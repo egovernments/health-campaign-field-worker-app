@@ -73,6 +73,7 @@ class _HouseholdOverviewPageState
 
     return PopScope(
       onPopInvoked: (didPop) async {
+        context.read<RegistrationWrapperBloc>().add(const RegistrationWrapperEvent.clear());
         context.router.maybePop();
       },
       child: BlocBuilder<RegistrationWrapperBloc, RegistrationWrapperState>(

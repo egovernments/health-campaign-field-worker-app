@@ -88,7 +88,8 @@ class RegistrationWrapperBloc extends Bloc<RegistrationWrapperEvent, Registratio
             .where((b) => b.beneficiaryClientReferenceId == household.clientReferenceId)
             .toList();
 
-        final tasks = allTasks.where((t) => t.clientReferenceId == household.clientReferenceId).toList();
+        final beneficiaryIds = householdBeneficiaries.map((b) => b.clientReferenceId).toSet();
+        final tasks = allTasks.where((t) => beneficiaryIds.contains(t.projectBeneficiaryClientReferenceId)).toList();
         final sideEffects = allSideEffects.where((s) => s.clientReferenceId == household.clientReferenceId).toList();
         final referrals = allReferrals.where((r) => r.clientReferenceId == household.clientReferenceId).toList();
 
