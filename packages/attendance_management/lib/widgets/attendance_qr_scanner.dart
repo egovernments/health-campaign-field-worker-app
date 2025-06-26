@@ -342,12 +342,14 @@ class AttendanceScannerPageState extends DigitScannerPageState {
         ],
         actions: [
           DigitButton(
+            capitalizeLetters: false,
             label: i18.attendance.scanAnotherQR,
             onPressed: () => Navigator.of(ctx).pop(),
             type: DigitButtonType.primary,
             size: DigitButtonSize.large,
           ),
           DigitButton(
+            capitalizeLetters: false,
             label: i18.attendance.backToAttendanceManager,
             onPressed: () {
               Navigator.of(ctx).pop();
