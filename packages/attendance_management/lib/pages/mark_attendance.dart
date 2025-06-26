@@ -6,6 +6,7 @@ import 'package:attendance_management/utils/extensions/extensions.dart';
 import 'package:attendance_management/widgets/custom_attendance_info_card.dart';
 import 'package:attendance_management/widgets/labelled_toggle.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -50,6 +51,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   bool isDialogOpen = false;
   bool isMorning = true;
   static const _commentKey = 'comment';
+  static const _reasonKey = 'reason';
+  static const _reasonCommentKey = 'reason_comment';
   Timer? _debounce;
   late TextEditingController controller;
   AttendanceIndividualBloc? individualLogBloc;
@@ -285,37 +288,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                           AttendanceSingleton()
                                                               .manualAttendanceReasons;
 
-                                                      if (reasonList.isEmpty) {
-                                                        await showDialog(
-                                                          context: context,
-                                                          barrierDismissible:
-                                                              false,
-                                                          builder: (ctx) =>
-                                                              Popup(
-                                                            type: PopUpType
-                                                                .simple,
-                                                            title: 'Error',
-                                                            description:
-                                                                'No reasons found. Please sync again.',
-                                                            actions: [
-                                                              DigitButton(
-                                                                label: 'OK',
-                                                                type:
-                                                                    DigitButtonType
-                                                                        .primary,
-                                                                size:
-                                                                    DigitButtonSize
-                                                                        .large,
-                                                                onPressed: () =>
-                                                                    Navigator.of(
-                                                                            ctx)
-                                                                        .pop(),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        );
-                                                        return;
-                                                      }
 
                                                       final reasonResult =
                                                           await showManualAttendanceReasonDialog(
@@ -450,7 +422,9 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                     : DateTime.now(),
                                 onChange: (String date) {
                                   currentSelectedDate = date;
-                                    final DateTime selectedDate = AttendanceDateTimeManagement.getFormattedDateToDateTime(date)!;
+                                  final DateTime selectedDate =
+                                      AttendanceDateTimeManagement
+                                          .getFormattedDateToDateTime(date)!;
                                   // ✅ Reset only if selected date is today
                                   if (AttendanceDateTimeManagement.isToday(
                                       selectedDate)) {
@@ -1137,110 +1111,136 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
     return "$missedDays${AttendanceLocalization.of(context).translate(i18.attendance.missedAttendanceDescription)}";
   }
 
-  Future<Map<String, String>?> showManualAttendanceReasonDialog({
-    required BuildContext context,
-    required List<DropdownItem> reasonList,
-  }) async {
-    final form = fb.group(<String, Object>{
-      'reason': FormControl<String>(validators: [Validators.required]),
-      'comment': FormControl<String>(),
-    });
 
-    DropdownItem? selectedReason;
-    bool isOthers = false;
+Future<Map<String, String>?> showManualAttendanceReasonDialog({
+  required BuildContext context,
+  required List<DropdownItem> reasonList,
+}) async {
+  final localizations = AttendanceLocalization.of(context);
 
-    return showDialog<Map<String, String>>(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) {
-        return StatefulBuilder(builder: (ctx, setState) {
+  final form = fb.group(<String, Object>{
+    _reasonKey: FormControl<String>(validators: [Validators.required]),
+    _reasonCommentKey: FormControl<String>(),
+  });
+
+  DropdownItem? selectedReason;
+  bool isOthers = false;
+
+  return showDialog<Map<String, String>>(
+    context: context,
+    barrierDismissible: false,
+    builder: (ctx) {
+      return StatefulBuilder(
+        builder: (ctx, setState) {
+          // Always update selectedReason to match form's current value
+          final selectedCode = form.control(_reasonKey).value;
+          if (selectedCode != null &&
+              (selectedReason == null || selectedReason!.code != selectedCode)) {
+            selectedReason =
+                reasonList.firstWhereOrNull((e) => e.code == selectedCode);
+            isOthers = selectedReason?.name.toLowerCase() == 'others';
+          }
+
           final isFormValid = form.valid &&
               (!isOthers ||
-                  form.control('comment').value?.toString().isNotEmpty == true);
+                  form.control(_reasonCommentKey).value?.toString().isNotEmpty == true);
 
-          return Popup(
-            type: PopUpType.simple,
-            title: "Reason for Marking Attendance Manually",
-            description: "Please select the reason for skipping QR scan.",
-            additionalWidgets: [
-              ReactiveForm(
-                formGroup: form,
-                child: Column(
+          return ReactiveForm(
+            formGroup: form,
+            child: Popup(
+              title: localizations.translate(i18.attendance.reasonForManualAttendance),
+              type: PopUpType.simple,
+              titleIcon: Icon(
+                Icons.warning,
+                color: Theme.of(context).colorTheme.alert.error,
+              ),
+              description: localizations.translate(
+                i18.attendance.reasonForManualAttendanceDesc,
+              ),
+              additionalWidgets: [
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     DigitDropdown(
                       items: reasonList,
                       selectedOption: selectedReason,
                       isSearchable: false,
+                      helpText: localizations.translate(i18.attendance.selectReason),
                       onSelect: (DropdownItem item) {
+                        // Always update and trigger state change
                         setState(() {
                           selectedReason = item;
-                          form.control('reason').value = item.code;
+                          form.control(_reasonKey).value = item.code;
+
                           isOthers = item.name.toLowerCase() == 'others';
 
                           if (isOthers) {
-                            form
-                                .control('comment')
-                                .setValidators([Validators.required]);
+                            form.control(_reasonCommentKey).setValidators([Validators.required]);
                           } else {
-                            form.control('comment').clearValidators();
+                            form.control(_reasonCommentKey).clearValidators();
                           }
 
-                          form.control('comment').updateValueAndValidity();
+                          form.control(_reasonCommentKey).updateValueAndValidity();
                         });
                       },
                     ),
                     const SizedBox(height: 16),
-                    if (isOthers)
-                      DigitTextFormInput(
-                        innerLabel: 'Comment',
-                        isRequired: true,
-                        initialValue: '',
-                        errorMessage: form.control('comment').invalid
-                            ? 'Comment is required'
-                            : null,
-                        onChange: (value) {
-                          form.control('comment').value = value;
-                          setState(() {});
-                        },
-                        maxLength: 250,
+                    if (isOthers) ...[
+                      Text(
+                        localizations.translate(i18.attendance.addComment),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
                       ),
+                      const SizedBox(height: 8),
+                      ReactiveTextField<String>(
+                        formControlName: _reasonCommentKey,
+                        maxLength: 250,
+                        onChanged: (_) => setState(() {}),
+                        decoration: InputDecoration(
+                          labelText: localizations.translate(i18.common.commentKey),
+                          errorText: form.control(_reasonCommentKey).invalid
+                              ? localizations.translate(i18.attendance.validationRequiredError)
+                              : null,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
-              ),
-            ],
-            actions: [
-              DigitButton(
-                label: "Mark Attendance Manually",
-                type: DigitButtonType.primary,
-                size: DigitButtonSize.large,
-                isDisabled: !isFormValid,
-                onPressed: () {
-                  form.markAllAsTouched();
-                  if (isFormValid) {
-                    Future.delayed(Duration.zero, () {
+              ],
+              actions: [
+                DigitButton(
+                  label: localizations.translate(i18.attendance.markAttendanceManually),
+                  type: DigitButtonType.primary,
+                  size: DigitButtonSize.large,
+                  isDisabled: !isFormValid,
+                  onPressed: () {
+                    form.markAllAsTouched();
+                    if (isFormValid) {
                       Navigator.of(ctx).pop(<String, String>{
-                        'reason': selectedReason?.name ?? '',
-                        'comment': isOthers
-                            ? (form.control('comment').value?.toString() ?? '')
+                        _reasonKey: selectedReason?.name ?? '',
+                        _reasonCommentKey: isOthers
+                            ? (form.control(_reasonCommentKey).value?.toString() ?? '')
                             : '',
                       });
-                    });
-                  }
-                },
-              ),
-              DigitButton(
-                label: "Go Back",
-                type: DigitButtonType.secondary,
-                size: DigitButtonSize.large,
-                onPressed: () {
-                  Navigator.of(ctx).pop();
-                },
-              ),
-            ],
+                    }
+                  },
+                ),
+                DigitButton(
+                  label: localizations.translate(i18.common.coreCommonBack),
+                  type: DigitButtonType.link,
+                  size: DigitButtonSize.large,
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                ),
+              ],
+            ),
           );
-        });
-      },
-    );
-  }
+        },
+      );
+    },
+  );
+}
+
 }
