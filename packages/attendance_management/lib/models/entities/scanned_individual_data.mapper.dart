@@ -37,6 +37,9 @@ class ScannedIndividualDataModelMapper
   static String? _$age(ScannedIndividualDataModel v) => v.age;
   static const Field<ScannedIndividualDataModel, String> _f$age =
       Field('age', _$age, opt: true);
+  static bool? _$manualEntry(ScannedIndividualDataModel v) => v.manualEntry;
+  static const Field<ScannedIndividualDataModel, bool> _f$manualEntry =
+      Field('manualEntry', _$manualEntry, opt: true);
 
   @override
   final MappableFields<ScannedIndividualDataModel> fields = const {
@@ -45,6 +48,7 @@ class ScannedIndividualDataModelMapper
     #name: _f$name,
     #locality: _f$locality,
     #age: _f$age,
+    #manualEntry: _f$manualEntry,
   };
 
   static ScannedIndividualDataModel _instantiate(DecodingData data) {
@@ -53,7 +57,8 @@ class ScannedIndividualDataModelMapper
         qrCreatedTime: data.dec(_f$qrCreatedTime),
         name: data.dec(_f$name),
         locality: data.dec(_f$locality),
-        age: data.dec(_f$age));
+        age: data.dec(_f$age),
+        manualEntry: data.dec(_f$manualEntry));
   }
 
   @override
@@ -120,7 +125,8 @@ abstract class ScannedIndividualDataModelCopyWith<
       int? qrCreatedTime,
       String? name,
       String? locality,
-      String? age});
+      String? age,
+      bool? manualEntry});
   ScannedIndividualDataModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -141,13 +147,15 @@ class _ScannedIndividualDataModelCopyWithImpl<$R, $Out>
           Object? qrCreatedTime = $none,
           Object? name = $none,
           Object? locality = $none,
-          Object? age = $none}) =>
+          Object? age = $none,
+          Object? manualEntry = $none}) =>
       $apply(FieldCopyWithData({
         if (individualId != $none) #individualId: individualId,
         if (qrCreatedTime != $none) #qrCreatedTime: qrCreatedTime,
         if (name != $none) #name: name,
         if (locality != $none) #locality: locality,
-        if (age != $none) #age: age
+        if (age != $none) #age: age,
+        if (manualEntry != $none) #manualEntry: manualEntry
       }));
   @override
   ScannedIndividualDataModel $make(CopyWithData data) =>
@@ -156,7 +164,8 @@ class _ScannedIndividualDataModelCopyWithImpl<$R, $Out>
           qrCreatedTime: data.get(#qrCreatedTime, or: $value.qrCreatedTime),
           name: data.get(#name, or: $value.name),
           locality: data.get(#locality, or: $value.locality),
-          age: data.get(#age, or: $value.age));
+          age: data.get(#age, or: $value.age),
+          manualEntry: data.get(#manualEntry, or: $value.manualEntry));
 
   @override
   ScannedIndividualDataModelCopyWith<$R2, ScannedIndividualDataModel, $Out2>

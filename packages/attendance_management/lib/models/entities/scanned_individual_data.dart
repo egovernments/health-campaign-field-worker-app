@@ -9,12 +9,13 @@ class ScannedIndividualDataModel with ScannedIndividualDataModelMappable {
   final String? name;
   final String? locality;
   final String? age;
+  final bool? manualEntry;
 
-  ScannedIndividualDataModel({
-    this.individualId,
-    this.qrCreatedTime,
-    this.name,
-    this.locality,
-    this.age,
-  });
+  ScannedIndividualDataModel(
+      {this.individualId,
+      this.qrCreatedTime,
+      this.name,
+      this.locality,
+      this.age,
+      this.manualEntry});
 }

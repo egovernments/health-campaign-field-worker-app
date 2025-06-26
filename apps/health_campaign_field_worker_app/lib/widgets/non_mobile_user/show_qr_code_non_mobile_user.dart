@@ -6,7 +6,6 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
-import 'package:digit_ui_components/widgets/atoms/text_block.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -31,25 +30,26 @@ void showQRForNonMobileUser(
           },
           additionalWidgets: [
             Center(
-                child: DigitTextBlock(
-              subHeading: localizations.translate(individualScannerData.name!),
+                child: Text(
+              localizations.translate(individualScannerData.name!),
+              style: textTheme.captionS,
             )),
             Container(
-              alignment: Alignment.center,
-              width: MediaQuery.sizeOf(context).width,
+              padding: const EdgeInsets.symmetric(
+                  horizontal: spacer1, vertical: spacer1),
               decoration: BoxDecoration(
-                border: Border.all(
-                  color: Color(theme.colorTheme.paper.secondary.value),
-                  width: 2,
-                ),
-                borderRadius: BorderRadius.circular(10),
-                color: Color(theme.colorTheme.paper.secondary.value),
+                borderRadius: const BorderRadius.all(Radius.circular(spacer1)),
+                border: Border(
+                    left: BorderSide(color: theme.colorTheme.generic.divider),
+                    right: BorderSide(color: theme.colorTheme.generic.divider),
+                    bottom: BorderSide(color: theme.colorTheme.generic.divider),
+                    top: BorderSide(color: theme.colorTheme.generic.divider)),
+                color: theme.colorTheme.paper.secondary,
               ),
-              child: DigitTextBlock(
-                spacing: 0,
-                padding: const EdgeInsets.all(spacer1),
-                description: individualScannerData.individualId,
-                descriptionStyle: textTheme.label,
+              child: Center(
+                child: Text(individualScannerData.individualId!,
+                    style: textTheme.headingXS
+                        .copyWith(color: theme.colorTheme.primary.primary2)),
               ),
             ),
             Center(
