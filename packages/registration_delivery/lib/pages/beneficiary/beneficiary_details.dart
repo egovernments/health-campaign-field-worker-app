@@ -155,7 +155,7 @@ class BeneficiaryDetailsPageState
                             return (beneficiaryDetailsTemplate?.properties?[registration_keys.commonKeys.primaryButtonKey]?.hidden == true)
                                 ? const SizedBox.shrink()
                                 : cycles != null && cycles.isNotEmpty
-                                ? deliverState.deliveryWrapper?.hasCycleArrived ?? true /// todo need to check for multiround campaigns
+                                ? deliverState.deliveryWrapper?.hasCycleArrived ?? false /// todo need to check for multiround campaigns
                                     ? DigitCard(
                                         margin:
                                             const EdgeInsets.only(top: spacer2),
@@ -175,31 +175,7 @@ class BeneficiaryDetailsPageState
                                                         c.id ==
                                                             deliverState.deliveryWrapper?.cycle);
 
-                                                if(beneficiaryDetailsTemplate?.navigateTo!=null){
-                                                  if(beneficiaryDetailsTemplate?.navigateTo?.type=='form'){
-                                                    final pageName = context.read<FormsBloc>().state.cachedSchemas['DELIVERYFLOW']?.pages.entries.first.key;
-
-                                                    if (pageName == null) {
-                                                      Toast.showToast(
-                                                        context,
-                                                        message: localizations.translate('NO_FORM_FOUND_FOR_DELIVERY'),
-                                                        type: ToastType.error,
-                                                      );
-                                                    } else {
-                                                      context.router.push(FormsRenderRoute(currentSchemaKey: 'DELIVERYFLOW', pageName: pageName,
-                                                        defaultValues: {
-                                                          'locality':
-                                                          localizations.translate(RegistrationDeliverySingleton().boundary?.code ?? '')
-                                                        },
-                                                        customComponents: const [
-                                                          {
-                                                            'resourceCard': ResourceCard()
-                                                          }
-                                                        ],
-                                                      ));
-                                                    }
-                                                  }
-                                                } else if (selectedCycle != null) {
+                                               if (selectedCycle != null) {
                                                   final currentCycle =
                                                   (deliverState.deliveryWrapper?.cycle ?? 0) >= 0
                                                       ? deliverState.deliveryWrapper?.cycle
@@ -213,11 +189,9 @@ class BeneficiaryDetailsPageState
 
                                                   final items =
                                                   RegistrationDeliverySingleton()
-                                                      .projectType!
-                                                      .cycles?[
-                                                  currentCycle ?? 1 - 1]
-                                                      .deliveries?[
-                                                  currentDose ?? 1- 1];
+                                                      .projectType
+                                                      ?.cycles?.firstWhere((c) => c.id == currentCycle)
+                                                      .deliveries?.firstWhere((d) => d.id == currentDose);
 
                                                   // bloc.add(
                                                   //   DeliverInterventionEvent
@@ -287,7 +261,8 @@ class BeneficiaryDetailsPageState
                                                                     .large)
                                                           ]),
                                                     );
-                                                  } else {
+                                                  }
+                                                  else {
                                                     showCustomPopup(
                                                       context: context,
                                                       builder: (popUpContext) => Popup(
@@ -322,8 +297,35 @@ class BeneficiaryDetailsPageState
                                                                     rootNavigator:
                                                                     true,
                                                                   ).pop();
+                                                                  if(beneficiaryDetailsTemplate?.navigateTo!=null){
+                                                                    if(beneficiaryDetailsTemplate?.navigateTo?.type=='form'){
+                                                                      final pageName = context.read<FormsBloc>().state.cachedSchemas['DELIVERYFLOW']?.pages.entries.first.key;
 
+                                                                      if (pageName == null) {
+                                                                        Toast.showToast(
+                                                                          context,
+                                                                          message: localizations.translate('NO_FORM_FOUND_FOR_DELIVERY'),
+                                                                          type: ToastType.error,
+                                                                        );
+                                                                      } else {
+                                                                        context.router.push(FormsRenderRoute(currentSchemaKey: 'DELIVERYFLOW', pageName: pageName,
+                                                                          defaultValues: {
+                                                                            'locality':
+                                                                            localizations.translate(RegistrationDeliverySingleton().boundary?.code ?? '')
+                                                                          },
+                                                                          customComponents: const [
+                                                                            {
+                                                                              'resourceCard': ResourceCard()
+                                                                            }
+                                                                          ],
+                                                                        ));
+                                                                      }
 
+                                                                    }
+                                                                  }
+                                                                  else{
+                                                                    context.router.push(DeliverInterventionRoute());
+                                                                  }
                                                                   // router.push(
                                                                   //   DeliverInterventionRoute(),
                                                                   // );
@@ -604,7 +606,7 @@ class BeneficiaryDetailsPageState
                                       ?.cycles ??
                                   [])
                               .isNotEmpty && (beneficiaryDetailsTemplate
-                        ?.properties?[registration_keys.beneficiaryDetailsKeys.detailsCardKey]?.hidden != true))
+                        ?.properties?[registration_keys.beneficiaryDetailsKeys.tableCardKey]?.hidden != true))
                             DigitCard(
                                 margin: const EdgeInsets.all(spacer2),
                                 children: RegistrationDeliverySingleton()

@@ -50,7 +50,7 @@ Widget buildTableContent(
   final ProjectTypeModel projectType =
   RegistrationDeliverySingleton().projectType!;
   final item =
-  projectType.cycles?[currentCycle ?? 1 - 1].deliveries?[currentDose?? 1 - 1];  //todo: need to check again for cycles
+  projectType.cycles?.firstWhere((c) => c.id == currentCycle).deliveries?.firstWhere((d) => d.id == currentDose);  //todo: need to check again for cycles
 
   return Container(
     padding: const EdgeInsets.only(
