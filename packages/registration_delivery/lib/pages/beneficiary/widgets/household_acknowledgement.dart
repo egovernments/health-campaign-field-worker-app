@@ -3,6 +3,7 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../../router/registration_delivery_router.gm.dart';
@@ -34,7 +35,7 @@ class HouseholdAcknowledgementPageState
     return PopScope(
       canPop: false,
       child: Scaffold(
-        body: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
+        body: BlocBuilder<RegistrationWrapperBloc, RegistrationWrapperState>(
           builder: (context, householdState) {
             return Padding(
               padding: const EdgeInsets.all(spacer2),
@@ -64,14 +65,14 @@ class HouseholdAcknowledgementPageState
                       ),
                       isDisabled: !(widget.enableViewHousehold ?? false),
                       onPressed: () {
-                        final wrapper = context
-                            .read<HouseholdOverviewBloc>()
-                            .state
-                            .householdMemberWrapper;
-
-                        context.router.popAndPush(
-                          BeneficiaryWrapperRoute(wrapper: wrapper),
-                        );
+                        // final wrapper = context
+                        //     .read<HouseholdOverviewBloc>()
+                        //     .state
+                        //     .householdMemberWrapper;
+                        //
+                        // context.router.popAndPush(
+                        //   BeneficiaryWrapperRoute(wrapper: wrapper),
+                        // );
                       },
                       type: DigitButtonType.primary,
                       size: DigitButtonSize.large),
