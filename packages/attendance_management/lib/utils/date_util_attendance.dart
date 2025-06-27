@@ -39,7 +39,7 @@ class AttendanceDateTimeManagement {
   }
 
   static String getDateString(DateTime date) {
-    final DateFormat formatter = DateFormat('dd/MM/yyyy');
+    final DateFormat formatter = DateFormat('dd MMM yyyy');
     return formatter.format(date);
   }
 
@@ -47,9 +47,7 @@ class AttendanceDateTimeManagement {
   static DateTime? getFormattedDateToDateTime(String date) {
     try {
       DateFormat inputFormat;
-      inputFormat = date.contains('-')
-          ? DateFormat('dd-MM-yyyy')
-          : DateFormat('dd/MM/yyyy');
+      inputFormat = DateFormat('dd MMM yyyy');
       DateTime inputDate = inputFormat.parse(date);
 
       return inputDate;
@@ -67,7 +65,7 @@ class AttendanceDateTimeManagement {
     if (date.trim().isEmpty) return '';
     try {
       var dateTime = DateTime.parse(date).toLocal();
-      return DateFormat(dateFormat ?? "dd/MM/yyyy").format(dateTime);
+      return DateFormat(dateFormat ?? "dd MMM yyyy").format(dateTime);
     } on Exception catch (e) {
       if (kDebugMode) {
         print(e);

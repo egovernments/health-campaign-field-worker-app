@@ -54,8 +54,12 @@ class _NonMobileUserListPageState
           builder: (context, state) {
             return ScrollableContent(
               enableFixedDigitButton: true,
-              header: const BackNavigationHelpHeaderWidget(
+              header: BackNavigationHelpHeaderWidget(
                 showHelp: false,
+                handleback: () {
+                  context.router.replaceAll([HomeRoute()]);
+                },
+                defaultPopRoute: false,
               ),
               footer: DigitCard(
                   margin: const EdgeInsets.only(top: spacer2),
