@@ -100,6 +100,7 @@ class _NonMobileUserListPageState
                                   ...List.generate(
                                       registers.first.attendees!.length, (x) {
                                     return NonMobileUserCard(
+                                      mobileNumber: registers.first.individualList![x].mobileNumber.toString(),
                                       userName: registers.first
                                           .individualList![x].name!.givenName!,
                                       age: getAge(registers.first
