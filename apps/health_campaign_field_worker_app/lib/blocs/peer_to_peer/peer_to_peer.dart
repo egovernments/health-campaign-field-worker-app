@@ -10,6 +10,7 @@ import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:survey_form/models/entities/service.dart';
 import 'package:sync_service/data/repositories/sync/remote_type.dart';
 
 import '../../data/sync_service_mapper.dart';
@@ -38,6 +39,8 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
       referralLocalRepository;
   final LocalRepository<DownsyncModel, DownsyncSearchModel>
       downSyncLocalRepository;
+  final LocalRepository<ServiceModel, ServiceSearchModel>
+      serviceLocalRepository;
 
   List<dynamic> receivedData = [];
   int receivedBytes = 0;
@@ -54,7 +57,8 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
       required this.taskLocalRepository,
       required this.sideEffectLocalRepository,
       required this.referralLocalRepository,
-      required this.downSyncLocalRepository})
+      required this.downSyncLocalRepository,
+      required this.serviceLocalRepository})
       : super(const PeerToPeerInitial()) {
     on(_handleSendEntities);
     on(_handleReceiveEntities);
@@ -69,8 +73,7 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
           progress: 0, offset: 0, totalCount: 0));
 
       final downloadsDirectory = await getDownloadsDirectory();
-      final file = File(
-          '${downloadsDirectory!.path}/${event.selectedProject}/${event.selectedBoundaryCode}/down_sync_data.json');
+      final file = File('${downloadsDirectory!.path}/down_sync_data.json');
 
       if (await file.exists()) {
         final fileStream = file.openRead();
@@ -107,52 +110,52 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
                 .toList()
                 .first;
             for (var device in event.connectedDevice) {
-              await event.nearbyService.sendMessage(
-                device.deviceId,
-                PeerToPeerMessageModel(
-                  messageType: MessageTypes.handShake.toValue(),
-                  selectedBoundaryCode: event.selectedBoundaryCode,
-                  message: event.selectedProject,
-                ).toJson(),
-              );
+              // await event.nearbyService.sendMessage(
+              //   device.deviceId,
+              //   PeerToPeerMessageModel(
+              //     messageType: MessageTypes.handShake.toValue(),
+              //     selectedBoundaryCode: event.selectedBoundaryCode,
+              //     message: event.selectedProject,
+              //   ).toJson(),
+              // );
+              //
+              // bool handshakeSuccessful = await waitForConfirmation(
+              //   event.nearbyService,
+              //   confirmationType: ConfirmationTypes.handShake.toValue(),
+              // );
+              //
+              // if (!handshakeSuccessful) {
+              //   emit(PeerToPeerState.failedToTransfer(
+              //       error: i18.dataShare.projectMisMatchError));
+              //   return;
+              // } else {
+              for (var entity in entityData) {
+                Map<String, dynamic> entityResponse = entity;
 
-              bool handshakeSuccessful = await waitForConfirmation(
-                event.nearbyService,
-                confirmationType: ConfirmationTypes.handShake.toValue(),
-              );
-
-              if (!handshakeSuccessful) {
-                emit(PeerToPeerState.failedToTransfer(
-                    error: i18.dataShare.projectMisMatchError));
-                return;
-              } else {
-                for (var entity in entityData) {
-                  Map<String, dynamic> entityResponse = entity;
-
-                  await event.nearbyService.sendMessage(
-                    device.deviceId,
-                    PeerToPeerMessageModel(
-                            messageType: MessageTypes.chunk.toValue(),
-                            selectedBoundaryCode: selectedBoundaryCode,
-                            message: compressJson(entityResponse),
-                            offset: offsetValue,
-                            totalCount: totalCount)
-                        .toJson(),
-                  );
-                }
-
-                // Wait for confirmation before proceeding
-                await waitForConfirmation(
-                  event.nearbyService,
-                  confirmationType: ConfirmationTypes.chunk.toValue(),
-                  offset: offsetValue,
+                await event.nearbyService.sendMessage(
+                  device.deviceId,
+                  PeerToPeerMessageModel(
+                          messageType: MessageTypes.chunk.toValue(),
+                          selectedBoundaryCode: selectedBoundaryCode,
+                          message: compressJson(entityResponse),
+                          offset: offsetValue,
+                          totalCount: totalCount)
+                      .toJson(),
                 );
-
-                emit(PeerToPeerState.transferInProgress(
-                    progress: offsetValue / totalCount,
-                    offset: offsetValue,
-                    totalCount: totalCount));
               }
+
+              // Wait for confirmation before proceeding
+              await waitForConfirmation(
+                event.nearbyService,
+                confirmationType: ConfirmationTypes.chunk.toValue(),
+                offset: offsetValue,
+              );
+
+              emit(PeerToPeerState.transferInProgress(
+                  progress: offsetValue / totalCount,
+                  offset: offsetValue,
+                  totalCount: totalCount));
+              // }
             }
           }
 
@@ -218,31 +221,32 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
       PeerToPeerMessageModel messageModel =
           PeerToPeerMessageModelMapper.fromJson(event.data["message"]);
 
-      if (messageModel.messageType == MessageTypes.handShake.toValue()) {
-        if (messageModel.message == event.projectId) {
-          // Send acknowledgment to proceed
-          await event.nearbyService.sendMessage(
-              event.data["deviceId"],
-              PeerToPeerMessageModel(
-                messageType: MessageTypes.confirmation.toValue(),
-                message: "Handshake successful. Proceeding with transfer.",
-                confirmationType: ConfirmationTypes.handShake.toValue(),
-                status: MessageStatus.success.toValue(),
-              ).toJson());
-        } else {
-          // Send failure message and stop transfer
-          await event.nearbyService.sendMessage(
-              event.data["deviceId"],
-              PeerToPeerMessageModel(
-                messageType: MessageTypes.confirmation.toValue(),
-                message: "Handshake failed. Project mismatch.",
-                confirmationType: ConfirmationTypes.failed.toValue(),
-                status: MessageStatus.fail.toValue(),
-              ).toJson());
-          emit(PeerToPeerState.failedToReceive(
-              error: i18.dataShare.projectMisMatchError));
-        }
-      } else if (messageModel.messageType == MessageTypes.chunk.toValue()) {
+      // if (messageModel.messageType == MessageTypes.handShake.toValue()) {
+      //   if (messageModel.message == event.projectId) {
+      //     // Send acknowledgment to proceed
+      //     await event.nearbyService.sendMessage(
+      //         event.data["deviceId"],
+      //         PeerToPeerMessageModel(
+      //           messageType: MessageTypes.confirmation.toValue(),
+      //           message: "Handshake successful. Proceeding with transfer.",
+      //           confirmationType: ConfirmationTypes.handShake.toValue(),
+      //           status: MessageStatus.success.toValue(),
+      //         ).toJson());
+      //   } else {
+      //     // Send failure message and stop transfer
+      //     await event.nearbyService.sendMessage(
+      //         event.data["deviceId"],
+      //         PeerToPeerMessageModel(
+      //           messageType: MessageTypes.confirmation.toValue(),
+      //           message: "Handshake failed. Project mismatch.",
+      //           confirmationType: ConfirmationTypes.failed.toValue(),
+      //           status: MessageStatus.fail.toValue(),
+      //         ).toJson());
+      //     emit(PeerToPeerState.failedToReceive(
+      //         error: i18.dataShare.projectMisMatchError));
+      //   }
+      // } else
+      if (messageModel.messageType == MessageTypes.chunk.toValue()) {
         // Process chunk
         int? offset = messageModel.offset;
         int? totalCount = messageModel.totalCount;
@@ -281,6 +285,7 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
                 taskLocalRepository,
                 sideEffectLocalRepository,
                 referralLocalRepository,
+                serviceLocalRepository,
               ],
             );
 
