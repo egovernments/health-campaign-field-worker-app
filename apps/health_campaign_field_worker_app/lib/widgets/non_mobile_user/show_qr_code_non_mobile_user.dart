@@ -29,44 +29,58 @@ void showQRForNonMobileUser(
             Navigator.of(ctx).pop();
           },
           additionalWidgets: [
-            Center(
-                child: Text(
-              localizations.translate(individualScannerData.name!),
-              style: textTheme.captionS,
-            )),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: spacer1, vertical: spacer1),
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(spacer1)),
-                border: Border(
-                    left: BorderSide(color: theme.colorTheme.generic.divider),
-                    right: BorderSide(color: theme.colorTheme.generic.divider),
-                    bottom: BorderSide(color: theme.colorTheme.generic.divider),
-                    top: BorderSide(color: theme.colorTheme.generic.divider)),
-                color: theme.colorTheme.paper.secondary,
-              ),
-              child: Center(
-                child: Text(individualScannerData.individualId!,
-                    style: textTheme.headingXS
-                        .copyWith(color: theme.colorTheme.primary.primary2)),
-              ),
-            ),
-            Center(
-              child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(
-                  color: theme.colorTheme.primary.primary1,
-                  width: 2,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                    child: Text(
+                  localizations.translate(individualScannerData.name!),
+                  style: textTheme.headingS.copyWith(color: theme.colorTheme.text.primary),
                 )),
-                child: QrImageView(
-                  data: DataMapEncryptor()
-                      .encryptWithRandomKey(individualScannerData.toMap()),
-                  version: QrVersions.auto,
-                  size: 220.0,
+                const SizedBox(height: spacer4,),
+                Center(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width*.64,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: spacer1/2, vertical: spacer1/2),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(spacer2)),
+                      border: Border(
+                          left: BorderSide(color: theme.colorTheme.generic.divider),
+                          right: BorderSide(color: theme.colorTheme.generic.divider),
+                          bottom: BorderSide(color: theme.colorTheme.generic.divider),
+                          top: BorderSide(color: theme.colorTheme.generic.divider)),
+                      color: theme.colorTheme.paper.secondary,
+                    ),
+                    child: Center(
+                      child: Text(individualScannerData.individualId!,
+                          style: textTheme.headingXS
+                              .copyWith(color: theme.colorTheme.primary.primary2)),
+                    ),
+                  ),
                 ),
-              ),
-            )
+                const SizedBox(height: spacer4,),
+                Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(spacer2),
+                    decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(Radius.circular(spacer1)),
+                        border: Border.all(
+                          color: theme.colorTheme.primary.primary1,
+                          width: 2,
+                        )),
+                    child: QrImageView(
+                      data: DataMapEncryptor()
+                          .encryptWithRandomKey(individualScannerData.toMap()),
+                      version: QrVersions.auto,
+                      size: MediaQuery.of(context).size.width*.59,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: spacer4,),
+              ],
+            ),
           ],
           actions: [
             DigitButton(
