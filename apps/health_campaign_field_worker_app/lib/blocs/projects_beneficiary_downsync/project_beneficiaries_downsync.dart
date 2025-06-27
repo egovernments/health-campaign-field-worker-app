@@ -46,7 +46,7 @@ class BeneficiaryDownSyncBloc
       referralLocalRepository;
   final LocalRepository<ServiceModel, ServiceSearchModel>
       serviceLocalRepository;
-  
+
   BeneficiaryDownSyncBloc({
     required this.individualLocalRepository,
     required this.downSyncRemoteRepository,
@@ -290,8 +290,7 @@ class BeneficiaryDownSyncBloc
     }
 
     // Define the file path
-    final file = File(
-        '${downloadsDirectory.path}/$projectId/$selectedBoundaryCode/down_sync_data.json');
+    final file = File('${downloadsDirectory.path}/down_sync_data.json');
 
     // Read existing file content if available
     if (file.existsSync()) {
