@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
@@ -55,43 +56,55 @@ class HouseholdAcknowledgementPageState
                       ??
                   i18.acknowledgementSuccess.acknowledgementLabelText,
                 ),
-                actions: [
-                  if((householdAcknowledgementTemplate
-                      ?.properties?[registration_keys.commonKeys.primaryButtonKey]?.hidden  != true))
-                    DigitButton(
-                      label: localizations.translate(
-                        householdAcknowledgementTemplate
-                            ?.properties?[registration_keys.commonKeys.primaryButtonKey]?.label ??
-                        i18.householdDetails.viewHouseHoldDetailsAction,
-                      ),
-                      isDisabled: !(widget.enableViewHousehold ?? false),
-                      onPressed: () {
-
-                        context.router.popUntil((route) => route.settings.name == 'SearchBeneficiaryRoute');
-                        context.router.push(HouseholdOverviewRoute());
-                      },
-                      type: DigitButtonType.primary,
-                      size: DigitButtonSize.large),
-                  if((householdAcknowledgementTemplate
-                      ?.properties?[registration_keys.commonKeys.secondaryButtonKey]?.hidden != true))
-                    DigitButton(
-                      label: localizations
-                          .translate(
-                          householdAcknowledgementTemplate
-                              ?.properties?[registration_keys.commonKeys.secondaryButtonKey]?.label ??
-                          i18.acknowledgementSuccess.actionLabelText),
-                      onPressed: () {
-                        context.read<RegistrationWrapperBloc>().add(const RegistrationWrapperEvent.clear());
-                        context.router.popUntil((route) => route.settings.name == 'SearchBeneficiaryRoute');
-                      },
-                      type: DigitButtonType.secondary,
-                      size: DigitButtonSize.large),
-                ],
+                actions: _buildActionButtons(context, householdAcknowledgementTemplate),
               ),
             );
           },
         ),
       ),
     );
+  }
+
+  List<DigitButton>? _buildActionButtons(
+      BuildContext context,
+      TemplateConfig? template,
+      ) {
+    final primaryProp = template?.properties?[registration_keys.commonKeys.primaryButtonKey];
+    final secondaryProp = template?.properties?[registration_keys.commonKeys.secondaryButtonKey];
+
+    final entries = <MapEntry<int, DigitButton>>[];
+
+    if ((widget.enableViewHousehold ?? false) && primaryProp?.hidden != true) {
+      final order = primaryProp?.order ?? 0;
+      entries.add(MapEntry(
+        order,
+        DigitButton(
+          label: localizations.translate(
+              primaryProp?.label ?? i18.householdDetails.viewHouseHoldDetailsAction),
+          onPressed: () => context.router.popAndPush(HouseholdOverviewRoute()),
+          type: DigitButtonType.primary,
+          size: DigitButtonSize.large,
+        ),
+      ));
+    }
+
+    if (secondaryProp?.hidden != true) {
+      final order = secondaryProp?.order ?? 1;
+      entries.add(MapEntry(
+        order,
+        DigitButton(
+          label: localizations.translate(
+              secondaryProp?.label ?? i18.acknowledgementSuccess.actionLabelText),
+          onPressed: () => context.router.popUntilRouteWithName(SearchBeneficiaryRoute.name),
+          type: DigitButtonType.secondary,
+          size: DigitButtonSize.large,
+        ),
+      ));
+    }
+
+    if (entries.isEmpty) return null;
+
+    entries.sort((a, b) => a.key.compareTo(b.key));
+    return entries.map((e) => e.value).toList(growable: false);
   }
 }
