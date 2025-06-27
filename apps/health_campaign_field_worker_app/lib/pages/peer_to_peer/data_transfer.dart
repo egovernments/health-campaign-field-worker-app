@@ -72,19 +72,19 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
       onPopInvoked: (pop) {},
       child: BlocListener<PeerToPeerBloc, PeerToPeerState>(
         listener: (context, state) {
-          if (state is CompletedDataTransfer) {
-            context.router
-                .popAndPush(AcknowledgementRoute(isDataRecordSuccess: false));
-          }
-          // if (state is FailedDataTransfer) {
-          //   Toast.showToast(
-          //     context,
-          //     message: localizations.translate(state.error),
-          //     type: ToastType.error,
-          //     position: ToastPosition.aboveOneButtonFooter,
-          //   );
-          //   context.router.maybePop();
+          // if (state is CompletedDataTransfer) {
+          //   context.router
+          //       .popAndPush(AcknowledgementRoute(isDataRecordSuccess: false));
           // }
+          if (state is FailedDataTransfer) {
+            Toast.showToast(
+              context,
+              message: localizations.translate(state.error),
+              type: ToastType.error,
+              position: ToastPosition.aboveOneButtonFooter,
+            );
+            // context.router.maybePop();
+          }
         },
         child: BlocBuilder<PeerToPeerBloc, PeerToPeerState>(
             builder: (context, state) {
@@ -97,12 +97,13 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                 padding: const EdgeInsets.all(spacer2),
                 children: [
                   DigitButton(
-                    type: DigitButtonType.secondary,
+                    capitalizeLetters: false,
+                    type: DigitButtonType.primary,
                     mainAxisSize: MainAxisSize.max,
                     onPressed: () {
-                      context.router.maybePop();
+                      context.router.replaceAll([HomeRoute()]);
                     },
-                    label: localizations.translate(i18.common.coreCommonGoback),
+                    label: localizations.translate(i18.common.coreCommonGoHome),
                     size: DigitButtonSize.large,
                   ),
                 ]),
@@ -111,7 +112,7 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(spacer2),
+                      padding: const EdgeInsets.only(left: spacer2),
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Text(
@@ -121,94 +122,147 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                       ),
                     ),
                     Container(
-                        color: DigitTheme.instance.colors.light.paperPrimary,
                         margin: const EdgeInsets.all(spacer2),
                         child: state.maybeWhen(
                           orElse: () => Center(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            child: DigitCard(
                               children: [
-                                Lottie.asset(dataTransfer,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.15),
-                                Text(
-                                  localizations.translate(
-                                      i18.dataShare.sendingActionMessage),
-                                  style: textTheme.label.copyWith(
-                                      color: DigitTheme
-                                          .instance.colors.light.primary1),
+                                Center(
+                                  child: Lottie.asset(dataTransfer,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.15),
+                                ),
+                                Center(
+                                  child: Text(
+                                    localizations.translate(
+                                        i18.dataShare.sendingActionMessage),
+                                    style: textTheme.label.copyWith(
+                                        color: DigitTheme
+                                            .instance.colors.light.primary1),
+                                  ),
                                 ),
                                 const SizedBox(height: spacer4),
-                                const Padding(
+                                const Center(
+                                  child: Padding(
+                                      padding: EdgeInsets.all(spacer2),
+                                      child: ProgressIndicatorContainer(
+                                        value: 0,
+                                        label: '',
+                                        prefixLabel: '',
+                                        suffixLabel: '',
+                                        height: spacer3,
+                                        radius: spacer4,
+                                      )),
+                                ),
+                              ],
+                            ),
+                          ),
+                          transferInProgress: (progress, offset, totalCount) =>
+                              SizedBox(
+                            child: DigitCard(
+                              children: [
+                                Center(
+                                  child: Lottie.asset(dataTransfer,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.15),
+                                ),
+                                Center(
+                                  child: Text(
+                                    localizations
+                                        .translate(i18.dataShare.transferring),
+                                    style: textTheme.headingM.copyWith(
+                                        color: DigitTheme
+                                            .instance.colors.light.primary2),
+                                  ),
+                                ),
+                                Center(
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(spacer2),
+                                      child: ProgressIndicatorContainer(
+                                        value: progress,
+                                        label: '',
+                                        prefixLabel: '',
+                                        suffixLabel: '',
+                                        height: spacer3,
+                                        radius: spacer4,
+                                      )),
+                                ),
+                              ],
+                            ),
+                          ),
+                          completedDataTransfer: () => Center(
+                            child: DigitCard(
+                              children: [
+                                Center(
+                                  child: Lottie.asset(downloadSuccess,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.15),
+                                ),
+                                Center(
+                                  child: Text(
+                                    localizations.translate(
+                                        i18.dataShare.dataTransferCompleted),
+                                    style: textTheme.headingM.copyWith(
+                                        color: DigitTheme
+                                            .instance.colors.light.primary2),
+                                  ),
+                                ),
+                                Center(
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(spacer2),
+                                      child: ProgressIndicatorContainer(
+                                        value: 1,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                          theme.colorTheme.alert.success,
+                                        ),
+                                        label: '',
+                                        prefixLabel: '',
+                                        suffixLabel: '',
+                                        height: spacer3,
+                                        radius: spacer4,
+                                      )),
+                                ),
+                              ],
+                            ),
+                          ),
+                          failedToTransfer: (message) => DigitCard(
+                            children: [
+                              Center(child: Lottie.asset(failedLottie)),
+                              Center(
+                                child: Text(
+                                  localizations.translate(
+                                      i18.dataShare.failedToTransfer),
+                                  style: textTheme.headingM.copyWith(
+                                      color: DigitTheme
+                                          .instance.colors.light.alertError),
+                                ),
+                              ),
+                              const SizedBox(height: spacer4),
+                              Center(
+                                child: Text(
+                                  localizations.translate(
+                                      i18.dataShare.failedToTransfer),
+                                  style: textTheme.bodyS.copyWith(
+                                      color: DigitTheme.instance.colors.light
+                                          .paperSecondary),
+                                ),
+                              ),
+                              const Center(
+                                child: Padding(
                                     padding: EdgeInsets.all(spacer2),
                                     child: ProgressIndicatorContainer(
-                                      value: 0,
+                                      value: 0.7,
                                       label: '',
                                       prefixLabel: '',
                                       suffixLabel: '',
                                       height: spacer3,
                                       radius: spacer4,
                                     )),
-                              ],
-                            ),
-                          ),
-                          transferInProgress: (progress, offset, totalCount) =>
-                              Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Lottie.asset(dataTransfer,
-                                  height: MediaQuery.of(context).size.height *
-                                      0.15),
-                              Text(
-                                localizations.translate(
-                                    i18.dataShare.receivingActionMessage),
-                                style: textTheme.headingS.copyWith(
-                                    color: DigitTheme
-                                        .instance.colors.light.primary1),
                               ),
-                              const SizedBox(height: spacer4),
-                              Padding(
-                                  padding: const EdgeInsets.all(spacer4),
-                                  child: ProgressIndicatorContainer(
-                                    value: progress,
-                                    label: '',
-                                    prefixLabel: '',
-                                    suffixLabel: '',
-                                    height: spacer3,
-                                    radius: spacer4,
-                                  )),
-                            ],
-                          ),
-                          failedToTransfer: (message) => Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Lottie.asset(failedLottie),
-                              Text(
-                                localizations
-                                    .translate(i18.dataShare.failedToTransfer),
-                                style: textTheme.headingM.copyWith(
-                                    color: DigitTheme
-                                        .instance.colors.light.alertError),
-                              ),
-                              const SizedBox(height: spacer4),
-                              Text(
-                                localizations
-                                    .translate(i18.dataShare.failedToTransfer),
-                                style: textTheme.bodyS.copyWith(
-                                    color: DigitTheme
-                                        .instance.colors.light.paperSecondary),
-                              ),
-                              const Padding(
-                                  padding: EdgeInsets.all(spacer2),
-                                  child: ProgressIndicatorContainer(
-                                    value: 0.7,
-                                    label: '',
-                                    prefixLabel: '',
-                                    suffixLabel: '',
-                                    height: spacer3,
-                                    radius: spacer4,
-                                  )),
                             ],
                           ),
                         )),

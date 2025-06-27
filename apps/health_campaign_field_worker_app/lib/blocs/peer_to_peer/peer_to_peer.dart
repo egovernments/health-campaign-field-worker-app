@@ -18,6 +18,7 @@ import '../../models/downsync/downsync.dart';
 import '../../models/entities/peer_to_peer/message_types.dart';
 import '../../models/entities/peer_to_peer/peer_to_peer_message.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/least_level_boundary_singleton.dart';
 
 part 'peer_to_peer.freezed.dart';
 
@@ -48,6 +49,8 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
   String entityType = '';
   late Device connectedDevice;
   late String? selectedBoundaryCode;
+  final Set<String> receivedBoundaries = {};
+  double? receivedProgress;
 
   PeerToPeerBloc(
       {required this.individualLocalRepository,
@@ -171,6 +174,8 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
               ).toJson(),
             );
           }
+          emit(PeerToPeerState.transferInProgress(
+              progress: 100, offset: 0, totalCount: totalCount));
 
           // Wait for receiver's overall acknowledgment
           await waitForConfirmation(
@@ -247,74 +252,86 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
       //   }
       // } else
       if (messageModel.messageType == MessageTypes.chunk.toValue()) {
-        // Process chunk
         int? offset = messageModel.offset;
         int? totalCount = messageModel.totalCount;
         selectedBoundaryCode = messageModel.selectedBoundaryCode;
         final compressedMessage = messageModel.message;
-        final entityList = decompressJson(compressedMessage).entries;
 
-        for (var entity in entityList) {
-          entityType = entity.key;
+        // Check boundary match
+        final isValidBoundary = LeastLevelBoundarySingleton()
+            .boundary!
+            .contains(selectedBoundaryCode);
 
-          if (entityType == 'DownsyncCriteria') {
-            final existingDownSyncData =
-                await downSyncLocalRepository.search(DownsyncSearchModel(
-              locality: selectedBoundaryCode,
-            ));
+        if (isValidBoundary) {
+          final entityList = decompressJson(compressedMessage).entries;
 
-            if (existingDownSyncData.isNotEmpty) {
-              await downSyncLocalRepository
-                  .update(DownsyncModelMapper.fromMap(entity.value));
+          for (var entity in entityList) {
+            entityType = entity.key;
+
+            if (entityType == 'DownsyncCriteria') {
+              final existingDownSyncData = await downSyncLocalRepository.search(
+                DownsyncSearchModel(locality: selectedBoundaryCode),
+              );
+
+              if (existingDownSyncData.isNotEmpty) {
+                await downSyncLocalRepository
+                    .update(DownsyncModelMapper.fromMap(entity.value));
+              } else {
+                await downSyncLocalRepository
+                    .create(DownsyncModelMapper.fromMap(entity.value));
+              }
             } else {
-              await downSyncLocalRepository
-                  .create(DownsyncModelMapper.fromMap(entity.value));
-            }
-          } else {
-            final List<dynamic> entityResponse = entity.value ?? [];
-            final entityList =
-                entityResponse.whereType<Map<String, dynamic>>().toList();
-            // Save chunk to database immediately
-            final local = RepositoryType.getLocalForType(
-              DataModels.getDataModelForEntityName(entityType),
-              [
-                individualLocalRepository,
-                householdLocalRepository,
-                householdMemberLocalRepository,
-                projectBeneficiaryLocalRepository,
-                taskLocalRepository,
-                sideEffectLocalRepository,
-                referralLocalRepository,
-                serviceLocalRepository,
-              ],
-            );
+              final List<dynamic> entityResponse = entity.value ?? [];
+              final entityList =
+                  entityResponse.whereType<Map<String, dynamic>>().toList();
 
-            SyncServiceMapper().createDbRecords(local, entityList, entityType);
+              final local = RepositoryType.getLocalForType(
+                DataModels.getDataModelForEntityName(entityType),
+                [
+                  individualLocalRepository,
+                  householdLocalRepository,
+                  householdMemberLocalRepository,
+                  projectBeneficiaryLocalRepository,
+                  taskLocalRepository,
+                  sideEffectLocalRepository,
+                  referralLocalRepository,
+                  serviceLocalRepository,
+                ],
+              );
+
+              SyncServiceMapper()
+                  .createDbRecords(local, entityList, entityType);
+            }
           }
+
+          // Add boundary to received list
+          receivedBoundaries.add(selectedBoundaryCode!);
+          // Update progress even if boundary was skipped
+          receivedBytes = offset!;
+          receivedProgress = receivedBytes / totalCount!;
         }
 
-        // Update progress and clear processed data
-        receivedBytes = offset!;
-        double progress = receivedBytes / totalCount!;
-
-        // Emit progress
         emit(PeerToPeerState.receivingInProgress(
-          progress: progress,
-          offset: offset,
-          totalCount: totalCount,
+          progress: receivedProgress ?? 0,
+          offset: offset ?? 0,
+          totalCount: totalCount ?? 0,
+          receivedBoundaries: receivedBoundaries,
         ));
 
-        // Send chunk acknowledgment
+        // Send acknowledgment regardless of whether it was processed
         await event.nearbyService.sendMessage(
-            event.data["deviceId"],
-            PeerToPeerMessageModel(
-                    messageType: MessageTypes.confirmation.toValue(),
-                    confirmationType: ConfirmationTypes.chunk.toValue(),
-                    status: MessageStatus.received.toValue(),
-                    progress: progress,
-                    offset: offset,
-                    message: "Chunk received and saved successfully.")
-                .toJson());
+          event.data["deviceId"],
+          PeerToPeerMessageModel(
+            messageType: MessageTypes.confirmation.toValue(),
+            confirmationType: ConfirmationTypes.chunk.toValue(),
+            status: MessageStatus.received.toValue(),
+            progress: receivedProgress,
+            offset: offset,
+            message: isValidBoundary
+                ? "Chunk received and saved successfully."
+                : "Boundary mismatch – chunk skipped but acknowledged.",
+          ).toJson(),
+        );
       } else if (messageModel.messageType ==
               MessageTypes.confirmation.toValue() &&
           messageModel.confirmationType ==
@@ -331,7 +348,12 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
             lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
           ),
         );
-
+        emit(PeerToPeerState.receivingInProgress(
+          progress: 100,
+          offset: 0,
+          totalCount: totalCount,
+          receivedBoundaries: receivedBoundaries,
+        ));
         // Send overall transfer acknowledgment
         await event.nearbyService.sendMessage(
             event.data["deviceId"],
@@ -341,7 +363,8 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
               confirmationType: ConfirmationTypes.finalAcknowledgment.toValue(),
               status: MessageStatus.success.toValue(),
             ).toJson());
-        emit(const PeerToPeerState.dataReceived());
+        emit(PeerToPeerState.dataReceived(
+            receivedBoundaries: receivedBoundaries));
       }
     } catch (e) {
       debugPrint("Error processing received data: $e");
@@ -370,7 +393,9 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
           PeerToPeerMessageModel messageModel =
               PeerToPeerMessageModelMapper.fromJson(data["message"]);
 
-          if (messageModel.messageType == MessageTypes.confirmation.toValue()) {
+          if (messageModel.messageType == MessageTypes.confirmation.toValue() ||
+              messageModel.confirmationType ==
+                  ConfirmationTypes.finalTransfer.toValue()) {
             if (confirmationType == ConfirmationTypes.chunk.toValue() &&
                 messageModel.offset == offset) {
               completer.complete(true);
@@ -432,9 +457,11 @@ class PeerToPeerState with _$PeerToPeerState {
   const factory PeerToPeerState.receivingInProgress(
       {required double progress,
       required int offset,
-      required int totalCount}) = ReceivingInProgress;
+      required int totalCount,
+      required Set<String> receivedBoundaries}) = ReceivingInProgress;
 
-  const factory PeerToPeerState.dataReceived() = DataReceived;
+  const factory PeerToPeerState.dataReceived(
+      {required Set<String> receivedBoundaries}) = DataReceived;
 
   const factory PeerToPeerState.failedToReceive({required String error}) =
       FailedDataTransfer;
