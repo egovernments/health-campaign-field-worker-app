@@ -169,12 +169,19 @@ class AttendanceScannerPageState extends DigitScannerPageState {
         }
       }
     } catch (e) {
-      context.read<DigitScannerBloc>().add(
-            const DigitScannerEvent.handleScanner(
-              barCode: [],
-              qrCode: [],
-            ),
-          );
+      if (mounted) {
+        context.read<DigitScannerBloc>().add(
+              const DigitScannerEvent.handleScanner(
+                barCode: [],
+                qrCode: [],
+              ),
+            );
+        Toast.showToast(
+          context,
+          type: ToastType.error,
+          message: localizations.translate(i18.attendance.attendeeNotFound),
+        );
+      }
       if (kDebugMode) {
         print("Error decoding QR code: $e");
       }
@@ -428,7 +435,7 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                             : null;
 
                         final Map<String, String> result = {
-                          'isManualScan': 'true',
+                          'isManualScan': true.toString(),
                           _reasonKey: reason,
                           if (reason == 'OTHERS' && reasonComment != null)
                             _reasonCommentKey: reasonComment,

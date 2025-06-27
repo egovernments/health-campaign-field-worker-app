@@ -54,7 +54,9 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   AttendanceIndividualBloc? individualLogBloc;
   late FormGroup form;
   var entryTime = 0, exitTime = 0;
-  var currentSelectedDate = DateTime.now().toString(), selectedSession = 0;
+  var currentSelectedDate =
+          DateTime.now().getFormattedDate('dd MMM yyyy').toString(),
+      selectedSession = 0;
   bool markManualAttendance = false;
   String? manualAttendanceReason;
   String? manualAttendanceComment;
@@ -73,6 +75,10 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
     );
     form = buildForm(); // Initialize the form using your method
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showMissedAttendanceDialog(
+          currentSelectedDate, AttendanceLocalization.of(context));
+    });
   }
 
   void searchByName() {
@@ -423,7 +429,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                       markManualAttendance = true;
                                     });
                                   }
-
+                                  setRegisterData();
                                   individualLogBloc!.add(
                                     AttendanceIndividualLogSearchEvent(
                                       attendees: widget.registerModel.attendees!
@@ -447,94 +453,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                           .toString(),
                                     ),
                                   );
-                                  setRegisterData();
-                                  if (showInfoCard(
-                                      widget.registerModel,
-                                      AttendanceDateTimeManagement
-                                          .getFormattedDateToDateTime(
-                                              currentSelectedDate)!)) {
-                                    showCustomPopup(
-                                        context: context,
-                                        builder: (ctx) {
-                                          return Popup(
-                                            type: PopUpType.simple,
-                                            onCrossTap: () {
-                                              Navigator.of(ctx).pop();
-                                            },
-                                            actions: [
-                                              DigitButton(
-                                                capitalizeLetters: false,
-                                                type: DigitButtonType.primary,
-                                                size: DigitButtonSize.large,
-                                                mainAxisSize: MainAxisSize.max,
-                                                onPressed: () {
-                                                  currentSelectedDate = date;
-                                                  individualLogBloc!.add(
-                                                    AttendanceIndividualLogSearchEvent(
-                                                      attendees: widget
-                                                              .registerModel
-                                                              .attendees!
-                                                              .isNotEmpty
-                                                          ? widget.registerModel
-                                                              .attendees!
-                                                          : [],
-                                                      limit: 10,
-                                                      offset: 0,
-                                                      currentDate: AttendanceDateTimeManagement
-                                                          .getMillisecondEpoch(
-                                                              AttendanceDateTimeManagement
-                                                                  .getFormattedDateToDateTime(
-                                                                      currentSelectedDate)!,
-                                                              selectedSession,
-                                                              'entryTime'),
-                                                      entryTime: entryTime,
-                                                      isSingleSession: false,
-                                                      exitTime: exitTime,
-                                                      registerId: widget
-                                                          .registerModel.id,
-                                                      tenantId: widget
-                                                          .registerModel
-                                                          .tenantId
-                                                          .toString(),
-                                                    ),
-                                                  );
-                                                  setRegisterData();
-                                                  Navigator.of(ctx).pop();
-                                                },
-                                                label: localizations.translate(
-                                                  i18.attendance
-                                                      .ctaDateChangeProceed,
-                                                ),
-                                              ),
-                                              DigitButton(
-                                                capitalizeLetters: false,
-                                                type: DigitButtonType.tertiary,
-                                                size: DigitButtonSize.large,
-                                                mainAxisSize: MainAxisSize.max,
-                                                onPressed: () {
-                                                  Navigator.of(ctx).pop();
-                                                },
-                                                label: localizations.translate(
-                                                  i18.common.coreCommonCancel,
-                                                ),
-                                              ),
-                                            ],
-                                            title: localizations.translate(
-                                                i18.attendance.actionRequired),
-                                            additionalWidgets: [
-                                              InfoCard(
-                                                  title: localizations
-                                                      .translate(i18.attendance
-                                                          .missedAttendanceInfo),
-                                                  type: InfoType.info,
-                                                  capitalizedLetter: false,
-                                                  description:
-                                                      getMissedDays(context))
-                                            ],
-                                            description: '',
-                                          );
-                                        });
-                                  }
+                                  showMissedAttendanceDialog(
+                                      date, localizations);
                                 },
                               ),
                               DigitCard(
@@ -1175,5 +1095,83 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
         .individualId!;
 
     return id;
+  }
+
+  void showMissedAttendanceDialog(
+      String date, AttendanceLocalization localizations) {
+    if (showInfoCard(
+        widget.registerModel,
+        AttendanceDateTimeManagement.getFormattedDateToDateTime(
+            currentSelectedDate)!)) {
+      showCustomPopup(
+          context: context,
+          builder: (ctx) {
+            return Popup(
+              type: PopUpType.simple,
+              onCrossTap: () {
+                Navigator.of(ctx).pop();
+              },
+              actions: [
+                DigitButton(
+                  capitalizeLetters: false,
+                  type: DigitButtonType.primary,
+                  size: DigitButtonSize.large,
+                  mainAxisSize: MainAxisSize.max,
+                  onPressed: () {
+                    currentSelectedDate = date;
+                    individualLogBloc!.add(
+                      AttendanceIndividualLogSearchEvent(
+                        attendees: widget.registerModel.attendees!.isNotEmpty
+                            ? widget.registerModel.attendees!
+                            : [],
+                        limit: 10,
+                        offset: 0,
+                        currentDate:
+                            AttendanceDateTimeManagement.getMillisecondEpoch(
+                                AttendanceDateTimeManagement
+                                    .getFormattedDateToDateTime(
+                                        currentSelectedDate)!,
+                                selectedSession,
+                                'entryTime'),
+                        entryTime: entryTime,
+                        isSingleSession: false,
+                        exitTime: exitTime,
+                        registerId: widget.registerModel.id,
+                        tenantId: widget.registerModel.tenantId.toString(),
+                      ),
+                    );
+                    setRegisterData();
+                    Navigator.of(ctx).pop();
+                  },
+                  label: localizations.translate(
+                    i18.attendance.ctaDateChangeProceed,
+                  ),
+                ),
+                DigitButton(
+                  capitalizeLetters: false,
+                  type: DigitButtonType.tertiary,
+                  size: DigitButtonSize.large,
+                  mainAxisSize: MainAxisSize.max,
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  label: localizations.translate(
+                    i18.common.coreCommonCancel,
+                  ),
+                ),
+              ],
+              title: localizations.translate(i18.attendance.actionRequired),
+              additionalWidgets: [
+                InfoCard(
+                    title: localizations
+                        .translate(i18.attendance.missedAttendanceInfo),
+                    type: InfoType.info,
+                    capitalizedLetter: false,
+                    description: getMissedDays(context))
+              ],
+              description: '',
+            );
+          });
+    }
   }
 }
