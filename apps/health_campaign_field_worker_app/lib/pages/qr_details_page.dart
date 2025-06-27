@@ -106,7 +106,7 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                     padding: const EdgeInsets.all(spacer2),
                     child: DigitTabBar(
                       tabBarThemeData: DigitTabBarThemeData(
-                          tabWidth: MediaQuery.of(context).size.width*.45,
+                        tabWidth: MediaQuery.of(context).size.width * .45,
                       ),
                       initialIndex: selectedIndex,
                       tabs: tabs,
@@ -117,7 +117,9 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                       },
                     ),
                   ),
-                const SizedBox(height: spacer10,),
+                const SizedBox(
+                  height: spacer10,
+                ),
                 IndexedStack(
                   index: selectedIndex,
                   children: [
@@ -152,7 +154,8 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
               child: Container(
                 padding: const EdgeInsets.all(spacer2),
                 decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(spacer1)),
+                    borderRadius:
+                        const BorderRadius.all(Radius.circular(spacer1)),
                     border: Border.all(
                       color: theme.colorTheme.primary.primary1,
                       width: 2,
@@ -200,7 +203,8 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                     padding: const EdgeInsets.all(spacer2),
                     child: Container(
                       decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(Radius.circular(spacer1)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(spacer1)),
                           border: Border.all(
                             color: theme.colorTheme.primary.primary1,
                             width: 2,
@@ -214,8 +218,15 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                                         .individualList!.first.individualId,
                                     age: getAge(registers.first.individualList!
                                         .first.dateOfBirth),
-                                    locality: registers.first.individualList!
-                                        .first.boundaryCode,
+                                    locality: registers
+                                            .first
+                                            .individualList
+                                            ?.first
+                                            .address
+                                            ?.first
+                                            .locality
+                                            ?.boundaryCode ??
+                                        '',
                                     qrCreatedTime:
                                         DateTime.now().millisecondsSinceEpoch)
                                 .toMap()),
@@ -236,7 +247,9 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: spacer2,),
+                const SizedBox(
+                  height: spacer2,
+                ),
                 Center(
                   child: Container(
                     width: MediaQuery.of(context).size.width / 1.32,
