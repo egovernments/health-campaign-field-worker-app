@@ -75,19 +75,19 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
         onPopInvoked: (pop) {},
         child: BlocListener<PeerToPeerBloc, PeerToPeerState>(
           listener: (context, state) {
-            if (state is DataReceived) {
-              context.router
-                  .popAndPush(AcknowledgementRoute(isDataRecordSuccess: false));
-            }
-            // if (state is FailedDataTransfer) {
-            //   Toast.showToast(
-            //     context,
-            //     message: localizations.translate(state.error),
-            //     type: ToastType.error,
-            //     position: ToastPosition.aboveOneButtonFooter,
-            //   );
-            //   context.router.maybePop();
+            // if (state is DataReceived) {
+            //   context.router
+            //       .popAndPush(AcknowledgementRoute(isDataRecordSuccess: false));
             // }
+            if (state is FailedDataTransfer) {
+              Toast.showToast(
+                context,
+                message: localizations.translate(state.error),
+                type: ToastType.error,
+                position: ToastPosition.aboveOneButtonFooter,
+              );
+              // context.router.maybePop();
+            }
           },
           child: BlocBuilder<PeerToPeerBloc, PeerToPeerState>(
             builder: (context, state) {
@@ -100,13 +100,14 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                       padding: const EdgeInsets.all(spacer2),
                       children: [
                         DigitButton(
+                          capitalizeLetters: false,
                           type: DigitButtonType.primary,
                           mainAxisSize: MainAxisSize.max,
                           onPressed: () {
-                            context.router.maybePop();
+                            context.router.replaceAll([HomeRoute()]);
                           },
                           label: localizations
-                              .translate(i18.common.coreCommonGoback),
+                              .translate(i18.common.coreCommonGoHome),
                           size: DigitButtonSize.large,
                         ),
                       ]),
@@ -114,7 +115,7 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                     SliverToBoxAdapter(
                         child: Column(children: [
                       Padding(
-                        padding: const EdgeInsets.all(spacer2),
+                        padding: const EdgeInsets.only(left: spacer4),
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: Text(
@@ -125,26 +126,27 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                         ),
                       ),
                       Container(
-                          color: DigitTheme.instance.colors.light.paperPrimary,
                           margin: const EdgeInsets.all(spacer4),
                           child: state.maybeWhen(
-                            orElse: () => Center(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Lottie.asset(receiveData,
+                            orElse: () => DigitCard(
+                              children: [
+                                Center(
+                                  child: Lottie.asset(receiveData,
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.15),
-                                  Text(
+                                ),
+                                Center(
+                                  child: Text(
                                     localizations.translate(
                                         i18.dataShare.receivingActionMessage),
                                     style: textTheme.headingM.copyWith(
                                         color: DigitTheme
                                             .instance.colors.light.primary2),
                                   ),
-                                  const Padding(
+                                ),
+                                const Center(
+                                  child: Padding(
                                       padding: EdgeInsets.all(spacer2),
                                       child: ProgressIndicatorContainer(
                                         value: 0,
@@ -154,41 +156,134 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                         height: spacer3,
                                         radius: spacer4,
                                       )),
+                                ),
+                              ],
+                            ),
+                            receivingInProgress: (progress, offset, totalCount,
+                                receivedBoundaries) {
+                              return Column(
+                                children: [
+                                  DigitCard(children: [
+                                    Center(
+                                      child: Lottie.asset(receiveData,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.15),
+                                    ),
+                                    Center(
+                                      child: Text(
+                                        localizations.translate(i18
+                                            .dataShare.receivingActionMessage),
+                                        style: textTheme.headingM.copyWith(
+                                            color: DigitTheme.instance.colors
+                                                .light.primary2),
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Padding(
+                                          padding:
+                                              const EdgeInsets.all(spacer2),
+                                          child: ProgressIndicatorContainer(
+                                            value: progress,
+                                            label: '',
+                                            prefixLabel: '',
+                                            suffixLabel: '',
+                                            height: spacer3,
+                                            radius: spacer4,
+                                          )),
+                                    ),
+                                  ]),
+                                  const SizedBox(
+                                    height: spacer4,
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: DigitCard(children: [
+                                      Text(
+                                        localizations.translate(i18.dataShare
+                                            .dateReceivedForBoundaries),
+                                        style: textTheme.headingM.copyWith(
+                                            color: DigitTheme.instance.colors
+                                                .light.primary2),
+                                      ),
+                                      Text(
+                                        localizations.translate(
+                                            receivedBoundaries.first),
+                                        style: textTheme.bodyS.copyWith(
+                                            color: DigitTheme.instance.colors
+                                                .light.primary2),
+                                      ),
+                                    ]),
+                                  )
+                                ],
+                              );
+                            },
+                            dataReceived: (receivedBoundaries) => Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  DigitCard(children: [
+                                    Center(
+                                      child: Lottie.asset(downloadSuccess,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.15),
+                                    ),
+                                    Center(
+                                      child: Text(
+                                        localizations.translate(i18
+                                            .dataShare.receivedSuccessMessage),
+                                        style: textTheme.headingM.copyWith(
+                                            color: DigitTheme.instance.colors
+                                                .light.primary2),
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Padding(
+                                          padding:
+                                              const EdgeInsets.all(spacer2),
+                                          child: ProgressIndicatorContainer(
+                                            value: 1,
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                              theme.colorTheme.alert.success,
+                                            ),
+                                            label: '',
+                                            prefixLabel: '',
+                                            suffixLabel: '',
+                                            height: spacer3,
+                                            radius: spacer4,
+                                          )),
+                                    ),
+                                  ]),
+                                  const SizedBox(
+                                    height: spacer2,
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: DigitCard(children: [
+                                      Text(
+                                        localizations.translate(i18.dataShare
+                                            .dateReceivedForBoundaries),
+                                        style: textTheme.headingM.copyWith(
+                                            color: DigitTheme.instance.colors
+                                                .light.primary2),
+                                      ),
+                                      Text(
+                                        localizations.translate(
+                                            receivedBoundaries.first),
+                                        style: textTheme.bodyS.copyWith(
+                                            color: DigitTheme.instance.colors
+                                                .light.primary2),
+                                      ),
+                                    ]),
+                                  )
                                 ],
                               ),
                             ),
-                            receivingInProgress:
-                                (progress, offset, totalCount) {
-                              return Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Lottie.asset(receiveData,
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.15),
-                                    Text(
-                                      localizations.translate(
-                                          i18.dataShare.receivingActionMessage),
-                                      style: textTheme.headingM.copyWith(
-                                          color: DigitTheme
-                                              .instance.colors.light.primary2),
-                                    ),
-                                    Padding(
-                                        padding: const EdgeInsets.all(spacer2),
-                                        child: ProgressIndicatorContainer(
-                                          value: progress,
-                                          label: '',
-                                          prefixLabel: '',
-                                          suffixLabel: '',
-                                          height: spacer3,
-                                          radius: spacer4,
-                                        )),
-                                  ],
-                                ),
-                              );
-                            },
                             failedToReceive: (message) => Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,

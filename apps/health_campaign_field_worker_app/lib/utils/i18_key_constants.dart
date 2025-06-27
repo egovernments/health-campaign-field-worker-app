@@ -80,6 +80,8 @@ class Common {
 
   String get coreCommonHome => 'CORE_COMMON_HOME';
 
+  String get coreCommonGoHome => 'CORE_COMMON_GO_HOME';
+
   String get coreCommonViewDownloadedData => 'CORE_COMMON_VIEW_DOWNLOADED_DATA';
 
   String get coreCommonlanguage => 'CORE_COMMON_LANGUAGE';
@@ -607,9 +609,13 @@ class DataShare {
 
   String get sendingActionMessage => 'SENDING_ACTION_MESSAGE';
 
+  String get dataTransferCompleted => 'DATA_TRANSFER_COMPLETED';
+
   String get receiveActionMessage => 'RECEIVE_ACTION_MESSAGE';
 
   String get receivingActionMessage => 'RECEIVING_ACTION_MESSAGE';
+
+  String get receivedSuccessMessage => 'RECEIVED_SUCCESS_MESSAGE';
 
   String get receiverDialogTitle => 'RECEIVER_DIALOG_TITLE';
 
@@ -628,6 +634,8 @@ class DataShare {
   String get fileNotFoundError => 'FILE_NOT_FOUND_ERROR';
 
   String get failedToTransfer => 'FAILED_TO_TRANSFER';
+
+  String get dateReceivedForBoundaries => 'DATA_RECEIVED_FOR_BOUNDARIES';
 
   String get failedToTransferDescription => 'FAILED_TO_TRANSFER_DESCRIPTION';
 

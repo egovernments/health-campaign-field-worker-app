@@ -560,9 +560,10 @@ mixin _$PeerToPeerState {
         transferInProgress,
     required TResult Function() completedDataTransfer,
     required TResult Function(String error) failedToTransfer,
-    required TResult Function(double progress, int offset, int totalCount)
+    required TResult Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)
         receivingInProgress,
-    required TResult Function() dataReceived,
+    required TResult Function(Set<String> receivedBoundaries) dataReceived,
     required TResult Function(String error) failedToReceive,
   }) =>
       throw _privateConstructorUsedError;
@@ -574,9 +575,10 @@ mixin _$PeerToPeerState {
         transferInProgress,
     TResult? Function()? completedDataTransfer,
     TResult? Function(String error)? failedToTransfer,
-    TResult? Function(double progress, int offset, int totalCount)?
+    TResult? Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)?
         receivingInProgress,
-    TResult? Function()? dataReceived,
+    TResult? Function(Set<String> receivedBoundaries)? dataReceived,
     TResult? Function(String error)? failedToReceive,
   }) =>
       throw _privateConstructorUsedError;
@@ -588,9 +590,10 @@ mixin _$PeerToPeerState {
         transferInProgress,
     TResult Function()? completedDataTransfer,
     TResult Function(String error)? failedToTransfer,
-    TResult Function(double progress, int offset, int totalCount)?
+    TResult Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)?
         receivingInProgress,
-    TResult Function()? dataReceived,
+    TResult Function(Set<String> receivedBoundaries)? dataReceived,
     TResult Function(String error)? failedToReceive,
     required TResult orElse(),
   }) =>
@@ -705,9 +708,10 @@ class _$PeerToPeerInitialImpl
         transferInProgress,
     required TResult Function() completedDataTransfer,
     required TResult Function(String error) failedToTransfer,
-    required TResult Function(double progress, int offset, int totalCount)
+    required TResult Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)
         receivingInProgress,
-    required TResult Function() dataReceived,
+    required TResult Function(Set<String> receivedBoundaries) dataReceived,
     required TResult Function(String error) failedToReceive,
   }) {
     return initial();
@@ -722,9 +726,10 @@ class _$PeerToPeerInitialImpl
         transferInProgress,
     TResult? Function()? completedDataTransfer,
     TResult? Function(String error)? failedToTransfer,
-    TResult? Function(double progress, int offset, int totalCount)?
+    TResult? Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)?
         receivingInProgress,
-    TResult? Function()? dataReceived,
+    TResult? Function(Set<String> receivedBoundaries)? dataReceived,
     TResult? Function(String error)? failedToReceive,
   }) {
     return initial?.call();
@@ -739,9 +744,10 @@ class _$PeerToPeerInitialImpl
         transferInProgress,
     TResult Function()? completedDataTransfer,
     TResult Function(String error)? failedToTransfer,
-    TResult Function(double progress, int offset, int totalCount)?
+    TResult Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)?
         receivingInProgress,
-    TResult Function()? dataReceived,
+    TResult Function(Set<String> receivedBoundaries)? dataReceived,
     TResult Function(String error)? failedToReceive,
     required TResult orElse(),
   }) {
@@ -858,9 +864,10 @@ class _$PeerToPeerLoadingImpl
         transferInProgress,
     required TResult Function() completedDataTransfer,
     required TResult Function(String error) failedToTransfer,
-    required TResult Function(double progress, int offset, int totalCount)
+    required TResult Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)
         receivingInProgress,
-    required TResult Function() dataReceived,
+    required TResult Function(Set<String> receivedBoundaries) dataReceived,
     required TResult Function(String error) failedToReceive,
   }) {
     return loading();
@@ -875,9 +882,10 @@ class _$PeerToPeerLoadingImpl
         transferInProgress,
     TResult? Function()? completedDataTransfer,
     TResult? Function(String error)? failedToTransfer,
-    TResult? Function(double progress, int offset, int totalCount)?
+    TResult? Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)?
         receivingInProgress,
-    TResult? Function()? dataReceived,
+    TResult? Function(Set<String> receivedBoundaries)? dataReceived,
     TResult? Function(String error)? failedToReceive,
   }) {
     return loading?.call();
@@ -892,9 +900,10 @@ class _$PeerToPeerLoadingImpl
         transferInProgress,
     TResult Function()? completedDataTransfer,
     TResult Function(String error)? failedToTransfer,
-    TResult Function(double progress, int offset, int totalCount)?
+    TResult Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)?
         receivingInProgress,
-    TResult Function()? dataReceived,
+    TResult Function(Set<String> receivedBoundaries)? dataReceived,
     TResult Function(String error)? failedToReceive,
     required TResult orElse(),
   }) {
@@ -1061,9 +1070,10 @@ class _$TransferInProgressImpl
         transferInProgress,
     required TResult Function() completedDataTransfer,
     required TResult Function(String error) failedToTransfer,
-    required TResult Function(double progress, int offset, int totalCount)
+    required TResult Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)
         receivingInProgress,
-    required TResult Function() dataReceived,
+    required TResult Function(Set<String> receivedBoundaries) dataReceived,
     required TResult Function(String error) failedToReceive,
   }) {
     return transferInProgress(progress, offset, totalCount);
@@ -1078,9 +1088,10 @@ class _$TransferInProgressImpl
         transferInProgress,
     TResult? Function()? completedDataTransfer,
     TResult? Function(String error)? failedToTransfer,
-    TResult? Function(double progress, int offset, int totalCount)?
+    TResult? Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)?
         receivingInProgress,
-    TResult? Function()? dataReceived,
+    TResult? Function(Set<String> receivedBoundaries)? dataReceived,
     TResult? Function(String error)? failedToReceive,
   }) {
     return transferInProgress?.call(progress, offset, totalCount);
@@ -1095,9 +1106,10 @@ class _$TransferInProgressImpl
         transferInProgress,
     TResult Function()? completedDataTransfer,
     TResult Function(String error)? failedToTransfer,
-    TResult Function(double progress, int offset, int totalCount)?
+    TResult Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)?
         receivingInProgress,
-    TResult Function()? dataReceived,
+    TResult Function(Set<String> receivedBoundaries)? dataReceived,
     TResult Function(String error)? failedToReceive,
     required TResult orElse(),
   }) {
@@ -1227,9 +1239,10 @@ class _$CompletedDataTransferImpl
         transferInProgress,
     required TResult Function() completedDataTransfer,
     required TResult Function(String error) failedToTransfer,
-    required TResult Function(double progress, int offset, int totalCount)
+    required TResult Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)
         receivingInProgress,
-    required TResult Function() dataReceived,
+    required TResult Function(Set<String> receivedBoundaries) dataReceived,
     required TResult Function(String error) failedToReceive,
   }) {
     return completedDataTransfer();
@@ -1244,9 +1257,10 @@ class _$CompletedDataTransferImpl
         transferInProgress,
     TResult? Function()? completedDataTransfer,
     TResult? Function(String error)? failedToTransfer,
-    TResult? Function(double progress, int offset, int totalCount)?
+    TResult? Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)?
         receivingInProgress,
-    TResult? Function()? dataReceived,
+    TResult? Function(Set<String> receivedBoundaries)? dataReceived,
     TResult? Function(String error)? failedToReceive,
   }) {
     return completedDataTransfer?.call();
@@ -1261,9 +1275,10 @@ class _$CompletedDataTransferImpl
         transferInProgress,
     TResult Function()? completedDataTransfer,
     TResult Function(String error)? failedToTransfer,
-    TResult Function(double progress, int offset, int totalCount)?
+    TResult Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)?
         receivingInProgress,
-    TResult Function()? dataReceived,
+    TResult Function(Set<String> receivedBoundaries)? dataReceived,
     TResult Function(String error)? failedToReceive,
     required TResult orElse(),
   }) {
@@ -1409,9 +1424,10 @@ class _$FailedToTransferImpl
         transferInProgress,
     required TResult Function() completedDataTransfer,
     required TResult Function(String error) failedToTransfer,
-    required TResult Function(double progress, int offset, int totalCount)
+    required TResult Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)
         receivingInProgress,
-    required TResult Function() dataReceived,
+    required TResult Function(Set<String> receivedBoundaries) dataReceived,
     required TResult Function(String error) failedToReceive,
   }) {
     return failedToTransfer(error);
@@ -1426,9 +1442,10 @@ class _$FailedToTransferImpl
         transferInProgress,
     TResult? Function()? completedDataTransfer,
     TResult? Function(String error)? failedToTransfer,
-    TResult? Function(double progress, int offset, int totalCount)?
+    TResult? Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)?
         receivingInProgress,
-    TResult? Function()? dataReceived,
+    TResult? Function(Set<String> receivedBoundaries)? dataReceived,
     TResult? Function(String error)? failedToReceive,
   }) {
     return failedToTransfer?.call(error);
@@ -1443,9 +1460,10 @@ class _$FailedToTransferImpl
         transferInProgress,
     TResult Function()? completedDataTransfer,
     TResult Function(String error)? failedToTransfer,
-    TResult Function(double progress, int offset, int totalCount)?
+    TResult Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)?
         receivingInProgress,
-    TResult Function()? dataReceived,
+    TResult Function(Set<String> receivedBoundaries)? dataReceived,
     TResult Function(String error)? failedToReceive,
     required TResult orElse(),
   }) {
@@ -1522,7 +1540,11 @@ abstract class _$$ReceivingInProgressImplCopyWith<$Res> {
           $Res Function(_$ReceivingInProgressImpl) then) =
       __$$ReceivingInProgressImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({double progress, int offset, int totalCount});
+  $Res call(
+      {double progress,
+      int offset,
+      int totalCount,
+      Set<String> receivedBoundaries});
 }
 
 /// @nodoc
@@ -1539,6 +1561,7 @@ class __$$ReceivingInProgressImplCopyWithImpl<$Res>
     Object? progress = null,
     Object? offset = null,
     Object? totalCount = null,
+    Object? receivedBoundaries = null,
   }) {
     return _then(_$ReceivingInProgressImpl(
       progress: null == progress
@@ -1553,6 +1576,10 @@ class __$$ReceivingInProgressImplCopyWithImpl<$Res>
           ? _value.totalCount
           : totalCount // ignore: cast_nullable_to_non_nullable
               as int,
+      receivedBoundaries: null == receivedBoundaries
+          ? _value._receivedBoundaries
+          : receivedBoundaries // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
     ));
   }
 }
@@ -1563,7 +1590,11 @@ class _$ReceivingInProgressImpl
     with DiagnosticableTreeMixin
     implements ReceivingInProgress {
   const _$ReceivingInProgressImpl(
-      {required this.progress, required this.offset, required this.totalCount});
+      {required this.progress,
+      required this.offset,
+      required this.totalCount,
+      required final Set<String> receivedBoundaries})
+      : _receivedBoundaries = receivedBoundaries;
 
   @override
   final double progress;
@@ -1571,10 +1602,18 @@ class _$ReceivingInProgressImpl
   final int offset;
   @override
   final int totalCount;
+  final Set<String> _receivedBoundaries;
+  @override
+  Set<String> get receivedBoundaries {
+    if (_receivedBoundaries is EqualUnmodifiableSetView)
+      return _receivedBoundaries;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_receivedBoundaries);
+  }
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'PeerToPeerState.receivingInProgress(progress: $progress, offset: $offset, totalCount: $totalCount)';
+    return 'PeerToPeerState.receivingInProgress(progress: $progress, offset: $offset, totalCount: $totalCount, receivedBoundaries: $receivedBoundaries)';
   }
 
   @override
@@ -1584,7 +1623,8 @@ class _$ReceivingInProgressImpl
       ..add(DiagnosticsProperty('type', 'PeerToPeerState.receivingInProgress'))
       ..add(DiagnosticsProperty('progress', progress))
       ..add(DiagnosticsProperty('offset', offset))
-      ..add(DiagnosticsProperty('totalCount', totalCount));
+      ..add(DiagnosticsProperty('totalCount', totalCount))
+      ..add(DiagnosticsProperty('receivedBoundaries', receivedBoundaries));
   }
 
   @override
@@ -1596,11 +1636,14 @@ class _$ReceivingInProgressImpl
                 other.progress == progress) &&
             (identical(other.offset, offset) || other.offset == offset) &&
             (identical(other.totalCount, totalCount) ||
-                other.totalCount == totalCount));
+                other.totalCount == totalCount) &&
+            const DeepCollectionEquality()
+                .equals(other._receivedBoundaries, _receivedBoundaries));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, progress, offset, totalCount);
+  int get hashCode => Object.hash(runtimeType, progress, offset, totalCount,
+      const DeepCollectionEquality().hash(_receivedBoundaries));
 
   @JsonKey(ignore: true)
   @override
@@ -1618,12 +1661,14 @@ class _$ReceivingInProgressImpl
         transferInProgress,
     required TResult Function() completedDataTransfer,
     required TResult Function(String error) failedToTransfer,
-    required TResult Function(double progress, int offset, int totalCount)
+    required TResult Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)
         receivingInProgress,
-    required TResult Function() dataReceived,
+    required TResult Function(Set<String> receivedBoundaries) dataReceived,
     required TResult Function(String error) failedToReceive,
   }) {
-    return receivingInProgress(progress, offset, totalCount);
+    return receivingInProgress(
+        progress, offset, totalCount, receivedBoundaries);
   }
 
   @override
@@ -1635,12 +1680,14 @@ class _$ReceivingInProgressImpl
         transferInProgress,
     TResult? Function()? completedDataTransfer,
     TResult? Function(String error)? failedToTransfer,
-    TResult? Function(double progress, int offset, int totalCount)?
+    TResult? Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)?
         receivingInProgress,
-    TResult? Function()? dataReceived,
+    TResult? Function(Set<String> receivedBoundaries)? dataReceived,
     TResult? Function(String error)? failedToReceive,
   }) {
-    return receivingInProgress?.call(progress, offset, totalCount);
+    return receivingInProgress?.call(
+        progress, offset, totalCount, receivedBoundaries);
   }
 
   @override
@@ -1652,14 +1699,16 @@ class _$ReceivingInProgressImpl
         transferInProgress,
     TResult Function()? completedDataTransfer,
     TResult Function(String error)? failedToTransfer,
-    TResult Function(double progress, int offset, int totalCount)?
+    TResult Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)?
         receivingInProgress,
-    TResult Function()? dataReceived,
+    TResult Function(Set<String> receivedBoundaries)? dataReceived,
     TResult Function(String error)? failedToReceive,
     required TResult orElse(),
   }) {
     if (receivingInProgress != null) {
-      return receivingInProgress(progress, offset, totalCount);
+      return receivingInProgress(
+          progress, offset, totalCount, receivedBoundaries);
     }
     return orElse();
   }
@@ -1717,13 +1766,16 @@ class _$ReceivingInProgressImpl
 
 abstract class ReceivingInProgress implements PeerToPeerState {
   const factory ReceivingInProgress(
-      {required final double progress,
-      required final int offset,
-      required final int totalCount}) = _$ReceivingInProgressImpl;
+          {required final double progress,
+          required final int offset,
+          required final int totalCount,
+          required final Set<String> receivedBoundaries}) =
+      _$ReceivingInProgressImpl;
 
   double get progress;
   int get offset;
   int get totalCount;
+  Set<String> get receivedBoundaries;
   @JsonKey(ignore: true)
   _$$ReceivingInProgressImplCopyWith<_$ReceivingInProgressImpl> get copyWith =>
       throw _privateConstructorUsedError;
@@ -1734,6 +1786,8 @@ abstract class _$$DataReceivedImplCopyWith<$Res> {
   factory _$$DataReceivedImplCopyWith(
           _$DataReceivedImpl value, $Res Function(_$DataReceivedImpl) then) =
       __$$DataReceivedImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({Set<String> receivedBoundaries});
 }
 
 /// @nodoc
@@ -1743,32 +1797,67 @@ class __$$DataReceivedImplCopyWithImpl<$Res>
   __$$DataReceivedImplCopyWithImpl(
       _$DataReceivedImpl _value, $Res Function(_$DataReceivedImpl) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? receivedBoundaries = null,
+  }) {
+    return _then(_$DataReceivedImpl(
+      receivedBoundaries: null == receivedBoundaries
+          ? _value._receivedBoundaries
+          : receivedBoundaries // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$DataReceivedImpl with DiagnosticableTreeMixin implements DataReceived {
-  const _$DataReceivedImpl();
+  const _$DataReceivedImpl({required final Set<String> receivedBoundaries})
+      : _receivedBoundaries = receivedBoundaries;
+
+  final Set<String> _receivedBoundaries;
+  @override
+  Set<String> get receivedBoundaries {
+    if (_receivedBoundaries is EqualUnmodifiableSetView)
+      return _receivedBoundaries;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_receivedBoundaries);
+  }
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'PeerToPeerState.dataReceived()';
+    return 'PeerToPeerState.dataReceived(receivedBoundaries: $receivedBoundaries)';
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('type', 'PeerToPeerState.dataReceived'));
+    properties
+      ..add(DiagnosticsProperty('type', 'PeerToPeerState.dataReceived'))
+      ..add(DiagnosticsProperty('receivedBoundaries', receivedBoundaries));
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$DataReceivedImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$DataReceivedImpl &&
+            const DeepCollectionEquality()
+                .equals(other._receivedBoundaries, _receivedBoundaries));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_receivedBoundaries));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DataReceivedImplCopyWith<_$DataReceivedImpl> get copyWith =>
+      __$$DataReceivedImplCopyWithImpl<_$DataReceivedImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1779,12 +1868,13 @@ class _$DataReceivedImpl with DiagnosticableTreeMixin implements DataReceived {
         transferInProgress,
     required TResult Function() completedDataTransfer,
     required TResult Function(String error) failedToTransfer,
-    required TResult Function(double progress, int offset, int totalCount)
+    required TResult Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)
         receivingInProgress,
-    required TResult Function() dataReceived,
+    required TResult Function(Set<String> receivedBoundaries) dataReceived,
     required TResult Function(String error) failedToReceive,
   }) {
-    return dataReceived();
+    return dataReceived(receivedBoundaries);
   }
 
   @override
@@ -1796,12 +1886,13 @@ class _$DataReceivedImpl with DiagnosticableTreeMixin implements DataReceived {
         transferInProgress,
     TResult? Function()? completedDataTransfer,
     TResult? Function(String error)? failedToTransfer,
-    TResult? Function(double progress, int offset, int totalCount)?
+    TResult? Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)?
         receivingInProgress,
-    TResult? Function()? dataReceived,
+    TResult? Function(Set<String> receivedBoundaries)? dataReceived,
     TResult? Function(String error)? failedToReceive,
   }) {
-    return dataReceived?.call();
+    return dataReceived?.call(receivedBoundaries);
   }
 
   @override
@@ -1813,14 +1904,15 @@ class _$DataReceivedImpl with DiagnosticableTreeMixin implements DataReceived {
         transferInProgress,
     TResult Function()? completedDataTransfer,
     TResult Function(String error)? failedToTransfer,
-    TResult Function(double progress, int offset, int totalCount)?
+    TResult Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)?
         receivingInProgress,
-    TResult Function()? dataReceived,
+    TResult Function(Set<String> receivedBoundaries)? dataReceived,
     TResult Function(String error)? failedToReceive,
     required TResult orElse(),
   }) {
     if (dataReceived != null) {
-      return dataReceived();
+      return dataReceived(receivedBoundaries);
     }
     return orElse();
   }
@@ -1877,7 +1969,13 @@ class _$DataReceivedImpl with DiagnosticableTreeMixin implements DataReceived {
 }
 
 abstract class DataReceived implements PeerToPeerState {
-  const factory DataReceived() = _$DataReceivedImpl;
+  const factory DataReceived({required final Set<String> receivedBoundaries}) =
+      _$DataReceivedImpl;
+
+  Set<String> get receivedBoundaries;
+  @JsonKey(ignore: true)
+  _$$DataReceivedImplCopyWith<_$DataReceivedImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1961,9 +2059,10 @@ class _$FailedDataTransferImpl
         transferInProgress,
     required TResult Function() completedDataTransfer,
     required TResult Function(String error) failedToTransfer,
-    required TResult Function(double progress, int offset, int totalCount)
+    required TResult Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)
         receivingInProgress,
-    required TResult Function() dataReceived,
+    required TResult Function(Set<String> receivedBoundaries) dataReceived,
     required TResult Function(String error) failedToReceive,
   }) {
     return failedToReceive(error);
@@ -1978,9 +2077,10 @@ class _$FailedDataTransferImpl
         transferInProgress,
     TResult? Function()? completedDataTransfer,
     TResult? Function(String error)? failedToTransfer,
-    TResult? Function(double progress, int offset, int totalCount)?
+    TResult? Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)?
         receivingInProgress,
-    TResult? Function()? dataReceived,
+    TResult? Function(Set<String> receivedBoundaries)? dataReceived,
     TResult? Function(String error)? failedToReceive,
   }) {
     return failedToReceive?.call(error);
@@ -1995,9 +2095,10 @@ class _$FailedDataTransferImpl
         transferInProgress,
     TResult Function()? completedDataTransfer,
     TResult Function(String error)? failedToTransfer,
-    TResult Function(double progress, int offset, int totalCount)?
+    TResult Function(double progress, int offset, int totalCount,
+            Set<String> receivedBoundaries)?
         receivingInProgress,
-    TResult Function()? dataReceived,
+    TResult Function(Set<String> receivedBoundaries)? dataReceived,
     TResult Function(String error)? failedToReceive,
     required TResult orElse(),
   }) {
