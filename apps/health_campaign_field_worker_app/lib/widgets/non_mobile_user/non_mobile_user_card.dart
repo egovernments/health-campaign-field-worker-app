@@ -13,6 +13,7 @@ class NonMobileUserCard extends LocalizedStatefulWidget {
   final String individualId;
   final String gender;
   final String age;
+  final String mobileNumber;
   final void Function() onScanMe;
 
   const NonMobileUserCard({
@@ -21,6 +22,7 @@ class NonMobileUserCard extends LocalizedStatefulWidget {
     required this.individualId,
     required this.gender,
     required this.age,
+    required this.mobileNumber,
     required this.onScanMe,
   });
 
@@ -35,27 +37,28 @@ class _NonMobileUserCardState extends LocalizedState<NonMobileUserCard> {
     final textTheme = theme.digitTextTheme(context);
 
     return DigitCard(
-      spacing: spacer2,
       margin: const EdgeInsets.all(spacer2),
-      padding: const EdgeInsets.all(spacer3),
       children: [
-        _buildCenteredTextBlock(widget.userName, textTheme.captionS),
-        _buildCenteredTextBlock(
-            "${widget.gender}, ${widget.age}", textTheme.bodyXS),
+        _buildCenteredTextBlock(widget.userName, "${widget.gender}, ${widget.age}", widget.mobileNumber, context),
         _buildIdContainer(context, textTheme),
         _buildQRButton(context),
       ],
     );
   }
 
-  Widget _buildCenteredTextBlock(String text, TextStyle? style) {
+  Widget _buildCenteredTextBlock(String userName, String description, String mobileNumber, BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
     return Center(
-      child: DigitTextBlock(
-        spacing: 0,
-        padding: EdgeInsets.zero,
-        description: text,
-        descriptionStyle: style,
-      ),
+      child: Column(
+        children: [
+          Text(userName,style:  textTheme.headingS.copyWith(color: theme.colorTheme.text.primary)),
+          const SizedBox(height: spacer2,),
+          Text(description, style: textTheme.bodyXS.copyWith(color: theme.colorTheme.text.secondary),),
+          const SizedBox(height: spacer2,),
+          Text(mobileNumber, style: textTheme.bodyXS.copyWith(color: theme.colorTheme.text.secondary),),
+        ],
+      )
     );
   }
 
@@ -64,9 +67,9 @@ class _NonMobileUserCardState extends LocalizedState<NonMobileUserCard> {
 
     return Container(
       padding:
-          const EdgeInsets.symmetric(horizontal: spacer1, vertical: spacer1),
+          const EdgeInsets.symmetric(horizontal: spacer1/2, vertical: spacer1/2),
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(spacer1)),
+        borderRadius: const BorderRadius.all(Radius.circular(spacer2)),
         border: Border(
             left: BorderSide(color: theme.colorTheme.generic.divider),
             right: BorderSide(color: theme.colorTheme.generic.divider),
@@ -86,7 +89,7 @@ class _NonMobileUserCardState extends LocalizedState<NonMobileUserCard> {
     return DigitButton(
       capitalizeLetters: false,
       type: DigitButtonType.secondary,
-      size: DigitButtonSize.large,
+      size: DigitButtonSize.medium,
       mainAxisSize: MainAxisSize.max,
       onPressed: () => widget.onScanMe(),
       prefixIcon: Icons.qr_code,

@@ -3,6 +3,7 @@ import 'package:attendance_management/models/entities/scanned_individual_data.da
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:digit_data_model/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/ComponentTheme/digit_tab_bar_theme.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_tab.dart';
@@ -101,15 +102,22 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
               ),
               children: [
                 if (isDistributor)
-                  DigitTabBar(
-                    initialIndex: selectedIndex,
-                    tabs: tabs,
-                    onTabSelected: (index) {
-                      setState(() {
-                        selectedIndex = index;
-                      });
-                    },
+                  Padding(
+                    padding: const EdgeInsets.all(spacer2),
+                    child: DigitTabBar(
+                      tabBarThemeData: DigitTabBarThemeData(
+                          tabWidth: MediaQuery.of(context).size.width*.45,
+                      ),
+                      initialIndex: selectedIndex,
+                      tabs: tabs,
+                      onTabSelected: (index) {
+                        setState(() {
+                          selectedIndex = index;
+                        });
+                      },
+                    ),
                   ),
+                const SizedBox(height: spacer10,),
                 IndexedStack(
                   index: selectedIndex,
                   children: [
@@ -131,6 +139,8 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
   }
 
   Widget _buildInventoryQR(BuildContext context, AuthState state) {
+    final theme = Theme.of(context);
+
     return state.maybeMap(
       authenticated: (value) => Column(
         children: [
@@ -139,7 +149,14 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
             height: MediaQuery.of(context).size.width / 1.25,
             child: Padding(
               padding: const EdgeInsets.all(spacer2),
-              child: Card(
+              child: Container(
+                padding: const EdgeInsets.all(spacer2),
+                decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(spacer1)),
+                    border: Border.all(
+                      color: theme.colorTheme.primary.primary1,
+                      width: 2,
+                    )),
                 child: QrImageView(
                   data: context.loggedInUserUuid,
                   version: QrVersions.auto,
@@ -174,13 +191,20 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
           orElse: () => const SizedBox.shrink(),
           registerLoaded: (registers, offset, limit) {
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width / 1.25,
                   height: MediaQuery.of(context).size.width / 1.25,
                   child: Padding(
                     padding: const EdgeInsets.all(spacer2),
-                    child: Card(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.all(Radius.circular(spacer1)),
+                          border: Border.all(
+                            color: theme.colorTheme.primary.primary1,
+                            width: 2,
+                          )),
                       child: QrImageView(
                         data: DataMapEncryptor().encryptWithRandomKey(
                             ScannedIndividualDataModel(
@@ -201,7 +225,7 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: spacer4),
                 Center(
                   child: Text(
                     registers.first.individualList!.first.name!.givenName!,
@@ -212,8 +236,10 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                     ),
                   ),
                 ),
+                const SizedBox(height: spacer2,),
                 Center(
                   child: Container(
+                    width: MediaQuery.of(context).size.width / 1.32,
                     padding: const EdgeInsets.symmetric(
                         horizontal: spacer1, vertical: spacer1),
                     decoration: BoxDecoration(
