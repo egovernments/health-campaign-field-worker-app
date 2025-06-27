@@ -163,7 +163,9 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                           final attendees =
                               attendanceSearchModelList?.isNotEmpty == true
                                   ? attendanceSearchModelList!
-                                  : controller.text.isNotEmpty ? attendanceSearchModelList ?? [] : attendanceCollectionModel ;
+                                  : controller.text.isNotEmpty
+                                      ? attendanceSearchModelList ?? []
+                                      : attendanceCollectionModel;
 
                           return ScrollableContent(
                             enableFixedDigitButton: true,
@@ -396,6 +398,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                               ),
                               InfiniteDateScrollInput(
                                 controller: dateController,
+                                disableScroll: true,
                                 initialValue: DateTime.now().isAfter(
                                         DateTime.fromMillisecondsSinceEpoch(
                                             widget.registerModel.endDate!))
@@ -632,7 +635,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                     EdgeInsets.all(theme.spacerTheme.spacer3),
                                 child: ((attendees ?? []).isNotEmpty)
                                     ? Column(
-                                        children: (attendees ?? []).map((individual) {
+                                        children:
+                                            (attendees ?? []).map((individual) {
                                           return CustomAttendanceInfoCard(
                                             name: individual.name ??
                                                 localizations.translate(
