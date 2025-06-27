@@ -64,6 +64,11 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
                         localKey: 'individualClientReferenceId',
                         foreignKey: 'clientReferenceId'),
                     const RelationshipMapping(
+                        from: 'address',
+                        to: 'household',
+                        localKey: 'relatedClientReferenceId',
+                        foreignKey: 'clientReferenceId'),
+                    const RelationshipMapping(
                         from: 'householdMember',
                         to: 'household',
                         localKey: 'householdClientReferenceId',

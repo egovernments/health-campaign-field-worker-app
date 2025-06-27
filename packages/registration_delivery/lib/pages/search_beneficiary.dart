@@ -915,7 +915,7 @@ class _SearchBeneficiaryPageState
             ),
           if (isProximityEnabled)
             reg_params.SearchFilter(
-              root: 'household',
+              root: 'address',
               field: '',
               operator: 'within',
               value: RegistrationDeliverySingleton().maxRadius,
