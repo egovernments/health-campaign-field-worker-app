@@ -163,7 +163,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                           final attendees =
                               attendanceSearchModelList?.isNotEmpty == true
                                   ? attendanceSearchModelList!
-                                  : attendanceCollectionModel ?? [];
+                                  : controller.text.isNotEmpty ? attendanceSearchModelList ?? [] : attendanceCollectionModel ;
 
                           return ScrollableContent(
                             enableFixedDigitButton: true,
@@ -417,6 +417,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                     : DateTime.now(),
                                 onChange: (String date) {
                                   currentSelectedDate = date;
+                                  controller.clear();
                                   if (AttendanceDateTimeManagement.isToday(
                                       AttendanceDateTimeManagement
                                           .getFormattedDateToDateTime(
@@ -629,9 +630,9 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                               Container(
                                 margin:
                                     EdgeInsets.all(theme.spacerTheme.spacer3),
-                                child: (attendees.isNotEmpty)
+                                child: ((attendees ?? []).isNotEmpty)
                                     ? Column(
-                                        children: attendees.map((individual) {
+                                        children: (attendees ?? []).map((individual) {
                                           return CustomAttendanceInfoCard(
                                             name: individual.name ??
                                                 localizations.translate(

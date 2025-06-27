@@ -338,6 +338,7 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                     children: [
                       ReactiveWrapperField(
                         formControlName: _reasonKey,
+                        showErrors: (control) => control.invalid && control.touched,
                         validationMessages: {
                           'required': (_) => localizations.translate(
                                 i18.common.corecommonRequired,
@@ -358,6 +359,7 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                                     : const DropdownItem(name: '', code: ''),
                             items: reasonList,
                             onSelect: (value) {
+                              form.control(_reasonKey).markAsTouched();
                               form.control(_reasonKey).value = value.code;
                               setState(() {
                                 form.control(_reasonKey).value = value.code;
@@ -379,17 +381,15 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                             },
                             emptyItemText: localizations
                                 .translate(i18.common.noMatchFound),
-                            errorMessage: form.control(_reasonKey).hasErrors
-                                ? localizations.translate(
-                                    i18.common.corecommonRequired,
-                                  )
-                                : null,
+                            errorMessage: field.errorText,
                           ),
                         ),
                       ),
                       if (form.control(_reasonKey).value == 'OTHERS') ...[
+                        const SizedBox(height: spacer2,),
                         ReactiveWrapperField(
                           formControlName: _reasonCommentKey,
+                          showErrors: (control) => control.invalid && control.touched,
                           validationMessages: {
                             'required': (object) => localizations.translate(
                                 i18.attendance.validationRequiredError),
@@ -403,7 +403,11 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                               errorMessage: field.errorText,
                               maxLine: 3,
                               onChange: (value) {
-                                form.control(_reasonCommentKey).value = value;
+                                form.control(_reasonCommentKey).markAsTouched();
+                                setState((){
+                                  form.control(_reasonCommentKey).value = value;
+                                });
+
                               },
                               initialValue:
                                   form.control(_reasonCommentKey).value,
@@ -450,8 +454,8 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                   ),
                   DigitButton(
                     label: localizations.translate(i18.common.coreCommonBack),
-                    type: DigitButtonType.link,
-                    size: DigitButtonSize.large,
+                    type: DigitButtonType.tertiary,
+                    size: DigitButtonSize.medium,
                     onPressed: () {
                       Navigator.of(ctx).pop();
                     },
