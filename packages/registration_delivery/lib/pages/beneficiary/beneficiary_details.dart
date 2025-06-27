@@ -68,64 +68,22 @@ class BeneficiaryDetailsPageState
           final projectBeneficiary =
               RegistrationDeliverySingleton().beneficiaryType !=
                       BeneficiaryType.individual
-                  ? [householdMemberWrapper.first.projectBeneficiaries?.first]
+                  ?householdMemberWrapper.firstOrNull?.projectBeneficiaries != null ? [householdMemberWrapper.first.projectBeneficiaries?.first]
                   : householdMemberWrapper.first.projectBeneficiaries
                       ?.where(
                         (element) =>
                             element.beneficiaryClientReferenceId ==
                             state.selectedIndividual?.clientReferenceId,
                       )
-                      .toList();
+                      .toList() : null;
 
           // Extracting task data related to the selected project beneficiary
 
-          final taskData = state.householdMembers.first.tasks
+          final taskData = projectBeneficiary != null ? state.householdMembers.first.tasks
               ?.where((element) =>
                   element.projectBeneficiaryClientReferenceId ==
-                  projectBeneficiary?.first?.clientReferenceId)
-              .toList();
-          // final bloc = context.read<DeliverInterventionBloc>();
-          final lastDose = taskData != null && taskData.isNotEmpty
-              ? taskData.last.additionalFields?.fields
-                      .firstWhereOrNull(
-                        (e) =>
-                            e.key == AdditionalFieldsType.doseIndex.toValue(),
-                      )
-                      ?.value ??
-                  '1'
-              : '0';
-          final lastCycle = taskData != null && taskData.isNotEmpty
-              ? taskData.last.additionalFields?.fields
-                      .firstWhereOrNull(
-                        (e) =>
-                            e.key == AdditionalFieldsType.cycleIndex.toValue(),
-                      )
-                      ?.value ??
-                  '1'
-              : '1';
-
-          // [TODO] Need to move this to Bloc listener or consumer
-          if (RegistrationDeliverySingleton().projectType != null) {
-            // bloc.add(
-            //   DeliverInterventionEvent.setActiveCycleDose(
-            //     lastDose: taskData != null && taskData.isNotEmpty
-            //         ? int.tryParse(
-            //               lastDose,
-            //             ) ??
-            //             1
-            //         : 0,
-            //     lastCycle: taskData != null && taskData.isNotEmpty
-            //         ? int.tryParse(
-            //               lastCycle,
-            //             ) ??
-            //             1
-            //         : 1,
-            //     individualModel: state.selectedIndividual,
-            //     projectType: RegistrationDeliverySingleton().projectType!,
-            //   ),
-            // );
-          }
-
+                  projectBeneficiary.first?.clientReferenceId)
+              .toList() : null;
           // Building the table content based on the DeliverInterventionState
 
           return BlocBuilder<ProductVariantBloc, ProductVariantState>(

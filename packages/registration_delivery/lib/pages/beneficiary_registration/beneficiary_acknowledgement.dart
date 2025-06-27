@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:registration_delivery/utils/utils.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/registration_component_keys.dart' as registration_keys;
 import '../../../widgets/localized.dart';
+import '../../blocs/app_localization.dart';
 import '../../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../../router/registration_delivery_router.gm.dart';
 
@@ -47,46 +49,7 @@ class BeneficiaryAcknowledgementPageState
                       .acknowledgementKeys.acknowledgmentTitleKey]
                   ?.label ??
               i18.acknowledgementSuccess.acknowledgementLabelText),
-          actions: [
-            if ((widget.enableViewHousehold ?? false) &&
-                (beneficiaryAcknowledgementTemplate
-                        ?.properties?[
-                            registration_keys.commonKeys.primaryButtonKey]
-                        ?.hidden !=
-                    true))
-              DigitButton(
-                  label: localizations.translate(
-                    beneficiaryAcknowledgementTemplate
-                            ?.properties?[
-                                registration_keys.commonKeys.primaryButtonKey]
-                            ?.label ??
-                        i18.householdDetails.viewHouseHoldDetailsAction,
-                  ),
-                  onPressed: () {
-                    // [TODO: Need to come back, View Household Details on Pressed failing due to no data in SearchBlocWrapper
-
-                    context.router.popAndPush(
-                      HouseholdOverviewRoute()
-                    );
-                  },
-                  type: DigitButtonType.primary,
-                  size: DigitButtonSize.large),
-            if ((beneficiaryAcknowledgementTemplate
-                    ?.properties?[
-                        registration_keys.commonKeys.secondaryButtonKey]
-                    ?.hidden !=
-                true))
-              DigitButton(
-                  label: localizations.translate(
-                      beneficiaryAcknowledgementTemplate
-                              ?.properties?[registration_keys
-                                  .commonKeys.secondaryButtonKey]
-                              ?.label ??
-                          i18.acknowledgementSuccess.actionLabelText),
-                  onPressed: () => context.router.maybePop(),
-                  type: DigitButtonType.secondary,
-                  size: DigitButtonSize.large),
-          ],
+          actions: _buildActionButtons(context, beneficiaryAcknowledgementTemplate),
           description: beneficiaryAcknowledgementTemplate
                       ?.properties?[registration_keys
                           .acknowledgementKeys.acknowledgmentDescriptionKey]
@@ -104,4 +67,49 @@ class BeneficiaryAcknowledgementPageState
       ),
     );
   }
+
+  List<DigitButton>? _buildActionButtons(
+      BuildContext context,
+      TemplateConfig? template,
+      ) {
+    final primaryProp = template?.properties?[registration_keys.commonKeys.primaryButtonKey];
+    final secondaryProp = template?.properties?[registration_keys.commonKeys.secondaryButtonKey];
+
+    final entries = <MapEntry<int, DigitButton>>[];
+
+    if ((widget.enableViewHousehold ?? false) && primaryProp?.hidden != true) {
+      final order = primaryProp?.order ?? 0;
+      entries.add(MapEntry(
+        order,
+        DigitButton(
+          label: localizations.translate(
+              primaryProp?.label ?? i18.householdDetails.viewHouseHoldDetailsAction),
+          onPressed: () => context.router.popAndPush(HouseholdOverviewRoute()),
+          type: DigitButtonType.primary,
+          size: DigitButtonSize.large,
+        ),
+      ));
+    }
+
+    if (secondaryProp?.hidden != true) {
+      final order = secondaryProp?.order ?? 1;
+      entries.add(MapEntry(
+        order,
+        DigitButton(
+          label: localizations.translate(
+              secondaryProp?.label ?? i18.acknowledgementSuccess.actionLabelText),
+          onPressed: () => context.router.maybePop(),
+          type: DigitButtonType.secondary,
+          size: DigitButtonSize.large,
+        ),
+      ));
+    }
+
+    if (entries.isEmpty) return null;
+
+    entries.sort((a, b) => a.key.compareTo(b.key));
+    return entries.map((e) => e.value).toList(growable: false);
+  }
+
+
 }

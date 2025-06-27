@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
+import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -687,21 +688,23 @@ class _SearchBeneficiaryPageState
                                           //   ),
                                           // );
                                         } else {
-                                          RegistrationWrapperEvent.fetchDeliveryDetails(projectId: RegistrationDeliverySingleton().selectedProject!.id,selectedIndividual: null, householdWrapper: HouseholdWrapper(household: i.household), beneficiaryType: RegistrationDeliverySingleton().beneficiaryType?.toValue());
-                                          final nextAction =
-                                              searchTemplate?.navigateTo;
-                                          if (nextAction != null) {
-                                            if (nextAction.type == 'template') {
-                                              final nextPath =
-                                                  routerMap[nextAction.name];
-                                              if (nextPath != null) {
-                                                context.router.push(nextPath);
-                                              }
-                                            }
-                                          }else{
+                                          blocWrapper.add(
+                                              const RegistrationWrapperEvent
+                                                  .clear());
+                                          blocWrapper.add(
+                                               RegistrationWrapperEvent.fetchDeliveryDetails(projectId: RegistrationDeliverySingleton().selectedProject!.id,selectedIndividual: null, householdWrapper: HouseholdWrapper(
+                                                  household: i.household,
+                                                  individuals: i.individuals,
+                                                  members: i.members,
+                                                  projectBeneficiaries: i.projectBeneficiaries,
+                                                  tasks: i.tasks,
+                                                  sideEffects: i.sideEffects,
+                                                  referrals: i.referrals
+                                              ), beneficiaryType: RegistrationDeliverySingleton().beneficiaryType?.toValue()));
+
                                             await context.router
                                                 .push(HouseholdOverviewRoute());
-                                          }
+
                                         }
                                         setState(() {
                                           isProximityEnabled = false;
@@ -740,96 +743,7 @@ class _SearchBeneficiaryPageState
                     margin: const EdgeInsets.only(top: spacer2),
                     padding: const EdgeInsets.all(spacer4),
                     children: [
-                      DigitButton(
-                        capitalizeLetters: false,
-                        label: isCommunity
-                            ? localizations.translate(
-                                i18.searchBeneficiary.clfAddActionLabel)
-                            : localizations.translate(i18
-                                .searchBeneficiary.beneficiaryAddActionLabel),
-                        mainAxisSize: MainAxisSize.max,
-                        type: DigitButtonType.primary,
-                        size: DigitButtonSize.large,
-                        isDisabled: isTextShort,
-                        onPressed: () {
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          context.read<FormsBloc>().add(
-                              const FormsEvent.clearForm(
-                                  schemaKey: 'REGISTRATIONFLOW'));
-
-                          final pageName = context
-                              .read<FormsBloc>()
-                              .state
-                              .cachedSchemas['REGISTRATIONFLOW']
-                              ?.pages
-                              .entries
-                              .first
-                              .key;
-
-                          if (pageName == null) {
-                            Toast.showToast(
-                              context,
-                              message: localizations
-                                  .translate('NO_FORM_FOUND_FOR_REGISTRATION'),
-                              type: ToastType.error,
-                            );
-                          } else {
-                            context.router.push(FormsRenderRoute(
-                                currentSchemaKey: 'REGISTRATIONFLOW',
-                                pageName: pageName,
-                                defaultValues: {
-                                  'locality': localizations.translate(
-                                      RegistrationDeliverySingleton()
-                                              .boundary
-                                              ?.code ??
-                                          ''),
-                                  'nameOfIndividual': value.text,
-                                }));
-                          }
-
-                          context
-                              .read<DigitScannerBloc>()
-                              .add(const DigitScannerEvent.handleScanner());
-                          searchController.clear();
-                          selectedFilters = [];
-                          blocWrapper
-                              .add(const RegistrationWrapperEvent.clear());
-                        },
-                      ),
-                      if (searchTemplate
-                              ?.properties?['SecondaryButton']?.hidden !=
-                          true)
-                        DigitButton(
-                          capitalizeLetters: false,
-                          type: DigitButtonType.secondary,
-                          size: DigitButtonSize.large,
-                          mainAxisSize: MainAxisSize.max,
-                          onPressed: () {
-                            blocWrapper
-                                .add(const RegistrationWrapperEvent.clear());
-                            selectedFilters = [];
-                            searchController.clear();
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const DigitScannerPage(
-                                  quantity: 1,
-                                  isGS1code: false,
-                                  singleValue: true,
-                                ),
-                                settings:
-                                    const RouteSettings(name: '/qr-scanner'),
-                              ),
-                            );
-                          },
-                          prefixIcon: Icons.qr_code,
-                          label: searchTemplate
-                                      ?.properties?['SecondaryButton']?.label !=
-                                  null
-                              ? localizations.translate(searchTemplate!
-                                  .properties!['SecondaryButton']!.label)
-                              : localizations.translate(
-                                  i18.deliverIntervention.scannerLabel),
-                        ),
+                      ...buildSearchButtons(context, value, isCommunity, isTextShort, searchTemplate),
                     ],
                   ),
                 );
@@ -886,6 +800,109 @@ class _SearchBeneficiaryPageState
       blocWrapper.add(const RegistrationWrapperEvent.clear());
       triggerGlobalSearchEvent();
     }
+  }
+
+  List<DigitButton> buildSearchButtons(BuildContext context,TextEditingValue value ,bool isCommunity, bool isTextShort, TemplateConfig? template,) {
+    final primaryProp   = template?.properties?['PrimaryButton'];
+    final secondaryProp = template?.properties?['SecondaryButton'];
+
+    final entries = <MapEntry<int, DigitButton>>[];
+
+    // — Primary button — (respect hidden + enableViewHousehold logic if any)
+    if (primaryProp?.hidden != true) {
+      final order = primaryProp?.order ?? 0;
+      entries.add(MapEntry(
+        order,
+        DigitButton(
+          capitalizeLetters: false,
+          label: isCommunity
+              ? localizations.translate(primaryProp?.label ?? i18.searchBeneficiary.clfAddActionLabel)
+              : localizations.translate(
+              primaryProp?.label ?? i18.searchBeneficiary.beneficiaryAddActionLabel),
+          mainAxisSize: MainAxisSize.max,
+          type: DigitButtonType.primary,
+          size: DigitButtonSize.large,
+          isDisabled: isTextShort,
+          onPressed: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+            context.read<FormsBloc>().add(
+                const FormsEvent.clearForm(schemaKey: 'REGISTRATIONFLOW'));
+
+            final pageName = context
+                .read<FormsBloc>()
+                .state
+                .cachedSchemas['REGISTRATIONFLOW']
+                ?.pages
+                .entries
+                .first
+                .key;
+
+            if (pageName == null) {
+              Toast.showToast(
+                context,
+                message: localizations.translate(
+                    'NO_FORM_FOUND_FOR_REGISTRATION'),
+                type: ToastType.error,
+              );
+            } else {
+              context.router.push(FormsRenderRoute(
+                currentSchemaKey: 'REGISTRATIONFLOW',
+                pageName: pageName,
+                defaultValues: {
+                  'locality': localizations.translate(
+                      RegistrationDeliverySingleton().boundary?.code ?? ''),
+                  'nameOfIndividual': value.text,
+                },
+              ));
+            }
+
+            context
+                .read<DigitScannerBloc>()
+                .add(const DigitScannerEvent.handleScanner());
+            searchController.clear();
+            selectedFilters = [];
+            blocWrapper.add(const RegistrationWrapperEvent.clear());
+          },
+        ),
+      ));
+    }
+
+    // — Secondary button —
+    if (secondaryProp?.hidden != true) {
+      final order = secondaryProp?.order ?? 1;
+      entries.add(MapEntry(
+        order,
+        DigitButton(
+          capitalizeLetters: false,
+          type: DigitButtonType.secondary,
+          size: DigitButtonSize.large,
+          mainAxisSize: MainAxisSize.max,
+          onPressed: () {
+            blocWrapper.add(const RegistrationWrapperEvent.clear());
+            selectedFilters = [];
+            searchController.clear();
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const DigitScannerPage(
+                  quantity: 1,
+                  isGS1code: false,
+                  singleValue: true,
+                ),
+                settings: const RouteSettings(name: '/qr-scanner'),
+              ),
+            );
+          },
+          prefixIcon: Icons.qr_code,
+          label: secondaryProp?.label != null
+              ? localizations.translate(secondaryProp?.label ?? '')
+              : localizations.translate(i18.deliverIntervention.scannerLabel),
+        ),
+      ));
+    }
+
+    // Sort by order and return only the DigitButtons
+    entries.sort((a, b) => a.key.compareTo(b.key));
+    return entries.map((e) => e.value).toList(growable: false);
   }
 
   void triggerGlobalSearchEvent({bool isPagination = false}) {
