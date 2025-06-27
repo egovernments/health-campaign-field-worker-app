@@ -231,12 +231,12 @@ class Attendance {
   String get goToAttendanceRegisters => "GO_TO_ATTENDANCE_REGISTERS";
 
   String get reasonForManualAttendance =>
-      "REASON_FOR MARKING_ATTENDANCE_MANUALLY";
+      "REASON_FOR_MARKING_ATTENDANCE_MANUALLY";
 
   String get selectReason => "SELECT_REASON";
 
   String get reasonForManualAttendanceDesc =>
-      "REASON_FOR MARKING_ATTENDANCE_MANUALLY_DESC";
+      "REASON_FOR_MARKING_ATTENDANCE_MANUALLY_DESC";
 
   String get plzSelectSession => "PLZ_SELECT_THE_SESSION";
 

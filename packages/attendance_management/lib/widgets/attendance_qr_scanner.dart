@@ -122,8 +122,10 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                 onPressed: () {
                   showManualAttendanceReasonDialog(
                       context: context,
-                      reasonList:
-                          AttendanceSingleton().manualAttendanceReasons);
+                      reasonList: AttendanceSingleton()
+                          .manualAttendanceReasons
+                          .reversed
+                          .toList());
                 },
                 type: DigitButtonType.link,
                 size: DigitButtonSize.large),
@@ -338,7 +340,8 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                     children: [
                       ReactiveWrapperField(
                         formControlName: _reasonKey,
-                        showErrors: (control) => control.invalid && control.touched,
+                        showErrors: (control) =>
+                            control.invalid && control.touched,
                         validationMessages: {
                           'required': (_) => localizations.translate(
                                 i18.common.corecommonRequired,
@@ -386,10 +389,13 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                         ),
                       ),
                       if (form.control(_reasonKey).value == 'OTHERS') ...[
-                        const SizedBox(height: spacer2,),
+                        const SizedBox(
+                          height: spacer2,
+                        ),
                         ReactiveWrapperField(
                           formControlName: _reasonCommentKey,
-                          showErrors: (control) => control.invalid && control.touched,
+                          showErrors: (control) =>
+                              control.invalid && control.touched,
                           validationMessages: {
                             'required': (object) => localizations.translate(
                                 i18.attendance.validationRequiredError),
@@ -404,10 +410,9 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                               maxLine: 3,
                               onChange: (value) {
                                 form.control(_reasonCommentKey).markAsTouched();
-                                setState((){
+                                setState(() {
                                   form.control(_reasonCommentKey).value = value;
                                 });
-
                               },
                               initialValue:
                                   form.control(_reasonCommentKey).value,
@@ -485,7 +490,7 @@ class AttendanceScannerPageState extends DigitScannerPageState {
           color: const DigitColors().light.alertSuccess,
         ),
         onCrossTap: () => Navigator.of(ctx).pop(),
-        title: i18.attendance.markedAsPresent,
+        title: localizations.translate(i18.attendance.markedAsPresent),
         additionalWidgets: [
           LabelValueSummary(
             items: [
@@ -520,14 +525,15 @@ class AttendanceScannerPageState extends DigitScannerPageState {
         actions: [
           DigitButton(
             capitalizeLetters: false,
-            label: i18.attendance.scanAnotherQR,
+            label: localizations.translate(i18.attendance.scanAnotherQR),
             onPressed: () => Navigator.of(ctx).pop(),
             type: DigitButtonType.primary,
             size: DigitButtonSize.large,
           ),
           DigitButton(
             capitalizeLetters: false,
-            label: i18.attendance.backToAttendanceManager,
+            label:
+                localizations.translate(i18.attendance.backToAttendanceManager),
             onPressed: () {
               Navigator.of(ctx).pop();
               Navigator.of(context).pop();
