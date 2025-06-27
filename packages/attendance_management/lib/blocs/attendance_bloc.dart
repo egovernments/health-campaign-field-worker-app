@@ -166,7 +166,6 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
       register.startDate!,
       register.endDate!,
       registerCompletedLogs ?? [],
-      register.additionalDetails?["sessions"] != 2,
     );
 
     var completedDaysCount = register.additionalDetails?["sessions"] == 2
@@ -214,7 +213,6 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     int startMillis,
     int endMillis,
     List<AttendanceLogModel> completedLogs,
-    bool isSingleSession,
   ) {
     List<Map<DateTime, bool>> dateList = [];
 
@@ -231,8 +229,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
       bool hasMorningLog = hasLogWithType(completedLogs, currentDate, "ENTRY");
       bool hasEveningLog = hasLogWithType(completedLogs, currentDate, "EXIT");
       dateList.add({
-        currentDate:
-            isSingleSession ? hasMorningLog : hasMorningLog && hasEveningLog,
+        currentDate: hasMorningLog && hasEveningLog,
       });
     }
 
