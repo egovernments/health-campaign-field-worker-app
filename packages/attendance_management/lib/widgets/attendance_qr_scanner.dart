@@ -204,16 +204,14 @@ class AttendanceScannerPageState extends DigitScannerPageState {
     // Manual entry: only check attendee presence
     if (scannedData.manualEntry == true) {
       final found = _isAttendeeInRegister(scannedData, registerModel.attendees);
-      if (found) {
-        var callBack = widget as AttendanceDigitScannerPage;
+      var callBack = widget as AttendanceDigitScannerPage;
 
-        callBack.onScanResult(
-            scannedData,
-            AttendanceValidationResult(
-              isValid: found,
-              errorMessage: found ? null : i18.attendance.attendeeNotFound,
-            ));
-      }
+      callBack.onScanResult(
+          scannedData,
+          AttendanceValidationResult(
+            isValid: found,
+            errorMessage: found ? null : i18.attendance.attendeeNotFound,
+          ));
       return AttendanceValidationResult(
         isValid: found,
         errorMessage: found ? null : i18.attendance.attendeeNotFound,
