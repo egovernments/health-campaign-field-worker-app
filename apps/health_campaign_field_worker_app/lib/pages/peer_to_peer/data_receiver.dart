@@ -199,22 +199,61 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                   ),
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width,
-                                    child: DigitCard(children: [
-                                      Text(
-                                        localizations.translate(i18.dataShare
-                                            .dateReceivedForBoundaries),
-                                        style: textTheme.headingM.copyWith(
-                                            color: DigitTheme.instance.colors
-                                                .light.primary2),
-                                      ),
-                                      Text(
-                                        localizations.translate(
-                                            receivedBoundaries.first),
-                                        style: textTheme.bodyS.copyWith(
-                                            color: DigitTheme.instance.colors
-                                                .light.primary2),
-                                      ),
-                                    ]),
+                                    child: DigitCard(
+                                        children: receivedBoundaries.isNotEmpty
+                                            ? [
+                                                Text(
+                                                  localizations.translate(i18
+                                                      .dataShare
+                                                      .dateReceivedForBoundaries),
+                                                  style: textTheme.headingM
+                                                      .copyWith(
+                                                          color: DigitTheme
+                                                              .instance
+                                                              .colors
+                                                              .light
+                                                              .primary2),
+                                                ),
+                                                ...receivedBoundaries
+                                                    .map((e) => Text(
+                                                          localizations.translate(
+                                                              receivedBoundaries
+                                                                  .first),
+                                                          style: textTheme.bodyS
+                                                              .copyWith(
+                                                                  color: DigitTheme
+                                                                      .instance
+                                                                      .colors
+                                                                      .light
+                                                                      .primary2),
+                                                        ))
+                                              ]
+                                            : [
+                                                Text(
+                                                  localizations.translate(i18
+                                                      .dataShare
+                                                      .noBoundariesMatchedTitle),
+                                                  style: textTheme.headingM
+                                                      .copyWith(
+                                                          color: DigitTheme
+                                                              .instance
+                                                              .colors
+                                                              .light
+                                                              .primary2),
+                                                ),
+                                                Text(
+                                                  localizations.translate(i18
+                                                      .dataShare
+                                                      .noBoundariesMatchedDesc),
+                                                  style: textTheme.bodyS
+                                                      .copyWith(
+                                                          color: DigitTheme
+                                                              .instance
+                                                              .colors
+                                                              .light
+                                                              .primary2),
+                                                ),
+                                              ]),
                                   )
                                 ],
                               );

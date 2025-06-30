@@ -637,6 +637,11 @@ class DataShare {
 
   String get dateReceivedForBoundaries => 'DATA_RECEIVED_FOR_BOUNDARIES';
 
+  String get noBoundariesMatchedTitle => 'NO_BOUNDARIES_MATCHED_ERROR_TITLE';
+
+  String get noBoundariesMatchedDesc =>
+      'NO_BOUNDARIES_MATCHED_ERROR_DESCRIPTION';
+
   String get failedToTransferDescription => 'FAILED_TO_TRANSFER_DESCRIPTION';
 
   String get failedToReceive => 'FAILED_TO_RECEIVE';

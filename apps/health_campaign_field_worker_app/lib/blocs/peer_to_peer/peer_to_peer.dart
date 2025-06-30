@@ -348,12 +348,6 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
             lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
           ),
         );
-        emit(PeerToPeerState.receivingInProgress(
-          progress: 100,
-          offset: 0,
-          totalCount: totalCount,
-          receivedBoundaries: receivedBoundaries,
-        ));
         // Send overall transfer acknowledgment
         await event.nearbyService.sendMessage(
             event.data["deviceId"],
@@ -363,6 +357,12 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
               confirmationType: ConfirmationTypes.finalAcknowledgment.toValue(),
               status: MessageStatus.success.toValue(),
             ).toJson());
+        emit(PeerToPeerState.receivingInProgress(
+          progress: 100,
+          offset: 0,
+          totalCount: totalCount,
+          receivedBoundaries: receivedBoundaries,
+        ));
         emit(PeerToPeerState.dataReceived(
             receivedBoundaries: receivedBoundaries));
       }
