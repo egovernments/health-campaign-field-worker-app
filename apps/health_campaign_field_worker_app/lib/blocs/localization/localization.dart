@@ -99,7 +99,7 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
     } catch (error) {
       rethrow;
     } finally {
-      emit(state.copyWith(loading: false));
+      emit(state.copyWith(loading: false, retryModule: null));
     }
   }
 
