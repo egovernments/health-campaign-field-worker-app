@@ -362,14 +362,10 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
           ),
         ),
         // [TODO : Need move to constants]
-        Positioned(
-          top: MediaQuery.of(context).size.width / 7.5,
-          left: MediaQuery.of(context).size.width / 2.6,
-          width: 250,
-          height: 250,
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width / 3,
-            height: MediaQuery.of(context).size.height / 3,
+        Padding(
+          padding: const EdgeInsets.only(top: spacer12),
+          child: Align(
+            alignment: Alignment.topCenter,
             child: Text(
               localizations.translate(
                 i18.scanner.scannerLabel,
@@ -384,7 +380,9 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
         if (widget.isGS1code)
           const SizedBox.shrink()
         else
-          overlayForManualEntry(theme, textTheme),
+          Center(
+            child: overlayForManualEntry(theme, textTheme),
+          ),
 
         renderScannedResource(theme, textTheme, state)
       ],
