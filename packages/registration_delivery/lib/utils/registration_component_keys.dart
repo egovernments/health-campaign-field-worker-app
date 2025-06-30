@@ -40,6 +40,6 @@ class AcknowledgementKeys{
   const AcknowledgementKeys();
 
   String get acknowledgmentTitleKey => 'AcknowledgmentTitle';
-  String get acknowledgmentDescriptionKey => 'AcknowledgmentDescription';
+  String get acknowledgmentDescriptionKey => 'AcknowledgementDescription';
 
 }
