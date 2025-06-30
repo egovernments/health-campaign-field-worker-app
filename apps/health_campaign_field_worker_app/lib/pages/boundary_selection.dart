@@ -97,6 +97,10 @@ class _BoundarySelectionPageState
             return Scaffold(
               body: Builder(
                 builder: (context) {
+                  // final labelCodeList = state.selectedBoundaryMap.keys.map((key) => '${envConfig.variables.hierarchyType}_$key').toList();
+                  //
+                  // LocalizationParams().setCode(labelCodeList);
+
                   if (state.loading) {
                     return const Center(
                       child: CircularProgressIndicator(),
@@ -111,9 +115,15 @@ class _BoundarySelectionPageState
                         BlocListener<BoundaryBloc, BoundaryState>(
                       listener: (context, state) {
                         if (state.boundaryList.isNotEmpty) {
-                          final finalCodes =
-                              state.boundaryList.map((e) => e.code!).toList();
-                          LocalizationParams().setCode(finalCodes);
+                          final finalCodes = state.boundaryList.map((e) => e.code!).toList();
+
+                          final labelCodeList = state.selectedBoundaryMap.keys
+                              .map((key) => '${envConfig.variables.hierarchyType}_$key')
+                              .toList();
+
+                          final combinedCodes = [...finalCodes, ...labelCodeList];
+
+                          LocalizationParams().setCode(combinedCodes);
                           context.read<LocalizationBloc>().add(
                               LocalizationEvent.onUpdateLocalizationIndex(
                                   index: appConfiguration.languages!.indexWhere(
@@ -602,9 +612,9 @@ class _BoundarySelectionPageState
                                               }
                                             },
                                             builder: (field) => LabeledField(
-                                              // capitalizedFirstLetter: false,
+                                              capitalizedFirstLetter: false,
                                               label: localizations
-                                                  .translate(label),
+                                                  .translate('${envConfig.variables.hierarchyType}_$label'),
                                               isRequired: true,
                                               child:
                                                   DigitDropdown<BoundaryModel>(
@@ -749,7 +759,14 @@ class _BoundarySelectionPageState
     final labelList = state.selectedBoundaryMap.keys.toList();
     if (state.boundaryList.isNotEmpty) {
       final finalCodes = state.boundaryList.map((e) => e.code!).toList();
-      LocalizationParams().setCode(finalCodes);
+
+      final labelCodeList = state.selectedBoundaryMap.keys
+          .map((key) => '${envConfig.variables.hierarchyType}_$key')
+          .toList();
+
+      final combinedCodes = [...finalCodes, ...labelCodeList];
+
+      LocalizationParams().setCode(combinedCodes);
       context.read<LocalizationBloc>().add(
           LocalizationEvent.onUpdateLocalizationIndex(
               index: appConfiguration.languages!.indexWhere((element) =>
