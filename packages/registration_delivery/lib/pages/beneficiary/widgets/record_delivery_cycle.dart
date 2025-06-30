@@ -275,7 +275,7 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
 
                     return DigitTableRow(tableRow: [
                       DigitTableData(
-                        '${localizations.translate(i18.deliverIntervention.dose)} ${e.deliveries!.indexOf(item) + 1}',
+                        '${localizations.translate(headerList.first.header ?? i18.deliverIntervention.dose)} ${e.deliveries!.indexOf(item) + 1}',
                         cellKey: 'dose',
                       ),
                       DigitTableData(

@@ -122,6 +122,7 @@ enum PropertySchemaFormat {
   dob,
   scanner,
   idPopulator,
+  mobileNumber,
   text;
 }
 
