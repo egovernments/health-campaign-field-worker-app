@@ -87,7 +87,7 @@ class LocalizationLocalRepository {
 
       final query = sql.select(sql.localization).join([])
         ..where(
-          sql.localization.module.equals(module) &
+          sql.localization.module.contains(module) &
           sql.localization.locale.equals(locale),
         );
 
