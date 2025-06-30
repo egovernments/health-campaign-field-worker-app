@@ -84,7 +84,7 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
             fileStream.transform(utf8.decoder).transform(json.decoder);
 
         await for (final offsets in jsonStream) {
-          // Ensure that 'entities' is a Map<String, dynamic>
+          // Ensure the root is a Map<String, dynamic>
           if (offsets is! Map<String, dynamic>) {
             emit(PeerToPeerState.failedToTransfer(
                 error: i18.dataShare.invalidFileError));
@@ -97,68 +97,67 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
             int offsetValue = int.parse(offset.key);
             Map<String, dynamic> offsetData = offset.value;
 
-            var entityData = offsetData.keys
-                .where((element) => element == 'response')
-                .map((e) => offsetData[e])
-                .toList();
+            int totalCount = offsetData['totalCount'] ?? 0;
+            List<dynamic> boundaries = offsetData['boundaries'] ?? [];
 
-            var selectedBoundaryCode = offsetData.keys
-                .where((element) => element == 'boundaryCode')
-                .map((e) => offsetData[e])
-                .firstOrNull;
+            var entityData;
+            String? selectedBoundaryCode, selectedBoundaryName;
 
-            totalCount = offsetData.keys
-                .where((element) => element == 'totalCount')
-                .map((e) => offsetData[e])
-                .toList()
-                .first;
-            for (var device in event.connectedDevice) {
-              // await event.nearbyService.sendMessage(
-              //   device.deviceId,
-              //   PeerToPeerMessageModel(
-              //     messageType: MessageTypes.handShake.toValue(),
-              //     selectedBoundaryCode: event.selectedBoundaryCode,
-              //     message: event.selectedProject,
-              //   ).toJson(),
-              // );
-              //
-              // bool handshakeSuccessful = await waitForConfirmation(
-              //   event.nearbyService,
-              //   confirmationType: ConfirmationTypes.handShake.toValue(),
-              // );
-              //
-              // if (!handshakeSuccessful) {
-              //   emit(PeerToPeerState.failedToTransfer(
-              //       error: i18.dataShare.projectMisMatchError));
-              //   return;
-              // } else {
-              for (var entity in entityData) {
-                Map<String, dynamic> entityResponse = entity;
+            for (var boundary in boundaries) {
+              selectedBoundaryCode = boundary['boundaryCode'];
+              selectedBoundaryName = boundary['boundaryName'];
 
-                await event.nearbyService.sendMessage(
-                  device.deviceId,
-                  PeerToPeerMessageModel(
-                          messageType: MessageTypes.chunk.toValue(),
-                          selectedBoundaryCode: selectedBoundaryCode,
-                          message: compressJson(entityResponse),
-                          offset: offsetValue,
-                          totalCount: totalCount)
-                      .toJson(),
-                );
-              }
+              // ✅ This matches your original entityData format (a list)
+              entityData = [boundary['response']];
 
-              // Wait for confirmation before proceeding
-              await waitForConfirmation(
-                event.nearbyService,
-                confirmationType: ConfirmationTypes.chunk.toValue(),
-                offset: offsetValue,
-              );
+              for (var device in event.connectedDevice) {
+                // await event.nearbyService.sendMessage(
+                //   device.deviceId,
+                //   PeerToPeerMessageModel(
+                //     messageType: MessageTypes.handShake.toValue(),
+                //     selectedBoundaryCode: event.selectedBoundaryCode,
+                //     message: event.selectedProject,
+                //   ).toJson(),
+                // );
+                //
+                // bool handshakeSuccessful = await waitForConfirmation(
+                //   event.nearbyService,
+                //   confirmationType: ConfirmationTypes.handShake.toValue(),
+                // );
+                //
+                // if (!handshakeSuccessful) {
+                //   emit(PeerToPeerState.failedToTransfer(
+                //       error: i18.dataShare.projectMisMatchError));
+                //   return;
+                // } else {
+                for (var entity in entityData) {
+                  Map<String, dynamic> entityResponse = entity;
 
-              emit(PeerToPeerState.transferInProgress(
-                  progress: offsetValue / totalCount,
+                  await event.nearbyService.sendMessage(
+                    device.deviceId,
+                    PeerToPeerMessageModel(
+                            messageType: MessageTypes.chunk.toValue(),
+                            selectedBoundaryCode: selectedBoundaryCode,
+                            message: compressJson(entityResponse),
+                            offset: offsetValue,
+                            totalCount: totalCount)
+                        .toJson(),
+                  );
+                }
+
+                // Wait for confirmation before proceeding
+                await waitForConfirmation(
+                  event.nearbyService,
+                  confirmationType: ConfirmationTypes.chunk.toValue(),
                   offset: offsetValue,
-                  totalCount: totalCount));
-              // }
+                );
+
+                emit(PeerToPeerState.transferInProgress(
+                    progress: offsetValue / totalCount,
+                    offset: offsetValue,
+                    totalCount: totalCount));
+                // }
+              }
             }
           }
 

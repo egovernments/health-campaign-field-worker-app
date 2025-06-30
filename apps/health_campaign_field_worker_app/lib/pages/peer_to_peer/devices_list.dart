@@ -39,8 +39,6 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
   late final String senderDeviceDetails;
   late NearbyService nearbyService;
   late StreamSubscription<dynamic> stateSubscription;
-  late AnimationController _controller;
-  late AnimationController _radarController;
   final ValueNotifier<List<Device>> _deviceNotifier = ValueNotifier([]);
   bool _isSheetShown = false;
   Timer? _debounceTimer;
@@ -53,7 +51,6 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
   @override
   void initState() {
     super.initState();
-    createAnimations();
     initializeNearbyService();
     fetchSenderDeviceDetails();
   }
@@ -63,8 +60,6 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
     stateSubscription.cancel();
     nearbyService.stopBrowsingForPeers();
     nearbyService.stopAdvertisingPeer();
-    _controller.dispose();
-    _radarController.dispose();
     super.dispose();
   }
 
@@ -77,14 +72,14 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
 
     return Scaffold(
       body: ScrollableContent(
-        backgroundColor: DigitTheme.instance.colors.light.primary1Bg,
+        backgroundColor: DigitTheme.instance.colors.light.genericBackground,
         slivers: [
           SliverToBoxAdapter(
             child: Column(
               children: [
                 const BackNavigationHelpHeaderWidget(showHelp: true),
                 Padding(
-                  padding: EdgeInsets.all(spacer4),
+                  padding: const EdgeInsets.all(spacer4),
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
@@ -95,25 +90,34 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
                     ),
                   ),
                 ),
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Lottie.asset(searchingLottie),
-                    // This will be the background
-                    SvgPicture.asset(
-                      peerSearchSvg,
-                      width: 25,
-                      height: 25,
-                    ),
-                  ],
-                ),
-                Text(
-                  localizations.translate(widget.deviceType == DeviceType.sender
-                      ? i18.dataShare.sendActionMessage
-                      : i18.dataShare.receiveActionMessage),
-                  style: textTheme.bodyL
-                      .copyWith(color: theme.colorTheme.text.secondary),
-                ),
+                DigitCard(
+                    borderRadius:
+                        const BorderRadius.all(Radius.circular(spacer2)),
+                    margin: const EdgeInsets.all(spacer3),
+                    children: [
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Lottie.asset(searchingLottie),
+                          // This will be the background
+                          SvgPicture.asset(
+                            peerSearchSvg,
+                            width: 25,
+                            height: 25,
+                          ),
+                        ],
+                      ),
+                      Center(
+                        child: Text(
+                          localizations.translate(
+                              widget.deviceType == DeviceType.sender
+                                  ? i18.dataShare.sendActionMessage
+                                  : i18.dataShare.receiveActionMessage),
+                          style: textTheme.bodyL
+                              .copyWith(color: theme.colorTheme.text.secondary),
+                        ),
+                      ),
+                    ])
               ],
             ),
           )
@@ -133,7 +137,9 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
                   ? theme.colorTheme.primary.primary1
                   : theme.disabledColor)),
       child: ListTile(
-        onTap: () => handleDeviceTap(device),
+        onTap: () => device.state == SessionState.connecting
+            ? null
+            : handleDeviceTap(device),
         selected: connected,
         selectedColor: connected
             ? theme.colorTheme.primary.primaryBg
@@ -171,10 +177,39 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
     }
 
     if (widget.deviceType == DeviceType.sender) {
-      context.router.push(DataTransferRoute(
-        connectedDevices: connectedDevices,
-        nearbyService: nearbyService,
-      ));
+      showCustomPopup(
+        context: context,
+        builder: (BuildContext ctx) => Popup(
+            title: localizations.translate(i18.dataShare.senderDialogTitle),
+            description:
+                localizations.translate(i18.dataShare.senderDialogDescription),
+            type: PopUpType.alert,
+            onCrossTap: () {
+              nearbyService.disconnectPeer(
+                  deviceID: connectedDevices.first.deviceId);
+              Navigator.of(
+                ctx,
+                rootNavigator: true,
+              ).pop();
+            },
+            actions: [
+              DigitButton(
+                  capitalizeLetters: false,
+                  label: localizations.translate(i18.dataShare.sendAction),
+                  onPressed: () {
+                    Navigator.of(
+                      ctx,
+                      rootNavigator: true,
+                    ).pop();
+                    context.router.push(DataTransferRoute(
+                      connectedDevices: connectedDevices,
+                      nearbyService: nearbyService,
+                    ));
+                  },
+                  type: DigitButtonType.primary,
+                  size: DigitButtonSize.large)
+            ]),
+      );
     } else {
       context.router.push(DataReceiverRoute(
         connectedDevice: connectedDevices.first,
@@ -218,17 +253,6 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
     }
   }
 
-  void createAnimations() {
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 10),
-    )..repeat();
-    _radarController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 10),
-    )..repeat();
-  }
-
   Future<void> initializeNearbyService() async {
     final deviceInfo = DeviceInfoPlugin();
     final deviceId = Platform.isAndroid
@@ -264,7 +288,7 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
         final uniqueDevices = <String, Device>{};
         // Separate devices based on their connection state
         for (var device in devicesList) {
-          uniqueDevices[device.deviceId] =
+          uniqueDevices[device.deviceName] =
               device; // Replace entries with the same deviceId
         }
 
@@ -289,12 +313,12 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
             showCustomPopup(
               context: context,
               builder: (BuildContext ctx) => Popup(
-                  title: localizations.translate(i18
-                          .dataShare.receiverDialogTitle +
-                      '{}'.replaceAll('{}', connectedDevices.first.deviceName)),
-                  description: localizations.translate(i18
-                      .dataShare.receiverDialogDescription
-                      .replaceAll('{}', connectedDevices.first.deviceName)),
+                  title: localizations
+                      .translate(i18.dataShare.receiverDialogTitle)
+                      .replaceAll('{}', connectedDevices.first.deviceName),
+                  description: localizations
+                      .translate(i18.dataShare.receiverDialogDescription)
+                      .replaceAll('{}', connectedDevices.first.deviceName),
                   type: PopUpType.alert,
                   onCrossTap: () {
                     nearbyService.disconnectPeer(
@@ -306,6 +330,7 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
                   },
                   actions: [
                     DigitButton(
+                        capitalizeLetters: false,
                         label: localizations
                             .translate(i18.dataShare.receiveAction),
                         onPressed: () {

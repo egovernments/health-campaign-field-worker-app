@@ -1,6 +1,7 @@
 import 'package:attendance_management/widgets/back_navigation_help_header.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_divider.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,7 +63,7 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
   @override
   void dispose() {
     nearbyService.stopAdvertisingPeer();
-    nearbyService.stopBrowsingForPeers();
+    nearbyService.disconnectPeer(deviceID: widget.connectedDevice.deviceId);
     super.dispose();
   }
 
@@ -214,11 +215,15 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                                               .light
                                                               .primary2),
                                                 ),
-                                                ...receivedBoundaries
-                                                    .map((e) => Text(
-                                                          localizations.translate(
-                                                              receivedBoundaries
-                                                                  .first),
+                                                ...receivedBoundaries.map((e) =>
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          localizations
+                                                              .translate(e),
                                                           style: textTheme.bodyS
                                                               .copyWith(
                                                                   color: DigitTheme
@@ -226,7 +231,13 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                                                       .colors
                                                                       .light
                                                                       .primary2),
-                                                        ))
+                                                        ),
+                                                        const DigitDivider(
+                                                          dividerType:
+                                                              DividerType.small,
+                                                        )
+                                                      ],
+                                                    ))
                                               ]
                                             : [
                                                 Text(
@@ -311,13 +322,21 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                             color: DigitTheme.instance.colors
                                                 .light.primary2),
                                       ),
-                                      Text(
-                                        localizations.translate(
-                                            receivedBoundaries.first),
-                                        style: textTheme.bodyS.copyWith(
-                                            color: DigitTheme.instance.colors
-                                                .light.primary2),
-                                      ),
+                                      ...receivedBoundaries.map((e) => Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                localizations.translate(e),
+                                                style: textTheme.bodyS.copyWith(
+                                                    color: DigitTheme.instance
+                                                        .colors.light.primary2),
+                                              ),
+                                              const DigitDivider(
+                                                dividerType: DividerType.small,
+                                              )
+                                            ],
+                                          ))
                                     ]),
                                   )
                                 ],

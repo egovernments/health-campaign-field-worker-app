@@ -541,6 +541,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.send,
           label: i18.home.dataShare,
           onPressed: () async {
+            if (isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            }
             context.router.push(const DataShareHomeRoute());
           },
         ),

@@ -41,7 +41,7 @@ class _DataShareHomeState extends LocalizedState<DataShareHomePage> {
         ),
         SizedBox(
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * 0.2,
+          height: MediaQuery.of(context).size.height * 0.25,
           child: DigitCard(
               padding: const EdgeInsets.only(top: spacer10),
               margin: const EdgeInsets.all(spacer4),
@@ -53,7 +53,7 @@ class _DataShareHomeState extends LocalizedState<DataShareHomePage> {
               children: [
                 Center(
                   child: Icon(Icons.upload,
-                      size: 20,
+                      size: spacer7,
                       color: DigitTheme.instance.colors.light.primary1),
                 ),
                 Center(
@@ -61,15 +61,22 @@ class _DataShareHomeState extends LocalizedState<DataShareHomePage> {
                     children: [
                       Text(
                         localizations.translate(i18.dataShare.sendAction),
-                        style: textTheme.label.copyWith(
+                        style: textTheme.headingM.copyWith(
                             color: DigitTheme.instance.colors.light.primary1),
                       ),
-                      Text(
-                        localizations
-                            .translate(i18.dataShare.sendActionDescription),
-                        style: textTheme.bodyXS.copyWith(
-                            color:
-                                DigitTheme.instance.colors.light.textSecondary),
+                      const SizedBox(
+                        height: spacer2,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: Text(
+                          localizations
+                              .translate(i18.dataShare.sendActionDescription),
+                          style: textTheme.bodyXS.copyWith(
+                              color: DigitTheme
+                                  .instance.colors.light.textSecondary),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ],
                   ),
@@ -78,7 +85,7 @@ class _DataShareHomeState extends LocalizedState<DataShareHomePage> {
         ),
         SizedBox(
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * 0.2,
+          height: MediaQuery.of(context).size.height * 0.25,
           child: DigitCard(
               padding: const EdgeInsets.only(top: spacer10),
               inline: true,
@@ -90,7 +97,7 @@ class _DataShareHomeState extends LocalizedState<DataShareHomePage> {
               children: [
                 Center(
                   child: Icon(Icons.download,
-                      size: 20,
+                      size: spacer7,
                       color: DigitTheme.instance.colors.light.primary1),
                 ),
                 Center(
@@ -98,21 +105,28 @@ class _DataShareHomeState extends LocalizedState<DataShareHomePage> {
                     children: [
                       Text(
                         localizations.translate(i18.dataShare.receiveAction),
-                        style: textTheme.label.copyWith(
+                        style: textTheme.headingM.copyWith(
                             color: DigitTheme.instance.colors.light.primary1),
                       ),
-                      Text(
-                        localizations
-                            .translate(i18.dataShare.receiveActionDescription),
-                        style: textTheme.bodyXS.copyWith(
-                            color:
-                                DigitTheme.instance.colors.light.textSecondary),
+                      const SizedBox(
+                        height: spacer2,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: Text(
+                          localizations.translate(
+                              i18.dataShare.receiveActionDescription),
+                          style: textTheme.bodyXS.copyWith(
+                              color: DigitTheme
+                                  .instance.colors.light.textSecondary),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ],
                   ),
-                )
+                ),
               ]),
-        )
+        ),
       ],
     );
   }
