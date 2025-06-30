@@ -44,13 +44,15 @@ class HouseholdAcknowledgementPageState
               child: PanelCard(
                 type: PanelType.success,
                 description: householdAcknowledgementTemplate
-                    ?.properties?[registration_keys.acknowledgementKeys.acknowledgmentTitleKey]?.hidden == true ?
+                    ?.properties?[registration_keys.acknowledgementKeys.acknowledgmentDescriptionKey]?.hidden == true ?
                 "" : localizations.translate(
                   householdAcknowledgementTemplate
                       ?.properties?[registration_keys.acknowledgementKeys.acknowledgmentDescriptionKey]?.label ??
                   i18.acknowledgementSuccess.acknowledgementDescriptionText,
                 ),
-                title: localizations.translate(
+                title: householdAcknowledgementTemplate
+                    ?.properties?[registration_keys.acknowledgementKeys.acknowledgmentTitleKey]?.hidden == true ?
+                "" : localizations.translate(
                   householdAcknowledgementTemplate
                       ?.properties?[registration_keys.acknowledgementKeys.acknowledgmentTitleKey]?.label
                       ??

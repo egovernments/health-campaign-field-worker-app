@@ -84,6 +84,8 @@ class BeneficiaryDetailsPageState
                   element.projectBeneficiaryClientReferenceId ==
                   projectBeneficiary.first?.clientReferenceId)
               .toList() : null;
+          final deliverState = state.deliveryWrapper;
+          final pastCycles = deliverState?.pastCycles;
           // Building the table content based on the DeliverInterventionState
 
           return BlocBuilder<ProductVariantBloc, ProductVariantState>(
@@ -564,13 +566,14 @@ class BeneficiaryDetailsPageState
                                       ?.cycles ??
                                   [])
                               .isNotEmpty && (beneficiaryDetailsTemplate
-                        ?.properties?[registration_keys.beneficiaryDetailsKeys.tableCardKey]?.hidden != true))
+                        ?.properties?[registration_keys.beneficiaryDetailsKeys.tableCardKey]?.hidden != true) && (deliverState?.hasCycleArrived == true || (pastCycles ?? []).isNotEmpty))
                             DigitCard(
                                 margin: const EdgeInsets.all(spacer2),
                                 children: RegistrationDeliverySingleton()
                                             .projectType
                                             ?.cycles !=
-                                        null
+                                        null && (beneficiaryDetailsTemplate
+                                            ?.properties?[registration_keys.beneficiaryDetailsKeys.tableCardKey]?.hidden != true)
                                     ? [
                                         BlocBuilder<RegistrationWrapperBloc,
                                             RegistrationWrapperState>(
@@ -581,7 +584,8 @@ class BeneficiaryDetailsPageState
                                                                 .projectType
                                                                 ?.cycles ??
                                                             [])
-                                                        .isNotEmpty
+                                                        .isNotEmpty && (beneficiaryDetailsTemplate
+                                                    ?.properties?[registration_keys.beneficiaryDetailsKeys.tableCardKey]?.hidden != true)
                                                     ? RecordDeliveryCycle(
                                                         projectCycles:
                                                             RegistrationDeliverySingleton()

@@ -8,8 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../../../utils/registration_component_keys.dart' as registration_keys;
 import '../../../utils/utils.dart';
 import '../../../widgets/table_card/table_card.dart';
 
@@ -22,6 +24,9 @@ Widget buildTableContent(
     HouseholdModel? householdModel,
     ) {
 
+  final pageKey = BeneficiaryDetailsRoute.name.replaceAll('Route', '');
+  final beneficiaryDetailsTableConfig = RegistrationDeliverySingleton().templateConfigs?[pageKey]?.properties?[registration_keys.beneficiaryDetailsKeys.tableCardKey];
+
   final deliverInterventionState = state.deliveryWrapper;
   // Calculate the current cycle. If deliverInterventionState.cycle is negative, set it to 0.
   final currentCycle =
@@ -33,7 +38,12 @@ Widget buildTableContent(
   final localizations = RegistrationDeliveryLocalization.of(context);
 
   // Defining a list of table headers for resource popup
-  final columnListResource = [
+  final columnListResource = beneficiaryDetailsTableConfig?.hidden != true && (beneficiaryDetailsTableConfig?.enums ?? []).isNotEmpty
+      ? beneficiaryDetailsTableConfig?.enums?.map((header) => DigitTableColumn(
+    header: localizations.translate(header['code']),
+    cellValue: header['fieldKey'],
+  ),).toList()
+      : [
     DigitTableColumn(
       header: localizations.translate(i18.beneficiaryDetails.beneficiaryDose),
       cellValue: 'dose',
@@ -98,7 +108,17 @@ Widget buildTableContent(
             withColumnDividers: false,
             showSelectedState: false,
             showPagination: false,
-            columns: columnListResource,
+            columns: columnListResource ?? [
+              DigitTableColumn(
+                header: localizations.translate(i18.beneficiaryDetails.beneficiaryDose),
+                cellValue: 'dose',
+              ),
+              DigitTableColumn(
+                header:
+                localizations.translate(i18.beneficiaryDetails.beneficiaryResources),
+                cellValue: 'resources',
+              ),
+            ],
             rows: [
               ...getProductVariant(item, individualModel, householdModel,
                   context)!['criteria']
@@ -123,7 +143,7 @@ Widget buildTableContent(
                         ?.indexOf(e) ==
                         0
                         ? DigitTableData(
-                      '${localizations.translate(i18.deliverIntervention.dose)} ${deliverInterventionState?.dose}',
+                      '${localizations.translate(columnListResource?.first.header ?? i18.deliverIntervention.dose)} ${deliverInterventionState?.dose}',
                       cellKey: 'dose',
                     )
                         : DigitTableData('', cellKey: ''),
