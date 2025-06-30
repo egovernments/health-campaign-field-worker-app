@@ -233,7 +233,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
 
   FormGroup buildForm() => fb.group(<String, Object>{
         _userId: FormControl<String>(
-          value: 'USR-000843',
+          value: 'USR-185783',
           validators: [Validators.required],
         ),
         _password: FormControl<String>(

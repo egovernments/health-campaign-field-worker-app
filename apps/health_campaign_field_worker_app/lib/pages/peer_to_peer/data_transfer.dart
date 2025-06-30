@@ -103,7 +103,8 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                     onPressed: () {
                       context.router.replaceAll([HomeRoute()]);
                     },
-                    label: localizations.translate(i18.common.coreCommonGoHome),
+                    label: localizations
+                        .translate(i18.common.coreCommonGoBackHome),
                     size: DigitButtonSize.large,
                   ),
                 ]),
@@ -170,8 +171,8 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                                 ),
                                 Center(
                                   child: Text(
-                                    localizations
-                                        .translate(i18.dataShare.transferring),
+                                    localizations.translate(
+                                        i18.dataShare.sendingActionMessage),
                                     style: textTheme.headingM.copyWith(
                                         color: DigitTheme
                                             .instance.colors.light.primary2),

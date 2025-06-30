@@ -82,6 +82,10 @@ class Common {
 
   String get coreCommonGoHome => 'CORE_COMMON_GO_HOME';
 
+  String get coreCommonGoBackHome => 'CORE_COMMON_GO_BACK_HOME';
+
+  String get coreCommonAttention => 'CORE_COMMON_ATTENTION';
+
   String get coreCommonViewDownloadedData => 'CORE_COMMON_VIEW_DOWNLOADED_DATA';
 
   String get coreCommonlanguage => 'CORE_COMMON_LANGUAGE';
@@ -593,13 +597,13 @@ class DataShare {
 
   String get sendAction => 'SEND_ACTION';
 
+  String get dataUnSyncedDesc => 'DATA_UN_SYNCED_DESCRIPTION';
+
   String get sendActionDescription => 'SEND_ACTION_DESCRIPTION';
 
   String get receiveAction => 'RECEIVE_ACTION';
 
   String get receiveActionDescription => 'RECEIVE_ACTION_DESCRIPTION';
-
-  String get connectedTo => 'CONNECTED_TO';
 
   String get selectRecipients => 'SELECT_RECIPIENTS';
 
@@ -621,11 +625,11 @@ class DataShare {
 
   String get receiverDialogDescription => 'RECEIVER_DIALOG_DESCRIPTION';
 
+  String get senderDialogTitle => 'SENDER_DIALOG_TITLE';
+
+  String get senderDialogDescription => 'SENDER_DIALOG_DESCRIPTION';
+
   String get dataSharingLabel => 'DATA_SHARING_LABEL';
-
-  String get receiving => 'RECEIVING';
-
-  String get transferring => 'TRANSFERRING';
 
   String get projectMisMatchError => 'PROJECT_MISMATCH_ERROR';
 

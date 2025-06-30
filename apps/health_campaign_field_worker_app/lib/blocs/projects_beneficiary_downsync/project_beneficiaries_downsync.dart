@@ -289,7 +289,6 @@ class BeneficiaryDownSyncBloc
       return;
     }
 
-    // Define the file path
     final file = File('${downloadsDirectory.path}/down_sync_data.json');
 
     // Read existing file content if available
@@ -301,30 +300,51 @@ class BeneficiaryDownSyncBloc
     } else {
       // Create the file if it doesn't exist
       await file.create(recursive: true);
-      await file.writeAsString(
-          jsonEncode({})); // Initialize with an empty JSON object
+      await file.writeAsString(jsonEncode({}));
     }
     var downSyncModel = response["DownsyncCriteria"];
-    // Create a unique key using just the offset
-    String uniqueKey = '${downSyncModel["offset"]}';
+    String offsetKey = '${downSyncModel["offset"]}';
 
-    // Prepare data to insert
-    Map<String, dynamic> data = {
-      "totalCount": downSyncModel["totalCount"],
-      "response": response,
+    // Prepare the boundary data
+    Map<String, dynamic> boundaryData = {
       "boundaryCode": selectedBoundaryCode,
-      "boundaryName": selectedBoundaryName
+      "boundaryName": selectedBoundaryName,
+      "response": response
     };
 
-    // Store the data under the unique key
-    storedData[uniqueKey] = data;
+    // Initialize the offset entry if it doesn't exist
+    storedData[offsetKey] ??= {"totalCount": 0, "boundaries": []};
+
+    // Always update totalCount to reflect latest info
+    storedData[offsetKey]["totalCount"] += downSyncModel["totalCount"];
+
+    // Fetch or initialize the list of boundaries
+    List<dynamic> boundaries = storedData[offsetKey]["boundaries"];
+
+    // Check if boundary already exists
+    bool exists = boundaries
+        .any((entry) => entry["boundaryCode"] == selectedBoundaryCode);
+
+    if (!exists) {
+      boundaries.add(boundaryData);
+      storedData[offsetKey]["boundaries"] = boundaries;
+
+      if (kDebugMode) {
+        print(
+            "Added new boundary: $selectedBoundaryCode under offset: $offsetKey");
+      }
+    } else {
+      if (kDebugMode) {
+        print(
+            "Boundary '$selectedBoundaryCode' already exists under offset $offsetKey.");
+      }
+    }
 
     // Convert map to JSON string
     String storedDataString = jsonEncode(storedData);
-
     debugPrint("Stored data: $storedDataString");
 
-    // Write the updated data back to the file
+    // Write back to file
     await file.writeAsString(storedDataString);
 
     if (kDebugMode) {
