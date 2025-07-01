@@ -8,14 +8,17 @@ import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:forms_engine/blocs/forms/forms.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/project/project.dart';
+import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../router/app_router.dart';
 import '../utils/constants.dart';
 import '../utils/extensions/extensions.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
@@ -238,8 +241,16 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
   }
 
   void navigateToBoundary(String boundary) async {
+    // todo : will change module name later with dynamic keys and add a try catch to throw error if api fails
+    await triggerLocalizationIfUpdated(
+      context: context,
+      locale: AppSharedPreferences().getSelectedLocale!,
+      moduleKey: 'REGISTRATIONFLOW,DELIVERYFLOW',
+      projectReferenceId: context.selectedProject.referenceID ?? '',
+    );
     BoundaryBloc boundaryBloc = context.read<BoundaryBloc>();
     boundaryBloc.add(BoundaryFindEvent(code: boundary));
+
     try {
       await boundaryBloc.stream
           .firstWhere((element) => element.boundaryList.isNotEmpty);

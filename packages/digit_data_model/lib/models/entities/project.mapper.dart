@@ -41,9 +41,9 @@ class ProjectSearchModelMapper extends SubClassMapperBase<ProjectSearchModel> {
   static String? _$department(ProjectSearchModel v) => v.department;
   static const Field<ProjectSearchModel, String> _f$department =
       Field('department', _$department, opt: true);
-  static String? _$referenceId(ProjectSearchModel v) => v.referenceId;
-  static const Field<ProjectSearchModel, String> _f$referenceId =
-      Field('referenceId', _$referenceId, opt: true);
+  static String? _$referenceID(ProjectSearchModel v) => v.referenceID;
+  static const Field<ProjectSearchModel, String> _f$referenceID =
+      Field('referenceID', _$referenceID, opt: true);
   static String? _$tenantId(ProjectSearchModel v) => v.tenantId;
   static const Field<ProjectSearchModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
@@ -82,7 +82,7 @@ class ProjectSearchModelMapper extends SubClassMapperBase<ProjectSearchModel> {
     #isTaskEnabled: _f$isTaskEnabled,
     #parent: _f$parent,
     #department: _f$department,
-    #referenceId: _f$referenceId,
+    #referenceID: _f$referenceID,
     #tenantId: _f$tenantId,
     #projectType: _f$projectType,
     #startDate: _f$startDate,
@@ -113,7 +113,7 @@ class ProjectSearchModelMapper extends SubClassMapperBase<ProjectSearchModel> {
         isTaskEnabled: data.dec(_f$isTaskEnabled),
         parent: data.dec(_f$parent),
         department: data.dec(_f$department),
-        referenceId: data.dec(_f$referenceId),
+        referenceID: data.dec(_f$referenceID),
         tenantId: data.dec(_f$tenantId),
         projectType: data.dec(_f$projectType),
         startDate: data.dec(_f$startDate),
@@ -185,7 +185,7 @@ abstract class ProjectSearchModelCopyWith<$R, $In extends ProjectSearchModel,
       bool? isTaskEnabled,
       String? parent,
       String? department,
-      String? referenceId,
+      String? referenceID,
       String? tenantId,
       String? projectType,
       int? startDate,
@@ -212,7 +212,7 @@ class _ProjectSearchModelCopyWithImpl<$R, $Out>
           Object? isTaskEnabled = $none,
           Object? parent = $none,
           Object? department = $none,
-          Object? referenceId = $none,
+          Object? referenceID = $none,
           Object? tenantId = $none,
           Object? projectType = $none,
           Object? startDate = $none,
@@ -226,7 +226,7 @@ class _ProjectSearchModelCopyWithImpl<$R, $Out>
         if (isTaskEnabled != $none) #isTaskEnabled: isTaskEnabled,
         if (parent != $none) #parent: parent,
         if (department != $none) #department: department,
-        if (referenceId != $none) #referenceId: referenceId,
+        if (referenceID != $none) #referenceID: referenceID,
         if (tenantId != $none) #tenantId: tenantId,
         if (projectType != $none) #projectType: projectType,
         if (startDate != $none) #startDate: startDate,
@@ -244,7 +244,7 @@ class _ProjectSearchModelCopyWithImpl<$R, $Out>
           isTaskEnabled: data.get(#isTaskEnabled, or: $value.isTaskEnabled),
           parent: data.get(#parent, or: $value.parent),
           department: data.get(#department, or: $value.department),
-          referenceId: data.get(#referenceId, or: $value.referenceId),
+          referenceID: data.get(#referenceID, or: $value.referenceID),
           tenantId: data.get(#tenantId, or: $value.tenantId),
           projectType: data.get(#projectType, or: $value.projectType),
           startDate: data.get(#startDate, or: $value.startDate),
@@ -301,9 +301,9 @@ class ProjectModelMapper extends SubClassMapperBase<ProjectModel> {
   static String? _$description(ProjectModel v) => v.description;
   static const Field<ProjectModel, String> _f$description =
       Field('description', _$description, opt: true);
-  static String? _$referenceId(ProjectModel v) => v.referenceId;
-  static const Field<ProjectModel, String> _f$referenceId =
-      Field('referenceId', _$referenceId, opt: true);
+  static String? _$referenceID(ProjectModel v) => v.referenceID;
+  static const Field<ProjectModel, String> _f$referenceID =
+      Field('referenceID', _$referenceID, opt: true);
   static String? _$projectHierarchy(ProjectModel v) => v.projectHierarchy;
   static const Field<ProjectModel, String> _f$projectHierarchy =
       Field('projectHierarchy', _$projectHierarchy, opt: true);
@@ -369,7 +369,7 @@ class ProjectModelMapper extends SubClassMapperBase<ProjectModel> {
     #name: _f$name,
     #department: _f$department,
     #description: _f$description,
-    #referenceId: _f$referenceId,
+    #referenceID: _f$referenceID,
     #projectHierarchy: _f$projectHierarchy,
     #nonRecoverableError: _f$nonRecoverableError,
     #tenantId: _f$tenantId,
@@ -410,7 +410,7 @@ class ProjectModelMapper extends SubClassMapperBase<ProjectModel> {
         name: data.dec(_f$name),
         department: data.dec(_f$department),
         description: data.dec(_f$description),
-        referenceId: data.dec(_f$referenceId),
+        referenceID: data.dec(_f$referenceID),
         projectHierarchy: data.dec(_f$projectHierarchy),
         nonRecoverableError: data.dec(_f$nonRecoverableError),
         tenantId: data.dec(_f$tenantId),
@@ -505,7 +505,7 @@ abstract class ProjectModelCopyWith<$R, $In extends ProjectModel, $Out>
       String? name,
       String? department,
       String? description,
-      String? referenceId,
+      String? referenceID,
       String? projectHierarchy,
       bool? nonRecoverableError,
       String? tenantId,
@@ -577,7 +577,7 @@ class _ProjectModelCopyWithImpl<$R, $Out>
           String? name,
           Object? department = $none,
           Object? description = $none,
-          Object? referenceId = $none,
+          Object? referenceID = $none,
           Object? projectHierarchy = $none,
           Object? nonRecoverableError = $none,
           Object? tenantId = $none,
@@ -603,7 +603,7 @@ class _ProjectModelCopyWithImpl<$R, $Out>
         if (name != null) #name: name,
         if (department != $none) #department: department,
         if (description != $none) #description: description,
-        if (referenceId != $none) #referenceId: referenceId,
+        if (referenceID != $none) #referenceID: referenceID,
         if (projectHierarchy != $none) #projectHierarchy: projectHierarchy,
         if (nonRecoverableError != $none)
           #nonRecoverableError: nonRecoverableError,
@@ -635,7 +635,7 @@ class _ProjectModelCopyWithImpl<$R, $Out>
       name: data.get(#name, or: $value.name),
       department: data.get(#department, or: $value.department),
       description: data.get(#description, or: $value.description),
-      referenceId: data.get(#referenceId, or: $value.referenceId),
+      referenceID: data.get(#referenceID, or: $value.referenceID),
       projectHierarchy:
           data.get(#projectHierarchy, or: $value.projectHierarchy),
       nonRecoverableError:

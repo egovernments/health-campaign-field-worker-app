@@ -1,122 +1,66 @@
 library json_forms;
 
 import 'package:flutter/material.dart';
+import 'package:forms_engine/utils/utils.dart';
 import 'package:forms_engine/widgets/widgets.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import 'helper/form_builder_helper.dart';
 import 'models/property_schema/property_schema.dart';
 
 class JsonForms extends StatelessWidget {
   final PropertySchema propertySchema;
+  final List<Map<String, Widget>>? childrens;
+  final Map<String, dynamic>? defaultValues;
 
   const JsonForms({
     super.key,
     required this.propertySchema,
+    this.childrens,
+    this.defaultValues,
   });
 
-  static Map<String, FormControl> getFormControls(
-    PropertySchema propertySchema, {
-    String? defaultLatlng,
-  }) {
-    assert(propertySchema.properties != null);
-    final controls = Map.fromEntries(
-      propertySchema.properties!.entries
-          .map((e) => _getControls(
-                e.key,
-                e.value,
-                propertySchema,
-                defaultLatlng: defaultLatlng,
-              ))
-          .expand((element) => element),
-    );
+   static Map<String, AbstractControl<dynamic>> getFormControls(
+      PropertySchema schema, {
+        String? defaultLatlng,
+        Map<String, dynamic>? defaultValues,
+      }) {
+    assert(schema.properties != null);
+
+    final Map<String, AbstractControl<dynamic>> controls = {
+      for (final entry in schema.properties!.entries)
+        if (!isHidden(entry.value) || entry.value.includeInForm == true)
+          entry.key: buildFormControl(
+            entry.key,
+            entry.value,
+            schema,
+            defaultLatlng: defaultLatlng,
+            defaultValues: defaultValues,
+          ),
+    };
+
     return controls;
   }
 
   static Map<String, dynamic> getFormValues(
-    FormGroup form,
-    PropertySchema schema,
-  ) {
+      FormGroup form,
+      PropertySchema schema,
+      ) {
     final values = schema.properties!.entries
+        .where((entry) => (!isHidden(entry.value) || entry.value.includeInForm==true)) // Skip hidden fields
         .map((e) => _getParsedValues(form, e.key, e.value))
+        .whereType<MapEntry<String, dynamic>>()
         .toList();
 
-    return Map.fromEntries(values.whereType<MapEntry<String, dynamic>>());
-  }
-
-  static List<MapEntry<String, FormControl>> _getControls(
-    String name,
-    PropertySchema schema,
-    PropertySchema parentSchema, {
-    String? defaultLatlng,
-  }) {
-    final List<MapEntry<String, FormControl>> entries = [];
-    final type = schema.type;
-
-    final requiredValidators = [
-      if ((parentSchema.required ?? []).contains(name)) Validators.required,
-      if (schema.maxLength != null) Validators.maxLength(schema.maxLength!),
-      if (schema.minLength != null) Validators.minLength(schema.minLength!),
-    ];
-
-    if (type == PropertySchemaType.object) {
-      final properties = schema.properties;
-      assert(properties != null);
-      final result = properties!.entries
-          .map((e) => _getControls(e.key, e.value, parentSchema))
-          .expand((element) => element)
-          .toList();
-
-      entries.addAll(result);
-    } else {
-      late FormControl control;
-      switch (type) {
-        case PropertySchemaType.integer:
-          control = FormControl<int>(
-            value: schema.format == PropertySchemaFormat.incrementer
-                ? schema.value ?? 0
-                : schema.value,
-            validators: requiredValidators,
-          );
-          break;
-        case PropertySchemaType.numeric:
-          control = FormControl<num>(
-            value: schema.value,
-            validators: requiredValidators,
-          );
-          break;
-        case PropertySchemaType.boolean:
-          control = FormControl<bool>(
-            value: schema.value,
-            validators: requiredValidators,
-          );
-          break;
-        default:
-          if (schema.format == PropertySchemaFormat.date) {
-            control = FormControl<String>(
-              value: schema.value,
-              validators: requiredValidators,
-            );
-          } else if (schema.format == PropertySchemaFormat.latLng) {
-            control = FormControl<String>(value: defaultLatlng);
-          } else {
-            control = FormControl<String>(
-              value: schema.value,
-              validators: requiredValidators,
-            );
-          }
-          break;
-      }
-      entries.add(MapEntry(name, control));
-    }
-
-    return entries;
+    return Map.fromEntries(values);
   }
 
   static MapEntry<String, dynamic>? _getParsedValues(
-    FormGroup form,
-    String name,
-    PropertySchema schema,
-  ) {
+      FormGroup form,
+      String name,
+      PropertySchema schema,
+
+      ) {
     if (schema.type == PropertySchemaType.object) {
       final results = schema.properties!.entries.map((e) {
         return _getParsedValues(form, e.key, e.value);
@@ -133,15 +77,12 @@ class JsonForms extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            JsonFormBuilder(
-              schema: propertySchema,
-              formControlName: '/',
-            ),
-          ],
-        ),
-      );
+  Widget build(BuildContext context) => JsonFormBuilder(
+    schema: propertySchema,
+    formControlName: '/',
+    components: childrens,
+  );
 }
+
+
+

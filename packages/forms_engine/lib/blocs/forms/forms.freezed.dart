@@ -18,45 +18,70 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$FormsEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() load,
-    required TResult Function() createMapping,
-    required TResult Function(SchemaObject object) update,
+    required TResult Function(List<String> schemas) load,
+    required TResult Function(String schemaKey, String key, dynamic value)
+        updateField,
+    required TResult Function(SchemaObject schema, String schemaKey) update,
+    required TResult Function(String schemaKey, String key) clearField,
+    required TResult Function(String schemaKey, String pageKey) clearPage,
+    required TResult Function(String schemaKey) clearForm,
+    required TResult Function(String schemaKey) submit,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? load,
-    TResult? Function()? createMapping,
-    TResult? Function(SchemaObject object)? update,
+    TResult? Function(List<String> schemas)? load,
+    TResult? Function(String schemaKey, String key, dynamic value)? updateField,
+    TResult? Function(SchemaObject schema, String schemaKey)? update,
+    TResult? Function(String schemaKey, String key)? clearField,
+    TResult? Function(String schemaKey, String pageKey)? clearPage,
+    TResult? Function(String schemaKey)? clearForm,
+    TResult? Function(String schemaKey)? submit,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? load,
-    TResult Function()? createMapping,
-    TResult Function(SchemaObject object)? update,
+    TResult Function(List<String> schemas)? load,
+    TResult Function(String schemaKey, String key, dynamic value)? updateField,
+    TResult Function(SchemaObject schema, String schemaKey)? update,
+    TResult Function(String schemaKey, String key)? clearField,
+    TResult Function(String schemaKey, String pageKey)? clearPage,
+    TResult Function(String schemaKey)? clearForm,
+    TResult Function(String schemaKey)? submit,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(FormsLoadEvent value) load,
-    required TResult Function(FormsCreateMappingEvent value) createMapping,
+    required TResult Function(FormsUpdateFieldEvent value) updateField,
     required TResult Function(FormsUpdateEvent value) update,
+    required TResult Function(FormsClearFieldEvent value) clearField,
+    required TResult Function(FormsClearPageEvent value) clearPage,
+    required TResult Function(FormsClearFormEvent value) clearForm,
+    required TResult Function(FormsSubmitEvent value) submit,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(FormsLoadEvent value)? load,
-    TResult? Function(FormsCreateMappingEvent value)? createMapping,
+    TResult? Function(FormsUpdateFieldEvent value)? updateField,
     TResult? Function(FormsUpdateEvent value)? update,
+    TResult? Function(FormsClearFieldEvent value)? clearField,
+    TResult? Function(FormsClearPageEvent value)? clearPage,
+    TResult? Function(FormsClearFormEvent value)? clearForm,
+    TResult? Function(FormsSubmitEvent value)? submit,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(FormsLoadEvent value)? load,
-    TResult Function(FormsCreateMappingEvent value)? createMapping,
+    TResult Function(FormsUpdateFieldEvent value)? updateField,
     TResult Function(FormsUpdateEvent value)? update,
+    TResult Function(FormsClearFieldEvent value)? clearField,
+    TResult Function(FormsClearPageEvent value)? clearPage,
+    TResult Function(FormsClearFormEvent value)? clearForm,
+    TResult Function(FormsSubmitEvent value)? submit,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -85,6 +110,8 @@ abstract class _$$FormsLoadEventImplCopyWith<$Res> {
   factory _$$FormsLoadEventImplCopyWith(_$FormsLoadEventImpl value,
           $Res Function(_$FormsLoadEventImpl) then) =
       __$$FormsLoadEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<String> schemas});
 }
 
 /// @nodoc
@@ -94,57 +121,102 @@ class __$$FormsLoadEventImplCopyWithImpl<$Res>
   __$$FormsLoadEventImplCopyWithImpl(
       _$FormsLoadEventImpl _value, $Res Function(_$FormsLoadEventImpl) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? schemas = null,
+  }) {
+    return _then(_$FormsLoadEventImpl(
+      schemas: null == schemas
+          ? _value._schemas
+          : schemas // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$FormsLoadEventImpl implements FormsLoadEvent {
-  const _$FormsLoadEventImpl();
+  const _$FormsLoadEventImpl({required final List<String> schemas})
+      : _schemas = schemas;
+
+  final List<String> _schemas;
+  @override
+  List<String> get schemas {
+    if (_schemas is EqualUnmodifiableListView) return _schemas;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_schemas);
+  }
 
   @override
   String toString() {
-    return 'FormsEvent.load()';
+    return 'FormsEvent.load(schemas: $schemas)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$FormsLoadEventImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$FormsLoadEventImpl &&
+            const DeepCollectionEquality().equals(other._schemas, _schemas));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_schemas));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FormsLoadEventImplCopyWith<_$FormsLoadEventImpl> get copyWith =>
+      __$$FormsLoadEventImplCopyWithImpl<_$FormsLoadEventImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() load,
-    required TResult Function() createMapping,
-    required TResult Function(SchemaObject object) update,
+    required TResult Function(List<String> schemas) load,
+    required TResult Function(String schemaKey, String key, dynamic value)
+        updateField,
+    required TResult Function(SchemaObject schema, String schemaKey) update,
+    required TResult Function(String schemaKey, String key) clearField,
+    required TResult Function(String schemaKey, String pageKey) clearPage,
+    required TResult Function(String schemaKey) clearForm,
+    required TResult Function(String schemaKey) submit,
   }) {
-    return load();
+    return load(schemas);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? load,
-    TResult? Function()? createMapping,
-    TResult? Function(SchemaObject object)? update,
+    TResult? Function(List<String> schemas)? load,
+    TResult? Function(String schemaKey, String key, dynamic value)? updateField,
+    TResult? Function(SchemaObject schema, String schemaKey)? update,
+    TResult? Function(String schemaKey, String key)? clearField,
+    TResult? Function(String schemaKey, String pageKey)? clearPage,
+    TResult? Function(String schemaKey)? clearForm,
+    TResult? Function(String schemaKey)? submit,
   }) {
-    return load?.call();
+    return load?.call(schemas);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? load,
-    TResult Function()? createMapping,
-    TResult Function(SchemaObject object)? update,
+    TResult Function(List<String> schemas)? load,
+    TResult Function(String schemaKey, String key, dynamic value)? updateField,
+    TResult Function(SchemaObject schema, String schemaKey)? update,
+    TResult Function(String schemaKey, String key)? clearField,
+    TResult Function(String schemaKey, String pageKey)? clearPage,
+    TResult Function(String schemaKey)? clearForm,
+    TResult Function(String schemaKey)? submit,
     required TResult orElse(),
   }) {
     if (load != null) {
-      return load();
+      return load(schemas);
     }
     return orElse();
   }
@@ -153,8 +225,12 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(FormsLoadEvent value) load,
-    required TResult Function(FormsCreateMappingEvent value) createMapping,
+    required TResult Function(FormsUpdateFieldEvent value) updateField,
     required TResult Function(FormsUpdateEvent value) update,
+    required TResult Function(FormsClearFieldEvent value) clearField,
+    required TResult Function(FormsClearPageEvent value) clearPage,
+    required TResult Function(FormsClearFormEvent value) clearForm,
+    required TResult Function(FormsSubmitEvent value) submit,
   }) {
     return load(this);
   }
@@ -163,8 +239,12 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(FormsLoadEvent value)? load,
-    TResult? Function(FormsCreateMappingEvent value)? createMapping,
+    TResult? Function(FormsUpdateFieldEvent value)? updateField,
     TResult? Function(FormsUpdateEvent value)? update,
+    TResult? Function(FormsClearFieldEvent value)? clearField,
+    TResult? Function(FormsClearPageEvent value)? clearPage,
+    TResult? Function(FormsClearFormEvent value)? clearForm,
+    TResult? Function(FormsSubmitEvent value)? submit,
   }) {
     return load?.call(this);
   }
@@ -173,8 +253,12 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(FormsLoadEvent value)? load,
-    TResult Function(FormsCreateMappingEvent value)? createMapping,
+    TResult Function(FormsUpdateFieldEvent value)? updateField,
     TResult Function(FormsUpdateEvent value)? update,
+    TResult Function(FormsClearFieldEvent value)? clearField,
+    TResult Function(FormsClearPageEvent value)? clearPage,
+    TResult Function(FormsClearFormEvent value)? clearForm,
+    TResult Function(FormsSubmitEvent value)? submit,
     required TResult orElse(),
   }) {
     if (load != null) {
@@ -185,77 +269,140 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
 }
 
 abstract class FormsLoadEvent implements FormsEvent {
-  const factory FormsLoadEvent() = _$FormsLoadEventImpl;
+  const factory FormsLoadEvent({required final List<String> schemas}) =
+      _$FormsLoadEventImpl;
+
+  List<String> get schemas;
+  @JsonKey(ignore: true)
+  _$$FormsLoadEventImplCopyWith<_$FormsLoadEventImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$FormsCreateMappingEventImplCopyWith<$Res> {
-  factory _$$FormsCreateMappingEventImplCopyWith(
-          _$FormsCreateMappingEventImpl value,
-          $Res Function(_$FormsCreateMappingEventImpl) then) =
-      __$$FormsCreateMappingEventImplCopyWithImpl<$Res>;
+abstract class _$$FormsUpdateFieldEventImplCopyWith<$Res> {
+  factory _$$FormsUpdateFieldEventImplCopyWith(
+          _$FormsUpdateFieldEventImpl value,
+          $Res Function(_$FormsUpdateFieldEventImpl) then) =
+      __$$FormsUpdateFieldEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String schemaKey, String key, dynamic value});
 }
 
 /// @nodoc
-class __$$FormsCreateMappingEventImplCopyWithImpl<$Res>
-    extends _$FormsEventCopyWithImpl<$Res, _$FormsCreateMappingEventImpl>
-    implements _$$FormsCreateMappingEventImplCopyWith<$Res> {
-  __$$FormsCreateMappingEventImplCopyWithImpl(
-      _$FormsCreateMappingEventImpl _value,
-      $Res Function(_$FormsCreateMappingEventImpl) _then)
+class __$$FormsUpdateFieldEventImplCopyWithImpl<$Res>
+    extends _$FormsEventCopyWithImpl<$Res, _$FormsUpdateFieldEventImpl>
+    implements _$$FormsUpdateFieldEventImplCopyWith<$Res> {
+  __$$FormsUpdateFieldEventImplCopyWithImpl(_$FormsUpdateFieldEventImpl _value,
+      $Res Function(_$FormsUpdateFieldEventImpl) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? schemaKey = null,
+    Object? key = null,
+    Object? value = freezed,
+  }) {
+    return _then(_$FormsUpdateFieldEventImpl(
+      schemaKey: null == schemaKey
+          ? _value.schemaKey
+          : schemaKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      key: null == key
+          ? _value.key
+          : key // ignore: cast_nullable_to_non_nullable
+              as String,
+      value: freezed == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+    ));
+  }
 }
 
 /// @nodoc
 
-class _$FormsCreateMappingEventImpl implements FormsCreateMappingEvent {
-  const _$FormsCreateMappingEventImpl();
+class _$FormsUpdateFieldEventImpl implements FormsUpdateFieldEvent {
+  const _$FormsUpdateFieldEventImpl(
+      {required this.schemaKey, required this.key, required this.value});
+
+  @override
+  final String schemaKey;
+  @override
+  final String key;
+  @override
+  final dynamic value;
 
   @override
   String toString() {
-    return 'FormsEvent.createMapping()';
+    return 'FormsEvent.updateField(schemaKey: $schemaKey, key: $key, value: $value)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FormsCreateMappingEventImpl);
+            other is _$FormsUpdateFieldEventImpl &&
+            (identical(other.schemaKey, schemaKey) ||
+                other.schemaKey == schemaKey) &&
+            (identical(other.key, key) || other.key == key) &&
+            const DeepCollectionEquality().equals(other.value, value));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(
+      runtimeType, schemaKey, key, const DeepCollectionEquality().hash(value));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FormsUpdateFieldEventImplCopyWith<_$FormsUpdateFieldEventImpl>
+      get copyWith => __$$FormsUpdateFieldEventImplCopyWithImpl<
+          _$FormsUpdateFieldEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() load,
-    required TResult Function() createMapping,
-    required TResult Function(SchemaObject object) update,
+    required TResult Function(List<String> schemas) load,
+    required TResult Function(String schemaKey, String key, dynamic value)
+        updateField,
+    required TResult Function(SchemaObject schema, String schemaKey) update,
+    required TResult Function(String schemaKey, String key) clearField,
+    required TResult Function(String schemaKey, String pageKey) clearPage,
+    required TResult Function(String schemaKey) clearForm,
+    required TResult Function(String schemaKey) submit,
   }) {
-    return createMapping();
+    return updateField(schemaKey, key, value);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? load,
-    TResult? Function()? createMapping,
-    TResult? Function(SchemaObject object)? update,
+    TResult? Function(List<String> schemas)? load,
+    TResult? Function(String schemaKey, String key, dynamic value)? updateField,
+    TResult? Function(SchemaObject schema, String schemaKey)? update,
+    TResult? Function(String schemaKey, String key)? clearField,
+    TResult? Function(String schemaKey, String pageKey)? clearPage,
+    TResult? Function(String schemaKey)? clearForm,
+    TResult? Function(String schemaKey)? submit,
   }) {
-    return createMapping?.call();
+    return updateField?.call(schemaKey, key, value);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? load,
-    TResult Function()? createMapping,
-    TResult Function(SchemaObject object)? update,
+    TResult Function(List<String> schemas)? load,
+    TResult Function(String schemaKey, String key, dynamic value)? updateField,
+    TResult Function(SchemaObject schema, String schemaKey)? update,
+    TResult Function(String schemaKey, String key)? clearField,
+    TResult Function(String schemaKey, String pageKey)? clearPage,
+    TResult Function(String schemaKey)? clearForm,
+    TResult Function(String schemaKey)? submit,
     required TResult orElse(),
   }) {
-    if (createMapping != null) {
-      return createMapping();
+    if (updateField != null) {
+      return updateField(schemaKey, key, value);
     }
     return orElse();
   }
@@ -264,39 +411,61 @@ class _$FormsCreateMappingEventImpl implements FormsCreateMappingEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(FormsLoadEvent value) load,
-    required TResult Function(FormsCreateMappingEvent value) createMapping,
+    required TResult Function(FormsUpdateFieldEvent value) updateField,
     required TResult Function(FormsUpdateEvent value) update,
+    required TResult Function(FormsClearFieldEvent value) clearField,
+    required TResult Function(FormsClearPageEvent value) clearPage,
+    required TResult Function(FormsClearFormEvent value) clearForm,
+    required TResult Function(FormsSubmitEvent value) submit,
   }) {
-    return createMapping(this);
+    return updateField(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(FormsLoadEvent value)? load,
-    TResult? Function(FormsCreateMappingEvent value)? createMapping,
+    TResult? Function(FormsUpdateFieldEvent value)? updateField,
     TResult? Function(FormsUpdateEvent value)? update,
+    TResult? Function(FormsClearFieldEvent value)? clearField,
+    TResult? Function(FormsClearPageEvent value)? clearPage,
+    TResult? Function(FormsClearFormEvent value)? clearForm,
+    TResult? Function(FormsSubmitEvent value)? submit,
   }) {
-    return createMapping?.call(this);
+    return updateField?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(FormsLoadEvent value)? load,
-    TResult Function(FormsCreateMappingEvent value)? createMapping,
+    TResult Function(FormsUpdateFieldEvent value)? updateField,
     TResult Function(FormsUpdateEvent value)? update,
+    TResult Function(FormsClearFieldEvent value)? clearField,
+    TResult Function(FormsClearPageEvent value)? clearPage,
+    TResult Function(FormsClearFormEvent value)? clearForm,
+    TResult Function(FormsSubmitEvent value)? submit,
     required TResult orElse(),
   }) {
-    if (createMapping != null) {
-      return createMapping(this);
+    if (updateField != null) {
+      return updateField(this);
     }
     return orElse();
   }
 }
 
-abstract class FormsCreateMappingEvent implements FormsEvent {
-  const factory FormsCreateMappingEvent() = _$FormsCreateMappingEventImpl;
+abstract class FormsUpdateFieldEvent implements FormsEvent {
+  const factory FormsUpdateFieldEvent(
+      {required final String schemaKey,
+      required final String key,
+      required final dynamic value}) = _$FormsUpdateFieldEventImpl;
+
+  String get schemaKey;
+  String get key;
+  dynamic get value;
+  @JsonKey(ignore: true)
+  _$$FormsUpdateFieldEventImplCopyWith<_$FormsUpdateFieldEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -305,9 +474,9 @@ abstract class _$$FormsUpdateEventImplCopyWith<$Res> {
           $Res Function(_$FormsUpdateEventImpl) then) =
       __$$FormsUpdateEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({SchemaObject object});
+  $Res call({SchemaObject schema, String schemaKey});
 
-  $SchemaObjectCopyWith<$Res> get object;
+  $SchemaObjectCopyWith<$Res> get schema;
 }
 
 /// @nodoc
@@ -321,21 +490,26 @@ class __$$FormsUpdateEventImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? object = null,
+    Object? schema = null,
+    Object? schemaKey = null,
   }) {
     return _then(_$FormsUpdateEventImpl(
-      null == object
-          ? _value.object
-          : object // ignore: cast_nullable_to_non_nullable
+      schema: null == schema
+          ? _value.schema
+          : schema // ignore: cast_nullable_to_non_nullable
               as SchemaObject,
+      schemaKey: null == schemaKey
+          ? _value.schemaKey
+          : schemaKey // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $SchemaObjectCopyWith<$Res> get object {
-    return $SchemaObjectCopyWith<$Res>(_value.object, (value) {
-      return _then(_value.copyWith(object: value));
+  $SchemaObjectCopyWith<$Res> get schema {
+    return $SchemaObjectCopyWith<$Res>(_value.schema, (value) {
+      return _then(_value.copyWith(schema: value));
     });
   }
 }
@@ -343,14 +517,16 @@ class __$$FormsUpdateEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FormsUpdateEventImpl implements FormsUpdateEvent {
-  const _$FormsUpdateEventImpl(this.object);
+  const _$FormsUpdateEventImpl({required this.schema, required this.schemaKey});
 
   @override
-  final SchemaObject object;
+  final SchemaObject schema;
+  @override
+  final String schemaKey;
 
   @override
   String toString() {
-    return 'FormsEvent.update(object: $object)';
+    return 'FormsEvent.update(schema: $schema, schemaKey: $schemaKey)';
   }
 
   @override
@@ -358,11 +534,13 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$FormsUpdateEventImpl &&
-            (identical(other.object, object) || other.object == object));
+            (identical(other.schema, schema) || other.schema == schema) &&
+            (identical(other.schemaKey, schemaKey) ||
+                other.schemaKey == schemaKey));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, object);
+  int get hashCode => Object.hash(runtimeType, schema, schemaKey);
 
   @JsonKey(ignore: true)
   @override
@@ -374,33 +552,46 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() load,
-    required TResult Function() createMapping,
-    required TResult Function(SchemaObject object) update,
+    required TResult Function(List<String> schemas) load,
+    required TResult Function(String schemaKey, String key, dynamic value)
+        updateField,
+    required TResult Function(SchemaObject schema, String schemaKey) update,
+    required TResult Function(String schemaKey, String key) clearField,
+    required TResult Function(String schemaKey, String pageKey) clearPage,
+    required TResult Function(String schemaKey) clearForm,
+    required TResult Function(String schemaKey) submit,
   }) {
-    return update(object);
+    return update(schema, schemaKey);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? load,
-    TResult? Function()? createMapping,
-    TResult? Function(SchemaObject object)? update,
+    TResult? Function(List<String> schemas)? load,
+    TResult? Function(String schemaKey, String key, dynamic value)? updateField,
+    TResult? Function(SchemaObject schema, String schemaKey)? update,
+    TResult? Function(String schemaKey, String key)? clearField,
+    TResult? Function(String schemaKey, String pageKey)? clearPage,
+    TResult? Function(String schemaKey)? clearForm,
+    TResult? Function(String schemaKey)? submit,
   }) {
-    return update?.call(object);
+    return update?.call(schema, schemaKey);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? load,
-    TResult Function()? createMapping,
-    TResult Function(SchemaObject object)? update,
+    TResult Function(List<String> schemas)? load,
+    TResult Function(String schemaKey, String key, dynamic value)? updateField,
+    TResult Function(SchemaObject schema, String schemaKey)? update,
+    TResult Function(String schemaKey, String key)? clearField,
+    TResult Function(String schemaKey, String pageKey)? clearPage,
+    TResult Function(String schemaKey)? clearForm,
+    TResult Function(String schemaKey)? submit,
     required TResult orElse(),
   }) {
     if (update != null) {
-      return update(object);
+      return update(schema, schemaKey);
     }
     return orElse();
   }
@@ -409,8 +600,12 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(FormsLoadEvent value) load,
-    required TResult Function(FormsCreateMappingEvent value) createMapping,
+    required TResult Function(FormsUpdateFieldEvent value) updateField,
     required TResult Function(FormsUpdateEvent value) update,
+    required TResult Function(FormsClearFieldEvent value) clearField,
+    required TResult Function(FormsClearPageEvent value) clearPage,
+    required TResult Function(FormsClearFormEvent value) clearForm,
+    required TResult Function(FormsSubmitEvent value) submit,
   }) {
     return update(this);
   }
@@ -419,8 +614,12 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(FormsLoadEvent value)? load,
-    TResult? Function(FormsCreateMappingEvent value)? createMapping,
+    TResult? Function(FormsUpdateFieldEvent value)? updateField,
     TResult? Function(FormsUpdateEvent value)? update,
+    TResult? Function(FormsClearFieldEvent value)? clearField,
+    TResult? Function(FormsClearPageEvent value)? clearPage,
+    TResult? Function(FormsClearFormEvent value)? clearForm,
+    TResult? Function(FormsSubmitEvent value)? submit,
   }) {
     return update?.call(this);
   }
@@ -429,8 +628,12 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(FormsLoadEvent value)? load,
-    TResult Function(FormsCreateMappingEvent value)? createMapping,
+    TResult Function(FormsUpdateFieldEvent value)? updateField,
     TResult Function(FormsUpdateEvent value)? update,
+    TResult Function(FormsClearFieldEvent value)? clearField,
+    TResult Function(FormsClearPageEvent value)? clearPage,
+    TResult Function(FormsClearFormEvent value)? clearForm,
+    TResult Function(FormsSubmitEvent value)? submit,
     required TResult orElse(),
   }) {
     if (update != null) {
@@ -441,19 +644,776 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
 }
 
 abstract class FormsUpdateEvent implements FormsEvent {
-  const factory FormsUpdateEvent(final SchemaObject object) =
-      _$FormsUpdateEventImpl;
+  const factory FormsUpdateEvent(
+      {required final SchemaObject schema,
+      required final String schemaKey}) = _$FormsUpdateEventImpl;
 
-  SchemaObject get object;
+  SchemaObject get schema;
+  String get schemaKey;
   @JsonKey(ignore: true)
   _$$FormsUpdateEventImplCopyWith<_$FormsUpdateEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
+abstract class _$$FormsClearFieldEventImplCopyWith<$Res> {
+  factory _$$FormsClearFieldEventImplCopyWith(_$FormsClearFieldEventImpl value,
+          $Res Function(_$FormsClearFieldEventImpl) then) =
+      __$$FormsClearFieldEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String schemaKey, String key});
+}
+
+/// @nodoc
+class __$$FormsClearFieldEventImplCopyWithImpl<$Res>
+    extends _$FormsEventCopyWithImpl<$Res, _$FormsClearFieldEventImpl>
+    implements _$$FormsClearFieldEventImplCopyWith<$Res> {
+  __$$FormsClearFieldEventImplCopyWithImpl(_$FormsClearFieldEventImpl _value,
+      $Res Function(_$FormsClearFieldEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? schemaKey = null,
+    Object? key = null,
+  }) {
+    return _then(_$FormsClearFieldEventImpl(
+      schemaKey: null == schemaKey
+          ? _value.schemaKey
+          : schemaKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      key: null == key
+          ? _value.key
+          : key // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$FormsClearFieldEventImpl implements FormsClearFieldEvent {
+  const _$FormsClearFieldEventImpl(
+      {required this.schemaKey, required this.key});
+
+  @override
+  final String schemaKey;
+  @override
+  final String key;
+
+  @override
+  String toString() {
+    return 'FormsEvent.clearField(schemaKey: $schemaKey, key: $key)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FormsClearFieldEventImpl &&
+            (identical(other.schemaKey, schemaKey) ||
+                other.schemaKey == schemaKey) &&
+            (identical(other.key, key) || other.key == key));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, schemaKey, key);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FormsClearFieldEventImplCopyWith<_$FormsClearFieldEventImpl>
+      get copyWith =>
+          __$$FormsClearFieldEventImplCopyWithImpl<_$FormsClearFieldEventImpl>(
+              this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(List<String> schemas) load,
+    required TResult Function(String schemaKey, String key, dynamic value)
+        updateField,
+    required TResult Function(SchemaObject schema, String schemaKey) update,
+    required TResult Function(String schemaKey, String key) clearField,
+    required TResult Function(String schemaKey, String pageKey) clearPage,
+    required TResult Function(String schemaKey) clearForm,
+    required TResult Function(String schemaKey) submit,
+  }) {
+    return clearField(schemaKey, key);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(List<String> schemas)? load,
+    TResult? Function(String schemaKey, String key, dynamic value)? updateField,
+    TResult? Function(SchemaObject schema, String schemaKey)? update,
+    TResult? Function(String schemaKey, String key)? clearField,
+    TResult? Function(String schemaKey, String pageKey)? clearPage,
+    TResult? Function(String schemaKey)? clearForm,
+    TResult? Function(String schemaKey)? submit,
+  }) {
+    return clearField?.call(schemaKey, key);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(List<String> schemas)? load,
+    TResult Function(String schemaKey, String key, dynamic value)? updateField,
+    TResult Function(SchemaObject schema, String schemaKey)? update,
+    TResult Function(String schemaKey, String key)? clearField,
+    TResult Function(String schemaKey, String pageKey)? clearPage,
+    TResult Function(String schemaKey)? clearForm,
+    TResult Function(String schemaKey)? submit,
+    required TResult orElse(),
+  }) {
+    if (clearField != null) {
+      return clearField(schemaKey, key);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(FormsLoadEvent value) load,
+    required TResult Function(FormsUpdateFieldEvent value) updateField,
+    required TResult Function(FormsUpdateEvent value) update,
+    required TResult Function(FormsClearFieldEvent value) clearField,
+    required TResult Function(FormsClearPageEvent value) clearPage,
+    required TResult Function(FormsClearFormEvent value) clearForm,
+    required TResult Function(FormsSubmitEvent value) submit,
+  }) {
+    return clearField(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(FormsLoadEvent value)? load,
+    TResult? Function(FormsUpdateFieldEvent value)? updateField,
+    TResult? Function(FormsUpdateEvent value)? update,
+    TResult? Function(FormsClearFieldEvent value)? clearField,
+    TResult? Function(FormsClearPageEvent value)? clearPage,
+    TResult? Function(FormsClearFormEvent value)? clearForm,
+    TResult? Function(FormsSubmitEvent value)? submit,
+  }) {
+    return clearField?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FormsLoadEvent value)? load,
+    TResult Function(FormsUpdateFieldEvent value)? updateField,
+    TResult Function(FormsUpdateEvent value)? update,
+    TResult Function(FormsClearFieldEvent value)? clearField,
+    TResult Function(FormsClearPageEvent value)? clearPage,
+    TResult Function(FormsClearFormEvent value)? clearForm,
+    TResult Function(FormsSubmitEvent value)? submit,
+    required TResult orElse(),
+  }) {
+    if (clearField != null) {
+      return clearField(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FormsClearFieldEvent implements FormsEvent {
+  const factory FormsClearFieldEvent(
+      {required final String schemaKey,
+      required final String key}) = _$FormsClearFieldEventImpl;
+
+  String get schemaKey;
+  String get key;
+  @JsonKey(ignore: true)
+  _$$FormsClearFieldEventImplCopyWith<_$FormsClearFieldEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$FormsClearPageEventImplCopyWith<$Res> {
+  factory _$$FormsClearPageEventImplCopyWith(_$FormsClearPageEventImpl value,
+          $Res Function(_$FormsClearPageEventImpl) then) =
+      __$$FormsClearPageEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String schemaKey, String pageKey});
+}
+
+/// @nodoc
+class __$$FormsClearPageEventImplCopyWithImpl<$Res>
+    extends _$FormsEventCopyWithImpl<$Res, _$FormsClearPageEventImpl>
+    implements _$$FormsClearPageEventImplCopyWith<$Res> {
+  __$$FormsClearPageEventImplCopyWithImpl(_$FormsClearPageEventImpl _value,
+      $Res Function(_$FormsClearPageEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? schemaKey = null,
+    Object? pageKey = null,
+  }) {
+    return _then(_$FormsClearPageEventImpl(
+      schemaKey: null == schemaKey
+          ? _value.schemaKey
+          : schemaKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      pageKey: null == pageKey
+          ? _value.pageKey
+          : pageKey // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$FormsClearPageEventImpl implements FormsClearPageEvent {
+  const _$FormsClearPageEventImpl(
+      {required this.schemaKey, required this.pageKey});
+
+  @override
+  final String schemaKey;
+  @override
+  final String pageKey;
+
+  @override
+  String toString() {
+    return 'FormsEvent.clearPage(schemaKey: $schemaKey, pageKey: $pageKey)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FormsClearPageEventImpl &&
+            (identical(other.schemaKey, schemaKey) ||
+                other.schemaKey == schemaKey) &&
+            (identical(other.pageKey, pageKey) || other.pageKey == pageKey));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, schemaKey, pageKey);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FormsClearPageEventImplCopyWith<_$FormsClearPageEventImpl> get copyWith =>
+      __$$FormsClearPageEventImplCopyWithImpl<_$FormsClearPageEventImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(List<String> schemas) load,
+    required TResult Function(String schemaKey, String key, dynamic value)
+        updateField,
+    required TResult Function(SchemaObject schema, String schemaKey) update,
+    required TResult Function(String schemaKey, String key) clearField,
+    required TResult Function(String schemaKey, String pageKey) clearPage,
+    required TResult Function(String schemaKey) clearForm,
+    required TResult Function(String schemaKey) submit,
+  }) {
+    return clearPage(schemaKey, pageKey);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(List<String> schemas)? load,
+    TResult? Function(String schemaKey, String key, dynamic value)? updateField,
+    TResult? Function(SchemaObject schema, String schemaKey)? update,
+    TResult? Function(String schemaKey, String key)? clearField,
+    TResult? Function(String schemaKey, String pageKey)? clearPage,
+    TResult? Function(String schemaKey)? clearForm,
+    TResult? Function(String schemaKey)? submit,
+  }) {
+    return clearPage?.call(schemaKey, pageKey);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(List<String> schemas)? load,
+    TResult Function(String schemaKey, String key, dynamic value)? updateField,
+    TResult Function(SchemaObject schema, String schemaKey)? update,
+    TResult Function(String schemaKey, String key)? clearField,
+    TResult Function(String schemaKey, String pageKey)? clearPage,
+    TResult Function(String schemaKey)? clearForm,
+    TResult Function(String schemaKey)? submit,
+    required TResult orElse(),
+  }) {
+    if (clearPage != null) {
+      return clearPage(schemaKey, pageKey);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(FormsLoadEvent value) load,
+    required TResult Function(FormsUpdateFieldEvent value) updateField,
+    required TResult Function(FormsUpdateEvent value) update,
+    required TResult Function(FormsClearFieldEvent value) clearField,
+    required TResult Function(FormsClearPageEvent value) clearPage,
+    required TResult Function(FormsClearFormEvent value) clearForm,
+    required TResult Function(FormsSubmitEvent value) submit,
+  }) {
+    return clearPage(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(FormsLoadEvent value)? load,
+    TResult? Function(FormsUpdateFieldEvent value)? updateField,
+    TResult? Function(FormsUpdateEvent value)? update,
+    TResult? Function(FormsClearFieldEvent value)? clearField,
+    TResult? Function(FormsClearPageEvent value)? clearPage,
+    TResult? Function(FormsClearFormEvent value)? clearForm,
+    TResult? Function(FormsSubmitEvent value)? submit,
+  }) {
+    return clearPage?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FormsLoadEvent value)? load,
+    TResult Function(FormsUpdateFieldEvent value)? updateField,
+    TResult Function(FormsUpdateEvent value)? update,
+    TResult Function(FormsClearFieldEvent value)? clearField,
+    TResult Function(FormsClearPageEvent value)? clearPage,
+    TResult Function(FormsClearFormEvent value)? clearForm,
+    TResult Function(FormsSubmitEvent value)? submit,
+    required TResult orElse(),
+  }) {
+    if (clearPage != null) {
+      return clearPage(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FormsClearPageEvent implements FormsEvent {
+  const factory FormsClearPageEvent(
+      {required final String schemaKey,
+      required final String pageKey}) = _$FormsClearPageEventImpl;
+
+  String get schemaKey;
+  String get pageKey;
+  @JsonKey(ignore: true)
+  _$$FormsClearPageEventImplCopyWith<_$FormsClearPageEventImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$FormsClearFormEventImplCopyWith<$Res> {
+  factory _$$FormsClearFormEventImplCopyWith(_$FormsClearFormEventImpl value,
+          $Res Function(_$FormsClearFormEventImpl) then) =
+      __$$FormsClearFormEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String schemaKey});
+}
+
+/// @nodoc
+class __$$FormsClearFormEventImplCopyWithImpl<$Res>
+    extends _$FormsEventCopyWithImpl<$Res, _$FormsClearFormEventImpl>
+    implements _$$FormsClearFormEventImplCopyWith<$Res> {
+  __$$FormsClearFormEventImplCopyWithImpl(_$FormsClearFormEventImpl _value,
+      $Res Function(_$FormsClearFormEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? schemaKey = null,
+  }) {
+    return _then(_$FormsClearFormEventImpl(
+      schemaKey: null == schemaKey
+          ? _value.schemaKey
+          : schemaKey // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$FormsClearFormEventImpl implements FormsClearFormEvent {
+  const _$FormsClearFormEventImpl({required this.schemaKey});
+
+  @override
+  final String schemaKey;
+
+  @override
+  String toString() {
+    return 'FormsEvent.clearForm(schemaKey: $schemaKey)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FormsClearFormEventImpl &&
+            (identical(other.schemaKey, schemaKey) ||
+                other.schemaKey == schemaKey));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, schemaKey);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FormsClearFormEventImplCopyWith<_$FormsClearFormEventImpl> get copyWith =>
+      __$$FormsClearFormEventImplCopyWithImpl<_$FormsClearFormEventImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(List<String> schemas) load,
+    required TResult Function(String schemaKey, String key, dynamic value)
+        updateField,
+    required TResult Function(SchemaObject schema, String schemaKey) update,
+    required TResult Function(String schemaKey, String key) clearField,
+    required TResult Function(String schemaKey, String pageKey) clearPage,
+    required TResult Function(String schemaKey) clearForm,
+    required TResult Function(String schemaKey) submit,
+  }) {
+    return clearForm(schemaKey);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(List<String> schemas)? load,
+    TResult? Function(String schemaKey, String key, dynamic value)? updateField,
+    TResult? Function(SchemaObject schema, String schemaKey)? update,
+    TResult? Function(String schemaKey, String key)? clearField,
+    TResult? Function(String schemaKey, String pageKey)? clearPage,
+    TResult? Function(String schemaKey)? clearForm,
+    TResult? Function(String schemaKey)? submit,
+  }) {
+    return clearForm?.call(schemaKey);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(List<String> schemas)? load,
+    TResult Function(String schemaKey, String key, dynamic value)? updateField,
+    TResult Function(SchemaObject schema, String schemaKey)? update,
+    TResult Function(String schemaKey, String key)? clearField,
+    TResult Function(String schemaKey, String pageKey)? clearPage,
+    TResult Function(String schemaKey)? clearForm,
+    TResult Function(String schemaKey)? submit,
+    required TResult orElse(),
+  }) {
+    if (clearForm != null) {
+      return clearForm(schemaKey);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(FormsLoadEvent value) load,
+    required TResult Function(FormsUpdateFieldEvent value) updateField,
+    required TResult Function(FormsUpdateEvent value) update,
+    required TResult Function(FormsClearFieldEvent value) clearField,
+    required TResult Function(FormsClearPageEvent value) clearPage,
+    required TResult Function(FormsClearFormEvent value) clearForm,
+    required TResult Function(FormsSubmitEvent value) submit,
+  }) {
+    return clearForm(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(FormsLoadEvent value)? load,
+    TResult? Function(FormsUpdateFieldEvent value)? updateField,
+    TResult? Function(FormsUpdateEvent value)? update,
+    TResult? Function(FormsClearFieldEvent value)? clearField,
+    TResult? Function(FormsClearPageEvent value)? clearPage,
+    TResult? Function(FormsClearFormEvent value)? clearForm,
+    TResult? Function(FormsSubmitEvent value)? submit,
+  }) {
+    return clearForm?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FormsLoadEvent value)? load,
+    TResult Function(FormsUpdateFieldEvent value)? updateField,
+    TResult Function(FormsUpdateEvent value)? update,
+    TResult Function(FormsClearFieldEvent value)? clearField,
+    TResult Function(FormsClearPageEvent value)? clearPage,
+    TResult Function(FormsClearFormEvent value)? clearForm,
+    TResult Function(FormsSubmitEvent value)? submit,
+    required TResult orElse(),
+  }) {
+    if (clearForm != null) {
+      return clearForm(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FormsClearFormEvent implements FormsEvent {
+  const factory FormsClearFormEvent({required final String schemaKey}) =
+      _$FormsClearFormEventImpl;
+
+  String get schemaKey;
+  @JsonKey(ignore: true)
+  _$$FormsClearFormEventImplCopyWith<_$FormsClearFormEventImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$FormsSubmitEventImplCopyWith<$Res> {
+  factory _$$FormsSubmitEventImplCopyWith(_$FormsSubmitEventImpl value,
+          $Res Function(_$FormsSubmitEventImpl) then) =
+      __$$FormsSubmitEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String schemaKey});
+}
+
+/// @nodoc
+class __$$FormsSubmitEventImplCopyWithImpl<$Res>
+    extends _$FormsEventCopyWithImpl<$Res, _$FormsSubmitEventImpl>
+    implements _$$FormsSubmitEventImplCopyWith<$Res> {
+  __$$FormsSubmitEventImplCopyWithImpl(_$FormsSubmitEventImpl _value,
+      $Res Function(_$FormsSubmitEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? schemaKey = null,
+  }) {
+    return _then(_$FormsSubmitEventImpl(
+      schemaKey: null == schemaKey
+          ? _value.schemaKey
+          : schemaKey // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$FormsSubmitEventImpl implements FormsSubmitEvent {
+  const _$FormsSubmitEventImpl({required this.schemaKey});
+
+  @override
+  final String schemaKey;
+
+  @override
+  String toString() {
+    return 'FormsEvent.submit(schemaKey: $schemaKey)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FormsSubmitEventImpl &&
+            (identical(other.schemaKey, schemaKey) ||
+                other.schemaKey == schemaKey));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, schemaKey);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FormsSubmitEventImplCopyWith<_$FormsSubmitEventImpl> get copyWith =>
+      __$$FormsSubmitEventImplCopyWithImpl<_$FormsSubmitEventImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(List<String> schemas) load,
+    required TResult Function(String schemaKey, String key, dynamic value)
+        updateField,
+    required TResult Function(SchemaObject schema, String schemaKey) update,
+    required TResult Function(String schemaKey, String key) clearField,
+    required TResult Function(String schemaKey, String pageKey) clearPage,
+    required TResult Function(String schemaKey) clearForm,
+    required TResult Function(String schemaKey) submit,
+  }) {
+    return submit(schemaKey);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(List<String> schemas)? load,
+    TResult? Function(String schemaKey, String key, dynamic value)? updateField,
+    TResult? Function(SchemaObject schema, String schemaKey)? update,
+    TResult? Function(String schemaKey, String key)? clearField,
+    TResult? Function(String schemaKey, String pageKey)? clearPage,
+    TResult? Function(String schemaKey)? clearForm,
+    TResult? Function(String schemaKey)? submit,
+  }) {
+    return submit?.call(schemaKey);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(List<String> schemas)? load,
+    TResult Function(String schemaKey, String key, dynamic value)? updateField,
+    TResult Function(SchemaObject schema, String schemaKey)? update,
+    TResult Function(String schemaKey, String key)? clearField,
+    TResult Function(String schemaKey, String pageKey)? clearPage,
+    TResult Function(String schemaKey)? clearForm,
+    TResult Function(String schemaKey)? submit,
+    required TResult orElse(),
+  }) {
+    if (submit != null) {
+      return submit(schemaKey);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(FormsLoadEvent value) load,
+    required TResult Function(FormsUpdateFieldEvent value) updateField,
+    required TResult Function(FormsUpdateEvent value) update,
+    required TResult Function(FormsClearFieldEvent value) clearField,
+    required TResult Function(FormsClearPageEvent value) clearPage,
+    required TResult Function(FormsClearFormEvent value) clearForm,
+    required TResult Function(FormsSubmitEvent value) submit,
+  }) {
+    return submit(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(FormsLoadEvent value)? load,
+    TResult? Function(FormsUpdateFieldEvent value)? updateField,
+    TResult? Function(FormsUpdateEvent value)? update,
+    TResult? Function(FormsClearFieldEvent value)? clearField,
+    TResult? Function(FormsClearPageEvent value)? clearPage,
+    TResult? Function(FormsClearFormEvent value)? clearForm,
+    TResult? Function(FormsSubmitEvent value)? submit,
+  }) {
+    return submit?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FormsLoadEvent value)? load,
+    TResult Function(FormsUpdateFieldEvent value)? updateField,
+    TResult Function(FormsUpdateEvent value)? update,
+    TResult Function(FormsClearFieldEvent value)? clearField,
+    TResult Function(FormsClearPageEvent value)? clearPage,
+    TResult Function(FormsClearFormEvent value)? clearForm,
+    TResult Function(FormsSubmitEvent value)? submit,
+    required TResult orElse(),
+  }) {
+    if (submit != null) {
+      return submit(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FormsSubmitEvent implements FormsEvent {
+  const factory FormsSubmitEvent({required final String schemaKey}) =
+      _$FormsSubmitEventImpl;
+
+  String get schemaKey;
+  @JsonKey(ignore: true)
+  _$$FormsSubmitEventImplCopyWith<_$FormsSubmitEventImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$FormsState {
-  SchemaObject? get schema => throw _privateConstructorUsedError;
-  Map<String, dynamic>? get savedProperties =>
+  Map<String, SchemaObject> get cachedSchemas =>
+      throw _privateConstructorUsedError;
+  Map<String, SchemaObject> get initialSchemas =>
+      throw _privateConstructorUsedError;
+  String? get activeSchemaKey => throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(Map<String, SchemaObject> cachedSchemas,
+            Map<String, SchemaObject> initialSchemas, String? activeSchemaKey)
+        $default, {
+    required TResult Function(
+            SchemaObject schema,
+            Map<String, Map<String, dynamic>> formData,
+            Map<String, SchemaObject> cachedSchemas,
+            Map<String, SchemaObject> initialSchemas,
+            String? activeSchemaKey)
+        formSubmitted,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(Map<String, SchemaObject> cachedSchemas,
+            Map<String, SchemaObject> initialSchemas, String? activeSchemaKey)?
+        $default, {
+    TResult? Function(
+            SchemaObject schema,
+            Map<String, Map<String, dynamic>> formData,
+            Map<String, SchemaObject> cachedSchemas,
+            Map<String, SchemaObject> initialSchemas,
+            String? activeSchemaKey)?
+        formSubmitted,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(Map<String, SchemaObject> cachedSchemas,
+            Map<String, SchemaObject> initialSchemas, String? activeSchemaKey)?
+        $default, {
+    TResult Function(
+            SchemaObject schema,
+            Map<String, Map<String, dynamic>> formData,
+            Map<String, SchemaObject> cachedSchemas,
+            Map<String, SchemaObject> initialSchemas,
+            String? activeSchemaKey)?
+        formSubmitted,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_FormsState value) $default, {
+    required TResult Function(FormsSubmittedState value) formSubmitted,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_FormsState value)? $default, {
+    TResult? Function(FormsSubmittedState value)? formSubmitted,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_FormsState value)? $default, {
+    TResult Function(FormsSubmittedState value)? formSubmitted,
+    required TResult orElse(),
+  }) =>
       throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -467,9 +1427,10 @@ abstract class $FormsStateCopyWith<$Res> {
           FormsState value, $Res Function(FormsState) then) =
       _$FormsStateCopyWithImpl<$Res, FormsState>;
   @useResult
-  $Res call({SchemaObject? schema, Map<String, dynamic>? savedProperties});
-
-  $SchemaObjectCopyWith<$Res>? get schema;
+  $Res call(
+      {Map<String, SchemaObject> cachedSchemas,
+      Map<String, SchemaObject> initialSchemas,
+      String? activeSchemaKey});
 }
 
 /// @nodoc
@@ -485,31 +1446,24 @@ class _$FormsStateCopyWithImpl<$Res, $Val extends FormsState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? schema = freezed,
-    Object? savedProperties = freezed,
+    Object? cachedSchemas = null,
+    Object? initialSchemas = null,
+    Object? activeSchemaKey = freezed,
   }) {
     return _then(_value.copyWith(
-      schema: freezed == schema
-          ? _value.schema
-          : schema // ignore: cast_nullable_to_non_nullable
-              as SchemaObject?,
-      savedProperties: freezed == savedProperties
-          ? _value.savedProperties
-          : savedProperties // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
+      cachedSchemas: null == cachedSchemas
+          ? _value.cachedSchemas
+          : cachedSchemas // ignore: cast_nullable_to_non_nullable
+              as Map<String, SchemaObject>,
+      initialSchemas: null == initialSchemas
+          ? _value.initialSchemas
+          : initialSchemas // ignore: cast_nullable_to_non_nullable
+              as Map<String, SchemaObject>,
+      activeSchemaKey: freezed == activeSchemaKey
+          ? _value.activeSchemaKey
+          : activeSchemaKey // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $SchemaObjectCopyWith<$Res>? get schema {
-    if (_value.schema == null) {
-      return null;
-    }
-
-    return $SchemaObjectCopyWith<$Res>(_value.schema!, (value) {
-      return _then(_value.copyWith(schema: value) as $Val);
-    });
   }
 }
 
@@ -521,10 +1475,10 @@ abstract class _$$FormsStateImplCopyWith<$Res>
       __$$FormsStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({SchemaObject? schema, Map<String, dynamic>? savedProperties});
-
-  @override
-  $SchemaObjectCopyWith<$Res>? get schema;
+  $Res call(
+      {Map<String, SchemaObject> cachedSchemas,
+      Map<String, SchemaObject> initialSchemas,
+      String? activeSchemaKey});
 }
 
 /// @nodoc
@@ -538,18 +1492,23 @@ class __$$FormsStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? schema = freezed,
-    Object? savedProperties = freezed,
+    Object? cachedSchemas = null,
+    Object? initialSchemas = null,
+    Object? activeSchemaKey = freezed,
   }) {
     return _then(_$FormsStateImpl(
-      schema: freezed == schema
-          ? _value.schema
-          : schema // ignore: cast_nullable_to_non_nullable
-              as SchemaObject?,
-      savedProperties: freezed == savedProperties
-          ? _value._savedProperties
-          : savedProperties // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
+      cachedSchemas: null == cachedSchemas
+          ? _value._cachedSchemas
+          : cachedSchemas // ignore: cast_nullable_to_non_nullable
+              as Map<String, SchemaObject>,
+      initialSchemas: null == initialSchemas
+          ? _value._initialSchemas
+          : initialSchemas // ignore: cast_nullable_to_non_nullable
+              as Map<String, SchemaObject>,
+      activeSchemaKey: freezed == activeSchemaKey
+          ? _value.activeSchemaKey
+          : activeSchemaKey // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -558,24 +1517,36 @@ class __$$FormsStateImplCopyWithImpl<$Res>
 
 class _$FormsStateImpl implements _FormsState {
   const _$FormsStateImpl(
-      {this.schema, final Map<String, dynamic>? savedProperties})
-      : _savedProperties = savedProperties;
+      {final Map<String, SchemaObject> cachedSchemas = const {},
+      final Map<String, SchemaObject> initialSchemas = const {},
+      this.activeSchemaKey})
+      : _cachedSchemas = cachedSchemas,
+        _initialSchemas = initialSchemas;
 
+  final Map<String, SchemaObject> _cachedSchemas;
   @override
-  final SchemaObject? schema;
-  final Map<String, dynamic>? _savedProperties;
-  @override
-  Map<String, dynamic>? get savedProperties {
-    final value = _savedProperties;
-    if (value == null) return null;
-    if (_savedProperties is EqualUnmodifiableMapView) return _savedProperties;
+  @JsonKey()
+  Map<String, SchemaObject> get cachedSchemas {
+    if (_cachedSchemas is EqualUnmodifiableMapView) return _cachedSchemas;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(value);
+    return EqualUnmodifiableMapView(_cachedSchemas);
+  }
+
+  final Map<String, SchemaObject> _initialSchemas;
+  @override
+  @JsonKey()
+  Map<String, SchemaObject> get initialSchemas {
+    if (_initialSchemas is EqualUnmodifiableMapView) return _initialSchemas;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_initialSchemas);
   }
 
   @override
+  final String? activeSchemaKey;
+
+  @override
   String toString() {
-    return 'FormsState(schema: $schema, savedProperties: $savedProperties)';
+    return 'FormsState(cachedSchemas: $cachedSchemas, initialSchemas: $initialSchemas, activeSchemaKey: $activeSchemaKey)';
   }
 
   @override
@@ -583,33 +1554,386 @@ class _$FormsStateImpl implements _FormsState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$FormsStateImpl &&
-            (identical(other.schema, schema) || other.schema == schema) &&
             const DeepCollectionEquality()
-                .equals(other._savedProperties, _savedProperties));
+                .equals(other._cachedSchemas, _cachedSchemas) &&
+            const DeepCollectionEquality()
+                .equals(other._initialSchemas, _initialSchemas) &&
+            (identical(other.activeSchemaKey, activeSchemaKey) ||
+                other.activeSchemaKey == activeSchemaKey));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, schema,
-      const DeepCollectionEquality().hash(_savedProperties));
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_cachedSchemas),
+      const DeepCollectionEquality().hash(_initialSchemas),
+      activeSchemaKey);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$FormsStateImplCopyWith<_$FormsStateImpl> get copyWith =>
       __$$FormsStateImplCopyWithImpl<_$FormsStateImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(Map<String, SchemaObject> cachedSchemas,
+            Map<String, SchemaObject> initialSchemas, String? activeSchemaKey)
+        $default, {
+    required TResult Function(
+            SchemaObject schema,
+            Map<String, Map<String, dynamic>> formData,
+            Map<String, SchemaObject> cachedSchemas,
+            Map<String, SchemaObject> initialSchemas,
+            String? activeSchemaKey)
+        formSubmitted,
+  }) {
+    return $default(cachedSchemas, initialSchemas, activeSchemaKey);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(Map<String, SchemaObject> cachedSchemas,
+            Map<String, SchemaObject> initialSchemas, String? activeSchemaKey)?
+        $default, {
+    TResult? Function(
+            SchemaObject schema,
+            Map<String, Map<String, dynamic>> formData,
+            Map<String, SchemaObject> cachedSchemas,
+            Map<String, SchemaObject> initialSchemas,
+            String? activeSchemaKey)?
+        formSubmitted,
+  }) {
+    return $default?.call(cachedSchemas, initialSchemas, activeSchemaKey);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(Map<String, SchemaObject> cachedSchemas,
+            Map<String, SchemaObject> initialSchemas, String? activeSchemaKey)?
+        $default, {
+    TResult Function(
+            SchemaObject schema,
+            Map<String, Map<String, dynamic>> formData,
+            Map<String, SchemaObject> cachedSchemas,
+            Map<String, SchemaObject> initialSchemas,
+            String? activeSchemaKey)?
+        formSubmitted,
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(cachedSchemas, initialSchemas, activeSchemaKey);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_FormsState value) $default, {
+    required TResult Function(FormsSubmittedState value) formSubmitted,
+  }) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_FormsState value)? $default, {
+    TResult? Function(FormsSubmittedState value)? formSubmitted,
+  }) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_FormsState value)? $default, {
+    TResult Function(FormsSubmittedState value)? formSubmitted,
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 }
 
 abstract class _FormsState implements FormsState {
   const factory _FormsState(
-      {final SchemaObject? schema,
-      final Map<String, dynamic>? savedProperties}) = _$FormsStateImpl;
+      {final Map<String, SchemaObject> cachedSchemas,
+      final Map<String, SchemaObject> initialSchemas,
+      final String? activeSchemaKey}) = _$FormsStateImpl;
 
   @override
-  SchemaObject? get schema;
+  Map<String, SchemaObject> get cachedSchemas;
   @override
-  Map<String, dynamic>? get savedProperties;
+  Map<String, SchemaObject> get initialSchemas;
+  @override
+  String? get activeSchemaKey;
   @override
   @JsonKey(ignore: true)
   _$$FormsStateImplCopyWith<_$FormsStateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$FormsSubmittedStateImplCopyWith<$Res>
+    implements $FormsStateCopyWith<$Res> {
+  factory _$$FormsSubmittedStateImplCopyWith(_$FormsSubmittedStateImpl value,
+          $Res Function(_$FormsSubmittedStateImpl) then) =
+      __$$FormsSubmittedStateImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {SchemaObject schema,
+      Map<String, Map<String, dynamic>> formData,
+      Map<String, SchemaObject> cachedSchemas,
+      Map<String, SchemaObject> initialSchemas,
+      String? activeSchemaKey});
+
+  $SchemaObjectCopyWith<$Res> get schema;
+}
+
+/// @nodoc
+class __$$FormsSubmittedStateImplCopyWithImpl<$Res>
+    extends _$FormsStateCopyWithImpl<$Res, _$FormsSubmittedStateImpl>
+    implements _$$FormsSubmittedStateImplCopyWith<$Res> {
+  __$$FormsSubmittedStateImplCopyWithImpl(_$FormsSubmittedStateImpl _value,
+      $Res Function(_$FormsSubmittedStateImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? schema = null,
+    Object? formData = null,
+    Object? cachedSchemas = null,
+    Object? initialSchemas = null,
+    Object? activeSchemaKey = freezed,
+  }) {
+    return _then(_$FormsSubmittedStateImpl(
+      schema: null == schema
+          ? _value.schema
+          : schema // ignore: cast_nullable_to_non_nullable
+              as SchemaObject,
+      formData: null == formData
+          ? _value._formData
+          : formData // ignore: cast_nullable_to_non_nullable
+              as Map<String, Map<String, dynamic>>,
+      cachedSchemas: null == cachedSchemas
+          ? _value._cachedSchemas
+          : cachedSchemas // ignore: cast_nullable_to_non_nullable
+              as Map<String, SchemaObject>,
+      initialSchemas: null == initialSchemas
+          ? _value._initialSchemas
+          : initialSchemas // ignore: cast_nullable_to_non_nullable
+              as Map<String, SchemaObject>,
+      activeSchemaKey: freezed == activeSchemaKey
+          ? _value.activeSchemaKey
+          : activeSchemaKey // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $SchemaObjectCopyWith<$Res> get schema {
+    return $SchemaObjectCopyWith<$Res>(_value.schema, (value) {
+      return _then(_value.copyWith(schema: value));
+    });
+  }
+}
+
+/// @nodoc
+
+class _$FormsSubmittedStateImpl implements FormsSubmittedState {
+  const _$FormsSubmittedStateImpl(
+      {required this.schema,
+      required final Map<String, Map<String, dynamic>> formData,
+      required final Map<String, SchemaObject> cachedSchemas,
+      required final Map<String, SchemaObject> initialSchemas,
+      this.activeSchemaKey})
+      : _formData = formData,
+        _cachedSchemas = cachedSchemas,
+        _initialSchemas = initialSchemas;
+
+  @override
+  final SchemaObject schema;
+  final Map<String, Map<String, dynamic>> _formData;
+  @override
+  Map<String, Map<String, dynamic>> get formData {
+    if (_formData is EqualUnmodifiableMapView) return _formData;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_formData);
+  }
+
+  final Map<String, SchemaObject> _cachedSchemas;
+  @override
+  Map<String, SchemaObject> get cachedSchemas {
+    if (_cachedSchemas is EqualUnmodifiableMapView) return _cachedSchemas;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_cachedSchemas);
+  }
+
+  final Map<String, SchemaObject> _initialSchemas;
+  @override
+  Map<String, SchemaObject> get initialSchemas {
+    if (_initialSchemas is EqualUnmodifiableMapView) return _initialSchemas;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_initialSchemas);
+  }
+
+  @override
+  final String? activeSchemaKey;
+
+  @override
+  String toString() {
+    return 'FormsState.formSubmitted(schema: $schema, formData: $formData, cachedSchemas: $cachedSchemas, initialSchemas: $initialSchemas, activeSchemaKey: $activeSchemaKey)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FormsSubmittedStateImpl &&
+            (identical(other.schema, schema) || other.schema == schema) &&
+            const DeepCollectionEquality().equals(other._formData, _formData) &&
+            const DeepCollectionEquality()
+                .equals(other._cachedSchemas, _cachedSchemas) &&
+            const DeepCollectionEquality()
+                .equals(other._initialSchemas, _initialSchemas) &&
+            (identical(other.activeSchemaKey, activeSchemaKey) ||
+                other.activeSchemaKey == activeSchemaKey));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      schema,
+      const DeepCollectionEquality().hash(_formData),
+      const DeepCollectionEquality().hash(_cachedSchemas),
+      const DeepCollectionEquality().hash(_initialSchemas),
+      activeSchemaKey);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FormsSubmittedStateImplCopyWith<_$FormsSubmittedStateImpl> get copyWith =>
+      __$$FormsSubmittedStateImplCopyWithImpl<_$FormsSubmittedStateImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(Map<String, SchemaObject> cachedSchemas,
+            Map<String, SchemaObject> initialSchemas, String? activeSchemaKey)
+        $default, {
+    required TResult Function(
+            SchemaObject schema,
+            Map<String, Map<String, dynamic>> formData,
+            Map<String, SchemaObject> cachedSchemas,
+            Map<String, SchemaObject> initialSchemas,
+            String? activeSchemaKey)
+        formSubmitted,
+  }) {
+    return formSubmitted(
+        schema, formData, cachedSchemas, initialSchemas, activeSchemaKey);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(Map<String, SchemaObject> cachedSchemas,
+            Map<String, SchemaObject> initialSchemas, String? activeSchemaKey)?
+        $default, {
+    TResult? Function(
+            SchemaObject schema,
+            Map<String, Map<String, dynamic>> formData,
+            Map<String, SchemaObject> cachedSchemas,
+            Map<String, SchemaObject> initialSchemas,
+            String? activeSchemaKey)?
+        formSubmitted,
+  }) {
+    return formSubmitted?.call(
+        schema, formData, cachedSchemas, initialSchemas, activeSchemaKey);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(Map<String, SchemaObject> cachedSchemas,
+            Map<String, SchemaObject> initialSchemas, String? activeSchemaKey)?
+        $default, {
+    TResult Function(
+            SchemaObject schema,
+            Map<String, Map<String, dynamic>> formData,
+            Map<String, SchemaObject> cachedSchemas,
+            Map<String, SchemaObject> initialSchemas,
+            String? activeSchemaKey)?
+        formSubmitted,
+    required TResult orElse(),
+  }) {
+    if (formSubmitted != null) {
+      return formSubmitted(
+          schema, formData, cachedSchemas, initialSchemas, activeSchemaKey);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_FormsState value) $default, {
+    required TResult Function(FormsSubmittedState value) formSubmitted,
+  }) {
+    return formSubmitted(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_FormsState value)? $default, {
+    TResult? Function(FormsSubmittedState value)? formSubmitted,
+  }) {
+    return formSubmitted?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_FormsState value)? $default, {
+    TResult Function(FormsSubmittedState value)? formSubmitted,
+    required TResult orElse(),
+  }) {
+    if (formSubmitted != null) {
+      return formSubmitted(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FormsSubmittedState implements FormsState {
+  const factory FormsSubmittedState(
+      {required final SchemaObject schema,
+      required final Map<String, Map<String, dynamic>> formData,
+      required final Map<String, SchemaObject> cachedSchemas,
+      required final Map<String, SchemaObject> initialSchemas,
+      final String? activeSchemaKey}) = _$FormsSubmittedStateImpl;
+
+  SchemaObject get schema;
+  Map<String, Map<String, dynamic>> get formData;
+  @override
+  Map<String, SchemaObject> get cachedSchemas;
+  @override
+  Map<String, SchemaObject> get initialSchemas;
+  @override
+  String? get activeSchemaKey;
+  @override
+  @JsonKey(ignore: true)
+  _$$FormsSubmittedStateImplCopyWith<_$FormsSubmittedStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

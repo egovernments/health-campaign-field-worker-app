@@ -8,7 +8,7 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  auto_route: ^7.3.2
+  auto_route: ^8.3.0
   collection: ^1.16.0
   flutter:
     sdk: flutter
@@ -16,8 +16,10 @@ dependencies:
   intl: ^0.19.0
   json_annotation: ^4.7.0
   reactive_forms: ^17.0.0
-  digit_ui_components: ^0.0.2-dev.15
+  digit_ui_components: ^0.2.1+9
   flutter_bloc: ^8.1.1
+  uuid: ^4.5.1
+  digit_scanner: ^1.0.5
 
 dev_dependencies:
   flutter_test:
@@ -27,5 +29,6 @@ dev_dependencies:
   build_runner: ^2.2.1
   json_serializable: ^6.4.0
   bloc_test: ^9.1.0
+  auto_route_generator: ^8.0.0
 
 flutter:

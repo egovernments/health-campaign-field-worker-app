@@ -15,6 +15,7 @@ class AcknowledgementPage extends LocalizedStatefulWidget {
   String? label;
   String? description;
   Map<String, dynamic>? descriptionTableData;
+  bool isDirectCreate;
 
   AcknowledgementPage({
     super.key,
@@ -23,6 +24,7 @@ class AcknowledgementPage extends LocalizedStatefulWidget {
     this.label,
     this.description,
     this.descriptionTableData,
+    this.isDirectCreate = false,
   });
 
   @override
@@ -54,7 +56,7 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
                 ),
               ]
             : null,
-        actions: (!widget.isDataRecordSuccess)
+        actions: (!widget.isDataRecordSuccess && !widget.isDirectCreate)
             ? [
                 DigitButton(
                   isDisabled: widget.isDataRecordSuccess,
@@ -70,7 +72,7 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
             : null,
       ),
       bottomNavigationBar: Offstage(
-        offstage: !widget.isDataRecordSuccess,
+        offstage: !widget.isDataRecordSuccess && !widget.isDirectCreate,
         // Show the bottom navigation bar if `isDataRecordSuccess` is true
         child:
             DigitCard(margin: const EdgeInsets.only(top: spacer2), children: [
@@ -83,6 +85,7 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
               context.router.popAndPushAll([HomeRoute()]);
             },
           ),
+          if(!widget.isDirectCreate)
           DigitButton(
             type: DigitButtonType.secondary,
             mainAxisSize: MainAxisSize.max,

@@ -1,3 +1,5 @@
+import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/models/privacy_notice/privacy_notice_model.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -9,6 +11,7 @@ import 'package:digit_ui_components/widgets/privacy_notice/privacy_component.dar
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:encrypt/encrypt.dart' as e;
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
@@ -52,58 +55,99 @@ class _LoginPageState extends LocalizedState<LoginPage> {
         backgroundColor: theme.colorTheme.primary.primary2,
       ),
       body: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-          state.maybeWhen(
-            orElse: () {},
-            loading: () {
-              DigitLoaders.overlayLoader(context: context);
-            },
-            error: (message) {
-              Navigator.of(context, rootNavigator: true).pop();
-              Toast.showToast(
-                context,
-                message: message ??
-                    localizations.translate(i18.login.unableToLoginText),
-                type: ToastType.error,
-              );
-            },
-          );
-        },
-        child: ScrollableContent(
-          children: [
-            ReactiveFormBuilder(
-              form: buildForm,
-              builder: (context, form, child) {
-                return DigitCard(
-                    margin: const EdgeInsets.all(spacer2),
-                    children: [
-                      Text(
-                        localizations.translate(
-                          i18.login.labelText,
+          listener: (context, state) {
+            state.maybeWhen(
+              orElse: () {},
+              loading: () {
+                DigitLoaders.overlayLoader(context: context);
+              },
+              error: (message) {
+                Navigator.of(context, rootNavigator: true).pop();
+                Toast.showToast(
+                  context,
+                  message: message ??
+                      localizations.translate(i18.login.unableToLoginText),
+                  type: ToastType.error,
+                );
+              },
+            );
+          },
+          child: BlocListener<DigitScannerBloc, DigitScannerState>(
+            listener: (context, scannerState) {
+              if (scannerState.qrCodes.isNotEmpty) {
+                final encryptedText =
+                    scannerState.qrCodes.first.trim().replaceAll('\n', '');
+                context.router.popUntilRouteWithName(
+                  LoginRoute.name,
+                );
+                try {
+
+                  final key =
+                      e.Key.fromUtf8('my 32 length key................');
+                  final iv = e.IV.allZerosOfLength(16);
+
+                  final encrypter = e.Encrypter(e.AES(key));
+
+                  // final encrypted = encrypter.encrypt(plainText, iv: iv);
+
+                  // print(encrypted.base64);
+
+                  print('---------');
+
+                  final decrypted = encrypter.decrypt64(encryptedText, iv: iv);
+                  print('QR Decryption : $decrypted');
+
+                  final parts = decrypted.split('|');
+                  final userId = parts[0];
+                  final password = parts[1];
+
+                  context.read<AuthBloc>().add(
+                        AuthLoginEvent(
+                          userId: (userId).trim(),
+                          password: (password).trim(),
+                          tenantId: envConfig.variables.tenantId,
                         ),
-                        style: textTheme.headingXl.copyWith(
-                          color: theme
-                              .colorTheme.primary.primary2, // Use theme color
-                        ),
-                      ),
-                      ReactiveWrapperField(
-                        formControlName: _userId,
-                        validationMessages: {
-                          "required": (control) {
-                            return localizations.translate(
-                              '${i18.login.userIdPlaceholder}_IS_REQUIRED',
-                            );
-                          },
-                        },
-                        builder: (field) => LabeledField(
-                          label: localizations.translate(
-                            i18.login.userIdPlaceholder,
+                      );
+                } catch (e) {
+                  print('QR Decryption Failed: $e');
+                }
+              }
+            },
+            child: ScrollableContent(
+              children: [
+                ReactiveFormBuilder(
+                  form: buildForm,
+                  builder: (context, form, child) {
+                    return DigitCard(
+                        margin: const EdgeInsets.all(spacer2),
+                        children: [
+                          Text(
+                            localizations.translate(
+                              i18.login.labelText,
+                            ),
+                            style: textTheme.headingXl.copyWith(
+                              color: theme.colorTheme.primary
+                                  .primary2, // Use theme color
+                            ),
                           ),
-                          capitalizedFirstLetter: false,
-                          isRequired: true,
-                          child: DigitTextFormInput(
-                            keyboardType: TextInputType.text,
-                            initialValue: form.control(_userId).value,
+                          ReactiveWrapperField(
+                            formControlName: _userId,
+                            validationMessages: {
+                              "required": (control) {
+                                return localizations.translate(
+                                  '${i18.login.userIdPlaceholder}_IS_REQUIRED',
+                                );
+                              },
+                            },
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.login.userIdPlaceholder,
+                              ),
+                              capitalizedFirstLetter: false,
+                              isRequired: true,
+                              child: DigitTextFormInput(
+                                keyboardType: TextInputType.text,
+                                initialValue: form.control(_userId).value,
                             errorMessage: field.errorText,
                             onChange: (value) {
                               form.control(_userId).value = value;
@@ -127,107 +171,131 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                           isRequired: true,
                           child: DigitPasswordFormInput(
                             initialValue: form.control(_password).value,
-                            errorMessage: field.errorText,
-                            onChange: (value) {
-                              form.control(_password).value = value;
-                            },
-                            keyboardType: TextInputType.text,
+                                errorMessage: field.errorText,
+                                onChange: (value) {
+                                  form.control(_password).value = value;
+                                },
+                                keyboardType: TextInputType.text,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      BlocBuilder<AppInitializationBloc,
-                              AppInitializationState>(
-                          builder: (context, initState) {
-                        final privacyPolicyJson = initState.maybeWhen(
-                            initialized:
-                                (AppConfiguration appConfiguration, _, __) =>
+                          BlocBuilder<AppInitializationBloc,
+                                  AppInitializationState>(
+                              builder: (context, initState) {
+                            final privacyPolicyJson = initState.maybeWhen(
+                                initialized: (AppConfiguration appConfiguration,
+                                        _, __) =>
                                     appConfiguration.privacyPolicyConfig,
-                            orElse: () => null);
-                        if (privacyPolicyJson?.active == false) {
-                          return const SizedBox.shrink();
-                        }
+                                orElse: () => null);
+                            if (privacyPolicyJson?.active == false) {
+                              return const SizedBox.shrink();
+                            }
 
-                        form
-                            .control(_privacyCheck)
-                            .setValidators([Validators.requiredTrue]);
-                        form.control(_privacyCheck).updateValueAndValidity();
-                        return PrivacyComponent(
-                          privacyPolicy:
-                              convertToPrivacyPolicyModel(privacyPolicyJson),
-                          formControlName: _privacyCheck,
-                          text: localizations
-                              .translate(i18.privacyPolicy.privacyNoticeText),
-                          linkText: localizations.translate(
-                              i18.privacyPolicy.privacyPolicyLinkText),
-                          validationMessage: localizations.translate(
-                              i18.privacyPolicy.privacyPolicyValidationText),
-                        );
-                      }),
-                      DigitButton(
-                        label: localizations.translate(i18.login.actionLabel),
-                        type: DigitButtonType.primary,
-                        onPressed: () {
-                          form.markAllAsTouched();
-                          if (!form.valid) return;
+                            form
+                                .control(_privacyCheck)
+                                .setValidators([Validators.requiredTrue]);
+                            form
+                                .control(_privacyCheck)
+                                .updateValueAndValidity();
+                            return PrivacyComponent(
+                              privacyPolicy: convertToPrivacyPolicyModel(
+                                  privacyPolicyJson),
+                              formControlName: _privacyCheck,
+                              text: localizations.translate(
+                                  i18.privacyPolicy.privacyNoticeText),
+                              linkText: localizations.translate(
+                                  i18.privacyPolicy.privacyPolicyLinkText),
+                              validationMessage: localizations.translate(i18
+                                  .privacyPolicy.privacyPolicyValidationText),
+                            );
+                          }),
+                          DigitButton(
+                            label:
+                                localizations.translate(i18.login.actionLabel),
+                            type: DigitButtonType.primary,
+                            onPressed: () {
+                              form.markAllAsTouched();
+                              if (!form.valid) return;
 
-                          FocusManager.instance.primaryFocus?.unfocus();
+                              FocusManager.instance.primaryFocus?.unfocus();
 
-                          context.read<AuthBloc>().add(
-                                AuthLoginEvent(
-                                  userId:
-                                      (form.control(_userId).value as String)
+                              context.read<AuthBloc>().add(
+                                    AuthLoginEvent(
+                                      userId: (form.control(_userId).value
+                                              as String)
                                           .trim(),
-                                  password:
-                                      (form.control(_password).value as String)
+                                      password: (form.control(_password).value
+                                              as String)
                                           .trim(),
-                                  tenantId: envConfig.variables.tenantId,
-                                ),
-                              );
-                        },
-                        size: DigitButtonSize.large,
-                        mainAxisSize: MainAxisSize.max,
-                      ),
-                      DigitButton(
-                        label: localizations.translate(
-                          i18.forgotPassword.actionLabel,
-                        ),
-                        mainAxisSize: MainAxisSize.max,
-                        type: DigitButtonType.tertiary,
-                        size: DigitButtonSize.medium,
-                        onPressed: () => showCustomPopup(
-                          context: context,
-                          builder: (ctx) => Popup(
-                            title: localizations.translate(
-                              i18.forgotPassword.labelText,
-                            ),
-                            description: localizations.translate(
-                              i18.forgotPassword.contentText,
-                            ),
-                            onOutsideTap: () {
-                              Navigator.of(ctx).pop();
+                                      tenantId: envConfig.variables.tenantId,
+                                    ),
+                                  );
                             },
-                            type: PopUpType.simple,
-                            actions: [
-                              DigitButton(
-                                  label: localizations.translate(
-                                    i18.forgotPassword.primaryActionLabel,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(ctx).pop();
-                                    context.router.popUntilRoot();
-                                  },
-                                  type: DigitButtonType.primary,
-                                  size: DigitButtonSize.large)
-                            ],
+                            size: DigitButtonSize.large,
+                            mainAxisSize: MainAxisSize.max,
                           ),
-                        ),
-                      ),
-                    ]);
-              },
+                          DigitButton(
+                            capitalizeLetters: false,
+                            size: DigitButtonSize.large,
+                            label: localizations.translate(
+                              i18.login.qrLogin,
+                            ),
+                            onPressed: () async {
+                              context.read<DigitScannerBloc>().add(
+                                    const DigitScannerEvent.handleScanner(
+                                        barCode: [], qrCode: []),
+                                  );
+                              context.router.push(DigitScannerRoute(
+                                quantity: 1,
+                                isGS1code: false,
+                                singleValue: true,
+                              ));
+                            },
+                            type: DigitButtonType.secondary,
+                            prefixIcon: Icons.qr_code,
+                            mainAxisSize: MainAxisSize.max,
+                          ),
+                          DigitButton(
+                            label: localizations.translate(
+                              i18.forgotPassword.actionLabel,
+                            ),
+                            mainAxisSize: MainAxisSize.max,
+                            type: DigitButtonType.tertiary,
+                            size: DigitButtonSize.medium,
+                            onPressed: () => showCustomPopup(
+                              context: context,
+                              builder: (ctx) => Popup(
+                                title: localizations.translate(
+                                  i18.forgotPassword.labelText,
+                                ),
+                                description: localizations.translate(
+                                  i18.forgotPassword.contentText,
+                                ),
+                                onOutsideTap: () {
+                                  Navigator.of(ctx).pop();
+                                },
+                                type: PopUpType.simple,
+                                actions: [
+                                  DigitButton(
+                                      label: localizations.translate(
+                                        i18.forgotPassword.primaryActionLabel,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(ctx).pop();
+                                        context.router.popUntilRoot();
+                                      },
+                                      type: DigitButtonType.primary,
+                                      size: DigitButtonSize.large)
+                                ],
+                              ),
+                            ),
+                          ),
+                        ]);
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          )),
     );
   }
 

@@ -27,6 +27,7 @@ abstract class _$AppRouter extends RootStackRouter {
           label: args.label,
           description: args.description,
           descriptionTableData: args.descriptionTableData,
+          isDirectCreate: args.isDirectCreate,
         ),
       );
     },
@@ -141,6 +142,7 @@ abstract class _$AppRouter extends RootStackRouter {
     ...DashboardRoute().pagesMap,
     ...SurveyFormRoute().pagesMap,
     ...ComplaintsRoute().pagesMap,
+    ...FormsRoute().pagesMap,
   };
 }
 
@@ -154,6 +156,7 @@ class AcknowledgementRoute extends PageRouteInfo<AcknowledgementRouteArgs> {
     String? label,
     String? description,
     Map<String, dynamic>? descriptionTableData,
+    bool isDirectCreate = false,
     List<PageRouteInfo>? children,
   }) : super(
           AcknowledgementRoute.name,
@@ -164,6 +167,7 @@ class AcknowledgementRoute extends PageRouteInfo<AcknowledgementRouteArgs> {
             label: label,
             description: description,
             descriptionTableData: descriptionTableData,
+            isDirectCreate: isDirectCreate,
           ),
           initialChildren: children,
         );
@@ -182,6 +186,7 @@ class AcknowledgementRouteArgs {
     this.label,
     this.description,
     this.descriptionTableData,
+    this.isDirectCreate = false,
   });
 
   final Key? key;
@@ -196,9 +201,11 @@ class AcknowledgementRouteArgs {
 
   final Map<String, dynamic>? descriptionTableData;
 
+  final bool isDirectCreate;
+
   @override
   String toString() {
-    return 'AcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, isDataRecordSuccess: $isDataRecordSuccess, label: $label, description: $description, descriptionTableData: $descriptionTableData}';
+    return 'AcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, isDataRecordSuccess: $isDataRecordSuccess, label: $label, description: $description, descriptionTableData: $descriptionTableData, isDirectCreate: $isDirectCreate}';
   }
 }
 
