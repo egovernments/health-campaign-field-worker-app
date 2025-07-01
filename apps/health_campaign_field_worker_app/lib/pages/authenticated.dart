@@ -418,27 +418,43 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
                 String? dynamicModule;
                 final isInRegistrationFlow = context.router.current.name.contains(RegistrationDeliveryWrapperRoute.name);
-                if(isInRegistrationFlow){
+
+                if (isInRegistrationFlow) {
                   final prefs = await SharedPreferences.getInstance();
                   final schemaJsonRaw = prefs.getString('app_config_schemas');
 
                   if (schemaJsonRaw != null) {
                     final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                    final projectId = context.selectedProject.referenceID;
+
+                    // Initialize empty list to collect modules
+                    final List<String> modules = [];
+
+                    // Handle registrationflow
                     final registrationSchemaEntry = allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
-                    final schemaData = registrationSchemaEntry?['data'];
-                    if (schemaData != null) {
-                      final flowName = schemaData['name']?.toString().toLowerCase();
-                      final projectId = context.selectedProject.referenceID;
-                      if (flowName != null && projectId != null) {
-                        dynamicModule = 'hcm-$flowName-$projectId';
-                      }
+                    final registrationSchemaData = registrationSchemaEntry?['data'];
+                    final registrationFlowName = registrationSchemaData?['name']?.toString().toLowerCase();
+                    if (registrationFlowName != null && projectId != null) {
+                      modules.add('hcm-$registrationFlowName-$projectId');
                     }
+
+                    // Handle deliveryflow
+                    final deliverySchemaEntry = allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
+                    final deliverySchemaData = deliverySchemaEntry?['data'];
+                    final deliveryFlowName = deliverySchemaData?['name']?.toString().toLowerCase();
+                    if (deliveryFlowName != null && projectId != null) {
+                      modules.add('hcm-$deliveryFlowName-$projectId');
+                    }
+
+                    // Combine into a single string
+                    dynamicModule = modules.join(',');
                   }
                 }
 
                 final staticModules = localizationModulesList.interfaces
                     .where((element) => element.type == Modules.localizationModule)
                     .map((e) => e.name.toString())
+                    .followedBy(['hcm-boundary-${envConfig.variables.hierarchyType}'])
                     .join(',');
 
                 final combinedModules = dynamicModule != null
