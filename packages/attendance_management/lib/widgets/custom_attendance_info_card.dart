@@ -14,17 +14,18 @@ class CustomAttendanceInfoCard extends StatelessWidget {
   final VoidCallback onMarkAbsent;
   final bool markManualAttendance;
   final bool viewOnly;
+  final bool isCurrentDate;
 
-  const CustomAttendanceInfoCard({
-    super.key,
-    required this.name,
-    required this.individualNumber,
-    required this.status,
-    required this.onMarkPresent,
-    required this.onMarkAbsent,
-    required this.markManualAttendance,
-    required this.viewOnly,
-  });
+  const CustomAttendanceInfoCard(
+      {super.key,
+      required this.name,
+      required this.individualNumber,
+      required this.status,
+      required this.onMarkPresent,
+      required this.onMarkAbsent,
+      required this.markManualAttendance,
+      required this.viewOnly,
+      required this.isCurrentDate});
 
   @override
   Widget build(BuildContext context) {
@@ -88,9 +89,9 @@ class CustomAttendanceInfoCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: spacer4),
-          if (!viewOnly && markManualAttendance)
-            Row(
-              children: [
+          Row(
+            children: [
+              if (!viewOnly && markManualAttendance)
                 Expanded(
                   child: DigitButton(
                     prefixIcon: Icons.check,
@@ -118,7 +119,10 @@ class CustomAttendanceInfoCard extends StatelessWidget {
                     ),
                   ),
                 ),
+              if (!viewOnly && markManualAttendance)
                 const SizedBox(width: spacer3),
+              if (!viewOnly && markManualAttendance ||
+                  isCurrentDate && status == -1)
                 Expanded(
                   child: DigitButton(
                     prefixIcon: Icons.cancel,
@@ -145,8 +149,8 @@ class CustomAttendanceInfoCard extends StatelessWidget {
                     ),
                   ),
                 ),
-              ],
-            ),
+            ],
+          ),
           const SizedBox(height: spacer2),
         ],
       ),
