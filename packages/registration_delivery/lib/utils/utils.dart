@@ -238,7 +238,7 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
     }
 
     final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
-      final condition = "ROUND(memberCount/1.8)";
+      final condition = criteria.condition;
       if (condition != null) {
         if (condition.contains('and')) {
           final conditions = condition.split('and');
