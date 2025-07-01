@@ -16,7 +16,6 @@ import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/models/entities/deliver_strategy_type.dart';
 import 'package:registration_delivery/registration_delivery.dart';
-import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 import 'package:registration_delivery/utils/utils.dart';
 

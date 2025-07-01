@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/identifier_types.dart';
+import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
@@ -52,12 +52,12 @@ class BeneficiaryAcknowledgementPageState
           type: PanelType.success,
           additionalDetails: [
             if (wrapper?.members?.lastOrNull!.identifiers!
-                .lastWhereOrNull(
-                  (e) =>
-              e.identifierType ==
-                  IdentifierTypes.uniqueBeneficiaryID.toValue(),
-            )
-                ?.identifierId !=
+                    .lastWhereOrNull(
+                      (e) =>
+                          e.identifierType ==
+                          IdentifierTypes.uniqueBeneficiaryID.toValue(),
+                    )
+                    ?.identifierId !=
                 null)
               Text(
                 getSubText(wrapper),
@@ -71,7 +71,8 @@ class BeneficiaryAcknowledgementPageState
                       .acknowledgementKeys.acknowledgmentTitleKey]
                   ?.label ??
               i18.acknowledgementSuccess.acknowledgementLabelText),
-          actions: _buildActionButtons(context, beneficiaryAcknowledgementTemplate),
+          actions:
+              _buildActionButtons(context, beneficiaryAcknowledgementTemplate),
           description: beneficiaryAcknowledgementTemplate
                       ?.properties?[registration_keys
                           .acknowledgementKeys.acknowledgmentDescriptionKey]
@@ -91,11 +92,13 @@ class BeneficiaryAcknowledgementPageState
   }
 
   List<DigitButton>? _buildActionButtons(
-      BuildContext context,
-      TemplateConfig? template,
-      ) {
-    final primaryProp = template?.properties?[registration_keys.commonKeys.primaryButtonKey];
-    final secondaryProp = template?.properties?[registration_keys.commonKeys.secondaryButtonKey];
+    BuildContext context,
+    TemplateConfig? template,
+  ) {
+    final primaryProp =
+        template?.properties?[registration_keys.commonKeys.primaryButtonKey];
+    final secondaryProp =
+        template?.properties?[registration_keys.commonKeys.secondaryButtonKey];
 
     final entries = <MapEntry<int, DigitButton>>[];
 
@@ -104,8 +107,8 @@ class BeneficiaryAcknowledgementPageState
       entries.add(MapEntry(
         order,
         DigitButton(
-          label: localizations.translate(
-              primaryProp?.label ?? i18.householdDetails.viewHouseHoldDetailsAction),
+          label: localizations.translate(primaryProp?.label ??
+              i18.householdDetails.viewHouseHoldDetailsAction),
           onPressed: () => context.router.popAndPush(HouseholdOverviewRoute()),
           type: DigitButtonType.primary,
           size: DigitButtonSize.large,
@@ -118,8 +121,8 @@ class BeneficiaryAcknowledgementPageState
       entries.add(MapEntry(
         order,
         DigitButton(
-          label: localizations.translate(
-              secondaryProp?.label ?? i18.acknowledgementSuccess.actionLabelText),
+          label: localizations.translate(secondaryProp?.label ??
+              i18.acknowledgementSuccess.actionLabelText),
           onPressed: () => context.router.maybePop(),
           type: DigitButtonType.secondary,
           size: DigitButtonSize.large,
@@ -132,8 +135,6 @@ class BeneficiaryAcknowledgementPageState
     entries.sort((a, b) => a.key.compareTo(b.key));
     return entries.map((e) => e.value).toList(growable: false);
   }
-
-
 
   getSubText(HouseholdMemberWrapper? wrapper) {
     return wrapper != null

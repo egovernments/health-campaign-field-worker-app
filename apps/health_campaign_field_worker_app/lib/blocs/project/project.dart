@@ -560,8 +560,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 MdmsModuleDetailModel(
                   moduleName: 'HCM-ADMIN-CONSOLE',
                   masterDetails: [
-                    MdmsMasterDetailModel('FormConfig',
-                      filter: "[?(@.project=='${event.model.referenceID}' && @.isSelected==true)]",
+                    MdmsMasterDetailModel(
+                      'FormConfig',
+                      filter:
+                          "[?(@.project=='${event.model.referenceID}' && @.isSelected==true)]",
                     ),
                   ],
                 ),
@@ -583,7 +585,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             syncError: ProjectSyncErrorType.appConfig,
           ),
         );
-        if(kDebugMode){
+        if (kDebugMode) {
           debugPrint(e.toString());
         }
         return;
@@ -716,9 +718,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     // Load existing schemas
     final existingSchemasRaw = prefs.getString(schemaKey);
-    final Map<String, dynamic> existingSchemas = existingSchemasRaw != null
-        ? json.decode(existingSchemasRaw)
-        : {};
+    final Map<String, dynamic> existingSchemas =
+        existingSchemasRaw != null ? json.decode(existingSchemasRaw) : {};
 
     // Get the existing schema for this name if any
     final existingEntry = existingSchemas[schemaName] as Map<String, dynamic>?;
@@ -736,9 +737,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     await prefs.setString(schemaKey, json.encode(existingSchemas));
   }
 
-
-  Future<void> enrichFormSchemaWithEnums(Map<String, dynamic> formConfig) async {
-    final Map<String, Set<String>> moduleToMasters = {}; // To collect module: master mapping
+  Future<void> enrichFormSchemaWithEnums(
+      Map<String, dynamic> formConfig) async {
+    final Map<String, Set<String>> moduleToMasters =
+        {}; // To collect module: master mapping
 
     // Step 1 & 2: Traverse the form schema
     for (final page in formConfig['pages']) {
@@ -766,7 +768,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     final moduleDetails = moduleToMasters.entries.map((entry) {
       return MdmsModuleDetailModel(
         moduleName: entry.key,
-        masterDetails: entry.value.map((m) => MdmsMasterDetailModel(m)).toList(),
+        masterDetails:
+            entry.value.map((m) => MdmsMasterDetailModel(m)).toList(),
       );
     }).toList();
 
@@ -795,9 +798,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             if (enumValues != null) {
               property['enums'] = enumValues
                   .map((e) => {
-                'code': e['code'],
-                'name': e['name'] ?? e['code'], // fallback if name is missing
-              })
+                        'code': e['code'],
+                        'name': e['name'] ??
+                            e['code'], // fallback if name is missing
+                      })
                   .toList();
             }
           }
@@ -807,7 +811,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     await storeSchema(formConfig);
   }
-
 
   FutureOr<int> _getBatchSize() async {
     try {

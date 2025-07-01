@@ -8,10 +8,10 @@ import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:digit_ui_components/widgets/privacy_notice/privacy_component.dart';
+import 'package:encrypt/encrypt.dart' as e;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:encrypt/encrypt.dart' as e;
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
@@ -81,7 +81,6 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                   LoginRoute.name,
                 );
                 try {
-
                   final key =
                       e.Key.fromUtf8('my 32 length key................');
                   final iv = e.IV.allZerosOfLength(16);
@@ -148,29 +147,29 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                               child: DigitTextFormInput(
                                 keyboardType: TextInputType.text,
                                 initialValue: form.control(_userId).value,
-                            errorMessage: field.errorText,
-                            onChange: (value) {
-                              form.control(_userId).value = value;
+                                errorMessage: field.errorText,
+                                onChange: (value) {
+                                  form.control(_userId).value = value;
+                                },
+                              ),
+                            ),
+                          ),
+                          ReactiveWrapperField(
+                            formControlName: _password,
+                            validationMessages: {
+                              "required": (control) {
+                                return localizations.translate(
+                                  '${i18.login.passwordPlaceholder}_IS_REQUIRED',
+                                );
+                              },
                             },
-                          ),
-                        ),
-                      ),
-                      ReactiveWrapperField(
-                        formControlName: _password,
-                        validationMessages: {
-                          "required": (control) {
-                            return localizations.translate(
-                              '${i18.login.passwordPlaceholder}_IS_REQUIRED',
-                            );
-                          },
-                        },
-                        builder: (field) => LabeledField(
-                          label: localizations.translate(
-                            i18.login.passwordPlaceholder,
-                          ),
-                          isRequired: true,
-                          child: DigitPasswordFormInput(
-                            initialValue: form.control(_password).value,
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.login.passwordPlaceholder,
+                              ),
+                              isRequired: true,
+                              child: DigitPasswordFormInput(
+                                initialValue: form.control(_password).value,
                                 errorMessage: field.errorText,
                                 onChange: (value) {
                                   form.control(_password).value = value;

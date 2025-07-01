@@ -158,7 +158,7 @@ class MemberCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    if(editMemberActionProperties?.hidden != true)
+                    if (editMemberActionProperties?.hidden != true)
                       Positioned(
                         child: Align(
                           alignment: Alignment.topRight,
@@ -175,19 +175,21 @@ class MemberCard extends StatelessWidget {
                                   DigitButton(
                                     prefixIcon: Icons.person,
                                     label: (RegistrationDeliverySingleton()
-                                        .householdType ==
-                                        HouseholdType.community)
+                                                .householdType ==
+                                            HouseholdType.community)
                                         ? localizations.translate(
-                                        i18.memberCard.assignAsClfhead)
+                                            i18.memberCard.assignAsClfhead)
                                         : localizations.translate(
-                                      i18.memberCard.assignAsHouseholdhead,
-                                    ),
-                                    isDisabled: isHead || setAsHeadAction == null
-                                      ? true
-                                      : false,
+                                            i18.memberCard
+                                                .assignAsHouseholdhead,
+                                          ),
+                                    isDisabled:
+                                        isHead || setAsHeadAction == null
+                                            ? true
+                                            : false,
                                     onPressed: setAsHeadAction != null
-                                      ? setAsHeadAction!
-                                      : () {},
+                                        ? setAsHeadAction!
+                                        : () {},
                                     type: DigitButtonType.secondary,
                                     size: DigitButtonSize.large,
                                   ),
@@ -214,7 +216,8 @@ class MemberCard extends StatelessWidget {
                               ),
                             ),
                             label: localizations.translate(
-                              editMemberActionProperties?.label ?? i18.memberCard.editDetails,
+                              editMemberActionProperties?.label ??
+                                  i18.memberCard.editDetails,
                             ),
                             prefixIcon: Icons.edit,
                             type: DigitButtonType.tertiary,
@@ -249,44 +252,44 @@ class MemberCard extends StatelessWidget {
                 ),
                 Padding(
                   padding:
-                  const EdgeInsets.only(left: spacer1, bottom: spacer2),
+                      const EdgeInsets.only(left: spacer1, bottom: spacer2),
                   child: Offstage(
                     offstage: beneficiaryType != BeneficiaryType.individual,
                     child: !isDelivered ||
-                        isNotEligible ||
-                        isBeneficiaryRefused ||
-                        isBeneficiaryReferred
+                            isNotEligible ||
+                            isBeneficiaryRefused ||
+                            isBeneficiaryReferred
                         ? Align(
-                      alignment: Alignment.centerLeft,
-                      child: Tag(
-                        isIcon: true,
-                        label: localizations.translate(
-                          isNotEligible
-                              ? i18.householdOverView
-                              .householdOverViewNotEligibleIconLabel
-                              : isBeneficiaryReferred
-                              ? i18.householdOverView
-                              .householdOverViewBeneficiaryReferredLabel
-                              : isBeneficiaryRefused
-                              ? Status.beneficiaryRefused
-                              .toValue()
-                              : i18.householdOverView
-                              .householdOverViewNotDeliveredIconLabel,
-                        ),
-                        type: TagType.error,
-                      ),
-                    )
+                            alignment: Alignment.centerLeft,
+                            child: Tag(
+                              isIcon: true,
+                              label: localizations.translate(
+                                isNotEligible
+                                    ? i18.householdOverView
+                                        .householdOverViewNotEligibleIconLabel
+                                    : isBeneficiaryReferred
+                                        ? i18.householdOverView
+                                            .householdOverViewBeneficiaryReferredLabel
+                                        : isBeneficiaryRefused
+                                            ? Status.beneficiaryRefused
+                                                .toValue()
+                                            : i18.householdOverView
+                                                .householdOverViewNotDeliveredIconLabel,
+                              ),
+                              type: TagType.error,
+                            ),
+                          )
                         : Align(
-                      alignment: Alignment.centerLeft,
-                      child: Tag(
-                        isIcon: true,
-                        label: localizations.translate(
-                          i18.householdOverView
-                              .householdOverViewDeliveredIconLabel,
-                        ),
-                        type: TagType.success,
-                      ),
-                    ),
+                            alignment: Alignment.centerLeft,
+                            child: Tag(
+                              isIcon: true,
+                              label: localizations.translate(
+                                i18.householdOverView
+                                    .householdOverViewDeliveredIconLabel,
+                              ),
+                              type: TagType.success,
+                            ),
+                          ),
                   ),
                 ),
                 Offstage(
@@ -299,299 +302,306 @@ class MemberCard extends StatelessWidget {
                     child: Column(
                       children: [
                         isNotEligible ||
-                            isBeneficiaryRefused ||
-                            isBeneficiaryReferred
+                                isBeneficiaryRefused ||
+                                isBeneficiaryReferred
                             ? const Offstage()
                             : !isNotEligible
-                            ? Offstage(
-                          offstage: primaryButtonProperties?.hidden != null && primaryButtonProperties?.hidden == true,
-                          child: DigitButton(
-                            mainAxisSize: MainAxisSize.max,
-                            isDisabled:
-                            (projectBeneficiaries ?? []).isEmpty
-                                ? true
-                                : false,
-                            type: DigitButtonType.primary,
-                            size: DigitButtonSize.medium,
-                            label: allDosesDelivered(
-                              tasks,
-                              context.selectedCycle,
-                              sideEffects,
-                              individual,
-                            ) &&
-                                !checkStatus(
-                                  tasks,
-                                  context.selectedCycle,
-                                )
-                                ? localizations.translate(
-                              i18.householdOverView
-                                  .viewDeliveryLabel,
-                            )
-                                : localizations.translate(
-                              i18.householdOverView
-                                  .householdOverViewActionText,
-                            ),
-                            onPressed: () {
-                              final bloc =
-                              context.read<HouseholdOverviewBloc>();
-                              final serviceDefinitionBloc = context
-                                  .read<ServiceDefinitionBloc>()
-                                  .state;
+                                ? Offstage(
+                                    offstage: primaryButtonProperties?.hidden !=
+                                            null &&
+                                        primaryButtonProperties?.hidden == true,
+                                    child: DigitButton(
+                                      mainAxisSize: MainAxisSize.max,
+                                      isDisabled:
+                                          (projectBeneficiaries ?? []).isEmpty
+                                              ? true
+                                              : false,
+                                      type: DigitButtonType.primary,
+                                      size: DigitButtonSize.medium,
+                                      label: allDosesDelivered(
+                                                tasks,
+                                                context.selectedCycle,
+                                                sideEffects,
+                                                individual,
+                                              ) &&
+                                              !checkStatus(
+                                                tasks,
+                                                context.selectedCycle,
+                                              )
+                                          ? localizations.translate(
+                                              i18.householdOverView
+                                                  .viewDeliveryLabel,
+                                            )
+                                          : localizations.translate(
+                                              i18.householdOverView
+                                                  .householdOverViewActionText,
+                                            ),
+                                      onPressed: () {
+                                        final bloc = context
+                                            .read<HouseholdOverviewBloc>();
+                                        final serviceDefinitionBloc = context
+                                            .read<ServiceDefinitionBloc>()
+                                            .state;
 
-                              bloc.add(
-                                HouseholdOverviewEvent
-                                    .selectedIndividual(
-                                  individualModel: individual,
-                                ),
-                              );
-                              bloc.add(HouseholdOverviewReloadEvent(
-                                projectId:
-                                RegistrationDeliverySingleton()
-                                    .projectId!,
-                                projectBeneficiaryType:
-                                RegistrationDeliverySingleton()
-                                    .beneficiaryType ??
-                                    BeneficiaryType.individual,
-                              ));
+                                        bloc.add(
+                                          HouseholdOverviewEvent
+                                              .selectedIndividual(
+                                            individualModel: individual,
+                                          ),
+                                        );
+                                        bloc.add(HouseholdOverviewReloadEvent(
+                                          projectId:
+                                              RegistrationDeliverySingleton()
+                                                  .projectId!,
+                                          projectBeneficiaryType:
+                                              RegistrationDeliverySingleton()
+                                                      .beneficiaryType ??
+                                                  BeneficiaryType.individual,
+                                        ));
 
-                              final futureTaskList = tasks
-                                  ?.where((task) =>
-                              task.status ==
-                                  Status.delivered.toValue())
-                                  .toList();
+                                        final futureTaskList = tasks
+                                            ?.where((task) =>
+                                                task.status ==
+                                                Status.delivered.toValue())
+                                            .toList();
 
-                              if ((futureTaskList ?? []).isNotEmpty) {
-                                context.router.push(
-                                  RecordPastDeliveryDetailsRoute(
-                                    tasks: tasks,
-                                  ),
-                                );
-                              } else {
-                                if (allDosesDelivered(
-                                  tasks,
-                                  context.selectedCycle,
-                                  sideEffects,
-                                  individual,
-                                ) &&
-                                    !checkStatus(
-                                      tasks,
-                                      context.selectedCycle,
-                                    )) {
-                                  context.router
-                                      .push(BeneficiaryDetailsRoute());
-                                } else {
-                                  serviceDefinitionBloc.when(
-                                      empty: () {},
-                                      isloading: () {},
-                                      serviceDefinitionFetch:
-                                          (value, model) {
-                                        if (value
-                                            .where((element) => element
-                                            .code
-                                            .toString()
-                                            .contains(
-                                            '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
-                                            .toList()
-                                            .isEmpty) {
+                                        if ((futureTaskList ?? []).isNotEmpty) {
                                           context.router.push(
-                                            BeneficiaryDetailsRoute(),
+                                            RecordPastDeliveryDetailsRoute(
+                                              tasks: tasks,
+                                            ),
                                           );
                                         } else {
-                                          navigateToChecklist(context,
-                                              projectBeneficiaryClientReferenceId);
+                                          if (allDosesDelivered(
+                                                tasks,
+                                                context.selectedCycle,
+                                                sideEffects,
+                                                individual,
+                                              ) &&
+                                              !checkStatus(
+                                                tasks,
+                                                context.selectedCycle,
+                                              )) {
+                                            context.router.push(
+                                                BeneficiaryDetailsRoute());
+                                          } else {
+                                            serviceDefinitionBloc.when(
+                                                empty: () {},
+                                                isloading: () {},
+                                                serviceDefinitionFetch:
+                                                    (value, model) {
+                                                  if (value
+                                                      .where((element) => element
+                                                          .code
+                                                          .toString()
+                                                          .contains(
+                                                              '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
+                                                      .toList()
+                                                      .isEmpty) {
+                                                    context.router.push(
+                                                      BeneficiaryDetailsRoute(),
+                                                    );
+                                                  } else {
+                                                    navigateToChecklist(context,
+                                                        projectBeneficiaryClientReferenceId);
+                                                  }
+                                                });
+                                          }
                                         }
-                                      });
-                                }
-                              }
-                            },
-                          ),
-                        )
-                            : const Offstage(),
+                                      },
+                                    ),
+                                  )
+                                : const Offstage(),
                         const SizedBox(
                           height: 10,
                         ),
                         (isNotEligible ||
-                            isBeneficiaryRefused ||
-                            isBeneficiaryReferred ||
-                            (allDosesDelivered(
-                              tasks,
-                              context.selectedCycle,
-                              sideEffects,
-                              individual,
-                            ) &&
-                                !checkStatus(tasks, context.selectedCycle)))
+                                isBeneficiaryRefused ||
+                                isBeneficiaryReferred ||
+                                (allDosesDelivered(
+                                      tasks,
+                                      context.selectedCycle,
+                                      sideEffects,
+                                      individual,
+                                    ) &&
+                                    !checkStatus(tasks, context.selectedCycle)))
                             ? const Offstage()
                             : Offstage(
-                          offstage: secondaryButtonProperties?.hidden != null && secondaryButtonProperties?.hidden == true,
-                          child: DigitButton(
-                            label: localizations.translate(
-                              i18.memberCard.unableToDeliverLabel,
-                            ),
-                            isDisabled: (projectBeneficiaries ?? []).isEmpty
-                                ? true
-                                : false,
-                            type: DigitButtonType.secondary,
-                            size: DigitButtonSize.medium,
-                            mainAxisSize: MainAxisSize.max,
-                            onPressed: () async {
-                              await showDialog(
-                                context: context,
-                                builder: (ctx) => DigitActionCard(
-                                  onOutsideTap: () {
-                                    Navigator.of(
-                                      context,
-                                      rootNavigator: true,
-                                    ).pop();
-                                  },
-                                  actions: [
-                                    DigitButton(
-                                      label: localizations.translate(
-                                        i18.memberCard
-                                            .beneficiaryRefusedLabel,
-                                      ),
-                                      type: DigitButtonType.secondary,
-                                      size: DigitButtonSize.large,
-                                      onPressed: () {
-                                        Navigator.of(context,
-                                            rootNavigator: true)
-                                            .pop();
-                                        context
-                                            .read<DeliverInterventionBloc>()
-                                            .add(
-                                          DeliverInterventionSubmitEvent(
-                                            task: TaskModel(
-                                              projectBeneficiaryClientReferenceId:
-                                              projectBeneficiaryClientReferenceId,
-                                              clientReferenceId:
-                                              IdGen.i.identifier,
-                                              tenantId:
-                                              RegistrationDeliverySingleton()
-                                                  .tenantId,
-                                              rowVersion: 1,
-                                              auditDetails:
-                                              AuditDetails(
-                                                createdBy:
-                                                RegistrationDeliverySingleton()
-                                                    .loggedInUserUuid!,
-                                                createdTime: context
-                                                    .millisecondsSinceEpoch(),
-                                              ),
-                                              projectId:
-                                              RegistrationDeliverySingleton()
-                                                  .projectId,
-                                              status: Status
-                                                  .beneficiaryRefused
-                                                  .toValue(),
-                                              clientAuditDetails:
-                                              ClientAuditDetails(
-                                                createdBy:
-                                                RegistrationDeliverySingleton()
-                                                    .loggedInUserUuid!,
-                                                createdTime: context
-                                                    .millisecondsSinceEpoch(),
-                                                lastModifiedBy:
-                                                RegistrationDeliverySingleton()
-                                                    .loggedInUserUuid,
-                                                lastModifiedTime: context
-                                                    .millisecondsSinceEpoch(),
-                                              ),
-                                              additionalFields:
-                                              TaskAdditionalFields(
-                                                version: 1,
-                                                fields: [
-                                                  AdditionalField(
-                                                    'taskStatus',
-                                                    Status
-                                                        .beneficiaryRefused
-                                                        .toValue(),
+                                offstage: secondaryButtonProperties?.hidden !=
+                                        null &&
+                                    secondaryButtonProperties?.hidden == true,
+                                child: DigitButton(
+                                  label: localizations.translate(
+                                    i18.memberCard.unableToDeliverLabel,
+                                  ),
+                                  isDisabled:
+                                      (projectBeneficiaries ?? []).isEmpty
+                                          ? true
+                                          : false,
+                                  type: DigitButtonType.secondary,
+                                  size: DigitButtonSize.medium,
+                                  mainAxisSize: MainAxisSize.max,
+                                  onPressed: () async {
+                                    await showDialog(
+                                      context: context,
+                                      builder: (ctx) => DigitActionCard(
+                                        onOutsideTap: () {
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop();
+                                        },
+                                        actions: [
+                                          DigitButton(
+                                            label: localizations.translate(
+                                              i18.memberCard
+                                                  .beneficiaryRefusedLabel,
+                                            ),
+                                            type: DigitButtonType.secondary,
+                                            size: DigitButtonSize.large,
+                                            onPressed: () {
+                                              Navigator.of(context,
+                                                      rootNavigator: true)
+                                                  .pop();
+                                              context
+                                                  .read<
+                                                      DeliverInterventionBloc>()
+                                                  .add(
+                                                    DeliverInterventionSubmitEvent(
+                                                      task: TaskModel(
+                                                        projectBeneficiaryClientReferenceId:
+                                                            projectBeneficiaryClientReferenceId,
+                                                        clientReferenceId:
+                                                            IdGen.i.identifier,
+                                                        tenantId:
+                                                            RegistrationDeliverySingleton()
+                                                                .tenantId,
+                                                        rowVersion: 1,
+                                                        auditDetails:
+                                                            AuditDetails(
+                                                          createdBy:
+                                                              RegistrationDeliverySingleton()
+                                                                  .loggedInUserUuid!,
+                                                          createdTime: context
+                                                              .millisecondsSinceEpoch(),
+                                                        ),
+                                                        projectId:
+                                                            RegistrationDeliverySingleton()
+                                                                .projectId,
+                                                        status: Status
+                                                            .beneficiaryRefused
+                                                            .toValue(),
+                                                        clientAuditDetails:
+                                                            ClientAuditDetails(
+                                                          createdBy:
+                                                              RegistrationDeliverySingleton()
+                                                                  .loggedInUserUuid!,
+                                                          createdTime: context
+                                                              .millisecondsSinceEpoch(),
+                                                          lastModifiedBy:
+                                                              RegistrationDeliverySingleton()
+                                                                  .loggedInUserUuid,
+                                                          lastModifiedTime: context
+                                                              .millisecondsSinceEpoch(),
+                                                        ),
+                                                        additionalFields:
+                                                            TaskAdditionalFields(
+                                                          version: 1,
+                                                          fields: [
+                                                            AdditionalField(
+                                                              'taskStatus',
+                                                              Status
+                                                                  .beneficiaryRefused
+                                                                  .toValue(),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        address: individual
+                                                            .address?.first,
+                                                      ),
+                                                      isEditing: false,
+                                                      boundaryModel:
+                                                          RegistrationDeliverySingleton()
+                                                              .boundary!,
+                                                    ),
+                                                  );
+                                              final reloadState = context.read<
+                                                  HouseholdOverviewBloc>();
+                                              Future.delayed(
+                                                const Duration(
+                                                    milliseconds: 500),
+                                                () {
+                                                  reloadState.add(
+                                                    HouseholdOverviewReloadEvent(
+                                                      projectId:
+                                                          RegistrationDeliverySingleton()
+                                                              .projectId!,
+                                                      projectBeneficiaryType:
+                                                          RegistrationDeliverySingleton()
+                                                              .beneficiaryType!,
+                                                    ),
+                                                  );
+                                                },
+                                              ).then(
+                                                (value) => context.router.push(
+                                                  HouseholdAcknowledgementRoute(
+                                                    enableViewHousehold: true,
                                                   ),
-                                                ],
-                                              ),
-                                              address: individual
-                                                  .address?.first,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                          DigitButton(
+                                            label: localizations.translate(
+                                              i18.memberCard
+                                                  .referBeneficiaryLabel,
                                             ),
-                                            isEditing: false,
-                                            boundaryModel:
-                                            RegistrationDeliverySingleton()
-                                                .boundary!,
+                                            type: DigitButtonType.secondary,
+                                            size: DigitButtonSize.large,
+                                            onPressed: () async {
+                                              Navigator.of(
+                                                context,
+                                                rootNavigator: true,
+                                              ).pop();
+                                              await context.router.push(
+                                                ReferBeneficiaryRoute(
+                                                  projectBeneficiaryClientRefId:
+                                                      projectBeneficiaryClientReferenceId ??
+                                                          '',
+                                                ),
+                                              );
+                                            },
                                           ),
-                                        );
-                                        final reloadState = context
-                                            .read<HouseholdOverviewBloc>();
-                                        Future.delayed(
-                                          const Duration(milliseconds: 500),
-                                              () {
-                                            reloadState.add(
-                                              HouseholdOverviewReloadEvent(
-                                                projectId:
-                                                RegistrationDeliverySingleton()
-                                                    .projectId!,
-                                                projectBeneficiaryType:
-                                                RegistrationDeliverySingleton()
-                                                    .beneficiaryType!,
-                                              ),
-                                            );
-                                          },
-                                        ).then(
-                                              (value) => context.router.push(
-                                            HouseholdAcknowledgementRoute(
-                                              enableViewHousehold: true,
+                                          DigitButton(
+                                            label: localizations.translate(
+                                              i18.memberCard
+                                                  .recordAdverseEventsLabel,
                                             ),
+                                            isDisabled: tasks != null &&
+                                                    (tasks ?? []).isNotEmpty
+                                                ? false
+                                                : true,
+                                            type: DigitButtonType.secondary,
+                                            size: DigitButtonSize.large,
+                                            mainAxisSize: MainAxisSize.max,
+                                            onPressed: () async {
+                                              Navigator.of(
+                                                context,
+                                                rootNavigator: true,
+                                              ).pop();
+                                              await context.router.push(
+                                                SideEffectsRoute(
+                                                  tasks: tasks!,
+                                                ),
+                                              );
+                                            },
                                           ),
-                                        );
-                                      },
-                                    ),
-                                    DigitButton(
-                                      label: localizations.translate(
-                                        i18.memberCard
-                                            .referBeneficiaryLabel,
+                                        ],
                                       ),
-                                      type: DigitButtonType.secondary,
-                                      size: DigitButtonSize.large,
-                                      onPressed: () async {
-                                        Navigator.of(
-                                          context,
-                                          rootNavigator: true,
-                                        ).pop();
-                                        await context.router.push(
-                                          ReferBeneficiaryRoute(
-                                            projectBeneficiaryClientRefId:
-                                            projectBeneficiaryClientReferenceId ??
-                                                '',
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    DigitButton(
-                                      label: localizations.translate(
-                                        i18.memberCard
-                                            .recordAdverseEventsLabel,
-                                      ),
-                                      isDisabled: tasks != null &&
-                                          (tasks ?? []).isNotEmpty
-                                          ? false
-                                          : true,
-                                      type: DigitButtonType.secondary,
-                                      size: DigitButtonSize.large,
-                                      mainAxisSize: MainAxisSize.max,
-                                      onPressed: () async {
-                                        Navigator.of(
-                                          context,
-                                          rootNavigator: true,
-                                        ).pop();
-                                        await context.router.push(
-                                          SideEffectsRoute(
-                                            tasks: tasks!,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
+                                    );
+                                  },
                                 ),
-                              );
-                            },
-                          ),
-                        ),
+                              ),
                       ],
                     ),
                   ),

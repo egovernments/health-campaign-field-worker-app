@@ -7,16 +7,14 @@ import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:isar/isar.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:forms_engine/blocs/forms/forms.dart';
+import 'package:isar/isar.dart';
+
 import '../blocs/auth/auth.dart';
 import '../blocs/project/project.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../router/app_router.dart';
-import '../utils/constants.dart';
-import '../utils/extensions/extensions.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';

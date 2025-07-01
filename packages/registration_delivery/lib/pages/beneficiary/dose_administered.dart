@@ -20,7 +20,6 @@ import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
 import '../../models/entities/task_resource.dart';
-import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/constants.dart';
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
