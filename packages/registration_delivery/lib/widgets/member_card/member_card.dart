@@ -45,7 +45,6 @@ class MemberCard extends StatelessWidget {
   final TemplateProperty? editMemberActionProperties;
   final TemplateProperty? primaryButtonProperties;
   final TemplateProperty? secondaryButtonProperties;
-  final VoidCallback setAsHeadAction;
   final VoidCallback editMemberAction;
   final VoidCallback deleteMemberAction;
   final RegistrationDeliveryLocalization localizations;
@@ -648,21 +647,21 @@ class MemberCard extends StatelessWidget {
                                           .beneficiaryType!,
                                 ),
                               );
-                              await context.router.root.push(
-                                BeneficiaryRegistrationWrapperRoute(
-                                  initialState:
-                                      BeneficiaryRegistrationAddMemberState(
-                                          addressModel: address,
-                                          householdModel: household!,
-                                          parentClientReferenceId:
-                                              parentClientReferenceId),
-                                  children: [
-                                    IndividualDetailsRoute(
-                                        parentClientReferenceId:
-                                            parentClientReferenceId),
-                                  ],
-                                ),
-                              );
+                              // await context.router.root.push(
+                              //   BeneficiaryRegistrationWrapperRoute(
+                              //     initialState:
+                              //         BeneficiaryRegistrationAddMemberState(
+                              //             addressModel: address,
+                              //             householdModel: household!,
+                              //             parentClientReferenceId:
+                              //                 parentClientReferenceId),
+                              //     children: [
+                              //       IndividualDetailsRoute(
+                              //           parentClientReferenceId:
+                              //               parentClientReferenceId),
+                              //     ],
+                              //   ),
+                              // );
                             }
                           },
                         ),
@@ -677,7 +676,7 @@ class MemberCard extends StatelessWidget {
                               context.read<ParentOverviewBloc>().add(
                                   ParentOverviewEvent.selectedIndividual(
                                       individualModel: individual));
-                              context.router.push(ParentOverviewRoute());
+                              // context.router.push(ParentOverviewRoute());
                             },
                             type: DigitButtonType.tertiary,
                             size: DigitButtonSize.medium),

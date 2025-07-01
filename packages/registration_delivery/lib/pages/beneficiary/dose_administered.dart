@@ -280,24 +280,24 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                   final reloadState =
                                       context.read<HouseholdOverviewBloc>();
 
-                                  Future.delayed(
-                                    const Duration(milliseconds: 1000),
-                                    () {
-                                      reloadState
-                                          .add(HouseholdOverviewReloadEvent(
-                                        projectId:
-                                            RegistrationDeliverySingleton()
-                                                .projectId!,
-                                        projectBeneficiaryType:
-                                            RegistrationDeliverySingleton()
-                                                .beneficiaryType!,
-                                      ));
-                                    },
-                                  ).then((value) => context.router.popAndPush(
-                                        HouseholdAcknowledgementRoute(
-                                          enableViewHousehold: true,
-                                        ),
-                                      ));
+                                  // Future.delayed(
+                                  //   const Duration(milliseconds: 1000),
+                                  //   () {
+                                  //     reloadState
+                                  //         .add(HouseholdOverviewReloadEvent(
+                                  //       projectId:
+                                  //           RegistrationDeliverySingleton()
+                                  //               .projectId!,
+                                  //       projectBeneficiaryType:
+                                  //           RegistrationDeliverySingleton()
+                                  //               .beneficiaryType!,
+                                  //     ));
+                                  //   },
+                                  // ).then((value) => context.router.popAndPush(
+                                  //       HouseholdAcknowledgementRoute(
+                                  //         enableViewHousehold: true,
+                                  //       ),
+                                  //     ));
                                 }
                               },
                             );

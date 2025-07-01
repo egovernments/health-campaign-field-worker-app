@@ -365,7 +365,7 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                           individual: e,
                                           projectBeneficiaries:projectBeneficiary,
                                           projectBeneficiaryClientReferenceId:projectBeneficiaryId,
-                                          individualChecklist: individualChecklist,
+                                          // individualChecklist: individualChecklist,
                                           name: e.name?.givenName ?? ' - - ',
                                           localizations: localizations,
                                           years: (e.dateOfBirth == null
@@ -455,20 +455,20 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                               ),
                                             );
 
-                                            await context.router.root.push(
-                                              BeneficiaryRegistrationWrapperRoute(
-                                                initialState: BeneficiaryRegistrationEditIndividualState(
-                                                  individualModel: e,
-                                                  householdModel: household!,
-                                                  addressModel: address,
-                                                  projectBeneficiaryModel: projectBeneficiary?.first,
-                                                  individualChecklists: individualChecklist!=null ? [individualChecklist] : null,
-                                                ),
-                                                children: [
-                                                  IndividualDetailsRoute( parentClientReferenceId: parentClientReferenceId),
-                                                ],
-                                              ),
-                                            );
+                                            // await context.router.root.push(
+                                            //   BeneficiaryRegistrationWrapperRoute(
+                                            //     initialState: BeneficiaryRegistrationEditIndividualState(
+                                            //       individualModel: e,
+                                            //       householdModel: household!,
+                                            //       addressModel: address,
+                                            //       projectBeneficiaryModel: projectBeneficiary?.first,
+                                            //       individualChecklists: individualChecklist!=null ? [individualChecklist] : null,
+                                            //     ),
+                                            //     children: [
+                                            //       IndividualDetailsRoute( parentClientReferenceId: parentClientReferenceId),
+                                            //     ],
+                                            //   ),
+                                            // );
                                           },
                                           deleteMemberAction: () {
                                             final bloc = context.read<HouseholdOverviewBloc>();
@@ -585,19 +585,19 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
           .firstOrNull
           ?.clientReferenceId;
 
-      await context.router.root.push(
-        BeneficiaryRegistrationWrapperRoute(
-          initialState: BeneficiaryRegistrationAddMemberState(
-            addressModel: address,
-            householdModel: household,
-            parentClientReferenceId: parentClientReferenceId
-          ),
-          children: [
-            IndividualDetailsRoute(
-                parentClientReferenceId: parentClientReferenceId),
-          ],
-        ),
-      );
+      // await context.router.root.push(
+      //   BeneficiaryRegistrationWrapperRoute(
+      //     initialState: BeneficiaryRegistrationAddMemberState(
+      //       addressModel: address,
+      //       householdModel: household,
+      //       parentClientReferenceId: parentClientReferenceId
+      //     ),
+      //     children: [
+      //       IndividualDetailsRoute(
+      //           parentClientReferenceId: parentClientReferenceId),
+      //     ],
+      //   ),
+      // );
     }
   }
 

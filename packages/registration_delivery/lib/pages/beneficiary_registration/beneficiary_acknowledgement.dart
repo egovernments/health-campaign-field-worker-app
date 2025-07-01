@@ -8,6 +8,7 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/utils/utils.dart';
@@ -45,13 +46,15 @@ class BeneficiaryAcknowledgementPageState
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
 
+    final wrapper = context.read<RegistrationWrapperBloc>().state;
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(spacer2),
         child: PanelCard(
           type: PanelType.success,
           additionalDetails: [
-            if (wrapper?.members?.lastOrNull!.identifiers!
+            if (wrapper.householdMembers?.first?.individuals?.lastOrNull!.identifiers!
                     .lastWhereOrNull(
                       (e) =>
                           e.identifierType ==
@@ -60,7 +63,7 @@ class BeneficiaryAcknowledgementPageState
                     ?.identifierId !=
                 null)
               Text(
-                getSubText(wrapper),
+                getSubText(wrapper.householdMembers.first),
                 textAlign: TextAlign.center,
                 style: textTheme.headingM
                     .copyWith(color: const DigitColors().light.paperPrimary),
@@ -136,11 +139,11 @@ class BeneficiaryAcknowledgementPageState
     return entries.map((e) => e.value).toList(growable: false);
   }
 
-  getSubText(HouseholdMemberWrapper? wrapper) {
+  getSubText(HouseholdWrapper? wrapper) {
     return wrapper != null
         ? '${localizations.translate(i18.beneficiaryDetails.beneficiaryId)}\n'
-            '${wrapper.members?.lastOrNull!.name!.givenName} - '
-            '${wrapper.members?.lastOrNull!.identifiers!.lastWhereOrNull(
+            '${wrapper.individuals?.lastOrNull!.name!.givenName} - '
+            '${wrapper.individuals?.lastOrNull!.identifiers!.lastWhereOrNull(
                   (e) =>
                       e.identifierType ==
                       IdentifierTypes.uniqueBeneficiaryID.toValue(),
