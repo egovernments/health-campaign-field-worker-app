@@ -20,11 +20,14 @@ import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:survey_form/survey_form.dart';
-
+import 'package:forms_engine/blocs/forms/forms.dart';
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
+import 'package:registration_bloc/repositories/local/search_entity_repository.dart';
+import 'blocs/entity_create/entity_create.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
+import 'data/fake_schema.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/network_manager.dart';
 import 'data/remote_client.dart';
@@ -77,6 +80,12 @@ class MainApplicationState extends State<MainApplication>
           create: (context) => IndividualGlobalSearchRepository(
             widget.sql,
             IndividualOpLogManager(widget.isar),
+          ),
+        ),
+        RepositoryProvider<SearchEntityRepository>(
+          create: (context) => SearchEntityRepository(
+            widget.sql,
+            IndividualOpLogManager(widget.isar), /// todo: need to be changed to make is generic as this won't affect anything right now
           ),
         ),
         RepositoryProvider<HouseHoldGlobalSearchRepository>(
@@ -187,7 +196,7 @@ class MainApplicationState extends State<MainApplication>
                                   LocalizationEvent.onLoadLocalization(
                                     module:
                                         "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
-                                    tenantId: appConfig.tenantId.toString(),
+                                    tenantId: envConfig.variables.tenantId,
                                     locale: firstLanguage,
                                     path: Constants.localizationApiPath,
                                   ),

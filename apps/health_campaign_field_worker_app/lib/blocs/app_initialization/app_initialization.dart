@@ -218,7 +218,7 @@ class AppInitializationBloc
         .findAll();
 
     if (serviceRegistryList.isEmpty) {
-      throw Exception('`serviceRegistryList` cannot be empty');
+       throw Exception('`serviceRegistryList` cannot be empty');
     }
     if (configs.isEmpty) {
       throw Exception('`configs` cannot be empty');

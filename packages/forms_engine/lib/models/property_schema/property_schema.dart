@@ -13,48 +13,75 @@ class PropertySchema with _$PropertySchema {
     includeIfNull: false,
   )
   const factory PropertySchema({
-    @JsonKey(name: 'type') required PropertySchemaType type,
-    bool? readonly,
+    @JsonKey(
+      name: 'type',
+      unknownEnumValue: PropertySchemaType.string,
+    )
+    required PropertySchemaType type,
+    bool? readOnly,
     bool? displayOnly,
+    bool? hidden,
     Map<String, PropertySchema>? properties,
-    List<String>? required,
-    List<String>? enums,
+    List<Option>? enums,
+    String? schemaCode,
+    bool? systemDate,
+    bool? charCount,
+    @JsonKey(
+      name: 'format',
+      unknownEnumValue: PropertySchemaFormat.text,
+    )
     PropertySchemaFormat? format,
-    DateFormatValue? firstDate,
-    DateFormatValue? lastDate,
+    String? startDate,
+    String? endDate,
+    int? minValue,
+    int? maxValue,
     int? minLength,
     int? maxLength,
-    num? maximum,
-    num? minimum,
-    String? hint,
+    String? helpText,
+    String? tooltip,
+    String? innerLabel,
     String? label,
+    bool? isMultiSelect,
     dynamic value,
     DisplayBehavior? displayBehavior,
+    Map<String, dynamic>? conditions,
+    int? order,
+    String? actionLabel,
+    String? description,
+    List<ValidationRule>? validations,
+    bool? includeInForm,
+    bool? includeInSummary,
+    NavigateToConfig? navigateTo,
   }) = _PropertySchema;
+
+
 
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>
       _$PropertySchemaFromJson(json);
 }
 
+
 @freezed
-class DateFormatValue with _$DateFormatValue {
-  const DateFormatValue._();
+class ValidationRule with _$ValidationRule {
+  const factory ValidationRule({
+    required String type,
+    dynamic value,
+    String? message,
+  }) = _ValidationRule;
 
-  const factory DateFormatValue({
-    required String value,
-    @Default('yyyy-MM-dd') String format,
-  }) = _DateFormatValue;
+  factory ValidationRule.fromJson(Map<String, dynamic> json) =>
+      _$ValidationRuleFromJson(json);
+}
 
-  factory DateFormatValue.fromJson(Map<String, dynamic> json) =>
-      _$DateFormatValueFromJson(json);
+@freezed
+class Option with _$Option {
+  const factory Option({
+    required String code,
+    required String name,
+  }) = _Option;
 
-  factory DateFormatValue.fromDateTime(
-    DateTime dateTime, [
-    String format = 'yyyy-MM-dd',
-  ]) =>
-      DateFormatValue(value: DateFormat(format).format(dateTime));
-
-  DateTime get dateValue => DateFormat(format).parse(value);
+  factory Option.fromJson(Map<String, dynamic> json) =>
+      _$OptionFromJson(json);
 }
 
 @freezed
@@ -69,13 +96,34 @@ class DisplayBehavior with _$DisplayBehavior {
       _$DisplayBehaviorFromJson(json);
 }
 
+@freezed
+class NavigateToConfig with _$NavigateToConfig {
+  const factory NavigateToConfig({
+    required String type, // "template" or "form"
+    required String name, // route name or form name
+  }) = _NavigateToConfig;
+
+  factory NavigateToConfig.fromJson(Map<String, dynamic> json) =>
+      _$NavigateToConfigFromJson(json);
+}
+
 enum FormulaBehavior { show, hide }
 
 enum PropertySchemaFormat {
   date,
-  dateTime,
   latLng,
-  incrementer;
+  custom,
+  locality,
+  select,
+  numeric,
+  dropdown,
+  checkbox,
+  radio,
+  dob,
+  scanner,
+  idPopulator,
+  mobileNumber,
+  text;
 }
 
-enum PropertySchemaType { object, string, integer, boolean, numeric }
+enum PropertySchemaType { object, string, integer, boolean, dynamic }

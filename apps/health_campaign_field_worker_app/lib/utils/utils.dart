@@ -1,6 +1,7 @@
 library app_utils;
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart'
@@ -27,9 +28,11 @@ import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
 import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.init.dart' as survey_form_mappers;
 
 import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
@@ -41,6 +44,7 @@ import '../models/tenant_boundary/tenant_boundary_model.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
+import 'environment_config.dart';
 import 'extensions/extensions.dart';
 
 export 'app_exception.dart';
@@ -513,3 +517,122 @@ class LocalizationParams {
 
   bool? get exclude => _exclude;
 }
+
+// Transforms the input JSON into a new structure where each page's properties
+// are keyed by their fieldName and the main structure is flattened for use.
+Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
+  try {
+    final transformed = <String, dynamic>{
+      'name': inputJson['name'],
+      'version': inputJson['version'],
+      'pages': <String, dynamic>{},
+      'summary': inputJson['summary'],
+      'templates': <String, dynamic>{},
+    };
+
+    for (final page in inputJson['pages'] as List<dynamic>) {
+      final pageMap = page as Map<String, dynamic>;
+      final pageKey = pageMap['page'];
+      final type = pageMap['type'];
+
+      final Map<String, dynamic> properties = {};
+
+      for (final prop in pageMap['properties'] as List<dynamic>) {
+        final property = prop as Map<String, dynamic>;
+        final fieldName = property['fieldName'];
+        if (fieldName != null) {
+          properties[fieldName] = Map<String, dynamic>.from(property);
+        }
+      }
+
+      final transformedPage = <String, dynamic>{
+        'label': pageMap['label'],
+        'order': pageMap['order'],
+        'type': pageMap['type'],
+        'format': pageMap['format'],
+        'description': pageMap['description'],
+        'actionLabel': pageMap['actionLabel'],
+        'properties': properties,
+        'value': pageMap['value'],
+        'required': pageMap['required'],
+        'hidden': pageMap['hidden'],
+        'helpText': pageMap['helpText'],
+        'innerLabel': pageMap['innerLabel'],
+        'validations': pageMap['validations'],
+        'tooltip': pageMap['tooltip'],
+        'startDate': pageMap['startDate'],
+        'endDate': pageMap['endDate'],
+        'readOnly': pageMap['readOnly'],
+        'charCount': pageMap['charCount'],
+        'systemDate': pageMap['systemDate'],
+        'isMultiSelect': pageMap['isMultiSelect'],
+        'includeInForm': pageMap['includeInForm'],
+        'includeInSummary': pageMap['includeInSummary'],
+        'autoEnable' : pageMap['autoEnable'],
+        'navigateTo': pageMap['navigateTo'] is Map<String, dynamic>
+            ? pageMap['navigateTo']
+            : null,
+      };
+
+      if (type == 'template') {
+        (transformed['templates'] as Map<String, dynamic>)[pageKey] = transformedPage;
+      } else {
+        (transformed['pages'] as Map<String, dynamic>)[pageKey] = transformedPage;
+      }
+    }
+
+    return transformed;
+  } catch (e, stackTrace) {
+    // Log and rethrow to propagate error to the outer try-catch
+    debugPrint('Error inside transformJson: $e');
+    debugPrint('$stackTrace');
+    rethrow;
+  }
+}
+
+Future<void> triggerLocalizationIfUpdated({
+  required BuildContext context,
+  required String moduleKey, // e.g., 'REGISTRATIONFLOW'
+  required String projectReferenceId,
+  required String locale,
+}) async {
+
+  final prefs = await SharedPreferences.getInstance();
+  final rawSchemas = prefs.getString('app_config_schemas');
+  if (rawSchemas == null) return;
+
+  final allSchemas = json.decode(rawSchemas) as Map<String, dynamic>;
+  final schemaEntry = allSchemas[moduleKey] as Map<String, dynamic>?;
+
+  if (schemaEntry == null) return;
+
+  final currentVersion = schemaEntry['currentVersion'] ;
+  final previousVersion = schemaEntry['previousVersion'] ;
+  final schemaData = schemaEntry['data'] as Map<String, dynamic>?;
+
+  if (schemaData == null) return;
+
+  final moduleName = 'hcm-${schemaData['name'].toLowerCase()}-$projectReferenceId';
+
+
+  ///TODO; removing check to check current and previous version will refetch localization every time
+  // if (currentVersion != previousVersion) {
+     context
+        .read<LocalizationBloc>()
+        .add(LocalizationEvent.onRemoteLoadLocalization(
+      module: moduleName,
+      tenantId: envConfig.variables.tenantId,
+      locale: AppSharedPreferences()
+          .getSelectedLocale!,
+      path: Constants.localizationApiPath,
+    ));
+
+    // Update stored previous version
+    schemaEntry['previousVersion'] = currentVersion;
+    allSchemas[moduleKey] = schemaEntry;
+    await prefs.setString('app_config_schemas', json.encode(allSchemas));
+  // }
+}
+
+
+

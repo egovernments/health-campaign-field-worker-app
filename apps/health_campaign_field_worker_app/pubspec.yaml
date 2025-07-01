@@ -18,7 +18,7 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.11+1
   path_provider: ^2.1.3
   path: ^1.9.0
-  digit_ui_components: ^0.2.1+7
+  digit_ui_components: ^0.2.1+9
   auto_route: ^8.3.0
   flutter_bloc: ^8.1.5
   collection: ^1.18.0
@@ -70,6 +70,10 @@ dependencies:
   permission_handler: ^11.3.1
   survey_form: ^1.0.3
   complaints: ^1.0.3-dev.1-enumeration
+  encrypt: ^5.0.3
+  chopper: ^6.1.1
+  swagger_dart_code_generator: 2.15.0
+  form_data_transformer: 0.0.1
 
 dev_dependencies:
   flutter_test:
@@ -92,6 +96,7 @@ dev_dependencies:
   isar_generator: ^3.1.0+1
   flutter_launcher_icons: ^0.13.1
   hrk_flutter_test_batteries: ^0.8.0
+  chopper_generator: ^6.0.0
 
 flutter_icons:
   android: 'ic_launcher'

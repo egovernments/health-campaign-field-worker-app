@@ -1,82 +1,60 @@
 part of 'json_schema_builder.dart';
 
 class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
-  final int? minimum;
-  final int? maximum;
-  final bool incrementer;
+  final int? maxValue;
+  final int? minValue;
 
   const JsonSchemaIntegerBuilder({
     required super.formControlName,
     required super.form,
     super.key,
     super.value,
-    super.hint,
-    this.incrementer = false,
-    this.minimum,
-    this.maximum,
+    this.maxValue,
+    this.minValue,
+    super.label,
+    super.helpText,
+    super.innerLabel,
+    super.readOnly,
+    super.validations,
+    super.isRequired,
+    super.tooltipText,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (!incrementer) {
-      return ReactiveTextField(
-        formControlName: formControlName,
-        decoration: InputDecoration(labelText: hint),
-        keyboardType: TextInputType.number,
-      );
-    }
 
-    return IntrinsicHeight(
-      child: Row(
-        children: [
-          _buildButton(
-            context,
-            border: Border(
-              left: _borderSide,
-              bottom: _borderSide,
-              top: _borderSide,
-            ),
-            icon: Icons.remove,
-            onPressed: () => form.control(formControlName).value -= 1,
-          ),
-          Expanded(
-            child: ReactiveTextField(
-              readOnly: true,
-              textAlign: TextAlign.center,
-              formControlName: formControlName,
-              decoration: InputDecoration(labelText: hint),
-              keyboardType: TextInputType.number,
-            ),
-          ),
-          _buildButton(
-            context,
-            border: Border(
-              right: _borderSide,
-              bottom: _borderSide,
-              top: _borderSide,
-            ),
-            icon: Icons.add,
-            onPressed: () => form.control(formControlName).value += 1,
-          ),
-        ],
+    final loc = FormLocalization.of(context);
+    final validationMessages = buildValidationMessages(validations, loc);
+
+    return ReactiveWrapperField(
+      formControlName: formControlName,
+      validationMessages: validationMessages,
+      showErrors: (control) => control.invalid && control.touched,
+      builder: (field) => LabeledField(
+        infoText: translateIfPresent(tooltipText, loc),
+        label: label,
+        isRequired: isRequired ?? false,
+        child: DigitNumericFormInput(
+          helpText: helpText,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly
+          ],
+          errorMessage: field.errorText,
+          minValue: 0,
+          maxValue: 10000,
+          maxLength: 5,
+          step: 1,
+          initialValue: (form.control(formControlName).value ?? 0).toString(),
+          onChange: (value) {
+            form.control(formControlName).markAsTouched();
+            if (value.isEmpty) {
+              form.control(formControlName).value = 0;
+              return;
+            }
+            form.control(formControlName).value = int.parse(value);
+          },
+        ),
       ),
     );
   }
-
-  Widget _buildButton(
-    BuildContext context, {
-    required Border border,
-    required IconData icon,
-    VoidCallback? onPressed,
-  }) =>
-      AspectRatio(
-        aspectRatio: 1,
-        child: Material(
-          shape: border,
-          color: Theme.of(context).colorScheme.surface,
-          child: InkWell(onTap: onPressed, child: Icon(icon)),
-        ),
-      );
-
-  BorderSide get _borderSide => const BorderSide(width: 1);
 }
