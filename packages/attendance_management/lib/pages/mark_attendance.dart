@@ -76,6 +76,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
     form = buildForm(); // Initialize the form using your method
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      setRegisterData();
       showMissedAttendanceDialog(
           currentSelectedDate, AttendanceLocalization.of(context));
     });
@@ -398,7 +399,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                               ),
                               InfiniteDateScrollInput(
                                 controller: dateController,
-                                disableScroll: true,
+                                disableScroll: false,
                                 initialValue: DateTime.now().isAfter(
                                         DateTime.fromMillisecondsSinceEpoch(
                                             widget.registerModel.endDate!))
@@ -434,31 +435,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                     });
                                   }
                                   setRegisterData();
-                                  individualLogBloc!.add(
-                                    AttendanceIndividualLogSearchEvent(
-                                      attendees: widget.registerModel.attendees!
-                                              .isNotEmpty
-                                          ? widget.registerModel.attendees!
-                                          : [],
-                                      limit: 10,
-                                      offset: 0,
-                                      currentDate: AttendanceDateTimeManagement
-                                          .getMillisecondEpoch(
-                                              AttendanceDateTimeManagement
-                                                  .getFormattedDateToDateTime(
-                                                      currentSelectedDate)!,
-                                              selectedSession,
-                                              'entryTime'),
-                                      entryTime: entryTime,
-                                      isSingleSession: false,
-                                      exitTime: exitTime,
-                                      registerId: widget.registerModel.id,
-                                      tenantId: widget.registerModel.tenantId
-                                          .toString(),
-                                    ),
-                                  );
-                                  showMissedAttendanceDialog(
-                                      date, localizations);
                                 },
                               ),
                               DigitCard(
@@ -638,6 +614,11 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                         children:
                                             (attendees ?? []).map((individual) {
                                           return CustomAttendanceInfoCard(
+                                            isCurrentDate:
+                                                AttendanceDateTimeManagement.isToday(
+                                                    AttendanceDateTimeManagement
+                                                        .getFormattedDateToDateTime(
+                                                            currentSelectedDate)!),
                                             name: individual.name ??
                                                 localizations.translate(
                                                   i18.attendance.name,
