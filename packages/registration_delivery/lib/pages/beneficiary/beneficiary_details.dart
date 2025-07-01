@@ -121,11 +121,10 @@ class BeneficiaryDetailsPageState
                                             const EdgeInsets.only(top: spacer2),
                                         children: [
                                             DigitButton(
-                                              label:(beneficiaryDetailsTemplate?.properties?[registration_keys.commonKeys.primaryButtonKey]?.label ?? '').isNotEmpty
-                                                  ? localizations.translate(beneficiaryDetailsTemplate?.properties?[registration_keys.commonKeys.primaryButtonKey]?.label ?? '')
-                                                  : '${localizations.translate(i18.beneficiaryDetails.recordCycle)} '
-                                                  '${(deliverState.deliveryWrapper?.cycle == 0 ? (deliverState.deliveryWrapper?.cycle ?? 0 + 1) : deliverState.deliveryWrapper?.cycle).toString()} ${localizations.translate(i18.deliverIntervention.dose)} '
-                                                  '${(deliverState.deliveryWrapper?.dose).toString()}',
+                                              label:
+                                                  '${localizations.translate(i18.beneficiaryDetails.recordCycle)} '
+                                                  '${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} ${localizations.translate(i18.deliverIntervention.dose)} '
+                                                  '${(deliverState.dose).toString()}',
                                               type: DigitButtonType.primary,
                                               size: DigitButtonSize.large,
                                               mainAxisSize: MainAxisSize.max,
@@ -133,107 +132,107 @@ class BeneficiaryDetailsPageState
                                                 final selectedCycle = cycles
                                                     .firstWhereOrNull((c) =>
                                                         c.id ==
-                                                            deliverState.deliveryWrapper?.cycle);
-
-                                               if (selectedCycle != null) {
+                                                        deliverState.cycle);
+                                                if (selectedCycle != null) {
                                                   final currentCycle =
-                                                  (deliverState.deliveryWrapper?.cycle ?? 0) >= 0
-                                                      ? deliverState.deliveryWrapper?.cycle
-                                                      : 0;
+                                                      deliverState.cycle >= 0
+                                                          ? deliverState.cycle
+                                                          : 0;
 
                                                   // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
                                                   final currentDose =
-                                                  (deliverState.deliveryWrapper?.dose ?? 0) >= 0
-                                                      ? deliverState.deliveryWrapper?.dose
-                                                      : 0;
+                                                      deliverState.dose >= 0
+                                                          ? deliverState.dose
+                                                          : 0;
 
                                                   final items =
-                                                  RegistrationDeliverySingleton()
-                                                      .projectType
-                                                      ?.cycles?.firstWhere((c) => c.id == currentCycle)
-                                                      .deliveries?.firstWhere((d) => d.id == currentDose);
+                                                      RegistrationDeliverySingleton()
+                                                              .projectType!
+                                                              .cycles?[
+                                                                  currentCycle - 1]
+                                                              .deliveries?[
+                                                          currentDose - 1];
 
-                                                  // bloc.add(
-                                                  //   DeliverInterventionEvent
-                                                  //       .selectFutureCycleDose(
-                                                  //     dose: deliverState.dose,
-                                                  //     cycle:
-                                                  //         RegistrationDeliverySingleton()
-                                                  //             .projectType!
-                                                  //             .cycles!
-                                                  //             .firstWhere((c) =>
-                                                  //                 c.id ==
-                                                  //                 deliverState
-                                                  //                     .cycle),
-                                                  //     individualModel: state
-                                                  //         .selectedIndividual,
-                                                  //   ),
-                                                  // );
+                                                  bloc.add(
+                                                    DeliverInterventionEvent
+                                                        .selectFutureCycleDose(
+                                                      dose: deliverState.dose,
+                                                      cycle:
+                                                          RegistrationDeliverySingleton()
+                                                              .projectType!
+                                                              .cycles!
+                                                              .firstWhere((c) =>
+                                                                  c.id ==
+                                                                  deliverState
+                                                                      .cycle),
+                                                      individualModel: state
+                                                          .selectedIndividual,
+                                                    ),
+                                                  );
 
                                                   var productVariants =
-                                                  fetchProductVariant(
-                                                      items,
-                                                      state
-                                                          .selectedIndividual,
-                                                      state
-                                                          .householdMembers.first
-                                                          .household,
-                                                      context: context);
+                                                      fetchProductVariant(
+                                                          items,
+                                                          state
+                                                              .selectedIndividual,
+                                                          state
+                                                              .householdMemberWrapper
+                                                              .household,
+                                                          context: context);
 
                                                   if (productVariants[
-                                                  'criteria'] ==
+                                                          'criteria'] ==
                                                       null) {
                                                     showCustomPopup(
                                                       context: context,
                                                       builder: (BuildContext context) => Popup(
                                                           title: localizations
                                                               .translate(i18
-                                                              .common
-                                                              .coreCommonError),
+                                                                  .common
+                                                                  .coreCommonError),
                                                           description: localizations
-                                                              .translate(
-                                                              'CONDITION_FAILED') +
+                                                                  .translate(
+                                                                      'CONDITION_FAILED') +
                                                               productVariants[
-                                                              'errors']
+                                                                      'errors']
                                                                   .toString()
                                                                   .replaceAll(
-                                                                  '[', '')
+                                                                      '[', '')
                                                                   .replaceAll(
-                                                                  ']', ''),
+                                                                      ']', ''),
                                                           type: PopUpType.alert,
                                                           actions: [
                                                             DigitButton(
                                                                 label: localizations
                                                                     .translate(i18
-                                                                    .common
-                                                                    .corecommonclose),
+                                                                        .common
+                                                                        .corecommonclose),
                                                                 onPressed: () {
                                                                   Navigator.of(
                                                                     context,
                                                                     rootNavigator:
-                                                                    true,
+                                                                        true,
                                                                   ).pop();
                                                                 },
                                                                 type: DigitButtonType
-                                                                    .secondary,
+                                                                    .tertiary,
                                                                 size:
-                                                                DigitButtonSize
-                                                                    .large)
+                                                                    DigitButtonSize
+                                                                        .large)
                                                           ]),
                                                     );
-                                                  }
-                                                  else {
+                                                  } else {
                                                     showCustomPopup(
                                                       context: context,
                                                       builder: (popUpContext) => Popup(
                                                           title: localizations
                                                               .translate(i18
-                                                              .beneficiaryDetails
-                                                              .resourcesTobeDelivered),
+                                                                  .beneficiaryDetails
+                                                                  .resourcesTobeDelivered),
                                                           type:
-                                                          PopUpType.simple,
+                                                              PopUpType.simple,
                                                           contentPadding:
-                                                          EdgeInsets.zero,
+                                                              EdgeInsets.zero,
                                                           additionalWidgets: [
                                                             buildTableContent(
                                                                 deliverState,
@@ -242,60 +241,31 @@ class BeneficiaryDetailsPageState
                                                                 state
                                                                     .selectedIndividual,
                                                                 state
-                                                                    .householdMembers.first
+                                                                    .householdMemberWrapper
                                                                     .household),
                                                           ],
                                                           actions: [
                                                             DigitButton(
                                                                 label: localizations
                                                                     .translate(i18
-                                                                    .beneficiaryDetails
-                                                                    .ctaProceed),
+                                                                        .beneficiaryDetails
+                                                                        .ctaProceed),
                                                                 onPressed: () {
                                                                   Navigator.of(
                                                                     context,
                                                                     rootNavigator:
-                                                                    true,
+                                                                        true,
                                                                   ).pop();
-                                                                  if(beneficiaryDetailsTemplate?.navigateTo!=null){
-                                                                    if(beneficiaryDetailsTemplate?.navigateTo?.type=='form'){
-                                                                      final pageName = context.read<FormsBloc>().state.cachedSchemas['DELIVERYFLOW']?.pages.entries.first.key;
-
-                                                                      if (pageName == null) {
-                                                                        Toast.showToast(
-                                                                          context,
-                                                                          message: localizations.translate('NO_FORM_FOUND_FOR_DELIVERY'),
-                                                                          type: ToastType.error,
-                                                                        );
-                                                                      } else {
-                                                                        context.router.push(FormsRenderRoute(currentSchemaKey: 'DELIVERYFLOW', pageName: pageName,
-                                                                          defaultValues: {
-                                                                            'locality':
-                                                                            localizations.translate(RegistrationDeliverySingleton().boundary?.code ?? '')
-                                                                          },
-                                                                          customComponents: const [
-                                                                            {
-                                                                              'resourceCard': ResourceCard()
-                                                                            }
-                                                                          ],
-                                                                        ));
-                                                                      }
-
-                                                                    }
-                                                                  }
-                                                                  else{
-                                                                    context.router.push(DeliverInterventionRoute());
-                                                                  }
-                                                                  // router.push(
-                                                                  //   DeliverInterventionRoute(),
-                                                                  // );
+                                                                  router.push(
+                                                                    DeliverInterventionRoute(),
+                                                                  );
                                                                 },
                                                                 type:
-                                                                DigitButtonType
-                                                                    .primary,
+                                                                    DigitButtonType
+                                                                        .primary,
                                                                 size:
-                                                                DigitButtonSize
-                                                                    .large),
+                                                                    DigitButtonSize
+                                                                        .large),
                                                           ]),
                                                     );
                                                   }
@@ -308,9 +278,7 @@ class BeneficiaryDetailsPageState
                                     margin: const EdgeInsets.only(top: spacer2),
                                     children: [
                                         DigitButton(
-                                          label: (beneficiaryDetailsTemplate?.properties?[registration_keys.commonKeys.primaryButtonKey]?.label ?? '').isNotEmpty
-                                              ? localizations.translate(beneficiaryDetailsTemplate?.properties?[registration_keys.commonKeys.primaryButtonKey]?.label ?? '')
-                                              : localizations.translate(i18
+                                          label: localizations.translate(i18
                                               .householdOverView
                                               .householdOverViewActionText),
                                           type: DigitButtonType.primary,
@@ -318,27 +286,27 @@ class BeneficiaryDetailsPageState
                                           mainAxisSize: MainAxisSize.max,
                                           onPressed: () {
                                             final currentCycle =
-                                            (deliverState.deliveryWrapper?.cycle ?? 0) >= 0
-                                                    ? deliverState.deliveryWrapper?.cycle
+                                                deliverState.cycle >= 0
+                                                    ? deliverState.cycle
                                                     : 0;
 
                                             // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
                                             final currentDose =
-                                            (deliverState.deliveryWrapper?.dose ?? 0) >= 0
-                                                    ? deliverState.deliveryWrapper?.dose
+                                                deliverState.dose >= 0
+                                                    ? deliverState.dose
                                                     : 0;
 
                                             final items =
                                                 RegistrationDeliverySingleton()
                                                     .projectType!
-                                                    .cycles?[currentCycle ?? 0 - 1]
-                                                    .deliveries?[currentDose ?? 0 - 1];
+                                                    .cycles?[currentCycle - 1]
+                                                    .deliveries?[currentDose - 1];
 
                                             var productVariants =
                                                 fetchProductVariant(
                                                     items,
                                                     state.selectedIndividual,
-                                                    state.householdMembers.first
+                                                    state.householdMemberWrapper
                                                         .household,
                                                     context: context);
 
@@ -397,42 +365,13 @@ class BeneficiaryDetailsPageState
                               margin: const EdgeInsets.all(spacer2),
                               children: [
                                 Text(
-                                  localizations.translate(beneficiaryDetailsTemplate
-                                      ?.label ?? i18.beneficiaryDetails
+                                  localizations.translate(i18.beneficiaryDetails
                                       .beneficiarysDetailsLabelText),
                                   style: textTheme.headingXl.copyWith(
                                       color: theme.colorTheme.primary.primary2),
                                 ),
-                                if(beneficiaryDetailsTemplate?.description != null && ( beneficiaryDetailsTemplate?.description ?? '').isNotEmpty)
-                                  Text(
-                                    localizations.translate(
-                                        beneficiaryDetailsTemplate?.description ?? ''
-                                    ),
-                                    style: textTheme.bodyS.copyWith(
-                                      color: theme.colorTheme.text.secondary,
-                                    ),
-                                    textAlign: TextAlign.left,
-                                  ),
-                                if(beneficiaryDetailsTemplate
-                                    ?.properties?[registration_keys.beneficiaryDetailsKeys.detailsCardKey]?.hidden != true)
-                                  DigitTableCard(
-                                  element: buildEnumValueMap(
-                                        HouseholdWrapper(
-                                      household: householdMemberWrapper.first.household,
-                                      headOfHousehold: RegistrationDeliverySingleton()
-                                          .beneficiaryType !=
-                                          BeneficiaryType.individual
-                                          ? householdMemberWrapper.first.headOfHousehold : state.selectedIndividual,
-                                      tasks: householdMemberWrapper.first.tasks,
-                                      projectBeneficiaries: householdMemberWrapper.first.projectBeneficiaries,
-                                      sideEffects: householdMemberWrapper.first.sideEffects,
-                                      referrals: householdMemberWrapper.first.referrals,
-                                    )
-                                      ,
-                                      beneficiaryDetailsTemplate
-                                          ?.properties?[registration_keys.beneficiaryDetailsKeys.detailsCardKey]?.enums
-                                  )?.map((k, v) => MapEntry(localizations.translate(k), localizations.translate(v.toString())))
-                                      ?? {
+                                DigitTableCard(
+                                  element: {
                                     localizations.translate(
                                       RegistrationDeliverySingleton()
                                                   .beneficiaryType !=
@@ -443,7 +382,7 @@ class BeneficiaryDetailsPageState
                                     ): RegistrationDeliverySingleton()
                                                 .beneficiaryType !=
                                             BeneficiaryType.individual
-                                        ? householdMemberWrapper.first
+                                        ? householdMemberWrapper
                                             .headOfHousehold?.name?.givenName
                                         : state.selectedIndividual?.name
                                                 ?.givenName ??
@@ -455,7 +394,7 @@ class BeneficiaryDetailsPageState
                                           RegistrationDeliverySingleton()
                                                       .beneficiaryType !=
                                                   BeneficiaryType.individual
-                                              ? householdMemberWrapper.first
+                                              ? householdMemberWrapper
                                                   .headOfHousehold?.identifiers
                                               : state.selectedIndividual
                                                   ?.identifiers;
@@ -464,9 +403,29 @@ class BeneficiaryDetailsPageState
                                         return '--';
                                       }
 
+                                      String? primaryIdType = state
+                                          .selectedIndividual
+                                          ?.additionalFields
+                                          ?.fields
+                                          .firstWhereOrNull((idType) =>
+                                              idType.key == 'primaryIdType')
+                                          ?.value;
+
                                       return localizations.translate(
-                                          identifiers.first.identifierType ??
-                                              '--');
+                                          primaryIdType != null
+                                              ? state.selectedIndividual
+                                                      ?.identifiers
+                                                      ?.firstWhereOrNull((type) =>
+                                                          type.identifierType ==
+                                                          primaryIdType)
+                                                      ?.identifierType ??
+                                                  '--'
+                                              : state
+                                                      .selectedIndividual
+                                                      ?.identifiers
+                                                      ?.firstOrNull
+                                                      ?.identifierType ??
+                                                  '--');
                                     }(),
                                     localizations.translate(
                                       i18.deliverIntervention.idNumberText,
@@ -484,9 +443,41 @@ class BeneficiaryDetailsPageState
                                         return '--';
                                       }
 
-                                      return maskString(identifiers
-                                          .first.identifierId
-                                          .toString());
+                                      String? primaryIdType = state
+                                          .selectedIndividual
+                                          ?.additionalFields
+                                          ?.fields
+                                          .firstWhereOrNull((idType) =>
+                                              idType.key == 'primaryIdType')
+                                          ?.value;
+
+                                      String? getMaskedOrRawIdentifier(
+                                          List<IdentifierModel> identifiers,
+                                          String? type) {
+                                        final identifier =
+                                            identifiers.firstWhereOrNull(
+                                          (id) =>
+                                              type == null ||
+                                              id.identifierType == type,
+                                        );
+                                        if (identifier == null) return null;
+
+                                        return type ==
+                                                IdentifierTypes
+                                                    .uniqueBeneficiaryID
+                                                    .toValue()
+                                            ? identifier.identifierId
+                                            : maskString(
+                                                identifier.identifierId ?? '');
+                                      }
+
+                                      final identifiersList = state
+                                              .selectedIndividual
+                                              ?.identifiers ??
+                                          identifiers;
+
+                                      return getMaskedOrRawIdentifier(
+                                          identifiersList, primaryIdType);
                                     }(),
                                     localizations.translate(
                                       i18.common.coreCommonAge,

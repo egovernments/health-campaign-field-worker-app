@@ -1,5 +1,4 @@
 import 'package:digit_ui_components/digit_components.dart';
-import 'package:digit_ui_components/theme/ComponentTheme/digit_tag_theme.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
 import 'package:flutter/material.dart';

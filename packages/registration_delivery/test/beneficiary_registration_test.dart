@@ -1,9 +1,10 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/utils/typedefs.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary_registration.dart';
+import 'package:registration_delivery/data/repositories/local/unique_id_pool.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
@@ -13,6 +14,9 @@ import 'constants/test_constants.dart';
 
 class MockIndividualDataRepository extends Mock
     implements IndividualDataRepository {}
+
+class MockIUniqueIdLocalRepository extends Mock
+    implements UniqueIdPoolLocalRepository {}
 
 class MockHouseholdDataRepository extends Mock
     implements HouseholdDataRepository {}
@@ -33,6 +37,7 @@ void main() {
       mockProjectBeneficiaryDataRepository;
   late MockTaskDataRepository mockTaskDataRepository;
   late BeneficiaryRegistrationBloc beneficiaryRegistrationBloc;
+  late UniqueIdPoolLocalRepository mockUniqueIdLocalRepository;
 
   setUpAll(() {
     registerFallbackValue(RegistrationDeliveryTestConstants.mockAddress);
@@ -52,15 +57,16 @@ void main() {
     mockProjectBeneficiaryDataRepository =
         MockProjectBeneficiaryDataRepository();
     mockTaskDataRepository = MockTaskDataRepository();
+    mockUniqueIdLocalRepository = MockIUniqueIdLocalRepository();
     beneficiaryRegistrationBloc = BeneficiaryRegistrationBloc(
-      const BeneficiaryRegistrationState.create(),
-      individualRepository: mockIndividualDataRepository,
-      householdRepository: mockHouseholdDataRepository,
-      householdMemberRepository: mockHouseholdMemberDataRepository,
-      projectBeneficiaryRepository: mockProjectBeneficiaryDataRepository,
-      beneficiaryType: BeneficiaryType.individual,
-      taskDataRepository: mockTaskDataRepository,
-    );
+        const BeneficiaryRegistrationState.create(),
+        individualRepository: mockIndividualDataRepository,
+        householdRepository: mockHouseholdDataRepository,
+        householdMemberRepository: mockHouseholdMemberDataRepository,
+        projectBeneficiaryRepository: mockProjectBeneficiaryDataRepository,
+        beneficiaryType: BeneficiaryType.individual,
+        taskDataRepository: mockTaskDataRepository,
+        uniqueIdPoolLocalRepository: mockUniqueIdLocalRepository);
   });
 
   group('BeneficiaryRegistrationBloc', () {

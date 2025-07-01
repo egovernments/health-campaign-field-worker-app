@@ -78,7 +78,6 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
           BlocConsumer<ProjectBloc, ProjectState>(
             listener: (context, state) {
               final error = state.syncError;
-              final projectSelected = state.selectedProject;
 
               if (syncDialogRoute?.isActive ?? false) {
                 Navigator.of(context).removeRoute(syncDialogRoute!);
@@ -90,27 +89,23 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                   barrierDismissible: false,
                   builder: (context) => DigitSyncDialogContent(
                     label: localizations.translate(
-                      '${error.name.toUpperCase()}_ERROR',
+                      i18.projectSelection.syncFailedTitleText,
                     ),
                     type: DialogType.failed,
                     primaryAction: DigitDialogActions(
                       label: localizations.translate(
                         i18.projectSelection.retryButtonText,
                       ),
-                      action: projectSelected == null
-                          ? (cxt) {
-                        if (syncDialogRoute != null && syncDialogRoute!.isActive) {
-                          Navigator.of(cxt).removeRoute(syncDialogRoute!);
-                        }
-                        context.read<ProjectBloc>().add(const ProjectInitializeEvent());
-                      }
-                          : (cxt) {
-                        if (syncDialogRoute != null && syncDialogRoute!.isActive) {
-                          Navigator.of(cxt).removeRoute(syncDialogRoute!);
-                        }
-                              cxt.read<ProjectBloc>().add(
+                      action: _selectedProject == null
+                          ? null
+                          : (context) {
+                              if (syncDialogRoute?.isActive ?? false) {
+                                Navigator.of(context)
+                                    .removeRoute(syncDialogRoute!);
+                              }
+                              context.read<ProjectBloc>().add(
                                     ProjectSelectProjectEvent(
-                                      projectSelected,
+                                      _selectedProject!,
                                     ),
                                   );
                             },
@@ -238,16 +233,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
   }
 
   void navigateToBoundary(String boundary) async {
-    // todo : will change module name later with dynamic keys
-    await triggerLocalizationIfUpdated(
-      context: context,
-      locale: AppSharedPreferences().getSelectedLocale!,
-      moduleKey: 'REGISTRATIONFLOW,DELIVERYFLOW',
-      projectReferenceId: context.selectedProject.referenceID ?? '',
-    );
     BoundaryBloc boundaryBloc = context.read<BoundaryBloc>();
     boundaryBloc.add(BoundaryFindEvent(code: boundary));
-
     try {
       await boundaryBloc.stream
           .firstWhere((element) => element.boundaryList.isNotEmpty);

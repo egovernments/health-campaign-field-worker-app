@@ -26,7 +26,7 @@ class AuthRepository {
         .join('&');
     final response = await _client.post(
       loginPath,
-      data: encodedFormData,
+      data: formData,
       options: Options(headers: headers),
     );
 

@@ -26,12 +26,16 @@ class Common {
 
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
 
+  String get coreCommonSkipContinue => 'CORE_COMMON_SKIP_CONTINUE';
+
   String get coreCommonAge => 'CORE_COMMON_AGE';
 
   String get coreCommonName => 'CORE_COMMON_NAME';
   String get coreCommonError => 'CORE_COMMON_ERROR';
 
   String get coreCommonEmailId => 'CORE_COMMON_EMAIL_ID';
+
+  String get coreCommonError => 'CORE_COMMON_ERROR';
 
   String get coreCommonGender => 'CORE_COMMON_GENDER';
 
@@ -137,6 +141,10 @@ class Common {
   String get minAge => 'MINIMUM_AGE_SHOULD_BE_GREATER_THAN_0';
 
   String get maxAge => 'MAXIMUM_AGE_CAN_NOT_EXCEED_150_YEARS';
+
+  String get coreCommonNoInternet => 'CORE_COMMON_NO_INTERNET';
+
+  String get coreCommonDownloading => 'CORE_COMMON_DOWNLOADING';
 }
 
 class SearchBeneficiary {
@@ -144,6 +152,8 @@ class SearchBeneficiary {
 
   String get communityProximityLabel =>
       'BENEFICIARY_SEARCH_COMMUNITY_PROXIMITY_LABEL_TEXT';
+
+  String get beneficiaryIdSearchLabel => 'BENEFICIARY_ID_SEARCH_LABEL_TEXT';
 
   String get clfSearchHintText => 'BENEFICIARY_CLF_SEARCH_HINT_TEXT';
 
@@ -159,6 +169,8 @@ class SearchBeneficiary {
   String get noOfResourcesDelivered => 'NO_OF_RESOURCES_DELIVERED';
 
   String get beneficiarySearchHintText => 'BENEFICIARY_SEARCH_HINT_TEXT';
+
+  String get beneficiaryIdSearchHintText => 'BENEFICIARY_ID_SEARCH_HINT_TEXT';
 
   String get beneficiaryIndividualSearchHintText =>
       'BENEFICIARY_INDIVIDUAL_SEARCH_HINT_TEXT';
@@ -190,6 +202,10 @@ class SearchBeneficiary {
 
 class BeneficiaryDetails {
   const BeneficiaryDetails();
+  String get notMeetDeliveryRulesCriteria =>
+      'BENEFICIARY_NOT_MEET_DELIVERY_RULES';
+
+  String get addValueText => "HCM_ADD";
 
   String get beneficiarysDetailsLabelText => 'BENEFICIARY_DETAILS_LABEL_TEXT';
 
@@ -207,6 +223,8 @@ class BeneficiaryDetails {
   String get resourcesTobeProvided => 'RESOURCES_TO_BE_PROVIDED';
 
   String get beneficiaryAge => 'BENEFICIARY_AGE';
+
+  String get beneficiaryId => 'BENEFICIARY_ID';
 
   String get ctaProceed => 'PROCEED';
 
@@ -263,6 +281,8 @@ class BeneficiaryDetails {
 
   String get deliveryHeader => 'DELIVERY_TABLE_HEADER';
 
+  String get beneficiaryIdHeader => 'BENEFICIARY_ID_TABLE_HEADER';
+
   String get proceedWithoutDownloading => 'PROCEED_WITHOUT_DOWNLOADING';
 
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
@@ -286,6 +306,34 @@ class BeneficiaryDetails {
   String get status => 'STATUS';
 
   String get downloadedon => 'DOWNLOADED_ON';
+
+  String get beneficiaryIdsLabel => 'BENEFICIARY_IDS_LABEL';
+
+  String get downloadBeneficiaryIds => 'DOWNLOAD_BENEFICIARY_IDS';
+
+  String get noOfBeneficiaryIdsLeft => 'NO_OF_BENEFICIARY_IDS_LEFT';
+
+  String get availableBeneficiaryIdsText => 'AVAILABLE_BENEFICIARY_IDS_TEXT';
+
+  String get lowBeneficiaryIdsLabel => 'LOW_BENEFICIARY_IDS_LABEL';
+
+  String get lowBeneficiaryIdsText => 'LOW_BENEFICIARY_IDS_TEXT';
+
+  String get lowBeneficiaryIdsAlertText => 'LOW_BENEFICIARY_IDS_ALERT_TEXT';
+
+  String get noBeneficiaryIdsLabel => 'NO_BENEFICIARY_IDS_LABEL';
+
+  String get noBeneficiaryIdsText => 'NO_BENEFICIARY_IDS_TEXT';
+
+  String get noInternetBeneficiaryIdsText => 'NO_INTERNET_BENEFICIARY_IDS_TEXT';
+
+  String get failedBeneficiaryIds => 'FAILED_BENEFICIARY_IDS';
+
+  String get beneficiaryIdsLimitError => 'BENEFICIARY_IDS_LIMIT_ERROR';
+
+  String get beneficiaryIdsReFetch => 'BENEFICIARY_IDS_RE_FETCH';
+
+  String get totalBeneficiaryIds => 'TOTAL_BENEFICIARY_IDS';
 
   String get recordsdownload => 'RECORDS_DOWNLOAD';
 
@@ -311,10 +359,14 @@ class BeneficiaryDetails {
   String get householdMemberPlural => 'BENEFICIARY_HOUSEHOLD_MEMBERS';
 
   String get totalMembers => 'TOTAL_HOUSEHOLD_MEMBERS';
+
+  String get totalCLFMembers => 'TOTAL_CLF_MEMBERS';
 }
 
 class IndividualDetails {
   const IndividualDetails();
+
+  String get weightLabelText => 'WEIGHT_LABEL_TEXT';
 
   String get clfCheckboxLabelText => 'INDIVIDUAL_CLF_CHECKBOX_LABEL_TEXT';
 
@@ -325,6 +377,8 @@ class IndividualDetails {
   String get checkboxLabelText => 'HEAD_OF_HOUSEHOLD_LABEL_TEXT';
 
   String get idTypeLabelText => 'ID_TYPE_LABEL_TEXT';
+
+  String get relationShipTypeLabelText => 'RELATIONSHIP_TYPE_LABEL_TEXT';
 
   String get idNumberLabelText => 'ID_NUMBER_LABEL_TEXT';
 
@@ -566,6 +620,8 @@ class HouseholdOverView {
 
   String get householdOverViewAddActionText =>
       'HOUSEHOLD_OVER_VIEW__ADD_ACTION_TEXT';
+
+  String get householdOverViewAge => 'HOUSEHOLD_OVER_VIEW_AGE';
 }
 
 class MemberCard {
@@ -603,6 +659,10 @@ class MemberCard {
       'MEMBER_CARD_RECORD_ADVERSE_EVENTS_LABEL';
 
   String get referBeneficiaryLabel => 'MEMBER_CARD_REFER_BENEFICIARY_LABEL';
+
+  String get noOfChildren => 'MEMBER_CARD_NO_OF_CHILDREN';
+
+  String get addChildLabel => 'MEMBER_CARD_ADD_CHILD_LABEL';
 }
 
 class DeliverIntervention {
@@ -975,6 +1035,14 @@ class IndividualDetailsShowcase {
 
   String get idType {
     return 'INDIVIDUAL_DETAILS_SHOWCASE_ID_TYPE';
+  }
+
+  String get height {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_HEIGHT';
+  }
+
+  String get weight {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_WEIGHT';
   }
 }
 

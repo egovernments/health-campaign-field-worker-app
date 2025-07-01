@@ -7,6 +7,7 @@ import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 
+import '../../../models/entities/referral.dart';
 import '../../../models/entities/status.dart';
 import '../../../models/entities/task.dart';
 import '../../../models/entities/task_resource.dart';
@@ -33,8 +34,11 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       var proximitySelectQuery =
           await proximitySearch(selectQuery, params, super.sql);
 
+      var identifierIdSelectQuery =
+          await searchByIdentifierId(proximitySelectQuery, params, super.sql);
+
       var nameSelectQuery =
-          await nameSearch(proximitySelectQuery, params, super.sql);
+          await nameSearch(identifierIdSelectQuery, params, super.sql);
 
       var filterSelectQuery = nameSelectQuery;
 
@@ -69,16 +73,20 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       var proximitySelectQuery =
           await proximitySearch(selectQuery, params, super.sql);
 
+      var beneficiaryIdSelectQuery =
+          await searchByIdentifierId(proximitySelectQuery, params, super.sql);
+
       var nameSelectQuery =
-          await nameSearch(proximitySelectQuery, params, super.sql);
+          await nameSearch(beneficiaryIdSelectQuery, params, super.sql);
 
       var filterSelectQuery = nameSelectQuery;
 
       // Apply filters if present
       if (params.filter != null && params.filter!.isNotEmpty) {
         for (var filter in params.filter!) {
-          filterSelectQuery =
-              await filterSearch(filterSelectQuery, params, filter, super.sql);
+          filterSelectQuery = await filterSearch(
+                  filterSelectQuery, params, filter, super.sql) ??
+              nameSelectQuery;
         }
       } else {
         filterSelectQuery = nameSelectQuery;
@@ -95,54 +103,100 @@ class IndividualGlobalSearchRepository extends LocalRepository {
         }
         await filterSelectQuery.limit(params.limit ?? 50,
             offset: params.offset ?? 0);
-
+        var data;
         final results = await filterSelectQuery.get();
-        var data = results
-            .map((e) {
-              final task = e.readTableOrNull(sql.task);
-              final resources = e.readTableOrNull(sql.taskResource);
+        if (params.filter!.contains(Status.beneficiaryReferred.name)) {
+          data = results
+              .map((e) {
+                final referral = e.readTableOrNull(sql.referral);
+                if (referral == null) return null;
 
-              return TaskModel(
-                id: task.id,
-                createdBy: task.createdBy,
-                clientReferenceId: task.clientReferenceId,
-                rowVersion: task.rowVersion,
-                tenantId: task.tenantId,
-                isDeleted: task.isDeleted,
-                projectId: task.projectId,
-                projectBeneficiaryId: task.projectBeneficiaryId,
-                projectBeneficiaryClientReferenceId:
-                    task.projectBeneficiaryClientReferenceId,
-                createdDate: task.createdDate,
-                status: task.status,
-                resources: resources == null
-                    ? null
-                    : [
-                        TaskResourceModel(
-                          taskclientReferenceId:
-                              resources.taskclientReferenceId,
-                          clientReferenceId: resources.clientReferenceId,
-                          id: resources.id,
-                          productVariantId: resources.productVariantId,
-                          taskId: resources.taskId,
-                          deliveryComment: resources.deliveryComment,
-                          quantity: resources.quantity,
-                          rowVersion: resources.rowVersion,
+                return ReferralModel(
+                  id: referral.id,
+                  clientReferenceId: referral.clientReferenceId,
+                  rowVersion: referral.rowVersion,
+                  tenantId: referral.tenantId,
+                  isDeleted: referral.isDeleted,
+                  projectBeneficiaryClientReferenceId:
+                      referral.projectBeneficiaryClientReferenceId,
+                  auditDetails: AuditDetails(
+                    createdBy: referral.auditCreatedBy!,
+                    createdTime: referral.auditCreatedTime!,
+                    lastModifiedBy: referral.auditModifiedBy,
+                    lastModifiedTime: referral.auditModifiedTime,
+                  ),
+                  clientAuditDetails: referral.clientCreatedTime == null ||
+                          referral.clientCreatedBy == null
+                      ? null
+                      : ClientAuditDetails(
+                          createdTime: referral.clientCreatedTime!,
+                          createdBy: referral.clientCreatedBy!,
+                          lastModifiedBy: referral.clientModifiedBy,
+                          lastModifiedTime: referral.clientModifiedTime,
                         ),
-                      ],
-              );
-            })
-            .where((element) => element.isDeleted != true)
-            .toList();
+                );
+              })
+              .where((e) => e != null)
+              .where((element) => element!.isDeleted != true)
+              .toList();
+        } else {
+          data = results
+              .map((e) {
+                final task = e.readTableOrNull(sql.task);
+                final resources = e.readTableOrNull(sql.taskResource);
 
-        return {"data": data, "total_count": count};
+                return TaskModel(
+                  id: task.id,
+                  createdBy: task.createdBy,
+                  clientReferenceId: task.clientReferenceId,
+                  rowVersion: task.rowVersion,
+                  tenantId: task.tenantId,
+                  isDeleted: task.isDeleted,
+                  projectId: task.projectId,
+                  projectBeneficiaryId: task.projectBeneficiaryId,
+                  projectBeneficiaryClientReferenceId:
+                      task.projectBeneficiaryClientReferenceId,
+                  createdDate: task.createdDate,
+                  status: task.status,
+                  resources: resources == null
+                      ? null
+                      : [
+                          TaskResourceModel(
+                            taskclientReferenceId:
+                                resources.taskclientReferenceId,
+                            clientReferenceId: resources.clientReferenceId,
+                            id: resources.id,
+                            productVariantId: resources.productVariantId,
+                            taskId: resources.taskId,
+                            deliveryComment: resources.deliveryComment,
+                            quantity: resources.quantity,
+                            rowVersion: resources.rowVersion,
+                          ),
+                        ],
+                );
+              })
+              .where((element) => element.isDeleted != true)
+              .toList();
+        }
+
+        return {
+          "data": data,
+          "total_count": data.isNotEmpty
+              ? count
+              : params.offset! > 0
+                  ? params.totalCount
+                  : 0
+        };
       }
     } else {
       var proximitySelectQuery =
           await proximitySearch(selectQuery, params, super.sql);
 
+      var beneficiaryIdSelectQuery =
+          await searchByIdentifierId(proximitySelectQuery, params, super.sql);
+
       var nameSelectQuery =
-          await nameSearch(proximitySelectQuery, params, super.sql);
+          await nameSearch(beneficiaryIdSelectQuery, params, super.sql);
 
       // Return empty list if no results found
       if (nameSelectQuery == null) {
@@ -232,11 +286,8 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       return selectQuery;
     } else if (params.nameSearch != null ||
         params.nameSearch!.isNotEmpty && selectQuery == null) {
-      selectQuery = super
-          .sql
-          .individual
-          .select()
-          .join([joinName(sql), joinIndividualAddress(sql)]);
+      selectQuery = super.sql.individual.select().join(
+          [joinName(sql), joinIdentifier(sql), joinIndividualAddress(sql)]);
 
       if (params.householdClientReferenceId != null) {
         await searchByName(selectQuery, params, sql);
@@ -298,13 +349,21 @@ class IndividualGlobalSearchRepository extends LocalRepository {
           params.householdClientReferenceId == null) {
         selectQuery = searchByBuildingName(selectQuery, params, sql);
       } else {
-        selectQuery = selectQuery.join([
-          joinName(sql),
-        ]);
+        selectQuery = selectQuery.join([joinName(sql), joinIdentifier(sql)]);
         selectQuery = searchByName(selectQuery, params, sql);
       }
     }
     return selectQuery;
+  }
+
+  searchByBuildingName(
+      selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
+    return selectQuery.where(buildAnd([
+      if (params.nameSearch != null)
+        buildOr([
+          sql.address.buildingName.contains(params.nameSearch!),
+        ]),
+    ]));
   }
 
   searchByName(
@@ -333,12 +392,51 @@ class IndividualGlobalSearchRepository extends LocalRepository {
     ]));
   }
 
-  searchByBuildingName(
+  //Function to get search query from beneficiary Id
+  searchByIdentifierId(
+      selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) async {
+    if (params.identifierId == null || params.identifierId!.isEmpty) {
+      return selectQuery;
+    } else if (params.identifierId != null ||
+        params.identifierId!.isNotEmpty && selectQuery == null) {
+      selectQuery = super.sql.individual.select().join([joinIdentifier(sql)]);
+      await searchByBeneficiary(selectQuery, params, sql);
+      selectQuery = selectQuery.join([
+        leftOuterJoin(
+            sql.householdMember,
+            sql.householdMember.individualClientReferenceId
+                .equalsExp(sql.individual.clientReferenceId))
+      ]);
+      selectQuery.join([
+        leftOuterJoin(
+            sql.household,
+            sql.household.clientReferenceId
+                .equalsExp(sql.householdMember.householdClientReferenceId)),
+        leftOuterJoin(
+            sql.projectBeneficiary,
+            sql.projectBeneficiary.beneficiaryClientReferenceId
+                .equalsExp(sql.household.clientReferenceId))
+      ]);
+    } else if (params.identifierId != null &&
+        params.identifierId!.isNotEmpty &&
+        selectQuery != null) {
+      selectQuery = selectQuery.join([
+        joinIdentifier(sql),
+      ]);
+      selectQuery = searchByBeneficiary(selectQuery, params, sql);
+    }
+
+    return selectQuery;
+  }
+
+  searchByBeneficiary(
       selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
     return selectQuery.where(buildAnd([
-      if (params.nameSearch != null)
+      if (params.identifierId != null)
         buildOr([
-          sql.address.buildingName.contains(params.nameSearch!),
+          sql.identifier.identifierId.contains(
+            params.identifierId!,
+          ),
         ]),
     ]));
   }
@@ -373,6 +471,14 @@ class IndividualGlobalSearchRepository extends LocalRepository {
               sql.householdMember.householdClientReferenceId
                   .equals(params.householdClientReferenceId ?? '')
           ]));
+      } else if (filter == Status.beneficiaryReferred.name) {
+        selectQuery = sql.referral.select().join([
+          if (params.nameSearch == null || !params.isProximityEnabled)
+            leftOuterJoin(
+                sql.projectBeneficiary,
+                sql.projectBeneficiary.clientReferenceId.equalsExp(
+                    sql.referral.projectBeneficiaryClientReferenceId))
+        ]);
       } else {
         var filterSearchQuery =
             await filterTasks(selectQuery, filter, sql, params);
@@ -403,6 +509,14 @@ class IndividualGlobalSearchRepository extends LocalRepository {
           ..where(filter == Status.registered.name
               ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
               : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
+      } else if (filter == Status.beneficiaryReferred.name) {
+        selectQuery = selectQuery.join([
+          leftOuterJoin(
+              sql.referral,
+              sql.referral.projectBeneficiaryClientReferenceId
+                  .equalsExp(sql.projectBeneficiary.clientReferenceId))
+        ]).where(sql.referral.projectBeneficiaryClientReferenceId
+            .equalsExp(sql.projectBeneficiary.clientReferenceId));
       } else {
         var filterSearchQuery =
             await filterTasks(selectQuery, filter, sql, params);
@@ -420,14 +534,13 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       Status.visited.name: Status.visited,
       Status.notVisited.name: Status.notVisited,
       Status.beneficiaryRefused.name: Status.beneficiaryRefused,
-      Status.beneficiaryReferred.name: Status.beneficiaryReferred,
       Status.administeredSuccess.name: Status.administeredSuccess,
       Status.administeredFailed.name: Status.administeredFailed,
       Status.inComplete.name: Status.inComplete,
       Status.toAdminister.name: Status.toAdminister,
       Status.closeHousehold.name: Status.closeHousehold,
+      Status.ineligible.name: Status.ineligible
     };
-    var applyFilter = filter;
     var appliedFilter = statusMap[filter]!.toValue();
     if (selectQuery == null) {
       selectQuery = sql.select(sql.task).join([
@@ -477,7 +590,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
   joinIdentifier(LocalSqlDataStore sql) {
     return leftOuterJoin(
       sql.identifier,
-      sql.identifier.clientReferenceId.equalsExp(
+      sql.identifier.individualClientReferenceId.equalsExp(
         sql.individual.clientReferenceId,
       ),
     );
@@ -490,11 +603,6 @@ class IndividualGlobalSearchRepository extends LocalRepository {
         sql.individual.clientReferenceId,
       ),
     );
-  }
-
-  joinProjectBeneficiary(LocalSqlDataStore sql) {
-    return leftOuterJoin(sql.projectBeneficiary,
-        sql.projectBeneficiary.clientReferenceId.isNotNull());
   }
 
   // Executing custom select query on top of filterSelectQuery to get count
@@ -516,7 +624,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
                   : [])
           .get();
     } catch (e) {
-      debugPrint('error in total $e');
+      debugPrint('Error in total $e');
     }
     return totalCount == null ? 0 : totalCount.first.data['total_count'];
   }
@@ -635,7 +743,10 @@ class IndividualGlobalSearchRepository extends LocalRepository {
               if (identifier != null)
                 IdentifierModel(
                   id: identifier.id,
-                  clientReferenceId: individual.clientReferenceId,
+                  individualId: identifier.individualId,
+                  individualClientReferenceId:
+                      identifier.individualClientReferenceId,
+                  clientReferenceId: identifier.clientReferenceId,
                   identifierType: identifier.identifierType,
                   identifierId: identifier.identifierId,
                   rowVersion: identifier.rowVersion,
@@ -658,6 +769,6 @@ class IndividualGlobalSearchRepository extends LocalRepository {
         .where((element) => element.isDeleted != true)
         .toList();
 
-    return {'total_count': count, 'data': data};
+    return {'total_count': data.isNotEmpty ? count : 0, 'data': data};
   }
 }

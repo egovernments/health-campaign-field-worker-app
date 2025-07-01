@@ -65,8 +65,6 @@ class _HouseholdOverviewPageState
 
   @override
   Widget build(BuildContext context) {
-    final pageKey = HouseholdOverviewRoute.name.replaceAll('Route', '');
-    final overviewTemplate = RegistrationDeliverySingleton().templateConfigs?[pageKey];
     final theme = Theme.of(context);
     final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType!;
     final textTheme = theme.digitTextTheme(context);
@@ -123,66 +121,135 @@ class _HouseholdOverviewPageState
                                     state.householdMembers.firstOrNull?.tasks
                                                 ?.lastOrNull?.status ==
                                             Status.administeredSuccess.toValue()
-                                        ? Offstage(
-                                      offstage: overviewTemplate
-                                          ?.properties?[registration_keys.commonKeys.secondaryButtonKey]
-                                          ?.hidden ?? false,
-                                          child: Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                  vertical: spacer2),
-                                              child: DigitButton(
-                                                label: localizations.translate(
-                                                  overviewTemplate
-                                                      ?.properties?[registration_keys.commonKeys.secondaryButtonKey]
-                                                      ?.label ?? '${RegistrationDeliverySingleton().selectedProject!.projectType}_${i18.memberCard.deliverDetailsUpdateLabel}',
-                                                ),
-                                                capitalizeLetters: false,
-                                                isDisabled: state
-                                                            .householdMembers.first
-                                                            .tasks
-                                                            ?.lastOrNull
-                                                            ?.status ==
-                                                        Status.administeredSuccess
-                                                            .toValue()
-                                                    ? true
-                                                    : false,
-                                                type: DigitButtonType.secondary,
-                                                size: DigitButtonSize.large,
-                                                mainAxisSize: MainAxisSize.max,
-                                                onPressed: () {
-                                                  serviceDefinitionState.when(
-                                                      empty: () {},
-                                                      isloading: () {},
-                                                      serviceDefinitionFetch:
-                                                          (value, model) {
-                                                        if (value
-                                                            .where((element) =>
-                                                                element.code
-                                                                    .toString()
-                                                                    .contains(
-                                                                        '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
-                                                            .toList()
-                                                            .isEmpty) {
+                                        ? Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: spacer2),
+                                            child: DigitButton(
+                                              label: localizations.translate(
+                                                '${RegistrationDeliverySingleton().selectedProject!.projectType}_${i18.memberCard.deliverDetailsUpdateLabel}',
+                                              ),
+                                              capitalizeLetters: false,
+                                              isDisabled: state
+                                                          .householdMemberWrapper
+                                                          .tasks
+                                                          ?.lastOrNull
+                                                          ?.status ==
+                                                      Status.administeredSuccess
+                                                          .toValue()
+                                                  ? true
+                                                  : false,
+                                              type: DigitButtonType.secondary,
+                                              size: DigitButtonSize.large,
+                                              mainAxisSize: MainAxisSize.max,
+                                              onPressed: () {
+                                                serviceDefinitionState.when(
+                                                    empty: () {},
+                                                    isloading: () {},
+                                                    serviceDefinitionFetch:
+                                                        (value, model) {
+                                                      if (value
+                                                          .where((element) =>
+                                                              element.code
+                                                                  .toString()
+                                                                  .contains(
+                                                                      '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
+                                                          .toList()
+                                                          .isEmpty) {
+                                                        var productVariants = fetchProductVariant(
+                                                            RegistrationDeliverySingleton()
+                                                                .selectedProject
+                                                                ?.additionalDetails
+                                                                ?.projectType
+                                                                ?.cycles![
+                                                                    deliverInterventionState
+                                                                            .cycle -
+                                                                        1]
+                                                                .deliveries?[deliverInterventionState
+                                                                    .dose -
+                                                                1],
+                                                            state
+                                                                .selectedIndividual,
+                                                            state
+                                                                .householdMemberWrapper
+                                                                .household,
+                                                            context: context);
+
+                                                        if (productVariants[
+                                                                'criteria'] ==
+                                                            null) {
+                                                          showCustomPopup(
+                                                            context: context,
+                                                            builder: (BuildContext context) => Popup(
+                                                                title: localizations
+                                                                    .translate(i18
+                                                                        .common
+                                                                        .coreCommonError),
+                                                                description: localizations.translate(
+                                                                        'CONDITION_FAILED') +
+                                                                    productVariants['errors']
+                                                                        .toString()
+                                                                        .replaceAll(
+                                                                            '[',
+                                                                            '')
+                                                                        .replaceAll(
+                                                                            ']',
+                                                                            ''),
+                                                                type: PopUpType
+                                                                    .alert,
+                                                                actions: [
+                                                                  DigitButton(
+                                                                      label: localizations.translate(i18
+                                                                          .common
+                                                                          .corecommonclose),
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator
+                                                                            .of(
+                                                                          context,
+                                                                          rootNavigator:
+                                                                              true,
+                                                                        ).pop();
+                                                                      },
+                                                                      type: DigitButtonType
+                                                                          .tertiary,
+                                                                      size: DigitButtonSize
+                                                                          .large)
+                                                                ]),
+                                                          );
+                                                        } else {
                                                           context.router.push(
                                                             DeliverInterventionRoute(),
                                                           );
-                                                        } else {
-                                                          navigateToChecklist(
-                                                              ctx,
-                                                              state
-                                                                  .householdMembers.first
-                                                                  .household!
-                                                                  .clientReferenceId);
                                                         }
-                                                      });
-                                                  callReloadEvent(
-                                                      offset: state
-                                                          .householdMembers.first
-                                                          .members!
-                                                          .length,
-                                                      limit: limit);
-                                                },
-                                              ),
+                                                      } else {
+                                                        navigateToChecklist(
+                                                          ctx,
+                                                          state
+                                                              .householdMemberWrapper
+                                                              .household!
+                                                              .clientReferenceId,
+                                                          RegistrationDeliverySingleton()
+                                                                      .beneficiaryType ==
+                                                                  BeneficiaryType
+                                                                      .individual
+                                                              ? state
+                                                                  .selectedIndividual
+                                                                  ?.address
+                                                                  ?.first
+                                                              : state
+                                                                  .householdMemberWrapper
+                                                                  .household
+                                                                  ?.address,
+                                                        );
+                                                      }
+                                                    });
+                                                callReloadEvent(
+                                                    offset: state
+                                                        .householdMemberWrapper
+                                                        .members!
+                                                        .length,
+                                                    limit: limit);
+                                              },
                                             ),
                                         )
                                         : Offstage(
@@ -229,51 +296,126 @@ class _HouseholdOverviewPageState
                                                 //   ),
                                                 // );
 
-                                                serviceDefinitionState.when(
-                                                    empty: () {},
-                                                    isloading: () {},
-                                                    serviceDefinitionFetch:
-                                                        (value, model) {
-                                                      if (value
-                                                          .where((element) =>
-                                                              element.code
-                                                                  .toString()
-                                                                  .contains(
-                                                                      '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
-                                                              element.code
-                                                                  .toString()
-                                                                  .contains(
-                                                                      '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
-                                                          .toList()
-                                                          .isEmpty) {
-                                                        context.router.push(
-                                                          BeneficiaryDetailsRoute(),
+                                              serviceDefinitionState.when(
+                                                  empty: () {},
+                                                  isloading: () {},
+                                                  serviceDefinitionFetch:
+                                                      (value, model) {
+                                                    if (value
+                                                        .where((element) =>
+                                                            element.code
+                                                                .toString()
+                                                                .contains(
+                                                                    '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
+                                                            element.code
+                                                                .toString()
+                                                                .contains(
+                                                                    '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
+                                                        .toList()
+                                                        .isEmpty) {
+                                                      var productVariants = fetchProductVariant(
+                                                          RegistrationDeliverySingleton()
+                                                              .selectedProject
+                                                              ?.additionalDetails
+                                                              ?.projectType
+                                                              ?.cycles![
+                                                                  deliverInterventionState
+                                                                          .cycle -
+                                                                      1]
+                                                              .deliveries?[deliverInterventionState
+                                                                  .dose -
+                                                              1],
+                                                          state
+                                                              .selectedIndividual,
+                                                          state
+                                                              .householdMemberWrapper
+                                                              .household,
+                                                          context: context);
+
+                                                      if (productVariants[
+                                                              'criteria'] ==
+                                                          null) {
+                                                        showCustomPopup(
+                                                          context: context,
+                                                          builder: (BuildContext context) => Popup(
+                                                              title: localizations
+                                                                  .translate(i18
+                                                                      .common
+                                                                      .coreCommonError),
+                                                              description: localizations.translate(
+                                                                      'CONDITION_FAILED') +
+                                                                  productVariants[
+                                                                          'errors']
+                                                                      .toString()
+                                                                      .replaceAll(
+                                                                          '[', '')
+                                                                      .replaceAll(
+                                                                          ']', ''),
+                                                              type: PopUpType
+                                                                  .alert,
+                                                              actions: [
+                                                                DigitButton(
+                                                                    label: localizations
+                                                                        .translate(i18
+                                                                            .common
+                                                                            .corecommonclose),
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator
+                                                                          .of(
+                                                                        context,
+                                                                        rootNavigator:
+                                                                            true,
+                                                                      ).pop();
+                                                                    },
+                                                                    type: DigitButtonType
+                                                                        .tertiary,
+                                                                    size: DigitButtonSize
+                                                                        .large)
+                                                              ]),
                                                         );
                                                       } else {
-                                                        navigateToChecklist(
-                                                            ctx,
-                                                            RegistrationDeliverySingleton()
-                                                                        .beneficiaryType ==
-                                                                    BeneficiaryType
-                                                                        .individual
-                                                                ? state
-                                                                    .selectedIndividual!
-                                                                    .clientReferenceId
-                                                                : state
-                                                                    .householdMembers.first
-                                                                    .household!
-                                                                    .clientReferenceId);
+                                                        context.router.push(
+                                                          DeliverInterventionRoute(),
+                                                        );
                                                       }
-                                                    });
-                                                callReloadEvent(
-                                                    offset: state
-                                                        .householdMembers.first
-                                                        .members!
-                                                        .length,
-                                                    limit: limit);
-                                              },
-                                            ),
-                                        ),
+                                                    } else {
+                                                      navigateToChecklist(
+                                                        ctx,
+                                                        RegistrationDeliverySingleton()
+                                                                    .beneficiaryType ==
+                                                                BeneficiaryType
+                                                                    .individual
+                                                            ? state
+                                                                .selectedIndividual!
+                                                                .clientReferenceId
+                                                            : state
+                                                                .householdMemberWrapper
+                                                                .household!
+                                                                .clientReferenceId,
+                                                        RegistrationDeliverySingleton()
+                                                                    .beneficiaryType ==
+                                                                BeneficiaryType
+                                                                    .individual
+                                                            ? state
+                                                                .selectedIndividual
+                                                                ?.address
+                                                                ?.first
+                                                            : state
+                                                                .householdMemberWrapper
+                                                                .household
+                                                                ?.address,
+                                                      );
+                                                    }
+                                                  });
+                                              callReloadEvent(
+                                                  offset: state
+                                                      .householdMemberWrapper
+                                                      .members!
+                                                      .length,
+                                                  limit: limit);
+                                            },
+                                          ),
                               ),
                             ),
                           ),
@@ -391,60 +533,54 @@ class _HouseholdOverviewPageState
                                                                   ?.clientReferenceId,
                                                         );
 
-                                                        await context.router.root
-                                                            .push(
-                                                          BeneficiaryRegistrationWrapperRoute(
-                                                            initialState:
-                                                                BeneficiaryRegistrationEditHouseholdState(
+                                                      await context.router.root
+                                                          .push(
+                                                        BeneficiaryRegistrationWrapperRoute(
+                                                          initialState: BeneficiaryRegistrationEditHouseholdState(
                                                               addressModel:
                                                                   address,
                                                               individualModel: state
-                                                                      .householdMembers.first
-                                                                      .individuals ??
+                                                                      .householdMemberWrapper
+                                                                      .members ??
                                                                   [],
                                                               householdModel: state
-                                                                  .householdMembers.first
+                                                                  .householdMemberWrapper
                                                                   .household!,
                                                               registrationDate:
                                                                   date,
                                                               projectBeneficiaryModel:
                                                                   projectBeneficiary,
-                                                            ),
-                                                            children: [
-                                                              HouseholdLocationRoute(),
-                                                            ],
-                                                          ),
-                                                        );
-                                                        callReloadEvent(
-                                                            offset: 0, limit: 10);
-                                                      },
+                                                              householdChecklists: state
+                                                                  .householdMemberWrapper
+                                                                  .householdChecklists),
+                                                          children: [
+                                                            HouseholdLocationRoute(),
+                                                          ],
+                                                        ),
+                                                      );
+                                                      callReloadEvent(
+                                                          offset: 0, limit: 10);
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                          label:
+                                              (RegistrationDeliverySingleton()
+                                                          .householdType ==
+                                                      HouseholdType.community)
+                                                  ? localizations.translate(i18
+                                                      .householdOverView
+                                                      .clfOverViewEditIconText)
+                                                  : localizations.translate(
+                                                      i18.householdOverView
+                                                          .householdOverViewEditIconText,
                                                     ),
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                            label:
-                                            overviewTemplate
-                                                ?.properties?[registration_keys.householdOverViewKeys.editHouseholdKey]
-                                                ?.label != null ? localizations.translate(overviewTemplate
-                                                ?.properties?[registration_keys.householdOverViewKeys.editHouseholdKey]
-                                                ?.label ?? i18.householdOverView
-                                                .householdOverViewEditIconText)
-                                            : (RegistrationDeliverySingleton()
-                                                            .householdType ==
-                                                        HouseholdType.community)
-                                                    ? localizations.translate(i18
-                                                        .householdOverView
-                                                        .clfOverViewEditIconText)
-                                                    : localizations.translate(
-                                                        i18.householdOverView
-                                                            .householdOverViewEditIconText,
-                                                      ),
-                                            type: DigitButtonType.tertiary,
-                                            size: DigitButtonSize.medium,
-                                            prefixIcon: Icons.edit,
-                                            capitalizeLetters: false,
-                                          ),
+                                          type: DigitButtonType.tertiary,
+                                          size: DigitButtonSize.medium,
+                                          prefixIcon: Icons.edit,
+                                          capitalizeLetters: false,
                                         ),
                                       ),
 
@@ -473,7 +609,29 @@ class _HouseholdOverviewPageState
                                     //     ),
                                     //   ),
                                     // ),
-
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(spacer2),
+                                        child: Text(
+                                          RegistrationDeliverySingleton()
+                                                          .householdType !=
+                                                      null &&
+                                                  RegistrationDeliverySingleton()
+                                                          .householdType ==
+                                                      HouseholdType.community
+                                              ? localizations.translate(i18
+                                                  .householdOverView
+                                                  .clfOverviewLabel)
+                                              : localizations.translate(i18
+                                                  .householdOverView
+                                                  .householdOverViewLabel),
+                                          style: textTheme.headingXl.copyWith(
+                                              color: theme
+                                                  .colorTheme.primary.primary2),
+                                        ),
+                                      ),
+                                    ),
                                     Padding(
                                       padding: const EdgeInsets.only(
                                         left: spacer2,
@@ -497,7 +655,7 @@ class _HouseholdOverviewPageState
                                                 localizations.translate(i18
                                                     .householdOverView
                                                     .instituteNameLabel): state
-                                                        .householdMembers.first
+                                                        .householdMemberWrapper
                                                         .household
                                                         ?.address
                                                         ?.buildingName ??
@@ -568,7 +726,34 @@ class _HouseholdOverviewPageState
                                                       localizations.translate(
                                                     getStatusAttributes(state)[
                                                         'textLabel'],
-                                                  )
+                                                  ),
+                                                if (state
+                                                        .householdMemberWrapper
+                                                        .householdChecklists
+                                                        ?.isNotEmpty ??
+                                                    false)
+                                                  for (var attribute in state
+                                                          .householdMemberWrapper
+                                                          .householdChecklists
+                                                          ?.first
+                                                          .attributes ??
+                                                      [])
+                                                    if (attribute.value != null &&
+                                                        attribute.value != "" &&
+                                                        attribute.value !=
+                                                            "NOT_SELECTED")
+                                                      localizations
+                                                          .translate(
+                                                              '${RegistrationDeliverySingleton().selectedProject?.name}.HOUSEHOLD.DISTRIBUTOR.${attribute?.attributeCode}' //TODO:
+                                                              ): attribute.value
+                                                          .split(
+                                                              '.') // Split on `.`
+                                                          .map((part) =>
+                                                              localizations
+                                                                  .translate(
+                                                                      part.trim())) // Localize each part
+                                                          .join(", ")
+                                                // Join with `, `
                                               },
                                             ),
                                           ],
@@ -678,8 +863,25 @@ class _HouseholdOverviewPageState
                                           )
                                         : const Offstage(),
                                     Column(
-                                      children: (state.householdMembers.firstOrNull
-                                                  ?.individuals ??
+                                      children: (state.householdMemberWrapper
+                                                  .members
+                                                  ?.where((m) {
+                                                // Identify if this member is a "child" in any other member's relationships
+                                                final isChild = state
+                                                    .householdMemberWrapper
+                                                    .householdMembers
+                                                    ?.any((member) =>
+                                                        member.memberRelationships !=
+                                                            null &&
+                                                        member
+                                                            .memberRelationships!
+                                                            .isNotEmpty &&
+                                                        member.individualClientReferenceId ==
+                                                            m.clientReferenceId);
+
+                                                return !(isChild ??
+                                                    false); // Only show if not a child
+                                              }).toList() ??
                                               [])
                                           .map(
                                         (e) {
@@ -752,6 +954,47 @@ class _HouseholdOverviewPageState
                                                           ?.clientReferenceId)
                                                   .toList()
                                               : null;
+
+                                          final childBeneficiaries = (state
+                                                  .householdMemberWrapper
+                                                  .members
+                                                  ?.where((childMem) {
+                                                final parentBeneficiary = state
+                                                    .householdMemberWrapper
+                                                    .householdMembers
+                                                    ?.where((element) =>
+                                                        element
+                                                            .individualClientReferenceId ==
+                                                        e.clientReferenceId)
+                                                    .firstOrNull;
+
+                                                final isChild = state
+                                                    .householdMemberWrapper
+                                                    .householdMembers
+                                                    ?.any((member) =>
+                                                        member.individualClientReferenceId ==
+                                                            childMem
+                                                                .clientReferenceId &&
+                                                        (member.memberRelationships
+                                                                ?.any(
+                                                              (rel) =>
+                                                                  rel.relativeClientReferenceId ==
+                                                                  parentBeneficiary
+                                                                      ?.clientReferenceId,
+                                                            ) ??
+                                                            false));
+                                                return (isChild ??
+                                                    false); // Only include if it is a child
+                                              }).toList() ??
+                                              []);
+
+                                          final individualChecklist = state
+                                              .householdMemberWrapper
+                                              .individualChecklists
+                                              ?.firstWhereOrNull((element) =>
+                                                  element.referenceId ==
+                                                  e.clientReferenceId);
+
                                           final ageInYears =
                                               e.dateOfBirth != null
                                                   ? DigitDateUtils.calculateAge(
@@ -799,6 +1042,10 @@ class _HouseholdOverviewPageState
                                           return MemberCard(
                                             isHead: isHead,
                                             individual: e,
+                                            household: household,
+                                            individualChecklist:
+                                                individualChecklist,
+                                            children: childBeneficiaries,
                                             projectBeneficiaries:
                                                 projectBeneficiary ?? [],
                                             tasks: taskData,
@@ -812,6 +1059,7 @@ class _HouseholdOverviewPageState
                                             editMemberAction: () async {
                                               final bloc = ctx.read<
                                                   HouseholdOverviewBloc>();
+
                                               Navigator.of(
                                                 context,
                                                 rootNavigator: true,
@@ -861,6 +1109,13 @@ class _HouseholdOverviewPageState
                                                                   .household
                                                                   ?.clientReferenceId),
                                                     ),
+                                                    individualChecklists:
+                                                        individualChecklist !=
+                                                                null
+                                                            ? [
+                                                                individualChecklist
+                                                              ]
+                                                            : [],
                                                   ),
                                                   children: [
                                                     IndividualDetailsRoute(
@@ -896,7 +1151,7 @@ class _HouseholdOverviewPageState
                                             },
                                             deleteMemberAction: () {
                                               showCustomPopup(
-                                                context: context,
+                                                context: ctx,
                                                 builder: (BuildContext
                                                         context) =>
                                                     Popup(
@@ -919,7 +1174,7 @@ class _HouseholdOverviewPageState
                                                             )
                                                               ..pop()
                                                               ..pop();
-                                                            context
+                                                            ctx
                                                                 .read<
                                                                     HouseholdOverviewBloc>()
                                                                 .add(
@@ -965,19 +1220,43 @@ class _HouseholdOverviewPageState
                                                             ?.cycles !=
                                                         null
                                                     ? !checkEligibilityForAgeAndSideEffect(
-                                                        DigitDOBAgeConvertor(
-                                                          years: ageInYears,
-                                                          months: ageInMonths,
-                                                        ),
-                                                        RegistrationDeliverySingleton()
-                                                            .projectType,
-                                                        (taskData ?? [])
+                                                              DigitDOBAgeConvertor(
+                                                                years:
+                                                                    ageInYears,
+                                                                months:
+                                                                    ageInMonths,
+                                                              ),
+                                                              RegistrationDeliverySingleton()
+                                                                  .projectType,
+                                                              (taskData ?? [])
+                                                                      .isNotEmpty
+                                                                  ? taskData
+                                                                      ?.lastOrNull
+                                                                  : null,
+                                                              sideEffectData,
+                                                            ) ||
+                                                            (taskData ?? [])
                                                                 .isNotEmpty
-                                                            ? taskData
-                                                                ?.lastOrNull
-                                                            : null,
-                                                        sideEffectData,
-                                                      )
+                                                        ? taskData
+                                                                ?.last.status ==
+                                                            Status.ineligible
+                                                                .toValue()
+                                                                .toString()
+                                                        : !checkEligibilityForAgeAndSideEffect(
+                                                            DigitDOBAgeConvertor(
+                                                              years: ageInYears,
+                                                              months:
+                                                                  ageInMonths,
+                                                            ),
+                                                            RegistrationDeliverySingleton()
+                                                                .projectType,
+                                                            (taskData ?? [])
+                                                                    .isNotEmpty
+                                                                ? taskData
+                                                                    ?.lastOrNull
+                                                                : null,
+                                                            sideEffectData,
+                                                          )
                                                     : false,
                                             name: e.name?.givenName ?? ' - - ',
                                             years: (e.dateOfBirth == null
@@ -1133,8 +1412,8 @@ class _HouseholdOverviewPageState
     return {'textLabel': textLabel, 'color': color, 'icon': icon};
   }
 
-  void navigateToChecklist(
-      BuildContext ctx, String beneficiaryClientRefId) async {
+  void navigateToChecklist(BuildContext ctx, String beneficiaryClientRefId,
+      AddressModel? address) async {
     await context.router.push(BeneficiaryChecklistRoute(
         beneficiaryClientRefId: beneficiaryClientRefId));
   }
@@ -1144,14 +1423,21 @@ class _HouseholdOverviewPageState
     required int limit,
   }) {
     if (mounted) {
-      final bloc = context.read<RegistrationWrapperBloc>();
+      final bloc = context.read<HouseholdOverviewBloc>();
 
-      RegistrationWrapperEvent.fetchDeliveryDetails(projectId: RegistrationDeliverySingleton().selectedProject!.id,selectedIndividual: null, householdWrapper: HouseholdWrapper(
-          household: bloc.state.householdMembers.firstOrNull?.household,
-          individuals: bloc.state.householdMembers.firstOrNull?.individuals,
-        members: bloc.state.householdMembers.firstOrNull?.members,
-        projectBeneficiaries: bloc.state.householdMembers.firstOrNull?.projectBeneficiaries,
-      ), beneficiaryType: RegistrationDeliverySingleton().beneficiaryType?.toValue());
+      bloc.add(
+        HouseholdOverviewReloadEvent(
+          projectId: RegistrationDeliverySingleton().projectId!,
+          projectBeneficiaryType:
+              RegistrationDeliverySingleton().beneficiaryType!,
+          offset: offset,
+          limit: limit,
+          searchByName: searchController.text.trim().length > 2
+              ? searchController.text.trim()
+              : null,
+          selectedFilter: selectedFilters,
+        ),
+      );
     }
   }
 

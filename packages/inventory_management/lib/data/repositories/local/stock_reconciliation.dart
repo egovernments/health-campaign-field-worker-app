@@ -91,6 +91,7 @@ class StockReconciliationLocalRepository extends LocalRepository<
   FutureOr<void> update(
     StockReconciliationModel entity, {
     bool createOpLog = true,
+        DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
       final stockReconciliationCompanion = entity.companion;

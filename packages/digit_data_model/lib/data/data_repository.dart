@@ -79,27 +79,42 @@ abstract class RemoteRepository<D extends EntityModel,
     try {
       response = await executeFuture(
         future: () async {
-          return await dio.post(
-            searchPath,
-            queryParameters: {
-              'offset': offSet ?? 0,
-              'limit': limit ?? 100,
-              'tenantId': DigitDataModelSingleton().tenantId,
-              if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
-            },
-            data: entityName == 'User'
-                ? query.toMap()
-                : {
-                    isPlural
-                            ? entityNamePlural
-                            : entityName == 'ServiceDefinition'
-                                ? 'ServiceDefinitionCriteria'
-                                : entityName == 'Downsync'
-                                    ? 'DownsyncCriteria'
-                                    : entityName:
-                        isPlural ? [query.toMap()] : query.toMap(),
-                  },
-          );
+          return await dio.post(searchPath,
+              queryParameters: {
+                'offset': offSet ?? 0,
+                'limit': limit ?? 100,
+                'tenantId': DigitDataModelSingleton().tenantId,
+                if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
+              },
+              data: entityName == 'User'
+                  ? query.toMap()
+                  : {
+                      entityName == 'ServiceDefinition'
+                          ? 'ServiceDefinitionCriteria'
+                          : entityName == 'Downsync'
+                              ? 'DownsyncCriteria'
+                              : entityName == 'Service'
+                                  ? 'ServiceCriteria'
+                                  : isPlural
+                                      ? entityNamePlural
+                                      : entityName: isPlural
+                          ? (entityName == 'Service'
+                              ? [
+                                  {
+                                    ...query.toMap(),
+                                    'tenantId':
+                                        DigitDataModelSingleton().tenantId,
+                                  }
+                                ]
+                              : [query.toMap()])
+                          : (entityName == 'Service'
+                              ? {
+                                  ...query.toMap(),
+                                  'tenantId':
+                                      DigitDataModelSingleton().tenantId,
+                                }
+                              : query.toMap()),
+                    });
         },
       );
     } catch (error) {
@@ -117,7 +132,9 @@ abstract class RemoteRepository<D extends EntityModel,
     }
 
     if (!responseMap.containsKey(
-      (isSearchResponsePlural || entityName == 'ServiceDefinition')
+      (isSearchResponsePlural ||
+              entityName == 'ServiceDefinition' ||
+              entityName == 'Service')
           ? entityNamePlural
           : entityName,
     )) {
@@ -128,10 +145,11 @@ abstract class RemoteRepository<D extends EntityModel,
       );
     }
 
-    final entityResponse = await responseMap[
-        (isSearchResponsePlural || entityName == 'ServiceDefinition')
-            ? entityNamePlural
-            : entityName];
+    final entityResponse = await responseMap[(isSearchResponsePlural ||
+            entityName == 'ServiceDefinition' ||
+            entityName == 'Service')
+        ? entityNamePlural
+        : entityName];
 
     if (entityResponse is! List) {
       throw InvalidApiResponseException(
@@ -159,6 +177,15 @@ abstract class RemoteRepository<D extends EntityModel,
       data: {
         'Service': entity.toMap(),
         "apiOperation": "CREATE",
+      },
+    );
+  }
+
+  FutureOr<Response> singleUpdate(D entity) async {
+    return await dio.post(
+      updatePath,
+      data: {
+        'Service': entity.toMap(),
       },
     );
   }
@@ -425,8 +452,12 @@ abstract class LocalRepository<D extends EntityModel,
 
   @override
   @mustCallSuper
-  FutureOr<void> update(D entity, {bool createOpLog = true}) async {
-    if (createOpLog) await createOplogEntry(entity, DataOperation.update);
+  FutureOr<void> update(
+    D entity, {
+    bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.update,
+  }) async {
+    if (createOpLog) await createOplogEntry(entity, dataOperation);
   }
 
   @override

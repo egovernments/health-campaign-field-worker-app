@@ -58,7 +58,6 @@ class ProjectFacilityRemoteRepository
           },
         );
       } catch (error) {
-        rethrow;
         break; // Break out of the loop if an error occurs
       }
 

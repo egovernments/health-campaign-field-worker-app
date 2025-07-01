@@ -29,12 +29,13 @@ class DigitTableCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LabelValueSummary(
-      padding: EdgeInsets.all(0),
+      padding: const EdgeInsets.all(0),
       items: element.keys
           .map((e) => LabelValueItem(
+        maxLines: 5,
                 label: e,
                 value: element[e].toString(),
-        labelFlex: 5,
+        labelFlex: 9,
               ))
           .toList(),
     );

@@ -1,3 +1,54 @@
+## 1.1.0
+
+* Merged Enumeration and IdGen
+* Updated target type to string from enum
+* Updated serviceAttribute with id and serviceClientReferenceId
+* Updated identifier with individualId and individualClientReferenceId
+* Modified migration scripts
+
+## 1.0.7-dev.3-enumeration
+
+* Updated service attribute table with serviceClientReferenceId
+
+## 1.0.7-dev.2-enumeration
+
+* Updated member relation table with client audit details
+
+## 1.0.7-dev.1-enumeration
+
+* Updated new memberRelationship column in member
+* Added new member relationship table
+* Added tenant id in dump error call
+
+## 1.0.6+3
+
+* Added additionalFields to individual search entity
+
+## 1.0.6+2
+
+* Added more enum types in beneficiaryType
+
+## 1.0.7-dev.2-idGen
+
+* Modified Identifier table and model
+    * Added individualId and individualClientReferenceId
+* Updated Migration script for the identifier
+* Modified search query with individualClientReferenceId
+* BugFix:
+    * Updated bulk create to insert all the identifiers instead of first index
+
+## 1.0.7-dev.1-idGen
+
+* Added new table for storing unique Id's
+
+## 1.0.6+3
+
+* Added additionalFields to individual search entity
+
+## 1.0.6+2
+
+* Added more enum types in beneficiaryType
+
 ## 1.0.6+1
 
 * Added PRODUCT as enum in beneficiaryType
@@ -43,6 +94,27 @@
 * Added tenant id to query params and RequestInfo for security gateway fixes
 * Updated additionalDetails field to service definition attributes model
 * Changed the object type of additionalDetails in Service model from String to Map
+
+## 1.0.3+2
+
+* Updated beneficiary type target model and table to string
+* Updated project type beneficiary type model and table to BeneficiaryType enum
+
+## 1.0.4-dev.7-uniqueId
+
+* Modified identifierType of unique beneficiary id
+
+## 1.0.4-dev.6-uniqueId
+
+* Added additionalDetails field to service definition attributes model
+
+## 1.0.4-dev.5-uniqueId
+
+* Added identifierType enum entity
+* Added identifierType and id as primary key to identifier table
+
+* Updated oplog transactions to synchronous - fix for write transaction lock
+* Same change in 1.0.3-hotfix, 1.0.4-dev.3
 
 ## 1.0.3+2
 

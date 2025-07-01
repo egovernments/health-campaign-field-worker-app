@@ -188,6 +188,9 @@ class Constants {
   static const String closedHouseholdSvg =
       'assets/icons/svg/closed_household.svg';
 
+  static const String beneficiaryIdDownload =
+      'assets/icons/svg/beneficiary_ids.svg';
+
   static List<RemoteRepository> getRemoteRepositories(
     Dio dio,
     Map<DataModelType, Map<ApiOperation, String>> actionMap,
