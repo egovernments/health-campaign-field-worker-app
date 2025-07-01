@@ -614,7 +614,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                         children:
                                             (attendees ?? []).map((individual) {
                                           return CustomAttendanceInfoCard(
-                                            isCurrentDate:
+                                            isCurrentDate: attendees!.any(
+                                                    (a) => a.status == 1) &&
                                                 AttendanceDateTimeManagement.isToday(
                                                     AttendanceDateTimeManagement
                                                         .getFormattedDateToDateTime(
