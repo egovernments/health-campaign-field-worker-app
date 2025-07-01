@@ -104,7 +104,7 @@ class DeliverInterventionPageState
               navigateToSummary: true,
               householdMemberWrapper: householdMember),
         );
-    context.router.push(DeliverySummaryRoute());
+    // context.router.push(DeliverySummaryRoute());
   }
 
   void handleLocationState(

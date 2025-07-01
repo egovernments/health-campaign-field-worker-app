@@ -124,17 +124,17 @@ class _SearchBeneficiaryPageState
             blocWrapper.add(RegistrationWrapperEvent.fetchDeliveryDetails(
                 projectId: RegistrationDeliverySingleton().selectedProject!.id,
                 selectedIndividual: null,
-                householdWrapper: HouseholdWrapper(
-                    household: householdModel),
+                householdWrapper: HouseholdWrapper(household: householdModel),
                 beneficiaryType: RegistrationDeliverySingleton()
                     .beneficiaryType
                     ?.toValue()));
-          }else{
+          } else {
             blocWrapper.add(RegistrationWrapperEvent.fetchDeliveryDetails(
                 projectId: RegistrationDeliverySingleton().selectedProject!.id,
                 selectedIndividual: null,
                 householdWrapper: HouseholdWrapper(
-                    household: blocWrapper.state.householdMembers.first.household),
+                    household:
+                        blocWrapper.state.householdMembers.first.household),
                 beneficiaryType: RegistrationDeliverySingleton()
                     .beneficiaryType
                     ?.toValue()));
@@ -454,25 +454,27 @@ class _SearchBeneficiaryPageState
                                             ),
                                           )
                                         : const Offstage(),
-    Padding(
-    padding: const EdgeInsets.all(spacer2),
-    child: DigitSwitch(
-    mainAxisAlignment:
-    MainAxisAlignment.start,
-    label: localizations.translate(
-    i18.searchBeneficiary
-        .beneficiaryIdSearchLabel,
-    ),
-    value: isBeneficiaryIdSearchEnabled,
-    onChanged: (value) {
-    setState(() {
-    isBeneficiaryIdSearchEnabled = value;
-    });
-    blocWrapper.clearEvent();
-    triggerGlobalSearchEvent();
-    },
-    ),
-    ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(spacer2),
+                                    child: DigitSwitch(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      label: localizations.translate(
+                                        i18.searchBeneficiary
+                                            .beneficiaryIdSearchLabel,
+                                      ),
+                                      value: isBeneficiaryIdSearchEnabled,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          isBeneficiaryIdSearchEnabled = value;
+                                        });
+                                        blocWrapper.add(
+                                            const RegistrationWrapperEvent
+                                                .clear());
+                                        triggerGlobalSearchEvent();
+                                      },
+                                    ),
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.all(spacer2),
                                     child: DigitSearchBar(
@@ -580,7 +582,7 @@ class _SearchBeneficiaryPageState
                                                         blocWrapper.add(
                                                             const RegistrationWrapperEvent
                                                                 .clear());
-                                                        },
+                                                      },
                                                     ),
                                                   );
                                                 }),
@@ -618,256 +620,269 @@ class _SearchBeneficiaryPageState
                       ),
                     ),
                   ),
-                ),
-              BlocListener<UniqueIdBloc, UniqueIdState>(
-                listener: (context, state) {
-                  state.maybeWhen(
-                      orElse: () {},
-                      idCount: (availableIdCount, totalCount) {
-                        if (availableIdCount != 0 &&
-                            availableIdCount <
+                  BlocListener<UniqueIdBloc, UniqueIdState>(
+                    listener: (context, state) {
+                      state.maybeWhen(
+                          orElse: () {},
+                          idCount: (availableIdCount, totalCount) {
+                            if (availableIdCount != 0 &&
+                                availableIdCount <
+                                    RegistrationDeliverySingleton()
+                                        .beneficiaryIdMinCount!) {
+                              showLowIdsAlert(
+                                  context: context,
+                                  availableCount: availableIdCount,
+                                  localizations: localizations,
+                                  shouldProceedFurther: (bool proceed) {
+                                    if (proceed) {
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+                                      context.read<DigitScannerBloc>().add(
+                                            const DigitScannerEvent
+                                                .handleScanner(),
+                                          );
+                                      context.router.push(
+                                          BeneficiaryRegistrationWrapperRoute(
+                                        initialState:
+                                            BeneficiaryRegistrationCreateState(
+                                          searchQuery: searchController.text,
+                                        ),
+                                      ));
+                                      searchController.clear();
+                                      selectedFilters = [];
+                                      blocWrapper.add(
+                                          const RegistrationWrapperEvent
+                                              .clear());
+                                    }
+                                  });
+                            } else if (availableIdCount >=
                                 RegistrationDeliverySingleton()
                                     .beneficiaryIdMinCount!) {
-                          showLowIdsAlert(
-                              context: context,
-                              availableCount: availableIdCount,
-                              localizations: localizations,
-                              shouldProceedFurther: (bool proceed) {
-                                if (proceed) {
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                  context.read<DigitScannerBloc>().add(
-                                        const DigitScannerEvent.handleScanner(),
-                                      );
-                                  context.router
-                                      .push(BeneficiaryRegistrationWrapperRoute(
-                                    initialState:
-                                        BeneficiaryRegistrationCreateState(
-                                      searchQuery:
-                                          searchHouseholdsState.searchQuery,
-                                    ),
-                                  ));
-                                  searchController.clear();
-                                  selectedFilters = [];
-                                  blocWrapper.clearEvent();
-                                }
+                              FocusManager.instance.primaryFocus?.unfocus();
+                              context.read<DigitScannerBloc>().add(
+                                    const DigitScannerEvent.handleScanner(),
+                                  );
+                              context.router
+                                  .push(BeneficiaryRegistrationWrapperRoute(
+                                initialState:
+                                    BeneficiaryRegistrationCreateState(
+                                  searchQuery: searchController.text,
+                                ),
+                              ));
+                              searchController.clear();
+                              selectedFilters = [];
+                              blocWrapper
+                                  .add(const RegistrationWrapperEvent.clear());
+                            }
+                            if (availableIdCount <= 0) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                showNoIdsAlert(
+                                    context: context,
+                                    showSkip: true,
+                                    localizations: localizations,
+                                    shouldProceedFurther: (bool skip) {
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+                                      context.read<DigitScannerBloc>().add(
+                                            const DigitScannerEvent
+                                                .handleScanner(),
+                                          );
+                                      context.router.push(
+                                          BeneficiaryRegistrationWrapperRoute(
+                                        initialState:
+                                            BeneficiaryRegistrationCreateState(
+                                          searchQuery: searchController.text,
+                                        ),
+                                      ));
+                                      searchController.clear();
+                                      selectedFilters = [];
+                                      blocWrapper.add(
+                                          const RegistrationWrapperEvent
+                                              .clear());
+                                    });
                               });
-                        } else if (availableIdCount >=
-                            RegistrationDeliverySingleton()
-                                .beneficiaryIdMinCount!) {
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          context.read<DigitScannerBloc>().add(
-                                const DigitScannerEvent.handleScanner(),
-                              );
-                          context.router
-                              .push(BeneficiaryRegistrationWrapperRoute(
-                            initialState: BeneficiaryRegistrationCreateState(
-                              searchQuery: searchHouseholdsState.searchQuery,
-                            ),
-                          ));
-                          searchController.clear();
-                          selectedFilters = [];
-                          blocWrapper.clearEvent();
-                        }
-                        if (availableIdCount <= 0) {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            showNoIdsAlert(
+                            }
+                          },
+                          ids: (ids) {
+                            _isProgressDialogVisible = false;
+                          },
+                          fetching: (currentCount, totalCount) {
+                            if (_isProgressDialogVisible == false) {
+                              _progressDialog.showProgressDialog(
                                 context: context,
-                                showSkip: true,
-                                localizations: localizations,
-                                shouldProceedFurther: (bool skip) {
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                  context.read<DigitScannerBloc>().add(
-                                        const DigitScannerEvent.handleScanner(),
-                                      );
-                                  context.router
-                                      .push(BeneficiaryRegistrationWrapperRoute(
-                                    initialState:
-                                        BeneficiaryRegistrationCreateState(
-                                      searchQuery:
-                                          searchHouseholdsState.searchQuery,
-                                    ),
-                                  ));
-                                  searchController.clear();
-                                  selectedFilters = [];
-                                  blocWrapper.clearEvent();
+                                localizations:
+                                    RegistrationDeliveryLocalization.of(
+                                        context),
+                                currentCount: currentCount,
+                                totalCount: totalCount,
+                                theme: Theme.of(context),
+                              );
+                              _isProgressDialogVisible = true;
+                            } else {
+                              // To update progress:
+                              _progressDialog.updateProgressDialog(
+                                currentCount: currentCount,
+                                totalCount: totalCount,
+                              );
+                            }
+                          },
+                          failed: (String? error) {
+                            _progressDialog.closeProgressDialog();
+                            _isProgressDialogVisible = false;
+                            if (error != null) {
+                              Toast.showToast(context,
+                                  message: localizations.translate(
+                                    i18.beneficiaryDetails.failedBeneficiaryIds,
+                                  ),
+                                  type: ToastType.error);
+                            }
+                          },
+                          limitExceeded: (String? error) {
+                            _progressDialog.closeProgressDialog();
+                            _isProgressDialogVisible = false;
+                            if (error != null) {
+                              showCustomPopup(
+                                  context: context,
+                                  builder: (ctx) {
+                                    return Popup(
+                                      type: PopUpType.alert,
+                                      onCrossTap: () {
+                                        Navigator.of(ctx).pop();
+                                      },
+                                      actions: [
+                                        DigitButton(
+                                          capitalizeLetters: false,
+                                          type: DigitButtonType.primary,
+                                          size: DigitButtonSize.large,
+                                          mainAxisSize: MainAxisSize.max,
+                                          onPressed: () {
+                                            Navigator.pop(ctx);
+                                            context.read<UniqueIdBloc>().add(
+                                                  const UniqueIdEvent
+                                                      .fetchUniqueIdsFromServer(
+                                                      reFetch: true),
+                                                );
+                                          },
+                                          label: localizations.translate(i18
+                                              .beneficiaryDetails
+                                              .beneficiaryIdsReFetch),
+                                        ),
+                                        DigitButton(
+                                          capitalizeLetters: false,
+                                          type: DigitButtonType.secondary,
+                                          size: DigitButtonSize.large,
+                                          mainAxisSize: MainAxisSize.max,
+                                          onPressed: () {
+                                            Navigator.pop(ctx);
+                                          },
+                                          label: localizations.translate(
+                                            i18.common.corecommonclose,
+                                          ),
+                                        ),
+                                      ],
+                                      title: localizations.translate(i18
+                                          .beneficiaryDetails
+                                          .beneficiaryIdsLimitError),
+                                    );
+                                  });
+                            }
+                          },
+                          noInternet: () {
+                            _progressDialog.closeProgressDialog();
+                            _isProgressDialogVisible = false;
+                            showCustomPopup(
+                                context: context,
+                                builder: (ctx) {
+                                  return Popup(
+                                    type: PopUpType.alert,
+                                    onCrossTap: () {
+                                      Navigator.of(ctx).pop();
+                                    },
+                                    actions: [
+                                      DigitButton(
+                                        capitalizeLetters: false,
+                                        type: DigitButtonType.primary,
+                                        size: DigitButtonSize.large,
+                                        mainAxisSize: MainAxisSize.max,
+                                        onPressed: () {
+                                          Navigator.of(ctx).pop();
+
+                                          context.read<UniqueIdBloc>().add(
+                                                const UniqueIdEvent
+                                                    .fetchUniqueIdsFromServer(),
+                                              );
+                                        },
+                                        label: localizations.translate(
+                                          i18.common.coreCommonDataSyncRetry,
+                                        ),
+                                      ),
+                                      DigitButton(
+                                        capitalizeLetters: false,
+                                        type: DigitButtonType.secondary,
+                                        size: DigitButtonSize.large,
+                                        mainAxisSize: MainAxisSize.max,
+                                        onPressed: () {
+                                          Navigator.of(ctx).pop();
+                                        },
+                                        label: localizations.translate(
+                                          i18.common.corecommonclose,
+                                        ),
+                                      ),
+                                    ],
+                                    title: localizations.translate(
+                                        i18.common.coreCommonNoInternet),
+                                    description: localizations.translate(i18
+                                        .beneficiaryDetails
+                                        .noInternetBeneficiaryIdsText),
+                                  );
                                 });
                           });
-                        }
-                      },
-                      ids: (ids) {
-                        _isProgressDialogVisible = false;
-                      },
-                      fetching: (currentCount, totalCount) {
-                        if (_isProgressDialogVisible == false) {
-                          _progressDialog.showProgressDialog(
-                            context: context,
-                            localizations:
-                                RegistrationDeliveryLocalization.of(context),
-                            currentCount: currentCount,
-                            totalCount: totalCount,
-                            theme: Theme.of(context),
-                          );
-                          _isProgressDialogVisible = true;
-                        } else {
-                          // To update progress:
-                          _progressDialog.updateProgressDialog(
-                            currentCount: currentCount,
-                            totalCount: totalCount,
-                          );
-                        }
-                      },
-                      failed: (String? error) {
-                        _progressDialog.closeProgressDialog();
-                        _isProgressDialogVisible = false;
-                        if (error != null) {
-                          Toast.showToast(context,
-                              message: localizations.translate(
-                                i18.beneficiaryDetails.failedBeneficiaryIds,
-                              ),
-                              type: ToastType.error);
-                        }
-                      },
-                      limitExceeded: (String? error) {
-                        _progressDialog.closeProgressDialog();
-                        _isProgressDialogVisible = false;
-                        if (error != null) {
-                          showCustomPopup(
-                              context: context,
-                              builder: (ctx) {
-                                return Popup(
-                                  type: PopUpType.alert,
-                                  onCrossTap: () {
-                                    Navigator.of(ctx).pop();
-                                  },
-                                  actions: [
-                                    DigitButton(
-                                      capitalizeLetters: false,
-                                      type: DigitButtonType.primary,
-                                      size: DigitButtonSize.large,
-                                      mainAxisSize: MainAxisSize.max,
-                                      onPressed: () {
-                                        Navigator.pop(ctx);
-                                        context.read<UniqueIdBloc>().add(
-                                              const UniqueIdEvent
-                                                  .fetchUniqueIdsFromServer(
-                                                  reFetch: true),
-                                            );
-                                      },
-                                      label: localizations.translate(i18
-                                          .beneficiaryDetails
-                                          .beneficiaryIdsReFetch),
-                                    ),
-                                    DigitButton(
-                                      capitalizeLetters: false,
-                                      type: DigitButtonType.secondary,
-                                      size: DigitButtonSize.large,
-                                      mainAxisSize: MainAxisSize.max,
-                                      onPressed: () {
-                                        Navigator.pop(ctx);
-                                      },
-                                      label: localizations.translate(
-                                        i18.common.corecommonclose,
-                                      ),
-                                    ),
-                                  ],
-                                  title: localizations.translate(i18
-                                      .beneficiaryDetails
-                                      .beneficiaryIdsLimitError),
+                    },
+                    child: BlocBuilder<RegistrationWrapperBloc,
+                            RegistrationWrapperState>(
+                        builder: (context, blocState) {
+                      final items = blocState.householdMembers;
+                      return BlocListener<DigitScannerBloc, DigitScannerState>(
+                        listener: (context, scannerState) {
+                          if (scannerState.qrCodes.isNotEmpty) {
+                            context.read<SearchBlocWrapper>().tagSearchBloc.add(
+                                  SearchHouseholdsEvent.searchByTag(
+                                    tag: scannerState.qrCodes.isNotEmpty
+                                        ? scannerState.qrCodes.lastOrNull!
+                                        : '',
+                                    projectId: RegistrationDeliverySingleton()
+                                        .projectId!,
+                                  ),
                                 );
-                              });
-                        }
-                      },
-                      noInternet: () {
-                        _progressDialog.closeProgressDialog();
-                        _isProgressDialogVisible = false;
-                        showCustomPopup(
-                            context: context,
-                            builder: (ctx) {
-                              return Popup(
-                                type: PopUpType.alert,
-                                onCrossTap: () {
-                                  Navigator.of(ctx).pop();
-                                },
-                                actions: [
-                                  DigitButton(
-                                    capitalizeLetters: false,
-                                    type: DigitButtonType.primary,
-                                    size: DigitButtonSize.large,
-                                    mainAxisSize: MainAxisSize.max,
-                                    onPressed: () {
-                                      Navigator.of(ctx).pop();
-
-                                      context.read<UniqueIdBloc>().add(
-                                            const UniqueIdEvent
-                                                .fetchUniqueIdsFromServer(),
-                                          );
-                                    },
-                                    label: localizations.translate(
-                                      i18.common.coreCommonDataSyncRetry,
+                          }
+                        },
+                        child: BlocBuilder<LocationBloc, LocationState>(
+                          builder: (context, locationState) {
+                            return SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                (ctx, index) {
+                                  final i = items[index];
+                                  final distance = calculateDistance(
+                                    Coordinate(
+                                      lat,
+                                      long,
                                     ),
-                                  ),
-                                  DigitButton(
-                                    capitalizeLetters: false,
-                                    type: DigitButtonType.secondary,
-                                    size: DigitButtonSize.large,
-                                    mainAxisSize: MainAxisSize.max,
-                                    onPressed: () {
-                                      Navigator.of(ctx).pop();
-                                    },
-                                    label: localizations.translate(
-                                      i18.common.corecommonclose,
+                                    Coordinate(
+                                      i.household?.address?.latitude,
+                                      i.household?.address?.longitude,
                                     ),
-                                  ),
-                                ],
-                                title: localizations
-                                    .translate(i18.common.coreCommonNoInternet),
-                                description: localizations.translate(i18
-                                    .beneficiaryDetails
-                                    .noInternetBeneficiaryIdsText),
-                              );
-                            });
-                      });
-                },
-                child: BlocListener<DigitScannerBloc, DigitScannerState>(
-                  listener: (context, scannerState) {
-                    if (scannerState.qrCodes.isNotEmpty) {
-                      context.read<SearchBlocWrapper>().tagSearchBloc.add(
-                            SearchHouseholdsEvent.searchByTag(
-                              tag: scannerState.qrCodes.isNotEmpty
-                                  ? scannerState.qrCodes.lastOrNull!
-                                  : '',
-                              projectId:
-                                  RegistrationDeliverySingleton().projectId!,
-                            ),
-                          );
-                    }
-                  },
-                  child: BlocBuilder<LocationBloc, LocationState>(
-                    builder: (context, locationState) {
-                      return SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (ctx, index) {
-                            final i = searchHouseholdsState.householdMembers
-                                .elementAt(index);
-                            final distance = calculateDistance(
-                              Coordinate(
-                                lat,
-                                long,
-                              ),
-                              Coordinate(
-                                i.household?.address?.latitude,
-                                i.household?.address?.longitude,
-                              ),
-                            );
+                                  );
 
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: spacer2),
-                            child: ViewBeneficiaryCard(
-                              distance: isProximityEnabled ? distance : null,
-                              householdMember: i,
-                              onOpenPressed: () async {
-                                final scannerBloc =
-                                    context.read<DigitScannerBloc>();
+                                  return Container(
+                                    margin:
+                                        const EdgeInsets.only(bottom: spacer2),
+                                    child: ViewBeneficiaryCard(
+                                      distance:
+                                          isProximityEnabled ? distance : null,
+                                      householdWrapper: i,
+                                      onOpenPressed: () async {
+                                        final scannerBloc =
+                                            context.read<DigitScannerBloc>();
 
                                         if ((i.tasks?.lastOrNull?.status ==
                                                     Status.closeHousehold
@@ -904,20 +919,31 @@ class _SearchBeneficiaryPageState
                                           blocWrapper.add(
                                               const RegistrationWrapperEvent
                                                   .clear());
-                                          blocWrapper.add(
-                                               RegistrationWrapperEvent.fetchDeliveryDetails(projectId: RegistrationDeliverySingleton().selectedProject!.id,selectedIndividual: null, householdWrapper: HouseholdWrapper(
-                                                  household: i.household,
-                                                  individuals: i.individuals,
-                                                  members: i.members,
-                                                  projectBeneficiaries: i.projectBeneficiaries,
-                                                  tasks: i.tasks,
-                                                  sideEffects: i.sideEffects,
-                                                  referrals: i.referrals
-                                              ), beneficiaryType: RegistrationDeliverySingleton().beneficiaryType?.toValue()));
+                                          blocWrapper.add(RegistrationWrapperEvent
+                                              .fetchDeliveryDetails(
+                                                  projectId:
+                                                      RegistrationDeliverySingleton()
+                                                          .selectedProject!
+                                                          .id,
+                                                  selectedIndividual: null,
+                                                  householdWrapper: HouseholdWrapper(
+                                                      household: i.household,
+                                                      individuals:
+                                                          i.individuals,
+                                                      members: i.members,
+                                                      projectBeneficiaries: i
+                                                          .projectBeneficiaries,
+                                                      tasks: i.tasks,
+                                                      sideEffects:
+                                                          i.sideEffects,
+                                                      referrals: i.referrals),
+                                                  beneficiaryType:
+                                                      RegistrationDeliverySingleton()
+                                                          .beneficiaryType
+                                                          ?.toValue()));
 
-                                            await context.router
-                                                .push(HouseholdOverviewRoute());
-
+                                          await context.router
+                                              .push(HouseholdOverviewRoute());
                                         }
                                         setState(() {
                                           isProximityEnabled = false;
@@ -937,7 +963,7 @@ class _SearchBeneficiaryPageState
                           },
                         ),
                       );
-                    },
+                    }),
                   ),
                 ],
               ),
@@ -956,7 +982,8 @@ class _SearchBeneficiaryPageState
                     margin: const EdgeInsets.only(top: spacer2),
                     padding: const EdgeInsets.all(spacer4),
                     children: [
-                      ...buildSearchButtons(context, value, isCommunity, isTextShort, searchTemplate),
+                      ...buildSearchButtons(context, value, isCommunity,
+                          isTextShort, searchTemplate),
                     ],
                   ),
                 );
@@ -1015,8 +1042,14 @@ class _SearchBeneficiaryPageState
     }
   }
 
-  List<DigitButton> buildSearchButtons(BuildContext context,TextEditingValue value ,bool isCommunity, bool isTextShort, TemplateConfig? template,) {
-    final primaryProp   = template?.properties?['PrimaryButton'];
+  List<DigitButton> buildSearchButtons(
+    BuildContext context,
+    TextEditingValue value,
+    bool isCommunity,
+    bool isTextShort,
+    TemplateConfig? template,
+  ) {
+    final primaryProp = template?.properties?['PrimaryButton'];
     final secondaryProp = template?.properties?['SecondaryButton'];
 
     final entries = <MapEntry<int, DigitButton>>[];
@@ -1029,17 +1062,19 @@ class _SearchBeneficiaryPageState
         DigitButton(
           capitalizeLetters: false,
           label: isCommunity
-              ? localizations.translate(primaryProp?.label ?? i18.searchBeneficiary.clfAddActionLabel)
-              : localizations.translate(
-              primaryProp?.label ?? i18.searchBeneficiary.beneficiaryAddActionLabel),
+              ? localizations.translate(
+                  primaryProp?.label ?? i18.searchBeneficiary.clfAddActionLabel)
+              : localizations.translate(primaryProp?.label ??
+                  i18.searchBeneficiary.beneficiaryAddActionLabel),
           mainAxisSize: MainAxisSize.max,
           type: DigitButtonType.primary,
           size: DigitButtonSize.large,
           isDisabled: isTextShort,
           onPressed: () {
             FocusManager.instance.primaryFocus?.unfocus();
-            context.read<FormsBloc>().add(
-                const FormsEvent.clearForm(schemaKey: 'REGISTRATIONFLOW'));
+            context
+                .read<FormsBloc>()
+                .add(const FormsEvent.clearForm(schemaKey: 'REGISTRATIONFLOW'));
 
             final pageName = context
                 .read<FormsBloc>()
@@ -1053,8 +1088,8 @@ class _SearchBeneficiaryPageState
             if (pageName == null) {
               Toast.showToast(
                 context,
-                message: localizations.translate(
-                    'NO_FORM_FOUND_FOR_REGISTRATION'),
+                message:
+                    localizations.translate('NO_FORM_FOUND_FOR_REGISTRATION'),
                 type: ToastType.error,
               );
             } else {

@@ -172,7 +172,7 @@ class _HouseholdOverviewPageState
                                                               state
                                                                   .householdMembers.first
                                                                   .household!
-                                                                  .clientReferenceId);
+                                                                  .clientReferenceId, state.householdMembers.first.household?.address);
                                                         }
                                                       });
                                                   callReloadEvent(
@@ -247,7 +247,7 @@ class _HouseholdOverviewPageState
                                                                 : state
                                                                     .householdMembers.first
                                                                     .household!
-                                                                    .clientReferenceId);
+                                                                    .clientReferenceId, state.householdMembers.first.household?.address);
                                                       }
                                                     });
                                                 callReloadEvent(
@@ -663,15 +663,12 @@ class _HouseholdOverviewPageState
                                           )
                                         : const Offstage(),
                                     Column(
-                                      children: (state.householdMembers.firstOrNull
-                                                  ?.individuals ??
-                                      children: (state.householdMemberWrapper
-                                                  .members
+                                      children: (state.householdMembers.first
+                                                  .individuals
                                                   ?.where((m) {
                                                 // Identify if this member is a "child" in any other member's relationships
                                                 final isChild = state
-                                                    .householdMemberWrapper
-                                                    .householdMembers
+                                                    .householdMembers.first.members
                                                     ?.any((member) =>
                                                         member.memberRelationships !=
                                                             null &&
@@ -694,7 +691,7 @@ class _HouseholdOverviewPageState
                                               e.clientReferenceId;
 
                                           final household = state
-                                              .householdMemberWrapper.household;
+                                              .householdMembers.first.household;
 
                                           final projectBeneficiaryId = state
                                               .householdMembers.first
@@ -762,12 +759,12 @@ class _HouseholdOverviewPageState
                                               : null;
 
                                           final childBeneficiaries = (state
-                                                  .householdMemberWrapper
+                                                  .householdMembers.first
                                                   .members
                                                   ?.where((childMem) {
                                                 final parentBeneficiary = state
-                                                    .householdMemberWrapper
-                                                    .householdMembers
+                                                    .householdMembers.first
+                                                    .members
                                                     ?.where((element) =>
                                                         element
                                                             .individualClientReferenceId ==
@@ -775,8 +772,8 @@ class _HouseholdOverviewPageState
                                                     .firstOrNull;
 
                                                 final isChild = state
-                                                    .householdMemberWrapper
-                                                    .householdMembers
+                                                    .householdMembers.first
+                                                    .members
                                                     ?.any((member) =>
                                                         member.individualClientReferenceId ==
                                                             childMem
@@ -842,7 +839,7 @@ class _HouseholdOverviewPageState
                                             isHead: isHead,
                                             individual: e,
                                             household: household,
-                                            children: childBeneficiaries,
+                                            // children: childBeneficiaries,
                                             projectBeneficiaries:
                                                 projectBeneficiary ?? [],
                                             tasks: taskData,
