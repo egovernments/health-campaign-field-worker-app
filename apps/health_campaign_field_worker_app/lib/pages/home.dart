@@ -25,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:forms_engine/blocs/forms/forms.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:recase/recase.dart';
@@ -39,7 +40,6 @@ import 'package:sync_service/blocs/sync/sync.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
-import 'package:forms_engine/blocs/forms/forms.dart';
 import '../blocs/localization/localization.dart';
 import '../data/fake_schema.dart';
 import '../data/local_store/app_shared_preferences.dart';
@@ -374,26 +374,33 @@ class _HomePageState extends LocalizedState<HomePage> {
               final allSchemas =
                   json.decode(schemaJsonRaw) as Map<String, dynamic>;
 
-              final registrationSchemaEntry = allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
-              final deliverySchemaEntry = allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
+              final registrationSchemaEntry =
+                  allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
+              final deliverySchemaEntry =
+                  allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
 
               final registrationSchemaData = registrationSchemaEntry?['data'];
               final deliverySchemaData = deliverySchemaEntry?['data'];
 
-              if (registrationSchemaData != null || deliverySchemaData !=null) {
+              if (registrationSchemaData != null ||
+                  deliverySchemaData != null) {
                 // Extract templates from both schemas
                 final regTemplatesRaw = registrationSchemaData?['templates'];
                 final delTemplatesRaw = deliverySchemaData?['templates'];
 
                 final Map<String, dynamic> regTemplateMap =
-                regTemplatesRaw is Map<String, dynamic> ? regTemplatesRaw : {};
+                    regTemplatesRaw is Map<String, dynamic>
+                        ? regTemplatesRaw
+                        : {};
 
                 final Map<String, dynamic> delTemplateMap =
-                delTemplatesRaw is Map<String, dynamic> ? delTemplatesRaw : {};
+                    delTemplatesRaw is Map<String, dynamic>
+                        ? delTemplatesRaw
+                        : {};
 
                 final templates = {
-                  for (final entry in {...regTemplateMap, ...delTemplateMap}
-                      .entries)
+                  for (final entry
+                      in {...regTemplateMap, ...delTemplateMap}.entries)
                     entry.key: TemplateConfig.fromJson(
                         entry.value as Map<String, dynamic>)
                 };
@@ -401,17 +408,16 @@ class _HomePageState extends LocalizedState<HomePage> {
                 final registrationConfig = json.encode(registrationSchemaData);
                 final deliveryConfig = json.encode(deliverySchemaData);
 
-                RegistrationDeliverySingleton()
-                    .setTemplateConfigs(templates);
+                RegistrationDeliverySingleton().setTemplateConfigs(templates);
                 RegistrationDeliverySingleton()
                     .setRegistrationConfig(registrationConfig);
                 RegistrationDeliverySingleton()
                     .setDeliveryConfig(deliveryConfig);
-
               }
 
-              if (isTriggerLocalisation ) {
-                final moduleName = 'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
+              if (isTriggerLocalisation) {
+                final moduleName =
+                    'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
               }
@@ -800,12 +806,12 @@ class _HomePageState extends LocalizedState<HomePage> {
               context
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
-                module: module ??
-                    "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
-                tenantId: envConfig.variables.tenantId,
-                locale: selectedLocale!,
-                path: Constants.localizationApiPath,
-              ));
+                    module: module ??
+                        "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                    tenantId: envConfig.variables.tenantId,
+                    locale: selectedLocale!,
+                    path: Constants.localizationApiPath,
+                  ));
             }
           },
         );

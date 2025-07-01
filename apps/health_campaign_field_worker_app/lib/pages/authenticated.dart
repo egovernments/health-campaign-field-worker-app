@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:forms_engine/blocs/forms/forms.dart';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_showcase/showcase_widget.dart';
@@ -15,6 +15,7 @@ import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
+import 'package:forms_engine/blocs/forms/forms.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -215,7 +216,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                               LocalRepository<ReferralModel,
                                   ReferralSearchModel>>(),
                           serviceLocalRepository: ctx.read<
-                              LocalRepository<ServiceModel, ServiceSearchModel>>(),
+                              LocalRepository<ServiceModel,
+                                  ServiceSearchModel>>(),
                         ),
                       ),
                       BlocProvider(
@@ -430,31 +432,39 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                 );
 
                 String? dynamicModule;
-                final isInRegistrationFlow = context.router.current.name.contains(RegistrationDeliveryWrapperRoute.name);
+                final isInRegistrationFlow = context.router.current.name
+                    .contains(RegistrationDeliveryWrapperRoute.name);
 
                 if (isInRegistrationFlow) {
                   final prefs = await SharedPreferences.getInstance();
                   final schemaJsonRaw = prefs.getString('app_config_schemas');
 
                   if (schemaJsonRaw != null) {
-                    final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                    final allSchemas =
+                        json.decode(schemaJsonRaw) as Map<String, dynamic>;
                     final projectId = context.selectedProject.referenceID;
 
                     // Initialize empty list to collect modules
                     final List<String> modules = [];
 
                     // Handle registrationflow
-                    final registrationSchemaEntry = allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
-                    final registrationSchemaData = registrationSchemaEntry?['data'];
-                    final registrationFlowName = registrationSchemaData?['name']?.toString().toLowerCase();
+                    final registrationSchemaEntry =
+                        allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
+                    final registrationSchemaData =
+                        registrationSchemaEntry?['data'];
+                    final registrationFlowName = registrationSchemaData?['name']
+                        ?.toString()
+                        .toLowerCase();
                     if (registrationFlowName != null && projectId != null) {
                       modules.add('hcm-$registrationFlowName-$projectId');
                     }
 
                     // Handle deliveryflow
-                    final deliverySchemaEntry = allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
+                    final deliverySchemaEntry =
+                        allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
                     final deliverySchemaData = deliverySchemaEntry?['data'];
-                    final deliveryFlowName = deliverySchemaData?['name']?.toString().toLowerCase();
+                    final deliveryFlowName =
+                        deliverySchemaData?['name']?.toString().toLowerCase();
                     if (deliveryFlowName != null && projectId != null) {
                       modules.add('hcm-$deliveryFlowName-$projectId');
                     }
@@ -465,10 +475,12 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                 }
 
                 final staticModules = localizationModulesList.interfaces
-                    .where((element) => element.type == Modules.localizationModule)
+                    .where(
+                        (element) => element.type == Modules.localizationModule)
                     .map((e) => e.name.toString())
-                    .followedBy(['hcm-boundary-${envConfig.variables.hierarchyType}'])
-                    .join(',');
+                    .followedBy([
+                  'hcm-boundary-${envConfig.variables.hierarchyType}'
+                ]).join(',');
 
                 final combinedModules = dynamicModule != null
                     ? '$dynamicModule,$staticModules'
