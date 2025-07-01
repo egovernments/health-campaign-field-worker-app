@@ -262,6 +262,8 @@ class Attendance {
 
   String get absent => 'ABSENT';
 
+  String get markAsAbsent => 'MARK_AS_ABSENT';
+
   String get ctaDateChangeProceed => 'DATE_CHANGE_PROCEED';
 
   String get scanAnotherQR => 'SCAN_ANOTHER_QR';

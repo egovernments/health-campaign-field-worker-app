@@ -126,7 +126,10 @@ class CustomAttendanceInfoCard extends StatelessWidget {
                 Expanded(
                   child: DigitButton(
                     prefixIcon: Icons.cancel,
-                    label: localizations.translate(i18.attendance.absent),
+                    label: localizations.translate(
+                        isCurrentDate && status == -1 && !markManualAttendance
+                            ? i18.attendance.markAsAbsent
+                            : i18.attendance.absent),
                     capitalizeLetters: true,
                     textColor: status == 0
                         ? theme.colorTheme.paper.primary
