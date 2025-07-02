@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'additional_fields_type.dart';
@@ -59,6 +59,16 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
         return AdditionalFieldsType.latitude;
       case "longitude":
         return AdditionalFieldsType.longitude;
+      case "pregnantWomen":
+        return AdditionalFieldsType.pregnantWomen;
+      case "children":
+        return AdditionalFieldsType.children;
+      case "noOfRooms":
+        return AdditionalFieldsType.noOfRooms;
+      case "houseStructureTypes":
+        return AdditionalFieldsType.houseStructureTypes;
+      case "reasonOfRefusal":
+        return AdditionalFieldsType.reasonOfRefusal;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -101,6 +111,16 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
         return "latitude";
       case AdditionalFieldsType.longitude:
         return "longitude";
+      case AdditionalFieldsType.pregnantWomen:
+        return "pregnantWomen";
+      case AdditionalFieldsType.children:
+        return "children";
+      case AdditionalFieldsType.noOfRooms:
+        return "noOfRooms";
+      case AdditionalFieldsType.houseStructureTypes:
+        return "houseStructureTypes";
+      case AdditionalFieldsType.reasonOfRefusal:
+        return "reasonOfRefusal";
     }
   }
 }

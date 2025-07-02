@@ -19,7 +19,11 @@ mixin _$DeliverInterventionEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)
+            TaskModel task,
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            bool navigateToSummary,
+            HouseholdMemberWrapper? householdMemberWrapper)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
     required TResult Function(
@@ -33,7 +37,11 @@ mixin _$DeliverInterventionEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+            TaskModel task,
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            bool navigateToSummary,
+            HouseholdMemberWrapper? householdMemberWrapper)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
     TResult? Function(
@@ -47,7 +55,11 @@ mixin _$DeliverInterventionEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+            TaskModel task,
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            bool navigateToSummary,
+            HouseholdMemberWrapper? householdMemberWrapper)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
     TResult Function(
@@ -122,7 +134,14 @@ abstract class _$$DeliverInterventionSubmitEventImplCopyWith<$Res> {
           $Res Function(_$DeliverInterventionSubmitEventImpl) then) =
       __$$DeliverInterventionSubmitEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({TaskModel task, bool isEditing, BoundaryModel boundaryModel});
+  $Res call(
+      {TaskModel task,
+      bool isEditing,
+      BoundaryModel boundaryModel,
+      bool navigateToSummary,
+      HouseholdMemberWrapper? householdMemberWrapper});
+
+  $HouseholdMemberWrapperCopyWith<$Res>? get householdMemberWrapper;
 }
 
 /// @nodoc
@@ -141,6 +160,8 @@ class __$$DeliverInterventionSubmitEventImplCopyWithImpl<$Res>
     Object? task = null,
     Object? isEditing = null,
     Object? boundaryModel = null,
+    Object? navigateToSummary = null,
+    Object? householdMemberWrapper = freezed,
   }) {
     return _then(_$DeliverInterventionSubmitEventImpl(
       task: null == task
@@ -155,7 +176,28 @@ class __$$DeliverInterventionSubmitEventImplCopyWithImpl<$Res>
           ? _value.boundaryModel
           : boundaryModel // ignore: cast_nullable_to_non_nullable
               as BoundaryModel,
+      navigateToSummary: null == navigateToSummary
+          ? _value.navigateToSummary
+          : navigateToSummary // ignore: cast_nullable_to_non_nullable
+              as bool,
+      householdMemberWrapper: freezed == householdMemberWrapper
+          ? _value.householdMemberWrapper
+          : householdMemberWrapper // ignore: cast_nullable_to_non_nullable
+              as HouseholdMemberWrapper?,
     ));
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $HouseholdMemberWrapperCopyWith<$Res>? get householdMemberWrapper {
+    if (_value.householdMemberWrapper == null) {
+      return null;
+    }
+
+    return $HouseholdMemberWrapperCopyWith<$Res>(_value.householdMemberWrapper!,
+        (value) {
+      return _then(_value.copyWith(householdMemberWrapper: value));
+    });
   }
 }
 
@@ -166,7 +208,9 @@ class _$DeliverInterventionSubmitEventImpl
   const _$DeliverInterventionSubmitEventImpl(
       {required this.task,
       required this.isEditing,
-      required this.boundaryModel});
+      required this.boundaryModel,
+      this.navigateToSummary = false,
+      this.householdMemberWrapper});
 
   @override
   final TaskModel task;
@@ -174,10 +218,15 @@ class _$DeliverInterventionSubmitEventImpl
   final bool isEditing;
   @override
   final BoundaryModel boundaryModel;
+  @override
+  @JsonKey()
+  final bool navigateToSummary;
+  @override
+  final HouseholdMemberWrapper? householdMemberWrapper;
 
   @override
   String toString() {
-    return 'DeliverInterventionEvent.handleSubmit(task: $task, isEditing: $isEditing, boundaryModel: $boundaryModel)';
+    return 'DeliverInterventionEvent.handleSubmit(task: $task, isEditing: $isEditing, boundaryModel: $boundaryModel, navigateToSummary: $navigateToSummary, householdMemberWrapper: $householdMemberWrapper)';
   }
 
   @override
@@ -189,11 +238,16 @@ class _$DeliverInterventionSubmitEventImpl
             (identical(other.isEditing, isEditing) ||
                 other.isEditing == isEditing) &&
             (identical(other.boundaryModel, boundaryModel) ||
-                other.boundaryModel == boundaryModel));
+                other.boundaryModel == boundaryModel) &&
+            (identical(other.navigateToSummary, navigateToSummary) ||
+                other.navigateToSummary == navigateToSummary) &&
+            (identical(other.householdMemberWrapper, householdMemberWrapper) ||
+                other.householdMemberWrapper == householdMemberWrapper));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, task, isEditing, boundaryModel);
+  int get hashCode => Object.hash(runtimeType, task, isEditing, boundaryModel,
+      navigateToSummary, householdMemberWrapper);
 
   @JsonKey(ignore: true)
   @override
@@ -207,7 +261,11 @@ class _$DeliverInterventionSubmitEventImpl
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)
+            TaskModel task,
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            bool navigateToSummary,
+            HouseholdMemberWrapper? householdMemberWrapper)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
     required TResult Function(
@@ -217,14 +275,19 @@ class _$DeliverInterventionSubmitEventImpl
             IndividualModel? individualModel, ProjectTypeModel projectType)
         setActiveCycleDose,
   }) {
-    return handleSubmit(task, isEditing, boundaryModel);
+    return handleSubmit(task, isEditing, boundaryModel, navigateToSummary,
+        householdMemberWrapper);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+            TaskModel task,
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            bool navigateToSummary,
+            HouseholdMemberWrapper? householdMemberWrapper)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
     TResult? Function(
@@ -234,14 +297,19 @@ class _$DeliverInterventionSubmitEventImpl
             IndividualModel? individualModel, ProjectTypeModel projectType)?
         setActiveCycleDose,
   }) {
-    return handleSubmit?.call(task, isEditing, boundaryModel);
+    return handleSubmit?.call(task, isEditing, boundaryModel, navigateToSummary,
+        householdMemberWrapper);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+            TaskModel task,
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            bool navigateToSummary,
+            HouseholdMemberWrapper? householdMemberWrapper)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
     TResult Function(
@@ -253,7 +321,8 @@ class _$DeliverInterventionSubmitEventImpl
     required TResult orElse(),
   }) {
     if (handleSubmit != null) {
-      return handleSubmit(task, isEditing, boundaryModel);
+      return handleSubmit(task, isEditing, boundaryModel, navigateToSummary,
+          householdMemberWrapper);
     }
     return orElse();
   }
@@ -311,12 +380,16 @@ abstract class DeliverInterventionSubmitEvent
   const factory DeliverInterventionSubmitEvent(
           {required final TaskModel task,
           required final bool isEditing,
-          required final BoundaryModel boundaryModel}) =
+          required final BoundaryModel boundaryModel,
+          final bool navigateToSummary,
+          final HouseholdMemberWrapper? householdMemberWrapper}) =
       _$DeliverInterventionSubmitEventImpl;
 
   TaskModel get task;
   bool get isEditing;
   BoundaryModel get boundaryModel;
+  bool get navigateToSummary;
+  HouseholdMemberWrapper? get householdMemberWrapper;
   @JsonKey(ignore: true)
   _$$DeliverInterventionSubmitEventImplCopyWith<
           _$DeliverInterventionSubmitEventImpl>
@@ -395,7 +468,11 @@ class _$DeliverInterventionSearchEventImpl
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)
+            TaskModel task,
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            bool navigateToSummary,
+            HouseholdMemberWrapper? householdMemberWrapper)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
     required TResult Function(
@@ -412,7 +489,11 @@ class _$DeliverInterventionSearchEventImpl
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+            TaskModel task,
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            bool navigateToSummary,
+            HouseholdMemberWrapper? householdMemberWrapper)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
     TResult? Function(
@@ -429,7 +510,11 @@ class _$DeliverInterventionSearchEventImpl
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+            TaskModel task,
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            bool navigateToSummary,
+            HouseholdMemberWrapper? householdMemberWrapper)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
     TResult Function(
@@ -603,7 +688,11 @@ class _$DeliverInterventionCycleFutureDoseSelectionEventImpl
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)
+            TaskModel task,
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            bool navigateToSummary,
+            HouseholdMemberWrapper? householdMemberWrapper)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
     required TResult Function(
@@ -620,7 +709,11 @@ class _$DeliverInterventionCycleFutureDoseSelectionEventImpl
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+            TaskModel task,
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            bool navigateToSummary,
+            HouseholdMemberWrapper? householdMemberWrapper)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
     TResult? Function(
@@ -637,7 +730,11 @@ class _$DeliverInterventionCycleFutureDoseSelectionEventImpl
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+            TaskModel task,
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            bool navigateToSummary,
+            HouseholdMemberWrapper? householdMemberWrapper)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
     TResult Function(
@@ -834,7 +931,11 @@ class _$DeliverInterventionActiveCycleDoseSelectionEventImpl
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)
+            TaskModel task,
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            bool navigateToSummary,
+            HouseholdMemberWrapper? householdMemberWrapper)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
     required TResult Function(
@@ -852,7 +953,11 @@ class _$DeliverInterventionActiveCycleDoseSelectionEventImpl
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+            TaskModel task,
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            bool navigateToSummary,
+            HouseholdMemberWrapper? householdMemberWrapper)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
     TResult? Function(
@@ -870,7 +975,11 @@ class _$DeliverInterventionActiveCycleDoseSelectionEventImpl
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+            TaskModel task,
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            bool navigateToSummary,
+            HouseholdMemberWrapper? householdMemberWrapper)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
     TResult Function(
@@ -964,6 +1073,8 @@ mixin _$DeliverInterventionState {
   List<ProjectCycle>? get pastCycles => throw _privateConstructorUsedError;
   bool get hasCycleArrived => throw _privateConstructorUsedError;
   bool get isLastDoseOfCycle => throw _privateConstructorUsedError;
+  HouseholdMemberWrapper? get householdMemberWrapper =>
+      throw _privateConstructorUsedError;
   List<TaskModel>? get tasks => throw _privateConstructorUsedError;
   List<ProjectCycleDelivery>? get futureDeliveries =>
       throw _privateConstructorUsedError;
@@ -989,10 +1100,13 @@ abstract class $DeliverInterventionStateCopyWith<$Res> {
       List<ProjectCycle>? pastCycles,
       bool hasCycleArrived,
       bool isLastDoseOfCycle,
+      HouseholdMemberWrapper? householdMemberWrapper,
       List<TaskModel>? tasks,
       List<ProjectCycleDelivery>? futureDeliveries,
       List<TaskModel>? futureTask,
       TaskModel? oldTask});
+
+  $HouseholdMemberWrapperCopyWith<$Res>? get householdMemberWrapper;
 }
 
 /// @nodoc
@@ -1016,6 +1130,7 @@ class _$DeliverInterventionStateCopyWithImpl<$Res,
     Object? pastCycles = freezed,
     Object? hasCycleArrived = null,
     Object? isLastDoseOfCycle = null,
+    Object? householdMemberWrapper = freezed,
     Object? tasks = freezed,
     Object? futureDeliveries = freezed,
     Object? futureTask = freezed,
@@ -1050,6 +1165,10 @@ class _$DeliverInterventionStateCopyWithImpl<$Res,
           ? _value.isLastDoseOfCycle
           : isLastDoseOfCycle // ignore: cast_nullable_to_non_nullable
               as bool,
+      householdMemberWrapper: freezed == householdMemberWrapper
+          ? _value.householdMemberWrapper
+          : householdMemberWrapper // ignore: cast_nullable_to_non_nullable
+              as HouseholdMemberWrapper?,
       tasks: freezed == tasks
           ? _value.tasks
           : tasks // ignore: cast_nullable_to_non_nullable
@@ -1067,6 +1186,19 @@ class _$DeliverInterventionStateCopyWithImpl<$Res,
           : oldTask // ignore: cast_nullable_to_non_nullable
               as TaskModel?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $HouseholdMemberWrapperCopyWith<$Res>? get householdMemberWrapper {
+    if (_value.householdMemberWrapper == null) {
+      return null;
+    }
+
+    return $HouseholdMemberWrapperCopyWith<$Res>(_value.householdMemberWrapper!,
+        (value) {
+      return _then(_value.copyWith(householdMemberWrapper: value) as $Val);
+    });
   }
 }
 
@@ -1087,10 +1219,14 @@ abstract class _$$DeliverInterventionStateImplCopyWith<$Res>
       List<ProjectCycle>? pastCycles,
       bool hasCycleArrived,
       bool isLastDoseOfCycle,
+      HouseholdMemberWrapper? householdMemberWrapper,
       List<TaskModel>? tasks,
       List<ProjectCycleDelivery>? futureDeliveries,
       List<TaskModel>? futureTask,
       TaskModel? oldTask});
+
+  @override
+  $HouseholdMemberWrapperCopyWith<$Res>? get householdMemberWrapper;
 }
 
 /// @nodoc
@@ -1113,6 +1249,7 @@ class __$$DeliverInterventionStateImplCopyWithImpl<$Res>
     Object? pastCycles = freezed,
     Object? hasCycleArrived = null,
     Object? isLastDoseOfCycle = null,
+    Object? householdMemberWrapper = freezed,
     Object? tasks = freezed,
     Object? futureDeliveries = freezed,
     Object? futureTask = freezed,
@@ -1147,6 +1284,10 @@ class __$$DeliverInterventionStateImplCopyWithImpl<$Res>
           ? _value.isLastDoseOfCycle
           : isLastDoseOfCycle // ignore: cast_nullable_to_non_nullable
               as bool,
+      householdMemberWrapper: freezed == householdMemberWrapper
+          ? _value.householdMemberWrapper
+          : householdMemberWrapper // ignore: cast_nullable_to_non_nullable
+              as HouseholdMemberWrapper?,
       tasks: freezed == tasks
           ? _value._tasks
           : tasks // ignore: cast_nullable_to_non_nullable
@@ -1178,6 +1319,7 @@ class _$DeliverInterventionStateImpl implements _DeliverInterventionState {
       final List<ProjectCycle>? pastCycles,
       this.hasCycleArrived = true,
       this.isLastDoseOfCycle = false,
+      this.householdMemberWrapper,
       final List<TaskModel>? tasks,
       final List<ProjectCycleDelivery>? futureDeliveries,
       final List<TaskModel>? futureTask,
@@ -1215,6 +1357,8 @@ class _$DeliverInterventionStateImpl implements _DeliverInterventionState {
   @override
   @JsonKey()
   final bool isLastDoseOfCycle;
+  @override
+  final HouseholdMemberWrapper? householdMemberWrapper;
   final List<TaskModel>? _tasks;
   @override
   List<TaskModel>? get tasks {
@@ -1251,7 +1395,7 @@ class _$DeliverInterventionStateImpl implements _DeliverInterventionState {
 
   @override
   String toString() {
-    return 'DeliverInterventionState(loading: $loading, isEditing: $isEditing, cycle: $cycle, dose: $dose, pastCycles: $pastCycles, hasCycleArrived: $hasCycleArrived, isLastDoseOfCycle: $isLastDoseOfCycle, tasks: $tasks, futureDeliveries: $futureDeliveries, futureTask: $futureTask, oldTask: $oldTask)';
+    return 'DeliverInterventionState(loading: $loading, isEditing: $isEditing, cycle: $cycle, dose: $dose, pastCycles: $pastCycles, hasCycleArrived: $hasCycleArrived, isLastDoseOfCycle: $isLastDoseOfCycle, householdMemberWrapper: $householdMemberWrapper, tasks: $tasks, futureDeliveries: $futureDeliveries, futureTask: $futureTask, oldTask: $oldTask)';
   }
 
   @override
@@ -1270,6 +1414,8 @@ class _$DeliverInterventionStateImpl implements _DeliverInterventionState {
                 other.hasCycleArrived == hasCycleArrived) &&
             (identical(other.isLastDoseOfCycle, isLastDoseOfCycle) ||
                 other.isLastDoseOfCycle == isLastDoseOfCycle) &&
+            (identical(other.householdMemberWrapper, householdMemberWrapper) ||
+                other.householdMemberWrapper == householdMemberWrapper) &&
             const DeepCollectionEquality().equals(other._tasks, _tasks) &&
             const DeepCollectionEquality()
                 .equals(other._futureDeliveries, _futureDeliveries) &&
@@ -1288,6 +1434,7 @@ class _$DeliverInterventionStateImpl implements _DeliverInterventionState {
       const DeepCollectionEquality().hash(_pastCycles),
       hasCycleArrived,
       isLastDoseOfCycle,
+      householdMemberWrapper,
       const DeepCollectionEquality().hash(_tasks),
       const DeepCollectionEquality().hash(_futureDeliveries),
       const DeepCollectionEquality().hash(_futureTask),
@@ -1310,6 +1457,7 @@ abstract class _DeliverInterventionState implements DeliverInterventionState {
       final List<ProjectCycle>? pastCycles,
       final bool hasCycleArrived,
       final bool isLastDoseOfCycle,
+      final HouseholdMemberWrapper? householdMemberWrapper,
       final List<TaskModel>? tasks,
       final List<ProjectCycleDelivery>? futureDeliveries,
       final List<TaskModel>? futureTask,
@@ -1329,6 +1477,8 @@ abstract class _DeliverInterventionState implements DeliverInterventionState {
   bool get hasCycleArrived;
   @override
   bool get isLastDoseOfCycle;
+  @override
+  HouseholdMemberWrapper? get householdMemberWrapper;
   @override
   List<TaskModel>? get tasks;
   @override

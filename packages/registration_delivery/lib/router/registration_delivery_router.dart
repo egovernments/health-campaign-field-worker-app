@@ -4,17 +4,15 @@ import 'registration_delivery_router.gm.dart';
 
 @AutoRouterConfig.module()
 class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
-  @override
   RouteType get defaultRouteType => const RouteType.material();
 
-  @override
   List<AutoRoute> get routes => [
         AutoRoute(
             page: RegistrationDeliveryWrapperRoute.page,
             path: 'registration-delivery-wrapper',
             children: [
               AutoRoute(
-                initial: true,
+                  initial: true,
                   page: SearchBeneficiaryRoute.page,
                   path: 'search-beneficiary'),
 
@@ -30,6 +28,8 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
                       page: HouseHoldDetailsRoute.page,
                       path: 'household-details'),
                   AutoRoute(
+                      page: HouseDetailsRoute.page, path: 'house-details'),
+                  AutoRoute(
                     page: HouseholdLocationRoute.page,
                     path: 'household-location',
                     initial: true,
@@ -37,6 +37,10 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
                   AutoRoute(
                     page: BeneficiaryAcknowledgementRoute.page,
                     path: 'beneficiary-acknowledgement',
+                  ),
+                  AutoRoute(
+                    page: SummaryRoute.page,
+                    path: 'beneficiary-summary',
                   ),
                 ],
               ),
@@ -54,8 +58,20 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
                     path: 'beneficiary-details',
                   ),
                   AutoRoute(
+                    page: BeneficiaryChecklistRoute.page,
+                    path: 'beneficiary-checklist',
+                  ),
+                  AutoRoute(
+                    page: BeneficiaryChecklistRoute.page,
+                    path: 'beneficiary-checklist',
+                  ),
+                  AutoRoute(
                     page: DeliverInterventionRoute.page,
                     path: 'deliver-intervention',
+                  ),
+                  AutoRoute(
+                    page: RefusedDeliveryRoute.page,
+                    path: 'refused-delivery',
                   ),
                   AutoRoute(
                     page: SideEffectsRoute.page,
@@ -84,6 +100,10 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
                   AutoRoute(
                     page: HouseholdAcknowledgementRoute.page,
                     path: 'household-acknowledgement',
+                  ),
+                  AutoRoute(
+                    page: DeliverySummaryRoute.page,
+                    path: 'delivery-summary',
                   ),
                 ],
               ),

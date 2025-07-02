@@ -147,7 +147,7 @@ abstract class RemoteRepository<D extends EntityModel,
       mapperRes =
           entityList.map((e) => MapperContainer.globals.fromMap<D>(e)).toList();
     } catch (e) {
-      rethrow ;
+      rethrow;
     }
 
     return mapperRes;
@@ -245,6 +245,9 @@ abstract class RemoteRepository<D extends EntityModel,
           options: Options(headers: {
             "content-type": 'application/json',
           }),
+          queryParameters: {
+            "tenantId": DigitDataModelSingleton().tenantId,
+          },
           data: {
             EntityPlurals.getPluralForEntityName(entityName): _getMap(entities),
           },
@@ -261,6 +264,9 @@ abstract class RemoteRepository<D extends EntityModel,
           options: Options(headers: {
             "content-type": 'application/json',
           }),
+          queryParameters: {
+            "tenantId": DigitDataModelSingleton().tenantId,
+          },
           data: {
             EntityPlurals.getPluralForEntityName(entityName): _getMap(entities),
             "apiOperation": "UPDATE",
@@ -291,7 +297,7 @@ abstract class RemoteRepository<D extends EntityModel,
         }
 
         return await dio.post(
-          'error-handler/handle-error', // [TODO: Update this URL]
+          DigitDataModelSingleton().errorDumpApiPath,
           options: Options(headers: {
             "content-type": 'application/json',
           }),
@@ -330,6 +336,9 @@ abstract class RemoteRepository<D extends EntityModel,
           options: Options(headers: {
             "content-type": 'application/json',
           }),
+          queryParameters: {
+            "tenantId": DigitDataModelSingleton().tenantId,
+          },
           data: {
             EntityPlurals.getPluralForEntityName(entityName): _getMap(entities),
             "apiOperation": "DELETE",

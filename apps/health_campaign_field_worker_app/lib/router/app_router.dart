@@ -1,7 +1,14 @@
 import 'package:attendance_management/router/attendance_router.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:closed_household/router/closed_household_router.dart';
+import 'package:closed_household/router/closed_household_router.gm.dart';
+import 'package:complaints/router/complaints_router.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_dss/router/dashboard_router.dart';
+import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_scanner/router/digit_scanner_router.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:flutter/material.dart';
@@ -11,27 +18,13 @@ import 'package:referral_reconciliation/router/referral_reconciliation_router.da
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:survey_form/router/survey_form_router.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
 import '../pages/boundary_selection.dart';
-import '../pages/checklist/checklist.dart';
-import '../pages/checklist/checklist_boundary_view.dart';
-import '../pages/checklist/checklist_preview.dart';
-import '../pages/checklist/checklist_view.dart';
-import '../pages/checklist/checklist_wrapper.dart';
-import '../pages/complaints/inbox/complaints_details_view.dart';
-import '../pages/complaints/inbox/complaints_inbox.dart';
-import '../pages/complaints/inbox/complaints_inbox_filter.dart';
-import '../pages/complaints/inbox/complaints_inbox_search.dart';
-import '../pages/complaints/inbox/complaints_inbox_sort.dart';
-import '../pages/complaints/inbox/complaints_inbox_wrapper.dart';
-import '../pages/complaints/registration/complaint_type.dart';
-import '../pages/complaints/registration/complaints_details.dart';
-import '../pages/complaints/registration/complaints_location.dart';
-import '../pages/complaints/registration/complaints_registration_wrapper.dart';
-import '../pages/complaints_acknowledgement.dart';
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
@@ -53,6 +46,10 @@ part 'app_router.gr.dart';
     ReferralReconciliationRoute,
     DigitScannerPackageRoute,
     RegistrationDeliveryRoute,
+    ClosedHouseholdPackageRoute,
+    DashboardRoute,
+    SurveyFormRoute,
+    ComplaintsRoute
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -85,115 +82,43 @@ class AppRouter extends _$AppRouter {
           page: BeneficiariesReportRoute.page,
           path: 'beneficiary-downsync-report',
         ),
+        // DSS Dashboard Routes
+        AutoRoute(
+          page: UserDashboardRoute.page,
+          path: 'dashboard',
+        ),
+        ...RegistrationDeliveryRoute().routes,
+
+        /// close household
+        ...ClosedHouseholdPackageRoute().routes,
 
         AutoRoute(
-            page: RegistrationDeliveryWrapperRoute.page,
-            path: 'registration-delivery-wrapper',
+            page: SurveyFormWrapperRoute.page,
+            path: 'surveyForm',
             children: [
               AutoRoute(
-                  initial: true,
-                  page: SearchBeneficiaryRoute.page,
-                  path: 'search-beneficiary'),
-
-              /// Beneficiary Registration
-              AutoRoute(
-                page: BeneficiaryRegistrationWrapperRoute.page,
-                path: 'beneficiary-registration',
-                children: [
-                  AutoRoute(
-                      page: IndividualDetailsRoute.page,
-                      path: 'individual-details'),
-                  AutoRoute(
-                      page: HouseHoldDetailsRoute.page,
-                      path: 'household-details'),
-                  AutoRoute(
-                    page: HouseholdLocationRoute.page,
-                    path: 'household-location',
-                    initial: true,
-                  ),
-                  AutoRoute(
-                    page: BeneficiaryAcknowledgementRoute.page,
-                    path: 'beneficiary-acknowledgement',
-                  ),
-                ],
-              ),
-              AutoRoute(
-                page: BeneficiaryWrapperRoute.page,
-                path: 'beneficiary',
-                children: [
-                  AutoRoute(
-                    page: HouseholdOverviewRoute.page,
-                    path: 'overview',
-                    initial: true,
-                  ),
-                  AutoRoute(
-                    page: BeneficiaryDetailsRoute.page,
-                    path: 'beneficiary-details',
-                  ),
-                  AutoRoute(
-                    page: DeliverInterventionRoute.page,
-                    path: 'deliver-intervention',
-                  ),
-                  AutoRoute(
-                    page: SideEffectsRoute.page,
-                    path: 'side-effects',
-                  ),
-                  AutoRoute(
-                    page: ReferBeneficiaryRoute.page,
-                    path: 'refer-beneficiary',
-                  ),
-                  AutoRoute(
-                    page: DoseAdministeredRoute.page,
-                    path: 'dose-administered',
-                  ),
-                  AutoRoute(
-                    page: SplashAcknowledgementRoute.page,
-                    path: 'splash-acknowledgement',
-                  ),
-                  AutoRoute(
-                    page: ReasonForDeletionRoute.page,
-                    path: 'reason-for-deletion',
-                  ),
-                  AutoRoute(
-                    page: RecordPastDeliveryDetailsRoute.page,
-                    path: 'record-past-delivery-details',
-                  ),
-                  AutoRoute(
-                    page: HouseholdAcknowledgementRoute.page,
-                    path: 'household-acknowledgement',
-                  ),
-                  AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
-                ],
-              ),
-            ]),
-
-        AutoRoute(
-            page: ChecklistWrapperRoute.page,
-            path: 'checklist',
-            children: [
-              AutoRoute(
-                page: ChecklistRoute.page,
+                page: SurveyformRoute.page,
                 path: '',
               ),
               AutoRoute(
-                  page: ChecklistBoundaryViewRoute.page, path: 'view-boundary'),
-              AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
-              AutoRoute(page: ChecklistPreviewRoute.page, path: 'preview'),
+                  page: SurveyFormBoundaryViewRoute.page,
+                  path: 'view-boundary'),
+              AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
+              AutoRoute(page: SurveyFormPreviewRoute.page, path: 'preview'),
+              AutoRoute(
+                  page: SurveyFormAcknowledgementRoute.page,
+                  path: 'surveyForm-acknowledgement'),
             ]),
         AutoRoute(
           page: BeneficiaryAcknowledgementRoute.page,
           path: 'beneficiary-acknowledgement',
         ),
         AutoRoute(page: AcknowledgementRoute.page, path: 'acknowledgement'),
-        AutoRoute(
-          page: ComplaintsAcknowledgementRoute.page,
-          path: 'complaints-acknowledgement',
-        ),
+
         AutoRoute(
           page: ProjectFacilitySelectionRoute.page,
           path: 'select-project-facilities',
         ),
-
         AutoRoute(
           page: FacilitySelectionRoute.page,
           path: 'select-facilities',
@@ -212,7 +137,7 @@ class AppRouter extends _$AppRouter {
           path: 'select-boundary',
         ),
 
-        /// Complaints Inbox
+        // INFO : Need to add Router of package Here
         AutoRoute(
           page: ComplaintsInboxWrapperRoute.page,
           path: 'complaints-inbox',
@@ -262,87 +187,20 @@ class AppRouter extends _$AppRouter {
           ],
         ),
 
+        /// Complaints Acknowledgemnet
+        AutoRoute(
+          page: ComplaintsAcknowledgementRoute.page,
+          path: 'complaints-acknowledgement',
+        ),
+
         // Attendance Route
-        AutoRoute(
-          page: ManageAttendanceRoute.page,
-          path: 'manage-attendance',
-        ),
-        AutoRoute(
-          page: AttendanceDateSessionSelectionRoute.page,
-          path: 'attendance-date-session-selection',
-        ),
-        AutoRoute(
-          page: MarkAttendanceRoute.page,
-          path: 'mark-attendance',
-        ),
-        AutoRoute(
-          page: AttendanceAcknowledgementRoute.page,
-          path: 'attendance-acknowledgement',
-        ),
+        ...AttendanceRoute().routes,
 
         //Inventory Route
-        AutoRoute(
-          page: ManageStocksRoute.page,
-          path: 'manage-stocks',
-        ),
-        AutoRoute(
-            page: RecordStockWrapperRoute.page,
-            path: 'record-stock',
-            children: [
-              AutoRoute(
-                  page: WarehouseDetailsRoute.page,
-                  path: 'warehouse-details',
-                  initial: true),
-              AutoRoute(page: StockDetailsRoute.page, path: 'details'),
-            ]),
-        AutoRoute(
-            page: InventoryFacilitySelectionRoute.page,
-            path: 'inventory-select-facilities'),
-        AutoRoute(
-            page: StockReconciliationRoute.page, path: 'stock-reconciliation'),
-        AutoRoute(
-            page: InventoryReportSelectionRoute.page,
-            path: 'inventory-report-selection'),
-        AutoRoute(
-            page: InventoryReportDetailsRoute.page,
-            path: 'inventory-report-details'),
-        AutoRoute(
-            page: InventoryAcknowledgementRoute.page,
-            path: 'inventory-acknowledgement'),
+        ...InventoryRoute().routes,
 
         // Referral Reconciliation Route
-        AutoRoute(
-            page: HFCreateReferralWrapperRoute.page,
-            path: 'hf-referral',
-            children: [
-              AutoRoute(
-                  page: ReferralFacilityRoute.page,
-                  path: 'facility-details',
-                  initial: true),
-              AutoRoute(
-                  page: RecordReferralDetailsRoute.page,
-                  path: 'referral-details'),
-              AutoRoute(
-                page: ReferralReasonChecklistRoute.page,
-                path: 'referral-checklist-create',
-              ),
-              AutoRoute(
-                page: ReferralReasonChecklistPreviewRoute.page,
-                path: 'referral-checklist-view',
-              ),
-            ]),
-        AutoRoute(
-          page: ReferralReconAcknowledgementRoute.page,
-          path: 'referral-acknowledgement',
-        ),
-        AutoRoute(
-          page: ReferralReconProjectFacilitySelectionRoute.page,
-          path: 'referral-project-facility',
-        ),
-        AutoRoute(
-          page: SearchReferralReconciliationsRoute.page,
-          path: 'search-referrals',
-        ),
+        ...ReferralReconciliationRoute().routes,
       ],
     )
   ];

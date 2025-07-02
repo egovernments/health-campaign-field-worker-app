@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'staff.dart';
@@ -97,10 +97,8 @@ mixin StaffSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            StaffSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as StaffSearchModel, other));
+    return StaffSearchModelMapper.ensureInitialized()
+        .equalsValue(this as StaffSearchModel, other);
   }
 
   @override
@@ -197,6 +195,9 @@ class StaffModelMapper extends SubClassMapperBase<StaffModel> {
   static int? _$denrollmentDate(StaffModel v) => v.denrollmentDate;
   static const Field<StaffModel, int> _f$denrollmentDate =
       Field('denrollmentDate', _$denrollmentDate, opt: true);
+  static String? _$staffType(StaffModel v) => v.staffType;
+  static const Field<StaffModel, String> _f$staffType =
+      Field('staffType', _$staffType, opt: true);
   static bool? _$nonRecoverableError(StaffModel v) => v.nonRecoverableError;
   static const Field<StaffModel, bool> _f$nonRecoverableError = Field(
       'nonRecoverableError', _$nonRecoverableError,
@@ -224,6 +225,7 @@ class StaffModelMapper extends SubClassMapperBase<StaffModel> {
     #userId: _f$userId,
     #enrollmentDate: _f$enrollmentDate,
     #denrollmentDate: _f$denrollmentDate,
+    #staffType: _f$staffType,
     #nonRecoverableError: _f$nonRecoverableError,
     #rowVersion: _f$rowVersion,
     #auditDetails: _f$auditDetails,
@@ -250,6 +252,7 @@ class StaffModelMapper extends SubClassMapperBase<StaffModel> {
         userId: data.dec(_f$userId),
         enrollmentDate: data.dec(_f$enrollmentDate),
         denrollmentDate: data.dec(_f$denrollmentDate),
+        staffType: data.dec(_f$staffType),
         nonRecoverableError: data.dec(_f$nonRecoverableError),
         rowVersion: data.dec(_f$rowVersion),
         auditDetails: data.dec(_f$auditDetails),
@@ -290,10 +293,8 @@ mixin StaffModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            StaffModelMapper.ensureInitialized()
-                .isValueEqual(this as StaffModel, other));
+    return StaffModelMapper.ensureInitialized()
+        .equalsValue(this as StaffModel, other);
   }
 
   @override
@@ -326,6 +327,7 @@ abstract class StaffModelCopyWith<$R, $In extends StaffModel, $Out>
       String? userId,
       int? enrollmentDate,
       int? denrollmentDate,
+      String? staffType,
       bool? nonRecoverableError,
       int? rowVersion,
       AuditDetails? auditDetails,
@@ -363,6 +365,7 @@ class _StaffModelCopyWithImpl<$R, $Out>
           Object? userId = $none,
           Object? enrollmentDate = $none,
           Object? denrollmentDate = $none,
+          Object? staffType = $none,
           Object? nonRecoverableError = $none,
           Object? rowVersion = $none,
           Object? auditDetails = $none,
@@ -376,6 +379,7 @@ class _StaffModelCopyWithImpl<$R, $Out>
         if (userId != $none) #userId: userId,
         if (enrollmentDate != $none) #enrollmentDate: enrollmentDate,
         if (denrollmentDate != $none) #denrollmentDate: denrollmentDate,
+        if (staffType != $none) #staffType: staffType,
         if (nonRecoverableError != $none)
           #nonRecoverableError: nonRecoverableError,
         if (rowVersion != $none) #rowVersion: rowVersion,
@@ -394,6 +398,7 @@ class _StaffModelCopyWithImpl<$R, $Out>
       userId: data.get(#userId, or: $value.userId),
       enrollmentDate: data.get(#enrollmentDate, or: $value.enrollmentDate),
       denrollmentDate: data.get(#denrollmentDate, or: $value.denrollmentDate),
+      staffType: data.get(#staffType, or: $value.staffType),
       nonRecoverableError:
           data.get(#nonRecoverableError, or: $value.nonRecoverableError),
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
@@ -425,7 +430,7 @@ class StaffAdditionalFieldsMapper
 
   static String _$schema(StaffAdditionalFields v) => v.schema;
   static const Field<StaffAdditionalFields, String> _f$schema =
-      Field('schema', _$schema, opt: true, def: 'AttendanceLog');
+      Field('schema', _$schema, opt: true, def: 'Staff');
   static int _$version(StaffAdditionalFields v) => v.version;
   static const Field<StaffAdditionalFields, int> _f$version =
       Field('version', _$version);
@@ -492,10 +497,8 @@ mixin StaffAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            StaffAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as StaffAdditionalFields, other));
+    return StaffAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as StaffAdditionalFields, other);
   }
 
   @override

@@ -1,11 +1,14 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -25,16 +28,17 @@ class WarehouseDetailsPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<WarehouseDetailsPage> createState() => _WarehouseDetailsPageState();
+  State<WarehouseDetailsPage> createState() => WarehouseDetailsPageState();
 }
 
-class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
+class WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   static const _dateOfEntryKey = 'dateOfReceipt';
   static const _administrativeUnitKey = 'administrativeUnit';
   static const _warehouseKey = 'warehouse';
   static const _teamCodeKey = 'teamCode';
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
+  TextEditingController controller1 = TextEditingController();
 
   @override
   void initState() {
@@ -50,7 +54,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
       fb.group(<String, Object>{
         _dateOfEntryKey: FormControl<DateTime>(value: DateTime.now()),
         _administrativeUnitKey: FormControl<String>(
-          value: localizations.translate(InventorySingleton().boundaryName),
+          value: localizations.translate(InventorySingleton().boundary!.code ?? ''),
         ),
         _warehouseKey: FormControl<String>(
           validators: [Validators.required],
@@ -65,6 +69,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final recordStockBloc = BlocProvider.of<RecordStockBloc>(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return InventorySingleton().projectId.isEmpty
         ? Center(
@@ -113,7 +118,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                         builder: (context, form, child) {
                           form.control(_teamCodeKey).value =
                               scannerState.qrCodes.isNotEmpty
-                                  ? scannerState.qrCodes.last
+                                  ? scannerState.qrCodes.firstOrNull
                                   : '';
 
                           return ScrollableContent(
@@ -122,132 +127,122 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                             ]),
                             footer: SizedBox(
                               child: DigitCard(
-                                margin: const EdgeInsets.fromLTRB(
-                                    0, kPadding, 0, 0),
-                                padding: const EdgeInsets.fromLTRB(
-                                  kPadding,
-                                  0,
-                                  kPadding,
-                                  0,
-                                ),
-                                child: ReactiveFormConsumer(
-                                  builder: (context, form, child) {
-                                    return DigitElevatedButton(
-                                      onPressed: !form.valid
-                                          ? null
-                                          : () {
-                                              form.markAllAsTouched();
-                                              if (!form.valid) {
-                                                return;
-                                              }
-                                              final dateOfRecord = form
-                                                  .control(_dateOfEntryKey)
-                                                  .value as DateTime;
+                                  margin: const EdgeInsets.fromLTRB(
+                                      0, spacer2, 0, 0),
+                                  children: [
+                                    ReactiveFormConsumer(
+                                      builder: (context, form, child) {
+                                        return DigitButton(
+                                          type: DigitButtonType.primary,
+                                          mainAxisSize: MainAxisSize.max,
+                                          size: DigitButtonSize.large,
+                                          isDisabled: !form.valid,
+                                          label: localizations.translate(
+                                            i18.householdDetails.actionLabel,
+                                          ),
+                                          onPressed: !form.valid
+                                              ? () {}
+                                              : () {
+                                                  form.markAllAsTouched();
+                                                  if (!form.valid) {
+                                                    return;
+                                                  }
+                                                  final dateOfRecord = form
+                                                      .control(_dateOfEntryKey)
+                                                      .value as DateTime;
 
-                                              final teamCode = form
-                                                  .control(_teamCodeKey)
-                                                  .value as String?;
+                                                  final teamCode = form
+                                                      .control(_teamCodeKey)
+                                                      .value as String?;
 
-                                              final facility =
-                                                  deliveryTeamSelected
-                                                      ? FacilityModel(
-                                                          id: teamCode ??
-                                                              'Delivery Team',
-                                                        )
-                                                      : selectedFacilityId !=
-                                                              null
+                                                  final facility =
+                                                      deliveryTeamSelected
                                                           ? FacilityModel(
-                                                              id: selectedFacilityId
-                                                                  .toString(),
+                                                              id: teamCode ??
+                                                                  'Delivery Team',
                                                             )
-                                                          : null;
+                                                          : selectedFacilityId !=
+                                                                  null
+                                                              ? FacilityModel(
+                                                                  id: selectedFacilityId
+                                                                      .toString(),
+                                                                )
+                                                              : null;
 
-                                              context
-                                                  .read<DigitScannerBloc>()
-                                                  .add(
-                                                    const DigitScannerEvent
-                                                        .handleScanner(
-                                                        qrCode: [],
-                                                        barCode: []),
-                                                  );
-                                              if (facility == null) {
-                                                DigitToast.show(
-                                                  context,
-                                                  options: DigitToastOptions(
-                                                    localizations.translate(
-                                                      i18.stockDetails
-                                                          .facilityRequired,
-                                                    ),
-                                                    true,
-                                                    theme,
-                                                  ),
-                                                );
-                                              } else if (deliveryTeamSelected &&
-                                                  (teamCode == null ||
-                                                      teamCode
-                                                          .trim()
-                                                          .isEmpty)) {
-                                                DigitToast.show(
-                                                  context,
-                                                  options: DigitToastOptions(
-                                                    localizations.translate(
-                                                      i18.stockDetails
-                                                          .teamCodeRequired,
-                                                    ),
-                                                    true,
-                                                    theme,
-                                                  ),
-                                                );
-                                              } else {
-                                                recordStockBloc.add(
-                                                  RecordStockSaveTransactionDetailsEvent(
-                                                    dateOfRecord: dateOfRecord,
-                                                    facilityModel: InventorySingleton()
-                                                                .isDistributor! &&
-                                                            !InventorySingleton()
-                                                                .isWareHouseMgr!
-                                                        ? FacilityModel(
-                                                            id: teamCode
-                                                                .toString(),
-                                                          )
-                                                        : facility,
-                                                    primaryId: facility.id ==
-                                                            "Delivery Team"
-                                                        ? teamCode ?? ''
-                                                        : facility.id,
-                                                    primaryType: (InventorySingleton()
+                                                  context
+                                                      .read<DigitScannerBloc>()
+                                                      .add(
+                                                        const DigitScannerEvent
+                                                            .handleScanner(
+                                                            qrCode: [],
+                                                            barCode: []),
+                                                      );
+                                                  if (facility == null) {
+                                                    Toast.showToast(
+                                                      type: ToastType.error,
+                                                      context,
+                                                      message: localizations
+                                                          .translate(
+                                                        i18.stockDetails
+                                                            .facilityRequired,
+                                                      ),
+                                                    );
+                                                  } else if (deliveryTeamSelected &&
+                                                      (teamCode == null ||
+                                                          teamCode
+                                                              .trim()
+                                                              .isEmpty)) {
+                                                    Toast.showToast(
+                                                      context,
+                                                      type: ToastType.error,
+                                                      message: localizations
+                                                          .translate(
+                                                        i18.stockDetails
+                                                            .teamCodeRequired,
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    recordStockBloc.add(
+                                                      RecordStockSaveTransactionDetailsEvent(
+                                                        dateOfRecord:
+                                                            dateOfRecord,
+                                                        facilityModel: InventorySingleton()
                                                                     .isDistributor! &&
                                                                 !InventorySingleton()
-                                                                    .isWareHouseMgr! &&
-                                                                deliveryTeamSelected) ||
-                                                            deliveryTeamSelected
-                                                        ? "STAFF"
-                                                        : "WAREHOUSE",
-                                                  ),
-                                                );
-                                                context.router.push(
-                                                  StockDetailsRoute(),
-                                                );
-                                              }
-                                            },
-                                      child: child!,
-                                    );
-                                  },
-                                  child: Center(
-                                    child: Text(
-                                      localizations.translate(
-                                        i18.householdDetails.actionLabel,
-                                      ),
+                                                                    .isWareHouseMgr!
+                                                            ? FacilityModel(
+                                                                id: teamCode
+                                                                    .toString(),
+                                                              )
+                                                            : facility,
+                                                        primaryId: facility
+                                                                    .id ==
+                                                                "Delivery Team"
+                                                            ? teamCode ?? ''
+                                                            : facility.id,
+                                                        primaryType: (InventorySingleton()
+                                                                        .isDistributor! &&
+                                                                    !InventorySingleton()
+                                                                        .isWareHouseMgr! &&
+                                                                    deliveryTeamSelected) ||
+                                                                deliveryTeamSelected
+                                                            ? "STAFF"
+                                                            : "WAREHOUSE",
+                                                      ),
+                                                    );
+                                                    context.router.push(
+                                                      StockDetailsRoute(),
+                                                    );
+                                                  }
+                                                },
+                                        );
+                                      },
                                     ),
-                                  ),
-                                ),
-                              ),
+                                  ]),
                             ),
                             children: [
                               DigitCard(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
+                                  margin: const EdgeInsets.all(spacer2),
                                   children: [
                                     Text(
                                       InventorySingleton().isDistributor! &&
@@ -261,32 +256,42 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                               i18.warehouseDetails
                                                   .warehouseDetailsLabel,
                                             ),
-                                      style: theme.textTheme.displayMedium,
+                                      style: textTheme.headingXl,
                                     ),
-                                    Column(children: [
-                                      DigitDateFormPicker(
-                                        isEnabled: false,
+                                    ReactiveWrapperField(
                                         formControlName: _dateOfEntryKey,
-                                        label: localizations.translate(
-                                          i18.warehouseDetails.dateOfReceipt,
-                                        ),
-                                        isRequired: false,
-                                        confirmText: localizations.translate(
-                                          i18.common.coreCommonOk,
-                                        ),
-                                        cancelText: localizations.translate(
-                                          i18.common.coreCommonCancel,
-                                        ),
-                                      ),
-                                      DigitTextFormField(
-                                        readOnly: true,
+                                        builder: (field) {
+                                          return InputField(
+                                            type: InputType.date,
+                                            label: localizations.translate(
+                                              i18.warehouseDetails
+                                                  .dateOfReceipt,
+                                            ),
+                                            confirmText:
+                                                localizations.translate(
+                                              i18.common.coreCommonOk,
+                                            ),
+                                            cancelText: localizations.translate(
+                                              i18.common.coreCommonCancel,
+                                            ),
+                                            initialValue: DateFormat('dd/MM/yy')
+                                                .format(field.control.value),
+                                            readOnly: true,
+                                          );
+                                        }),
+                                    ReactiveWrapperField(
                                         formControlName: _administrativeUnitKey,
-                                        label: localizations.translate(
-                                          i18.warehouseDetails
-                                              .administrativeUnit,
-                                        ),
-                                      ),
-                                    ]),
+                                        builder: (field) {
+                                          return InputField(
+                                            type: InputType.text,
+                                            label: localizations.translate(
+                                              i18.warehouseDetails
+                                                  .administrativeUnit,
+                                            ),
+                                            initialValue: field.control.value,
+                                            readOnly: true,
+                                          );
+                                        }),
                                     InkWell(
                                       onTap: () async {
                                         clearQRCodes();
@@ -306,6 +311,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                         form.control(_warehouseKey).value =
                                             localizations.translate(
                                                 'FAC_${facility.id}');
+                                        controller1.text = localizations
+                                            .translate('FAC_${facility.id}');
 
                                         setState(() {
                                           selectedFacilityId = facility.id;
@@ -321,123 +328,86 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                         }
                                       },
                                       child: IgnorePointer(
-                                        child: DigitTextFormField(
-                                          hideKeyboard: true,
-                                          padding: const EdgeInsets.only(
-                                            bottom: kPadding,
-                                          ),
-                                          isRequired: true,
-                                          label: localizations.translate(
-                                            i18.stockReconciliationDetails
-                                                .facilityLabel,
-                                          ),
-                                          validationMessages: {
-                                            'required': (object) =>
-                                                localizations.translate(
-                                                  '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
-                                                ),
-                                          },
-                                          suffix: const Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: Icon(Icons.search),
-                                          ),
-                                          formControlName: _warehouseKey,
-                                          readOnly: true,
-                                          onTap: () async {
-                                            context
-                                                .read<DigitScannerBloc>()
-                                                .add(
-                                                  const DigitScannerEvent
-                                                      .handleScanner(
-                                                    barCode: [],
-                                                    qrCode: [],
+                                        child: ReactiveWrapperField(
+                                            formControlName: _warehouseKey,
+                                            validationMessages: {
+                                              'required': (object) =>
+                                                  localizations.translate(
+                                                    '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
                                                   ),
-                                                );
-                                            form.control(_teamCodeKey).value =
-                                                '';
-                                            final facility =
-                                                await Navigator.of(context)
-                                                    .push(
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    InventoryFacilitySelectionPage(
-                                                  facilities: facilities,
+                                            },
+                                            showErrors: (control) =>
+                                                control.invalid &&
+                                                control.touched,
+                                            builder: (field) {
+                                              return InputField(
+                                                type: InputType.search,
+                                                label: localizations.translate(
+                                                  i18.stockReconciliationDetails
+                                                      .facilityLabel,
                                                 ),
-                                              ),
-                                            );
-
-                                            if (facility == null) return;
-                                            form.control(_warehouseKey).value =
-                                                localizations.translate(
-                                                    'FAC_${facility.id}');
-
-                                            setState(() {
-                                              selectedFacilityId = facility.id;
-                                            });
-                                            if (facility.id ==
-                                                'Delivery Team') {
-                                              setState(() {
-                                                deliveryTeamSelected = true;
-                                              });
-                                            } else {
-                                              setState(() {
-                                                deliveryTeamSelected = false;
-                                              });
-                                            }
-                                          },
-                                        ),
+                                                controller: controller1,
+                                                isRequired: true,
+                                                errorMessage: field.errorText,
+                                                onChange: (value) {
+                                                  field.control.markAsTouched();
+                                                },
+                                              );
+                                            }),
                                       ),
                                     ),
                                     if (deliveryTeamSelected)
-                                      DigitTextFormField(
-                                        label: localizations.translate(
-                                          i18.stockReconciliationDetails
-                                              .teamCodeLabel,
-                                        ),
-                                        formControlName: _teamCodeKey,
-                                        onChanged: (val) {
-                                          String? value = val as String?;
-                                          if (value != null &&
-                                              value.trim().isNotEmpty) {
-                                            context
-                                                .read<DigitScannerBloc>()
-                                                .add(
-                                                  DigitScannerEvent
-                                                      .handleScanner(
-                                                    barCode: [],
-                                                    qrCode: [value],
+                                      ReactiveWrapperField(
+                                          formControlName: _teamCodeKey,
+                                          builder: (field) {
+                                            return InputField(
+                                              type: InputType.search,
+                                              label: localizations.translate(
+                                                i18.stockReconciliationDetails
+                                                    .teamCodeLabel,
+                                              ),
+                                              initialValue: form
+                                                  .control(_teamCodeKey)
+                                                  .value,
+                                              isRequired: deliveryTeamSelected,
+                                              suffixIcon: Icons.qr_code_2,
+                                              onSuffixTap: (value) {
+                                                //[TODO: Add route to auto_route]
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const DigitScannerPage(
+                                                      quantity: 5,
+                                                      isGS1code: false,
+                                                      singleValue: false,
+                                                    ),
+                                                    settings:
+                                                        const RouteSettings(
+                                                            name:
+                                                                '/qr-scanner'),
                                                   ),
                                                 );
-                                          } else {
-                                            clearQRCodes();
-                                          }
-                                        },
-                                        isRequired: true,
-                                        suffix: IconButton(
-                                          onPressed: () {
-                                            //[TODO: Add route to auto_route]
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const DigitScannerPage(
-                                                  quantity: 1,
-                                                  isGS1code: true,
-                                                  singleValue: false,
-                                                ),
-                                                settings: const RouteSettings(
-                                                    name: '/qr-scanner'),
-                                              ),
+                                              },
+                                              onChange: (val) {
+                                                String? value = val;
+                                                if (value != null &&
+                                                    value.trim().isNotEmpty) {
+                                                  context
+                                                      .read<DigitScannerBloc>()
+                                                      .add(
+                                                        DigitScannerEvent
+                                                            .handleScanner(
+                                                          barCode: [],
+                                                          qrCode: [value],
+                                                        ),
+                                                      );
+                                                } else {
+                                                  clearQRCodes();
+                                                }
+                                              },
                                             );
-                                          },
-                                          icon: Icon(
-                                            Icons.qr_code_2,
-                                            color: theme.colorScheme.secondary,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
+                                          })
+                                  ]),
                             ],
                           );
                         },

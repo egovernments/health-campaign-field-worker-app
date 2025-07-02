@@ -1,14 +1,16 @@
+import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:flutter/material.dart';
-import 'package:isar/isar.dart';
+
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/localization.dart';
+import '../../data/repositories/local/localization.dart';
 import 'app_localizations_delegate.dart';
 
 class AppLocalizations {
   final Locale locale;
-  final Isar isar;
+  final LocalSqlDataStore sql;
 
-  AppLocalizations(this.locale, this.isar);
+  AppLocalizations(this.locale, this.sql);
 
   static AppLocalizations of(BuildContext context) {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
@@ -17,22 +19,16 @@ class AppLocalizations {
   static final List<Localization> _localizedStrings = <Localization>[];
 
   static LocalizationsDelegate<AppLocalizations> getDelegate(
-    AppConfiguration config,
-    Isar isar,
-  ) =>
-      AppLocalizationsDelegate(config, isar);
+          AppConfiguration config, LocalSqlDataStore sql) =>
+      AppLocalizationsDelegate(config, sql);
 
   Future<bool> load() async {
     _localizedStrings.clear();
-    final List<LocalizationWrapper> localizationList = await isar
-        .localizationWrappers
-        .filter()
-        .localeEqualTo('${locale.languageCode}_${locale.countryCode}')
-        .findAll();
 
-    if (localizationList.isNotEmpty) {
-      _localizedStrings.addAll(localizationList.first.localization!);
-    }
+    final listOfLocalizations =
+        await LocalizationLocalRepository().returnLocalizationFromSQL(sql);
+
+    _localizedStrings.addAll(listOfLocalizations);
 
     return true;
   }

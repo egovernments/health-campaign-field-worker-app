@@ -10,6 +10,8 @@ class _HouseholdDetailsShowcaseData {
 
   List<ShowcaseItemBuilder> get showcaseData => [
         dateOfRegistration,
+        numberOfPregnantWomenInHousehold,
+        numberOfChildrenBelow5InHousehold,
         numberOfMembersLivingInHousehold,
       ];
 
@@ -20,5 +22,14 @@ class _HouseholdDetailsShowcaseData {
   final numberOfMembersLivingInHousehold = ShowcaseItemBuilder(
     messageLocalizationKey:
         i18.householdDetailsShowcase.numberOfMembersLivingInHousehold,
+  );
+
+  final numberOfPregnantWomenInHousehold = ShowcaseItemBuilder(
+    messageLocalizationKey:
+        i18.householdDetailsShowcase.numberOfPregnantWomenInHousehold,
+  );
+  final numberOfChildrenBelow5InHousehold = ShowcaseItemBuilder(
+    messageLocalizationKey:
+        i18.householdDetailsShowcase.numberOfChildrenBelow5InHousehold,
   );
 }

@@ -72,7 +72,16 @@ class AppConfiguration {
 
   late List<SymptomsTypes>? symptomsTypes;
 
+  @Name('SEARCH_HOUSEHOLD_FILTERS')
+  late List<SearchHouseHoldFilters>? searchHouseHoldFilters;
+
+  @Name('SEARCH_CLF_FILTERS')
+  late List<SearchCLFFilters>? searchCLFFilters;
+
   late List<ReferralReasons>? referralReasons;
+  late List<HouseStructureTypes>? houseStructureTypes;
+  late List<RefusalReasons>? refusalReasons;
+  late PrivacyPolicy? privacyPolicyConfig;
 }
 
 @embedded
@@ -164,6 +173,20 @@ class HouseholdDeletionReasonOptions {
 }
 
 @embedded
+class SearchHouseHoldFilters {
+  late String name;
+  late String code;
+  late bool active;
+}
+
+@embedded
+class SearchCLFFilters {
+  late String name;
+  late String code;
+  late bool active;
+}
+
+@embedded
 class HouseholdMemberDeletionReasonOptions {
   late String name;
   late String code;
@@ -196,4 +219,48 @@ class ReferralReasons {
   late String code;
   late String name;
   late bool active;
+}
+
+@embedded
+class HouseStructureTypes {
+  late String code;
+  late String name;
+  late bool active;
+}
+
+@embedded
+class RefusalReasons {
+  late String code;
+  late String name;
+  late bool active;
+}
+
+@embedded
+class PrivacyPolicy {
+  late String header;
+  late String module;
+  late bool? active;
+  late List<Content>? contents;
+}
+
+@embedded
+class Content {
+  late String? header;
+  late List<Description>? descriptions;
+}
+
+@embedded
+class Description {
+  late String? text;
+  late String? type;
+  late bool? isBold;
+  late List<SubDescription>? subDescriptions;
+}
+
+@embedded
+class SubDescription {
+  late String? text;
+  late String? type;
+  late bool? isBold;
+  late bool? isSpaceRequired;
 }

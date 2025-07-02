@@ -8,7 +8,8 @@ class RegistrationDeliveryLocalization {
   final Future<dynamic> localizedStrings;
   final List<dynamic> languages;
 
-  RegistrationDeliveryLocalization(this.locale, this.localizedStrings, this.languages);
+  RegistrationDeliveryLocalization(
+      this.locale, this.localizedStrings, this.languages);
 
   // Method to get the current localization instance from context
   static RegistrationDeliveryLocalization of(BuildContext context) {

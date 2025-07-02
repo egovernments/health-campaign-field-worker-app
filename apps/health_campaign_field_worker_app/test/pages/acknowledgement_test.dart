@@ -1,4 +1,4 @@
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:health_campaign_field_worker_app/pages/acknowledgement.dart';
 import 'package:mocktail/mocktail.dart';
@@ -59,7 +59,7 @@ void main() {
       );
       expect(
         find.widgetWithText(
-          DigitElevatedButton,
+          DigitButton,
           i18.acknowledgementSuccess.actionLabelText,
         ),
         findsOneWidget,

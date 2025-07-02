@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
-import 'package:registration_delivery/utils/utils.dart';
 
 class ProjectBeneficiaryLocalRepository extends LocalRepository<
     ProjectBeneficiaryModel, ProjectBeneficiarySearchModel> {
@@ -203,8 +202,7 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
       final updated = entity.copyWith(
         isDeleted: true,
         rowVersion: entity.rowVersion,
-        clientAuditDetails: (entity.clientAuditDetails?.createdBy != null &&
-                entity.clientAuditDetails!.createdTime != null)
+        clientAuditDetails: (entity.clientAuditDetails?.createdBy != null)
             ? ClientAuditDetails(
                 createdBy: entity.clientAuditDetails!.createdBy,
                 createdTime: entity.clientAuditDetails!.createdTime,

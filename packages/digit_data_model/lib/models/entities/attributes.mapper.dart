@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'attributes.dart';
@@ -36,8 +36,8 @@ class AttributesSearchModelMapper
   static String? _$code(AttributesSearchModel v) => v.code;
   static const Field<AttributesSearchModel, String> _f$code =
       Field('code', _$code, opt: true);
-  static String? _$isActive(AttributesSearchModel v) => v.isActive;
-  static const Field<AttributesSearchModel, String> _f$isActive =
+  static bool? _$isActive(AttributesSearchModel v) => v.isActive;
+  static const Field<AttributesSearchModel, bool> _f$isActive =
       Field('isActive', _$isActive, opt: true);
   static bool? _$required(AttributesSearchModel v) => v.required;
   static const Field<AttributesSearchModel, bool> _f$required =
@@ -136,10 +136,8 @@ mixin AttributesSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            AttributesSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as AttributesSearchModel, other));
+    return AttributesSearchModelMapper.ensureInitialized()
+        .equalsValue(this as AttributesSearchModel, other);
   }
 
   @override
@@ -167,7 +165,7 @@ abstract class AttributesSearchModelCopyWith<
       String? referenceId,
       String? tenantId,
       String? code,
-      String? isActive,
+      bool? isActive,
       bool? required,
       String? regex,
       int? order,
@@ -242,6 +240,11 @@ class AttributesModelMapper extends SubClassMapperBase<AttributesModel> {
   @override
   final String id = 'AttributesModel';
 
+  static Map<String, dynamic>? _$additionalDetails(AttributesModel v) =>
+      v.additionalDetails;
+  static const Field<AttributesModel, Map<String, dynamic>>
+      _f$additionalDetails =
+      Field('additionalDetails', _$additionalDetails, opt: true);
   static AttributesAdditionalFields? _$additionalFields(AttributesModel v) =>
       v.additionalFields;
   static const Field<AttributesModel, AttributesAdditionalFields>
@@ -265,8 +268,8 @@ class AttributesModelMapper extends SubClassMapperBase<AttributesModel> {
   static List<String>? _$values(AttributesModel v) => v.values;
   static const Field<AttributesModel, List<String>> _f$values =
       Field('values', _$values, opt: true);
-  static String? _$isActive(AttributesModel v) => v.isActive;
-  static const Field<AttributesModel, String> _f$isActive =
+  static bool? _$isActive(AttributesModel v) => v.isActive;
+  static const Field<AttributesModel, bool> _f$isActive =
       Field('isActive', _$isActive, opt: true);
   static bool? _$required(AttributesModel v) => v.required;
   static const Field<AttributesModel, bool> _f$required =
@@ -299,6 +302,7 @@ class AttributesModelMapper extends SubClassMapperBase<AttributesModel> {
 
   @override
   final MappableFields<AttributesModel> fields = const {
+    #additionalDetails: _f$additionalDetails,
     #additionalFields: _f$additionalFields,
     #id: _f$id,
     #dataType: _f$dataType,
@@ -329,6 +333,7 @@ class AttributesModelMapper extends SubClassMapperBase<AttributesModel> {
 
   static AttributesModel _instantiate(DecodingData data) {
     return AttributesModel(
+        additionalDetails: data.dec(_f$additionalDetails),
         additionalFields: data.dec(_f$additionalFields),
         id: data.dec(_f$id),
         dataType: data.dec(_f$dataType),
@@ -381,10 +386,8 @@ mixin AttributesModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            AttributesModelMapper.ensureInitialized()
-                .isValueEqual(this as AttributesModel, other));
+    return AttributesModelMapper.ensureInitialized()
+        .equalsValue(this as AttributesModel, other);
   }
 
   @override
@@ -402,6 +405,8 @@ extension AttributesModelValueCopy<$R, $Out>
 
 abstract class AttributesModelCopyWith<$R, $In extends AttributesModel, $Out>
     implements EntityModelCopyWith<$R, $In, $Out> {
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
+      get additionalDetails;
   AttributesAdditionalFieldsCopyWith<$R, AttributesAdditionalFields,
       AttributesAdditionalFields>? get additionalFields;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get values;
@@ -412,14 +417,15 @@ abstract class AttributesModelCopyWith<$R, $In extends AttributesModel, $Out>
       get clientAuditDetails;
   @override
   $R call(
-      {AttributesAdditionalFields? additionalFields,
+      {Map<String, dynamic>? additionalDetails,
+      AttributesAdditionalFields? additionalFields,
       String? id,
       String? dataType,
       String? referenceId,
       String? tenantId,
       String? code,
       List<String>? values,
-      String? isActive,
+      bool? isActive,
       bool? required,
       String? regex,
       int? order,
@@ -441,6 +447,14 @@ class _AttributesModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<AttributesModel> $mapper =
       AttributesModelMapper.ensureInitialized();
   @override
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
+      get additionalDetails => $value.additionalDetails != null
+          ? MapCopyWith(
+              $value.additionalDetails!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(additionalDetails: v))
+          : null;
+  @override
   AttributesAdditionalFieldsCopyWith<$R, AttributesAdditionalFields,
           AttributesAdditionalFields>?
       get additionalFields => $value.additionalFields?.copyWith
@@ -460,7 +474,8 @@ class _AttributesModelCopyWithImpl<$R, $Out>
           .$chain((v) => call(clientAuditDetails: v));
   @override
   $R call(
-          {Object? additionalFields = $none,
+          {Object? additionalDetails = $none,
+          Object? additionalFields = $none,
           Object? id = $none,
           Object? dataType = $none,
           Object? referenceId = $none,
@@ -477,6 +492,7 @@ class _AttributesModelCopyWithImpl<$R, $Out>
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
       $apply(FieldCopyWithData({
+        if (additionalDetails != $none) #additionalDetails: additionalDetails,
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (id != $none) #id: id,
         if (dataType != $none) #dataType: dataType,
@@ -498,6 +514,8 @@ class _AttributesModelCopyWithImpl<$R, $Out>
       }));
   @override
   AttributesModel $make(CopyWithData data) => AttributesModel(
+      additionalDetails:
+          data.get(#additionalDetails, or: $value.additionalDetails),
       additionalFields:
           data.get(#additionalFields, or: $value.additionalFields),
       id: data.get(#id, or: $value.id),
@@ -612,10 +630,8 @@ mixin AttributesAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            AttributesAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as AttributesAdditionalFields, other));
+    return AttributesAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as AttributesAdditionalFields, other);
   }
 
   @override

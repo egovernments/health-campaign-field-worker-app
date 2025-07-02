@@ -23,12 +23,15 @@ class MockHouseholdMemberDataRepository extends Mock
 class MockProjectBeneficiaryDataRepository extends Mock
     implements ProjectBeneficiaryDataRepository {}
 
+class MockTaskDataRepository extends Mock implements TaskDataRepository {}
+
 void main() {
   late MockIndividualDataRepository mockIndividualDataRepository;
   late MockHouseholdDataRepository mockHouseholdDataRepository;
   late MockHouseholdMemberDataRepository mockHouseholdMemberDataRepository;
   late MockProjectBeneficiaryDataRepository
       mockProjectBeneficiaryDataRepository;
+  late MockTaskDataRepository mockTaskDataRepository;
   late BeneficiaryRegistrationBloc beneficiaryRegistrationBloc;
 
   setUpAll(() {
@@ -48,6 +51,7 @@ void main() {
     mockHouseholdMemberDataRepository = MockHouseholdMemberDataRepository();
     mockProjectBeneficiaryDataRepository =
         MockProjectBeneficiaryDataRepository();
+    mockTaskDataRepository = MockTaskDataRepository();
     beneficiaryRegistrationBloc = BeneficiaryRegistrationBloc(
       const BeneficiaryRegistrationState.create(),
       individualRepository: mockIndividualDataRepository,
@@ -55,6 +59,7 @@ void main() {
       householdMemberRepository: mockHouseholdMemberDataRepository,
       projectBeneficiaryRepository: mockProjectBeneficiaryDataRepository,
       beneficiaryType: BeneficiaryType.individual,
+      taskDataRepository: mockTaskDataRepository,
     );
   });
 

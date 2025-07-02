@@ -33,10 +33,10 @@ class ShowcaseItemWrapperWidget extends LocalizedStatefulWidget {
 
   @override
   LocalizedState<ShowcaseItemWrapperWidget> createState() =>
-      _ShowcaseItemWrapperWidgetState();
+      ShowcaseItemWrapperWidgetState();
 }
 
-class _ShowcaseItemWrapperWidgetState
+class ShowcaseItemWrapperWidgetState
     extends LocalizedState<ShowcaseItemWrapperWidget> {
   @override
   Widget build(BuildContext context) {

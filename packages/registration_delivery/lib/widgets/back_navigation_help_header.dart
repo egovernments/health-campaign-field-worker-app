@@ -1,5 +1,8 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/ComponentTheme/back_button_theme.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
@@ -29,55 +32,49 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.all(kPadding / 2),
+      padding: const EdgeInsets.only(left: spacer2, top: spacer4),
       child: Row(
         children: [
           Expanded(
             child: Row(
               children: [
                 if (showBackNavigation)
-                  Flexible(
-                    child: TextButton.icon(
-                      style: TextButton.styleFrom(
-                        foregroundColor: theme.colorScheme.onBackground,
-                        padding: EdgeInsets.zero,
-                      ),
-                      onPressed: () {
-                        context.router.maybePop();
-                        handleBack != null ? handleBack!() : null;
-                      },
-                      icon: const Icon(Icons.arrow_left_sharp),
-                      label: Text(
+                  DigitBackButton(
+                    label:
                         RegistrationDeliveryLocalization.of(context).translate(
-                          i18.common.coreCommonBack,
-                        ),
-                        overflow: TextOverflow.ellipsis,
+                      i18.common.coreCommonBack,
+                    ),
+                    digitBackButtonThemeData:
+                        const DigitBackButtonThemeData().copyWith(
+                      context: context,
+                      backDigitButtonIcon: Icon(
+                        Icons.arrow_left,
+                        size: MediaQuery.of(context).size.width < 500
+                            ? Theme.of(context).spacerTheme.spacer5
+                            : Theme.of(context).spacerTheme.spacer6,
+                        color: Theme.of(context).colorTheme.primary.primary2,
                       ),
                     ),
-                  ),
+                    handleBack: () {
+                      context.router.maybePop();
+                      handleBack != null ? handleBack!() : null;
+                    },
+                  )
               ],
             ),
           ),
-          SizedBox(width: showHelp ? kPadding * 2 : 0),
+          SizedBox(width: showHelp ? spacer2 * 2 : 0),
           if (showHelp)
-            TextButton(
-              style: TextButton.styleFrom(padding: EdgeInsets.zero),
-              onPressed: helpClicked,
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    RegistrationDeliveryLocalization.of(context)
-                        .translate(i18.common.coreCommonHelp),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const Icon(
-                    Icons.help_outline_outlined,
-                  ), // Add the icon to the right
-                ],
-              ),
+            DigitButton(
+              label: RegistrationDeliveryLocalization.of(context)
+                  .translate(i18.common.coreCommonHelp),
+              type: DigitButtonType.tertiary,
+              size: DigitButtonSize.small,
+              suffixIcon: Icons.help_outline_outlined,
+              onPressed: () => helpClicked,
             ),
-          SizedBox(width: showcaseButton != null ? 16 : 0),
-          if (showcaseButton != null) showcaseButton!,
+          SizedBox(width: showcaseButton != null && showHelp ? 16 : 0),
+          if (showcaseButton != null && showHelp) showcaseButton!,
         ],
       ),
     );

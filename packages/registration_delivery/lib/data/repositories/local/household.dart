@@ -4,7 +4,6 @@ import 'dart:math' as math;
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
-import 'package:registration_delivery/utils/utils.dart';
 
 import '../../../models/entities/household.dart';
 
@@ -71,11 +70,17 @@ class HouseholdLocalRepository
 
             return HouseholdModel(
               id: household.id,
+              householdType: household.householdType,
               tenantId: household.tenantId,
               clientReferenceId: household.clientReferenceId,
               memberCount: household.memberCount,
               rowVersion: household.rowVersion,
               isDeleted: household.isDeleted,
+              additionalFields: household.additionalFields != null &&
+                      household.additionalFields.toString().isNotEmpty
+                  ? HouseholdAdditionalFieldsMapper.fromJson(
+                      household.additionalFields.toString())
+                  : null,
               auditDetails: (household.auditCreatedBy != null &&
                       household.auditCreatedTime != null)
                   ? AuditDetails(
@@ -98,6 +103,7 @@ class HouseholdLocalRepository
                   ? null
                   : AddressModel(
                       id: address.id,
+                      buildingName: address.buildingName,
                       relatedClientReferenceId: household.clientReferenceId,
                       tenantId: address.tenantId,
                       doorNo: address.doorNo,

@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'target.dart';
@@ -93,10 +93,8 @@ mixin TargetSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            TargetSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as TargetSearchModel, other));
+    return TargetSearchModelMapper.ensureInitialized()
+        .equalsValue(this as TargetSearchModel, other);
   }
 
   @override
@@ -274,10 +272,8 @@ mixin TargetModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            TargetModelMapper.ensureInitialized()
-                .isValueEqual(this as TargetModel, other));
+    return TargetModelMapper.ensureInitialized()
+        .equalsValue(this as TargetModel, other);
   }
 
   @override
@@ -477,10 +473,8 @@ mixin TargetAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            TargetAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as TargetAdditionalFields, other));
+    return TargetAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as TargetAdditionalFields, other);
   }
 
   @override

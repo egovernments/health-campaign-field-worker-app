@@ -14,46 +14,48 @@ build_apk() {
   fi
 }
 
-# Ask user for environment to build for
-echo "Please select an environment to build for (UAT, DEV, QA or ALL):"
-read env
-env="${env:-ALL}"
+# # Ask user for environment to build for
+# echo "Please select an environment to build for (UAT, DEV, QA or ALL):"
+# read env
+# env="${env:-ALL}"
 
 # Ask user for build config
 echo "Please select a build config (release or profile):"
 read build_config
 build_config="${build_config:-release}"
 
-# Build APK for specified environment(s) and build config
-if [ "$env" == "ALL" ]; then
-  env_list=("UAT" "DEV" "QA")
-else
-  env_list=("$env")
-fi
+# # Build APK for specified environment(s) and build config
+# if [ "$env" == "ALL" ]; then
+#   env_list=("UAT" "DEV" "QA")
+# else
+#   env_list=("$env")
+# fi
 
 ./tools/install_bricks.sh
 
-for env_option in "${env_list[@]}"; do
-  cd "$APP_DIR" || exit
+cd "$APP_DIR" || exit
 
-  case $env_option in
-  "UAT")
-    cp ".env.uat" ".env"
-    ;;
-  "QA")
-    cp ".env.qa" ".env"
-    ;;
-  "DEV")
-    cp ".env.dev" ".env"
-    ;;
-  esac
+# for env_option in "${env_list[@]}"; do
+#   cd "$APP_DIR" || exit
+
+#   case $env_option in
+#   "UAT")
+#     cp ".env.uat" ".env"
+#     ;;
+#   "QA")
+#     cp ".env.qa" ".env"
+#     ;;
+#   "DEV")
+#     cp ".env.dev" ".env"
+#     ;;
+#   esac
 
   build_apk
   cd ../../ || exit
 
-  mkdir -p outputs
-  mv "$APP_DIR/build/app/outputs/flutter-apk/app-$build_config.apk" "outputs/app-$env_option-$build_config.apk"
-done
+  # mkdir -p outputs
+  # mv "$APP_DIR/build/app/outputs/apk/release/app-$build_config.apk" "outputs/app-$env_option-$build_config.apk"
+# done
 
-open outputs
+# open outputs
 echo "APK generation complete."

@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
+import 'package:recase/recase.dart';
 
 class BoundaryRemoteRepository
     extends RemoteRepository<BoundaryModel, BoundarySearchModel> {
@@ -108,7 +109,7 @@ class BoundaryRemoteRepository
         materializedPath: [...materializedPath, e.code ?? ''].join('.'),
         boundaryNum: [...materializedPath, e.code ?? ''].length,
         label: e.boundaryType,
-        name: e.code?.split('_').lastOrNull ?? e.code,
+        name: e.code?.split('_').lastOrNull?.titleCase ?? e.code?.titleCase,
       );
 
       boundaryModelList.add(boundary.copyWith(children: []));

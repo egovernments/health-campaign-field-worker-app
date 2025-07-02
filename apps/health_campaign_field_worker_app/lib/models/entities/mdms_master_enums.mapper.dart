@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'mdms_master_enums.dart';
@@ -31,6 +31,10 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.symptomTypes;
       case "REFERRAL_REASONS":
         return MasterEnums.referralReasons;
+      case "HOUSE_STRUCTURE_TYPES":
+        return MasterEnums.houseStructureTypes;
+      case "REFUSAL_REASONS":
+        return MasterEnums.refusalReasons;
       case "BANDWIDTH_BATCH_SIZE":
         return MasterEnums.bandWidthBatchSize;
       case "DOWNSYNC-BANDWIDTH_BATCH_SIZE":
@@ -63,6 +67,14 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.serviceDefinitions;
       case "FIREBASE_CONFIG":
         return MasterEnums.firebaseConfig;
+      case "SEARCH_HOUSEHOLD_FILTERS":
+        return MasterEnums.searchHouseHoldFilters;
+      case "SEARCH_CLF_FILTERS":
+        return MasterEnums.searchCLFFilters;
+      case "PrivacyPolicy":
+        return MasterEnums.privacyPolicy;
+      case "dashboardConfig":
+        return MasterEnums.dashboardConfig;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -77,6 +89,10 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "SYMPTOM_TYPES";
       case MasterEnums.referralReasons:
         return "REFERRAL_REASONS";
+      case MasterEnums.houseStructureTypes:
+        return "HOUSE_STRUCTURE_TYPES";
+      case MasterEnums.refusalReasons:
+        return "REFUSAL_REASONS";
       case MasterEnums.bandWidthBatchSize:
         return "BANDWIDTH_BATCH_SIZE";
       case MasterEnums.downSyncBandwidthBatchSize:
@@ -109,6 +125,14 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "ServiceDefs";
       case MasterEnums.firebaseConfig:
         return "FIREBASE_CONFIG";
+      case MasterEnums.searchHouseHoldFilters:
+        return "SEARCH_HOUSEHOLD_FILTERS";
+      case MasterEnums.searchCLFFilters:
+        return "SEARCH_CLF_FILTERS";
+      case MasterEnums.privacyPolicy:
+        return "PrivacyPolicy";
+      case MasterEnums.dashboardConfig:
+        return "dashboardConfig";
     }
   }
 }

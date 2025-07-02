@@ -1,8 +1,10 @@
 // Importing necessary packages and files.
 import 'dart:io';
 
+import 'package:digit_data_model/data/local_store/sql_store/tables/localization.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
@@ -10,7 +12,8 @@ import '../../../models/entities/address_type.dart';
 import '../../../models/entities/beneficiary_type.dart';
 import '../../../models/entities/blood_group.dart';
 import '../../../models/entities/gender.dart';
-import '../../../models/pgr_complaints/pgr_complaints.dart';
+import '../../../models/entities/pgr_application_status.dart';
+import '../../../models/entities/household_type.dart';
 import 'tables/address.dart';
 import 'tables/attributes.dart';
 import 'tables/boundary.dart';
@@ -98,6 +101,7 @@ part 'sql_store.g.dart';
   TaskResource,
   SideEffect,
   Referral,
+  Localization
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
   /// The constructor for `LocalSqlDataStore`.
@@ -106,7 +110,92 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
   /// The `schemaVersion` getter returns the schema version of the database.
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 6; // Increment schema version
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onUpgrade: (migrator, from, to) async {
+          if (from < 5) {
+            //Add column for projectType in Project Table
+            try {
+              await migrator.addColumn(project, project.projectType);
+            } catch (e) {
+              if (kDebugMode) {
+                print("Failed to add column for projectType");
+              }
+            }
+          }
+          if (from < 5) {
+            await customStatement('''
+        CREATE TABLE attributes_temp (
+          id TEXT,
+          dataType TEXT,
+          referenceId TEXT,
+          tenantId TEXT,
+          code TEXT,
+          values TEXT,
+          isActive BOOLEAN,
+          required BOOLEAN,
+          regex TEXT,
+          "order" INTEGER,
+          auditCreatedBy TEXT,
+          nonRecoverableError BOOLEAN DEFAULT 0,
+          auditCreatedTime INTEGER,
+          clientCreatedTime INTEGER,
+          clientModifiedBy TEXT,
+          clientCreatedBy TEXT,
+          clientModifiedTime INTEGER,
+          auditModifiedBy TEXT,
+          auditModifiedTime INTEGER,
+          isDeleted BOOLEAN DEFAULT 0,
+          rowVersion INTEGER,
+          additionalFields TEXT,
+          additionalDetails TEXT
+        );
+      ''');
+
+            // Step 2: Copy data from the old table to the new table
+            await customStatement('''
+        INSERT INTO attributes_temp (
+          id, dataType, referenceId, tenantId, code, values, isActive, required, regex, "order",
+          auditCreatedBy, nonRecoverableError, auditCreatedTime, clientCreatedTime,
+          clientModifiedBy, clientCreatedBy, clientModifiedTime, auditModifiedBy,
+          auditModifiedTime, isDeleted, rowVersion, additionalFields, additionalDetails
+        )
+        SELECT 
+          id, dataType, referenceId, tenantId, code, values,
+          CASE isActive WHEN 'true' THEN 1 WHEN 'false' THEN 0 ELSE NULL END,
+          required, regex, "order",
+          auditCreatedBy, nonRecoverableError, auditCreatedTime, clientCreatedTime,
+          clientModifiedBy, clientCreatedBy, clientModifiedTime, auditModifiedBy,
+          auditModifiedTime, isDeleted, rowVersion, additionalFields, additionalDetails
+        FROM attributes;
+      ''');
+
+            // Step 3: Drop the old table
+            await migrator.deleteTable('attributes');
+
+            // Step 4: Rename the new table to the old table's name
+            await customStatement(
+                'ALTER TABLE attributes_temp RENAME TO attributes;');
+          }
+
+          if (from < 6) {
+            try {
+              await migrator.addColumn(household, household.householdType);
+              await migrator.addColumn(
+                  attendanceRegister, attendanceRegister.localityCode);
+              await migrator.addColumn(
+                  service, service.relatedClientReferenceId);
+            } catch (e) {
+              if (kDebugMode) {
+                print(
+                    "Failed to add columns for householdType, attendance - localityCode, and service - relatedClientReferenceId");
+              }
+            }
+          }
+        },
+      );
 
   /// The `_openConnection` method opens a connection to the database.
   /// It returns a `LazyDatabase` that opens the database when it is first accessed.

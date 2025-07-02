@@ -7,10 +7,11 @@ const home = Home();
 const acknowledgementSuccess = AcknowledgementSuccess();
 const adverseEvents = AdverseEvents();
 const projectSelection = ProjectSelection();
-const checklist = Checklist();
 const complaints = Complaints();
 const syncDialog = SyncDialog();
 const homeShowcase = HomeShowcase();
+const privacyPolicy = PrivacyPolicy();
+const dashBoard = Dashboard();
 
 const householdLocationShowcase = HouseholdLocationShowcase();
 const householdLocation = HouseholdLocation();
@@ -22,12 +23,12 @@ const selectStockShowcase = SelectStockShowcase();
 const warehouseDetailsShowcase = WarehouseDetailsShowcase();
 const stockDetailsReceiptShowcase = StockDetailsReceiptShowcase();
 const stockDetailsIssuedShowcase = StockDetailsIssuedShowcase();
-const selectChecklistShowcase = SelectChecklistShowcase();
+const selectSurveyFormShowcase = SelectSurveyFormShowcase();
 const stockDetailsReturnedShowcase = StockDetailsReturnedShowcase();
 const stockReconciliationShowcase = StockReconciliationShowcase();
 
-const checklistDataShowcase = ChecklistDataShowcase();
-const checklistListShowcase = ChecklistListShowcase();
+const surveyFormDataShowcase = SurveyFormDataShowcase();
+const surveyFormListShowcase = SurveyFormListShowcase();
 const complaintTypeShowcase = ComplaintTypeShowcase();
 const complaintsDetailsShowcase = ComplaintsDetailsShowcase();
 const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
@@ -59,6 +60,10 @@ class Common {
   String get coreCommonReasonRequired => 'CORE_COMMON_REASON_REQUIRED';
 
   String get corecommonclose => 'CORE_COMMON_CLOSE';
+
+  String get coreCommonRetry => 'CORE_COMMON_RETRY';
+
+  String get failedToFetch => 'CORE_COMMON_FAILED_TO_FETCH';
 
   String get coreCommonOk => 'CORE_COMMON_OK';
 
@@ -124,7 +129,7 @@ class Common {
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
-
+  String get locationCapturing => 'CAPTURING_LOCATION';
   String get profileUpdateSuccess => 'PROFILE_UPDATE_SUCCESS';
 }
 
@@ -175,7 +180,7 @@ class HomeShowcase {
     return 'SUPERVISOR_HOME_SHOWCASE_PROGRESS_BAR';
   }
 
-  String get supervisorMyChecklist {
+  String get supervisorMySurveyForm {
     return 'SUPERVISOR_HOME_SHOWCASE_MY_CHECKLIST';
   }
 
@@ -197,6 +202,10 @@ class HomeShowcase {
 
   String get deleteAll {
     return 'WAREHOUSE_MANAGER_HOME_SHOWCASE_DELETE_ALL';
+  }
+
+  String get clf {
+    return "COMMUNAL_LIVING_FACILITY_SHOWCASE";
   }
 }
 
@@ -339,18 +348,20 @@ class Login {
   String get passwordPlaceholder => 'PASSWORD_PLACEHOLDER';
 
   String get actionLabel => 'LOGIN_ACTION_LABEL';
+
+  String get unableToLoginText => 'UNABLE_TO_LOGIN';
 }
 
-class SelectChecklistShowcase {
-  const SelectChecklistShowcase();
+class SelectSurveyFormShowcase {
+  const SelectSurveyFormShowcase();
 
-  String get selectChecklist {
+  String get selectSurveyForm {
     return 'SELECT_CHECKLIST_SHOWCASE_SELECT_CHECKLIST';
   }
 }
 
-class ChecklistDataShowcase {
-  const ChecklistDataShowcase();
+class SurveyFormDataShowcase {
+  const SurveyFormDataShowcase();
 
   String get date {
     return 'CHECKLIST_DATA_SHOWCASE_DATE';
@@ -361,8 +372,8 @@ class ChecklistDataShowcase {
   }
 }
 
-class ChecklistListShowcase {
-  const ChecklistListShowcase();
+class SurveyFormListShowcase {
+  const SurveyFormListShowcase();
 
   String get open {
     return 'CHECKLIST_LIST_SHOWCASE_OPEN';
@@ -505,48 +516,6 @@ class ComplaintsInboxShowcase {
   }
 }
 
-class Checklist {
-  const Checklist();
-
-  String get checklist => 'CHECKLIST';
-
-  String get checklistlabel => 'CHECKLIST_LABEL';
-
-  String get checklistCreateActionLabel => 'CHECKLIST_CREATE_ACTION_LABEL';
-
-  String get checklistViewActionLabel => 'CHECKLIST_VIEW_ACTION_LABEL';
-
-  String get checklistDetailLabel => 'CHECKLIST_DETAILS_LABEL';
-
-  String get checklistDialogLabel => 'CHECKLIST_DIALOG_LABEL';
-
-  String get checklistDialogDescription => 'CHECKLIST_DIALOG_DESCRITPTION';
-
-  String get checklistDialogPrimaryAction => 'CHECKLIST_DIALOG_PRIMARY_ACTION';
-
-  String get checklistDialogSecondaryAction =>
-      'CHECKLIST_DIALOG_SECONDARY_ACTION';
-
-  String get checklistdate => 'CHECKLIST_DATE';
-
-  String get checklistReasonRequiredError => 'CHECKLIST_REASON_REQUIRED_ERROR';
-
-  String get notSelectedKey => 'NOT_SELECTED';
-
-  String get checklistBackDialogLabel => 'CHECKLIST_BACK_DIALOG_LABEL';
-
-  String get checklistBackDialogDescription =>
-      'CHECKLIST_BACK_DIALOG_DESCRITPTION';
-
-  String get checklistBackDialogPrimaryAction =>
-      'CHECKLIST_BACK_DIALOG_PRIMARY_ACTION';
-
-  String get checklistBackDialogSecondaryAction =>
-      'CHECKLIST_BACK_DIALOG_SECONDARY_ACTION';
-
-  String get noChecklistFound => 'NO_CHECKLISTS_FOUND';
-}
-
 class ForgotPassword {
   const ForgotPassword();
 
@@ -586,14 +555,19 @@ class Home {
 
   String get dataSyncInfoContent => 'DATA_SYNC_INFO_CONTENT';
 
-  String get myCheckList => 'MY_CHECK_LIST_LABEL';
+  String get mySurveyForm => 'MY_CHECK_LIST_LABEL';
 
   String get warehouseManagerCheckList => 'WAREHOUSE_MANAGER_CHECK_LIST_LABEL';
 
   String get deleteAllLabel => 'HOME_DELETE_ALL_LABEL';
   String get db => 'HOME_DB_LABEL';
+  String get dashboard => 'HOME_DASHBOARD_LABEL';
   String get beneficiaryReferralLabel => 'HOME_BENEFICIARY_REFERRAL_LABEL';
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
+
+  String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
+
+  String get clfLabel => "HOME_COMMUNAL_LIVING_FACILITIES_LABEL";
 }
 
 class AcknowledgementSuccess {
@@ -633,6 +607,8 @@ class ProjectSelection {
   String get contactSysAdmin => 'CONTACT_SYS_ADMIN';
 
   String get onProjectMapped => 'NO_PROJECT_MAPPED';
+
+  String get fetchBoundaryFailed => 'FETCH_BOUNDARY_FAILED';
 }
 
 class Complaints {
@@ -1031,4 +1007,26 @@ class BeneficiaryDetails {
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
+}
+
+class PrivacyPolicy {
+  const PrivacyPolicy();
+
+  String get acceptText {
+    return 'PRIVACY_POLICY_ACCEPT_TEXT';
+  }
+
+  String get declineText {
+    return 'PRIVACY_POLICY_DECLINE_TEXT';
+  }
+
+  String get privacyNoticeText => 'PRIVACY_POLICY_TEXT';
+  String get privacyPolicyLinkText => 'PRIVACY_POLICY_LINK_TEXT';
+  String get privacyPolicyValidationText => 'PRIVACY_POLICY_VALIDATION_TEXT';
+}
+
+class Dashboard {
+  const Dashboard();
+
+  String get dashboardHeaderLabel => 'DASHBOARD_HEADER';
 }

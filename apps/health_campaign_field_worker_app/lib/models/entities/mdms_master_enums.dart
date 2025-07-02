@@ -11,6 +11,10 @@ enum MasterEnums {
   symptomTypes,
   @MappableValue("REFERRAL_REASONS")
   referralReasons,
+  @MappableValue("HOUSE_STRUCTURE_TYPES")
+  houseStructureTypes,
+  @MappableValue("REFUSAL_REASONS")
+  refusalReasons,
   @MappableValue("BANDWIDTH_BATCH_SIZE")
   bandWidthBatchSize,
   @MappableValue("DOWNSYNC-BANDWIDTH_BATCH_SIZE")
@@ -43,4 +47,12 @@ enum MasterEnums {
   serviceDefinitions,
   @MappableValue("FIREBASE_CONFIG")
   firebaseConfig,
+  @MappableValue("SEARCH_HOUSEHOLD_FILTERS")
+  searchHouseHoldFilters,
+  @MappableValue("SEARCH_CLF_FILTERS")
+  searchCLFFilters,
+  @MappableValue("PrivacyPolicy")
+  privacyPolicy,
+  @MappableValue("dashboardConfig")
+  dashboardConfig,
 }
