@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:attendance_management/widgets/back_navigation_help_header.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/services/BottomSheetService.dart';
 import 'package:digit_ui_components/theme/TextTheme/digit_text_theme.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
@@ -129,7 +130,7 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
   Widget buildDeviceListTile(Device device) {
     var connected = device.state == SessionState.connected;
     return Container(
-      margin: const EdgeInsets.all(spacer4),
+      margin: const EdgeInsets.only(left: spacer2, top: spacer2),
       decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(spacer2)),
           border: Border.all(
@@ -148,7 +149,7 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
             ? theme.colorTheme.primary.primaryBg
             : theme.disabledColor,
         leading: Icon(
-          connected ? Icons.check_circle : Icons.circle_outlined,
+          connected ? Icons.check_box : Icons.check_box_outline_blank,
           size: spacer8,
           color: connected
               ? theme.colorTheme.primary.primary1
@@ -174,6 +175,13 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
         type: ToastType.error,
       );
       return;
+    } else if (!devices.any((e) => e.state == SessionState.connected)) {
+      Toast.showToast(
+        context,
+        message: localizations.translate(i18.dataShare.noRecipientsSelected),
+        type: ToastType.error,
+      );
+      return;
     }
 
     if (widget.deviceType == DeviceType.sender) {
@@ -185,8 +193,9 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
                 localizations.translate(i18.dataShare.senderDialogDescription),
             type: PopUpType.alert,
             onCrossTap: () {
-              nearbyService.disconnectPeer(
-                  deviceID: connectedDevices.first.deviceId);
+              for (var e in connectedDevices) {
+                nearbyService.disconnectPeer(deviceID: e.deviceId);
+              }
               Navigator.of(
                 ctx,
                 rootNavigator: true,
@@ -210,11 +219,6 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
                   size: DigitButtonSize.large)
             ]),
       );
-    } else {
-      context.router.push(DataReceiverRoute(
-        connectedDevice: connectedDevices.first,
-        nearbyService: nearbyService,
-      ));
     }
   }
 
@@ -359,89 +363,52 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
               if (mounted) {
                 _isSheetShown = true;
 
-                await showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: false,
-                  isDismissible:
-                      widget.deviceType == DeviceType.sender ? false : true,
-                  enableDrag: true,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(spacer4)),
-                  ),
-                  elevation: 2,
-                  showDragHandle: true,
-                  builder: (context) {
-                    return SafeArea(
-                      child: SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.8,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Sheet title and close button row
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: spacer4, vertical: spacer3),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    localizations.translate(
-                                        i18.dataShare.selectRecipients),
-                                    style: textTheme.headingL.copyWith(
-                                        color:
-                                            theme.colorTheme.primary.primary2),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            // Device list
-                            Expanded(
-                              child: ValueListenableBuilder<List<Device>>(
-                                valueListenable: _deviceNotifier,
-                                builder: (context, deviceList, _) {
-                                  return ListView.builder(
-                                    itemCount:
-                                        widget.deviceType == DeviceType.receiver
-                                            ? connectedDevices.length
-                                            : devices.length,
-                                    itemBuilder: (context, index) {
-                                      final device = widget.deviceType ==
-                                              DeviceType.receiver
-                                          ? connectedDevices[index]
-                                          : devices[index];
-                                      return buildDeviceListTile(device);
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-
-                            // Bottom button
-                            DigitCard(
-                              margin: const EdgeInsets.only(top: spacer4),
-                              padding: const EdgeInsets.all(spacer4),
-                              children: [
-                                DigitButton(
-                                  onPressed: handleFooterButtonPress,
-                                  type: DigitButtonType.primary,
-                                  label: widget.deviceType == DeviceType.sender
-                                      ? localizations
-                                          .translate(i18.dataShare.sendAction)
-                                      : localizations.translate(
-                                          i18.dataShare.receiveAction),
-                                  size: DigitButtonSize.large,
-                                  mainAxisSize: MainAxisSize.max,
-                                  capitalizeLetters: false,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
+                DigitBottomSheetService().show(
+                  onPrimaryAction: (ctx) {
+                    handleFooterButtonPress();
                   },
+                  primaryActionLabel:
+                      localizations.translate(i18.dataShare.sendAction),
+                  secondaryActionLabel:
+                      localizations.translate(i18.common.coreCommonCancel),
+                  context: context,
+                  initialHeightPercentage: 70,
+                  allowInteractionWithUnderlyingContent: true,
+                  content: SafeArea(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: spacer2),
+                          child: Text(
+                            textAlign: TextAlign.start,
+                            localizations
+                                .translate(i18.dataShare.selectRecipients),
+                            style: textTheme.headingL.copyWith(
+                              color: theme.colorTheme.primary.primary2,
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: spacer3),
+
+                        // Device list
+                        ValueListenableBuilder<List<Device>>(
+                          valueListenable: _deviceNotifier,
+                          builder: (context, deviceList, _) {
+                            final list =
+                                widget.deviceType == DeviceType.receiver
+                                    ? connectedDevices
+                                    : devices;
+
+                            return Column(
+                              children: list.map(buildDeviceListTile).toList(),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                 );
                 _isSheetShown = false;
               }

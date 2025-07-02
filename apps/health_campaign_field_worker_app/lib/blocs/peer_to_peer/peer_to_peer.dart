@@ -111,25 +111,6 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
               entityData = [boundary['response']];
 
               for (var device in event.connectedDevice) {
-                // await event.nearbyService.sendMessage(
-                //   device.deviceId,
-                //   PeerToPeerMessageModel(
-                //     messageType: MessageTypes.handShake.toValue(),
-                //     selectedBoundaryCode: event.selectedBoundaryCode,
-                //     message: event.selectedProject,
-                //   ).toJson(),
-                // );
-                //
-                // bool handshakeSuccessful = await waitForConfirmation(
-                //   event.nearbyService,
-                //   confirmationType: ConfirmationTypes.handShake.toValue(),
-                // );
-                //
-                // if (!handshakeSuccessful) {
-                //   emit(PeerToPeerState.failedToTransfer(
-                //       error: i18.dataShare.projectMisMatchError));
-                //   return;
-                // } else {
                 for (var entity in entityData) {
                   Map<String, dynamic> entityResponse = entity;
 
@@ -156,7 +137,6 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
                     progress: offsetValue / totalCount,
                     offset: offsetValue,
                     totalCount: totalCount));
-                // }
               }
             }
           }
@@ -224,32 +204,6 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
     try {
       PeerToPeerMessageModel messageModel =
           PeerToPeerMessageModelMapper.fromJson(event.data["message"]);
-
-      // if (messageModel.messageType == MessageTypes.handShake.toValue()) {
-      //   if (messageModel.message == event.projectId) {
-      //     // Send acknowledgment to proceed
-      //     await event.nearbyService.sendMessage(
-      //         event.data["deviceId"],
-      //         PeerToPeerMessageModel(
-      //           messageType: MessageTypes.confirmation.toValue(),
-      //           message: "Handshake successful. Proceeding with transfer.",
-      //           confirmationType: ConfirmationTypes.handShake.toValue(),
-      //           status: MessageStatus.success.toValue(),
-      //         ).toJson());
-      //   } else {
-      //     // Send failure message and stop transfer
-      //     await event.nearbyService.sendMessage(
-      //         event.data["deviceId"],
-      //         PeerToPeerMessageModel(
-      //           messageType: MessageTypes.confirmation.toValue(),
-      //           message: "Handshake failed. Project mismatch.",
-      //           confirmationType: ConfirmationTypes.failed.toValue(),
-      //           status: MessageStatus.fail.toValue(),
-      //         ).toJson());
-      //     emit(PeerToPeerState.failedToReceive(
-      //         error: i18.dataShare.projectMisMatchError));
-      //   }
-      // } else
       if (messageModel.messageType == MessageTypes.chunk.toValue()) {
         int? offset = messageModel.offset;
         int? totalCount = messageModel.totalCount;
@@ -335,18 +289,22 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
               MessageTypes.confirmation.toValue() &&
           messageModel.confirmationType ==
               ConfirmationTypes.finalTransfer.toValue()) {
-        final existingDownSyncData =
-            await downSyncLocalRepository.search(DownsyncSearchModel(
-          locality: selectedBoundaryCode,
-        ));
+        if (receivedBoundaries.isNotEmpty) {
+          for (var selectedBoundaryCode in receivedBoundaries) {
+            final existingDownSyncData =
+                await downSyncLocalRepository.search(DownsyncSearchModel(
+              locality: selectedBoundaryCode,
+            ));
 
-        await downSyncLocalRepository.update(
-          existingDownSyncData.first.copyWith(
-            offset: 0,
-            limit: 0,
-            lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
-          ),
-        );
+            await downSyncLocalRepository.update(
+              existingDownSyncData.first.copyWith(
+                offset: 0,
+                limit: 0,
+                lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
+              ),
+            );
+          }
+        }
         // Send overall transfer acknowledgment
         await event.nearbyService.sendMessage(
             event.data["deviceId"],

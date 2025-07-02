@@ -82,8 +82,6 @@ class Common {
 
   String get coreCommonGoHome => 'CORE_COMMON_GO_HOME';
 
-  String get coreCommonGoBackHome => 'CORE_COMMON_GO_BACK_HOME';
-
   String get coreCommonAttention => 'CORE_COMMON_ATTENTION';
 
   String get coreCommonViewDownloadedData => 'CORE_COMMON_VIEW_DOWNLOADED_DATA';
@@ -606,6 +604,8 @@ class DataShare {
   String get receiveActionDescription => 'RECEIVE_ACTION_DESCRIPTION';
 
   String get selectRecipients => 'SELECT_RECIPIENTS';
+
+  String get noRecipientsSelected => 'NO_RECIPIENTS_SELECTED';
 
   String get noDevicesConnected => 'NO_DEVICES_CONNECTED';
 

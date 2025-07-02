@@ -316,8 +316,12 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                     width: MediaQuery.of(context).size.width,
                                     child: DigitCard(children: [
                                       Text(
-                                        localizations.translate(i18.dataShare
-                                            .dateReceivedForBoundaries),
+                                        localizations.translate(
+                                            receivedBoundaries.isNotEmpty
+                                                ? i18.dataShare
+                                                    .dateReceivedForBoundaries
+                                                : i18.dataShare
+                                                    .noBoundariesMatchedTitle),
                                         style: textTheme.headingM.copyWith(
                                             color: DigitTheme.instance.colors
                                                 .light.primary2),
@@ -336,31 +340,56 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                                 dividerType: DividerType.small,
                                               )
                                             ],
-                                          ))
+                                          )),
+                                      if (receivedBoundaries.isEmpty)
+                                        Text(
+                                          localizations.translate(i18.dataShare
+                                              .noBoundariesMatchedDesc),
+                                          style: textTheme.bodyS.copyWith(
+                                              color: DigitTheme.instance.colors
+                                                  .light.primary2),
+                                        ),
                                     ]),
                                   )
                                 ],
                               ),
                             ),
-                            failedToReceive: (message) => Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                            failedToReceive: (message) => DigitCard(
                               children: [
-                                Lottie.asset(receiveData),
-                                Text(
-                                  localizations
-                                      .translate(i18.dataShare.failedToReceive),
-                                  style: textTheme.headingM.copyWith(
-                                      color: DigitTheme
-                                          .instance.colors.light.alertError),
+                                Center(
+                                    child: Lottie.asset(receiveData,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.15)),
+                                Center(
+                                  child: Text(
+                                    localizations.translate(
+                                        i18.dataShare.failedToReceive),
+                                    style: textTheme.headingM.copyWith(
+                                        color: DigitTheme
+                                            .instance.colors.light.alertError),
+                                  ),
                                 ),
-                                const SizedBox(height: spacer4),
-                                Text(
-                                  localizations.translate(
-                                      i18.dataShare.failedToTransfer),
-                                  style: textTheme.bodyS.copyWith(
-                                      color: DigitTheme.instance.colors.light
-                                          .paperSecondary),
+                                const SizedBox(height: spacer2),
+                                Center(
+                                  child: Text(
+                                    localizations.translate(i18
+                                        .dataShare.failedToReceiveDescription),
+                                    style: textTheme.bodyS.copyWith(
+                                        color: theme.colorTheme.text.secondary),
+                                  ),
+                                ),
+                                const Center(
+                                  child: Padding(
+                                      padding: EdgeInsets.all(spacer2),
+                                      child: ProgressIndicatorContainer(
+                                        value: 0.7,
+                                        label: '',
+                                        prefixLabel: '',
+                                        suffixLabel: '',
+                                        height: spacer3,
+                                        radius: spacer4,
+                                      )),
                                 ),
                               ],
                             ),
