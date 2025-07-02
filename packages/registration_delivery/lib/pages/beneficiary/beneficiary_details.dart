@@ -69,7 +69,7 @@ class BeneficiaryDetailsPageState
               RegistrationDeliverySingleton().beneficiaryType !=
                       BeneficiaryType.individual
                   ?householdMemberWrapper.firstOrNull?.projectBeneficiaries != null ? [householdMemberWrapper.first.projectBeneficiaries?.first]
-                  : householdMemberWrapper.first.projectBeneficiaries
+                  : householdMemberWrapper.firstOrNull?.projectBeneficiaries
                       ?.where(
                         (element) =>
                             element.beneficiaryClientReferenceId ==
@@ -259,7 +259,7 @@ class BeneficiaryDetailsPageState
                                                                   ).pop();
                                                                   if(beneficiaryDetailsTemplate?.navigateTo!=null){
                                                                     if(beneficiaryDetailsTemplate?.navigateTo?.type=='form'){
-                                                                      final pageName = context.read<FormsBloc>().state.cachedSchemas['DELIVERYFLOW']?.pages.entries.first.key;
+                                                                      final pageName = context.read<FormsBloc>().state.cachedSchemas['DELIVERYFLOW']?.pages.entries.firstOrNull?.key;
 
                                                                       if (pageName == null) {
                                                                         Toast.showToast(
