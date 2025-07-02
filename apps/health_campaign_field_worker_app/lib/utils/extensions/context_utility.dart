@@ -249,4 +249,66 @@ extension ContextUtilityExtensions on BuildContext {
     final syncBloc = _get<SyncBloc>();
     return syncBloc.stream;
   }
+
+  bool get isCDD {
+    return loggedInUserRoles
+        .where(
+          (role) =>
+              role.code == RolesType.distributor.toValue() ||
+              role.code == RolesType.communityDistributor.toValue(),
+        )
+        .toList()
+        .isNotEmpty;
+  }
+
+  bool get isHFUser {
+    try {
+      // todo : verify this make this healthFacilitySupervsior as per kebbi
+      bool isDownSyncEnabled = loggedInUserRoles
+          .where(
+            (role) =>
+                role.code == RolesType.healthFacilityWorker.toValue() ||
+                role.code == RolesType.healthFacilitySupervisor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return isDownSyncEnabled;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool get isHealthFacilitySupervisor {
+    try {
+      // todo : verify this make this healthFacilitySupervsior as per kebbi
+      bool isDownSyncEnabled = loggedInUserRoles
+          .where(
+            (role) =>
+                role.code == RolesType.healthFacilityWorker.toValue() ||
+                role.code == RolesType.healthFacilitySupervisor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return isDownSyncEnabled;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool get isCommunityDistributor {
+    try {
+      bool communityDistributor = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.communityDistributor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return communityDistributor;
+    } catch (_) {
+      return false;
+    }
+  }
 }

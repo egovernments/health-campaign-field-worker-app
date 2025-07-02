@@ -20,6 +20,9 @@ class InventoryRoute extends $InventoryRoute {
               path: 'warehouse-details',
               initial: true),
           AutoRoute(page: StockDetailsRoute.page, path: 'details'),
+          AutoRoute(
+              page: ViewAllTransactionsRoute.page,
+              path: 'view-all-transactions')
         ]),
     AutoRoute(
         page: InventoryFacilitySelectionRoute.page,

@@ -1,5 +1,10 @@
 // Importing necessary packages and modules
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../models/entities/inventory_transport_type.dart';
@@ -57,6 +62,12 @@ class InventorySingleton {
     _boundaryModel = boundary;
   }
 
+  bool _isLgaUser = false;
+  bool _isCDD = false;
+  bool _isHFU = false;
+  bool _isHealthFacilitySupervisor = false;
+  bool _isCommunityDistributor = false;
+
   // Sets the initial data for the inventory.
   void setInitialData({
     String? loggedInUserUuid,
@@ -65,6 +76,11 @@ class InventorySingleton {
     required bool isWareHouseMgr,
     List<InventoryTransportTypes>? transportTypes,
     UserModel? loggedInUser,
+    required bool isLgaUser,
+    required bool isCDD,
+    required bool isHFU,
+    required bool isHealthFacilitySupervisor,
+    required bool isCommunityDistributor,
   }) {
     _projectId = projectId;
     _loggedInUserUuid = loggedInUserUuid;
@@ -73,6 +89,11 @@ class InventorySingleton {
     _isWareHouseMgr = isWareHouseMgr;
     _transportType = transportTypes;
     _loggedInUser = loggedInUser;
+    _isLgaUser = isLgaUser;
+    _isCDD = isCDD;
+    _isHFU = isHFU;
+    _isHealthFacilitySupervisor = isHealthFacilitySupervisor;
+    _isCommunityDistributor = isCommunityDistributor;
   }
 
   void setPersistenceConfiguration(PersistenceConfiguration configuration) {
@@ -98,4 +119,127 @@ class InventorySingleton {
   get tenantId => _tenantId;
   get persistenceConfiguration => _persistenceConfiguration;
   UserModel? get loggedInUser => _loggedInUser;
+
+  get isLgaUser => _isLgaUser;
+
+  get isCDD => _isCDD;
+  get isHFU => _isHFU;
+  get isHealthFacilitySupervisor => _isHealthFacilitySupervisor;
+  get isCommunityDistributor => _isCommunityDistributor;
+
+  String formatDateFromMillis(int millis) {
+    final date = DateTime.fromMillisecondsSinceEpoch(millis);
+    final day = date.day.toString().padLeft(2, '0');
+    final month = _monthShort(date.month);
+    final year = date.year;
+    return '$day $month $year';
+  }
+
+  String _monthShort(int month) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+    return months[month - 1];
+  }
+}
+
+class UniqueIdGeneration {
+  Future<Set<String>> generateUniqueId({
+    required String localityCode,
+    required String loggedInUserId,
+    required bool returnCombinedIds,
+  }) async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
+    // Get the Android ID
+    String androidId = androidInfo.serialNumber == 'unknown'
+        ? androidInfo.id.replaceAll('.', '')
+        : androidInfo.serialNumber;
+
+    // Get current timestamp
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
+
+    // Combine the Android ID with the timestamp
+    String combinedId = '$loggedInUserId$androidId$localityCode$timestamp';
+
+    // Generate SHA-256 hash
+    List<int> bytes = utf8.encode(combinedId);
+    Digest sha256Hash = sha256.convert(bytes);
+
+    // Convert the hash to a 12-character string and make it uppercase
+    String hashString = sha256Hash.toString();
+    String uniqueId = hashString.substring(0, 12).toUpperCase();
+
+    // Add a hyphen every 4 characters, except the last
+    String formattedUniqueId = uniqueId.replaceAllMapped(
+      RegExp(r'.{1,4}'),
+      (match) => '${match.group(0)}-',
+    );
+
+    // Remove the last hyphen
+    formattedUniqueId =
+        formattedUniqueId.substring(0, formattedUniqueId.length - 1);
+
+    if (kDebugMode) {
+      print('uniqueId : $formattedUniqueId');
+    }
+
+    return returnCombinedIds
+        ? {formattedUniqueId, combinedId}
+        : {formattedUniqueId};
+  }
+
+  Future<Set<String>> generateUniqueMaterialNoteNumber({
+    required String loggedInUserId,
+    required bool returnCombinedIds,
+  }) async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
+    String androidId = androidInfo.serialNumber == 'unknown'
+        ? androidInfo.id.replaceAll('.', '')
+        : androidInfo.serialNumber;
+
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
+
+    String combinedId = '$loggedInUserId$androidId$timestamp';
+
+    // Generate SHA-256 hash
+    List<int> bytes = utf8.encode(combinedId);
+    Digest sha256Hash = sha256.convert(bytes);
+
+    // Convert the hash to a 12-character string and make it uppercase
+    String hashString = sha256Hash.toString();
+    String uniqueId = hashString.substring(0, 12).toUpperCase();
+
+    // Add a hyphen every 4 characters
+    String formattedUniqueId = uniqueId.replaceAllMapped(
+      RegExp(r'.{1,4}'),
+      (match) => '${match.group(0)}-',
+    );
+
+    // Remove the last hyphen
+    formattedUniqueId =
+        formattedUniqueId.substring(0, formattedUniqueId.length - 1);
+
+    if (kDebugMode) {
+      print('uniqueId : $formattedUniqueId');
+    }
+
+    return returnCombinedIds
+        ? {formattedUniqueId, combinedId}
+        : {formattedUniqueId};
+  }
 }

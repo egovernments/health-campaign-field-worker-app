@@ -605,11 +605,9 @@ class _HomePageState extends LocalizedState<HomePage> {
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
-
-      if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
-        filteredLabels.remove(i18.home.db);
-      }
-
+    if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
+      filteredLabels.remove(i18.home.db);
+    }
 
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
@@ -727,6 +725,17 @@ class _HomePageState extends LocalizedState<HomePage> {
   }
 }
 
+bool isLGAUser() {
+  String? boundaryLevel =
+      RegistrationDeliverySingleton().selectedProject?.address?.boundaryType;
+  if (InventorySingleton().isWareHouseMgr) {
+    if (boundaryLevel == "LGA") {
+      return true;
+    }
+  }
+  return false;
+}
+
 // Function to set initial Data required for the packages to run
 void setPackagesSingleton(BuildContext context) {
   context.read<AppInitializationBloc>().state.maybeWhen(
@@ -842,6 +851,7 @@ void setPackagesSingleton(BuildContext context) {
                   [],
         );
 
+        InventorySingleton().setBoundary(boundary: context.boundary);
         InventorySingleton().setInitialData(
           isWareHouseMgr: context.loggedInUserRoles
               .where(
@@ -862,6 +872,11 @@ void setPackagesSingleton(BuildContext context) {
                 ..name = e.code
                 ..code = e.code)
               .toList(),
+          isLgaUser: isLGAUser(),
+          isCDD: context.isCDD,
+          isHFU: context.isHFUser,
+          isHealthFacilitySupervisor: context.isHealthFacilitySupervisor,
+          isCommunityDistributor: context.isCommunityDistributor,
         );
         DashboardSingleton().setInitialData(
             projectId: context.projectId,
