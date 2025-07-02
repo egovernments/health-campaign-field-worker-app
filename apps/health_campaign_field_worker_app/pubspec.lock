@@ -68,9 +68,10 @@ packages:
   attendance_management:
     dependency: "direct main"
     description:
-      path: "../../packages/attendance_management"
-      relative: true
-    source: path
+      name: attendance_management
+      sha256: "976d2b2f7c7c79bf8f05647a4138b66dab9017316697222223d888273a95f96a"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.4+2"
   audioplayers:
     dependency: transitive
@@ -265,7 +266,7 @@ packages:
     source: hosted
     version: "0.11.0+2"
   camera_android_camerax:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: camera_android_camerax
       sha256: "594b40a5ea0e144fdfe49e4036abe4ec9bd578b2ce3aabdb0668a02db376a1e8"
@@ -523,9 +524,10 @@ packages:
   digit_dss:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_dss"
-      relative: true
-    source: path
+      name: digit_dss
+      sha256: e1a541a5360413ed903ee77af580faf93623160aa5e7143e8bc1d0ec44dd980b
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.4+1"
   digit_firebase_services:
     dependency: "direct main"
@@ -546,10 +548,11 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_scanner"
-      relative: true
-    source: path
-    version: "1.0.5+1"
+      name: digit_scanner
+      sha256: "4bbfd96e1bc7ce4b9b9a0a92a5944ce1ee2220f9cc3c9c86c7ceb73b2988c549"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.6"
   digit_showcase:
     dependency: "direct main"
     description:

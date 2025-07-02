@@ -9,7 +9,6 @@ import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
-import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
@@ -307,7 +306,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         action: (ctx) {
           Navigator.pop(ctx);
           // Sync Failed Manual Sync is Enabled
-          _attemptSyncUp(context);
+          attemptSyncUp(context);
         },
       ),
       secondaryAction: DigitDialogActions(
@@ -460,10 +459,10 @@ class _HomePageState extends LocalizedState<HomePage> {
               label: i18.home.syncDataLabel,
               onPressed: () async {
                 if (envConfig.variables.envType == EnvType.qa) {
-                  if (context.mounted) _attemptSyncUp(context);
+                  if (context.mounted) attemptSyncUp(context);
                 } else {
                   if (snapshot.data?['enablesManualSync'] == true) {
-                    if (context.mounted) _attemptSyncUp(context);
+                    if (context.mounted) attemptSyncUp(context);
                   } else {
                     if (context.mounted) {
                       Toast.showToast(
@@ -541,10 +540,9 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.send,
           label: i18.home.dataShare,
           onPressed: () async {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
+            triggerLocalization();
+            isTriggerLocalisation = false;
+
             context.router.push(const DataShareHomeRoute());
           },
         ),
@@ -604,6 +602,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       i18.home.clfLabel: homeShowcaseData.clf.showcaseKey,
       i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey,
+      i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey
     };
 
     final homeItemsLabel = <String>[
@@ -622,6 +621,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.db,
       i18.home.dashboard,
       i18.home.beneficiaryIdLabel,
+      i18.home.dataShare
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -641,9 +641,6 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
       filteredLabels.remove(i18.home.db);
     }
-
-    filteredLabels.add(i18.home.dataShare); // TODO: Role action mapping
-
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
 
@@ -651,90 +648,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       widgetList,
       showcaseKeys,
     );
-  }
-
-  void _attemptSyncUp(BuildContext context) async {
-    await LocalSecureStore.instance.setManualSyncTrigger(true);
-
-    if (context.mounted) {
-      context.read<SyncBloc>().add(
-            SyncSyncUpEvent(
-              userId: context.loggedInUserUuid,
-              localRepositories: [
-                // INFO : Need to add local repo of package Here
-                context.read<
-                    LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-                context.read<
-                    LocalRepository<IndividualModel, IndividualSearchModel>>(),
-                context.read<
-                    LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
-                context.read<
-                    LocalRepository<ProjectBeneficiaryModel,
-                        ProjectBeneficiarySearchModel>>(),
-                context.read<
-                    LocalRepository<HouseholdMemberModel,
-                        HouseholdMemberSearchModel>>(),
-                context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
-                context.read<
-                    LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
-                context.read<
-                    LocalRepository<ReferralModel, ReferralSearchModel>>(),
-                context
-                    .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
-                context.read<LocalRepository<StockModel, StockSearchModel>>(),
-                context.read<
-                    LocalRepository<StockReconciliationModel,
-                        StockReconciliationSearchModel>>(),
-                context.read<
-                    LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-                context.read<
-                    LocalRepository<HFReferralModel, HFReferralSearchModel>>(),
-                context.read<
-                    LocalRepository<AttendanceLogModel,
-                        AttendanceLogSearchModel>>(),
-                context.read<
-                    LocalRepository<UserActionModel, UserActionSearchModel>>(),
-                context
-                    .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
-              ],
-              remoteRepositories: [
-                // INFO : Need to add repo repo of package Here
-                context.read<
-                    RemoteRepository<IndividualModel, IndividualSearchModel>>(),
-                context.read<
-                    RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
-                context.read<
-                    RemoteRepository<ProjectBeneficiaryModel,
-                        ProjectBeneficiarySearchModel>>(),
-                context.read<
-                    RemoteRepository<HouseholdMemberModel,
-                        HouseholdMemberSearchModel>>(),
-                context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
-                context.read<
-                    RemoteRepository<SideEffectModel, SideEffectSearchModel>>(),
-                context.read<
-                    RemoteRepository<ReferralModel, ReferralSearchModel>>(),
-                context
-                    .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
-                context.read<RemoteRepository<StockModel, StockSearchModel>>(),
-                context.read<
-                    RemoteRepository<StockReconciliationModel,
-                        StockReconciliationSearchModel>>(),
-                context.read<
-                    RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-                context.read<
-                    RemoteRepository<HFReferralModel, HFReferralSearchModel>>(),
-                context.read<
-                    RemoteRepository<AttendanceLogModel,
-                        AttendanceLogSearchModel>>(),
-                context.read<
-                    RemoteRepository<UserActionModel, UserActionSearchModel>>(),
-                context
-                    .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
-              ],
-            ),
-          );
-    }
   }
 
   void triggerLocalization() {

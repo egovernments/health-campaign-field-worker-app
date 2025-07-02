@@ -59,7 +59,6 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
 
   @override
   void dispose() {
-    widget.nearbyService.stopAdvertisingPeer();
     super.dispose();
   }
 
@@ -72,10 +71,6 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
       onPopInvoked: (pop) {},
       child: BlocListener<PeerToPeerBloc, PeerToPeerState>(
         listener: (context, state) {
-          // if (state is CompletedDataTransfer) {
-          //   context.router
-          //       .popAndPush(AcknowledgementRoute(isDataRecordSuccess: false));
-          // }
           if (state is FailedDataTransfer) {
             Toast.showToast(
               context,
@@ -83,7 +78,6 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
               type: ToastType.error,
               position: ToastPosition.aboveOneButtonFooter,
             );
-            // context.router.maybePop();
           }
         },
         child: BlocBuilder<PeerToPeerBloc, PeerToPeerState>(
@@ -103,8 +97,7 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                     onPressed: () {
                       context.router.replaceAll([HomeRoute()]);
                     },
-                    label: localizations
-                        .translate(i18.common.coreCommonGoBackHome),
+                    label: localizations.translate(i18.common.coreCommonGoHome),
                     size: DigitButtonSize.large,
                   ),
                 ]),
@@ -232,7 +225,11 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                           ),
                           failedToTransfer: (message) => DigitCard(
                             children: [
-                              Center(child: Lottie.asset(failedLottie)),
+                              Center(
+                                  child: Lottie.asset(failedLottie,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.15)),
                               Center(
                                 child: Text(
                                   localizations.translate(
