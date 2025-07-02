@@ -15,13 +15,9 @@ import 'package:intl/intl.dart';
 import 'package:recase/recase.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
-import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/pages/beneficiary/widgets/past_delivery.dart';
 import 'package:registration_delivery/widgets/beneficiary/resource_card.dart';
 
-import '../../blocs/delivery_intervention/deliver_intervention.dart';
-import '../../blocs/household_overview/household_overview.dart';
-import '../../models/entities/additional_fields_type.dart';
 import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/registration_component_keys.dart' as registration_keys;
@@ -199,6 +195,23 @@ class BeneficiaryDetailsPageState
                                                                   d.id ==
                                                                   currentDose);
 
+                                                      // bloc.add(
+                                                      //   DeliverInterventionEvent
+                                                      //       .selectFutureCycleDose(
+                                                      //     dose: deliverState.dose,
+                                                      //     cycle:
+                                                      //         RegistrationDeliverySingleton()
+                                                      //             .projectType!
+                                                      //             .cycles!
+                                                      //             .firstWhere((c) =>
+                                                      //                 c.id ==
+                                                      //                 deliverState
+                                                      //                     .cycle),
+                                                      //     individualModel: state
+                                                      //         .selectedIndividual,
+                                                      //   ),
+                                                      // );
+
                                                       var productVariants =
                                                           fetchProductVariant(
                                                               items,
@@ -301,8 +314,8 @@ class BeneficiaryDetailsPageState
                                                                               .cachedSchemas['DELIVERYFLOW']
                                                                               ?.pages
                                                                               .entries
-                                                                              .first
-                                                                              .key;
+                                                                              .firstOrNull
+                                                                              ?.key;
 
                                                                           if (pageName ==
                                                                               null) {
@@ -570,31 +583,10 @@ class BeneficiaryDetailsPageState
                                               return '--';
                                             }
 
-                                            String? primaryIdType = state
-                                                .selectedIndividual
-                                                ?.additionalFields
-                                                ?.fields
-                                                .firstWhereOrNull((idType) =>
-                                                    idType.key ==
-                                                    'primaryIdType')
-                                                ?.value;
-
                                             return localizations.translate(
-                                                primaryIdType != null
-                                                    ? state.selectedIndividual
-                                                            ?.identifiers
-                                                            ?.firstWhereOrNull(
-                                                                (type) =>
-                                                                    type.identifierType ==
-                                                                    primaryIdType)
-                                                            ?.identifierType ??
-                                                        '--'
-                                                    : state
-                                                            .selectedIndividual
-                                                            ?.identifiers
-                                                            ?.firstOrNull
-                                                            ?.identifierType ??
-                                                        '--');
+                                                identifiers
+                                                        .first.identifierType ??
+                                                    '--');
                                           }(),
                                           localizations.translate(
                                             i18.deliverIntervention
@@ -616,45 +608,9 @@ class BeneficiaryDetailsPageState
                                               return '--';
                                             }
 
-                                            String? primaryIdType = state
-                                                .selectedIndividual
-                                                ?.additionalFields
-                                                ?.fields
-                                                .firstWhereOrNull((idType) =>
-                                                    idType.key ==
-                                                    'primaryIdType')
-                                                ?.value;
-
-                                            String? getMaskedOrRawIdentifier(
-                                                List<IdentifierModel>
-                                                    identifiers,
-                                                String? type) {
-                                              final identifier =
-                                                  identifiers.firstWhereOrNull(
-                                                (id) =>
-                                                    type == null ||
-                                                    id.identifierType == type,
-                                              );
-                                              if (identifier == null)
-                                                return null;
-
-                                              return type ==
-                                                      IdentifierTypes
-                                                          .uniqueBeneficiaryID
-                                                          .toValue()
-                                                  ? identifier.identifierId
-                                                  : maskString(
-                                                      identifier.identifierId ??
-                                                          '');
-                                            }
-
-                                            final identifiersList = state
-                                                    .selectedIndividual
-                                                    ?.identifiers ??
-                                                identifiers;
-
-                                            return getMaskedOrRawIdentifier(
-                                                identifiersList, primaryIdType);
+                                            return maskString(identifiers
+                                                .first.identifierId
+                                                .toString());
                                           }(),
                                           localizations.translate(
                                             i18.common.coreCommonAge,
