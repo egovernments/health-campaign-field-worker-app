@@ -266,7 +266,7 @@ packages:
     source: hosted
     version: "0.11.0+2"
   camera_android_camerax:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: camera_android_camerax
       sha256: "594b40a5ea0e144fdfe49e4036abe4ec9bd578b2ce3aabdb0668a02db376a1e8"
@@ -444,11 +444,9 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      path: "packages/dart_mappable_builder"
-      ref: master
-      resolved-ref: ab088b8fc21a07ed7a56bf81c935ee51481ad253
-      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
-    source: git
+      path: "../../packages/dart_mappable_builder"
+      relative: true
+    source: path
     version: "4.2.3"
   dart_style:
     dependency: transitive
@@ -525,10 +523,9 @@ packages:
   digit_firebase_services:
     dependency: "direct main"
     description:
-      name: digit_firebase_services
-      sha256: ce76521d797e123b6fc95c9dfad7d4a918a93b97f57aecd0e1d517b46190909d
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_firebase_services"
+      relative: true
+    source: path
     version: "0.0.1"
   digit_location_tracker:
     dependency: "direct main"

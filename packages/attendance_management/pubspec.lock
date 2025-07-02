@@ -57,62 +57,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
-  audioplayers:
-    dependency: transitive
-    description:
-      name: audioplayers
-      sha256: c05c6147124cd63e725e861335a8b4d57300b80e6e92cea7c145c739223bbaef
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.2.1"
-  audioplayers_android:
-    dependency: transitive
-    description:
-      name: audioplayers_android
-      sha256: b00e1a0e11365d88576320ec2d8c192bc21f1afb6c0e5995d1c57ae63156acb5
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.3"
-  audioplayers_darwin:
-    dependency: transitive
-    description:
-      name: audioplayers_darwin
-      sha256: "3034e99a6df8d101da0f5082dcca0a2a99db62ab1d4ddb3277bed3f6f81afe08"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.2"
-  audioplayers_linux:
-    dependency: transitive
-    description:
-      name: audioplayers_linux
-      sha256: "60787e73fefc4d2e0b9c02c69885402177e818e4e27ef087074cf27c02246c9e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.0"
-  audioplayers_platform_interface:
-    dependency: transitive
-    description:
-      name: audioplayers_platform_interface
-      sha256: "365c547f1bb9e77d94dd1687903a668d8f7ac3409e48e6e6a3668a1ac2982adb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.1.0"
-  audioplayers_web:
-    dependency: transitive
-    description:
-      name: audioplayers_web
-      sha256: "22cd0173e54d92bd9b2c80b1204eb1eb159ece87475ab58c9788a70ec43c2a62"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.1.0"
-  audioplayers_windows:
-    dependency: transitive
-    description:
-      name: audioplayers_windows
-      sha256: "9536812c9103563644ada2ef45ae523806b0745f7a78e89d1b5fb1951de90e1a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.0"
   auto_route:
     dependency: "direct main"
     description:
@@ -353,14 +297,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  cupertino_icons:
-    dependency: transitive
-    description:
-      name: cupertino_icons
-      sha256: ba631d1c7f7bef6b729a622b7b752645a2d076dba9976925b8f25725a30e1ee6
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.8"
   dart_mappable:
     dependency: "direct main"
     description:
@@ -372,11 +308,9 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      path: "packages/dart_mappable_builder"
-      ref: master
-      resolved-ref: ab088b8fc21a07ed7a56bf81c935ee51481ad253
-      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
-    source: git
+      path: "../dart_mappable_builder"
+      relative: true
+    source: path
     version: "4.2.3"
   dart_style:
     dependency: transitive
@@ -410,22 +344,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
-  digit_scanner:
-    dependency: transitive
-    description:
-      name: digit_scanner
-      sha256: c33af61ed9ab3d7740fc3c8948af4b763d946cba5e902f8bfb00948d4d69d60a
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.4"
-  digit_showcase:
-    dependency: transitive
-    description:
-      name: digit_showcase
-      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   digit_ui_components:
     dependency: "direct main"
     description:
@@ -591,54 +509,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.13"
-  flutter_keyboard_visibility:
-    dependency: transitive
-    description:
-      name: flutter_keyboard_visibility
-      sha256: "4983655c26ab5b959252ee204c2fffa4afeb4413cd030455194ec0caa3b8e7cb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.4.1"
-  flutter_keyboard_visibility_linux:
-    dependency: transitive
-    description:
-      name: flutter_keyboard_visibility_linux
-      sha256: "6fba7cd9bb033b6ddd8c2beb4c99ad02d728f1e6e6d9b9446667398b2ac39f08"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
-  flutter_keyboard_visibility_macos:
-    dependency: transitive
-    description:
-      name: flutter_keyboard_visibility_macos
-      sha256: c5c49b16fff453dfdafdc16f26bdd8fb8d55812a1d50b0ce25fc8d9f2e53d086
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
-  flutter_keyboard_visibility_platform_interface:
-    dependency: transitive
-    description:
-      name: flutter_keyboard_visibility_platform_interface
-      sha256: e43a89845873f7be10cb3884345ceb9aebf00a659f479d1c8f4293fcb37022a4
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
-  flutter_keyboard_visibility_web:
-    dependency: transitive
-    description:
-      name: flutter_keyboard_visibility_web
-      sha256: d3771a2e752880c79203f8d80658401d0c998e4183edca05a149f5098ce6e3d1
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
-  flutter_keyboard_visibility_windows:
-    dependency: transitive
-    description:
-      name: flutter_keyboard_visibility_windows
-      sha256: fc4b0f0b6be9b93ae527f3d527fb56ee2d918cd88bbca438c478af7bcfd0ef73
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -702,14 +572,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.2.5"
-  formula_parser:
-    dependency: transitive
-    description:
-      name: formula_parser
-      sha256: af9e9ae2961ec1dab54c5de97d9a6bef0593ddb998720e3785bd91ef05353359
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
   freezed:
     dependency: "direct dev"
     description:
@@ -798,22 +660,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.2.1"
-  google_mlkit_barcode_scanning:
-    dependency: transitive
-    description:
-      name: google_mlkit_barcode_scanning
-      sha256: f1a2a39cf1730b9a5e2784a07efa1ca5bfdfdde6aa00b193b3f8cd1953c638ec
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.12.0"
-  google_mlkit_commons:
-    dependency: transitive
-    description:
-      name: google_mlkit_commons
-      sha256: "27d626c66a181351a953eba5b6ff1ff123aadb891b4dab085b292118f039d6ac"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.7.1"
   graphs:
     dependency: transitive
     description:
@@ -822,22 +668,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.1"
-  group_radio_button:
-    dependency: transitive
-    description:
-      name: group_radio_button
-      sha256: "204de8d16b224be7fc72dade0c3afd410ff5a34417d89f74f0fd8be7a8c2b4d6"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.0"
-  gs1_barcode_parser:
-    dependency: transitive
-    description:
-      name: gs1_barcode_parser
-      sha256: ff171bc40038de3f7178fbc32eaf9eebc3d35a3c4c00bb0281fe4a976d853a42
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   horizontal_data_table:
     dependency: transitive
     description:
@@ -1142,22 +972,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
-  package_info_plus:
-    dependency: transitive
-    description:
-      name: package_info_plus
-      sha256: a75164ade98cb7d24cfd0a13c6408927c6b217fa60dee5a7ff5c116a58f28918
-      url: "https://pub.dev"
-    source: hosted
-    version: "8.0.2"
-  package_info_plus_platform_interface:
-    dependency: transitive
-    description:
-      name: package_info_plus_platform_interface
-      sha256: "205ec83335c2ab9107bbba3f8997f9356d72ca3c715d2f038fc773d0366b4c76"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.0"
   path:
     dependency: "direct main"
     description:
@@ -1254,14 +1068,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
-  pluto_grid:
-    dependency: transitive
-    description:
-      name: pluto_grid
-      sha256: "1d4cd9d2652742b556aa9b3230cc64672a3f63c34a9acc80fef794ab36ad903b"
-      url: "https://pub.dev"
-    source: hosted
-    version: "8.0.0"
   pool:
     dependency: transitive
     description:
@@ -1310,21 +1116,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
-  registration_delivery:
-    dependency: "direct overridden"
-    description:
-      path: "../registration_delivery"
-      relative: true
-    source: path
-    version: "1.0.5+2-dev.1"
-  rxdart:
-    dependency: transitive
-    description:
-      name: rxdart
-      sha256: "0c7c0cedd93788d996e33041ffecda924cc54389199cde4e6a34b440f50044cb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.27.7"
   shelf:
     dependency: transitive
     description:
@@ -1466,22 +1257,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  survey_form:
-    dependency: transitive
-    description:
-      name: survey_form
-      sha256: "5e3a08570fe8c97d7dfd0bc6f28b2ae829e2fe66ce987504920c20d091c47c19"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
-  synchronized:
-    dependency: transitive
-    description:
-      name: synchronized
-      sha256: "539ef412b170d65ecdafd780f924e5be3f60032a1128df156adad6c5b373d558"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.0+1"
   term_glyph:
     dependency: transitive
     description:
@@ -1739,5 +1514,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.0 <3.9.0"
+  dart: ">=3.4.0 <4.0.0"
   flutter: ">=3.22.0"

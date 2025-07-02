@@ -60,10 +60,9 @@ packages:
   attendance_management:
     dependency: "direct main"
     description:
-      name: attendance_management
-      sha256: "6b7c39aba4f4c26340daee8dcb8fde3823a28e3fae6065fd3abf3ed90d3c74c5"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../attendance_management"
+      relative: true
+    source: path
     version: "1.0.4+1"
   auto_route:
     dependency: "direct main"
