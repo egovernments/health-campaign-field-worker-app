@@ -84,7 +84,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
 
   void searchByName() {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () {
+    _debounce = Timer(const Duration(milliseconds: 100), () {
       if (controller.text.length >= 2) {
         individualLogBloc!
             .add(SearchAttendeesEvent(name: controller.text.trim()));
@@ -388,7 +388,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                             children: [
                               Container(
                                 width: MediaQuery.of(context).size.width,
-                                padding: const EdgeInsets.all(spacer2),
+                                padding: const EdgeInsets.all(spacer3),
                                 child: Text(
                                   localizations.translate(
                                     i18.attendance.markAttendanceLabel,
@@ -583,6 +583,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                         isMorning = val;
                                       });
                                       setRegisterData();
+                                      searchByName();
                                     },
                                     activeLabel: localizations.translate(
                                         i18.attendance.morningSession),
