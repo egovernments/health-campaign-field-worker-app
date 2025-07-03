@@ -266,7 +266,7 @@ packages:
     source: hosted
     version: "0.11.0+2"
   camera_android_camerax:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: camera_android_camerax
       sha256: "594b40a5ea0e144fdfe49e4036abe4ec9bd578b2ce3aabdb0668a02db376a1e8"
@@ -441,14 +441,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
-  curl_logger_dio_interceptor:
-    dependency: "direct main"
-    description:
-      name: curl_logger_dio_interceptor
-      sha256: f20d89187a321d2150e1412bca30ebf4d89130bafc648ce21bd4f1ef4062b214
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   dart_mappable:
     dependency: "direct main"
     description:
@@ -525,10 +517,9 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: "85764601509108706433e241a838982b37fcce6d35abd9e9ceb4b6c712f768fc"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_data_model"
+      relative: true
+    source: path
     version: "1.1.1"
   digit_dss:
     dependency: "direct main"
@@ -574,10 +565,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "861cf54ff775e854a3a620c13b6bc381fac97ac899f611115204fe48fa5b3eac"
+      sha256: c07a13efd5d23fe869a87f7ab12b7b82bdb0b911d4c9ed7f4bb1a5c4310847f5
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.1+7"
+    version: "0.2.2+4"
   dio:
     dependency: "direct main"
     description:
@@ -945,6 +936,15 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_nearby_connections:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: "9ead63aa7e01f7603a453368de1ee2b4dc009ed6"
+      url: "https://github.com/champeauxr/flutter_nearby_connections"
+    source: git
+    version: "1.1.2"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -1345,10 +1345,10 @@ packages:
     dependency: "direct main"
     description:
       name: inventory_management
-      sha256: f645ecd84a450cefe1e9ce085c5f86fcb0c98b5fbec790070e880367b43e19f8
+      sha256: "0f8cd2635b08afb1aa2c3bd104c18615d5ab33aa693fc06e13c3d43af71782c2"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.6-dev.1-enumeration"
+    version: "1.0.6"
   io:
     dependency: transitive
     description:
@@ -1470,7 +1470,7 @@ packages:
     source: hosted
     version: "1.3.0"
   lottie:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: lottie
       sha256: "7afc60865a2429d994144f7d66ced2ae4305fe35d82890b8766e3359872d872c"
@@ -1653,6 +1653,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
+  percent_indicator:
+    dependency: "direct main"
+    description:
+      name: percent_indicator
+      sha256: "157d29133bbc6ecb11f923d36e7960a96a3f28837549a20b65e5135729f0f9fd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.5"
   permission_handler:
     dependency: "direct main"
     description:
@@ -1817,10 +1825,10 @@ packages:
     dependency: "direct main"
     description:
       name: referral_reconciliation
-      sha256: "35e3694cea71f9b47148fa3cb0c6e7e9b4460887318bea90bb6ba87788d3f852"
+      sha256: "2f3587105c2229ed089a23bc7084b8a2b2fbd5b69d119e9d1b80850def33848d"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5-dev.2-enumeration"
+    version: "1.0.6"
   registration_delivery:
     dependency: "direct main"
     description:
@@ -2036,10 +2044,11 @@ packages:
   survey_form:
     dependency: "direct main"
     description:
-      path: "../../packages/survey_form"
-      relative: true
-    source: path
-    version: "1.0.2-dev.4-enumeration"
+      name: survey_form
+      sha256: "26c02064d6d74928ce458fe25eb037ee9a131952f3aa6e03480b70277473b635"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   sync_http:
     dependency: transitive
     description:
@@ -2051,10 +2060,11 @@ packages:
   sync_service:
     dependency: "direct main"
     description:
-      path: "../../packages/sync_service"
-      relative: true
-    source: path
-    version: "1.0.1-dev.3-enumeration"
+      name: sync_service
+      sha256: da4847fcd10ff8de25b6b722e0ba93bb93268824d903f8ff4fdc870a806ebe84
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   synchronized:
     dependency: transitive
     description:
@@ -2384,5 +2394,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.0 <3.9.0"
+  dart: ">=3.4.1 <3.9.0"
   flutter: ">=3.22.0"
