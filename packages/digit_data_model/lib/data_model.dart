@@ -263,5 +263,6 @@ enum DataModelType {
   attendanceRegister,
   attendance,
   userLocation,
-  uniqueId,
+  userAction,
+  uniqueId
 }

@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:digit_data_model/data/local_store/sql_store/tables/localization.dart';
+import 'package:digit_data_model/data/local_store/sql_store/tables/user_action.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/foundation.dart';
@@ -105,6 +106,7 @@ part 'sql_store.g.dart';
   SideEffect,
   Referral,
   Localization,
+  UserAction,
   UniqueIdPool
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {

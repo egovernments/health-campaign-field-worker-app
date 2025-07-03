@@ -70,6 +70,7 @@ dependencies:
   permission_handler: ^11.3.1
   survey_form: ^1.0.3
   complaints: ^1.0.3-dev.1-enumeration
+  transit_post: ^1.0.0
   flutter_nearby_connections:
     git:
       url: https://github.com/champeauxr/flutter_nearby_connections

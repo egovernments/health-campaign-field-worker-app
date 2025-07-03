@@ -139,6 +139,7 @@ class CustomSyncRegistry implements SyncUpOperation {
       LocalRepository<EntityModel, EntitySearchModel> local) async {
     for (final syncedEntity in entity) {
       if (syncedEntity.type == DataModelType.complaints) continue;
+
       await local.markSyncedUp(
         entry: syncedEntity,
         id: syncedEntity.id,

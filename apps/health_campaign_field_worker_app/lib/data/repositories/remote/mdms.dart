@@ -356,6 +356,15 @@ class MdmsRepository {
       return searchFilters;
     }).toList();
 
+    appConfiguration.transitPostType =
+        result.hcmWrapperModel?.transitPostType?.map((e) {
+      final transitPostType = TransitPostType()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+      return transitPostType;
+    }).toList();
+
     appConfiguration.symptomsTypes =
         result.hcmWrapperModel?.symptomsTypeList?.map((e) {
       final symptomTypes = SymptomsTypes()

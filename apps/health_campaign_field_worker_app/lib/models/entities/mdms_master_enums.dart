@@ -59,4 +59,6 @@ enum MasterEnums {
   privacyPolicy,
   @MappableValue("dashboardConfig")
   dashboardConfig,
+  @MappableValue("TRANSIT_POST_TYPE")
+  transitPostType,
 }
