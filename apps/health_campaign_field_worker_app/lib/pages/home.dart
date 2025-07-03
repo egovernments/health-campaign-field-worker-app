@@ -32,8 +32,6 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
-import 'package:transit_post/data/repositories/local/user_action.dart';
-import 'package:transit_post/data/repositories/remote/user_action.dart';
 import 'package:transit_post/router/transit_post_router.gm.dart';
 import 'package:transit_post/utils/utils.dart';
 
@@ -608,14 +606,14 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
-      i18.home.db: homeShowcaseData.db.showcaseKey,
       i18.home.closedHouseHoldLabel:
           homeShowcaseData.closedHouseHold.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
       i18.home.clfLabel: homeShowcaseData.clf.showcaseKey,
       i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey,
-      i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey
+      i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
+      i18.home.db: homeShowcaseData.db.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -632,10 +630,10 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.viewReportsLabel,
       i18.home.beneficiaryReferralLabel,
       i18.home.manageAttendanceLabel,
-      i18.home.db,
       i18.home.dashboard,
       i18.home.beneficiaryIdLabel,
-      i18.home.dataShare
+      i18.home.dataShare,
+      i18.home.db,
     ];
 
     final List<String> filteredLabels = homeItemsLabel

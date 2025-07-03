@@ -76,10 +76,6 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
         onPopInvoked: (pop) {},
         child: BlocListener<PeerToPeerBloc, PeerToPeerState>(
           listener: (context, state) {
-            // if (state is DataReceived) {
-            //   context.router
-            //       .popAndPush(AcknowledgementRoute(isDataRecordSuccess: false));
-            // }
             if (state is FailedDataTransfer) {
               Toast.showToast(
                 context,
@@ -87,12 +83,12 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                 type: ToastType.error,
                 position: ToastPosition.aboveOneButtonFooter,
               );
-              // context.router.maybePop();
             }
           },
           child: BlocBuilder<PeerToPeerBloc, PeerToPeerState>(
             builder: (context, state) {
               return ScrollableContent(
+                  enableFixedDigitButton: true,
                   header: const BackNavigationHelpHeaderWidget(
                     showHelp: true,
                   ),

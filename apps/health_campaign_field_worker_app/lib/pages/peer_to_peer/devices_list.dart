@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:attendance_management/widgets/back_navigation_help_header.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:digit_ui_components/digit_components.dart';
-import 'package:digit_ui_components/services/BottomSheetService.dart';
 import 'package:digit_ui_components/theme/TextTheme/digit_text_theme.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
@@ -363,53 +362,99 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
               if (mounted) {
                 _isSheetShown = true;
 
-                DigitBottomSheetService().show(
-                  onPrimaryAction: (ctx) {
-                    handleFooterButtonPress();
-                  },
-                  primaryActionLabel:
-                      localizations.translate(i18.dataShare.sendAction),
-                  secondaryActionLabel:
-                      localizations.translate(i18.common.coreCommonCancel),
+                await showModalBottomSheet(
                   context: context,
-                  initialHeightPercentage: 70,
-                  allowInteractionWithUnderlyingContent: true,
-                  content: SafeArea(
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: spacer2),
-                          child: Text(
-                            textAlign: TextAlign.start,
-                            localizations
-                                .translate(i18.dataShare.selectRecipients),
-                            style: textTheme.headingL.copyWith(
-                              color: theme.colorTheme.primary.primary2,
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: spacer3),
-
-                        // Device list
-                        ValueListenableBuilder<List<Device>>(
-                          valueListenable: _deviceNotifier,
-                          builder: (context, deviceList, _) {
-                            final list =
-                                widget.deviceType == DeviceType.receiver
-                                    ? connectedDevices
-                                    : devices;
-
-                            return Column(
-                              children: list.map(buildDeviceListTile).toList(),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
+                  isScrollControlled: false,
+                  isDismissible:
+                      widget.deviceType == DeviceType.sender ? false : true,
+                  enableDrag: true,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(spacer4)),
                   ),
+                  elevation: 2,
+                  showDragHandle: true,
+                  builder: (ctx) {
+                    return SafeArea(
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.8,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: spacer3,
+                              ),
+                              child: Text(
+                                textAlign: TextAlign.start,
+                                localizations
+                                    .translate(i18.dataShare.selectRecipients),
+                                style: textTheme.headingL.copyWith(
+                                    color: theme.colorTheme.primary.primary2),
+                              ),
+                            ),
+
+                            // Device list
+                            Expanded(
+                              child: ValueListenableBuilder<List<Device>>(
+                                valueListenable: _deviceNotifier,
+                                builder: (context, deviceList, _) {
+                                  return ListView.builder(
+                                    itemCount:
+                                        widget.deviceType == DeviceType.receiver
+                                            ? connectedDevices.length
+                                            : devices.length,
+                                    itemBuilder: (context, index) {
+                                      final device = widget.deviceType ==
+                                              DeviceType.receiver
+                                          ? connectedDevices[index]
+                                          : devices[index];
+                                      return buildDeviceListTile(device);
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+
+                            // Bottom button
+                            DigitCard(
+                              margin: const EdgeInsets.only(top: spacer4),
+                              padding: const EdgeInsets.all(spacer4),
+                              inline: true,
+                              children: [
+                                DigitButton(
+                                  onPressed: handleFooterButtonPress,
+                                  type: DigitButtonType.primary,
+                                  label: localizations
+                                      .translate(i18.dataShare.sendAction),
+                                  size: DigitButtonSize.large,
+                                  mainAxisSize: MainAxisSize.max,
+                                  capitalizeLetters: false,
+                                ),
+                                DigitButton(
+                                  onPressed: () {
+                                    for (var e in connectedDevices) {
+                                      nearbyService.disconnectPeer(
+                                          deviceID: e.deviceId);
+                                    }
+                                    Navigator.of(ctx).pop();
+                                  },
+                                  type: DigitButtonType.secondary,
+                                  label: localizations
+                                      .translate(i18.common.coreCommonCancel),
+                                  size: DigitButtonSize.large,
+                                  mainAxisSize: MainAxisSize.max,
+                                  capitalizeLetters: false,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 );
+
                 _isSheetShown = false;
               }
             });

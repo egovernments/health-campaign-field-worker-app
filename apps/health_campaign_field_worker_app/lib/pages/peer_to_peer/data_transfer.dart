@@ -44,7 +44,9 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
       for (var device in devices) {
         if (device.state == SessionState.notConnected) {
           if (mounted) {
-            context.router.maybePop();
+            if (!devices.any((e) => e.state == SessionState.connected)) {
+              context.router.maybePop();
+            }
             Toast.showToast(
               context,
               message: localizations.translate(
@@ -83,6 +85,7 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
         child: BlocBuilder<PeerToPeerBloc, PeerToPeerState>(
             builder: (context, state) {
           return ScrollableContent(
+            enableFixedDigitButton: true,
             header: const BackNavigationHelpHeaderWidget(
               showHelp: true,
             ),
@@ -242,11 +245,10 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                               const SizedBox(height: spacer4),
                               Center(
                                 child: Text(
-                                  localizations.translate(
-                                      i18.dataShare.failedToTransfer),
+                                  localizations.translate(i18
+                                      .dataShare.failedToTransferDescription),
                                   style: textTheme.bodyS.copyWith(
-                                      color: DigitTheme.instance.colors.light
-                                          .paperSecondary),
+                                      color: theme.colorTheme.text.secondary),
                                 ),
                               ),
                               const Center(
