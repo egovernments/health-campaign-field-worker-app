@@ -75,8 +75,6 @@ dependencies:
     git:
       url: https://github.com/champeauxr/flutter_nearby_connections
       ref: master
-  #  flutter_nearby_connections:
-  #    path: ../../packages/flutter_nearby_connections
   percent_indicator: ^4.2.4
   lottie: ^3.1.0
 

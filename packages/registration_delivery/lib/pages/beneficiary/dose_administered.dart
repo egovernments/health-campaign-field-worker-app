@@ -178,38 +178,41 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                                   overViewBloc
                                                       .householdMemberWrapper
                                                       .household,
-                                                  context: context)?['criteria']
+                                                  context: context)['criteria']
                                               .productVariants
-                                              ?.map((variant) =>
-                                                  TaskResourceModel(
-                                                    clientReferenceId:
-                                                        IdGen.i.identifier,
-                                                    tenantId:
-                                                        RegistrationDeliverySingleton()
-                                                            .tenantId,
-                                                    taskclientReferenceId:
-                                                        clientReferenceId,
-                                                    quantity: variant.quantity
-                                                        .toString(),
-                                                    productVariantId: variant
-                                                        .productVariantId,
-                                                    isDelivered: true,
-                                                    auditDetails: AuditDetails(
-                                                      createdBy:
-                                                          RegistrationDeliverySingleton()
-                                                              .loggedInUserUuid!,
-                                                      createdTime: context
-                                                          .millisecondsSinceEpoch(),
-                                                    ),
-                                                    clientAuditDetails:
-                                                        ClientAuditDetails(
-                                                      createdBy:
-                                                          RegistrationDeliverySingleton()
-                                                              .loggedInUserUuid!,
-                                                      createdTime: context
-                                                          .millisecondsSinceEpoch(),
-                                                    ),
-                                                  ))
+                                              ?.map<TaskResourceModel>(
+                                                  (variant) =>
+                                                      TaskResourceModel(
+                                                        clientReferenceId:
+                                                            IdGen.i.identifier,
+                                                        tenantId:
+                                                            RegistrationDeliverySingleton()
+                                                                .tenantId,
+                                                        taskclientReferenceId:
+                                                            clientReferenceId,
+                                                        quantity: variant
+                                                            .quantity
+                                                            .toString(),
+                                                        productVariantId: variant
+                                                            .productVariantId,
+                                                        isDelivered: true,
+                                                        auditDetails:
+                                                            AuditDetails(
+                                                          createdBy:
+                                                              RegistrationDeliverySingleton()
+                                                                  .loggedInUserUuid!,
+                                                          createdTime: context
+                                                              .millisecondsSinceEpoch(),
+                                                        ),
+                                                        clientAuditDetails:
+                                                            ClientAuditDetails(
+                                                          createdBy:
+                                                              RegistrationDeliverySingleton()
+                                                                  .loggedInUserUuid!,
+                                                          createdTime: context
+                                                              .millisecondsSinceEpoch(),
+                                                        ),
+                                                      ))
                                               .toList(),
                                           additionalFields:
                                               TaskAdditionalFields(
@@ -377,7 +380,7 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                                     .household,
                                                 context: context)!['criteria']
                                             .productVariants!
-                                            .map((ele) {
+                                            .map<String>((ele) {
                                           final pv = variant!.firstWhere(
                                             (element) =>
                                                 element.id ==
