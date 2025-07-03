@@ -6,31 +6,33 @@ import 'package:digit_data_model/data_model.dart';
 part 'project_product_variant.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ProjectProductVariantSearchModel extends EntitySearchModel with ProjectProductVariantSearchModelMappable {
+class ProjectProductVariantSearchModel extends EntitySearchModel
+    with ProjectProductVariantSearchModelMappable {
   final String? productVariantId;
   final String? tenantId;
-  
+
   ProjectProductVariantSearchModel({
     this.productVariantId,
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   ProjectProductVariantSearchModel.ignoreDeleted({
     this.productVariantId,
     this.tenantId,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ProjectProductVariantModel extends EntityModel with ProjectProductVariantModelMappable {
-
+class ProjectProductVariantModel extends EntityModel
+    with ProjectProductVariantModelMappable {
   static const schemaName = 'ProjectProductVariant';
 
   final String productVariantId;
+  final String? name;
   final String? type;
   final bool? isBaseUnitVariant;
   final bool? nonRecoverableError;
@@ -40,15 +42,17 @@ class ProjectProductVariantModel extends EntityModel with ProjectProductVariantM
 
   ProjectProductVariantModel({
     this.additionalFields,
+    this.name,
     required this.productVariantId,
     this.type,
     this.isBaseUnitVariant,
     this.nonRecoverableError = false,
     this.tenantId,
     this.rowVersion,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   ProjectProductVariantCompanion get companion {
     return ProjectProductVariantCompanion(
@@ -68,16 +72,17 @@ class ProjectProductVariantModel extends EntityModel with ProjectProductVariantM
       nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
-      );
+      name: Value(name),
+    );
   }
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ProjectProductVariantAdditionalFields extends AdditionalFields with ProjectProductVariantAdditionalFieldsMappable {
+class ProjectProductVariantAdditionalFields extends AdditionalFields
+    with ProjectProductVariantAdditionalFieldsMappable {
   ProjectProductVariantAdditionalFields({
     super.schema = 'ProjectProductVariant',
     required super.version,
     super.fields,
   });
 }
-

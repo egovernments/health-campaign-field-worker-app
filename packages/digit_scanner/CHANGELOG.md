@@ -1,3 +1,8 @@
+## 1.0.6
+
+* Updated with new fields for manual entry for gs1 codes
+* Updated dynamic capturing of gs1 codes
+
 ## 1.0.5+1
 
 * Updated to latest package versions

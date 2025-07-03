@@ -1,8 +1,11 @@
 import 'package:attendance_management/router/attendance_router.dart';
+import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:closed_household/router/closed_household_router.dart';
+import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:complaints/router/complaints_router.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/router/dashboard_router.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
@@ -11,11 +14,15 @@ import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import 'package:inventory_management/router/inventory_router.dart';
+import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.dart';
+import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:survey_form/router/survey_form_router.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
+import 'package:transit_post/router/transit_post_router.dart';
+import 'package:transit_post/router/transit_post_router.gm.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
@@ -50,7 +57,8 @@ part 'app_router.gr.dart';
     ClosedHouseholdPackageRoute,
     DashboardRoute,
     SurveyFormRoute,
-    ComplaintsRoute
+    ComplaintsRoute,
+    TransitPostRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -202,6 +210,8 @@ class AppRouter extends _$AppRouter {
 
         // Referral Reconciliation Route
         ...ReferralReconciliationRoute().routes,
+
+        ...TransitPostRoute().routes,
 
         AutoRoute(
           page: DataShareHomeRoute.page,

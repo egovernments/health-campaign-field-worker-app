@@ -88,6 +88,10 @@ class EntityMapper extends EntityMapperListener {
         final entity = UserActionModelMapper.fromJson(entityString);
         return entity;
 
+      case "userAction":
+        final entity = UserActionModelMapper.fromJson(entityString);
+        return entity;
+
       default:
         final entity = EntityModelMapper.fromJson(entityString);
         return entity;
