@@ -24,6 +24,11 @@ class DataShareHomePage extends LocalizedStatefulWidget {
 
 class _DataShareHomeState extends LocalizedState<DataShareHomePage> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
@@ -96,6 +101,10 @@ class _DataShareHomeState extends LocalizedState<DataShareHomePage> {
                                             label: localizations.translate(i18
                                                 .beneficiaryDetails.ctaProceed),
                                             onPressed: () {
+                                              Navigator.of(
+                                                ctx,
+                                                rootNavigator: true,
+                                              ).pop();
                                               context.router.push(
                                                   DevicesListRoute(
                                                       deviceType:

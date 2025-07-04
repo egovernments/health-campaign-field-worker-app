@@ -494,8 +494,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               } catch (_) {
                 emit(state.copyWith(
                   projects: [],
-                loading: false,
-                syncError: ProjectSyncErrorType.attendance,
+                  loading: false,
+                  syncError: ProjectSyncErrorType.attendance,
                 ));
                 return;
               }
