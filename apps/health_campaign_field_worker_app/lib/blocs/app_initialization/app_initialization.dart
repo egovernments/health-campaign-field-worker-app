@@ -91,6 +91,7 @@ class AppInitializationBloc
                     MasterEnums.appConfig.toValue(),
                     MasterEnums.symptomTypes.toValue(),
                     MasterEnums.referralReasons.toValue(),
+                    MasterEnums.manualAttendanceReasons.toValue(),
                     MasterEnums.houseStructureTypes.toValue(),
                     MasterEnums.refusalReasons.toValue(),
                     MasterEnums.bandWidthBatchSize.toValue(),

@@ -27,11 +27,15 @@ class Common {
 
   String get searchByName => 'CORE_COMMON_SEARCH_BY_NAME';
 
+  String get searchByNameOrID => 'CORE_COMMON_SEARCH_BY_NAME_OR_ID';
+
   String get coreCommonReasonRequired => 'CORE_COMMON_REASON_REQUIRED';
 
   String get corecommonclose => 'CORE_COMMON_CLOSE';
 
   String get coreCommonOk => 'CORE_COMMON_OK';
+
+  String get coreCommonOr => 'CORE_COMMON_OR';
 
   String get coreCommonNA => 'CORE_COMMON_NA';
 
@@ -68,6 +72,7 @@ class Common {
   String get coreCommonYes => 'CORE_COMMON_YES';
 
   String get coreCommonNo => 'CORE_COMMON_NO';
+
   String get coreCommonGoback => 'CORE_COMMON_GO_BACK';
 
   String get coreCommonRequiredItems => 'CORE_COMMON_REQUIRED_ITEMS';
@@ -77,6 +82,7 @@ class Common {
   String get maxCharsRequired => 'MAX_CHARS_ALLOWED';
 
   String get maxValue => 'MAX_VALUE_ALLOWED';
+
   String get minValue => 'MIN_VALUE_ALLOWED';
 
   String get noResultsFound => 'NO_RESULTS_FOUND';
@@ -86,6 +92,7 @@ class Common {
   String get coreCommonSyncInProgress => 'CORE_COMMON_SYNC_IN_PROGRESS';
 
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
+
   String get projectFacilitySearchHeaderLabel =>
       'PROJECT_FACILITY_SEARCH_HEADER_LABEL';
 
@@ -96,13 +103,24 @@ class Common {
   String get noMatchFound => 'CORE_COMMON_NO_MATCH_FOUND';
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
+
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
 
   String get inactive => 'INACTIVE';
 
   String get locationCapturing => 'CAPTURING_LOCATION';
+
   String get locationCaptured => 'LOCATION_CAPTURED';
+
+  String get locationLabel => 'LOCATION_LABEL';
+
   String get ctaProceed => 'PROCEED';
+
+  String get clearFilter => 'CLEAR_FILTER';
+
+  String get applyFilter => 'APPLY';
+
+  String get filterByStatus => 'FILTER_BY_STATUS';
 }
 
 class AcknowledgementSuccess {
@@ -116,7 +134,9 @@ class AcknowledgementSuccess {
   String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
 
   String get goToHome => 'GO_TO_HOME_SCREEN';
+
   String get downloadmoredata => 'DOWNLOAD_MORE_DATA';
+
   String get dataDownloadedSuccessLabel => 'DATA_DOWNLOADED_SUCCESS_LABEL';
 }
 
@@ -172,13 +192,21 @@ class Attendance {
 
   String get markAttendance => 'BUTTON_MARK_ATTENDANCE';
 
-  String get tableHeaderName => 'TABLE_HEADER_NAME';
+  String get name => 'TABLE_HEADER_NAME';
 
   String get tableHeaderAttendance => 'TABLE_HEADER_ATTENDANCE';
 
-  String get tableHeaderUserId => 'TABLE_HEADER_USERID';
+  String get userId => 'TABLE_HEADER_USERID';
+
+  String get individualId => 'INDIVIDUAL_ID_NUMBER';
 
   String get markAttendanceLabel => "LABEL_MARK_ATTENDANCE";
+
+  String get markedAsPresent => "MARKED_AS_PRESENT";
+
+  String get attendanceUnMarked => "UN_MARKED";
+
+  String get markedAsAbsent => "MARKED_AS_ABSENT";
 
   String get closeButton => "CLOSE_BUTTON";
 
@@ -202,6 +230,14 @@ class Attendance {
 
   String get goToAttendanceRegisters => "GO_TO_ATTENDANCE_REGISTERS";
 
+  String get reasonForManualAttendance =>
+      "REASON_FOR_MARKING_ATTENDANCE_MANUALLY";
+
+  String get selectReason => "SELECT_REASON";
+
+  String get reasonForManualAttendanceDesc =>
+      "REASON_FOR_MARKING_ATTENDANCE_MANUALLY_DESC";
+
   String get plzSelectSession => "PLZ_SELECT_THE_SESSION";
 
   String get checkAttendanceMark => "CHECK_ATTENDANCE_MARK";
@@ -221,6 +257,41 @@ class Attendance {
   String get missedAttendanceDescription => "MISSED_ATTENDANCE_DESCRIPTION";
 
   String get halfDay => 'HALF_DAY';
+
   String get present => 'PRESENT';
+
   String get absent => 'ABSENT';
+
+  String get markAsAbsent => 'MARK_AS_ABSENT';
+
+  String get ctaDateChangeProceed => 'DATE_CHANGE_PROCEED';
+
+  String get scanAnotherQR => 'SCAN_ANOTHER_QR';
+
+  String get actionRequired => "ACTION_REQUIRED";
+
+  String get qrCreatedTime => 'QR_CREATED_TIME';
+
+  String get scannerNotAvailableTitle => 'SCANNER_NOT_AVAILABLE_TITLE';
+
+  String get scannerNotAvailableDescription =>
+      'SCANNER_NOT_AVAILABLE_DESCRIPTION';
+
+  String get manualScanLabel => 'ATTENDANCE_MANUAL_SCAN';
+
+  String get enterUniqueCode => 'ENTER_UNIQUE_CODE';
+
+  String get userQRTimeExpiredError => 'USER_QR_TIME_EXPIRED_ERROR';
+
+  String get qrAlreadyScanned => 'USER_QR_ALREADY_SCANNED';
+
+  String get uniqueCodeLabel => 'UNIQUE_CODE_LABEL';
+
+  String get attendeeNotFound => 'ATTENDEE_NOT_FOUND';
+
+  String get failedToScanQR => 'QR_SCANNER_FAILED';
+
+  String get markAttendanceManually => 'MARK_ATTENDANCE_MANUALLY';
+
+  String get validationRequiredError => 'COMMENT_VALIDATION_REQUIRED_ERROR';
 }

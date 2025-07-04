@@ -460,7 +460,8 @@ class _HomePageState extends LocalizedState<HomePage> {
               icon: Icons.sync_alt,
               label: i18.home.syncDataLabel,
               onPressed: () async {
-                if (envConfig.variables.envType == EnvType.qa) {
+                if (envConfig.variables.envType == EnvType.qa ||
+                    envConfig.variables.envType == EnvType.dev) {
                   if (context.mounted) attemptSyncUp(context);
                 } else {
                   if (snapshot.data?['enablesManualSync'] == true) {
@@ -789,10 +790,15 @@ void setPackagesSingleton(BuildContext context) {
         );
 
         AttendanceSingleton().setInitialData(
-          projectId: context.projectId,
+          project: context.selectedProject,
           loggedInIndividualId: context.loggedInIndividualId ?? '',
           loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,
+          manualAttendanceReasons: appConfiguration.manualAttendanceReasons
+          ?.where((e) => e.active)
+          .map((e) => DropdownItem(name: e.name, code: e.code)) 
+          .toList() ??
+      [],
         );
 
         SurveyFormSingleton().setInitialData(

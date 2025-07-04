@@ -31,6 +31,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.symptomTypes;
       case "REFERRAL_REASONS":
         return MasterEnums.referralReasons;
+      case "MANUAL_ATTENDANCE_REASONS":
+        return MasterEnums.manualAttendanceReasons;
       case "HOUSE_STRUCTURE_TYPES":
         return MasterEnums.houseStructureTypes;
       case "REFUSAL_REASONS":
@@ -95,6 +97,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "SYMPTOM_TYPES";
       case MasterEnums.referralReasons:
         return "REFERRAL_REASONS";
+      case MasterEnums.manualAttendanceReasons:
+        return "MANUAL_ATTENDANCE_REASONS";
       case MasterEnums.houseStructureTypes:
         return "HOUSE_STRUCTURE_TYPES";
       case MasterEnums.refusalReasons:

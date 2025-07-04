@@ -155,6 +155,11 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
       referralReasonList: (json['REFERRAL_REASONS'] as List<dynamic>?)
           ?.map((e) => ReferralReasonType.fromJson(e as Map<String, dynamic>))
           .toList(),
+      manualAttendanceReasonList: (json['MANUAL_ATTENDANCE_REASONS']
+              as List<dynamic>?)
+          ?.map((e) =>
+              ManualAttendanceReasonType.fromJson(e as Map<String, dynamic>))
+          .toList(),
       houseStructureTypes: (json['HOUSE_STRUCTURE_TYPES'] as List<dynamic>?)
           ?.map((e) => CommonMasterModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -192,6 +197,7 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'SEARCH_HOUSEHOLD_FILTERS': instance.searchHouseHoldFilters,
       'SEARCH_CLF_FILTERS': instance.searchCLFFilters,
       'REFERRAL_REASONS': instance.referralReasonList,
+      'MANUAL_ATTENDANCE_REASONS': instance.manualAttendanceReasonList,
       'HOUSE_STRUCTURE_TYPES': instance.houseStructureTypes,
       'REFUSAL_REASONS': instance.refusalReasons,
       'FIREBASE_CONFIG': instance.firebaseConfig,

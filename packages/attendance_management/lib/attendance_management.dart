@@ -21,6 +21,5 @@ export 'models/entities/register_status.dart';
 export 'models/entities/staff.dart';
 export 'pages/manage_attendance.dart';
 export 'pages/mark_attendance.dart';
-export 'pages/session_select.dart';
 export 'router/attendance_router.dart';
 export 'utils/utils.dart';
