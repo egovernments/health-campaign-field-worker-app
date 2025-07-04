@@ -9,9 +9,6 @@ class AttendanceRoute extends $AttendanceRoute {
   List<AutoRoute> routes = [
     AutoRoute(page: ManageAttendanceRoute.page),
     AutoRoute(
-      page: AttendanceDateSessionSelectionRoute.page,
-    ),
-    AutoRoute(
       page: MarkAttendanceRoute.page,
     ),
     AutoRoute(page: AttendanceAcknowledgementRoute.page),

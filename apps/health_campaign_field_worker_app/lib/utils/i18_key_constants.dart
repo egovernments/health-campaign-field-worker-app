@@ -35,6 +35,8 @@ const complaintsDetailsShowcase = ComplaintsDetailsShowcase();
 const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
 const complaintsInboxShowcase = ComplaintsInboxShowcase();
 
+const nonMobileUser = NonMobileUser();
+
 class Common {
   const Common();
 
@@ -142,6 +144,10 @@ class Common {
   String get locationCapturing => 'CAPTURING_LOCATION';
 
   String get profileUpdateSuccess => 'PROFILE_UPDATE_SUCCESS';
+
+  String get qrInventory => 'QR_INVENTORY';
+
+  String get qrAttendance => 'QR_ATTENDANCE';
 }
 
 class HomeShowcase {
@@ -1163,4 +1169,14 @@ class Dashboard {
   const Dashboard();
 
   String get dashboardHeaderLabel => 'DASHBOARD_HEADER';
+}
+
+class NonMobileUser {
+  const NonMobileUser();
+
+  String get nonMobileUserLabel => 'NON_MOBILE_USER_LABEL';
+
+  String get showQrCodeBtnLabel => 'NON_MOBILE_USER_QR_BTN_LABEL';
+
+  String get showQrCodeLabel => 'NON_MOBILE_USER_QR_LABEL';
 }

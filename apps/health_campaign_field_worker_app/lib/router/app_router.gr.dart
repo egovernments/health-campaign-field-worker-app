@@ -127,6 +127,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: WrappedRoute(child: const PeerToPeerWrapperPage()),
       );
     },
+    NonMobileUserListRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const NonMobileUserListPage(),
+      );
+    },
     ProfileRoute.name: (routeData) {
       final args = routeData.argsAs<ProfileRouteArgs>(
           orElse: () => const ProfileRouteArgs());
@@ -565,6 +571,20 @@ class PeerToPeerWrapperRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'PeerToPeerWrapperRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [NonMobileUserListPage]
+class NonMobileUserListRoute extends PageRouteInfo<void> {
+  const NonMobileUserListRoute({List<PageRouteInfo>? children})
+      : super(
+          NonMobileUserListRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'NonMobileUserListRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

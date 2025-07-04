@@ -6,6 +6,7 @@ import 'package:camera/camera.dart';
 import 'package:digit_scanner/utils/scanner_utils.dart';
 import 'package:digit_scanner/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/TextTheme/digit_text_theme.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -37,10 +38,10 @@ class DigitScannerPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<DigitScannerPage> createState() => _DigitScannerPageState();
+  State<DigitScannerPage> createState() => DigitScannerPageState();
 }
 
-class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
+class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
   final BarcodeScanner _barcodeScanner = BarcodeScanner();
   bool _canProcess = true;
   bool _isBusy = false;
@@ -81,83 +82,293 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
         builder: (context, state) {
           return _cameras.isNotEmpty
               ? !manualCode
-                  ? Stack(
-                      children: <Widget>[
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
-                          color: theme.colorScheme.onSurfaceVariant
-                              .withOpacity(0.5),
-                          child: DetectorView(
-                            cameraController: _cameraController,
-                            cameras: _cameras,
-                            title: localizations
-                                .translate(i18.scanner.barCodeScannerLabel),
-                            customPaint: _customPaint,
-                            text: _text,
-                            onImage: _processImage,
-                            initialCameraLensDirection: _cameraLensDirection,
-                            onCameraLensDirectionChanged: (value) =>
-                                _cameraLensDirection = value,
-                            onBackButtonPressed: () {
-                              context
-                                  .read<DigitScannerBloc>()
-                                  .add(const DigitScannerEvent.handleScanner(
-                                    barCode: [],
-                                    qrCode: [],
-                                  ));
-                              Navigator.of(context).pop();
-                            },
-                          ),
+                  ? scanWidget(context, theme, textTheme, state)
+                  : manualEntryWidget(context, theme, textTheme)
+              : const Center(
+                  child: CircularProgressIndicator(),
+                );
+        },
+      ),
+    );
+  }
+
+  Future<void> processImage(InputImage inputImage) async {
+    await DigitScannerUtils().processImage(
+      context: context,
+      inputImage: inputImage,
+      canProcess: _canProcess,
+      isBusy: _isBusy,
+      setBusy: (busy) => mounted ? setState(() => _isBusy = busy) : null,
+      setText: (text) => mounted ? setState(() => _text = text) : null,
+      updateCustomPaint: (customPaint) => _customPaint = customPaint,
+      isGS1code: widget.isGS1code,
+      quantity: widget.quantity,
+      result: result,
+      handleError: handleErrorWrapper,
+      storeValue: storeValueWrapper,
+      storeCode: storeCodeWrapper,
+      cameraLensDirection: _cameraLensDirection,
+      barcodeScanner: _barcodeScanner,
+      localizations: localizations,
+    );
+  }
+
+  Future<void> handleErrorWrapper(String message) async {
+    await DigitScannerUtils().handleError(
+      context: context,
+      message: message,
+      player: player,
+      result: result,
+      setStateCallback: () {
+        setState(() {
+          _canProcess = true;
+          _isBusy = false;
+        });
+      },
+      localizations: localizations,
+    );
+  }
+
+  Future<void> storeCodeWrapper(String code) async {
+    await DigitScannerUtils().storeCode(
+      context: context,
+      code: code,
+      player: player,
+      singleValue: widget.singleValue,
+      updateCodes: (newCodes) {
+        setState(() {
+          codes = newCodes;
+        });
+      },
+      initialCodes: codes,
+    );
+  }
+
+  Future<void> storeValueWrapper(GS1Barcode scanData) async {
+    await DigitScannerUtils().storeValue(
+      context: context,
+      scanData: scanData,
+      player: player,
+      updateResult: (newResult) {
+        setState(() {
+          result = newResult;
+        });
+      },
+      initialResult: result,
+    );
+  }
+
+  @override
+  void dispose() {
+    _cameraController?.dispose();
+    _barcodeScanner.close();
+    super.dispose();
+  }
+
+  void initializeCameras() async {
+    if (_cameras.isEmpty) {
+      _cameras = await availableCameras();
+    }
+    for (var i = 0; i < _cameras.length; i++) {
+      if (_cameras[i].lensDirection == _cameraLensDirection) {
+        setState(() {
+          _cameraIndex = i;
+        });
+        break;
+      }
+    }
+    var camera = _cameras[_cameraIndex];
+    _cameraController = CameraController(
+      camera,
+      // Set to ResolutionPreset.high. Do NOT set it to ResolutionPreset.max because for some phones does NOT work.
+      ResolutionPreset.high,
+      enableAudio: false,
+      imageFormatGroup: Platform.isAndroid
+          ? ImageFormatGroup.nv21
+          : ImageFormatGroup.bgra8888,
+    );
+  }
+
+  FormGroup buildForm() {
+    return fb
+        .group(<String, Object>{_manualCodeFormKey: FormControl<String>()});
+  }
+
+  manualEntryWidget(
+      BuildContext context, ThemeData theme, DigitTextTheme textTheme) {
+    return BlocBuilder<DigitScannerBloc, DigitScannerState>(
+        builder: (context, state) {
+      return ReactiveFormBuilder(
+          form: () => buildForm(),
+          builder: (context, form, child) {
+            return ScrollableContent(
+              backgroundColor: theme.colorScheme.onError,
+              header: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    manualCode = false;
+                    initializeCameras();
+                  });
+                },
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Icon(
+                    Icons.close,
+                    color: Theme.of(context).colorTheme.text.primary,
+                  ),
+                ),
+              ),
+              footer: Padding(
+                padding: const EdgeInsets.all(spacer4),
+                child: DigitButton(
+                  mainAxisSize: MainAxisSize.max,
+                  onPressed: () async {
+                    if (form.control(_manualCodeFormKey).value == null ||
+                        form
+                            .control(_manualCodeFormKey)
+                            .value
+                            .toString()
+                            .trim()
+                            .isEmpty) {
+                      Toast.showToast(
+                        context,
+                        type: ToastType.error,
+                        message: localizations
+                            .translate(i18.scanner.enterManualCode),
+                      );
+                    } else {
+                      final bloc = context.read<DigitScannerBloc>();
+                      codes.add(form.control(_manualCodeFormKey).value);
+                      bloc.add(
+                        DigitScannerEvent.handleScanner(
+                          barCode: state.barCodes,
+                          qrCode: codes,
                         ),
-                        Positioned(
-                          top: spacer1 * 1.5,
-                          left: spacer1,
-                          child: SizedBox(
-                            child: InkWell(
-                              onTap: () async {
-                                _cameraController?.setFlashMode(
-                                  flashStatus ? FlashMode.off : FlashMode.torch,
-                                );
-                                setState(() {
-                                  flashStatus = !flashStatus;
-                                });
-                              },
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Icon(
-                                    flashStatus
-                                        ? Icons.flashlight_off
-                                        : Icons.flashlight_on,
-                                    color: theme.colorScheme.secondary,
-                                  ),
-                                  Text(
-                                    localizations.translate(
-                                      flashStatus
-                                          ? i18.scanner.flashOff
-                                          : i18.scanner.flashOn,
-                                    ),
-                                    style: TextStyle(
-                                      color: theme.colorScheme.secondary,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                      );
+                      if (widget.isGS1code && result.length < widget.quantity) {
+                        DigitScannerUtils().buildDialog(
+                          context,
+                          localizations,
+                          widget.quantity,
+                        );
+                      }
+
+                      setState(() {
+                        manualCode = false;
+                        initializeCameras();
+                      });
+                    }
+                  },
+                  type: DigitButtonType.primary,
+                  size: DigitButtonSize.large,
+                  label: localizations.translate(
+                    i18.common.coreCommonSubmit,
+                  ),
+                ),
+              ),
+              children: [
+                DigitCard(children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      localizations.translate(
+                        i18.scanner.enterManualCode,
+                      ),
+                      style: textTheme.headingL.copyWith(
+                        color: theme.colorTheme.text.primary,
+                      ),
+                    ),
+                  ),
+                  ReactiveWrapperField(
+                    formControlName: _manualCodeFormKey,
+                    builder: (field) {
+                      return InputField(
+                          label: localizations.translate(
+                            i18.scanner.resourceCode,
                           ),
-                        ),
-                        // [TODO : Need move to constants]
-                        Positioned(
-                          top: MediaQuery.of(context).size.width / 7.5,
-                          left: MediaQuery.of(context).size.width / 2.6,
-                          width: 250,
-                          height: 250,
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width / 3,
-                            height: MediaQuery.of(context).size.height / 3,
+                          errorMessage: field.errorText,
+                          isRequired: true,
+                          type: InputType.text,
+                          onChange: (value) {
+                            form.control(_manualCodeFormKey).value = value;
+                          });
+                    },
+                  ),
+                ])
+              ],
+            );
+          });
+    });
+  }
+
+  scanWidget(BuildContext context, ThemeData theme, DigitTextTheme textTheme,
+      DigitScannerState state) {
+    return Stack(
+      children: <Widget>[
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5),
+          child: DetectorView(
+            cameraController: _cameraController,
+            cameras: _cameras,
+            title: localizations.translate(i18.scanner.barCodeScannerLabel),
+            customPaint: _customPaint,
+            text: _text,
+            onImage: processImage,
+            initialCameraLensDirection: _cameraLensDirection,
+            onCameraLensDirectionChanged: (value) =>
+                _cameraLensDirection = value,
+            onBackButtonPressed: () {
+              context
+                  .read<DigitScannerBloc>()
+                  .add(const DigitScannerEvent.handleScanner(
+                    barCode: [],
+                    qrCode: [],
+                  ));
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+        Positioned(
+          top: spacer1 * 1.5,
+          left: spacer1,
+          child: SizedBox(
+            child: InkWell(
+              onTap: () async {
+                _cameraController?.setFlashMode(
+                  flashStatus ? FlashMode.off : FlashMode.torch,
+                );
+                setState(() {
+                  flashStatus = !flashStatus;
+                });
+              },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Icon(
+                    flashStatus ? Icons.flashlight_off : Icons.flashlight_on,
+                    color: theme.colorScheme.secondary,
+                  ),
+                  Text(
+                    localizations.translate(
+                      flashStatus ? i18.scanner.flashOff : i18.scanner.flashOn,
+                    ),
+                    style: TextStyle(
+                      color: theme.colorScheme.secondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        // [TODO : Need move to constants]
+        Padding(
+          padding: const EdgeInsets.only(top: spacer12),
+          child: Align(
+            alignment: Alignment.topCenter,
                             child: Text(
                               localizations.translate(
                                 i18.scanner.scannerLabel,
@@ -170,7 +381,17 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                           ),
                         ),
 
-                        Align(
+                       Center(
+            child: overlayForManualEntry(theme, textTheme),
+          ),
+
+        renderScannedResource(theme, textTheme, state)
+      ],
+    );
+  }
+
+  overlayForManualEntry(ThemeData theme, DigitTextTheme textTheme) {
+    return Align(
                           alignment: Alignment.center,
                           widthFactor: 2,
                           child: Padding(
@@ -210,9 +431,13 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                               ],
                             ),
                           ),
-                        ),
+                        );
+  }
 
-                        Positioned(
+  renderScannedResource(
+      ThemeData theme, DigitTextTheme textTheme, DigitScannerState state) {
+    return Stack(
+      children: [        Positioned(
                           bottom: 0,
                           width: MediaQuery.of(context).size.width,
                           child: DigitCard(
@@ -344,55 +569,48 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   widget.isGS1code
-                                                      ? DigitScannerUtils()
-                                                          .getGs1CodeFormattedString(
-                                                              state.barCodes)
-                                                          .entries
-                                                          .first
+                                                      ? DigitScannerUtils().getGs1CodeFormattedString(
+                                                              state.barCodes).entries
+                                          .first
                                                           .value
-                                                      : DigitScannerUtils()
-                                                          .trimString(state
-                                                              .qrCodes[index]
-                                                              .toString()),
-                                                ),
-                                              ),
-                                              IconButton(
-                                                padding: const EdgeInsets.only(
-                                                  bottom: spacer2,
-                                                ),
-                                                icon: Icon(
-                                                  Icons.delete,
-                                                  color:
-                                                      theme.colorScheme.error,
-                                                  size: 24,
-                                                ),
-                                                onPressed: () {
-                                                  final bloc = context
-                                                      .read<DigitScannerBloc>();
-                                                  if (widget.isGS1code) {
-                                                    result = List.from(
-                                                      state.barCodes,
-                                                    );
-                                                    result.removeAt(index);
-                                                    setState(() {
-                                                      result = result;
-                                                    });
+                                      : DigitScannerUtils().trimString(
+                                          state.qrCodes[index].toString()),
+                                ),
+                              ),
+                              IconButton(
+                                padding: const EdgeInsets.only(
+                                  bottom: spacer2,
+                                ),
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: theme.colorScheme.error,
+                                  size: 24,
+                                ),
+                                onPressed: () {
+                                  final bloc = context.read<DigitScannerBloc>();
+                                  if (widget.isGS1code) {
+                                    result = List.from(
+                                      state.barCodes,
+                                    );
+                                    result.removeAt(index);
+                                    setState(() {
+                                      result = result;
+                                    });
 
-                                                    bloc.add(
-                                                      DigitScannerEvent
-                                                          .handleScanner(
-                                                        barCode: result,
-                                                        qrCode: state.qrCodes,
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    codes = List.from(
-                                                      state.qrCodes,
-                                                    );
-                                                    codes.removeAt(index);
-                                                    setState(() {
-                                                      codes = codes;
-                                                    });
+                                    bloc.add(
+                                      DigitScannerEvent.handleScanner(
+                                        barCode: result,
+                                        qrCode: state.qrCodes,
+                                      ),
+                                    );
+                                  } else {
+                                    codes = List.from(
+                                      state.qrCodes,
+                                    );
+                                    codes.removeAt(index);
+                                    setState(() {
+                                      codes = codes;
+                                    });
 
                                                     bloc.add(
                                                       DigitScannerEvent

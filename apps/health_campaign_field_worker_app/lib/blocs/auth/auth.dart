@@ -100,7 +100,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       await localSecureStore.setRoleActions(actionsWrapper);
       if (result.userRequestModel.roles
-          .where((role) => role.code == RolesType.districtSupervisor.toValue())
+          .where((role) =>
+              role.code == RolesType.districtSupervisor.toValue() ||
+              role.code ==
+                  RolesType.distributor
+                      .toValue()) // NOTE: Savings distributor user details for fetching non mobile users
           .toList()
           .isNotEmpty) {
         final loggedInIndividual = await individualRemoteRepository.search(

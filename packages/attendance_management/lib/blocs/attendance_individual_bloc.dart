@@ -31,6 +31,7 @@ class AttendanceIndividualBloc
     on<AttendanceMarkEvent>(_onIndividualAttendanceMark);
     on<SaveAsDraftEvent>(_onSaveAsDraft);
     on<SearchAttendeesEvent>(_onSearchAttendeeByName);
+    on<ToggleSortTypeEvent>(_onToggleSortTypeEvent);
   }
 
   // Event handler for attendance log of Individual
@@ -91,42 +92,41 @@ class AttendanceIndividualBloc
     AttendanceMarkEvent event,
     AttendanceIndividualEmitter emit,
   ) async {
-    // Handling attendance marking
     await state.maybeMap(
       loaded: (value) async {
         List<AttendeeModel>? searchList;
-        double status = 0;
+        double newStatus = event.status;
+
         List<AttendeeModel> updatedList =
             value.attendanceCollectionModel!.map((e) {
           if (e.individualId == event.individualId) {
-            if (e.status == -1) {
+            // Toggle logic
+            double? status = e.status;
+            if (status == -1) {
+              status = newStatus;
+            } else if (status == 1 && newStatus == 1) {
               status = 1;
-            } else if (e.status == 1) {
-              if (event.isSingleSession) {
-                status = 0.5;
-              } else {
-                status = 0;
-              }
-            } else if (event.isSingleSession && e.status == 0.5) {
+            } else if (status == 0.5 && event.isSingleSession) {
               status = 0;
             } else {
-              status = 1;
+              status = newStatus;
             }
             return e.copyWith(status: status);
           }
           return e;
         }).toList();
-        // Updating search list if it's available
+
         if (value.attendanceSearchModelList != null &&
-            (value.attendanceSearchModelList ?? []).isNotEmpty) {
+            value.attendanceSearchModelList!.isNotEmpty) {
           searchList = value.attendanceSearchModelList!.map((e) {
             if (e.individualId == event.individualId) {
-              if (e.status == -1) {
-                status = 1;
-              } else if (e.status == 1) {
+              double? status = e.status;
+              if (status == -1) {
+                status = newStatus;
+              } else if (status == 1 && newStatus == 1) {
                 status = 0;
               } else {
-                status = 1;
+                status = newStatus;
               }
               return e.copyWith(status: status);
             }
@@ -151,12 +151,35 @@ class AttendanceIndividualBloc
     final List<AttendanceLogModel> list = [];
     await state.maybeMap(
       loaded: (value) async {
-        DateTime twelvePM = DateTime(event.selectedDate.year,
-            event.selectedDate.month, event.selectedDate.day, 11, 58);
-        int halfDay = twelvePM.millisecondsSinceEpoch;
         if (value.attendanceCollectionModel != null) {
           value.attendanceCollectionModel?.forEach((e) {
             if (e.status != -1) {
+              final Map<String, dynamic> entryAdditionalDetails = {
+                if (event.latitude != null)
+                  EnumValues.latitude.toValue(): event.latitude!,
+                if (event.longitude != null)
+                  EnumValues.longitude.toValue(): event.longitude!,
+                if (event.comment != null && event.comment!.isNotEmpty)
+                  "comment": event.comment!,
+                EnumValues.boundaryCode.toValue():
+                    AttendanceSingleton().boundary?.code ?? '',
+              };
+              final Map<String, dynamic> exitAdditionalDetails = {
+                if (event.latitude != null)
+                  EnumValues.latitude.toValue(): event.latitude!,
+                if (event.longitude != null)
+                  EnumValues.longitude.toValue(): event.longitude!,
+                EnumValues.boundaryCode.toValue():
+                    AttendanceSingleton().boundary?.code ?? '',
+                if (event.comment != null && event.comment!.isNotEmpty)
+                  "comment": event.comment!,
+              };
+
+              if (event.additionalDetails != null) {
+                entryAdditionalDetails.addAll(event.additionalDetails!);
+                exitAdditionalDetails.addAll(event.additionalDetails!);
+              }
+
               list.addAll([
                 AttendanceLogModel(
                   individualId: e.individualId,
@@ -168,47 +191,20 @@ class AttendanceIndividualBloc
                       : EnumValues.active.toValue(),
                   time: event.entryTime,
                   uploadToServer: (event.createOplog ?? false),
-                  additionalDetails: event.latitude != null &&
-                          event.longitude != null
-                      ? {
-                          "latitude": event.latitude,
-                          "longitude": event.longitude,
-                          if (event.comment!.isNotEmpty) "comment": event.comment,
-                        }
-                      : {
-                          EnumValues.boundaryCode.toValue():
-                              AttendanceSingleton().boundary?.code,
-                          if (event.comment!.isNotEmpty) "comment": event.comment,
-                        },
+                  additionalDetails: entryAdditionalDetails,
                 ),
                 AttendanceLogModel(
-                    individualId: e.individualId,
-                    registerId: e.registerId,
-                    tenantId: e.tenantId,
-                    type: EnumValues.exit.toValue(),
-                    status: e.status == 0
-                        ? EnumValues.inactive.toValue()
-                        : EnumValues.active.toValue(),
-                    time: e.status == 0
-                        ? event.exitTime
-                        : e.status == 0.5
-                            ? halfDay
-                            : event.exitTime,
-                    uploadToServer: (event.createOplog ?? false),
-                    additionalDetails: event.latitude != null &&
-                            event.longitude != null
-                        ? {
-                            EnumValues.latitude.toValue(): event.latitude,
-                            EnumValues.longitude.toValue(): event.longitude,
-                            EnumValues.boundaryCode.toValue():
-                                AttendanceSingleton().boundary?.code,
-                            if (event.comment!.isNotEmpty) "comment": event.comment,
-                          }
-                        : {
-                            EnumValues.boundaryCode.toValue():
-                                AttendanceSingleton().boundary?.code,
-                            if (event.comment!.isNotEmpty) "comment": event.comment,
-                          })
+                  individualId: e.individualId,
+                  registerId: e.registerId,
+                  tenantId: e.tenantId,
+                  type: EnumValues.exit.toValue(),
+                  status: e.status == 0
+                      ? EnumValues.inactive.toValue()
+                      : EnumValues.active.toValue(),
+                  time: e.status == 0 ? event.exitTime : event.exitTime,
+                  uploadToServer: (event.createOplog ?? false),
+                  additionalDetails: exitAdditionalDetails,
+                )
               ]);
             }
           });
@@ -242,7 +238,8 @@ class AttendanceIndividualBloc
         if (event.name.isNotEmpty && event.name.trim().length >= 2) {
           final List<AttendeeModel> result = value.attendanceCollectionModel!
               .where((item) =>
-                  item.name!.toLowerCase().contains(event.name.toLowerCase()))
+                  item.name!.toLowerCase().contains(event.name.toLowerCase()) ||
+                  item.individualNumber!.contains(event.name))
               .toList();
 
           emit(value.copyWith(attendanceSearchModelList: result));
@@ -251,6 +248,43 @@ class AttendanceIndividualBloc
         }
       },
     );
+  }
+
+  FutureOr<void> _onToggleSortTypeEvent(
+      ToggleSortTypeEvent event, AttendanceIndividualEmitter emit) {
+    state.maybeMap(
+      loaded: (loadedState) {
+        final original = loadedState.attendanceCollectionModel ?? [];
+        List<AttendeeModel> updatedList = [...original];
+
+        if (event.sortType == AttendanceSortType.presentFirst) {
+          updatedList.sort((a, b) => _getSortValue(a, event.sortType)
+              .compareTo(_getSortValue(b, event.sortType)));
+        } else if (event.sortType == AttendanceSortType.absentFirst) {
+          updatedList.sort((a, b) => _getSortValue(a, event.sortType)
+              .compareTo(_getSortValue(b, event.sortType)));
+        } // else: no sorting (keep order)
+
+        emit(loadedState.copyWith(
+          attendanceCollectionModel: updatedList,
+          sortType: event.sortType,
+        ));
+      },
+      orElse: () {},
+    );
+  }
+
+  int _getSortValue(AttendeeModel model, AttendanceSortType type) {
+    if (type == AttendanceSortType.presentFirst) {
+      if (model.status == 1) return 0;
+      if (model.status == 0) return 1;
+      return 2;
+    } else if (type == AttendanceSortType.absentFirst) {
+      if (model.status == 0) return 0;
+      if (model.status == 1) return 1;
+      return 2;
+    }
+    return 2;
   }
 
   // Function to process response after searching attendance log
@@ -305,7 +339,11 @@ class AttendanceIndividualBloc
     }).toList();
 
     emit(AttendanceIndividualState.loaded(
-        attendanceCollectionModel: attendees, viewOnly: anyLogPresent));
+      attendanceCollectionModel: attendees,
+      attendanceSearchModelList: null,
+      viewOnly: anyLogPresent,
+      sortType: AttendanceSortType.none,
+    ));
   }
 
   void submitAttendanceDetails(
@@ -423,24 +461,30 @@ class AttendanceIndividualEvent with _$AttendanceIndividualEvent {
     @Default(false) bool isSingleSession,
     required String individualId,
     required String registerId,
+    AttendeeAdditionalFields? additionalFields,
   }) = AttendanceMarkEvent;
 
   // Event for saving attendance as draft
-  const factory AttendanceIndividualEvent.saveAsDraft({
-    required int entryTime,
-    required int exitTime,
-    required DateTime selectedDate,
-    @Default(false) bool isSingleSession,
-    @Default(false) bool? createOplog,
-    double? latitude,
-    double? longitude,
-    String? comment,
-  }) = SaveAsDraftEvent;
+  const factory AttendanceIndividualEvent.saveAsDraft(
+      {required int entryTime,
+      required int exitTime,
+      required DateTime selectedDate,
+      @Default(false) bool isSingleSession,
+      @Default(false) bool? createOplog,
+      double? latitude,
+      double? longitude,
+      String? comment,
+      Map<String, dynamic>? additionalDetails}) = SaveAsDraftEvent;
 
   // Event for searching attendees by name
   const factory AttendanceIndividualEvent.searchAttendees({
     required String name,
   }) = SearchAttendeesEvent;
+
+// Event for sorting attendees by status
+  const factory AttendanceIndividualEvent.toggleSort({
+    required AttendanceSortType sortType,
+  }) = ToggleSortTypeEvent;
 }
 
 // Freezed class for defining individual attendance-related states
@@ -463,6 +507,7 @@ class AttendanceIndividualState with _$AttendanceIndividualState {
     @Default(0) int countData,
     @Default(10) int limitData,
     @Default(false) bool viewOnly,
+    @Default(AttendanceSortType.none) AttendanceSortType sortType,
   }) = _AttendanceRowModelLoaded;
 
   // Error state

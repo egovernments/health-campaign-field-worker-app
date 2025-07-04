@@ -197,6 +197,9 @@ class AttendeeModelMapper extends ClassMapperBase<AttendeeModel> {
   static String? _$name(AttendeeModel v) => v.name;
   static const Field<AttendeeModel, String> _f$name =
       Field('name', _$name, opt: true);
+  static String? _$tag(AttendeeModel v) => v.tag;
+  static const Field<AttendeeModel, String> _f$tag =
+      Field('tag', _$tag, opt: true);
   static String? _$identifierID(AttendeeModel v) => v.identifierID;
   static const Field<AttendeeModel, String> _f$identifierID =
       Field('identifierID', _$identifierID, opt: true);
@@ -229,6 +232,7 @@ class AttendeeModelMapper extends ClassMapperBase<AttendeeModel> {
     #nonRecoverableError: _f$nonRecoverableError,
     #rowVersion: _f$rowVersion,
     #name: _f$name,
+    #tag: _f$tag,
     #identifierID: _f$identifierID,
     #individualNumber: _f$individualNumber,
     #status: _f$status,
@@ -251,6 +255,7 @@ class AttendeeModelMapper extends ClassMapperBase<AttendeeModel> {
         nonRecoverableError: data.dec(_f$nonRecoverableError),
         rowVersion: data.dec(_f$rowVersion),
         name: data.dec(_f$name),
+        tag: data.dec(_f$tag),
         identifierID: data.dec(_f$identifierID),
         individualNumber: data.dec(_f$individualNumber),
         status: data.dec(_f$status),
@@ -331,6 +336,7 @@ abstract class AttendeeModelCopyWith<$R, $In extends AttendeeModel, $Out>
       bool? nonRecoverableError,
       int? rowVersion,
       String? name,
+      String? tag,
       String? identifierID,
       String? individualNumber,
       double? status,
@@ -372,6 +378,7 @@ class _AttendeeModelCopyWithImpl<$R, $Out>
           Object? nonRecoverableError = $none,
           Object? rowVersion = $none,
           Object? name = $none,
+          Object? tag = $none,
           Object? identifierID = $none,
           Object? individualNumber = $none,
           Object? status = $none,
@@ -390,6 +397,7 @@ class _AttendeeModelCopyWithImpl<$R, $Out>
           #nonRecoverableError: nonRecoverableError,
         if (rowVersion != $none) #rowVersion: rowVersion,
         if (name != $none) #name: name,
+        if (tag != $none) #tag: tag,
         if (identifierID != $none) #identifierID: identifierID,
         if (individualNumber != $none) #individualNumber: individualNumber,
         if (status != $none) #status: status,
@@ -412,6 +420,7 @@ class _AttendeeModelCopyWithImpl<$R, $Out>
           data.get(#nonRecoverableError, or: $value.nonRecoverableError),
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
       name: data.get(#name, or: $value.name),
+      tag: data.get(#tag, or: $value.tag),
       identifierID: data.get(#identifierID, or: $value.identifierID),
       individualNumber:
           data.get(#individualNumber, or: $value.individualNumber),
