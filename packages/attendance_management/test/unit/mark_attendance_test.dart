@@ -1,11 +1,9 @@
+import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/blocs/attendance_individual_bloc.dart';
-import 'package:attendance_management/pages/mark_attendance.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-
-import '../constants/test_constants.dart';
 
 // Mock Classes
 class MockAttendanceIndividualBloc extends Mock
@@ -23,12 +21,7 @@ void main() {
       home: BlocProvider<AttendanceIndividualBloc>(
         create: (_) => mockBloc,
         child: MarkAttendancePage(
-          attendees: AttendanceTestConstants.attendees,
-          registerId: "test_register",
-          tenantId: "test_tenant",
-          dateTime: DateTime.now(),
-          entryTime: 9,
-          exitTime: 17,
+          registerModel: AttendanceRegisterModel(id: ''),
         ),
       ),
     );

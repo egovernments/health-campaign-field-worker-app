@@ -543,9 +543,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.send,
           label: i18.home.dataShare,
           onPressed: () async {
-            triggerLocalization();
-            isTriggerLocalisation = false;
-
+            if (isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            }
             context.router.push(const DataShareHomeRoute());
           },
         ),
@@ -795,10 +796,10 @@ void setPackagesSingleton(BuildContext context) {
           loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,
           manualAttendanceReasons: appConfiguration.manualAttendanceReasons
-          ?.where((e) => e.active)
-          .map((e) => DropdownItem(name: e.name, code: e.code)) 
-          .toList() ??
-      [],
+                  ?.where((e) => e.active)
+                  .map((e) => DropdownItem(name: e.name, code: e.code))
+                  .toList() ??
+              [],
         );
 
         SurveyFormSingleton().setInitialData(

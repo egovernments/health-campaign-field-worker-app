@@ -266,7 +266,7 @@ packages:
     source: hosted
     version: "0.3.5"
   carousel_slider:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: carousel_slider
       sha256: "9c695cc963bf1d04a47bd6021f68befce8970bcd61d24938e1fb0918cf5d9c42"
@@ -432,14 +432,14 @@ packages:
       path: "../digit_data_model"
       relative: true
     source: path
-    version: "1.0.7-dev.2-idGen"
+    version: "1.1.1"
   digit_scanner:
     dependency: "direct main"
     description:
       path: "../digit_scanner"
       relative: true
     source: path
-    version: "1.0.5+1"
+    version: "1.0.6"
   digit_ui_components:
     dependency: "direct main"
     description:

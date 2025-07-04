@@ -40,7 +40,7 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
   late NearbyService nearbyService;
   late StreamSubscription<dynamic> stateSubscription;
   final ValueNotifier<List<Device>> _deviceNotifier = ValueNotifier([]);
-  bool _isSheetShown = false;
+  bool _isSheetShown = false, _isReceiverDialogShown = false;
   Timer? _debounceTimer;
 
   late ThemeData theme;
@@ -122,46 +122,6 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
             ),
           )
         ],
-      ),
-    );
-  }
-
-  Widget buildDeviceListTile(Device device) {
-    var connected = device.state == SessionState.connected;
-    return Container(
-      margin: const EdgeInsets.only(left: spacer2, top: spacer2),
-      decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(spacer2)),
-          border: Border.all(
-              color: connected
-                  ? theme.colorTheme.primary.primary1
-                  : theme.disabledColor)),
-      child: ListTile(
-        onTap: () => device.state == SessionState.connecting
-            ? null
-            : handleDeviceTap(device),
-        selected: connected,
-        selectedColor: connected
-            ? theme.colorTheme.primary.primaryBg
-            : theme.disabledColor,
-        selectedTileColor: connected
-            ? theme.colorTheme.primary.primaryBg
-            : theme.disabledColor,
-        leading: Icon(
-          connected ? Icons.check_box : Icons.check_box_outline_blank,
-          size: spacer8,
-          color: connected
-              ? theme.colorTheme.primary.primary1
-              : theme.disabledColor,
-        ),
-        title: Text(
-          device.deviceName,
-          style: connected
-              ? textTheme.headingS
-                  .copyWith(color: theme.colorTheme.primary.primary2)
-              : textTheme.bodyL
-                  .copyWith(color: theme.colorTheme.primary.primary2),
-        ),
       ),
     );
   }
@@ -266,7 +226,7 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
     await nearbyService.init(
       serviceType: 'DigitShare',
       deviceName: deviceId,
-      strategy: Strategy.Wi_Fi_P2P,
+      strategy: Strategy.P2P_CLUSTER,
       callback: (isRunning) async {
         if (isRunning) {
           if (widget.deviceType == DeviceType.sender) {
@@ -291,8 +251,9 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
         final uniqueDevices = <String, Device>{};
         // Separate devices based on their connection state
         for (var device in devicesList) {
-          uniqueDevices[device.deviceName] =
-              device; // Replace entries with the same deviceId
+          if (device.deviceName != 'Null') {
+            uniqueDevices[device.deviceName] = device;
+          }
         }
 
         // Update the devices list and connected devices
@@ -313,6 +274,7 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
             widget.deviceType == DeviceType.receiver) {
           _debounceTimer?.cancel();
           _debounceTimer = Timer(const Duration(milliseconds: 300), () {
+            _isReceiverDialogShown = true;
             showCustomPopup(
               context: context,
               builder: (BuildContext ctx) => Popup(
@@ -324,6 +286,7 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
                       .replaceAll('{}', connectedDevices.first.deviceName),
                   type: PopUpType.alert,
                   onCrossTap: () {
+                    _isReceiverDialogShown = false;
                     nearbyService.disconnectPeer(
                         deviceID: connectedDevices.first.deviceId);
                     Navigator.of(
@@ -337,6 +300,7 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
                         label: localizations
                             .translate(i18.dataShare.receiveAction),
                         onPressed: () {
+                          _isReceiverDialogShown = false;
                           Navigator.of(
                             ctx,
                             rootNavigator: true,
@@ -350,6 +314,14 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
                   ]),
             );
           });
+        } else if (widget.deviceType == DeviceType.receiver) {
+          if (_isReceiverDialogShown) {
+            Navigator.of(
+              context,
+              rootNavigator: true,
+            ).pop();
+            _isReceiverDialogShown = false;
+          }
         }
 
         // Show bottom sheet once when devices are available
@@ -409,7 +381,69 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
                                               DeviceType.receiver
                                           ? connectedDevices[index]
                                           : devices[index];
-                                      return buildDeviceListTile(device);
+
+                                      var connected = device.state ==
+                                          SessionState.connected;
+                                      var connecting = device.state ==
+                                              SessionState.connecting
+                                          ? true
+                                          : false;
+
+                                      return Container(
+                                        margin: const EdgeInsets.only(
+                                            left: spacer2,
+                                            top: spacer2,
+                                            right: spacer2),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(spacer2)),
+                                            border: Border.all(
+                                                color: connected
+                                                    ? theme.colorTheme.primary
+                                                        .primary1
+                                                    : theme.disabledColor)),
+                                        child: ListTile(
+                                          onTap: connecting
+                                              ? null
+                                              : () {
+                                                  connecting = true;
+                                                  handleDeviceTap(device);
+                                                },
+                                          selected: connected,
+                                          selectedColor: connected
+                                              ? theme
+                                                  .colorTheme.primary.primaryBg
+                                              : theme.disabledColor,
+                                          selectedTileColor: connected
+                                              ? theme
+                                                  .colorTheme.primary.primaryBg
+                                              : theme.disabledColor,
+                                          leading: connecting
+                                              ? const CircularProgressIndicator()
+                                              : Icon(
+                                                  connected || connecting
+                                                      ? Icons.check_box
+                                                      : Icons
+                                                          .check_box_outline_blank,
+                                                  size: spacer8,
+                                                  color: connected
+                                                      ? theme.colorTheme.primary
+                                                          .primary1
+                                                      : theme.disabledColor,
+                                                ),
+                                          title: Text(
+                                            device.deviceName,
+                                            style: connected
+                                                ? textTheme.headingS.copyWith(
+                                                    color: theme.colorTheme
+                                                        .primary.primary2)
+                                                : textTheme.bodyL.copyWith(
+                                                    color: theme.colorTheme
+                                                        .primary.primary2),
+                                          ),
+                                        ),
+                                      );
                                     },
                                   );
                                 },
