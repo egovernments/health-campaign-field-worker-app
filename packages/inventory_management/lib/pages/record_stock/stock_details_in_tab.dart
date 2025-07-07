@@ -18,6 +18,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/blocs/stock.dart';
+import 'package:inventory_management/data/repositories/local/stock.dart';
 import 'package:inventory_management/models/entities/inventory_transport_type.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/transaction_reason.dart';
@@ -109,7 +110,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         _formkeys =
             List.generate(products.length, (_) => GlobalKey<FormState>());
 
-        _initializeForms();
+        await _initializeForms();
         await _initializeStocks();
       }
     } on TimeoutException {
@@ -123,97 +124,106 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
     }
   }
 
-  void _initializeForms() {
+  Future<void> _initializeForms() async {
     final state = context.read<RecordStockBloc>().state;
-    StockRecordEntryType entryType = state.entryType;
+    final entryType = state.entryType;
 
-    final selectedProducts =
-        products.map((variant) => variant.sku).whereType<String>().toList();
+    final repository =
+        context.read<LocalRepository<StockModel, StockSearchModel>>()
+            as StockLocalRepository;
 
-    _forms.addAll({
-      for (final product in selectedProducts)
-        product: FormGroup(
-          {
-            'materialNoteNumber': FormControl<String>(value: _sharedMRN),
-            _transactionReasonKey: FormControl<String>(),
-            _waybillNumberKey: FormControl<String>(
-              validators: InventorySingleton().isWareHouseMgr
-                  ? [
-                      Validators.minLength(2),
-                      Validators.maxLength(200),
-                      Validators.required,
-                      Validators.delegate((control) {
-                        final value = control.value?.toString();
-                        if (value == null || value.isEmpty) return null;
+    final Map<String, FormGroup> tempForms = {};
 
-                        // More comprehensive regex to detect emoji characters
-                        final emojiRegex = RegExp(
-                            r'(\p{Emoji_Presentation}|\p{Extended_Pictographic}|\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])',
-                            unicode: true);
-                        if (emojiRegex.hasMatch(value)) {
-                          return {'noEmojis': true};
-                        }
+    for (final product in products) {
+      final List<StockModel> stockModel = await CustomStockMethods()
+          .getStockBasedonProductVariantId(repository, product.id!);
 
-                        // Check for valid waybill characters - only allowing alphanumerics and specific special chars
-                        final validWaybillRegex =
-                            RegExp(r'^[a-zA-Z0-9\-_/#:.,() ]+$');
-                        if (!validWaybillRegex.hasMatch(value)) {
-                          return {'invalidCharacters': true};
-                        }
+      tempForms[product.sku!] = FormGroup({
+        'materialNoteNumber': FormControl<String>(value: _sharedMRN),
+        _transactionReasonKey: FormControl<String>(),
+        _waybillNumberKey: FormControl<String>(
+          validators: InventorySingleton().isWareHouseMgr
+              ? [
+                  Validators.minLength(2),
+                  Validators.maxLength(200),
+                  Validators.required,
+                  Validators.delegate((control) {
+                    final value = control.value?.toString();
+                    if (value == null || value.isEmpty) return null;
 
-                        // Check for excessive repetition of specific special characters
-                        for (final specialChar in [
-                          '-',
-                          '.',
-                          ',',
-                          ')',
-                          '(',
-                          '/',
-                          '#',
-                          ':',
-                          '_'
-                        ]) {
-                          if (value.contains(
-                              '$specialChar$specialChar$specialChar')) {
-                            return {'repeatedChars': true};
-                          }
-                        }
+                    final emojiRegex = RegExp(
+                      r'(\p{Emoji_Presentation}|\p{Extended_Pictographic}|\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])',
+                      unicode: true,
+                    );
+                    if (emojiRegex.hasMatch(value)) {
+                      return {'noEmojis': true};
+                    }
 
-                        // Additional check for any character repeated more than 3 times
-                        final repeatedCharsPattern = RegExp(r'(.)\1{3,}');
-                        if (repeatedCharsPattern.hasMatch(value)) {
-                          return {'repeatedChars': true};
-                        }
+                    final validWaybillRegex =
+                        RegExp(r'^[a-zA-Z0-9\-_/#:.,() ]+$');
+                    if (!validWaybillRegex.hasMatch(value)) {
+                      return {'invalidCharacters': true};
+                    }
 
-                        return null;
-                      }),
-                    ]
-                  : [],
-            ),
-            _transactionQuantityKey: FormControl<int>(validators: [
-              Validators.number(),
-              Validators.required,
-              Validators.min(1),
-              Validators.max(Constants.stockMaxLimit),
-              // Add custom validator for stock quantity validation
-              Validators.delegate(
-                  (control) => _createStockQuantityValidator(product, control)),
-            ]),
-            // _waybillQuantityKey:
-            //     FormControl<String>(validators: [Validators.required]),
-            _batchNumberKey: FormControl<String>(),
-            _commentsKey: FormControl<String>(),
+                    for (final specialChar in [
+                      '-',
+                      '.',
+                      ',',
+                      ')',
+                      '(',
+                      '/',
+                      '#',
+                      ':',
+                      '_'
+                    ]) {
+                      if (value
+                          .contains('$specialChar$specialChar$specialChar')) {
+                        return {'repeatedChars': true};
+                      }
+                    }
 
-            _partiallyUsedBlistersReturnedKey: FormControl<int>(),
-            _wastedBlistersReturnedKey: FormControl<int>(),
-          },
+                    final repeatedCharsPattern = RegExp(r'(.)\1{3,}');
+                    if (repeatedCharsPattern.hasMatch(value)) {
+                      return {'repeatedChars': true};
+                    }
+
+                    return null;
+                  }),
+                ]
+              : [],
         ),
-    });
+        _transactionQuantityKey: FormControl<int>(
+          validators: [
+            Validators.number(),
+            Validators.required,
+            Validators.min(1),
+            Validators.max(Constants.stockMaxLimit),
+            Validators.delegate(
+              (control) => _createStockQuantityValidator(
+                product.sku!,
+                control,
+                stockModel.isEmpty
+                    ? 0
+                    : stockModel
+                        .map((e) => int.parse(e.quantity ?? '0'))
+                        .reduce((value, element) => value + element),
+              ),
+            ),
+          ],
+        ),
+        _batchNumberKey: FormControl<String>(),
+        _commentsKey: FormControl<String>(),
+        _partiallyUsedBlistersReturnedKey: FormControl<int>(),
+        _wastedBlistersReturnedKey: FormControl<int>(),
+      });
+    }
+
+    _forms.addAll(tempForms);
   }
 
   /// Custom validator for stock quantity based on product type and available stock
   Map<String, dynamic>? _createStockQuantityValidator(
-      String productName, AbstractControl<dynamic> control) {
+      String productName, AbstractControl<dynamic> control, int availableQty) {
     // Only validate for dispatch operations and exclude CDD roles
     final state = context.read<RecordStockBloc>().state;
     if (state.entryType != StockRecordEntryType.dispatch ||
@@ -226,36 +236,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
       return null; // Let required validator handle this
     }
 
-    // Get current stock quantities from context
-    int availableQuantity = 0;
-    String productDisplayName = '';
-
-    if (productName == Constants.spaq1) {
-      //TODO: context.spaq1
-      // availableQuantity = context.spaq1;
-      availableQuantity = 200;
-      productDisplayName = 'SPAQ1';
-    } else if (productName == Constants.spaq2) {
-      //TODO: context.spaq2
-      // availableQuantity = context.spaq2;
-      availableQuantity = 200;
-      productDisplayName = 'SPAQ2';
-    } else if (productName == Constants.blueVAS) {
-      //TODO: context.blueVas
-      // availableQuantity = context.blueVas;
-      availableQuantity = 200;
-      productDisplayName = 'Blue VAS';
-    } else if (productName == Constants.redVAS) {
-      //TODO: context.redVas
-      // availableQuantity = context.redVas;
-      availableQuantity = 200;
-      productDisplayName = 'Red VAS';
-    } else {
-      return null; // Unknown product type
-    }
-
     // Check if entered quantity exceeds available stock
-    if (enteredQuantity > availableQuantity) {
+    if (enteredQuantity > availableQty) {
       return {
         'insufficientStock': localizations.translate(
           "i18.stockDetails.issueStockLabelExceeded",
@@ -1064,6 +1046,10 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
     final theme = Theme.of(context);
     final lastProduct = products.last.sku ?? '';
 
+    final repository =
+        context.read<LocalRepository<StockModel, StockSearchModel>>()
+            as StockLocalRepository;
+
     for (StockModel stock in _tabStocks.values) {
       String productName = stock.additionalFields?.fields
           .firstWhereOrNull((element) => element.key == 'productName')
@@ -1120,11 +1106,12 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
     ) as bool;
 
     if (submit && context.mounted) {
-      int spaq1Count = 0;
-      int spaq2Count = 0;
+      // TODO: commented by pitabash
+      // int spaq1Count = 0;
+      // int spaq2Count = 0;
 
-      int blueVasCount = 0;
-      int redVasCount = 0;
+      // int blueVasCount = 0;
+      // int redVasCount = 0;
 
 // TODO: old code
       // int currentSpaq1Count = context.spaq1;
@@ -1132,10 +1119,10 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
       // int currentBlueVasCount = context.blueVas;
       // int currentRedVasCount = context.redVas;
 
-      int currentSpaq1Count = 190;
-      int currentSpaq2Count = 190;
-      int currentBlueVasCount = 190;
-      int currentRedVasCount = 190;
+      // int currentSpaq1Count = 190;
+      // int currentSpaq2Count = 190;
+      // int currentBlueVasCount = 190;
+      // int currentRedVasCount = 190;
 
       // Loop through all stocks and dispatch individual events
       for (final stockModel in _tabStocks.values) {
@@ -1166,55 +1153,29 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
             ?.value;
 
         // Accumulate quantities based on product
-        if (productName == Constants.spaq1) {
-          spaq1Count = totalQty;
-        } else if (productName == Constants.spaq2) {
-          spaq2Count = totalQty;
-        } else if (productName == Constants.blueVAS) {
-          blueVasCount = totalQty;
-        } else if (productName == Constants.redVAS) {
-          redVasCount = totalQty;
-        }
+        //TODO: commented by pitabash
+        // if (productName == Constants.spaq1) {
+        //   spaq1Count = totalQty;
+        // } else if (productName == Constants.spaq2) {
+        //   spaq2Count = totalQty;
+        // } else if (productName == Constants.blueVAS) {
+        //   blueVasCount = totalQty;
+        // } else if (productName == Constants.redVAS) {
+        //   redVasCount = totalQty;
+        // }
+
+        final List<StockModel> sm = await CustomStockMethods()
+            .getStockBasedonProductVariantId(
+                repository, stockModel.productVariantId!);
+
+        final int currentCount = sm.isEmpty
+            ? 0
+            : sm
+                .map((e) => int.parse(e.quantity ?? '0'))
+                .reduce((value, element) => value + element);
 
         if (entryType == StockRecordEntryType.dispatch) {
-          if (productName == Constants.spaq1 &&
-              (currentSpaq1Count + totalQty < 0)) {
-            Toast.showToast(
-              context,
-              message: localizations.translate(
-                InventorySingleton().isCDD
-                    ? "i18.beneficiaryDetails.validationForExcessStockReturn"
-                    : "i18.beneficiaryDetails.validationForExcessStockDispatch",
-              ),
-              type: ToastType.error,
-            );
-            return;
-          } else if (productName == Constants.spaq2 &&
-              (currentSpaq2Count + totalQty < 0)) {
-            Toast.showToast(
-              context,
-              message: localizations.translate(
-                InventorySingleton().isCDD
-                    ? "i18.beneficiaryDetails.validationForExcessStockReturn"
-                    : "i18.beneficiaryDetails.validationForExcessStockDispatch",
-              ),
-              type: ToastType.error,
-            );
-            return;
-          } else if (productName == Constants.blueVAS &&
-              (currentBlueVasCount + totalQty < 0)) {
-            Toast.showToast(
-              context,
-              message: localizations.translate(
-                InventorySingleton().isCDD
-                    ? "i18.beneficiaryDetails.validationForExcessStockReturn"
-                    : "i18.beneficiaryDetails.validationForExcessStockDispatch",
-              ),
-              type: ToastType.error,
-            );
-            return;
-          } else if (productName == Constants.redVAS &&
-              (currentRedVasCount + totalQty < 0)) {
+          if ((currentCount + totalQty < 0)) {
             Toast.showToast(
               context,
               message: localizations.translate(
@@ -1226,6 +1187,44 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
             );
             return;
           }
+//TODO: commented by pitabash
+          // else if (productName == Constants.spaq2 &&
+          //     (currentSpaq2Count + totalQty < 0)) {
+          //   Toast.showToast(
+          //     context,
+          //     message: localizations.translate(
+          //       InventorySingleton().isCDD
+          //           ? "i18.beneficiaryDetails.validationForExcessStockReturn"
+          //           : "i18.beneficiaryDetails.validationForExcessStockDispatch",
+          //     ),
+          //     type: ToastType.error,
+          //   );
+          //   return;
+          // } else if (productName == Constants.blueVAS &&
+          //     (currentBlueVasCount + totalQty < 0)) {
+          //   Toast.showToast(
+          //     context,
+          //     message: localizations.translate(
+          //       InventorySingleton().isCDD
+          //           ? "i18.beneficiaryDetails.validationForExcessStockReturn"
+          //           : "i18.beneficiaryDetails.validationForExcessStockDispatch",
+          //     ),
+          //     type: ToastType.error,
+          //   );
+          //   return;
+          // } else if (productName == Constants.redVAS &&
+          //     (currentRedVasCount + totalQty < 0)) {
+          //   Toast.showToast(
+          //     context,
+          //     message: localizations.translate(
+          //       InventorySingleton().isCDD
+          //           ? "i18.beneficiaryDetails.validationForExcessStockReturn"
+          //           : "i18.beneficiaryDetails.validationForExcessStockDispatch",
+          //     ),
+          //     type: ToastType.error,
+          //   );
+          //   return;
+          // }
         }
 
         context.read<RecordStockBloc>().add(
@@ -1294,6 +1293,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
     }
   }
 
+// TODO: to remove it as it is unused
   String? wastageQuantity(FormGroup form, BuildContext context) {
     final quantity = form.control(_transactionQuantityKey).value;
     final partialBlisters = form.control(_transactionQuantityKey).value;

@@ -276,9 +276,11 @@ class UniqueIdGeneration {
 }
 
 class CustomStockMethods {
-  Future<StockModel> getStockBasedonProductVariantId(
+  Future<List<StockModel>> getStockBasedonProductVariantId(
       StockLocalRepository stockRepo, String productVariantId) async {
-    final result = await stockRepo.search(StockSearchModel(), productVariantId);
-    return result.first;
+    final result = await stockRepo.search(
+        StockSearchModel(productVariantId: productVariantId),
+        InventorySingleton().loggedInUserUuid);
+    return result;
   }
 }
