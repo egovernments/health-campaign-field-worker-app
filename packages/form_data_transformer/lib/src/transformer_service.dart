@@ -71,6 +71,80 @@ class FormEntityMapper {
     return entities;
   }
 
+  List<EntityModel> updateEntitiesFromForm({
+    required List<EntityModel> existingModels,
+    required Map<String, dynamic> formValues,
+    required Map<String, dynamic> modelsConfig,
+    required Map<String, dynamic> context,
+  }) {
+    final List<EntityModel> updatedModels = [];
+
+    for (final model in existingModels) {
+      final modelType = model.runtimeType.toString();
+      final modelConfig = modelsConfig[modelType];
+
+      if (modelConfig == null) {
+        // No config — just keep the model unchanged
+        updatedModels.add(model);
+        continue;
+      }
+
+      final updatedModel = updateModelFromForm(
+        existingModel: model,
+        formValues: formValues,
+        modelConfig: modelConfig,
+        context: context,
+      );
+
+      updatedModels.add(updatedModel);
+    }
+
+    return updatedModels;
+  }
+
+  EntityModel updateModelFromForm({
+    required EntityModel existingModel,
+    required Map<String, dynamic> formValues,
+    required Map<String, dynamic> modelConfig,
+    required Map<String, dynamic> context,
+  }) {
+    final factory = modelFactoryRegistry[existingModel.runtimeType.toString()];
+    if (factory == null) {
+      throw Exception('Factory not found for ${existingModel.runtimeType}');
+    }
+
+    // Start from the existing model's JSON
+    final updatedMap = Map<String, dynamic>.from(existingModel.toMap());
+
+    final mappings = modelConfig['mappings'] as Map<String, dynamic>? ?? {};
+
+    for (final entry in mappings.entries) {
+      final targetKey = entry.key;
+      final sourcePath = entry.value;
+
+      if (sourcePath is String) {
+        final value = getValueFromMapping(
+          sourcePath,
+          formValues,
+          existingModel.runtimeType.toString(),
+          context,
+        );
+
+        if (value != null) {
+          updatedMap[targetKey] = value is DateTime
+              ? value.millisecondsSinceEpoch
+              : value;
+        }
+      }
+
+      // You can add nested mappings or additionalFields support if needed
+    }
+
+    return factory(updatedMap);
+  }
+
+
+
   EntityModel _mapModel(
     String modelName,
     Map<String, dynamic> formValues,

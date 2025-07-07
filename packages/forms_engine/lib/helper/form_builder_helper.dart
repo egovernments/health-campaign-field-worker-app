@@ -5,32 +5,35 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../models/property_schema/property_schema.dart';
 
 FormControl buildFormControl(
-    String name,
-    PropertySchema schema,
-    PropertySchema parentSchema, {
-      String? defaultLatlng,
-      Map<String, dynamic>? defaultValues,
-    }) {
+  String name,
+  PropertySchema schema,
+  PropertySchema parentSchema, {
+  String? defaultLatlng,
+  Map<String, dynamic>? defaultValues,
+}) {
   final validators = buildValidators(schema);
   final format = schema.format;
   final rawValue = schema.value;
 
   switch (schema.type) {
     case PropertySchemaType.integer:
-      if(format == PropertySchemaFormat.date) {
+      if (format == PropertySchemaFormat.date) {
         return FormControl<DateTime>(
-          value: schema.systemDate==true ? DateTime.now() : parseDateValue(rawValue),
+          value: parseDateValue(defaultValues?[name]) ??
+              (schema.systemDate == true
+                  ? DateTime.now()
+                  : parseDateValue(rawValue)),
           validators: validators,
         );
       }
       return FormControl<int>(
-        value: parseIntValue(rawValue),
+        value: parseIntValue(defaultValues?[name]) ?? parseIntValue(rawValue),
         validators: validators,
       );
 
     case PropertySchemaType.boolean:
       return FormControl<bool>(
-        value: parseBoolValue(rawValue),
+        value: defaultValues?[name] ?? parseBoolValue(rawValue),
         validators: validators,
       );
 
@@ -40,23 +43,28 @@ FormControl buildFormControl(
     case PropertySchemaType.string:
       if (format == PropertySchemaFormat.date) {
         return FormControl<DateTime>(
-          value: schema.systemDate==true ? DateTime.now() : parseDateValue(rawValue),
+          value: parseDateValue(defaultValues?[name]) ??
+              (schema.systemDate == true
+                  ? DateTime.now()
+                  : parseDateValue(rawValue)),
           validators: validators,
         );
       } else if (format == PropertySchemaFormat.idPopulator) {
         final idNumber = IdGen.i.identifier.toString();
         return FormControl<String>(
-          value: schema.hidden==true ? "DEFAULT, $idNumber": rawValue?.toString(),
+          value: schema.hidden == true
+              ? "DEFAULT, $idNumber"
+              : rawValue?.toString(),
           validators: validators,
         );
       } else if (format == PropertySchemaFormat.latLng) {
         return FormControl<String>(
-          value: defaultLatlng ?? (rawValue?.toString()),
+          value: defaultValues?[name] ?? rawValue?.toString(),
           validators: validators,
         );
       } else if (format == PropertySchemaFormat.locality) {
         return FormControl<String>(
-          value: defaultValues?['locality'] ?? rawValue?.toString(),
+          value: defaultValues?[name] ?? rawValue?.toString(),
           validators: validators,
         );
       } else if (format == PropertySchemaFormat.numeric) {
@@ -66,14 +74,18 @@ FormControl buildFormControl(
         );
       } else {
         return FormControl<String>(
-          value: defaultValues?[name] ?? (rawValue?.toString().isEmpty ?? true ? null : rawValue.toString()),
+          value: defaultValues?[name] ??
+              (rawValue?.toString().isEmpty ?? true
+                  ? null
+                  : rawValue.toString()),
           validators: validators,
         );
       }
 
     default:
       return FormControl<String>(
-        value: defaultValues?[name] ?? (rawValue?.toString().isEmpty ?? true ? null : rawValue.toString()),
+        value: defaultValues?[name] ??
+            (rawValue?.toString().isEmpty ?? true ? null : rawValue.toString()),
         validators: validators,
       );
   }
@@ -87,25 +99,41 @@ int? parseIntValue(dynamic value) {
   return null;
 }
 
-
 bool? parseBoolValue(dynamic value) {
   if (value == null) return null;
   if (value is bool) return value;
-  if (value is String) return value.toLowerCase() == 'true' ? true : value.toLowerCase() == 'false' ? false : null;
+  if (value is String)
+    return value.toLowerCase() == 'true'
+        ? true
+        : value.toLowerCase() == 'false'
+            ? false
+            : null;
   return null;
 }
 
 DateTime? parseDateValue(dynamic value) {
   if (value == null) return null;
+
   if (value is DateTime) return value;
+
+  if (value is int) {
+    // Handle milliseconds since epoch
+    return DateTime.fromMillisecondsSinceEpoch(value);
+  }
+
   if (value is String) {
     try {
+      // Try parsing as ISO date first
       return DateTime.parse(value);
     } catch (_) {
+      // Try parsing as milliseconds in string form
+      final millis = int.tryParse(value);
+      if (millis != null) {
+        return DateTime.fromMillisecondsSinceEpoch(millis);
+      }
       return null;
     }
   }
+
   return null;
 }
-
-

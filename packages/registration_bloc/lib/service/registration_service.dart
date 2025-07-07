@@ -1,28 +1,22 @@
-// lib/src/services/household_registration_service.dart
-
 import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/utils/typedefs.dart';
-import 'package:registration_delivery/utils/typedefs.dart';
 import 'package:registration_bloc/repositories/local/search_entity_repository.dart';
+import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/models/entities/household_member.dart';
+import 'package:registration_delivery/models/entities/project_beneficiary.dart';
+import 'package:registration_delivery/models/entities/task.dart';
+import 'package:registration_delivery/utils/typedefs.dart';
 
-import '../models/entities/household.dart';
-import '../models/entities/household_member.dart';
-import '../models/entities/project_beneficiary.dart';
-import '../models/entities/task.dart';
 import '../models/global_search_params.dart';
-import '../repositories/local/household_global_search.dart';
-import '../repositories/local/individual_global_search.dart';
-// import '../utils/typedefs.dart';
 
 class RegistrationService {
   final List<RelationshipMapping> relationshipMap;
   final List<NestedModelMapping> nestedModelMappings;
 
-
   late final Map<String, List<RelationshipMapping>> _relationshipGraph;
-  late final Map<String, Map<String, NestedFieldMapping> > _nestedMappingLookup;
+  late final Map<String, Map<String, NestedFieldMapping>> _nestedMappingLookup;
 
   final SearchEntityRepository searchEntityRepository;
   final IndividualDataRepository individualRepository;
@@ -70,15 +64,14 @@ class RegistrationService {
 
   void _initNestedMappings() {
     _nestedMappingLookup = {
-      for (final mapping in nestedModelMappings) mapping.rootModel: mapping.fields,
+      for (final mapping in nestedModelMappings)
+        mapping.rootModel: mapping.fields,
     };
   }
 
-
-  Future<(Map<String, List<EntityModel>>, int)>  searchHouseholds({
+  Future<(Map<String, List<EntityModel>>, int)> searchHouseholds({
     required GlobalSearchParameters query,
   }) async {
-
     return searchEntityRepository.searchEntities(
       filters: query.filters,
       relationshipGraph: _relationshipGraph,

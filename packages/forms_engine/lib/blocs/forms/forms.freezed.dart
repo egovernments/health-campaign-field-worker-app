@@ -25,7 +25,7 @@ mixin _$FormsEvent {
     required TResult Function(String schemaKey, String key) clearField,
     required TResult Function(String schemaKey, String pageKey) clearPage,
     required TResult Function(String schemaKey) clearForm,
-    required TResult Function(String schemaKey) submit,
+    required TResult Function(String schemaKey, bool isEdit) submit,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -36,7 +36,7 @@ mixin _$FormsEvent {
     TResult? Function(String schemaKey, String key)? clearField,
     TResult? Function(String schemaKey, String pageKey)? clearPage,
     TResult? Function(String schemaKey)? clearForm,
-    TResult? Function(String schemaKey)? submit,
+    TResult? Function(String schemaKey, bool isEdit)? submit,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -47,7 +47,7 @@ mixin _$FormsEvent {
     TResult Function(String schemaKey, String key)? clearField,
     TResult Function(String schemaKey, String pageKey)? clearPage,
     TResult Function(String schemaKey)? clearForm,
-    TResult Function(String schemaKey)? submit,
+    TResult Function(String schemaKey, bool isEdit)? submit,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -184,7 +184,7 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     required TResult Function(String schemaKey, String key) clearField,
     required TResult Function(String schemaKey, String pageKey) clearPage,
     required TResult Function(String schemaKey) clearForm,
-    required TResult Function(String schemaKey) submit,
+    required TResult Function(String schemaKey, bool isEdit) submit,
   }) {
     return load(schemas);
   }
@@ -198,7 +198,7 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     TResult? Function(String schemaKey, String key)? clearField,
     TResult? Function(String schemaKey, String pageKey)? clearPage,
     TResult? Function(String schemaKey)? clearForm,
-    TResult? Function(String schemaKey)? submit,
+    TResult? Function(String schemaKey, bool isEdit)? submit,
   }) {
     return load?.call(schemas);
   }
@@ -212,7 +212,7 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     TResult Function(String schemaKey, String key)? clearField,
     TResult Function(String schemaKey, String pageKey)? clearPage,
     TResult Function(String schemaKey)? clearForm,
-    TResult Function(String schemaKey)? submit,
+    TResult Function(String schemaKey, bool isEdit)? submit,
     required TResult orElse(),
   }) {
     if (load != null) {
@@ -370,7 +370,7 @@ class _$FormsUpdateFieldEventImpl implements FormsUpdateFieldEvent {
     required TResult Function(String schemaKey, String key) clearField,
     required TResult Function(String schemaKey, String pageKey) clearPage,
     required TResult Function(String schemaKey) clearForm,
-    required TResult Function(String schemaKey) submit,
+    required TResult Function(String schemaKey, bool isEdit) submit,
   }) {
     return updateField(schemaKey, key, value);
   }
@@ -384,7 +384,7 @@ class _$FormsUpdateFieldEventImpl implements FormsUpdateFieldEvent {
     TResult? Function(String schemaKey, String key)? clearField,
     TResult? Function(String schemaKey, String pageKey)? clearPage,
     TResult? Function(String schemaKey)? clearForm,
-    TResult? Function(String schemaKey)? submit,
+    TResult? Function(String schemaKey, bool isEdit)? submit,
   }) {
     return updateField?.call(schemaKey, key, value);
   }
@@ -398,7 +398,7 @@ class _$FormsUpdateFieldEventImpl implements FormsUpdateFieldEvent {
     TResult Function(String schemaKey, String key)? clearField,
     TResult Function(String schemaKey, String pageKey)? clearPage,
     TResult Function(String schemaKey)? clearForm,
-    TResult Function(String schemaKey)? submit,
+    TResult Function(String schemaKey, bool isEdit)? submit,
     required TResult orElse(),
   }) {
     if (updateField != null) {
@@ -559,7 +559,7 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
     required TResult Function(String schemaKey, String key) clearField,
     required TResult Function(String schemaKey, String pageKey) clearPage,
     required TResult Function(String schemaKey) clearForm,
-    required TResult Function(String schemaKey) submit,
+    required TResult Function(String schemaKey, bool isEdit) submit,
   }) {
     return update(schema, schemaKey);
   }
@@ -573,7 +573,7 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
     TResult? Function(String schemaKey, String key)? clearField,
     TResult? Function(String schemaKey, String pageKey)? clearPage,
     TResult? Function(String schemaKey)? clearForm,
-    TResult? Function(String schemaKey)? submit,
+    TResult? Function(String schemaKey, bool isEdit)? submit,
   }) {
     return update?.call(schema, schemaKey);
   }
@@ -587,7 +587,7 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
     TResult Function(String schemaKey, String key)? clearField,
     TResult Function(String schemaKey, String pageKey)? clearPage,
     TResult Function(String schemaKey)? clearForm,
-    TResult Function(String schemaKey)? submit,
+    TResult Function(String schemaKey, bool isEdit)? submit,
     required TResult orElse(),
   }) {
     if (update != null) {
@@ -738,7 +738,7 @@ class _$FormsClearFieldEventImpl implements FormsClearFieldEvent {
     required TResult Function(String schemaKey, String key) clearField,
     required TResult Function(String schemaKey, String pageKey) clearPage,
     required TResult Function(String schemaKey) clearForm,
-    required TResult Function(String schemaKey) submit,
+    required TResult Function(String schemaKey, bool isEdit) submit,
   }) {
     return clearField(schemaKey, key);
   }
@@ -752,7 +752,7 @@ class _$FormsClearFieldEventImpl implements FormsClearFieldEvent {
     TResult? Function(String schemaKey, String key)? clearField,
     TResult? Function(String schemaKey, String pageKey)? clearPage,
     TResult? Function(String schemaKey)? clearForm,
-    TResult? Function(String schemaKey)? submit,
+    TResult? Function(String schemaKey, bool isEdit)? submit,
   }) {
     return clearField?.call(schemaKey, key);
   }
@@ -766,7 +766,7 @@ class _$FormsClearFieldEventImpl implements FormsClearFieldEvent {
     TResult Function(String schemaKey, String key)? clearField,
     TResult Function(String schemaKey, String pageKey)? clearPage,
     TResult Function(String schemaKey)? clearForm,
-    TResult Function(String schemaKey)? submit,
+    TResult Function(String schemaKey, bool isEdit)? submit,
     required TResult orElse(),
   }) {
     if (clearField != null) {
@@ -916,7 +916,7 @@ class _$FormsClearPageEventImpl implements FormsClearPageEvent {
     required TResult Function(String schemaKey, String key) clearField,
     required TResult Function(String schemaKey, String pageKey) clearPage,
     required TResult Function(String schemaKey) clearForm,
-    required TResult Function(String schemaKey) submit,
+    required TResult Function(String schemaKey, bool isEdit) submit,
   }) {
     return clearPage(schemaKey, pageKey);
   }
@@ -930,7 +930,7 @@ class _$FormsClearPageEventImpl implements FormsClearPageEvent {
     TResult? Function(String schemaKey, String key)? clearField,
     TResult? Function(String schemaKey, String pageKey)? clearPage,
     TResult? Function(String schemaKey)? clearForm,
-    TResult? Function(String schemaKey)? submit,
+    TResult? Function(String schemaKey, bool isEdit)? submit,
   }) {
     return clearPage?.call(schemaKey, pageKey);
   }
@@ -944,7 +944,7 @@ class _$FormsClearPageEventImpl implements FormsClearPageEvent {
     TResult Function(String schemaKey, String key)? clearField,
     TResult Function(String schemaKey, String pageKey)? clearPage,
     TResult Function(String schemaKey)? clearForm,
-    TResult Function(String schemaKey)? submit,
+    TResult Function(String schemaKey, bool isEdit)? submit,
     required TResult orElse(),
   }) {
     if (clearPage != null) {
@@ -1085,7 +1085,7 @@ class _$FormsClearFormEventImpl implements FormsClearFormEvent {
     required TResult Function(String schemaKey, String key) clearField,
     required TResult Function(String schemaKey, String pageKey) clearPage,
     required TResult Function(String schemaKey) clearForm,
-    required TResult Function(String schemaKey) submit,
+    required TResult Function(String schemaKey, bool isEdit) submit,
   }) {
     return clearForm(schemaKey);
   }
@@ -1099,7 +1099,7 @@ class _$FormsClearFormEventImpl implements FormsClearFormEvent {
     TResult? Function(String schemaKey, String key)? clearField,
     TResult? Function(String schemaKey, String pageKey)? clearPage,
     TResult? Function(String schemaKey)? clearForm,
-    TResult? Function(String schemaKey)? submit,
+    TResult? Function(String schemaKey, bool isEdit)? submit,
   }) {
     return clearForm?.call(schemaKey);
   }
@@ -1113,7 +1113,7 @@ class _$FormsClearFormEventImpl implements FormsClearFormEvent {
     TResult Function(String schemaKey, String key)? clearField,
     TResult Function(String schemaKey, String pageKey)? clearPage,
     TResult Function(String schemaKey)? clearForm,
-    TResult Function(String schemaKey)? submit,
+    TResult Function(String schemaKey, bool isEdit)? submit,
     required TResult orElse(),
   }) {
     if (clearForm != null) {
@@ -1185,7 +1185,7 @@ abstract class _$$FormsSubmitEventImplCopyWith<$Res> {
           $Res Function(_$FormsSubmitEventImpl) then) =
       __$$FormsSubmitEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String schemaKey});
+  $Res call({String schemaKey, bool isEdit});
 }
 
 /// @nodoc
@@ -1200,12 +1200,17 @@ class __$$FormsSubmitEventImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? schemaKey = null,
+    Object? isEdit = null,
   }) {
     return _then(_$FormsSubmitEventImpl(
       schemaKey: null == schemaKey
           ? _value.schemaKey
           : schemaKey // ignore: cast_nullable_to_non_nullable
               as String,
+      isEdit: null == isEdit
+          ? _value.isEdit
+          : isEdit // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -1213,14 +1218,17 @@ class __$$FormsSubmitEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FormsSubmitEventImpl implements FormsSubmitEvent {
-  const _$FormsSubmitEventImpl({required this.schemaKey});
+  const _$FormsSubmitEventImpl({required this.schemaKey, this.isEdit = false});
 
   @override
   final String schemaKey;
+  @override
+  @JsonKey()
+  final bool isEdit;
 
   @override
   String toString() {
-    return 'FormsEvent.submit(schemaKey: $schemaKey)';
+    return 'FormsEvent.submit(schemaKey: $schemaKey, isEdit: $isEdit)';
   }
 
   @override
@@ -1229,11 +1237,12 @@ class _$FormsSubmitEventImpl implements FormsSubmitEvent {
         (other.runtimeType == runtimeType &&
             other is _$FormsSubmitEventImpl &&
             (identical(other.schemaKey, schemaKey) ||
-                other.schemaKey == schemaKey));
+                other.schemaKey == schemaKey) &&
+            (identical(other.isEdit, isEdit) || other.isEdit == isEdit));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, schemaKey);
+  int get hashCode => Object.hash(runtimeType, schemaKey, isEdit);
 
   @JsonKey(ignore: true)
   @override
@@ -1252,9 +1261,9 @@ class _$FormsSubmitEventImpl implements FormsSubmitEvent {
     required TResult Function(String schemaKey, String key) clearField,
     required TResult Function(String schemaKey, String pageKey) clearPage,
     required TResult Function(String schemaKey) clearForm,
-    required TResult Function(String schemaKey) submit,
+    required TResult Function(String schemaKey, bool isEdit) submit,
   }) {
-    return submit(schemaKey);
+    return submit(schemaKey, isEdit);
   }
 
   @override
@@ -1266,9 +1275,9 @@ class _$FormsSubmitEventImpl implements FormsSubmitEvent {
     TResult? Function(String schemaKey, String key)? clearField,
     TResult? Function(String schemaKey, String pageKey)? clearPage,
     TResult? Function(String schemaKey)? clearForm,
-    TResult? Function(String schemaKey)? submit,
+    TResult? Function(String schemaKey, bool isEdit)? submit,
   }) {
-    return submit?.call(schemaKey);
+    return submit?.call(schemaKey, isEdit);
   }
 
   @override
@@ -1280,11 +1289,11 @@ class _$FormsSubmitEventImpl implements FormsSubmitEvent {
     TResult Function(String schemaKey, String key)? clearField,
     TResult Function(String schemaKey, String pageKey)? clearPage,
     TResult Function(String schemaKey)? clearForm,
-    TResult Function(String schemaKey)? submit,
+    TResult Function(String schemaKey, bool isEdit)? submit,
     required TResult orElse(),
   }) {
     if (submit != null) {
-      return submit(schemaKey);
+      return submit(schemaKey, isEdit);
     }
     return orElse();
   }
@@ -1337,10 +1346,12 @@ class _$FormsSubmitEventImpl implements FormsSubmitEvent {
 }
 
 abstract class FormsSubmitEvent implements FormsEvent {
-  const factory FormsSubmitEvent({required final String schemaKey}) =
-      _$FormsSubmitEventImpl;
+  const factory FormsSubmitEvent(
+      {required final String schemaKey,
+      final bool isEdit}) = _$FormsSubmitEventImpl;
 
   String get schemaKey;
+  bool get isEdit;
   @JsonKey(ignore: true)
   _$$FormsSubmitEventImplCopyWith<_$FormsSubmitEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
@@ -1363,6 +1374,7 @@ mixin _$FormsState {
             Map<String, Map<String, dynamic>> formData,
             Map<String, SchemaObject> cachedSchemas,
             Map<String, SchemaObject> initialSchemas,
+            bool isEdit,
             String? activeSchemaKey)
         formSubmitted,
   }) =>
@@ -1377,6 +1389,7 @@ mixin _$FormsState {
             Map<String, Map<String, dynamic>> formData,
             Map<String, SchemaObject> cachedSchemas,
             Map<String, SchemaObject> initialSchemas,
+            bool isEdit,
             String? activeSchemaKey)?
         formSubmitted,
   }) =>
@@ -1391,6 +1404,7 @@ mixin _$FormsState {
             Map<String, Map<String, dynamic>> formData,
             Map<String, SchemaObject> cachedSchemas,
             Map<String, SchemaObject> initialSchemas,
+            bool isEdit,
             String? activeSchemaKey)?
         formSubmitted,
     required TResult orElse(),
@@ -1586,6 +1600,7 @@ class _$FormsStateImpl implements _FormsState {
             Map<String, Map<String, dynamic>> formData,
             Map<String, SchemaObject> cachedSchemas,
             Map<String, SchemaObject> initialSchemas,
+            bool isEdit,
             String? activeSchemaKey)
         formSubmitted,
   }) {
@@ -1603,6 +1618,7 @@ class _$FormsStateImpl implements _FormsState {
             Map<String, Map<String, dynamic>> formData,
             Map<String, SchemaObject> cachedSchemas,
             Map<String, SchemaObject> initialSchemas,
+            bool isEdit,
             String? activeSchemaKey)?
         formSubmitted,
   }) {
@@ -1620,6 +1636,7 @@ class _$FormsStateImpl implements _FormsState {
             Map<String, Map<String, dynamic>> formData,
             Map<String, SchemaObject> cachedSchemas,
             Map<String, SchemaObject> initialSchemas,
+            bool isEdit,
             String? activeSchemaKey)?
         formSubmitted,
     required TResult orElse(),
@@ -1693,6 +1710,7 @@ abstract class _$$FormsSubmittedStateImplCopyWith<$Res>
       Map<String, Map<String, dynamic>> formData,
       Map<String, SchemaObject> cachedSchemas,
       Map<String, SchemaObject> initialSchemas,
+      bool isEdit,
       String? activeSchemaKey});
 
   $SchemaObjectCopyWith<$Res> get schema;
@@ -1713,6 +1731,7 @@ class __$$FormsSubmittedStateImplCopyWithImpl<$Res>
     Object? formData = null,
     Object? cachedSchemas = null,
     Object? initialSchemas = null,
+    Object? isEdit = null,
     Object? activeSchemaKey = freezed,
   }) {
     return _then(_$FormsSubmittedStateImpl(
@@ -1732,6 +1751,10 @@ class __$$FormsSubmittedStateImplCopyWithImpl<$Res>
           ? _value._initialSchemas
           : initialSchemas // ignore: cast_nullable_to_non_nullable
               as Map<String, SchemaObject>,
+      isEdit: null == isEdit
+          ? _value.isEdit
+          : isEdit // ignore: cast_nullable_to_non_nullable
+              as bool,
       activeSchemaKey: freezed == activeSchemaKey
           ? _value.activeSchemaKey
           : activeSchemaKey // ignore: cast_nullable_to_non_nullable
@@ -1756,6 +1779,7 @@ class _$FormsSubmittedStateImpl implements FormsSubmittedState {
       required final Map<String, Map<String, dynamic>> formData,
       required final Map<String, SchemaObject> cachedSchemas,
       required final Map<String, SchemaObject> initialSchemas,
+      required this.isEdit,
       this.activeSchemaKey})
       : _formData = formData,
         _cachedSchemas = cachedSchemas,
@@ -1788,11 +1812,13 @@ class _$FormsSubmittedStateImpl implements FormsSubmittedState {
   }
 
   @override
+  final bool isEdit;
+  @override
   final String? activeSchemaKey;
 
   @override
   String toString() {
-    return 'FormsState.formSubmitted(schema: $schema, formData: $formData, cachedSchemas: $cachedSchemas, initialSchemas: $initialSchemas, activeSchemaKey: $activeSchemaKey)';
+    return 'FormsState.formSubmitted(schema: $schema, formData: $formData, cachedSchemas: $cachedSchemas, initialSchemas: $initialSchemas, isEdit: $isEdit, activeSchemaKey: $activeSchemaKey)';
   }
 
   @override
@@ -1806,6 +1832,7 @@ class _$FormsSubmittedStateImpl implements FormsSubmittedState {
                 .equals(other._cachedSchemas, _cachedSchemas) &&
             const DeepCollectionEquality()
                 .equals(other._initialSchemas, _initialSchemas) &&
+            (identical(other.isEdit, isEdit) || other.isEdit == isEdit) &&
             (identical(other.activeSchemaKey, activeSchemaKey) ||
                 other.activeSchemaKey == activeSchemaKey));
   }
@@ -1817,6 +1844,7 @@ class _$FormsSubmittedStateImpl implements FormsSubmittedState {
       const DeepCollectionEquality().hash(_formData),
       const DeepCollectionEquality().hash(_cachedSchemas),
       const DeepCollectionEquality().hash(_initialSchemas),
+      isEdit,
       activeSchemaKey);
 
   @JsonKey(ignore: true)
@@ -1837,11 +1865,12 @@ class _$FormsSubmittedStateImpl implements FormsSubmittedState {
             Map<String, Map<String, dynamic>> formData,
             Map<String, SchemaObject> cachedSchemas,
             Map<String, SchemaObject> initialSchemas,
+            bool isEdit,
             String? activeSchemaKey)
         formSubmitted,
   }) {
-    return formSubmitted(
-        schema, formData, cachedSchemas, initialSchemas, activeSchemaKey);
+    return formSubmitted(schema, formData, cachedSchemas, initialSchemas,
+        isEdit, activeSchemaKey);
   }
 
   @override
@@ -1855,11 +1884,12 @@ class _$FormsSubmittedStateImpl implements FormsSubmittedState {
             Map<String, Map<String, dynamic>> formData,
             Map<String, SchemaObject> cachedSchemas,
             Map<String, SchemaObject> initialSchemas,
+            bool isEdit,
             String? activeSchemaKey)?
         formSubmitted,
   }) {
-    return formSubmitted?.call(
-        schema, formData, cachedSchemas, initialSchemas, activeSchemaKey);
+    return formSubmitted?.call(schema, formData, cachedSchemas, initialSchemas,
+        isEdit, activeSchemaKey);
   }
 
   @override
@@ -1873,13 +1903,14 @@ class _$FormsSubmittedStateImpl implements FormsSubmittedState {
             Map<String, Map<String, dynamic>> formData,
             Map<String, SchemaObject> cachedSchemas,
             Map<String, SchemaObject> initialSchemas,
+            bool isEdit,
             String? activeSchemaKey)?
         formSubmitted,
     required TResult orElse(),
   }) {
     if (formSubmitted != null) {
-      return formSubmitted(
-          schema, formData, cachedSchemas, initialSchemas, activeSchemaKey);
+      return formSubmitted(schema, formData, cachedSchemas, initialSchemas,
+          isEdit, activeSchemaKey);
     }
     return orElse();
   }
@@ -1922,6 +1953,7 @@ abstract class FormsSubmittedState implements FormsState {
       required final Map<String, Map<String, dynamic>> formData,
       required final Map<String, SchemaObject> cachedSchemas,
       required final Map<String, SchemaObject> initialSchemas,
+      required final bool isEdit,
       final String? activeSchemaKey}) = _$FormsSubmittedStateImpl;
 
   SchemaObject get schema;
@@ -1930,6 +1962,7 @@ abstract class FormsSubmittedState implements FormsState {
   Map<String, SchemaObject> get cachedSchemas;
   @override
   Map<String, SchemaObject> get initialSchemas;
+  bool get isEdit;
   @override
   String? get activeSchemaKey;
   @override

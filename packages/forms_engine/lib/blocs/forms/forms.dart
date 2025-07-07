@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forms_engine/forms_engine.dart';
 import 'package:forms_engine/models/schema_object/schema_object.dart';
@@ -38,9 +36,10 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
         final sortedProperties = page.properties == null
             ? null
             : Map.fromEntries(
-          page.properties!.entries.toList()
-            ..sort((a, b) => (a.value.order ?? 0).compareTo(b.value.order ?? 0)),
-        );
+                page.properties!.entries.toList()
+                  ..sort((a, b) =>
+                      (a.value.order ?? 0).compareTo(b.value.order ?? 0)),
+              );
 
         return MapEntry(key, page.copyWith(properties: sortedProperties));
       });
@@ -71,11 +70,11 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
           properties: entry.value.properties == null
               ? null
               : {
-            for (final prop in entry.value.properties!.entries)
-              prop.key: prop.key == event.key
-                  ? prop.value.copyWith(value: event.value)
-                  : prop.value,
-          },
+                  for (final prop in entry.value.properties!.entries)
+                    prop.key: prop.key == event.key
+                        ? prop.value.copyWith(value: event.value)
+                        : prop.value,
+                },
         )
     };
 
@@ -138,10 +137,10 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
     final updatedSchemas = Map.of(state.cachedSchemas);
     updatedSchemas[event.schemaKey] = initialSchema;
 
-
     emit(FormsState(
       cachedSchemas: state.initialSchemas,
-      initialSchemas: state.initialSchemas,)); // Reset after submit
+      initialSchemas: state.initialSchemas,
+    )); // Reset after submit
   }
 
   void _onSubmit(FormsSubmitEvent event, FormsStateEmitter emit) {
@@ -162,7 +161,7 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
         if (prop.hidden == true && prop.includeInForm != true) continue;
 
         pageValues[propEntry.key] =
-        (rawValue is String && rawValue.trim().isEmpty) ? null : rawValue;
+            (rawValue is String && rawValue.trim().isEmpty) ? null : rawValue;
       }
 
       if (pageValues.isNotEmpty) {
@@ -175,9 +174,9 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
       formData: outputData,
       cachedSchemas: state.cachedSchemas,
       initialSchemas: state.initialSchemas,
+      isEdit: event.isEdit,
       activeSchemaKey: event.schemaKey,
     ));
-
   }
 }
 
@@ -221,6 +220,7 @@ class FormsEvent with _$FormsEvent {
   /// Submit the form, emitting a summary output of collected form data
   const factory FormsEvent.submit({
     required String schemaKey,
+    @Default(false) bool isEdit,
   }) = FormsSubmitEvent;
 }
 
@@ -237,7 +237,7 @@ class FormsState with _$FormsState {
     required Map<String, Map<String, dynamic>> formData,
     required Map<String, SchemaObject> cachedSchemas,
     required Map<String, SchemaObject> initialSchemas,
+    required bool isEdit,
     String? activeSchemaKey,
   }) = FormsSubmittedState;
 }
-
