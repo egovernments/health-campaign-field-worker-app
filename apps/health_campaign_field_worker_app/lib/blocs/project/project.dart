@@ -190,6 +190,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     } catch (error) {
       emit(
         state.copyWith(
+          projects: [],
           loading: false,
           syncError: ProjectSyncErrorType.projectStaff,
         ),
@@ -255,6 +256,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       } catch (_) {
         emit(
           state.copyWith(
+            projects: [],
             loading: false,
             syncError: ProjectSyncErrorType.projectFacilities,
           ),
@@ -278,6 +280,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       } catch (_) {
         emit(
           state.copyWith(
+            projects: [],
             loading: false,
             syncError: ProjectSyncErrorType.productVariants,
           ),
@@ -289,6 +292,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       } catch (_) {
         emit(
           state.copyWith(
+            projects: [],
             loading: false,
             syncError: ProjectSyncErrorType.serviceDefinitions,
           ),
@@ -489,7 +493,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 }
               } catch (_) {
                 emit(state.copyWith(
-                  loading: false,
+                  projects: [],loading: false,
                   syncError: ProjectSyncErrorType.attendance,
                 ));
                 return;
@@ -670,6 +674,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       await localSecureStore.setProjectSetUpComplete(event.model.id, true);
     } catch (_) {
       emit(state.copyWith(
+        projects: [],
         selectedProject: event.model,
         loading: false,
         syncError: ProjectSyncErrorType.boundary,
@@ -678,6 +683,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     emit(state.copyWith(
+      projects: [],
       selectedProject: event.model,
       loading: false,
       syncError: null,

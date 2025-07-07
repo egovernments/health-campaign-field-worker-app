@@ -175,7 +175,7 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
   FutureOr<void> update(
     ProjectBeneficiaryModel entity, {
     bool createOpLog = true,
-        DataOperation dataOperation = DataOperation.update,
+    DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
       final projectBeneficiaryCompanion = entity.companion;
@@ -190,7 +190,8 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
         );
       });
 
-      return super.update(entity, createOpLog: createOpLog);
+      return super.update(entity,
+          createOpLog: createOpLog, dataOperation: dataOperation);
     });
   }
 

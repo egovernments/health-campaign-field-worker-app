@@ -223,11 +223,24 @@ class _HouseholdOverviewPageState
                                                         }
                                                       } else {
                                                         navigateToChecklist(
-                                                            ctx,
-                                                            state
-                                                                .householdMemberWrapper
-                                                                .household!
-                                                                .clientReferenceId);
+                                                          ctx,
+                                                          state
+                                                              .householdMemberWrapper
+                                                              .household!
+                                                              .clientReferenceId,
+                                                          RegistrationDeliverySingleton()
+                                                                      .beneficiaryType ==
+                                                                  BeneficiaryType
+                                                                      .individual
+                                                              ? state
+                                                                  .selectedIndividual
+                                                                  ?.address
+                                                                  ?.first
+                                                              : state
+                                                                  .householdMemberWrapper
+                                                                  .household
+                                                                  ?.address,
+                                                        );
                                                       }
                                                     });
                                                 callReloadEvent(
@@ -361,18 +374,31 @@ class _HouseholdOverviewPageState
                                                       }
                                                     } else {
                                                       navigateToChecklist(
-                                                          ctx,
-                                                          RegistrationDeliverySingleton()
-                                                                      .beneficiaryType ==
-                                                                  BeneficiaryType
-                                                                      .individual
-                                                              ? state
-                                                                  .selectedIndividual!
-                                                                  .clientReferenceId
-                                                              : state
-                                                                  .householdMemberWrapper
-                                                                  .household!
-                                                                  .clientReferenceId);
+                                                        ctx,
+                                                        RegistrationDeliverySingleton()
+                                                                    .beneficiaryType ==
+                                                                BeneficiaryType
+                                                                    .individual
+                                                            ? state
+                                                                .selectedIndividual!
+                                                                .clientReferenceId
+                                                            : state
+                                                                .householdMemberWrapper
+                                                                .household!
+                                                                .clientReferenceId,
+                                                        RegistrationDeliverySingleton()
+                                                                    .beneficiaryType ==
+                                                                BeneficiaryType
+                                                                    .individual
+                                                            ? state
+                                                                .selectedIndividual
+                                                                ?.address
+                                                                ?.first
+                                                            : state
+                                                                .householdMemberWrapper
+                                                                .household
+                                                                ?.address,
+                                                      );
                                                     }
                                                   });
                                               callReloadEvent(
@@ -1087,7 +1113,7 @@ class _HouseholdOverviewPageState
                                             },
                                             deleteMemberAction: () {
                                               showCustomPopup(
-                                                context: context,
+                                                context: ctx,
                                                 builder: (BuildContext
                                                         context) =>
                                                     Popup(
@@ -1110,7 +1136,7 @@ class _HouseholdOverviewPageState
                                                             )
                                                               ..pop()
                                                               ..pop();
-                                                            context
+                                                            ctx
                                                                 .read<
                                                                     HouseholdOverviewBloc>()
                                                                 .add(
@@ -1156,19 +1182,43 @@ class _HouseholdOverviewPageState
                                                             ?.cycles !=
                                                         null
                                                     ? !checkEligibilityForAgeAndSideEffect(
-                                                        DigitDOBAgeConvertor(
-                                                          years: ageInYears,
-                                                          months: ageInMonths,
-                                                        ),
-                                                        RegistrationDeliverySingleton()
-                                                            .projectType,
-                                                        (taskData ?? [])
+                                                              DigitDOBAgeConvertor(
+                                                                years:
+                                                                    ageInYears,
+                                                                months:
+                                                                    ageInMonths,
+                                                              ),
+                                                              RegistrationDeliverySingleton()
+                                                                  .projectType,
+                                                              (taskData ?? [])
+                                                                      .isNotEmpty
+                                                                  ? taskData
+                                                                      ?.lastOrNull
+                                                                  : null,
+                                                              sideEffectData,
+                                                            ) ||
+                                                            (taskData ?? [])
                                                                 .isNotEmpty
-                                                            ? taskData
-                                                                ?.lastOrNull
-                                                            : null,
-                                                        sideEffectData,
-                                                      )
+                                                        ? taskData
+                                                                ?.last.status ==
+                                                            Status.ineligible
+                                                                .toValue()
+                                                                .toString()
+                                                        : !checkEligibilityForAgeAndSideEffect(
+                                                            DigitDOBAgeConvertor(
+                                                              years: ageInYears,
+                                                              months:
+                                                                  ageInMonths,
+                                                            ),
+                                                            RegistrationDeliverySingleton()
+                                                                .projectType,
+                                                            (taskData ?? [])
+                                                                    .isNotEmpty
+                                                                ? taskData
+                                                                    ?.lastOrNull
+                                                                : null,
+                                                            sideEffectData,
+                                                          )
                                                     : false,
                                             name: e.name?.givenName ?? ' - - ',
                                             years: (e.dateOfBirth == null
@@ -1319,8 +1369,8 @@ class _HouseholdOverviewPageState
     return {'textLabel': textLabel, 'color': color, 'icon': icon};
   }
 
-  void navigateToChecklist(
-      BuildContext ctx, String beneficiaryClientRefId) async {
+  void navigateToChecklist(BuildContext ctx, String beneficiaryClientRefId,
+      AddressModel? address) async {
     await context.router.push(BeneficiaryChecklistRoute(
         beneficiaryClientRefId: beneficiaryClientRefId));
   }

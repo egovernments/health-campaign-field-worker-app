@@ -9,15 +9,5 @@ enum BeneficiaryType {
   individual,
   @MappableValue("HOUSEHOLD")
   household,
-  @MappableValue("PRODUCT")
-  product,
-  @MappableValue("SPECIAL_GROUPS")
-  specialGroups,
-  @MappableValue("REFUGEE_CAMPS")
-  refugeeCamps,
-  @MappableValue("SG_PRODUCT")
-  sgProduct,
-  @MappableValue("RC_PRODUCT")
-  rcProduct,
   ;
 }

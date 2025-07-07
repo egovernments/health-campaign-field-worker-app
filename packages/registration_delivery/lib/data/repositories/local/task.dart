@@ -412,7 +412,8 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
         batch.insertAllOnConflictUpdate(sql.taskResource, resourcesCompanions);
       });
 
-      await super.update(entity, createOpLog: createOpLog);
+      await super.update(entity,
+          createOpLog: createOpLog, dataOperation: dataOperation);
     });
   }
 
