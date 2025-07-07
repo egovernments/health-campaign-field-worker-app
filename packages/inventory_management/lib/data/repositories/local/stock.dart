@@ -104,6 +104,11 @@ class StockLocalRepository
                   lastModifiedBy: data.clientModifiedBy,
                   lastModifiedTime: data.clientModifiedTime,
                 ),
+          additionalFields: data.additionalFields != null &&
+                  data.additionalFields.toString().isNotEmpty
+              ? StockAdditionalFieldsMapper.fromJson(
+                  data.additionalFields.toString())
+              : null,
         );
       }).toList();
     });

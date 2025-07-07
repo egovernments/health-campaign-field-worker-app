@@ -5,6 +5,7 @@ import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
+import 'package:inventory_management/utils/utils.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
@@ -140,49 +141,52 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                     ],
                   ),
                 ),
-
-                // if (!context.isCDD)
-                //   Padding(
-                //     padding:
-                //         const EdgeInsets.only(left: spacer2, right: spacer2),
-                //     child: Stack(
-                //       children: [
-                //         Align(
-                //           alignment: Alignment.center,
-                //           child: SizedBox(
-                //             width: 0.94 * MediaQuery.of(context).size.width,
-                //             child: MenuCard(
-                //                 heading: localizations.translate(
-                //                     i18.manageStock.recordStockReturnedLabel),
-                //                 description: insertNewlines(
-                //                     localizations.translate(i18_local
-                //                         .stockDetails
-                //                         .recordStockReturnedDescription)),
-                //                 icon: Icons.settings_backup_restore,
-                //                 onTap: () {
-                //                   showStockReturnDialog(context);
-                //                 }),
-                //           ),
-                //         ),
-                //         Positioned(
-                //           top: 0,
-                //           bottom: 0,
-                //           right: 16,
-                //           child: Center(
-                //               child: GestureDetector(
-                //             onTap: () {
-                //               showStockReturnDialog(context);
-                //             },
-                //             child: Icon(
-                //               Icons.arrow_circle_right,
-                //               color: Colors.orange[800],
-                //               size: Base.height,
-                //             ),
-                //           )),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
+                const SizedBox(
+                  height: spacer4,
+                ),
+                if (!InventorySingleton().isCDD)
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: spacer2, right: spacer2),
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: SizedBox(
+                            width: 0.94 * MediaQuery.of(context).size.width,
+                            child: MenuCard(
+                                heading: localizations.translate(
+                                    i18.manageStock.recordStockReturnedLabel),
+                                description: insertNewlines(
+                                  localizations.translate(
+                                    "i18.stockDetails.recordStockReturnedDescription",
+                                  ),
+                                ),
+                                icon: Icons.settings_backup_restore,
+                                onTap: () {
+                                  showStockReturnDialog(context);
+                                }),
+                          ),
+                        ),
+                        Positioned(
+                          top: 0,
+                          bottom: 0,
+                          right: 16,
+                          child: Center(
+                              child: GestureDetector(
+                            onTap: () {
+                              showStockReturnDialog(context);
+                            },
+                            child: Icon(
+                              Icons.arrow_circle_right,
+                              color: Colors.orange[800],
+                              size: Base.height,
+                            ),
+                          )),
+                        ),
+                      ],
+                    ),
+                  ),
               ]),
               const SizedBox(height: spacer4),
             ],
@@ -252,11 +256,11 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                 GestureDetector(
                   onTap: () {
                     //TODO:
-                    // context.router.push(
-                    //   CustomMinNumberRoute(
-                    //     type: StockRecordEntryType.receipt,
-                    //   ),
-                    // );
+                    context.router.push(
+                      MinNumberRoute(
+                        type: StockRecordEntryType.receipt,
+                      ),
+                    );
                     Navigator.of(context).pop();
                   },
                   child: Container(
@@ -352,11 +356,11 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                 GestureDetector(
                   onTap: () {
                     //TODO:
-                    // context.router.push(
-                    //   CustomMinNumberRoute(
-                    //     type: StockRecordEntryType.dispatch,
-                    //   ),
-                    // );
+                    context.router.push(
+                      MinNumberRoute(
+                        type: StockRecordEntryType.dispatch,
+                      ),
+                    );
                     Navigator.of(context).pop();
                   },
                   child: Container(
@@ -452,11 +456,11 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                 GestureDetector(
                   onTap: () {
                     // TODO:
-                    // context.router.push(
-                    //   CustomMinNumberRoute(
-                    //     type: StockRecordEntryType.returned,
-                    //   ),
-                    // );
+                    context.router.push(
+                      MinNumberRoute(
+                        type: StockRecordEntryType.returned,
+                      ),
+                    );
                     Navigator.of(context).pop();
                   },
                   child: Container(

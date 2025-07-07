@@ -8,36 +8,41 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i11;
-import 'package:digit_data_model/data_model.dart' as _i14;
-import 'package:flutter/material.dart' as _i12;
-import 'package:inventory_management/blocs/app_localization.dart' as _i13;
-import 'package:inventory_management/blocs/inventory_report.dart' as _i15;
-import 'package:inventory_management/blocs/record_stock.dart' as _i16;
+import 'package:auto_route/auto_route.dart' as _i13;
+import 'package:digit_data_model/data_model.dart' as _i16;
+import 'package:flutter/material.dart' as _i14;
+import 'package:inventory_management/blocs/app_localization.dart' as _i15;
+import 'package:inventory_management/blocs/inventory_report.dart' as _i17;
+import 'package:inventory_management/blocs/record_stock.dart' as _i18;
+import 'package:inventory_management/models/entities/stock.dart' as _i19;
 import 'package:inventory_management/pages/acknowledgement.dart' as _i1;
 import 'package:inventory_management/pages/facility_selection.dart' as _i2;
 import 'package:inventory_management/pages/manage_stocks.dart' as _i5;
-import 'package:inventory_management/pages/record_stock/record_stock_wrapper.dart'
+import 'package:inventory_management/pages/record_stock/min_number_page.dart'
     as _i6;
-import 'package:inventory_management/pages/record_stock/stock_details.dart'
+import 'package:inventory_management/pages/record_stock/record_stock_wrapper.dart'
     as _i7;
+import 'package:inventory_management/pages/record_stock/stock_details.dart'
+    as _i8;
 import 'package:inventory_management/pages/record_stock/view_all_transaction_page.dart'
-    as _i9;
-import 'package:inventory_management/pages/record_stock/warehouse_details.dart'
     as _i10;
+import 'package:inventory_management/pages/record_stock/view_stock_record.dart'
+    as _i11;
+import 'package:inventory_management/pages/record_stock/warehouse_details.dart'
+    as _i12;
 import 'package:inventory_management/pages/reports/report_details.dart' as _i3;
 import 'package:inventory_management/pages/reports/report_selection.dart'
     as _i4;
 import 'package:inventory_management/pages/stock_reconciliation/stock_reconciliation.dart'
-    as _i8;
+    as _i9;
 
-abstract class $InventoryRoute extends _i11.AutoRouterModule {
+abstract class $InventoryRoute extends _i13.AutoRouterModule {
   @override
-  final Map<String, _i11.PageFactory> pagesMap = {
+  final Map<String, _i13.PageFactory> pagesMap = {
     InventoryAcknowledgementRoute.name: (routeData) {
       final args = routeData.argsAs<InventoryAcknowledgementRouteArgs>(
           orElse: () => const InventoryAcknowledgementRouteArgs());
-      return _i11.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i1.InventoryAcknowledgementPage(
           key: args.key,
@@ -51,7 +56,7 @@ abstract class $InventoryRoute extends _i11.AutoRouterModule {
     },
     InventoryFacilitySelectionRoute.name: (routeData) {
       final args = routeData.argsAs<InventoryFacilitySelectionRouteArgs>();
-      return _i11.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i2.InventoryFacilitySelectionPage(
           key: args.key,
@@ -62,7 +67,7 @@ abstract class $InventoryRoute extends _i11.AutoRouterModule {
     },
     InventoryReportDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<InventoryReportDetailsRouteArgs>();
-      return _i11.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i3.InventoryReportDetailsPage(
           key: args.key,
@@ -74,7 +79,7 @@ abstract class $InventoryRoute extends _i11.AutoRouterModule {
     InventoryReportSelectionRoute.name: (routeData) {
       final args = routeData.argsAs<InventoryReportSelectionRouteArgs>(
           orElse: () => const InventoryReportSelectionRouteArgs());
-      return _i11.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i4.InventoryReportSelectionPage(
           key: args.key,
@@ -85,7 +90,7 @@ abstract class $InventoryRoute extends _i11.AutoRouterModule {
     ManageStocksRoute.name: (routeData) {
       final args = routeData.argsAs<ManageStocksRouteArgs>(
           orElse: () => const ManageStocksRouteArgs());
-      return _i11.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i5.ManageStocksPage(
           key: args.key,
@@ -93,12 +98,23 @@ abstract class $InventoryRoute extends _i11.AutoRouterModule {
         ),
       );
     },
+    MinNumberRoute.name: (routeData) {
+      final args = routeData.argsAs<MinNumberRouteArgs>();
+      return _i13.AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: _i6.MinNumberPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          type: args.type,
+        ),
+      );
+    },
     RecordStockWrapperRoute.name: (routeData) {
       final args = routeData.argsAs<RecordStockWrapperRouteArgs>();
-      return _i11.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i11.WrappedRoute(
-            child: _i6.RecordStockWrapperPage(
+        child: _i13.WrappedRoute(
+            child: _i7.RecordStockWrapperPage(
           key: args.key,
           type: args.type,
         )),
@@ -107,9 +123,9 @@ abstract class $InventoryRoute extends _i11.AutoRouterModule {
     StockDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<StockDetailsRouteArgs>(
           orElse: () => const StockDetailsRouteArgs());
-      return _i11.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i7.StockDetailsPage(
+        child: _i8.StockDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -118,9 +134,9 @@ abstract class $InventoryRoute extends _i11.AutoRouterModule {
     StockReconciliationRoute.name: (routeData) {
       final args = routeData.argsAs<StockReconciliationRouteArgs>(
           orElse: () => const StockReconciliationRouteArgs());
-      return _i11.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i8.StockReconciliationPage(
+        child: _i9.StockReconciliationPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -128,21 +144,33 @@ abstract class $InventoryRoute extends _i11.AutoRouterModule {
     },
     ViewAllTransactionsRoute.name: (routeData) {
       final args = routeData.argsAs<ViewAllTransactionsRouteArgs>();
-      return _i11.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i9.ViewAllTransactionsPage(
+        child: _i10.ViewAllTransactionsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           warehouseId: args.warehouseId,
         ),
       );
     },
+    ViewStockRecordsRoute.name: (routeData) {
+      final args = routeData.argsAs<ViewStockRecordsRouteArgs>();
+      return _i13.AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: _i11.ViewStockRecordsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          mrnNumber: args.mrnNumber,
+          stockRecords: args.stockRecords,
+        ),
+      );
+    },
     WarehouseDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<WarehouseDetailsRouteArgs>(
           orElse: () => const WarehouseDetailsRouteArgs());
-      return _i11.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i10.WarehouseDetailsPage(
+        child: _i12.WarehouseDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -154,15 +182,15 @@ abstract class $InventoryRoute extends _i11.AutoRouterModule {
 /// generated route for
 /// [_i1.InventoryAcknowledgementPage]
 class InventoryAcknowledgementRoute
-    extends _i11.PageRouteInfo<InventoryAcknowledgementRouteArgs> {
+    extends _i13.PageRouteInfo<InventoryAcknowledgementRouteArgs> {
   InventoryAcknowledgementRoute({
-    _i12.Key? key,
-    _i13.InventoryLocalization? appLocalizations,
+    _i14.Key? key,
+    _i15.InventoryLocalization? appLocalizations,
     bool isDataRecordSuccess = false,
     String? label,
     String? description,
     Map<String, dynamic>? descriptionTableData,
-    List<_i11.PageRouteInfo>? children,
+    List<_i13.PageRouteInfo>? children,
   }) : super(
           InventoryAcknowledgementRoute.name,
           args: InventoryAcknowledgementRouteArgs(
@@ -178,8 +206,8 @@ class InventoryAcknowledgementRoute
 
   static const String name = 'InventoryAcknowledgementRoute';
 
-  static const _i11.PageInfo<InventoryAcknowledgementRouteArgs> page =
-      _i11.PageInfo<InventoryAcknowledgementRouteArgs>(name);
+  static const _i13.PageInfo<InventoryAcknowledgementRouteArgs> page =
+      _i13.PageInfo<InventoryAcknowledgementRouteArgs>(name);
 }
 
 class InventoryAcknowledgementRouteArgs {
@@ -192,9 +220,9 @@ class InventoryAcknowledgementRouteArgs {
     this.descriptionTableData,
   });
 
-  final _i12.Key? key;
+  final _i14.Key? key;
 
-  final _i13.InventoryLocalization? appLocalizations;
+  final _i15.InventoryLocalization? appLocalizations;
 
   final bool isDataRecordSuccess;
 
@@ -213,12 +241,12 @@ class InventoryAcknowledgementRouteArgs {
 /// generated route for
 /// [_i2.InventoryFacilitySelectionPage]
 class InventoryFacilitySelectionRoute
-    extends _i11.PageRouteInfo<InventoryFacilitySelectionRouteArgs> {
+    extends _i13.PageRouteInfo<InventoryFacilitySelectionRouteArgs> {
   InventoryFacilitySelectionRoute({
-    _i12.Key? key,
-    _i13.InventoryLocalization? appLocalizations,
-    required List<_i14.FacilityModel> facilities,
-    List<_i11.PageRouteInfo>? children,
+    _i14.Key? key,
+    _i15.InventoryLocalization? appLocalizations,
+    required List<_i16.FacilityModel> facilities,
+    List<_i13.PageRouteInfo>? children,
   }) : super(
           InventoryFacilitySelectionRoute.name,
           args: InventoryFacilitySelectionRouteArgs(
@@ -231,8 +259,8 @@ class InventoryFacilitySelectionRoute
 
   static const String name = 'InventoryFacilitySelectionRoute';
 
-  static const _i11.PageInfo<InventoryFacilitySelectionRouteArgs> page =
-      _i11.PageInfo<InventoryFacilitySelectionRouteArgs>(name);
+  static const _i13.PageInfo<InventoryFacilitySelectionRouteArgs> page =
+      _i13.PageInfo<InventoryFacilitySelectionRouteArgs>(name);
 }
 
 class InventoryFacilitySelectionRouteArgs {
@@ -242,11 +270,11 @@ class InventoryFacilitySelectionRouteArgs {
     required this.facilities,
   });
 
-  final _i12.Key? key;
+  final _i14.Key? key;
 
-  final _i13.InventoryLocalization? appLocalizations;
+  final _i15.InventoryLocalization? appLocalizations;
 
-  final List<_i14.FacilityModel> facilities;
+  final List<_i16.FacilityModel> facilities;
 
   @override
   String toString() {
@@ -257,12 +285,12 @@ class InventoryFacilitySelectionRouteArgs {
 /// generated route for
 /// [_i3.InventoryReportDetailsPage]
 class InventoryReportDetailsRoute
-    extends _i11.PageRouteInfo<InventoryReportDetailsRouteArgs> {
+    extends _i13.PageRouteInfo<InventoryReportDetailsRouteArgs> {
   InventoryReportDetailsRoute({
-    _i12.Key? key,
-    _i13.InventoryLocalization? appLocalizations,
-    required _i15.InventoryReportType reportType,
-    List<_i11.PageRouteInfo>? children,
+    _i14.Key? key,
+    _i15.InventoryLocalization? appLocalizations,
+    required _i17.InventoryReportType reportType,
+    List<_i13.PageRouteInfo>? children,
   }) : super(
           InventoryReportDetailsRoute.name,
           args: InventoryReportDetailsRouteArgs(
@@ -275,8 +303,8 @@ class InventoryReportDetailsRoute
 
   static const String name = 'InventoryReportDetailsRoute';
 
-  static const _i11.PageInfo<InventoryReportDetailsRouteArgs> page =
-      _i11.PageInfo<InventoryReportDetailsRouteArgs>(name);
+  static const _i13.PageInfo<InventoryReportDetailsRouteArgs> page =
+      _i13.PageInfo<InventoryReportDetailsRouteArgs>(name);
 }
 
 class InventoryReportDetailsRouteArgs {
@@ -286,11 +314,11 @@ class InventoryReportDetailsRouteArgs {
     required this.reportType,
   });
 
-  final _i12.Key? key;
+  final _i14.Key? key;
 
-  final _i13.InventoryLocalization? appLocalizations;
+  final _i15.InventoryLocalization? appLocalizations;
 
-  final _i15.InventoryReportType reportType;
+  final _i17.InventoryReportType reportType;
 
   @override
   String toString() {
@@ -301,11 +329,11 @@ class InventoryReportDetailsRouteArgs {
 /// generated route for
 /// [_i4.InventoryReportSelectionPage]
 class InventoryReportSelectionRoute
-    extends _i11.PageRouteInfo<InventoryReportSelectionRouteArgs> {
+    extends _i13.PageRouteInfo<InventoryReportSelectionRouteArgs> {
   InventoryReportSelectionRoute({
-    _i12.Key? key,
-    _i13.InventoryLocalization? appLocalizations,
-    List<_i11.PageRouteInfo>? children,
+    _i14.Key? key,
+    _i15.InventoryLocalization? appLocalizations,
+    List<_i13.PageRouteInfo>? children,
   }) : super(
           InventoryReportSelectionRoute.name,
           args: InventoryReportSelectionRouteArgs(
@@ -317,8 +345,8 @@ class InventoryReportSelectionRoute
 
   static const String name = 'InventoryReportSelectionRoute';
 
-  static const _i11.PageInfo<InventoryReportSelectionRouteArgs> page =
-      _i11.PageInfo<InventoryReportSelectionRouteArgs>(name);
+  static const _i13.PageInfo<InventoryReportSelectionRouteArgs> page =
+      _i13.PageInfo<InventoryReportSelectionRouteArgs>(name);
 }
 
 class InventoryReportSelectionRouteArgs {
@@ -327,9 +355,9 @@ class InventoryReportSelectionRouteArgs {
     this.appLocalizations,
   });
 
-  final _i12.Key? key;
+  final _i14.Key? key;
 
-  final _i13.InventoryLocalization? appLocalizations;
+  final _i15.InventoryLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -339,11 +367,11 @@ class InventoryReportSelectionRouteArgs {
 
 /// generated route for
 /// [_i5.ManageStocksPage]
-class ManageStocksRoute extends _i11.PageRouteInfo<ManageStocksRouteArgs> {
+class ManageStocksRoute extends _i13.PageRouteInfo<ManageStocksRouteArgs> {
   ManageStocksRoute({
-    _i12.Key? key,
-    _i13.InventoryLocalization? appLocalizations,
-    List<_i11.PageRouteInfo>? children,
+    _i14.Key? key,
+    _i15.InventoryLocalization? appLocalizations,
+    List<_i13.PageRouteInfo>? children,
   }) : super(
           ManageStocksRoute.name,
           args: ManageStocksRouteArgs(
@@ -355,8 +383,8 @@ class ManageStocksRoute extends _i11.PageRouteInfo<ManageStocksRouteArgs> {
 
   static const String name = 'ManageStocksRoute';
 
-  static const _i11.PageInfo<ManageStocksRouteArgs> page =
-      _i11.PageInfo<ManageStocksRouteArgs>(name);
+  static const _i13.PageInfo<ManageStocksRouteArgs> page =
+      _i13.PageInfo<ManageStocksRouteArgs>(name);
 }
 
 class ManageStocksRouteArgs {
@@ -365,9 +393,9 @@ class ManageStocksRouteArgs {
     this.appLocalizations,
   });
 
-  final _i12.Key? key;
+  final _i14.Key? key;
 
-  final _i13.InventoryLocalization? appLocalizations;
+  final _i15.InventoryLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -376,13 +404,56 @@ class ManageStocksRouteArgs {
 }
 
 /// generated route for
-/// [_i6.RecordStockWrapperPage]
+/// [_i6.MinNumberPage]
+class MinNumberRoute extends _i13.PageRouteInfo<MinNumberRouteArgs> {
+  MinNumberRoute({
+    _i14.Key? key,
+    _i15.InventoryLocalization? appLocalizations,
+    required dynamic type,
+    List<_i13.PageRouteInfo>? children,
+  }) : super(
+          MinNumberRoute.name,
+          args: MinNumberRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            type: type,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'MinNumberRoute';
+
+  static const _i13.PageInfo<MinNumberRouteArgs> page =
+      _i13.PageInfo<MinNumberRouteArgs>(name);
+}
+
+class MinNumberRouteArgs {
+  const MinNumberRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.type,
+  });
+
+  final _i14.Key? key;
+
+  final _i15.InventoryLocalization? appLocalizations;
+
+  final dynamic type;
+
+  @override
+  String toString() {
+    return 'MinNumberRouteArgs{key: $key, appLocalizations: $appLocalizations, type: $type}';
+  }
+}
+
+/// generated route for
+/// [_i7.RecordStockWrapperPage]
 class RecordStockWrapperRoute
-    extends _i11.PageRouteInfo<RecordStockWrapperRouteArgs> {
+    extends _i13.PageRouteInfo<RecordStockWrapperRouteArgs> {
   RecordStockWrapperRoute({
-    _i12.Key? key,
-    required _i16.StockRecordEntryType type,
-    List<_i11.PageRouteInfo>? children,
+    _i14.Key? key,
+    required _i18.StockRecordEntryType type,
+    List<_i13.PageRouteInfo>? children,
   }) : super(
           RecordStockWrapperRoute.name,
           args: RecordStockWrapperRouteArgs(
@@ -394,8 +465,8 @@ class RecordStockWrapperRoute
 
   static const String name = 'RecordStockWrapperRoute';
 
-  static const _i11.PageInfo<RecordStockWrapperRouteArgs> page =
-      _i11.PageInfo<RecordStockWrapperRouteArgs>(name);
+  static const _i13.PageInfo<RecordStockWrapperRouteArgs> page =
+      _i13.PageInfo<RecordStockWrapperRouteArgs>(name);
 }
 
 class RecordStockWrapperRouteArgs {
@@ -404,9 +475,9 @@ class RecordStockWrapperRouteArgs {
     required this.type,
   });
 
-  final _i12.Key? key;
+  final _i14.Key? key;
 
-  final _i16.StockRecordEntryType type;
+  final _i18.StockRecordEntryType type;
 
   @override
   String toString() {
@@ -415,12 +486,12 @@ class RecordStockWrapperRouteArgs {
 }
 
 /// generated route for
-/// [_i7.StockDetailsPage]
-class StockDetailsRoute extends _i11.PageRouteInfo<StockDetailsRouteArgs> {
+/// [_i8.StockDetailsPage]
+class StockDetailsRoute extends _i13.PageRouteInfo<StockDetailsRouteArgs> {
   StockDetailsRoute({
-    _i12.Key? key,
-    _i13.InventoryLocalization? appLocalizations,
-    List<_i11.PageRouteInfo>? children,
+    _i14.Key? key,
+    _i15.InventoryLocalization? appLocalizations,
+    List<_i13.PageRouteInfo>? children,
   }) : super(
           StockDetailsRoute.name,
           args: StockDetailsRouteArgs(
@@ -432,8 +503,8 @@ class StockDetailsRoute extends _i11.PageRouteInfo<StockDetailsRouteArgs> {
 
   static const String name = 'StockDetailsRoute';
 
-  static const _i11.PageInfo<StockDetailsRouteArgs> page =
-      _i11.PageInfo<StockDetailsRouteArgs>(name);
+  static const _i13.PageInfo<StockDetailsRouteArgs> page =
+      _i13.PageInfo<StockDetailsRouteArgs>(name);
 }
 
 class StockDetailsRouteArgs {
@@ -442,9 +513,9 @@ class StockDetailsRouteArgs {
     this.appLocalizations,
   });
 
-  final _i12.Key? key;
+  final _i14.Key? key;
 
-  final _i13.InventoryLocalization? appLocalizations;
+  final _i15.InventoryLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -453,13 +524,13 @@ class StockDetailsRouteArgs {
 }
 
 /// generated route for
-/// [_i8.StockReconciliationPage]
+/// [_i9.StockReconciliationPage]
 class StockReconciliationRoute
-    extends _i11.PageRouteInfo<StockReconciliationRouteArgs> {
+    extends _i13.PageRouteInfo<StockReconciliationRouteArgs> {
   StockReconciliationRoute({
-    _i12.Key? key,
-    _i13.InventoryLocalization? appLocalizations,
-    List<_i11.PageRouteInfo>? children,
+    _i14.Key? key,
+    _i15.InventoryLocalization? appLocalizations,
+    List<_i13.PageRouteInfo>? children,
   }) : super(
           StockReconciliationRoute.name,
           args: StockReconciliationRouteArgs(
@@ -471,8 +542,8 @@ class StockReconciliationRoute
 
   static const String name = 'StockReconciliationRoute';
 
-  static const _i11.PageInfo<StockReconciliationRouteArgs> page =
-      _i11.PageInfo<StockReconciliationRouteArgs>(name);
+  static const _i13.PageInfo<StockReconciliationRouteArgs> page =
+      _i13.PageInfo<StockReconciliationRouteArgs>(name);
 }
 
 class StockReconciliationRouteArgs {
@@ -481,9 +552,9 @@ class StockReconciliationRouteArgs {
     this.appLocalizations,
   });
 
-  final _i12.Key? key;
+  final _i14.Key? key;
 
-  final _i13.InventoryLocalization? appLocalizations;
+  final _i15.InventoryLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -492,14 +563,14 @@ class StockReconciliationRouteArgs {
 }
 
 /// generated route for
-/// [_i9.ViewAllTransactionsPage]
+/// [_i10.ViewAllTransactionsPage]
 class ViewAllTransactionsRoute
-    extends _i11.PageRouteInfo<ViewAllTransactionsRouteArgs> {
+    extends _i13.PageRouteInfo<ViewAllTransactionsRouteArgs> {
   ViewAllTransactionsRoute({
-    _i12.Key? key,
-    _i13.InventoryLocalization? appLocalizations,
+    _i14.Key? key,
+    _i15.InventoryLocalization? appLocalizations,
     required String? warehouseId,
-    List<_i11.PageRouteInfo>? children,
+    List<_i13.PageRouteInfo>? children,
   }) : super(
           ViewAllTransactionsRoute.name,
           args: ViewAllTransactionsRouteArgs(
@@ -512,8 +583,8 @@ class ViewAllTransactionsRoute
 
   static const String name = 'ViewAllTransactionsRoute';
 
-  static const _i11.PageInfo<ViewAllTransactionsRouteArgs> page =
-      _i11.PageInfo<ViewAllTransactionsRouteArgs>(name);
+  static const _i13.PageInfo<ViewAllTransactionsRouteArgs> page =
+      _i13.PageInfo<ViewAllTransactionsRouteArgs>(name);
 }
 
 class ViewAllTransactionsRouteArgs {
@@ -523,9 +594,9 @@ class ViewAllTransactionsRouteArgs {
     required this.warehouseId,
   });
 
-  final _i12.Key? key;
+  final _i14.Key? key;
 
-  final _i13.InventoryLocalization? appLocalizations;
+  final _i15.InventoryLocalization? appLocalizations;
 
   final String? warehouseId;
 
@@ -536,13 +607,62 @@ class ViewAllTransactionsRouteArgs {
 }
 
 /// generated route for
-/// [_i10.WarehouseDetailsPage]
+/// [_i11.ViewStockRecordsPage]
+class ViewStockRecordsRoute
+    extends _i13.PageRouteInfo<ViewStockRecordsRouteArgs> {
+  ViewStockRecordsRoute({
+    _i14.Key? key,
+    _i15.InventoryLocalization? appLocalizations,
+    required String mrnNumber,
+    required List<_i19.StockModel> stockRecords,
+    List<_i13.PageRouteInfo>? children,
+  }) : super(
+          ViewStockRecordsRoute.name,
+          args: ViewStockRecordsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            mrnNumber: mrnNumber,
+            stockRecords: stockRecords,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ViewStockRecordsRoute';
+
+  static const _i13.PageInfo<ViewStockRecordsRouteArgs> page =
+      _i13.PageInfo<ViewStockRecordsRouteArgs>(name);
+}
+
+class ViewStockRecordsRouteArgs {
+  const ViewStockRecordsRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.mrnNumber,
+    required this.stockRecords,
+  });
+
+  final _i14.Key? key;
+
+  final _i15.InventoryLocalization? appLocalizations;
+
+  final String mrnNumber;
+
+  final List<_i19.StockModel> stockRecords;
+
+  @override
+  String toString() {
+    return 'ViewStockRecordsRouteArgs{key: $key, appLocalizations: $appLocalizations, mrnNumber: $mrnNumber, stockRecords: $stockRecords}';
+  }
+}
+
+/// generated route for
+/// [_i12.WarehouseDetailsPage]
 class WarehouseDetailsRoute
-    extends _i11.PageRouteInfo<WarehouseDetailsRouteArgs> {
+    extends _i13.PageRouteInfo<WarehouseDetailsRouteArgs> {
   WarehouseDetailsRoute({
-    _i12.Key? key,
-    _i13.InventoryLocalization? appLocalizations,
-    List<_i11.PageRouteInfo>? children,
+    _i14.Key? key,
+    _i15.InventoryLocalization? appLocalizations,
+    List<_i13.PageRouteInfo>? children,
   }) : super(
           WarehouseDetailsRoute.name,
           args: WarehouseDetailsRouteArgs(
@@ -554,8 +674,8 @@ class WarehouseDetailsRoute
 
   static const String name = 'WarehouseDetailsRoute';
 
-  static const _i11.PageInfo<WarehouseDetailsRouteArgs> page =
-      _i11.PageInfo<WarehouseDetailsRouteArgs>(name);
+  static const _i13.PageInfo<WarehouseDetailsRouteArgs> page =
+      _i13.PageInfo<WarehouseDetailsRouteArgs>(name);
 }
 
 class WarehouseDetailsRouteArgs {
@@ -564,9 +684,9 @@ class WarehouseDetailsRouteArgs {
     this.appLocalizations,
   });
 
-  final _i12.Key? key;
+  final _i14.Key? key;
 
-  final _i13.InventoryLocalization? appLocalizations;
+  final _i15.InventoryLocalization? appLocalizations;
 
   @override
   String toString() {

@@ -38,5 +38,13 @@ class InventoryRoute extends $InventoryRoute {
     AutoRoute(
         page: InventoryAcknowledgementRoute.page,
         path: 'inventory-acknowledgement'),
+    AutoRoute(
+      page: MinNumberRoute.page,
+      path: 'custom-min-number',
+    ),
+    AutoRoute(
+      page: ViewStockRecordsRoute.page,
+      path: 'stock-record-view',
+    ),
   ];
 }

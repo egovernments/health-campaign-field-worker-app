@@ -1,10 +1,14 @@
 // Importing necessary packages and modules
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:crypto/crypto.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:inventory_management/data/repositories/local/stock.dart';
+import 'package:inventory_management/models/entities/stock.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../models/entities/inventory_transport_type.dart';
@@ -154,6 +158,33 @@ class InventorySingleton {
   }
 }
 
+String getSecondaryPartyValue(StockModel? stock) {
+  // Use a guard clause for null safety
+  if (stock == null) return "";
+
+  // For a RECEIPT, the other party is always the SENDER.
+  if (stock.transactionType == "RECEIVED") {
+    // This now correctly handles your case without checking senderType.
+    return 'FAC_${stock.senderId}';
+  }
+
+  // For a DISPATCH, the other party is the RECEIVER.
+  // Here we can keep the special logic for STAFF receivers.
+  if (stock.transactionType == "DISPATCHED") {
+    if (stock.receiverType == "STAFF") {
+      return stock.additionalFields?.fields
+              .firstWhereOrNull((e) => e.key == "distributorName")
+              ?.value ??
+          "Delivery Team";
+    } else {
+      return 'FAC_${stock.receiverId}';
+    }
+  }
+
+  // Provide a sensible fallback for any other transaction types
+  return 'FAC_${stock.receiverId ?? ''}';
+}
+
 class UniqueIdGeneration {
   Future<Set<String>> generateUniqueId({
     required String localityCode,
@@ -241,5 +272,13 @@ class UniqueIdGeneration {
     return returnCombinedIds
         ? {formattedUniqueId, combinedId}
         : {formattedUniqueId};
+  }
+}
+
+class CustomStockMethods {
+  Future<StockModel> getStockBasedonProductVariantId(
+      StockLocalRepository stockRepo, String productVariantId) async {
+    final result = await stockRepo.search(StockSearchModel(), productVariantId);
+    return result.first;
   }
 }
