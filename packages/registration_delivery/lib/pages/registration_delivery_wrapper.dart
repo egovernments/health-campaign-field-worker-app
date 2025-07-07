@@ -1,10 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:forms_engine/blocs/forms/forms.dart';
 import 'package:location/location.dart';
 import 'package:registration_bloc/bloc/registration_bloc.dart';
 import 'package:registration_bloc/models/global_search_params.dart';
@@ -13,25 +11,19 @@ import 'package:registration_bloc/service/registration_service.dart';
 import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/blocs/search_households/household_global_seach.dart';
 import 'package:registration_delivery/blocs/search_households/individual_global_search.dart';
-import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 import 'package:survey_form/blocs/service_definition.dart';
 import 'package:survey_form/models/entities/service_definition.dart';
 
-import '../blocs/entity_create/entity_create.dart';
 import '../blocs/household_details/household_details.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/search_households/tag_by_search.dart';
 import '../blocs/unique_id/unique_id.dart';
-import '../data/repositories/local/household_global_search.dart';
-import '../data/repositories/local/registration_delivery_address.dart';
 import '../data/repositories/remote/unique_id_pool.dart';
 import '../models/entities/household.dart';
 import '../models/entities/household_member.dart';
 import '../models/entities/project_beneficiary.dart';
-import '../models/entities/referral.dart';
-import '../models/entities/side_effect.dart';
 import '../models/entities/task.dart';
 import '../models/entities/unique_id_pool.dart';
 import '../utils/utils.dart';
@@ -42,7 +34,6 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final serviceDefinition = context.repository<ServiceDefinitionModel,
         ServiceDefinitionSearchModel>(context);
 
@@ -201,21 +192,6 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
                         UniqueIdPoolSearchModel>>(),
                 uniqueIdPoolRemoteRepository:
                     context.read<UniqueIdPoolRemoteRepository>()),
-          ),
-          BlocProvider(
-            create: (ctx) => EntityCreateBloc(
-              individualRepository: context
-                  .repository<IndividualModel, IndividualSearchModel>(context),
-              householdRepository: context
-                  .repository<HouseholdModel, HouseholdSearchModel>(context),
-              householdMemberRepository: context.repository<
-                  HouseholdMemberModel, HouseholdMemberSearchModel>(context),
-              projectBeneficiaryRepository: context.repository<
-                  ProjectBeneficiaryModel,
-                  ProjectBeneficiarySearchModel>(context),
-              taskDataRepository:
-                  context.repository<TaskModel, TaskSearchModel>(context),
-            ),
           ),
         ],
         child: const AutoRouter(),

@@ -3,16 +3,15 @@ part of 'json_schema_builder.dart';
 class JsonSchemaLatLngBuilder extends JsonSchemaBuilder<String> {
   final String? label;
 
-  const JsonSchemaLatLngBuilder({
-    super.key,
-    required super.formControlName,
-    required super.form,
-    this.label,
-    super.validations,
-    super.helpText,
-    super.isRequired,
-    super.tooltipText
-  });
+  const JsonSchemaLatLngBuilder(
+      {super.key,
+      required super.formControlName,
+      required super.form,
+      this.label,
+      super.validations,
+      super.helpText,
+      super.isRequired,
+      super.tooltipText});
 
   @override
   Widget build(BuildContext context) {
@@ -48,19 +47,30 @@ class _LatLngBuilderStatefulWrapper extends StatefulWidget {
   });
 
   @override
-  State<_LatLngBuilderStatefulWrapper> createState() => _LatLngBuilderStatefulWrapperState();
+  State<_LatLngBuilderStatefulWrapper> createState() =>
+      _LatLngBuilderStatefulWrapperState();
 }
 
-class _LatLngBuilderStatefulWrapperState extends State<_LatLngBuilderStatefulWrapper> {
+class _LatLngBuilderStatefulWrapperState
+    extends State<_LatLngBuilderStatefulWrapper> {
   bool _valueSet = false;
 
   @override
   void initState() {
     super.initState();
-    // Triggered once the widget is built
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      DigitComponentsUtils.showDialog(context, '', DialogType.inProgress);
-    });
+    // Don't show dialog if location value already exists (e.g., from defaultValues)
+    final controlValue = widget.form.control(widget.formControlName).value;
+    final isLatLngPreFilled =
+        controlValue != null && controlValue.toString().isNotEmpty;
+
+    if (!isLatLngPreFilled) {
+      // Show loading dialog only if value isn't already set
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        DigitComponentsUtils.showDialog(context, '', DialogType.inProgress);
+      });
+    } else {
+      _valueSet = true; // prevent setting again from Bloc listener
+    }
   }
 
   @override
@@ -70,7 +80,8 @@ class _LatLngBuilderStatefulWrapperState extends State<_LatLngBuilderStatefulWra
       listener: (context, state) {
         if (state.longitude != null && !_valueSet) {
           _valueSet = true;
-          widget.form.control(widget.formControlName).value = state.latLngString;
+          widget.form.control(widget.formControlName).value =
+              state.latLngString;
 
           if (Navigator.canPop(context)) {
             DigitComponentsUtils.hideDialog(context);
@@ -90,7 +101,8 @@ class _LatLngBuilderStatefulWrapperState extends State<_LatLngBuilderStatefulWra
                 child: DigitTextFormInput(
                   helpText: widget.helpText,
                   readOnly: true,
-                  initialValue: widget.form.control(widget.formControlName).value,
+                  initialValue:
+                      widget.form.control(widget.formControlName).value,
                   onChange: (value) {
                     widget.form.control(widget.formControlName).value = value;
                   },
@@ -104,4 +116,3 @@ class _LatLngBuilderStatefulWrapperState extends State<_LatLngBuilderStatefulWra
     );
   }
 }
-

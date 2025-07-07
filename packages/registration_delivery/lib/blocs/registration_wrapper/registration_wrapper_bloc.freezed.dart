@@ -27,6 +27,9 @@ mixin _$RegistrationWrapperEvent {
             String? beneficiaryType,
             String projectId)
         fetchDeliveryDetails,
+    required TResult Function(List<EntityModel> entities) create,
+    required TResult Function(List<EntityModel> entities) update,
+    required TResult Function(List<EntityModel> entities) delete,
     required TResult Function() clear,
   }) =>
       throw _privateConstructorUsedError;
@@ -41,6 +44,9 @@ mixin _$RegistrationWrapperEvent {
             String? beneficiaryType,
             String projectId)?
         fetchDeliveryDetails,
+    TResult? Function(List<EntityModel> entities)? create,
+    TResult? Function(List<EntityModel> entities)? update,
+    TResult? Function(List<EntityModel> entities)? delete,
     TResult? Function()? clear,
   }) =>
       throw _privateConstructorUsedError;
@@ -55,6 +61,9 @@ mixin _$RegistrationWrapperEvent {
             String? beneficiaryType,
             String projectId)?
         fetchDeliveryDetails,
+    TResult Function(List<EntityModel> entities)? create,
+    TResult Function(List<EntityModel> entities)? update,
+    TResult Function(List<EntityModel> entities)? delete,
     TResult Function()? clear,
     required TResult orElse(),
   }) =>
@@ -64,6 +73,9 @@ mixin _$RegistrationWrapperEvent {
     required TResult Function(RegistrationWrapperLoadFromGlobal value)
         loadFromGlobal,
     required TResult Function(FetchDeliveryDetails value) fetchDeliveryDetails,
+    required TResult Function(Create value) create,
+    required TResult Function(Update value) update,
+    required TResult Function(Delete value) delete,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) =>
       throw _privateConstructorUsedError;
@@ -71,6 +83,9 @@ mixin _$RegistrationWrapperEvent {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
     TResult? Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult? Function(Create value)? create,
+    TResult? Function(Update value)? update,
+    TResult? Function(Delete value)? delete,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) =>
       throw _privateConstructorUsedError;
@@ -78,6 +93,9 @@ mixin _$RegistrationWrapperEvent {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
     TResult Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult Function(Create value)? create,
+    TResult Function(Update value)? update,
+    TResult Function(Delete value)? delete,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) =>
@@ -203,6 +221,9 @@ class _$RegistrationWrapperLoadFromGlobalImpl
             String? beneficiaryType,
             String projectId)
         fetchDeliveryDetails,
+    required TResult Function(List<EntityModel> entities) create,
+    required TResult Function(List<EntityModel> entities) update,
+    required TResult Function(List<EntityModel> entities) delete,
     required TResult Function() clear,
   }) {
     return loadFromGlobal(searchParams, beneficiaryType);
@@ -220,6 +241,9 @@ class _$RegistrationWrapperLoadFromGlobalImpl
             String? beneficiaryType,
             String projectId)?
         fetchDeliveryDetails,
+    TResult? Function(List<EntityModel> entities)? create,
+    TResult? Function(List<EntityModel> entities)? update,
+    TResult? Function(List<EntityModel> entities)? delete,
     TResult? Function()? clear,
   }) {
     return loadFromGlobal?.call(searchParams, beneficiaryType);
@@ -237,6 +261,9 @@ class _$RegistrationWrapperLoadFromGlobalImpl
             String? beneficiaryType,
             String projectId)?
         fetchDeliveryDetails,
+    TResult Function(List<EntityModel> entities)? create,
+    TResult Function(List<EntityModel> entities)? update,
+    TResult Function(List<EntityModel> entities)? delete,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -252,6 +279,9 @@ class _$RegistrationWrapperLoadFromGlobalImpl
     required TResult Function(RegistrationWrapperLoadFromGlobal value)
         loadFromGlobal,
     required TResult Function(FetchDeliveryDetails value) fetchDeliveryDetails,
+    required TResult Function(Create value) create,
+    required TResult Function(Update value) update,
+    required TResult Function(Delete value) delete,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) {
     return loadFromGlobal(this);
@@ -262,6 +292,9 @@ class _$RegistrationWrapperLoadFromGlobalImpl
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
     TResult? Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult? Function(Create value)? create,
+    TResult? Function(Update value)? update,
+    TResult? Function(Delete value)? delete,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) {
     return loadFromGlobal?.call(this);
@@ -272,6 +305,9 @@ class _$RegistrationWrapperLoadFromGlobalImpl
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
     TResult Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult Function(Create value)? create,
+    TResult Function(Update value)? update,
+    TResult Function(Delete value)? delete,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) {
@@ -419,6 +455,9 @@ class _$FetchDeliveryDetailsImpl implements FetchDeliveryDetails {
             String? beneficiaryType,
             String projectId)
         fetchDeliveryDetails,
+    required TResult Function(List<EntityModel> entities) create,
+    required TResult Function(List<EntityModel> entities) update,
+    required TResult Function(List<EntityModel> entities) delete,
     required TResult Function() clear,
   }) {
     return fetchDeliveryDetails(
@@ -437,6 +476,9 @@ class _$FetchDeliveryDetailsImpl implements FetchDeliveryDetails {
             String? beneficiaryType,
             String projectId)?
         fetchDeliveryDetails,
+    TResult? Function(List<EntityModel> entities)? create,
+    TResult? Function(List<EntityModel> entities)? update,
+    TResult? Function(List<EntityModel> entities)? delete,
     TResult? Function()? clear,
   }) {
     return fetchDeliveryDetails?.call(
@@ -455,6 +497,9 @@ class _$FetchDeliveryDetailsImpl implements FetchDeliveryDetails {
             String? beneficiaryType,
             String projectId)?
         fetchDeliveryDetails,
+    TResult Function(List<EntityModel> entities)? create,
+    TResult Function(List<EntityModel> entities)? update,
+    TResult Function(List<EntityModel> entities)? delete,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -471,6 +516,9 @@ class _$FetchDeliveryDetailsImpl implements FetchDeliveryDetails {
     required TResult Function(RegistrationWrapperLoadFromGlobal value)
         loadFromGlobal,
     required TResult Function(FetchDeliveryDetails value) fetchDeliveryDetails,
+    required TResult Function(Create value) create,
+    required TResult Function(Update value) update,
+    required TResult Function(Delete value) delete,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) {
     return fetchDeliveryDetails(this);
@@ -481,6 +529,9 @@ class _$FetchDeliveryDetailsImpl implements FetchDeliveryDetails {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
     TResult? Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult? Function(Create value)? create,
+    TResult? Function(Update value)? update,
+    TResult? Function(Delete value)? delete,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) {
     return fetchDeliveryDetails?.call(this);
@@ -491,6 +542,9 @@ class _$FetchDeliveryDetailsImpl implements FetchDeliveryDetails {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
     TResult Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult Function(Create value)? create,
+    TResult Function(Update value)? update,
+    TResult Function(Delete value)? delete,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) {
@@ -515,6 +569,567 @@ abstract class FetchDeliveryDetails implements RegistrationWrapperEvent {
   @JsonKey(ignore: true)
   _$$FetchDeliveryDetailsImplCopyWith<_$FetchDeliveryDetailsImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$CreateImplCopyWith<$Res> {
+  factory _$$CreateImplCopyWith(
+          _$CreateImpl value, $Res Function(_$CreateImpl) then) =
+      __$$CreateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<EntityModel> entities});
+}
+
+/// @nodoc
+class __$$CreateImplCopyWithImpl<$Res>
+    extends _$RegistrationWrapperEventCopyWithImpl<$Res, _$CreateImpl>
+    implements _$$CreateImplCopyWith<$Res> {
+  __$$CreateImplCopyWithImpl(
+      _$CreateImpl _value, $Res Function(_$CreateImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? entities = null,
+  }) {
+    return _then(_$CreateImpl(
+      entities: null == entities
+          ? _value._entities
+          : entities // ignore: cast_nullable_to_non_nullable
+              as List<EntityModel>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$CreateImpl implements Create {
+  const _$CreateImpl({required final List<EntityModel> entities})
+      : _entities = entities;
+
+  final List<EntityModel> _entities;
+  @override
+  List<EntityModel> get entities {
+    if (_entities is EqualUnmodifiableListView) return _entities;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_entities);
+  }
+
+  @override
+  String toString() {
+    return 'RegistrationWrapperEvent.create(entities: $entities)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CreateImpl &&
+            const DeepCollectionEquality().equals(other._entities, _entities));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_entities));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CreateImplCopyWith<_$CreateImpl> get copyWith =>
+      __$$CreateImplCopyWithImpl<_$CreateImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)
+        loadFromGlobal,
+    required TResult Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)
+        fetchDeliveryDetails,
+    required TResult Function(List<EntityModel> entities) create,
+    required TResult Function(List<EntityModel> entities) update,
+    required TResult Function(List<EntityModel> entities) delete,
+    required TResult Function() clear,
+  }) {
+    return create(entities);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)?
+        loadFromGlobal,
+    TResult? Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)?
+        fetchDeliveryDetails,
+    TResult? Function(List<EntityModel> entities)? create,
+    TResult? Function(List<EntityModel> entities)? update,
+    TResult? Function(List<EntityModel> entities)? delete,
+    TResult? Function()? clear,
+  }) {
+    return create?.call(entities);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)?
+        loadFromGlobal,
+    TResult Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)?
+        fetchDeliveryDetails,
+    TResult Function(List<EntityModel> entities)? create,
+    TResult Function(List<EntityModel> entities)? update,
+    TResult Function(List<EntityModel> entities)? delete,
+    TResult Function()? clear,
+    required TResult orElse(),
+  }) {
+    if (create != null) {
+      return create(entities);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(RegistrationWrapperLoadFromGlobal value)
+        loadFromGlobal,
+    required TResult Function(FetchDeliveryDetails value) fetchDeliveryDetails,
+    required TResult Function(Create value) create,
+    required TResult Function(Update value) update,
+    required TResult Function(Delete value) delete,
+    required TResult Function(RegistrationWrapperClear value) clear,
+  }) {
+    return create(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult? Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult? Function(Create value)? create,
+    TResult? Function(Update value)? update,
+    TResult? Function(Delete value)? delete,
+    TResult? Function(RegistrationWrapperClear value)? clear,
+  }) {
+    return create?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult Function(Create value)? create,
+    TResult Function(Update value)? update,
+    TResult Function(Delete value)? delete,
+    TResult Function(RegistrationWrapperClear value)? clear,
+    required TResult orElse(),
+  }) {
+    if (create != null) {
+      return create(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class Create implements RegistrationWrapperEvent {
+  const factory Create({required final List<EntityModel> entities}) =
+      _$CreateImpl;
+
+  List<EntityModel> get entities;
+  @JsonKey(ignore: true)
+  _$$CreateImplCopyWith<_$CreateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$UpdateImplCopyWith<$Res> {
+  factory _$$UpdateImplCopyWith(
+          _$UpdateImpl value, $Res Function(_$UpdateImpl) then) =
+      __$$UpdateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<EntityModel> entities});
+}
+
+/// @nodoc
+class __$$UpdateImplCopyWithImpl<$Res>
+    extends _$RegistrationWrapperEventCopyWithImpl<$Res, _$UpdateImpl>
+    implements _$$UpdateImplCopyWith<$Res> {
+  __$$UpdateImplCopyWithImpl(
+      _$UpdateImpl _value, $Res Function(_$UpdateImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? entities = null,
+  }) {
+    return _then(_$UpdateImpl(
+      entities: null == entities
+          ? _value._entities
+          : entities // ignore: cast_nullable_to_non_nullable
+              as List<EntityModel>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$UpdateImpl implements Update {
+  const _$UpdateImpl({required final List<EntityModel> entities})
+      : _entities = entities;
+
+  final List<EntityModel> _entities;
+  @override
+  List<EntityModel> get entities {
+    if (_entities is EqualUnmodifiableListView) return _entities;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_entities);
+  }
+
+  @override
+  String toString() {
+    return 'RegistrationWrapperEvent.update(entities: $entities)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UpdateImpl &&
+            const DeepCollectionEquality().equals(other._entities, _entities));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_entities));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UpdateImplCopyWith<_$UpdateImpl> get copyWith =>
+      __$$UpdateImplCopyWithImpl<_$UpdateImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)
+        loadFromGlobal,
+    required TResult Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)
+        fetchDeliveryDetails,
+    required TResult Function(List<EntityModel> entities) create,
+    required TResult Function(List<EntityModel> entities) update,
+    required TResult Function(List<EntityModel> entities) delete,
+    required TResult Function() clear,
+  }) {
+    return update(entities);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)?
+        loadFromGlobal,
+    TResult? Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)?
+        fetchDeliveryDetails,
+    TResult? Function(List<EntityModel> entities)? create,
+    TResult? Function(List<EntityModel> entities)? update,
+    TResult? Function(List<EntityModel> entities)? delete,
+    TResult? Function()? clear,
+  }) {
+    return update?.call(entities);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)?
+        loadFromGlobal,
+    TResult Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)?
+        fetchDeliveryDetails,
+    TResult Function(List<EntityModel> entities)? create,
+    TResult Function(List<EntityModel> entities)? update,
+    TResult Function(List<EntityModel> entities)? delete,
+    TResult Function()? clear,
+    required TResult orElse(),
+  }) {
+    if (update != null) {
+      return update(entities);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(RegistrationWrapperLoadFromGlobal value)
+        loadFromGlobal,
+    required TResult Function(FetchDeliveryDetails value) fetchDeliveryDetails,
+    required TResult Function(Create value) create,
+    required TResult Function(Update value) update,
+    required TResult Function(Delete value) delete,
+    required TResult Function(RegistrationWrapperClear value) clear,
+  }) {
+    return update(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult? Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult? Function(Create value)? create,
+    TResult? Function(Update value)? update,
+    TResult? Function(Delete value)? delete,
+    TResult? Function(RegistrationWrapperClear value)? clear,
+  }) {
+    return update?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult Function(Create value)? create,
+    TResult Function(Update value)? update,
+    TResult Function(Delete value)? delete,
+    TResult Function(RegistrationWrapperClear value)? clear,
+    required TResult orElse(),
+  }) {
+    if (update != null) {
+      return update(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class Update implements RegistrationWrapperEvent {
+  const factory Update({required final List<EntityModel> entities}) =
+      _$UpdateImpl;
+
+  List<EntityModel> get entities;
+  @JsonKey(ignore: true)
+  _$$UpdateImplCopyWith<_$UpdateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$DeleteImplCopyWith<$Res> {
+  factory _$$DeleteImplCopyWith(
+          _$DeleteImpl value, $Res Function(_$DeleteImpl) then) =
+      __$$DeleteImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<EntityModel> entities});
+}
+
+/// @nodoc
+class __$$DeleteImplCopyWithImpl<$Res>
+    extends _$RegistrationWrapperEventCopyWithImpl<$Res, _$DeleteImpl>
+    implements _$$DeleteImplCopyWith<$Res> {
+  __$$DeleteImplCopyWithImpl(
+      _$DeleteImpl _value, $Res Function(_$DeleteImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? entities = null,
+  }) {
+    return _then(_$DeleteImpl(
+      entities: null == entities
+          ? _value._entities
+          : entities // ignore: cast_nullable_to_non_nullable
+              as List<EntityModel>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$DeleteImpl implements Delete {
+  const _$DeleteImpl({required final List<EntityModel> entities})
+      : _entities = entities;
+
+  final List<EntityModel> _entities;
+  @override
+  List<EntityModel> get entities {
+    if (_entities is EqualUnmodifiableListView) return _entities;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_entities);
+  }
+
+  @override
+  String toString() {
+    return 'RegistrationWrapperEvent.delete(entities: $entities)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DeleteImpl &&
+            const DeepCollectionEquality().equals(other._entities, _entities));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_entities));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DeleteImplCopyWith<_$DeleteImpl> get copyWith =>
+      __$$DeleteImplCopyWithImpl<_$DeleteImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)
+        loadFromGlobal,
+    required TResult Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)
+        fetchDeliveryDetails,
+    required TResult Function(List<EntityModel> entities) create,
+    required TResult Function(List<EntityModel> entities) update,
+    required TResult Function(List<EntityModel> entities) delete,
+    required TResult Function() clear,
+  }) {
+    return delete(entities);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)?
+        loadFromGlobal,
+    TResult? Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)?
+        fetchDeliveryDetails,
+    TResult? Function(List<EntityModel> entities)? create,
+    TResult? Function(List<EntityModel> entities)? update,
+    TResult? Function(List<EntityModel> entities)? delete,
+    TResult? Function()? clear,
+  }) {
+    return delete?.call(entities);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)?
+        loadFromGlobal,
+    TResult Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)?
+        fetchDeliveryDetails,
+    TResult Function(List<EntityModel> entities)? create,
+    TResult Function(List<EntityModel> entities)? update,
+    TResult Function(List<EntityModel> entities)? delete,
+    TResult Function()? clear,
+    required TResult orElse(),
+  }) {
+    if (delete != null) {
+      return delete(entities);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(RegistrationWrapperLoadFromGlobal value)
+        loadFromGlobal,
+    required TResult Function(FetchDeliveryDetails value) fetchDeliveryDetails,
+    required TResult Function(Create value) create,
+    required TResult Function(Update value) update,
+    required TResult Function(Delete value) delete,
+    required TResult Function(RegistrationWrapperClear value) clear,
+  }) {
+    return delete(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult? Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult? Function(Create value)? create,
+    TResult? Function(Update value)? update,
+    TResult? Function(Delete value)? delete,
+    TResult? Function(RegistrationWrapperClear value)? clear,
+  }) {
+    return delete?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult Function(Create value)? create,
+    TResult Function(Update value)? update,
+    TResult Function(Delete value)? delete,
+    TResult Function(RegistrationWrapperClear value)? clear,
+    required TResult orElse(),
+  }) {
+    if (delete != null) {
+      return delete(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class Delete implements RegistrationWrapperEvent {
+  const factory Delete({required final List<EntityModel> entities}) =
+      _$DeleteImpl;
+
+  List<EntityModel> get entities;
+  @JsonKey(ignore: true)
+  _$$DeleteImplCopyWith<_$DeleteImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -568,6 +1183,9 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
             String? beneficiaryType,
             String projectId)
         fetchDeliveryDetails,
+    required TResult Function(List<EntityModel> entities) create,
+    required TResult Function(List<EntityModel> entities) update,
+    required TResult Function(List<EntityModel> entities) delete,
     required TResult Function() clear,
   }) {
     return clear();
@@ -585,6 +1203,9 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
             String? beneficiaryType,
             String projectId)?
         fetchDeliveryDetails,
+    TResult? Function(List<EntityModel> entities)? create,
+    TResult? Function(List<EntityModel> entities)? update,
+    TResult? Function(List<EntityModel> entities)? delete,
     TResult? Function()? clear,
   }) {
     return clear?.call();
@@ -602,6 +1223,9 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
             String? beneficiaryType,
             String projectId)?
         fetchDeliveryDetails,
+    TResult Function(List<EntityModel> entities)? create,
+    TResult Function(List<EntityModel> entities)? update,
+    TResult Function(List<EntityModel> entities)? delete,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -617,6 +1241,9 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
     required TResult Function(RegistrationWrapperLoadFromGlobal value)
         loadFromGlobal,
     required TResult Function(FetchDeliveryDetails value) fetchDeliveryDetails,
+    required TResult Function(Create value) create,
+    required TResult Function(Update value) update,
+    required TResult Function(Delete value) delete,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) {
     return clear(this);
@@ -627,6 +1254,9 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
     TResult? Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult? Function(Create value)? create,
+    TResult? Function(Update value)? update,
+    TResult? Function(Delete value)? delete,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) {
     return clear?.call(this);
@@ -637,6 +1267,9 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
     TResult Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult Function(Create value)? create,
+    TResult Function(Update value)? update,
+    TResult Function(Delete value)? delete,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) {
@@ -662,6 +1295,8 @@ mixin _$RegistrationWrapperState {
   int? get limit => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
   int get totalCount => throw _privateConstructorUsedError;
+  RegistrationWrapperActionType get lastAction =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $RegistrationWrapperStateCopyWith<RegistrationWrapperState> get copyWith =>
@@ -682,7 +1317,8 @@ abstract class $RegistrationWrapperStateCopyWith<$Res> {
       int? offset,
       int? limit,
       String? error,
-      int totalCount});
+      int totalCount,
+      RegistrationWrapperActionType lastAction});
 
   $DeliveryWrapperCopyWith<$Res>? get deliveryWrapper;
 }
@@ -709,6 +1345,7 @@ class _$RegistrationWrapperStateCopyWithImpl<$Res,
     Object? limit = freezed,
     Object? error = freezed,
     Object? totalCount = null,
+    Object? lastAction = null,
   }) {
     return _then(_value.copyWith(
       loading: null == loading
@@ -743,6 +1380,10 @@ class _$RegistrationWrapperStateCopyWithImpl<$Res,
           ? _value.totalCount
           : totalCount // ignore: cast_nullable_to_non_nullable
               as int,
+      lastAction: null == lastAction
+          ? _value.lastAction
+          : lastAction // ignore: cast_nullable_to_non_nullable
+              as RegistrationWrapperActionType,
     ) as $Val);
   }
 
@@ -776,7 +1417,8 @@ abstract class _$$RegistrationWrapperStateImplCopyWith<$Res>
       int? offset,
       int? limit,
       String? error,
-      int totalCount});
+      int totalCount,
+      RegistrationWrapperActionType lastAction});
 
   @override
   $DeliveryWrapperCopyWith<$Res>? get deliveryWrapper;
@@ -803,6 +1445,7 @@ class __$$RegistrationWrapperStateImplCopyWithImpl<$Res>
     Object? limit = freezed,
     Object? error = freezed,
     Object? totalCount = null,
+    Object? lastAction = null,
   }) {
     return _then(_$RegistrationWrapperStateImpl(
       loading: null == loading
@@ -837,6 +1480,10 @@ class __$$RegistrationWrapperStateImplCopyWithImpl<$Res>
           ? _value.totalCount
           : totalCount // ignore: cast_nullable_to_non_nullable
               as int,
+      lastAction: null == lastAction
+          ? _value.lastAction
+          : lastAction // ignore: cast_nullable_to_non_nullable
+              as RegistrationWrapperActionType,
     ));
   }
 }
@@ -852,7 +1499,8 @@ class _$RegistrationWrapperStateImpl implements _RegistrationWrapperState {
       this.offset,
       this.limit,
       this.error,
-      this.totalCount = 0})
+      this.totalCount = 0,
+      this.lastAction = RegistrationWrapperActionType.none})
       : _householdMembers = householdMembers;
 
   @override
@@ -881,10 +1529,13 @@ class _$RegistrationWrapperStateImpl implements _RegistrationWrapperState {
   @override
   @JsonKey()
   final int totalCount;
+  @override
+  @JsonKey()
+  final RegistrationWrapperActionType lastAction;
 
   @override
   String toString() {
-    return 'RegistrationWrapperState(loading: $loading, householdMembers: $householdMembers, selectedIndividual: $selectedIndividual, deliveryWrapper: $deliveryWrapper, offset: $offset, limit: $limit, error: $error, totalCount: $totalCount)';
+    return 'RegistrationWrapperState(loading: $loading, householdMembers: $householdMembers, selectedIndividual: $selectedIndividual, deliveryWrapper: $deliveryWrapper, offset: $offset, limit: $limit, error: $error, totalCount: $totalCount, lastAction: $lastAction)';
   }
 
   @override
@@ -903,7 +1554,9 @@ class _$RegistrationWrapperStateImpl implements _RegistrationWrapperState {
             (identical(other.limit, limit) || other.limit == limit) &&
             (identical(other.error, error) || other.error == error) &&
             (identical(other.totalCount, totalCount) ||
-                other.totalCount == totalCount));
+                other.totalCount == totalCount) &&
+            (identical(other.lastAction, lastAction) ||
+                other.lastAction == lastAction));
   }
 
   @override
@@ -916,7 +1569,8 @@ class _$RegistrationWrapperStateImpl implements _RegistrationWrapperState {
       offset,
       limit,
       error,
-      totalCount);
+      totalCount,
+      lastAction);
 
   @JsonKey(ignore: true)
   @override
@@ -928,14 +1582,16 @@ class _$RegistrationWrapperStateImpl implements _RegistrationWrapperState {
 
 abstract class _RegistrationWrapperState implements RegistrationWrapperState {
   const factory _RegistrationWrapperState(
-      {final bool loading,
-      final List<HouseholdWrapper> householdMembers,
-      final IndividualModel? selectedIndividual,
-      final DeliveryWrapper? deliveryWrapper,
-      final int? offset,
-      final int? limit,
-      final String? error,
-      final int totalCount}) = _$RegistrationWrapperStateImpl;
+          {final bool loading,
+          final List<HouseholdWrapper> householdMembers,
+          final IndividualModel? selectedIndividual,
+          final DeliveryWrapper? deliveryWrapper,
+          final int? offset,
+          final int? limit,
+          final String? error,
+          final int totalCount,
+          final RegistrationWrapperActionType lastAction}) =
+      _$RegistrationWrapperStateImpl;
 
   @override
   bool get loading;
@@ -953,6 +1609,8 @@ abstract class _RegistrationWrapperState implements RegistrationWrapperState {
   String? get error;
   @override
   int get totalCount;
+  @override
+  RegistrationWrapperActionType get lastAction;
   @override
   @JsonKey(ignore: true)
   _$$RegistrationWrapperStateImplCopyWith<_$RegistrationWrapperStateImpl>

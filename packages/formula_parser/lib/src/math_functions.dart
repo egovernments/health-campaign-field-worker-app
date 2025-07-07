@@ -29,7 +29,6 @@ final comparisonFunctions = {
   'gte': (a, b) => a >= b,
   'eq': (a, b) => a == b,
   'ne': (a, b) => a != b,
-  
 };
 
 final functionsWithOneBoolArg = {
@@ -66,7 +65,9 @@ final functionsWithOneListArg = {
   'avg': (List<num> l) {
     num sum = l.fold(0, (num v1, num v2) => v1 + v2);
     return sum / l.length;
-  }
+  },
+  'min': (List<num> l) => l.reduce((a, b) => a < b ? a : b),
+  'max': (List<num> l) => l.reduce((a, b) => a > b ? a : b),
 };
 
 /// Common mathematical functions.

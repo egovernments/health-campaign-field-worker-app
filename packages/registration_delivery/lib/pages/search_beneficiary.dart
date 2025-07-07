@@ -13,29 +13,27 @@ import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/switch.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
-import 'package:flutter/foundation.dart';
-import 'package:registration_bloc/bloc/registration_bloc.dart';
-import 'package:registration_bloc/service/registration_service.dart';
-import 'package:registration_bloc/models/global_search_params.dart'
-    as reg_params;
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:registration_delivery/blocs/entity_create/entity_create.dart';
+import 'package:form_data_transformer/src/transformer_service.dart';
+import 'package:forms_engine/blocs/forms/forms.dart';
+import 'package:forms_engine/router/forms_router.gm.dart';
+import 'package:registration_bloc/bloc/registration_bloc.dart';
+import 'package:registration_bloc/models/global_search_params.dart'
+    as reg_params;
 import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/data/transformer_config.dart';
 import 'package:registration_delivery/registration_delivery.dart';
-import 'package:forms_engine/blocs/forms/forms.dart';
-import 'package:forms_engine/router/forms_router.gm.dart';
-import 'package:form_data_transformer/src/transformer_service.dart';
 import 'package:registration_delivery/widgets/beneficiary/resource_card.dart';
+
 import '../../utils/i18_key_constants.dart' as i18;
 import '../blocs/app_localization.dart';
 import '../blocs/unique_id/unique_id.dart';
 import '../models/entities/status.dart';
 import '../router/registration_delivery_router.gm.dart';
-import '../utils/global_search_parameters.dart';
 import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/beneficiary/id_count_alert.dart';
@@ -112,29 +110,18 @@ class _SearchBeneficiaryPageState
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
 
-    return BlocListener<EntityCreateBloc, EntityCreateState>(
+    return BlocListener<RegistrationWrapperBloc, RegistrationWrapperState>(
       listener: (context, createState) {
-        if (createState is EntityCreateLoadingState) {
-        } else if (createState is EntityCreatePersistedState) {
+        if (createState.lastAction == RegistrationWrapperActionType.created ||
+            createState.lastAction == RegistrationWrapperActionType.updated) {
           Navigator.of(context, rootNavigator: true).pop();
-          final householdModel =
-              createState.entities.whereType<HouseholdModel>().firstOrNull;
+          final householdModel = createState.householdMembers.first.household;
 
           if (householdModel != null) {
             blocWrapper.add(RegistrationWrapperEvent.fetchDeliveryDetails(
                 projectId: RegistrationDeliverySingleton().selectedProject!.id,
                 selectedIndividual: null,
                 householdWrapper: HouseholdWrapper(household: householdModel),
-                beneficiaryType: RegistrationDeliverySingleton()
-                    .beneficiaryType
-                    ?.toValue()));
-          } else {
-            blocWrapper.add(RegistrationWrapperEvent.fetchDeliveryDetails(
-                projectId: RegistrationDeliverySingleton().selectedProject!.id,
-                selectedIndividual: null,
-                householdWrapper: HouseholdWrapper(
-                    household:
-                        blocWrapper.state.householdMembers.first.household),
                 beneficiaryType: RegistrationDeliverySingleton()
                     .beneficiaryType
                     ?.toValue()));
@@ -187,7 +174,7 @@ class _SearchBeneficiaryPageState
                       currentSchemaKey: 'REGISTRATIONFLOW',
                       pageName: pageName,
                       defaultValues: {
-                        'locality': localizations.translate(
+                        'administrativeArea': localizations.translate(
                             RegistrationDeliverySingleton().boundary?.code ??
                                 '')
                       }));
@@ -214,7 +201,7 @@ class _SearchBeneficiaryPageState
                     currentSchemaKey: 'DELIVERYFLOW',
                     pageName: pageName,
                     defaultValues: {
-                      'locality': localizations.translate(
+                      'administrativeArea': localizations.translate(
                           RegistrationDeliverySingleton().boundary?.code ?? '')
                     },
                     customComponents: const [
@@ -228,7 +215,7 @@ class _SearchBeneficiaryPageState
             context.router.push(BeneficiaryAcknowledgementRoute(
                 enableViewHousehold: true)); // fallback page
           }
-        } else if (createState is EntityCreateErrorState) {
+        } else if (createState.error != null) {
           Navigator.of(context, rootNavigator: true).pop();
           // Reset to prevent re-handling
           context.read<FormsBloc>().add(
@@ -239,7 +226,7 @@ class _SearchBeneficiaryPageState
           context.router
               .push(BeneficiaryErrorRoute(enableViewHousehold: false));
           if (kDebugMode) {
-            print(createState.message);
+            print(createState.error);
           }
         }
       },
@@ -252,53 +239,119 @@ class _SearchBeneficiaryPageState
             if (formData.isEmpty) return;
 
             try {
-              final modelsConfig = formState.activeSchemaKey == 'DELIVERYFLOW'
-                  ? (jsonConfig['delivery']?['models'] as Map<String, dynamic>)
-                  : jsonConfig['beneficiaryRegistration']?['models']
-                      as Map<String, dynamic>;
+              if (formState.isEdit) {
+                final formEntityMapper = FormEntityMapper(config: jsonConfig);
 
-              final fallBackModel = formState.activeSchemaKey == 'DELIVERYFLOW'
-                  ? (jsonConfig['delivery']?['fallbackModel'] as String?)
-                  : jsonConfig['beneficiaryRegistration']?['fallbackModel']
-                      as String?;
+                final householdMember =
+                    blocWrapper.state.householdMembers.firstOrNull;
+                final household = householdMember?.household;
+                final projectBeneficiary =
+                    householdMember?.projectBeneficiaries?.firstOrNull;
 
-              final formEntityMapper = FormEntityMapper(config: jsonConfig);
+                final individual = householdMember?.individuals?.firstOrNull;
 
-              final householdMember =
-                  blocWrapper.state.householdMembers.firstOrNull;
-              final household = householdMember?.household?.toMap();
-              final projectBeneficiary =
-                  householdMember?.projectBeneficiaries?.firstOrNull?.toMap();
+                final member = householdMember?.members?.firstOrNull;
 
-              final entities = formEntityMapper.mapFormToEntities(
-                formValues: formData,
-                modelsConfig: modelsConfig,
-                context: {
-                  "projectId":
-                      RegistrationDeliverySingleton().selectedProject?.id,
-                  "user": RegistrationDeliverySingleton().loggedInUser,
-                  "tenantId":
-                      RegistrationDeliverySingleton().selectedProject?.tenantId,
-                  "selectedBoundaryCode":
-                      RegistrationDeliverySingleton().boundary?.code,
-                  // converting in json format to match nested object value as passing model will cause issue
-                  'userUUID':
-                      RegistrationDeliverySingleton().loggedInUser?.uuid,
-                  'householdType':
-                      RegistrationDeliverySingleton().householdType?.toValue(),
-                  "beneficiaryType": RegistrationDeliverySingleton()
-                      .beneficiaryType
-                      ?.toValue(),
-                  if (household != null) 'householdModel': household,
-                  if (projectBeneficiary != null)
-                    "projectBeneficiaryModel": projectBeneficiary,
-                },
-                fallbackFormDataString: fallBackModel,
-              );
+                final modelsConfig = formState.activeSchemaKey == 'DELIVERYFLOW'
+                    ? (jsonConfig['delivery']?['models']
+                        as Map<String, dynamic>)
+                    : jsonConfig['beneficiaryRegistration']?['models']
+                        as Map<String, dynamic>;
 
-              context.read<EntityCreateBloc>().add(
-                    EntityCreateEvent.create(entities: entities),
+                try {
+                  final entities = formEntityMapper.updateEntitiesFromForm(
+                    modelsConfig: modelsConfig,
+                    formValues: formData,
+                    existingModels: [
+                      household!,
+                      individual!,
+                      projectBeneficiary!,
+                      member!
+                    ],
+                    context: {
+                      "projectId":
+                          RegistrationDeliverySingleton().selectedProject?.id,
+                      "user": RegistrationDeliverySingleton().loggedInUser,
+                      "tenantId": RegistrationDeliverySingleton()
+                          .selectedProject
+                          ?.tenantId,
+                      "selectedBoundaryCode":
+                          RegistrationDeliverySingleton().boundary?.code,
+                      // converting in json format to match nested object value as passing model will cause issue
+                      'userUUID':
+                          RegistrationDeliverySingleton().loggedInUser?.uuid,
+                      'householdType': RegistrationDeliverySingleton()
+                          .householdType
+                          ?.toValue(),
+                      "beneficiaryType": RegistrationDeliverySingleton()
+                          .beneficiaryType
+                          ?.toValue(),
+                      if (household != null) 'householdModel': household,
+                      if (projectBeneficiary != null)
+                        "projectBeneficiaryModel": projectBeneficiary,
+                    },
                   );
+
+                  blocWrapper.add(
+                    RegistrationWrapperEvent.update(entities: entities),
+                  );
+                } catch (e) {
+                  print(e);
+                }
+                ;
+              } else {
+                final modelsConfig = formState.activeSchemaKey == 'DELIVERYFLOW'
+                    ? (jsonConfig['delivery']?['models']
+                        as Map<String, dynamic>)
+                    : jsonConfig['beneficiaryRegistration']?['models']
+                        as Map<String, dynamic>;
+
+                final fallBackModel =
+                    formState.activeSchemaKey == 'DELIVERYFLOW'
+                        ? (jsonConfig['delivery']?['fallbackModel'] as String?)
+                        : jsonConfig['beneficiaryRegistration']
+                            ?['fallbackModel'] as String?;
+
+                final formEntityMapper = FormEntityMapper(config: jsonConfig);
+
+                final householdMember =
+                    blocWrapper.state.householdMembers.firstOrNull;
+                final household = householdMember?.household?.toMap();
+                final projectBeneficiary =
+                    householdMember?.projectBeneficiaries?.firstOrNull?.toMap();
+
+                final entities = formEntityMapper.mapFormToEntities(
+                  formValues: formData,
+                  modelsConfig: modelsConfig,
+                  context: {
+                    "projectId":
+                        RegistrationDeliverySingleton().selectedProject?.id,
+                    "user": RegistrationDeliverySingleton().loggedInUser,
+                    "tenantId": RegistrationDeliverySingleton()
+                        .selectedProject
+                        ?.tenantId,
+                    "selectedBoundaryCode":
+                        RegistrationDeliverySingleton().boundary?.code,
+                    // converting in json format to match nested object value as passing model will cause issue
+                    'userUUID':
+                        RegistrationDeliverySingleton().loggedInUser?.uuid,
+                    'householdType': RegistrationDeliverySingleton()
+                        .householdType
+                        ?.toValue(),
+                    "beneficiaryType": RegistrationDeliverySingleton()
+                        .beneficiaryType
+                        ?.toValue(),
+                    if (household != null) 'householdModel': household,
+                    if (projectBeneficiary != null)
+                      "projectBeneficiaryModel": projectBeneficiary,
+                  },
+                  fallbackFormDataString: fallBackModel,
+                );
+
+                blocWrapper.add(
+                  RegistrationWrapperEvent.create(entities: entities),
+                );
+              }
             } catch (e) {
               Navigator.of(context, rootNavigator: true).pop();
               // Reset to prevent re-handling
@@ -1097,7 +1150,7 @@ class _SearchBeneficiaryPageState
                 currentSchemaKey: 'REGISTRATIONFLOW',
                 pageName: pageName,
                 defaultValues: {
-                  'locality': localizations.translate(
+                  'administrativeArea': localizations.translate(
                       RegistrationDeliverySingleton().boundary?.code ?? ''),
                   'nameOfIndividual': value.text,
                 },

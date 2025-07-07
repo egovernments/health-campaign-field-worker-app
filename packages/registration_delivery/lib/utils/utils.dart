@@ -12,7 +12,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:formula_parser/formula_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
-import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
@@ -218,8 +217,8 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
     if (individualModel != null) {
       final individualAge = DigitDateUtils.calculateAge(
         DigitDateUtils.getFormattedDateToDateTime(
-          individualModel.dateOfBirth!,
-        ) ??
+              individualModel.dateOfBirth!,
+            ) ??
             DateTime.now(),
       );
       individualAgeInMonths = individualAge.years * 12 + individualAge.months;
@@ -288,9 +287,9 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
             if (error["value"] == null || !error["value"]) {
               errorMessages.add(condition);
             }
-            if(error["value"] == null){
+            if (error["value"] == null) {
               expressionParser.add(false);
-            }else{
+            } else {
               expressionParser.add(error["value"]);
             }
           }
@@ -319,9 +318,9 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
             if (error["value"] == null || !error["value"]) {
               errorMessages.add(condition);
             }
-            if(error["value"] == null){
+            if (error["value"] == null) {
               expressionParser.add(false);
-            }else{
+            } else {
               expressionParser.add(error["value"]);
             }
           }
@@ -352,12 +351,11 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
             if (error["value"] == null || !error["value"]) {
               errorMessages.add(condition);
             }
-            if(error["value"] == null){
+            if (error["value"] == null) {
               expressionParser.add(false);
-            }else{
+            } else {
               expressionParser.add(error["value"]);
             }
-
           }
 
           return expressionParser.where((element) => element == true).length ==
@@ -395,11 +393,28 @@ String maskString(String input) {
 class CustomFormulaParser {
   // Modify the function to accept stringKeys as nullable
   static Map<String, dynamic> parseCondition(
-      String condition,
-      Map<String, dynamic> variables, {
-        List<String>? stringKeys,
-      } // Accept stringKeys as nullable
+    String condition,
+    Map<String, dynamic> variables, {
+    List<String>? stringKeys,
+  } // Accept stringKeys as nullable
       ) {
+    final upper = condition.trim().toUpperCase();
+
+    if (upper.startsWith('MIN(') || upper.startsWith('MAX(')) {
+      final isMin = upper.startsWith('MIN(');
+
+      // Remove the top-level MIN/MAX and get the inner arguments
+      final values = _evaluateFunctionArguments(condition, variables);
+
+      if (values.isEmpty) return {'value': null};
+
+      final result = isMin
+          ? values.reduce((a, b) => a < b ? a : b)
+          : values.reduce((a, b) => a > b ? a : b);
+
+      return {'value': result};
+    }
+
     // If stringKeys is null or empty, default to FormulaParser for all conditions
     if (stringKeys == null || stringKeys.isEmpty) {
       return _parseAsFormula(condition, variables);
@@ -418,6 +433,59 @@ class CustomFormulaParser {
 
     // If no string-specific comparison, use FormulaParser for numeric evaluation
     return _parseAsFormula(condition, variables);
+  }
+
+  static List<num> _evaluateFunctionArguments(
+    String condition,
+    Map<String, dynamic> variables,
+  ) {
+    final startIndex = condition.indexOf('(');
+    final endIndex = condition.lastIndexOf(')');
+
+    if (startIndex == -1 || endIndex == -1 || endIndex <= startIndex) {
+      return [];
+    }
+
+    final innerContent = condition.substring(startIndex + 1, endIndex);
+    final args = _splitArguments(innerContent);
+
+    final List<num> results = [];
+
+    for (var arg in args) {
+      final parsed = FormulaParser(arg, variables).parse;
+      final value = parsed["value"];
+      if (value is num) {
+        results.add(value);
+      }
+    }
+
+    return results;
+  }
+
+  /// Handles splitting arguments inside MIN(...), accounting for nested functions
+  static List<String> _splitArguments(String input) {
+    final List<String> args = [];
+    final buffer = StringBuffer();
+    int bracketCount = 0;
+
+    for (int i = 0; i < input.length; i++) {
+      final char = input[i];
+
+      if (char == ',' && bracketCount == 0) {
+        args.add(buffer.toString());
+        buffer.clear();
+      } else {
+        if (char == '(') bracketCount++;
+        if (char == ')') bracketCount--;
+        buffer.write(char);
+      }
+    }
+
+    if (buffer.isNotEmpty) {
+      args.add(buffer.toString());
+    }
+
+    return args.map((e) => e.trim()).toList();
   }
 
   // Handle string comparison
@@ -588,6 +656,7 @@ class RegistrationDeliverySingleton {
   void setRegistrationConfig(String registrationConfig) {
     _registrationConfig = registrationConfig;
   }
+
   void setDeliveryConfig(String deliveryConfig) {
     _deliveryConfig = deliveryConfig;
   }
@@ -658,11 +727,17 @@ Map<String, dynamic>? _asMap(dynamic obj) {
 
   if (obj is HouseholdWrapper) {
     return {
-      'HOUSEHOLD'           : obj.household?.toJson(),
-      'INDIVIDUAL'          : obj.headOfHousehold?.toJson(),
-      'TASK': (obj.tasks?.isNotEmpty ?? false) ? obj.tasks!.map((e) => e.toJson()).toList().last : null,
-      'SIDE_EFFECT': (obj.sideEffects?.isNotEmpty ?? false) ? obj.sideEffects!.map((e) => e.toJson()).last : null,
-      'REFERRAL': (obj.referrals?.isNotEmpty ?? false) ? obj.referrals!.map((e) => e.toJson()).toList().last : null,
+      'HOUSEHOLD': obj.household?.toJson(),
+      'INDIVIDUAL': obj.headOfHousehold?.toJson(),
+      'TASK': (obj.tasks?.isNotEmpty ?? false)
+          ? obj.tasks!.map((e) => e.toJson()).toList().last
+          : null,
+      'SIDE_EFFECT': (obj.sideEffects?.isNotEmpty ?? false)
+          ? obj.sideEffects!.map((e) => e.toJson()).last
+          : null,
+      'REFERRAL': (obj.referrals?.isNotEmpty ?? false)
+          ? obj.referrals!.map((e) => e.toJson()).toList().last
+          : null,
     };
   }
 
@@ -672,7 +747,6 @@ Map<String, dynamic>? _asMap(dynamic obj) {
     return null;
   }
 }
-
 
 dynamic _decodeIfString(dynamic v) {
   if (v is String) {
@@ -684,6 +758,7 @@ dynamic _decodeIfString(dynamic v) {
   }
   return v;
 }
+
 /// Walk a dotted path like "Household.address[0].locality.code".
 /// Only the *first* segment is lower-cased because rootMap stores
 /// "household/individual/…".  Inner keys keep their original case.
@@ -718,7 +793,8 @@ dynamic _extractNestedValue(Map<String, dynamic>? base, List<String> path) {
 }
 
 /// Looks for {additionalFields: {fields: [ {key,value}, … ]}}
-dynamic _extractAdditionalField(Map<String, dynamic>? container, String fieldKey) {
+dynamic _extractAdditionalField(
+    Map<String, dynamic>? container, String fieldKey) {
   if (container == null) return null;
 
   final fields = (container['additionalFields']?['fields']);
@@ -726,12 +802,13 @@ dynamic _extractAdditionalField(Map<String, dynamic>? container, String fieldKey
   if (fields is List) {
     final matched = fields.cast<Map>().firstWhere(
           (e) => e['key'].toString().contains(fieldKey),
-      orElse: () => {},
-    );
+          orElse: () => {},
+        );
     return matched['value'];
   }
   return null;
 }
+
 Map<String, dynamic>? _prepareBase(dynamic raw) {
   if (raw is Map<String, dynamic>) return raw;
   if (raw is String) {
@@ -746,26 +823,25 @@ Map<String, dynamic>? _prepareBase(dynamic raw) {
 }
 
 Map<String, dynamic>? buildEnumValueMap(
-    HouseholdWrapper? wrapper,
-    List<Map<String, dynamic>>? enums,
-    )
-{
+  HouseholdWrapper? wrapper,
+  List<Map<String, dynamic>>? enums,
+) {
   if (wrapper == null || enums == null) return null;
 
   final rootMap = _asMap(wrapper)!;
   final result = <String, dynamic>{};
 
   for (final item in enums) {
-    final code         = item['code']     as String;
-    final jsonPath     = item['jsonPath'] as String;
-    final fieldKey     = item['fieldKey'] as String;
+    final code = item['code'] as String;
+    final jsonPath = item['jsonPath'] as String;
+    final fieldKey = item['fieldKey'] as String;
     final isAdditional = (item['additionalField'] ?? 'false') == 'true';
 
     final segments = jsonPath.split('.');
     if (segments.isEmpty) continue;
 
     final rootKey = segments.first.toUpperCase();
-    final base    = _prepareBase(rootMap[rootKey]);
+    final base = _prepareBase(rootMap[rootKey]);
 
     final value = isAdditional
         ? _extractAdditionalField(base, fieldKey)
@@ -773,11 +849,10 @@ Map<String, dynamic>? buildEnumValueMap(
 
     if (value != null) {
       result[code] = value;
-
     } else {
       result[code] = 'CORE_COMMON_NA';
-
-    }}
+    }
+  }
 
   return result.isEmpty ? null : result;
 }
@@ -888,8 +963,10 @@ String getStatus(String selectedFilter) {
 
 final Map<String, PageRouteInfo> routerMap = {
   'beneficiary-details': BeneficiaryDetailsRoute(),
-  'beneficiary-acknowledgement': BeneficiaryAcknowledgementRoute(enableViewHousehold: true),
-  'household-acknowledgement': HouseholdAcknowledgementRoute(enableViewHousehold: true),
+  'beneficiary-acknowledgement':
+      BeneficiaryAcknowledgementRoute(enableViewHousehold: true),
+  'household-acknowledgement':
+      HouseholdAcknowledgementRoute(enableViewHousehold: true),
   'overview': HouseholdOverviewRoute(),
   // Add more routes here
 };

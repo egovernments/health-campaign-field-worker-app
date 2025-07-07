@@ -5,13 +5,14 @@ import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forms_engine/blocs/forms/forms.dart';
+import 'package:forms_engine/json_forms.dart';
 import 'package:forms_engine/router/forms_router.gm.dart';
 import 'package:forms_engine/widgets/back_header/back_navigation_help_header.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:forms_engine/json_forms.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../widgets/localized.dart';
 import '../models/property_schema/property_schema.dart';
 import '../models/schema_object/schema_object.dart';
@@ -24,12 +25,14 @@ class FormsRenderPage extends LocalizedStatefulWidget {
   final String currentSchemaKey;
   final List<Map<String, Widget>>? customComponents;
   final bool isSummary;
+  final bool isEdit;
 
   const FormsRenderPage({
     super.key,
     super.appLocalizations,
     @QueryParam() this.currentSchemaKey = '',
     @PathParam() required this.pageName,
+    @QueryParam() this.isEdit = false,
     this.customComponents,
     this.defaultValues,
     @QueryParam() this.isSummary = false,
@@ -169,6 +172,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
                         if ((index) < schemaObject.pages.length - 1) {
                           context.router.push(FormsRenderRoute(
+                            isEdit: widget.isEdit,
                             customComponents: widget.customComponents,
                             currentSchemaKey: widget.currentSchemaKey,
                             pageName: schemaObject.pages.entries
@@ -182,11 +186,13 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                               customComponents: widget.customComponents,
                               currentSchemaKey: widget.currentSchemaKey,
                               pageName: '',
+                              isEdit: widget.isEdit,
                               isSummary: true,
                               defaultValues: widget.defaultValues,
                             ));
                           } else {
                             context.read<FormsBloc>().add(FormsSubmitEvent(
+                                isEdit: widget.isEdit,
                                 schemaKey: widget.currentSchemaKey));
 
                             // Pop all form pages (FormsRenderRoute)
@@ -283,9 +289,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               mainAxisSize: MainAxisSize.max,
               label: localizations.translate('CORE_COMMON_SUBMIT'),
               onPressed: () {
-                context
-                    .read<FormsBloc>()
-                    .add(FormsSubmitEvent(schemaKey: widget.currentSchemaKey));
+                context.read<FormsBloc>().add(FormsSubmitEvent(
+                    schemaKey: widget.currentSchemaKey, isEdit: widget.isEdit));
 
                 // Pop all form pages (FormsRenderRoute)
                 context.router.popUntil((route) {
