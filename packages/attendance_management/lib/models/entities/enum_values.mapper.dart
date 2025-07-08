@@ -103,3 +103,53 @@ extension EnumValuesMapperExtension on EnumValues {
     return MapperContainer.globals.toValue<EnumValues>(this);
   }
 }
+
+class AttendanceSortTypeMapper extends EnumMapper<AttendanceSortType> {
+  AttendanceSortTypeMapper._();
+
+  static AttendanceSortTypeMapper? _instance;
+  static AttendanceSortTypeMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = AttendanceSortTypeMapper._());
+    }
+    return _instance!;
+  }
+
+  static AttendanceSortType fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  AttendanceSortType decode(dynamic value) {
+    switch (value) {
+      case "none":
+        return AttendanceSortType.none;
+      case "presentFirst":
+        return AttendanceSortType.presentFirst;
+      case "absentFirst":
+        return AttendanceSortType.absentFirst;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(AttendanceSortType self) {
+    switch (self) {
+      case AttendanceSortType.none:
+        return "none";
+      case AttendanceSortType.presentFirst:
+        return "presentFirst";
+      case AttendanceSortType.absentFirst:
+        return "absentFirst";
+    }
+  }
+}
+
+extension AttendanceSortTypeMapperExtension on AttendanceSortType {
+  dynamic toValue() {
+    AttendanceSortTypeMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<AttendanceSortType>(this);
+  }
+}

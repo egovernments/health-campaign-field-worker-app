@@ -55,6 +55,44 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    DataReceiverRoute.name: (routeData) {
+      final args = routeData.argsAs<DataReceiverRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DataReceiverPage(
+          key: args.key,
+          connectedDevice: args.connectedDevice,
+          nearbyService: args.nearbyService,
+        ),
+      );
+    },
+    DataShareHomeRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const DataShareHomePage(),
+      );
+    },
+    DataTransferRoute.name: (routeData) {
+      final args = routeData.argsAs<DataTransferRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DataTransferPage(
+          key: args.key,
+          nearbyService: args.nearbyService,
+          connectedDevices: args.connectedDevices,
+        ),
+      );
+    },
+    DevicesListRoute.name: (routeData) {
+      final args = routeData.argsAs<DevicesListRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DevicesListPage(
+          key: args.key,
+          deviceType: args.deviceType,
+        ),
+      );
+    },
     HomeRoute.name: (routeData) {
       final args =
           routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
@@ -81,6 +119,18 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
+      );
+    },
+    PeerToPeerWrapperRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: WrappedRoute(child: const PeerToPeerWrapperPage()),
+      );
+    },
+    NonMobileUserListRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const NonMobileUserListPage(),
       );
     },
     ProfileRoute.name: (routeData) {
@@ -141,6 +191,7 @@ abstract class _$AppRouter extends RootStackRouter {
     ...DashboardRoute().pagesMap,
     ...SurveyFormRoute().pagesMap,
     ...ComplaintsRoute().pagesMap,
+    ...TransitPostRoute().pagesMap,
   };
 }
 
@@ -285,6 +336,144 @@ class BoundarySelectionRouteArgs {
 }
 
 /// generated route for
+/// [DataReceiverPage]
+class DataReceiverRoute extends PageRouteInfo<DataReceiverRouteArgs> {
+  DataReceiverRoute({
+    Key? key,
+    required Device connectedDevice,
+    required NearbyService nearbyService,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DataReceiverRoute.name,
+          args: DataReceiverRouteArgs(
+            key: key,
+            connectedDevice: connectedDevice,
+            nearbyService: nearbyService,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DataReceiverRoute';
+
+  static const PageInfo<DataReceiverRouteArgs> page =
+      PageInfo<DataReceiverRouteArgs>(name);
+}
+
+class DataReceiverRouteArgs {
+  const DataReceiverRouteArgs({
+    this.key,
+    required this.connectedDevice,
+    required this.nearbyService,
+  });
+
+  final Key? key;
+
+  final Device connectedDevice;
+
+  final NearbyService nearbyService;
+
+  @override
+  String toString() {
+    return 'DataReceiverRouteArgs{key: $key, connectedDevice: $connectedDevice, nearbyService: $nearbyService}';
+  }
+}
+
+/// generated route for
+/// [DataShareHomePage]
+class DataShareHomeRoute extends PageRouteInfo<void> {
+  const DataShareHomeRoute({List<PageRouteInfo>? children})
+      : super(
+          DataShareHomeRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'DataShareHomeRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [DataTransferPage]
+class DataTransferRoute extends PageRouteInfo<DataTransferRouteArgs> {
+  DataTransferRoute({
+    Key? key,
+    required NearbyService nearbyService,
+    required List<Device> connectedDevices,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DataTransferRoute.name,
+          args: DataTransferRouteArgs(
+            key: key,
+            nearbyService: nearbyService,
+            connectedDevices: connectedDevices,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DataTransferRoute';
+
+  static const PageInfo<DataTransferRouteArgs> page =
+      PageInfo<DataTransferRouteArgs>(name);
+}
+
+class DataTransferRouteArgs {
+  const DataTransferRouteArgs({
+    this.key,
+    required this.nearbyService,
+    required this.connectedDevices,
+  });
+
+  final Key? key;
+
+  final NearbyService nearbyService;
+
+  final List<Device> connectedDevices;
+
+  @override
+  String toString() {
+    return 'DataTransferRouteArgs{key: $key, nearbyService: $nearbyService, connectedDevices: $connectedDevices}';
+  }
+}
+
+/// generated route for
+/// [DevicesListPage]
+class DevicesListRoute extends PageRouteInfo<DevicesListRouteArgs> {
+  DevicesListRoute({
+    Key? key,
+    required DeviceType deviceType,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DevicesListRoute.name,
+          args: DevicesListRouteArgs(
+            key: key,
+            deviceType: deviceType,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DevicesListRoute';
+
+  static const PageInfo<DevicesListRouteArgs> page =
+      PageInfo<DevicesListRouteArgs>(name);
+}
+
+class DevicesListRouteArgs {
+  const DevicesListRouteArgs({
+    this.key,
+    required this.deviceType,
+  });
+
+  final Key? key;
+
+  final DeviceType deviceType;
+
+  @override
+  String toString() {
+    return 'DevicesListRouteArgs{key: $key, deviceType: $deviceType}';
+  }
+}
+
+/// generated route for
 /// [HomePage]
 class HomeRoute extends PageRouteInfo<HomeRouteArgs> {
   HomeRoute({
@@ -370,6 +559,34 @@ class LoginRouteArgs {
   String toString() {
     return 'LoginRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
+}
+
+/// generated route for
+/// [PeerToPeerWrapperPage]
+class PeerToPeerWrapperRoute extends PageRouteInfo<void> {
+  const PeerToPeerWrapperRoute({List<PageRouteInfo>? children})
+      : super(
+          PeerToPeerWrapperRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'PeerToPeerWrapperRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [NonMobileUserListPage]
+class NonMobileUserListRoute extends PageRouteInfo<void> {
+  const NonMobileUserListRoute({List<PageRouteInfo>? children})
+      : super(
+          NonMobileUserListRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'NonMobileUserListRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

@@ -173,6 +173,43 @@ class DeliverInterventionPageState
                 : BlocBuilder<DeliverInterventionBloc,
                     DeliverInterventionState>(
                     builder: (context, deliveryInterventionState) {
+                      var checkForFormulaErrors =
+                          getProductVariants(deliveryInterventionState, state);
+
+                      if (checkForFormulaErrors['criteria'] == null) {
+                        if (context.mounted) {
+                          SchedulerBinding.instance.addPostFrameCallback((_) {
+                            context.router.maybePop();
+                            showCustomPopup(
+                              context: context,
+                              builder: (BuildContext context) => Popup(
+                                  title: localizations
+                                      .translate(i18.common.coreCommonError),
+                                  description: localizations
+                                          .translate('CONDITION_FAILED') +
+                                      checkForFormulaErrors['errors']
+                                          .toString()
+                                          .replaceAll('[', '')
+                                          .replaceAll(']', ''),
+                                  type: PopUpType.alert,
+                                  actions: [
+                                    DigitButton(
+                                        label: localizations.translate(
+                                            i18.common.corecommonclose),
+                                        onPressed: () {
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop();
+                                        },
+                                        type: DigitButtonType.tertiary,
+                                        size: DigitButtonSize.large)
+                                  ]),
+                            );
+                          });
+                        }
+                      }
+
                       List<DeliveryProductVariant>? productVariants =
                           RegistrationDeliverySingleton()
                                       .selectedProject
@@ -181,20 +218,9 @@ class DeliverInterventionPageState
                                       ?.cycles
                                       ?.isNotEmpty ==
                                   true
-                              ? (fetchProductVariant(
-                                      RegistrationDeliverySingleton()
-                                              .selectedProject
-                                              ?.additionalDetails
-                                              ?.projectType
-                                              ?.cycles![
-                                                  deliveryInterventionState
-                                                          .cycle -
-                                                      1]
-                                              .deliveries?[
-                                          deliveryInterventionState.dose - 1],
-                                      state.selectedIndividual,
-                                      state.householdMemberWrapper.household)
-                                  ?.productVariants)
+                              ? getProductVariants(deliveryInterventionState,
+                                      state)['criteria']
+                                  ?.productVariants
                               : RegistrationDeliverySingleton()
                                   .selectedProject
                                   ?.additionalDetails
@@ -218,34 +244,35 @@ class DeliverInterventionPageState
                           : 0;
 
                       final steps = generateSteps(numberOfDoses);
-                      if ((productVariants ?? []).isEmpty && context.mounted) {
-                        SchedulerBinding.instance.addPostFrameCallback((_) {
-                          showCustomPopup(
-                              context: context,
-                              builder: (popUpContext) => Popup(
-                                      title: localizations.translate(
-                                        i18.common.noResultsFound,
-                                      ),
-                                      description: localizations.translate(
-                                        i18.deliverIntervention
-                                            .checkForProductVariantsConfig,
-                                      ),
-                                      type: PopUpType.alert,
-                                      actions: [
-                                        DigitButton(
-                                          label: localizations.translate(
-                                            i18.common.coreCommonOk,
-                                          ),
-                                          onPressed: () {
-                                            context.router.maybePop();
-                                            Navigator.of(popUpContext).pop();
-                                          },
-                                          type: DigitButtonType.primary,
-                                          size: DigitButtonSize.large,
-                                        ),
-                                      ]));
-                        });
-                      }
+                      // TODO:[ already checking the dose criteria for the individual in the previous screen , so disabling now ]
+                      // if ((productVariants ?? []).isEmpty && context.mounted) {
+                      //   SchedulerBinding.instance.addPostFrameCallback((_) {
+                      //     showCustomPopup(
+                      //         context: context,
+                      //         builder: (popUpContext) => Popup(
+                      //                 title: localizations.translate(
+                      //                   i18.common.noResultsFound,
+                      //                 ),
+                      //                 description: localizations.translate(
+                      //                   i18.deliverIntervention
+                      //                       .checkForProductVariantsConfig,
+                      //                 ),
+                      //                 type: PopUpType.alert,
+                      //                 actions: [
+                      //                   DigitButton(
+                      //                     label: localizations.translate(
+                      //                       i18.common.coreCommonOk,
+                      //                     ),
+                      //                     onPressed: () {
+                      //                       context.router.maybePop();
+                      //                       Navigator.of(popUpContext).pop();
+                      //                     },
+                      //                     type: DigitButtonType.primary,
+                      //                     size: DigitButtonSize.large,
+                      //                   ),
+                      //                 ]));
+                      //   });
+                      // }
 
                       return BlocBuilder<ProductVariantBloc,
                           ProductVariantState>(
@@ -819,18 +846,11 @@ class DeliverInterventionPageState
                   ?.cycles ==
               null
           ? 1
-          : fetchProductVariant(
-                      RegistrationDeliverySingleton()
-                          .selectedProject
-                          ?.additionalDetails
-                          ?.projectType
-                          ?.cycles![bloc.cycle - 1]
-                          .deliveries?[bloc.dose - 1],
-                      overViewbloc.selectedIndividual,
-                      overViewbloc.householdMemberWrapper.household)
-                  ?.productVariants
-                  ?.length ??
-              0;
+          : getProductVariants(bloc, overViewbloc) != null
+              ? getProductVariants(bloc, overViewbloc)['criteria']
+                  .productVariants
+                  .length
+              : 0;
 
       _controllers.addAll(List.generate(r, (index) => index)
           .mapIndexed((index, element) => index));
@@ -897,5 +917,21 @@ class DeliverInterventionPageState
         ),
       ]),
     });
+  }
+
+  getProductVariants(DeliverInterventionState deliveryInterventionState,
+      HouseholdOverviewState state) {
+    var result = (fetchProductVariant(
+        RegistrationDeliverySingleton()
+            .selectedProject
+            ?.additionalDetails
+            ?.projectType
+            ?.cycles![deliveryInterventionState.cycle - 1]
+            .deliveries?[deliveryInterventionState.dose - 1],
+        state.selectedIndividual,
+        state.householdMemberWrapper.household,
+        context: context));
+
+    return result;
   }
 }

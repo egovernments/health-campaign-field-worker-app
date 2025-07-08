@@ -9,7 +9,7 @@ class Service extends Table {
 
   TextColumn get serviceDefId => text().nullable()();
 
-  TextColumn get relatedClientReferenceId => text().nullable()();
+  TextColumn get referenceId => text().nullable()();
 
   BoolColumn get isActive => boolean().nullable()();
 

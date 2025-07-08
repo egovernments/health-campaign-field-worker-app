@@ -239,9 +239,8 @@ class _ReferralReasonChecklistPageState
                                                         lastModifiedTime: context
                                                             .millisecondsSinceEpoch(),
                                                       ),
-                                                      relatedClientReferenceId:
-                                                          widget
-                                                              .referralClientRefId,
+                                                      referenceId: widget
+                                                          .referralClientRefId,
                                                       additionalFields:
                                                           ServiceAdditionalFields(
                                                               version: 1,

@@ -922,6 +922,9 @@ mixin _$HCMWrapperModel {
   @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
   List<BandWidthBatchSize> get bandWidthBatchSize =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'BENEFICIARY_ID_CONFIG')
+  List<BeneficiaryIdConfig> get beneficiaryIdConfig =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
   List<BandWidthBatchSize> get downSyncBandWidthBatchSize =>
       throw _privateConstructorUsedError;
@@ -938,6 +941,9 @@ mixin _$HCMWrapperModel {
   List<CheckListTypes> get checklistTypes => throw _privateConstructorUsedError;
   @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
   List<IdTypeOptions> get idTypeOptions => throw _privateConstructorUsedError;
+  @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
+  List<RelationShipTypeOptions> get relationShipTypeOptions =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
   List<DeliveryCommentOptions> get deliveryCommentOptions =>
       throw _privateConstructorUsedError;
@@ -961,6 +967,9 @@ mixin _$HCMWrapperModel {
   @JsonKey(name: 'REFERRAL_REASONS')
   List<ReferralReasonType>? get referralReasonList =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'MANUAL_ATTENDANCE_REASONS')
+  List<ManualAttendanceReasonType>? get manualAttendanceReasonList =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
   List<CommonMasterModel>? get houseStructureTypes =>
       throw _privateConstructorUsedError;
@@ -969,6 +978,9 @@ mixin _$HCMWrapperModel {
       throw _privateConstructorUsedError;
   @JsonKey(name: 'FIREBASE_CONFIG')
   List<FirebaseConfig>? get firebaseConfig =>
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'TRANSIT_POST_TYPE')
+  List<TransitPostType>? get transitPostType =>
       throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -987,6 +999,8 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       {@JsonKey(name: 'APP_CONFIG') List<AppConfig> appConfig,
       @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
       List<BandWidthBatchSize> bandWidthBatchSize,
+      @JsonKey(name: 'BENEFICIARY_ID_CONFIG')
+      List<BeneficiaryIdConfig> beneficiaryIdConfig,
       @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
       List<BandWidthBatchSize> downSyncBandWidthBatchSize,
       @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
@@ -998,6 +1012,8 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       @JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       List<IdTypeOptions> idTypeOptions,
+      @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
+      List<RelationShipTypeOptions> relationShipTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       List<DeliveryCommentOptions> deliveryCommentOptions,
       @JsonKey(name: 'BACKEND_INTERFACE')
@@ -1011,10 +1027,14 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       List<SearchCLFFilters>? searchCLFFilters,
       @JsonKey(name: 'REFERRAL_REASONS')
       List<ReferralReasonType>? referralReasonList,
+      @JsonKey(name: 'MANUAL_ATTENDANCE_REASONS')
+      List<ManualAttendanceReasonType>? manualAttendanceReasonList,
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
       List<CommonMasterModel>? houseStructureTypes,
       @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
-      @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig});
+      @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig,
+      @JsonKey(name: 'TRANSIT_POST_TYPE')
+      List<TransitPostType>? transitPostType});
 }
 
 /// @nodoc
@@ -1032,12 +1052,14 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
   $Res call({
     Object? appConfig = null,
     Object? bandWidthBatchSize = null,
+    Object? beneficiaryIdConfig = null,
     Object? downSyncBandWidthBatchSize = null,
     Object? householdDeletionReasonOptions = null,
     Object? householdMemberDeletionReasonOptions = null,
     Object? backgroundServiceConfig = freezed,
     Object? checklistTypes = null,
     Object? idTypeOptions = null,
+    Object? relationShipTypeOptions = null,
     Object? deliveryCommentOptions = null,
     Object? backendInterface = null,
     Object? callSupportOptions = freezed,
@@ -1046,9 +1068,11 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? searchHouseHoldFilters = freezed,
     Object? searchCLFFilters = freezed,
     Object? referralReasonList = freezed,
+    Object? manualAttendanceReasonList = freezed,
     Object? houseStructureTypes = freezed,
     Object? refusalReasons = freezed,
     Object? firebaseConfig = freezed,
+    Object? transitPostType = freezed,
   }) {
     return _then(_value.copyWith(
       appConfig: null == appConfig
@@ -1059,6 +1083,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.bandWidthBatchSize
           : bandWidthBatchSize // ignore: cast_nullable_to_non_nullable
               as List<BandWidthBatchSize>,
+      beneficiaryIdConfig: null == beneficiaryIdConfig
+          ? _value.beneficiaryIdConfig
+          : beneficiaryIdConfig // ignore: cast_nullable_to_non_nullable
+              as List<BeneficiaryIdConfig>,
       downSyncBandWidthBatchSize: null == downSyncBandWidthBatchSize
           ? _value.downSyncBandWidthBatchSize
           : downSyncBandWidthBatchSize // ignore: cast_nullable_to_non_nullable
@@ -1084,6 +1112,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.idTypeOptions
           : idTypeOptions // ignore: cast_nullable_to_non_nullable
               as List<IdTypeOptions>,
+      relationShipTypeOptions: null == relationShipTypeOptions
+          ? _value.relationShipTypeOptions
+          : relationShipTypeOptions // ignore: cast_nullable_to_non_nullable
+              as List<RelationShipTypeOptions>,
       deliveryCommentOptions: null == deliveryCommentOptions
           ? _value.deliveryCommentOptions
           : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
@@ -1116,6 +1148,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.referralReasonList
           : referralReasonList // ignore: cast_nullable_to_non_nullable
               as List<ReferralReasonType>?,
+      manualAttendanceReasonList: freezed == manualAttendanceReasonList
+          ? _value.manualAttendanceReasonList
+          : manualAttendanceReasonList // ignore: cast_nullable_to_non_nullable
+              as List<ManualAttendanceReasonType>?,
       houseStructureTypes: freezed == houseStructureTypes
           ? _value.houseStructureTypes
           : houseStructureTypes // ignore: cast_nullable_to_non_nullable
@@ -1128,6 +1164,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.firebaseConfig
           : firebaseConfig // ignore: cast_nullable_to_non_nullable
               as List<FirebaseConfig>?,
+      transitPostType: freezed == transitPostType
+          ? _value.transitPostType
+          : transitPostType // ignore: cast_nullable_to_non_nullable
+              as List<TransitPostType>?,
     ) as $Val);
   }
 }
@@ -1144,6 +1184,8 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       {@JsonKey(name: 'APP_CONFIG') List<AppConfig> appConfig,
       @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
       List<BandWidthBatchSize> bandWidthBatchSize,
+      @JsonKey(name: 'BENEFICIARY_ID_CONFIG')
+      List<BeneficiaryIdConfig> beneficiaryIdConfig,
       @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
       List<BandWidthBatchSize> downSyncBandWidthBatchSize,
       @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
@@ -1155,6 +1197,8 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       @JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       List<IdTypeOptions> idTypeOptions,
+      @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
+      List<RelationShipTypeOptions> relationShipTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       List<DeliveryCommentOptions> deliveryCommentOptions,
       @JsonKey(name: 'BACKEND_INTERFACE')
@@ -1168,10 +1212,14 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       List<SearchCLFFilters>? searchCLFFilters,
       @JsonKey(name: 'REFERRAL_REASONS')
       List<ReferralReasonType>? referralReasonList,
+      @JsonKey(name: 'MANUAL_ATTENDANCE_REASONS')
+      List<ManualAttendanceReasonType>? manualAttendanceReasonList,
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
       List<CommonMasterModel>? houseStructureTypes,
       @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
-      @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig});
+      @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig,
+      @JsonKey(name: 'TRANSIT_POST_TYPE')
+      List<TransitPostType>? transitPostType});
 }
 
 /// @nodoc
@@ -1187,12 +1235,14 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
   $Res call({
     Object? appConfig = null,
     Object? bandWidthBatchSize = null,
+    Object? beneficiaryIdConfig = null,
     Object? downSyncBandWidthBatchSize = null,
     Object? householdDeletionReasonOptions = null,
     Object? householdMemberDeletionReasonOptions = null,
     Object? backgroundServiceConfig = freezed,
     Object? checklistTypes = null,
     Object? idTypeOptions = null,
+    Object? relationShipTypeOptions = null,
     Object? deliveryCommentOptions = null,
     Object? backendInterface = null,
     Object? callSupportOptions = freezed,
@@ -1201,9 +1251,11 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? searchHouseHoldFilters = freezed,
     Object? searchCLFFilters = freezed,
     Object? referralReasonList = freezed,
+    Object? manualAttendanceReasonList = freezed,
     Object? houseStructureTypes = freezed,
     Object? refusalReasons = freezed,
     Object? firebaseConfig = freezed,
+    Object? transitPostType = freezed,
   }) {
     return _then(_$HCMWrapperModelImpl(
       appConfig: null == appConfig
@@ -1214,6 +1266,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._bandWidthBatchSize
           : bandWidthBatchSize // ignore: cast_nullable_to_non_nullable
               as List<BandWidthBatchSize>,
+      beneficiaryIdConfig: null == beneficiaryIdConfig
+          ? _value._beneficiaryIdConfig
+          : beneficiaryIdConfig // ignore: cast_nullable_to_non_nullable
+              as List<BeneficiaryIdConfig>,
       downSyncBandWidthBatchSize: null == downSyncBandWidthBatchSize
           ? _value._downSyncBandWidthBatchSize
           : downSyncBandWidthBatchSize // ignore: cast_nullable_to_non_nullable
@@ -1239,6 +1295,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._idTypeOptions
           : idTypeOptions // ignore: cast_nullable_to_non_nullable
               as List<IdTypeOptions>,
+      relationShipTypeOptions: null == relationShipTypeOptions
+          ? _value._relationShipTypeOptions
+          : relationShipTypeOptions // ignore: cast_nullable_to_non_nullable
+              as List<RelationShipTypeOptions>,
       deliveryCommentOptions: null == deliveryCommentOptions
           ? _value._deliveryCommentOptions
           : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
@@ -1271,6 +1331,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._referralReasonList
           : referralReasonList // ignore: cast_nullable_to_non_nullable
               as List<ReferralReasonType>?,
+      manualAttendanceReasonList: freezed == manualAttendanceReasonList
+          ? _value._manualAttendanceReasonList
+          : manualAttendanceReasonList // ignore: cast_nullable_to_non_nullable
+              as List<ManualAttendanceReasonType>?,
       houseStructureTypes: freezed == houseStructureTypes
           ? _value._houseStructureTypes
           : houseStructureTypes // ignore: cast_nullable_to_non_nullable
@@ -1283,6 +1347,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._firebaseConfig
           : firebaseConfig // ignore: cast_nullable_to_non_nullable
               as List<FirebaseConfig>?,
+      transitPostType: freezed == transitPostType
+          ? _value._transitPostType
+          : transitPostType // ignore: cast_nullable_to_non_nullable
+              as List<TransitPostType>?,
     ));
   }
 }
@@ -1294,6 +1362,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       {@JsonKey(name: 'APP_CONFIG') required final List<AppConfig> appConfig,
       @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
       required final List<BandWidthBatchSize> bandWidthBatchSize,
+      @JsonKey(name: 'BENEFICIARY_ID_CONFIG')
+      required final List<BeneficiaryIdConfig> beneficiaryIdConfig,
       @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
       required final List<BandWidthBatchSize> downSyncBandWidthBatchSize,
       @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
@@ -1307,6 +1377,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       required final List<CheckListTypes> checklistTypes,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       required final List<IdTypeOptions> idTypeOptions,
+      @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
+      required final List<RelationShipTypeOptions> relationShipTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       required final List<DeliveryCommentOptions> deliveryCommentOptions,
       @JsonKey(name: 'BACKEND_INTERFACE')
@@ -1323,14 +1395,19 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       final List<SearchCLFFilters>? searchCLFFilters,
       @JsonKey(name: 'REFERRAL_REASONS')
       final List<ReferralReasonType>? referralReasonList,
+      @JsonKey(name: 'MANUAL_ATTENDANCE_REASONS')
+      final List<ManualAttendanceReasonType>? manualAttendanceReasonList,
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
       final List<CommonMasterModel>? houseStructureTypes,
       @JsonKey(name: 'REFUSAL_REASONS')
       final List<CommonMasterModel>? refusalReasons,
       @JsonKey(name: 'FIREBASE_CONFIG')
-      required final List<FirebaseConfig>? firebaseConfig})
+      required final List<FirebaseConfig>? firebaseConfig,
+      @JsonKey(name: 'TRANSIT_POST_TYPE')
+      final List<TransitPostType>? transitPostType})
       : _appConfig = appConfig,
         _bandWidthBatchSize = bandWidthBatchSize,
+        _beneficiaryIdConfig = beneficiaryIdConfig,
         _downSyncBandWidthBatchSize = downSyncBandWidthBatchSize,
         _householdDeletionReasonOptions = householdDeletionReasonOptions,
         _householdMemberDeletionReasonOptions =
@@ -1338,6 +1415,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         _backgroundServiceConfig = backgroundServiceConfig,
         _checklistTypes = checklistTypes,
         _idTypeOptions = idTypeOptions,
+        _relationShipTypeOptions = relationShipTypeOptions,
         _deliveryCommentOptions = deliveryCommentOptions,
         _backendInterface = backendInterface,
         _callSupportOptions = callSupportOptions,
@@ -1346,9 +1424,11 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         _searchHouseHoldFilters = searchHouseHoldFilters,
         _searchCLFFilters = searchCLFFilters,
         _referralReasonList = referralReasonList,
+        _manualAttendanceReasonList = manualAttendanceReasonList,
         _houseStructureTypes = houseStructureTypes,
         _refusalReasons = refusalReasons,
-        _firebaseConfig = firebaseConfig;
+        _firebaseConfig = firebaseConfig,
+        _transitPostType = transitPostType;
 
   factory _$HCMWrapperModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$HCMWrapperModelImplFromJson(json);
@@ -1370,6 +1450,16 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       return _bandWidthBatchSize;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_bandWidthBatchSize);
+  }
+
+  final List<BeneficiaryIdConfig> _beneficiaryIdConfig;
+  @override
+  @JsonKey(name: 'BENEFICIARY_ID_CONFIG')
+  List<BeneficiaryIdConfig> get beneficiaryIdConfig {
+    if (_beneficiaryIdConfig is EqualUnmodifiableListView)
+      return _beneficiaryIdConfig;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_beneficiaryIdConfig);
   }
 
   final List<BandWidthBatchSize> _downSyncBandWidthBatchSize;
@@ -1430,6 +1520,16 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     if (_idTypeOptions is EqualUnmodifiableListView) return _idTypeOptions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_idTypeOptions);
+  }
+
+  final List<RelationShipTypeOptions> _relationShipTypeOptions;
+  @override
+  @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
+  List<RelationShipTypeOptions> get relationShipTypeOptions {
+    if (_relationShipTypeOptions is EqualUnmodifiableListView)
+      return _relationShipTypeOptions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_relationShipTypeOptions);
   }
 
   final List<DeliveryCommentOptions> _deliveryCommentOptions;
@@ -1521,6 +1621,18 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<ManualAttendanceReasonType>? _manualAttendanceReasonList;
+  @override
+  @JsonKey(name: 'MANUAL_ATTENDANCE_REASONS')
+  List<ManualAttendanceReasonType>? get manualAttendanceReasonList {
+    final value = _manualAttendanceReasonList;
+    if (value == null) return null;
+    if (_manualAttendanceReasonList is EqualUnmodifiableListView)
+      return _manualAttendanceReasonList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   final List<CommonMasterModel>? _houseStructureTypes;
   @override
   @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
@@ -1555,9 +1667,20 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<TransitPostType>? _transitPostType;
+  @override
+  @JsonKey(name: 'TRANSIT_POST_TYPE')
+  List<TransitPostType>? get transitPostType {
+    final value = _transitPostType;
+    if (value == null) return null;
+    if (_transitPostType is EqualUnmodifiableListView) return _transitPostType;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchCLFFilters: $searchCLFFilters, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig)';
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, beneficiaryIdConfig: $beneficiaryIdConfig, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, relationShipTypeOptions: $relationShipTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchCLFFilters: $searchCLFFilters, referralReasonList: $referralReasonList, manualAttendanceReasonList: $manualAttendanceReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig, transitPostType: $transitPostType)';
   }
 
   @override
@@ -1569,6 +1692,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
                 .equals(other._appConfig, _appConfig) &&
             const DeepCollectionEquality()
                 .equals(other._bandWidthBatchSize, _bandWidthBatchSize) &&
+            const DeepCollectionEquality()
+                .equals(other._beneficiaryIdConfig, _beneficiaryIdConfig) &&
             const DeepCollectionEquality().equals(
                 other._downSyncBandWidthBatchSize,
                 _downSyncBandWidthBatchSize) &&
@@ -1585,6 +1710,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
             const DeepCollectionEquality()
                 .equals(other._idTypeOptions, _idTypeOptions) &&
             const DeepCollectionEquality().equals(
+                other._relationShipTypeOptions, _relationShipTypeOptions) &&
+            const DeepCollectionEquality().equals(
                 other._deliveryCommentOptions, _deliveryCommentOptions) &&
             const DeepCollectionEquality()
                 .equals(other._backendInterface, _backendInterface) &&
@@ -1600,12 +1727,17 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
                 .equals(other._searchCLFFilters, _searchCLFFilters) &&
             const DeepCollectionEquality()
                 .equals(other._referralReasonList, _referralReasonList) &&
+            const DeepCollectionEquality().equals(
+                other._manualAttendanceReasonList,
+                _manualAttendanceReasonList) &&
             const DeepCollectionEquality()
                 .equals(other._houseStructureTypes, _houseStructureTypes) &&
             const DeepCollectionEquality()
                 .equals(other._refusalReasons, _refusalReasons) &&
             const DeepCollectionEquality()
-                .equals(other._firebaseConfig, _firebaseConfig));
+                .equals(other._firebaseConfig, _firebaseConfig) &&
+            const DeepCollectionEquality()
+                .equals(other._transitPostType, _transitPostType));
   }
 
   @JsonKey(ignore: true)
@@ -1614,6 +1746,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         runtimeType,
         const DeepCollectionEquality().hash(_appConfig),
         const DeepCollectionEquality().hash(_bandWidthBatchSize),
+        const DeepCollectionEquality().hash(_beneficiaryIdConfig),
         const DeepCollectionEquality().hash(_downSyncBandWidthBatchSize),
         const DeepCollectionEquality().hash(_householdDeletionReasonOptions),
         const DeepCollectionEquality()
@@ -1621,6 +1754,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         const DeepCollectionEquality().hash(_backgroundServiceConfig),
         const DeepCollectionEquality().hash(_checklistTypes),
         const DeepCollectionEquality().hash(_idTypeOptions),
+        const DeepCollectionEquality().hash(_relationShipTypeOptions),
         const DeepCollectionEquality().hash(_deliveryCommentOptions),
         const DeepCollectionEquality().hash(_backendInterface),
         const DeepCollectionEquality().hash(_callSupportOptions),
@@ -1629,9 +1763,11 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         const DeepCollectionEquality().hash(_searchHouseHoldFilters),
         const DeepCollectionEquality().hash(_searchCLFFilters),
         const DeepCollectionEquality().hash(_referralReasonList),
+        const DeepCollectionEquality().hash(_manualAttendanceReasonList),
         const DeepCollectionEquality().hash(_houseStructureTypes),
         const DeepCollectionEquality().hash(_refusalReasons),
-        const DeepCollectionEquality().hash(_firebaseConfig)
+        const DeepCollectionEquality().hash(_firebaseConfig),
+        const DeepCollectionEquality().hash(_transitPostType)
       ]);
 
   @JsonKey(ignore: true)
@@ -1654,6 +1790,8 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       {@JsonKey(name: 'APP_CONFIG') required final List<AppConfig> appConfig,
       @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
       required final List<BandWidthBatchSize> bandWidthBatchSize,
+      @JsonKey(name: 'BENEFICIARY_ID_CONFIG')
+      required final List<BeneficiaryIdConfig> beneficiaryIdConfig,
       @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
       required final List<BandWidthBatchSize> downSyncBandWidthBatchSize,
       @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
@@ -1667,6 +1805,8 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       required final List<CheckListTypes> checklistTypes,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       required final List<IdTypeOptions> idTypeOptions,
+      @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
+      required final List<RelationShipTypeOptions> relationShipTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       required final List<DeliveryCommentOptions> deliveryCommentOptions,
       @JsonKey(name: 'BACKEND_INTERFACE')
@@ -1683,13 +1823,16 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       final List<SearchCLFFilters>? searchCLFFilters,
       @JsonKey(name: 'REFERRAL_REASONS')
       final List<ReferralReasonType>? referralReasonList,
+      @JsonKey(name: 'MANUAL_ATTENDANCE_REASONS')
+      final List<ManualAttendanceReasonType>? manualAttendanceReasonList,
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
       final List<CommonMasterModel>? houseStructureTypes,
       @JsonKey(name: 'REFUSAL_REASONS')
       final List<CommonMasterModel>? refusalReasons,
       @JsonKey(name: 'FIREBASE_CONFIG')
-      required final List<FirebaseConfig>?
-          firebaseConfig}) = _$HCMWrapperModelImpl;
+      required final List<FirebaseConfig>? firebaseConfig,
+      @JsonKey(name: 'TRANSIT_POST_TYPE')
+      final List<TransitPostType>? transitPostType}) = _$HCMWrapperModelImpl;
 
   factory _HCMWrapperModel.fromJson(Map<String, dynamic> json) =
       _$HCMWrapperModelImpl.fromJson;
@@ -1700,6 +1843,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
   List<BandWidthBatchSize> get bandWidthBatchSize;
+  @override
+  @JsonKey(name: 'BENEFICIARY_ID_CONFIG')
+  List<BeneficiaryIdConfig> get beneficiaryIdConfig;
   @override
   @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
   List<BandWidthBatchSize> get downSyncBandWidthBatchSize;
@@ -1718,6 +1864,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
   List<IdTypeOptions> get idTypeOptions;
+  @override
+  @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
+  List<RelationShipTypeOptions> get relationShipTypeOptions;
   @override
   @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
   List<DeliveryCommentOptions> get deliveryCommentOptions;
@@ -1743,6 +1892,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @JsonKey(name: 'REFERRAL_REASONS')
   List<ReferralReasonType>? get referralReasonList;
   @override
+  @JsonKey(name: 'MANUAL_ATTENDANCE_REASONS')
+  List<ManualAttendanceReasonType>? get manualAttendanceReasonList;
+  @override
   @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
   List<CommonMasterModel>? get houseStructureTypes;
   @override
@@ -1751,6 +1903,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'FIREBASE_CONFIG')
   List<FirebaseConfig>? get firebaseConfig;
+  @override
+  @JsonKey(name: 'TRANSIT_POST_TYPE')
+  List<TransitPostType>? get transitPostType;
   @override
   @JsonKey(ignore: true)
   _$$HCMWrapperModelImplCopyWith<_$HCMWrapperModelImpl> get copyWith =>
@@ -3143,6 +3298,184 @@ abstract class _IdTypeOptions implements IdTypeOptions {
       throw _privateConstructorUsedError;
 }
 
+RelationShipTypeOptions _$RelationShipTypeOptionsFromJson(
+    Map<String, dynamic> json) {
+  return _RelationShipTypeOptions.fromJson(json);
+}
+
+/// @nodoc
+mixin _$RelationShipTypeOptions {
+  String get name => throw _privateConstructorUsedError;
+  String get code => throw _privateConstructorUsedError;
+  bool get active => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $RelationShipTypeOptionsCopyWith<RelationShipTypeOptions> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $RelationShipTypeOptionsCopyWith<$Res> {
+  factory $RelationShipTypeOptionsCopyWith(RelationShipTypeOptions value,
+          $Res Function(RelationShipTypeOptions) then) =
+      _$RelationShipTypeOptionsCopyWithImpl<$Res, RelationShipTypeOptions>;
+  @useResult
+  $Res call({String name, String code, bool active});
+}
+
+/// @nodoc
+class _$RelationShipTypeOptionsCopyWithImpl<$Res,
+        $Val extends RelationShipTypeOptions>
+    implements $RelationShipTypeOptionsCopyWith<$Res> {
+  _$RelationShipTypeOptionsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+    Object? active = null,
+  }) {
+    return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      active: null == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$RelationShipTypeOptionsImplCopyWith<$Res>
+    implements $RelationShipTypeOptionsCopyWith<$Res> {
+  factory _$$RelationShipTypeOptionsImplCopyWith(
+          _$RelationShipTypeOptionsImpl value,
+          $Res Function(_$RelationShipTypeOptionsImpl) then) =
+      __$$RelationShipTypeOptionsImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String name, String code, bool active});
+}
+
+/// @nodoc
+class __$$RelationShipTypeOptionsImplCopyWithImpl<$Res>
+    extends _$RelationShipTypeOptionsCopyWithImpl<$Res,
+        _$RelationShipTypeOptionsImpl>
+    implements _$$RelationShipTypeOptionsImplCopyWith<$Res> {
+  __$$RelationShipTypeOptionsImplCopyWithImpl(
+      _$RelationShipTypeOptionsImpl _value,
+      $Res Function(_$RelationShipTypeOptionsImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+    Object? active = null,
+  }) {
+    return _then(_$RelationShipTypeOptionsImpl(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      active: null == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$RelationShipTypeOptionsImpl implements _RelationShipTypeOptions {
+  _$RelationShipTypeOptionsImpl(
+      {required this.name, required this.code, required this.active});
+
+  factory _$RelationShipTypeOptionsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RelationShipTypeOptionsImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final String code;
+  @override
+  final bool active;
+
+  @override
+  String toString() {
+    return 'RelationShipTypeOptions(name: $name, code: $code, active: $active)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RelationShipTypeOptionsImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.active, active) || other.active == active));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, code, active);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RelationShipTypeOptionsImplCopyWith<_$RelationShipTypeOptionsImpl>
+      get copyWith => __$$RelationShipTypeOptionsImplCopyWithImpl<
+          _$RelationShipTypeOptionsImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$RelationShipTypeOptionsImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _RelationShipTypeOptions implements RelationShipTypeOptions {
+  factory _RelationShipTypeOptions(
+      {required final String name,
+      required final String code,
+      required final bool active}) = _$RelationShipTypeOptionsImpl;
+
+  factory _RelationShipTypeOptions.fromJson(Map<String, dynamic> json) =
+      _$RelationShipTypeOptionsImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  String get code;
+  @override
+  bool get active;
+  @override
+  @JsonKey(ignore: true)
+  _$$RelationShipTypeOptionsImplCopyWith<_$RelationShipTypeOptionsImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
 BandWidthBatchSize _$BandWidthBatchSizeFromJson(Map<String, dynamic> json) {
   return _BandWidthBatchSize.fromJson(json);
 }
@@ -3334,6 +3667,176 @@ abstract class _BandWidthBatchSize implements BandWidthBatchSize {
   @override
   @JsonKey(ignore: true)
   _$$BandWidthBatchSizeImplCopyWith<_$BandWidthBatchSizeImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+BeneficiaryIdConfig _$BeneficiaryIdConfigFromJson(Map<String, dynamic> json) {
+  return _BeneficiaryIdConfig.fromJson(json);
+}
+
+/// @nodoc
+mixin _$BeneficiaryIdConfig {
+  @JsonKey(name: 'MIN_COUNT')
+  double get minCount => throw _privateConstructorUsedError;
+  @JsonKey(name: 'BATCH_SIZE')
+  int get batchSize => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $BeneficiaryIdConfigCopyWith<BeneficiaryIdConfig> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $BeneficiaryIdConfigCopyWith<$Res> {
+  factory $BeneficiaryIdConfigCopyWith(
+          BeneficiaryIdConfig value, $Res Function(BeneficiaryIdConfig) then) =
+      _$BeneficiaryIdConfigCopyWithImpl<$Res, BeneficiaryIdConfig>;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'MIN_COUNT') double minCount,
+      @JsonKey(name: 'BATCH_SIZE') int batchSize});
+}
+
+/// @nodoc
+class _$BeneficiaryIdConfigCopyWithImpl<$Res, $Val extends BeneficiaryIdConfig>
+    implements $BeneficiaryIdConfigCopyWith<$Res> {
+  _$BeneficiaryIdConfigCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? minCount = null,
+    Object? batchSize = null,
+  }) {
+    return _then(_value.copyWith(
+      minCount: null == minCount
+          ? _value.minCount
+          : minCount // ignore: cast_nullable_to_non_nullable
+              as double,
+      batchSize: null == batchSize
+          ? _value.batchSize
+          : batchSize // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$BeneficiaryIdConfigImplCopyWith<$Res>
+    implements $BeneficiaryIdConfigCopyWith<$Res> {
+  factory _$$BeneficiaryIdConfigImplCopyWith(_$BeneficiaryIdConfigImpl value,
+          $Res Function(_$BeneficiaryIdConfigImpl) then) =
+      __$$BeneficiaryIdConfigImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'MIN_COUNT') double minCount,
+      @JsonKey(name: 'BATCH_SIZE') int batchSize});
+}
+
+/// @nodoc
+class __$$BeneficiaryIdConfigImplCopyWithImpl<$Res>
+    extends _$BeneficiaryIdConfigCopyWithImpl<$Res, _$BeneficiaryIdConfigImpl>
+    implements _$$BeneficiaryIdConfigImplCopyWith<$Res> {
+  __$$BeneficiaryIdConfigImplCopyWithImpl(_$BeneficiaryIdConfigImpl _value,
+      $Res Function(_$BeneficiaryIdConfigImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? minCount = null,
+    Object? batchSize = null,
+  }) {
+    return _then(_$BeneficiaryIdConfigImpl(
+      minCount: null == minCount
+          ? _value.minCount
+          : minCount // ignore: cast_nullable_to_non_nullable
+              as double,
+      batchSize: null == batchSize
+          ? _value.batchSize
+          : batchSize // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$BeneficiaryIdConfigImpl implements _BeneficiaryIdConfig {
+  _$BeneficiaryIdConfigImpl(
+      {@JsonKey(name: 'MIN_COUNT') required this.minCount,
+      @JsonKey(name: 'BATCH_SIZE') required this.batchSize});
+
+  factory _$BeneficiaryIdConfigImpl.fromJson(Map<String, dynamic> json) =>
+      _$$BeneficiaryIdConfigImplFromJson(json);
+
+  @override
+  @JsonKey(name: 'MIN_COUNT')
+  final double minCount;
+  @override
+  @JsonKey(name: 'BATCH_SIZE')
+  final int batchSize;
+
+  @override
+  String toString() {
+    return 'BeneficiaryIdConfig(minCount: $minCount, batchSize: $batchSize)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BeneficiaryIdConfigImpl &&
+            (identical(other.minCount, minCount) ||
+                other.minCount == minCount) &&
+            (identical(other.batchSize, batchSize) ||
+                other.batchSize == batchSize));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, minCount, batchSize);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BeneficiaryIdConfigImplCopyWith<_$BeneficiaryIdConfigImpl> get copyWith =>
+      __$$BeneficiaryIdConfigImplCopyWithImpl<_$BeneficiaryIdConfigImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$BeneficiaryIdConfigImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _BeneficiaryIdConfig implements BeneficiaryIdConfig {
+  factory _BeneficiaryIdConfig(
+          {@JsonKey(name: 'MIN_COUNT') required final double minCount,
+          @JsonKey(name: 'BATCH_SIZE') required final int batchSize}) =
+      _$BeneficiaryIdConfigImpl;
+
+  factory _BeneficiaryIdConfig.fromJson(Map<String, dynamic> json) =
+      _$BeneficiaryIdConfigImpl.fromJson;
+
+  @override
+  @JsonKey(name: 'MIN_COUNT')
+  double get minCount;
+  @override
+  @JsonKey(name: 'BATCH_SIZE')
+  int get batchSize;
+  @override
+  @JsonKey(ignore: true)
+  _$$BeneficiaryIdConfigImplCopyWith<_$BeneficiaryIdConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -5458,6 +5961,179 @@ abstract class _SearchCLFFilters implements SearchCLFFilters {
   @override
   @JsonKey(ignore: true)
   _$$SearchCLFFiltersImplCopyWith<_$SearchCLFFiltersImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+TransitPostType _$TransitPostTypeFromJson(Map<String, dynamic> json) {
+  return _TransitPostType.fromJson(json);
+}
+
+/// @nodoc
+mixin _$TransitPostType {
+  String get name => throw _privateConstructorUsedError;
+  String get code => throw _privateConstructorUsedError;
+  bool get active => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $TransitPostTypeCopyWith<TransitPostType> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TransitPostTypeCopyWith<$Res> {
+  factory $TransitPostTypeCopyWith(
+          TransitPostType value, $Res Function(TransitPostType) then) =
+      _$TransitPostTypeCopyWithImpl<$Res, TransitPostType>;
+  @useResult
+  $Res call({String name, String code, bool active});
+}
+
+/// @nodoc
+class _$TransitPostTypeCopyWithImpl<$Res, $Val extends TransitPostType>
+    implements $TransitPostTypeCopyWith<$Res> {
+  _$TransitPostTypeCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+    Object? active = null,
+  }) {
+    return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      active: null == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$TransitPostTypeImplCopyWith<$Res>
+    implements $TransitPostTypeCopyWith<$Res> {
+  factory _$$TransitPostTypeImplCopyWith(_$TransitPostTypeImpl value,
+          $Res Function(_$TransitPostTypeImpl) then) =
+      __$$TransitPostTypeImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String name, String code, bool active});
+}
+
+/// @nodoc
+class __$$TransitPostTypeImplCopyWithImpl<$Res>
+    extends _$TransitPostTypeCopyWithImpl<$Res, _$TransitPostTypeImpl>
+    implements _$$TransitPostTypeImplCopyWith<$Res> {
+  __$$TransitPostTypeImplCopyWithImpl(
+      _$TransitPostTypeImpl _value, $Res Function(_$TransitPostTypeImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+    Object? active = null,
+  }) {
+    return _then(_$TransitPostTypeImpl(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      active: null == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$TransitPostTypeImpl implements _TransitPostType {
+  _$TransitPostTypeImpl(
+      {required this.name, required this.code, required this.active});
+
+  factory _$TransitPostTypeImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TransitPostTypeImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final String code;
+  @override
+  final bool active;
+
+  @override
+  String toString() {
+    return 'TransitPostType(name: $name, code: $code, active: $active)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$TransitPostTypeImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.active, active) || other.active == active));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, code, active);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$TransitPostTypeImplCopyWith<_$TransitPostTypeImpl> get copyWith =>
+      __$$TransitPostTypeImplCopyWithImpl<_$TransitPostTypeImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$TransitPostTypeImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _TransitPostType implements TransitPostType {
+  factory _TransitPostType(
+      {required final String name,
+      required final String code,
+      required final bool active}) = _$TransitPostTypeImpl;
+
+  factory _TransitPostType.fromJson(Map<String, dynamic> json) =
+      _$TransitPostTypeImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  String get code;
+  @override
+  bool get active;
+  @override
+  @JsonKey(ignore: true)
+  _$$TransitPostTypeImplCopyWith<_$TransitPostTypeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:digit_scanner/blocs/app_localization.dart';
-import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/utils/i18_key_constants.dart' as i18;
 import 'package:digit_scanner/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -10,7 +9,6 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 
 class CameraView extends LocalizedStatefulWidget {

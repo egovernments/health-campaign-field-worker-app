@@ -1,10 +1,13 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../data/local_store/no_sql/schema/app_configuration.dart';
+import '../manual_attendance_reasons/manual_attendance_reasons_model.dart';
 import '../privacy_notice/privacy_notice_model.dart';
 import '../referral_reasons/referral_reasons_model.dart';
 import '../symptoms_types/symptoms_types_model.dart';
 
 part 'app_config_model.freezed.dart';
+
 part 'app_config_model.g.dart';
 
 @freezed
@@ -67,6 +70,8 @@ class HCMWrapperModel with _$HCMWrapperModel {
     @JsonKey(name: 'APP_CONFIG') required List<AppConfig> appConfig,
     @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
     required List<BandWidthBatchSize> bandWidthBatchSize,
+    @JsonKey(name: 'BENEFICIARY_ID_CONFIG')
+    required List<BeneficiaryIdConfig> beneficiaryIdConfig,
     @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
     required List<BandWidthBatchSize> downSyncBandWidthBatchSize,
     @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
@@ -79,6 +84,8 @@ class HCMWrapperModel with _$HCMWrapperModel {
     required List<CheckListTypes> checklistTypes,
     @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
     required List<IdTypeOptions> idTypeOptions,
+    @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
+    required List<RelationShipTypeOptions> relationShipTypeOptions,
     @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
     required List<DeliveryCommentOptions> deliveryCommentOptions,
     @JsonKey(name: 'BACKEND_INTERFACE')
@@ -94,11 +101,14 @@ class HCMWrapperModel with _$HCMWrapperModel {
     List<SearchCLFFilters>? searchCLFFilters,
     @JsonKey(name: 'REFERRAL_REASONS')
     List<ReferralReasonType>? referralReasonList,
+    @JsonKey(name:'MANUAL_ATTENDANCE_REASONS')
+    List<ManualAttendanceReasonType>? manualAttendanceReasonList,
     @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
     List<CommonMasterModel>? houseStructureTypes,
     @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
     @JsonKey(name: 'FIREBASE_CONFIG')
     required List<FirebaseConfig>? firebaseConfig,
+    @JsonKey(name: 'TRANSIT_POST_TYPE') List<TransitPostType>? transitPostType,
   }) = _HCMWrapperModel;
 
   factory HCMWrapperModel.fromJson(
@@ -201,6 +211,18 @@ class IdTypeOptions with _$IdTypeOptions {
 }
 
 @freezed
+class RelationShipTypeOptions with _$RelationShipTypeOptions {
+  factory RelationShipTypeOptions({
+    required String name,
+    required String code,
+    required bool active,
+  }) = _RelationShipTypeOptions;
+
+  factory RelationShipTypeOptions.fromJson(Map<String, dynamic> json) =>
+      _$RelationShipTypeOptionsFromJson(json);
+}
+
+@freezed
 class BandWidthBatchSize with _$BandWidthBatchSize {
   factory BandWidthBatchSize({
     @JsonKey(name: 'MIN_RANGE') required double minRange,
@@ -210,6 +232,17 @@ class BandWidthBatchSize with _$BandWidthBatchSize {
 
   factory BandWidthBatchSize.fromJson(Map<String, dynamic> json) =>
       _$BandWidthBatchSizeFromJson(json);
+}
+
+@freezed
+class BeneficiaryIdConfig with _$BeneficiaryIdConfig {
+  factory BeneficiaryIdConfig({
+    @JsonKey(name: 'MIN_COUNT') required double minCount,
+    @JsonKey(name: 'BATCH_SIZE') required int batchSize,
+  }) = _BeneficiaryIdConfig;
+
+  factory BeneficiaryIdConfig.fromJson(Map<String, dynamic> json) =>
+      _$BeneficiaryIdConfigFromJson(json);
 }
 
 @freezed
@@ -354,6 +387,18 @@ class SearchCLFFilters with _$SearchCLFFilters {
 
   factory SearchCLFFilters.fromJson(Map<String, dynamic> json) =>
       _$SearchCLFFiltersFromJson(json);
+}
+
+@freezed
+class TransitPostType with _$TransitPostType {
+  factory TransitPostType({
+    required String name,
+    required String code,
+    required bool active,
+  }) = _TransitPostType;
+
+  factory TransitPostType.fromJson(Map<String, dynamic> json) =>
+      _$TransitPostTypeFromJson(json);
 }
 
 @freezed

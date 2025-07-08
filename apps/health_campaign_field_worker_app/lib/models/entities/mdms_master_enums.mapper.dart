@@ -31,12 +31,16 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.symptomTypes;
       case "REFERRAL_REASONS":
         return MasterEnums.referralReasons;
+      case "MANUAL_ATTENDANCE_REASONS":
+        return MasterEnums.manualAttendanceReasons;
       case "HOUSE_STRUCTURE_TYPES":
         return MasterEnums.houseStructureTypes;
       case "REFUSAL_REASONS":
         return MasterEnums.refusalReasons;
       case "BANDWIDTH_BATCH_SIZE":
         return MasterEnums.bandWidthBatchSize;
+      case "BENEFICIARY_ID_CONFIG":
+        return MasterEnums.beneficiaryIdConfig;
       case "DOWNSYNC-BANDWIDTH_BATCH_SIZE":
         return MasterEnums.downSyncBandwidthBatchSize;
       case "HOUSEHOLD_DELETION_REASON_OPTIONS":
@@ -49,6 +53,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.checklistTypes;
       case "ID_TYPE_OPTIONS_POPULATOR":
         return MasterEnums.idTypes;
+      case "HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES":
+        return MasterEnums.relationShipTypeOptions;
       case "DELIVERY_COMMENT_OPTIONS_POPULATOR":
         return MasterEnums.deliveryComments;
       case "BACKEND_INTERFACE":
@@ -75,6 +81,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.privacyPolicy;
       case "dashboardConfig":
         return MasterEnums.dashboardConfig;
+      case "TRANSIT_POST_TYPE":
+        return MasterEnums.transitPostType;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -89,12 +97,16 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "SYMPTOM_TYPES";
       case MasterEnums.referralReasons:
         return "REFERRAL_REASONS";
+      case MasterEnums.manualAttendanceReasons:
+        return "MANUAL_ATTENDANCE_REASONS";
       case MasterEnums.houseStructureTypes:
         return "HOUSE_STRUCTURE_TYPES";
       case MasterEnums.refusalReasons:
         return "REFUSAL_REASONS";
       case MasterEnums.bandWidthBatchSize:
         return "BANDWIDTH_BATCH_SIZE";
+      case MasterEnums.beneficiaryIdConfig:
+        return "BENEFICIARY_ID_CONFIG";
       case MasterEnums.downSyncBandwidthBatchSize:
         return "DOWNSYNC-BANDWIDTH_BATCH_SIZE";
       case MasterEnums.hhDelReasons:
@@ -107,6 +119,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "CHECKLIST_TYPES";
       case MasterEnums.idTypes:
         return "ID_TYPE_OPTIONS_POPULATOR";
+      case MasterEnums.relationShipTypeOptions:
+        return "HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES";
       case MasterEnums.deliveryComments:
         return "DELIVERY_COMMENT_OPTIONS_POPULATOR";
       case MasterEnums.backendInterface:
@@ -133,6 +147,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "PrivacyPolicy";
       case MasterEnums.dashboardConfig:
         return "dashboardConfig";
+      case MasterEnums.transitPostType:
+        return "TRANSIT_POST_TYPE";
     }
   }
 }

@@ -24,6 +24,7 @@ class _HomePageShowcaseData {
         supervisorSyncData,
         deleteAll,
         db,
+        beneficiaryId,
         closedHouseHold,
       ];
 
@@ -99,11 +100,24 @@ class _HomePageShowcaseData {
     messageLocalizationKey: i18.home.db,
   );
 
+  final dataShare = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.dataShare,
+  );
+
   final dashBoard = ShowcaseItemBuilder(
     messageLocalizationKey: i18.home.dashboard,
   );
+
+  final beneficiaryId = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.beneficiaryIdLabel,
+  );
+
   final closedHouseHold = ShowcaseItemBuilder(
     messageLocalizationKey: i18.home.closedHouseHoldLabel,
+  );
+
+  final transitPost = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.transitPostLabel,
   );
 
   final clf = ShowcaseItemBuilder(messageLocalizationKey: i18.homeShowcase.clf);

@@ -48,6 +48,7 @@ class ProjectResourceLocalRepository
                 tenantId: projectProductVariant.tenantId,
                 type: projectProductVariant.type,
                 isBaseUnitVariant: projectProductVariant.isBaseUnitVariant,
+                name: projectProductVariant.name,
               ),
             );
           })
