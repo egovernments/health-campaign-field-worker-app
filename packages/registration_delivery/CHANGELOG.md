@@ -1,3 +1,8 @@
+## 1.0.7
+
+* Updated IdGen, Enumeration, Ineligible flow, Referred Search
+* Updated digit_data_model, digit_ui_components, survey_form
+
 ## 1.0.7-dev.6-enumeration
 
 * Passing member relation type from ui to bloc
@@ -25,7 +30,7 @@
 * Added Checklist for household and individual page
 * Added member relationship model and db
 
-## 1.0.7-dev.1-idGen
+## 1.0.7-dev.2-idGen
 
 * Modified individual search query with individualClientReferenceId
 * BugFix:

@@ -1,3 +1,8 @@
+## 1.1.2
+
+* Added tag for attendee table
+* Updated to latest components
+
 ## 1.1.1
 
 * Added name field in projectProductVariant

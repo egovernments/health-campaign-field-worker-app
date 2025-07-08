@@ -184,7 +184,9 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
   void handleDeviceTap(Device device) {
     if (device.state == SessionState.notConnected) {
       nearbyService.invitePeer(
-          deviceID: device.deviceId, deviceName: context.loggedInUser.userName);
+          deviceID: device.deviceId,
+          deviceName:
+              '${context.loggedInUser.name} (${context.loggedInUser.userName})');
     } else if (device.state == SessionState.connected) {
       nearbyService.disconnectPeer(deviceID: device.deviceId);
     }
@@ -233,7 +235,8 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
             await nearbyService.startBrowsingForPeers();
           } else {
             await nearbyService.startAdvertisingPeer(
-              deviceName: context.loggedInUser.userName,
+              deviceName:
+                  '${context.loggedInUser.name} (${context.loggedInUser.userName})',
             );
           }
         }
