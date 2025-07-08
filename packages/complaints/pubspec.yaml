@@ -1,6 +1,6 @@
 name: complaints
 description: This package offers filing complaints features, allowing users to file complaints.
-version: 1.0.2+1
+version: 1.0.3-dev.1-enumeration
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/complaints
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 

@@ -14,6 +14,7 @@ class AttendanceRegisterSearchModel extends EntitySearchModel
     with AttendanceRegisterSearchModelMappable {
   final String? id;
   final String? staffId;
+  final String? attendeeId;
   final String? registerNumber;
   final String? status;
   final String? referenceId;
@@ -21,10 +22,12 @@ class AttendanceRegisterSearchModel extends EntitySearchModel
   final String? serviceCode;
   final int? offSet;
   final int? limit;
+  final bool? includeTaggedAttendees;
 
   AttendanceRegisterSearchModel({
     this.id,
     this.staffId,
+    this.attendeeId,
     this.registerNumber,
     this.status,
     this.serviceCode,
@@ -32,6 +35,7 @@ class AttendanceRegisterSearchModel extends EntitySearchModel
     this.offSet,
     this.limit,
     this.localityCode,
+    this.includeTaggedAttendees,
     super.boundaryCode,
     super.isDeleted,
   }) : super();
@@ -40,6 +44,7 @@ class AttendanceRegisterSearchModel extends EntitySearchModel
   AttendanceRegisterSearchModel.ignoreDeleted({
     this.id,
     this.staffId,
+    this.attendeeId,
     this.registerNumber,
     this.status,
     this.serviceCode,
@@ -47,6 +52,7 @@ class AttendanceRegisterSearchModel extends EntitySearchModel
     this.offSet,
     this.limit,
     this.localityCode,
+    this.includeTaggedAttendees,
     super.boundaryCode,
   }) : super(isDeleted: false);
 }
@@ -74,6 +80,7 @@ class AttendanceRegisterModel extends EntityModel
   final Map<String, dynamic>? additionalDetails;
   final int? completedDays;
   final List<Map<DateTime, bool>>? attendanceLog;
+  final String? tag;
 
   AttendanceRegisterModel({
     required this.id,
@@ -94,12 +101,14 @@ class AttendanceRegisterModel extends EntityModel
     this.completedDays = 0,
     this.attendanceLog = const [],
     this.additionalDetails,
+    this.tag,
     super.auditDetails,
     super.clientAuditDetails,
     super.isDeleted = false,
   }) : super();
 
-  AttendanceRegisterCompanion get companion => AttendanceRegisterCompanion(
+  AttendanceRegisterCompanion get companion =>
+      AttendanceRegisterCompanion(
         id: Value(id),
         tenantId: Value(tenantId!),
         registerNumber: Value(registerNumber!),

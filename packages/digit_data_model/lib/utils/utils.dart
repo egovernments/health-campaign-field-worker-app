@@ -1,6 +1,10 @@
 // Importing necessary packages.
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:encrypt/encrypt.dart';
 import 'package:uuid/uuid.dart';
 
 import '../data/local_store/no_sql/schema/entity_mapper_listener.dart';
@@ -78,20 +82,24 @@ class DigitDataModelSingleton {
 
   // Getters for the environment configuration variables.
   get syncDownRetryCount => _syncDownRetryCount;
+
   get retryTimeInterval => _retryTimeInterval;
+
   get tenantId => _tenantId;
+
   get errorDumpApiPath => _errorDumpApiPath;
+
   get hierarchyType => _hierarchyType;
+
   EntityMapperListener? get entityMapper => _entityListener;
 }
 
 /// `PersistenceConfiguration` is an enum that represents the different types of persistence configurations.
 enum PersistenceConfiguration { offlineFirst, onlineOnly }
 
-
 Future<T> retryLocalCallOperation<T>(Future<T> Function() operation,
     {int maxRetries = 5,
-      Duration retryDelay = const Duration(seconds: 1)}) async {
+    Duration retryDelay = const Duration(seconds: 1)}) async {
   int retryCount = 0;
   while (retryCount < maxRetries) {
     try {
@@ -107,4 +115,45 @@ Future<T> retryLocalCallOperation<T>(Future<T> Function() operation,
   }
   throw Exception(
       'Failed to complete the database operation after $maxRetries retries.');
+}
+
+class DataMapEncryptor {
+  // Generate secure random bytes
+  static List<int> _randomBytes(int length) =>
+      List.generate(length, (_) => Random.secure().nextInt(256));
+
+  /// Encrypts a Map and returns a base64 string suitable for a QR code
+  String encryptWithRandomKey(dynamic data) {
+    final keyBytes = _randomBytes(32);
+    final ivBytes = _randomBytes(16);
+
+    final key = Key(Uint8List.fromList(keyBytes));
+    final iv = IV(Uint8List.fromList(ivBytes));
+    final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
+
+    final encrypted = encrypter.encrypt(jsonEncode(data), iv: iv);
+
+    final payload = jsonEncode({
+      'key': base64UrlEncode(keyBytes),
+      'iv': base64UrlEncode(ivBytes),
+      'data': encrypted.base64,
+    });
+
+    return base64UrlEncode(utf8.encode(payload));
+  }
+
+  /// Decrypts the base64 QR string and returns the original Map
+  static Map<String, dynamic> decrypt(String encryptedData) {
+    final decodedJson = utf8.decode(base64Url.decode(encryptedData));
+    final payload = jsonDecode(decodedJson);
+
+    final key = Key(base64Url.decode(payload['key']));
+    final iv = IV(base64Url.decode(payload['iv']));
+    final cipherText = payload['data'];
+
+    final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
+    final decrypted = encrypter.decrypt64(cipherText, iv: iv);
+
+    return jsonDecode(decrypted);
+  }
 }

@@ -32,7 +32,7 @@ class AppLocalizations {
 
     _localizedStrings.addAll(listOfLocalizations);
 
-    return true;
+    return _localizedStrings.isNotEmpty ? true : false;
   }
 
   String translate(String localizedValues) {

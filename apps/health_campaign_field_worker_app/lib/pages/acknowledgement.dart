@@ -48,6 +48,7 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
                       .map((e) => LabelValueItem(
                           labelFlex: 5,
                           label: e,
+                          maxLines: 3,
                           value: widget.descriptionTableData?[e].toString()))
                       .toList(),
                 ),

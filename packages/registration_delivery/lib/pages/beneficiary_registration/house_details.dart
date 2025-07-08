@@ -95,10 +95,14 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                   householdModel,
                                   individualModel,
                                   projectBeneficiaryModel,
+                                  parentClientReferenceId,
+                                    relationshipType,
                                   registrationDate,
                                   searchQuery,
                                   loading,
                                   isHeadOfHousehold,
+                                    householdChecklists,
+                                    individualChecklists,
                                 ) {
                                   var houseModel = HouseholdModel(
                                       clientReferenceId: IdGen.i.identifier,
@@ -170,9 +174,13 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                   householdModel,
                                   individuals,
                                   registrationDate,
+                                  parentClientReferenceId,
+                                    relationshipType,
                                   projectBeneficiaryModel,
                                   loading,
                                   headOfHousehold,
+                                    householdChecklists,
+                                    individualChecklists,
                                 ) {
                                   var houseModel = householdModel.copyWith(
                                       additionalFields:

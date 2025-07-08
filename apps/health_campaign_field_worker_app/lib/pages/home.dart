@@ -9,7 +9,6 @@ import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
-import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
@@ -33,6 +32,8 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
+import 'package:transit_post/router/transit_post_router.gm.dart';
+import 'package:transit_post/utils/utils.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
@@ -267,7 +268,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     return count == 0
                         ? const Offstage()
                         : Padding(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: spacer2,
                             ),
                             child: InfoCard(
@@ -307,7 +308,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         action: (ctx) {
           Navigator.pop(ctx);
           // Sync Failed Manual Sync is Enabled
-          _attemptSyncUp(context);
+          attemptSyncUp(context);
         },
       ),
       secondaryAction: DigitDialogActions(
@@ -459,16 +460,21 @@ class _HomePageState extends LocalizedState<HomePage> {
               icon: Icons.sync_alt,
               label: i18.home.syncDataLabel,
               onPressed: () async {
-                if (snapshot.data?['enablesManualSync'] == true) {
-                  if (context.mounted) _attemptSyncUp(context);
+                if (envConfig.variables.envType == EnvType.qa ||
+                    envConfig.variables.envType == EnvType.dev) {
+                  if (context.mounted) attemptSyncUp(context);
                 } else {
-                  if (context.mounted) {
-                    Toast.showToast(
-                      context,
-                      message: localizations
-                          .translate(i18.common.coreCommonSyncInProgress),
-                      type: ToastType.success,
-                    );
+                  if (snapshot.data?['enablesManualSync'] == true) {
+                    if (context.mounted) attemptSyncUp(context);
+                  } else {
+                    if (context.mounted) {
+                      Toast.showToast(
+                        context,
+                        message: localizations
+                            .translate(i18.common.coreCommonSyncInProgress),
+                        type: ToastType.success,
+                      );
+                    }
                   }
                 }
               },
@@ -513,7 +519,6 @@ class _HomePageState extends LocalizedState<HomePage> {
               triggerLocalization();
               isTriggerLocalisation = false;
             }
-            ;
             context.router.push(const ManageAttendanceRoute());
           },
         ),
@@ -533,6 +538,19 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.dataShare: homeShowcaseData.dataShare.buildWith(
+        child: HomeItemCard(
+          icon: Icons.send,
+          label: i18.home.dataShare,
+          onPressed: () async {
+            if (isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            }
+            context.router.push(const DataShareHomeRoute());
+          },
+        ),
+      ),
       i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
         child: HomeItemCard(
           icon: Icons.bar_chart_sharp,
@@ -542,11 +560,34 @@ class _HomePageState extends LocalizedState<HomePage> {
               triggerLocalization();
               isTriggerLocalisation = false;
             }
-            ;
             context.router.push(const UserDashboardRoute());
           },
         ),
       ),
+      i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.buildWith(
+        child: HomeItemCard(
+          label: i18.home.beneficiaryIdLabel,
+          onPressed: () {
+            if (isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            }
+            context.router.push(BeneficiaryIdDownSyncRoute());
+          },
+          icon: Icons.account_box,
+          enableCustomIcon: true,
+          customIconSize: spacer9,
+          customIcon: Constants.beneficiaryIdDownload,
+        ),
+      ),
+      i18.home.transitPostLabel: homeShowcaseData.transitPost.buildWith(
+          child: HomeItemCard(
+        icon: Icons.vaccines_outlined,
+        label: i18.home.transitPostLabel,
+        onPressed: () {
+          context.router.push(const TransitPostWrapperRoute());
+        },
+      )),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -567,17 +608,21 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
-      i18.home.db: homeShowcaseData.db.showcaseKey,
       i18.home.closedHouseHoldLabel:
           homeShowcaseData.closedHouseHold.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+      i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
       i18.home.clfLabel: homeShowcaseData.clf.showcaseKey,
+      i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey,
+      i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
+      i18.home.db: homeShowcaseData.db.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
       i18.home.beneficiaryLabel,
       i18.home.clfLabel,
+      i18.home.transitPostLabel,
       i18.home.closedHouseHoldLabel,
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
@@ -587,8 +632,10 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.viewReportsLabel,
       i18.home.beneficiaryReferralLabel,
       i18.home.manageAttendanceLabel,
-      i18.home.db,
       i18.home.dashboard,
+      i18.home.beneficiaryIdLabel,
+      i18.home.dataShare,
+      i18.home.db,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -605,12 +652,9 @@ class _HomePageState extends LocalizedState<HomePage> {
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
-
-      if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
-        filteredLabels.remove(i18.home.db);
-      }
-
-
+    if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
+      filteredLabels.remove(i18.home.db);
+    }
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
 
@@ -618,86 +662,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       widgetList,
       showcaseKeys,
     );
-  }
-
-  void _attemptSyncUp(BuildContext context) async {
-    await LocalSecureStore.instance.setManualSyncTrigger(true);
-
-    if (context.mounted) {
-      context.read<SyncBloc>().add(
-            SyncSyncUpEvent(
-              userId: context.loggedInUserUuid,
-              localRepositories: [
-                // INFO : Need to add local repo of package Here
-                context.read<
-                    LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-                context.read<
-                    LocalRepository<IndividualModel, IndividualSearchModel>>(),
-                context.read<
-                    LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
-                context.read<
-                    LocalRepository<ProjectBeneficiaryModel,
-                        ProjectBeneficiarySearchModel>>(),
-                context.read<
-                    LocalRepository<HouseholdMemberModel,
-                        HouseholdMemberSearchModel>>(),
-                context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
-                context.read<
-                    LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
-                context.read<
-                    LocalRepository<ReferralModel, ReferralSearchModel>>(),
-                context
-                    .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
-                context.read<LocalRepository<StockModel, StockSearchModel>>(),
-                context.read<
-                    LocalRepository<StockReconciliationModel,
-                        StockReconciliationSearchModel>>(),
-                context.read<
-                    LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-                context.read<
-                    LocalRepository<HFReferralModel, HFReferralSearchModel>>(),
-                context.read<
-                    LocalRepository<AttendanceLogModel,
-                        AttendanceLogSearchModel>>(),
-                context.read<
-                    LocalRepository<UserActionModel, UserActionSearchModel>>()
-              ],
-              remoteRepositories: [
-                // INFO : Need to add repo repo of package Here
-                context.read<
-                    RemoteRepository<IndividualModel, IndividualSearchModel>>(),
-                context.read<
-                    RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
-                context.read<
-                    RemoteRepository<ProjectBeneficiaryModel,
-                        ProjectBeneficiarySearchModel>>(),
-                context.read<
-                    RemoteRepository<HouseholdMemberModel,
-                        HouseholdMemberSearchModel>>(),
-                context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
-                context.read<
-                    RemoteRepository<SideEffectModel, SideEffectSearchModel>>(),
-                context.read<
-                    RemoteRepository<ReferralModel, ReferralSearchModel>>(),
-                context
-                    .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
-                context.read<RemoteRepository<StockModel, StockSearchModel>>(),
-                context.read<
-                    RemoteRepository<StockReconciliationModel,
-                        StockReconciliationSearchModel>>(),
-                context.read<
-                    RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-                context.read<
-                    RemoteRepository<HFReferralModel, HFReferralSearchModel>>(),
-                context.read<
-                    RemoteRepository<AttendanceLogModel,
-                        AttendanceLogSearchModel>>(),
-                context.read<
-                    RemoteRepository<UserActionModel, UserActionSearchModel>>(),
-              ],
-            ),
-          );
-    }
   }
 
   void triggerLocalization() {
@@ -740,6 +704,16 @@ void setPackagesSingleton(BuildContext context) {
             dashboardConfigSchema ?? [], context.projectTypeCode ?? "");
         loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
+        TransitPostSingleton().setInitialData(
+          resources: context.selectedProjectType?.resources,
+          transitPostType: appConfiguration.transitPostType != null
+              ? appConfiguration.transitPostType!.map((e) => e.code).toList()
+              : [],
+          loggedInUserUuid: context.loggedInUserUuid,
+          projectId: context.selectedProject.id,
+          minAge: context.selectedProjectType?.validMinAge,
+          maxAge: context.selectedProjectType?.validMaxAge,
+        );
         ComplaintsSingleton().setInitialData(
           tenantId: envConfig.variables.tenantId,
           loggedInUserUuid: context.loggedInUserUuid,
@@ -751,6 +725,10 @@ void setPackagesSingleton(BuildContext context) {
         );
 
         RegistrationDeliverySingleton().setInitialData(
+          beneficiaryIdMinCount:
+              appConfiguration.beneficiaryIdConfig?.first.minCount.toInt(),
+          beneficiaryIdBatchSize:
+              appConfiguration.beneficiaryIdConfig?.first.batchSize.toInt(),
           loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,
@@ -762,6 +740,9 @@ void setPackagesSingleton(BuildContext context) {
               appConfiguration.genderOptions!.map((e) => e.code).toList(),
           idTypeOptions:
               appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
+          memberRelationTypeOptions: appConfiguration.relationShipTypeOptions!
+              .map((e) => e.code)
+              .toList(),
           householdDeletionReasonOptions: appConfiguration
               .householdDeletionReasonOptions!
               .map((e) => e.code)
@@ -773,22 +754,34 @@ void setPackagesSingleton(BuildContext context) {
           deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
               .map((e) => e.code)
               .toList(),
-          symptomsTypes:
-              appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
+          symptomsTypes: appConfiguration.symptomsTypes
+              ?.where((e) => e.active)
+              .map((e) => e.code)
+              .toList(),
           searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
               ? appConfiguration.searchHouseHoldFilters!
+                  .where((e) => e.active)
                   .map((e) => e.code)
                   .toList()
               : [],
           searchCLFFilters: appConfiguration.searchCLFFilters != null
-              ? appConfiguration.searchCLFFilters!.map((e) => e.code).toList()
+              ? appConfiguration.searchCLFFilters!
+                  .where((e) => e.active)
+                  .map((e) => e.code)
+                  .toList()
               : [],
-          referralReasons:
-              appConfiguration.referralReasons?.map((e) => e.code).toList(),
-          houseStructureTypes:
-              appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
-          refusalReasons:
-              appConfiguration.refusalReasons?.map((e) => e.code).toList(),
+          referralReasons: appConfiguration.referralReasons
+              ?.where((e) => e.active)
+              .map((e) => e.code)
+              .toList(),
+          houseStructureTypes: appConfiguration.houseStructureTypes
+              ?.where((e) => e.active)
+              .map((e) => e.code)
+              .toList(),
+          refusalReasons: appConfiguration.refusalReasons
+              ?.where((e) => e.active)
+              .map((e) => e.code)
+              .toList(),
         );
 
         ClosedHouseholdSingleton().setInitialData(
@@ -798,10 +791,15 @@ void setPackagesSingleton(BuildContext context) {
         );
 
         AttendanceSingleton().setInitialData(
-          projectId: context.projectId,
+          project: context.selectedProject,
           loggedInIndividualId: context.loggedInIndividualId ?? '',
           loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,
+          manualAttendanceReasons: appConfiguration.manualAttendanceReasons
+                  ?.where((e) => e.active)
+                  .map((e) => DropdownItem(name: e.name, code: e.code))
+                  .toList() ??
+              [],
         );
 
         SurveyFormSingleton().setInitialData(
@@ -834,9 +832,11 @@ void setPackagesSingleton(BuildContext context) {
           genderOptions:
               appConfiguration.genderOptions?.map((e) => e.code).toList() ?? [],
           cycles: context.cycles,
-          referralReasons:
-              appConfiguration.referralReasons?.map((e) => e.code).toList() ??
-                  [],
+          referralReasons: appConfiguration.referralReasons
+                  ?.where((e) => e.active)
+                  .map((e) => e.code)
+                  .toList() ??
+              [],
           checklistTypes:
               appConfiguration.checklistTypes?.map((e) => e.code).toList() ??
                   [],

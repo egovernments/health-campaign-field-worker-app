@@ -170,6 +170,15 @@ class MdmsRepository {
       return bandwidthBatchSizeElement;
     }).toList();
 
+    final List<BeneficiaryIdConfig>? beneficiaryIdConfig =
+        element?.beneficiaryIdConfig.map((e) {
+      final beneficiaryIdConfigElement = BeneficiaryIdConfig()
+        ..batchSize = e.batchSize
+        ..minCount = e.minCount;
+
+      return beneficiaryIdConfigElement;
+    }).toList();
+
     final List<BandwidthBatchSize>? downSyncBandWidthBatchSize =
         element?.downSyncBandWidthBatchSize.map((e) {
       final bandwidthBatchSizeElement = BandwidthBatchSize()
@@ -252,6 +261,16 @@ class MdmsRepository {
       return idOption;
     }).toList();
 
+    final List<RelationShipTypeOptions>? relationShipTypes =
+        element?.relationShipTypeOptions.map((element) {
+      final relationShipOption = RelationShipTypeOptions()
+        ..name = element.name
+        ..code = element.code
+        ..active = element.active;
+
+      return relationShipOption;
+    }).toList();
+
     final List<ChecklistTypes>? checklistTypes =
         element?.checklistTypes.map((e) {
       final surveyForm = ChecklistTypes()
@@ -304,6 +323,7 @@ class MdmsRepository {
       ..interfaces = interfaceList ?? [];
     appConfiguration.genderOptions = genderOptions;
     appConfiguration.idTypeOptions = idTypeOptions;
+    appConfiguration.relationShipTypeOptions = relationShipTypes;
     appConfiguration.privacyPolicyConfig = privacyPolicy;
     appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
     appConfiguration.householdDeletionReasonOptions =
@@ -317,6 +337,7 @@ class MdmsRepository {
     appConfiguration.languages = languageList;
     appConfiguration.complaintTypes = complaintTypesList;
     appConfiguration.bandwidthBatchSize = bandwidthBatchSize;
+    appConfiguration.beneficiaryIdConfig = beneficiaryIdConfig;
     appConfiguration.downSyncBandwidthBatchSize = downSyncBandWidthBatchSize;
     appConfiguration.searchHouseHoldFilters =
         result.hcmWrapperModel?.searchHouseHoldFilters?.map((e) {
@@ -333,6 +354,15 @@ class MdmsRepository {
         ..code = e.code
         ..active = e.active;
       return searchFilters;
+    }).toList();
+
+    appConfiguration.transitPostType =
+        result.hcmWrapperModel?.transitPostType?.map((e) {
+      final transitPostType = TransitPostType()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+      return transitPostType;
     }).toList();
 
     appConfiguration.symptomsTypes =
@@ -354,6 +384,17 @@ class MdmsRepository {
 
       return reasonTypes;
     }).toList();
+
+    appConfiguration.manualAttendanceReasons =
+        result.hcmWrapperModel?.manualAttendanceReasonList?.map((e) {
+      final reasonTypes = ManualAttendanceReasons()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+
+      return reasonTypes;
+    }).toList();
+    
     appConfiguration.houseStructureTypes =
         result.hcmWrapperModel?.houseStructureTypes?.map((e) {
       final structureTypes = HouseStructureTypes()

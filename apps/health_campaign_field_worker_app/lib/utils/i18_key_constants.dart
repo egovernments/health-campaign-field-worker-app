@@ -4,6 +4,7 @@ const common = Common();
 const login = Login();
 const forgotPassword = ForgotPassword();
 const home = Home();
+const dataShare = DataShare();
 const acknowledgementSuccess = AcknowledgementSuccess();
 const adverseEvents = AdverseEvents();
 const projectSelection = ProjectSelection();
@@ -33,6 +34,8 @@ const complaintTypeShowcase = ComplaintTypeShowcase();
 const complaintsDetailsShowcase = ComplaintsDetailsShowcase();
 const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
 const complaintsInboxShowcase = ComplaintsInboxShowcase();
+
+const nonMobileUser = NonMobileUser();
 
 class Common {
   const Common();
@@ -79,6 +82,10 @@ class Common {
 
   String get coreCommonHome => 'CORE_COMMON_HOME';
 
+  String get coreCommonGoHome => 'CORE_COMMON_GO_HOME';
+
+  String get coreCommonAttention => 'CORE_COMMON_ATTENTION';
+
   String get coreCommonViewDownloadedData => 'CORE_COMMON_VIEW_DOWNLOADED_DATA';
 
   String get coreCommonlanguage => 'CORE_COMMON_LANGUAGE';
@@ -102,6 +109,7 @@ class Common {
   String get coreCommonYes => 'CORE_COMMON_YES';
 
   String get coreCommonNo => 'CORE_COMMON_NO';
+
   String get coreCommonGoback => 'CORE_COMMON_GO_BACK';
 
   String get coreCommonRequiredItems => 'CORE_COMMON_REQUIRED_ITEMS';
@@ -111,6 +119,7 @@ class Common {
   String get maxCharsRequired => 'MAX_CHARS_ALLOWED';
 
   String get maxValue => 'MAX_VALUE_ALLOWED';
+
   String get minValue => 'MIN_VALUE_ALLOWED';
 
   String get noResultsFound => 'NO_RESULTS_FOUND';
@@ -118,6 +127,7 @@ class Common {
   String get coreCommonSyncInProgress => 'CORE_COMMON_SYNC_IN_PROGRESS';
 
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
+
   String get projectFacilitySearchHeaderLabel =>
       'PROJECT_FACILITY_SEARCH_HEADER_LABEL';
 
@@ -128,9 +138,16 @@ class Common {
   String get noMatchFound => 'CORE_COMMON_NO_MATCH_FOUND';
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
+
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
+
   String get locationCapturing => 'CAPTURING_LOCATION';
+
   String get profileUpdateSuccess => 'PROFILE_UPDATE_SUCCESS';
+
+  String get qrInventory => 'QR_INVENTORY';
+
+  String get qrAttendance => 'QR_ATTENDANCE';
 }
 
 class HomeShowcase {
@@ -315,6 +332,7 @@ class StockDetailsIssuedShowcase {
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
 
   String get coreCommonDownload => 'CORE_COMMON_DOWNLOAD';
+
   String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
 }
 
@@ -560,14 +578,89 @@ class Home {
   String get warehouseManagerCheckList => 'WAREHOUSE_MANAGER_CHECK_LIST_LABEL';
 
   String get deleteAllLabel => 'HOME_DELETE_ALL_LABEL';
+
   String get db => 'HOME_DB_LABEL';
+
+  String get dataShare => 'HOME_DATA_SHARE_LABEL';
+
   String get dashboard => 'HOME_DASHBOARD_LABEL';
+
+  String get beneficiaryIdLabel => 'HOME_BENEFICIARY_ID_LABEL';
+
   String get beneficiaryReferralLabel => 'HOME_BENEFICIARY_REFERRAL_LABEL';
+
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
+
+  String get transitPostLabel => 'HOME_TRANSIT_POST_LABEL';
 
   String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
 
   String get clfLabel => "HOME_COMMUNAL_LIVING_FACILITIES_LABEL";
+}
+
+class DataShare {
+  const DataShare();
+
+  String get sendAction => 'SEND_ACTION';
+
+  String get dataUnSyncedDesc => 'DATA_UN_SYNCED_DESCRIPTION';
+
+  String get sendActionDescription => 'SEND_ACTION_DESCRIPTION';
+
+  String get receiveAction => 'RECEIVE_ACTION';
+
+  String get receiveActionDescription => 'RECEIVE_ACTION_DESCRIPTION';
+
+  String get selectRecipients => 'SELECT_RECIPIENTS';
+
+  String get noRecipientsSelected => 'NO_RECIPIENTS_SELECTED';
+
+  String get noDevicesConnected => 'NO_DEVICES_CONNECTED';
+
+  String get sendActionMessage => 'SEND_ACTION_MESSAGE';
+
+  String get sendingActionMessage => 'SENDING_ACTION_MESSAGE';
+
+  String get dataTransferCompleted => 'DATA_TRANSFER_COMPLETED';
+
+  String get receiveActionMessage => 'RECEIVE_ACTION_MESSAGE';
+
+  String get receivingActionMessage => 'RECEIVING_ACTION_MESSAGE';
+
+  String get receivedSuccessMessage => 'RECEIVED_SUCCESS_MESSAGE';
+
+  String get receiverDialogTitle => 'RECEIVER_DIALOG_TITLE';
+
+  String get receiverDialogDescription => 'RECEIVER_DIALOG_DESCRIPTION';
+
+  String get senderDialogTitle => 'SENDER_DIALOG_TITLE';
+
+  String get senderDialogDescription => 'SENDER_DIALOG_DESCRIPTION';
+
+  String get dataSharingLabel => 'DATA_SHARING_LABEL';
+
+  String get projectMisMatchError => 'PROJECT_MISMATCH_ERROR';
+
+  String get invalidFileError => 'INVALID_FILE_FORMAT_ERROR';
+
+  String get fileNotFoundError => 'FILE_NOT_FOUND_ERROR';
+
+  String get failedToTransfer => 'FAILED_TO_TRANSFER';
+
+  String get failedToTransferDesc => 'FAILED_TO_TRANSFER_DESCRIPTION';
+
+  String get dateReceivedForBoundaries => 'DATA_RECEIVED_FOR_BOUNDARIES';
+
+  String get noBoundariesMatchedTitle => 'NO_BOUNDARIES_MATCHED_ERROR_TITLE';
+
+  String get noBoundariesMatchedDesc =>
+      'NO_BOUNDARIES_MATCHED_ERROR_DESCRIPTION';
+
+  String get failedToTransferDescription => 'FAILED_TO_TRANSFER_DESCRIPTION';
+
+  String get failedToReceive => 'FAILED_TO_RECEIVE';
+
+  String get failedToReceiveDescription => 'FAILED_TO_RECEIVE_DESCRIPTION';
 }
 
 class AcknowledgementSuccess {
@@ -581,7 +674,9 @@ class AcknowledgementSuccess {
   String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
 
   String get goToHome => 'GO_TO_HOME_SCREEN';
+
   String get downloadmoredata => 'DOWNLOAD_MORE_DATA';
+
   String get dataDownloadedSuccessLabel => 'DATA_DOWNLOADED_SUCCESS_LABEL';
 }
 
@@ -688,6 +783,7 @@ class Complaints {
   String get inboxSyncRequiredLabel => 'COMPLAINTS_INBOX_SYNC_REQUIRED_LABEL';
 
   String get raisedForMyself => 'COMPLAINTS_RAISED_FOR_MYSELF';
+
   String get validationMinLengthError =>
       'COMPLAINTS_VALIDATION_MINLENGTH_ERROR';
 
@@ -732,7 +828,9 @@ class SyncDialog {
   String get closeButtonLabel => 'SYNC_DIALOG_CLOSE_BUTTON_LABEL';
 
   String get retryButtonLabel => 'SYNC_DIALOG_RETRY_BUTTON_LABEL';
+
   String get pendingSyncLabel => 'PENDING_SYNC_LABEL';
+
   String get pendingSyncContent => 'PENDING_SYNC_CONTENT';
 }
 
@@ -918,6 +1016,7 @@ class IndividualDetails {
       'INDIVIDUAL_DETAILS_INVALID_MOBILE_NUMBER';
 
   String get yearsHintText => 'YEARS_HINT_TEXT';
+
   String get monthsHintText => 'MONTHS_HINT_TEXT';
 
   String get yearsErrorText => 'ERR_YEARS';
@@ -933,28 +1032,45 @@ class BeneficiaryDetails {
   const BeneficiaryDetails();
 
   String get beneficiarysDetailsLabelText => 'BENEFICIARY_DETAILS_LABEL_TEXT';
+
   String get beneficiarysDetailsEditIconLabelText =>
       'BENEFICIARY_DETAILS_EDIT_ICON_LABEL_TEXT';
+
   String get beneficiarysDetailsEditIconLabel =>
       'BENEFICIARY_DETAILS_EDIT_ICON_LABEL';
+
   String get beneficiarysDetailsDeleteIconLabel =>
       'BENEFICIARY_DETAILS_DELETE_ICON_LABEL';
+
   String get resourcesTobeDelivered => 'RESOURCES_TO_BE_DELIVERED';
+
   String get resourcesTobeProvided => 'RESOURCES_TO_BE_PROVIDED';
 
   String get beneficiaryAge => 'BENEFICIARY_AGE';
+
   String get ctaProceed => 'PROCEED';
+
   String get beneficiaryDoseNo => 'BENEFICIARY_DETAILS_DOSE_NO';
+
   String get beneficiaryDose => 'BENEFICIARY_DETAILS_DOSE';
+
   String get beneficiaryStatus => 'BENEFICIARY_DETAILS_STATUS';
+
   String get beneficiaryResources => 'BENEFICIARY_DETAILS_RESOURCES';
+
   String get beneficiaryQuantity => 'BENEFICIARY_DETAILS_QUANTITY';
+
   String get beneficiaryCompletedOn => 'BENEFICIARY_DETAILS_COMPLETED_ON';
+
   String get beneficiaryDeliveryStrategy =>
       'BENEFICIARY_DETAILS_DELIVERY_STRATEGY';
+
   String get beneficiaryCycle => 'BENEFICIARY_DETAILS_CYCLE';
+
   String get currentCycleLabel => 'BENEFICIARY_DETAILS_CURRENT_CYCLE_LABEL';
+
   String get fromCurrentLocation => 'FROM_CURRENT_LOCATION';
+
   String get unableToScan => 'UNABLE_TO_SCAN';
 
   String get scanValidResource => 'SCAN_VALID_RESOURCE';
@@ -982,30 +1098,52 @@ class BeneficiaryDetails {
   String get scannerDialogPrimaryAction => 'SCANNER_DIALOG_PRIMARY_ACTION';
 
   String get scannerDialogSecondaryAction => 'SCANNER_DIALOG_SECONDARY_ACTION';
+
   String get beneficiaryHeader => 'BENEFICIARY_HEADER';
+
   String get deliveryHeader => 'DELIVERY_TABLE_HEADER';
 
   String get proceedWithoutDownloading => 'PROCEED_WITHOUT_DOWNLOADING';
+
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
+
   String get dataFound => 'DATA_FOUND';
+
   String get noDataFound => 'NO_DATA_FOUND';
+
   String get dataFoundContent => 'DATA_FOUND_CONTENT';
+
   String get noDataFoundContent => 'NO_DATA_FOUND_CONTENT';
+
   String get dataDownloadInProgress => 'DATA_DOWNLOAD_IN_PROGRESS';
+
   String get insufficientStorage => 'INSUFFICIENT_STORAGE_WARNING';
+
   String get downloadreport => 'DOWNLOAD_REPORT';
+
   String get boundary => 'BOUNDARY';
+
   String get status => 'STATUS';
+
   String get downloadedon => 'DOWNLOADED_ON';
+
   String get recordsdownload => 'RECORDS_DOWNLOAD';
+
   String get downloadcompleted => 'DOWNLOAD_COMPLETED';
+
   String get datadownloadreport => 'DATA_DOWNLOAD_REPORT';
+
   String get download => 'DOWNLOAD';
+
   String get partialdownloaded => 'PARTIAL_DOWNLOAD';
+
   String get downloadtime => 'DOWNLOAD_TIME';
+
   String get totalrecorddownload => 'TOTAL_RECORD_DOWNLOAD';
+
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
+
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
 }
 
@@ -1021,7 +1159,9 @@ class PrivacyPolicy {
   }
 
   String get privacyNoticeText => 'PRIVACY_POLICY_TEXT';
+
   String get privacyPolicyLinkText => 'PRIVACY_POLICY_LINK_TEXT';
+
   String get privacyPolicyValidationText => 'PRIVACY_POLICY_VALIDATION_TEXT';
 }
 
@@ -1029,4 +1169,14 @@ class Dashboard {
   const Dashboard();
 
   String get dashboardHeaderLabel => 'DASHBOARD_HEADER';
+}
+
+class NonMobileUser {
+  const NonMobileUser();
+
+  String get nonMobileUserLabel => 'NON_MOBILE_USER_LABEL';
+
+  String get showQrCodeBtnLabel => 'NON_MOBILE_USER_QR_BTN_LABEL';
+
+  String get showQrCodeLabel => 'NON_MOBILE_USER_QR_LABEL';
 }
