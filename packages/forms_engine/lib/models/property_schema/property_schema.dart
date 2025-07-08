@@ -118,8 +118,8 @@ enum PropertySchemaFormat {
   dob,
   scanner,
   idPopulator,
-  text,
-  resourceData;
+  mobileNumber,
+  text;
 }
 
 enum PropertySchemaType { object, string, integer, boolean, dynamic }

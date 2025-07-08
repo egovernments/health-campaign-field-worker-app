@@ -41,7 +41,6 @@ import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import 'package:forms_engine/blocs/forms/forms.dart';
 import '../blocs/localization/localization.dart';
-import '../data/fake_schema.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';

@@ -265,7 +265,12 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                     .primary
                                     .primary2),
                       ),
-                      if (schema.description != null) ...[
+                      if (schema.description != null &&
+                          translateIfPresent(
+                                  schema.description, localizations) !=
+                              null &&
+                          translateIfPresent(schema.description, localizations)!
+                              .isNotEmpty) ...[
                         Text(
                           localizations.translate(schema.description!),
                           style: Theme.of(context)
@@ -373,7 +378,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     final dateFormatter = DateFormat('dd MMM yyyy');
 
     return properties.entries
-        .where((entry) => entry.value.includeInSummary != false)
+        .where((entry) =>
+            entry.value.includeInSummary != false && entry.value.hidden != true)
         .map((entry) {
       final label = localizations.translate(entry.value.label ?? entry.key);
       final rawValue = entry.value.value;

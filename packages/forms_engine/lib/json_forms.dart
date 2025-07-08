@@ -50,7 +50,7 @@ class JsonForms extends StatelessWidget {
     PropertySchema schema,
   ) {
     final values = schema.properties!.entries
-        .where((entry) => !isHidden(entry.value)) // Skip hidden fields
+        .where((entry) => (!isHidden(entry.value) || entry.value.includeInForm==true)) // Skip hidden fields
         .map((e) => _getParsedValues(form, e.key, e.value))
         .whereType<MapEntry<String, dynamic>>()
         .toList();

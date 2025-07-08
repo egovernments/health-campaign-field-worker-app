@@ -15,6 +15,8 @@ import 'package:registration_bloc/bloc/registration_bloc.dart';
 import 'package:registration_bloc/service/registration_service.dart';
 import 'package:registration_bloc/repositories/local/search_entity_repository.dart';
 import 'package:registration_bloc/models/global_search_params.dart';
+import 'package:survey_form/blocs/service_definition.dart';
+import 'package:survey_form/models/entities/service_definition.dart';
 import '../blocs/entity_create/entity_create.dart';
 import '../blocs/household_details/household_details.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
@@ -36,6 +38,10 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final serviceDefinition = context.repository<ServiceDefinitionModel,
+        ServiceDefinitionSearchModel>(context);
+
     return Scaffold(
       body: MultiBlocProvider(
         providers: [
@@ -56,6 +62,11 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
                         from: 'householdMember',
                         to: 'individual',
                         localKey: 'individualClientReferenceId',
+                        foreignKey: 'clientReferenceId'),
+                    const RelationshipMapping(
+                        from: 'address',
+                        to: 'household',
+                        localKey: 'relatedClientReferenceId',
                         foreignKey: 'clientReferenceId'),
                     const RelationshipMapping(
                         from: 'householdMember',
@@ -213,6 +224,12 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
                   individualGlobalSearchRepository: context.read<IndividualGlobalSearchRepository>(),
                   houseHoldGlobalSearchRepository: context.read<HouseHoldGlobalSearchRepository>());
             },
+          ),
+          BlocProvider(
+            create: (_) => ServiceDefinitionBloc(
+              const ServiceDefinitionEmptyState(),
+              serviceDefinitionDataRepository: serviceDefinition,
+            )..add(const ServiceDefinitionFetchEvent()),
           ),
           BlocProvider(
             create: (context) {
