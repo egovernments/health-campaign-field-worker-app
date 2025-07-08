@@ -17,7 +17,6 @@ import 'package:digit_ui_components/widgets/atoms/digit_dob_picker.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/atoms/tooltip_2.dart';
 import 'package:forms_engine/helper/form_builder_helper.dart';
-import 'package:forms_engine/widgets/product_variant_builder.dart';
 import '../blocs/forms/forms.dart';
 import 'localized.dart';
 import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';

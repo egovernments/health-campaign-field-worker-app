@@ -1,9 +1,7 @@
 library json_forms;
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:forms_engine/utils/utils.dart';
-import 'package:forms_engine/widgets/product_variant_builder.dart';
 import 'package:forms_engine/widgets/widgets.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -26,7 +24,6 @@ class JsonForms extends StatelessWidget {
     PropertySchema schema, {
     String? defaultLatlng,
     Map<String, dynamic>? defaultValues,
-    int count = 0,
   }) {
     assert(schema.properties != null);
 
@@ -50,7 +47,8 @@ class JsonForms extends StatelessWidget {
     PropertySchema schema,
   ) {
     final values = schema.properties!.entries
-        .where((entry) => (!isHidden(entry.value) || entry.value.includeInForm==true)) // Skip hidden fields
+        .where((entry) => (!isHidden(entry.value) ||
+            entry.value.includeInForm == true)) // Skip hidden fields
         .map((e) => _getParsedValues(form, e.key, e.value))
         .whereType<MapEntry<String, dynamic>>()
         .toList();

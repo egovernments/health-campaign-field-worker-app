@@ -70,27 +70,6 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     }
   }
 
-  /// Handle `_buildProductVariantType` type formats
-  Widget _buildProductVariantType(FormGroup form) {
-    final format = widget.schema.format;
-
-    switch (format) {
-      case PropertySchemaFormat.select:
-        return JsonSchemaResourceCardBuilder(
-          1,
-          formControlName: widget.formControlName,
-          form: form,
-        );
-
-      default:
-        return JsonSchemaResourceCardBuilder(
-          1,
-          formControlName: widget.formControlName,
-          form: form,
-        );
-    }
-  }
-
   /// Handle `string` type formats
   Widget _buildStringType(FormGroup form) {
     final format = widget.schema.format;
@@ -332,79 +311,24 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
   }
 
   /// Handle `object` type
-  /// TODO: working code
-  // Widget _buildObjectType(FormGroup form) {
-  //   final entries = widget.schema.properties?.entries.toList() ?? [];
-
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: entries
-  //         .where((entry) {
-  //           final subSchema = entry.value;
-  //           return !shouldHideField(subSchema, form);
-  //         })
-  //         .toList()
-  //         .asMap()
-  //         .entries
-  //         .map((entry) {
-  //           final index = entry.key;
-  //           final mapEntry = entry.value;
-  //           final subSchema = mapEntry.value;
-  //           final subName = mapEntry.key;
-
-  //           final field = JsonFormBuilder(
-  //             formControlName: subName,
-  //             schema: subSchema,
-  //             components: widget.components,
-  //           );
-
-  //           final isLast = index ==
-  //               entries.where((e) => !shouldHideField(e.value, form)).length -
-  //                   1;
-
-  //           return isLast
-  //               ? field
-  //               : Padding(
-  //                   padding: const EdgeInsets.only(bottom: 16.0),
-  //                   child: field,
-  //                 );
-  //         })
-  //         .toList(),
-  //   );
-  // }
-
-// modification by pitabash for handling the resource card
-
   Widget _buildObjectType(FormGroup form) {
     final entries = widget.schema.properties?.entries.toList() ?? [];
-    final widgetEntries = entries
-        .where((entry) {
-          final subSchema = entry.value;
-          return !shouldHideField(subSchema, form);
-        })
-        .toList()
-        .asMap()
-        .entries;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: widgetEntries
-          .map<Widget?>((entry) {
+      children: entries
+          .where((entry) {
+            final subSchema = entry.value;
+            return !shouldHideField(subSchema, form);
+          })
+          .toList()
+          .asMap()
+          .entries
+          .map((entry) {
             final index = entry.key;
             final mapEntry = entry.value;
             final subSchema = mapEntry.value;
-            String subName = mapEntry.key;
-
-            // if (subName.contains("resourceCard_")) {
-            //   return null;
-            // }
-            // if (subName.contains("quantityDistributed_")) {
-            //   final res_key = widgetEntries.elementAt(index - 1).value.key;
-            //   subName = "$res_key,$subName";
-            // }
-            if (subName.contains("quantityDistributed_")) {
-              return null;
-            }
+            final subName = mapEntry.key;
 
             final field = JsonFormBuilder(
               formControlName: subName,
@@ -423,7 +347,6 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
                     child: field,
                   );
           })
-          .whereType<Widget>() // <-- removes nulls
           .toList(),
     );
   }

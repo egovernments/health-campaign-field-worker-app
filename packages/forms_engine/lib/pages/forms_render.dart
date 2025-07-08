@@ -6,14 +6,12 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:forms_engine/blocs/forms/forms.dart';
-import 'package:forms_engine/models/property_schema/property_schema.dart';
 import 'package:forms_engine/router/forms_router.gm.dart';
 import 'package:forms_engine/widgets/back_header/back_navigation_help_header.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:forms_engine/json_forms.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../widgets/localized.dart';
 import '../models/property_schema/property_schema.dart';
 import '../models/schema_object/schema_object.dart';
@@ -71,7 +69,6 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               JsonForms.getFormControls(
                 schema,
                 defaultValues: widget.defaultValues ?? {},
-                count: widget.defaultValues?['count'] ?? 0,
               ),
             ),
             builder: (context, formGroup, child) => ScrollableContent(
@@ -132,38 +129,13 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
                         // 4. Proceed with value extraction and state update
                         final values = JsonForms.getFormValues(
-                            formGroup,
-                            // schema,
-                            properties?.containsKey("resourceCard") == false
-                                ? schema
-                                // old
-                                // : cloneAndReplaceResourceCard(
-                                //     baseSchema: schema,
-                                //     cloneFromKey: "resourceCard",
-                                //     newPropertyKeys: List.generate(
-                                //         widget.defaultValues?['count'] ?? 0,
-                                //         (i) => 'resourceCard_$i').toList()),
+                          formGroup,
+                          schema,
+                        );
 
-                                : cloneAndReplaceResourceCard(
-                                    baseSchema: schema,
-                                    cloneFromKey: 'resourceCard',
-                                    count: widget.defaultValues?['count'] ?? 0,
-                                  ));
-
-                        // Use transformed schema only if resourceCard exists
-                        final transformedSchema =
-                            properties?.containsKey("resourceCard") == false
-                                ? schema
-                                : cloneAndReplaceResourceCard(
-                                    baseSchema: schema,
-                                    cloneFromKey: 'resourceCard',
-                                    count: widget.defaultValues?['count'] ?? 0,
-                                  );
-
-                        final updatedPropertySchema =
-                            transformedSchema.copyWith(
+                        final updatedPropertySchema = schema.copyWith(
                           properties: Map.fromEntries(
-                            transformedSchema.properties?.entries.map(
+                            schema.properties?.entries.map(
                                   (e) => values.containsKey(e.key)
                                       ? MapEntry(
                                           e.key,
@@ -193,23 +165,6 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                   ),
                                 ),
                               ),
-                            );
-
-                        final updatedSchemaObject = schemaObject.copyWith(
-                          pages: Map.fromEntries(
-                            schemaObject.pages.entries.map(
-                              (entry) => MapEntry(
-                                entry.key,
-                                entry.key == widget.pageName
-                                    ? updatedPropertySchema
-                                    : entry.value,
-                              ),
-                            ),
-                          ),
-                        );
-
-                        context.read<FormsBloc>().add(
-                              FormsUpdateEvent(updatedSchemaObject),
                             );
 
                         if ((index) < schemaObject.pages.length - 1) {
