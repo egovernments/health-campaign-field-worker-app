@@ -9,12 +9,12 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i13;
-import 'package:digit_data_model/data_model.dart' as _i16;
+import 'package:digit_data_model/data_model.dart' as _i18;
 import 'package:flutter/material.dart' as _i14;
 import 'package:inventory_management/blocs/app_localization.dart' as _i15;
-import 'package:inventory_management/blocs/inventory_report.dart' as _i17;
-import 'package:inventory_management/blocs/record_stock.dart' as _i18;
-import 'package:inventory_management/models/entities/stock.dart' as _i19;
+import 'package:inventory_management/blocs/inventory_report.dart' as _i19;
+import 'package:inventory_management/blocs/record_stock.dart' as _i17;
+import 'package:inventory_management/models/entities/stock.dart' as _i16;
 import 'package:inventory_management/pages/acknowledgement.dart' as _i1;
 import 'package:inventory_management/pages/facility_selection.dart' as _i2;
 import 'package:inventory_management/pages/manage_stocks.dart' as _i5;
@@ -51,6 +51,9 @@ abstract class $InventoryRoute extends _i13.AutoRouterModule {
           label: args.label,
           description: args.description,
           descriptionTableData: args.descriptionTableData,
+          mrrnNumber: args.mrrnNumber,
+          stockRecords: args.stockRecords,
+          entryType: args.entryType,
         ),
       );
     },
@@ -190,6 +193,9 @@ class InventoryAcknowledgementRoute
     String? label,
     String? description,
     Map<String, dynamic>? descriptionTableData,
+    String? mrrnNumber,
+    List<_i16.StockModel>? stockRecords,
+    _i17.StockRecordEntryType? entryType,
     List<_i13.PageRouteInfo>? children,
   }) : super(
           InventoryAcknowledgementRoute.name,
@@ -200,6 +206,9 @@ class InventoryAcknowledgementRoute
             label: label,
             description: description,
             descriptionTableData: descriptionTableData,
+            mrrnNumber: mrrnNumber,
+            stockRecords: stockRecords,
+            entryType: entryType,
           ),
           initialChildren: children,
         );
@@ -218,6 +227,9 @@ class InventoryAcknowledgementRouteArgs {
     this.label,
     this.description,
     this.descriptionTableData,
+    this.mrrnNumber,
+    this.stockRecords,
+    this.entryType,
   });
 
   final _i14.Key? key;
@@ -232,9 +244,15 @@ class InventoryAcknowledgementRouteArgs {
 
   final Map<String, dynamic>? descriptionTableData;
 
+  final String? mrrnNumber;
+
+  final List<_i16.StockModel>? stockRecords;
+
+  final _i17.StockRecordEntryType? entryType;
+
   @override
   String toString() {
-    return 'InventoryAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, isDataRecordSuccess: $isDataRecordSuccess, label: $label, description: $description, descriptionTableData: $descriptionTableData}';
+    return 'InventoryAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, isDataRecordSuccess: $isDataRecordSuccess, label: $label, description: $description, descriptionTableData: $descriptionTableData, mrrnNumber: $mrrnNumber, stockRecords: $stockRecords, entryType: $entryType}';
   }
 }
 
@@ -245,7 +263,7 @@ class InventoryFacilitySelectionRoute
   InventoryFacilitySelectionRoute({
     _i14.Key? key,
     _i15.InventoryLocalization? appLocalizations,
-    required List<_i16.FacilityModel> facilities,
+    required List<_i18.FacilityModel> facilities,
     List<_i13.PageRouteInfo>? children,
   }) : super(
           InventoryFacilitySelectionRoute.name,
@@ -274,7 +292,7 @@ class InventoryFacilitySelectionRouteArgs {
 
   final _i15.InventoryLocalization? appLocalizations;
 
-  final List<_i16.FacilityModel> facilities;
+  final List<_i18.FacilityModel> facilities;
 
   @override
   String toString() {
@@ -289,7 +307,7 @@ class InventoryReportDetailsRoute
   InventoryReportDetailsRoute({
     _i14.Key? key,
     _i15.InventoryLocalization? appLocalizations,
-    required _i17.InventoryReportType reportType,
+    required _i19.InventoryReportType reportType,
     List<_i13.PageRouteInfo>? children,
   }) : super(
           InventoryReportDetailsRoute.name,
@@ -318,7 +336,7 @@ class InventoryReportDetailsRouteArgs {
 
   final _i15.InventoryLocalization? appLocalizations;
 
-  final _i17.InventoryReportType reportType;
+  final _i19.InventoryReportType reportType;
 
   @override
   String toString() {
@@ -452,7 +470,7 @@ class RecordStockWrapperRoute
     extends _i13.PageRouteInfo<RecordStockWrapperRouteArgs> {
   RecordStockWrapperRoute({
     _i14.Key? key,
-    required _i18.StockRecordEntryType type,
+    required _i17.StockRecordEntryType type,
     List<_i13.PageRouteInfo>? children,
   }) : super(
           RecordStockWrapperRoute.name,
@@ -477,7 +495,7 @@ class RecordStockWrapperRouteArgs {
 
   final _i14.Key? key;
 
-  final _i18.StockRecordEntryType type;
+  final _i17.StockRecordEntryType type;
 
   @override
   String toString() {
@@ -614,7 +632,7 @@ class ViewStockRecordsRoute
     _i14.Key? key,
     _i15.InventoryLocalization? appLocalizations,
     required String mrnNumber,
-    required List<_i19.StockModel> stockRecords,
+    required List<_i16.StockModel> stockRecords,
     List<_i13.PageRouteInfo>? children,
   }) : super(
           ViewStockRecordsRoute.name,
@@ -647,7 +665,7 @@ class ViewStockRecordsRouteArgs {
 
   final String mrnNumber;
 
-  final List<_i19.StockModel> stockRecords;
+  final List<_i16.StockModel> stockRecords;
 
   @override
   String toString() {

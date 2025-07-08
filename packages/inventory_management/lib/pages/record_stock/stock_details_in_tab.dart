@@ -23,6 +23,7 @@ import 'package:inventory_management/models/entities/inventory_transport_type.da
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/transaction_reason.dart';
 import 'package:inventory_management/models/entities/transaction_type.dart';
+import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/utils.dart';
 import 'package:inventory_management/widgets/localized.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -1255,6 +1256,13 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
       //     mrnNumber: _sharedMRN,
       //     stockRecords: _tabStocks.values.toList(),
       //     entryType: entryType));
+
+      // my implimentation
+
+      context.router.push(InventoryAcknowledgementRoute(
+          mrrnNumber: _sharedMRN,
+          stockRecords: _tabStocks.values.toList(),
+          entryType: entryType));
     }
   }
 

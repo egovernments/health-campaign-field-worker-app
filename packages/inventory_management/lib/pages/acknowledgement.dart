@@ -3,6 +3,9 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
+import 'package:inventory_management/blocs/record_stock.dart';
+import 'package:inventory_management/models/entities/stock.dart';
+import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
@@ -13,6 +16,9 @@ class InventoryAcknowledgementPage extends LocalizedStatefulWidget {
   final String? label;
   final String? description;
   final Map<String, dynamic>? descriptionTableData;
+  final String? mrrnNumber;
+  final List<StockModel>? stockRecords;
+  final StockRecordEntryType? entryType;
 
   const InventoryAcknowledgementPage({
     super.key,
@@ -21,6 +27,9 @@ class InventoryAcknowledgementPage extends LocalizedStatefulWidget {
     this.label,
     this.description,
     this.descriptionTableData,
+    this.mrrnNumber,
+    this.stockRecords,
+    this.entryType,
   });
 
   @override
@@ -40,6 +49,8 @@ class AcknowledgementPageState
             localizations.translate(
               i18.acknowledgementSuccess.acknowledgementLabelText,
             ),
+        additionalDetails:
+            widget.mrrnNumber != null ? [Text(widget.mrrnNumber ?? "")] : [],
         type: PanelType.success,
         description: widget.description ??
             localizations.translate(
@@ -53,14 +64,46 @@ class AcknowledgementPageState
         //       )
         //     : null,
         actions: [
-          DigitButton(
-              label: localizations
-                  .translate(i18.acknowledgementSuccess.actionLabelText),
+          if (widget.stockRecords != null &&
+              widget.stockRecords!.isNotEmpty) ...[
+            DigitButton(
+              label: localizations.translate(
+                "i18.acknowledgementSuccess.viewtransactions",
+              ),
               onPressed: () {
-                context.router.maybePop();
+                context.router.push(
+                  ViewStockRecordsRoute(
+                    mrnNumber: widget.mrrnNumber!,
+                    stockRecords: widget.stockRecords!,
+                  ),
+                );
               },
               type: DigitButtonType.primary,
-              size: DigitButtonSize.large),
+              size: DigitButtonSize.large,
+            ),
+            DigitButton(
+              label: localizations.translate(
+                "i18.acknowledgementSuccess.createNewTransactions",
+              ),
+              onPressed: () {
+                // context
+                //     .read<RecordStockBloc>()
+                //     .add(const RecordStockEvent.reset());
+                context.router.popUntilRouteWithName(ManageStocksRoute.name);
+              },
+              type: DigitButtonType.secondary,
+              size: DigitButtonSize.large,
+            ),
+          ] else ...[
+            DigitButton(
+                label: localizations
+                    .translate(i18.acknowledgementSuccess.actionLabelText),
+                onPressed: () {
+                  context.router.maybePop();
+                },
+                type: DigitButtonType.primary,
+                size: DigitButtonSize.large),
+          ]
         ],
         // action: () {
         //   context.router.maybePop();
