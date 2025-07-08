@@ -13,6 +13,7 @@ import '../../router/app_router.dart';
 import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
+import '../../widgets/no_result_card/no_result_card.dart';
 import '../../widgets/non_mobile_user/non_mobile_user_card.dart';
 import '../../widgets/non_mobile_user/show_qr_code_non_mobile_user.dart';
 
@@ -149,7 +150,12 @@ class _NonMobileUserListPageState
                                   })
                                 ],
                               )
-                            : Text(i18.common.noResultsFound);
+                            : NoResultCard(
+                                align: Alignment.center,
+                                label: localizations.translate(
+                                  i18.common.noResultsFound,
+                                ),
+                              );
                       });
                 })
               ],

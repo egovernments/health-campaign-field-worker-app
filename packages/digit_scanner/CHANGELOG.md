@@ -1,3 +1,7 @@
+## 1.0.6+1
+
+* Modified scanner page with method to override and incorporate attendance features
+
 ## 1.0.6
 
 * Updated with new fields for manual entry for gs1 codes
