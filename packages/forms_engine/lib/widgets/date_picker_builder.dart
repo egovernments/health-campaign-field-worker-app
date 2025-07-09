@@ -28,37 +28,37 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
       formControlName: formControlName,
       validationMessages: validationMessages,
       showErrors: (control) => control.invalid && control.touched,
-      builder: (field) =>
-          LabeledField(
-            infoText: translateIfPresent(tooltipText, loc),
-            label: label,
-            isRequired: isRequired ?? false,
-            child: DigitDateFormInput(
-              firstDate: parseDateValue(start),
-              lastDate: parseDateValue(end),
-              onChange: (value){
-                form.control(formControlName).markAsTouched();
-                DateTime? parsedDate;
-                try {
-                  parsedDate = DateFormat("dd/MM/yyyy").parseStrict(value);
-                } catch (e) {
-                  // Optional: Handle invalid date input
-                  parsedDate = null;
-                }
-                form.control(formControlName).value = parsedDate;
-              },
-              readOnly: readOnly,
-              errorMessage: field.errorText,
-              innerLabel: innerLabel,
-              initialValue: form.control(formControlName).value != null
-                  ? formatDateLocalized(
-                context,
-                form.control(formControlName).value as DateTime,
-                Constants().dateMonthYearFormat,
-              )
-                  : null,
-            ),
-          ),
+      builder: (field) => LabeledField(
+        infoText: translateIfPresent(tooltipText, loc),
+        label: label,
+        isRequired: isRequired ?? false,
+        child: DigitDateFormInput(
+          firstDate: parseDateValue(start),
+          lastDate: parseDateValue(end),
+          helpText: helpText,
+          onChange: (value) {
+            form.control(formControlName).markAsTouched();
+            DateTime? parsedDate;
+            try {
+              parsedDate = DateFormat("dd MMM yyyy").parseStrict(value);
+            } catch (e) {
+              // Optional: Handle invalid date input
+              parsedDate = null;
+            }
+            form.control(formControlName).value = parsedDate;
+          },
+          readOnly: readOnly,
+          errorMessage: field.errorText,
+          innerLabel: innerLabel,
+          initialValue: form.control(formControlName).value != null
+              ? formatDateLocalized(
+                  context,
+                  form.control(formControlName).value as DateTime,
+                  Constants().dateMonthYearFormat,
+                )
+              : null,
+        ),
+      ),
     );
   }
 }
