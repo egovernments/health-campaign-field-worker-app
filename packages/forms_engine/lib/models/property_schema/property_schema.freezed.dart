@@ -43,6 +43,8 @@ mixin _$PropertySchema {
   int? get maxLength => throw _privateConstructorUsedError;
   String? get helpText => throw _privateConstructorUsedError;
   String? get tooltip => throw _privateConstructorUsedError;
+  String? get prefixText => throw _privateConstructorUsedError;
+  String? get suffixText => throw _privateConstructorUsedError;
   String? get innerLabel => throw _privateConstructorUsedError;
   String? get label => throw _privateConstructorUsedError;
   bool? get isMultiSelect => throw _privateConstructorUsedError;
@@ -90,6 +92,8 @@ abstract class $PropertySchemaCopyWith<$Res> {
       int? maxLength,
       String? helpText,
       String? tooltip,
+      String? prefixText,
+      String? suffixText,
       String? innerLabel,
       String? label,
       bool? isMultiSelect,
@@ -139,6 +143,8 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? maxLength = freezed,
     Object? helpText = freezed,
     Object? tooltip = freezed,
+    Object? prefixText = freezed,
+    Object? suffixText = freezed,
     Object? innerLabel = freezed,
     Object? label = freezed,
     Object? isMultiSelect = freezed,
@@ -225,6 +231,14 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
       tooltip: freezed == tooltip
           ? _value.tooltip
           : tooltip // ignore: cast_nullable_to_non_nullable
+              as String?,
+      prefixText: freezed == prefixText
+          ? _value.prefixText
+          : prefixText // ignore: cast_nullable_to_non_nullable
+              as String?,
+      suffixText: freezed == suffixText
+          ? _value.suffixText
+          : suffixText // ignore: cast_nullable_to_non_nullable
               as String?,
       innerLabel: freezed == innerLabel
           ? _value.innerLabel
@@ -335,6 +349,8 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       int? maxLength,
       String? helpText,
       String? tooltip,
+      String? prefixText,
+      String? suffixText,
       String? innerLabel,
       String? label,
       bool? isMultiSelect,
@@ -384,6 +400,8 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? maxLength = freezed,
     Object? helpText = freezed,
     Object? tooltip = freezed,
+    Object? prefixText = freezed,
+    Object? suffixText = freezed,
     Object? innerLabel = freezed,
     Object? label = freezed,
     Object? isMultiSelect = freezed,
@@ -471,6 +489,14 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.tooltip
           : tooltip // ignore: cast_nullable_to_non_nullable
               as String?,
+      prefixText: freezed == prefixText
+          ? _value.prefixText
+          : prefixText // ignore: cast_nullable_to_non_nullable
+              as String?,
+      suffixText: freezed == suffixText
+          ? _value.suffixText
+          : suffixText // ignore: cast_nullable_to_non_nullable
+              as String?,
       innerLabel: freezed == innerLabel
           ? _value.innerLabel
           : innerLabel // ignore: cast_nullable_to_non_nullable
@@ -552,6 +578,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
       this.maxLength,
       this.helpText,
       this.tooltip,
+      this.prefixText,
+      this.suffixText,
       this.innerLabel,
       this.label,
       this.isMultiSelect,
@@ -630,6 +658,10 @@ class _$PropertySchemaImpl implements _PropertySchema {
   @override
   final String? tooltip;
   @override
+  final String? prefixText;
+  @override
+  final String? suffixText;
+  @override
   final String? innerLabel;
   @override
   final String? label;
@@ -674,7 +706,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
 
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo)';
   }
 
   @override
@@ -712,6 +744,10 @@ class _$PropertySchemaImpl implements _PropertySchema {
             (identical(other.helpText, helpText) ||
                 other.helpText == helpText) &&
             (identical(other.tooltip, tooltip) || other.tooltip == tooltip) &&
+            (identical(other.prefixText, prefixText) ||
+                other.prefixText == prefixText) &&
+            (identical(other.suffixText, suffixText) ||
+                other.suffixText == suffixText) &&
             (identical(other.innerLabel, innerLabel) ||
                 other.innerLabel == innerLabel) &&
             (identical(other.label, label) || other.label == label) &&
@@ -759,6 +795,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
         maxLength,
         helpText,
         tooltip,
+        prefixText,
+        suffixText,
         innerLabel,
         label,
         isMultiSelect,
@@ -811,6 +849,8 @@ abstract class _PropertySchema implements PropertySchema {
       final int? maxLength,
       final String? helpText,
       final String? tooltip,
+      final String? prefixText,
+      final String? suffixText,
       final String? innerLabel,
       final String? label,
       final bool? isMultiSelect,
@@ -868,6 +908,10 @@ abstract class _PropertySchema implements PropertySchema {
   String? get helpText;
   @override
   String? get tooltip;
+  @override
+  String? get prefixText;
+  @override
+  String? get suffixText;
   @override
   String? get innerLabel;
   @override
