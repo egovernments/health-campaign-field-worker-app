@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
@@ -33,7 +32,8 @@ class HouseholdAcknowledgementPageState
   @override
   Widget build(BuildContext context) {
     final pageKey = HouseholdAcknowledgementRoute.name.replaceAll('Route', '');
-    final householdAcknowledgementTemplate = RegistrationDeliverySingleton().templateConfigs?[pageKey];
+    final householdAcknowledgementTemplate =
+        RegistrationDeliverySingleton().templateConfigs?[pageKey];
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -44,21 +44,42 @@ class HouseholdAcknowledgementPageState
               child: PanelCard(
                 type: PanelType.success,
                 description: householdAcknowledgementTemplate
-                    ?.properties?[registration_keys.acknowledgementKeys.acknowledgmentDescriptionKey]?.hidden == true ?
-                "" : localizations.translate(
-                  householdAcknowledgementTemplate
-                      ?.properties?[registration_keys.acknowledgementKeys.acknowledgmentDescriptionKey]?.label ??
-                  i18.acknowledgementSuccess.acknowledgementDescriptionText,
-                ),
+                            ?.properties?[registration_keys.acknowledgementKeys
+                                .acknowledgmentDescriptionKey]
+                            ?.hidden ==
+                        true
+                    ? ""
+                    : localizations.translate(
+                        householdAcknowledgementTemplate
+                                ?.properties?[registration_keys
+                                    .acknowledgementKeys
+                                    .acknowledgmentDescriptionKey]
+                                ?.label ??
+                            i18.acknowledgementSuccess
+                                .acknowledgementDescriptionText,
+                      ),
                 title: householdAcknowledgementTemplate
-                    ?.properties?[registration_keys.acknowledgementKeys.acknowledgmentTitleKey]?.hidden == true ?
-                "" : householdAcknowledgementTemplate
-                    ?.properties?[registration_keys.acknowledgementKeys.acknowledgmentTitleKey]?.label != null
-                  ? localizations.translate(
-                  householdAcknowledgementTemplate
-                      ?.properties?[registration_keys.acknowledgementKeys.acknowledgmentTitleKey]?.label ?? ""
-                ) : "",
-                actions: _buildActionButtons(context, householdAcknowledgementTemplate),
+                            ?.properties?[registration_keys
+                                .acknowledgementKeys.acknowledgmentTitleKey]
+                            ?.hidden ==
+                        true
+                    ? ""
+                    : householdAcknowledgementTemplate
+                                ?.properties?[registration_keys
+                                    .acknowledgementKeys.acknowledgmentTitleKey]
+                                ?.label !=
+                            null
+                        ? localizations.translate(
+                            householdAcknowledgementTemplate
+                                    ?.properties?[registration_keys
+                                        .acknowledgementKeys
+                                        .acknowledgmentTitleKey]
+                                    ?.label ??
+                                "")
+                        : "",
+                actions: _buildActionButtons(
+                    context, householdAcknowledgementTemplate),
+                sortButtons: false,
               ),
             );
           },
@@ -68,11 +89,13 @@ class HouseholdAcknowledgementPageState
   }
 
   List<DigitButton>? _buildActionButtons(
-      BuildContext context,
-      TemplateConfig? template,
-      ) {
-    final primaryProp = template?.properties?[registration_keys.commonKeys.primaryButtonKey];
-    final secondaryProp = template?.properties?[registration_keys.commonKeys.secondaryButtonKey];
+    BuildContext context,
+    TemplateConfig? template,
+  ) {
+    final primaryProp =
+        template?.properties?[registration_keys.commonKeys.primaryButtonKey];
+    final secondaryProp =
+        template?.properties?[registration_keys.commonKeys.secondaryButtonKey];
 
     final entries = <MapEntry<int, DigitButton>>[];
 
@@ -81,8 +104,8 @@ class HouseholdAcknowledgementPageState
       entries.add(MapEntry(
         order,
         DigitButton(
-          label: localizations.translate(
-              primaryProp?.label ?? i18.householdDetails.viewHouseHoldDetailsAction),
+          label: localizations.translate(primaryProp?.label ??
+              i18.householdDetails.viewHouseHoldDetailsAction),
           onPressed: () => context.router.popAndPush(HouseholdOverviewRoute()),
           type: DigitButtonType.primary,
           size: DigitButtonSize.large,
@@ -95,9 +118,10 @@ class HouseholdAcknowledgementPageState
       entries.add(MapEntry(
         order,
         DigitButton(
-          label: localizations.translate(
-              secondaryProp?.label ?? i18.acknowledgementSuccess.actionLabelText),
-          onPressed: () => context.router.popUntilRouteWithName(SearchBeneficiaryRoute.name),
+          label: localizations.translate(secondaryProp?.label ??
+              i18.acknowledgementSuccess.actionLabelText),
+          onPressed: () =>
+              context.router.popUntilRouteWithName(SearchBeneficiaryRoute.name),
           type: DigitButtonType.secondary,
           size: DigitButtonSize.large,
         ),
