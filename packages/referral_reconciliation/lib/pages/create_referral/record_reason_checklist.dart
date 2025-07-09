@@ -42,7 +42,6 @@ class _ReferralReasonChecklistPageState
   String isStateChanged = '';
   var submitTriggered = false;
   List<TextEditingController> controller = [];
-  List<TextEditingController> additionalController = [];
   List<AttributesModel>? initialAttributes;
   ServiceDefinitionModel? selectedServiceDefinition;
   bool isControllersInitialized = false;
@@ -66,7 +65,7 @@ class _ReferralReasonChecklistPageState
     final textTheme = theme.digitTextTheme(context);
 
     return PopScope(
-      canPop: false,
+      canPop: true,
       child: Scaffold(
         body: BlocBuilder<ReferralReconServiceDefinitionBloc,
             ReferralReconServiceDefinitionState>(
@@ -240,6 +239,8 @@ class _ReferralReasonChecklistPageState
                                                         lastModifiedTime: context
                                                             .millisecondsSinceEpoch(),
                                                       ),
+                                                      referenceId: widget
+                                                          .referralClientRefId,
                                                       additionalFields:
                                                           ServiceAdditionalFields(
                                                               version: 1,
@@ -588,12 +589,14 @@ class _ReferralReasonChecklistPageState
                             if (excludedIndexes.isNotEmpty) {
                               for (int i = 0; i < excludedIndexes.length; i++) {
                                 // Clear excluded child controllers
-                                controller[excludedIndexes[i]].value =
-                                    TextEditingController.fromValue(
-                                  const TextEditingValue(
-                                    text: '',
-                                  ),
-                                ).value;
+                                if (item.dataType != 'SingleValueList') {
+                                  controller[excludedIndexes[i]].value =
+                                      TextEditingController.fromValue(
+                                    const TextEditingValue(
+                                      text: '',
+                                    ),
+                                  ).value;
+                                }
                               }
                             }
                           });

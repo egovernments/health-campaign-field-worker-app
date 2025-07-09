@@ -17,6 +17,10 @@ import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/sync_service_lib.dart';
+import 'package:transit_post/data/repositories/local/user_action.dart';
+import 'package:transit_post/data/repositories/oplog/oplog.dart';
+import 'package:transit_post/data/repositories/remote/user_action.dart';
+import 'package:transit_post/utils/utils.dart';
 
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/entity_mapper.dart';
@@ -91,7 +95,8 @@ class Constants {
 
   static const String boundaryLocalizationPath = 'rainmaker-boundary-admin';
 
-  static const String dashboardAnalyticsPath = '/dashboard-analytics/dashboard/getChartV2';
+  static const String dashboardAnalyticsPath =
+      '/dashboard-analytics/dashboard/getChartV2';
 
   static RegExp mobileNumberRegExp =
       RegExp(r'^(?=.{10}$)[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
@@ -160,6 +165,7 @@ class Constants {
       ),
       LocationTrackerLocalBaseRepository(
           sql, LocationTrackerOpLogManager(isar)),
+      UserActionLocalRepository(sql, UserActionOpLogManager(isar)),
     ];
   }
 
@@ -186,6 +192,9 @@ class Constants {
 
   static const String closedHouseholdSvg =
       'assets/icons/svg/closed_household.svg';
+
+  static const String beneficiaryIdDownload =
+      'assets/icons/svg/beneficiary_ids.svg';
 
   static List<RemoteRepository> getRemoteRepositories(
     Dio dio,
@@ -248,6 +257,8 @@ class Constants {
           PgrServiceRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.userLocation)
           LocationTrackerRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.userAction)
+          UserActionRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -289,6 +300,7 @@ class Constants {
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
     LocationTrackerSingleton()
         .setTenantId(tenantId: envConfig.variables.tenantId);
+    TransitPostSingleton().setTenantId(envConfig.variables.tenantId);
     SyncServiceSingleton().setData(
       syncDownRetryCount: envConfig.variables.syncDownRetryCount,
       persistenceConfiguration: PersistenceConfiguration.offlineFirst,
@@ -297,6 +309,7 @@ class Constants {
     SyncServiceSingleton().setRegistries(SyncServiceRegistry());
     SyncServiceSingleton().registries?.registerSyncRegistries({
       DataModelType.complaints: (remote) => CustomSyncRegistry(remote),
+      DataModelType.userAction: (remote) => CustomSyncRegistry(remote),
     });
   }
 }
@@ -336,6 +349,13 @@ class Modules {
 
 const String noResultSvg = 'assets/icons/svg/no_result.svg';
 const String mySurveyFormSvg = 'assets/icons/svg/mychecklist.svg';
+const String peerSearchSvg = 'assets/icons/svg/search_peers.svg';
+
+const String searchingLottie = 'assets/animated_json/scanning_devices.json';
+const String dataTransfer = 'assets/animated_json/data_transfer.json';
+const String receiveData = 'assets/animated_json/download_animation.json';
+const String downloadSuccess = 'assets/animated_json/download_success.json';
+const String failedLottie = 'assets/animated_json/failed_animation.json';
 
 enum DigitProgressDialogType {
   inProgress,

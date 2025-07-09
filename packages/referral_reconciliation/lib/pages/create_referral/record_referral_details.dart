@@ -70,7 +70,8 @@ class _RecordReferralDetailsPageState
         ReferralReconServiceDefinitionState>(
       builder: (context, state) {
         return state.map(
-          empty: (value) => const Text('No Checklist'),
+          empty: (value) =>
+              Text(localizations.translate(i18.common.noResultsFound)),
           isloading: (value) => const Center(
             child: CircularProgressIndicator(),
           ),
@@ -179,15 +180,17 @@ class _RecordReferralDetailsPageState
                                                           ServiceSearchEvent(
                                                             serviceSearchModel:
                                                                 ServiceSearchModel(
-                                                              clientId:
+                                                              referenceIds:
                                                                   recordState
                                                                       .mapOrNull(
-                                                                create: (value) => value
-                                                                        .viewOnly
-                                                                    ? value
-                                                                        .hfReferralModel
-                                                                        ?.clientReferenceId
-                                                                    : null,
+                                                                create: (value) =>
+                                                                    value.viewOnly &&
+                                                                            value.hfReferralModel?.clientReferenceId !=
+                                                                                null
+                                                                        ? [
+                                                                            value.hfReferralModel!.clientReferenceId
+                                                                          ]
+                                                                        : null,
                                                               ),
                                                             ),
                                                           ),
@@ -431,7 +434,8 @@ class _RecordReferralDetailsPageState
                                       },
                                     ),
                                   ]),
-                              serviceSearch: (value1, value2, value3) {
+                              serviceSearch:
+                                  (serviceList, selectedService, loading) {
                                 return DigitCard(
                                     cardType: CardType.primary,
                                     children: [
@@ -486,7 +490,8 @@ class _RecordReferralDetailsPageState
                                                           .control(
                                                               _referralReason)
                                                           .value as String;
-                                                      if (value1.isNotEmpty) {
+                                                      if (serviceList
+                                                          .isNotEmpty) {
                                                         context
                                                             .read<
                                                                 ReferralReconServiceDefinitionBloc>()
@@ -501,15 +506,15 @@ class _RecordReferralDetailsPageState
                                                               ServiceSearchEvent(
                                                                 serviceSearchModel:
                                                                     ServiceSearchModel(
-                                                                  clientId:
+                                                                  referenceIds:
                                                                       recordState
                                                                           .mapOrNull(
-                                                                    create: (value) => value
-                                                                            .viewOnly
-                                                                        ? value
-                                                                            .hfReferralModel
-                                                                            ?.clientReferenceId
-                                                                        : null,
+                                                                    create: (value) =>
+                                                                        value.viewOnly
+                                                                            ? [
+                                                                                value.hfReferralModel?.clientReferenceId ?? ''
+                                                                              ]
+                                                                            : null,
                                                                   ),
                                                                 ),
                                                               ),

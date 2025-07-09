@@ -21,6 +21,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
   final AttendanceDataRepository? attendanceDataRepository;
   final AttendanceLogDataRepository? attendanceLogDataRepository;
   final IndividualDataRepository? individualDataRepository;
+
   // Constructor initializing the initial state and setting up event handlers
   AttendanceBloc(
     super.initialState, {
@@ -29,6 +30,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     required this.individualDataRepository,
   }) {
     on(_onInitial);
+    on(_onFetchNonMobileUsers);
     on(_onLoadAttendanceRegisterData);
     on(_onLoadSelectedRegisterData);
     on(_onLoadMoreAttendanceRegisters);
@@ -42,6 +44,19 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     emit(const RegisterLoading());
     // Getting attendance registers using a singleton instance
     final registers = await fetchRegisters(offSet: 0, limit: 10);
+    add(AttendanceEvents.loadAttendanceRegisters(
+        registers: registers!, limit: 10, offset: 0));
+  }
+
+  // Event handler for InitialAttendance event
+  void _onFetchNonMobileUsers(
+    FetchNonMobileUsers event,
+    Emitter<AttendanceStates> emit,
+  ) async {
+    emit(const RegisterLoading());
+    // Getting attendance registers using a singleton instance
+    final registers = await fetchNonMobileUsers(
+        offSet: 0, limit: 10, fetchOnlyMobileUser: event.fetchOnlyMobileUser);
     add(AttendanceEvents.loadAttendanceRegisters(
         registers: registers!, limit: 10, offset: 0));
   }
@@ -119,7 +134,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
         limit: limit,
         offSet: offSet,
         staffId: AttendanceSingleton().loggedInIndividualId,
-        referenceId: AttendanceSingleton().projectId,
+        referenceId: AttendanceSingleton().project!.id,
       ),
     );
 
@@ -151,7 +166,6 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
       register.startDate!,
       register.endDate!,
       registerCompletedLogs ?? [],
-      register.additionalDetails?["sessions"] != 2,
     );
 
     var completedDaysCount = register.additionalDetails?["sessions"] == 2
@@ -176,22 +190,18 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
         ?.where((att) => (att.denrollmentDate == null ||
             (att.denrollmentDate ?? DateTime.now().millisecondsSinceEpoch) >=
                 DateTime.now().millisecondsSinceEpoch))
-        .map(
-          (a) => a.copyWith(
-            name: individualList
-                .where((i) => i.id == a.individualId)
-                .firstOrNull
-                ?.name
-                ?.givenName,
-            individualNumber: individualList
-                .where((i) => i.id == a.individualId)
-                .firstOrNull
-                ?.individualId,
-          ),
-        )
-        .toList();
+        .map((a) {
+      var ind = individualList.where((i) => i.id == a.individualId).firstOrNull;
+      return a.copyWith(
+        name: ind?.name?.givenName,
+        individualId: ind?.id,
+        identifierID: ind?.identifiers?.firstOrNull?.identifierId,
+        individualNumber: ind?.individualId,
+      );
+    }).toList();
 
     return register.copyWith(
+      individualList: individualList,
       attendees: attendeeList,
       attendanceLog: list,
       completedDays: completedDaysCount,
@@ -203,7 +213,6 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     int startMillis,
     int endMillis,
     List<AttendanceLogModel> completedLogs,
-    bool isSingleSession,
   ) {
     List<Map<DateTime, bool>> dateList = [];
 
@@ -220,8 +229,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
       bool hasMorningLog = hasLogWithType(completedLogs, currentDate, "ENTRY");
       bool hasEveningLog = hasLogWithType(completedLogs, currentDate, "EXIT");
       dateList.add({
-        currentDate:
-            isSingleSession ? hasMorningLog : hasMorningLog && hasEveningLog,
+        currentDate: hasMorningLog && hasEveningLog,
       });
     }
 
@@ -254,19 +262,112 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     return logs
         .any((element) => element.time == logTime && element.type == type);
   }
+
+  Future<List<AttendanceRegisterModel>> fetchNonMobileUsers({
+    required int offSet,
+    required int limit,
+    bool? fetchOnlyMobileUser,
+  }) async {
+    final registers = await attendanceDataRepository?.search(
+      AttendanceRegisterSearchModel(
+        limit: limit,
+        offSet: offSet,
+        attendeeId: AttendanceSingleton().loggedInIndividualId,
+      ),
+    );
+
+    final List<AttendanceRegisterModel> nonMobileUserRegister = [];
+
+    for (var register in registers!) {
+      final allEligibleAttendees = register.attendees
+          ?.where((att) =>
+              att.denrollmentDate == null ||
+              (att.denrollmentDate ?? DateTime.now().millisecondsSinceEpoch) >=
+                  DateTime.now().millisecondsSinceEpoch)
+          .toList();
+
+      final filteredAttendeeIds =
+          allEligibleAttendees?.map((a) => a.individualId!).toList();
+
+      final individualList = await individualDataRepository?.search(
+            IndividualSearchModel(id: filteredAttendeeIds),
+          ) ??
+          [];
+
+      // Filter individual & attendee lists based on `fetchOnlyMobileUser`
+      List<IndividualModel> filteredIndividuals;
+      List<AttendeeModel> filteredAttendees;
+
+      if (fetchOnlyMobileUser == true) {
+        // Keep only logged-in individual
+        filteredIndividuals = individualList
+            .where(
+                (ind) => ind.id == AttendanceSingleton().loggedInIndividualId)
+            .toList();
+
+        filteredAttendees = allEligibleAttendees
+                ?.where((att) =>
+                    att.individualId ==
+                    AttendanceSingleton().loggedInIndividualId)
+                .toList() ??
+            [];
+      } else {
+        // Exclude logged-in individual
+        filteredIndividuals = individualList
+            .where(
+                (ind) => ind.id != AttendanceSingleton().loggedInIndividualId)
+            .toList();
+
+        filteredAttendees = allEligibleAttendees
+                ?.where((att) =>
+                    att.individualId !=
+                    AttendanceSingleton().loggedInIndividualId)
+                .toList() ??
+            [];
+      }
+
+      // Map filtered attendees with individual info
+      final enrichedAttendees = filteredAttendees.map((a) {
+        var ind = filteredIndividuals.firstWhere(
+          (i) => i.id == a.individualId,
+        );
+        return a.copyWith(
+          name: ind.name?.givenName,
+          individualId: ind.id,
+          identifierID: ind.identifiers?.firstOrNull?.identifierId,
+          individualNumber: ind.individualId,
+        );
+      }).toList();
+
+      nonMobileUserRegister.add(
+        register.copyWith(
+          attendees: enrichedAttendees,
+          individualList: filteredIndividuals,
+        ),
+      );
+    }
+
+    return nonMobileUserRegister;
+  }
 }
 
 // Freezed class for defining attendance-related events
 @freezed
 class AttendanceEvents with _$AttendanceEvents {
   const factory AttendanceEvents.initial() = InitialAttendance;
+
+  const factory AttendanceEvents.fetchNonMobileUsers(
+      {bool? fetchOnlyMobileUser}) = FetchNonMobileUsers;
+
   const factory AttendanceEvents.loadAttendanceRegisters(
       {required List<AttendanceRegisterModel> registers,
       required int limit,
       required int offset}) = LoadAttendanceRegisterData;
+
   const factory AttendanceEvents.loadSelectedRegister(
       {required final List<AttendanceRegisterModel> registers,
       required final String registerID}) = LoadSelectedAttendanceRegisterData;
+
   const factory AttendanceEvents.loadMoreAttendanceRegisters(
       {int? limit, int? offset}) = LoadMoreAttendanceRegisterData;
 }
@@ -275,11 +376,13 @@ class AttendanceEvents with _$AttendanceEvents {
 @freezed
 class AttendanceStates with _$AttendanceStates {
   const factory AttendanceStates.registerLoading() = RegisterLoading;
+
   const factory AttendanceStates.registerLoaded({
     required final List<AttendanceRegisterModel> registers,
     @Default(0) int offset,
     @Default(10) int limit,
   }) = RegisterLoaded;
+
   const factory AttendanceStates.selectedRegisterLoaded({
     final AttendanceRegisterModel? selectedRegister,
   }) = SelectedRegisterLoaded;

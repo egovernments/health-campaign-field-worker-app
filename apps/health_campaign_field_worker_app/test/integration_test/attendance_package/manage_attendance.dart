@@ -1,5 +1,4 @@
-import 'package:attendance_management/pages/manage_attendance.dart';
-import 'package:attendance_management/pages/session_select.dart';
+import 'package:attendance_management/attendance_management.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -35,7 +34,7 @@ Future<void> manageAttendance(WidgetTester widgetTester) async {
   ); //wait for the app to go to the next page
 
   expect(
-    find.byType(AttendanceDateSessionSelectionPage),
+    find.byType(MarkAttendancePage),
     findsOneWidget,
   ); //check if we go to the next page
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));

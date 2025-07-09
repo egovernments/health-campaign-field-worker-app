@@ -16,7 +16,22 @@ class AttendanceLocalRepository extends LocalRepository<AttendanceRegisterModel,
     String? userId,
   ]) async {
     return retryLocalCallOperation<List<AttendanceRegisterModel>>(() async {
-      var attendanceRegisterQuery = sql.select(sql.attendanceRegister).join([]);
+      String? targetTag;
+
+      if (query.attendeeId != null) {
+        final tagResult = await (sql.select(sql.attendee)
+              ..where((tbl) => tbl.individualId.equals(query.attendeeId!)))
+            .getSingleOrNull();
+
+        targetTag = tagResult?.tag;
+      }
+      var attendanceRegisterQuery = sql.select(sql.attendanceRegister).join([
+        if (query.attendeeId != null)
+          leftOuterJoin(
+            sql.attendee,
+            sql.attendee.registerId.equalsExp(sql.attendanceRegister.id),
+          ),
+      ]);
 
       if (query.limit != null && query.offSet != null) {
         attendanceRegisterQuery.limit(query.limit!, offset: query.offSet);
@@ -25,8 +40,12 @@ class AttendanceLocalRepository extends LocalRepository<AttendanceRegisterModel,
       attendanceRegisterQuery = attendanceRegisterQuery
         ..where(buildAnd([
           if (query.id != null) sql.attendanceRegister.id.equals(query.id!),
-          if (query.referenceId != null)
+          if (query.referenceId != null &&
+              query.attendeeId ==
+                  null) // For fetching non mobile users as the register is created at different hierarchy
             sql.attendanceRegister.referenceId.equals(query.referenceId!),
+          if (query.attendeeId != null)
+            sql.attendee.individualId.equals(query.attendeeId!),
         ]));
 
       final attendanceRegisterResults = await attendanceRegisterQuery.get();
@@ -54,14 +73,15 @@ class AttendanceLocalRepository extends LocalRepository<AttendanceRegisterModel,
             sql.attendanceRegister.id.equals(
               query.id!,
             ),
-          if (query.staffId != null)
+          if (query.staffId != null && query.attendeeId == null)
             sql.staff.userId.equals(
               query.staffId!,
             ),
-          if (query.referenceId != null)
+          if (query.referenceId != null && query.attendeeId == null)
             sql.attendanceRegister.referenceId.equals(
               query.referenceId!,
             ),
+          if (targetTag != null) sql.attendee.tag.equals(targetTag),
         ]));
 
       final results = await selectQuery.get();
@@ -77,13 +97,13 @@ class AttendanceLocalRepository extends LocalRepository<AttendanceRegisterModel,
         if (registerMap.containsKey(register.id)) {
           registerMap[register.id]!.attendees?.add(
                 AttendeeModel(
-                  id: attendees?.id.toString(),
-                  registerId: attendees?.registerId,
-                  tenantId: attendees?.tenantId,
-                  individualId: attendees?.individualId,
-                  enrollmentDate: attendees?.enrollmentDate,
-                  denrollmentDate: attendees?.denrollmentDate,
-                ),
+                    id: attendees?.id.toString(),
+                    registerId: attendees?.registerId,
+                    tenantId: attendees?.tenantId,
+                    individualId: attendees?.individualId,
+                    enrollmentDate: attendees?.enrollmentDate,
+                    denrollmentDate: attendees?.denrollmentDate,
+                    tag: attendees?.tag),
               );
 
           registerMap[register.id]!.staff?.add(
@@ -103,13 +123,13 @@ class AttendanceLocalRepository extends LocalRepository<AttendanceRegisterModel,
                 ? null
                 : [
                     AttendeeModel(
-                      id: attendees.id.toString(),
-                      registerId: attendees.registerId,
-                      tenantId: attendees.tenantId,
-                      individualId: attendees.individualId,
-                      enrollmentDate: attendees.enrollmentDate,
-                      denrollmentDate: attendees.denrollmentDate,
-                    ),
+                        id: attendees.id.toString(),
+                        registerId: attendees.registerId,
+                        tenantId: attendees.tenantId,
+                        individualId: attendees.individualId,
+                        enrollmentDate: attendees.enrollmentDate,
+                        denrollmentDate: attendees.denrollmentDate,
+                        tag: attendees.tag),
                   ],
             staff: staffs == null
                 ? null
@@ -187,13 +207,13 @@ class AttendanceLocalRepository extends LocalRepository<AttendanceRegisterModel,
       final attendeeList = entities
           .map((e) => e.attendees?.map((a) {
                 return AttendeeCompanion(
-                  id: Value(a.id),
-                  individualId: Value(a.individualId.toString()),
-                  tenantId: Value(a.tenantId.toString()),
-                  registerId: Value(a.registerId.toString()),
-                  enrollmentDate: Value(a.enrollmentDate),
-                  denrollmentDate: Value(a.denrollmentDate),
-                );
+                    id: Value(a.id),
+                    individualId: Value(a.individualId.toString()),
+                    tenantId: Value(a.tenantId.toString()),
+                    registerId: Value(a.registerId.toString()),
+                    enrollmentDate: Value(a.enrollmentDate),
+                    denrollmentDate: Value(a.denrollmentDate),
+                    tag: Value(a.tag));
               }).toList())
           .toList();
 

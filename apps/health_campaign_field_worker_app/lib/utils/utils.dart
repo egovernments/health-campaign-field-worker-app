@@ -5,9 +5,14 @@ import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart'
     as attendance_mappers;
+import 'package:attendance_management/attendance_management.dart';
+import 'package:complaints/complaints.dart';
 import 'package:complaints/complaints.init.dart' as complaints_mappers;
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:digit_data_model/data_model.dart' as data_model;
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_dss/digit_dss.dart' as dss_mappers;
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -18,16 +23,20 @@ import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/inventory_management.init.dart'
     as inventory_mappers;
 import 'package:isar/isar.dart';
-import 'package:digit_data_model/data_model.dart' as data_model;
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
+import 'package:referral_reconciliation/referral_reconciliation.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
+import 'package:survey_form/survey_form.dart';
 import 'package:survey_form/survey_form.init.dart' as survey_form_mappers;
+import 'package:sync_service/blocs/sync/sync.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
@@ -35,9 +44,6 @@ import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/app_config/app_config_model.dart';
-import '../models/data_model.init.dart';
-import '../models/tenant_boundary/tenant_boundary_model.dart';
-
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
@@ -362,14 +368,14 @@ void showDownloadDialog(
   }
 }
 
-
 // Existing _findLeastLevelBoundaryCode method remains unchanged
 String _findLeastLevelBoundaryCode(List<data_model.BoundaryModel> boundaries) {
   data_model.BoundaryModel? highestBoundary;
 
   // Find the boundary with the highest boundaryNum
   for (var boundary in boundaries) {
-    if (highestBoundary == null || (boundary.boundaryNum ?? 0) > (highestBoundary.boundaryNum ?? 0)) {
+    if (highestBoundary == null ||
+        (boundary.boundaryNum ?? 0) > (highestBoundary.boundaryNum ?? 0)) {
       highestBoundary = boundary;
     }
   }
@@ -381,9 +387,10 @@ String _findLeastLevelBoundaryCode(List<data_model.BoundaryModel> boundaries) {
   }
 
   // If the highest boundary has children, recursively search in them
-  if(highestBoundary?.children != null) {
+  if (highestBoundary?.children != null) {
     for (var child in highestBoundary!.children) {
-      String leastCode = _findLeastLevelBoundaryCode([child]); // Recursively find the least level
+      String leastCode = _findLeastLevelBoundaryCode(
+          [child]); // Recursively find the least level
       if (leastCode.isNotEmpty) {
         return leastCode;
       }
@@ -395,7 +402,8 @@ String _findLeastLevelBoundaryCode(List<data_model.BoundaryModel> boundaries) {
 }
 
 // Recursive function to find the least level boundary codes
-List<String> findLeastLevelBoundaries(List<data_model.BoundaryModel> boundaries) {
+List<String> findLeastLevelBoundaries(
+    List<data_model.BoundaryModel> boundaries) {
   // Find the least level boundary type
   String leastLevelType = _findLeastLevelBoundaryCode(boundaries);
 
@@ -403,15 +411,18 @@ List<String> findLeastLevelBoundaries(List<data_model.BoundaryModel> boundaries)
   List<String> leastLevelBoundaryCodes = [];
 
   // Iterate through the boundaries to find matching codes
-  if(leastLevelType.isNotEmpty) {
+  if (leastLevelType.isNotEmpty) {
     for (var boundary in boundaries) {
       // Check if the boundary matches the least-level type and has no children (leaf node)
-      if ((boundary.boundaryType == leastLevelType || boundary.label == leastLevelType) && boundary.children.isEmpty) {
+      if ((boundary.boundaryType == leastLevelType ||
+              boundary.label == leastLevelType) &&
+          boundary.children.isEmpty) {
         // Found a least level boundary with no children (leaf node), add its code
         leastLevelBoundaryCodes.add(boundary.code!);
       } else if (boundary.children.isNotEmpty) {
         // Recursively search in the children
-        List<String> childVillageCodes = findLeastLevelBoundaries(boundary.children);
+        List<String> childVillageCodes =
+            findLeastLevelBoundaries(boundary.children);
         leastLevelBoundaryCodes.addAll(childVillageCodes);
       }
     }
@@ -440,10 +451,13 @@ getLocalizationString(Isar isar, String selectedLocale) async {
 }
 
 List<dss_mappers.DashboardConfigSchema?> filterDashboardConfig(
-    List<dss_mappers.DashboardConfigSchema?>? dashboardConfig, String projectTypeCode) {
-  return dashboardConfig?.where((element) =>
-          element != null && element.projectTypeCode == projectTypeCode)
-      .toList() ?? [];
+    List<dss_mappers.DashboardConfigSchema?>? dashboardConfig,
+    String projectTypeCode) {
+  return dashboardConfig
+          ?.where((element) =>
+              element != null && element.projectTypeCode == projectTypeCode)
+          .toList() ??
+      [];
 }
 
 getSelectedLanguage(AppInitialized state, int index) {
@@ -471,6 +485,88 @@ initializeAllMappers() async {
     Future(() => complaints_mappers.initializeMappers())
   ];
   await Future.wait(initializations);
+}
+
+void attemptSyncUp(BuildContext context) async {
+  await LocalSecureStore.instance.setManualSyncTrigger(true);
+
+  if (context.mounted) {
+    context.read<SyncBloc>().add(
+          SyncSyncUpEvent(
+            userId: context.loggedInUserUuid,
+            localRepositories: [
+              // INFO : Need to add local repo of package Here
+              context.read<
+                  LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+              context.read<
+                  LocalRepository<IndividualModel, IndividualSearchModel>>(),
+              context.read<
+                  LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
+              context.read<
+                  LocalRepository<ProjectBeneficiaryModel,
+                      ProjectBeneficiarySearchModel>>(),
+              context.read<
+                  LocalRepository<HouseholdMemberModel,
+                      HouseholdMemberSearchModel>>(),
+              context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
+              context.read<
+                  LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
+              context
+                  .read<LocalRepository<ReferralModel, ReferralSearchModel>>(),
+              context.read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
+              context.read<LocalRepository<StockModel, StockSearchModel>>(),
+              context.read<
+                  LocalRepository<StockReconciliationModel,
+                      StockReconciliationSearchModel>>(),
+              context.read<
+                  LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+              context.read<
+                  LocalRepository<HFReferralModel, HFReferralSearchModel>>(),
+              context.read<
+                  LocalRepository<AttendanceLogModel,
+                      AttendanceLogSearchModel>>(),
+              context.read<
+                  LocalRepository<UserActionModel, UserActionSearchModel>>(),
+              context.read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
+            ],
+            remoteRepositories: [
+              // INFO : Need to add repo repo of package Here
+              context.read<
+                  RemoteRepository<IndividualModel, IndividualSearchModel>>(),
+              context.read<
+                  RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
+              context.read<
+                  RemoteRepository<ProjectBeneficiaryModel,
+                      ProjectBeneficiarySearchModel>>(),
+              context.read<
+                  RemoteRepository<HouseholdMemberModel,
+                      HouseholdMemberSearchModel>>(),
+              context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
+              context.read<
+                  RemoteRepository<SideEffectModel, SideEffectSearchModel>>(),
+              context
+                  .read<RemoteRepository<ReferralModel, ReferralSearchModel>>(),
+              context
+                  .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
+              context.read<RemoteRepository<StockModel, StockSearchModel>>(),
+              context.read<
+                  RemoteRepository<StockReconciliationModel,
+                      StockReconciliationSearchModel>>(),
+              context.read<
+                  RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+              context.read<
+                  RemoteRepository<HFReferralModel, HFReferralSearchModel>>(),
+              context.read<
+                  RemoteRepository<AttendanceLogModel,
+                      AttendanceLogSearchModel>>(),
+              context.read<
+                  RemoteRepository<UserActionModel, UserActionSearchModel>>(),
+              context
+                  .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
+            ],
+          ),
+        );
+  }
 }
 
 class LocalizationParams {

@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
+import 'package:intl/intl.dart';
 
 import '../blocs/scanner.dart';
 import '../widgets/vision_detector_views/painters/barcode_detector_painter.dart';
@@ -143,8 +144,12 @@ class DigitScannerUtils {
             } else if (quantity > result.length) {
               // Store the parsed result if the quantity is greater than result length
               await storeValue(parsedResult);
-            } else {
+            } else if (quantity <= result.length) {
               // Handle error if there is a mismatch in the scanned resource count
+              await handleError(
+                  localizations.translate(i18.scanner.scannedQtyExceed));
+            } else {
+              // Handle error if there is a mismatch in the scanned resource
               await handleError(
                   localizations.translate(i18.scanner.invalidBarcode));
             }
@@ -301,4 +306,24 @@ class DigitScannerUtils {
     // Wait for 5 seconds before completing the function
     await Future.delayed(const Duration(seconds: 5));
   }
+
+  Map<String, dynamic> getGs1CodeFormattedString(List<GS1Barcode> barCodes) {
+    final elements = barCodes.last;
+
+    return elements.getAIsData;
+  }
+
+  String generateGS1Barcode({
+  required String batchNumber,
+  required DateTime expiryDate,
+  required String serialNumber,
+}) {
+  const groupSeparator = '\u001d'; // ASCII 29
+  final formattedDate = DateFormat('yyMMdd').format(expiryDate);
+
+  return '10$batchNumber${groupSeparator}17${formattedDate}21$serialNumber$groupSeparator';
+}
+
+  
+
 }

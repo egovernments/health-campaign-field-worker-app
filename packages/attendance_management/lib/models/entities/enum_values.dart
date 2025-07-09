@@ -36,3 +36,12 @@ enum EnumValues {
   @MappableValue("boundaryCode")
   boundaryCode,
 }
+@MappableEnum(caseStyle: CaseStyle.camelCase)
+enum AttendanceSortType {
+  @MappableValue("none")
+  none,
+  @MappableValue("presentFirst")
+  presentFirst,
+  @MappableValue("absentFirst")
+  absentFirst,
+}

@@ -19,6 +19,7 @@ mixin _$AttendanceEvents {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
+    required TResult Function(bool? fetchOnlyMobileUser) fetchNonMobileUsers,
     required TResult Function(
             List<AttendanceRegisterModel> registers, int limit, int offset)
         loadAttendanceRegisters,
@@ -32,6 +33,7 @@ mixin _$AttendanceEvents {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
+    TResult? Function(bool? fetchOnlyMobileUser)? fetchNonMobileUsers,
     TResult? Function(
             List<AttendanceRegisterModel> registers, int limit, int offset)?
         loadAttendanceRegisters,
@@ -44,6 +46,7 @@ mixin _$AttendanceEvents {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
+    TResult Function(bool? fetchOnlyMobileUser)? fetchNonMobileUsers,
     TResult Function(
             List<AttendanceRegisterModel> registers, int limit, int offset)?
         loadAttendanceRegisters,
@@ -57,6 +60,7 @@ mixin _$AttendanceEvents {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(InitialAttendance value) initial,
+    required TResult Function(FetchNonMobileUsers value) fetchNonMobileUsers,
     required TResult Function(LoadAttendanceRegisterData value)
         loadAttendanceRegisters,
     required TResult Function(LoadSelectedAttendanceRegisterData value)
@@ -68,6 +72,7 @@ mixin _$AttendanceEvents {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(InitialAttendance value)? initial,
+    TResult? Function(FetchNonMobileUsers value)? fetchNonMobileUsers,
     TResult? Function(LoadAttendanceRegisterData value)?
         loadAttendanceRegisters,
     TResult? Function(LoadSelectedAttendanceRegisterData value)?
@@ -79,6 +84,7 @@ mixin _$AttendanceEvents {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(InitialAttendance value)? initial,
+    TResult Function(FetchNonMobileUsers value)? fetchNonMobileUsers,
     TResult Function(LoadAttendanceRegisterData value)? loadAttendanceRegisters,
     TResult Function(LoadSelectedAttendanceRegisterData value)?
         loadSelectedRegister,
@@ -146,6 +152,7 @@ class _$InitialAttendanceImpl implements InitialAttendance {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
+    required TResult Function(bool? fetchOnlyMobileUser) fetchNonMobileUsers,
     required TResult Function(
             List<AttendanceRegisterModel> registers, int limit, int offset)
         loadAttendanceRegisters,
@@ -162,6 +169,7 @@ class _$InitialAttendanceImpl implements InitialAttendance {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
+    TResult? Function(bool? fetchOnlyMobileUser)? fetchNonMobileUsers,
     TResult? Function(
             List<AttendanceRegisterModel> registers, int limit, int offset)?
         loadAttendanceRegisters,
@@ -177,6 +185,7 @@ class _$InitialAttendanceImpl implements InitialAttendance {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
+    TResult Function(bool? fetchOnlyMobileUser)? fetchNonMobileUsers,
     TResult Function(
             List<AttendanceRegisterModel> registers, int limit, int offset)?
         loadAttendanceRegisters,
@@ -196,6 +205,7 @@ class _$InitialAttendanceImpl implements InitialAttendance {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(InitialAttendance value) initial,
+    required TResult Function(FetchNonMobileUsers value) fetchNonMobileUsers,
     required TResult Function(LoadAttendanceRegisterData value)
         loadAttendanceRegisters,
     required TResult Function(LoadSelectedAttendanceRegisterData value)
@@ -210,6 +220,7 @@ class _$InitialAttendanceImpl implements InitialAttendance {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(InitialAttendance value)? initial,
+    TResult? Function(FetchNonMobileUsers value)? fetchNonMobileUsers,
     TResult? Function(LoadAttendanceRegisterData value)?
         loadAttendanceRegisters,
     TResult? Function(LoadSelectedAttendanceRegisterData value)?
@@ -224,6 +235,7 @@ class _$InitialAttendanceImpl implements InitialAttendance {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(InitialAttendance value)? initial,
+    TResult Function(FetchNonMobileUsers value)? fetchNonMobileUsers,
     TResult Function(LoadAttendanceRegisterData value)? loadAttendanceRegisters,
     TResult Function(LoadSelectedAttendanceRegisterData value)?
         loadSelectedRegister,
@@ -240,6 +252,181 @@ class _$InitialAttendanceImpl implements InitialAttendance {
 
 abstract class InitialAttendance implements AttendanceEvents {
   const factory InitialAttendance() = _$InitialAttendanceImpl;
+}
+
+/// @nodoc
+abstract class _$$FetchNonMobileUsersImplCopyWith<$Res> {
+  factory _$$FetchNonMobileUsersImplCopyWith(_$FetchNonMobileUsersImpl value,
+          $Res Function(_$FetchNonMobileUsersImpl) then) =
+      __$$FetchNonMobileUsersImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({bool? fetchOnlyMobileUser});
+}
+
+/// @nodoc
+class __$$FetchNonMobileUsersImplCopyWithImpl<$Res>
+    extends _$AttendanceEventsCopyWithImpl<$Res, _$FetchNonMobileUsersImpl>
+    implements _$$FetchNonMobileUsersImplCopyWith<$Res> {
+  __$$FetchNonMobileUsersImplCopyWithImpl(_$FetchNonMobileUsersImpl _value,
+      $Res Function(_$FetchNonMobileUsersImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? fetchOnlyMobileUser = freezed,
+  }) {
+    return _then(_$FetchNonMobileUsersImpl(
+      fetchOnlyMobileUser: freezed == fetchOnlyMobileUser
+          ? _value.fetchOnlyMobileUser
+          : fetchOnlyMobileUser // ignore: cast_nullable_to_non_nullable
+              as bool?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$FetchNonMobileUsersImpl implements FetchNonMobileUsers {
+  const _$FetchNonMobileUsersImpl({this.fetchOnlyMobileUser});
+
+  @override
+  final bool? fetchOnlyMobileUser;
+
+  @override
+  String toString() {
+    return 'AttendanceEvents.fetchNonMobileUsers(fetchOnlyMobileUser: $fetchOnlyMobileUser)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FetchNonMobileUsersImpl &&
+            (identical(other.fetchOnlyMobileUser, fetchOnlyMobileUser) ||
+                other.fetchOnlyMobileUser == fetchOnlyMobileUser));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, fetchOnlyMobileUser);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FetchNonMobileUsersImplCopyWith<_$FetchNonMobileUsersImpl> get copyWith =>
+      __$$FetchNonMobileUsersImplCopyWithImpl<_$FetchNonMobileUsersImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function(bool? fetchOnlyMobileUser) fetchNonMobileUsers,
+    required TResult Function(
+            List<AttendanceRegisterModel> registers, int limit, int offset)
+        loadAttendanceRegisters,
+    required TResult Function(
+            List<AttendanceRegisterModel> registers, String registerID)
+        loadSelectedRegister,
+    required TResult Function(int? limit, int? offset)
+        loadMoreAttendanceRegisters,
+  }) {
+    return fetchNonMobileUsers(fetchOnlyMobileUser);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function(bool? fetchOnlyMobileUser)? fetchNonMobileUsers,
+    TResult? Function(
+            List<AttendanceRegisterModel> registers, int limit, int offset)?
+        loadAttendanceRegisters,
+    TResult? Function(
+            List<AttendanceRegisterModel> registers, String registerID)?
+        loadSelectedRegister,
+    TResult? Function(int? limit, int? offset)? loadMoreAttendanceRegisters,
+  }) {
+    return fetchNonMobileUsers?.call(fetchOnlyMobileUser);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function(bool? fetchOnlyMobileUser)? fetchNonMobileUsers,
+    TResult Function(
+            List<AttendanceRegisterModel> registers, int limit, int offset)?
+        loadAttendanceRegisters,
+    TResult Function(
+            List<AttendanceRegisterModel> registers, String registerID)?
+        loadSelectedRegister,
+    TResult Function(int? limit, int? offset)? loadMoreAttendanceRegisters,
+    required TResult orElse(),
+  }) {
+    if (fetchNonMobileUsers != null) {
+      return fetchNonMobileUsers(fetchOnlyMobileUser);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(InitialAttendance value) initial,
+    required TResult Function(FetchNonMobileUsers value) fetchNonMobileUsers,
+    required TResult Function(LoadAttendanceRegisterData value)
+        loadAttendanceRegisters,
+    required TResult Function(LoadSelectedAttendanceRegisterData value)
+        loadSelectedRegister,
+    required TResult Function(LoadMoreAttendanceRegisterData value)
+        loadMoreAttendanceRegisters,
+  }) {
+    return fetchNonMobileUsers(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(InitialAttendance value)? initial,
+    TResult? Function(FetchNonMobileUsers value)? fetchNonMobileUsers,
+    TResult? Function(LoadAttendanceRegisterData value)?
+        loadAttendanceRegisters,
+    TResult? Function(LoadSelectedAttendanceRegisterData value)?
+        loadSelectedRegister,
+    TResult? Function(LoadMoreAttendanceRegisterData value)?
+        loadMoreAttendanceRegisters,
+  }) {
+    return fetchNonMobileUsers?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(InitialAttendance value)? initial,
+    TResult Function(FetchNonMobileUsers value)? fetchNonMobileUsers,
+    TResult Function(LoadAttendanceRegisterData value)? loadAttendanceRegisters,
+    TResult Function(LoadSelectedAttendanceRegisterData value)?
+        loadSelectedRegister,
+    TResult Function(LoadMoreAttendanceRegisterData value)?
+        loadMoreAttendanceRegisters,
+    required TResult orElse(),
+  }) {
+    if (fetchNonMobileUsers != null) {
+      return fetchNonMobileUsers(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FetchNonMobileUsers implements AttendanceEvents {
+  const factory FetchNonMobileUsers({final bool? fetchOnlyMobileUser}) =
+      _$FetchNonMobileUsersImpl;
+
+  bool? get fetchOnlyMobileUser;
+  @JsonKey(ignore: true)
+  _$$FetchNonMobileUsersImplCopyWith<_$FetchNonMobileUsersImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -339,6 +526,7 @@ class _$LoadAttendanceRegisterDataImpl implements LoadAttendanceRegisterData {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
+    required TResult Function(bool? fetchOnlyMobileUser) fetchNonMobileUsers,
     required TResult Function(
             List<AttendanceRegisterModel> registers, int limit, int offset)
         loadAttendanceRegisters,
@@ -355,6 +543,7 @@ class _$LoadAttendanceRegisterDataImpl implements LoadAttendanceRegisterData {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
+    TResult? Function(bool? fetchOnlyMobileUser)? fetchNonMobileUsers,
     TResult? Function(
             List<AttendanceRegisterModel> registers, int limit, int offset)?
         loadAttendanceRegisters,
@@ -370,6 +559,7 @@ class _$LoadAttendanceRegisterDataImpl implements LoadAttendanceRegisterData {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
+    TResult Function(bool? fetchOnlyMobileUser)? fetchNonMobileUsers,
     TResult Function(
             List<AttendanceRegisterModel> registers, int limit, int offset)?
         loadAttendanceRegisters,
@@ -389,6 +579,7 @@ class _$LoadAttendanceRegisterDataImpl implements LoadAttendanceRegisterData {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(InitialAttendance value) initial,
+    required TResult Function(FetchNonMobileUsers value) fetchNonMobileUsers,
     required TResult Function(LoadAttendanceRegisterData value)
         loadAttendanceRegisters,
     required TResult Function(LoadSelectedAttendanceRegisterData value)
@@ -403,6 +594,7 @@ class _$LoadAttendanceRegisterDataImpl implements LoadAttendanceRegisterData {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(InitialAttendance value)? initial,
+    TResult? Function(FetchNonMobileUsers value)? fetchNonMobileUsers,
     TResult? Function(LoadAttendanceRegisterData value)?
         loadAttendanceRegisters,
     TResult? Function(LoadSelectedAttendanceRegisterData value)?
@@ -417,6 +609,7 @@ class _$LoadAttendanceRegisterDataImpl implements LoadAttendanceRegisterData {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(InitialAttendance value)? initial,
+    TResult Function(FetchNonMobileUsers value)? fetchNonMobileUsers,
     TResult Function(LoadAttendanceRegisterData value)? loadAttendanceRegisters,
     TResult Function(LoadSelectedAttendanceRegisterData value)?
         loadSelectedRegister,
@@ -536,6 +729,7 @@ class _$LoadSelectedAttendanceRegisterDataImpl
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
+    required TResult Function(bool? fetchOnlyMobileUser) fetchNonMobileUsers,
     required TResult Function(
             List<AttendanceRegisterModel> registers, int limit, int offset)
         loadAttendanceRegisters,
@@ -552,6 +746,7 @@ class _$LoadSelectedAttendanceRegisterDataImpl
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
+    TResult? Function(bool? fetchOnlyMobileUser)? fetchNonMobileUsers,
     TResult? Function(
             List<AttendanceRegisterModel> registers, int limit, int offset)?
         loadAttendanceRegisters,
@@ -567,6 +762,7 @@ class _$LoadSelectedAttendanceRegisterDataImpl
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
+    TResult Function(bool? fetchOnlyMobileUser)? fetchNonMobileUsers,
     TResult Function(
             List<AttendanceRegisterModel> registers, int limit, int offset)?
         loadAttendanceRegisters,
@@ -586,6 +782,7 @@ class _$LoadSelectedAttendanceRegisterDataImpl
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(InitialAttendance value) initial,
+    required TResult Function(FetchNonMobileUsers value) fetchNonMobileUsers,
     required TResult Function(LoadAttendanceRegisterData value)
         loadAttendanceRegisters,
     required TResult Function(LoadSelectedAttendanceRegisterData value)
@@ -600,6 +797,7 @@ class _$LoadSelectedAttendanceRegisterDataImpl
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(InitialAttendance value)? initial,
+    TResult? Function(FetchNonMobileUsers value)? fetchNonMobileUsers,
     TResult? Function(LoadAttendanceRegisterData value)?
         loadAttendanceRegisters,
     TResult? Function(LoadSelectedAttendanceRegisterData value)?
@@ -614,6 +812,7 @@ class _$LoadSelectedAttendanceRegisterDataImpl
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(InitialAttendance value)? initial,
+    TResult Function(FetchNonMobileUsers value)? fetchNonMobileUsers,
     TResult Function(LoadAttendanceRegisterData value)? loadAttendanceRegisters,
     TResult Function(LoadSelectedAttendanceRegisterData value)?
         loadSelectedRegister,
@@ -721,6 +920,7 @@ class _$LoadMoreAttendanceRegisterDataImpl
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
+    required TResult Function(bool? fetchOnlyMobileUser) fetchNonMobileUsers,
     required TResult Function(
             List<AttendanceRegisterModel> registers, int limit, int offset)
         loadAttendanceRegisters,
@@ -737,6 +937,7 @@ class _$LoadMoreAttendanceRegisterDataImpl
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
+    TResult? Function(bool? fetchOnlyMobileUser)? fetchNonMobileUsers,
     TResult? Function(
             List<AttendanceRegisterModel> registers, int limit, int offset)?
         loadAttendanceRegisters,
@@ -752,6 +953,7 @@ class _$LoadMoreAttendanceRegisterDataImpl
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
+    TResult Function(bool? fetchOnlyMobileUser)? fetchNonMobileUsers,
     TResult Function(
             List<AttendanceRegisterModel> registers, int limit, int offset)?
         loadAttendanceRegisters,
@@ -771,6 +973,7 @@ class _$LoadMoreAttendanceRegisterDataImpl
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(InitialAttendance value) initial,
+    required TResult Function(FetchNonMobileUsers value) fetchNonMobileUsers,
     required TResult Function(LoadAttendanceRegisterData value)
         loadAttendanceRegisters,
     required TResult Function(LoadSelectedAttendanceRegisterData value)
@@ -785,6 +988,7 @@ class _$LoadMoreAttendanceRegisterDataImpl
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(InitialAttendance value)? initial,
+    TResult? Function(FetchNonMobileUsers value)? fetchNonMobileUsers,
     TResult? Function(LoadAttendanceRegisterData value)?
         loadAttendanceRegisters,
     TResult? Function(LoadSelectedAttendanceRegisterData value)?
@@ -799,6 +1003,7 @@ class _$LoadMoreAttendanceRegisterDataImpl
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(InitialAttendance value)? initial,
+    TResult Function(FetchNonMobileUsers value)? fetchNonMobileUsers,
     TResult Function(LoadAttendanceRegisterData value)? loadAttendanceRegisters,
     TResult Function(LoadSelectedAttendanceRegisterData value)?
         loadSelectedRegister,

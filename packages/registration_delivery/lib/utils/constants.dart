@@ -13,11 +13,18 @@ class Constants {
   final String dateTimeExtFormat = 'dd-MM-yyyy';
   final String dateMonthYearFormat = 'dd MMM yyyy';
   static const String checklistViewDateFormat = 'dd/MM/yyyy hh:mm a';
+
+  static const String downloadAnimation =
+      'assets/animated_json/download_animation.json';
+
+  static const String downloadSuccessAnimation =
+      'assets/animated_json/download_success.json';
 }
 
 class KeyValue {
   String label;
   dynamic key;
+
   KeyValue(this.label, this.key);
 }
 
@@ -30,6 +37,7 @@ class StatusKeys {
   bool isBeneficiaryRefused;
   bool isBeneficiaryReferred;
   bool isStatusReset;
+
   StatusKeys(this.isNotEligible, this.isBeneficiaryRefused,
       this.isBeneficiaryReferred, this.isStatusReset);
 }

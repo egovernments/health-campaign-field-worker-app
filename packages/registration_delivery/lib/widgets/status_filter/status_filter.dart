@@ -1,3 +1,4 @@
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_scanner/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -188,6 +189,11 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
         .map((e) => Status.values.where((element) => element.toValue() == e))
         .expand((element) => element)
         .toList());
+
+    if (RegistrationDeliverySingleton().beneficiaryType ==
+        BeneficiaryType.household) {
+      finalStatues.remove(Status.beneficiaryReferred);
+    }
 
     return finalStatues;
   }
