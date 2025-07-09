@@ -33,6 +33,8 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
       maxLength: json['maxLength'] as int?,
       helpText: json['helpText'] as String?,
       tooltip: json['tooltip'] as String?,
+      prefixText: json['prefixText'] as String?,
+      suffixText: json['suffixText'] as String?,
       innerLabel: json['innerLabel'] as String?,
       label: json['label'] as String?,
       isMultiSelect: json['isMultiSelect'] as bool?,
@@ -86,6 +88,8 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('maxLength', instance.maxLength);
   writeNotNull('helpText', instance.helpText);
   writeNotNull('tooltip', instance.tooltip);
+  writeNotNull('prefixText', instance.prefixText);
+  writeNotNull('suffixText', instance.suffixText);
   writeNotNull('innerLabel', instance.innerLabel);
   writeNotNull('label', instance.label);
   writeNotNull('isMultiSelect', instance.isMultiSelect);

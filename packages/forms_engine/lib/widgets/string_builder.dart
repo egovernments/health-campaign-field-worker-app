@@ -2,6 +2,8 @@ part of 'json_schema_builder.dart';
 
 class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
   final TextInputType inputType;
+  final String? prefixText;
+  final String? suffixText;
 
   const JsonSchemaStringBuilder({
     required super.formControlName,
@@ -11,6 +13,8 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
     super.key,
     super.value,
     super.label,
+    this.suffixText,
+    this.prefixText,
     this.inputType = TextInputType.text,
     super.isRequired,
     super.validations,
@@ -22,7 +26,6 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
 
   @override
   Widget build(BuildContext context) {
-
     final loc = FormLocalization.of(context);
     final validationMessages = buildValidationMessages(validations, loc);
     final inputFormatter = getPatternFormatter(validations);
@@ -45,12 +48,12 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
               innerLabel: innerLabel,
               readOnly: readOnly,
               keyboardType: inputType,
-              initialValue:
-              form.control(formControlName).value,
+              suffixText: suffixText,
+              prefixText: prefixText,
+              initialValue: form.control(formControlName).value,
               onChange: (value) {
                 form.control(formControlName).markAsTouched();
-                form.control(formControlName).value =
-                    value;
+                form.control(formControlName).value = value;
               },
               errorMessage: field.errorText,
               inputFormatters: inputFormatter != null ? [inputFormatter] : null,

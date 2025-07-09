@@ -38,6 +38,8 @@ class PropertySchema with _$PropertySchema {
     int? maxLength,
     String? helpText,
     String? tooltip,
+    String? prefixText,
+    String? suffixText,
     String? innerLabel,
     String? label,
     bool? isMultiSelect,
