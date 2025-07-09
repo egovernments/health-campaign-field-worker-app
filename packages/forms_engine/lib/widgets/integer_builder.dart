@@ -22,7 +22,6 @@ class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
 
   @override
   Widget build(BuildContext context) {
-
     final loc = FormLocalization.of(context);
     final validationMessages = buildValidationMessages(validations, loc);
 
@@ -36,9 +35,8 @@ class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
         isRequired: isRequired ?? false,
         child: DigitNumericFormInput(
           helpText: helpText,
-          inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly
-          ],
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          readOnly: readOnly,
           errorMessage: field.errorText,
           minValue: 0,
           maxValue: 10000,

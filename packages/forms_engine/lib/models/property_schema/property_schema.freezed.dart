@@ -33,7 +33,9 @@ mixin _$PropertySchema {
   bool? get charCount => throw _privateConstructorUsedError;
   @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
   PropertySchemaFormat? get format => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _stringOrNull)
   String? get startDate => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _stringOrNull)
   String? get endDate => throw _privateConstructorUsedError;
   int? get minValue => throw _privateConstructorUsedError;
   int? get maxValue => throw _privateConstructorUsedError;
@@ -80,8 +82,8 @@ abstract class $PropertySchemaCopyWith<$Res> {
       bool? charCount,
       @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
       PropertySchemaFormat? format,
-      String? startDate,
-      String? endDate,
+      @JsonKey(fromJson: _stringOrNull) String? startDate,
+      @JsonKey(fromJson: _stringOrNull) String? endDate,
       int? minValue,
       int? maxValue,
       int? minLength,
@@ -325,8 +327,8 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       bool? charCount,
       @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
       PropertySchemaFormat? format,
-      String? startDate,
-      String? endDate,
+      @JsonKey(fromJson: _stringOrNull) String? startDate,
+      @JsonKey(fromJson: _stringOrNull) String? endDate,
       int? minValue,
       int? maxValue,
       int? minLength,
@@ -542,8 +544,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
       this.charCount,
       @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
       this.format,
-      this.startDate,
-      this.endDate,
+      @JsonKey(fromJson: _stringOrNull) this.startDate,
+      @JsonKey(fromJson: _stringOrNull) this.endDate,
       this.minValue,
       this.maxValue,
       this.minLength,
@@ -610,8 +612,10 @@ class _$PropertySchemaImpl implements _PropertySchema {
   @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
   final PropertySchemaFormat? format;
   @override
+  @JsonKey(fromJson: _stringOrNull)
   final String? startDate;
   @override
+  @JsonKey(fromJson: _stringOrNull)
   final String? endDate;
   @override
   final int? minValue;
@@ -799,8 +803,8 @@ abstract class _PropertySchema implements PropertySchema {
       final bool? charCount,
       @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
       final PropertySchemaFormat? format,
-      final String? startDate,
-      final String? endDate,
+      @JsonKey(fromJson: _stringOrNull) final String? startDate,
+      @JsonKey(fromJson: _stringOrNull) final String? endDate,
       final int? minValue,
       final int? maxValue,
       final int? minLength,
@@ -847,8 +851,10 @@ abstract class _PropertySchema implements PropertySchema {
   @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
   PropertySchemaFormat? get format;
   @override
+  @JsonKey(fromJson: _stringOrNull)
   String? get startDate;
   @override
+  @JsonKey(fromJson: _stringOrNull)
   String? get endDate;
   @override
   int? get minValue;
