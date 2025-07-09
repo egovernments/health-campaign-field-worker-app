@@ -583,10 +583,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: ee974dfd50bc07c7b097b0db2f5b36dedb571f9b910b2e5160a3d24018a54ade
+      sha256: "94bfc92dc2bd7dbec934a04e80155beb2dd71e76e166d14095c129880b0c0e36"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.1+9"
+    version: "0.2.2+5"
   dio:
     dependency: "direct main"
     description:

@@ -4,31 +4,30 @@ const acknowledgementKeys = AcknowledgementKeys();
 const commonKeys = CommonKeys();
 const beneficiaryDetailsKeys = BeneficiaryDetailsKeys();
 
-
-class SearchBeneficiaryKeys{
+class SearchBeneficiaryKeys {
   const SearchBeneficiaryKeys();
-
 }
 
-class BeneficiaryDetailsKeys{
+class BeneficiaryDetailsKeys {
   const BeneficiaryDetailsKeys();
 
   String get detailsCardKey => 'DetailsCard';
   String get tableCardKey => 'Table';
 }
 
-class CommonKeys{
+class CommonKeys {
   const CommonKeys();
   String get secondaryButtonKey => 'SecondaryButton';
   String get primaryButtonKey => 'PrimaryButton';
 }
 
-class HouseholdOverViewKeys{
+class HouseholdOverViewKeys {
   const HouseholdOverViewKeys();
 
   String get editHouseholdKey => 'editHousehold';
   String get editIndividualKey => 'editIndividual';
-  String get individualSecondaryButtonKey => 'IndividualDeliverySecondaryButton';
+  String get individualSecondaryButtonKey =>
+      'IndividualDeliverySecondaryButton';
   String get individualPrimaryButtonKey => 'IndividualDeliveryPrimaryButton';
   String get addMemberKey => 'addMember';
   String get householdSecondaryButtonKey => 'SecondaryButton';
@@ -36,10 +35,9 @@ class HouseholdOverViewKeys{
   String get detailsCardKey => 'DetailsCard';
 }
 
-class AcknowledgementKeys{
+class AcknowledgementKeys {
   const AcknowledgementKeys();
 
-  String get acknowledgmentTitleKey => 'AcknowledgmentTitle';
+  String get acknowledgmentTitleKey => 'AcknowledgementTitle';
   String get acknowledgmentDescriptionKey => 'AcknowledgementDescription';
-
 }
