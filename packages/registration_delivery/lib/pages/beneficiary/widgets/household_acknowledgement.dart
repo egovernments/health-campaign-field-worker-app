@@ -52,12 +52,12 @@ class HouseholdAcknowledgementPageState
                 ),
                 title: householdAcknowledgementTemplate
                     ?.properties?[registration_keys.acknowledgementKeys.acknowledgmentTitleKey]?.hidden == true ?
-                "" : localizations.translate(
+                "" : householdAcknowledgementTemplate
+                    ?.properties?[registration_keys.acknowledgementKeys.acknowledgmentTitleKey]?.label != null
+                  ? localizations.translate(
                   householdAcknowledgementTemplate
-                      ?.properties?[registration_keys.acknowledgementKeys.acknowledgmentTitleKey]?.label
-                      ??
-                  i18.acknowledgementSuccess.acknowledgementLabelText,
-                ),
+                      ?.properties?[registration_keys.acknowledgementKeys.acknowledgmentTitleKey]?.label ?? ""
+                ) : "",
                 actions: _buildActionButtons(context, householdAcknowledgementTemplate),
               ),
             );
