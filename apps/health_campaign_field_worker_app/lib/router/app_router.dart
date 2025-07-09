@@ -20,7 +20,9 @@ import 'package:registration_delivery/router/registration_delivery_router.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:survey_form/router/survey_form_router.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
-
+import 'package:forms_engine/router/forms_router.dart';
+import 'package:forms_engine/pages/forms_render.dart';
+import 'package:forms_engine/router/forms_router.gm.dart';
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
@@ -49,7 +51,8 @@ part 'app_router.gr.dart';
     ClosedHouseholdPackageRoute,
     DashboardRoute,
     SurveyFormRoute,
-    ComplaintsRoute
+    ComplaintsRoute,
+    FormsRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -68,6 +71,7 @@ class AppRouter extends _$AppRouter {
           initial: true,
         ),
         AutoRoute(page: LoginRoute.page, path: 'login'),
+        AutoRoute(page: DigitScannerRoute.page, path: 'scanner'),
       ],
     ),
     AutoRoute(
@@ -201,6 +205,9 @@ class AppRouter extends _$AppRouter {
 
         // Referral Reconciliation Route
         ...ReferralReconciliationRoute().routes,
+
+        // Forms Route
+        ...FormsRoute().routes,
       ],
     )
   ];

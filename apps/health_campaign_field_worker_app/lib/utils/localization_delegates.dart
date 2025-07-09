@@ -22,6 +22,8 @@ import 'package:registration_delivery/blocs/app_localization.dart'
     as registration_delivery_localization;
 import 'package:survey_form/blocs/app_localization.dart'
     as survey_form_localization;
+import 'package:forms_engine/blocs/app_localization.dart'
+as forms_engine_localization;
 
 import '../blocs/localization/app_localization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -78,6 +80,10 @@ getAppLocalizationDelegates({
       appConfig.languages!,
     ),
     component_localization.ComponentLocalization.getDelegate(
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
+      appConfig.languages!,
+    ),
+    forms_engine_localization.FormLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),

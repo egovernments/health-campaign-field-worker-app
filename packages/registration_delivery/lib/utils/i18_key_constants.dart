@@ -29,6 +29,7 @@ class Common {
   String get coreCommonAge => 'CORE_COMMON_AGE';
 
   String get coreCommonName => 'CORE_COMMON_NAME';
+  String get coreCommonError => 'CORE_COMMON_ERROR';
 
   String get coreCommonEmailId => 'CORE_COMMON_EMAIL_ID';
 

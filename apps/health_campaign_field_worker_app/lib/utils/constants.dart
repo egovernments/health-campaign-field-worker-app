@@ -91,7 +91,8 @@ class Constants {
 
   static const String boundaryLocalizationPath = 'rainmaker-boundary-admin';
 
-  static const String dashboardAnalyticsPath = '/dashboard-analytics/dashboard/getChartV2';
+  static const String dashboardAnalyticsPath =
+      '/dashboard-analytics/dashboard/getChartV2';
 
   static RegExp mobileNumberRegExp =
       RegExp(r'^(?=.{10}$)[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
@@ -346,6 +347,21 @@ enum DigitProgressDialogType {
   checkFailed,
   pendingSync,
 }
+
+DataModelType getDataModelTypeFromModel(EntityModel entity) {
+  if (entity is HouseholdModel) {
+    return DataModelType.household;
+  } else if (entity is HouseholdMemberModel) {
+    return DataModelType.householdMember;
+  } else if (entity is IndividualModel) {
+    return DataModelType.individual;
+  } else if (entity is ProjectBeneficiaryModel) {
+    return DataModelType.projectBeneficiary;
+  } else {
+    return DataModelType.householdMember; // or throw if this should not happen
+  }
+}
+
 
 class DownloadBeneficiary {
   String title;

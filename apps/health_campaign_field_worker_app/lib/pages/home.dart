@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
@@ -10,6 +11,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
+import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
@@ -30,12 +32,14 @@ import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
+import 'package:forms_engine/blocs/forms/forms.dart';
 import '../blocs/localization/localization.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -267,7 +271,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     return count == 0
                         ? const Offstage()
                         : Padding(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: spacer2,
                             ),
                             child: InfoCard(
@@ -362,12 +366,58 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
+            final prefs = await SharedPreferences.getInstance();
+            final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+            if (schemaJsonRaw != null) {
+              final allSchemas =
+                  json.decode(schemaJsonRaw) as Map<String, dynamic>;
+
+              final registrationSchemaEntry = allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
+              final deliverySchemaEntry = allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
+
+              final registrationSchemaData = registrationSchemaEntry?['data'];
+              final deliverySchemaData = deliverySchemaEntry?['data'];
+
+              if (registrationSchemaData != null || deliverySchemaData !=null) {
+                // Extract templates from both schemas
+                final regTemplatesRaw = registrationSchemaData?['templates'];
+                final delTemplatesRaw = deliverySchemaData?['templates'];
+
+                final Map<String, dynamic> regTemplateMap =
+                regTemplatesRaw is Map<String, dynamic> ? regTemplatesRaw : {};
+
+                final Map<String, dynamic> delTemplateMap =
+                delTemplatesRaw is Map<String, dynamic> ? delTemplatesRaw : {};
+
+                final templates = {
+                  for (final entry in {...regTemplateMap, ...delTemplateMap}
+                      .entries)
+                    entry.key: TemplateConfig.fromJson(
+                        entry.value as Map<String, dynamic>)
+                };
+
+                final registrationConfig = json.encode(registrationSchemaData);
+                final deliveryConfig = json.encode(deliverySchemaData);
+
+                RegistrationDeliverySingleton()
+                    .setTemplateConfigs(templates);
+                RegistrationDeliverySingleton()
+                    .setRegistrationConfig(registrationConfig);
+                RegistrationDeliverySingleton()
+                    .setDeliveryConfig(deliveryConfig);
+
+              }
+
+              if (isTriggerLocalisation ) {
+                final moduleName = 'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
+                triggerLocalization(module: moduleName);
+                isTriggerLocalisation = false;
+              }
+            }
             RegistrationDeliverySingleton()
                 .setHouseholdType(HouseholdType.family);
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
+
             await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
@@ -459,18 +509,19 @@ class _HomePageState extends LocalizedState<HomePage> {
               icon: Icons.sync_alt,
               label: i18.home.syncDataLabel,
               onPressed: () async {
-                if (snapshot.data?['enablesManualSync'] == true) {
-                  if (context.mounted) _attemptSyncUp(context);
-                } else {
-                  if (context.mounted) {
-                    Toast.showToast(
-                      context,
-                      message: localizations
-                          .translate(i18.common.coreCommonSyncInProgress),
-                      type: ToastType.success,
-                    );
-                  }
-                }
+                if (context.mounted) _attemptSyncUp(context);
+                // if (snapshot.data?['enablesManualSync'] == true) {
+                //   if (context.mounted) _attemptSyncUp(context);
+                // } else {
+                //   if (context.mounted) {
+                //     Toast.showToast(
+                //       context,
+                //       message: localizations
+                //           .translate(i18.common.coreCommonSyncInProgress),
+                //       type: ToastType.success,
+                //     );
+                //   }
+                // }
               },
             );
           },
@@ -513,8 +564,8 @@ class _HomePageState extends LocalizedState<HomePage> {
               triggerLocalization();
               isTriggerLocalisation = false;
             }
-            ;
-            context.router.push(const ManageAttendanceRoute());
+
+            // context.router.push( FormsRoute(pageName: pageName!));
           },
         ),
       ),
@@ -698,7 +749,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     }
   }
 
-  void triggerLocalization() {
+  void triggerLocalization({String? module, bool? loadOnline}) {
     context.read<AppInitializationBloc>().state.maybeWhen(
           orElse: () {},
           initialized: (
@@ -711,15 +762,27 @@ class _HomePageState extends LocalizedState<HomePage> {
             final selectedLocale = AppSharedPreferences().getSelectedLocale;
             LocalizationParams()
                 .setCode(LeastLevelBoundarySingleton().boundary);
-            context
-                .read<LocalizationBloc>()
-                .add(LocalizationEvent.onLoadLocalization(
-                  module:
-                      "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
-                  tenantId: appConfig.tenantId ?? "default",
-                  locale: selectedLocale!,
-                  path: Constants.localizationApiPath,
-                ));
+            if (loadOnline == true) {
+              context
+                  .read<LocalizationBloc>()
+                  .add(LocalizationEvent.onRemoteLoadLocalization(
+                    module: module ??
+                        "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                    tenantId: envConfig.variables.tenantId,
+                    locale: selectedLocale!,
+                    path: Constants.localizationApiPath,
+                  ));
+            } else {
+              context
+                  .read<LocalizationBloc>()
+                  .add(LocalizationEvent.onLoadLocalization(
+                module: module ??
+                    "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                tenantId: envConfig.variables.tenantId,
+                locale: selectedLocale!,
+                path: Constants.localizationApiPath,
+              ));
+            }
           },
         );
   }

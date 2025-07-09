@@ -16,7 +16,9 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
+import 'package:registration_bloc/models/global_search_params.dart' as reg_params;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:survey_form/survey_form.dart';
 
 import '/widgets/status_filter/status_filter.dart';
@@ -30,6 +32,7 @@ import '../../models/entities/registration_delivery_enums.dart';
 import '../../models/entities/status.dart';
 import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/registration_component_keys.dart' as registration_keys;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
@@ -62,19 +65,18 @@ class _HouseholdOverviewPageState
 
   @override
   Widget build(BuildContext context) {
+    final pageKey = HouseholdOverviewRoute.name.replaceAll('Route', '');
+    final overviewTemplate = RegistrationDeliverySingleton().templateConfigs?[pageKey];
     final theme = Theme.of(context);
     final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType!;
     final textTheme = theme.digitTextTheme(context);
 
     return PopScope(
       onPopInvoked: (didPop) async {
-        context
-            .read<SearchBlocWrapper>()
-            .searchHouseholdsBloc
-            .add(const SearchHouseholdsClearEvent());
+        context.read<RegistrationWrapperBloc>().add(const RegistrationWrapperEvent.clear());
         context.router.maybePop();
       },
-      child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
+      child: BlocBuilder<RegistrationWrapperBloc, RegistrationWrapperState>(
         builder: (ctx, state) {
           return Scaffold(
             body: state.loading
@@ -115,33 +117,118 @@ class _HouseholdOverviewPageState
                             child: BlocBuilder<ServiceDefinitionBloc,
                                 ServiceDefinitionState>(
                               builder: (context, serviceDefinitionState) =>
-                                  BlocBuilder<DeliverInterventionBloc,
-                                      DeliverInterventionState>(
+                                  BlocBuilder<RegistrationWrapperBloc,
+                                      RegistrationWrapperState>(
                                 builder: (ctx, deliverInterventionState) =>
-                                    state.householdMemberWrapper.tasks
+                                    state.householdMembers.firstOrNull?.tasks
                                                 ?.lastOrNull?.status ==
                                             Status.administeredSuccess.toValue()
-                                        ? Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: spacer2),
-                                            child: DigitButton(
+                                        ? Offstage(
+                                      offstage: overviewTemplate
+                                          ?.properties?[registration_keys.commonKeys.secondaryButtonKey]
+                                          ?.hidden ?? false,
+                                          child: Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  vertical: spacer2),
+                                              child: DigitButton(
+                                                label: localizations.translate(
+                                                  overviewTemplate
+                                                      ?.properties?[registration_keys.commonKeys.secondaryButtonKey]
+                                                      ?.label ?? '${RegistrationDeliverySingleton().selectedProject!.projectType}_${i18.memberCard.deliverDetailsUpdateLabel}',
+                                                ),
+                                                capitalizeLetters: false,
+                                                isDisabled: state
+                                                            .householdMembers.first
+                                                            .tasks
+                                                            ?.lastOrNull
+                                                            ?.status ==
+                                                        Status.administeredSuccess
+                                                            .toValue()
+                                                    ? true
+                                                    : false,
+                                                type: DigitButtonType.secondary,
+                                                size: DigitButtonSize.large,
+                                                mainAxisSize: MainAxisSize.max,
+                                                onPressed: () {
+                                                  serviceDefinitionState.when(
+                                                      empty: () {},
+                                                      isloading: () {},
+                                                      serviceDefinitionFetch:
+                                                          (value, model) {
+                                                        if (value
+                                                            .where((element) =>
+                                                                element.code
+                                                                    .toString()
+                                                                    .contains(
+                                                                        '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
+                                                            .toList()
+                                                            .isEmpty) {
+                                                          context.router.push(
+                                                            DeliverInterventionRoute(),
+                                                          );
+                                                        } else {
+                                                          navigateToChecklist(
+                                                              ctx,
+                                                              state
+                                                                  .householdMembers.first
+                                                                  .household!
+                                                                  .clientReferenceId);
+                                                        }
+                                                      });
+                                                  callReloadEvent(
+                                                      offset: state
+                                                          .householdMembers.first
+                                                          .members!
+                                                          .length,
+                                                      limit: limit);
+                                                },
+                                              ),
+                                            ),
+                                        )
+                                        : Offstage(
+                                          offstage: (overviewTemplate
+                                              ?.properties?[registration_keys.commonKeys.primaryButtonKey]
+                                              ?.hidden ?? false),
+                                          child: DigitButton(
                                               label: localizations.translate(
-                                                '${RegistrationDeliverySingleton().selectedProject!.projectType}_${i18.memberCard.deliverDetailsUpdateLabel}',
+                                                  overviewTemplate
+                                                      ?.properties?[registration_keys.commonKeys.primaryButtonKey]
+                                                      ?.label ??
+                                                '${RegistrationDeliverySingleton().selectedProject!.projectType}_${i18.householdOverView.householdOverViewActionText}',
                                               ),
                                               capitalizeLetters: false,
-                                              isDisabled: state
-                                                          .householdMemberWrapper
-                                                          .tasks
-                                                          ?.lastOrNull
-                                                          ?.status ==
-                                                      Status.administeredSuccess
-                                                          .toValue()
-                                                  ? true
-                                                  : false,
-                                              type: DigitButtonType.secondary,
+                                              type: DigitButtonType.primary,
                                               size: DigitButtonSize.large,
                                               mainAxisSize: MainAxisSize.max,
-                                              onPressed: () {
+                                              isDisabled: (state.householdMembers.firstOrNull
+                                                                  ?.projectBeneficiaries ??
+                                                              [])
+                                                          .isEmpty ||
+                                                      state
+                                                              .householdMembers.first
+                                                              .tasks
+                                                              ?.lastOrNull
+                                                              ?.status ==
+                                                          Status.closeHousehold
+                                                              .toValue()
+                                                  ? true
+                                                  : false,
+                                              onPressed: () async {
+                                                // final bloc = ctx.read<
+                                                //     HouseholdOverviewBloc>();
+                                                //
+                                                // final projectId =
+                                                //     RegistrationDeliverySingleton()
+                                                //         .projectId!;
+
+                                                // bloc.add(
+                                                //   HouseholdOverviewReloadEvent(
+                                                //     projectId: projectId,
+                                                //     projectBeneficiaryType:
+                                                //         beneficiaryType,
+                                                //   ),
+                                                // );
+
                                                 serviceDefinitionState.when(
                                                     empty: () {},
                                                     isloading: () {},
@@ -152,111 +239,41 @@ class _HouseholdOverviewPageState
                                                               element.code
                                                                   .toString()
                                                                   .contains(
+                                                                      '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
+                                                              element.code
+                                                                  .toString()
+                                                                  .contains(
                                                                       '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
                                                           .toList()
                                                           .isEmpty) {
                                                         context.router.push(
-                                                          DeliverInterventionRoute(),
+                                                          BeneficiaryDetailsRoute(),
                                                         );
                                                       } else {
                                                         navigateToChecklist(
                                                             ctx,
-                                                            state
-                                                                .householdMemberWrapper
-                                                                .household!
-                                                                .clientReferenceId);
+                                                            RegistrationDeliverySingleton()
+                                                                        .beneficiaryType ==
+                                                                    BeneficiaryType
+                                                                        .individual
+                                                                ? state
+                                                                    .selectedIndividual!
+                                                                    .clientReferenceId
+                                                                : state
+                                                                    .householdMembers.first
+                                                                    .household!
+                                                                    .clientReferenceId);
                                                       }
                                                     });
                                                 callReloadEvent(
                                                     offset: state
-                                                        .householdMemberWrapper
+                                                        .householdMembers.first
                                                         .members!
                                                         .length,
                                                     limit: limit);
                                               },
                                             ),
-                                          )
-                                        : DigitButton(
-                                            label: localizations.translate(
-                                              '${RegistrationDeliverySingleton().selectedProject!.projectType}_${i18.householdOverView.householdOverViewActionText}',
-                                            ),
-                                            capitalizeLetters: false,
-                                            type: DigitButtonType.primary,
-                                            size: DigitButtonSize.large,
-                                            mainAxisSize: MainAxisSize.max,
-                                            isDisabled: (state.householdMemberWrapper
-                                                                .projectBeneficiaries ??
-                                                            [])
-                                                        .isEmpty ||
-                                                    state
-                                                            .householdMemberWrapper
-                                                            .tasks
-                                                            ?.lastOrNull
-                                                            ?.status ==
-                                                        Status.closeHousehold
-                                                            .toValue()
-                                                ? true
-                                                : false,
-                                            onPressed: () async {
-                                              final bloc = ctx.read<
-                                                  HouseholdOverviewBloc>();
-
-                                              final projectId =
-                                                  RegistrationDeliverySingleton()
-                                                      .projectId!;
-
-                                              bloc.add(
-                                                HouseholdOverviewReloadEvent(
-                                                  projectId: projectId,
-                                                  projectBeneficiaryType:
-                                                      beneficiaryType,
-                                                ),
-                                              );
-
-                                              serviceDefinitionState.when(
-                                                  empty: () {},
-                                                  isloading: () {},
-                                                  serviceDefinitionFetch:
-                                                      (value, model) {
-                                                    if (value
-                                                        .where((element) =>
-                                                            element.code
-                                                                .toString()
-                                                                .contains(
-                                                                    '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
-                                                            element.code
-                                                                .toString()
-                                                                .contains(
-                                                                    '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
-                                                        .toList()
-                                                        .isEmpty) {
-                                                      context.router.push(
-                                                        DeliverInterventionRoute(),
-                                                      );
-                                                    } else {
-                                                      navigateToChecklist(
-                                                          ctx,
-                                                          RegistrationDeliverySingleton()
-                                                                      .beneficiaryType ==
-                                                                  BeneficiaryType
-                                                                      .individual
-                                                              ? state
-                                                                  .selectedIndividual!
-                                                                  .clientReferenceId
-                                                              : state
-                                                                  .householdMemberWrapper
-                                                                  .household!
-                                                                  .clientReferenceId);
-                                                    }
-                                                  });
-                                              callReloadEvent(
-                                                  offset: state
-                                                      .householdMemberWrapper
-                                                      .members!
-                                                      .length,
-                                                  limit: limit);
-                                            },
-                                          ),
+                                        ),
                               ),
                             ),
                           ),
@@ -271,134 +288,163 @@ class _HouseholdOverviewPageState
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
-                                    if ((state.householdMemberWrapper
-                                                .projectBeneficiaries ??
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(spacer2),
+                                        child: Text(
+                                          overviewTemplate?.label != null ?
+                                              localizations.translate(overviewTemplate?.label ?? i18
+                                                  .householdOverView
+                                                  .householdOverViewLabel)
+                                              : localizations.translate(i18
+                                              .householdOverView
+                                              .householdOverViewLabel),
+                                          style: textTheme.headingXl.copyWith(
+                                              color: theme.colorTheme.primary.primary2
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    if ((state.householdMembers.firstOrNull
+                                                ?.projectBeneficiaries ??
                                             [])
                                         .isNotEmpty)
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: DigitButton(
-                                          onPressed: () {
-                                            final projectId =
-                                                RegistrationDeliverySingleton()
-                                                    .projectId!;
+                                      Offstage(
+                                        offstage: overviewTemplate
+                                            ?.properties?[registration_keys.householdOverViewKeys.editHouseholdKey]
+                                            ?.hidden ?? true,
+                                        child: Align(
+                                          alignment: Alignment.centerRight,
+                                          child: DigitButton(
+                                            onPressed: () {
+                                              final projectId =
+                                                  RegistrationDeliverySingleton()
+                                                      .projectId!;
 
-                                            final bloc = context
-                                                .read<HouseholdOverviewBloc>();
-                                            bloc.add(
-                                              HouseholdOverviewReloadEvent(
-                                                projectId: projectId,
-                                                projectBeneficiaryType:
-                                                    beneficiaryType,
-                                              ),
-                                            );
-                                            showDialog(
-                                              context: context,
-                                              builder: (ctx) => DigitActionCard(
-                                                actions: [
-                                                  DigitButton(
-                                                    capitalizeLetters: false,
-                                                    prefixIcon: Icons.edit,
-                                                    label: (RegistrationDeliverySingleton()
-                                                                .householdType ==
-                                                            HouseholdType
-                                                                .community)
-                                                        ? localizations.translate(i18
-                                                            .householdOverView
-                                                            .clfOverViewEditLabel)
-                                                        : localizations
-                                                            .translate(
-                                                            i18.householdOverView
-                                                                .householdOverViewEditLabel,
+                                              final bloc = context
+                                                  .read<HouseholdOverviewBloc>();
+                                              bloc.add(
+                                                HouseholdOverviewReloadEvent(
+                                                  projectId: projectId,
+                                                  projectBeneficiaryType:
+                                                      beneficiaryType,
+                                                ),
+                                              );
+                                              showDialog(
+                                                context: context,
+                                                builder: (ctx) => DigitActionCard(
+                                                  actions: [
+                                                    DigitButton(
+                                                      capitalizeLetters: false,
+                                                      prefixIcon: Icons.edit,
+                                                      label: (RegistrationDeliverySingleton()
+                                                                  .householdType ==
+                                                              HouseholdType
+                                                                  .community)
+                                                          ? localizations.translate(i18
+                                                              .householdOverView
+                                                              .clfOverViewEditLabel)
+                                                          : localizations
+                                                              .translate(
+                                                              i18.householdOverView
+                                                                  .householdOverViewEditLabel,
+                                                            ),
+                                                      type: DigitButtonType
+                                                          .secondary,
+                                                      size: DigitButtonSize.large,
+                                                      onPressed: () async {
+                                                        Navigator.of(
+                                                          context,
+                                                          rootNavigator: true,
+                                                        ).pop();
+
+                                                        HouseholdWrapper
+                                                            wrapper = state
+                                                                .householdMembers.first;
+
+                                                        final timestamp = wrapper
+                                                            .headOfHousehold
+                                                            ?.clientAuditDetails
+                                                            ?.createdTime;
+                                                        final date = DateTime
+                                                            .fromMillisecondsSinceEpoch(
+                                                          timestamp ??
+                                                              DateTime.now()
+                                                                  .millisecondsSinceEpoch,
+                                                        );
+
+                                                        final address = wrapper
+                                                            .household?.address;
+
+                                                        if (address == null)
+                                                          return;
+
+                                                        final projectBeneficiary = state
+                                                            .householdMembers.first
+                                                            .projectBeneficiaries
+                                                            ?.firstWhereOrNull(
+                                                          (element) =>
+                                                              element
+                                                                  .beneficiaryClientReferenceId ==
+                                                              wrapper.household
+                                                                  ?.clientReferenceId,
+                                                        );
+
+                                                        await context.router.root
+                                                            .push(
+                                                          BeneficiaryRegistrationWrapperRoute(
+                                                            initialState:
+                                                                BeneficiaryRegistrationEditHouseholdState(
+                                                              addressModel:
+                                                                  address,
+                                                              individualModel: state
+                                                                      .householdMembers.first
+                                                                      .individuals ??
+                                                                  [],
+                                                              householdModel: state
+                                                                  .householdMembers.first
+                                                                  .household!,
+                                                              registrationDate:
+                                                                  date,
+                                                              projectBeneficiaryModel:
+                                                                  projectBeneficiary,
+                                                            ),
+                                                            children: [
+                                                              HouseholdLocationRoute(),
+                                                            ],
                                                           ),
-                                                    type: DigitButtonType
-                                                        .secondary,
-                                                    size: DigitButtonSize.large,
-                                                    onPressed: () async {
-                                                      Navigator.of(
-                                                        context,
-                                                        rootNavigator: true,
-                                                      ).pop();
-
-                                                      HouseholdMemberWrapper
-                                                          wrapper = state
-                                                              .householdMemberWrapper;
-
-                                                      final timestamp = wrapper
-                                                          .headOfHousehold
-                                                          ?.clientAuditDetails
-                                                          ?.createdTime;
-                                                      final date = DateTime
-                                                          .fromMillisecondsSinceEpoch(
-                                                        timestamp ??
-                                                            DateTime.now()
-                                                                .millisecondsSinceEpoch,
-                                                      );
-
-                                                      final address = wrapper
-                                                          .household?.address;
-
-                                                      if (address == null)
-                                                        return;
-
-                                                      final projectBeneficiary = state
-                                                          .householdMemberWrapper
-                                                          .projectBeneficiaries
-                                                          ?.firstWhereOrNull(
-                                                        (element) =>
-                                                            element
-                                                                .beneficiaryClientReferenceId ==
-                                                            wrapper.household
-                                                                ?.clientReferenceId,
-                                                      );
-
-                                                      await context.router.root
-                                                          .push(
-                                                        BeneficiaryRegistrationWrapperRoute(
-                                                          initialState:
-                                                              BeneficiaryRegistrationEditHouseholdState(
-                                                            addressModel:
-                                                                address,
-                                                            individualModel: state
-                                                                    .householdMemberWrapper
-                                                                    .members ??
-                                                                [],
-                                                            householdModel: state
-                                                                .householdMemberWrapper
-                                                                .household!,
-                                                            registrationDate:
-                                                                date,
-                                                            projectBeneficiaryModel:
-                                                                projectBeneficiary,
-                                                          ),
-                                                          children: [
-                                                            HouseholdLocationRoute(),
-                                                          ],
-                                                        ),
-                                                      );
-                                                      callReloadEvent(
-                                                          offset: 0, limit: 10);
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                          label:
-                                              (RegistrationDeliverySingleton()
-                                                          .householdType ==
-                                                      HouseholdType.community)
-                                                  ? localizations.translate(i18
-                                                      .householdOverView
-                                                      .clfOverViewEditIconText)
-                                                  : localizations.translate(
-                                                      i18.householdOverView
-                                                          .householdOverViewEditIconText,
+                                                        );
+                                                        callReloadEvent(
+                                                            offset: 0, limit: 10);
+                                                      },
                                                     ),
-                                          type: DigitButtonType.tertiary,
-                                          size: DigitButtonSize.medium,
-                                          prefixIcon: Icons.edit,
-                                          capitalizeLetters: false,
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                            label:
+                                            overviewTemplate
+                                                ?.properties?[registration_keys.householdOverViewKeys.editHouseholdKey]
+                                                ?.label != null ? localizations.translate(overviewTemplate
+                                                ?.properties?[registration_keys.householdOverViewKeys.editHouseholdKey]
+                                                ?.label ?? i18.householdOverView
+                                                .householdOverViewEditIconText)
+                                            : (RegistrationDeliverySingleton()
+                                                            .householdType ==
+                                                        HouseholdType.community)
+                                                    ? localizations.translate(i18
+                                                        .householdOverView
+                                                        .clfOverViewEditIconText)
+                                                    : localizations.translate(
+                                                        i18.householdOverView
+                                                            .householdOverViewEditIconText,
+                                                      ),
+                                            type: DigitButtonType.tertiary,
+                                            size: DigitButtonSize.medium,
+                                            prefixIcon: Icons.edit,
+                                            capitalizeLetters: false,
+                                          ),
                                         ),
                                       ),
 
@@ -427,37 +473,15 @@ class _HouseholdOverviewPageState
                                     //     ),
                                     //   ),
                                     // ),
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(spacer2),
-                                        child: Text(
-                                          RegistrationDeliverySingleton()
-                                                          .householdType !=
-                                                      null &&
-                                                  RegistrationDeliverySingleton()
-                                                          .householdType ==
-                                                      HouseholdType.community
-                                              ? localizations.translate(i18
-                                                  .householdOverView
-                                                  .clfOverviewLabel)
-                                              : localizations.translate(i18
-                                                  .householdOverView
-                                                  .householdOverViewLabel),
-                                          style: textTheme.headingXl.copyWith(
-                                            color: theme.colorTheme.primary.primary2
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+
                                     Padding(
                                       padding: const EdgeInsets.only(
                                         left: spacer2,
                                         right: spacer2,
                                       ),
                                       child: BlocBuilder<
-                                              DeliverInterventionBloc,
-                                              DeliverInterventionState>(
+                                              RegistrationWrapperBloc,
+                                              RegistrationWrapperState>(
                                           builder:
                                               (ctx, deliverInterventionState) {
                                         bool shouldShowStatus =
@@ -473,7 +497,7 @@ class _HouseholdOverviewPageState
                                                 localizations.translate(i18
                                                     .householdOverView
                                                     .instituteNameLabel): state
-                                                        .householdMemberWrapper
+                                                        .householdMembers.first
                                                         .household
                                                         ?.address
                                                         ?.buildingName ??
@@ -482,13 +506,13 @@ class _HouseholdOverviewPageState
                                                 localizations.translate(
                                                   i18.deliverIntervention
                                                       .memberCountText,
-                                                ): state.householdMemberWrapper
+                                                ): state.householdMembers.first
                                                     .household?.memberCount,
                                                 localizations.translate(
                                                   i18.householdLocation
                                                       .administrationAreaFormLabel,
                                                 ): localizations.translate(state
-                                                        .householdMemberWrapper
+                                                        .householdMembers.first
                                                         .headOfHousehold
                                                         ?.address
                                                         ?.first
@@ -500,15 +524,23 @@ class _HouseholdOverviewPageState
                                           );
                                         }
 
-                                        return Column(
+                                        return overviewTemplate
+                                            ?.properties?[registration_keys.householdOverViewKeys.detailsCardKey]?.hidden !=  true
+                                            ? Column(
                                           children: [
                                             DigitTableCard(
-                                              element: {
+                                              element:
+                                              buildEnumValueMap(state.householdMembers.firstOrNull,
+                                                  overviewTemplate
+                                                      ?.properties?[registration_keys.householdOverViewKeys.detailsCardKey]?.enums
+                                              )
+                                                  ?.map((k, v) => MapEntry(localizations.translate(k), localizations.translate(v.toString())))
+                                                  ?? {
                                                 localizations.translate(i18
                                                     .householdOverView
                                                     .householdOverViewHouseholdHeadNameLabel): state
-                                                        .householdMemberWrapper
-                                                        .headOfHousehold
+                                                        .householdMembers.firstOrNull
+                                                        ?.headOfHousehold
                                                         ?.name
                                                         ?.givenName ??
                                                     localizations.translate(i18
@@ -517,8 +549,8 @@ class _HouseholdOverviewPageState
                                                   i18.householdLocation
                                                       .administrationAreaFormLabel,
                                                 ): localizations.translate(state
-                                                        .householdMemberWrapper
-                                                        .headOfHousehold
+                                                        .householdMembers.firstOrNull
+                                                        ?.headOfHousehold
                                                         ?.address
                                                         ?.first
                                                         .locality
@@ -527,21 +559,20 @@ class _HouseholdOverviewPageState
                                                 localizations.translate(
                                                   i18.deliverIntervention
                                                       .memberCountText,
-                                                ): state.householdMemberWrapper
-                                                    .household?.memberCount,
+                                                ): state.householdMembers.firstOrNull
+                                                    ?.household?.memberCount,
                                                 if (shouldShowStatus)
                                                   localizations.translate(i18
                                                           .beneficiaryDetails
                                                           .status):
                                                       localizations.translate(
-                                                    getStatusAttributes(state,
-                                                            deliverInterventionState)[
+                                                    getStatusAttributes(state)[
                                                         'textLabel'],
                                                   )
                                               },
                                             ),
                                           ],
-                                        );
+                                        ) : const SizedBox.shrink();
                                       }),
                                     ),
                                     if (RegistrationDeliverySingleton()
@@ -631,7 +662,7 @@ class _HouseholdOverviewPageState
                                                       child: DigitChip(
                                                         label:
                                                             '${localizations.translate(getStatus(selectedFilters[index]))}'
-                                                            ' (${state.householdMemberWrapper.members!.length})',
+                                                            ' (${state.householdMembers.firstOrNull?.members?.length})',
                                                         onItemDelete: () {
                                                           selectedFilters.remove(
                                                               selectedFilters[
@@ -647,18 +678,18 @@ class _HouseholdOverviewPageState
                                           )
                                         : const Offstage(),
                                     Column(
-                                      children: (state.householdMemberWrapper
-                                                  .members ??
+                                      children: (state.householdMembers.firstOrNull
+                                                  ?.individuals ??
                                               [])
                                           .map(
                                         (e) {
                                           final isHead = state
-                                                  .householdMemberWrapper
+                                                  .householdMembers.first
                                                   .headOfHousehold
                                                   ?.clientReferenceId ==
                                               e.clientReferenceId;
                                           final projectBeneficiaryId = state
-                                              .householdMemberWrapper
+                                              .householdMembers.first
                                               .projectBeneficiaries
                                               ?.firstWhereOrNull((b) =>
                                                   b.beneficiaryClientReferenceId ==
@@ -666,7 +697,7 @@ class _HouseholdOverviewPageState
                                               ?.clientReferenceId;
 
                                           final projectBeneficiary = state
-                                              .householdMemberWrapper
+                                              .householdMembers.first
                                               .projectBeneficiaries
                                               ?.where(
                                                 (element) =>
@@ -678,7 +709,7 @@ class _HouseholdOverviewPageState
                                                                 .individual
                                                         ? e.clientReferenceId
                                                         : state
-                                                            .householdMemberWrapper
+                                                            .householdMembers.first
                                                             .household
                                                             ?.clientReferenceId),
                                               )
@@ -688,7 +719,7 @@ class _HouseholdOverviewPageState
                                                       [])
                                                   .isNotEmpty
                                               ? state
-                                                  .householdMemberWrapper.tasks
+                                                  .householdMembers.firstOrNull?.tasks
                                                   ?.where((element) =>
                                                       element
                                                           .projectBeneficiaryClientReferenceId ==
@@ -699,7 +730,7 @@ class _HouseholdOverviewPageState
                                           final referralData =
                                               (projectBeneficiary ?? [])
                                                       .isNotEmpty
-                                                  ? state.householdMemberWrapper
+                                                  ? state.householdMembers.first
                                                       .referrals
                                                       ?.where((element) =>
                                                           element
@@ -712,7 +743,7 @@ class _HouseholdOverviewPageState
                                           final sideEffectData = taskData !=
                                                       null &&
                                                   taskData.isNotEmpty
-                                              ? state.householdMemberWrapper
+                                              ? state.householdMembers.first
                                                   .sideEffects
                                                   ?.where((element) =>
                                                       element
@@ -772,10 +803,15 @@ class _HouseholdOverviewPageState
                                                 projectBeneficiary ?? [],
                                             tasks: taskData,
                                             sideEffects: sideEffectData,
+                                            editMemberActionProperties: overviewTemplate
+                                                ?.properties?[registration_keys.householdOverViewKeys.editIndividualKey],
+                                            primaryButtonProperties: overviewTemplate
+                                                ?.properties?[registration_keys.householdOverViewKeys.individualPrimaryButtonKey],
+                                            secondaryButtonProperties: overviewTemplate
+                                                ?.properties?[registration_keys.householdOverViewKeys.individualSecondaryButtonKey],
                                             editMemberAction: () async {
                                               final bloc = ctx.read<
                                                   HouseholdOverviewBloc>();
-
                                               Navigator.of(
                                                 context,
                                                 rootNavigator: true,
@@ -804,11 +840,11 @@ class _HouseholdOverviewPageState
                                                       BeneficiaryRegistrationEditIndividualState(
                                                     individualModel: e,
                                                     householdModel: state
-                                                        .householdMemberWrapper
+                                                        .householdMembers.first
                                                         .household!,
                                                     addressModel: address.first,
                                                     projectBeneficiaryModel: state
-                                                        .householdMemberWrapper
+                                                        .householdMembers.first
                                                         .projectBeneficiaries
                                                         ?.firstWhereOrNull(
                                                       (element) =>
@@ -821,7 +857,7 @@ class _HouseholdOverviewPageState
                                                               ? e
                                                                   .clientReferenceId
                                                               : state
-                                                                  .householdMemberWrapper
+                                                                  .householdMembers.first
                                                                   .household
                                                                   ?.clientReferenceId),
                                                     ),
@@ -846,7 +882,7 @@ class _HouseholdOverviewPageState
                                                           RegistrationDeliverySingleton()
                                                               .projectId!,
                                                       householdModel: state
-                                                          .householdMemberWrapper
+                                                          .householdMembers.first
                                                           .household!,
                                                       projectBeneficiaryType:
                                                           beneficiaryType,
@@ -989,19 +1025,25 @@ class _HouseholdOverviewPageState
                                     ),
                                   ],
                                 ),
-                                DigitButton(
-                                  mainAxisSize: MainAxisSize.max,
-                                  onPressed: () => addIndividual(
-                                    context,
-                                    state.householdMemberWrapper.household!,
+                                Offstage(
+                                  offstage: overviewTemplate
+                                      ?.properties?[registration_keys.householdOverViewKeys.addMemberKey]?.hidden ?? false,
+                                  child: DigitButton(
+                                    mainAxisSize: MainAxisSize.max,
+                                    onPressed: () => addIndividual(
+                                      context,
+                                      state.householdMembers.first.household!,
+                                    ),
+                                    label: localizations.translate(
+                                      overviewTemplate
+                                          ?.properties?[registration_keys.householdOverViewKeys.addMemberKey]?.label ??
+                                      i18.householdOverView
+                                          .householdOverViewAddActionText,
+                                    ),
+                                    prefixIcon: Icons.add_circle,
+                                    type: DigitButtonType.tertiary,
+                                    size: DigitButtonSize.large,
                                   ),
-                                  label: localizations.translate(
-                                    i18.householdOverView
-                                        .householdOverViewAddActionText,
-                                  ),
-                                  prefixIcon: Icons.add_circle,
-                                  type: DigitButtonType.tertiary,
-                                  size: DigitButtonSize.large,
                                 ),
                               ]),
                         ),
@@ -1054,31 +1096,30 @@ class _HouseholdOverviewPageState
     return false;
   }
 
-  getStatusAttributes(HouseholdOverviewState state,
-      DeliverInterventionState deliverInterventionState) {
+  getStatusAttributes(RegistrationWrapperState state) {
     var textLabel =
         i18.householdOverView.householdOverViewNotRegisteredIconLabel;
     var color = DigitTheme.instance.colorScheme.error;
     var icon = Icons.info_rounded;
 
-    if ((state.householdMemberWrapper.projectBeneficiaries ?? []).isNotEmpty) {
-      textLabel = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
-          ? getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue() ==
+    if ((state.householdMembers.firstOrNull?.projectBeneficiaries ?? []).isNotEmpty) {
+      textLabel = state.householdMembers.firstOrNull?.tasks?.isNotEmpty ?? false
+          ? getTaskStatus(state.householdMembers.firstOrNull?.tasks ?? []).toValue() ==
                   Status.administeredSuccess.toValue()
-              ? '${RegistrationDeliverySingleton().selectedProject!.projectType}_${getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue()}'
-              : getTaskStatus(state.householdMemberWrapper.tasks ?? [])
+              ? '${RegistrationDeliverySingleton().selectedProject!.projectType}_${getTaskStatus(state.householdMembers.firstOrNull?.tasks ?? []).toValue()}'
+              : getTaskStatus(state.householdMembers.firstOrNull?.tasks ?? [])
                   .toValue()
           : Status.registered.toValue();
 
-      color = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
-          ? (state.householdMemberWrapper.tasks?.lastOrNull?.status ==
+      color = state.householdMembers.firstOrNull?.tasks?.isNotEmpty ?? false
+          ? (state.householdMembers.firstOrNull?.tasks?.lastOrNull?.status ==
                   Status.administeredSuccess.toValue()
               ? DigitTheme.instance.colorScheme.onSurfaceVariant
               : DigitTheme.instance.colorScheme.error)
           : DigitTheme.instance.colorScheme.onSurfaceVariant;
 
-      icon = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
-          ? (state.householdMemberWrapper.tasks?.lastOrNull?.status ==
+      icon = state.householdMembers.firstOrNull?.tasks?.isNotEmpty ?? false
+          ? (state.householdMembers.firstOrNull?.tasks?.lastOrNull?.status ==
                   Status.administeredSuccess.toValue()
               ? Icons.check_circle
               : Icons.info_rounded)
@@ -1103,21 +1144,14 @@ class _HouseholdOverviewPageState
     required int limit,
   }) {
     if (mounted) {
-      final bloc = context.read<HouseholdOverviewBloc>();
+      final bloc = context.read<RegistrationWrapperBloc>();
 
-      bloc.add(
-        HouseholdOverviewReloadEvent(
-          projectId: RegistrationDeliverySingleton().projectId!,
-          projectBeneficiaryType:
-              RegistrationDeliverySingleton().beneficiaryType!,
-          offset: offset,
-          limit: limit,
-          searchByName: searchController.text.trim().length > 2
-              ? searchController.text.trim()
-              : null,
-          selectedFilter: selectedFilters,
-        ),
-      );
+      RegistrationWrapperEvent.fetchDeliveryDetails(projectId: RegistrationDeliverySingleton().selectedProject!.id,selectedIndividual: null, householdWrapper: HouseholdWrapper(
+          household: bloc.state.householdMembers.firstOrNull?.household,
+          individuals: bloc.state.householdMembers.firstOrNull?.individuals,
+        members: bloc.state.householdMembers.firstOrNull?.members,
+        projectBeneficiaries: bloc.state.householdMembers.firstOrNull?.projectBeneficiaries,
+      ), beneficiaryType: RegistrationDeliverySingleton().beneficiaryType?.toValue());
     }
   }
 

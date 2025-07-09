@@ -8,6 +8,7 @@ import 'package:digit_ui_components/widgets/atoms/table_cell.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_table.dart';
 import 'package:flutter/material.dart';
+import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 
 import '../../blocs/search_households/search_households.dart';
@@ -20,14 +21,14 @@ import '../localized.dart';
 import 'beneficiary_card.dart';
 
 class ViewBeneficiaryCard extends LocalizedStatefulWidget {
-  final HouseholdMemberWrapper householdMember;
+  final HouseholdWrapper householdWrapper;
   final VoidCallback onOpenPressed;
   final double? distance;
 
   const ViewBeneficiaryCard({
     super.key,
     super.appLocalizations,
-    required this.householdMember,
+    required this.householdWrapper,
     required this.onOpenPressed,
     this.distance,
   });
@@ -37,17 +38,17 @@ class ViewBeneficiaryCard extends LocalizedStatefulWidget {
 }
 
 class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
-  late HouseholdMemberWrapper householdMember;
+  late HouseholdWrapper householdMember;
 
   @override
   void initState() {
-    householdMember = widget.householdMember;
+    householdMember = widget.householdWrapper;
     super.initState();
   }
 
   @override
   void didUpdateWidget(covariant ViewBeneficiaryCard oldWidget) {
-    householdMember = widget.householdMember;
+    householdMember = widget.householdWrapper;
     super.didUpdateWidget(oldWidget);
   }
 
@@ -96,7 +97,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
               // Return null when no matching cycle is found
             );
 
-    final tableData = householdMember.members?.map(
+    final tableData = householdMember.individuals?.map(
       (e) {
         final projectBeneficiary =
             householdMember.projectBeneficiaries?.where((element) {

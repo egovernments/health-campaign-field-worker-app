@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
-
 import 'registration_delivery_router.gm.dart';
+import 'package:forms_engine/router/forms_router.dart';
 
 @AutoRouterConfig.module()
 class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
@@ -11,11 +11,31 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
             page: RegistrationDeliveryWrapperRoute.page,
             path: 'registration-delivery-wrapper',
             children: [
+              ...FormsRoute().routes,
               AutoRoute(
                   initial: true,
                   page: SearchBeneficiaryRoute.page,
                   path: 'search-beneficiary'),
-
+              AutoRoute(
+                page: BeneficiaryErrorRoute.page,
+                path: 'beneficiary-error',
+              ),
+              AutoRoute(
+                page: BeneficiaryAcknowledgementRoute.page,
+                path: 'beneficiary-acknowledgement',
+              ),
+              AutoRoute(
+                page: HouseholdOverviewRoute.page,
+                path: 'overview',
+              ),
+              AutoRoute(
+                page: BeneficiaryDetailsRoute.page,
+                path: 'beneficiary-details',
+              ),
+              AutoRoute(
+                page: HouseholdAcknowledgementRoute.page,
+                path: 'household-acknowledgement',
+              ),
               /// Beneficiary Registration
               AutoRoute(
                 page: BeneficiaryRegistrationWrapperRoute.page,
@@ -35,10 +55,6 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
                     initial: true,
                   ),
                   AutoRoute(
-                    page: BeneficiaryAcknowledgementRoute.page,
-                    path: 'beneficiary-acknowledgement',
-                  ),
-                  AutoRoute(
                     page: SummaryRoute.page,
                     path: 'beneficiary-summary',
                   ),
@@ -48,15 +64,15 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
                 page: BeneficiaryWrapperRoute.page,
                 path: 'beneficiary',
                 children: [
-                  AutoRoute(
-                    page: HouseholdOverviewRoute.page,
-                    path: 'overview',
-                    initial: true,
-                  ),
-                  AutoRoute(
-                    page: BeneficiaryDetailsRoute.page,
-                    path: 'beneficiary-details',
-                  ),
+                  // AutoRoute(
+                  //   page: HouseholdOverviewRoute.page,
+                  //   path: 'overview',
+                  //   initial: true,
+                  // ),
+                  // AutoRoute(
+                  //   page: BeneficiaryDetailsRoute.page,
+                  //   path: 'beneficiary-details',
+                  // ),
                   AutoRoute(
                     page: BeneficiaryChecklistRoute.page,
                     path: 'beneficiary-checklist',
@@ -108,5 +124,6 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
                 ],
               ),
             ]),
+
       ];
 }

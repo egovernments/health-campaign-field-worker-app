@@ -1,13 +1,20 @@
 // Importing necessary packages and modules
+import 'dart:convert';
 import 'dart:math';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
+import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:formula_parser/formula_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
+import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
 import '../models/entities/additional_fields_type.dart';
 import '../models/entities/referral.dart';
@@ -193,40 +200,41 @@ bool checkIfBeneficiaryReferred(
   }
 }
 
-DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
-    IndividualModel? individualModel, HouseholdModel? householdModel) {
+Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
+    IndividualModel? individualModel, HouseholdModel? householdModel,
+    {BuildContext? context}) {
+  List<String> errorMessages = [];
+  DeliveryDoseCriteria? deliveryDoseCriteria;
+
   if (currentDelivery != null) {
     var individualAgeInMonths = 0;
     var gender;
     var roomCount;
     var memberCount;
     String? structureType;
+    var weight = 0.0;
+    var height = 0.0;
 
     if (individualModel != null) {
       final individualAge = DigitDateUtils.calculateAge(
         DigitDateUtils.getFormattedDateToDateTime(
-              individualModel.dateOfBirth!,
-            ) ??
+          individualModel.dateOfBirth!,
+        ) ??
             DateTime.now(),
       );
       individualAgeInMonths = individualAge.years * 12 + individualAge.months;
 
-      gender = individualModel.gender?.index;
+      gender = individualModel.gender?.toValue();
+
     }
     if (householdModel != null && householdModel.additionalFields != null) {
       memberCount = householdModel.memberCount;
       roomCount = int.tryParse(householdModel.additionalFields?.fields
-              .where((h) => h.key == AdditionalFieldsType.noOfRooms.toValue())
-              .firstOrNull
-              ?.value
-              .toString() ??
-          '1')!;
-      structureType = householdModel.additionalFields?.fields
-          .where((h) =>
-              h.key == AdditionalFieldsType.houseStructureTypes.toValue())
+          .where((h) => h.key == AdditionalFieldsType.noOfRooms.toValue())
           .firstOrNull
           ?.value
-          .toString();
+          .toString() ??
+          '1')!;
     }
 
     final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
@@ -235,19 +243,25 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
         if (condition.contains('and')) {
           final conditions = condition.split('and');
 
-          List expressionParser = [];
+          List<bool> expressionParser = [];
           for (var element in conditions) {
-            final expression = FormulaParser(
-              element,
-              {
-                'age': individualAgeInMonths,
-                if (gender != null) 'gender': gender,
-                if (memberCount != null) 'memberCount': memberCount,
-                if (roomCount != null) 'roomCount': roomCount
-              },
-            );
-            final error = expression.parse;
-            expressionParser.add(error["value"]);
+            final expression = CustomFormulaParser.parseCondition(element, {
+              'age': individualAgeInMonths,
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount,
+            }, stringKeys: [
+              'gender'
+            ]);
+            final error = expression;
+            if (error["value"] == null || !error["value"]) {
+              errorMessages.add(condition);
+            }
+            if(error["value"] == null){
+              expressionParser.add(false);
+            }else{
+              expressionParser.add(error["value"]);
+            }
           }
 
           return expressionParser.where((element) => element == true).length ==
@@ -255,7 +269,7 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
         } else if (condition.contains('or')) {
           final conditions = condition.split('or');
 
-          List expressionParser = [];
+          List<bool> expressionParser = [];
           for (var element in conditions) {
             final expression = CustomFormulaParser.parseCondition(element, {
               if (individualModel != null && individualAgeInMonths != 0)
@@ -263,22 +277,28 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               if (gender != null) 'gender': gender,
               if (memberCount != null) 'memberCount': memberCount,
               if (roomCount != null) 'roomCount': roomCount,
-              if (structureType != null) 'type_of_structure': structureType
             }, stringKeys: [
-              'type_of_structure'
+              'gender'
             ]);
             final error = expression;
-            expressionParser.add(error["value"]);
+            if (error["value"] == null || !error["value"]) {
+              errorMessages.add(condition);
+            }
+            if(error["value"] == null){
+              expressionParser.add(false);
+            }else{
+              expressionParser.add(error["value"]);
+            }
           }
 
-          return expressionParser.where((element) => element == true).isNotEmpty
-              ? true
-              : false;
+          return expressionParser
+              .where((element) => element == true)
+              .isNotEmpty;
         } else {
           final conditions = condition.split(
               'and'); // Assuming there's only one condition since we have contain for and check above and split with and will return the first condition so this is valid
 
-          List expressionParser = [];
+          List<bool> expressionParser = [];
           for (var element in conditions) {
             final expression = CustomFormulaParser.parseCondition(element, {
               if (individualModel != null && individualAgeInMonths != 0)
@@ -286,12 +306,19 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               if (gender != null) 'gender': gender,
               if (memberCount != null) 'memberCount': memberCount,
               if (roomCount != null) 'roomCount': roomCount,
-              if (structureType != null) 'type_of_structure': structureType
             }, stringKeys: [
-              'type_of_structure'
+              'gender'
             ]);
             final error = expression;
-            expressionParser.add(error["value"]);
+            if (error["value"] == null || !error["value"]) {
+              errorMessages.add(condition);
+            }
+            if(error["value"] == null){
+              expressionParser.add(false);
+            }else{
+              expressionParser.add(error["value"]);
+            }
+
           }
 
           return expressionParser.where((element) => element == true).length ==
@@ -302,10 +329,17 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
       return false;
     }).toList();
 
-    return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
+    deliveryDoseCriteria =
+    (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
   }
 
-  return null;
+  // Remove duplicate error messages
+  errorMessages = errorMessages.toSet().toList();
+
+  return {
+    'criteria': deliveryDoseCriteria,
+    'errors': errorMessages,
+  };
 }
 
 String maskString(String input) {
@@ -322,10 +356,10 @@ String maskString(String input) {
 class CustomFormulaParser {
   // Modify the function to accept stringKeys as nullable
   static Map<String, dynamic> parseCondition(
-    String condition,
-    Map<String, dynamic> variables, {
-    List<String>? stringKeys,
-  } // Accept stringKeys as nullable
+      String condition,
+      Map<String, dynamic> variables, {
+        List<String>? stringKeys,
+      } // Accept stringKeys as nullable
       ) {
     // If stringKeys is null or empty, default to FormulaParser for all conditions
     if (stringKeys == null || stringKeys.isEmpty) {
@@ -438,6 +472,9 @@ class RegistrationDeliverySingleton {
   List<String>? _houseStructureTypes;
   List<String>? _refusalReasons;
   HouseholdType? _householdType;
+  Map<String, TemplateConfig>? _templateConfigs;
+  String? _registrationConfig;
+  String? _deliveryConfig;
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
@@ -497,6 +534,17 @@ class RegistrationDeliverySingleton {
     _householdType = householdType;
   }
 
+  void setTemplateConfigs(Map<String, TemplateConfig> templateConfigs) {
+    _templateConfigs = templateConfigs;
+  }
+
+  void setRegistrationConfig(String registrationConfig) {
+    _registrationConfig = registrationConfig;
+  }
+  void setDeliveryConfig(String deliveryConfig) {
+    _deliveryConfig = deliveryConfig;
+  }
+
   String? get tenantId => _tenantId;
 
   String? get loggedInUserUuid => _loggedInUserUuid;
@@ -543,6 +591,142 @@ class RegistrationDeliverySingleton {
   UserModel? get loggedInUser => _loggedInUser;
 
   HouseholdType? get householdType => _householdType;
+
+  Map<String, TemplateConfig>? get templateConfigs => _templateConfigs;
+  String? get regisrationConfig => _registrationConfig;
+  String? get deliveryConfig => _deliveryConfig;
+}
+
+/// Safely converts HouseholdMemberWrapper into structured map
+Map<String, dynamic>? _asMap(dynamic obj) {
+  if (obj == null) return null;
+
+  if (obj is Map<String, dynamic>) return obj;
+
+  if (obj is HouseholdWrapper) {
+    return {
+      'HOUSEHOLD'           : obj.household?.toJson(),
+      'INDIVIDUAL'          : obj.headOfHousehold?.toJson(),
+      'TASK': (obj.tasks?.isNotEmpty ?? false) ? obj.tasks!.map((e) => e.toJson()).toList().last : null,
+      'SIDE_EFFECT': (obj.sideEffects?.isNotEmpty ?? false) ? obj.sideEffects!.map((e) => e.toJson()).last : null,
+      'REFERRAL': (obj.referrals?.isNotEmpty ?? false) ? obj.referrals!.map((e) => e.toJson()).toList().last : null,
+    };
+  }
+
+  try {
+    return (obj as dynamic).toJson() as Map<String, dynamic>;
+  } catch (_) {
+    return null;
+  }
+}
+
+
+dynamic _decodeIfString(dynamic v) {
+  if (v is String) {
+    try {
+      return jsonDecode(v);
+    } catch (_) {
+      // not valid JSON → leave it as-is
+    }
+  }
+  return v;
+}
+/// Walk a dotted path like "Household.address[0].locality.code".
+/// Only the *first* segment is lower-cased because rootMap stores
+/// "household/individual/…".  Inner keys keep their original case.
+/// Walks path like address[0].locality.code from the given base map
+dynamic _extractNestedValue(Map<String, dynamic>? base, List<String> path) {
+  if (base == null) return null;
+  dynamic current = base;
+
+  for (final raw in path) {
+    current = _decodeIfString(current);
+    final match = RegExp(r'^([^\[\]]+)(?:\[(\d+)\])?$').firstMatch(raw);
+    if (match == null) return null;
+
+    final key = match.group(1)!;
+    final idx = match.group(2);
+
+    if (current is Map<String, dynamic>) {
+      current = current[key];
+    } else {
+      return null;
+    }
+
+    if (idx != null) {
+      if (current is List && int.parse(idx) < current.length) {
+        current = current[int.parse(idx)];
+      } else {
+        return null;
+      }
+    }
+  }
+  return current;
+}
+
+/// Looks for {additionalFields: {fields: [ {key,value}, … ]}}
+dynamic _extractAdditionalField(Map<String, dynamic>? container, String fieldKey) {
+  if (container == null) return null;
+
+  final fields = (container['additionalFields']?['fields']);
+
+  if (fields is List) {
+    final matched = fields.cast<Map>().firstWhere(
+          (e) => e['key'].toString().contains(fieldKey),
+      orElse: () => {},
+    );
+    return matched['value'];
+  }
+  return null;
+}
+Map<String, dynamic>? _prepareBase(dynamic raw) {
+  if (raw is Map<String, dynamic>) return raw;
+  if (raw is String) {
+    try {
+      final decoded = jsonDecode(raw);
+      return decoded is Map<String, dynamic> ? decoded : null;
+    } catch (_) {
+      return null;
+    }
+  }
+  return null;
+}
+
+Map<String, dynamic>? buildEnumValueMap(
+    HouseholdWrapper? wrapper,
+    List<Map<String, dynamic>>? enums,
+    )
+{
+  if (wrapper == null || enums == null) return null;
+
+  final rootMap = _asMap(wrapper)!;
+  final result = <String, dynamic>{};
+
+  for (final item in enums) {
+    final code         = item['code']     as String;
+    final jsonPath     = item['jsonPath'] as String;
+    final fieldKey     = item['fieldKey'] as String;
+    final isAdditional = (item['additionalField'] ?? 'false') == 'true';
+
+    final segments = jsonPath.split('.');
+    if (segments.isEmpty) continue;
+
+    final rootKey = segments.first.toUpperCase();
+    final base    = _prepareBase(rootMap[rootKey]);
+
+    final value = isAdditional
+        ? _extractAdditionalField(base, fieldKey)
+        : _extractNestedValue(base, segments.sublist(1));
+
+    if (value != null) {
+      result[code] = value;
+
+    } else {
+      result[code] = 'CORE_COMMON_NA';
+
+    }}
+
+  return result.isEmpty ? null : result;
 }
 
 bool allDosesDelivered(
@@ -646,3 +830,11 @@ String getStatus(String selectedFilter) {
     return selectedFilter;
   }
 }
+
+final Map<String, PageRouteInfo> routerMap = {
+  'beneficiary-details': BeneficiaryDetailsRoute(),
+  'beneficiary-acknowledgement': BeneficiaryAcknowledgementRoute(enableViewHousehold: true),
+  'household-acknowledgement': HouseholdAcknowledgementRoute(enableViewHousehold: true),
+  'overview': HouseholdOverviewRoute(),
+  // Add more routes here
+};

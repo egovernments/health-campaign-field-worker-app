@@ -1,3 +1,4 @@
+import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/ComponentTheme/back_button_theme.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -69,6 +70,12 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                     child: DigitButton(
                       capitalizeLetters: false,
                       onPressed: () {
+                             context.read<DigitScannerBloc>().add(
+                                const DigitScannerEvent.handleScanner(
+                                  barCode: [],
+                                  qrCode: []
+                                ),
+                              );
                         context.read<AuthBloc>().add(const AuthLogoutEvent());
                       },
                       prefixIcon: Icons.logout_outlined,

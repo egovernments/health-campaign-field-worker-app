@@ -20,25 +20,42 @@ PropertySchema _$PropertySchemaFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$PropertySchema {
-  @JsonKey(name: 'type')
+  @JsonKey(name: 'type', unknownEnumValue: PropertySchemaType.string)
   PropertySchemaType get type => throw _privateConstructorUsedError;
-  bool? get readonly => throw _privateConstructorUsedError;
+  bool? get readOnly => throw _privateConstructorUsedError;
   bool? get displayOnly => throw _privateConstructorUsedError;
+  bool? get hidden => throw _privateConstructorUsedError;
   Map<String, PropertySchema>? get properties =>
       throw _privateConstructorUsedError;
-  List<String>? get required => throw _privateConstructorUsedError;
-  List<String>? get enums => throw _privateConstructorUsedError;
+  List<Option>? get enums => throw _privateConstructorUsedError;
+  String? get schemaCode => throw _privateConstructorUsedError;
+  bool? get systemDate => throw _privateConstructorUsedError;
+  bool? get charCount => throw _privateConstructorUsedError;
+  @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
   PropertySchemaFormat? get format => throw _privateConstructorUsedError;
-  DateFormatValue? get firstDate => throw _privateConstructorUsedError;
-  DateFormatValue? get lastDate => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _stringOrNull)
+  String? get startDate => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _stringOrNull)
+  String? get endDate => throw _privateConstructorUsedError;
+  int? get minValue => throw _privateConstructorUsedError;
+  int? get maxValue => throw _privateConstructorUsedError;
   int? get minLength => throw _privateConstructorUsedError;
   int? get maxLength => throw _privateConstructorUsedError;
-  num? get maximum => throw _privateConstructorUsedError;
-  num? get minimum => throw _privateConstructorUsedError;
-  String? get hint => throw _privateConstructorUsedError;
+  String? get helpText => throw _privateConstructorUsedError;
+  String? get tooltip => throw _privateConstructorUsedError;
+  String? get innerLabel => throw _privateConstructorUsedError;
   String? get label => throw _privateConstructorUsedError;
+  bool? get isMultiSelect => throw _privateConstructorUsedError;
   dynamic get value => throw _privateConstructorUsedError;
   DisplayBehavior? get displayBehavior => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get conditions => throw _privateConstructorUsedError;
+  int? get order => throw _privateConstructorUsedError;
+  String? get actionLabel => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
+  List<ValidationRule>? get validations => throw _privateConstructorUsedError;
+  bool? get includeInForm => throw _privateConstructorUsedError;
+  bool? get includeInSummary => throw _privateConstructorUsedError;
+  NavigateToConfig? get navigateTo => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -53,27 +70,42 @@ abstract class $PropertySchemaCopyWith<$Res> {
       _$PropertySchemaCopyWithImpl<$Res, PropertySchema>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'type') PropertySchemaType type,
-      bool? readonly,
+      {@JsonKey(name: 'type', unknownEnumValue: PropertySchemaType.string)
+      PropertySchemaType type,
+      bool? readOnly,
       bool? displayOnly,
+      bool? hidden,
       Map<String, PropertySchema>? properties,
-      List<String>? required,
-      List<String>? enums,
+      List<Option>? enums,
+      String? schemaCode,
+      bool? systemDate,
+      bool? charCount,
+      @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
       PropertySchemaFormat? format,
-      DateFormatValue? firstDate,
-      DateFormatValue? lastDate,
+      @JsonKey(fromJson: _stringOrNull) String? startDate,
+      @JsonKey(fromJson: _stringOrNull) String? endDate,
+      int? minValue,
+      int? maxValue,
       int? minLength,
       int? maxLength,
-      num? maximum,
-      num? minimum,
-      String? hint,
+      String? helpText,
+      String? tooltip,
+      String? innerLabel,
       String? label,
+      bool? isMultiSelect,
       dynamic value,
-      DisplayBehavior? displayBehavior});
+      DisplayBehavior? displayBehavior,
+      Map<String, dynamic>? conditions,
+      int? order,
+      String? actionLabel,
+      String? description,
+      List<ValidationRule>? validations,
+      bool? includeInForm,
+      bool? includeInSummary,
+      NavigateToConfig? navigateTo});
 
-  $DateFormatValueCopyWith<$Res>? get firstDate;
-  $DateFormatValueCopyWith<$Res>? get lastDate;
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
+  $NavigateToConfigCopyWith<$Res>? get navigateTo;
 }
 
 /// @nodoc
@@ -90,60 +122,94 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
   @override
   $Res call({
     Object? type = null,
-    Object? readonly = freezed,
+    Object? readOnly = freezed,
     Object? displayOnly = freezed,
+    Object? hidden = freezed,
     Object? properties = freezed,
-    Object? required = freezed,
     Object? enums = freezed,
+    Object? schemaCode = freezed,
+    Object? systemDate = freezed,
+    Object? charCount = freezed,
     Object? format = freezed,
-    Object? firstDate = freezed,
-    Object? lastDate = freezed,
+    Object? startDate = freezed,
+    Object? endDate = freezed,
+    Object? minValue = freezed,
+    Object? maxValue = freezed,
     Object? minLength = freezed,
     Object? maxLength = freezed,
-    Object? maximum = freezed,
-    Object? minimum = freezed,
-    Object? hint = freezed,
+    Object? helpText = freezed,
+    Object? tooltip = freezed,
+    Object? innerLabel = freezed,
     Object? label = freezed,
+    Object? isMultiSelect = freezed,
     Object? value = freezed,
     Object? displayBehavior = freezed,
+    Object? conditions = freezed,
+    Object? order = freezed,
+    Object? actionLabel = freezed,
+    Object? description = freezed,
+    Object? validations = freezed,
+    Object? includeInForm = freezed,
+    Object? includeInSummary = freezed,
+    Object? navigateTo = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as PropertySchemaType,
-      readonly: freezed == readonly
-          ? _value.readonly
-          : readonly // ignore: cast_nullable_to_non_nullable
+      readOnly: freezed == readOnly
+          ? _value.readOnly
+          : readOnly // ignore: cast_nullable_to_non_nullable
               as bool?,
       displayOnly: freezed == displayOnly
           ? _value.displayOnly
           : displayOnly // ignore: cast_nullable_to_non_nullable
               as bool?,
+      hidden: freezed == hidden
+          ? _value.hidden
+          : hidden // ignore: cast_nullable_to_non_nullable
+              as bool?,
       properties: freezed == properties
           ? _value.properties
           : properties // ignore: cast_nullable_to_non_nullable
               as Map<String, PropertySchema>?,
-      required: freezed == required
-          ? _value.required
-          : required // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
       enums: freezed == enums
           ? _value.enums
           : enums // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as List<Option>?,
+      schemaCode: freezed == schemaCode
+          ? _value.schemaCode
+          : schemaCode // ignore: cast_nullable_to_non_nullable
+              as String?,
+      systemDate: freezed == systemDate
+          ? _value.systemDate
+          : systemDate // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      charCount: freezed == charCount
+          ? _value.charCount
+          : charCount // ignore: cast_nullable_to_non_nullable
+              as bool?,
       format: freezed == format
           ? _value.format
           : format // ignore: cast_nullable_to_non_nullable
               as PropertySchemaFormat?,
-      firstDate: freezed == firstDate
-          ? _value.firstDate
-          : firstDate // ignore: cast_nullable_to_non_nullable
-              as DateFormatValue?,
-      lastDate: freezed == lastDate
-          ? _value.lastDate
-          : lastDate // ignore: cast_nullable_to_non_nullable
-              as DateFormatValue?,
+      startDate: freezed == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      endDate: freezed == endDate
+          ? _value.endDate
+          : endDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      minValue: freezed == minValue
+          ? _value.minValue
+          : minValue // ignore: cast_nullable_to_non_nullable
+              as int?,
+      maxValue: freezed == maxValue
+          ? _value.maxValue
+          : maxValue // ignore: cast_nullable_to_non_nullable
+              as int?,
       minLength: freezed == minLength
           ? _value.minLength
           : minLength // ignore: cast_nullable_to_non_nullable
@@ -152,22 +218,26 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.maxLength
           : maxLength // ignore: cast_nullable_to_non_nullable
               as int?,
-      maximum: freezed == maximum
-          ? _value.maximum
-          : maximum // ignore: cast_nullable_to_non_nullable
-              as num?,
-      minimum: freezed == minimum
-          ? _value.minimum
-          : minimum // ignore: cast_nullable_to_non_nullable
-              as num?,
-      hint: freezed == hint
-          ? _value.hint
-          : hint // ignore: cast_nullable_to_non_nullable
+      helpText: freezed == helpText
+          ? _value.helpText
+          : helpText // ignore: cast_nullable_to_non_nullable
+              as String?,
+      tooltip: freezed == tooltip
+          ? _value.tooltip
+          : tooltip // ignore: cast_nullable_to_non_nullable
+              as String?,
+      innerLabel: freezed == innerLabel
+          ? _value.innerLabel
+          : innerLabel // ignore: cast_nullable_to_non_nullable
               as String?,
       label: freezed == label
           ? _value.label
           : label // ignore: cast_nullable_to_non_nullable
               as String?,
+      isMultiSelect: freezed == isMultiSelect
+          ? _value.isMultiSelect
+          : isMultiSelect // ignore: cast_nullable_to_non_nullable
+              as bool?,
       value: freezed == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -176,31 +246,39 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.displayBehavior
           : displayBehavior // ignore: cast_nullable_to_non_nullable
               as DisplayBehavior?,
+      conditions: freezed == conditions
+          ? _value.conditions
+          : conditions // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      order: freezed == order
+          ? _value.order
+          : order // ignore: cast_nullable_to_non_nullable
+              as int?,
+      actionLabel: freezed == actionLabel
+          ? _value.actionLabel
+          : actionLabel // ignore: cast_nullable_to_non_nullable
+              as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      validations: freezed == validations
+          ? _value.validations
+          : validations // ignore: cast_nullable_to_non_nullable
+              as List<ValidationRule>?,
+      includeInForm: freezed == includeInForm
+          ? _value.includeInForm
+          : includeInForm // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      includeInSummary: freezed == includeInSummary
+          ? _value.includeInSummary
+          : includeInSummary // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      navigateTo: freezed == navigateTo
+          ? _value.navigateTo
+          : navigateTo // ignore: cast_nullable_to_non_nullable
+              as NavigateToConfig?,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $DateFormatValueCopyWith<$Res>? get firstDate {
-    if (_value.firstDate == null) {
-      return null;
-    }
-
-    return $DateFormatValueCopyWith<$Res>(_value.firstDate!, (value) {
-      return _then(_value.copyWith(firstDate: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $DateFormatValueCopyWith<$Res>? get lastDate {
-    if (_value.lastDate == null) {
-      return null;
-    }
-
-    return $DateFormatValueCopyWith<$Res>(_value.lastDate!, (value) {
-      return _then(_value.copyWith(lastDate: value) as $Val);
-    });
   }
 
   @override
@@ -214,6 +292,18 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
       return _then(_value.copyWith(displayBehavior: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $NavigateToConfigCopyWith<$Res>? get navigateTo {
+    if (_value.navigateTo == null) {
+      return null;
+    }
+
+    return $NavigateToConfigCopyWith<$Res>(_value.navigateTo!, (value) {
+      return _then(_value.copyWith(navigateTo: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -225,30 +315,44 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'type') PropertySchemaType type,
-      bool? readonly,
+      {@JsonKey(name: 'type', unknownEnumValue: PropertySchemaType.string)
+      PropertySchemaType type,
+      bool? readOnly,
       bool? displayOnly,
+      bool? hidden,
       Map<String, PropertySchema>? properties,
-      List<String>? required,
-      List<String>? enums,
+      List<Option>? enums,
+      String? schemaCode,
+      bool? systemDate,
+      bool? charCount,
+      @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
       PropertySchemaFormat? format,
-      DateFormatValue? firstDate,
-      DateFormatValue? lastDate,
+      @JsonKey(fromJson: _stringOrNull) String? startDate,
+      @JsonKey(fromJson: _stringOrNull) String? endDate,
+      int? minValue,
+      int? maxValue,
       int? minLength,
       int? maxLength,
-      num? maximum,
-      num? minimum,
-      String? hint,
+      String? helpText,
+      String? tooltip,
+      String? innerLabel,
       String? label,
+      bool? isMultiSelect,
       dynamic value,
-      DisplayBehavior? displayBehavior});
+      DisplayBehavior? displayBehavior,
+      Map<String, dynamic>? conditions,
+      int? order,
+      String? actionLabel,
+      String? description,
+      List<ValidationRule>? validations,
+      bool? includeInForm,
+      bool? includeInSummary,
+      NavigateToConfig? navigateTo});
 
   @override
-  $DateFormatValueCopyWith<$Res>? get firstDate;
-  @override
-  $DateFormatValueCopyWith<$Res>? get lastDate;
-  @override
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
+  @override
+  $NavigateToConfigCopyWith<$Res>? get navigateTo;
 }
 
 /// @nodoc
@@ -263,60 +367,94 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? type = null,
-    Object? readonly = freezed,
+    Object? readOnly = freezed,
     Object? displayOnly = freezed,
+    Object? hidden = freezed,
     Object? properties = freezed,
-    Object? required = freezed,
     Object? enums = freezed,
+    Object? schemaCode = freezed,
+    Object? systemDate = freezed,
+    Object? charCount = freezed,
     Object? format = freezed,
-    Object? firstDate = freezed,
-    Object? lastDate = freezed,
+    Object? startDate = freezed,
+    Object? endDate = freezed,
+    Object? minValue = freezed,
+    Object? maxValue = freezed,
     Object? minLength = freezed,
     Object? maxLength = freezed,
-    Object? maximum = freezed,
-    Object? minimum = freezed,
-    Object? hint = freezed,
+    Object? helpText = freezed,
+    Object? tooltip = freezed,
+    Object? innerLabel = freezed,
     Object? label = freezed,
+    Object? isMultiSelect = freezed,
     Object? value = freezed,
     Object? displayBehavior = freezed,
+    Object? conditions = freezed,
+    Object? order = freezed,
+    Object? actionLabel = freezed,
+    Object? description = freezed,
+    Object? validations = freezed,
+    Object? includeInForm = freezed,
+    Object? includeInSummary = freezed,
+    Object? navigateTo = freezed,
   }) {
     return _then(_$PropertySchemaImpl(
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as PropertySchemaType,
-      readonly: freezed == readonly
-          ? _value.readonly
-          : readonly // ignore: cast_nullable_to_non_nullable
+      readOnly: freezed == readOnly
+          ? _value.readOnly
+          : readOnly // ignore: cast_nullable_to_non_nullable
               as bool?,
       displayOnly: freezed == displayOnly
           ? _value.displayOnly
           : displayOnly // ignore: cast_nullable_to_non_nullable
               as bool?,
+      hidden: freezed == hidden
+          ? _value.hidden
+          : hidden // ignore: cast_nullable_to_non_nullable
+              as bool?,
       properties: freezed == properties
           ? _value._properties
           : properties // ignore: cast_nullable_to_non_nullable
               as Map<String, PropertySchema>?,
-      required: freezed == required
-          ? _value._required
-          : required // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
       enums: freezed == enums
           ? _value._enums
           : enums // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as List<Option>?,
+      schemaCode: freezed == schemaCode
+          ? _value.schemaCode
+          : schemaCode // ignore: cast_nullable_to_non_nullable
+              as String?,
+      systemDate: freezed == systemDate
+          ? _value.systemDate
+          : systemDate // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      charCount: freezed == charCount
+          ? _value.charCount
+          : charCount // ignore: cast_nullable_to_non_nullable
+              as bool?,
       format: freezed == format
           ? _value.format
           : format // ignore: cast_nullable_to_non_nullable
               as PropertySchemaFormat?,
-      firstDate: freezed == firstDate
-          ? _value.firstDate
-          : firstDate // ignore: cast_nullable_to_non_nullable
-              as DateFormatValue?,
-      lastDate: freezed == lastDate
-          ? _value.lastDate
-          : lastDate // ignore: cast_nullable_to_non_nullable
-              as DateFormatValue?,
+      startDate: freezed == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      endDate: freezed == endDate
+          ? _value.endDate
+          : endDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      minValue: freezed == minValue
+          ? _value.minValue
+          : minValue // ignore: cast_nullable_to_non_nullable
+              as int?,
+      maxValue: freezed == maxValue
+          ? _value.maxValue
+          : maxValue // ignore: cast_nullable_to_non_nullable
+              as int?,
       minLength: freezed == minLength
           ? _value.minLength
           : minLength // ignore: cast_nullable_to_non_nullable
@@ -325,22 +463,26 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.maxLength
           : maxLength // ignore: cast_nullable_to_non_nullable
               as int?,
-      maximum: freezed == maximum
-          ? _value.maximum
-          : maximum // ignore: cast_nullable_to_non_nullable
-              as num?,
-      minimum: freezed == minimum
-          ? _value.minimum
-          : minimum // ignore: cast_nullable_to_non_nullable
-              as num?,
-      hint: freezed == hint
-          ? _value.hint
-          : hint // ignore: cast_nullable_to_non_nullable
+      helpText: freezed == helpText
+          ? _value.helpText
+          : helpText // ignore: cast_nullable_to_non_nullable
+              as String?,
+      tooltip: freezed == tooltip
+          ? _value.tooltip
+          : tooltip // ignore: cast_nullable_to_non_nullable
+              as String?,
+      innerLabel: freezed == innerLabel
+          ? _value.innerLabel
+          : innerLabel // ignore: cast_nullable_to_non_nullable
               as String?,
       label: freezed == label
           ? _value.label
           : label // ignore: cast_nullable_to_non_nullable
               as String?,
+      isMultiSelect: freezed == isMultiSelect
+          ? _value.isMultiSelect
+          : isMultiSelect // ignore: cast_nullable_to_non_nullable
+              as bool?,
       value: freezed == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -349,6 +491,38 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.displayBehavior
           : displayBehavior // ignore: cast_nullable_to_non_nullable
               as DisplayBehavior?,
+      conditions: freezed == conditions
+          ? _value._conditions
+          : conditions // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      order: freezed == order
+          ? _value.order
+          : order // ignore: cast_nullable_to_non_nullable
+              as int?,
+      actionLabel: freezed == actionLabel
+          ? _value.actionLabel
+          : actionLabel // ignore: cast_nullable_to_non_nullable
+              as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      validations: freezed == validations
+          ? _value._validations
+          : validations // ignore: cast_nullable_to_non_nullable
+              as List<ValidationRule>?,
+      includeInForm: freezed == includeInForm
+          ? _value.includeInForm
+          : includeInForm // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      includeInSummary: freezed == includeInSummary
+          ? _value.includeInSummary
+          : includeInSummary // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      navigateTo: freezed == navigateTo
+          ? _value.navigateTo
+          : navigateTo // ignore: cast_nullable_to_non_nullable
+              as NavigateToConfig?,
     ));
   }
 }
@@ -358,37 +532,56 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class _$PropertySchemaImpl implements _PropertySchema {
   const _$PropertySchemaImpl(
-      {@JsonKey(name: 'type') required this.type,
-      this.readonly,
+      {@JsonKey(name: 'type', unknownEnumValue: PropertySchemaType.string)
+      required this.type,
+      this.readOnly,
       this.displayOnly,
+      this.hidden,
       final Map<String, PropertySchema>? properties,
-      final List<String>? required,
-      final List<String>? enums,
+      final List<Option>? enums,
+      this.schemaCode,
+      this.systemDate,
+      this.charCount,
+      @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
       this.format,
-      this.firstDate,
-      this.lastDate,
+      @JsonKey(fromJson: _stringOrNull) this.startDate,
+      @JsonKey(fromJson: _stringOrNull) this.endDate,
+      this.minValue,
+      this.maxValue,
       this.minLength,
       this.maxLength,
-      this.maximum,
-      this.minimum,
-      this.hint,
+      this.helpText,
+      this.tooltip,
+      this.innerLabel,
       this.label,
+      this.isMultiSelect,
       this.value,
-      this.displayBehavior})
+      this.displayBehavior,
+      final Map<String, dynamic>? conditions,
+      this.order,
+      this.actionLabel,
+      this.description,
+      final List<ValidationRule>? validations,
+      this.includeInForm,
+      this.includeInSummary,
+      this.navigateTo})
       : _properties = properties,
-        _required = required,
-        _enums = enums;
+        _enums = enums,
+        _conditions = conditions,
+        _validations = validations;
 
   factory _$PropertySchemaImpl.fromJson(Map<String, dynamic> json) =>
       _$$PropertySchemaImplFromJson(json);
 
   @override
-  @JsonKey(name: 'type')
+  @JsonKey(name: 'type', unknownEnumValue: PropertySchemaType.string)
   final PropertySchemaType type;
   @override
-  final bool? readonly;
+  final bool? readOnly;
   @override
   final bool? displayOnly;
+  @override
+  final bool? hidden;
   final Map<String, PropertySchema>? _properties;
   @override
   Map<String, PropertySchema>? get properties {
@@ -399,19 +592,9 @@ class _$PropertySchemaImpl implements _PropertySchema {
     return EqualUnmodifiableMapView(value);
   }
 
-  final List<String>? _required;
+  final List<Option>? _enums;
   @override
-  List<String>? get required {
-    final value = _required;
-    if (value == null) return null;
-    if (_required is EqualUnmodifiableListView) return _required;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  final List<String>? _enums;
-  @override
-  List<String>? get enums {
+  List<Option>? get enums {
     final value = _enums;
     if (value == null) return null;
     if (_enums is EqualUnmodifiableListView) return _enums;
@@ -420,31 +603,78 @@ class _$PropertySchemaImpl implements _PropertySchema {
   }
 
   @override
+  final String? schemaCode;
+  @override
+  final bool? systemDate;
+  @override
+  final bool? charCount;
+  @override
+  @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
   final PropertySchemaFormat? format;
   @override
-  final DateFormatValue? firstDate;
+  @JsonKey(fromJson: _stringOrNull)
+  final String? startDate;
   @override
-  final DateFormatValue? lastDate;
+  @JsonKey(fromJson: _stringOrNull)
+  final String? endDate;
+  @override
+  final int? minValue;
+  @override
+  final int? maxValue;
   @override
   final int? minLength;
   @override
   final int? maxLength;
   @override
-  final num? maximum;
+  final String? helpText;
   @override
-  final num? minimum;
+  final String? tooltip;
   @override
-  final String? hint;
+  final String? innerLabel;
   @override
   final String? label;
+  @override
+  final bool? isMultiSelect;
   @override
   final dynamic value;
   @override
   final DisplayBehavior? displayBehavior;
+  final Map<String, dynamic>? _conditions;
+  @override
+  Map<String, dynamic>? get conditions {
+    final value = _conditions;
+    if (value == null) return null;
+    if (_conditions is EqualUnmodifiableMapView) return _conditions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
+
+  @override
+  final int? order;
+  @override
+  final String? actionLabel;
+  @override
+  final String? description;
+  final List<ValidationRule>? _validations;
+  @override
+  List<ValidationRule>? get validations {
+    final value = _validations;
+    if (value == null) return null;
+    if (_validations is EqualUnmodifiableListView) return _validations;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  final bool? includeInForm;
+  @override
+  final bool? includeInSummary;
+  @override
+  final NavigateToConfig? navigateTo;
 
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readonly: $readonly, displayOnly: $displayOnly, properties: $properties, required: $required, enums: $enums, format: $format, firstDate: $firstDate, lastDate: $lastDate, minLength: $minLength, maxLength: $maxLength, maximum: $maximum, minimum: $minimum, hint: $hint, label: $label, value: $value, displayBehavior: $displayBehavior)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo)';
   }
 
   @override
@@ -453,53 +683,96 @@ class _$PropertySchemaImpl implements _PropertySchema {
         (other.runtimeType == runtimeType &&
             other is _$PropertySchemaImpl &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.readonly, readonly) ||
-                other.readonly == readonly) &&
+            (identical(other.readOnly, readOnly) ||
+                other.readOnly == readOnly) &&
             (identical(other.displayOnly, displayOnly) ||
                 other.displayOnly == displayOnly) &&
+            (identical(other.hidden, hidden) || other.hidden == hidden) &&
             const DeepCollectionEquality()
                 .equals(other._properties, _properties) &&
-            const DeepCollectionEquality().equals(other._required, _required) &&
             const DeepCollectionEquality().equals(other._enums, _enums) &&
+            (identical(other.schemaCode, schemaCode) ||
+                other.schemaCode == schemaCode) &&
+            (identical(other.systemDate, systemDate) ||
+                other.systemDate == systemDate) &&
+            (identical(other.charCount, charCount) ||
+                other.charCount == charCount) &&
             (identical(other.format, format) || other.format == format) &&
-            (identical(other.firstDate, firstDate) ||
-                other.firstDate == firstDate) &&
-            (identical(other.lastDate, lastDate) ||
-                other.lastDate == lastDate) &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate) &&
+            (identical(other.endDate, endDate) || other.endDate == endDate) &&
+            (identical(other.minValue, minValue) ||
+                other.minValue == minValue) &&
+            (identical(other.maxValue, maxValue) ||
+                other.maxValue == maxValue) &&
             (identical(other.minLength, minLength) ||
                 other.minLength == minLength) &&
             (identical(other.maxLength, maxLength) ||
                 other.maxLength == maxLength) &&
-            (identical(other.maximum, maximum) || other.maximum == maximum) &&
-            (identical(other.minimum, minimum) || other.minimum == minimum) &&
-            (identical(other.hint, hint) || other.hint == hint) &&
+            (identical(other.helpText, helpText) ||
+                other.helpText == helpText) &&
+            (identical(other.tooltip, tooltip) || other.tooltip == tooltip) &&
+            (identical(other.innerLabel, innerLabel) ||
+                other.innerLabel == innerLabel) &&
             (identical(other.label, label) || other.label == label) &&
+            (identical(other.isMultiSelect, isMultiSelect) ||
+                other.isMultiSelect == isMultiSelect) &&
             const DeepCollectionEquality().equals(other.value, value) &&
             (identical(other.displayBehavior, displayBehavior) ||
-                other.displayBehavior == displayBehavior));
+                other.displayBehavior == displayBehavior) &&
+            const DeepCollectionEquality()
+                .equals(other._conditions, _conditions) &&
+            (identical(other.order, order) || other.order == order) &&
+            (identical(other.actionLabel, actionLabel) ||
+                other.actionLabel == actionLabel) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            const DeepCollectionEquality()
+                .equals(other._validations, _validations) &&
+            (identical(other.includeInForm, includeInForm) ||
+                other.includeInForm == includeInForm) &&
+            (identical(other.includeInSummary, includeInSummary) ||
+                other.includeInSummary == includeInSummary) &&
+            (identical(other.navigateTo, navigateTo) ||
+                other.navigateTo == navigateTo));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      type,
-      readonly,
-      displayOnly,
-      const DeepCollectionEquality().hash(_properties),
-      const DeepCollectionEquality().hash(_required),
-      const DeepCollectionEquality().hash(_enums),
-      format,
-      firstDate,
-      lastDate,
-      minLength,
-      maxLength,
-      maximum,
-      minimum,
-      hint,
-      label,
-      const DeepCollectionEquality().hash(value),
-      displayBehavior);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        type,
+        readOnly,
+        displayOnly,
+        hidden,
+        const DeepCollectionEquality().hash(_properties),
+        const DeepCollectionEquality().hash(_enums),
+        schemaCode,
+        systemDate,
+        charCount,
+        format,
+        startDate,
+        endDate,
+        minValue,
+        maxValue,
+        minLength,
+        maxLength,
+        helpText,
+        tooltip,
+        innerLabel,
+        label,
+        isMultiSelect,
+        const DeepCollectionEquality().hash(value),
+        displayBehavior,
+        const DeepCollectionEquality().hash(_conditions),
+        order,
+        actionLabel,
+        description,
+        const DeepCollectionEquality().hash(_validations),
+        includeInForm,
+        includeInSummary,
+        navigateTo
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -518,96 +791,144 @@ class _$PropertySchemaImpl implements _PropertySchema {
 
 abstract class _PropertySchema implements PropertySchema {
   const factory _PropertySchema(
-      {@JsonKey(name: 'type') required final PropertySchemaType type,
-      final bool? readonly,
+      {@JsonKey(name: 'type', unknownEnumValue: PropertySchemaType.string)
+      required final PropertySchemaType type,
+      final bool? readOnly,
       final bool? displayOnly,
+      final bool? hidden,
       final Map<String, PropertySchema>? properties,
-      final List<String>? required,
-      final List<String>? enums,
+      final List<Option>? enums,
+      final String? schemaCode,
+      final bool? systemDate,
+      final bool? charCount,
+      @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
       final PropertySchemaFormat? format,
-      final DateFormatValue? firstDate,
-      final DateFormatValue? lastDate,
+      @JsonKey(fromJson: _stringOrNull) final String? startDate,
+      @JsonKey(fromJson: _stringOrNull) final String? endDate,
+      final int? minValue,
+      final int? maxValue,
       final int? minLength,
       final int? maxLength,
-      final num? maximum,
-      final num? minimum,
-      final String? hint,
+      final String? helpText,
+      final String? tooltip,
+      final String? innerLabel,
       final String? label,
+      final bool? isMultiSelect,
       final dynamic value,
-      final DisplayBehavior? displayBehavior}) = _$PropertySchemaImpl;
+      final DisplayBehavior? displayBehavior,
+      final Map<String, dynamic>? conditions,
+      final int? order,
+      final String? actionLabel,
+      final String? description,
+      final List<ValidationRule>? validations,
+      final bool? includeInForm,
+      final bool? includeInSummary,
+      final NavigateToConfig? navigateTo}) = _$PropertySchemaImpl;
 
   factory _PropertySchema.fromJson(Map<String, dynamic> json) =
       _$PropertySchemaImpl.fromJson;
 
   @override
-  @JsonKey(name: 'type')
+  @JsonKey(name: 'type', unknownEnumValue: PropertySchemaType.string)
   PropertySchemaType get type;
   @override
-  bool? get readonly;
+  bool? get readOnly;
   @override
   bool? get displayOnly;
   @override
+  bool? get hidden;
+  @override
   Map<String, PropertySchema>? get properties;
   @override
-  List<String>? get required;
+  List<Option>? get enums;
   @override
-  List<String>? get enums;
+  String? get schemaCode;
   @override
+  bool? get systemDate;
+  @override
+  bool? get charCount;
+  @override
+  @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
   PropertySchemaFormat? get format;
   @override
-  DateFormatValue? get firstDate;
+  @JsonKey(fromJson: _stringOrNull)
+  String? get startDate;
   @override
-  DateFormatValue? get lastDate;
+  @JsonKey(fromJson: _stringOrNull)
+  String? get endDate;
+  @override
+  int? get minValue;
+  @override
+  int? get maxValue;
   @override
   int? get minLength;
   @override
   int? get maxLength;
   @override
-  num? get maximum;
+  String? get helpText;
   @override
-  num? get minimum;
+  String? get tooltip;
   @override
-  String? get hint;
+  String? get innerLabel;
   @override
   String? get label;
+  @override
+  bool? get isMultiSelect;
   @override
   dynamic get value;
   @override
   DisplayBehavior? get displayBehavior;
+  @override
+  Map<String, dynamic>? get conditions;
+  @override
+  int? get order;
+  @override
+  String? get actionLabel;
+  @override
+  String? get description;
+  @override
+  List<ValidationRule>? get validations;
+  @override
+  bool? get includeInForm;
+  @override
+  bool? get includeInSummary;
+  @override
+  NavigateToConfig? get navigateTo;
   @override
   @JsonKey(ignore: true)
   _$$PropertySchemaImplCopyWith<_$PropertySchemaImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
-DateFormatValue _$DateFormatValueFromJson(Map<String, dynamic> json) {
-  return _DateFormatValue.fromJson(json);
+ValidationRule _$ValidationRuleFromJson(Map<String, dynamic> json) {
+  return _ValidationRule.fromJson(json);
 }
 
 /// @nodoc
-mixin _$DateFormatValue {
-  String get value => throw _privateConstructorUsedError;
-  String get format => throw _privateConstructorUsedError;
+mixin _$ValidationRule {
+  String get type => throw _privateConstructorUsedError;
+  dynamic get value => throw _privateConstructorUsedError;
+  String? get message => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DateFormatValueCopyWith<DateFormatValue> get copyWith =>
+  $ValidationRuleCopyWith<ValidationRule> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $DateFormatValueCopyWith<$Res> {
-  factory $DateFormatValueCopyWith(
-          DateFormatValue value, $Res Function(DateFormatValue) then) =
-      _$DateFormatValueCopyWithImpl<$Res, DateFormatValue>;
+abstract class $ValidationRuleCopyWith<$Res> {
+  factory $ValidationRuleCopyWith(
+          ValidationRule value, $Res Function(ValidationRule) then) =
+      _$ValidationRuleCopyWithImpl<$Res, ValidationRule>;
   @useResult
-  $Res call({String value, String format});
+  $Res call({String type, dynamic value, String? message});
 }
 
 /// @nodoc
-class _$DateFormatValueCopyWithImpl<$Res, $Val extends DateFormatValue>
-    implements $DateFormatValueCopyWith<$Res> {
-  _$DateFormatValueCopyWithImpl(this._value, this._then);
+class _$ValidationRuleCopyWithImpl<$Res, $Val extends ValidationRule>
+    implements $ValidationRuleCopyWith<$Res> {
+  _$ValidationRuleCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -617,55 +938,224 @@ class _$DateFormatValueCopyWithImpl<$Res, $Val extends DateFormatValue>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? value = null,
-    Object? format = null,
+    Object? type = null,
+    Object? value = freezed,
+    Object? message = freezed,
   }) {
     return _then(_value.copyWith(
-      value: null == value
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      value: freezed == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      message: freezed == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$ValidationRuleImplCopyWith<$Res>
+    implements $ValidationRuleCopyWith<$Res> {
+  factory _$$ValidationRuleImplCopyWith(_$ValidationRuleImpl value,
+          $Res Function(_$ValidationRuleImpl) then) =
+      __$$ValidationRuleImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String type, dynamic value, String? message});
+}
+
+/// @nodoc
+class __$$ValidationRuleImplCopyWithImpl<$Res>
+    extends _$ValidationRuleCopyWithImpl<$Res, _$ValidationRuleImpl>
+    implements _$$ValidationRuleImplCopyWith<$Res> {
+  __$$ValidationRuleImplCopyWithImpl(
+      _$ValidationRuleImpl _value, $Res Function(_$ValidationRuleImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? type = null,
+    Object? value = freezed,
+    Object? message = freezed,
+  }) {
+    return _then(_$ValidationRuleImpl(
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
               as String,
-      format: null == format
-          ? _value.format
-          : format // ignore: cast_nullable_to_non_nullable
+      value: freezed == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      message: freezed == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ValidationRuleImpl implements _ValidationRule {
+  const _$ValidationRuleImpl({required this.type, this.value, this.message});
+
+  factory _$ValidationRuleImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ValidationRuleImplFromJson(json);
+
+  @override
+  final String type;
+  @override
+  final dynamic value;
+  @override
+  final String? message;
+
+  @override
+  String toString() {
+    return 'ValidationRule(type: $type, value: $value, message: $message)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ValidationRuleImpl &&
+            (identical(other.type, type) || other.type == type) &&
+            const DeepCollectionEquality().equals(other.value, value) &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, type, const DeepCollectionEquality().hash(value), message);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ValidationRuleImplCopyWith<_$ValidationRuleImpl> get copyWith =>
+      __$$ValidationRuleImplCopyWithImpl<_$ValidationRuleImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ValidationRuleImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _ValidationRule implements ValidationRule {
+  const factory _ValidationRule(
+      {required final String type,
+      final dynamic value,
+      final String? message}) = _$ValidationRuleImpl;
+
+  factory _ValidationRule.fromJson(Map<String, dynamic> json) =
+      _$ValidationRuleImpl.fromJson;
+
+  @override
+  String get type;
+  @override
+  dynamic get value;
+  @override
+  String? get message;
+  @override
+  @JsonKey(ignore: true)
+  _$$ValidationRuleImplCopyWith<_$ValidationRuleImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+Option _$OptionFromJson(Map<String, dynamic> json) {
+  return _Option.fromJson(json);
+}
+
+/// @nodoc
+mixin _$Option {
+  String get code => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $OptionCopyWith<Option> get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $OptionCopyWith<$Res> {
+  factory $OptionCopyWith(Option value, $Res Function(Option) then) =
+      _$OptionCopyWithImpl<$Res, Option>;
+  @useResult
+  $Res call({String code, String name});
+}
+
+/// @nodoc
+class _$OptionCopyWithImpl<$Res, $Val extends Option>
+    implements $OptionCopyWith<$Res> {
+  _$OptionCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? code = null,
+    Object? name = null,
+  }) {
+    return _then(_value.copyWith(
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$DateFormatValueImplCopyWith<$Res>
-    implements $DateFormatValueCopyWith<$Res> {
-  factory _$$DateFormatValueImplCopyWith(_$DateFormatValueImpl value,
-          $Res Function(_$DateFormatValueImpl) then) =
-      __$$DateFormatValueImplCopyWithImpl<$Res>;
+abstract class _$$OptionImplCopyWith<$Res> implements $OptionCopyWith<$Res> {
+  factory _$$OptionImplCopyWith(
+          _$OptionImpl value, $Res Function(_$OptionImpl) then) =
+      __$$OptionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String value, String format});
+  $Res call({String code, String name});
 }
 
 /// @nodoc
-class __$$DateFormatValueImplCopyWithImpl<$Res>
-    extends _$DateFormatValueCopyWithImpl<$Res, _$DateFormatValueImpl>
-    implements _$$DateFormatValueImplCopyWith<$Res> {
-  __$$DateFormatValueImplCopyWithImpl(
-      _$DateFormatValueImpl _value, $Res Function(_$DateFormatValueImpl) _then)
+class __$$OptionImplCopyWithImpl<$Res>
+    extends _$OptionCopyWithImpl<$Res, _$OptionImpl>
+    implements _$$OptionImplCopyWith<$Res> {
+  __$$OptionImplCopyWithImpl(
+      _$OptionImpl _value, $Res Function(_$OptionImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? value = null,
-    Object? format = null,
+    Object? code = null,
+    Object? name = null,
   }) {
-    return _then(_$DateFormatValueImpl(
-      value: null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
+    return _then(_$OptionImpl(
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
               as String,
-      format: null == format
-          ? _value.format
-          : format // ignore: cast_nullable_to_non_nullable
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -673,68 +1163,62 @@ class __$$DateFormatValueImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$DateFormatValueImpl extends _DateFormatValue {
-  const _$DateFormatValueImpl({required this.value, this.format = 'yyyy-MM-dd'})
-      : super._();
+class _$OptionImpl implements _Option {
+  const _$OptionImpl({required this.code, required this.name});
 
-  factory _$DateFormatValueImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DateFormatValueImplFromJson(json);
+  factory _$OptionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$OptionImplFromJson(json);
 
   @override
-  final String value;
+  final String code;
   @override
-  @JsonKey()
-  final String format;
+  final String name;
 
   @override
   String toString() {
-    return 'DateFormatValue(value: $value, format: $format)';
+    return 'Option(code: $code, name: $name)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$DateFormatValueImpl &&
-            (identical(other.value, value) || other.value == value) &&
-            (identical(other.format, format) || other.format == format));
+            other is _$OptionImpl &&
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.name, name) || other.name == name));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, value, format);
+  int get hashCode => Object.hash(runtimeType, code, name);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DateFormatValueImplCopyWith<_$DateFormatValueImpl> get copyWith =>
-      __$$DateFormatValueImplCopyWithImpl<_$DateFormatValueImpl>(
-          this, _$identity);
+  _$$OptionImplCopyWith<_$OptionImpl> get copyWith =>
+      __$$OptionImplCopyWithImpl<_$OptionImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$DateFormatValueImplToJson(
+    return _$$OptionImplToJson(
       this,
     );
   }
 }
 
-abstract class _DateFormatValue extends DateFormatValue {
-  const factory _DateFormatValue(
-      {required final String value,
-      final String format}) = _$DateFormatValueImpl;
-  const _DateFormatValue._() : super._();
+abstract class _Option implements Option {
+  const factory _Option(
+      {required final String code, required final String name}) = _$OptionImpl;
 
-  factory _DateFormatValue.fromJson(Map<String, dynamic> json) =
-      _$DateFormatValueImpl.fromJson;
+  factory _Option.fromJson(Map<String, dynamic> json) = _$OptionImpl.fromJson;
 
   @override
-  String get value;
+  String get code;
   @override
-  String get format;
+  String get name;
   @override
   @JsonKey(ignore: true)
-  _$$DateFormatValueImplCopyWith<_$DateFormatValueImpl> get copyWith =>
+  _$$OptionImplCopyWith<_$OptionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -934,5 +1418,161 @@ abstract class _DisplayBehavior implements DisplayBehavior {
   @override
   @JsonKey(ignore: true)
   _$$DisplayBehaviorImplCopyWith<_$DisplayBehaviorImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+NavigateToConfig _$NavigateToConfigFromJson(Map<String, dynamic> json) {
+  return _NavigateToConfig.fromJson(json);
+}
+
+/// @nodoc
+mixin _$NavigateToConfig {
+  String get type => throw _privateConstructorUsedError; // "template" or "form"
+  String get name => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $NavigateToConfigCopyWith<NavigateToConfig> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $NavigateToConfigCopyWith<$Res> {
+  factory $NavigateToConfigCopyWith(
+          NavigateToConfig value, $Res Function(NavigateToConfig) then) =
+      _$NavigateToConfigCopyWithImpl<$Res, NavigateToConfig>;
+  @useResult
+  $Res call({String type, String name});
+}
+
+/// @nodoc
+class _$NavigateToConfigCopyWithImpl<$Res, $Val extends NavigateToConfig>
+    implements $NavigateToConfigCopyWith<$Res> {
+  _$NavigateToConfigCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? type = null,
+    Object? name = null,
+  }) {
+    return _then(_value.copyWith(
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$NavigateToConfigImplCopyWith<$Res>
+    implements $NavigateToConfigCopyWith<$Res> {
+  factory _$$NavigateToConfigImplCopyWith(_$NavigateToConfigImpl value,
+          $Res Function(_$NavigateToConfigImpl) then) =
+      __$$NavigateToConfigImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String type, String name});
+}
+
+/// @nodoc
+class __$$NavigateToConfigImplCopyWithImpl<$Res>
+    extends _$NavigateToConfigCopyWithImpl<$Res, _$NavigateToConfigImpl>
+    implements _$$NavigateToConfigImplCopyWith<$Res> {
+  __$$NavigateToConfigImplCopyWithImpl(_$NavigateToConfigImpl _value,
+      $Res Function(_$NavigateToConfigImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? type = null,
+    Object? name = null,
+  }) {
+    return _then(_$NavigateToConfigImpl(
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$NavigateToConfigImpl implements _NavigateToConfig {
+  const _$NavigateToConfigImpl({required this.type, required this.name});
+
+  factory _$NavigateToConfigImpl.fromJson(Map<String, dynamic> json) =>
+      _$$NavigateToConfigImplFromJson(json);
+
+  @override
+  final String type;
+// "template" or "form"
+  @override
+  final String name;
+
+  @override
+  String toString() {
+    return 'NavigateToConfig(type: $type, name: $name)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$NavigateToConfigImpl &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.name, name) || other.name == name));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, type, name);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$NavigateToConfigImplCopyWith<_$NavigateToConfigImpl> get copyWith =>
+      __$$NavigateToConfigImplCopyWithImpl<_$NavigateToConfigImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$NavigateToConfigImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _NavigateToConfig implements NavigateToConfig {
+  const factory _NavigateToConfig(
+      {required final String type,
+      required final String name}) = _$NavigateToConfigImpl;
+
+  factory _NavigateToConfig.fromJson(Map<String, dynamic> json) =
+      _$NavigateToConfigImpl.fromJson;
+
+  @override
+  String get type;
+  @override // "template" or "form"
+  String get name;
+  @override
+  @JsonKey(ignore: true)
+  _$$NavigateToConfigImplCopyWith<_$NavigateToConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

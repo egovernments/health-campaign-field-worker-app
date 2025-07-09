@@ -22,6 +22,7 @@ SchemaObject _$SchemaObjectFromJson(Map<String, dynamic> json) {
 mixin _$SchemaObject {
   String get name => throw _privateConstructorUsedError;
   int get version => throw _privateConstructorUsedError;
+  bool get summary => throw _privateConstructorUsedError;
   Map<String, PropertySchema> get pages => throw _privateConstructorUsedError;
   List<ActionSchema>? get actionSchema => throw _privateConstructorUsedError;
 
@@ -40,6 +41,7 @@ abstract class $SchemaObjectCopyWith<$Res> {
   $Res call(
       {String name,
       int version,
+      bool summary,
       Map<String, PropertySchema> pages,
       List<ActionSchema>? actionSchema});
 }
@@ -59,6 +61,7 @@ class _$SchemaObjectCopyWithImpl<$Res, $Val extends SchemaObject>
   $Res call({
     Object? name = null,
     Object? version = null,
+    Object? summary = null,
     Object? pages = null,
     Object? actionSchema = freezed,
   }) {
@@ -71,6 +74,10 @@ class _$SchemaObjectCopyWithImpl<$Res, $Val extends SchemaObject>
           ? _value.version
           : version // ignore: cast_nullable_to_non_nullable
               as int,
+      summary: null == summary
+          ? _value.summary
+          : summary // ignore: cast_nullable_to_non_nullable
+              as bool,
       pages: null == pages
           ? _value.pages
           : pages // ignore: cast_nullable_to_non_nullable
@@ -94,6 +101,7 @@ abstract class _$$SchemaObjectImplCopyWith<$Res>
   $Res call(
       {String name,
       int version,
+      bool summary,
       Map<String, PropertySchema> pages,
       List<ActionSchema>? actionSchema});
 }
@@ -111,6 +119,7 @@ class __$$SchemaObjectImplCopyWithImpl<$Res>
   $Res call({
     Object? name = null,
     Object? version = null,
+    Object? summary = null,
     Object? pages = null,
     Object? actionSchema = freezed,
   }) {
@@ -123,6 +132,10 @@ class __$$SchemaObjectImplCopyWithImpl<$Res>
           ? _value.version
           : version // ignore: cast_nullable_to_non_nullable
               as int,
+      summary: null == summary
+          ? _value.summary
+          : summary // ignore: cast_nullable_to_non_nullable
+              as bool,
       pages: null == pages
           ? _value._pages
           : pages // ignore: cast_nullable_to_non_nullable
@@ -142,6 +155,7 @@ class _$SchemaObjectImpl implements _SchemaObject {
   const _$SchemaObjectImpl(
       {required this.name,
       required this.version,
+      this.summary = false,
       final Map<String, PropertySchema> pages = const {},
       final List<ActionSchema>? actionSchema})
       : _pages = pages,
@@ -154,6 +168,9 @@ class _$SchemaObjectImpl implements _SchemaObject {
   final String name;
   @override
   final int version;
+  @override
+  @JsonKey()
+  final bool summary;
   final Map<String, PropertySchema> _pages;
   @override
   @JsonKey()
@@ -175,7 +192,7 @@ class _$SchemaObjectImpl implements _SchemaObject {
 
   @override
   String toString() {
-    return 'SchemaObject(name: $name, version: $version, pages: $pages, actionSchema: $actionSchema)';
+    return 'SchemaObject(name: $name, version: $version, summary: $summary, pages: $pages, actionSchema: $actionSchema)';
   }
 
   @override
@@ -185,6 +202,7 @@ class _$SchemaObjectImpl implements _SchemaObject {
             other is _$SchemaObjectImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.version, version) || other.version == version) &&
+            (identical(other.summary, summary) || other.summary == summary) &&
             const DeepCollectionEquality().equals(other._pages, _pages) &&
             const DeepCollectionEquality()
                 .equals(other._actionSchema, _actionSchema));
@@ -196,6 +214,7 @@ class _$SchemaObjectImpl implements _SchemaObject {
       runtimeType,
       name,
       version,
+      summary,
       const DeepCollectionEquality().hash(_pages),
       const DeepCollectionEquality().hash(_actionSchema));
 
@@ -217,6 +236,7 @@ abstract class _SchemaObject implements SchemaObject {
   const factory _SchemaObject(
       {required final String name,
       required final int version,
+      final bool summary,
       final Map<String, PropertySchema> pages,
       final List<ActionSchema>? actionSchema}) = _$SchemaObjectImpl;
 
@@ -227,6 +247,8 @@ abstract class _SchemaObject implements SchemaObject {
   String get name;
   @override
   int get version;
+  @override
+  bool get summary;
   @override
   Map<String, PropertySchema> get pages;
   @override

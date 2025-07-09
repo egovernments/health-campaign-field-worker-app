@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -13,10 +14,13 @@ import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
+import 'package:forms_engine/blocs/forms/forms.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/sync_service_lib.dart';
 
@@ -35,6 +39,8 @@ import '../router/authenticated_route_observer.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
+import '../widgets/error_screen.dart';
+import 'error_boundary.dart';
 
 @RoutePage()
 class AuthenticatedPageWrapper extends StatelessWidget {
@@ -88,7 +94,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                       ]);
                                     },
                                     child: Container(
-                                      padding: const EdgeInsets.only(right: spacer2),
+                                      padding:
+                                          const EdgeInsets.only(right: spacer2),
                                       width: MediaQuery.of(context).size.width -
                                           60,
                                       child: Align(
@@ -218,26 +225,34 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                               .repository<ServiceModel, ServiceSearchModel>(),
                         ),
                       ),
+                      BlocProvider(
+                        create: (_) => FormsBloc(),
+                      ),
                     ],
-                    child: AutoRouter(
-                      navigatorObservers: () => [
-                        AuthenticatedRouteObserver(
-                          onNavigated: () {
-                            bool shouldShowDrawer;
-                            switch (context.router.topRoute.name) {
-                              case ProjectSelectionRoute.name:
-                              case BoundarySelectionRoute.name:
-                                shouldShowDrawer = false;
-                                break;
-                              default:
-                                shouldShowDrawer = true;
-                            }
+                    child: ErrorBoundary(builder: (context, errorState) {
+                      return errorState != null
+                          ? const ErrorScreen()
+                          : AutoRouter(
+                              navigatorObservers: () => [
+                                AuthenticatedRouteObserver(
+                                  onNavigated: () {
+                                    bool shouldShowDrawer;
+                                    switch (context.router.topRoute.name) {
+                                      case ProjectSelectionRoute.name:
+                                      case BoundarySelectionRoute.name:
+                                        shouldShowDrawer = false;
+                                        break;
+                                      default:
+                                        shouldShowDrawer = true;
+                                    }
 
-                            _drawerVisibilityController.add(shouldShowDrawer);
-                          },
-                        ),
-                      ],
-                    ),
+                                    _drawerVisibilityController
+                                        .add(shouldShowDrawer);
+                                  },
+                                ),
+                              ],
+                            );
+                    }),
                   ),
                 ),
               );
@@ -405,15 +420,70 @@ class AuthenticatedPageWrapper extends StatelessWidget {
     return languages
         ?.map((e) => SidebarItem(
               title: e.label,
-              onPressed: () {
+              onPressed: () async {
                 int index = languages.indexWhere(
                   (ele) => ele.value.toString() == e.value.toString(),
                 );
+
+                String? dynamicModule;
+                final isInRegistrationFlow = context.router.current.name
+                    .contains(RegistrationDeliveryWrapperRoute.name);
+
+                if (isInRegistrationFlow) {
+                  final prefs = await SharedPreferences.getInstance();
+                  final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+                  if (schemaJsonRaw != null) {
+                    final allSchemas =
+                        json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                    final projectId = context.selectedProject.referenceID;
+
+                    // Initialize empty list to collect modules
+                    final List<String> modules = [];
+
+                    // Handle registrationflow
+                    final registrationSchemaEntry =
+                        allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
+                    final registrationSchemaData =
+                        registrationSchemaEntry?['data'];
+                    final registrationFlowName = registrationSchemaData?['name']
+                        ?.toString()
+                        .toLowerCase();
+                    if (registrationFlowName != null && projectId != null) {
+                      modules.add('hcm-$registrationFlowName-$projectId');
+                    }
+
+                    // Handle deliveryflow
+                    final deliverySchemaEntry =
+                        allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
+                    final deliverySchemaData = deliverySchemaEntry?['data'];
+                    final deliveryFlowName =
+                        deliverySchemaData?['name']?.toString().toLowerCase();
+                    if (deliveryFlowName != null && projectId != null) {
+                      modules.add('hcm-$deliveryFlowName-$projectId');
+                    }
+
+                    // Combine into a single string
+                    dynamicModule = modules.join(',');
+                  }
+                }
+
+                final staticModules = localizationModulesList.interfaces
+                    .where(
+                        (element) => element.type == Modules.localizationModule)
+                    .map((e) => e.name.toString())
+                    .followedBy([
+                  'hcm-boundary-${envConfig.variables.hierarchyType}'
+                ]).join(',');
+
+                final combinedModules = dynamicModule != null
+                    ? '$dynamicModule,$staticModules'
+                    : staticModules;
+
                 context
                     .read<LocalizationBloc>()
                     .add(LocalizationEvent.onLoadLocalization(
-                      module:
-                          "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                      module: combinedModules,
                       tenantId: appConfig.tenantId ?? "default",
                       locale: e.value.toString(),
                       path: Constants.localizationApiPath,

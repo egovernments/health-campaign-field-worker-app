@@ -8,14 +8,17 @@ import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:forms_engine/blocs/forms/forms.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/project/project.dart';
+import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../router/app_router.dart';
 import '../utils/constants.dart';
 import '../utils/extensions/extensions.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
@@ -64,9 +67,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 localizations.translate(
                   i18.projectSelection.projectDetailsLabelText,
                 ),
-                style: textTheme.headingXl.copyWith(
-                  color: theme.colorTheme.primary.primary2
-                ),
+                style: textTheme.headingXl
+                    .copyWith(color: theme.colorTheme.primary.primary2),
               ),
             ),
           ],
@@ -75,6 +77,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
           BlocConsumer<ProjectBloc, ProjectState>(
             listener: (context, state) {
               final error = state.syncError;
+              final projectSelected = state.selectedProject;
 
               if (syncDialogRoute?.isActive ?? false) {
                 Navigator.of(context).removeRoute(syncDialogRoute!);
@@ -86,23 +89,27 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                   barrierDismissible: false,
                   builder: (context) => DigitSyncDialogContent(
                     label: localizations.translate(
-                      i18.projectSelection.syncFailedTitleText,
+                      '${error.name.toUpperCase()}_ERROR',
                     ),
                     type: DialogType.failed,
                     primaryAction: DigitDialogActions(
                       label: localizations.translate(
                         i18.projectSelection.retryButtonText,
                       ),
-                      action: _selectedProject == null
-                          ? null
-                          : (context) {
-                              if (syncDialogRoute?.isActive ?? false) {
-                                Navigator.of(context)
-                                    .removeRoute(syncDialogRoute!);
-                              }
-                              context.read<ProjectBloc>().add(
+                      action: projectSelected == null
+                          ? (cxt) {
+                        if (syncDialogRoute != null && syncDialogRoute!.isActive) {
+                          Navigator.of(cxt).removeRoute(syncDialogRoute!);
+                        }
+                        context.read<ProjectBloc>().add(const ProjectInitializeEvent());
+                      }
+                          : (cxt) {
+                        if (syncDialogRoute != null && syncDialogRoute!.isActive) {
+                          Navigator.of(cxt).removeRoute(syncDialogRoute!);
+                        }
+                              cxt.read<ProjectBloc>().add(
                                     ProjectSelectProjectEvent(
-                                      _selectedProject!,
+                                      projectSelected,
                                     ),
                                   );
                             },
@@ -230,8 +237,16 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
   }
 
   void navigateToBoundary(String boundary) async {
+    // todo : will change module name later with dynamic keys
+    await triggerLocalizationIfUpdated(
+      context: context,
+      locale: AppSharedPreferences().getSelectedLocale!,
+      moduleKey: 'REGISTRATIONFLOW,DELIVERYFLOW',
+      projectReferenceId: context.selectedProject.referenceID ?? '',
+    );
     BoundaryBloc boundaryBloc = context.read<BoundaryBloc>();
     boundaryBloc.add(BoundaryFindEvent(code: boundary));
+
     try {
       await boundaryBloc.stream
           .firstWhere((element) => element.boundaryList.isNotEmpty);
