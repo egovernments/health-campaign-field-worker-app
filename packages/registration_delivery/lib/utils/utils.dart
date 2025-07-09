@@ -127,8 +127,8 @@ bool checkEligibilityForAgeAndSideEffect(
               ? tasks.clientAuditDetails?.createdTime
               : null;
       recordedSideEffect = lastTaskTime != null &&
-          (lastTaskTime >= currentCycle.startDate! &&
-              lastTaskTime <= currentCycle.endDate!);
+          (lastTaskTime >= currentCycle.startDate &&
+              lastTaskTime <= currentCycle.endDate);
 
       return projectType?.validMinAge != null &&
               projectType?.validMaxAge != null
@@ -206,6 +206,8 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
     var roomCount;
     var memberCount;
     String? structureType;
+    var weight = 0.0;
+    var height = 0.0;
 
     if (individualModel != null) {
       final individualAge = DigitDateUtils.calculateAge(
@@ -216,7 +218,29 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
       );
       individualAgeInMonths = individualAge.years * 12 + individualAge.months;
 
-      gender = individualModel.gender?.index;
+      gender = individualModel.gender?.toValue();
+
+      weight = double.tryParse(individualModel.additionalFields?.fields
+                  .firstWhere(
+                    (element) =>
+                        element.key == AdditionalFieldsType.weight.toValue(),
+                    orElse: () => AdditionalField(
+                        AdditionalFieldsType.weight.toValue(), '0.0'),
+                  )
+                  .value ??
+              '0.0') ??
+          0.0;
+
+      height = double.tryParse(individualModel.additionalFields?.fields
+                  .firstWhere(
+                    (element) =>
+                        element.key == AdditionalFieldsType.height.toValue(),
+                    orElse: () => AdditionalField(
+                        AdditionalFieldsType.height.toValue(), '0.0'),
+                  )
+                  .value ??
+              '0.0') ??
+          0.0;
     }
     if (householdModel != null && householdModel.additionalFields != null) {
       memberCount = householdModel.memberCount;
@@ -242,18 +266,21 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
 
           List<bool> expressionParser = [];
           for (var element in conditions) {
-            final expression = FormulaParser(
-              element,
-              {
-                'age': individualAgeInMonths,
-                if (gender != null) 'gender': gender,
-                if (memberCount != null) 'memberCount': memberCount,
-                if (roomCount != null) 'roomCount': roomCount
-              },
-            );
-            final error = expression.parse;
+            final expression = CustomFormulaParser.parseCondition(element, {
+              'age': individualAgeInMonths,
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount,
+              if (structureType != null) 'type_of_structure': structureType,
+              'weight': weight,
+              'height': height,
+            }, stringKeys: [
+              'type_of_structure',
+              'gender'
+            ]);
+            final error = expression;
             if (!error["value"]) {
-              errorMessages.add("CONDITION $condition FAILED");
+              errorMessages.add(condition);
             }
             expressionParser.add(error["value"]);
           }
@@ -271,13 +298,16 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               if (gender != null) 'gender': gender,
               if (memberCount != null) 'memberCount': memberCount,
               if (roomCount != null) 'roomCount': roomCount,
-              if (structureType != null) 'type_of_structure': structureType
+              if (structureType != null) 'type_of_structure': structureType,
+              'weight': weight,
+              'height': height,
             }, stringKeys: [
-              'type_of_structure'
+              'type_of_structure',
+              'gender'
             ]);
             final error = expression;
             if (!error["value"]) {
-              errorMessages.add("CONDITION $condition FAILED");
+              errorMessages.add(condition);
             }
             expressionParser.add(error["value"]);
           }
@@ -297,13 +327,16 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               if (gender != null) 'gender': gender,
               if (memberCount != null) 'memberCount': memberCount,
               if (roomCount != null) 'roomCount': roomCount,
-              if (structureType != null) 'type_of_structure': structureType
+              if (structureType != null) 'type_of_structure': structureType,
+              'weight': weight,
+              'height': height,
             }, stringKeys: [
-              'type_of_structure'
+              'type_of_structure',
+              'gender'
             ]);
             final error = expression;
             if (!error["value"]) {
-              errorMessages.add("CONDITION $condition FAILED");
+              errorMessages.add(condition);
             }
             expressionParser.add(error["value"]);
           }
@@ -450,6 +483,7 @@ class RegistrationDeliverySingleton {
       .offlineFirst; // Default to offline first persistence configuration
   List<String>? _genderOptions;
   List<String>? _idTypeOptions;
+  List<String>? _memberRelationTypeOptions;
   List<String>? _householdDeletionReasonOptions;
   List<String>? _householdMemberDeletionReasonOptions;
   List<String>? _deliveryCommentOptions;
@@ -459,6 +493,8 @@ class RegistrationDeliverySingleton {
   List<String>? _houseStructureTypes;
   List<String>? _refusalReasons;
   HouseholdType? _householdType;
+  int? _beneficiaryIdMinCount;
+  int? _beneficiaryIdBatchSize;
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
@@ -469,26 +505,28 @@ class RegistrationDeliverySingleton {
     _persistenceConfiguration = persistenceConfiguration;
   }
 
-  void setInitialData({
-    required String loggedInUserUuid,
-    required double maxRadius,
-    required String projectId,
-    required BeneficiaryType selectedBeneficiaryType,
-    required ProjectTypeModel? projectType,
-    required ProjectModel selectedProject,
-    required List<String>? genderOptions,
-    required List<String>? idTypeOptions,
-    required List<String>? householdDeletionReasonOptions,
-    required List<String>? householdMemberDeletionReasonOptions,
-    required List<String>? deliveryCommentOptions,
-    required List<String>? symptomsTypes,
-    required List<String>? searchHouseHoldFilter,
-    required List<String>? searchCLFFilters,
-    required List<String>? referralReasons,
-    required List<String>? houseStructureTypes,
-    required List<String>? refusalReasons,
-    required UserModel? loggedInUser,
-  }) {
+  void setInitialData(
+      {required String loggedInUserUuid,
+      required double maxRadius,
+      required String projectId,
+      required BeneficiaryType selectedBeneficiaryType,
+      required ProjectTypeModel? projectType,
+      required ProjectModel selectedProject,
+      required List<String>? genderOptions,
+      required List<String>? idTypeOptions,
+      List<String>? memberRelationTypeOptions,
+      required List<String>? householdDeletionReasonOptions,
+      required List<String>? householdMemberDeletionReasonOptions,
+      required List<String>? deliveryCommentOptions,
+      required List<String>? symptomsTypes,
+      required List<String>? searchHouseHoldFilter,
+      required List<String>? searchCLFFilters,
+      required List<String>? referralReasons,
+      required List<String>? houseStructureTypes,
+      required List<String>? refusalReasons,
+      required UserModel? loggedInUser,
+      required int? beneficiaryIdMinCount,
+      required int? beneficiaryIdBatchSize}) {
     _loggedInUserUuid = loggedInUserUuid;
     _maxRadius = maxRadius;
     _projectId = projectId;
@@ -497,6 +535,7 @@ class RegistrationDeliverySingleton {
     _selectedProject = selectedProject;
     _genderOptions = genderOptions;
     _idTypeOptions = idTypeOptions;
+    _memberRelationTypeOptions = memberRelationTypeOptions;
     _householdDeletionReasonOptions = householdDeletionReasonOptions;
     _householdMemberDeletionReasonOptions =
         householdMemberDeletionReasonOptions;
@@ -508,6 +547,8 @@ class RegistrationDeliverySingleton {
     _houseStructureTypes = houseStructureTypes;
     _refusalReasons = refusalReasons;
     _loggedInUser = loggedInUser;
+    _beneficiaryIdMinCount = beneficiaryIdMinCount;
+    _beneficiaryIdBatchSize = beneficiaryIdBatchSize;
   }
 
   void setTenantId(String tenantId) {
@@ -541,6 +582,8 @@ class RegistrationDeliverySingleton {
 
   List<String>? get idTypeOptions => _idTypeOptions;
 
+  List<String>? get memberRelationTypeOptions => _memberRelationTypeOptions;
+
   List<String>? get householdDeletionReasonOptions =>
       _householdDeletionReasonOptions;
 
@@ -564,6 +607,10 @@ class RegistrationDeliverySingleton {
   UserModel? get loggedInUser => _loggedInUser;
 
   HouseholdType? get householdType => _householdType;
+
+  int? get beneficiaryIdMinCount => _beneficiaryIdMinCount;
+
+  int? get beneficiaryIdBatchSize => _beneficiaryIdBatchSize;
 }
 
 bool allDosesDelivered(
@@ -625,10 +672,11 @@ Status getTaskStatus(Iterable<TaskModel> tasks) {
     Status.inComplete.toValue(): Status.inComplete,
     Status.toAdminister.toValue(): Status.toAdminister,
     Status.closeHousehold.toValue(): Status.closeHousehold,
+    Status.ineligible.toValue(): Status.ineligible,
   };
 
   if (tasks.isEmpty) {
-    return Status.registered.toValue();
+    return Status.registered;
   } else {
     final mappedStatus =
         statusMap[tasks.lastOrNull!.status ?? Status.registered];
@@ -637,7 +685,7 @@ Status getTaskStatus(Iterable<TaskModel> tasks) {
     }
   }
 
-  return Status.registered.toValue();
+  return Status.registered;
 }
 
 String getStatus(String selectedFilter) {
@@ -655,6 +703,7 @@ String getStatus(String selectedFilter) {
     Status.closeHousehold.toValue(): Status.closeHousehold,
     Status.registered.toValue(): Status.registered,
     Status.notRegistered.toValue(): Status.notRegistered,
+    Status.ineligible.toValue(): Status.ineligible,
   };
 
   var mappedStatus = statusMap.entries

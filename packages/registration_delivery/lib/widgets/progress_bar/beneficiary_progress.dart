@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
-import 'package:digit_data_model/data/data_repository.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
@@ -79,19 +79,18 @@ class BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
     final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType;
 
     final targetModel = selectedProject.targets?.firstWhereOrNull(
-      (element) => element.beneficiaryType == beneficiaryType,
+      (element) => element.beneficiaryType == beneficiaryType?.toValue(),
     );
 
     final target = targetModel?.targetNo ?? 0.0;
 
-    return DigitCard(
-      margin: const EdgeInsets.all(spacer2),
-      children: [ProgressIndicatorContainer(
+    return DigitCard(margin: const EdgeInsets.all(spacer2), children: [
+      ProgressIndicatorContainer(
         label: '${max(target - current, 0).round()} ${widget.label}',
         prefixLabel: '$current ${widget.prefixLabel}',
         suffixLabel: target.toStringAsFixed(0),
         value: target == 0 ? 0 : min(current / target, 1),
-      ),]
-    );
+      ),
+    ]);
   }
 }

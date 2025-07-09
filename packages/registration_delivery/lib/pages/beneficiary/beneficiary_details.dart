@@ -164,6 +164,25 @@ class BeneficiaryDetailsPageState
                                                         c.id ==
                                                         deliverState.cycle);
                                                 if (selectedCycle != null) {
+                                                  final currentCycle =
+                                                      deliverState.cycle >= 0
+                                                          ? deliverState.cycle
+                                                          : 0;
+
+                                                  // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
+                                                  final currentDose =
+                                                      deliverState.dose >= 0
+                                                          ? deliverState.dose
+                                                          : 0;
+
+                                                  final items =
+                                                      RegistrationDeliverySingleton()
+                                                              .projectType!
+                                                              .cycles?[
+                                                                  currentCycle - 1]
+                                                              .deliveries?[
+                                                          currentDose - 1];
+
                                                   bloc.add(
                                                     DeliverInterventionEvent
                                                         .selectFutureCycleDose(
@@ -181,34 +200,56 @@ class BeneficiaryDetailsPageState
                                                     ),
                                                   );
 
-                                                  var productVariants = fetchProductVariant(
-                                                      RegistrationDeliverySingleton()
-                                                          .selectedProject
-                                                          ?.additionalDetails
-                                                          ?.projectType
-                                                          ?.cycles![deliverState
-                                                                  .cycle -
-                                                              1]
-                                                          .deliveries?[deliverState
-                                                              .dose -
-                                                          1],
-                                                      state.selectedIndividual,
-                                                      state
-                                                          .householdMemberWrapper
-                                                          .household,
-                                                      context: context);
+                                                  var productVariants =
+                                                      fetchProductVariant(
+                                                          items,
+                                                          state
+                                                              .selectedIndividual,
+                                                          state
+                                                              .householdMemberWrapper
+                                                              .household,
+                                                          context: context);
 
                                                   if (productVariants[
                                                           'criteria'] ==
                                                       null) {
-                                                    Toast.showToast(
-                                                      context,
-                                                      message: localizations
-                                                          .translate(
+                                                    showCustomPopup(
+                                                      context: context,
+                                                      builder: (BuildContext context) => Popup(
+                                                          title: localizations
+                                                              .translate(i18
+                                                                  .common
+                                                                  .coreCommonError),
+                                                          description: localizations
+                                                                  .translate(
+                                                                      'CONDITION_FAILED') +
                                                               productVariants[
                                                                       'errors']
-                                                                  .toString()),
-                                                      type: ToastType.error,
+                                                                  .toString()
+                                                                  .replaceAll(
+                                                                      '[', '')
+                                                                  .replaceAll(
+                                                                      ']', ''),
+                                                          type: PopUpType.alert,
+                                                          actions: [
+                                                            DigitButton(
+                                                                label: localizations
+                                                                    .translate(i18
+                                                                        .common
+                                                                        .corecommonclose),
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                    context,
+                                                                    rootNavigator:
+                                                                        true,
+                                                                  ).pop();
+                                                                },
+                                                                type: DigitButtonType
+                                                                    .tertiary,
+                                                                size:
+                                                                    DigitButtonSize
+                                                                        .large)
+                                                          ]),
                                                     );
                                                   } else {
                                                     showCustomPopup(
@@ -274,18 +315,26 @@ class BeneficiaryDetailsPageState
                                           size: DigitButtonSize.large,
                                           mainAxisSize: MainAxisSize.max,
                                           onPressed: () {
+                                            final currentCycle =
+                                                deliverState.cycle >= 0
+                                                    ? deliverState.cycle
+                                                    : 0;
+
+                                            // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
+                                            final currentDose =
+                                                deliverState.dose >= 0
+                                                    ? deliverState.dose
+                                                    : 0;
+
+                                            final items =
+                                                RegistrationDeliverySingleton()
+                                                    .projectType!
+                                                    .cycles?[currentCycle - 1]
+                                                    .deliveries?[currentDose - 1];
+
                                             var productVariants =
                                                 fetchProductVariant(
-                                                    RegistrationDeliverySingleton()
-                                                            .selectedProject
-                                                            ?.additionalDetails
-                                                            ?.projectType
-                                                            ?.cycles![
-                                                                deliverState
-                                                                        .cycle -
-                                                                    1]
-                                                            .deliveries?[
-                                                        deliverState.dose - 1],
+                                                    items,
                                                     state.selectedIndividual,
                                                     state.householdMemberWrapper
                                                         .household,
@@ -293,13 +342,44 @@ class BeneficiaryDetailsPageState
 
                                             if (productVariants['criteria'] ==
                                                 null) {
-                                              Toast.showToast(
-                                                context,
-                                                message: localizations
-                                                    .translate(productVariants[
-                                                            'errors']
-                                                        .toString()),
-                                                type: ToastType.error,
+                                              showCustomPopup(
+                                                context: context,
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    Popup(
+                                                        title: localizations
+                                                            .translate(i18
+                                                                .common
+                                                                .coreCommonError),
+                                                        description: localizations
+                                                                .translate(
+                                                                    'CONDITION_FAILED') +
+                                                            productVariants[
+                                                                    'errors']
+                                                                .toString()
+                                                                .replaceAll(
+                                                                    '[', '')
+                                                                .replaceAll(
+                                                                    ']', ''),
+                                                        type: PopUpType.alert,
+                                                        actions: [
+                                                      DigitButton(
+                                                          label: localizations
+                                                              .translate(i18
+                                                                  .common
+                                                                  .corecommonclose),
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                              context,
+                                                              rootNavigator:
+                                                                  true,
+                                                            ).pop();
+                                                          },
+                                                          type: DigitButtonType
+                                                              .tertiary,
+                                                          size: DigitButtonSize
+                                                              .large)
+                                                    ]),
                                               );
                                             } else {
                                               context.router.push(
@@ -353,9 +433,29 @@ class BeneficiaryDetailsPageState
                                         return '--';
                                       }
 
+                                      String? primaryIdType = state
+                                          .selectedIndividual
+                                          ?.additionalFields
+                                          ?.fields
+                                          .firstWhereOrNull((idType) =>
+                                              idType.key == 'primaryIdType')
+                                          ?.value;
+
                                       return localizations.translate(
-                                          identifiers.first.identifierType ??
-                                              '--');
+                                          primaryIdType != null
+                                              ? state.selectedIndividual
+                                                      ?.identifiers
+                                                      ?.firstWhereOrNull((type) =>
+                                                          type.identifierType ==
+                                                          primaryIdType)
+                                                      ?.identifierType ??
+                                                  '--'
+                                              : state
+                                                      .selectedIndividual
+                                                      ?.identifiers
+                                                      ?.firstOrNull
+                                                      ?.identifierType ??
+                                                  '--');
                                     }(),
                                     localizations.translate(
                                       i18.deliverIntervention.idNumberText,
@@ -373,9 +473,41 @@ class BeneficiaryDetailsPageState
                                         return '--';
                                       }
 
-                                      return maskString(identifiers
-                                          .first.identifierId
-                                          .toString());
+                                      String? primaryIdType = state
+                                          .selectedIndividual
+                                          ?.additionalFields
+                                          ?.fields
+                                          .firstWhereOrNull((idType) =>
+                                              idType.key == 'primaryIdType')
+                                          ?.value;
+
+                                      String? getMaskedOrRawIdentifier(
+                                          List<IdentifierModel> identifiers,
+                                          String? type) {
+                                        final identifier =
+                                            identifiers.firstWhereOrNull(
+                                          (id) =>
+                                              type == null ||
+                                              id.identifierType == type,
+                                        );
+                                        if (identifier == null) return null;
+
+                                        return type ==
+                                                IdentifierTypes
+                                                    .uniqueBeneficiaryID
+                                                    .toValue()
+                                            ? identifier.identifierId
+                                            : maskString(
+                                                identifier.identifierId ?? '');
+                                      }
+
+                                      final identifiersList = state
+                                              .selectedIndividual
+                                              ?.identifiers ??
+                                          identifiers;
+
+                                      return getMaskedOrRawIdentifier(
+                                          identifiersList, primaryIdType);
                                     }(),
                                     localizations.translate(
                                       i18.common.coreCommonAge,

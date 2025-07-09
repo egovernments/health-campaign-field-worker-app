@@ -159,10 +159,14 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                 householdModel,
                                 individualModel,
                                 projectBeneficiaryModel,
+                                parentClientReferenceId,
+                                  relationshipType,
                                 registrationDate,
                                 searchQuery,
                                 loading,
                                 isHeadOfHousehold,
+                                  householdChecklists,
+                                  individualChecklists,
                               ) {
                                 var addressModel = AddressModel(
                                   addressLine1: addressLine1 != null &&
@@ -236,9 +240,13 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                 householdModel,
                                 individuals,
                                 registrationDate,
+                                parentClientReferenceId,
+                                  relationshipType,
                                 projectBeneficiaryModel,
                                 loading,
                                 headOfHousehold,
+                                  householdChecklists,
+                                  individualChecklists,
                               ) {
                                 var addressModel = address.copyWith(
                                   addressLine1: addressLine1 != null &&
@@ -299,8 +307,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                         .householdLocationLabelText,
                                   ),
                             headingStyle: textTheme.headingXl.copyWith(
-                              color: theme.colorTheme.primary.primary2
-                            ),
+                                color: theme.colorTheme.primary.primary2),
                             description: (RegistrationDeliverySingleton()
                                         .householdType ==
                                     HouseholdType.community)

@@ -1,3 +1,43 @@
+## 1.0.3
+
+* Updated with latest packages data_model and digit_ui_components
+* Updating enumeration changes
+
+## 1.0.2-dev.4-enumeration
+
+* Removed unwanted type check in attributes for local
+
+## 1.0.2-dev.3-enumeration
+
+* Bug fix:
+    * Fixed issue in service attributes update
+
+## 1.0.2-dev.2-enumeration
+
+* Added serviceClientReferenceId to service attribute entity and table
+* Modified update query for attribute update with id and value
+* Added clear children when value is changed
+
+## 1.0.2-dev.1-enumeration
+
+* Added referenceIds to search model
+* Added downsync of service and service attributes
+* Added new type in checklist view
+* Added service update in repository
+* added parser to support checklist configuration
+
+## 1.0.1+3
+
+* Bug fix:
+    * Added relatedClientReferenceId to search model
+    * Modified search query to include relatedClientReferenceId
+
+## 1.0.1+2
+
+* Bug fix:
+    * Removed referralClientRefId
+    * Added the additional controller for the additional field attribute
+
 ## 1.0.1+1
 
 * Upgraded to latest package versions

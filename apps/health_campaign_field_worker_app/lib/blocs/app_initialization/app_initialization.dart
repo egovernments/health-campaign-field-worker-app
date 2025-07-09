@@ -91,21 +91,25 @@ class AppInitializationBloc
                     MasterEnums.appConfig.toValue(),
                     MasterEnums.symptomTypes.toValue(),
                     MasterEnums.referralReasons.toValue(),
+                    MasterEnums.manualAttendanceReasons.toValue(),
                     MasterEnums.houseStructureTypes.toValue(),
                     MasterEnums.refusalReasons.toValue(),
                     MasterEnums.bandWidthBatchSize.toValue(),
+                    MasterEnums.beneficiaryIdConfig.toValue(),
                     MasterEnums.downSyncBandwidthBatchSize.toValue(),
                     MasterEnums.hhDelReasons.toValue(),
                     MasterEnums.hhMemberDelReasons.toValue(),
                     MasterEnums.backgroundServiceConfig.toValue(),
                     MasterEnums.checklistTypes.toValue(),
                     MasterEnums.idTypes.toValue(),
+                    MasterEnums.relationShipTypeOptions.toValue(),
                     MasterEnums.deliveryComments.toValue(),
                     MasterEnums.backendInterface.toValue(),
                     MasterEnums.callSupport.toValue(),
                     MasterEnums.transportTypes.toValue(),
                     MasterEnums.firebaseConfig.toValue(),
                     MasterEnums.searchHouseHoldFilters.toValue(),
+                    MasterEnums.transitPostType.toValue(),
                     MasterEnums.searchCLFFilters.toValue()
                   ]),
                 ),
@@ -315,7 +319,6 @@ class MdmsConfig {
   final List<AppConfiguration> appConfigs;
   final List<ServiceRegistry> serviceRegistryList;
   final List<DashboardConfigSchema?>? dashboardConfigSchema;
-
 
   const MdmsConfig(
       {required this.appConfigs,
