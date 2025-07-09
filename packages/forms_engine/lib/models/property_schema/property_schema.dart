@@ -1,7 +1,6 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:intl/intl.dart';
 
 part 'property_schema.freezed.dart';
 part 'property_schema.g.dart';
@@ -31,8 +30,8 @@ class PropertySchema with _$PropertySchema {
       unknownEnumValue: PropertySchemaFormat.text,
     )
     PropertySchemaFormat? format,
-    String? startDate,
-    String? endDate,
+    @JsonKey(fromJson: _stringOrNull) final String? startDate,
+    @JsonKey(fromJson: _stringOrNull) final String? endDate,
     int? minValue,
     int? maxValue,
     int? minLength,
@@ -54,12 +53,9 @@ class PropertySchema with _$PropertySchema {
     NavigateToConfig? navigateTo,
   }) = _PropertySchema;
 
-
-
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>
       _$PropertySchemaFromJson(json);
 }
-
 
 @freezed
 class ValidationRule with _$ValidationRule {
@@ -80,8 +76,7 @@ class Option with _$Option {
     required String name,
   }) = _Option;
 
-  factory Option.fromJson(Map<String, dynamic> json) =>
-      _$OptionFromJson(json);
+  factory Option.fromJson(Map<String, dynamic> json) => _$OptionFromJson(json);
 }
 
 @freezed
@@ -105,6 +100,10 @@ class NavigateToConfig with _$NavigateToConfig {
 
   factory NavigateToConfig.fromJson(Map<String, dynamic> json) =>
       _$NavigateToConfigFromJson(json);
+}
+
+String? _stringOrNull(dynamic value) {
+  return value is String ? value : null;
 }
 
 enum FormulaBehavior { show, hide }

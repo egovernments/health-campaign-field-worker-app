@@ -14,7 +14,6 @@ class JsonFormBuilder extends LocalizedStatefulWidget {
   });
 
   @override
-
   State<JsonFormBuilder> createState() => _JsonFormBuilderState();
 }
 
@@ -34,7 +33,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
   /// Conditionally hide based on display behavior
   bool _shouldHideField(FormGroup form) {
     final hidden = widget.schema.hidden;
-    if( hidden != null && hidden == true) return true;
+    if (hidden != null && hidden == true) return true;
     final display = widget.schema.displayBehavior;
     if (display == null) return false;
 
@@ -100,7 +99,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
-          innerLabel: translateIfPresent(widget.schema.innerLabel, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
         );
 
       case PropertySchemaFormat.dropdown:
@@ -112,6 +112,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           formControlName: widget.formControlName,
           enums: widget.schema.enums ?? [],
           validations: widget.schema.validations,
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
         );
 
       case PropertySchemaFormat.dob:
@@ -135,7 +136,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         return JsonSchemaDatePickerBuilder(
           isRequired: hasRequiredValidation(widget.schema.validations),
           readOnly: widget.schema.readOnly ?? false,
-          innerLabel: translateIfPresent(widget.schema.innerLabel, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           label: translateIfPresent(widget.schema.label, localizations),
           form: form,
@@ -192,7 +194,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           isRequired: hasRequiredValidation(widget.schema.validations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
-          innerLabel: translateIfPresent(widget.schema.innerLabel, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
         );
     }
   }
@@ -213,14 +216,30 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           isRequired: hasRequiredValidation(widget.schema.validations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
-          innerLabel: translateIfPresent(widget.schema.innerLabel, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
+        );
+
+      case PropertySchemaFormat.mobileNumber:
+        return JsonSchemaNumberBuilder(
+          form: form,
+          label: translateIfPresent(widget.schema.label, localizations),
+          formControlName: widget.formControlName,
+          inputType: TextInputType.number,
+          readOnly: widget.schema.readOnly ?? false,
+          validations: widget.schema.validations,
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
         );
 
       case PropertySchemaFormat.date:
         return JsonSchemaDatePickerBuilder(
           readOnly: widget.schema.readOnly ?? false,
           isRequired: hasRequiredValidation(widget.schema.validations),
-          label:translateIfPresent(widget.schema.label, localizations),
+          label: translateIfPresent(widget.schema.label, localizations),
           form: form,
           formControlName: widget.formControlName,
           start: parseDateValue(widget.schema.startDate),
@@ -235,7 +254,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           form: form,
           value: parseIntValue(widget.schema.value) ?? 0,
           formControlName: widget.formControlName,
-          label:translateIfPresent(widget.schema.label, localizations),
+          label: translateIfPresent(widget.schema.label, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           minValue: widget.schema.minValue,
           maxValue: widget.schema.maxValue,
@@ -253,7 +272,6 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           form: form,
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
-          value: widget.schema.value as int?,
           readOnly: widget.schema.readOnly ?? false,
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
@@ -292,7 +310,6 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         return _buildCustomComponent() ?? const SizedBox.shrink();
 
       default:
-
         return JsonSchemaStringBuilder(
           form: form,
           label: translateIfPresent(widget.schema.label, localizations),
@@ -302,7 +319,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
-          innerLabel: translateIfPresent(widget.schema.innerLabel, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
         );
     }
   }
@@ -315,35 +333,35 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: entries
           .where((entry) {
-        final subSchema = entry.value;
-        return !shouldHideField(subSchema, form);
-      })
+            final subSchema = entry.value;
+            return !shouldHideField(subSchema, form);
+          })
           .toList()
           .asMap()
           .entries
           .map((entry) {
-        final index = entry.key;
-        final mapEntry = entry.value;
-        final subSchema = mapEntry.value;
-        final subName = mapEntry.key;
+            final index = entry.key;
+            final mapEntry = entry.value;
+            final subSchema = mapEntry.value;
+            final subName = mapEntry.key;
 
-        final field = JsonFormBuilder(
-          formControlName: subName,
-          schema: subSchema,
-          components: widget.components,
-        );
+            final field = JsonFormBuilder(
+              formControlName: subName,
+              schema: subSchema,
+              components: widget.components,
+            );
 
-        final isLast = index == entries
-            .where((e) => !shouldHideField(e.value, form))
-            .length - 1;
+            final isLast = index ==
+                entries.where((e) => !shouldHideField(e.value, form)).length -
+                    1;
 
-        return isLast
-            ? field
-            : Padding(
-          padding: const EdgeInsets.only(bottom: 16.0),
-          child: field,
-        );
-      })
+            return isLast
+                ? field
+                : Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: field,
+                  );
+          })
           .toList(),
     );
   }
@@ -359,4 +377,3 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     return null;
   }
 }
-

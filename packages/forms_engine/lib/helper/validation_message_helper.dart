@@ -1,11 +1,13 @@
+import 'package:forms_engine/utils/utils.dart';
+
 import '../blocs/app_localization.dart';
 import '../models/property_schema/property_schema.dart';
 
 /// Translates each rule.message via [localize].
 Map<String, String Function(Object)> buildValidationMessages(
-    List<ValidationRule>? validations,
-    FormLocalization localize,
-    ) {
+  List<ValidationRule>? validations,
+  FormLocalization localize,
+) {
   final Map<String, String Function(Object)> messages = {};
 
   if (validations == null) return messages;
@@ -14,7 +16,8 @@ Map<String, String Function(Object)> buildValidationMessages(
     if (rule.message == null) continue;
 
     // first translate the message
-    final translated = localize.translate(rule.message ?? "FIELD_VALIDATION_ERROR");
+    final translated = translateIfPresent(rule.message, localize) ??
+        localize.translate("FIELD_VALIDATION_ERROR");
 
     switch (rule.type) {
       case 'required':
