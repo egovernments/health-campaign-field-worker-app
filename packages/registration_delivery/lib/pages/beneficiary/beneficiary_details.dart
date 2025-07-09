@@ -393,174 +393,177 @@ class BeneficiaryDetailsPageState
                           },
                         ),
                         children: [
-                          DigitCard(
-                              margin: const EdgeInsets.all(spacer2),
-                              children: [
-                                Text(
-                                  localizations.translate(beneficiaryDetailsTemplate
-                                      ?.label ?? i18.beneficiaryDetails
-                                      .beneficiarysDetailsLabelText),
-                                  style: textTheme.headingXl.copyWith(
-                                      color: theme.colorTheme.primary.primary2),
-                                ),
-                                if(beneficiaryDetailsTemplate?.description != null && ( beneficiaryDetailsTemplate?.description ?? '').isNotEmpty)
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: DigitCard(
+                                margin: const EdgeInsets.all(spacer2),
+                                children: [
                                   Text(
-                                    localizations.translate(
-                                        beneficiaryDetailsTemplate?.description ?? ''
-                                    ),
-                                    style: textTheme.bodyS.copyWith(
-                                      color: theme.colorTheme.text.secondary,
-                                    ),
-                                    textAlign: TextAlign.left,
+                                    localizations.translate(beneficiaryDetailsTemplate
+                                        ?.label ?? i18.beneficiaryDetails
+                                        .beneficiarysDetailsLabelText),
+                                    style: textTheme.headingXl.copyWith(
+                                        color: theme.colorTheme.primary.primary2),
                                   ),
-                                if(beneficiaryDetailsTemplate
-                                    ?.properties?[registration_keys.beneficiaryDetailsKeys.detailsCardKey]?.hidden != true)
-                                  DigitTableCard(
-                                  element: buildEnumValueMap(
-                                        HouseholdWrapper(
-                                      household: householdMemberWrapper.first.household,
-                                      headOfHousehold: RegistrationDeliverySingleton()
-                                          .beneficiaryType !=
-                                          BeneficiaryType.individual
-                                          ? householdMemberWrapper.first.headOfHousehold : state.selectedIndividual,
-                                      tasks: householdMemberWrapper.first.tasks,
-                                      projectBeneficiaries: householdMemberWrapper.first.projectBeneficiaries,
-                                      sideEffects: householdMemberWrapper.first.sideEffects,
-                                      referrals: householdMemberWrapper.first.referrals,
-                                    )
-                                      ,
-                                      beneficiaryDetailsTemplate
-                                          ?.properties?[registration_keys.beneficiaryDetailsKeys.detailsCardKey]?.enums
-                                  )?.map((k, v) => MapEntry(localizations.translate(k), localizations.translate(v.toString())))
-                                      ?? {
-                                    localizations.translate(
-                                      RegistrationDeliverySingleton()
+                                  if(beneficiaryDetailsTemplate?.description != null && ( beneficiaryDetailsTemplate?.description ?? '').isNotEmpty)
+                                    Text(
+                                      localizations.translate(
+                                          beneficiaryDetailsTemplate?.description ?? ''
+                                      ),
+                                      style: textTheme.bodyS.copyWith(
+                                        color: theme.colorTheme.text.secondary,
+                                      ),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  if(beneficiaryDetailsTemplate
+                                      ?.properties?[registration_keys.beneficiaryDetailsKeys.detailsCardKey]?.hidden != true)
+                                    DigitTableCard(
+                                    element: buildEnumValueMap(
+                                          HouseholdWrapper(
+                                        household: householdMemberWrapper.first.household,
+                                        headOfHousehold: RegistrationDeliverySingleton()
+                                            .beneficiaryType !=
+                                            BeneficiaryType.individual
+                                            ? householdMemberWrapper.first.headOfHousehold : state.selectedIndividual,
+                                        tasks: householdMemberWrapper.first.tasks,
+                                        projectBeneficiaries: householdMemberWrapper.first.projectBeneficiaries,
+                                        sideEffects: householdMemberWrapper.first.sideEffects,
+                                        referrals: householdMemberWrapper.first.referrals,
+                                      )
+                                        ,
+                                        beneficiaryDetailsTemplate
+                                            ?.properties?[registration_keys.beneficiaryDetailsKeys.detailsCardKey]?.enums
+                                    )?.map((k, v) => MapEntry(localizations.translate(k), localizations.translate(v.toString())))
+                                        ?? {
+                                      localizations.translate(
+                                        RegistrationDeliverySingleton()
+                                                    .beneficiaryType !=
+                                                BeneficiaryType.individual
+                                            ? i18.householdOverView
+                                                .householdOverViewHouseholdHeadLabel
+                                            : i18.common.coreCommonName,
+                                      ): RegistrationDeliverySingleton()
                                                   .beneficiaryType !=
                                               BeneficiaryType.individual
-                                          ? i18.householdOverView
-                                              .householdOverViewHouseholdHeadLabel
-                                          : i18.common.coreCommonName,
-                                    ): RegistrationDeliverySingleton()
-                                                .beneficiaryType !=
-                                            BeneficiaryType.individual
-                                        ? householdMemberWrapper.first
-                                            .headOfHousehold?.name?.givenName
-                                        : state.selectedIndividual?.name
-                                                ?.givenName ??
-                                            '--',
-                                    localizations.translate(
-                                      i18.deliverIntervention.idTypeText,
-                                    ): () {
-                                      final identifiers =
-                                          RegistrationDeliverySingleton()
-                                                      .beneficiaryType !=
-                                                  BeneficiaryType.individual
-                                              ? householdMemberWrapper.first
-                                                  .headOfHousehold?.identifiers
-                                              : state.selectedIndividual
-                                                  ?.identifiers;
-                                      if (identifiers == null ||
-                                          identifiers.isEmpty) {
-                                        return '--';
-                                      }
+                                          ? householdMemberWrapper.first
+                                              .headOfHousehold?.name?.givenName
+                                          : state.selectedIndividual?.name
+                                                  ?.givenName ??
+                                              '--',
+                                      localizations.translate(
+                                        i18.deliverIntervention.idTypeText,
+                                      ): () {
+                                        final identifiers =
+                                            RegistrationDeliverySingleton()
+                                                        .beneficiaryType !=
+                                                    BeneficiaryType.individual
+                                                ? householdMemberWrapper.first
+                                                    .headOfHousehold?.identifiers
+                                                : state.selectedIndividual
+                                                    ?.identifiers;
+                                        if (identifiers == null ||
+                                            identifiers.isEmpty) {
+                                          return '--';
+                                        }
 
-                                      return localizations.translate(
-                                          identifiers.first.identifierType ??
-                                              '--');
-                                    }(),
-                                    localizations.translate(
-                                      i18.deliverIntervention.idNumberText,
-                                    ): () {
-                                      final identifiers =
-                                          RegistrationDeliverySingleton()
-                                                      .beneficiaryType !=
-                                                  BeneficiaryType.individual
-                                              ? householdMemberWrapper.first
-                                                  .headOfHousehold?.identifiers
-                                              : state.selectedIndividual
-                                                  ?.identifiers;
-                                      if (identifiers == null ||
-                                          identifiers.isEmpty) {
-                                        return '--';
-                                      }
+                                        return localizations.translate(
+                                            identifiers.first.identifierType ??
+                                                '--');
+                                      }(),
+                                      localizations.translate(
+                                        i18.deliverIntervention.idNumberText,
+                                      ): () {
+                                        final identifiers =
+                                            RegistrationDeliverySingleton()
+                                                        .beneficiaryType !=
+                                                    BeneficiaryType.individual
+                                                ? householdMemberWrapper.first
+                                                    .headOfHousehold?.identifiers
+                                                : state.selectedIndividual
+                                                    ?.identifiers;
+                                        if (identifiers == null ||
+                                            identifiers.isEmpty) {
+                                          return '--';
+                                        }
 
-                                      return maskString(identifiers
-                                          .first.identifierId
-                                          .toString());
-                                    }(),
-                                    localizations.translate(
-                                      i18.common.coreCommonAge,
-                                    ): () {
-                                      final dob =
-                                          RegistrationDeliverySingleton()
-                                                      .beneficiaryType !=
-                                                  BeneficiaryType.individual
-                                              ? householdMemberWrapper.first
-                                                  .headOfHousehold?.dateOfBirth
-                                              : state.selectedIndividual
-                                                  ?.dateOfBirth;
-                                      if (dob == null || dob.isEmpty) {
-                                        return '--';
-                                      }
+                                        return maskString(identifiers
+                                            .first.identifierId
+                                            .toString());
+                                      }(),
+                                      localizations.translate(
+                                        i18.common.coreCommonAge,
+                                      ): () {
+                                        final dob =
+                                            RegistrationDeliverySingleton()
+                                                        .beneficiaryType !=
+                                                    BeneficiaryType.individual
+                                                ? householdMemberWrapper.first
+                                                    .headOfHousehold?.dateOfBirth
+                                                : state.selectedIndividual
+                                                    ?.dateOfBirth;
+                                        if (dob == null || dob.isEmpty) {
+                                          return '--';
+                                        }
 
-                                      final int years =
-                                          DigitDateUtils.calculateAge(
-                                        DigitDateUtils
-                                                .getFormattedDateToDateTime(
-                                              dob,
-                                            ) ??
-                                            DateTime.now(),
-                                      ).years;
-                                      final int months =
-                                          DigitDateUtils.calculateAge(
-                                        DigitDateUtils
-                                                .getFormattedDateToDateTime(
-                                              dob,
-                                            ) ??
-                                            DateTime.now(),
-                                      ).months;
+                                        final int years =
+                                            DigitDateUtils.calculateAge(
+                                          DigitDateUtils
+                                                  .getFormattedDateToDateTime(
+                                                dob,
+                                              ) ??
+                                              DateTime.now(),
+                                        ).years;
+                                        final int months =
+                                            DigitDateUtils.calculateAge(
+                                          DigitDateUtils
+                                                  .getFormattedDateToDateTime(
+                                                dob,
+                                              ) ??
+                                              DateTime.now(),
+                                        ).months;
 
-                                      return "$years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} ${localizations.translate(months.toString().toUpperCase())} ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}";
-                                    }(),
-                                    localizations.translate(
-                                      i18.common.coreCommonGender,
-                                    ): RegistrationDeliverySingleton()
-                                                .beneficiaryType !=
-                                            BeneficiaryType.individual
-                                        ? householdMemberWrapper.first.headOfHousehold
-                                            ?.gender?.name.sentenceCase
-                                        : state.selectedIndividual?.gender?.name
-                                                .sentenceCase ??
-                                            '--',
-                                    localizations.translate(
-                                      i18.common.coreCommonMobileNumber,
-                                    ): RegistrationDeliverySingleton()
-                                                .beneficiaryType !=
-                                            BeneficiaryType.individual
-                                        ? householdMemberWrapper.first
-                                            .headOfHousehold?.mobileNumber
-                                        : state.selectedIndividual
-                                                ?.mobileNumber ??
-                                            '--',
-                                    localizations.translate(i18
-                                        .deliverIntervention
-                                        .dateOfRegistrationLabel): () {
-                                      final date = projectBeneficiary
-                                          ?.first?.dateOfRegistration;
+                                        return "$years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} ${localizations.translate(months.toString().toUpperCase())} ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}";
+                                      }(),
+                                      localizations.translate(
+                                        i18.common.coreCommonGender,
+                                      ): RegistrationDeliverySingleton()
+                                                  .beneficiaryType !=
+                                              BeneficiaryType.individual
+                                          ? householdMemberWrapper.first.headOfHousehold
+                                              ?.gender?.name.sentenceCase
+                                          : state.selectedIndividual?.gender?.name
+                                                  .sentenceCase ??
+                                              '--',
+                                      localizations.translate(
+                                        i18.common.coreCommonMobileNumber,
+                                      ): RegistrationDeliverySingleton()
+                                                  .beneficiaryType !=
+                                              BeneficiaryType.individual
+                                          ? householdMemberWrapper.first
+                                              .headOfHousehold?.mobileNumber
+                                          : state.selectedIndividual
+                                                  ?.mobileNumber ??
+                                              '--',
+                                      localizations.translate(i18
+                                          .deliverIntervention
+                                          .dateOfRegistrationLabel): () {
+                                        final date = projectBeneficiary
+                                            ?.first?.dateOfRegistration;
 
-                                      final registrationDate =
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                        date ??
-                                            DateTime.now()
-                                                .millisecondsSinceEpoch,
-                                      );
+                                        final registrationDate =
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                          date ??
+                                              DateTime.now()
+                                                  .millisecondsSinceEpoch,
+                                        );
 
-                                      return DateFormat('dd MMMM yyyy')
-                                          .format(registrationDate);
-                                    }(),
-                                  },
-                                ),
-                              ]),
+                                        return DateFormat('dd MMMM yyyy')
+                                            .format(registrationDate);
+                                      }(),
+                                    },
+                                  ),
+                                ]),
+                          ),
                           if ((RegistrationDeliverySingleton()
                                       .projectType
                                       ?.cycles ??
