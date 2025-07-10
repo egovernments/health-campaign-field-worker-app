@@ -61,14 +61,14 @@ class RegistrationWrapperBloc
     try {
       // Update audit fields for each entity
       final updatedEntities = event.entities.map((entity) {
-        final audit = entity.auditDetails;
+        final clientAudit = entity.clientAuditDetails;
 
-        final updatedAudit = audit?.copyWith(
+        final updatedClientAudit = clientAudit?.copyWith(
           lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid,
           lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
         );
 
-        return entity.copyWith(auditDetails: updatedAudit);
+        return entity.copyWith(clientAuditDetails: updatedClientAudit);
       }).toList();
 
       globalRegistrationBloc
