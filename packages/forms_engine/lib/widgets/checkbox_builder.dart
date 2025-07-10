@@ -22,7 +22,7 @@ class JsonSchemaCheckboxBuilder extends JsonSchemaBuilder<bool> {
     return ReactiveWrapperField(
       formControlName: formControlName,
       validationMessages: validationMessages,
-      builder: (field){
+      builder: (field) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -30,19 +30,18 @@ class JsonSchemaCheckboxBuilder extends JsonSchemaBuilder<bool> {
             DigitCheckbox(
               isRequired: isRequired ?? false,
               readOnly: readOnly,
-              label: label ?? 'checkbox label',
+              label: label,
               value: (field.value ?? false) as bool,
-              onChanged: (value){
+              onChanged: (value) {
                 form.control(formControlName).markAsTouched();
                 field.control.value = value;
-                if(value!=true && hasRequiredValidation(validations)){
+                if (value != true && hasRequiredValidation(validations)) {
                   form.control(formControlName).setErrors({'required': true});
                 }
               },
             ),
-            if(field.errorText!=null)
-              const SizedBox(width: spacer3),
-            if(field.errorText!=null)
+            if (field.errorText != null) const SizedBox(width: spacer3),
+            if (field.errorText != null)
               Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -67,7 +66,11 @@ class JsonSchemaCheckboxBuilder extends JsonSchemaBuilder<bool> {
                   const SizedBox(width: spacer1),
                   Flexible(
                     fit: FlexFit.tight,
-                    child: Text(truncateWithEllipsis(256, field.errorText!,),
+                    child: Text(
+                      truncateWithEllipsis(
+                        256,
+                        field.errorText!,
+                      ),
                       style: textTheme.bodyS.copyWith(
                         color: theme.colorTheme.alert.error,
                       ),
