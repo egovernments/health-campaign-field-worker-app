@@ -212,6 +212,10 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       case PropertySchemaFormat.text:
         return JsonSchemaNumberBuilder(
           form: form,
+          prefixText:
+          translateIfPresent(widget.schema.prefixText, localizations),
+          suffixText:
+          translateIfPresent(widget.schema.suffixText, localizations),
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
           inputType: TextInputType.number,
