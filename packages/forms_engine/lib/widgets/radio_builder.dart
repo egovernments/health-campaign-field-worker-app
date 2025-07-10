@@ -30,6 +30,7 @@ class JsonSchemaRadioBuilder extends JsonSchemaBuilder<bool> {
       showErrors: (control) => control.invalid && control.touched,
       builder: (field){
         return LabeledField(
+          charCondition: true,
           isRequired: hasRequiredValidation(validations),
           label: label,
           infoText: tooltipText,
