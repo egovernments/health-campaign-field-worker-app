@@ -373,26 +373,33 @@ class _HomePageState extends LocalizedState<HomePage> {
               final allSchemas =
                   json.decode(schemaJsonRaw) as Map<String, dynamic>;
 
-              final registrationSchemaEntry = allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
-              final deliverySchemaEntry = allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
+              final registrationSchemaEntry =
+                  allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
+              final deliverySchemaEntry =
+                  allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
 
               final registrationSchemaData = registrationSchemaEntry?['data'];
               final deliverySchemaData = deliverySchemaEntry?['data'];
 
-              if (registrationSchemaData != null || deliverySchemaData !=null) {
+              if (registrationSchemaData != null ||
+                  deliverySchemaData != null) {
                 // Extract templates from both schemas
                 final regTemplatesRaw = registrationSchemaData?['templates'];
                 final delTemplatesRaw = deliverySchemaData?['templates'];
 
                 final Map<String, dynamic> regTemplateMap =
-                regTemplatesRaw is Map<String, dynamic> ? regTemplatesRaw : {};
+                    regTemplatesRaw is Map<String, dynamic>
+                        ? regTemplatesRaw
+                        : {};
 
                 final Map<String, dynamic> delTemplateMap =
-                delTemplatesRaw is Map<String, dynamic> ? delTemplatesRaw : {};
+                    delTemplatesRaw is Map<String, dynamic>
+                        ? delTemplatesRaw
+                        : {};
 
                 final templates = {
-                  for (final entry in {...regTemplateMap, ...delTemplateMap}
-                      .entries)
+                  for (final entry
+                      in {...regTemplateMap, ...delTemplateMap}.entries)
                     entry.key: TemplateConfig.fromJson(
                         entry.value as Map<String, dynamic>)
                 };
@@ -400,17 +407,16 @@ class _HomePageState extends LocalizedState<HomePage> {
                 final registrationConfig = json.encode(registrationSchemaData);
                 final deliveryConfig = json.encode(deliverySchemaData);
 
-                RegistrationDeliverySingleton()
-                    .setTemplateConfigs(templates);
+                RegistrationDeliverySingleton().setTemplateConfigs(templates);
                 RegistrationDeliverySingleton()
                     .setRegistrationConfig(registrationConfig);
                 RegistrationDeliverySingleton()
                     .setDeliveryConfig(deliveryConfig);
-
               }
 
-              if (isTriggerLocalisation ) {
-                final moduleName = 'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
+              if (isTriggerLocalisation) {
+                final moduleName =
+                    'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
               }
@@ -460,12 +466,77 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.store_mall_directory,
           label: i18.home.manageStockLabel,
-          onPressed: () {
+          onPressed: () async {
             if (isTriggerLocalisation) {
               triggerLocalization();
               isTriggerLocalisation = false;
             }
-            context.router.push(ManageStocksRoute());
+
+// config start
+
+            const schemaJsonRaw = inventoryConfigData;
+
+            if (schemaJsonRaw != null) {
+              final allSchemas =
+                  json.decode(schemaJsonRaw) as Map<String, dynamic>;
+
+              final registrationSchemaEntry =
+                  allSchemas['MANAGESTOCK'] as Map<String, dynamic>?;
+              // final deliverySchemaEntry =
+              //     allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
+
+              final registrationSchemaData = registrationSchemaEntry?['data'];
+              //final deliverySchemaData = deliverySchemaEntry?['data'];
+
+              if (registrationSchemaData != null
+                  // ||
+                  //     deliverySchemaData != null
+
+                  ) {
+                // Extract templates from both schemas
+                final regTemplatesRaw = registrationSchemaData?['templates'];
+                // final delTemplatesRaw = deliverySchemaData?['templates'];
+
+                final Map<String, dynamic> regTemplateMap =
+                    regTemplatesRaw is Map<String, dynamic>
+                        ? regTemplatesRaw
+                        : {};
+
+                // final Map<String, dynamic> delTemplateMap =
+                //     delTemplatesRaw is Map<String, dynamic>
+                //         ? delTemplatesRaw
+                //         : {};
+
+                final templates = {
+                  for (final entry in {
+                    ...regTemplateMap,
+                    //...delTemplateMap
+                  }.entries)
+                    entry.key: TemplateConfig.fromJson(
+                        entry.value as Map<String, dynamic>)
+                };
+
+                final registrationConfig = json.encode(registrationSchemaData);
+                // final deliveryConfig = json.encode(deliverySchemaData);
+
+                InventorySingleton().setTemplateConfigs(templates);
+                InventorySingleton().setManageStockConfig(registrationConfig);
+                // RegistrationDeliverySingleton()
+                //     .setDeliveryConfig(deliveryConfig);
+              }
+
+              if (isTriggerLocalisation) {
+                final moduleName =
+                    'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
+                triggerLocalization(module: moduleName);
+                isTriggerLocalisation = false;
+              }
+            }
+
+            await context.router.push(ManageStocksRoute());
+
+// end
+            // context.router.push(ManageStocksRoute());
           },
         ),
       ),
@@ -650,6 +721,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .contains(element) ||
             element == i18.home.db)
         .toList();
+    filteredLabels.add(i18.home.manageStockLabel);
 
     final showcaseKeys = filteredLabels
         .where((f) => f != i18.home.db)
@@ -776,12 +848,12 @@ class _HomePageState extends LocalizedState<HomePage> {
               context
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
-                module: module ??
-                    "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
-                tenantId: envConfig.variables.tenantId,
-                locale: selectedLocale!,
-                path: Constants.localizationApiPath,
-              ));
+                    module: module ??
+                        "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                    tenantId: envConfig.variables.tenantId,
+                    locale: selectedLocale!,
+                    path: Constants.localizationApiPath,
+                  ));
             }
           },
         );

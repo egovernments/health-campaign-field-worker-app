@@ -79,7 +79,6 @@ class HouseholdAcknowledgementPageState
                         : "",
                 actions: _buildActionButtons(
                     context, householdAcknowledgementTemplate),
-                sortButtons: false,
               ),
             );
           },

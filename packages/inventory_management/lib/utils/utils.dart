@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:crypto/crypto.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/data/repositories/local/stock.dart';
@@ -72,6 +73,8 @@ class InventorySingleton {
   bool _isHealthFacilitySupervisor = false;
   bool _isCommunityDistributor = false;
 
+  Map<String, TemplateConfig>? _templateConfigs;
+  String? _manageStockConfig;
   // Sets the initial data for the inventory.
   void setInitialData({
     String? loggedInUserUuid,
@@ -130,6 +133,21 @@ class InventorySingleton {
   get isHFU => _isHFU;
   get isHealthFacilitySupervisor => _isHealthFacilitySupervisor;
   get isCommunityDistributor => _isCommunityDistributor;
+
+  // form config
+
+  void setTemplateConfigs(Map<String, TemplateConfig> templateConfigs) {
+    _templateConfigs = templateConfigs;
+  }
+
+  void setManageStockConfig(String registrationConfig) {
+    _manageStockConfig = registrationConfig;
+  }
+
+  String? get manageStockConfig => _manageStockConfig;
+  Map<String, TemplateConfig>? get templateConfigs => _templateConfigs;
+
+  // end
 
   String formatDateFromMillis(int millis) {
     final date = DateTime.fromMillisecondsSinceEpoch(millis);

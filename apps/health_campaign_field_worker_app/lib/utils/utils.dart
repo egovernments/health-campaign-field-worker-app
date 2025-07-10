@@ -574,8 +574,6 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'includeInForm': pageMap['includeInForm'],
         'includeInSummary': pageMap['includeInSummary'],
         'autoEnable': pageMap['autoEnable'],
-        'prefixText': pageMap['prefixText'],
-        'suffixText': pageMap['suffixText'],
         'navigateTo': pageMap['navigateTo'] is Map<String, dynamic>
             ? pageMap['navigateTo']
             : null,
@@ -640,3 +638,133 @@ Future<void> triggerLocalizationIfUpdated({
   await prefs.setString('app_config_schemas', json.encode(allSchemas));
   // }
 }
+
+const String inventoryConfigData = '''{
+  "MANAGESTOCK": {
+    "data": {
+      "name": "MANAGESTOCK",
+      "version": 1,
+      "pages": {
+        "warehouseDetails": {
+          "label": "APPONE_MANAGESTOCK_WAREHOUSE_SCREEN_HEADING",
+          "order": 6,
+          "type": "template",
+          "description": "APPONE_MANAGESTOCK_WAREHOUSE_SCREEN_DESCRIPTION",
+          "actionLabel": "APPONE_MANAGESTOCK_WAREHOUSE_ACTION_BUTTON_LABEL_1",
+          "properties": {
+            "dateOfReceipt": {
+              "type": "integer",
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_dateOfReceipt",
+              "order": 1,
+              "value": "",
+              "format": "date",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Enter the date on which the stock was received",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "dateOfReceipt",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_MANAGESTOCK_WAREHOUSE_label_dateOfReceipt_mandatory_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            "administrativeArea": {
+              "type": "string",
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_administrativeArea",
+              "order": 2,
+              "value": "",
+              "format": "locality",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Select the administrative area of the warehouse",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "administrativeArea",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_MANAGESTOCK_WAREHOUSE_label_administrativeArea_mandatory_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            "facilityToWhich": {
+              "type": "string",
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich",
+              "order": 3,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "tooltip": "",
+              "helpText":
+                  "Select the facility to which the stock is being sent",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "facilityToWhich",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR"
+            }
+          },
+          "navigateTo": {"name": "StockDetails", "type": "template"}
+        }
+      },
+      "templates": {
+        "ManageStocks": {
+          "label": "APPONE_REGISTRATION_SEARCHBENEFICIARY_SCREEN_HEADING",
+          "order": 1,
+          "type": "template",
+          "format": null,
+          "description":
+              "APPONE_REGISTRATION_SEARCHBENEFICIARY_SCREEN_DESCRIPTION",
+          "actionLabel": "",
+          "properties": {},
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "navigateTo": {"name": "acknowledgement", "type": "template"}
+        }
+      }
+    }
+  }
+}''';

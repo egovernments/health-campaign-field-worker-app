@@ -12,6 +12,9 @@ import 'package:location/location.dart';
 
 import '../../blocs/record_stock.dart';
 
+import 'package:forms_engine/blocs/forms/forms.dart';
+import 'package:forms_engine/router/forms_router.gm.dart';
+
 // This class is a wrapper for the RecordStock page.
 // It is a stateless widget that implements the AutoRouteWrapper interface.
 // It takes a StockRecordEntryType as a parameter, which determines the type of stock record to be created.
