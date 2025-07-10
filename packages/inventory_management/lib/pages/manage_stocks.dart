@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/data/repositories/transforms_config.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/utils.dart';
+import 'package:inventory_management/widgets/facility_card.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
@@ -85,9 +86,12 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
               modelsConfig: modelsConfig,
               context: {
                 "tenantId": InventorySingleton().tenantId,
+                "userUUID": InventorySingleton().loggedInUserUuid,
               },
               fallbackFormDataString: fallBackModel,
             );
+
+            print(entities);
 
             // context.read<EntityCreateBloc>().add(
             //       EntityCreateEvent.create(entities: entities),
@@ -312,7 +316,11 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                         defaultValues: {
                           'locality': localizations.translate(
                               InventorySingleton().boundary?.code ?? ''),
+                          'type': StockRecordEntryType.receipt
                         },
+                        customComponents: const [
+                          {'facilityId': FacilityInput()}
+                        ],
                       ));
                     }
                     Navigator.of(dContext).pop();

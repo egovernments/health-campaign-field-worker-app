@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:digit_data_model/data_model.dart';
+import 'package:inventory_management/models/entities/stock.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
@@ -23,5 +24,7 @@ final modelFactoryRegistry = <String, ModelFactory>{
   'SideEffectModel': (json) => SideEffectModelMapper.fromJson(jsonEncode(json)),
   'ReferralModel': (json) => ReferralModelMapper.fromJson(jsonEncode(json)),
   'FacilityModel': (json) => FacilityModelMapper.fromJson(jsonEncode(json)),
-  'ProjectTypeModel': (json) => ProjectTypeModelMapper.fromJson(jsonEncode(json)),
+  'ProjectTypeModel': (json) =>
+      ProjectTypeModelMapper.fromJson(jsonEncode(json)),
+  'StockModel': (json) => StockModelMapper.fromJson(jsonEncode(json)),
 };

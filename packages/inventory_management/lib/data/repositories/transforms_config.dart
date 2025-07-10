@@ -6,7 +6,7 @@ final jsonConfig = {
         "mappings": {
           "id": "stockDetails.id",
           "tenantId": "__context:tenantId",
-          "facilityId": "stockDetails.facilityId",
+          "facilityId": "warehouseDetails.facilityId",
           "productVariantId": "stockDetails.productVariantId",
           "referenceId": "stockDetails.referenceId",
           "referenceIdType": "stockDetails.referenceIdType",
@@ -23,7 +23,7 @@ final jsonConfig = {
           "transactionType": "stockDetails.transactionType",
           "transactionReason": "stockDetails.transactionReason",
           "rowVersion": "meta.rowVersion",
-          "dateOfEntry": "stockDetails.dateOfEntry",
+          "dateOfEntry": "warehouseDetails.dateOfEntry",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {

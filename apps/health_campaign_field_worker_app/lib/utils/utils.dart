@@ -652,7 +652,7 @@ const String inventoryConfigData = '''{
           "description": "APPONE_MANAGESTOCK_WAREHOUSE_SCREEN_DESCRIPTION",
           "actionLabel": "APPONE_MANAGESTOCK_WAREHOUSE_ACTION_BUTTON_LABEL_1",
           "properties": {
-            "dateOfReceipt": {
+            "dateOfEntry": {
               "type": "integer",
               "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_dateOfReceipt",
               "order": 1,
@@ -663,7 +663,7 @@ const String inventoryConfigData = '''{
               "helpText": "Enter the date on which the stock was received",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "dateOfReceipt",
+              "fieldName": "dateOfEntry",
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": true,
@@ -706,12 +706,12 @@ const String inventoryConfigData = '''{
               "errorMessage": "",
               "isMultiSelect": false
             },
-"facilityToWhich": {
-"type": "string",
+"facilityId": {
+"type": "dynamic",
 "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich",
 "order": 3,
 "value": "",
-"format": "text",
+"format": "custom",
 "hidden": false,
 "tooltip": "",
 "helpText":
