@@ -2,6 +2,8 @@ part of 'json_schema_builder.dart';
 
 class JsonSchemaNumberBuilder extends JsonSchemaBuilder<int> {
   final TextInputType inputType;
+  final String? prefixText;
+  final String? suffixText;
 
   const JsonSchemaNumberBuilder({
     required super.formControlName,
@@ -13,6 +15,8 @@ class JsonSchemaNumberBuilder extends JsonSchemaBuilder<int> {
     super.innerLabel,
     super.onTap,
     super.label,
+    this.prefixText,
+    this.suffixText,
     super.readOnly,
     this.inputType = TextInputType.number,
     super.isRequired,
@@ -43,6 +47,8 @@ class JsonSchemaNumberBuilder extends JsonSchemaBuilder<int> {
               maxLength: getMaxLength(validations),
               helpText: helpText,
               innerLabel: innerLabel,
+              suffixText: suffixText,
+              prefixText: prefixText,
               readOnly: readOnly,
               keyboardType: inputType,
               initialValue: form.control(formControlName).value?.toString(),
