@@ -647,8 +647,8 @@ const String inventoryConfigData = '''{
       "pages": {
         "warehouseDetails": {
           "label": "APPONE_MANAGESTOCK_WAREHOUSE_SCREEN_HEADING",
-          "order": 6,
-          "type": "template",
+          "order": 2,
+          "type": "object",
           "description": "APPONE_MANAGESTOCK_WAREHOUSE_SCREEN_DESCRIPTION",
           "actionLabel": "APPONE_MANAGESTOCK_WAREHOUSE_ACTION_BUTTON_LABEL_1",
           "properties": {
@@ -667,6 +667,7 @@ const String inventoryConfigData = '''{
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": true,
+              "includeInForm" : true,
               "validations": [
                 {
                   "type": "required",
@@ -693,6 +694,7 @@ const String inventoryConfigData = '''{
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
+              "includeInForm": true,
               "validations": [
                 {
                   "type": "required",
@@ -704,34 +706,36 @@ const String inventoryConfigData = '''{
               "errorMessage": "",
               "isMultiSelect": false
             },
-            "facilityToWhich": {
-              "type": "string",
-              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich",
-              "order": 3,
-              "value": "",
-              "format": "custom",
-              "hidden": false,
-              "tooltip": "",
-              "helpText":
-                  "Select the facility to which the stock is being sent",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "facilityToWhich",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message":
-                      "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR"
-            }
+"facilityToWhich": {
+"type": "string",
+"label": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich",
+"order": 3,
+"value": "",
+"format": "text",
+"hidden": false,
+"tooltip": "",
+"helpText":
+"Select the facility to which the stock is being sent",
+"infoText": "",
+"readOnly": false,
+"fieldName": "facilityToWhich",
+"deleteFlag": false,
+"innerLabel": "",
+"systemDate": false,
+"validations": [
+{
+"type": "required",
+"value": true,
+"message":
+"APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
+}
+],
+"errorMessage": "",
+"isMultiSelect": false,
+"includeInForm": true,
+"schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR"
+}
+
           },
           "navigateTo": {"name": "StockDetails", "type": "template"}
         }
