@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -64,31 +66,31 @@ class ReverseFormMapper {
       recurse(value, key);
     });
 
-    final simplifiedMap = <String, dynamic>{};
-    final latLngBuffer = <int, dynamic>{};
+    // Group fields like latLng[0], latLng[1] and identifiers[0], identifiers[1]
+    final grouped = <String, SplayTreeMap<int, dynamic>>{};
+    final otherFields = <String, dynamic>{};
 
-    for (final entry in flatMap.entries) {
-      final path = entry.key;
-      final value = entry.value;
-      final lastPart = path.split('.').last;
-
-      final latLngMatch = RegExp(r'latLng\[(\d+)\]').firstMatch(lastPart);
-      if (latLngMatch != null) {
-        final index = int.parse(latLngMatch.group(1)!);
-        latLngBuffer[index] = value;
-        continue;
+    flatMap.forEach((path, value) {
+      final match = RegExp(r'^(.*)\[(\d+)\]$').firstMatch(path);
+      if (match != null) {
+        final baseKey = match.group(1)!;
+        final index = int.parse(match.group(2)!);
+        grouped.putIfAbsent(
+            baseKey, () => SplayTreeMap<int, dynamic>())[index] = value;
+      } else {
+        final lastKey = path.split('.').last;
+        otherFields[lastKey] = value;
       }
+    });
 
-      simplifiedMap[lastPart] = value;
-    }
+    // Combine grouped indexed fields
+    grouped.forEach((baseKey, entries) {
+      final combined = entries.values.join(',');
+      final lastSegment = baseKey.split('.').last;
+      otherFields[lastSegment] = combined;
+    });
 
-    if (latLngBuffer.isNotEmpty) {
-      final lat = latLngBuffer[0]?.toString() ?? '';
-      final lng = latLngBuffer[1]?.toString() ?? '';
-      simplifiedMap['latLng'] = '$lat,$lng';
-    }
-
-    return simplifiedMap;
+    return otherFields;
   }
 
   void _applyMappings(

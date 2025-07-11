@@ -117,6 +117,16 @@ class _SearchBeneficiaryPageState
             createState.lastAction == RegistrationWrapperActionType.updated) {
           Navigator.of(context, rootNavigator: true).pop();
           final householdModel = createState.householdMembers.first.household;
+          final individualModel =
+              createState.householdMembers.first.individuals?.first;
+
+          if (createState.lastAction == RegistrationWrapperActionType.created &&
+              individualModel != null &&
+              individualModel.identifiers != null &&
+              individualModel.identifiers?.first.id != null) {
+            context.read<UniqueIdBloc>().add(UniqueIdEvent.updateStatus(
+                id: individualModel.identifiers!.first.id!));
+          }
 
           if (householdModel != null) {
             blocWrapper.add(RegistrationWrapperEvent.fetchDeliveryDetails(
@@ -734,7 +744,7 @@ class _SearchBeneficiaryPageState
                                                         ''),
                                             'nameOfIndividual':
                                                 searchController.text,
-                                            'identifiers': {
+                                            'availableIDs': {
                                               'DEFAULT':
                                                   IdGen.instance.identifier,
                                               'UNIQUE_ID': currentUniqueId?.id,
@@ -780,7 +790,7 @@ class _SearchBeneficiaryPageState
                                                     ?.code ??
                                                 ''),
                                     'nameOfIndividual': searchController.text,
-                                    'identifiers': {
+                                    'availableIDs': {
                                       'DEFAULT': IdGen.instance.identifier,
                                       'UNIQUE_BENEFICIARY_ID':
                                           currentUniqueId?.id,
@@ -831,7 +841,7 @@ class _SearchBeneficiaryPageState
                                                         ''),
                                             'nameOfIndividual':
                                                 searchController.text,
-                                            'identifiers': {
+                                            'availableIDs': {
                                               'DEFAULT':
                                                   IdGen.instance.identifier,
                                             }
@@ -1255,7 +1265,7 @@ class _SearchBeneficiaryPageState
                     'administrativeArea': localizations.translate(
                         RegistrationDeliverySingleton().boundary?.code ?? ''),
                     'nameOfIndividual': value.text,
-                    'identifiers': {
+                    'availableIDs': {
                       'DEFAULT': IdGen.instance.identifier,
                     }
                   },
@@ -1321,9 +1331,20 @@ class _SearchBeneficiaryPageState
 
     if (isProximityEnabled ||
         selectedFilters.isNotEmpty ||
-        searchController.text.isNotEmpty) {
+        (searchController.text.isNotEmpty &&
+            searchController.text.length > 2)) {
       final params = reg_params.GlobalSearchParameters(
         filters: [
+          if (searchController.text.isNotEmpty &&
+              searchController.text.length > 2 &&
+              isBeneficiaryIdSearchEnabled == true)
+            reg_params.SearchFilter(
+              root:
+                  'identifier', // or 'individual', based on what you're searching
+              field: 'identifierId',
+              operator: 'contains',
+              value: searchController.text,
+            ),
           if (selectedFilters.isNotEmpty)
             reg_params.SearchFilter(
               root: 'task', // or 'individual', based on what you're searching
@@ -1332,7 +1353,8 @@ class _SearchBeneficiaryPageState
               value: selectedFilters.first,
             ),
           if (searchController.text.isNotEmpty &&
-              searchController.text.length > 2)
+              searchController.text.length > 2 &&
+              isBeneficiaryIdSearchEnabled == false)
             reg_params.SearchFilter(
               root: 'name', // or 'individual', based on what you're searching
               field: 'givenName',

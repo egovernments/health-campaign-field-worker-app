@@ -54,6 +54,11 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
                         localKey: 'individualClientReferenceId',
                         foreignKey: 'clientReferenceId'),
                     const RelationshipMapping(
+                        from: 'identifier',
+                        to: 'individual',
+                        localKey: 'individualClientReferenceId',
+                        foreignKey: 'clientReferenceId'),
+                    const RelationshipMapping(
                         from: 'householdMember',
                         to: 'individual',
                         localKey: 'individualClientReferenceId',
@@ -109,7 +114,7 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
                         'identifiers': NestedFieldMapping(
                           table: 'identifier',
                           localKey: 'clientReferenceId',
-                          foreignKey: 'clientReferenceId',
+                          foreignKey: 'individualClientReferenceId',
                           type: NestedMappingType.many,
                         ),
                       },

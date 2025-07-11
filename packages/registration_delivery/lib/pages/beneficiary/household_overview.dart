@@ -415,16 +415,6 @@ class _HouseholdOverviewPageState
                                                         final formData = mapper
                                                             .buildFormData();
 
-                                                        final timestamp = wrapper
-                                                            .headOfHousehold
-                                                            ?.clientAuditDetails
-                                                            ?.createdTime;
-                                                        final date = DateTime
-                                                            .fromMillisecondsSinceEpoch(
-                                                          timestamp ??
-                                                              DateTime.now()
-                                                                  .millisecondsSinceEpoch,
-                                                        );
                                                         final pageName = context
                                                             .read<FormsBloc>()
                                                             .state
@@ -446,55 +436,9 @@ class _HouseholdOverviewPageState
                                                           defaultValues:
                                                               formData,
                                                         ));
-                                                        //
-                                                        // final address = wrapper
-                                                        //     .household?.address;
-                                                        //
-                                                        // if (address == null)
-                                                        //   return;
-                                                        //
-                                                        // final projectBeneficiary = state
-                                                        //     .householdMembers
-                                                        //     .first
-                                                        //     .projectBeneficiaries
-                                                        //     ?.firstWhereOrNull(
-                                                        //   (element) =>
-                                                        //       element
-                                                        //           .beneficiaryClientReferenceId ==
-                                                        //       wrapper.household
-                                                        //           ?.clientReferenceId,
-                                                        // );
-                                                        //
-                                                        // await context
-                                                        //     .router.root
-                                                        //     .push(
-                                                        //   BeneficiaryRegistrationWrapperRoute(
-                                                        //     initialState:
-                                                        //         BeneficiaryRegistrationEditHouseholdState(
-                                                        //       addressModel:
-                                                        //           address,
-                                                        //       individualModel: state
-                                                        //               .householdMembers
-                                                        //               .first
-                                                        //               .individuals ??
-                                                        //           [],
-                                                        //       householdModel: state
-                                                        //           .householdMembers
-                                                        //           .first
-                                                        //           .household!,
-                                                        //       registrationDate:
-                                                        //           date,
-                                                        //       projectBeneficiaryModel:
-                                                        //           projectBeneficiary,
-                                                        //     ),
-                                                        //     children: [
-                                                        //       HouseholdLocationRoute(),
-                                                        //     ],
-                                                        //   ),
-                                                        // );
-                                                        // callReloadEvent(
-                                                        //     offset: 0,
-                                                        //     limit: 10);
+                                                        callReloadEvent(
+                                                            offset: 0,
+                                                            limit: 10);
                                                       },
                                                     ),
                                                   ],
