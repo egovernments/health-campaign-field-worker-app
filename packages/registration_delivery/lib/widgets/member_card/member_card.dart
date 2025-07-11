@@ -415,8 +415,14 @@ class MemberCard extends StatelessWidget {
                                                     BeneficiaryDetailsRoute(),
                                                   );
                                                 } else {
-                                                  navigateToChecklist(context,
-                                                      projectBeneficiaryClientReferenceId);
+                                                  context.router.push(
+                                                      BeneficiaryChecklistRoute(
+                                                          beneficiaryAddress:
+                                                              individual
+                                                                  .address!
+                                                                  .first,
+                                                          beneficiaryClientRefId:
+                                                              projectBeneficiaryClientReferenceId));
                                                 }
                                               });
                                         }
@@ -690,10 +696,5 @@ class MemberCard extends StatelessWidget {
                 ),
               ])
         ]);
-  }
-
-  void navigateToChecklist(BuildContext context, clientReferenceId) async {
-    await context.router.push(
-        BeneficiaryChecklistRoute(beneficiaryClientRefId: clientReferenceId));
   }
 }
