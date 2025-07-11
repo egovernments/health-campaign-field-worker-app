@@ -33,8 +33,7 @@ class BeneficiaryIdDownSyncPage extends LocalizedStatefulWidget {
 }
 
 class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
-  int beneficiaryIdCount = 0,
-      beneficiaryIdTotalCount = 0;
+  int beneficiaryIdCount = 0, beneficiaryIdTotalCount = 0;
   bool _isProgressDialogVisible = false;
   final ProgressDialog _progressDialog = ProgressDialog();
 
@@ -60,14 +59,14 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
             uniqueIdPoolLocalRepository: context.read<
                 LocalRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>>(),
             uniqueIdPoolRemoteRepository:
-            context.read<UniqueIdPoolRemoteRepository>())
+                context.read<UniqueIdPoolRemoteRepository>())
           ..add(const UniqueIdEvent.fetchIdCount());
       },
       child: BlocListener<UniqueIdBloc, UniqueIdState>(
         listener: (context, state) {
           state.maybeWhen(
               orElse: () {},
-              idCount: (availableCount, totalCount) {
+              idCount: (availableCount, totalCount, currentUniqueId) {
                 _progressDialog.closeProgressDialog();
                 _isProgressDialogVisible = false;
                 beneficiaryIdCount = availableCount;
@@ -126,10 +125,10 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                               onPressed: () {
                                 Navigator.pop(ctx);
                                 context.read<UniqueIdBloc>().add(
-                                  const UniqueIdEvent
-                                      .fetchUniqueIdsFromServer(
-                                      reFetch: true),
-                                );
+                                      const UniqueIdEvent
+                                          .fetchUniqueIdsFromServer(
+                                          reFetch: true),
+                                    );
                               },
                               label: localizations.translate(
                                   i18.beneficiaryDetails.beneficiaryIdsReFetch),
@@ -174,9 +173,9 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                               Navigator.of(ctx).pop();
 
                               context.read<UniqueIdBloc>().add(
-                                const UniqueIdEvent
-                                    .fetchUniqueIdsFromServer(),
-                              );
+                                    const UniqueIdEvent
+                                        .fetchUniqueIdsFromServer(),
+                                  );
                             },
                             label: localizations.translate(
                               i18.common.coreCommonDataSyncRetry,
@@ -204,7 +203,7 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
               });
         },
         child:
-        BlocBuilder<UniqueIdBloc, UniqueIdState>(builder: (context, state) {
+            BlocBuilder<UniqueIdBloc, UniqueIdState>(builder: (context, state) {
           return Scaffold(
             body: ScrollableContent(
               enableFixedDigitButton: true,
@@ -226,8 +225,8 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                       capitalizeLetters: false,
                       onPressed: () async {
                         context.read<UniqueIdBloc>().add(
-                          const UniqueIdEvent.fetchUniqueIdsFromServer(),
-                        );
+                              const UniqueIdEvent.fetchUniqueIdsFromServer(),
+                            );
                       },
                     ),
                   ]),
@@ -237,7 +236,7 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                     idCount: beneficiaryIdCount,
                     totalCount: beneficiaryIdTotalCount,
                     beneficiaryMinCount:
-                    RegistrationDeliverySingleton().beneficiaryIdMinCount!,
+                        RegistrationDeliverySingleton().beneficiaryIdMinCount!,
                   ),
                 )
               ],
@@ -252,10 +251,11 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
 class BeneficiaryIDGauge extends LocalizedStatefulWidget {
   final int idCount, totalCount, beneficiaryMinCount; // Value between 0 to 100
 
-  const BeneficiaryIDGauge({super.key,
-    required this.idCount,
-    required this.totalCount,
-    required this.beneficiaryMinCount});
+  const BeneficiaryIDGauge(
+      {super.key,
+      required this.idCount,
+      required this.totalCount,
+      required this.beneficiaryMinCount});
 
   @override
   State<BeneficiaryIDGauge> createState() => _BeneficiaryIDGaugeState();
@@ -284,7 +284,7 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
     super.didUpdateWidget(oldWidget);
     if (widget.idCount != oldWidget.idCount) {
       _animation = Tween<double>(
-          begin: _animation.value, end: double.parse('${widget.idCount}'))
+              begin: _animation.value, end: double.parse('${widget.idCount}'))
           .animate(_controller);
       _controller.forward(from: 0);
     }
@@ -302,10 +302,7 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
 
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
-    double screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double screenWidth = MediaQuery.of(context).size.width;
     double gaugeSize = screenWidth * 0.8;
 
     return Column(
@@ -342,18 +339,18 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
                             style: textTheme.headingL.copyWith(
                                 fontSize: 50,
                                 color:
-                                widget.idCount <= widget.beneficiaryMinCount
-                                    ? theme.colorTheme.alert.error
-                                    : theme.colorTheme.primary.primary2)),
+                                    widget.idCount <= widget.beneficiaryMinCount
+                                        ? theme.colorTheme.alert.error
+                                        : theme.colorTheme.primary.primary2)),
                         Text(
                             localizations.translate(
                                 i18.beneficiaryDetails.noOfBeneficiaryIdsLeft),
                             style: textTheme.bodyS.copyWith(
                                 fontSize: 14,
                                 color:
-                                widget.idCount <= widget.beneficiaryMinCount
-                                    ? theme.colorTheme.alert.error
-                                    : theme.colorTheme.primary.primary2)),
+                                    widget.idCount <= widget.beneficiaryMinCount
+                                        ? theme.colorTheme.alert.error
+                                        : theme.colorTheme.primary.primary2)),
                       ],
                     ),
                   ),
@@ -414,17 +411,18 @@ class GaugePainter extends CustomPainter {
   final int currentValue, maxValue, minValue;
   final ThemeData theme;
 
-  GaugePainter({required this.currentValue,
-    required this.maxValue,
-    required this.theme,
-    required this.minValue});
+  GaugePainter(
+      {required this.currentValue,
+      required this.maxValue,
+      required this.theme,
+      required this.minValue});
 
   @override
   void paint(Canvas canvas, Size size) {
     double strokeWidth = 20;
     double radius = size.width / 2;
     Offset center =
-    Offset(size.width / 2, size.height * 0.8); // Lower arc position
+        Offset(size.width / 2, size.height * 0.8); // Lower arc position
 
     Paint backgroundPaint = Paint()
       ..color = theme.colorTheme.text.disabled

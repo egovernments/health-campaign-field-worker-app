@@ -1222,7 +1222,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       final uniqueId = context.read<UniqueIdBloc>().state;
       uniqueId.maybeWhen(
           orElse: () {},
-          idCount: (availableCount, totalCount) {
+          idCount: (availableCount, totalCount, currentUniqueId) {
             if (availableCount > 0) {
               context
                   .read<UniqueIdBloc>()
@@ -1251,7 +1251,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
         final uniqueId = context.read<UniqueIdBloc>().state;
         uniqueId.maybeWhen(
             orElse: () {},
-            idCount: (availableCount, totalCount) {
+            idCount: (availableCount, totalCount, currentUniqueId) {
               if (availableCount > 0) {
                 context
                     .read<UniqueIdBloc>()
@@ -1273,7 +1273,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       listener: (context, state) {
         state.maybeWhen(
             orElse: () {},
-            idCount: (availableIdCount, totalCount) {
+            idCount: (availableIdCount, totalCount, currentUniqueId) {
               idCount = availableIdCount;
               if (availableIdCount != 0 &&
                   availableIdCount <
@@ -1445,7 +1445,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
               idCount != null) {
             state.maybeWhen(
               orElse: () {},
-              idCount: (availableIdCount, totalCount) {
+              idCount: (availableIdCount, totalCount, currentUniqueId) {
                 idCount = availableIdCount;
               },
             );

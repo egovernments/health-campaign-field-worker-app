@@ -448,7 +448,9 @@ mixin _$UniqueIdState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(int progress, int totalCount) fetching,
-    required TResult Function(int count, int totalCount) idCount,
+    required TResult Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)
+        idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
     required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
@@ -460,7 +462,9 @@ mixin _$UniqueIdState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(int progress, int totalCount)? fetching,
-    TResult? Function(int count, int totalCount)? idCount,
+    TResult? Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)?
+        idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
     TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
@@ -472,7 +476,9 @@ mixin _$UniqueIdState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(int progress, int totalCount)? fetching,
-    TResult Function(int count, int totalCount)? idCount,
+    TResult Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)?
+        idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
     TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
@@ -578,7 +584,9 @@ class _$LoadingStateImpl implements LoadingState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(int progress, int totalCount) fetching,
-    required TResult Function(int count, int totalCount) idCount,
+    required TResult Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)
+        idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
     required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
@@ -593,7 +601,9 @@ class _$LoadingStateImpl implements LoadingState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(int progress, int totalCount)? fetching,
-    TResult? Function(int count, int totalCount)? idCount,
+    TResult? Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)?
+        idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
     TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
@@ -608,7 +618,9 @@ class _$LoadingStateImpl implements LoadingState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(int progress, int totalCount)? fetching,
-    TResult Function(int count, int totalCount)? idCount,
+    TResult Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)?
+        idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
     TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
@@ -752,7 +764,9 @@ class _$FetchingStateImpl implements FetchingState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(int progress, int totalCount) fetching,
-    required TResult Function(int count, int totalCount) idCount,
+    required TResult Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)
+        idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
     required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
@@ -767,7 +781,9 @@ class _$FetchingStateImpl implements FetchingState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(int progress, int totalCount)? fetching,
-    TResult? Function(int count, int totalCount)? idCount,
+    TResult? Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)?
+        idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
     TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
@@ -782,7 +798,9 @@ class _$FetchingStateImpl implements FetchingState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(int progress, int totalCount)? fetching,
-    TResult Function(int count, int totalCount)? idCount,
+    TResult Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)?
+        idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
     TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
@@ -863,7 +881,7 @@ abstract class _$$FetchedIdCountStateImplCopyWith<$Res> {
           $Res Function(_$FetchedIdCountStateImpl) then) =
       __$$FetchedIdCountStateImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({int count, int totalCount});
+  $Res call({int count, int totalCount, UniqueIdPoolModel? currentUniqueId});
 }
 
 /// @nodoc
@@ -879,6 +897,7 @@ class __$$FetchedIdCountStateImplCopyWithImpl<$Res>
   $Res call({
     Object? count = null,
     Object? totalCount = null,
+    Object? currentUniqueId = freezed,
   }) {
     return _then(_$FetchedIdCountStateImpl(
       null == count
@@ -889,6 +908,10 @@ class __$$FetchedIdCountStateImplCopyWithImpl<$Res>
           ? _value.totalCount
           : totalCount // ignore: cast_nullable_to_non_nullable
               as int,
+      freezed == currentUniqueId
+          ? _value.currentUniqueId
+          : currentUniqueId // ignore: cast_nullable_to_non_nullable
+              as UniqueIdPoolModel?,
     ));
   }
 }
@@ -896,16 +919,19 @@ class __$$FetchedIdCountStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FetchedIdCountStateImpl implements FetchedIdCountState {
-  const _$FetchedIdCountStateImpl(this.count, this.totalCount);
+  const _$FetchedIdCountStateImpl(
+      this.count, this.totalCount, this.currentUniqueId);
 
   @override
   final int count;
   @override
   final int totalCount;
+  @override
+  final UniqueIdPoolModel? currentUniqueId;
 
   @override
   String toString() {
-    return 'UniqueIdState.idCount(count: $count, totalCount: $totalCount)';
+    return 'UniqueIdState.idCount(count: $count, totalCount: $totalCount, currentUniqueId: $currentUniqueId)';
   }
 
   @override
@@ -915,11 +941,14 @@ class _$FetchedIdCountStateImpl implements FetchedIdCountState {
             other is _$FetchedIdCountStateImpl &&
             (identical(other.count, count) || other.count == count) &&
             (identical(other.totalCount, totalCount) ||
-                other.totalCount == totalCount));
+                other.totalCount == totalCount) &&
+            (identical(other.currentUniqueId, currentUniqueId) ||
+                other.currentUniqueId == currentUniqueId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, count, totalCount);
+  int get hashCode =>
+      Object.hash(runtimeType, count, totalCount, currentUniqueId);
 
   @JsonKey(ignore: true)
   @override
@@ -933,14 +962,16 @@ class _$FetchedIdCountStateImpl implements FetchedIdCountState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(int progress, int totalCount) fetching,
-    required TResult Function(int count, int totalCount) idCount,
+    required TResult Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)
+        idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
     required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
     required TResult Function() noInternet,
     required TResult Function(String message) limitExceeded,
   }) {
-    return idCount(count, totalCount);
+    return idCount(count, totalCount, currentUniqueId);
   }
 
   @override
@@ -948,14 +979,16 @@ class _$FetchedIdCountStateImpl implements FetchedIdCountState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(int progress, int totalCount)? fetching,
-    TResult? Function(int count, int totalCount)? idCount,
+    TResult? Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)?
+        idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
     TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult? Function()? noInternet,
     TResult? Function(String message)? limitExceeded,
   }) {
-    return idCount?.call(count, totalCount);
+    return idCount?.call(count, totalCount, currentUniqueId);
   }
 
   @override
@@ -963,7 +996,9 @@ class _$FetchedIdCountStateImpl implements FetchedIdCountState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(int progress, int totalCount)? fetching,
-    TResult Function(int count, int totalCount)? idCount,
+    TResult Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)?
+        idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
     TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
@@ -972,7 +1007,7 @@ class _$FetchedIdCountStateImpl implements FetchedIdCountState {
     required TResult orElse(),
   }) {
     if (idCount != null) {
-      return idCount(count, totalCount);
+      return idCount(count, totalCount, currentUniqueId);
     }
     return orElse();
   }
@@ -1028,11 +1063,12 @@ class _$FetchedIdCountStateImpl implements FetchedIdCountState {
 }
 
 abstract class FetchedIdCountState implements UniqueIdState {
-  const factory FetchedIdCountState(final int count, final int totalCount) =
-      _$FetchedIdCountStateImpl;
+  const factory FetchedIdCountState(final int count, final int totalCount,
+      final UniqueIdPoolModel? currentUniqueId) = _$FetchedIdCountStateImpl;
 
   int get count;
   int get totalCount;
+  UniqueIdPoolModel? get currentUniqueId;
   @JsonKey(ignore: true)
   _$$FetchedIdCountStateImplCopyWith<_$FetchedIdCountStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
@@ -1113,7 +1149,9 @@ class _$FetchedUniqueIdsStateImpl implements FetchedUniqueIdsState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(int progress, int totalCount) fetching,
-    required TResult Function(int count, int totalCount) idCount,
+    required TResult Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)
+        idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
     required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
@@ -1128,7 +1166,9 @@ class _$FetchedUniqueIdsStateImpl implements FetchedUniqueIdsState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(int progress, int totalCount)? fetching,
-    TResult? Function(int count, int totalCount)? idCount,
+    TResult? Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)?
+        idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
     TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
@@ -1143,7 +1183,9 @@ class _$FetchedUniqueIdsStateImpl implements FetchedUniqueIdsState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(int progress, int totalCount)? fetching,
-    TResult Function(int count, int totalCount)? idCount,
+    TResult Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)?
+        idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
     TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
@@ -1283,7 +1325,9 @@ class _$FailedStateImpl implements FailedState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(int progress, int totalCount) fetching,
-    required TResult Function(int count, int totalCount) idCount,
+    required TResult Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)
+        idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
     required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
@@ -1298,7 +1342,9 @@ class _$FailedStateImpl implements FailedState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(int progress, int totalCount)? fetching,
-    TResult? Function(int count, int totalCount)? idCount,
+    TResult? Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)?
+        idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
     TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
@@ -1313,7 +1359,9 @@ class _$FailedStateImpl implements FailedState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(int progress, int totalCount)? fetching,
-    TResult Function(int count, int totalCount)? idCount,
+    TResult Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)?
+        idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
     TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
@@ -1455,7 +1503,9 @@ class _$FetchedUniqueIdStateImpl implements FetchedUniqueIdState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(int progress, int totalCount) fetching,
-    required TResult Function(int count, int totalCount) idCount,
+    required TResult Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)
+        idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
     required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
@@ -1470,7 +1520,9 @@ class _$FetchedUniqueIdStateImpl implements FetchedUniqueIdState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(int progress, int totalCount)? fetching,
-    TResult? Function(int count, int totalCount)? idCount,
+    TResult? Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)?
+        idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
     TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
@@ -1485,7 +1537,9 @@ class _$FetchedUniqueIdStateImpl implements FetchedUniqueIdState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(int progress, int totalCount)? fetching,
-    TResult Function(int count, int totalCount)? idCount,
+    TResult Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)?
+        idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
     TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
@@ -1599,7 +1653,9 @@ class _$NoInternetStateImpl implements NoInternetState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(int progress, int totalCount) fetching,
-    required TResult Function(int count, int totalCount) idCount,
+    required TResult Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)
+        idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
     required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
@@ -1614,7 +1670,9 @@ class _$NoInternetStateImpl implements NoInternetState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(int progress, int totalCount)? fetching,
-    TResult? Function(int count, int totalCount)? idCount,
+    TResult? Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)?
+        idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
     TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
@@ -1629,7 +1687,9 @@ class _$NoInternetStateImpl implements NoInternetState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(int progress, int totalCount)? fetching,
-    TResult Function(int count, int totalCount)? idCount,
+    TResult Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)?
+        idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
     TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
@@ -1763,7 +1823,9 @@ class _$LimitExceededImpl implements LimitExceeded {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(int progress, int totalCount) fetching,
-    required TResult Function(int count, int totalCount) idCount,
+    required TResult Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)
+        idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
     required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
@@ -1778,7 +1840,9 @@ class _$LimitExceededImpl implements LimitExceeded {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(int progress, int totalCount)? fetching,
-    TResult? Function(int count, int totalCount)? idCount,
+    TResult? Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)?
+        idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
     TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
@@ -1793,7 +1857,9 @@ class _$LimitExceededImpl implements LimitExceeded {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(int progress, int totalCount)? fetching,
-    TResult Function(int count, int totalCount)? idCount,
+    TResult Function(
+            int count, int totalCount, UniqueIdPoolModel? currentUniqueId)?
+        idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
     TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,

@@ -18,6 +18,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:form_data_transformer/src/reverse_transformer_service.dart';
 import 'package:form_data_transformer/src/transformer_service.dart';
 import 'package:forms_engine/blocs/forms/forms.dart';
 import 'package:forms_engine/router/forms_router.gm.dart';
@@ -422,7 +423,12 @@ class _SearchBeneficiaryPageState
                                     textAlign: TextAlign.left,
                                   ),
                                   if (searchTemplate?.description != null &&
-                                      searchTemplate!.description!.isNotEmpty)
+                                      searchTemplate!.description!.isNotEmpty &&
+                                      localizations
+                                          .translate(
+                                              searchTemplate.description!)
+                                          .trim()
+                                          .isNotEmpty)
                                     Text(
                                       localizations.translate(
                                           searchTemplate.description!),
@@ -507,27 +513,31 @@ class _SearchBeneficiaryPageState
                                             ),
                                           )
                                         : const Offstage(),
-                                  Padding(
-                                    padding: const EdgeInsets.all(spacer2),
-                                    child: DigitSwitch(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      label: localizations.translate(
-                                        i18.searchBeneficiary
-                                            .beneficiaryIdSearchLabel,
+                                  if (searchTemplate
+                                          ?.properties?['searchByID']?.hidden !=
+                                      true)
+                                    Padding(
+                                      padding: const EdgeInsets.all(spacer2),
+                                      child: DigitSwitch(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        label: localizations.translate(
+                                          i18.searchBeneficiary
+                                              .beneficiaryIdSearchLabel,
+                                        ),
+                                        value: isBeneficiaryIdSearchEnabled,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            isBeneficiaryIdSearchEnabled =
+                                                value;
+                                          });
+                                          blocWrapper.add(
+                                              const RegistrationWrapperEvent
+                                                  .clear());
+                                          triggerGlobalSearchEvent();
+                                        },
                                       ),
-                                      value: isBeneficiaryIdSearchEnabled,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          isBeneficiaryIdSearchEnabled = value;
-                                        });
-                                        blocWrapper.add(
-                                            const RegistrationWrapperEvent
-                                                .clear());
-                                        triggerGlobalSearchEvent();
-                                      },
                                     ),
-                                  ),
                                   Padding(
                                     padding: const EdgeInsets.all(spacer2),
                                     child: DigitSearchBar(
@@ -677,7 +687,8 @@ class _SearchBeneficiaryPageState
                     listener: (context, state) {
                       state.maybeWhen(
                           orElse: () {},
-                          idCount: (availableIdCount, totalCount) {
+                          idCount:
+                              (availableIdCount, totalCount, currentUniqueId) {
                             if (availableIdCount != 0 &&
                                 availableIdCount <
                                     RegistrationDeliverySingleton()
@@ -690,42 +701,93 @@ class _SearchBeneficiaryPageState
                                     if (proceed) {
                                       FocusManager.instance.primaryFocus
                                           ?.unfocus();
-                                      context.read<DigitScannerBloc>().add(
-                                            const DigitScannerEvent
-                                                .handleScanner(),
-                                          );
-                                      context.router.push(
-                                          BeneficiaryRegistrationWrapperRoute(
-                                        initialState:
-                                            BeneficiaryRegistrationCreateState(
-                                          searchQuery: searchController.text,
-                                        ),
-                                      ));
-                                      searchController.clear();
-                                      selectedFilters = [];
-                                      blocWrapper.add(
-                                          const RegistrationWrapperEvent
-                                              .clear());
+                                      context.read<FormsBloc>().add(
+                                          const FormsEvent.clearForm(
+                                              schemaKey: 'REGISTRATIONFLOW'));
+
+                                      final pageName = context
+                                          .read<FormsBloc>()
+                                          .state
+                                          .cachedSchemas['REGISTRATIONFLOW']
+                                          ?.pages
+                                          .entries
+                                          .first
+                                          .key;
+
+                                      if (pageName == null) {
+                                        Toast.showToast(
+                                          context,
+                                          message: localizations.translate(
+                                              'NO_FORM_FOUND_FOR_REGISTRATION'),
+                                          type: ToastType.error,
+                                        );
+                                      } else {
+                                        context.router.push(FormsRenderRoute(
+                                          currentSchemaKey: 'REGISTRATIONFLOW',
+                                          pageName: pageName,
+                                          defaultValues: {
+                                            'administrativeArea':
+                                                localizations.translate(
+                                                    RegistrationDeliverySingleton()
+                                                            .boundary
+                                                            ?.code ??
+                                                        ''),
+                                            'nameOfIndividual':
+                                                searchController.text,
+                                            'identifiers': {
+                                              'DEFAULT':
+                                                  IdGen.instance.identifier,
+                                              'UNIQUE_ID': currentUniqueId?.id,
+                                            }
+                                          },
+                                        ));
+                                      }
                                     }
                                   });
                             } else if (availableIdCount >=
                                 RegistrationDeliverySingleton()
                                     .beneficiaryIdMinCount!) {
                               FocusManager.instance.primaryFocus?.unfocus();
-                              context.read<DigitScannerBloc>().add(
-                                    const DigitScannerEvent.handleScanner(),
-                                  );
-                              context.router
-                                  .push(BeneficiaryRegistrationWrapperRoute(
-                                initialState:
-                                    BeneficiaryRegistrationCreateState(
-                                  searchQuery: searchController.text,
-                                ),
-                              ));
-                              searchController.clear();
-                              selectedFilters = [];
-                              blocWrapper
-                                  .add(const RegistrationWrapperEvent.clear());
+                              context.read<FormsBloc>().add(
+                                  const FormsEvent.clearForm(
+                                      schemaKey: 'REGISTRATIONFLOW'));
+
+                              final pageName = context
+                                  .read<FormsBloc>()
+                                  .state
+                                  .cachedSchemas['REGISTRATIONFLOW']
+                                  ?.pages
+                                  .entries
+                                  .first
+                                  .key;
+
+                              if (pageName == null) {
+                                Toast.showToast(
+                                  context,
+                                  message: localizations.translate(
+                                      'NO_FORM_FOUND_FOR_REGISTRATION'),
+                                  type: ToastType.error,
+                                );
+                              } else {
+                                context.router.push(FormsRenderRoute(
+                                  currentSchemaKey: 'REGISTRATIONFLOW',
+                                  pageName: pageName,
+                                  defaultValues: {
+                                    'administrativeArea':
+                                        localizations.translate(
+                                            RegistrationDeliverySingleton()
+                                                    .boundary
+                                                    ?.code ??
+                                                ''),
+                                    'nameOfIndividual': searchController.text,
+                                    'identifiers': {
+                                      'DEFAULT': IdGen.instance.identifier,
+                                      'UNIQUE_BENEFICIARY_ID':
+                                          currentUniqueId?.id,
+                                    }
+                                  },
+                                ));
+                              }
                             }
                             if (availableIdCount <= 0) {
                               WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -736,22 +798,46 @@ class _SearchBeneficiaryPageState
                                     shouldProceedFurther: (bool skip) {
                                       FocusManager.instance.primaryFocus
                                           ?.unfocus();
-                                      context.read<DigitScannerBloc>().add(
-                                            const DigitScannerEvent
-                                                .handleScanner(),
-                                          );
-                                      context.router.push(
-                                          BeneficiaryRegistrationWrapperRoute(
-                                        initialState:
-                                            BeneficiaryRegistrationCreateState(
-                                          searchQuery: searchController.text,
-                                        ),
-                                      ));
-                                      searchController.clear();
-                                      selectedFilters = [];
-                                      blocWrapper.add(
-                                          const RegistrationWrapperEvent
-                                              .clear());
+                                      context.read<FormsBloc>().add(
+                                          const FormsEvent.clearForm(
+                                              schemaKey: 'REGISTRATIONFLOW'));
+
+                                      final pageName = context
+                                          .read<FormsBloc>()
+                                          .state
+                                          .cachedSchemas['REGISTRATIONFLOW']
+                                          ?.pages
+                                          .entries
+                                          .first
+                                          .key;
+
+                                      if (pageName == null) {
+                                        Toast.showToast(
+                                          context,
+                                          message: localizations.translate(
+                                              'NO_FORM_FOUND_FOR_REGISTRATION'),
+                                          type: ToastType.error,
+                                        );
+                                      } else {
+                                        context.router.push(FormsRenderRoute(
+                                          currentSchemaKey: 'REGISTRATIONFLOW',
+                                          pageName: pageName,
+                                          defaultValues: {
+                                            'administrativeArea':
+                                                localizations.translate(
+                                                    RegistrationDeliverySingleton()
+                                                            .boundary
+                                                            ?.code ??
+                                                        ''),
+                                            'nameOfIndividual':
+                                                searchController.text,
+                                            'identifiers': {
+                                              'DEFAULT':
+                                                  IdGen.instance.identifier,
+                                            }
+                                          },
+                                        ));
+                                      }
                                     });
                               });
                             }
@@ -950,24 +1036,40 @@ class _SearchBeneficiaryPageState
                                               const RegistrationWrapperEvent
                                                   .clear());
 
-                                          ///TODO: WILL PICK UP WHEN START WITH EDIT FLOW
-                                          // await context.router.push(
-                                          //   BeneficiaryRegistrationWrapperRoute(
-                                          //     initialState: BeneficiaryRegistrationState.editHousehold(
-                                          //       householdModel: i.household!,
-                                          //       individualModel: i.individuals!,
-                                          //       registrationDate: DateTime.now(),
-                                          //       projectBeneficiaryModel:
-                                          //       i.projectBeneficiaries?.lastOrNull,
-                                          //       addressModel: RegistrationDeliverySingleton()
-                                          //           .householdType ==
-                                          //           HouseholdType.community
-                                          //           ? i.household!.address!
-                                          //           : i.headOfHousehold!.address!.lastOrNull!,
-                                          //       headOfHousehold: i.headOfHousehold,
-                                          //     ),
-                                          //   ),
-                                          // );
+                                          final mapper = ReverseFormMapper(
+                                            formConfig: jsonConfig[
+                                                'beneficiaryRegistration']!,
+                                            modelInstances: [
+                                              if (i.household != null)
+                                                i.household!,
+                                              if (i.individuals?.first != null)
+                                                i.individuals!.first,
+                                              if (i.members?.first != null)
+                                                i.members!.first,
+                                            ],
+                                          );
+
+                                          final formData =
+                                              mapper.buildFormData();
+
+                                          final pageName = context
+                                              .read<FormsBloc>()
+                                              .state
+                                              .cachedSchemas['REGISTRATIONFLOW']
+                                              ?.pages
+                                              .entries
+                                              .first
+                                              .key;
+
+                                          context.router.push(FormsRenderRoute(
+                                            isEdit: true,
+                                            currentSchemaKey:
+                                                'REGISTRATIONFLOW',
+                                            pageName: pageName!,
+
+                                            /// as registration is there assuming form won't be null
+                                            defaultValues: formData,
+                                          ));
                                         } else {
                                           blocWrapper.add(
                                               const RegistrationWrapperEvent
@@ -1124,37 +1226,43 @@ class _SearchBeneficiaryPageState
           size: DigitButtonSize.large,
           isDisabled: isTextShort,
           onPressed: () {
-            FocusManager.instance.primaryFocus?.unfocus();
-            context
-                .read<FormsBloc>()
-                .add(const FormsEvent.clearForm(schemaKey: 'REGISTRATIONFLOW'));
+            if (template?.properties?['searchByID']?.hidden == true) {
+              FocusManager.instance.primaryFocus?.unfocus();
+              context.read<FormsBloc>().add(
+                  const FormsEvent.clearForm(schemaKey: 'REGISTRATIONFLOW'));
 
-            final pageName = context
-                .read<FormsBloc>()
-                .state
-                .cachedSchemas['REGISTRATIONFLOW']
-                ?.pages
-                .entries
-                .first
-                .key;
+              final pageName = context
+                  .read<FormsBloc>()
+                  .state
+                  .cachedSchemas['REGISTRATIONFLOW']
+                  ?.pages
+                  .entries
+                  .first
+                  .key;
 
-            if (pageName == null) {
-              Toast.showToast(
-                context,
-                message:
-                    localizations.translate('NO_FORM_FOUND_FOR_REGISTRATION'),
-                type: ToastType.error,
-              );
+              if (pageName == null) {
+                Toast.showToast(
+                  context,
+                  message:
+                      localizations.translate('NO_FORM_FOUND_FOR_REGISTRATION'),
+                  type: ToastType.error,
+                );
+              } else {
+                context.router.push(FormsRenderRoute(
+                  currentSchemaKey: 'REGISTRATIONFLOW',
+                  pageName: pageName,
+                  defaultValues: {
+                    'administrativeArea': localizations.translate(
+                        RegistrationDeliverySingleton().boundary?.code ?? ''),
+                    'nameOfIndividual': value.text,
+                    'identifiers': {
+                      'DEFAULT': IdGen.instance.identifier,
+                    }
+                  },
+                ));
+              }
             } else {
-              context.router.push(FormsRenderRoute(
-                currentSchemaKey: 'REGISTRATIONFLOW',
-                pageName: pageName,
-                defaultValues: {
-                  'administrativeArea': localizations.translate(
-                      RegistrationDeliverySingleton().boundary?.code ?? ''),
-                  'nameOfIndividual': value.text,
-                },
-              ));
+              fetchBeneficiaryIdCount();
             }
 
             context

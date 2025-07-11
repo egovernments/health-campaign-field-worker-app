@@ -1,24 +1,26 @@
 import 'package:complaints/models/pgr_complaints.dart';
 import 'package:dart_mappable/dart_mappable.dart';
-
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/pgr_application_status.dart';
 
 part 'pgr_complaints_response.mapper.dart';
 
 @MappableClass(ignoreNull: true)
-class PgrServiceCreateResponseModel extends EntityModel with PgrServiceCreateResponseModelMappable {
+class PgrServiceCreateResponseModel extends EntityModel
+    with PgrServiceCreateResponseModelMappable {
   final List<PgrComplaintResponseModel> serviceWrappers;
 
   const PgrServiceCreateResponseModel({
     @MappableField(key: 'ServiceWrappers') this.serviceWrappers = const [],
     super.auditDetails,
-    super.isDeleted  = false,
+    super.isDeleted = false,
+    super.clientAuditDetails,
   }) : super();
 }
 
 @MappableClass(ignoreNull: true)
-class PgrComplaintResponseModel extends EntityModel with PgrComplaintResponseModelMappable {
+class PgrComplaintResponseModel extends EntityModel
+    with PgrComplaintResponseModelMappable {
   final PgrServiceResponseModel service;
   final PgrWorkflowModel? workflow;
 
@@ -26,12 +28,14 @@ class PgrComplaintResponseModel extends EntityModel with PgrComplaintResponseMod
     required this.service,
     this.workflow,
     super.auditDetails,
-        super.isDeleted  = false,
+    super.isDeleted = false,
+    super.clientAuditDetails,
   }) : super();
 }
 
 @MappableClass(ignoreNull: true)
-class PgrComplainantResponseModel extends EntityModel with PgrComplainantResponseModelMappable {
+class PgrComplainantResponseModel extends EntityModel
+    with PgrComplainantResponseModelMappable {
   final int? id;
   final String? userName;
   final String? name;
@@ -58,12 +62,14 @@ class PgrComplainantResponseModel extends EntityModel with PgrComplainantRespons
     this.active = true,
     this.rowVersion = 1,
     super.auditDetails,
-        super.isDeleted  = false,
+    super.clientAuditDetails,
+    super.isDeleted = false,
   }) : super();
 }
 
 @MappableClass(ignoreNull: true)
-class PgrServiceResponseModel extends EntityModel with PgrServiceResponseModelMappable {
+class PgrServiceResponseModel extends EntityModel
+    with PgrServiceResponseModelMappable {
   final bool? active;
   final PgrComplainantResponseModel? user;
   final String? id;
@@ -90,6 +96,7 @@ class PgrServiceResponseModel extends EntityModel with PgrServiceResponseModelMa
     this.user,
     this.rowVersion = 1,
     super.auditDetails,
-        super.isDeleted  = false,
+    super.clientAuditDetails,
+    super.isDeleted = false,
   }) : super();
 }

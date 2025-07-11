@@ -47,7 +47,7 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
           userUuid: RegistrationDeliverySingleton().loggedInUserUuid,
         ),
       );
-      emit(UniqueIdState.idCount(count.length, totalCount.length));
+      emit(UniqueIdState.idCount(count.length, totalCount.length, count.first));
     } catch (e) {
       emit(UniqueIdState.failed(e.toString()));
     }
@@ -175,7 +175,8 @@ class UniqueIdState with _$UniqueIdState {
   const factory UniqueIdState.fetching(int progress, int totalCount) =
       FetchingState;
 
-  const factory UniqueIdState.idCount(int count, int totalCount) =
+  const factory UniqueIdState.idCount(
+          int count, int totalCount, UniqueIdPoolModel? currentUniqueId) =
       FetchedIdCountState;
 
   const factory UniqueIdState.ids(List<UniqueIdPoolModel> ids) =
