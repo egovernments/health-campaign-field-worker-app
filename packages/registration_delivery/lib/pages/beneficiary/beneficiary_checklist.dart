@@ -1449,6 +1449,6 @@ class _BeneficiaryChecklistPageState
             RegistrationDeliverySingleton().beneficiaryType!,
       ),
     );
-    context.router.popAndPush(HouseholdOverviewRoute());
+    context.router.popUntilRouteWithName(HouseholdOverviewRoute.name);
   }
 }
