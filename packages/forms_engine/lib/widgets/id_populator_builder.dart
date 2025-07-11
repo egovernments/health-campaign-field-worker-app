@@ -33,7 +33,7 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
     // Access defaultValues via Provider
     final defaultValues = context.read<Map<String, dynamic>>();
 
-    final identifiers = defaultValues['identifiers'];
+    final identifiers = defaultValues['availableIDs'];
 
     // Register additional controls if not already present
     if (!form.contains(idKey)) {
