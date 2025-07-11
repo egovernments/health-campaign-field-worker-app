@@ -1,7 +1,8 @@
-import 'package:dart_mappable/dart_mappable.dart';
-import 'package:drift/drift.dart';
 import 'dart:convert';
+
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:drift/drift.dart';
 
 part 'pgr_address.mapper.dart';
 
@@ -49,6 +50,7 @@ class PgrAddressModel extends EntityModel with PgrAddressModelMappable {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
+    super.clientAuditDetails,
   }) : super(isDeleted: false);
 
   AddressCompanion get companion {
