@@ -6,6 +6,7 @@ import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/blocs/enitty_create/entity_create.dart';
 import 'package:inventory_management/data/repositories/transforms_config.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/utils.dart';
@@ -93,9 +94,9 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
 
             print(entities);
 
-            // context.read<EntityCreateBloc>().add(
-            //       EntityCreateEvent.create(entities: entities),
-            //     );
+            context.read<EntityCreateBloc>().add(
+                  EntityCreateEvent.create(entities: entities),
+                );
           } catch (e) {
             Navigator.of(context, rootNavigator: true).pop();
             // Reset to prevent re-handling
@@ -332,13 +333,13 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                     // } else {
 
                     //TODO:: commented to use formengine by pitabash
-                    // context.router.push(
-                    //   RecordStockWrapperRoute(
-                    //     type: StockRecordEntryType.receipt,
-                    //   ),
-                    // );
-// end
-                    // Navigator.of(context).pop();
+//                     context.router.push(
+//                       RecordStockWrapperRoute(
+//                         type: StockRecordEntryType.receipt,
+//                       ),
+//                     );
+// //end
+//                     Navigator.of(context).pop();
                   },
                   child: Container(
                     width: double.infinity,

@@ -747,7 +747,7 @@ const String inventoryConfigData = '''{
           "actionLabel": "APPONE_INVENTORY_PRODUCTDETAILS_ACTION_BUTTON_LABEL_1",
           "properties": {
             
-            "productVariantId": {
+            "productDetails": {
               "type": "string",
               "label": "APPONE_INVENTORY_PRODUCTDETAILS_LABEL",
               "order": 1,
@@ -758,7 +758,7 @@ const String inventoryConfigData = '''{
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "productVariantId",
+              "fieldName": "productdetail",
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
@@ -785,7 +785,7 @@ const String inventoryConfigData = '''{
                 }
               ]
             },
-             "facilityId": {
+            "facilityId": {
               "type": "dynamic",
               "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich",
               "order": 3,
@@ -811,9 +811,58 @@ const String inventoryConfigData = '''{
               "isMultiSelect": false,
               "includeInForm": true,
               "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR"
+            },
+             "transportType": {
+              "type": "string",
+              "label": "APPONE_INVENTORY_TRANSPORT_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "transportType",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {
+                  "code": "BUS",
+                  "name": "Bus"
+                },
+                {
+                  "code": "TRUCK",
+                  "name": "Truck"
+                }
+              ]
+            },
+            "comment": {
+              "type": "string",
+              "label": "APPONE_INVENTORY_COMMENT_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "comment",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
             }
-            
-            
            
           },
           "value": null,
