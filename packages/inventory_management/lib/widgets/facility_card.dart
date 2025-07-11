@@ -94,7 +94,10 @@ class _FacilityInputState extends LocalizedState<FacilityInput> {
                   MaterialPageRoute(
                     builder: (context) => InventoryFacilitySelectionPage(
                       facilities: facilities.isEmpty
-                          ? [FacilityModel(id: "FT-456-AS")]
+                          ? [
+                              FacilityModel(id: "FT-456-AS"),
+                              FacilityModel(id: "FT-456R-AST")
+                            ]
                           : facilities,
                     ),
                   ),

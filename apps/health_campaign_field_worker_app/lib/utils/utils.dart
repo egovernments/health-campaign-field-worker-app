@@ -667,13 +667,12 @@ const String inventoryConfigData = '''{
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": true,
-              "includeInForm" : true,
+              "includeInForm": true,
               "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                      "APPONE_MANAGESTOCK_WAREHOUSE_label_dateOfReceipt_mandatory_message"
+                  "message": "APPONE_MANAGESTOCK_WAREHOUSE_label_dateOfReceipt_mandatory_message"
                 }
               ],
               "errorMessage": "",
@@ -699,45 +698,144 @@ const String inventoryConfigData = '''{
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                      "APPONE_MANAGESTOCK_WAREHOUSE_label_administrativeArea_mandatory_message"
+                  "message": "APPONE_MANAGESTOCK_WAREHOUSE_label_administrativeArea_mandatory_message"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false
             },
-"facilityId": {
-"type": "dynamic",
-"label": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich",
-"order": 3,
-"value": "",
-"format": "custom",
-"hidden": false,
-"tooltip": "",
-"helpText":
-"Select the facility to which the stock is being sent",
-"infoText": "",
-"readOnly": false,
-"fieldName": "facilityToWhich",
-"deleteFlag": false,
-"innerLabel": "",
-"systemDate": false,
-"validations": [
-{
-"type": "required",
-"value": true,
-"message":
-"APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
-}
-],
-"errorMessage": "",
-"isMultiSelect": false,
-"includeInForm": true,
-"schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR"
-}
-
+            "facilityId": {
+              "type": "dynamic",
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich",
+              "order": 3,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Select the facility to which the stock is being sent",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "facilityToWhich",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "includeInForm": true,
+              "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR"
+            }
           },
-          "navigateTo": {"name": "StockDetails", "type": "template"}
+          "navigateTo": {
+            "name": "StockDetails",
+            "type": "template"
+          }
+        },
+        
+        "stockDetails": {
+          "label": "APPONE_INVENTORY_PRODUCTDETAILS_SCREEN_HEADING",
+          "order": 2,
+          "type": "object",
+          "format": null,
+          "description": "APPONE_INVENTORY_PRODUCTDETAILS_SCREEN_DESCRIPTION",
+          "actionLabel": "APPONE_INVENTORY_PRODUCTDETAILS_ACTION_BUTTON_LABEL_1",
+          "properties": {
+            
+            "productVariantId": {
+              "type": "string",
+              "label": "APPONE_INVENTORY_PRODUCTDETAILS_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "productVariantId",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {
+                  "code": "BENEFICIARY_ABSENT",
+                  "name": "Beneficiary Absent"
+                },
+                {
+                  "code": "BENEFICIARY_REFUSED",
+                  "name": "Beneficiary Refused"
+                },
+                {
+                  "code": "INSUFFICIENT_RESOURCES",
+                  "name": "Insufficient Resources"
+                },
+                {
+                  "code": "SUCCESSFUL_DELIVERY",
+                  "name": "Delivery Successful"
+                }
+              ]
+            },
+             "facilityId": {
+              "type": "dynamic",
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich",
+              "order": 3,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Select the facility to which the stock is being sent",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "facilityToWhich",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "includeInForm": true,
+              "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR"
+            }
+            
+            
+           
+          },
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "navigateTo": {
+            "name": "household-acknowledgement",
+            "type": "template"
+          }
         }
       },
       "templates": {
@@ -746,8 +844,7 @@ const String inventoryConfigData = '''{
           "order": 1,
           "type": "template",
           "format": null,
-          "description":
-              "APPONE_REGISTRATION_SEARCHBENEFICIARY_SCREEN_DESCRIPTION",
+          "description": "APPONE_REGISTRATION_SEARCHBENEFICIARY_SCREEN_DESCRIPTION",
           "actionLabel": "",
           "properties": {},
           "value": null,
@@ -766,7 +863,10 @@ const String inventoryConfigData = '''{
           "includeInForm": null,
           "includeInSummary": null,
           "autoEnable": null,
-          "navigateTo": {"name": "acknowledgement", "type": "template"}
+          "navigateTo": {
+            "name": "acknowledgement",
+            "type": "template"
+          }
         }
       }
     }
