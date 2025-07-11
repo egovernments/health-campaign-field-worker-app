@@ -121,16 +121,16 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    PeerToPeerWrapperRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: WrappedRoute(child: const PeerToPeerWrapperPage()),
-      );
-    },
     NonMobileUserListRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const NonMobileUserListPage(),
+      );
+    },
+    PeerToPeerWrapperRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: WrappedRoute(child: const PeerToPeerWrapperPage()),
       );
     },
     ProfileRoute.name: (routeData) {
@@ -562,20 +562,6 @@ class LoginRouteArgs {
 }
 
 /// generated route for
-/// [PeerToPeerWrapperPage]
-class PeerToPeerWrapperRoute extends PageRouteInfo<void> {
-  const PeerToPeerWrapperRoute({List<PageRouteInfo>? children})
-      : super(
-          PeerToPeerWrapperRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'PeerToPeerWrapperRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
 /// [NonMobileUserListPage]
 class NonMobileUserListRoute extends PageRouteInfo<void> {
   const NonMobileUserListRoute({List<PageRouteInfo>? children})
@@ -585,6 +571,20 @@ class NonMobileUserListRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'NonMobileUserListRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PeerToPeerWrapperPage]
+class PeerToPeerWrapperRoute extends PageRouteInfo<void> {
+  const PeerToPeerWrapperRoute({List<PageRouteInfo>? children})
+      : super(
+          PeerToPeerWrapperRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'PeerToPeerWrapperRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
