@@ -350,19 +350,21 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                   }
                                 : null,
                             builder: (field) {
-                              return InputField(
-                                  label: localizations.translate(
-                                    widget.isGS1code
-                                        ? i18.scanner.barCodeBatch
-                                        : i18.scanner.resourceCode,
-                                  ),
-                                  errorMessage: field.errorText,
-                                  isRequired: true,
-                                  type: InputType.text,
-                                  onChange: (value) {
-                                    form.control(_manualCodeFormKey).value =
-                                        value;
-                                  });
+                              return LabeledField(
+                                label: localizations.translate(
+                                  widget.isGS1code
+                                      ? i18.scanner.barCodeBatch
+                                      : i18.scanner.resourceCode,
+                                ),
+                                capitalizedFirstLetter: false,
+                                child: DigitTextFormInput(
+                                    errorMessage: field.errorText,
+                                    isRequired: true,
+                                    onChange: (value) {
+                                      form.control(_manualCodeFormKey).value =
+                                          value;
+                                    }),
+                              );
                             },
                           ),
                           if (widget.isGS1code) ...[
@@ -374,18 +376,20 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                     ),
                               },
                               builder: (field) {
-                                return InputField(
-                                    label: localizations.translate(
-                                      i18.scanner.barCodeSerial,
-                                    ),
-                                    errorMessage: field.errorText,
-                                    isRequired: true,
-                                    type: InputType.text,
-                                    onChange: (value) {
-                                      form
-                                          .control(_manualSerialNoFormKey)
-                                          .value = value;
-                                    });
+                                return LabeledField(
+                                  label: localizations.translate(
+                                    i18.scanner.barCodeSerial,
+                                  ),
+                                  capitalizedFirstLetter: false,
+                                  child: DigitTextFormInput(
+                                      errorMessage: field.errorText,
+                                      isRequired: true,
+                                      onChange: (value) {
+                                        form
+                                            .control(_manualSerialNoFormKey)
+                                            .value = value;
+                                      }),
+                                );
                               },
                             ),
                             ReactiveWrapperField(
@@ -397,27 +401,30 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                       ),
                                 },
                                 builder: (field) {
-                                  return InputField(
-                                    firstDate: DateTime.now(),
-                                    isRequired: true,
-                                    type: InputType.date,
+                                  return LabeledField(
                                     label: localizations
                                         .translate(i18.scanner.barCodeExpiry),
-                                    confirmText: localizations.translate(
-                                      i18.common.coreCommonOk,
+                                    capitalizedFirstLetter: false,
+                                    child: DigitDateFormInput(
+                                      firstDate: DateTime.now(),
+                                      isRequired: true,
+                                      confirmText: localizations.translate(
+                                        i18.common.coreCommonOk,
+                                      ),
+                                      cancelText: localizations.translate(
+                                        i18.common.coreCommonCancel,
+                                      ),
+                                      initialValue: DateFormat('dd/MM/yy')
+                                          .format(field.control.value),
+                                      readOnly: false,
+                                      onChange: (value) {
+                                        form
+                                            .control(_manualExpiryDateFormKey)
+                                            .value = DateFormat(
+                                                "dd/MM/yyyy")
+                                            .parse(value);
+                                      },
                                     ),
-                                    cancelText: localizations.translate(
-                                      i18.common.coreCommonCancel,
-                                    ),
-                                    initialValue: DateFormat('dd/MM/yy')
-                                        .format(field.control.value),
-                                    readOnly: false,
-                                    onChange: (value) {
-                                      form
-                                              .control(_manualExpiryDateFormKey)
-                                              .value =
-                                          DateFormat("dd/MM/yyyy").parse(value);
-                                    },
                                   );
                                 }),
                           ],

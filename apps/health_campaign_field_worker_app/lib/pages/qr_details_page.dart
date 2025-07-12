@@ -218,15 +218,15 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                                         .individualList!.first.individualId,
                                     age: getAge(registers.first.individualList!
                                         .first.dateOfBirth),
-                                    locality: registers
+                                    locality: localizations.translate(registers
                                             .first
                                             .individualList
                                             ?.first
                                             .address
                                             ?.first
                                             .locality
-                                            ?.boundaryCode ??
-                                        '',
+                                            ?.code ??
+                                        ''),
                                     qrCreatedTime:
                                         DateTime.now().millisecondsSinceEpoch)
                                 .toMap()),

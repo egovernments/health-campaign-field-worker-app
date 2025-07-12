@@ -1,7 +1,6 @@
 // GENERATED using mason_cli
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:disk_space_update/disk_space_update.dart';
@@ -19,6 +18,7 @@ import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../models/downsync/downsync.dart';
 import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
+import '../../utils/utils.dart';
 
 part 'project_beneficiaries_downsync.freezed.dart';
 
@@ -208,9 +208,12 @@ class BeneficiaryDownSyncBloc
                 isDeleted: true,
               ),
             );
+            emit(BeneficiaryDownSyncState.inProgress(
+                offset, downSyncResults["DownsyncCriteria"]["totalCount"]));
+
             // check if the API response is there or it failed
             if (downSyncResults.isNotEmpty) {
-              writeToFile(event.projectId, event.boundaryCode,
+              await writeToFile(event.projectId, event.boundaryCode,
                   event.boundaryName, downSyncResults);
               await SyncServiceSingleton()
                   .entityMapper
@@ -272,7 +275,7 @@ class BeneficiaryDownSyncBloc
     }
   }
 
-  void writeToFile(
+  writeToFile(
     String projectId,
     String selectedBoundaryCode,
     String selectedBoundaryName,
@@ -289,7 +292,7 @@ class BeneficiaryDownSyncBloc
       return;
     }
 
-    final file = File('${downloadsDirectory.path}/down_sync_data.json');
+    final file = await getDownSyncFilePath();
 
     // Read existing file content if available
     if (file.existsSync()) {
@@ -309,7 +312,7 @@ class BeneficiaryDownSyncBloc
     Map<String, dynamic> boundaryData = {
       "boundaryCode": selectedBoundaryCode,
       "boundaryName": selectedBoundaryName,
-      "response": response
+      "response": DataMapEncryptor().encryptWithRandomKey(response)
     };
 
     // Initialize the offset entry if it doesn't exist

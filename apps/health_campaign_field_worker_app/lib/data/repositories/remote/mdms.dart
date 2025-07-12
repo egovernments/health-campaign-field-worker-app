@@ -387,14 +387,14 @@ class MdmsRepository {
 
     appConfiguration.manualAttendanceReasons =
         result.hcmWrapperModel?.manualAttendanceReasonList?.map((e) {
-      final reasonTypes = ManualAttendanceReasons()
+      final manualAttendanceTypes = ManualAttendanceReasons()
         ..name = e.name
         ..code = e.code
         ..active = e.active;
 
-      return reasonTypes;
+      return manualAttendanceTypes;
     }).toList();
-    
+
     appConfiguration.houseStructureTypes =
         result.hcmWrapperModel?.houseStructureTypes?.map((e) {
       final structureTypes = HouseStructureTypes()

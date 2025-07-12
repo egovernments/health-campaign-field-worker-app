@@ -273,6 +273,7 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                   DigitCard(children: [
                                     Center(
                                       child: Lottie.asset(downloadSuccess,
+                                          repeat: false,
                                           height: MediaQuery.of(context)
                                                   .size
                                                   .height *

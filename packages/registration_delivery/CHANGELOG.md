@@ -1,3 +1,9 @@
+## 1.0.7+1
+
+* Updated lister of searchState with stream
+* Updated individualGlobalSearch to include all members tasks during filter search
+* Updated ViewBeneficiaryCard to support new ineligible status
+
 ## 1.0.7
 
 * Updated IdGen, Enumeration, Ineligible flow, Referred Search

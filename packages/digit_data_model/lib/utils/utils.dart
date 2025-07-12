@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:archive/archive.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:encrypt/encrypt.dart';
@@ -122,7 +123,7 @@ class DataMapEncryptor {
   static List<int> _randomBytes(int length) =>
       List.generate(length, (_) => Random.secure().nextInt(256));
 
-  /// Encrypts a Map and returns a base64 string suitable for a QR code
+  /// Encrypts a Map and returns a base64 string
   String encryptWithRandomKey(dynamic data) {
     final keyBytes = _randomBytes(32);
     final ivBytes = _randomBytes(16);
@@ -131,8 +132,15 @@ class DataMapEncryptor {
     final iv = IV(Uint8List.fromList(ivBytes));
     final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
 
-    final encrypted = encrypter.encrypt(jsonEncode(data), iv: iv);
+    // Compress the JSON string
+    final jsonData = utf8.encode(jsonEncode(data));
 
+    final compressed = GZipEncoder().encode(jsonData);
+
+    // Encrypt the compressed data
+    final encrypted = encrypter.encryptBytes(compressed!, iv: iv);
+
+    // Build payload (key, iv, encrypted data)
     final payload = jsonEncode({
       'key': base64UrlEncode(keyBytes),
       'iv': base64UrlEncode(ivBytes),
@@ -149,11 +157,21 @@ class DataMapEncryptor {
 
     final key = Key(base64Url.decode(payload['key']));
     final iv = IV(base64Url.decode(payload['iv']));
-    final cipherText = payload['data'];
+    final cipherTextBase64 = payload['data'];
 
     final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
-    final decrypted = encrypter.decrypt64(cipherText, iv: iv);
 
-    return jsonDecode(decrypted);
+    // Manually decode base64 ciphertext
+    final encryptedBytes = base64.decode(cipherTextBase64);
+
+    // Decrypt the encrypted bytes
+    final decryptedBytes =
+        encrypter.decryptBytes(Encrypted(encryptedBytes), iv: iv);
+
+    // Decompress the decrypted bytes
+    final decompressedBytes = GZipDecoder().decodeBytes(decryptedBytes);
+
+    // Decode UTF-8 and parse JSON
+    return jsonDecode(utf8.decode(decompressedBytes));
   }
 }
