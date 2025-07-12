@@ -130,7 +130,6 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                               children: [
                                 Center(
                                   child: Lottie.asset(dataTransfer,
-                                      repeat: false,
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.15),
@@ -199,6 +198,7 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                               children: [
                                 Center(
                                   child: Lottie.asset(downloadSuccess,
+                                      repeat: false,
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.15),
