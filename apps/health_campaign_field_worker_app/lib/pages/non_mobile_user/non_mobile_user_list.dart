@@ -121,15 +121,16 @@ class _NonMobileUserListPageState
                                                         .first
                                                         .individualList![x]
                                                         .dateOfBirth),
-                                                    locality: registers
-                                                            .first
-                                                            .individualList
-                                                            ?.first
-                                                            .address
-                                                            ?.first
-                                                            .locality
-                                                            ?.boundaryCode ??
-                                                        '',
+                                                    locality: localizations
+                                                        .translate(registers
+                                                                .first
+                                                                .individualList
+                                                                ?.first
+                                                                .address
+                                                                ?.first
+                                                                .locality
+                                                                ?.code ??
+                                                            ''),
                                                     name: registers
                                                         .first
                                                         .individualList![x]

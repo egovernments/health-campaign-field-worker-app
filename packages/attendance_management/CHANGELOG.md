@@ -1,3 +1,7 @@
+## 1.0.5+1
+
+* Accommodated single sessions for registers
+
 ## 1.0.5
 
 * Attendance Revamp

@@ -155,18 +155,36 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
               : DateTime.now(),
         ).months;
 
-        final isNotEligible = !checkEligibilityForAgeAndSideEffect(
-          DigitDOBAgeConvertor(
-            years: ageInYears,
-            months: ageInMonths,
-          ),
-          RegistrationDeliverySingleton().projectType,
-          (taskData ?? []).isNotEmpty ? taskData?.last : null,
-          sideEffects,
-        );
+        final isNotEligible = RegistrationDeliverySingleton()
+                    .projectType
+                    ?.cycles !=
+                null
+            ? !checkEligibilityForAgeAndSideEffect(
+                      DigitDOBAgeConvertor(
+                        years: ageInYears,
+                        months: ageInMonths,
+                      ),
+                      RegistrationDeliverySingleton().projectType,
+                      (taskData ?? []).isNotEmpty ? taskData?.lastOrNull : null,
+                      sideEffects,
+                    ) ||
+                    (taskData ?? []).isNotEmpty
+                ? (taskData ?? []).isNotEmpty &&
+                    taskData?.last.status ==
+                        Status.ineligible.toValue().toString()
+                : !checkEligibilityForAgeAndSideEffect(
+                    DigitDOBAgeConvertor(
+                      years: ageInYears,
+                      months: ageInMonths,
+                    ),
+                    RegistrationDeliverySingleton().projectType,
+                    (taskData ?? []).isNotEmpty ? taskData?.lastOrNull : null,
+                    sideEffects,
+                  )
+            : false;
         final isSideEffectRecorded = recordedSideEffect(
           currentCycle,
-          (taskData ?? []).isNotEmpty ? taskData?.last : null,
+          (taskData ?? []).isNotEmpty ? taskData?.lastOrNull : null,
           sideEffects,
         );
         final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskData);
@@ -274,19 +292,35 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           : DateTime.now(),
     ).months;
 
-    final isNotEligible = !checkEligibilityForAgeAndSideEffect(
-      DigitDOBAgeConvertor(
-        years: ageInYears,
-        months: ageInMonths,
-      ),
-      RegistrationDeliverySingleton().projectType,
-      (householdMember.tasks ?? []).isNotEmpty
-          ? householdMember.tasks?.last
-          : null,
-      (householdMember.sideEffects ?? []).isNotEmpty
-          ? householdMember.sideEffects
-          : null,
-    );
+    final isNotEligible =
+        RegistrationDeliverySingleton().projectType?.cycles != null
+            ? !checkEligibilityForAgeAndSideEffect(
+                      DigitDOBAgeConvertor(
+                        years: ageInYears,
+                        months: ageInMonths,
+                      ),
+                      RegistrationDeliverySingleton().projectType,
+                      (householdMember.tasks ?? []).isNotEmpty
+                          ? householdMember.tasks?.lastOrNull
+                          : null,
+                      householdMember.sideEffects,
+                    ) ||
+                    (householdMember.tasks ?? []).isNotEmpty
+                ? (householdMember.tasks ?? []).isNotEmpty &&
+                    householdMember.tasks?.last.status ==
+                        Status.ineligible.toValue().toString()
+                : !checkEligibilityForAgeAndSideEffect(
+                    DigitDOBAgeConvertor(
+                      years: ageInYears,
+                      months: ageInMonths,
+                    ),
+                    RegistrationDeliverySingleton().projectType,
+                    (householdMember.tasks ?? []).isNotEmpty
+                        ? householdMember.tasks?.lastOrNull
+                        : null,
+                    householdMember.sideEffects,
+                  )
+            : false;
 
     final isBeneficiaryRefused =
         checkIfBeneficiaryRefused(householdMember.tasks);

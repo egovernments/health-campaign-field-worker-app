@@ -76,10 +76,9 @@ packages:
   attendance_management:
     dependency: "direct main"
     description:
-      name: attendance_management
-      sha256: "2093877e8a051588b47e19de98d20d341a2e0ee0a00721644c7dde2c7210e3a9"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/attendance_management"
+      relative: true
+    source: path
     version: "1.0.5"
   audioplayers:
     dependency: transitive
@@ -525,10 +524,9 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: "28adcdadbb25f03031fa1b65a987467873deafdef5fad71c707c8a0c6fe7954f"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_data_model"
+      relative: true
+    source: path
     version: "1.1.2"
   digit_dss:
     dependency: "direct main"
@@ -557,10 +555,9 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      name: digit_scanner
-      sha256: "10c1f7f24ba51219088023e54dfff5139ec860fa78b42d7c9970b006ddb6fac1"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_scanner"
+      relative: true
+    source: path
     version: "1.0.6+1"
   digit_showcase:
     dependency: "direct main"
@@ -574,10 +571,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: c07a13efd5d23fe869a87f7ab12b7b82bdb0b911d4c9ed7f4bb1a5c4310847f5
+      sha256: "94bfc92dc2bd7dbec934a04e80155beb2dd71e76e166d14095c129880b0c0e36"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.2+4"
+    version: "0.2.2+5"
   dio:
     dependency: "direct main"
     description:
@@ -1857,10 +1854,9 @@ packages:
   registration_delivery:
     dependency: "direct main"
     description:
-      name: registration_delivery
-      sha256: "2b877dcb89e84eb439ce3af55b9234323a3762a7d894b18174dc2324b0cec39e"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/registration_delivery"
+      relative: true
+    source: path
     version: "1.0.7"
   rxdart:
     dependency: transitive

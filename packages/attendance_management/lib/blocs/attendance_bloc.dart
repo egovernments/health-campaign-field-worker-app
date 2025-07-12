@@ -163,10 +163,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
       List<AttendanceLogModel>? registerCompletedLogs) async {
     // Generate date list
     var list = generateDateList(
-      register.startDate!,
-      register.endDate!,
-      registerCompletedLogs ?? [],
-    );
+        register.startDate!, register.endDate!, registerCompletedLogs ?? []);
 
     var completedDaysCount = register.additionalDetails?["sessions"] == 2
         ? list.length ~/ 2 // for registers with 2 sessions
