@@ -184,7 +184,6 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
 
   void handleDeviceTap(Device device) async {
     if (device.state == SessionState.notConnected) {
-      await Future.delayed(const Duration(seconds: 4));
       nearbyService.invitePeer(
           deviceID: device.deviceId,
           deviceName:
