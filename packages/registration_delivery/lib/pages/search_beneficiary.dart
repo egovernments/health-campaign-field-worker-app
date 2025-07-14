@@ -25,7 +25,6 @@ import 'package:forms_engine/router/forms_router.gm.dart';
 import 'package:registration_bloc/bloc/registration_bloc.dart';
 import 'package:registration_bloc/models/global_search_params.dart'
     as reg_params;
-import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/data/transformer_config.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/widgets/beneficiary/resource_card.dart';
@@ -59,7 +58,7 @@ class _SearchBeneficiaryPageState
   bool isProximityEnabled = false, isBeneficiaryIdSearchEnabled = false;
   int offset = 0;
   int limit = 10;
-
+  String selectedTag = "";
   double lat = 0.0;
   double long = 0.0;
   List<String> selectedFilters = [];
@@ -994,15 +993,10 @@ class _SearchBeneficiaryPageState
                       return BlocListener<DigitScannerBloc, DigitScannerState>(
                         listener: (context, scannerState) {
                           if (scannerState.qrCodes.isNotEmpty) {
-                            context.read<SearchBlocWrapper>().tagSearchBloc.add(
-                                  SearchHouseholdsEvent.searchByTag(
-                                    tag: scannerState.qrCodes.isNotEmpty
-                                        ? scannerState.qrCodes.lastOrNull!
-                                        : '',
-                                    projectId: RegistrationDeliverySingleton()
-                                        .projectId!,
-                                  ),
-                                );
+                            setState(() {
+                              selectedTag =
+                                  scannerState.qrCodes.lastOrNull ?? "";
+                            });
                           }
                         },
                         child: BlocBuilder<LocationBloc, LocationState>(
@@ -1332,9 +1326,18 @@ class _SearchBeneficiaryPageState
     if (isProximityEnabled ||
         selectedFilters.isNotEmpty ||
         (searchController.text.isNotEmpty &&
-            searchController.text.length > 2)) {
+            searchController.text.length > 2) ||
+        selectedTag != "") {
       final params = reg_params.GlobalSearchParameters(
         filters: [
+          if (selectedTag != "")
+            reg_params.SearchFilter(
+              root:
+                  'projectBeneficiary', // or 'individual', based on what you're searching
+              field: 'tag',
+              operator: 'equals',
+              value: selectedTag,
+            ),
           if (searchController.text.isNotEmpty &&
               searchController.text.length > 2 &&
               isBeneficiaryIdSearchEnabled == true)

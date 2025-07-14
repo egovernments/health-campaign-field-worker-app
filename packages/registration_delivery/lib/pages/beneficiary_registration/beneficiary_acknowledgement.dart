@@ -9,15 +9,11 @@ import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
-import 'package:registration_delivery/blocs/search_households/search_households.dart';
-import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/utils/utils.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/registration_component_keys.dart' as registration_keys;
 import '../../../widgets/localized.dart';
-import '../../blocs/app_localization.dart';
-import '../../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../../router/registration_delivery_router.gm.dart';
 
 @RoutePage()
@@ -54,7 +50,8 @@ class BeneficiaryAcknowledgementPageState
         child: PanelCard(
           type: PanelType.success,
           additionalDetails: [
-            if (wrapper.householdMembers?.first?.individuals?.lastOrNull!.identifiers!
+            if (wrapper.householdMembers?.first?.individuals?.lastOrNull!
+                    .identifiers!
                     .lastWhereOrNull(
                       (e) =>
                           e.identifierType ==

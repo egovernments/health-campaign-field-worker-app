@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 
-import '../../blocs/search_households/search_households.dart';
 import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
 import '../../utils/constants.dart';
