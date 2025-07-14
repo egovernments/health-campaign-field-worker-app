@@ -49,7 +49,7 @@ class _DataShareHomeState extends LocalizedState<DataShareHomePage> {
             ),
           ),
         ),
-        BlocConsumer<SyncBloc, SyncState>(
+        BlocBuilder<SyncBloc, SyncState>(
           builder: (BuildContext context, state) {
             return Column(
               children: [
@@ -270,7 +270,6 @@ class _DataShareHomeState extends LocalizedState<DataShareHomePage> {
               ],
             );
           },
-          listener: (BuildContext context, Object? state) {},
         ),
       ],
     );

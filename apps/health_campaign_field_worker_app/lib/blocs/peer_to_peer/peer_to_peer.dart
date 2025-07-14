@@ -106,7 +106,7 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
               selectedBoundaryCode = boundary['boundaryCode'];
               selectedBoundaryName = boundary['boundaryName'];
 
-              // ✅ This matches your original entityData format (a list)
+              // This matches your original entityData format (a list)
               entityData = [boundary['response']];
 
               for (var device in event.connectedDevice) {
@@ -202,8 +202,8 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
             // [TODO: Move the function DiskSpace.getFreeDiskSpace to utils
             diskSpace = await DiskSpace
                 .getFreeDiskSpace; // Returns the device available space in MB
-            // diskSpace in MB * 1000 comparison with serverTotalCount * 150KB * Number of entities * 2
-            if ((diskSpace ?? 0) * 1000 < (totalCount ?? 0 * 150 * 2)) {
+            // diskSpace in MB * 1024 comparison with serverTotalCount * 150KB * Number of entities * 2
+            if ((diskSpace ?? 0) * 1024 < (totalCount ?? 0 * 150 * 2)) {
               emit(PeerToPeerState.failedToReceive(
                   error: i18.beneficiaryDetails.insufficientStorage));
             }
