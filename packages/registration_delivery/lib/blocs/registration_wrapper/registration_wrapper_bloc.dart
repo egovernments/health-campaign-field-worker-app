@@ -234,15 +234,24 @@ class RegistrationWrapperBloc
     final household = event.householdWrapper.household;
     final individual = event.selectedIndividual;
     final projectId = event.projectId;
+    final task = event.householdWrapper?.tasks?.firstOrNull;
 
     final searchParams = GlobalSearchParameters(
       filters: [
-        SearchFilter(
-          root: 'household',
-          field: 'clientReferenceId',
-          operator: 'equals',
-          value: household?.clientReferenceId,
-        ),
+        if (household != null)
+          SearchFilter(
+            root: 'household',
+            field: 'clientReferenceId',
+            operator: 'equals',
+            value: household.clientReferenceId,
+          ),
+        if (household == null && task != null)
+          SearchFilter(
+            root: 'task',
+            field: 'clientReferenceId',
+            operator: 'equals',
+            value: task.clientReferenceId,
+          ),
       ], // Optional: if you're resolving linked entities
       primaryModel: 'household',
       select: [
