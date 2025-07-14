@@ -1,10 +1,12 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../../router/registration_delivery_router.gm.dart';
@@ -34,6 +36,10 @@ class HouseholdAcknowledgementPageState
     final pageKey = HouseholdAcknowledgementRoute.name.replaceAll('Route', '');
     final householdAcknowledgementTemplate =
         RegistrationDeliverySingleton().templateConfigs?[pageKey];
+    final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
+    final wrapper = context.read<RegistrationWrapperBloc>().state;
+
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -43,6 +49,23 @@ class HouseholdAcknowledgementPageState
               padding: const EdgeInsets.all(spacer2),
               child: PanelCard(
                 type: PanelType.success,
+                additionalDetails: [
+                  if (wrapper.householdMembers?.first?.individuals?.lastOrNull!
+                          .identifiers!
+                          .lastWhereOrNull(
+                            (e) =>
+                                e.identifierType ==
+                                IdentifierTypes.uniqueBeneficiaryID.toValue(),
+                          )
+                          ?.identifierId !=
+                      null)
+                    Text(
+                      getSubText(wrapper.householdMembers.first),
+                      textAlign: TextAlign.center,
+                      style: textTheme.headingM.copyWith(
+                          color: const DigitColors().light.paperPrimary),
+                    )
+                ],
                 description: householdAcknowledgementTemplate
                             ?.properties?[registration_keys.acknowledgementKeys
                                 .acknowledgmentDescriptionKey]
@@ -132,5 +155,17 @@ class HouseholdAcknowledgementPageState
 
     entries.sort((a, b) => a.key.compareTo(b.key));
     return entries.map((e) => e.value).toList(growable: false);
+  }
+
+  getSubText(HouseholdWrapper? wrapper) {
+    return wrapper != null
+        ? '${localizations.translate(i18.beneficiaryDetails.beneficiaryId)}\n'
+            '${wrapper.individuals?.lastOrNull!.name!.givenName} - '
+            '${wrapper.individuals?.lastOrNull!.identifiers!.lastWhereOrNull(
+                  (e) =>
+                      e.identifierType ==
+                      IdentifierTypes.uniqueBeneficiaryID.toValue(),
+                )?.identifierId ?? localizations.translate(i18.common.noResultsFound)}'
+        : '';
   }
 }

@@ -75,7 +75,7 @@ class _HouseholdOverviewPageState
         context
             .read<RegistrationWrapperBloc>()
             .add(const RegistrationWrapperEvent.clear());
-        context.router.maybePop();
+        context.router.popUntilRouteWithName(SearchBeneficiaryRoute.name);
       },
       child: BlocBuilder<RegistrationWrapperBloc, RegistrationWrapperState>(
         builder: (ctx, state) {

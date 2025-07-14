@@ -115,9 +115,12 @@ class _SearchBeneficiaryPageState
         if (createState.lastAction == RegistrationWrapperActionType.created ||
             createState.lastAction == RegistrationWrapperActionType.updated) {
           Navigator.of(context, rootNavigator: true).pop();
-          final householdModel = createState.householdMembers.first.household;
-          final individualModel =
-              createState.householdMembers.first.individuals?.first;
+          final householdModel =
+              createState.householdMembers.firstOrNull?.household;
+          final individualModel = createState
+              .householdMembers.firstOrNull?.individuals?.firstOrNull;
+          final taskModel =
+              createState.householdMembers.firstOrNull?.tasks?.firstOrNull;
 
           if (createState.lastAction == RegistrationWrapperActionType.created &&
               individualModel != null &&
@@ -132,6 +135,15 @@ class _SearchBeneficiaryPageState
                 projectId: RegistrationDeliverySingleton().selectedProject!.id,
                 selectedIndividual: null,
                 householdWrapper: HouseholdWrapper(household: householdModel),
+                beneficiaryType: RegistrationDeliverySingleton()
+                    .beneficiaryType
+                    ?.toValue()));
+          }
+          if (taskModel != null) {
+            blocWrapper.add(RegistrationWrapperEvent.fetchDeliveryDetails(
+                projectId: RegistrationDeliverySingleton().selectedProject!.id,
+                selectedIndividual: null,
+                householdWrapper: HouseholdWrapper(tasks: [taskModel]),
                 beneficiaryType: RegistrationDeliverySingleton()
                     .beneficiaryType
                     ?.toValue()));
@@ -389,8 +401,14 @@ class _SearchBeneficiaryPageState
                 return true;
               },
               child: ScrollableContent(
-                header: const Column(children: [
-                  BackNavigationHelpHeaderWidget(),
+                header: Column(children: [
+                  BackNavigationHelpHeaderWidget(
+                    handleBack: () {
+                      context
+                          .read<RegistrationWrapperBloc>()
+                          .add(const RegistrationWrapperEvent.clear());
+                    },
+                  ),
                 ]),
                 slivers: [
                   SliverToBoxAdapter(
