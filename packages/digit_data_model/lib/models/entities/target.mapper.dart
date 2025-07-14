@@ -183,8 +183,8 @@ class TargetModelMapper extends SubClassMapperBase<TargetModel> {
   static int? _$rowVersion(TargetModel v) => v.rowVersion;
   static const Field<TargetModel, int> _f$rowVersion =
       Field('rowVersion', _$rowVersion, opt: true);
-  static BeneficiaryType? _$beneficiaryType(TargetModel v) => v.beneficiaryType;
-  static const Field<TargetModel, BeneficiaryType> _f$beneficiaryType =
+  static String? _$beneficiaryType(TargetModel v) => v.beneficiaryType;
+  static const Field<TargetModel, String> _f$beneficiaryType =
       Field('beneficiaryType', _$beneficiaryType, opt: true);
   static AuditDetails? _$auditDetails(TargetModel v) => v.auditDetails;
   static const Field<TargetModel, AuditDetails> _f$auditDetails =
@@ -307,7 +307,7 @@ abstract class TargetModelCopyWith<$R, $In extends TargetModel, $Out>
       bool? nonRecoverableError,
       String? tenantId,
       int? rowVersion,
-      BeneficiaryType? beneficiaryType,
+      String? beneficiaryType,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});

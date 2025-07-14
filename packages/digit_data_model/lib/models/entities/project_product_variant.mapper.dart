@@ -197,6 +197,9 @@ class ProjectProductVariantModelMapper
   static const Field<ProjectProductVariantModel,
           ProjectProductVariantAdditionalFields> _f$additionalFields =
       Field('additionalFields', _$additionalFields, opt: true);
+  static String? _$name(ProjectProductVariantModel v) => v.name;
+  static const Field<ProjectProductVariantModel, String> _f$name =
+      Field('name', _$name, opt: true);
   static String _$productVariantId(ProjectProductVariantModel v) =>
       v.productVariantId;
   static const Field<ProjectProductVariantModel, String> _f$productVariantId =
@@ -236,6 +239,7 @@ class ProjectProductVariantModelMapper
   @override
   final MappableFields<ProjectProductVariantModel> fields = const {
     #additionalFields: _f$additionalFields,
+    #name: _f$name,
     #productVariantId: _f$productVariantId,
     #type: _f$type,
     #isBaseUnitVariant: _f$isBaseUnitVariant,
@@ -260,6 +264,7 @@ class ProjectProductVariantModelMapper
   static ProjectProductVariantModel _instantiate(DecodingData data) {
     return ProjectProductVariantModel(
         additionalFields: data.dec(_f$additionalFields),
+        name: data.dec(_f$name),
         productVariantId: data.dec(_f$productVariantId),
         type: data.dec(_f$type),
         isBaseUnitVariant: data.dec(_f$isBaseUnitVariant),
@@ -342,6 +347,7 @@ abstract class ProjectProductVariantModelCopyWith<
   @override
   $R call(
       {ProjectProductVariantAdditionalFields? additionalFields,
+      String? name,
       String? productVariantId,
       String? type,
       bool? isBaseUnitVariant,
@@ -382,6 +388,7 @@ class _ProjectProductVariantModelCopyWithImpl<$R, $Out>
   @override
   $R call(
           {Object? additionalFields = $none,
+          Object? name = $none,
           String? productVariantId,
           Object? type = $none,
           Object? isBaseUnitVariant = $none,
@@ -393,6 +400,7 @@ class _ProjectProductVariantModelCopyWithImpl<$R, $Out>
           Object? isDeleted = $none}) =>
       $apply(FieldCopyWithData({
         if (additionalFields != $none) #additionalFields: additionalFields,
+        if (name != $none) #name: name,
         if (productVariantId != null) #productVariantId: productVariantId,
         if (type != $none) #type: type,
         if (isBaseUnitVariant != $none) #isBaseUnitVariant: isBaseUnitVariant,
@@ -411,6 +419,7 @@ class _ProjectProductVariantModelCopyWithImpl<$R, $Out>
           ProjectProductVariantModel(
               additionalFields:
                   data.get(#additionalFields, or: $value.additionalFields),
+              name: data.get(#name, or: $value.name),
               productVariantId:
                   data.get(#productVariantId, or: $value.productVariantId),
               type: data.get(#type, or: $value.type),

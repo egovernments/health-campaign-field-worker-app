@@ -46,11 +46,17 @@ class AppConfiguration {
   @Name('BANDWIDTH_BATCH_SIZE')
   late List<BandwidthBatchSize>? bandwidthBatchSize;
 
+  @Name('BENEFICIARY_ID_CONFIG')
+  late List<BeneficiaryIdConfig>? beneficiaryIdConfig;
+
   @Name('DOWNSYNC-BANDWIDTH_BATCH_SIZE')
   late List<BandwidthBatchSize>? downSyncBandwidthBatchSize;
 
   @Name('ID_TYPE_OPTIONS_POPULATOR')
   late List<IdTypeOptions>? idTypeOptions;
+
+  @Name('HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
+  late List<RelationShipTypeOptions>? relationShipTypeOptions;
 
   @Name('DELIVERY_COMMENT_OPTIONS_POPULATOR')
   late List<DeliveryCommentOptions>? deliveryCommentOptions;
@@ -78,7 +84,11 @@ class AppConfiguration {
   @Name('SEARCH_CLF_FILTERS')
   late List<SearchCLFFilters>? searchCLFFilters;
 
+  @Name('TRANSIT_POST_TYPE')
+  late List<TransitPostType>? transitPostType;
+
   late List<ReferralReasons>? referralReasons;
+  late List<ManualAttendanceReasons>? manualAttendanceReasons;
   late List<HouseStructureTypes>? houseStructureTypes;
   late List<RefusalReasons>? refusalReasons;
   late PrivacyPolicy? privacyPolicyConfig;
@@ -109,6 +119,13 @@ class IdTypeOptions {
 }
 
 @embedded
+class RelationShipTypeOptions {
+  late String name;
+  late String code;
+  late bool active;
+}
+
+@embedded
 class DeliveryCommentOptions {
   late String name;
   late String code;
@@ -120,6 +137,14 @@ class BandwidthBatchSize {
   late double maxRange;
   @Name("MIN_RANGE")
   late double minRange;
+  @Name("BATCH_SIZE")
+  late int batchSize;
+}
+
+@embedded
+class BeneficiaryIdConfig {
+  @Name("MIN_COUNT")
+  late double minCount;
   @Name("BATCH_SIZE")
   late int batchSize;
 }
@@ -180,6 +205,13 @@ class SearchHouseHoldFilters {
 }
 
 @embedded
+class TransitPostType {
+  late String name;
+  late String code;
+  late bool active;
+}
+
+@embedded
 class SearchCLFFilters {
   late String name;
   late String code;
@@ -216,6 +248,12 @@ class SymptomsTypes {
 
 @embedded
 class ReferralReasons {
+  late String code;
+  late String name;
+  late bool active;
+}
+@embedded
+class ManualAttendanceReasons{
   late String code;
   late String name;
   late bool active;

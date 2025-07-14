@@ -2154,6 +2154,11 @@ class $AttendeeTable extends Attendee
   late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
       'additional_fields', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _tagMeta = const VerificationMeta('tag');
+  @override
+  late final GeneratedColumn<String> tag = GeneratedColumn<String>(
+      'tag', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -2174,7 +2179,8 @@ class $AttendeeTable extends Attendee
         denrollmentDate,
         isDeleted,
         rowVersion,
-        additionalFields
+        additionalFields,
+        tag
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2297,6 +2303,10 @@ class $AttendeeTable extends Attendee
           additionalFields.isAcceptableOrUnknown(
               data['additional_fields']!, _additionalFieldsMeta));
     }
+    if (data.containsKey('tag')) {
+      context.handle(
+          _tagMeta, tag.isAcceptableOrUnknown(data['tag']!, _tagMeta));
+    }
     return context;
   }
 
@@ -2344,6 +2354,8 @@ class $AttendeeTable extends Attendee
           .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
       additionalFields: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}additional_fields']),
+      tag: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tag']),
     );
   }
 
@@ -2373,6 +2385,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
   final bool? isDeleted;
   final int? rowVersion;
   final String? additionalFields;
+  final String? tag;
   const AttendeeData(
       {this.id,
       required this.tenantId,
@@ -2392,7 +2405,8 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       this.denrollmentDate,
       this.isDeleted,
       this.rowVersion,
-      this.additionalFields});
+      this.additionalFields,
+      this.tag});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -2447,6 +2461,9 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String>(additionalFields);
     }
+    if (!nullToAbsent || tag != null) {
+      map['tag'] = Variable<String>(tag);
+    }
     return map;
   }
 
@@ -2500,6 +2517,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       additionalFields: additionalFields == null && nullToAbsent
           ? const Value.absent()
           : Value(additionalFields),
+      tag: tag == null && nullToAbsent ? const Value.absent() : Value(tag),
     );
   }
 
@@ -2527,6 +2545,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+      tag: serializer.fromJson<String?>(json['tag']),
     );
   }
   @override
@@ -2552,6 +2571,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
       'additionalFields': serializer.toJson<String?>(additionalFields),
+      'tag': serializer.toJson<String?>(tag),
     };
   }
 
@@ -2574,7 +2594,8 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           Value<int?> denrollmentDate = const Value.absent(),
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
-          Value<String?> additionalFields = const Value.absent()}) =>
+          Value<String?> additionalFields = const Value.absent(),
+          Value<String?> tag = const Value.absent()}) =>
       AttendeeData(
         id: id.present ? id.value : this.id,
         tenantId: tenantId ?? this.tenantId,
@@ -2617,6 +2638,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
         additionalFields: additionalFields.present
             ? additionalFields.value
             : this.additionalFields,
+        tag: tag.present ? tag.value : this.tag,
       );
   @override
   String toString() {
@@ -2639,7 +2661,8 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           ..write('denrollmentDate: $denrollmentDate, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
-          ..write('additionalFields: $additionalFields')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('tag: $tag')
           ..write(')'))
         .toString();
   }
@@ -2664,7 +2687,8 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       denrollmentDate,
       isDeleted,
       rowVersion,
-      additionalFields);
+      additionalFields,
+      tag);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2687,7 +2711,8 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           other.denrollmentDate == this.denrollmentDate &&
           other.isDeleted == this.isDeleted &&
           other.rowVersion == this.rowVersion &&
-          other.additionalFields == this.additionalFields);
+          other.additionalFields == this.additionalFields &&
+          other.tag == this.tag);
 }
 
 class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
@@ -2710,6 +2735,7 @@ class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
   final Value<String?> additionalFields;
+  final Value<String?> tag;
   final Value<int> rowid;
   const AttendeeCompanion({
     this.id = const Value.absent(),
@@ -2731,6 +2757,7 @@ class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
+    this.tag = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   AttendeeCompanion.insert({
@@ -2753,6 +2780,7 @@ class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
+    this.tag = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : tenantId = Value(tenantId),
         registerId = Value(registerId),
@@ -2777,6 +2805,7 @@ class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
     Expression<String>? additionalFields,
+    Expression<String>? tag,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -2801,6 +2830,7 @@ class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowVersion != null) 'row_version': rowVersion,
       if (additionalFields != null) 'additional_fields': additionalFields,
+      if (tag != null) 'tag': tag,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -2825,6 +2855,7 @@ class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
       Value<String?>? additionalFields,
+      Value<String?>? tag,
       Value<int>? rowid}) {
     return AttendeeCompanion(
       id: id ?? this.id,
@@ -2846,6 +2877,7 @@ class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
       isDeleted: isDeleted ?? this.isDeleted,
       rowVersion: rowVersion ?? this.rowVersion,
       additionalFields: additionalFields ?? this.additionalFields,
+      tag: tag ?? this.tag,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -2910,6 +2942,9 @@ class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
     if (additionalFields.present) {
       map['additional_fields'] = Variable<String>(additionalFields.value);
     }
+    if (tag.present) {
+      map['tag'] = Variable<String>(tag.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -2938,6 +2973,7 @@ class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
           ..write('additionalFields: $additionalFields, ')
+          ..write('tag: $tag, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -12516,6 +12552,11 @@ class $ProjectProductVariantTable extends ProjectProductVariant
   late final GeneratedColumn<int> rowVersion = GeneratedColumn<int>(
       'row_version', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _additionalFieldsMeta =
       const VerificationMeta('additionalFields');
   @override
@@ -12539,6 +12580,7 @@ class $ProjectProductVariantTable extends ProjectProductVariant
         tenantId,
         isDeleted,
         rowVersion,
+        name,
         additionalFields
       ];
   @override
@@ -12638,6 +12680,10 @@ class $ProjectProductVariantTable extends ProjectProductVariant
           rowVersion.isAcceptableOrUnknown(
               data['row_version']!, _rowVersionMeta));
     }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    }
     if (data.containsKey('additional_fields')) {
       context.handle(
           _additionalFieldsMeta,
@@ -12684,6 +12730,8 @@ class $ProjectProductVariantTable extends ProjectProductVariant
           .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
       rowVersion: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name']),
       additionalFields: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}additional_fields']),
     );
@@ -12712,6 +12760,7 @@ class ProjectProductVariantData extends DataClass
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
+  final String? name;
   final String? additionalFields;
   const ProjectProductVariantData(
       {required this.productVariantId,
@@ -12729,6 +12778,7 @@ class ProjectProductVariantData extends DataClass
       this.tenantId,
       this.isDeleted,
       this.rowVersion,
+      this.name,
       this.additionalFields});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -12775,6 +12825,9 @@ class ProjectProductVariantData extends DataClass
     }
     if (!nullToAbsent || rowVersion != null) {
       map['row_version'] = Variable<int>(rowVersion);
+    }
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
     }
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String>(additionalFields);
@@ -12825,6 +12878,7 @@ class ProjectProductVariantData extends DataClass
       rowVersion: rowVersion == null && nullToAbsent
           ? const Value.absent()
           : Value(rowVersion),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
       additionalFields: additionalFields == null && nullToAbsent
           ? const Value.absent()
           : Value(additionalFields),
@@ -12851,6 +12905,7 @@ class ProjectProductVariantData extends DataClass
       tenantId: serializer.fromJson<String?>(json['tenantId']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      name: serializer.fromJson<String?>(json['name']),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
     );
   }
@@ -12873,6 +12928,7 @@ class ProjectProductVariantData extends DataClass
       'tenantId': serializer.toJson<String?>(tenantId),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
+      'name': serializer.toJson<String?>(name),
       'additionalFields': serializer.toJson<String?>(additionalFields),
     };
   }
@@ -12893,6 +12949,7 @@ class ProjectProductVariantData extends DataClass
           Value<String?> tenantId = const Value.absent(),
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
+          Value<String?> name = const Value.absent(),
           Value<String?> additionalFields = const Value.absent()}) =>
       ProjectProductVariantData(
         productVariantId: productVariantId ?? this.productVariantId,
@@ -12929,6 +12986,7 @@ class ProjectProductVariantData extends DataClass
         tenantId: tenantId.present ? tenantId.value : this.tenantId,
         isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
         rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
+        name: name.present ? name.value : this.name,
         additionalFields: additionalFields.present
             ? additionalFields.value
             : this.additionalFields,
@@ -12951,6 +13009,7 @@ class ProjectProductVariantData extends DataClass
           ..write('tenantId: $tenantId, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
+          ..write('name: $name, ')
           ..write('additionalFields: $additionalFields')
           ..write(')'))
         .toString();
@@ -12973,6 +13032,7 @@ class ProjectProductVariantData extends DataClass
       tenantId,
       isDeleted,
       rowVersion,
+      name,
       additionalFields);
   @override
   bool operator ==(Object other) =>
@@ -12993,6 +13053,7 @@ class ProjectProductVariantData extends DataClass
           other.tenantId == this.tenantId &&
           other.isDeleted == this.isDeleted &&
           other.rowVersion == this.rowVersion &&
+          other.name == this.name &&
           other.additionalFields == this.additionalFields);
 }
 
@@ -13013,6 +13074,7 @@ class ProjectProductVariantCompanion
   final Value<String?> tenantId;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
+  final Value<String?> name;
   final Value<String?> additionalFields;
   final Value<int> rowid;
   const ProjectProductVariantCompanion({
@@ -13031,6 +13093,7 @@ class ProjectProductVariantCompanion
     this.tenantId = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
+    this.name = const Value.absent(),
     this.additionalFields = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -13050,6 +13113,7 @@ class ProjectProductVariantCompanion
     this.tenantId = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
+    this.name = const Value.absent(),
     this.additionalFields = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : productVariantId = Value(productVariantId);
@@ -13069,6 +13133,7 @@ class ProjectProductVariantCompanion
     Expression<String>? tenantId,
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
+    Expression<String>? name,
     Expression<String>? additionalFields,
     Expression<int>? rowid,
   }) {
@@ -13090,6 +13155,7 @@ class ProjectProductVariantCompanion
       if (tenantId != null) 'tenant_id': tenantId,
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowVersion != null) 'row_version': rowVersion,
+      if (name != null) 'name': name,
       if (additionalFields != null) 'additional_fields': additionalFields,
       if (rowid != null) 'rowid': rowid,
     });
@@ -13111,6 +13177,7 @@ class ProjectProductVariantCompanion
       Value<String?>? tenantId,
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
+      Value<String?>? name,
       Value<String?>? additionalFields,
       Value<int>? rowid}) {
     return ProjectProductVariantCompanion(
@@ -13129,6 +13196,7 @@ class ProjectProductVariantCompanion
       tenantId: tenantId ?? this.tenantId,
       isDeleted: isDeleted ?? this.isDeleted,
       rowVersion: rowVersion ?? this.rowVersion,
+      name: name ?? this.name,
       additionalFields: additionalFields ?? this.additionalFields,
       rowid: rowid ?? this.rowid,
     );
@@ -13182,6 +13250,9 @@ class ProjectProductVariantCompanion
     if (rowVersion.present) {
       map['row_version'] = Variable<int>(rowVersion.value);
     }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
     if (additionalFields.present) {
       map['additional_fields'] = Variable<String>(additionalFields.value);
     }
@@ -13209,6 +13280,7 @@ class ProjectProductVariantCompanion
           ..write('tenantId: $tenantId, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
+          ..write('name: $name, ')
           ..write('additionalFields: $additionalFields, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -17226,6 +17298,19 @@ class $IdentifierTable extends Identifier
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _individualIdMeta =
+      const VerificationMeta('individualId');
+  @override
+  late final GeneratedColumn<String> individualId = GeneratedColumn<String>(
+      'individual_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _individualClientReferenceIdMeta =
+      const VerificationMeta('individualClientReferenceId');
+  @override
+  late final GeneratedColumn<String> individualClientReferenceId =
+      GeneratedColumn<String>(
+          'individual_client_reference_id', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _identifierTypeMeta =
       const VerificationMeta('identifierType');
   @override
@@ -17333,6 +17418,8 @@ class $IdentifierTable extends Identifier
   @override
   List<GeneratedColumn> get $columns => [
         id,
+        individualId,
+        individualClientReferenceId,
         identifierType,
         identifierId,
         auditCreatedBy,
@@ -17362,6 +17449,21 @@ class $IdentifierTable extends Identifier
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('individual_id')) {
+      context.handle(
+          _individualIdMeta,
+          individualId.isAcceptableOrUnknown(
+              data['individual_id']!, _individualIdMeta));
+    }
+    if (data.containsKey('individual_client_reference_id')) {
+      context.handle(
+          _individualClientReferenceIdMeta,
+          individualClientReferenceId.isAcceptableOrUnknown(
+              data['individual_client_reference_id']!,
+              _individualClientReferenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_individualClientReferenceIdMeta);
     }
     if (data.containsKey('identifier_type')) {
       context.handle(
@@ -17461,13 +17563,19 @@ class $IdentifierTable extends Identifier
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {auditCreatedBy, clientReferenceId};
+  Set<GeneratedColumn> get $primaryKey =>
+      {individualClientReferenceId, identifierType};
   @override
   IdentifierData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return IdentifierData(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      individualId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}individual_id']),
+      individualClientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}individual_client_reference_id'])!,
       identifierType: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}identifier_type']),
       identifierId: attachedDatabase.typeMapping
@@ -17511,6 +17619,8 @@ class $IdentifierTable extends Identifier
 
 class IdentifierData extends DataClass implements Insertable<IdentifierData> {
   final String? id;
+  final String? individualId;
+  final String individualClientReferenceId;
   final String? identifierType;
   final String? identifierId;
   final String? auditCreatedBy;
@@ -17529,6 +17639,8 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
   final String? additionalFields;
   const IdentifierData(
       {this.id,
+      this.individualId,
+      required this.individualClientReferenceId,
       this.identifierType,
       this.identifierId,
       this.auditCreatedBy,
@@ -17551,6 +17663,11 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
     if (!nullToAbsent || id != null) {
       map['id'] = Variable<String>(id);
     }
+    if (!nullToAbsent || individualId != null) {
+      map['individual_id'] = Variable<String>(individualId);
+    }
+    map['individual_client_reference_id'] =
+        Variable<String>(individualClientReferenceId);
     if (!nullToAbsent || identifierType != null) {
       map['identifier_type'] = Variable<String>(identifierType);
     }
@@ -17603,6 +17720,10 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
   IdentifierCompanion toCompanion(bool nullToAbsent) {
     return IdentifierCompanion(
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      individualId: individualId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(individualId),
+      individualClientReferenceId: Value(individualClientReferenceId),
       identifierType: identifierType == null && nullToAbsent
           ? const Value.absent()
           : Value(identifierType),
@@ -17657,6 +17778,9 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return IdentifierData(
       id: serializer.fromJson<String?>(json['id']),
+      individualId: serializer.fromJson<String?>(json['individualId']),
+      individualClientReferenceId:
+          serializer.fromJson<String>(json['individualClientReferenceId']),
       identifierType: serializer.fromJson<String?>(json['identifierType']),
       identifierId: serializer.fromJson<String?>(json['identifierId']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
@@ -17681,6 +17805,9 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String?>(id),
+      'individualId': serializer.toJson<String?>(individualId),
+      'individualClientReferenceId':
+          serializer.toJson<String>(individualClientReferenceId),
       'identifierType': serializer.toJson<String?>(identifierType),
       'identifierId': serializer.toJson<String?>(identifierId),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
@@ -17702,6 +17829,8 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
 
   IdentifierData copyWith(
           {Value<String?> id = const Value.absent(),
+          Value<String?> individualId = const Value.absent(),
+          String? individualClientReferenceId,
           Value<String?> identifierType = const Value.absent(),
           Value<String?> identifierId = const Value.absent(),
           Value<String?> auditCreatedBy = const Value.absent(),
@@ -17720,6 +17849,10 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
           Value<String?> additionalFields = const Value.absent()}) =>
       IdentifierData(
         id: id.present ? id.value : this.id,
+        individualId:
+            individualId.present ? individualId.value : this.individualId,
+        individualClientReferenceId:
+            individualClientReferenceId ?? this.individualClientReferenceId,
         identifierType:
             identifierType.present ? identifierType.value : this.identifierType,
         identifierId:
@@ -17762,6 +17895,8 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
   String toString() {
     return (StringBuffer('IdentifierData(')
           ..write('id: $id, ')
+          ..write('individualId: $individualId, ')
+          ..write('individualClientReferenceId: $individualClientReferenceId, ')
           ..write('identifierType: $identifierType, ')
           ..write('identifierId: $identifierId, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
@@ -17785,6 +17920,8 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
   @override
   int get hashCode => Object.hash(
       id,
+      individualId,
+      individualClientReferenceId,
       identifierType,
       identifierId,
       auditCreatedBy,
@@ -17806,6 +17943,9 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
       identical(this, other) ||
       (other is IdentifierData &&
           other.id == this.id &&
+          other.individualId == this.individualId &&
+          other.individualClientReferenceId ==
+              this.individualClientReferenceId &&
           other.identifierType == this.identifierType &&
           other.identifierId == this.identifierId &&
           other.auditCreatedBy == this.auditCreatedBy &&
@@ -17826,6 +17966,8 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
 
 class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
   final Value<String?> id;
+  final Value<String?> individualId;
+  final Value<String> individualClientReferenceId;
   final Value<String?> identifierType;
   final Value<String?> identifierId;
   final Value<String?> auditCreatedBy;
@@ -17845,6 +17987,8 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
   final Value<int> rowid;
   const IdentifierCompanion({
     this.id = const Value.absent(),
+    this.individualId = const Value.absent(),
+    this.individualClientReferenceId = const Value.absent(),
     this.identifierType = const Value.absent(),
     this.identifierId = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
@@ -17865,6 +18009,8 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
   });
   IdentifierCompanion.insert({
     this.id = const Value.absent(),
+    this.individualId = const Value.absent(),
+    required String individualClientReferenceId,
     this.identifierType = const Value.absent(),
     this.identifierId = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
@@ -17882,9 +18028,12 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
     this.rowid = const Value.absent(),
-  }) : clientReferenceId = Value(clientReferenceId);
+  })  : individualClientReferenceId = Value(individualClientReferenceId),
+        clientReferenceId = Value(clientReferenceId);
   static Insertable<IdentifierData> custom({
     Expression<String>? id,
+    Expression<String>? individualId,
+    Expression<String>? individualClientReferenceId,
     Expression<String>? identifierType,
     Expression<String>? identifierId,
     Expression<String>? auditCreatedBy,
@@ -17905,6 +18054,9 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (individualId != null) 'individual_id': individualId,
+      if (individualClientReferenceId != null)
+        'individual_client_reference_id': individualClientReferenceId,
       if (identifierType != null) 'identifier_type': identifierType,
       if (identifierId != null) 'identifier_id': identifierId,
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
@@ -17929,6 +18081,8 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
 
   IdentifierCompanion copyWith(
       {Value<String?>? id,
+      Value<String?>? individualId,
+      Value<String>? individualClientReferenceId,
       Value<String?>? identifierType,
       Value<String?>? identifierId,
       Value<String?>? auditCreatedBy,
@@ -17948,6 +18102,9 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
       Value<int>? rowid}) {
     return IdentifierCompanion(
       id: id ?? this.id,
+      individualId: individualId ?? this.individualId,
+      individualClientReferenceId:
+          individualClientReferenceId ?? this.individualClientReferenceId,
       identifierType: identifierType ?? this.identifierType,
       identifierId: identifierId ?? this.identifierId,
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
@@ -17973,6 +18130,13 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<String>(id.value);
+    }
+    if (individualId.present) {
+      map['individual_id'] = Variable<String>(individualId.value);
+    }
+    if (individualClientReferenceId.present) {
+      map['individual_client_reference_id'] =
+          Variable<String>(individualClientReferenceId.value);
     }
     if (identifierType.present) {
       map['identifier_type'] = Variable<String>(identifierType.value);
@@ -18032,6 +18196,8 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
   String toString() {
     return (StringBuffer('IdentifierCompanion(')
           ..write('id: $id, ')
+          ..write('individualId: $individualId, ')
+          ..write('individualClientReferenceId: $individualClientReferenceId, ')
           ..write('identifierType: $identifierType, ')
           ..write('identifierId: $identifierId, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
@@ -20658,12 +20824,9 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
   static const VerificationMeta _beneficiaryTypeMeta =
       const VerificationMeta('beneficiaryType');
   @override
-  late final GeneratedColumnWithTypeConverter<BeneficiaryType?, int>
-      beneficiaryType = GeneratedColumn<int>(
-              'beneficiary_type', aliasedName, true,
-              type: DriftSqlType.int, requiredDuringInsert: false)
-          .withConverter<BeneficiaryType?>(
-              $TargetTable.$converterbeneficiaryTypen);
+  late final GeneratedColumn<String> beneficiaryType = GeneratedColumn<String>(
+      'beneficiary_type', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _additionalFieldsMeta =
       const VerificationMeta('additionalFields');
   @override
@@ -20788,7 +20951,12 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
           rowVersion.isAcceptableOrUnknown(
               data['row_version']!, _rowVersionMeta));
     }
-    context.handle(_beneficiaryTypeMeta, const VerificationResult.success());
+    if (data.containsKey('beneficiary_type')) {
+      context.handle(
+          _beneficiaryTypeMeta,
+          beneficiaryType.isAcceptableOrUnknown(
+              data['beneficiary_type']!, _beneficiaryTypeMeta));
+    }
     if (data.containsKey('additional_fields')) {
       context.handle(
           _additionalFieldsMeta,
@@ -20836,9 +21004,8 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
           .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
       rowVersion: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
-      beneficiaryType: $TargetTable.$converterbeneficiaryTypen.fromSql(
-          attachedDatabase.typeMapping.read(
-              DriftSqlType.int, data['${effectivePrefix}beneficiary_type'])),
+      beneficiaryType: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}beneficiary_type']),
       additionalFields: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}additional_fields']),
     );
@@ -20848,13 +21015,6 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
   $TargetTable createAlias(String alias) {
     return $TargetTable(attachedDatabase, alias);
   }
-
-  static JsonTypeConverter2<BeneficiaryType, int, int>
-      $converterbeneficiaryType =
-      const EnumIndexConverter<BeneficiaryType>(BeneficiaryType.values);
-  static JsonTypeConverter2<BeneficiaryType?, int?, int?>
-      $converterbeneficiaryTypen =
-      JsonTypeConverter2.asNullable($converterbeneficiaryType);
 }
 
 class TargetData extends DataClass implements Insertable<TargetData> {
@@ -20874,7 +21034,7 @@ class TargetData extends DataClass implements Insertable<TargetData> {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  final BeneficiaryType? beneficiaryType;
+  final String? beneficiaryType;
   final String? additionalFields;
   const TargetData(
       {required this.id,
@@ -20945,8 +21105,7 @@ class TargetData extends DataClass implements Insertable<TargetData> {
       map['row_version'] = Variable<int>(rowVersion);
     }
     if (!nullToAbsent || beneficiaryType != null) {
-      map['beneficiary_type'] = Variable<int>(
-          $TargetTable.$converterbeneficiaryTypen.toSql(beneficiaryType));
+      map['beneficiary_type'] = Variable<String>(beneficiaryType);
     }
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String>(additionalFields);
@@ -21033,8 +21192,7 @@ class TargetData extends DataClass implements Insertable<TargetData> {
       tenantId: serializer.fromJson<String?>(json['tenantId']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
-      beneficiaryType: $TargetTable.$converterbeneficiaryTypen
-          .fromJson(serializer.fromJson<int?>(json['beneficiaryType'])),
+      beneficiaryType: serializer.fromJson<String?>(json['beneficiaryType']),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
     );
   }
@@ -21058,8 +21216,7 @@ class TargetData extends DataClass implements Insertable<TargetData> {
       'tenantId': serializer.toJson<String?>(tenantId),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
-      'beneficiaryType': serializer.toJson<int?>(
-          $TargetTable.$converterbeneficiaryTypen.toJson(beneficiaryType)),
+      'beneficiaryType': serializer.toJson<String?>(beneficiaryType),
       'additionalFields': serializer.toJson<String?>(additionalFields),
     };
   }
@@ -21081,7 +21238,7 @@ class TargetData extends DataClass implements Insertable<TargetData> {
           Value<String?> tenantId = const Value.absent(),
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
-          Value<BeneficiaryType?> beneficiaryType = const Value.absent(),
+          Value<String?> beneficiaryType = const Value.absent(),
           Value<String?> additionalFields = const Value.absent()}) =>
       TargetData(
         id: id ?? this.id,
@@ -21212,7 +21369,7 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
   final Value<String?> tenantId;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
-  final Value<BeneficiaryType?> beneficiaryType;
+  final Value<String?> beneficiaryType;
   final Value<String?> additionalFields;
   final Value<int> rowid;
   const TargetCompanion({
@@ -21274,7 +21431,7 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
     Expression<String>? tenantId,
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
-    Expression<int>? beneficiaryType,
+    Expression<String>? beneficiaryType,
     Expression<String>? additionalFields,
     Expression<int>? rowid,
   }) {
@@ -21320,7 +21477,7 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
       Value<String?>? tenantId,
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
-      Value<BeneficiaryType?>? beneficiaryType,
+      Value<String?>? beneficiaryType,
       Value<String?>? additionalFields,
       Value<int>? rowid}) {
     return TargetCompanion(
@@ -21398,8 +21555,7 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
       map['row_version'] = Variable<int>(rowVersion.value);
     }
     if (beneficiaryType.present) {
-      map['beneficiary_type'] = Variable<int>(
-          $TargetTable.$converterbeneficiaryTypen.toSql(beneficiaryType.value));
+      map['beneficiary_type'] = Variable<String>(beneficiaryType.value);
     }
     if (additionalFields.present) {
       map['additional_fields'] = Variable<String>(additionalFields.value);
@@ -21459,12 +21615,12 @@ class $ServiceTable extends Service with TableInfo<$ServiceTable, ServiceData> {
   late final GeneratedColumn<String> serviceDefId = GeneratedColumn<String>(
       'service_def_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _relatedClientReferenceIdMeta =
-      const VerificationMeta('relatedClientReferenceId');
+  static const VerificationMeta _referenceIdMeta =
+      const VerificationMeta('referenceId');
   @override
-  late final GeneratedColumn<String> relatedClientReferenceId =
-      GeneratedColumn<String>('related_client_reference_id', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
+  late final GeneratedColumn<String> referenceId = GeneratedColumn<String>(
+      'reference_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _isActiveMeta =
       const VerificationMeta('isActive');
   @override
@@ -21583,7 +21739,7 @@ class $ServiceTable extends Service with TableInfo<$ServiceTable, ServiceData> {
         id,
         clientId,
         serviceDefId,
-        relatedClientReferenceId,
+        referenceId,
         isActive,
         accountId,
         additionalDetails,
@@ -21627,12 +21783,11 @@ class $ServiceTable extends Service with TableInfo<$ServiceTable, ServiceData> {
           serviceDefId.isAcceptableOrUnknown(
               data['service_def_id']!, _serviceDefIdMeta));
     }
-    if (data.containsKey('related_client_reference_id')) {
+    if (data.containsKey('reference_id')) {
       context.handle(
-          _relatedClientReferenceIdMeta,
-          relatedClientReferenceId.isAcceptableOrUnknown(
-              data['related_client_reference_id']!,
-              _relatedClientReferenceIdMeta));
+          _referenceIdMeta,
+          referenceId.isAcceptableOrUnknown(
+              data['reference_id']!, _referenceIdMeta));
     }
     if (data.containsKey('is_active')) {
       context.handle(_isActiveMeta,
@@ -21741,9 +21896,8 @@ class $ServiceTable extends Service with TableInfo<$ServiceTable, ServiceData> {
           .read(DriftSqlType.string, data['${effectivePrefix}client_id'])!,
       serviceDefId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}service_def_id']),
-      relatedClientReferenceId: attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}related_client_reference_id']),
+      referenceId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}reference_id']),
       isActive: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_active']),
       accountId: attachedDatabase.typeMapping
@@ -21791,7 +21945,7 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
   final String? id;
   final String clientId;
   final String? serviceDefId;
-  final String? relatedClientReferenceId;
+  final String? referenceId;
   final bool? isActive;
   final String? accountId;
   final String? additionalDetails;
@@ -21813,7 +21967,7 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
       {this.id,
       required this.clientId,
       this.serviceDefId,
-      this.relatedClientReferenceId,
+      this.referenceId,
       this.isActive,
       this.accountId,
       this.additionalDetails,
@@ -21841,9 +21995,8 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
     if (!nullToAbsent || serviceDefId != null) {
       map['service_def_id'] = Variable<String>(serviceDefId);
     }
-    if (!nullToAbsent || relatedClientReferenceId != null) {
-      map['related_client_reference_id'] =
-          Variable<String>(relatedClientReferenceId);
+    if (!nullToAbsent || referenceId != null) {
+      map['reference_id'] = Variable<String>(referenceId);
     }
     if (!nullToAbsent || isActive != null) {
       map['is_active'] = Variable<bool>(isActive);
@@ -21906,9 +22059,9 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
       serviceDefId: serviceDefId == null && nullToAbsent
           ? const Value.absent()
           : Value(serviceDefId),
-      relatedClientReferenceId: relatedClientReferenceId == null && nullToAbsent
+      referenceId: referenceId == null && nullToAbsent
           ? const Value.absent()
-          : Value(relatedClientReferenceId),
+          : Value(referenceId),
       isActive: isActive == null && nullToAbsent
           ? const Value.absent()
           : Value(isActive),
@@ -21970,8 +22123,7 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
       id: serializer.fromJson<String?>(json['id']),
       clientId: serializer.fromJson<String>(json['clientId']),
       serviceDefId: serializer.fromJson<String?>(json['serviceDefId']),
-      relatedClientReferenceId:
-          serializer.fromJson<String?>(json['relatedClientReferenceId']),
+      referenceId: serializer.fromJson<String?>(json['referenceId']),
       isActive: serializer.fromJson<bool?>(json['isActive']),
       accountId: serializer.fromJson<String?>(json['accountId']),
       additionalDetails:
@@ -22000,8 +22152,7 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
       'id': serializer.toJson<String?>(id),
       'clientId': serializer.toJson<String>(clientId),
       'serviceDefId': serializer.toJson<String?>(serviceDefId),
-      'relatedClientReferenceId':
-          serializer.toJson<String?>(relatedClientReferenceId),
+      'referenceId': serializer.toJson<String?>(referenceId),
       'isActive': serializer.toJson<bool?>(isActive),
       'accountId': serializer.toJson<String?>(accountId),
       'additionalDetails': serializer.toJson<String?>(additionalDetails),
@@ -22026,7 +22177,7 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
           {Value<String?> id = const Value.absent(),
           String? clientId,
           Value<String?> serviceDefId = const Value.absent(),
-          Value<String?> relatedClientReferenceId = const Value.absent(),
+          Value<String?> referenceId = const Value.absent(),
           Value<bool?> isActive = const Value.absent(),
           Value<String?> accountId = const Value.absent(),
           Value<String?> additionalDetails = const Value.absent(),
@@ -22049,9 +22200,7 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
         clientId: clientId ?? this.clientId,
         serviceDefId:
             serviceDefId.present ? serviceDefId.value : this.serviceDefId,
-        relatedClientReferenceId: relatedClientReferenceId.present
-            ? relatedClientReferenceId.value
-            : this.relatedClientReferenceId,
+        referenceId: referenceId.present ? referenceId.value : this.referenceId,
         isActive: isActive.present ? isActive.value : this.isActive,
         accountId: accountId.present ? accountId.value : this.accountId,
         additionalDetails: additionalDetails.present
@@ -22097,7 +22246,7 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
           ..write('id: $id, ')
           ..write('clientId: $clientId, ')
           ..write('serviceDefId: $serviceDefId, ')
-          ..write('relatedClientReferenceId: $relatedClientReferenceId, ')
+          ..write('referenceId: $referenceId, ')
           ..write('isActive: $isActive, ')
           ..write('accountId: $accountId, ')
           ..write('additionalDetails: $additionalDetails, ')
@@ -22124,7 +22273,7 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
         id,
         clientId,
         serviceDefId,
-        relatedClientReferenceId,
+        referenceId,
         isActive,
         accountId,
         additionalDetails,
@@ -22150,7 +22299,7 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
           other.id == this.id &&
           other.clientId == this.clientId &&
           other.serviceDefId == this.serviceDefId &&
-          other.relatedClientReferenceId == this.relatedClientReferenceId &&
+          other.referenceId == this.referenceId &&
           other.isActive == this.isActive &&
           other.accountId == this.accountId &&
           other.additionalDetails == this.additionalDetails &&
@@ -22174,7 +22323,7 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
   final Value<String?> id;
   final Value<String> clientId;
   final Value<String?> serviceDefId;
-  final Value<String?> relatedClientReferenceId;
+  final Value<String?> referenceId;
   final Value<bool?> isActive;
   final Value<String?> accountId;
   final Value<String?> additionalDetails;
@@ -22197,7 +22346,7 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
     this.id = const Value.absent(),
     this.clientId = const Value.absent(),
     this.serviceDefId = const Value.absent(),
-    this.relatedClientReferenceId = const Value.absent(),
+    this.referenceId = const Value.absent(),
     this.isActive = const Value.absent(),
     this.accountId = const Value.absent(),
     this.additionalDetails = const Value.absent(),
@@ -22221,7 +22370,7 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
     this.id = const Value.absent(),
     required String clientId,
     this.serviceDefId = const Value.absent(),
-    this.relatedClientReferenceId = const Value.absent(),
+    this.referenceId = const Value.absent(),
     this.isActive = const Value.absent(),
     this.accountId = const Value.absent(),
     this.additionalDetails = const Value.absent(),
@@ -22245,7 +22394,7 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
     Expression<String>? id,
     Expression<String>? clientId,
     Expression<String>? serviceDefId,
-    Expression<String>? relatedClientReferenceId,
+    Expression<String>? referenceId,
     Expression<bool>? isActive,
     Expression<String>? accountId,
     Expression<String>? additionalDetails,
@@ -22269,8 +22418,7 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
       if (id != null) 'id': id,
       if (clientId != null) 'client_id': clientId,
       if (serviceDefId != null) 'service_def_id': serviceDefId,
-      if (relatedClientReferenceId != null)
-        'related_client_reference_id': relatedClientReferenceId,
+      if (referenceId != null) 'reference_id': referenceId,
       if (isActive != null) 'is_active': isActive,
       if (accountId != null) 'account_id': accountId,
       if (additionalDetails != null) 'additional_details': additionalDetails,
@@ -22298,7 +22446,7 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
       {Value<String?>? id,
       Value<String>? clientId,
       Value<String?>? serviceDefId,
-      Value<String?>? relatedClientReferenceId,
+      Value<String?>? referenceId,
       Value<bool?>? isActive,
       Value<String?>? accountId,
       Value<String?>? additionalDetails,
@@ -22321,8 +22469,7 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
       id: id ?? this.id,
       clientId: clientId ?? this.clientId,
       serviceDefId: serviceDefId ?? this.serviceDefId,
-      relatedClientReferenceId:
-          relatedClientReferenceId ?? this.relatedClientReferenceId,
+      referenceId: referenceId ?? this.referenceId,
       isActive: isActive ?? this.isActive,
       accountId: accountId ?? this.accountId,
       additionalDetails: additionalDetails ?? this.additionalDetails,
@@ -22356,9 +22503,8 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
     if (serviceDefId.present) {
       map['service_def_id'] = Variable<String>(serviceDefId.value);
     }
-    if (relatedClientReferenceId.present) {
-      map['related_client_reference_id'] =
-          Variable<String>(relatedClientReferenceId.value);
+    if (referenceId.present) {
+      map['reference_id'] = Variable<String>(referenceId.value);
     }
     if (isActive.present) {
       map['is_active'] = Variable<bool>(isActive.value);
@@ -22423,7 +22569,7 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
           ..write('id: $id, ')
           ..write('clientId: $clientId, ')
           ..write('serviceDefId: $serviceDefId, ')
-          ..write('relatedClientReferenceId: $relatedClientReferenceId, ')
+          ..write('referenceId: $referenceId, ')
           ..write('isActive: $isActive, ')
           ..write('accountId: $accountId, ')
           ..write('additionalDetails: $additionalDetails, ')
@@ -22453,6 +22599,11 @@ class $ServiceAttributesTable extends ServiceAttributes
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $ServiceAttributesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _attributeCodeMeta =
       const VerificationMeta('attributeCode');
   @override
@@ -22544,8 +22695,14 @@ class $ServiceAttributesTable extends ServiceAttributes
       const VerificationMeta('clientReferenceId');
   @override
   late final GeneratedColumn<String> clientReferenceId =
-      GeneratedColumn<String>('client_reference_id', aliasedName, false,
-          type: DriftSqlType.string, requiredDuringInsert: true);
+      GeneratedColumn<String>('client_reference_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _serviceClientReferenceIdMeta =
+      const VerificationMeta('serviceClientReferenceId');
+  @override
+  late final GeneratedColumn<String> serviceClientReferenceId =
+      GeneratedColumn<String>('service_client_reference_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _tenantIdMeta =
       const VerificationMeta('tenantId');
   @override
@@ -22576,6 +22733,7 @@ class $ServiceAttributesTable extends ServiceAttributes
       type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
+        id,
         attributeCode,
         value,
         dataType,
@@ -22591,6 +22749,7 @@ class $ServiceAttributesTable extends ServiceAttributes
         auditModifiedBy,
         auditModifiedTime,
         clientReferenceId,
+        serviceClientReferenceId,
         tenantId,
         isDeleted,
         rowVersion,
@@ -22606,6 +22765,9 @@ class $ServiceAttributesTable extends ServiceAttributes
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
     if (data.containsKey('attribute_code')) {
       context.handle(
           _attributeCodeMeta,
@@ -22691,8 +22853,13 @@ class $ServiceAttributesTable extends ServiceAttributes
           _clientReferenceIdMeta,
           clientReferenceId.isAcceptableOrUnknown(
               data['client_reference_id']!, _clientReferenceIdMeta));
-    } else if (isInserting) {
-      context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('service_client_reference_id')) {
+      context.handle(
+          _serviceClientReferenceIdMeta,
+          serviceClientReferenceId.isAcceptableOrUnknown(
+              data['service_client_reference_id']!,
+              _serviceClientReferenceIdMeta));
     }
     if (data.containsKey('tenant_id')) {
       context.handle(_tenantIdMeta,
@@ -22718,11 +22885,13 @@ class $ServiceAttributesTable extends ServiceAttributes
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {auditCreatedBy, clientReferenceId};
+  Set<GeneratedColumn> get $primaryKey => const {};
   @override
   ServiceAttribute map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ServiceAttribute(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
       attributeCode: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}attribute_code']),
       value: attachedDatabase.typeMapping
@@ -22752,7 +22921,10 @@ class $ServiceAttributesTable extends ServiceAttributes
       auditModifiedTime: attachedDatabase.typeMapping.read(
           DriftSqlType.int, data['${effectivePrefix}audit_modified_time']),
       clientReferenceId: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}client_reference_id'])!,
+          DriftSqlType.string, data['${effectivePrefix}client_reference_id']),
+      serviceClientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}service_client_reference_id']),
       tenantId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}tenant_id']),
       isDeleted: attachedDatabase.typeMapping
@@ -22772,6 +22944,7 @@ class $ServiceAttributesTable extends ServiceAttributes
 
 class ServiceAttribute extends DataClass
     implements Insertable<ServiceAttribute> {
+  final String? id;
   final String? attributeCode;
   final String? value;
   final String? dataType;
@@ -22786,13 +22959,15 @@ class ServiceAttribute extends DataClass
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
-  final String clientReferenceId;
+  final String? clientReferenceId;
+  final String? serviceClientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
   final String? additionalFields;
   const ServiceAttribute(
-      {this.attributeCode,
+      {this.id,
+      this.attributeCode,
       this.value,
       this.dataType,
       this.referenceId,
@@ -22806,7 +22981,8 @@ class ServiceAttribute extends DataClass
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
-      required this.clientReferenceId,
+      this.clientReferenceId,
+      this.serviceClientReferenceId,
       this.tenantId,
       this.isDeleted,
       this.rowVersion,
@@ -22814,6 +22990,9 @@ class ServiceAttribute extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String>(id);
+    }
     if (!nullToAbsent || attributeCode != null) {
       map['attribute_code'] = Variable<String>(attributeCode);
     }
@@ -22856,7 +23035,13 @@ class ServiceAttribute extends DataClass
     if (!nullToAbsent || auditModifiedTime != null) {
       map['audit_modified_time'] = Variable<int>(auditModifiedTime);
     }
-    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    if (!nullToAbsent || clientReferenceId != null) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId);
+    }
+    if (!nullToAbsent || serviceClientReferenceId != null) {
+      map['service_client_reference_id'] =
+          Variable<String>(serviceClientReferenceId);
+    }
     if (!nullToAbsent || tenantId != null) {
       map['tenant_id'] = Variable<String>(tenantId);
     }
@@ -22874,6 +23059,7 @@ class ServiceAttribute extends DataClass
 
   ServiceAttributesCompanion toCompanion(bool nullToAbsent) {
     return ServiceAttributesCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       attributeCode: attributeCode == null && nullToAbsent
           ? const Value.absent()
           : Value(attributeCode),
@@ -22915,7 +23101,12 @@ class ServiceAttribute extends DataClass
       auditModifiedTime: auditModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(auditModifiedTime),
-      clientReferenceId: Value(clientReferenceId),
+      clientReferenceId: clientReferenceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientReferenceId),
+      serviceClientReferenceId: serviceClientReferenceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serviceClientReferenceId),
       tenantId: tenantId == null && nullToAbsent
           ? const Value.absent()
           : Value(tenantId),
@@ -22935,6 +23126,7 @@ class ServiceAttribute extends DataClass
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ServiceAttribute(
+      id: serializer.fromJson<String?>(json['id']),
       attributeCode: serializer.fromJson<String?>(json['attributeCode']),
       value: serializer.fromJson<String?>(json['value']),
       dataType: serializer.fromJson<String?>(json['dataType']),
@@ -22951,7 +23143,10 @@ class ServiceAttribute extends DataClass
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
-      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      clientReferenceId:
+          serializer.fromJson<String?>(json['clientReferenceId']),
+      serviceClientReferenceId:
+          serializer.fromJson<String?>(json['serviceClientReferenceId']),
       tenantId: serializer.fromJson<String?>(json['tenantId']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
@@ -22962,6 +23157,7 @@ class ServiceAttribute extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'id': serializer.toJson<String?>(id),
       'attributeCode': serializer.toJson<String?>(attributeCode),
       'value': serializer.toJson<String?>(value),
       'dataType': serializer.toJson<String?>(dataType),
@@ -22976,7 +23172,9 @@ class ServiceAttribute extends DataClass
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
-      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'clientReferenceId': serializer.toJson<String?>(clientReferenceId),
+      'serviceClientReferenceId':
+          serializer.toJson<String?>(serviceClientReferenceId),
       'tenantId': serializer.toJson<String?>(tenantId),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
@@ -22985,7 +23183,8 @@ class ServiceAttribute extends DataClass
   }
 
   ServiceAttribute copyWith(
-          {Value<String?> attributeCode = const Value.absent(),
+          {Value<String?> id = const Value.absent(),
+          Value<String?> attributeCode = const Value.absent(),
           Value<String?> value = const Value.absent(),
           Value<String?> dataType = const Value.absent(),
           Value<String?> referenceId = const Value.absent(),
@@ -22999,12 +23198,14 @@ class ServiceAttribute extends DataClass
           Value<int?> clientModifiedTime = const Value.absent(),
           Value<String?> auditModifiedBy = const Value.absent(),
           Value<int?> auditModifiedTime = const Value.absent(),
-          String? clientReferenceId,
+          Value<String?> clientReferenceId = const Value.absent(),
+          Value<String?> serviceClientReferenceId = const Value.absent(),
           Value<String?> tenantId = const Value.absent(),
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
           Value<String?> additionalFields = const Value.absent()}) =>
       ServiceAttribute(
+        id: id.present ? id.value : this.id,
         attributeCode:
             attributeCode.present ? attributeCode.value : this.attributeCode,
         value: value.present ? value.value : this.value,
@@ -23039,7 +23240,12 @@ class ServiceAttribute extends DataClass
         auditModifiedTime: auditModifiedTime.present
             ? auditModifiedTime.value
             : this.auditModifiedTime,
-        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        clientReferenceId: clientReferenceId.present
+            ? clientReferenceId.value
+            : this.clientReferenceId,
+        serviceClientReferenceId: serviceClientReferenceId.present
+            ? serviceClientReferenceId.value
+            : this.serviceClientReferenceId,
         tenantId: tenantId.present ? tenantId.value : this.tenantId,
         isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
         rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
@@ -23050,6 +23256,7 @@ class ServiceAttribute extends DataClass
   @override
   String toString() {
     return (StringBuffer('ServiceAttribute(')
+          ..write('id: $id, ')
           ..write('attributeCode: $attributeCode, ')
           ..write('value: $value, ')
           ..write('dataType: $dataType, ')
@@ -23065,6 +23272,7 @@ class ServiceAttribute extends DataClass
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
           ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('serviceClientReferenceId: $serviceClientReferenceId, ')
           ..write('tenantId: $tenantId, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
@@ -23074,30 +23282,34 @@ class ServiceAttribute extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(
-      attributeCode,
-      value,
-      dataType,
-      referenceId,
-      additionalDetails,
-      auditCreatedBy,
-      nonRecoverableError,
-      auditCreatedTime,
-      clientCreatedTime,
-      clientModifiedBy,
-      clientCreatedBy,
-      clientModifiedTime,
-      auditModifiedBy,
-      auditModifiedTime,
-      clientReferenceId,
-      tenantId,
-      isDeleted,
-      rowVersion,
-      additionalFields);
+  int get hashCode => Object.hashAll([
+        id,
+        attributeCode,
+        value,
+        dataType,
+        referenceId,
+        additionalDetails,
+        auditCreatedBy,
+        nonRecoverableError,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        clientReferenceId,
+        serviceClientReferenceId,
+        tenantId,
+        isDeleted,
+        rowVersion,
+        additionalFields
+      ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ServiceAttribute &&
+          other.id == this.id &&
           other.attributeCode == this.attributeCode &&
           other.value == this.value &&
           other.dataType == this.dataType &&
@@ -23113,6 +23325,7 @@ class ServiceAttribute extends DataClass
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
           other.clientReferenceId == this.clientReferenceId &&
+          other.serviceClientReferenceId == this.serviceClientReferenceId &&
           other.tenantId == this.tenantId &&
           other.isDeleted == this.isDeleted &&
           other.rowVersion == this.rowVersion &&
@@ -23120,6 +23333,7 @@ class ServiceAttribute extends DataClass
 }
 
 class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
+  final Value<String?> id;
   final Value<String?> attributeCode;
   final Value<String?> value;
   final Value<String?> dataType;
@@ -23134,13 +23348,15 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
-  final Value<String> clientReferenceId;
+  final Value<String?> clientReferenceId;
+  final Value<String?> serviceClientReferenceId;
   final Value<String?> tenantId;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
   final Value<String?> additionalFields;
   final Value<int> rowid;
   const ServiceAttributesCompanion({
+    this.id = const Value.absent(),
     this.attributeCode = const Value.absent(),
     this.value = const Value.absent(),
     this.dataType = const Value.absent(),
@@ -23156,6 +23372,7 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
     this.clientReferenceId = const Value.absent(),
+    this.serviceClientReferenceId = const Value.absent(),
     this.tenantId = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
@@ -23163,6 +23380,7 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
     this.rowid = const Value.absent(),
   });
   ServiceAttributesCompanion.insert({
+    this.id = const Value.absent(),
     this.attributeCode = const Value.absent(),
     this.value = const Value.absent(),
     this.dataType = const Value.absent(),
@@ -23177,14 +23395,16 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
-    required String clientReferenceId,
+    this.clientReferenceId = const Value.absent(),
+    this.serviceClientReferenceId = const Value.absent(),
     this.tenantId = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
     this.rowid = const Value.absent(),
-  }) : clientReferenceId = Value(clientReferenceId);
+  });
   static Insertable<ServiceAttribute> custom({
+    Expression<String>? id,
     Expression<String>? attributeCode,
     Expression<String>? value,
     Expression<String>? dataType,
@@ -23200,6 +23420,7 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
     Expression<String>? auditModifiedBy,
     Expression<int>? auditModifiedTime,
     Expression<String>? clientReferenceId,
+    Expression<String>? serviceClientReferenceId,
     Expression<String>? tenantId,
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
@@ -23207,6 +23428,7 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (id != null) 'id': id,
       if (attributeCode != null) 'attribute_code': attributeCode,
       if (value != null) 'value': value,
       if (dataType != null) 'data_type': dataType,
@@ -23224,6 +23446,8 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
       if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
       if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (serviceClientReferenceId != null)
+        'service_client_reference_id': serviceClientReferenceId,
       if (tenantId != null) 'tenant_id': tenantId,
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowVersion != null) 'row_version': rowVersion,
@@ -23233,7 +23457,8 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
   }
 
   ServiceAttributesCompanion copyWith(
-      {Value<String?>? attributeCode,
+      {Value<String?>? id,
+      Value<String?>? attributeCode,
       Value<String?>? value,
       Value<String?>? dataType,
       Value<String?>? referenceId,
@@ -23247,13 +23472,15 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
-      Value<String>? clientReferenceId,
+      Value<String?>? clientReferenceId,
+      Value<String?>? serviceClientReferenceId,
       Value<String?>? tenantId,
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
       Value<String?>? additionalFields,
       Value<int>? rowid}) {
     return ServiceAttributesCompanion(
+      id: id ?? this.id,
       attributeCode: attributeCode ?? this.attributeCode,
       value: value ?? this.value,
       dataType: dataType ?? this.dataType,
@@ -23269,6 +23496,8 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
       clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      serviceClientReferenceId:
+          serviceClientReferenceId ?? this.serviceClientReferenceId,
       tenantId: tenantId ?? this.tenantId,
       isDeleted: isDeleted ?? this.isDeleted,
       rowVersion: rowVersion ?? this.rowVersion,
@@ -23280,6 +23509,9 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
     if (attributeCode.present) {
       map['attribute_code'] = Variable<String>(attributeCode.value);
     }
@@ -23325,6 +23557,10 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
     if (clientReferenceId.present) {
       map['client_reference_id'] = Variable<String>(clientReferenceId.value);
     }
+    if (serviceClientReferenceId.present) {
+      map['service_client_reference_id'] =
+          Variable<String>(serviceClientReferenceId.value);
+    }
     if (tenantId.present) {
       map['tenant_id'] = Variable<String>(tenantId.value);
     }
@@ -23346,6 +23582,7 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
   @override
   String toString() {
     return (StringBuffer('ServiceAttributesCompanion(')
+          ..write('id: $id, ')
           ..write('attributeCode: $attributeCode, ')
           ..write('value: $value, ')
           ..write('dataType: $dataType, ')
@@ -23361,6 +23598,7 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
           ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('serviceClientReferenceId: $serviceClientReferenceId, ')
           ..write('tenantId: $tenantId, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
@@ -25406,18 +25644,18 @@ class $AttributesTable extends Attributes
   late final GeneratedColumn<int> rowVersion = GeneratedColumn<int>(
       'row_version', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _additionalFieldsMeta =
-      const VerificationMeta('additionalFields');
-  @override
-  late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
-      'additional_fields', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _additionalDetailsMeta =
       const VerificationMeta('additionalDetails');
   @override
   late final GeneratedColumn<String> additionalDetails =
       GeneratedColumn<String>('additional_details', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
+      'additional_fields', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -25441,8 +25679,8 @@ class $AttributesTable extends Attributes
         auditModifiedTime,
         isDeleted,
         rowVersion,
-        additionalFields,
-        additionalDetails
+        additionalDetails,
+        additionalFields
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -25559,17 +25797,17 @@ class $AttributesTable extends Attributes
           rowVersion.isAcceptableOrUnknown(
               data['row_version']!, _rowVersionMeta));
     }
-    if (data.containsKey('additional_fields')) {
-      context.handle(
-          _additionalFieldsMeta,
-          additionalFields.isAcceptableOrUnknown(
-              data['additional_fields']!, _additionalFieldsMeta));
-    }
     if (data.containsKey('additional_details')) {
       context.handle(
           _additionalDetailsMeta,
           additionalDetails.isAcceptableOrUnknown(
               data['additional_details']!, _additionalDetailsMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
     }
     return context;
   }
@@ -25622,10 +25860,10 @@ class $AttributesTable extends Attributes
           .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
       rowVersion: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
-      additionalFields: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}additional_fields']),
       additionalDetails: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}additional_details']),
+      additionalFields: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}additional_fields']),
     );
   }
 
@@ -25657,8 +25895,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
   final int? auditModifiedTime;
   final bool? isDeleted;
   final int? rowVersion;
-  final String? additionalFields;
   final String? additionalDetails;
+  final String? additionalFields;
   const Attribute(
       {this.id,
       this.dataType,
@@ -25681,8 +25919,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       this.auditModifiedTime,
       this.isDeleted,
       this.rowVersion,
-      this.additionalFields,
-      this.additionalDetails});
+      this.additionalDetails,
+      this.additionalFields});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -25749,11 +25987,11 @@ class Attribute extends DataClass implements Insertable<Attribute> {
     if (!nullToAbsent || rowVersion != null) {
       map['row_version'] = Variable<int>(rowVersion);
     }
-    if (!nullToAbsent || additionalFields != null) {
-      map['additional_fields'] = Variable<String>(additionalFields);
-    }
     if (!nullToAbsent || additionalDetails != null) {
       map['additional_details'] = Variable<String>(additionalDetails);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String>(additionalFields);
     }
     return map;
   }
@@ -25816,12 +26054,12 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       rowVersion: rowVersion == null && nullToAbsent
           ? const Value.absent()
           : Value(rowVersion),
-      additionalFields: additionalFields == null && nullToAbsent
-          ? const Value.absent()
-          : Value(additionalFields),
       additionalDetails: additionalDetails == null && nullToAbsent
           ? const Value.absent()
           : Value(additionalDetails),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
     );
   }
 
@@ -25851,9 +26089,9 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
-      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
       additionalDetails:
           serializer.fromJson<String?>(json['additionalDetails']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
     );
   }
   @override
@@ -25881,8 +26119,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
-      'additionalFields': serializer.toJson<String?>(additionalFields),
       'additionalDetails': serializer.toJson<String?>(additionalDetails),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
     };
   }
 
@@ -25908,8 +26146,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
           Value<int?> auditModifiedTime = const Value.absent(),
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
-          Value<String?> additionalFields = const Value.absent(),
-          Value<String?> additionalDetails = const Value.absent()}) =>
+          Value<String?> additionalDetails = const Value.absent(),
+          Value<String?> additionalFields = const Value.absent()}) =>
       Attribute(
         id: id.present ? id.value : this.id,
         dataType: dataType.present ? dataType.value : this.dataType,
@@ -25949,12 +26187,12 @@ class Attribute extends DataClass implements Insertable<Attribute> {
             : this.auditModifiedTime,
         isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
         rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
-        additionalFields: additionalFields.present
-            ? additionalFields.value
-            : this.additionalFields,
         additionalDetails: additionalDetails.present
             ? additionalDetails.value
             : this.additionalDetails,
+        additionalFields: additionalFields.present
+            ? additionalFields.value
+            : this.additionalFields,
       );
   @override
   String toString() {
@@ -25980,8 +26218,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
           ..write('auditModifiedTime: $auditModifiedTime, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
-          ..write('additionalFields: $additionalFields, ')
-          ..write('additionalDetails: $additionalDetails')
+          ..write('additionalDetails: $additionalDetails, ')
+          ..write('additionalFields: $additionalFields')
           ..write(')'))
         .toString();
   }
@@ -26009,8 +26247,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
         auditModifiedTime,
         isDeleted,
         rowVersion,
-        additionalFields,
-        additionalDetails
+        additionalDetails,
+        additionalFields
       ]);
   @override
   bool operator ==(Object other) =>
@@ -26037,8 +26275,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
           other.auditModifiedTime == this.auditModifiedTime &&
           other.isDeleted == this.isDeleted &&
           other.rowVersion == this.rowVersion &&
-          other.additionalFields == this.additionalFields &&
-          other.additionalDetails == this.additionalDetails);
+          other.additionalDetails == this.additionalDetails &&
+          other.additionalFields == this.additionalFields);
 }
 
 class AttributesCompanion extends UpdateCompanion<Attribute> {
@@ -26063,8 +26301,8 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
   final Value<int?> auditModifiedTime;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
-  final Value<String?> additionalFields;
   final Value<String?> additionalDetails;
+  final Value<String?> additionalFields;
   final Value<int> rowid;
   const AttributesCompanion({
     this.id = const Value.absent(),
@@ -26088,8 +26326,8 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
     this.auditModifiedTime = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
-    this.additionalFields = const Value.absent(),
     this.additionalDetails = const Value.absent(),
+    this.additionalFields = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   AttributesCompanion.insert({
@@ -26114,8 +26352,8 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
     this.auditModifiedTime = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
-    this.additionalFields = const Value.absent(),
     this.additionalDetails = const Value.absent(),
+    this.additionalFields = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   static Insertable<Attribute> custom({
@@ -26140,8 +26378,8 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
     Expression<int>? auditModifiedTime,
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
-    Expression<String>? additionalFields,
     Expression<String>? additionalDetails,
+    Expression<String>? additionalFields,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -26168,8 +26406,8 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
       if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowVersion != null) 'row_version': rowVersion,
-      if (additionalFields != null) 'additional_fields': additionalFields,
       if (additionalDetails != null) 'additional_details': additionalDetails,
+      if (additionalFields != null) 'additional_fields': additionalFields,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -26196,8 +26434,8 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
       Value<int?>? auditModifiedTime,
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
-      Value<String?>? additionalFields,
       Value<String?>? additionalDetails,
+      Value<String?>? additionalFields,
       Value<int>? rowid}) {
     return AttributesCompanion(
       id: id ?? this.id,
@@ -26221,8 +26459,8 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
       isDeleted: isDeleted ?? this.isDeleted,
       rowVersion: rowVersion ?? this.rowVersion,
-      additionalFields: additionalFields ?? this.additionalFields,
       additionalDetails: additionalDetails ?? this.additionalDetails,
+      additionalFields: additionalFields ?? this.additionalFields,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -26293,11 +26531,11 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
     if (rowVersion.present) {
       map['row_version'] = Variable<int>(rowVersion.value);
     }
-    if (additionalFields.present) {
-      map['additional_fields'] = Variable<String>(additionalFields.value);
-    }
     if (additionalDetails.present) {
       map['additional_details'] = Variable<String>(additionalDetails.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String>(additionalFields.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -26329,8 +26567,8 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
           ..write('auditModifiedTime: $auditModifiedTime, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
-          ..write('additionalFields: $additionalFields, ')
           ..write('additionalDetails: $additionalDetails, ')
+          ..write('additionalFields: $additionalFields, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -34872,6 +35110,989 @@ class HouseholdMemberCompanion extends UpdateCompanion<HouseholdMemberData> {
   }
 }
 
+class $HouseholdMemberRelationShipTable extends HouseholdMemberRelationShip
+    with
+        TableInfo<$HouseholdMemberRelationShipTable,
+            HouseholdMemberRelationShipData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $HouseholdMemberRelationShipTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _selfIdMeta = const VerificationMeta('selfId');
+  @override
+  late final GeneratedColumn<String> selfId = GeneratedColumn<String>(
+      'self_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _selfClientReferenceIdMeta =
+      const VerificationMeta('selfClientReferenceId');
+  @override
+  late final GeneratedColumn<String> selfClientReferenceId =
+      GeneratedColumn<String>('self_client_reference_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _relativeIdMeta =
+      const VerificationMeta('relativeId');
+  @override
+  late final GeneratedColumn<String> relativeId = GeneratedColumn<String>(
+      'relative_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _relativeClientReferenceIdMeta =
+      const VerificationMeta('relativeClientReferenceId');
+  @override
+  late final GeneratedColumn<String> relativeClientReferenceId =
+      GeneratedColumn<String>('relative_client_reference_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _relationshipTypeMeta =
+      const VerificationMeta('relationshipType');
+  @override
+  late final GeneratedColumn<String> relationshipType = GeneratedColumn<String>(
+      'relationship_type', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientReferenceIdMeta =
+      const VerificationMeta('clientReferenceId');
+  @override
+  late final GeneratedColumn<String> clientReferenceId =
+      GeneratedColumn<String>('client_reference_id', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _tenantIdMeta =
+      const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+      'tenant_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditCreatedByMeta =
+      const VerificationMeta('auditCreatedBy');
+  @override
+  late final GeneratedColumn<String> auditCreatedBy = GeneratedColumn<String>(
+      'audit_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _nonRecoverableErrorMeta =
+      const VerificationMeta('nonRecoverableError');
+  @override
+  late final GeneratedColumn<bool> nonRecoverableError = GeneratedColumn<bool>(
+      'non_recoverable_error', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("non_recoverable_error" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _auditCreatedTimeMeta =
+      const VerificationMeta('auditCreatedTime');
+  @override
+  late final GeneratedColumn<int> auditCreatedTime = GeneratedColumn<int>(
+      'audit_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedTimeMeta =
+      const VerificationMeta('clientCreatedTime');
+  @override
+  late final GeneratedColumn<int> clientCreatedTime = GeneratedColumn<int>(
+      'client_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String> clientModifiedBy = GeneratedColumn<String>(
+      'client_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String> clientCreatedBy = GeneratedColumn<String>(
+      'client_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedTimeMeta =
+      const VerificationMeta('clientModifiedTime');
+  @override
+  late final GeneratedColumn<int> clientModifiedTime = GeneratedColumn<int>(
+      'client_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedByMeta =
+      const VerificationMeta('auditModifiedBy');
+  @override
+  late final GeneratedColumn<String> auditModifiedBy = GeneratedColumn<String>(
+      'audit_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedTimeMeta =
+      const VerificationMeta('auditModifiedTime');
+  @override
+  late final GeneratedColumn<int> auditModifiedTime = GeneratedColumn<int>(
+      'audit_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _isDeletedMeta =
+      const VerificationMeta('isDeleted');
+  @override
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+      'is_deleted', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _rowVersionMeta =
+      const VerificationMeta('rowVersion');
+  @override
+  late final GeneratedColumn<int> rowVersion = GeneratedColumn<int>(
+      'row_version', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
+      'additional_fields', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        selfId,
+        selfClientReferenceId,
+        relativeId,
+        relativeClientReferenceId,
+        relationshipType,
+        clientReferenceId,
+        tenantId,
+        auditCreatedBy,
+        nonRecoverableError,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        isDeleted,
+        rowVersion,
+        additionalFields
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'household_member_relation_ship';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<HouseholdMemberRelationShipData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('self_id')) {
+      context.handle(_selfIdMeta,
+          selfId.isAcceptableOrUnknown(data['self_id']!, _selfIdMeta));
+    }
+    if (data.containsKey('self_client_reference_id')) {
+      context.handle(
+          _selfClientReferenceIdMeta,
+          selfClientReferenceId.isAcceptableOrUnknown(
+              data['self_client_reference_id']!, _selfClientReferenceIdMeta));
+    }
+    if (data.containsKey('relative_id')) {
+      context.handle(
+          _relativeIdMeta,
+          relativeId.isAcceptableOrUnknown(
+              data['relative_id']!, _relativeIdMeta));
+    }
+    if (data.containsKey('relative_client_reference_id')) {
+      context.handle(
+          _relativeClientReferenceIdMeta,
+          relativeClientReferenceId.isAcceptableOrUnknown(
+              data['relative_client_reference_id']!,
+              _relativeClientReferenceIdMeta));
+    }
+    if (data.containsKey('relationship_type')) {
+      context.handle(
+          _relationshipTypeMeta,
+          relationshipType.isAcceptableOrUnknown(
+              data['relationship_type']!, _relationshipTypeMeta));
+    }
+    if (data.containsKey('client_reference_id')) {
+      context.handle(
+          _clientReferenceIdMeta,
+          clientReferenceId.isAcceptableOrUnknown(
+              data['client_reference_id']!, _clientReferenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    }
+    if (data.containsKey('audit_created_by')) {
+      context.handle(
+          _auditCreatedByMeta,
+          auditCreatedBy.isAcceptableOrUnknown(
+              data['audit_created_by']!, _auditCreatedByMeta));
+    }
+    if (data.containsKey('non_recoverable_error')) {
+      context.handle(
+          _nonRecoverableErrorMeta,
+          nonRecoverableError.isAcceptableOrUnknown(
+              data['non_recoverable_error']!, _nonRecoverableErrorMeta));
+    }
+    if (data.containsKey('audit_created_time')) {
+      context.handle(
+          _auditCreatedTimeMeta,
+          auditCreatedTime.isAcceptableOrUnknown(
+              data['audit_created_time']!, _auditCreatedTimeMeta));
+    }
+    if (data.containsKey('client_created_time')) {
+      context.handle(
+          _clientCreatedTimeMeta,
+          clientCreatedTime.isAcceptableOrUnknown(
+              data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
+    if (data.containsKey('client_modified_time')) {
+      context.handle(
+          _clientModifiedTimeMeta,
+          clientModifiedTime.isAcceptableOrUnknown(
+              data['client_modified_time']!, _clientModifiedTimeMeta));
+    }
+    if (data.containsKey('audit_modified_by')) {
+      context.handle(
+          _auditModifiedByMeta,
+          auditModifiedBy.isAcceptableOrUnknown(
+              data['audit_modified_by']!, _auditModifiedByMeta));
+    }
+    if (data.containsKey('audit_modified_time')) {
+      context.handle(
+          _auditModifiedTimeMeta,
+          auditModifiedTime.isAcceptableOrUnknown(
+              data['audit_modified_time']!, _auditModifiedTimeMeta));
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
+    if (data.containsKey('row_version')) {
+      context.handle(
+          _rowVersionMeta,
+          rowVersion.isAcceptableOrUnknown(
+              data['row_version']!, _rowVersionMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id, clientReferenceId};
+  @override
+  HouseholdMemberRelationShipData map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return HouseholdMemberRelationShipData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      selfId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}self_id']),
+      selfClientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}self_client_reference_id']),
+      relativeId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}relative_id']),
+      relativeClientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}relative_client_reference_id']),
+      relationshipType: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}relationship_type']),
+      clientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_reference_id'])!,
+      tenantId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tenant_id']),
+      auditCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_created_by']),
+      nonRecoverableError: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}non_recoverable_error']),
+      auditCreatedTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}audit_created_time']),
+      clientCreatedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_created_by']),
+      clientModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_modified_time']),
+      auditModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_modified_by']),
+      auditModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}audit_modified_time']),
+      isDeleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
+      rowVersion: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
+      additionalFields: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}additional_fields']),
+    );
+  }
+
+  @override
+  $HouseholdMemberRelationShipTable createAlias(String alias) {
+    return $HouseholdMemberRelationShipTable(attachedDatabase, alias);
+  }
+}
+
+class HouseholdMemberRelationShipData extends DataClass
+    implements Insertable<HouseholdMemberRelationShipData> {
+  final String? id;
+  final String? selfId;
+  final String? selfClientReferenceId;
+  final String? relativeId;
+  final String? relativeClientReferenceId;
+  final String? relationshipType;
+  final String clientReferenceId;
+  final String? tenantId;
+  final String? auditCreatedBy;
+  final bool? nonRecoverableError;
+  final int? auditCreatedTime;
+  final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
+  final int? clientModifiedTime;
+  final String? auditModifiedBy;
+  final int? auditModifiedTime;
+  final bool? isDeleted;
+  final int? rowVersion;
+  final String? additionalFields;
+  const HouseholdMemberRelationShipData(
+      {this.id,
+      this.selfId,
+      this.selfClientReferenceId,
+      this.relativeId,
+      this.relativeClientReferenceId,
+      this.relationshipType,
+      required this.clientReferenceId,
+      this.tenantId,
+      this.auditCreatedBy,
+      this.nonRecoverableError,
+      this.auditCreatedTime,
+      this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
+      this.clientModifiedTime,
+      this.auditModifiedBy,
+      this.auditModifiedTime,
+      this.isDeleted,
+      this.rowVersion,
+      this.additionalFields});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String>(id);
+    }
+    if (!nullToAbsent || selfId != null) {
+      map['self_id'] = Variable<String>(selfId);
+    }
+    if (!nullToAbsent || selfClientReferenceId != null) {
+      map['self_client_reference_id'] = Variable<String>(selfClientReferenceId);
+    }
+    if (!nullToAbsent || relativeId != null) {
+      map['relative_id'] = Variable<String>(relativeId);
+    }
+    if (!nullToAbsent || relativeClientReferenceId != null) {
+      map['relative_client_reference_id'] =
+          Variable<String>(relativeClientReferenceId);
+    }
+    if (!nullToAbsent || relationshipType != null) {
+      map['relationship_type'] = Variable<String>(relationshipType);
+    }
+    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    if (!nullToAbsent || tenantId != null) {
+      map['tenant_id'] = Variable<String>(tenantId);
+    }
+    if (!nullToAbsent || auditCreatedBy != null) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy);
+    }
+    if (!nullToAbsent || nonRecoverableError != null) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError);
+    }
+    if (!nullToAbsent || auditCreatedTime != null) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime);
+    }
+    if (!nullToAbsent || clientCreatedTime != null) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy);
+    }
+    if (!nullToAbsent || clientModifiedTime != null) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime);
+    }
+    if (!nullToAbsent || auditModifiedBy != null) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy);
+    }
+    if (!nullToAbsent || auditModifiedTime != null) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime);
+    }
+    if (!nullToAbsent || isDeleted != null) {
+      map['is_deleted'] = Variable<bool>(isDeleted);
+    }
+    if (!nullToAbsent || rowVersion != null) {
+      map['row_version'] = Variable<int>(rowVersion);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String>(additionalFields);
+    }
+    return map;
+  }
+
+  HouseholdMemberRelationShipCompanion toCompanion(bool nullToAbsent) {
+    return HouseholdMemberRelationShipCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      selfId:
+          selfId == null && nullToAbsent ? const Value.absent() : Value(selfId),
+      selfClientReferenceId: selfClientReferenceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(selfClientReferenceId),
+      relativeId: relativeId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(relativeId),
+      relativeClientReferenceId:
+          relativeClientReferenceId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(relativeClientReferenceId),
+      relationshipType: relationshipType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(relationshipType),
+      clientReferenceId: Value(clientReferenceId),
+      tenantId: tenantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tenantId),
+      auditCreatedBy: auditCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedBy),
+      nonRecoverableError: nonRecoverableError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nonRecoverableError),
+      auditCreatedTime: auditCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedTime),
+      clientCreatedTime: clientCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
+      clientModifiedTime: clientModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedTime),
+      auditModifiedBy: auditModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedBy),
+      auditModifiedTime: auditModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedTime),
+      isDeleted: isDeleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDeleted),
+      rowVersion: rowVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rowVersion),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
+    );
+  }
+
+  factory HouseholdMemberRelationShipData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return HouseholdMemberRelationShipData(
+      id: serializer.fromJson<String?>(json['id']),
+      selfId: serializer.fromJson<String?>(json['selfId']),
+      selfClientReferenceId:
+          serializer.fromJson<String?>(json['selfClientReferenceId']),
+      relativeId: serializer.fromJson<String?>(json['relativeId']),
+      relativeClientReferenceId:
+          serializer.fromJson<String?>(json['relativeClientReferenceId']),
+      relationshipType: serializer.fromJson<String?>(json['relationshipType']),
+      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      tenantId: serializer.fromJson<String?>(json['tenantId']),
+      auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
+      nonRecoverableError:
+          serializer.fromJson<bool?>(json['nonRecoverableError']),
+      auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
+      clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
+      clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
+      auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
+      auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
+      isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
+      rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String?>(id),
+      'selfId': serializer.toJson<String?>(selfId),
+      'selfClientReferenceId':
+          serializer.toJson<String?>(selfClientReferenceId),
+      'relativeId': serializer.toJson<String?>(relativeId),
+      'relativeClientReferenceId':
+          serializer.toJson<String?>(relativeClientReferenceId),
+      'relationshipType': serializer.toJson<String?>(relationshipType),
+      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'tenantId': serializer.toJson<String?>(tenantId),
+      'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
+      'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
+      'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
+      'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
+      'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
+      'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
+      'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
+      'isDeleted': serializer.toJson<bool?>(isDeleted),
+      'rowVersion': serializer.toJson<int?>(rowVersion),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
+    };
+  }
+
+  HouseholdMemberRelationShipData copyWith(
+          {Value<String?> id = const Value.absent(),
+          Value<String?> selfId = const Value.absent(),
+          Value<String?> selfClientReferenceId = const Value.absent(),
+          Value<String?> relativeId = const Value.absent(),
+          Value<String?> relativeClientReferenceId = const Value.absent(),
+          Value<String?> relationshipType = const Value.absent(),
+          String? clientReferenceId,
+          Value<String?> tenantId = const Value.absent(),
+          Value<String?> auditCreatedBy = const Value.absent(),
+          Value<bool?> nonRecoverableError = const Value.absent(),
+          Value<int?> auditCreatedTime = const Value.absent(),
+          Value<int?> clientCreatedTime = const Value.absent(),
+          Value<String?> clientModifiedBy = const Value.absent(),
+          Value<String?> clientCreatedBy = const Value.absent(),
+          Value<int?> clientModifiedTime = const Value.absent(),
+          Value<String?> auditModifiedBy = const Value.absent(),
+          Value<int?> auditModifiedTime = const Value.absent(),
+          Value<bool?> isDeleted = const Value.absent(),
+          Value<int?> rowVersion = const Value.absent(),
+          Value<String?> additionalFields = const Value.absent()}) =>
+      HouseholdMemberRelationShipData(
+        id: id.present ? id.value : this.id,
+        selfId: selfId.present ? selfId.value : this.selfId,
+        selfClientReferenceId: selfClientReferenceId.present
+            ? selfClientReferenceId.value
+            : this.selfClientReferenceId,
+        relativeId: relativeId.present ? relativeId.value : this.relativeId,
+        relativeClientReferenceId: relativeClientReferenceId.present
+            ? relativeClientReferenceId.value
+            : this.relativeClientReferenceId,
+        relationshipType: relationshipType.present
+            ? relationshipType.value
+            : this.relationshipType,
+        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        tenantId: tenantId.present ? tenantId.value : this.tenantId,
+        auditCreatedBy:
+            auditCreatedBy.present ? auditCreatedBy.value : this.auditCreatedBy,
+        nonRecoverableError: nonRecoverableError.present
+            ? nonRecoverableError.value
+            : this.nonRecoverableError,
+        auditCreatedTime: auditCreatedTime.present
+            ? auditCreatedTime.value
+            : this.auditCreatedTime,
+        clientCreatedTime: clientCreatedTime.present
+            ? clientCreatedTime.value
+            : this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy.present
+            ? clientModifiedBy.value
+            : this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy.present
+            ? clientCreatedBy.value
+            : this.clientCreatedBy,
+        clientModifiedTime: clientModifiedTime.present
+            ? clientModifiedTime.value
+            : this.clientModifiedTime,
+        auditModifiedBy: auditModifiedBy.present
+            ? auditModifiedBy.value
+            : this.auditModifiedBy,
+        auditModifiedTime: auditModifiedTime.present
+            ? auditModifiedTime.value
+            : this.auditModifiedTime,
+        isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
+        rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
+        additionalFields: additionalFields.present
+            ? additionalFields.value
+            : this.additionalFields,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('HouseholdMemberRelationShipData(')
+          ..write('id: $id, ')
+          ..write('selfId: $selfId, ')
+          ..write('selfClientReferenceId: $selfClientReferenceId, ')
+          ..write('relativeId: $relativeId, ')
+          ..write('relativeClientReferenceId: $relativeClientReferenceId, ')
+          ..write('relationshipType: $relationshipType, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      selfId,
+      selfClientReferenceId,
+      relativeId,
+      relativeClientReferenceId,
+      relationshipType,
+      clientReferenceId,
+      tenantId,
+      auditCreatedBy,
+      nonRecoverableError,
+      auditCreatedTime,
+      clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
+      clientModifiedTime,
+      auditModifiedBy,
+      auditModifiedTime,
+      isDeleted,
+      rowVersion,
+      additionalFields);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is HouseholdMemberRelationShipData &&
+          other.id == this.id &&
+          other.selfId == this.selfId &&
+          other.selfClientReferenceId == this.selfClientReferenceId &&
+          other.relativeId == this.relativeId &&
+          other.relativeClientReferenceId == this.relativeClientReferenceId &&
+          other.relationshipType == this.relationshipType &&
+          other.clientReferenceId == this.clientReferenceId &&
+          other.tenantId == this.tenantId &&
+          other.auditCreatedBy == this.auditCreatedBy &&
+          other.nonRecoverableError == this.nonRecoverableError &&
+          other.auditCreatedTime == this.auditCreatedTime &&
+          other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
+          other.clientModifiedTime == this.clientModifiedTime &&
+          other.auditModifiedBy == this.auditModifiedBy &&
+          other.auditModifiedTime == this.auditModifiedTime &&
+          other.isDeleted == this.isDeleted &&
+          other.rowVersion == this.rowVersion &&
+          other.additionalFields == this.additionalFields);
+}
+
+class HouseholdMemberRelationShipCompanion
+    extends UpdateCompanion<HouseholdMemberRelationShipData> {
+  final Value<String?> id;
+  final Value<String?> selfId;
+  final Value<String?> selfClientReferenceId;
+  final Value<String?> relativeId;
+  final Value<String?> relativeClientReferenceId;
+  final Value<String?> relationshipType;
+  final Value<String> clientReferenceId;
+  final Value<String?> tenantId;
+  final Value<String?> auditCreatedBy;
+  final Value<bool?> nonRecoverableError;
+  final Value<int?> auditCreatedTime;
+  final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
+  final Value<int?> clientModifiedTime;
+  final Value<String?> auditModifiedBy;
+  final Value<int?> auditModifiedTime;
+  final Value<bool?> isDeleted;
+  final Value<int?> rowVersion;
+  final Value<String?> additionalFields;
+  final Value<int> rowid;
+  const HouseholdMemberRelationShipCompanion({
+    this.id = const Value.absent(),
+    this.selfId = const Value.absent(),
+    this.selfClientReferenceId = const Value.absent(),
+    this.relativeId = const Value.absent(),
+    this.relativeClientReferenceId = const Value.absent(),
+    this.relationshipType = const Value.absent(),
+    this.clientReferenceId = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  HouseholdMemberRelationShipCompanion.insert({
+    this.id = const Value.absent(),
+    this.selfId = const Value.absent(),
+    this.selfClientReferenceId = const Value.absent(),
+    this.relativeId = const Value.absent(),
+    this.relativeClientReferenceId = const Value.absent(),
+    this.relationshipType = const Value.absent(),
+    required String clientReferenceId,
+    this.tenantId = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : clientReferenceId = Value(clientReferenceId);
+  static Insertable<HouseholdMemberRelationShipData> custom({
+    Expression<String>? id,
+    Expression<String>? selfId,
+    Expression<String>? selfClientReferenceId,
+    Expression<String>? relativeId,
+    Expression<String>? relativeClientReferenceId,
+    Expression<String>? relationshipType,
+    Expression<String>? clientReferenceId,
+    Expression<String>? tenantId,
+    Expression<String>? auditCreatedBy,
+    Expression<bool>? nonRecoverableError,
+    Expression<int>? auditCreatedTime,
+    Expression<int>? clientCreatedTime,
+    Expression<String>? clientModifiedBy,
+    Expression<String>? clientCreatedBy,
+    Expression<int>? clientModifiedTime,
+    Expression<String>? auditModifiedBy,
+    Expression<int>? auditModifiedTime,
+    Expression<bool>? isDeleted,
+    Expression<int>? rowVersion,
+    Expression<String>? additionalFields,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (selfId != null) 'self_id': selfId,
+      if (selfClientReferenceId != null)
+        'self_client_reference_id': selfClientReferenceId,
+      if (relativeId != null) 'relative_id': relativeId,
+      if (relativeClientReferenceId != null)
+        'relative_client_reference_id': relativeClientReferenceId,
+      if (relationshipType != null) 'relationship_type': relationshipType,
+      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
+      if (nonRecoverableError != null)
+        'non_recoverable_error': nonRecoverableError,
+      if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
+      if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
+      if (clientModifiedTime != null)
+        'client_modified_time': clientModifiedTime,
+      if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
+      if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (rowVersion != null) 'row_version': rowVersion,
+      if (additionalFields != null) 'additional_fields': additionalFields,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  HouseholdMemberRelationShipCompanion copyWith(
+      {Value<String?>? id,
+      Value<String?>? selfId,
+      Value<String?>? selfClientReferenceId,
+      Value<String?>? relativeId,
+      Value<String?>? relativeClientReferenceId,
+      Value<String?>? relationshipType,
+      Value<String>? clientReferenceId,
+      Value<String?>? tenantId,
+      Value<String?>? auditCreatedBy,
+      Value<bool?>? nonRecoverableError,
+      Value<int?>? auditCreatedTime,
+      Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
+      Value<int?>? clientModifiedTime,
+      Value<String?>? auditModifiedBy,
+      Value<int?>? auditModifiedTime,
+      Value<bool?>? isDeleted,
+      Value<int?>? rowVersion,
+      Value<String?>? additionalFields,
+      Value<int>? rowid}) {
+    return HouseholdMemberRelationShipCompanion(
+      id: id ?? this.id,
+      selfId: selfId ?? this.selfId,
+      selfClientReferenceId:
+          selfClientReferenceId ?? this.selfClientReferenceId,
+      relativeId: relativeId ?? this.relativeId,
+      relativeClientReferenceId:
+          relativeClientReferenceId ?? this.relativeClientReferenceId,
+      relationshipType: relationshipType ?? this.relationshipType,
+      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      tenantId: tenantId ?? this.tenantId,
+      auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+      nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
+      auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+      clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
+      clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
+      auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+      auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+      isDeleted: isDeleted ?? this.isDeleted,
+      rowVersion: rowVersion ?? this.rowVersion,
+      additionalFields: additionalFields ?? this.additionalFields,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (selfId.present) {
+      map['self_id'] = Variable<String>(selfId.value);
+    }
+    if (selfClientReferenceId.present) {
+      map['self_client_reference_id'] =
+          Variable<String>(selfClientReferenceId.value);
+    }
+    if (relativeId.present) {
+      map['relative_id'] = Variable<String>(relativeId.value);
+    }
+    if (relativeClientReferenceId.present) {
+      map['relative_client_reference_id'] =
+          Variable<String>(relativeClientReferenceId.value);
+    }
+    if (relationshipType.present) {
+      map['relationship_type'] = Variable<String>(relationshipType.value);
+    }
+    if (clientReferenceId.present) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (auditCreatedBy.present) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy.value);
+    }
+    if (nonRecoverableError.present) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError.value);
+    }
+    if (auditCreatedTime.present) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime.value);
+    }
+    if (clientCreatedTime.present) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy.value);
+    }
+    if (clientModifiedTime.present) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime.value);
+    }
+    if (auditModifiedBy.present) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy.value);
+    }
+    if (auditModifiedTime.present) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    if (rowVersion.present) {
+      map['row_version'] = Variable<int>(rowVersion.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String>(additionalFields.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('HouseholdMemberRelationShipCompanion(')
+          ..write('id: $id, ')
+          ..write('selfId: $selfId, ')
+          ..write('selfClientReferenceId: $selfClientReferenceId, ')
+          ..write('relativeId: $relativeId, ')
+          ..write('relativeClientReferenceId: $relativeClientReferenceId, ')
+          ..write('relationshipType: $relationshipType, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $TaskTable extends Task with TableInfo<$TaskTable, TaskData> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -39344,6 +40565,1638 @@ class LocalizationCompanion extends UpdateCompanion<LocalizationData> {
   }
 }
 
+class $UserActionTable extends UserAction
+    with TableInfo<$UserActionTable, UserActionData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UserActionTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _latitudeMeta =
+      const VerificationMeta('latitude');
+  @override
+  late final GeneratedColumn<String> latitude = GeneratedColumn<String>(
+      'latitude', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _longitudeMeta =
+      const VerificationMeta('longitude');
+  @override
+  late final GeneratedColumn<String> longitude = GeneratedColumn<String>(
+      'longitude', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _locationAccuracyMeta =
+      const VerificationMeta('locationAccuracy');
+  @override
+  late final GeneratedColumn<String> locationAccuracy = GeneratedColumn<String>(
+      'location_accuracy', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _clientReferenceIdMeta =
+      const VerificationMeta('clientReferenceId');
+  @override
+  late final GeneratedColumn<String> clientReferenceId =
+      GeneratedColumn<String>('client_reference_id', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _isSyncMeta = const VerificationMeta('isSync');
+  @override
+  late final GeneratedColumn<bool> isSync = GeneratedColumn<bool>(
+      'is_sync', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_sync" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _timestampMeta =
+      const VerificationMeta('timestamp');
+  @override
+  late final GeneratedColumn<int> timestamp = GeneratedColumn<int>(
+      'timestamp', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _nonRecoverableErrorMeta =
+      const VerificationMeta('nonRecoverableError');
+  @override
+  late final GeneratedColumn<bool> nonRecoverableError = GeneratedColumn<bool>(
+      'non_recoverable_error', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("non_recoverable_error" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _tenantIdMeta =
+      const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+      'tenant_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _rowVersionMeta =
+      const VerificationMeta('rowVersion');
+  @override
+  late final GeneratedColumn<int> rowVersion = GeneratedColumn<int>(
+      'row_version', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _projectIdMeta =
+      const VerificationMeta('projectId');
+  @override
+  late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
+      'project_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _boundaryCodeMeta =
+      const VerificationMeta('boundaryCode');
+  @override
+  late final GeneratedColumn<String> boundaryCode = GeneratedColumn<String>(
+      'boundary_code', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _actionMeta = const VerificationMeta('action');
+  @override
+  late final GeneratedColumn<String> action = GeneratedColumn<String>(
+      'action', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _auditCreatedTimeMeta =
+      const VerificationMeta('auditCreatedTime');
+  @override
+  late final GeneratedColumn<int> auditCreatedTime = GeneratedColumn<int>(
+      'audit_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedTimeMeta =
+      const VerificationMeta('clientCreatedTime');
+  @override
+  late final GeneratedColumn<int> clientCreatedTime = GeneratedColumn<int>(
+      'client_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String> clientModifiedBy = GeneratedColumn<String>(
+      'client_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String> clientCreatedBy = GeneratedColumn<String>(
+      'client_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedTimeMeta =
+      const VerificationMeta('clientModifiedTime');
+  @override
+  late final GeneratedColumn<int> clientModifiedTime = GeneratedColumn<int>(
+      'client_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedByMeta =
+      const VerificationMeta('auditModifiedBy');
+  @override
+  late final GeneratedColumn<String> auditModifiedBy = GeneratedColumn<String>(
+      'audit_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedTimeMeta =
+      const VerificationMeta('auditModifiedTime');
+  @override
+  late final GeneratedColumn<int> auditModifiedTime = GeneratedColumn<int>(
+      'audit_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _auditCreatedByMeta =
+      const VerificationMeta('auditCreatedBy');
+  @override
+  late final GeneratedColumn<String> auditCreatedBy = GeneratedColumn<String>(
+      'audit_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isDeletedMeta =
+      const VerificationMeta('isDeleted');
+  @override
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+      'is_deleted', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
+      'additional_fields', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        latitude,
+        longitude,
+        locationAccuracy,
+        clientReferenceId,
+        isSync,
+        timestamp,
+        nonRecoverableError,
+        tenantId,
+        rowVersion,
+        projectId,
+        boundaryCode,
+        action,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        auditCreatedBy,
+        isDeleted,
+        id,
+        additionalFields
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'user_action';
+  @override
+  VerificationContext validateIntegrity(Insertable<UserActionData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('latitude')) {
+      context.handle(_latitudeMeta,
+          latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta));
+    } else if (isInserting) {
+      context.missing(_latitudeMeta);
+    }
+    if (data.containsKey('longitude')) {
+      context.handle(_longitudeMeta,
+          longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta));
+    } else if (isInserting) {
+      context.missing(_longitudeMeta);
+    }
+    if (data.containsKey('location_accuracy')) {
+      context.handle(
+          _locationAccuracyMeta,
+          locationAccuracy.isAcceptableOrUnknown(
+              data['location_accuracy']!, _locationAccuracyMeta));
+    } else if (isInserting) {
+      context.missing(_locationAccuracyMeta);
+    }
+    if (data.containsKey('client_reference_id')) {
+      context.handle(
+          _clientReferenceIdMeta,
+          clientReferenceId.isAcceptableOrUnknown(
+              data['client_reference_id']!, _clientReferenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('is_sync')) {
+      context.handle(_isSyncMeta,
+          isSync.isAcceptableOrUnknown(data['is_sync']!, _isSyncMeta));
+    }
+    if (data.containsKey('timestamp')) {
+      context.handle(_timestampMeta,
+          timestamp.isAcceptableOrUnknown(data['timestamp']!, _timestampMeta));
+    } else if (isInserting) {
+      context.missing(_timestampMeta);
+    }
+    if (data.containsKey('non_recoverable_error')) {
+      context.handle(
+          _nonRecoverableErrorMeta,
+          nonRecoverableError.isAcceptableOrUnknown(
+              data['non_recoverable_error']!, _nonRecoverableErrorMeta));
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    }
+    if (data.containsKey('row_version')) {
+      context.handle(
+          _rowVersionMeta,
+          rowVersion.isAcceptableOrUnknown(
+              data['row_version']!, _rowVersionMeta));
+    }
+    if (data.containsKey('project_id')) {
+      context.handle(_projectIdMeta,
+          projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta));
+    } else if (isInserting) {
+      context.missing(_projectIdMeta);
+    }
+    if (data.containsKey('boundary_code')) {
+      context.handle(
+          _boundaryCodeMeta,
+          boundaryCode.isAcceptableOrUnknown(
+              data['boundary_code']!, _boundaryCodeMeta));
+    } else if (isInserting) {
+      context.missing(_boundaryCodeMeta);
+    }
+    if (data.containsKey('action')) {
+      context.handle(_actionMeta,
+          action.isAcceptableOrUnknown(data['action']!, _actionMeta));
+    } else if (isInserting) {
+      context.missing(_actionMeta);
+    }
+    if (data.containsKey('audit_created_time')) {
+      context.handle(
+          _auditCreatedTimeMeta,
+          auditCreatedTime.isAcceptableOrUnknown(
+              data['audit_created_time']!, _auditCreatedTimeMeta));
+    }
+    if (data.containsKey('client_created_time')) {
+      context.handle(
+          _clientCreatedTimeMeta,
+          clientCreatedTime.isAcceptableOrUnknown(
+              data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
+    if (data.containsKey('client_modified_time')) {
+      context.handle(
+          _clientModifiedTimeMeta,
+          clientModifiedTime.isAcceptableOrUnknown(
+              data['client_modified_time']!, _clientModifiedTimeMeta));
+    }
+    if (data.containsKey('audit_modified_by')) {
+      context.handle(
+          _auditModifiedByMeta,
+          auditModifiedBy.isAcceptableOrUnknown(
+              data['audit_modified_by']!, _auditModifiedByMeta));
+    }
+    if (data.containsKey('audit_modified_time')) {
+      context.handle(
+          _auditModifiedTimeMeta,
+          auditModifiedTime.isAcceptableOrUnknown(
+              data['audit_modified_time']!, _auditModifiedTimeMeta));
+    }
+    if (data.containsKey('audit_created_by')) {
+      context.handle(
+          _auditCreatedByMeta,
+          auditCreatedBy.isAcceptableOrUnknown(
+              data['audit_created_by']!, _auditCreatedByMeta));
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {clientReferenceId};
+  @override
+  UserActionData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UserActionData(
+      latitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}latitude'])!,
+      longitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}longitude'])!,
+      locationAccuracy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}location_accuracy'])!,
+      clientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_reference_id'])!,
+      isSync: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_sync'])!,
+      timestamp: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}timestamp'])!,
+      nonRecoverableError: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}non_recoverable_error']),
+      tenantId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tenant_id']),
+      rowVersion: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
+      projectId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}project_id'])!,
+      boundaryCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}boundary_code'])!,
+      action: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}action'])!,
+      auditCreatedTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}audit_created_time']),
+      clientCreatedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_created_by']),
+      clientModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_modified_time']),
+      auditModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_modified_by']),
+      auditModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}audit_modified_time']),
+      auditCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_created_by']),
+      isDeleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      additionalFields: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}additional_fields']),
+    );
+  }
+
+  @override
+  $UserActionTable createAlias(String alias) {
+    return $UserActionTable(attachedDatabase, alias);
+  }
+}
+
+class UserActionData extends DataClass implements Insertable<UserActionData> {
+  final String latitude;
+  final String longitude;
+  final String locationAccuracy;
+  final String clientReferenceId;
+  final bool isSync;
+  final int timestamp;
+  final bool? nonRecoverableError;
+  final String? tenantId;
+  final int? rowVersion;
+  final String projectId;
+  final String boundaryCode;
+  final String action;
+  final int? auditCreatedTime;
+  final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
+  final int? clientModifiedTime;
+  final String? auditModifiedBy;
+  final int? auditModifiedTime;
+  final String? auditCreatedBy;
+  final bool? isDeleted;
+  final String? id;
+  final String? additionalFields;
+  const UserActionData(
+      {required this.latitude,
+      required this.longitude,
+      required this.locationAccuracy,
+      required this.clientReferenceId,
+      required this.isSync,
+      required this.timestamp,
+      this.nonRecoverableError,
+      this.tenantId,
+      this.rowVersion,
+      required this.projectId,
+      required this.boundaryCode,
+      required this.action,
+      this.auditCreatedTime,
+      this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
+      this.clientModifiedTime,
+      this.auditModifiedBy,
+      this.auditModifiedTime,
+      this.auditCreatedBy,
+      this.isDeleted,
+      this.id,
+      this.additionalFields});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['latitude'] = Variable<String>(latitude);
+    map['longitude'] = Variable<String>(longitude);
+    map['location_accuracy'] = Variable<String>(locationAccuracy);
+    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    map['is_sync'] = Variable<bool>(isSync);
+    map['timestamp'] = Variable<int>(timestamp);
+    if (!nullToAbsent || nonRecoverableError != null) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError);
+    }
+    if (!nullToAbsent || tenantId != null) {
+      map['tenant_id'] = Variable<String>(tenantId);
+    }
+    if (!nullToAbsent || rowVersion != null) {
+      map['row_version'] = Variable<int>(rowVersion);
+    }
+    map['project_id'] = Variable<String>(projectId);
+    map['boundary_code'] = Variable<String>(boundaryCode);
+    map['action'] = Variable<String>(action);
+    if (!nullToAbsent || auditCreatedTime != null) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime);
+    }
+    if (!nullToAbsent || clientCreatedTime != null) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy);
+    }
+    if (!nullToAbsent || clientModifiedTime != null) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime);
+    }
+    if (!nullToAbsent || auditModifiedBy != null) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy);
+    }
+    if (!nullToAbsent || auditModifiedTime != null) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime);
+    }
+    if (!nullToAbsent || auditCreatedBy != null) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy);
+    }
+    if (!nullToAbsent || isDeleted != null) {
+      map['is_deleted'] = Variable<bool>(isDeleted);
+    }
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String>(id);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String>(additionalFields);
+    }
+    return map;
+  }
+
+  UserActionCompanion toCompanion(bool nullToAbsent) {
+    return UserActionCompanion(
+      latitude: Value(latitude),
+      longitude: Value(longitude),
+      locationAccuracy: Value(locationAccuracy),
+      clientReferenceId: Value(clientReferenceId),
+      isSync: Value(isSync),
+      timestamp: Value(timestamp),
+      nonRecoverableError: nonRecoverableError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nonRecoverableError),
+      tenantId: tenantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tenantId),
+      rowVersion: rowVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rowVersion),
+      projectId: Value(projectId),
+      boundaryCode: Value(boundaryCode),
+      action: Value(action),
+      auditCreatedTime: auditCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedTime),
+      clientCreatedTime: clientCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
+      clientModifiedTime: clientModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedTime),
+      auditModifiedBy: auditModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedBy),
+      auditModifiedTime: auditModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedTime),
+      auditCreatedBy: auditCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedBy),
+      isDeleted: isDeleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDeleted),
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
+    );
+  }
+
+  factory UserActionData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UserActionData(
+      latitude: serializer.fromJson<String>(json['latitude']),
+      longitude: serializer.fromJson<String>(json['longitude']),
+      locationAccuracy: serializer.fromJson<String>(json['locationAccuracy']),
+      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      isSync: serializer.fromJson<bool>(json['isSync']),
+      timestamp: serializer.fromJson<int>(json['timestamp']),
+      nonRecoverableError:
+          serializer.fromJson<bool?>(json['nonRecoverableError']),
+      tenantId: serializer.fromJson<String?>(json['tenantId']),
+      rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      projectId: serializer.fromJson<String>(json['projectId']),
+      boundaryCode: serializer.fromJson<String>(json['boundaryCode']),
+      action: serializer.fromJson<String>(json['action']),
+      auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
+      clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
+      clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
+      auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
+      auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
+      auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
+      isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
+      id: serializer.fromJson<String?>(json['id']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'latitude': serializer.toJson<String>(latitude),
+      'longitude': serializer.toJson<String>(longitude),
+      'locationAccuracy': serializer.toJson<String>(locationAccuracy),
+      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'isSync': serializer.toJson<bool>(isSync),
+      'timestamp': serializer.toJson<int>(timestamp),
+      'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
+      'tenantId': serializer.toJson<String?>(tenantId),
+      'rowVersion': serializer.toJson<int?>(rowVersion),
+      'projectId': serializer.toJson<String>(projectId),
+      'boundaryCode': serializer.toJson<String>(boundaryCode),
+      'action': serializer.toJson<String>(action),
+      'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
+      'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
+      'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
+      'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
+      'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
+      'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
+      'isDeleted': serializer.toJson<bool?>(isDeleted),
+      'id': serializer.toJson<String?>(id),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
+    };
+  }
+
+  UserActionData copyWith(
+          {String? latitude,
+          String? longitude,
+          String? locationAccuracy,
+          String? clientReferenceId,
+          bool? isSync,
+          int? timestamp,
+          Value<bool?> nonRecoverableError = const Value.absent(),
+          Value<String?> tenantId = const Value.absent(),
+          Value<int?> rowVersion = const Value.absent(),
+          String? projectId,
+          String? boundaryCode,
+          String? action,
+          Value<int?> auditCreatedTime = const Value.absent(),
+          Value<int?> clientCreatedTime = const Value.absent(),
+          Value<String?> clientModifiedBy = const Value.absent(),
+          Value<String?> clientCreatedBy = const Value.absent(),
+          Value<int?> clientModifiedTime = const Value.absent(),
+          Value<String?> auditModifiedBy = const Value.absent(),
+          Value<int?> auditModifiedTime = const Value.absent(),
+          Value<String?> auditCreatedBy = const Value.absent(),
+          Value<bool?> isDeleted = const Value.absent(),
+          Value<String?> id = const Value.absent(),
+          Value<String?> additionalFields = const Value.absent()}) =>
+      UserActionData(
+        latitude: latitude ?? this.latitude,
+        longitude: longitude ?? this.longitude,
+        locationAccuracy: locationAccuracy ?? this.locationAccuracy,
+        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        isSync: isSync ?? this.isSync,
+        timestamp: timestamp ?? this.timestamp,
+        nonRecoverableError: nonRecoverableError.present
+            ? nonRecoverableError.value
+            : this.nonRecoverableError,
+        tenantId: tenantId.present ? tenantId.value : this.tenantId,
+        rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
+        projectId: projectId ?? this.projectId,
+        boundaryCode: boundaryCode ?? this.boundaryCode,
+        action: action ?? this.action,
+        auditCreatedTime: auditCreatedTime.present
+            ? auditCreatedTime.value
+            : this.auditCreatedTime,
+        clientCreatedTime: clientCreatedTime.present
+            ? clientCreatedTime.value
+            : this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy.present
+            ? clientModifiedBy.value
+            : this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy.present
+            ? clientCreatedBy.value
+            : this.clientCreatedBy,
+        clientModifiedTime: clientModifiedTime.present
+            ? clientModifiedTime.value
+            : this.clientModifiedTime,
+        auditModifiedBy: auditModifiedBy.present
+            ? auditModifiedBy.value
+            : this.auditModifiedBy,
+        auditModifiedTime: auditModifiedTime.present
+            ? auditModifiedTime.value
+            : this.auditModifiedTime,
+        auditCreatedBy:
+            auditCreatedBy.present ? auditCreatedBy.value : this.auditCreatedBy,
+        isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
+        id: id.present ? id.value : this.id,
+        additionalFields: additionalFields.present
+            ? additionalFields.value
+            : this.additionalFields,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('UserActionData(')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('locationAccuracy: $locationAccuracy, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('isSync: $isSync, ')
+          ..write('timestamp: $timestamp, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('projectId: $projectId, ')
+          ..write('boundaryCode: $boundaryCode, ')
+          ..write('action: $action, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('id: $id, ')
+          ..write('additionalFields: $additionalFields')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+        latitude,
+        longitude,
+        locationAccuracy,
+        clientReferenceId,
+        isSync,
+        timestamp,
+        nonRecoverableError,
+        tenantId,
+        rowVersion,
+        projectId,
+        boundaryCode,
+        action,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        auditCreatedBy,
+        isDeleted,
+        id,
+        additionalFields
+      ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UserActionData &&
+          other.latitude == this.latitude &&
+          other.longitude == this.longitude &&
+          other.locationAccuracy == this.locationAccuracy &&
+          other.clientReferenceId == this.clientReferenceId &&
+          other.isSync == this.isSync &&
+          other.timestamp == this.timestamp &&
+          other.nonRecoverableError == this.nonRecoverableError &&
+          other.tenantId == this.tenantId &&
+          other.rowVersion == this.rowVersion &&
+          other.projectId == this.projectId &&
+          other.boundaryCode == this.boundaryCode &&
+          other.action == this.action &&
+          other.auditCreatedTime == this.auditCreatedTime &&
+          other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
+          other.clientModifiedTime == this.clientModifiedTime &&
+          other.auditModifiedBy == this.auditModifiedBy &&
+          other.auditModifiedTime == this.auditModifiedTime &&
+          other.auditCreatedBy == this.auditCreatedBy &&
+          other.isDeleted == this.isDeleted &&
+          other.id == this.id &&
+          other.additionalFields == this.additionalFields);
+}
+
+class UserActionCompanion extends UpdateCompanion<UserActionData> {
+  final Value<String> latitude;
+  final Value<String> longitude;
+  final Value<String> locationAccuracy;
+  final Value<String> clientReferenceId;
+  final Value<bool> isSync;
+  final Value<int> timestamp;
+  final Value<bool?> nonRecoverableError;
+  final Value<String?> tenantId;
+  final Value<int?> rowVersion;
+  final Value<String> projectId;
+  final Value<String> boundaryCode;
+  final Value<String> action;
+  final Value<int?> auditCreatedTime;
+  final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
+  final Value<int?> clientModifiedTime;
+  final Value<String?> auditModifiedBy;
+  final Value<int?> auditModifiedTime;
+  final Value<String?> auditCreatedBy;
+  final Value<bool?> isDeleted;
+  final Value<String?> id;
+  final Value<String?> additionalFields;
+  final Value<int> rowid;
+  const UserActionCompanion({
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.locationAccuracy = const Value.absent(),
+    this.clientReferenceId = const Value.absent(),
+    this.isSync = const Value.absent(),
+    this.timestamp = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.boundaryCode = const Value.absent(),
+    this.action = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.id = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  UserActionCompanion.insert({
+    required String latitude,
+    required String longitude,
+    required String locationAccuracy,
+    required String clientReferenceId,
+    this.isSync = const Value.absent(),
+    required int timestamp,
+    this.nonRecoverableError = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    required String projectId,
+    required String boundaryCode,
+    required String action,
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.id = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : latitude = Value(latitude),
+        longitude = Value(longitude),
+        locationAccuracy = Value(locationAccuracy),
+        clientReferenceId = Value(clientReferenceId),
+        timestamp = Value(timestamp),
+        projectId = Value(projectId),
+        boundaryCode = Value(boundaryCode),
+        action = Value(action);
+  static Insertable<UserActionData> custom({
+    Expression<String>? latitude,
+    Expression<String>? longitude,
+    Expression<String>? locationAccuracy,
+    Expression<String>? clientReferenceId,
+    Expression<bool>? isSync,
+    Expression<int>? timestamp,
+    Expression<bool>? nonRecoverableError,
+    Expression<String>? tenantId,
+    Expression<int>? rowVersion,
+    Expression<String>? projectId,
+    Expression<String>? boundaryCode,
+    Expression<String>? action,
+    Expression<int>? auditCreatedTime,
+    Expression<int>? clientCreatedTime,
+    Expression<String>? clientModifiedBy,
+    Expression<String>? clientCreatedBy,
+    Expression<int>? clientModifiedTime,
+    Expression<String>? auditModifiedBy,
+    Expression<int>? auditModifiedTime,
+    Expression<String>? auditCreatedBy,
+    Expression<bool>? isDeleted,
+    Expression<String>? id,
+    Expression<String>? additionalFields,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (latitude != null) 'latitude': latitude,
+      if (longitude != null) 'longitude': longitude,
+      if (locationAccuracy != null) 'location_accuracy': locationAccuracy,
+      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (isSync != null) 'is_sync': isSync,
+      if (timestamp != null) 'timestamp': timestamp,
+      if (nonRecoverableError != null)
+        'non_recoverable_error': nonRecoverableError,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (rowVersion != null) 'row_version': rowVersion,
+      if (projectId != null) 'project_id': projectId,
+      if (boundaryCode != null) 'boundary_code': boundaryCode,
+      if (action != null) 'action': action,
+      if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
+      if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
+      if (clientModifiedTime != null)
+        'client_modified_time': clientModifiedTime,
+      if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
+      if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
+      if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (id != null) 'id': id,
+      if (additionalFields != null) 'additional_fields': additionalFields,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  UserActionCompanion copyWith(
+      {Value<String>? latitude,
+      Value<String>? longitude,
+      Value<String>? locationAccuracy,
+      Value<String>? clientReferenceId,
+      Value<bool>? isSync,
+      Value<int>? timestamp,
+      Value<bool?>? nonRecoverableError,
+      Value<String?>? tenantId,
+      Value<int?>? rowVersion,
+      Value<String>? projectId,
+      Value<String>? boundaryCode,
+      Value<String>? action,
+      Value<int?>? auditCreatedTime,
+      Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
+      Value<int?>? clientModifiedTime,
+      Value<String?>? auditModifiedBy,
+      Value<int?>? auditModifiedTime,
+      Value<String?>? auditCreatedBy,
+      Value<bool?>? isDeleted,
+      Value<String?>? id,
+      Value<String?>? additionalFields,
+      Value<int>? rowid}) {
+    return UserActionCompanion(
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      locationAccuracy: locationAccuracy ?? this.locationAccuracy,
+      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      isSync: isSync ?? this.isSync,
+      timestamp: timestamp ?? this.timestamp,
+      nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
+      tenantId: tenantId ?? this.tenantId,
+      rowVersion: rowVersion ?? this.rowVersion,
+      projectId: projectId ?? this.projectId,
+      boundaryCode: boundaryCode ?? this.boundaryCode,
+      action: action ?? this.action,
+      auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+      clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
+      clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
+      auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+      auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+      auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+      isDeleted: isDeleted ?? this.isDeleted,
+      id: id ?? this.id,
+      additionalFields: additionalFields ?? this.additionalFields,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (latitude.present) {
+      map['latitude'] = Variable<String>(latitude.value);
+    }
+    if (longitude.present) {
+      map['longitude'] = Variable<String>(longitude.value);
+    }
+    if (locationAccuracy.present) {
+      map['location_accuracy'] = Variable<String>(locationAccuracy.value);
+    }
+    if (clientReferenceId.present) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (isSync.present) {
+      map['is_sync'] = Variable<bool>(isSync.value);
+    }
+    if (timestamp.present) {
+      map['timestamp'] = Variable<int>(timestamp.value);
+    }
+    if (nonRecoverableError.present) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (rowVersion.present) {
+      map['row_version'] = Variable<int>(rowVersion.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String>(projectId.value);
+    }
+    if (boundaryCode.present) {
+      map['boundary_code'] = Variable<String>(boundaryCode.value);
+    }
+    if (action.present) {
+      map['action'] = Variable<String>(action.value);
+    }
+    if (auditCreatedTime.present) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime.value);
+    }
+    if (clientCreatedTime.present) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy.value);
+    }
+    if (clientModifiedTime.present) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime.value);
+    }
+    if (auditModifiedBy.present) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy.value);
+    }
+    if (auditModifiedTime.present) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime.value);
+    }
+    if (auditCreatedBy.present) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String>(additionalFields.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserActionCompanion(')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('locationAccuracy: $locationAccuracy, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('isSync: $isSync, ')
+          ..write('timestamp: $timestamp, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('projectId: $projectId, ')
+          ..write('boundaryCode: $boundaryCode, ')
+          ..write('action: $action, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('id: $id, ')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $UniqueIdPoolTable extends UniqueIdPool
+    with TableInfo<$UniqueIdPoolTable, UniqueIdPoolData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UniqueIdPoolTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _deviceUuidMeta =
+      const VerificationMeta('deviceUuid');
+  @override
+  late final GeneratedColumn<String> deviceUuid = GeneratedColumn<String>(
+      'device_uuid', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _userUuidMeta =
+      const VerificationMeta('userUuid');
+  @override
+  late final GeneratedColumn<String> userUuid = GeneratedColumn<String>(
+      'user_uuid', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+      'status', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditCreatedTimeMeta =
+      const VerificationMeta('auditCreatedTime');
+  @override
+  late final GeneratedColumn<int> auditCreatedTime = GeneratedColumn<int>(
+      'audit_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedByMeta =
+      const VerificationMeta('auditModifiedBy');
+  @override
+  late final GeneratedColumn<String> auditModifiedBy = GeneratedColumn<String>(
+      'audit_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditCreatedByMeta =
+      const VerificationMeta('auditCreatedBy');
+  @override
+  late final GeneratedColumn<String> auditCreatedBy = GeneratedColumn<String>(
+      'audit_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedTimeMeta =
+      const VerificationMeta('auditModifiedTime');
+  @override
+  late final GeneratedColumn<int> auditModifiedTime = GeneratedColumn<int>(
+      'audit_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _tenantIdMeta =
+      const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+      'tenant_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _rowVersionMeta =
+      const VerificationMeta('rowVersion');
+  @override
+  late final GeneratedColumn<int> rowVersion = GeneratedColumn<int>(
+      'row_version', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
+      'additional_fields', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        deviceUuid,
+        userUuid,
+        status,
+        auditCreatedTime,
+        auditModifiedBy,
+        auditCreatedBy,
+        auditModifiedTime,
+        tenantId,
+        rowVersion,
+        additionalFields
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'unique_id_pool';
+  @override
+  VerificationContext validateIntegrity(Insertable<UniqueIdPoolData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('device_uuid')) {
+      context.handle(
+          _deviceUuidMeta,
+          deviceUuid.isAcceptableOrUnknown(
+              data['device_uuid']!, _deviceUuidMeta));
+    }
+    if (data.containsKey('user_uuid')) {
+      context.handle(_userUuidMeta,
+          userUuid.isAcceptableOrUnknown(data['user_uuid']!, _userUuidMeta));
+    }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    }
+    if (data.containsKey('audit_created_time')) {
+      context.handle(
+          _auditCreatedTimeMeta,
+          auditCreatedTime.isAcceptableOrUnknown(
+              data['audit_created_time']!, _auditCreatedTimeMeta));
+    }
+    if (data.containsKey('audit_modified_by')) {
+      context.handle(
+          _auditModifiedByMeta,
+          auditModifiedBy.isAcceptableOrUnknown(
+              data['audit_modified_by']!, _auditModifiedByMeta));
+    }
+    if (data.containsKey('audit_created_by')) {
+      context.handle(
+          _auditCreatedByMeta,
+          auditCreatedBy.isAcceptableOrUnknown(
+              data['audit_created_by']!, _auditCreatedByMeta));
+    }
+    if (data.containsKey('audit_modified_time')) {
+      context.handle(
+          _auditModifiedTimeMeta,
+          auditModifiedTime.isAcceptableOrUnknown(
+              data['audit_modified_time']!, _auditModifiedTimeMeta));
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    }
+    if (data.containsKey('row_version')) {
+      context.handle(
+          _rowVersionMeta,
+          rowVersion.isAcceptableOrUnknown(
+              data['row_version']!, _rowVersionMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  UniqueIdPoolData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UniqueIdPoolData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      deviceUuid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}device_uuid']),
+      userUuid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user_uuid']),
+      status: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status']),
+      auditCreatedTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}audit_created_time']),
+      auditModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_modified_by']),
+      auditCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_created_by']),
+      auditModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}audit_modified_time']),
+      tenantId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tenant_id']),
+      rowVersion: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
+      additionalFields: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}additional_fields']),
+    );
+  }
+
+  @override
+  $UniqueIdPoolTable createAlias(String alias) {
+    return $UniqueIdPoolTable(attachedDatabase, alias);
+  }
+}
+
+class UniqueIdPoolData extends DataClass
+    implements Insertable<UniqueIdPoolData> {
+  final String id;
+  final String? deviceUuid;
+  final String? userUuid;
+  final String? status;
+  final int? auditCreatedTime;
+  final String? auditModifiedBy;
+  final String? auditCreatedBy;
+  final int? auditModifiedTime;
+  final String? tenantId;
+  final int? rowVersion;
+  final String? additionalFields;
+  const UniqueIdPoolData(
+      {required this.id,
+      this.deviceUuid,
+      this.userUuid,
+      this.status,
+      this.auditCreatedTime,
+      this.auditModifiedBy,
+      this.auditCreatedBy,
+      this.auditModifiedTime,
+      this.tenantId,
+      this.rowVersion,
+      this.additionalFields});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    if (!nullToAbsent || deviceUuid != null) {
+      map['device_uuid'] = Variable<String>(deviceUuid);
+    }
+    if (!nullToAbsent || userUuid != null) {
+      map['user_uuid'] = Variable<String>(userUuid);
+    }
+    if (!nullToAbsent || status != null) {
+      map['status'] = Variable<String>(status);
+    }
+    if (!nullToAbsent || auditCreatedTime != null) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime);
+    }
+    if (!nullToAbsent || auditModifiedBy != null) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy);
+    }
+    if (!nullToAbsent || auditCreatedBy != null) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy);
+    }
+    if (!nullToAbsent || auditModifiedTime != null) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime);
+    }
+    if (!nullToAbsent || tenantId != null) {
+      map['tenant_id'] = Variable<String>(tenantId);
+    }
+    if (!nullToAbsent || rowVersion != null) {
+      map['row_version'] = Variable<int>(rowVersion);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String>(additionalFields);
+    }
+    return map;
+  }
+
+  UniqueIdPoolCompanion toCompanion(bool nullToAbsent) {
+    return UniqueIdPoolCompanion(
+      id: Value(id),
+      deviceUuid: deviceUuid == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deviceUuid),
+      userUuid: userUuid == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userUuid),
+      status:
+          status == null && nullToAbsent ? const Value.absent() : Value(status),
+      auditCreatedTime: auditCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedTime),
+      auditModifiedBy: auditModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedBy),
+      auditCreatedBy: auditCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedBy),
+      auditModifiedTime: auditModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedTime),
+      tenantId: tenantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tenantId),
+      rowVersion: rowVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rowVersion),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
+    );
+  }
+
+  factory UniqueIdPoolData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UniqueIdPoolData(
+      id: serializer.fromJson<String>(json['id']),
+      deviceUuid: serializer.fromJson<String?>(json['deviceUuid']),
+      userUuid: serializer.fromJson<String?>(json['userUuid']),
+      status: serializer.fromJson<String?>(json['status']),
+      auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
+      auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
+      auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
+      auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
+      tenantId: serializer.fromJson<String?>(json['tenantId']),
+      rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'deviceUuid': serializer.toJson<String?>(deviceUuid),
+      'userUuid': serializer.toJson<String?>(userUuid),
+      'status': serializer.toJson<String?>(status),
+      'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
+      'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
+      'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
+      'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
+      'tenantId': serializer.toJson<String?>(tenantId),
+      'rowVersion': serializer.toJson<int?>(rowVersion),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
+    };
+  }
+
+  UniqueIdPoolData copyWith(
+          {String? id,
+          Value<String?> deviceUuid = const Value.absent(),
+          Value<String?> userUuid = const Value.absent(),
+          Value<String?> status = const Value.absent(),
+          Value<int?> auditCreatedTime = const Value.absent(),
+          Value<String?> auditModifiedBy = const Value.absent(),
+          Value<String?> auditCreatedBy = const Value.absent(),
+          Value<int?> auditModifiedTime = const Value.absent(),
+          Value<String?> tenantId = const Value.absent(),
+          Value<int?> rowVersion = const Value.absent(),
+          Value<String?> additionalFields = const Value.absent()}) =>
+      UniqueIdPoolData(
+        id: id ?? this.id,
+        deviceUuid: deviceUuid.present ? deviceUuid.value : this.deviceUuid,
+        userUuid: userUuid.present ? userUuid.value : this.userUuid,
+        status: status.present ? status.value : this.status,
+        auditCreatedTime: auditCreatedTime.present
+            ? auditCreatedTime.value
+            : this.auditCreatedTime,
+        auditModifiedBy: auditModifiedBy.present
+            ? auditModifiedBy.value
+            : this.auditModifiedBy,
+        auditCreatedBy:
+            auditCreatedBy.present ? auditCreatedBy.value : this.auditCreatedBy,
+        auditModifiedTime: auditModifiedTime.present
+            ? auditModifiedTime.value
+            : this.auditModifiedTime,
+        tenantId: tenantId.present ? tenantId.value : this.tenantId,
+        rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
+        additionalFields: additionalFields.present
+            ? additionalFields.value
+            : this.additionalFields,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('UniqueIdPoolData(')
+          ..write('id: $id, ')
+          ..write('deviceUuid: $deviceUuid, ')
+          ..write('userUuid: $userUuid, ')
+          ..write('status: $status, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      deviceUuid,
+      userUuid,
+      status,
+      auditCreatedTime,
+      auditModifiedBy,
+      auditCreatedBy,
+      auditModifiedTime,
+      tenantId,
+      rowVersion,
+      additionalFields);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UniqueIdPoolData &&
+          other.id == this.id &&
+          other.deviceUuid == this.deviceUuid &&
+          other.userUuid == this.userUuid &&
+          other.status == this.status &&
+          other.auditCreatedTime == this.auditCreatedTime &&
+          other.auditModifiedBy == this.auditModifiedBy &&
+          other.auditCreatedBy == this.auditCreatedBy &&
+          other.auditModifiedTime == this.auditModifiedTime &&
+          other.tenantId == this.tenantId &&
+          other.rowVersion == this.rowVersion &&
+          other.additionalFields == this.additionalFields);
+}
+
+class UniqueIdPoolCompanion extends UpdateCompanion<UniqueIdPoolData> {
+  final Value<String> id;
+  final Value<String?> deviceUuid;
+  final Value<String?> userUuid;
+  final Value<String?> status;
+  final Value<int?> auditCreatedTime;
+  final Value<String?> auditModifiedBy;
+  final Value<String?> auditCreatedBy;
+  final Value<int?> auditModifiedTime;
+  final Value<String?> tenantId;
+  final Value<int?> rowVersion;
+  final Value<String?> additionalFields;
+  final Value<int> rowid;
+  const UniqueIdPoolCompanion({
+    this.id = const Value.absent(),
+    this.deviceUuid = const Value.absent(),
+    this.userUuid = const Value.absent(),
+    this.status = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  UniqueIdPoolCompanion.insert({
+    required String id,
+    this.deviceUuid = const Value.absent(),
+    this.userUuid = const Value.absent(),
+    this.status = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id);
+  static Insertable<UniqueIdPoolData> custom({
+    Expression<String>? id,
+    Expression<String>? deviceUuid,
+    Expression<String>? userUuid,
+    Expression<String>? status,
+    Expression<int>? auditCreatedTime,
+    Expression<String>? auditModifiedBy,
+    Expression<String>? auditCreatedBy,
+    Expression<int>? auditModifiedTime,
+    Expression<String>? tenantId,
+    Expression<int>? rowVersion,
+    Expression<String>? additionalFields,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (deviceUuid != null) 'device_uuid': deviceUuid,
+      if (userUuid != null) 'user_uuid': userUuid,
+      if (status != null) 'status': status,
+      if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
+      if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
+      if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
+      if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (rowVersion != null) 'row_version': rowVersion,
+      if (additionalFields != null) 'additional_fields': additionalFields,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  UniqueIdPoolCompanion copyWith(
+      {Value<String>? id,
+      Value<String?>? deviceUuid,
+      Value<String?>? userUuid,
+      Value<String?>? status,
+      Value<int?>? auditCreatedTime,
+      Value<String?>? auditModifiedBy,
+      Value<String?>? auditCreatedBy,
+      Value<int?>? auditModifiedTime,
+      Value<String?>? tenantId,
+      Value<int?>? rowVersion,
+      Value<String?>? additionalFields,
+      Value<int>? rowid}) {
+    return UniqueIdPoolCompanion(
+      id: id ?? this.id,
+      deviceUuid: deviceUuid ?? this.deviceUuid,
+      userUuid: userUuid ?? this.userUuid,
+      status: status ?? this.status,
+      auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+      auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+      auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+      auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+      tenantId: tenantId ?? this.tenantId,
+      rowVersion: rowVersion ?? this.rowVersion,
+      additionalFields: additionalFields ?? this.additionalFields,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (deviceUuid.present) {
+      map['device_uuid'] = Variable<String>(deviceUuid.value);
+    }
+    if (userUuid.present) {
+      map['user_uuid'] = Variable<String>(userUuid.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (auditCreatedTime.present) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime.value);
+    }
+    if (auditModifiedBy.present) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy.value);
+    }
+    if (auditCreatedBy.present) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy.value);
+    }
+    if (auditModifiedTime.present) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (rowVersion.present) {
+      map['row_version'] = Variable<int>(rowVersion.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String>(additionalFields.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UniqueIdPoolCompanion(')
+          ..write('id: $id, ')
+          ..write('deviceUuid: $deviceUuid, ')
+          ..write('userUuid: $userUuid, ')
+          ..write('status: $status, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   _$LocalSqlDataStore(QueryExecutor e) : super(e);
   _$LocalSqlDataStoreManager get managers => _$LocalSqlDataStoreManager(this);
@@ -39393,11 +42246,15 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final $HouseholdTable household = $HouseholdTable(this);
   late final $HouseholdMemberTable householdMember =
       $HouseholdMemberTable(this);
+  late final $HouseholdMemberRelationShipTable householdMemberRelationShip =
+      $HouseholdMemberRelationShipTable(this);
   late final $TaskTable task = $TaskTable(this);
   late final $TaskResourceTable taskResource = $TaskResourceTable(this);
   late final $SideEffectTable sideEffect = $SideEffectTable(this);
   late final $ReferralTable referral = $ReferralTable(this);
   late final $LocalizationTable localization = $LocalizationTable(this);
+  late final $UserActionTable userAction = $UserActionTable(this);
+  late final $UniqueIdPoolTable uniqueIdPool = $UniqueIdPoolTable(this);
   late final Index attendanceClientref = Index('attendance_clientref',
       'CREATE INDEX attendance_clientref ON attendance (client_reference_id)');
   late final Index attendanceIndividualid = Index('attendance_individualid',
@@ -39506,11 +42363,14 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         hFReferral,
         household,
         householdMember,
+        householdMemberRelationShip,
         task,
         taskResource,
         sideEffect,
         referral,
         localization,
+        userAction,
+        uniqueIdPool,
         attendanceClientref,
         attendanceIndividualid,
         projectClinetref,
@@ -40378,6 +43238,7 @@ typedef $$AttendeeTableInsertCompanionBuilder = AttendeeCompanion Function({
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
   Value<String?> additionalFields,
+  Value<String?> tag,
   Value<int> rowid,
 });
 typedef $$AttendeeTableUpdateCompanionBuilder = AttendeeCompanion Function({
@@ -40400,6 +43261,7 @@ typedef $$AttendeeTableUpdateCompanionBuilder = AttendeeCompanion Function({
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
   Value<String?> additionalFields,
+  Value<String?> tag,
   Value<int> rowid,
 });
 
@@ -40442,6 +43304,7 @@ class $$AttendeeTableTableManager extends RootTableManager<
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
+            Value<String?> tag = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               AttendeeCompanion(
@@ -40464,6 +43327,7 @@ class $$AttendeeTableTableManager extends RootTableManager<
             isDeleted: isDeleted,
             rowVersion: rowVersion,
             additionalFields: additionalFields,
+            tag: tag,
             rowid: rowid,
           ),
           getInsertCompanionBuilder: ({
@@ -40486,6 +43350,7 @@ class $$AttendeeTableTableManager extends RootTableManager<
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
+            Value<String?> tag = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               AttendeeCompanion.insert(
@@ -40508,6 +43373,7 @@ class $$AttendeeTableTableManager extends RootTableManager<
             isDeleted: isDeleted,
             rowVersion: rowVersion,
             additionalFields: additionalFields,
+            tag: tag,
             rowid: rowid,
           ),
         ));
@@ -40622,6 +43488,11 @@ class $$AttendeeTableFilterComposer
       column: $state.table.additionalFields,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tag => $state.composableBuilder(
+      column: $state.table.tag,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
 }
 
 class $$AttendeeTableOrderingComposer
@@ -40719,6 +43590,11 @@ class $$AttendeeTableOrderingComposer
 
   ColumnOrderings<String> get additionalFields => $state.composableBuilder(
       column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tag => $state.composableBuilder(
+      column: $state.table.tag,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
@@ -44516,6 +47392,7 @@ typedef $$ProjectProductVariantTableInsertCompanionBuilder
   Value<String?> tenantId,
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
+  Value<String?> name,
   Value<String?> additionalFields,
   Value<int> rowid,
 });
@@ -44536,6 +47413,7 @@ typedef $$ProjectProductVariantTableUpdateCompanionBuilder
   Value<String?> tenantId,
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
+  Value<String?> name,
   Value<String?> additionalFields,
   Value<int> rowid,
 });
@@ -44576,6 +47454,7 @@ class $$ProjectProductVariantTableTableManager extends RootTableManager<
             Value<String?> tenantId = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
+            Value<String?> name = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -44595,6 +47474,7 @@ class $$ProjectProductVariantTableTableManager extends RootTableManager<
             tenantId: tenantId,
             isDeleted: isDeleted,
             rowVersion: rowVersion,
+            name: name,
             additionalFields: additionalFields,
             rowid: rowid,
           ),
@@ -44614,6 +47494,7 @@ class $$ProjectProductVariantTableTableManager extends RootTableManager<
             Value<String?> tenantId = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
+            Value<String?> name = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -44633,6 +47514,7 @@ class $$ProjectProductVariantTableTableManager extends RootTableManager<
             tenantId: tenantId,
             isDeleted: isDeleted,
             rowVersion: rowVersion,
+            name: name,
             additionalFields: additionalFields,
             rowid: rowid,
           ),
@@ -44727,6 +47609,11 @@ class $$ProjectProductVariantTableFilterComposer
 
   ColumnFilters<int> get rowVersion => $state.composableBuilder(
       column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -44825,6 +47712,11 @@ class $$ProjectProductVariantTableOrderingComposer
 
   ColumnOrderings<int> get rowVersion => $state.composableBuilder(
       column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -46461,6 +49353,8 @@ class $$IndividualTableOrderingComposer
 
 typedef $$IdentifierTableInsertCompanionBuilder = IdentifierCompanion Function({
   Value<String?> id,
+  Value<String?> individualId,
+  required String individualClientReferenceId,
   Value<String?> identifierType,
   Value<String?> identifierId,
   Value<String?> auditCreatedBy,
@@ -46481,6 +49375,8 @@ typedef $$IdentifierTableInsertCompanionBuilder = IdentifierCompanion Function({
 });
 typedef $$IdentifierTableUpdateCompanionBuilder = IdentifierCompanion Function({
   Value<String?> id,
+  Value<String?> individualId,
+  Value<String> individualClientReferenceId,
   Value<String?> identifierType,
   Value<String?> identifierId,
   Value<String?> auditCreatedBy,
@@ -46521,6 +49417,8 @@ class $$IdentifierTableTableManager extends RootTableManager<
               $$IdentifierTableProcessedTableManager(p),
           getUpdateCompanionBuilder: ({
             Value<String?> id = const Value.absent(),
+            Value<String?> individualId = const Value.absent(),
+            Value<String> individualClientReferenceId = const Value.absent(),
             Value<String?> identifierType = const Value.absent(),
             Value<String?> identifierId = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
@@ -46541,6 +49439,8 @@ class $$IdentifierTableTableManager extends RootTableManager<
           }) =>
               IdentifierCompanion(
             id: id,
+            individualId: individualId,
+            individualClientReferenceId: individualClientReferenceId,
             identifierType: identifierType,
             identifierId: identifierId,
             auditCreatedBy: auditCreatedBy,
@@ -46561,6 +49461,8 @@ class $$IdentifierTableTableManager extends RootTableManager<
           ),
           getInsertCompanionBuilder: ({
             Value<String?> id = const Value.absent(),
+            Value<String?> individualId = const Value.absent(),
+            required String individualClientReferenceId,
             Value<String?> identifierType = const Value.absent(),
             Value<String?> identifierId = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
@@ -46581,6 +49483,8 @@ class $$IdentifierTableTableManager extends RootTableManager<
           }) =>
               IdentifierCompanion.insert(
             id: id,
+            individualId: individualId,
+            individualClientReferenceId: individualClientReferenceId,
             identifierType: identifierType,
             identifierId: identifierId,
             auditCreatedBy: auditCreatedBy,
@@ -46621,6 +49525,17 @@ class $$IdentifierTableFilterComposer
       column: $state.table.id,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get individualId => $state.composableBuilder(
+      column: $state.table.individualId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get individualClientReferenceId => $state
+      .composableBuilder(
+          column: $state.table.individualClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnFilters(column, joinBuilders: joinBuilders));
 
   ColumnFilters<String> get identifierType => $state.composableBuilder(
       column: $state.table.identifierType,
@@ -46710,6 +49625,17 @@ class $$IdentifierTableOrderingComposer
       column: $state.table.id,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get individualId => $state.composableBuilder(
+      column: $state.table.individualId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get individualClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.individualClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
 
   ColumnOrderings<String> get identifierType => $state.composableBuilder(
       column: $state.table.identifierType,
@@ -47784,7 +50710,7 @@ typedef $$TargetTableInsertCompanionBuilder = TargetCompanion Function({
   Value<String?> tenantId,
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
-  Value<BeneficiaryType?> beneficiaryType,
+  Value<String?> beneficiaryType,
   Value<String?> additionalFields,
   Value<int> rowid,
 });
@@ -47805,7 +50731,7 @@ typedef $$TargetTableUpdateCompanionBuilder = TargetCompanion Function({
   Value<String?> tenantId,
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
-  Value<BeneficiaryType?> beneficiaryType,
+  Value<String?> beneficiaryType,
   Value<String?> additionalFields,
   Value<int> rowid,
 });
@@ -47845,7 +50771,7 @@ class $$TargetTableTableManager extends RootTableManager<
             Value<String?> tenantId = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
-            Value<BeneficiaryType?> beneficiaryType = const Value.absent(),
+            Value<String?> beneficiaryType = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -47887,7 +50813,7 @@ class $$TargetTableTableManager extends RootTableManager<
             Value<String?> tenantId = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
-            Value<BeneficiaryType?> beneficiaryType = const Value.absent(),
+            Value<String?> beneficiaryType = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -48010,12 +50936,10 @@ class $$TargetTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnWithTypeConverterFilters<BeneficiaryType?, BeneficiaryType, int>
-      get beneficiaryType => $state.composableBuilder(
-          column: $state.table.beneficiaryType,
-          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
-              column,
-              joinBuilders: joinBuilders));
+  ColumnFilters<String> get beneficiaryType => $state.composableBuilder(
+      column: $state.table.beneficiaryType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
 
   ColumnFilters<String> get additionalFields => $state.composableBuilder(
       column: $state.table.additionalFields,
@@ -48106,7 +51030,7 @@ class $$TargetTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<int> get beneficiaryType => $state.composableBuilder(
+  ColumnOrderings<String> get beneficiaryType => $state.composableBuilder(
       column: $state.table.beneficiaryType,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
@@ -48121,7 +51045,7 @@ typedef $$ServiceTableInsertCompanionBuilder = ServiceCompanion Function({
   Value<String?> id,
   required String clientId,
   Value<String?> serviceDefId,
-  Value<String?> relatedClientReferenceId,
+  Value<String?> referenceId,
   Value<bool?> isActive,
   Value<String?> accountId,
   Value<String?> additionalDetails,
@@ -48145,7 +51069,7 @@ typedef $$ServiceTableUpdateCompanionBuilder = ServiceCompanion Function({
   Value<String?> id,
   Value<String> clientId,
   Value<String?> serviceDefId,
-  Value<String?> relatedClientReferenceId,
+  Value<String?> referenceId,
   Value<bool?> isActive,
   Value<String?> accountId,
   Value<String?> additionalDetails,
@@ -48188,7 +51112,7 @@ class $$ServiceTableTableManager extends RootTableManager<
             Value<String?> id = const Value.absent(),
             Value<String> clientId = const Value.absent(),
             Value<String?> serviceDefId = const Value.absent(),
-            Value<String?> relatedClientReferenceId = const Value.absent(),
+            Value<String?> referenceId = const Value.absent(),
             Value<bool?> isActive = const Value.absent(),
             Value<String?> accountId = const Value.absent(),
             Value<String?> additionalDetails = const Value.absent(),
@@ -48212,7 +51136,7 @@ class $$ServiceTableTableManager extends RootTableManager<
             id: id,
             clientId: clientId,
             serviceDefId: serviceDefId,
-            relatedClientReferenceId: relatedClientReferenceId,
+            referenceId: referenceId,
             isActive: isActive,
             accountId: accountId,
             additionalDetails: additionalDetails,
@@ -48236,7 +51160,7 @@ class $$ServiceTableTableManager extends RootTableManager<
             Value<String?> id = const Value.absent(),
             required String clientId,
             Value<String?> serviceDefId = const Value.absent(),
-            Value<String?> relatedClientReferenceId = const Value.absent(),
+            Value<String?> referenceId = const Value.absent(),
             Value<bool?> isActive = const Value.absent(),
             Value<String?> accountId = const Value.absent(),
             Value<String?> additionalDetails = const Value.absent(),
@@ -48260,7 +51184,7 @@ class $$ServiceTableTableManager extends RootTableManager<
             id: id,
             clientId: clientId,
             serviceDefId: serviceDefId,
-            relatedClientReferenceId: relatedClientReferenceId,
+            referenceId: referenceId,
             isActive: isActive,
             accountId: accountId,
             additionalDetails: additionalDetails,
@@ -48313,11 +51237,10 @@ class $$ServiceTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get relatedClientReferenceId =>
-      $state.composableBuilder(
-          column: $state.table.relatedClientReferenceId,
-          builder: (column, joinBuilders) =>
-              ColumnFilters(column, joinBuilders: joinBuilders));
+  ColumnFilters<String> get referenceId => $state.composableBuilder(
+      column: $state.table.referenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
 
   ColumnFilters<bool> get isActive => $state.composableBuilder(
       column: $state.table.isActive,
@@ -48423,11 +51346,10 @@ class $$ServiceTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get relatedClientReferenceId =>
-      $state.composableBuilder(
-          column: $state.table.relatedClientReferenceId,
-          builder: (column, joinBuilders) =>
-              ColumnOrderings(column, joinBuilders: joinBuilders));
+  ColumnOrderings<String> get referenceId => $state.composableBuilder(
+      column: $state.table.referenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
 
   ColumnOrderings<bool> get isActive => $state.composableBuilder(
       column: $state.table.isActive,
@@ -48517,6 +51439,7 @@ class $$ServiceTableOrderingComposer
 
 typedef $$ServiceAttributesTableInsertCompanionBuilder
     = ServiceAttributesCompanion Function({
+  Value<String?> id,
   Value<String?> attributeCode,
   Value<String?> value,
   Value<String?> dataType,
@@ -48531,7 +51454,8 @@ typedef $$ServiceAttributesTableInsertCompanionBuilder
   Value<int?> clientModifiedTime,
   Value<String?> auditModifiedBy,
   Value<int?> auditModifiedTime,
-  required String clientReferenceId,
+  Value<String?> clientReferenceId,
+  Value<String?> serviceClientReferenceId,
   Value<String?> tenantId,
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
@@ -48540,6 +51464,7 @@ typedef $$ServiceAttributesTableInsertCompanionBuilder
 });
 typedef $$ServiceAttributesTableUpdateCompanionBuilder
     = ServiceAttributesCompanion Function({
+  Value<String?> id,
   Value<String?> attributeCode,
   Value<String?> value,
   Value<String?> dataType,
@@ -48554,7 +51479,8 @@ typedef $$ServiceAttributesTableUpdateCompanionBuilder
   Value<int?> clientModifiedTime,
   Value<String?> auditModifiedBy,
   Value<int?> auditModifiedTime,
-  Value<String> clientReferenceId,
+  Value<String?> clientReferenceId,
+  Value<String?> serviceClientReferenceId,
   Value<String?> tenantId,
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
@@ -48583,6 +51509,7 @@ class $$ServiceAttributesTableTableManager extends RootTableManager<
           getChildManagerBuilder: (p) =>
               $$ServiceAttributesTableProcessedTableManager(p),
           getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
             Value<String?> attributeCode = const Value.absent(),
             Value<String?> value = const Value.absent(),
             Value<String?> dataType = const Value.absent(),
@@ -48597,7 +51524,8 @@ class $$ServiceAttributesTableTableManager extends RootTableManager<
             Value<int?> clientModifiedTime = const Value.absent(),
             Value<String?> auditModifiedBy = const Value.absent(),
             Value<int?> auditModifiedTime = const Value.absent(),
-            Value<String> clientReferenceId = const Value.absent(),
+            Value<String?> clientReferenceId = const Value.absent(),
+            Value<String?> serviceClientReferenceId = const Value.absent(),
             Value<String?> tenantId = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
@@ -48605,6 +51533,7 @@ class $$ServiceAttributesTableTableManager extends RootTableManager<
             Value<int> rowid = const Value.absent(),
           }) =>
               ServiceAttributesCompanion(
+            id: id,
             attributeCode: attributeCode,
             value: value,
             dataType: dataType,
@@ -48620,6 +51549,7 @@ class $$ServiceAttributesTableTableManager extends RootTableManager<
             auditModifiedBy: auditModifiedBy,
             auditModifiedTime: auditModifiedTime,
             clientReferenceId: clientReferenceId,
+            serviceClientReferenceId: serviceClientReferenceId,
             tenantId: tenantId,
             isDeleted: isDeleted,
             rowVersion: rowVersion,
@@ -48627,6 +51557,7 @@ class $$ServiceAttributesTableTableManager extends RootTableManager<
             rowid: rowid,
           ),
           getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
             Value<String?> attributeCode = const Value.absent(),
             Value<String?> value = const Value.absent(),
             Value<String?> dataType = const Value.absent(),
@@ -48641,7 +51572,8 @@ class $$ServiceAttributesTableTableManager extends RootTableManager<
             Value<int?> clientModifiedTime = const Value.absent(),
             Value<String?> auditModifiedBy = const Value.absent(),
             Value<int?> auditModifiedTime = const Value.absent(),
-            required String clientReferenceId,
+            Value<String?> clientReferenceId = const Value.absent(),
+            Value<String?> serviceClientReferenceId = const Value.absent(),
             Value<String?> tenantId = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
@@ -48649,6 +51581,7 @@ class $$ServiceAttributesTableTableManager extends RootTableManager<
             Value<int> rowid = const Value.absent(),
           }) =>
               ServiceAttributesCompanion.insert(
+            id: id,
             attributeCode: attributeCode,
             value: value,
             dataType: dataType,
@@ -48664,6 +51597,7 @@ class $$ServiceAttributesTableTableManager extends RootTableManager<
             auditModifiedBy: auditModifiedBy,
             auditModifiedTime: auditModifiedTime,
             clientReferenceId: clientReferenceId,
+            serviceClientReferenceId: serviceClientReferenceId,
             tenantId: tenantId,
             isDeleted: isDeleted,
             rowVersion: rowVersion,
@@ -48689,6 +51623,11 @@ class $$ServiceAttributesTableProcessedTableManager
 class $$ServiceAttributesTableFilterComposer
     extends FilterComposer<_$LocalSqlDataStore, $ServiceAttributesTable> {
   $$ServiceAttributesTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
   ColumnFilters<String> get attributeCode => $state.composableBuilder(
       column: $state.table.attributeCode,
       builder: (column, joinBuilders) =>
@@ -48764,6 +51703,12 @@ class $$ServiceAttributesTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
+  ColumnFilters<String> get serviceClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.serviceClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnFilters(column, joinBuilders: joinBuilders));
+
   ColumnFilters<String> get tenantId => $state.composableBuilder(
       column: $state.table.tenantId,
       builder: (column, joinBuilders) =>
@@ -48788,6 +51733,11 @@ class $$ServiceAttributesTableFilterComposer
 class $$ServiceAttributesTableOrderingComposer
     extends OrderingComposer<_$LocalSqlDataStore, $ServiceAttributesTable> {
   $$ServiceAttributesTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
   ColumnOrderings<String> get attributeCode => $state.composableBuilder(
       column: $state.table.attributeCode,
       builder: (column, joinBuilders) =>
@@ -48862,6 +51812,12 @@ class $$ServiceAttributesTableOrderingComposer
       column: $state.table.clientReferenceId,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get serviceClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.serviceClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
 
   ColumnOrderings<String> get tenantId => $state.composableBuilder(
       column: $state.table.tenantId,
@@ -49684,8 +52640,8 @@ typedef $$AttributesTableInsertCompanionBuilder = AttributesCompanion Function({
   Value<int?> auditModifiedTime,
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
-  Value<String?> additionalFields,
   Value<String?> additionalDetails,
+  Value<String?> additionalFields,
   Value<int> rowid,
 });
 typedef $$AttributesTableUpdateCompanionBuilder = AttributesCompanion Function({
@@ -49710,8 +52666,8 @@ typedef $$AttributesTableUpdateCompanionBuilder = AttributesCompanion Function({
   Value<int?> auditModifiedTime,
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
-  Value<String?> additionalFields,
   Value<String?> additionalDetails,
+  Value<String?> additionalFields,
   Value<int> rowid,
 });
 
@@ -49756,8 +52712,8 @@ class $$AttributesTableTableManager extends RootTableManager<
             Value<int?> auditModifiedTime = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
-            Value<String?> additionalFields = const Value.absent(),
             Value<String?> additionalDetails = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               AttributesCompanion(
@@ -49782,8 +52738,8 @@ class $$AttributesTableTableManager extends RootTableManager<
             auditModifiedTime: auditModifiedTime,
             isDeleted: isDeleted,
             rowVersion: rowVersion,
-            additionalFields: additionalFields,
             additionalDetails: additionalDetails,
+            additionalFields: additionalFields,
             rowid: rowid,
           ),
           getInsertCompanionBuilder: ({
@@ -49808,8 +52764,8 @@ class $$AttributesTableTableManager extends RootTableManager<
             Value<int?> auditModifiedTime = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
-            Value<String?> additionalFields = const Value.absent(),
             Value<String?> additionalDetails = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               AttributesCompanion.insert(
@@ -49834,8 +52790,8 @@ class $$AttributesTableTableManager extends RootTableManager<
             auditModifiedTime: auditModifiedTime,
             isDeleted: isDeleted,
             rowVersion: rowVersion,
-            additionalFields: additionalFields,
             additionalDetails: additionalDetails,
+            additionalFields: additionalFields,
             rowid: rowid,
           ),
         ));
@@ -49961,13 +52917,13 @@ class $$AttributesTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get additionalFields => $state.composableBuilder(
-      column: $state.table.additionalFields,
+  ColumnFilters<String> get additionalDetails => $state.composableBuilder(
+      column: $state.table.additionalDetails,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get additionalDetails => $state.composableBuilder(
-      column: $state.table.additionalDetails,
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 }
@@ -50080,13 +53036,13 @@ class $$AttributesTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
-      column: $state.table.additionalFields,
+  ColumnOrderings<String> get additionalDetails => $state.composableBuilder(
+      column: $state.table.additionalDetails,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get additionalDetails => $state.composableBuilder(
-      column: $state.table.additionalDetails,
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
@@ -53496,6 +56452,394 @@ class $$HouseholdMemberTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
+typedef $$HouseholdMemberRelationShipTableInsertCompanionBuilder
+    = HouseholdMemberRelationShipCompanion Function({
+  Value<String?> id,
+  Value<String?> selfId,
+  Value<String?> selfClientReferenceId,
+  Value<String?> relativeId,
+  Value<String?> relativeClientReferenceId,
+  Value<String?> relationshipType,
+  required String clientReferenceId,
+  Value<String?> tenantId,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$HouseholdMemberRelationShipTableUpdateCompanionBuilder
+    = HouseholdMemberRelationShipCompanion Function({
+  Value<String?> id,
+  Value<String?> selfId,
+  Value<String?> selfClientReferenceId,
+  Value<String?> relativeId,
+  Value<String?> relativeClientReferenceId,
+  Value<String?> relationshipType,
+  Value<String> clientReferenceId,
+  Value<String?> tenantId,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$HouseholdMemberRelationShipTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $HouseholdMemberRelationShipTable,
+    HouseholdMemberRelationShipData,
+    $$HouseholdMemberRelationShipTableFilterComposer,
+    $$HouseholdMemberRelationShipTableOrderingComposer,
+    $$HouseholdMemberRelationShipTableProcessedTableManager,
+    $$HouseholdMemberRelationShipTableInsertCompanionBuilder,
+    $$HouseholdMemberRelationShipTableUpdateCompanionBuilder> {
+  $$HouseholdMemberRelationShipTableTableManager(
+      _$LocalSqlDataStore db, $HouseholdMemberRelationShipTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer: $$HouseholdMemberRelationShipTableFilterComposer(
+              ComposerState(db, table)),
+          orderingComposer: $$HouseholdMemberRelationShipTableOrderingComposer(
+              ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$HouseholdMemberRelationShipTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> selfId = const Value.absent(),
+            Value<String?> selfClientReferenceId = const Value.absent(),
+            Value<String?> relativeId = const Value.absent(),
+            Value<String?> relativeClientReferenceId = const Value.absent(),
+            Value<String?> relationshipType = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              HouseholdMemberRelationShipCompanion(
+            id: id,
+            selfId: selfId,
+            selfClientReferenceId: selfClientReferenceId,
+            relativeId: relativeId,
+            relativeClientReferenceId: relativeClientReferenceId,
+            relationshipType: relationshipType,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> selfId = const Value.absent(),
+            Value<String?> selfClientReferenceId = const Value.absent(),
+            Value<String?> relativeId = const Value.absent(),
+            Value<String?> relativeClientReferenceId = const Value.absent(),
+            Value<String?> relationshipType = const Value.absent(),
+            required String clientReferenceId,
+            Value<String?> tenantId = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              HouseholdMemberRelationShipCompanion.insert(
+            id: id,
+            selfId: selfId,
+            selfClientReferenceId: selfClientReferenceId,
+            relativeId: relativeId,
+            relativeClientReferenceId: relativeClientReferenceId,
+            relationshipType: relationshipType,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$HouseholdMemberRelationShipTableProcessedTableManager
+    extends ProcessedTableManager<
+        _$LocalSqlDataStore,
+        $HouseholdMemberRelationShipTable,
+        HouseholdMemberRelationShipData,
+        $$HouseholdMemberRelationShipTableFilterComposer,
+        $$HouseholdMemberRelationShipTableOrderingComposer,
+        $$HouseholdMemberRelationShipTableProcessedTableManager,
+        $$HouseholdMemberRelationShipTableInsertCompanionBuilder,
+        $$HouseholdMemberRelationShipTableUpdateCompanionBuilder> {
+  $$HouseholdMemberRelationShipTableProcessedTableManager(super.$state);
+}
+
+class $$HouseholdMemberRelationShipTableFilterComposer extends FilterComposer<
+    _$LocalSqlDataStore, $HouseholdMemberRelationShipTable> {
+  $$HouseholdMemberRelationShipTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get selfId => $state.composableBuilder(
+      column: $state.table.selfId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get selfClientReferenceId => $state.composableBuilder(
+      column: $state.table.selfClientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get relativeId => $state.composableBuilder(
+      column: $state.table.relativeId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get relativeClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.relativeClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get relationshipType => $state.composableBuilder(
+      column: $state.table.relationshipType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$HouseholdMemberRelationShipTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore,
+        $HouseholdMemberRelationShipTable> {
+  $$HouseholdMemberRelationShipTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get selfId => $state.composableBuilder(
+      column: $state.table.selfId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get selfClientReferenceId => $state.composableBuilder(
+      column: $state.table.selfClientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get relativeId => $state.composableBuilder(
+      column: $state.table.relativeId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get relativeClientReferenceId => $state
+      .composableBuilder(
+          column: $state.table.relativeClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get relationshipType => $state.composableBuilder(
+      column: $state.table.relationshipType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
 typedef $$TaskTableInsertCompanionBuilder = TaskCompanion Function({
   Value<String?> id,
   Value<String?> projectId,
@@ -55280,6 +58624,675 @@ class $$LocalizationTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
+typedef $$UserActionTableInsertCompanionBuilder = UserActionCompanion Function({
+  required String latitude,
+  required String longitude,
+  required String locationAccuracy,
+  required String clientReferenceId,
+  Value<bool> isSync,
+  required int timestamp,
+  Value<bool?> nonRecoverableError,
+  Value<String?> tenantId,
+  Value<int?> rowVersion,
+  required String projectId,
+  required String boundaryCode,
+  required String action,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> auditCreatedBy,
+  Value<bool?> isDeleted,
+  Value<String?> id,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$UserActionTableUpdateCompanionBuilder = UserActionCompanion Function({
+  Value<String> latitude,
+  Value<String> longitude,
+  Value<String> locationAccuracy,
+  Value<String> clientReferenceId,
+  Value<bool> isSync,
+  Value<int> timestamp,
+  Value<bool?> nonRecoverableError,
+  Value<String?> tenantId,
+  Value<int?> rowVersion,
+  Value<String> projectId,
+  Value<String> boundaryCode,
+  Value<String> action,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> auditCreatedBy,
+  Value<bool?> isDeleted,
+  Value<String?> id,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$UserActionTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $UserActionTable,
+    UserActionData,
+    $$UserActionTableFilterComposer,
+    $$UserActionTableOrderingComposer,
+    $$UserActionTableProcessedTableManager,
+    $$UserActionTableInsertCompanionBuilder,
+    $$UserActionTableUpdateCompanionBuilder> {
+  $$UserActionTableTableManager(_$LocalSqlDataStore db, $UserActionTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$UserActionTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$UserActionTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$UserActionTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> latitude = const Value.absent(),
+            Value<String> longitude = const Value.absent(),
+            Value<String> locationAccuracy = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<bool> isSync = const Value.absent(),
+            Value<int> timestamp = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String> projectId = const Value.absent(),
+            Value<String> boundaryCode = const Value.absent(),
+            Value<String> action = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<String?> id = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              UserActionCompanion(
+            latitude: latitude,
+            longitude: longitude,
+            locationAccuracy: locationAccuracy,
+            clientReferenceId: clientReferenceId,
+            isSync: isSync,
+            timestamp: timestamp,
+            nonRecoverableError: nonRecoverableError,
+            tenantId: tenantId,
+            rowVersion: rowVersion,
+            projectId: projectId,
+            boundaryCode: boundaryCode,
+            action: action,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            auditCreatedBy: auditCreatedBy,
+            isDeleted: isDeleted,
+            id: id,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required String latitude,
+            required String longitude,
+            required String locationAccuracy,
+            required String clientReferenceId,
+            Value<bool> isSync = const Value.absent(),
+            required int timestamp,
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            required String projectId,
+            required String boundaryCode,
+            required String action,
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<String?> id = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              UserActionCompanion.insert(
+            latitude: latitude,
+            longitude: longitude,
+            locationAccuracy: locationAccuracy,
+            clientReferenceId: clientReferenceId,
+            isSync: isSync,
+            timestamp: timestamp,
+            nonRecoverableError: nonRecoverableError,
+            tenantId: tenantId,
+            rowVersion: rowVersion,
+            projectId: projectId,
+            boundaryCode: boundaryCode,
+            action: action,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            auditCreatedBy: auditCreatedBy,
+            isDeleted: isDeleted,
+            id: id,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$UserActionTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $UserActionTable,
+    UserActionData,
+    $$UserActionTableFilterComposer,
+    $$UserActionTableOrderingComposer,
+    $$UserActionTableProcessedTableManager,
+    $$UserActionTableInsertCompanionBuilder,
+    $$UserActionTableUpdateCompanionBuilder> {
+  $$UserActionTableProcessedTableManager(super.$state);
+}
+
+class $$UserActionTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $UserActionTable> {
+  $$UserActionTableFilterComposer(super.$state);
+  ColumnFilters<String> get latitude => $state.composableBuilder(
+      column: $state.table.latitude,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get longitude => $state.composableBuilder(
+      column: $state.table.longitude,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get locationAccuracy => $state.composableBuilder(
+      column: $state.table.locationAccuracy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isSync => $state.composableBuilder(
+      column: $state.table.isSync,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get timestamp => $state.composableBuilder(
+      column: $state.table.timestamp,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get boundaryCode => $state.composableBuilder(
+      column: $state.table.boundaryCode,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get action => $state.composableBuilder(
+      column: $state.table.action,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$UserActionTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $UserActionTable> {
+  $$UserActionTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get latitude => $state.composableBuilder(
+      column: $state.table.latitude,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get longitude => $state.composableBuilder(
+      column: $state.table.longitude,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get locationAccuracy => $state.composableBuilder(
+      column: $state.table.locationAccuracy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isSync => $state.composableBuilder(
+      column: $state.table.isSync,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get timestamp => $state.composableBuilder(
+      column: $state.table.timestamp,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get boundaryCode => $state.composableBuilder(
+      column: $state.table.boundaryCode,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get action => $state.composableBuilder(
+      column: $state.table.action,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$UniqueIdPoolTableInsertCompanionBuilder = UniqueIdPoolCompanion
+    Function({
+  required String id,
+  Value<String?> deviceUuid,
+  Value<String?> userUuid,
+  Value<String?> status,
+  Value<int?> auditCreatedTime,
+  Value<String?> auditModifiedBy,
+  Value<String?> auditCreatedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$UniqueIdPoolTableUpdateCompanionBuilder = UniqueIdPoolCompanion
+    Function({
+  Value<String> id,
+  Value<String?> deviceUuid,
+  Value<String?> userUuid,
+  Value<String?> status,
+  Value<int?> auditCreatedTime,
+  Value<String?> auditModifiedBy,
+  Value<String?> auditCreatedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$UniqueIdPoolTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $UniqueIdPoolTable,
+    UniqueIdPoolData,
+    $$UniqueIdPoolTableFilterComposer,
+    $$UniqueIdPoolTableOrderingComposer,
+    $$UniqueIdPoolTableProcessedTableManager,
+    $$UniqueIdPoolTableInsertCompanionBuilder,
+    $$UniqueIdPoolTableUpdateCompanionBuilder> {
+  $$UniqueIdPoolTableTableManager(
+      _$LocalSqlDataStore db, $UniqueIdPoolTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$UniqueIdPoolTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$UniqueIdPoolTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$UniqueIdPoolTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> id = const Value.absent(),
+            Value<String?> deviceUuid = const Value.absent(),
+            Value<String?> userUuid = const Value.absent(),
+            Value<String?> status = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              UniqueIdPoolCompanion(
+            id: id,
+            deviceUuid: deviceUuid,
+            userUuid: userUuid,
+            status: status,
+            auditCreatedTime: auditCreatedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditCreatedBy: auditCreatedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required String id,
+            Value<String?> deviceUuid = const Value.absent(),
+            Value<String?> userUuid = const Value.absent(),
+            Value<String?> status = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              UniqueIdPoolCompanion.insert(
+            id: id,
+            deviceUuid: deviceUuid,
+            userUuid: userUuid,
+            status: status,
+            auditCreatedTime: auditCreatedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditCreatedBy: auditCreatedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$UniqueIdPoolTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $UniqueIdPoolTable,
+    UniqueIdPoolData,
+    $$UniqueIdPoolTableFilterComposer,
+    $$UniqueIdPoolTableOrderingComposer,
+    $$UniqueIdPoolTableProcessedTableManager,
+    $$UniqueIdPoolTableInsertCompanionBuilder,
+    $$UniqueIdPoolTableUpdateCompanionBuilder> {
+  $$UniqueIdPoolTableProcessedTableManager(super.$state);
+}
+
+class $$UniqueIdPoolTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $UniqueIdPoolTable> {
+  $$UniqueIdPoolTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get deviceUuid => $state.composableBuilder(
+      column: $state.table.deviceUuid,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get userUuid => $state.composableBuilder(
+      column: $state.table.userUuid,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get status => $state.composableBuilder(
+      column: $state.table.status,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$UniqueIdPoolTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $UniqueIdPoolTable> {
+  $$UniqueIdPoolTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get deviceUuid => $state.composableBuilder(
+      column: $state.table.deviceUuid,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get userUuid => $state.composableBuilder(
+      column: $state.table.userUuid,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get status => $state.composableBuilder(
+      column: $state.table.status,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
 class _$LocalSqlDataStoreManager {
   final _$LocalSqlDataStore _db;
   _$LocalSqlDataStoreManager(this._db);
@@ -55353,6 +59366,10 @@ class _$LocalSqlDataStoreManager {
       $$HouseholdTableTableManager(_db, _db.household);
   $$HouseholdMemberTableTableManager get householdMember =>
       $$HouseholdMemberTableTableManager(_db, _db.householdMember);
+  $$HouseholdMemberRelationShipTableTableManager
+      get householdMemberRelationShip =>
+          $$HouseholdMemberRelationShipTableTableManager(
+              _db, _db.householdMemberRelationShip);
   $$TaskTableTableManager get task => $$TaskTableTableManager(_db, _db.task);
   $$TaskResourceTableTableManager get taskResource =>
       $$TaskResourceTableTableManager(_db, _db.taskResource);
@@ -55362,4 +59379,8 @@ class _$LocalSqlDataStoreManager {
       $$ReferralTableTableManager(_db, _db.referral);
   $$LocalizationTableTableManager get localization =>
       $$LocalizationTableTableManager(_db, _db.localization);
+  $$UserActionTableTableManager get userAction =>
+      $$UserActionTableTableManager(_db, _db.userAction);
+  $$UniqueIdPoolTableTableManager get uniqueIdPool =>
+      $$UniqueIdPoolTableTableManager(_db, _db.uniqueIdPool);
 }

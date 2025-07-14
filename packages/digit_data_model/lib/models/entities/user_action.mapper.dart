@@ -21,16 +21,16 @@ class UserActionSearchModelMapper
   @override
   final String id = 'UserActionSearchModel';
 
-  static double _$latitude(UserActionSearchModel v) => v.latitude;
+  static double? _$latitude(UserActionSearchModel v) => v.latitude;
   static const Field<UserActionSearchModel, double> _f$latitude =
       Field('latitude', _$latitude);
-  static double _$longitude(UserActionSearchModel v) => v.longitude;
+  static double? _$longitude(UserActionSearchModel v) => v.longitude;
   static const Field<UserActionSearchModel, double> _f$longitude =
       Field('longitude', _$longitude);
-  static bool _$isSync(UserActionSearchModel v) => v.isSync;
+  static bool? _$isSync(UserActionSearchModel v) => v.isSync;
   static const Field<UserActionSearchModel, bool> _f$isSync =
       Field('isSync', _$isSync);
-  static int _$timestamp(UserActionSearchModel v) => v.timestamp;
+  static int? _$timestamp(UserActionSearchModel v) => v.timestamp;
   static const Field<UserActionSearchModel, int> _f$timestamp =
       Field('timestamp', _$timestamp);
   static String? _$boundaryCode(UserActionSearchModel v) => v.boundaryCode;
@@ -39,7 +39,7 @@ class UserActionSearchModelMapper
   static AuditDetails? _$auditDetails(UserActionSearchModel v) =>
       v.auditDetails;
   static const Field<UserActionSearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
+      Field('auditDetails', _$auditDetails, opt: true);
   static AdditionalFields? _$additionalFields(UserActionSearchModel v) =>
       v.additionalFields;
   static const Field<UserActionSearchModel, AdditionalFields>
@@ -73,7 +73,8 @@ class UserActionSearchModelMapper
         longitude: data.dec(_f$longitude),
         isSync: data.dec(_f$isSync),
         timestamp: data.dec(_f$timestamp),
-        boundaryCode: data.dec(_f$boundaryCode));
+        boundaryCode: data.dec(_f$boundaryCode),
+        auditDetails: data.dec(_f$auditDetails));
   }
 
   @override
@@ -134,12 +135,15 @@ abstract class UserActionSearchModelCopyWith<
     $In extends UserActionSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  @override
   $R call(
       {double? latitude,
       double? longitude,
       bool? isSync,
       int? timestamp,
-      String? boundaryCode});
+      String? boundaryCode,
+      AuditDetails? auditDetails});
   UserActionSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -153,18 +157,23 @@ class _UserActionSearchModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<UserActionSearchModel> $mapper =
       UserActionSearchModelMapper.ensureInitialized();
   @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
   $R call(
-          {double? latitude,
-          double? longitude,
-          bool? isSync,
-          int? timestamp,
-          Object? boundaryCode = $none}) =>
+          {Object? latitude = $none,
+          Object? longitude = $none,
+          Object? isSync = $none,
+          Object? timestamp = $none,
+          Object? boundaryCode = $none,
+          Object? auditDetails = $none}) =>
       $apply(FieldCopyWithData({
-        if (latitude != null) #latitude: latitude,
-        if (longitude != null) #longitude: longitude,
-        if (isSync != null) #isSync: isSync,
-        if (timestamp != null) #timestamp: timestamp,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode
+        if (latitude != $none) #latitude: latitude,
+        if (longitude != $none) #longitude: longitude,
+        if (isSync != $none) #isSync: isSync,
+        if (timestamp != $none) #timestamp: timestamp,
+        if (boundaryCode != $none) #boundaryCode: boundaryCode,
+        if (auditDetails != $none) #auditDetails: auditDetails
       }));
   @override
   UserActionSearchModel $make(CopyWithData data) =>
@@ -173,7 +182,8 @@ class _UserActionSearchModelCopyWithImpl<$R, $Out>
           longitude: data.get(#longitude, or: $value.longitude),
           isSync: data.get(#isSync, or: $value.isSync),
           timestamp: data.get(#timestamp, or: $value.timestamp),
-          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
+          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
+          auditDetails: data.get(#auditDetails, or: $value.auditDetails));
 
   @override
   UserActionSearchModelCopyWith<$R2, UserActionSearchModel, $Out2>
@@ -238,6 +248,9 @@ class UserActionModelMapper extends SubClassMapperBase<UserActionModel> {
   static int? _$rowVersion(UserActionModel v) => v.rowVersion;
   static const Field<UserActionModel, int> _f$rowVersion =
       Field('rowVersion', _$rowVersion, opt: true);
+  static String? _$id(UserActionModel v) => v.id;
+  static const Field<UserActionModel, String> _f$id =
+      Field('id', _$id, opt: true);
   static AuditDetails? _$auditDetails(UserActionModel v) => v.auditDetails;
   static const Field<UserActionModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, opt: true);
@@ -265,6 +278,7 @@ class UserActionModelMapper extends SubClassMapperBase<UserActionModel> {
     #nonRecoverableError: _f$nonRecoverableError,
     #tenantId: _f$tenantId,
     #rowVersion: _f$rowVersion,
+    #id: _f$id,
     #auditDetails: _f$auditDetails,
     #clientAuditDetails: _f$clientAuditDetails,
     #isDeleted: _f$isDeleted,
@@ -295,6 +309,7 @@ class UserActionModelMapper extends SubClassMapperBase<UserActionModel> {
         nonRecoverableError: data.dec(_f$nonRecoverableError),
         tenantId: data.dec(_f$tenantId),
         rowVersion: data.dec(_f$rowVersion),
+        id: data.dec(_f$id),
         auditDetails: data.dec(_f$auditDetails),
         clientAuditDetails: data.dec(_f$clientAuditDetails),
         isDeleted: data.dec(_f$isDeleted));
@@ -375,6 +390,7 @@ abstract class UserActionModelCopyWith<$R, $In extends UserActionModel, $Out>
       bool? nonRecoverableError,
       String? tenantId,
       int? rowVersion,
+      String? id,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -417,6 +433,7 @@ class _UserActionModelCopyWithImpl<$R, $Out>
           Object? nonRecoverableError = $none,
           Object? tenantId = $none,
           Object? rowVersion = $none,
+          Object? id = $none,
           Object? auditDetails = $none,
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
@@ -435,6 +452,7 @@ class _UserActionModelCopyWithImpl<$R, $Out>
           #nonRecoverableError: nonRecoverableError,
         if (tenantId != $none) #tenantId: tenantId,
         if (rowVersion != $none) #rowVersion: rowVersion,
+        if (id != $none) #id: id,
         if (auditDetails != $none) #auditDetails: auditDetails,
         if (clientAuditDetails != $none)
           #clientAuditDetails: clientAuditDetails,
@@ -459,6 +477,7 @@ class _UserActionModelCopyWithImpl<$R, $Out>
           data.get(#nonRecoverableError, or: $value.nonRecoverableError),
       tenantId: data.get(#tenantId, or: $value.tenantId),
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
+      id: data.get(#id, or: $value.id),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
       clientAuditDetails:
           data.get(#clientAuditDetails, or: $value.clientAuditDetails),

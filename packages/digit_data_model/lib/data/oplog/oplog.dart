@@ -1,7 +1,4 @@
-import 'dart:async';
-
 import 'package:digit_data_model/data_model.dart';
-import 'package:isar/isar.dart';
 
 class IndividualOpLogManager extends OpLogManager<IndividualModel> {
   IndividualOpLogManager(super.isar);
@@ -232,6 +229,7 @@ class BoundaryOpLogManager extends OpLogManager<BoundaryModel> {
   @override
   String? getServerGeneratedId(BoundaryModel entity) =>
       throw UnimplementedError();
+
   @override
   int? getRowVersion(BoundaryModel entity) => throw UnimplementedError();
 

@@ -642,6 +642,26 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   code: variant.id,
                                                 );
                                               }).toList(),
+                                              selectedOption: (form
+                                                          .control(
+                                                              _productVariantKey)
+                                                          .value !=
+                                                      null)
+                                                  ? DropdownItem(
+                                                      name: localizations.translate((form
+                                                                      .control(
+                                                                          _productVariantKey)
+                                                                      .value
+                                                                  as ProductVariantModel)
+                                                              .sku ??
+                                                          (form.control(_productVariantKey).value
+                                                                  as ProductVariantModel)
+                                                              .id),
+                                                      code: (form.control(_productVariantKey).value
+                                                              as ProductVariantModel)
+                                                          .id)
+                                                  : const DropdownItem(
+                                                      name: '', code: ''),
                                               onSelect: (value) {
                                                 /// Find the selected product variant model by matching the id
                                                 final selectedVariant =
@@ -685,6 +705,22 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             code: reason.toString(),
                                           );
                                         }).toList(),
+                                        selectedOption: (form
+                                                    .control(
+                                                        _transactionReasonKey)
+                                                    .value !=
+                                                null)
+                                            ? DropdownItem(
+                                                name: localizations.translate(form
+                                                    .control(
+                                                        _transactionReasonKey)
+                                                    .value),
+                                                code: form
+                                                    .control(
+                                                        _transactionReasonKey)
+                                                    .value)
+                                            : const DropdownItem(
+                                                name: '', code: ''),
                                         onSelect: (value) {
                                           final selectedReason =
                                               reasons?.firstWhere(
@@ -930,6 +966,16 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                               if (isWareHouseMgr)
                                 ReactiveWrapperField(
                                     formControlName: _waybillNumberKey,
+                                    validationMessages: {
+                                      'maxLength': (object) => localizations
+                                          .translate(
+                                              i18.common.maxCharsRequired)
+                                          .replaceAll('{}', '200'),
+                                      'minLength': (object) => localizations
+                                          .translate(
+                                              i18.common.min2CharsRequired)
+                                          .replaceAll('{}', ''),
+                                    },
                                     builder: (field) {
                                       return InputField(
                                         type: InputType.text,
@@ -939,6 +985,11 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         onChange: (val) {
                                           field.control.value = val;
                                         },
+                                        keyboardType: const TextInputType
+                                            .numberWithOptions(
+                                          decimal: true,
+                                        ),
+                                        errorMessage: field.errorText,
                                       );
                                     }),
                               if (isWareHouseMgr)
@@ -971,6 +1022,23 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   .transportTypeLabel,
                                             ),
                                             child: DigitDropdown(
+                                              selectedOption: (form
+                                                          .control(
+                                                              _typeOfTransportKey)
+                                                          .value !=
+                                                      null)
+                                                  ? DropdownItem(
+                                                      name: localizations
+                                                          .translate(form
+                                                              .control(
+                                                                  _typeOfTransportKey)
+                                                              .value),
+                                                      code: form
+                                                          .control(
+                                                              _typeOfTransportKey)
+                                                          .value)
+                                                  : const DropdownItem(
+                                                      name: '', code: ''),
                                               emptyItemText:
                                                   localizations.translate(
                                                 i18.common.noMatchFound,
@@ -1028,8 +1096,10 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                const DigitScannerPage(
-                                              quantity: 5,
+                                                DigitScannerPage(
+                                              quantity: int.tryParse(
+                                                      '${form.control(_transactionQuantityKey).value ?? 0}') ??
+                                                  0,
                                               isGS1code: true,
                                               singleValue: false,
                                             ),
