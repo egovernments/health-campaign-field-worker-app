@@ -76,9 +76,10 @@ packages:
   attendance_management:
     dependency: "direct main"
     description:
-      path: "../../packages/attendance_management"
-      relative: true
-    source: path
+      name: attendance_management
+      sha256: c4fb1c928582b8ca704a3bf9c54fd03a5cd688d55d052e7f3d741b2497fd641d
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.5+1"
   audioplayers:
     dependency: transitive
@@ -380,10 +381,10 @@ packages:
     dependency: "direct main"
     description:
       name: complaints
-      sha256: "6c83c0f9bf9e099d958817b923ff9d1e7de777ffb6ae0cb960b816548e8fd80f"
+      sha256: "29f5d26c14438a0717682c26496df41b788a13634e10b2988e344a35f78debae"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3-dev.1-enumeration"
+    version: "1.0.3"
   connectivity_plus:
     dependency: "direct main"
     description:
@@ -524,9 +525,10 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_data_model"
-      relative: true
-    source: path
+      name: digit_data_model
+      sha256: "1a67c66237588f50aa2e7029aac86e9e0e220f4316bcef467bc930e310bcc8d7"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.1.2+1"
   digit_dss:
     dependency: "direct main"
@@ -555,9 +557,10 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_scanner"
-      relative: true
-    source: path
+      name: digit_scanner
+      sha256: "1bf24bdaf71f99de0f1281136478bb141f058a984752176ffa63ad580b467e18"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.6+2"
   digit_showcase:
     dependency: "direct main"
@@ -1854,9 +1857,10 @@ packages:
   registration_delivery:
     dependency: "direct main"
     description:
-      path: "../../packages/registration_delivery"
-      relative: true
-    source: path
+      name: registration_delivery
+      sha256: d4f425342adecd02eb813c1dbbffbba0b5d8d95b9ef2535e70659269f920fe74
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.7+1"
   rxdart:
     dependency: transitive

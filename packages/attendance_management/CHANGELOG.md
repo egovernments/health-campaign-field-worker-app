@@ -1,6 +1,7 @@
 ## 1.0.5+1
 
 * Accommodated single sessions for registers
+* Updated package versions
 
 ## 1.0.5
 
