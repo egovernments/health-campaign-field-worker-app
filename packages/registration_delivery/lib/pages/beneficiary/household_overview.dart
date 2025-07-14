@@ -25,8 +25,6 @@ import 'package:registration_delivery/data/transformer_config.dart';
 import 'package:survey_form/survey_form.dart';
 
 import '/widgets/status_filter/status_filter.dart';
-import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
-import '../../blocs/household_overview/household_overview.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/registration_delivery_enums.dart';
 import '../../models/entities/status.dart';
@@ -177,9 +175,10 @@ class _HouseholdOverviewPageState
                                                                         '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
                                                             .toList()
                                                             .isEmpty) {
-                                                          context.router.push(
-                                                            DeliverInterventionRoute(),
-                                                          );
+                                                          //TODO: need to handle in smc flow
+                                                          // context.router.push(
+                                                          //   DeliverInterventionRoute(),
+                                                          // );
                                                         } else {
                                                           navigateToChecklist(
                                                               ctx,
@@ -945,89 +944,10 @@ class _HouseholdOverviewPageState
                                                         .householdOverViewKeys
                                                         .individualSecondaryButtonKey],
                                             editMemberAction: () async {
-                                              final bloc = ctx.read<
-                                                  HouseholdOverviewBloc>();
-                                              Navigator.of(
-                                                context,
-                                                rootNavigator: true,
-                                              ).pop();
-
-                                              final address = e.address;
-                                              if (address == null ||
-                                                  address.isEmpty) {
-                                                return;
-                                              }
-
-                                              final projectId =
-                                                  RegistrationDeliverySingleton()
-                                                      .projectId!;
-                                              bloc.add(
-                                                HouseholdOverviewReloadEvent(
-                                                  projectId: projectId,
-                                                  projectBeneficiaryType:
-                                                      beneficiaryType,
-                                                ),
-                                              );
-
-                                              await context.router.root.push(
-                                                BeneficiaryRegistrationWrapperRoute(
-                                                  initialState:
-                                                      BeneficiaryRegistrationEditIndividualState(
-                                                    individualModel: e,
-                                                    householdModel: state
-                                                        .householdMembers
-                                                        .first
-                                                        .household!,
-                                                    addressModel: address.first,
-                                                    projectBeneficiaryModel:
-                                                        state
-                                                            .householdMembers
-                                                            .first
-                                                            .projectBeneficiaries
-                                                            ?.firstWhereOrNull(
-                                                      (element) =>
-                                                          element
-                                                              .beneficiaryClientReferenceId ==
-                                                          (RegistrationDeliverySingleton()
-                                                                      .beneficiaryType ==
-                                                                  BeneficiaryType
-                                                                      .individual
-                                                              ? e
-                                                                  .clientReferenceId
-                                                              : state
-                                                                  .householdMembers
-                                                                  .first
-                                                                  .household
-                                                                  ?.clientReferenceId),
-                                                    ),
-                                                  ),
-                                                  children: [
-                                                    IndividualDetailsRoute(
-                                                      isHeadOfHousehold: isHead,
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                              callReloadEvent(
-                                                  offset: 0, limit: 10);
+                                              //TODO: need to add logic for edit member
                                             },
                                             setAsHeadAction: () {
-                                              ctx
-                                                  .read<HouseholdOverviewBloc>()
-                                                  .add(
-                                                    HouseholdOverviewSetAsHeadEvent(
-                                                      individualModel: e,
-                                                      projectId:
-                                                          RegistrationDeliverySingleton()
-                                                              .projectId!,
-                                                      householdModel: state
-                                                          .householdMembers
-                                                          .first
-                                                          .household!,
-                                                      projectBeneficiaryType:
-                                                          beneficiaryType,
-                                                    ),
-                                                  );
+                                              /// TODO: need to add event in wrapper class for head change
 
                                               Navigator.of(
                                                 context,
@@ -1059,22 +979,8 @@ class _HouseholdOverviewPageState
                                                             )
                                                               ..pop()
                                                               ..pop();
-                                                            ctx
-                                                                .read<
-                                                                    HouseholdOverviewBloc>()
-                                                                .add(
-                                                                  HouseholdOverviewEvent
-                                                                      .selectedIndividual(
-                                                                    individualModel:
-                                                                        e,
-                                                                  ),
-                                                                );
-                                                            context.router.push(
-                                                              ReasonForDeletionRoute(
-                                                                isHousholdDelete:
-                                                                    false,
-                                                              ),
-                                                            );
+
+                                                            /// TODO: Need to add logic for deleting a household
                                                           },
                                                           type: DigitButtonType
                                                               .primary,
@@ -1228,29 +1134,7 @@ class _HouseholdOverviewPageState
   }
 
   addIndividual(BuildContext context, HouseholdModel household) async {
-    final bloc = context.read<HouseholdOverviewBloc>();
-
-    final address = household.address;
-
-    if (address == null) return;
-    bloc.add(
-      HouseholdOverviewReloadEvent(
-        projectId: RegistrationDeliverySingleton().projectId!,
-        projectBeneficiaryType:
-            RegistrationDeliverySingleton().beneficiaryType!,
-      ),
-    );
-    await context.router.push(
-      BeneficiaryRegistrationWrapperRoute(
-        initialState: BeneficiaryRegistrationAddMemberState(
-          addressModel: address,
-          householdModel: household,
-        ),
-        children: [
-          IndividualDetailsRoute(),
-        ],
-      ),
-    );
+    // TODO: Need to add logic for adding members
   }
 
   bool isOutsideProjectDateRange() {
@@ -1308,8 +1192,7 @@ class _HouseholdOverviewPageState
 
   void navigateToChecklist(BuildContext ctx, String beneficiaryClientRefId,
       AddressModel? address) async {
-    await context.router.push(BeneficiaryChecklistRoute(
-        beneficiaryClientRefId: beneficiaryClientRefId));
+    //// TODO: need to figure out the logic for
   }
 
   void callReloadEvent({

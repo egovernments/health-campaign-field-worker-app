@@ -7,9 +7,6 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
-import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
-import 'package:registration_delivery/utils/utils.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../localized.dart';
@@ -36,14 +33,8 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
 
 class ResourceBeneficiaryCardState
     extends LocalizedState<ResourceBeneficiaryCard> {
-  DeliverInterventionBloc? bloc;
-  HouseholdOverviewBloc? overViewbloc;
-
   @override
   void initState() {
-    // TODO: implement initState
-    bloc = context.read<DeliverInterventionBloc>();
-    overViewbloc = context.read<HouseholdOverviewBloc>();
     super.initState();
   }
 
@@ -55,25 +46,9 @@ class ResourceBeneficiaryCardState
   }
 
   Future<List<ProductVariantModel>> fetchAndFilterProductVariants() async {
-    var data = fetchProductVariant(
-      RegistrationDeliverySingleton()
-          .selectedProject
-          ?.additionalDetails
-          ?.projectType
-          ?.cycles![bloc!.state.cycle - 1]
-          .deliveries?[bloc!.state.dose - 1],
-      overViewbloc!.state.selectedIndividual,
-      overViewbloc!.state.householdMemberWrapper.household,
-    );
+    return [];
 
-    final state = context.read<ProductVariantBloc>().state;
-    return state.maybeWhen(
-      fetched: (productVariants) {
-        return filterMatchingElements(
-            productVariants, data['criteria'].productVariants);
-      },
-      orElse: () => [],
-    );
+    //TODO: need to check different type in smc
   }
 
   @override

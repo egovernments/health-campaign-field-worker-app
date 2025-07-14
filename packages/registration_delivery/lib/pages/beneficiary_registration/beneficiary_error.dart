@@ -2,12 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
-import '../../blocs/search_households/search_bloc_common_wrapper.dart';
-import '../../router/registration_delivery_router.gm.dart';
 
 @RoutePage()
 class BeneficiaryErrorPage extends LocalizedStatefulWidget {
@@ -32,7 +29,8 @@ class BeneficiaryErrorPageState extends LocalizedState<BeneficiaryErrorPage> {
         child: PanelCard(
           type: PanelType.error,
           title: localizations.translate('FAILED_TO_REGISTER_BENEFICIARY'),
-          description: localizations.translate('FAILED_TO_REGISTER_BENEFICIARY_DESCRIPTION'),
+          description: localizations
+              .translate('FAILED_TO_REGISTER_BENEFICIARY_DESCRIPTION'),
           actions: [
             DigitButton(
                 label: localizations

@@ -9,16 +9,10 @@ import 'package:registration_bloc/models/global_search_params.dart';
 import 'package:registration_bloc/repositories/local/search_entity_repository.dart';
 import 'package:registration_bloc/service/registration_service.dart';
 import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
-import 'package:registration_delivery/blocs/search_households/household_global_seach.dart';
-import 'package:registration_delivery/blocs/search_households/individual_global_search.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 import 'package:survey_form/blocs/service_definition.dart';
 import 'package:survey_form/models/entities/service_definition.dart';
 
-import '../blocs/household_details/household_details.dart';
-import '../blocs/search_households/search_bloc_common_wrapper.dart';
-import '../blocs/search_households/search_households.dart';
-import '../blocs/search_households/tag_by_search.dart';
 import '../blocs/unique_id/unique_id.dart';
 import '../data/repositories/remote/unique_id_pool.dart';
 import '../models/entities/household.dart';
@@ -172,20 +166,6 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
               const ServiceDefinitionEmptyState(),
               serviceDefinitionDataRepository: serviceDefinition,
             )..add(const ServiceDefinitionFetchEvent()),
-          ),
-          BlocProvider(
-            create: (context) {
-              return SearchBlocWrapper(
-                  searchHouseholdsBloc: context.read<SearchHouseholdsBloc>(),
-                  tagSearchBloc: context.read<TagSearchBloc>(),
-                  individualGlobalSearchBloc:
-                      context.read<IndividualGlobalSearchBloc>(),
-                  houseHoldGlobalSearchBloc:
-                      context.read<HouseHoldGlobalSearchBloc>());
-            },
-          ),
-          BlocProvider(
-            create: (_) => HouseholdDetailsBloc(const HouseholdDetailsState()),
           ),
           BlocProvider(
             create: (_) => LocationBloc(location: Location()),
