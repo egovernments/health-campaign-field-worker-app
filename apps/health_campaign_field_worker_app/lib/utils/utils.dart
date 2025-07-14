@@ -528,7 +528,6 @@ void attemptSyncUp(BuildContext context) async {
                       AttendanceLogSearchModel>>(),
               context.read<
                   LocalRepository<UserActionModel, UserActionSearchModel>>(),
-              context.read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
             ],
             remoteRepositories: [
               // INFO : Need to add repo repo of package Here
@@ -562,18 +561,16 @@ void attemptSyncUp(BuildContext context) async {
                       AttendanceLogSearchModel>>(),
               context.read<
                   RemoteRepository<UserActionModel, UserActionSearchModel>>(),
-              context
-                  .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
             ],
           ),
         );
   }
 }
 
-Future<File> getDownSyncFilePath() async  {
+Future<File> getDownSyncFilePath() async {
   final downloadsDirectory = await getDownloadsDirectory();
   final file = File('${downloadsDirectory!.path}/down_sync_data.json');
-  
+
   return file;
 }
 

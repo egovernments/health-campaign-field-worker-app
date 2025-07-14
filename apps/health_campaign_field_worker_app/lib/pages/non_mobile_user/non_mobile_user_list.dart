@@ -168,23 +168,12 @@ class _NonMobileUserListPageState
   }
 
   getAge(String? dateOfBirth) {
-    final ageInYears = dateOfBirth != null
-        ? DigitDateUtils.calculateAge(
-            DigitDateUtils.getFormattedDateToDateTime(
-                  dateOfBirth,
-                ) ??
-                DateTime.now(),
-          ).years
-        : 0;
-    final ageInMonths = dateOfBirth != null
-        ? DigitDateUtils.calculateAge(
-            DigitDateUtils.getFormattedDateToDateTime(
-                  dateOfBirth,
-                ) ??
-                DateTime.now(),
-          ).months
-        : 0;
-
-    return '$ageInYears ${localizations.translate('YEARS')} $ageInMonths ${localizations.translate('MONTHS')}';
+    if (dateOfBirth == null) {
+      return '0 ${localizations.translate('YEARS')} 0 ${localizations.translate('MONTHS')}';
+    }
+    final parsedDate = DigitDateUtils.getFormattedDateToDateTime(dateOfBirth) ??
+        DateTime.now();
+    final age = DigitDateUtils.calculateAge(parsedDate);
+    return '${age.years} ${localizations.translate('YEARS')} ${age.months} ${localizations.translate('MONTHS')}';
   }
 }
