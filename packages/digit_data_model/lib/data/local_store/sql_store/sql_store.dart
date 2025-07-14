@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:digit_data_model/data/local_store/sql_store/tables/localization.dart';
 import 'package:digit_data_model/data/local_store/sql_store/tables/user_action.dart';
 import 'package:drift/drift.dart';
+import 'package:drift/isolate.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
@@ -110,17 +111,14 @@ part 'sql_store.g.dart';
   UniqueIdPool
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
-  /// The constructor for `LocalSqlDataStore`.
-  /// It calls the superclass constructor with `_openConnection()` as the argument.
-  LocalSqlDataStore() : super(_openConnection());
+  LocalSqlDataStore.fromConnection(DatabaseConnection super.connection);
 
   /// The `schemaVersion` getter returns the schema version of the database.
   @override
   int get schemaVersion => 6; // Increment schema version
 
   @override
-  MigrationStrategy get migration =>
-      MigrationStrategy(
+  MigrationStrategy get migration => MigrationStrategy(
         onUpgrade: (migrator, from, to) async {
           if (from < 5) {
             //Add column for projectType in Project Table
@@ -283,8 +281,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
           }
           if (from < 8) {
             try {
-              await migrator.addColumn(
-                  attendee, attendee.tag);
+              await migrator.addColumn(attendee, attendee.tag);
             } catch (e) {
               if (kDebugMode) {
                 print("Failed to add columns for attendee, tag");
@@ -294,17 +291,21 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
         },
       );
 
-  /// The `_openConnection` method opens a connection to the database.
-  /// It returns a `LazyDatabase` that opens the database when it is first accessed.
-  static LazyDatabase _openConnection() {
-    return LazyDatabase(() async {
-      // Get the application documents directory.
-      final dbFolder = await getApplicationDocumentsDirectory();
-      // Create a file in the documents directory for the database.
-      final file = File(p.join(dbFolder.path, 'db.sqlite'));
+  /// Get a new instance running in its own isolate (safe for heavy queries).
+  static Future<LocalSqlDataStore> getIsolateInstance() async {
+    final dbFolder = await getApplicationDocumentsDirectory();
+    final dbPath = p.join(dbFolder.path, 'db.sqlite');
 
-      // Return a `NativeDatabase` that uses the file for storage.
-      return NativeDatabase(file, logStatements: true, setup: (data) {});
-    });
+    final isolate =
+        await DriftIsolate.spawn(() => _backgroundConnection(dbPath));
+    final connection = await isolate.connect();
+
+    return LocalSqlDataStore.fromConnection(connection);
+  }
+
+  /// Provides a database connection in a background isolate using the provided path.
+  static DatabaseConnection _backgroundConnection(String dbPath) {
+    final file = File(dbPath);
+    return DatabaseConnection(NativeDatabase(file, logStatements: true));
   }
 }

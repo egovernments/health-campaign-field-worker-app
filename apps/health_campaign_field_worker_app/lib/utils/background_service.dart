@@ -28,11 +28,12 @@ import '../widgets/network_manager_provider_wrapper.dart';
 import 'environment_config.dart';
 import 'utils.dart';
 
-final LocalSqlDataStore _sql = LocalSqlDataStore();
+late final LocalSqlDataStore _sql;
 late Dio _dio;
 Future<Isar> isarFuture = Constants().isar;
 
 Future<void> initializeService(dio, isar) async {
+  _sql = await LocalSqlDataStore.getIsolateInstance();
   if (Isar.getInstance('HCM') == null) {
     final info = await PackageInfo.fromPlatform();
     await Constants().initialize(info.version);

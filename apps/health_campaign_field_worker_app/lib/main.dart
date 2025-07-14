@@ -5,8 +5,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:isar/isar.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+
 import 'app.dart';
 import 'blocs/app_bloc_observer.dart';
 import 'data/local_store/app_shared_preferences.dart';
@@ -17,13 +18,14 @@ import 'utils/background_service.dart';
 import 'utils/environment_config.dart';
 import 'utils/utils.dart';
 
-final LocalSqlDataStore _sql = LocalSqlDataStore();
+late final LocalSqlDataStore _sql;
 late Dio _dio;
 late Isar _isar;
 int i = 0;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  _sql = await LocalSqlDataStore.getIsolateInstance();
 
   await initializeAllMappers();
   final info = await PackageInfo.fromPlatform();
