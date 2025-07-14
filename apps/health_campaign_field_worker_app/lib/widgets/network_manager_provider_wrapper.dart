@@ -478,14 +478,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
             ),
           ),
         if (value == DataModelType.uniqueId)
-          RepositoryProvider<
-              RemoteRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>>(
-            create: (_) => UniqueIdPoolRemoteRepository(
-              dio,
-              actionMap: actions,
-            ),
-          ),
-        if (value == DataModelType.uniqueId)
           RepositoryProvider<UniqueIdPoolRemoteRepository>(
             create: (context) =>
                 UniqueIdPoolRemoteRepository(dio, actionMap: actions),
