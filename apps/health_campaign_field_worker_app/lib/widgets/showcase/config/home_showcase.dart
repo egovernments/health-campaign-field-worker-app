@@ -107,4 +107,14 @@ class _HomePageShowcaseData {
   );
 
   final clf = ShowcaseItemBuilder(messageLocalizationKey: i18.homeShowcase.clf);
+  final arrayJunctionBox = ShowcaseItemBuilder(messageLocalizationKey: i18.homeShowcase.arrayJunctionBox);
+  final batteryBank = ShowcaseItemBuilder(messageLocalizationKey: i18.homeShowcase.batteryBank);
+  final pcu = ShowcaseItemBuilder(messageLocalizationKey: i18.homeShowcase.pcu);
+  final switchOverSettings = ShowcaseItemBuilder(messageLocalizationKey: i18.homeShowcase.switchOverSettings);
+  final earthPitResistanceTests = ShowcaseItemBuilder(messageLocalizationKey: i18.homeShowcase.earthPitResistanceTests);
+  final sockets = ShowcaseItemBuilder(messageLocalizationKey: i18.homeShowcase.sockets);
+  final pcuDisplaySettings = ShowcaseItemBuilder(messageLocalizationKey: i18.homeShowcase.pcuDisplaySettings);
+  final selco = ShowcaseItemBuilder(messageLocalizationKey: i18.homeShowcase.selco);
+
+
 }

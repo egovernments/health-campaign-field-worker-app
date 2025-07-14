@@ -555,10 +555,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               tenantId: envConfig.variables.tenantId,
               moduleDetails: [
                 MdmsModuleDetailModel(
-                  moduleName: 'HCM-ADMIN-CONSOLE',
+                  moduleName: 'SELCO',
                   masterDetails: [
                     MdmsMasterDetailModel('FormConfig',
-                      filter: "[?(@.project=='${event.model.referenceID}' && @.isSelected==true)]",
+                      filter: "[?(@.project=='SELCO')]",
                     ),
                   ],
                 ),
@@ -567,7 +567,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ).toJson(),
         );
 
-        final formConfigs = formConfigResult['HCM-ADMIN-CONSOLE']['FormConfig'];
+        final formConfigs = formConfigResult['SELCO']['FormConfig'];
 
         for (final config in formConfigs) {
           await enrichFormSchemaWithEnums(config);

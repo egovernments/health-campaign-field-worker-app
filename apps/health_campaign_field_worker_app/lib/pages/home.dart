@@ -36,7 +36,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
-
+import 'package:forms_engine/blocs/forms/forms.dart';
+import 'package:forms_engine/router/forms_router.gm.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import 'package:forms_engine/blocs/forms/forms.dart';
@@ -132,7 +133,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           slivers: [
             SliverGrid(
               delegate: SliverChildBuilderDelegate(
-                (context, index) {
+                    (context, index) {
                   return homeItems.elementAt(index);
                 },
                 childCount: homeItems.length,
@@ -152,18 +153,18 @@ class _HomePageState extends LocalizedState<HomePage> {
                   showcaseFor: showcaseKeys.toSet().toList(),
                 ),
               ),
-              skipProgressBar
-                  ? const SizedBox.shrink()
-                  : homeShowcaseData.distributorProgressBar.buildWith(
-                      child: BeneficiaryProgressBar(
-                        label: localizations.translate(
-                          i18.home.progressIndicatorTitle,
-                        ),
-                        prefixLabel: localizations.translate(
-                          i18.home.progressIndicatorPrefixLabel,
-                        ),
-                      ),
-                    ),
+              // skipProgressBar
+              //     ? const SizedBox.shrink()
+              //     : homeShowcaseData.distributorProgressBar.buildWith(
+              //   child: BeneficiaryProgressBar(
+              //     label: localizations.translate(
+              //       i18.home.progressIndicatorTitle,
+              //     ),
+              //     prefixLabel: localizations.translate(
+              //       i18.home.progressIndicatorPrefixLabel,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           footer: Padding(
@@ -271,19 +272,19 @@ class _HomePageState extends LocalizedState<HomePage> {
                     return count == 0
                         ? const Offstage()
                         : Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: spacer2,
-                            ),
-                            child: InfoCard(
-                              type: InfoType.info,
-                              description: localizations
-                                  .translate(i18.home.dataSyncInfoContent)
-                                  .replaceAll('{}', count.toString()),
-                              title: localizations.translate(
-                                i18.home.dataSyncInfoLabel,
-                              ),
-                            ),
-                          );
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: spacer2,
+                      ),
+                      child: InfoCard(
+                        type: InfoType.info,
+                        description: localizations
+                            .translate(i18.home.dataSyncInfoContent)
+                            .replaceAll('{}', count.toString()),
+                        title: localizations.translate(
+                          i18.home.dataSyncInfoLabel,
+                        ),
+                      ),
+                    );
                   },
                 );
               },
@@ -295,9 +296,9 @@ class _HomePageState extends LocalizedState<HomePage> {
   }
 
   void _showSyncFailedDialog(
-    BuildContext context, {
-    required String message,
-  }) {
+      BuildContext context, {
+        required String message,
+      }) {
     Navigator.of(context, rootNavigator: true).pop();
 
     DigitSyncDialog.show(
@@ -331,328 +332,698 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
-      i18.home.fileComplaint:
-          homeShowcaseData.distributorFileComplaint.buildWith(
+      // i18.home.fileComplaint:
+      // homeShowcaseData.distributorFileComplaint.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.announcement,
+      //     label: i18.home.fileComplaint,
+      //     onPressed: () {
+      //       if (isTriggerLocalisation) {
+      //         triggerLocalization();
+      //         isTriggerLocalisation = false;
+      //       }
+      //       context.router.push(const ComplaintsInboxWrapperRoute());
+      //     },
+      //   ),
+      // ),
+      //
+      // i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.bar_chart_sharp,
+      //     label: i18.home.dashboard,
+      //     onPressed: () {
+      //       if (isTriggerLocalisation) {
+      //         triggerLocalization();
+      //         isTriggerLocalisation = false;
+      //       }
+      //       context.router.push(const UserDashboardRoute());
+      //     },
+      //   ),
+      // ),
+      //
+      // i18.home.beneficiaryLabel:
+      // homeShowcaseData.distributorBeneficiaries.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.all_inbox,
+      //     label: i18.home.beneficiaryLabel,
+      //     onPressed: () async {
+      //       final prefs = await SharedPreferences.getInstance();
+      //       final schemaJsonRaw = prefs.getString('app_config_schemas');
+      //
+      //       if (schemaJsonRaw != null) {
+      //         final allSchemas =
+      //         json.decode(schemaJsonRaw) as Map<String, dynamic>;
+      //
+      //         final registrationSchemaEntry = allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
+      //         final deliverySchemaEntry = allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
+      //
+      //         final registrationSchemaData = registrationSchemaEntry?['data'];
+      //         final deliverySchemaData = deliverySchemaEntry?['data'];
+      //
+      //         if (registrationSchemaData != null || deliverySchemaData !=null) {
+      //           // Extract templates from both schemas
+      //           final regTemplatesRaw = registrationSchemaData?['templates'];
+      //           final delTemplatesRaw = deliverySchemaData?['templates'];
+      //
+      //           final Map<String, dynamic> regTemplateMap =
+      //           regTemplatesRaw is Map<String, dynamic> ? regTemplatesRaw : {};
+      //
+      //           final Map<String, dynamic> delTemplateMap =
+      //           delTemplatesRaw is Map<String, dynamic> ? delTemplatesRaw : {};
+      //
+      //           final templates = {
+      //             for (final entry in {...regTemplateMap, ...delTemplateMap}
+      //                 .entries)
+      //               entry.key: TemplateConfig.fromJson(
+      //                   entry.value as Map<String, dynamic>)
+      //           };
+      //
+      //           final registrationConfig = json.encode(registrationSchemaData);
+      //           final deliveryConfig = json.encode(deliverySchemaData);
+      //
+      //           RegistrationDeliverySingleton()
+      //               .setTemplateConfigs(templates);
+      //           RegistrationDeliverySingleton()
+      //               .setRegistrationConfig(registrationConfig);
+      //           RegistrationDeliverySingleton()
+      //               .setDeliveryConfig(deliveryConfig);
+      //
+      //         }
+      //
+      //         if (isTriggerLocalisation ) {
+      //           final moduleName = 'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
+      //           triggerLocalization(module: moduleName);
+      //           isTriggerLocalisation = false;
+      //         }
+      //       }
+      //       RegistrationDeliverySingleton()
+      //           .setHouseholdType(HouseholdType.family);
+      //
+      //       await context.router.push(const RegistrationDeliveryWrapperRoute());
+      //     },
+      //   ),
+      // ),
+      //
+      // i18.home.clfLabel: homeShowcaseData.clf.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.account_balance,
+      //     label: i18.home.clfLabel,
+      //     onPressed: () async {
+      //       RegistrationDeliverySingleton()
+      //           .setHouseholdType(HouseholdType.community);
+      //       if (isTriggerLocalisation) {
+      //         triggerLocalization();
+      //         isTriggerLocalisation = false;
+      //       }
+      //       await context.router.push(const RegistrationDeliveryWrapperRoute());
+      //     },
+      //   ),
+      // ),
+      //
+      // i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.home,
+      //     enableCustomIcon: true,
+      //     customIconSize: 40,
+      //     customIcon: Constants.closedHouseholdSvg,
+      //     label: i18.home.closedHouseHoldLabel,
+      //     onPressed: () {
+      //       if (isTriggerLocalisation) {
+      //         triggerLocalization();
+      //         isTriggerLocalisation = false;
+      //       }
+      //       context.router.push(const ClosedHouseholdWrapperRoute());
+      //     },
+      //   ),
+      // ),
+      // i18.home.manageStockLabel:
+      // homeShowcaseData.warehouseManagerManageStock.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.store_mall_directory,
+      //     label: i18.home.manageStockLabel,
+      //     onPressed: () {
+      //       if (isTriggerLocalisation) {
+      //         triggerLocalization();
+      //         isTriggerLocalisation = false;
+      //       }
+      //       context.router.push(ManageStocksRoute());
+      //     },
+      //   ),
+      // ),
+      // i18.home.stockReconciliationLabel:
+      // homeShowcaseData.wareHouseManagerStockReconciliation.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.menu_book,
+      //     label: i18.home.stockReconciliationLabel,
+      //     onPressed: () {
+      //       if (isTriggerLocalisation) {
+      //         triggerLocalization();
+      //         isTriggerLocalisation = false;
+      //       }
+      //       context.router.push(StockReconciliationRoute());
+      //     },
+      //   ),
+      // ),
+      // i18.home.mySurveyForm: homeShowcaseData.supervisorMySurveyForm.buildWith(
+      //   child: HomeItemCard(
+      //     enableCustomIcon: true,
+      //     customIcon: mySurveyFormSvg,
+      //     iconPadding: const EdgeInsets.all(spacer1),
+      //     icon: Icons.checklist,
+      //     customIconSize: spacer8,
+      //     label: i18.home.mySurveyForm,
+      //     onPressed: () {
+      //       if (isTriggerLocalisation) {
+      //         triggerLocalization();
+      //         isTriggerLocalisation = false;
+      //       }
+      //       context.router.push(SurveyFormWrapperRoute());
+      //     },
+      //   ),
+      // ),
+      //
+      // i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.buildWith(
+      //   child: StreamBuilder<Map<String, dynamic>?>(
+      //     stream: FlutterBackgroundService().on('serviceRunning'),
+      //     builder: (context, snapshot) {
+      //       return HomeItemCard(
+      //         icon: Icons.sync_alt,
+      //         label: i18.home.syncDataLabel,
+      //         onPressed: () async {
+      //           if (context.mounted) _attemptSyncUp(context);
+      //           // if (snapshot.data?['enablesManualSync'] == true) {
+      //           //   if (context.mounted) _attemptSyncUp(context);
+      //           // } else {
+      //           //   if (context.mounted) {
+      //           //     Toast.showToast(
+      //           //       context,
+      //           //       message: localizations
+      //           //           .translate(i18.common.coreCommonSyncInProgress),
+      //           //       type: ToastType.success,
+      //           //     );
+      //           //   }
+      //           // }
+      //         },
+      //       );
+      //     },
+      //   ),
+      // ),
+      // i18.home.beneficiaryReferralLabel:
+      // homeShowcaseData.hfBeneficiaryReferral.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.supervised_user_circle_rounded,
+      //     label: i18.home.beneficiaryReferralLabel,
+      //     onPressed: () async {
+      //       if (isTriggerLocalisation) {
+      //         triggerLocalization();
+      //         isTriggerLocalisation = false;
+      //       }
+      //       context.router.push(SearchReferralReconciliationsRoute());
+      //     },
+      //   ),
+      // ),
+      // i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.announcement,
+      //     label: i18.home.viewReportsLabel,
+      //     onPressed: () {
+      //       if (isTriggerLocalisation) {
+      //         triggerLocalization();
+      //         isTriggerLocalisation = false;
+      //       }
+      //       context.router.push(InventoryReportSelectionRoute());
+      //     },
+      //   ),
+      // ),
+      // i18.home.manageAttendanceLabel:
+      // homeShowcaseData.manageAttendance.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.fingerprint_outlined,
+      //     label: i18.home.manageAttendanceLabel,
+      //     onPressed: () {
+      //       if (isTriggerLocalisation) {
+      //         triggerLocalization();
+      //         isTriggerLocalisation = false;
+      //       }
+      //
+      //       // context.router.push( FormsRoute(pageName: pageName!));
+      //     },
+      //   ),
+      // ),
+      // i18.home.db: homeShowcaseData.db.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.table_chart,
+      //     label: i18.home.db,
+      //     onPressed: () async {
+      //       Navigator.of(context).push(
+      //         MaterialPageRoute(
+      //           builder: (context) => DriftDbViewer(
+      //             context.read<LocalSqlDataStore>(),
+      //           ),
+      //         ),
+      //       );
+      //     },
+      //   ),
+      // ),
+      i18.home.selco: homeShowcaseData.selco.buildWith(
         child: HomeItemCard(
-          icon: Icons.announcement,
-          label: i18.home.fileComplaint,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            context.router.push(const ComplaintsInboxWrapperRoute());
-          },
-        ),
-      ),
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
-        child: HomeItemCard(
-          icon: Icons.bar_chart_sharp,
-          label: i18.home.dashboard,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            context.router.push(const UserDashboardRoute());
-          },
-        ),
-      ),
-
-      i18.home.beneficiaryLabel:
-          homeShowcaseData.distributorBeneficiaries.buildWith(
-        child: HomeItemCard(
-          icon: Icons.all_inbox,
-          label: i18.home.beneficiaryLabel,
+          icon: Icons.account_balance,
+          label: i18.home.selco,
           onPressed: () async {
             final prefs = await SharedPreferences.getInstance();
             final schemaJsonRaw = prefs.getString('app_config_schemas');
-
-            if (schemaJsonRaw != null) {
+            if(schemaJsonRaw != null) {
               final allSchemas =
-                  json.decode(schemaJsonRaw) as Map<String, dynamic>;
+              json.decode(schemaJsonRaw) as Map<String, dynamic>;
 
-              final registrationSchemaEntry = allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
-              final deliverySchemaEntry = allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
+              final arrayJunctionBoxSchemaEntry = allSchemas['AssetForm'] as Map<
+                  String,
+                  dynamic>?;
+              final arrayJunctionDataSchemaData = arrayJunctionBoxSchemaEntry?['data'];
+              final arrayJunctionSchemas = jsonEncode(arrayJunctionDataSchemaData);
+              context.read<FormsBloc>().add(FormsEvent.load(schemas: [arrayJunctionSchemas]));
 
-              final registrationSchemaData = registrationSchemaEntry?['data'];
-              final deliverySchemaData = deliverySchemaEntry?['data'];
-
-              if (registrationSchemaData != null || deliverySchemaData !=null) {
-                // Extract templates from both schemas
-                final regTemplatesRaw = registrationSchemaData?['templates'];
-                final delTemplatesRaw = deliverySchemaData?['templates'];
-
-                final Map<String, dynamic> regTemplateMap =
-                regTemplatesRaw is Map<String, dynamic> ? regTemplatesRaw : {};
-
-                final Map<String, dynamic> delTemplateMap =
-                delTemplatesRaw is Map<String, dynamic> ? delTemplatesRaw : {};
-
-                final templates = {
-                  for (final entry in {...regTemplateMap, ...delTemplateMap}
-                      .entries)
-                    entry.key: TemplateConfig.fromJson(
-                        entry.value as Map<String, dynamic>)
-                };
-
-                final registrationConfig = json.encode(registrationSchemaData);
-                final deliveryConfig = json.encode(deliverySchemaData);
-
-                RegistrationDeliverySingleton()
-                    .setTemplateConfigs(templates);
-                RegistrationDeliverySingleton()
-                    .setRegistrationConfig(registrationConfig);
-                RegistrationDeliverySingleton()
-                    .setDeliveryConfig(deliveryConfig);
-
+              context.read<FormsBloc>().add(
+                  const FormsEvent.clearForm(schemaKey: 'AssetForm'));
+              final entries = context
+                  .read<FormsBloc>()
+                  .state
+                  .cachedSchemas;
+              final pageName = context
+                  .read<FormsBloc>()
+                  .state
+                  .cachedSchemas['AssetForm']
+                  ?.pages
+                  .entries
+                  .firstOrNull
+                  ?.key;
+              if (pageName != null) {
+                context.router.push(FormsRenderRoute(
+                  currentSchemaKey: 'AssetForm',
+                  pageName: pageName,
+                ));
               }
-
-              if (isTriggerLocalisation ) {
-                final moduleName = 'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
-                triggerLocalization(module: moduleName);
-                isTriggerLocalisation = false;
+              else {
+                Toast.showToast(
+                  context,
+                  message: localizations.translate(
+                      'NO_FORM_FOUND_FOR_SELCO_ASSET_FORM'),
+                  type: ToastType.error,
+                );
               }
             }
-            RegistrationDeliverySingleton()
-                .setHouseholdType(HouseholdType.family);
-
-            await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
       ),
-
-      i18.home.clfLabel: homeShowcaseData.clf.buildWith(
-        child: HomeItemCard(
-          icon: Icons.account_balance,
-          label: i18.home.clfLabel,
-          onPressed: () async {
-            RegistrationDeliverySingleton()
-                .setHouseholdType(HouseholdType.community);
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            await context.router.push(const RegistrationDeliveryWrapperRoute());
-          },
-        ),
-      ),
-
-      i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
-        child: HomeItemCard(
-          icon: Icons.home,
-          enableCustomIcon: true,
-          customIconSize: 40,
-          customIcon: Constants.closedHouseholdSvg,
-          label: i18.home.closedHouseHoldLabel,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            context.router.push(const ClosedHouseholdWrapperRoute());
-          },
-        ),
-      ),
-      i18.home.manageStockLabel:
-          homeShowcaseData.warehouseManagerManageStock.buildWith(
-        child: HomeItemCard(
-          icon: Icons.store_mall_directory,
-          label: i18.home.manageStockLabel,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            context.router.push(ManageStocksRoute());
-          },
-        ),
-      ),
-      i18.home.stockReconciliationLabel:
-          homeShowcaseData.wareHouseManagerStockReconciliation.buildWith(
-        child: HomeItemCard(
-          icon: Icons.menu_book,
-          label: i18.home.stockReconciliationLabel,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            context.router.push(StockReconciliationRoute());
-          },
-        ),
-      ),
-      i18.home.mySurveyForm: homeShowcaseData.supervisorMySurveyForm.buildWith(
-        child: HomeItemCard(
-          enableCustomIcon: true,
-          customIcon: mySurveyFormSvg,
-          iconPadding: const EdgeInsets.all(spacer1),
-          icon: Icons.checklist,
-          customIconSize: spacer8,
-          label: i18.home.mySurveyForm,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            context.router.push(SurveyFormWrapperRoute());
-          },
-        ),
-      ),
-
-      i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.buildWith(
-        child: StreamBuilder<Map<String, dynamic>?>(
-          stream: FlutterBackgroundService().on('serviceRunning'),
-          builder: (context, snapshot) {
-            return HomeItemCard(
-              icon: Icons.sync_alt,
-              label: i18.home.syncDataLabel,
-              onPressed: () async {
-                if (context.mounted) _attemptSyncUp(context);
-                // if (snapshot.data?['enablesManualSync'] == true) {
-                //   if (context.mounted) _attemptSyncUp(context);
-                // } else {
-                //   if (context.mounted) {
-                //     Toast.showToast(
-                //       context,
-                //       message: localizations
-                //           .translate(i18.common.coreCommonSyncInProgress),
-                //       type: ToastType.success,
-                //     );
-                //   }
-                // }
-              },
-            );
-          },
-        ),
-      ),
-      i18.home.beneficiaryReferralLabel:
-          homeShowcaseData.hfBeneficiaryReferral.buildWith(
-        child: HomeItemCard(
-          icon: Icons.supervised_user_circle_rounded,
-          label: i18.home.beneficiaryReferralLabel,
-          onPressed: () async {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            context.router.push(SearchReferralReconciliationsRoute());
-          },
-        ),
-      ),
-      i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.buildWith(
-        child: HomeItemCard(
-          icon: Icons.announcement,
-          label: i18.home.viewReportsLabel,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            context.router.push(InventoryReportSelectionRoute());
-          },
-        ),
-      ),
-      i18.home.manageAttendanceLabel:
-          homeShowcaseData.manageAttendance.buildWith(
-        child: HomeItemCard(
-          icon: Icons.fingerprint_outlined,
-          label: i18.home.manageAttendanceLabel,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-
-            // context.router.push( FormsRoute(pageName: pageName!));
-          },
-        ),
-      ),
-      i18.home.db: homeShowcaseData.db.buildWith(
-        child: HomeItemCard(
-          icon: Icons.table_chart,
-          label: i18.home.db,
-          onPressed: () async {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => DriftDbViewer(
-                  context.read<LocalSqlDataStore>(),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-      i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
-        child: HomeItemCard(
-          icon: Icons.bar_chart_sharp,
-          label: i18.home.dashboard,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            ;
-            context.router.push(const UserDashboardRoute());
-          },
-        ),
-      ),
+      // i18.home.batteryBank: homeShowcaseData.batteryBank.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.account_balance,
+      //     label: i18.home.batteryBank,
+      //     onPressed: () async {
+      //       final prefs = await SharedPreferences.getInstance();
+      //       final schemaJsonRaw = prefs.getString('app_config_schemas');
+      //       if(schemaJsonRaw != null) {
+      //         final allSchemas =
+      //         json.decode(schemaJsonRaw) as Map<String, dynamic>;
+      //
+      //         final arrayJunctionBoxSchemaEntry = allSchemas['BatteryBank'] as Map<
+      //             String,
+      //             dynamic>?;
+      //         final arrayJunctionDataSchemaData = arrayJunctionBoxSchemaEntry?['data'];
+      //         final arrayJunctionSchemas = jsonEncode(arrayJunctionDataSchemaData);
+      //         context.read<FormsBloc>().add(FormsEvent.load(schemas: [arrayJunctionSchemas]));
+      //
+      //         context.read<FormsBloc>().add(
+      //             const FormsEvent.clearForm(schemaKey: 'BatteryBank'));
+      //         final entries = context
+      //             .read<FormsBloc>()
+      //             .state
+      //             .cachedSchemas;
+      //         final pageName = context
+      //             .read<FormsBloc>()
+      //             .state
+      //             .cachedSchemas['BatteryBank']
+      //             ?.pages
+      //             .entries
+      //             .firstOrNull
+      //             ?.key;
+      //         if (pageName != null) {
+      //           context.router.push(FormsRenderRoute(
+      //             currentSchemaKey: 'BatteryBank',
+      //             pageName: pageName,
+      //           ));
+      //         }
+      //         else {
+      //           Toast.showToast(
+      //             context,
+      //             message: localizations.translate(
+      //                 'NO_FORM_FOUND_FOR_BATTERY_BANK'),
+      //             type: ToastType.error,
+      //           );
+      //         }
+      //       }
+      //     },
+      //   ),
+      // ),
+      // i18.home.pcu: homeShowcaseData.pcu.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.account_balance,
+      //     label: i18.home.pcu,
+      //     onPressed: () async {
+      //       final prefs = await SharedPreferences.getInstance();
+      //       final schemaJsonRaw = prefs.getString('app_config_schemas');
+      //       if(schemaJsonRaw != null) {
+      //         final allSchemas =
+      //         json.decode(schemaJsonRaw) as Map<String, dynamic>;
+      //
+      //         final arrayJunctionBoxSchemaEntry = allSchemas['PowerConditioningUnit'] as Map<
+      //             String,
+      //             dynamic>?;
+      //         final arrayJunctionDataSchemaData = arrayJunctionBoxSchemaEntry?['data'];
+      //         final arrayJunctionSchemas = jsonEncode(arrayJunctionDataSchemaData);
+      //         context.read<FormsBloc>().add(FormsEvent.load(schemas: [arrayJunctionSchemas]));
+      //
+      //         context.read<FormsBloc>().add(
+      //             const FormsEvent.clearForm(schemaKey: 'PowerConditioningUnit'));
+      //         final entries = context
+      //             .read<FormsBloc>()
+      //             .state
+      //             .cachedSchemas;
+      //         final pageName = context
+      //             .read<FormsBloc>()
+      //             .state
+      //             .cachedSchemas['PowerConditioningUnit']
+      //             ?.pages
+      //             .entries
+      //             .firstOrNull
+      //             ?.key;
+      //         if (pageName != null) {
+      //           context.router.push(FormsRenderRoute(
+      //             currentSchemaKey: 'PowerConditioningUnit',
+      //             pageName: pageName,
+      //           ));
+      //         }
+      //         else {
+      //           Toast.showToast(
+      //             context,
+      //             message: localizations.translate(
+      //                 'NO_FORM_FOUND_FOR_PCU'),
+      //             type: ToastType.error,
+      //           );
+      //         }
+      //       }
+      //     },
+      //   ),
+      // ),
+      // i18.home.pcuDisplaySettings: homeShowcaseData.pcuDisplaySettings.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.account_balance,
+      //     label: i18.home.pcuDisplaySettings,
+      //     onPressed: () async {
+      //       final prefs = await SharedPreferences.getInstance();
+      //       final schemaJsonRaw = prefs.getString('app_config_schemas');
+      //       if(schemaJsonRaw != null) {
+      //         final allSchemas =
+      //         json.decode(schemaJsonRaw) as Map<String, dynamic>;
+      //
+      //         final arrayJunctionBoxSchemaEntry = allSchemas['PCUDisplaySteetings'] as Map<
+      //             String,
+      //             dynamic>?;
+      //         final arrayJunctionDataSchemaData = arrayJunctionBoxSchemaEntry?['data'];
+      //         final arrayJunctionSchemas = jsonEncode(arrayJunctionDataSchemaData);
+      //         context.read<FormsBloc>().add(FormsEvent.load(schemas: [arrayJunctionSchemas]));
+      //
+      //         context.read<FormsBloc>().add(
+      //             const FormsEvent.clearForm(schemaKey: 'PCUDisplaySteetings'));
+      //         final entries = context
+      //             .read<FormsBloc>()
+      //             .state
+      //             .cachedSchemas;
+      //         final pageName = context
+      //             .read<FormsBloc>()
+      //             .state
+      //             .cachedSchemas['PCUDisplaySteetings']
+      //             ?.pages
+      //             .entries
+      //             .firstOrNull
+      //             ?.key;
+      //         if (pageName != null) {
+      //           context.router.push(FormsRenderRoute(
+      //             currentSchemaKey: 'PCUDisplaySteetings',
+      //             pageName: pageName,
+      //           ));
+      //         }
+      //         else {
+      //           Toast.showToast(
+      //             context,
+      //             message: localizations.translate(
+      //                 'NO_FORM_FOUND_FOR_PCU_DISPLAY_SETTINGS'),
+      //             type: ToastType.error,
+      //           );
+      //         }
+      //       }
+      //     },
+      //   ),
+      // ),
+      // i18.home.switchOverSettings: homeShowcaseData.switchOverSettings.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.account_balance,
+      //     label: i18.home.switchOverSettings,
+      //     onPressed: () async {
+      //       final prefs = await SharedPreferences.getInstance();
+      //       final schemaJsonRaw = prefs.getString('app_config_schemas');
+      //       if(schemaJsonRaw != null) {
+      //         final allSchemas =
+      //         json.decode(schemaJsonRaw) as Map<String, dynamic>;
+      //
+      //         final arrayJunctionBoxSchemaEntry = allSchemas['SwitchOverSettings'] as Map<
+      //             String,
+      //             dynamic>?;
+      //         final arrayJunctionDataSchemaData = arrayJunctionBoxSchemaEntry?['data'];
+      //         final arrayJunctionSchemas = jsonEncode(arrayJunctionDataSchemaData);
+      //         context.read<FormsBloc>().add(FormsEvent.load(schemas: [arrayJunctionSchemas]));
+      //
+      //         context.read<FormsBloc>().add(
+      //             const FormsEvent.clearForm(schemaKey: 'SwitchOverSettings'));
+      //         final entries = context
+      //             .read<FormsBloc>()
+      //             .state
+      //             .cachedSchemas;
+      //         final pageName = context
+      //             .read<FormsBloc>()
+      //             .state
+      //             .cachedSchemas['SwitchOverSettings']
+      //             ?.pages
+      //             .entries
+      //             .firstOrNull
+      //             ?.key;
+      //         if (pageName != null) {
+      //           context.router.push(FormsRenderRoute(
+      //             currentSchemaKey: 'SwitchOverSettings',
+      //             pageName: pageName,
+      //           ));
+      //         }
+      //         else {
+      //           Toast.showToast(
+      //             context,
+      //             message: localizations.translate(
+      //                 'NO_FORM_FOUND_FOR_SWITCHOVER_SETTINGS'),
+      //             type: ToastType.error,
+      //           );
+      //         }
+      //       }
+      //     },
+      //   ),
+      // ),
+      // i18.home.sockets: homeShowcaseData.sockets.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.account_balance,
+      //     label: i18.home.sockets,
+      //     onPressed: () async {
+      //       final prefs = await SharedPreferences.getInstance();
+      //       final schemaJsonRaw = prefs.getString('app_config_schemas');
+      //       if(schemaJsonRaw != null) {
+      //         final allSchemas =
+      //         json.decode(schemaJsonRaw) as Map<String, dynamic>;
+      //
+      //         final arrayJunctionBoxSchemaEntry = allSchemas['Sockets'] as Map<
+      //             String,
+      //             dynamic>?;
+      //         final arrayJunctionDataSchemaData = arrayJunctionBoxSchemaEntry?['data'];
+      //         final arrayJunctionSchemas = jsonEncode(arrayJunctionDataSchemaData);
+      //         context.read<FormsBloc>().add(FormsEvent.load(schemas: [arrayJunctionSchemas]));
+      //
+      //         context.read<FormsBloc>().add(
+      //             const FormsEvent.clearForm(schemaKey: 'Sockets'));
+      //         final entries = context
+      //             .read<FormsBloc>()
+      //             .state
+      //             .cachedSchemas;
+      //         final pageName = context
+      //             .read<FormsBloc>()
+      //             .state
+      //             .cachedSchemas['Sockets']
+      //             ?.pages
+      //             .entries
+      //             .firstOrNull
+      //             ?.key;
+      //         if (pageName != null) {
+      //           context.router.push(FormsRenderRoute(
+      //             currentSchemaKey: 'Sockets',
+      //             pageName: pageName,
+      //           ));
+      //         }
+      //         else {
+      //           Toast.showToast(
+      //             context,
+      //             message: localizations.translate(
+      //                 'NO_FORM_FOUND_FOR_SOCKETS'),
+      //             type: ToastType.error,
+      //           );
+      //         }
+      //       }
+      //     },
+      //   ),
+      // ),
+      // i18.home.earthPitResistanceTests: homeShowcaseData.earthPitResistanceTests.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.account_balance,
+      //     label: i18.home.earthPitResistanceTests,
+      //     onPressed: () async {
+      //       final prefs = await SharedPreferences.getInstance();
+      //       final schemaJsonRaw = prefs.getString('app_config_schemas');
+      //       if(schemaJsonRaw != null) {
+      //         final allSchemas =
+      //         json.decode(schemaJsonRaw) as Map<String, dynamic>;
+      //
+      //         final arrayJunctionBoxSchemaEntry = allSchemas['EPResistanceTests'] as Map<
+      //             String,
+      //             dynamic>?;
+      //         final arrayJunctionDataSchemaData = arrayJunctionBoxSchemaEntry?['data'];
+      //         final arrayJunctionSchemas = jsonEncode(arrayJunctionDataSchemaData);
+      //         context.read<FormsBloc>().add(FormsEvent.load(schemas: [arrayJunctionSchemas]));
+      //
+      //         context.read<FormsBloc>().add(
+      //             const FormsEvent.clearForm(schemaKey: 'EPResistanceTests'));
+      //         final entries = context
+      //             .read<FormsBloc>()
+      //             .state
+      //             .cachedSchemas;
+      //         final pageName = context
+      //             .read<FormsBloc>()
+      //             .state
+      //             .cachedSchemas['EPResistanceTests']
+      //             ?.pages
+      //             .entries
+      //             .firstOrNull
+      //             ?.key;
+      //         if (pageName != null) {
+      //           context.router.push(FormsRenderRoute(
+      //             currentSchemaKey: 'EPResistanceTests',
+      //             pageName: pageName,
+      //           ));
+      //         }
+      //         else {
+      //           Toast.showToast(
+      //             context,
+      //             message: localizations.translate(
+      //                 'NO_FORM_FOUND_FOR_EARTH_PIT_RESISTANCE_TESTS'),
+      //             type: ToastType.error,
+      //           );
+      //         }
+      //       }
+      //     },
+      //   ),
+      // ),
+      // i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.bar_chart_sharp,
+      //     label: i18.home.dashboard,
+      //     onPressed: () {
+      //       if (isTriggerLocalisation) {
+      //         triggerLocalization();
+      //         isTriggerLocalisation = false;
+      //       }
+      //       ;
+      //       context.router.push(const UserDashboardRoute());
+      //     },
+      //   ),
+      // ),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
       // INFO : Need to add showcase keys of package Here
-      i18.home.beneficiaryLabel:
-          homeShowcaseData.distributorBeneficiaries.showcaseKey,
-      i18.home.manageStockLabel:
-          homeShowcaseData.warehouseManagerManageStock.showcaseKey,
-      i18.home.stockReconciliationLabel:
-          homeShowcaseData.wareHouseManagerStockReconciliation.showcaseKey,
-      i18.home.mySurveyForm:
-          homeShowcaseData.supervisorMySurveyForm.showcaseKey,
-      i18.home.fileComplaint:
-          homeShowcaseData.distributorFileComplaint.showcaseKey,
-      i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
-      i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.showcaseKey,
-      i18.home.beneficiaryReferralLabel:
-          homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
-      i18.home.manageAttendanceLabel:
-          homeShowcaseData.manageAttendance.showcaseKey,
-      i18.home.db: homeShowcaseData.db.showcaseKey,
-      i18.home.closedHouseHoldLabel:
-          homeShowcaseData.closedHouseHold.showcaseKey,
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-      i18.home.clfLabel: homeShowcaseData.clf.showcaseKey,
+      // i18.home.beneficiaryLabel:
+      // homeShowcaseData.distributorBeneficiaries.showcaseKey,
+      // i18.home.manageStockLabel:
+      // homeShowcaseData.warehouseManagerManageStock.showcaseKey,
+      // i18.home.stockReconciliationLabel:
+      // homeShowcaseData.wareHouseManagerStockReconciliation.showcaseKey,
+      // i18.home.mySurveyForm:
+      // homeShowcaseData.supervisorMySurveyForm.showcaseKey,
+      // i18.home.fileComplaint:
+      // homeShowcaseData.distributorFileComplaint.showcaseKey,
+      // i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
+      // i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.showcaseKey,
+      // i18.home.beneficiaryReferralLabel:
+      // homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
+      // i18.home.manageAttendanceLabel:
+      // homeShowcaseData.manageAttendance.showcaseKey,
+      // i18.home.db: homeShowcaseData.db.showcaseKey,
+      // i18.home.closedHouseHoldLabel:
+      // homeShowcaseData.closedHouseHold.showcaseKey,
+      // i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+      // i18.home.clfLabel: homeShowcaseData.clf.showcaseKey,
+      // i18.home.arrayFunctionBox: homeShowcaseData.arrayJunctionBox.showcaseKey,
+      // i18.home.batteryBank: homeShowcaseData.batteryBank.showcaseKey,
+      // i18.home.pcu: homeShowcaseData.pcu.showcaseKey,
+      // i18.home.switchOverSettings: homeShowcaseData.switchOverSettings.showcaseKey,
+      // i18.home.earthPitResistanceTests: homeShowcaseData.earthPitResistanceTests.showcaseKey,
+      // i18.home.sockets: homeShowcaseData.sockets.showcaseKey,
+      // i18.home.pcuDisplaySettings: homeShowcaseData.pcuDisplaySettings.showcaseKey,
+      i18.home.selco: homeShowcaseData.selco.showcaseKey,
+
     };
 
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
-      i18.home.beneficiaryLabel,
-      i18.home.clfLabel,
-      i18.home.closedHouseHoldLabel,
-      i18.home.manageStockLabel,
-      i18.home.stockReconciliationLabel,
-      i18.home.mySurveyForm,
-      i18.home.fileComplaint,
-      i18.home.syncDataLabel,
-      i18.home.viewReportsLabel,
-      i18.home.beneficiaryReferralLabel,
-      i18.home.manageAttendanceLabel,
-      i18.home.db,
+      // i18.home.beneficiaryLabel,
+      // i18.home.clfLabel,
+      // i18.home.closedHouseHoldLabel,
+      // i18.home.manageStockLabel,
+      // i18.home.stockReconciliationLabel,
+      // i18.home.mySurveyForm,
+      // i18.home.fileComplaint,
+      // i18.home.syncDataLabel,
+      // i18.home.viewReportsLabel,
+      // i18.home.beneficiaryReferralLabel,
+      // i18.home.manageAttendanceLabel,
+      // i18.home.db,
+      // i18.home.arrayFunctionBox,
+      // i18.home.batteryBank,
+      // i18.home.pcu,
+      // i18.home.switchOverSettings,
+      // i18.home.earthPitResistanceTests,
+      // i18.home.sockets,
       i18.home.dashboard,
+      // i18.home.pcuDisplaySettings,
+      i18.home.selco,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
         .where((element) =>
-            state.actionsWrapper.actions
-                .map((e) => e.displayName)
-                .toList()
-                .contains(element) ||
-            element == i18.home.db)
+    state.actionsWrapper.actions
+        .map((e) => e.displayName)
+        .toList()
+        .contains(element) ||
+        element == i18.home.db
+
+        || element == i18.home.selco
+    )
         .toList();
 
     final showcaseKeys = filteredLabels
-        .where((f) => f != i18.home.db)
+        .where((f) => f != i18.home.db )
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
@@ -661,7 +1032,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     }
 
     final List<Widget> widgetList =
-        filteredLabels.map((label) => homeItemsMap[label]!).toList();
+    filteredLabels.map((label) => homeItemsMap[label]!).toList();
 
     return _HomeItemDataModel(
       widgetList,
@@ -674,117 +1045,117 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     if (context.mounted) {
       context.read<SyncBloc>().add(
-            SyncSyncUpEvent(
-              userId: context.loggedInUserUuid,
-              localRepositories: [
-                // INFO : Need to add local repo of package Here
-                context.read<
-                    LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-                context.read<
-                    LocalRepository<IndividualModel, IndividualSearchModel>>(),
-                context.read<
-                    LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
-                context.read<
-                    LocalRepository<ProjectBeneficiaryModel,
-                        ProjectBeneficiarySearchModel>>(),
-                context.read<
-                    LocalRepository<HouseholdMemberModel,
-                        HouseholdMemberSearchModel>>(),
-                context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
-                context.read<
-                    LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
-                context.read<
-                    LocalRepository<ReferralModel, ReferralSearchModel>>(),
-                context
-                    .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
-                context.read<LocalRepository<StockModel, StockSearchModel>>(),
-                context.read<
-                    LocalRepository<StockReconciliationModel,
-                        StockReconciliationSearchModel>>(),
-                context.read<
-                    LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-                context.read<
-                    LocalRepository<HFReferralModel, HFReferralSearchModel>>(),
-                context.read<
-                    LocalRepository<AttendanceLogModel,
-                        AttendanceLogSearchModel>>(),
-                context.read<
-                    LocalRepository<UserActionModel, UserActionSearchModel>>()
-              ],
-              remoteRepositories: [
-                // INFO : Need to add repo repo of package Here
-                context.read<
-                    RemoteRepository<IndividualModel, IndividualSearchModel>>(),
-                context.read<
-                    RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
-                context.read<
-                    RemoteRepository<ProjectBeneficiaryModel,
-                        ProjectBeneficiarySearchModel>>(),
-                context.read<
-                    RemoteRepository<HouseholdMemberModel,
-                        HouseholdMemberSearchModel>>(),
-                context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
-                context.read<
-                    RemoteRepository<SideEffectModel, SideEffectSearchModel>>(),
-                context.read<
-                    RemoteRepository<ReferralModel, ReferralSearchModel>>(),
-                context
-                    .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
-                context.read<RemoteRepository<StockModel, StockSearchModel>>(),
-                context.read<
-                    RemoteRepository<StockReconciliationModel,
-                        StockReconciliationSearchModel>>(),
-                context.read<
-                    RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-                context.read<
-                    RemoteRepository<HFReferralModel, HFReferralSearchModel>>(),
-                context.read<
-                    RemoteRepository<AttendanceLogModel,
-                        AttendanceLogSearchModel>>(),
-                context.read<
-                    RemoteRepository<UserActionModel, UserActionSearchModel>>(),
-              ],
-            ),
-          );
+        SyncSyncUpEvent(
+          userId: context.loggedInUserUuid,
+          localRepositories: [
+            // INFO : Need to add local repo of package Here
+            context.read<
+                LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+            context.read<
+                LocalRepository<IndividualModel, IndividualSearchModel>>(),
+            context.read<
+                LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
+            context.read<
+                LocalRepository<ProjectBeneficiaryModel,
+                    ProjectBeneficiarySearchModel>>(),
+            context.read<
+                LocalRepository<HouseholdMemberModel,
+                    HouseholdMemberSearchModel>>(),
+            context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
+            context.read<
+                LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
+            context.read<
+                LocalRepository<ReferralModel, ReferralSearchModel>>(),
+            context
+                .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
+            context.read<LocalRepository<StockModel, StockSearchModel>>(),
+            context.read<
+                LocalRepository<StockReconciliationModel,
+                    StockReconciliationSearchModel>>(),
+            context.read<
+                LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+            context.read<
+                LocalRepository<HFReferralModel, HFReferralSearchModel>>(),
+            context.read<
+                LocalRepository<AttendanceLogModel,
+                    AttendanceLogSearchModel>>(),
+            context.read<
+                LocalRepository<UserActionModel, UserActionSearchModel>>()
+          ],
+          remoteRepositories: [
+            // INFO : Need to add repo repo of package Here
+            context.read<
+                RemoteRepository<IndividualModel, IndividualSearchModel>>(),
+            context.read<
+                RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
+            context.read<
+                RemoteRepository<ProjectBeneficiaryModel,
+                    ProjectBeneficiarySearchModel>>(),
+            context.read<
+                RemoteRepository<HouseholdMemberModel,
+                    HouseholdMemberSearchModel>>(),
+            context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
+            context.read<
+                RemoteRepository<SideEffectModel, SideEffectSearchModel>>(),
+            context.read<
+                RemoteRepository<ReferralModel, ReferralSearchModel>>(),
+            context
+                .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
+            context.read<RemoteRepository<StockModel, StockSearchModel>>(),
+            context.read<
+                RemoteRepository<StockReconciliationModel,
+                    StockReconciliationSearchModel>>(),
+            context.read<
+                RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+            context.read<
+                RemoteRepository<HFReferralModel, HFReferralSearchModel>>(),
+            context.read<
+                RemoteRepository<AttendanceLogModel,
+                    AttendanceLogSearchModel>>(),
+            context.read<
+                RemoteRepository<UserActionModel, UserActionSearchModel>>(),
+          ],
+        ),
+      );
     }
   }
 
   void triggerLocalization({String? module, bool? loadOnline}) {
     context.read<AppInitializationBloc>().state.maybeWhen(
-          orElse: () {},
-          initialized: (
-            AppConfiguration appConfiguration,
-            _,
-            __,
+      orElse: () {},
+      initialized: (
+          AppConfiguration appConfiguration,
+          _,
+          __,
           ) {
-            final appConfig = appConfiguration;
-            final localizationModulesList = appConfiguration.backendInterface;
-            final selectedLocale = AppSharedPreferences().getSelectedLocale;
-            LocalizationParams()
-                .setCode(LeastLevelBoundarySingleton().boundary);
-            if (loadOnline == true) {
-              context
-                  .read<LocalizationBloc>()
-                  .add(LocalizationEvent.onRemoteLoadLocalization(
-                    module: module ??
-                        "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
-                    tenantId: envConfig.variables.tenantId,
-                    locale: selectedLocale!,
-                    path: Constants.localizationApiPath,
-                  ));
-            } else {
-              context
-                  .read<LocalizationBloc>()
-                  .add(LocalizationEvent.onLoadLocalization(
-                module: module ??
-                    "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
-                tenantId: envConfig.variables.tenantId,
-                locale: selectedLocale!,
-                path: Constants.localizationApiPath,
-              ));
-            }
-          },
-        );
+        final appConfig = appConfiguration;
+        final localizationModulesList = appConfiguration.backendInterface;
+        final selectedLocale = AppSharedPreferences().getSelectedLocale;
+        LocalizationParams()
+            .setCode(LeastLevelBoundarySingleton().boundary);
+        if (loadOnline == true) {
+          context
+              .read<LocalizationBloc>()
+              .add(LocalizationEvent.onRemoteLoadLocalization(
+            module: module ??
+                "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+            tenantId: envConfig.variables.tenantId,
+            locale: selectedLocale!,
+            path: Constants.localizationApiPath,
+          ));
+        } else {
+          context
+              .read<LocalizationBloc>()
+              .add(LocalizationEvent.onLoadLocalization(
+            module: module ??
+                "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+            tenantId: envConfig.variables.tenantId,
+            locale: selectedLocale!,
+            path: Constants.localizationApiPath,
+          ));
+        }
+      },
+    );
   }
 }
 
@@ -793,10 +1164,10 @@ void setPackagesSingleton(BuildContext context) {
   context.read<AppInitializationBloc>().state.maybeWhen(
       orElse: () {},
       initialized: (
-        AppConfiguration appConfiguration,
-        List<ServiceRegistry> serviceRegistry,
-        List<DashboardConfigSchema?>? dashboardConfigSchema,
-      ) {
+          AppConfiguration appConfiguration,
+          List<ServiceRegistry> serviceRegistry,
+          List<DashboardConfigSchema?>? dashboardConfigSchema,
+          ) {
         final filteredDashboardConfig = filterDashboardConfig(
             dashboardConfigSchema ?? [], context.projectTypeCode ?? "");
         loadLocalization(context, appConfiguration);
@@ -807,7 +1178,7 @@ void setPackagesSingleton(BuildContext context) {
           userMobileNumber: context.loggedInUser.mobileNumber,
           loggedInUserName: context.loggedInUser.name,
           complaintTypes:
-              appConfiguration.complaintTypes!.map((e) => e.code).toList(),
+          appConfiguration.complaintTypes!.map((e) => e.code).toList(),
           userName: context.loggedInUser.name ?? '',
         );
 
@@ -820,9 +1191,9 @@ void setPackagesSingleton(BuildContext context) {
           projectType: context.selectedProjectType,
           selectedProject: context.selectedProject,
           genderOptions:
-              appConfiguration.genderOptions!.map((e) => e.code).toList(),
+          appConfiguration.genderOptions!.map((e) => e.code).toList(),
           idTypeOptions:
-              appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
+          appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
           householdDeletionReasonOptions: appConfiguration
               .householdDeletionReasonOptions!
               .map((e) => e.code)
@@ -835,21 +1206,21 @@ void setPackagesSingleton(BuildContext context) {
               .map((e) => e.code)
               .toList(),
           symptomsTypes:
-              appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
+          appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
           searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
               ? appConfiguration.searchHouseHoldFilters!
-                  .map((e) => e.code)
-                  .toList()
+              .map((e) => e.code)
+              .toList()
               : [],
           searchCLFFilters: appConfiguration.searchCLFFilters != null
               ? appConfiguration.searchCLFFilters!.map((e) => e.code).toList()
               : [],
           referralReasons:
-              appConfiguration.referralReasons?.map((e) => e.code).toList(),
+          appConfiguration.referralReasons?.map((e) => e.code).toList(),
           houseStructureTypes:
-              appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
+          appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
           refusalReasons:
-              appConfiguration.refusalReasons?.map((e) => e.code).toList(),
+          appConfiguration.refusalReasons?.map((e) => e.code).toList(),
         );
 
         ClosedHouseholdSingleton().setInitialData(
@@ -893,14 +1264,14 @@ void setPackagesSingleton(BuildContext context) {
             validMaxAge: context.selectedProjectType?.validMaxAge ?? 64,
           ),
           genderOptions:
-              appConfiguration.genderOptions?.map((e) => e.code).toList() ?? [],
+          appConfiguration.genderOptions?.map((e) => e.code).toList() ?? [],
           cycles: context.cycles,
           referralReasons:
-              appConfiguration.referralReasons?.map((e) => e.code).toList() ??
-                  [],
+          appConfiguration.referralReasons?.map((e) => e.code).toList() ??
+              [],
           checklistTypes:
-              appConfiguration.checklistTypes?.map((e) => e.code).toList() ??
-                  [],
+          appConfiguration.checklistTypes?.map((e) => e.code).toList() ??
+              [],
         );
 
         InventorySingleton().setInitialData(
@@ -912,7 +1283,7 @@ void setPackagesSingleton(BuildContext context) {
           isDistributor: context.loggedInUserRoles
               .where(
                 (role) => role.code == RolesType.distributor.toValue(),
-              )
+          )
               .toList()
               .isNotEmpty,
           loggedInUser: context.loggedInUserModel,
@@ -920,8 +1291,8 @@ void setPackagesSingleton(BuildContext context) {
           loggedInUserUuid: context.loggedInUserUuid,
           transportTypes: appConfiguration.transportTypes
               ?.map((e) => InventoryTransportTypes()
-                ..name = e.code
-                ..code = e.code)
+            ..name = e.code
+            ..code = e.code)
               .toList(),
         );
         DashboardSingleton().setInitialData(
@@ -948,7 +1319,7 @@ void loadLocalization(
   context.read<LocalizationBloc>().add(
       LocalizationEvent.onUpdateLocalizationIndex(
           index: appConfiguration.languages!.indexWhere((element) =>
-              element.value == AppSharedPreferences().getSelectedLocale),
+          element.value == AppSharedPreferences().getSelectedLocale),
           code: AppSharedPreferences().getSelectedLocale!));
 }
 

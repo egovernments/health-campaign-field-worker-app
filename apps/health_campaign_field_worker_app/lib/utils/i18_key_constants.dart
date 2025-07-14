@@ -210,6 +210,16 @@ class HomeShowcase {
   String get clf {
     return "COMMUNAL_LIVING_FACILITY_SHOWCASE";
   }
+
+  String get arrayJunctionBox => 'Array Junction Box';
+  String get batteryBank => "Battery Bank";
+  String get pcu => "Power Conditioning Unit";
+  String get switchOverSettings => "Switchover Settings";
+  String get earthPitResistanceTests => 'Earth Pit Resistance Tests';
+  String get sockets => 'Sockets';
+  String get pcuDisplaySettings => "PCU/Inverter Display & Settings";
+  String get selco => "Selco";
+
 }
 
 class SelectStockShowcase {
@@ -572,6 +582,14 @@ class Home {
   String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
 
   String get clfLabel => "HOME_COMMUNAL_LIVING_FACILITIES_LABEL";
+  String get arrayFunctionBox => "Array Junction Box";
+  String get batteryBank => "Battery Bank";
+  String get pcu => "Power Conditioning Unit";
+  String get switchOverSettings => "Switchover Settings";
+  String get sockets => "Sockets";
+  String get earthPitResistanceTests => "Earth Pit Resistance Tests";
+  String get pcuDisplaySettings => "PCU/Inverter Display & Settings";
+  String get selco => "Selco";
 }
 
 class AcknowledgementSuccess {
