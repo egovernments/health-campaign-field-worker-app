@@ -17,10 +17,8 @@ class JsonSchemaRadioBuilder extends JsonSchemaBuilder<bool> {
     super.tooltipText,
   });
 
-  /// TODO: need to check if they are sending as list or a single radio button
   @override
   Widget build(BuildContext context) {
-
     final loc = FormLocalization.of(context);
     final validationMessages = buildValidationMessages(validations, loc);
 
@@ -28,7 +26,7 @@ class JsonSchemaRadioBuilder extends JsonSchemaBuilder<bool> {
       formControlName: formControlName,
       validationMessages: validationMessages,
       showErrors: (control) => control.invalid && control.touched,
-      builder: (field){
+      builder: (field) {
         return LabeledField(
           charCondition: true,
           isRequired: hasRequiredValidation(validations),
@@ -41,23 +39,22 @@ class JsonSchemaRadioBuilder extends JsonSchemaBuilder<bool> {
             radioDigitButtons: enums
                 .map(
                   (e) => RadioButtonModel(
-                code: e.code,
-                name: loc.translate(e.name),
-              ),
-            ).toList(),
-            onChanged: (value){
+                    code: e.code,
+                    name: loc.translate(e.name),
+                  ),
+                )
+                .toList(),
+            onChanged: (value) {
               form.control(formControlName).markAsTouched();
-              if(isBoolean){
+              if (isBoolean) {
                 form.control(formControlName).value = value.code == 'true';
-              }else{
+              } else {
                 form.control(formControlName).value = value.code;
               }
-
             },
           ),
         );
       },
     );
   }
-
 }
