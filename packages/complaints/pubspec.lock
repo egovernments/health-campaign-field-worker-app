@@ -41,6 +41,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.6.0"
+  asn1lib:
+    dependency: transitive
+    description:
+      name: asn1lib
+      sha256: "9a8f69025044eb466b9b60ef3bc3ac99b4dc6c158ae9c56d25eeccf5bc56d024"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.6.5"
   async:
     dependency: transitive
     description:
@@ -193,6 +201,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.5"
+  carousel_slider:
+    dependency: transitive
+    description:
+      name: carousel_slider
+      sha256: "9c695cc963bf1d04a47bd6021f68befce8970bcd61d24938e1fb0918cf5d9c42"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.1"
   characters:
     dependency: transitive
     description:
@@ -318,18 +334,18 @@ packages:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: bcb6c328a75df1442672e39c0dbae32bc9cb067a07a581bded672d2b748957b9
+      sha256: "1a67c66237588f50aa2e7029aac86e9e0e220f4316bcef467bc930e310bcc8d7"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.6"
+    version: "1.1.2+1"
   digit_ui_components:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "4cab483b1526e3438b36bc4253022882f5c46646178e966d91247916fd1306d5"
+      sha256: "94bfc92dc2bd7dbec934a04e80155beb2dd71e76e166d14095c129880b0c0e36"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2-dev.13"
+    version: "0.2.2+5"
   dio:
     dependency: "direct main"
     description:
@@ -358,10 +374,18 @@ packages:
     dependency: "direct main"
     description:
       name: drift
-      sha256: "4e0ffee40d23f0b809e6cff1ad202886f51d629649073ed42d9cd1d194ea943e"
+      sha256: "6acedc562ffeed308049f78fb1906abad3d65714580b6745441ee6d50ec564cd"
       url: "https://pub.dev"
     source: hosted
-    version: "2.19.1+1"
+    version: "2.18.0"
+  encrypt:
+    dependency: transitive
+    description:
+      name: encrypt
+      sha256: "62d9aa4670cc2a8798bab89b39fc71b6dfbacf615de6cf5001fb39f7e4a996a2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.3"
   fake_async:
     dependency: transitive
     description:
@@ -1038,6 +1062,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  pointycastle:
+    dependency: transitive
+    description:
+      name: pointycastle
+      sha256: "4be0097fcf3fd3e8449e53730c631200ebc7b88016acecab2b0da2f0149222fe"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.9.1"
   pool:
     dependency: transitive
     description:

@@ -176,7 +176,9 @@ class __$$DownSyncBeneficiaryEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DownSyncBeneficiaryEventImpl implements DownSyncBeneficiaryEvent {
+class _$DownSyncBeneficiaryEventImpl
+    with DiagnosticableTreeMixin
+    implements DownSyncBeneficiaryEvent {
   const _$DownSyncBeneficiaryEventImpl(
       {required this.projectId,
       required this.boundaryCode,
@@ -196,8 +198,20 @@ class _$DownSyncBeneficiaryEventImpl implements DownSyncBeneficiaryEvent {
   final String boundaryName;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'BeneficiaryDownSyncEvent.downSync(projectId: $projectId, boundaryCode: $boundaryCode, batchSize: $batchSize, initialServerCount: $initialServerCount, boundaryName: $boundaryName)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'BeneficiaryDownSyncEvent.downSync'))
+      ..add(DiagnosticsProperty('projectId', projectId))
+      ..add(DiagnosticsProperty('boundaryCode', boundaryCode))
+      ..add(DiagnosticsProperty('batchSize', batchSize))
+      ..add(DiagnosticsProperty('initialServerCount', initialServerCount))
+      ..add(DiagnosticsProperty('boundaryName', boundaryName));
   }
 
   @override
@@ -414,6 +428,7 @@ class __$$DownSyncCheckTotalCountEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$DownSyncCheckTotalCountEventImpl
+    with DiagnosticableTreeMixin
     implements DownSyncCheckTotalCountEvent {
   const _$DownSyncCheckTotalCountEventImpl(
       {required this.projectId,
@@ -434,8 +449,21 @@ class _$DownSyncCheckTotalCountEventImpl
   final String boundaryName;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'BeneficiaryDownSyncEvent.checkForData(projectId: $projectId, boundaryCode: $boundaryCode, pendingSyncCount: $pendingSyncCount, batchSize: $batchSize, boundaryName: $boundaryName)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(
+          DiagnosticsProperty('type', 'BeneficiaryDownSyncEvent.checkForData'))
+      ..add(DiagnosticsProperty('projectId', projectId))
+      ..add(DiagnosticsProperty('boundaryCode', boundaryCode))
+      ..add(DiagnosticsProperty('pendingSyncCount', pendingSyncCount))
+      ..add(DiagnosticsProperty('batchSize', batchSize))
+      ..add(DiagnosticsProperty('boundaryName', boundaryName));
   }
 
   @override
@@ -654,7 +682,9 @@ class __$$DownSyncGetBatchSizeEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DownSyncGetBatchSizeEventImpl implements DownSyncGetBatchSizeEvent {
+class _$DownSyncGetBatchSizeEventImpl
+    with DiagnosticableTreeMixin
+    implements DownSyncGetBatchSizeEvent {
   const _$DownSyncGetBatchSizeEventImpl(
       {required final List<AppConfiguration> appConfiguration,
       required this.projectId,
@@ -682,8 +712,21 @@ class _$DownSyncGetBatchSizeEventImpl implements DownSyncGetBatchSizeEvent {
   final String boundaryName;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'BeneficiaryDownSyncEvent.getBatchSize(appConfiguration: $appConfiguration, projectId: $projectId, boundaryCode: $boundaryCode, pendingSyncCount: $pendingSyncCount, boundaryName: $boundaryName)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(
+          DiagnosticsProperty('type', 'BeneficiaryDownSyncEvent.getBatchSize'))
+      ..add(DiagnosticsProperty('appConfiguration', appConfiguration))
+      ..add(DiagnosticsProperty('projectId', projectId))
+      ..add(DiagnosticsProperty('boundaryCode', boundaryCode))
+      ..add(DiagnosticsProperty('pendingSyncCount', pendingSyncCount))
+      ..add(DiagnosticsProperty('boundaryName', boundaryName));
   }
 
   @override
@@ -862,12 +905,21 @@ class __$$DownSyncReportEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DownSyncReportEventImpl implements DownSyncReportEvent {
+class _$DownSyncReportEventImpl
+    with DiagnosticableTreeMixin
+    implements DownSyncReportEvent {
   const _$DownSyncReportEventImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'BeneficiaryDownSyncEvent.downSyncReport()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+        DiagnosticsProperty('type', 'BeneficiaryDownSyncEvent.downSyncReport'));
   }
 
   @override
@@ -1008,12 +1060,21 @@ class __$$DownSyncResetStateEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DownSyncResetStateEventImpl implements DownSyncResetStateEvent {
+class _$DownSyncResetStateEventImpl
+    with DiagnosticableTreeMixin
+    implements DownSyncResetStateEvent {
   const _$DownSyncResetStateEventImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'BeneficiaryDownSyncEvent.resetState()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+        DiagnosticsProperty('type', 'BeneficiaryDownSyncEvent.resetState'));
   }
 
   @override
@@ -1301,7 +1362,8 @@ class __$$DownSyncInProgressStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState {
+class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState
+    with DiagnosticableTreeMixin {
   const _$DownSyncInProgressStateImpl(this.syncedCount, this.totalCount)
       : super._();
 
@@ -1311,8 +1373,17 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState {
   final int totalCount;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'BeneficiaryDownSyncState.inProgress(syncedCount: $syncedCount, totalCount: $totalCount)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'BeneficiaryDownSyncState.inProgress'))
+      ..add(DiagnosticsProperty('syncedCount', syncedCount))
+      ..add(DiagnosticsProperty('totalCount', totalCount));
   }
 
   @override
@@ -1512,15 +1583,24 @@ class __$$DownSyncSuccessStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState {
+class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState
+    with DiagnosticableTreeMixin {
   const _$DownSyncSuccessStateImpl(this.downSyncResult) : super._();
 
   @override
   final DownsyncModel downSyncResult;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'BeneficiaryDownSyncState.success(downSyncResult: $downSyncResult)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'BeneficiaryDownSyncState.success'))
+      ..add(DiagnosticsProperty('downSyncResult', downSyncResult));
   }
 
   @override
@@ -1744,7 +1824,8 @@ class __$$DownSyncGetBatchSizeStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState {
+class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
+    with DiagnosticableTreeMixin {
   const _$DownSyncGetBatchSizeStateImpl(this.batchSize, this.projectId,
       this.boundaryCode, this.pendingSyncCount, this.boundaryName)
       : super._();
@@ -1761,8 +1842,21 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState {
   final String boundaryName;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'BeneficiaryDownSyncState.getBatchSize(batchSize: $batchSize, projectId: $projectId, boundaryCode: $boundaryCode, pendingSyncCount: $pendingSyncCount, boundaryName: $boundaryName)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(
+          DiagnosticsProperty('type', 'BeneficiaryDownSyncState.getBatchSize'))
+      ..add(DiagnosticsProperty('batchSize', batchSize))
+      ..add(DiagnosticsProperty('projectId', projectId))
+      ..add(DiagnosticsProperty('boundaryCode', boundaryCode))
+      ..add(DiagnosticsProperty('pendingSyncCount', pendingSyncCount))
+      ..add(DiagnosticsProperty('boundaryName', boundaryName));
   }
 
   @override
@@ -1978,15 +2072,24 @@ class __$$DownSyncLoadingStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState {
+class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState
+    with DiagnosticableTreeMixin {
   const _$DownSyncLoadingStateImpl(this.isPop) : super._();
 
   @override
   final bool isPop;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'BeneficiaryDownSyncState.loading(isPop: $isPop)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'BeneficiaryDownSyncState.loading'))
+      ..add(DiagnosticsProperty('isPop', isPop));
   }
 
   @override
@@ -2170,12 +2273,19 @@ class __$$DownSyncInsufficientStorageStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$DownSyncInsufficientStorageStateImpl
-    extends _DownSyncInsufficientStorageState {
+    extends _DownSyncInsufficientStorageState with DiagnosticableTreeMixin {
   const _$DownSyncInsufficientStorageStateImpl() : super._();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'BeneficiaryDownSyncState.insufficientStorage()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty(
+        'type', 'BeneficiaryDownSyncState.insufficientStorage'));
   }
 
   @override
@@ -2365,7 +2475,8 @@ class __$$DownSyncDataFoundStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState {
+class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
+    with DiagnosticableTreeMixin {
   const _$DownSyncDataFoundStateImpl(this.initialServerCount, this.batchSize)
       : super._();
 
@@ -2375,8 +2486,17 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState {
   final int batchSize;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'BeneficiaryDownSyncState.dataFound(initialServerCount: $initialServerCount, batchSize: $batchSize)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'BeneficiaryDownSyncState.dataFound'))
+      ..add(DiagnosticsProperty('initialServerCount', initialServerCount))
+      ..add(DiagnosticsProperty('batchSize', batchSize));
   }
 
   @override
@@ -2561,12 +2681,20 @@ class __$$DownSyncResetStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DownSyncResetStateImpl extends _DownSyncResetState {
+class _$DownSyncResetStateImpl extends _DownSyncResetState
+    with DiagnosticableTreeMixin {
   const _$DownSyncResetStateImpl() : super._();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'BeneficiaryDownSyncState.resetState()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+        DiagnosticsProperty('type', 'BeneficiaryDownSyncState.resetState'));
   }
 
   @override
@@ -2733,13 +2861,20 @@ class __$$DownSynnCountCheckFailedStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DownSynnCountCheckFailedStateImpl
-    extends _DownSynnCountCheckFailedState {
+class _$DownSynnCountCheckFailedStateImpl extends _DownSynnCountCheckFailedState
+    with DiagnosticableTreeMixin {
   const _$DownSynnCountCheckFailedStateImpl() : super._();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'BeneficiaryDownSyncState.totalCountCheckFailed()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty(
+        'type', 'BeneficiaryDownSyncState.totalCountCheckFailed'));
   }
 
   @override
@@ -2906,12 +3041,20 @@ class __$$DownSyncFailureStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DownSyncFailureStateImpl extends _DownSyncFailureState {
+class _$DownSyncFailureStateImpl extends _DownSyncFailureState
+    with DiagnosticableTreeMixin {
   const _$DownSyncFailureStateImpl() : super._();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'BeneficiaryDownSyncState.failed()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty('type', 'BeneficiaryDownSyncState.failed'));
   }
 
   @override
@@ -3092,7 +3235,8 @@ class __$$DownSyncReportStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DownSyncReportStateImpl extends _DownSyncReportState {
+class _$DownSyncReportStateImpl extends _DownSyncReportState
+    with DiagnosticableTreeMixin {
   const _$DownSyncReportStateImpl(
       final List<DownsyncModel> downsyncCriteriaList)
       : _downsyncCriteriaList = downsyncCriteriaList,
@@ -3108,8 +3252,16 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState {
   }
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'BeneficiaryDownSyncState.report(downsyncCriteriaList: $downsyncCriteriaList)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'BeneficiaryDownSyncState.report'))
+      ..add(DiagnosticsProperty('downsyncCriteriaList', downsyncCriteriaList));
   }
 
   @override
@@ -3294,12 +3446,20 @@ class __$$DownSyncPendingSyncStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState {
+class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
+    with DiagnosticableTreeMixin {
   const _$DownSyncPendingSyncStateImpl() : super._();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'BeneficiaryDownSyncState.pendingSync()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+        DiagnosticsProperty('type', 'BeneficiaryDownSyncState.pendingSync'));
   }
 
   @override

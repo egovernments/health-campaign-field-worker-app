@@ -11,12 +11,16 @@ enum MasterEnums {
   symptomTypes,
   @MappableValue("REFERRAL_REASONS")
   referralReasons,
+  @MappableValue("MANUAL_ATTENDANCE_REASONS")
+  manualAttendanceReasons,
   @MappableValue("HOUSE_STRUCTURE_TYPES")
   houseStructureTypes,
   @MappableValue("REFUSAL_REASONS")
   refusalReasons,
   @MappableValue("BANDWIDTH_BATCH_SIZE")
   bandWidthBatchSize,
+  @MappableValue("BENEFICIARY_ID_CONFIG")
+  beneficiaryIdConfig,
   @MappableValue("DOWNSYNC-BANDWIDTH_BATCH_SIZE")
   downSyncBandwidthBatchSize,
   @MappableValue("HOUSEHOLD_DELETION_REASON_OPTIONS")
@@ -29,6 +33,8 @@ enum MasterEnums {
   checklistTypes,
   @MappableValue("ID_TYPE_OPTIONS_POPULATOR")
   idTypes,
+  @MappableValue("HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES")
+  relationShipTypeOptions,
   @MappableValue("DELIVERY_COMMENT_OPTIONS_POPULATOR")
   deliveryComments,
   @MappableValue("BACKEND_INTERFACE")
@@ -55,4 +61,6 @@ enum MasterEnums {
   privacyPolicy,
   @MappableValue("dashboardConfig")
   dashboardConfig,
+  @MappableValue("TRANSIT_POST_TYPE")
+  transitPostType,
 }

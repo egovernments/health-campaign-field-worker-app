@@ -13,6 +13,7 @@ class GlobalSearchParameters {
   final List<String>? filter;
   final int? totalCount;
   final HouseholdType? householdType;
+  final String? identifierId;
 
   GlobalSearchParameters(
       {required this.isProximityEnabled,
@@ -23,6 +24,7 @@ class GlobalSearchParameters {
       required this.offset,
       required this.limit,
       required this.filter,
+      this.identifierId,
       this.totalCount,
       this.projectId,
       this.householdClientReferenceId,

@@ -1,3 +1,7 @@
+## 1.0.5+1
+
+* Upgrade packages to latest version
+
 ## 1.0.5
 
 * Upgrade digit_ui_components, digit_data_model

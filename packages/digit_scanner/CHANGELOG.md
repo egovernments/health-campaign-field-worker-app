@@ -1,3 +1,20 @@
+## 1.0.6+2
+
+* Updated component of input with DigitInput
+
+## 1.0.6+1
+
+* Modified scanner page with method to override and incorporate attendance features
+
+## 1.0.6
+
+* Updated with new fields for manual entry for gs1 codes
+* Updated dynamic capturing of gs1 codes
+
+## 1.0.5+1
+
+* Updated to latest package versions
+
 ## 1.0.5
 
 * Updated to latest package versions

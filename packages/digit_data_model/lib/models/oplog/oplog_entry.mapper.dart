@@ -35,6 +35,8 @@ class DataOperationMapper extends EnumMapper<DataOperation> {
         return DataOperation.delete;
       case 'singleCreate':
         return DataOperation.singleCreate;
+      case 'singleUpdate':
+        return DataOperation.singleUpdate;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -53,6 +55,8 @@ class DataOperationMapper extends EnumMapper<DataOperation> {
         return 'delete';
       case DataOperation.singleCreate:
         return 'singleCreate';
+      case DataOperation.singleUpdate:
+        return 'singleUpdate';
     }
   }
 }
@@ -101,6 +105,8 @@ class ApiOperationMapper extends EnumMapper<ApiOperation> {
         return ApiOperation.bulkDelete;
       case 'single_create':
         return ApiOperation.singleCreate;
+      case 'single_update':
+        return ApiOperation.singleUpdate;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -127,6 +133,8 @@ class ApiOperationMapper extends EnumMapper<ApiOperation> {
         return 'bulk_delete';
       case ApiOperation.singleCreate:
         return 'single_create';
+      case ApiOperation.singleUpdate:
+        return 'single_update';
     }
   }
 }

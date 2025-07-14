@@ -123,6 +123,8 @@ class AcknowledgementSuccess {
 class Scanner {
   const Scanner();
 
+  String get scannedQtyExceed => 'SCANNED_QTY_EXCEED_THAN_REQUIRED';
+
   String get changingCameraLens => 'CHANGING_CAMERA_LENS';
 
   String get flashOn => 'FLASH_ON';
@@ -162,4 +164,14 @@ class Scanner {
   String get barCodesFound => 'BARCODES_FOUND';
 
   String get barCode => 'BARCODE';
+
+  String get barCodeBatch => 'BARCODE_BATCH_NUMBER';
+
+  String get barCodeSerial => 'BARCODE_SERIAL_NUMBER';
+
+  String get barCodeExpiry => 'BARCODE_EXPIRY_DATE';
+
+  String get batchNoRequired => 'BARCODE_BATCH_NO_REQUIRED';
+  String get serialNoRequired => 'BARCODE_SERIAL_NO_REQUIRED';
+  String get expiryDateRequired => 'BARCODE_EXPIRY_DATE_REQUIRED';
 }
