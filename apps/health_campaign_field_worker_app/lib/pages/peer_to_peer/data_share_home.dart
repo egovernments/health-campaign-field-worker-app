@@ -76,10 +76,46 @@ class _DataShareHomeState extends LocalizedState<DataShareHomePage> {
                             completedSync: (value) {
                               Navigator.of(context, rootNavigator: true).pop();
                             },
-                            pendingSync: (syncState) {
+                            pendingSync: (syncState) async {
+                              var file = await getDownSyncFilePath();
                               if (syncState.count == 0) {
-                                context.router.push(DevicesListRoute(
-                                    deviceType: DeviceType.sender));
+                                if (await file.exists()) {
+                                  context.router.push(DevicesListRoute(
+                                      deviceType: DeviceType.sender));
+                                } else {
+                                  showCustomPopup(
+                                    context: context,
+                                    builder: (BuildContext ctx) => Popup(
+                                        title: localizations.translate(
+                                            i18.common.coreCommonAttention),
+                                        description: localizations.translate(
+                                            i18.dataShare.dataUnSyncedDesc),
+                                        type: PopUpType.alert,
+                                        onCrossTap: () {
+                                          Navigator.of(
+                                            ctx,
+                                            rootNavigator: true,
+                                          ).pop();
+                                        },
+                                        actions: [
+                                          DigitButton(
+                                              capitalizeLetters: false,
+                                              label: localizations.translate(
+                                                  i18.home.syncDataLabel),
+                                              onPressed: () {
+                                                Navigator.of(
+                                                  ctx,
+                                                  rootNavigator: true,
+                                                ).pop();
+                                                ctx.router.replaceAll([
+                                                  BoundarySelectionRoute(),
+                                                ]);
+                                              },
+                                              type: DigitButtonType.primary,
+                                              size: DigitButtonSize.large)
+                                        ]),
+                                  );
+                                }
                               } else {
                                 showCustomPopup(
                                   context: context,

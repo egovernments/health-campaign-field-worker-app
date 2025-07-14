@@ -791,85 +791,91 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             widget.isHeadOfHousehold) ||
                         (RegistrationDeliverySingleton().beneficiaryType ==
                             BeneficiaryType.individual))
-                      BlocBuilder<DigitScannerBloc, DigitScannerState>(
-                        buildWhen: (p, c) {
-                          return true;
-                        },
-                        builder: (context, state) => state.qrCodes.isNotEmpty
-                            ? Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width / 3,
-                                    child: Text(
-                                      localizations.translate(
-                                        i18.deliverIntervention.voucherCode,
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: spacer2, left: spacer4, right: spacer4),
+                        child: BlocBuilder<DigitScannerBloc, DigitScannerState>(
+                          buildWhen: (p, c) {
+                            return true;
+                          },
+                          builder: (context, state) => state.qrCodes.isNotEmpty
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      width:
+                                          MediaQuery.of(context).size.width / 3,
+                                      child: Text(
+                                        localizations.translate(
+                                          i18.deliverIntervention.voucherCode,
+                                        ),
+                                        style: textTheme.headingS,
                                       ),
-                                      style: textTheme.headingS,
                                     ),
-                                  ),
-                                  Flexible(
-                                    child: Text(
-                                      overflow: TextOverflow.ellipsis,
-                                      localizations
-                                          .translate(state.qrCodes.last),
+                                    Flexible(
+                                      child: Text(
+                                        overflow: TextOverflow.ellipsis,
+                                        localizations
+                                            .translate(state.qrCodes.last),
+                                      ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      bottom: spacer2 * 2,
-                                    ),
-                                    child: IconButton(
-                                      color: theme.colorTheme.primary.primary1,
-                                      icon: const Icon(Icons.edit),
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                          //[TODO: Add the route to auto_route]
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const DigitScannerPage(
-                                              quantity: 1,
-                                              isGS1code: false,
-                                              singleValue: true,
-                                              isEditEnabled: true,
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: spacer2 * 2,
+                                      ),
+                                      child: IconButton(
+                                        color:
+                                            theme.colorTheme.primary.primary1,
+                                        icon: const Icon(Icons.edit),
+                                        onPressed: () {
+                                          Navigator.of(context).push(
+                                            //[TODO: Add the route to auto_route]
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const DigitScannerPage(
+                                                quantity: 1,
+                                                isGS1code: false,
+                                                singleValue: true,
+                                                isEditEnabled: true,
+                                              ),
+                                              settings: const RouteSettings(
+                                                  name: '/qr-scanner'),
                                             ),
-                                            settings: const RouteSettings(
-                                                name: '/qr-scanner'),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
-
-                                // ignore: no-empty-block
-                              )
-                            : DigitButton(
-                                type: DigitButtonType.secondary,
-                                size: DigitButtonSize.large,
-                                mainAxisSize: MainAxisSize.max,
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    // [TODO: Add the route to auto_route]
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const DigitScannerPage(
-                                        quantity: 1,
-                                        isGS1code: false,
-                                        singleValue: true,
+                                          );
+                                        },
                                       ),
-                                      settings: const RouteSettings(
-                                          name: '/qr-scanner'),
                                     ),
-                                  );
-                                },
-                                prefixIcon: Icons.qr_code,
-                                label: localizations.translate(
-                                  i18.individualDetails.linkVoucherToIndividual,
+                                  ],
+
+                                  // ignore: no-empty-block
+                                )
+                              : DigitButton(
+                                  type: DigitButtonType.secondary,
+                                  size: DigitButtonSize.large,
+                                  mainAxisSize: MainAxisSize.max,
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      // [TODO: Add the route to auto_route]
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const DigitScannerPage(
+                                          quantity: 1,
+                                          isGS1code: false,
+                                          singleValue: true,
+                                        ),
+                                        settings: const RouteSettings(
+                                            name: '/qr-scanner'),
+                                      ),
+                                    );
+                                  },
+                                  prefixIcon: Icons.qr_code,
+                                  label: localizations.translate(
+                                    i18.individualDetails
+                                        .linkVoucherToIndividual,
+                                  ),
                                 ),
-                              ),
+                        ),
                       ),
                   ]),
             )

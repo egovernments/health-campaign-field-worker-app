@@ -1199,11 +1199,14 @@ class _HouseholdOverviewPageState
                                                             ) ||
                                                             (taskData ?? [])
                                                                 .isNotEmpty
-                                                        ? taskData
-                                                                ?.last.status ==
-                                                            Status.ineligible
-                                                                .toValue()
-                                                                .toString()
+                                                        ? (taskData ?? [])
+                                                                .isNotEmpty &&
+                                                            taskData?.last
+                                                                    .status ==
+                                                                Status
+                                                                    .ineligible
+                                                                    .toValue()
+                                                                    .toString()
                                                         : !checkEligibilityForAgeAndSideEffect(
                                                             DigitDOBAgeConvertor(
                                                               years: ageInYears,
@@ -1372,6 +1375,7 @@ class _HouseholdOverviewPageState
   void navigateToChecklist(BuildContext ctx, String beneficiaryClientRefId,
       AddressModel? address) async {
     await context.router.push(BeneficiaryChecklistRoute(
+        beneficiaryAddress: address,
         beneficiaryClientRefId: beneficiaryClientRefId));
   }
 

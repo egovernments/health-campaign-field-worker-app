@@ -42,6 +42,7 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
   final ValueNotifier<List<Device>> _deviceNotifier = ValueNotifier([]);
   bool _isSheetShown = false, _isReceiverDialogShown = false;
   Timer? _debounceTimer;
+  Set<String> connectingDeviceIds = {};
 
   late ThemeData theme;
   late DigitTextTheme textTheme;
@@ -181,7 +182,7 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
     }
   }
 
-  void handleDeviceTap(Device device) {
+  void handleDeviceTap(Device device) async {
     if (device.state == SessionState.notConnected) {
       nearbyService.invitePeer(
           deviceID: device.deviceId,
@@ -189,6 +190,9 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
               '${context.loggedInUser.name} (${context.loggedInUser.userName})');
     } else if (device.state == SessionState.connected) {
       nearbyService.disconnectPeer(deviceID: device.deviceId);
+      setState(() {
+        connectingDeviceIds.remove(device.deviceId);
+      });
     }
   }
 

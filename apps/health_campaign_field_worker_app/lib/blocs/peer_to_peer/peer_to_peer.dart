@@ -1,14 +1,13 @@
 // GENERATED using mason_cli
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:digit_data_model/data_model.dart';
+import 'package:disk_space_update/disk_space_update.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:survey_form/models/entities/service.dart';
 import 'package:sync_service/data/repositories/sync/remote_type.dart';
@@ -19,6 +18,7 @@ import '../../models/entities/peer_to_peer/message_types.dart';
 import '../../models/entities/peer_to_peer/peer_to_peer_message.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/least_level_boundary_singleton.dart';
+import '../../utils/utils.dart';
 
 part 'peer_to_peer.freezed.dart';
 
@@ -75,8 +75,7 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
       emit(const PeerToPeerState.transferInProgress(
           progress: 0, offset: 0, totalCount: 0));
 
-      final downloadsDirectory = await getDownloadsDirectory();
-      final file = File('${downloadsDirectory!.path}/down_sync_data.json');
+      final file = await getDownSyncFilePath();
 
       if (await file.exists()) {
         final fileStream = file.openRead();
@@ -112,14 +111,14 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
 
               for (var device in event.connectedDevice) {
                 for (var entity in entityData) {
-                  Map<String, dynamic> entityResponse = entity;
+                  var entityResponse = entity;
 
                   await event.nearbyService.sendMessage(
                     device.deviceId,
                     PeerToPeerMessageModel(
                             messageType: MessageTypes.chunk.toValue(),
                             selectedBoundaryCode: selectedBoundaryCode,
-                            message: compressJson(entityResponse),
+                            message: entityResponse,
                             offset: offsetValue,
                             totalCount: totalCount)
                         .toJson(),
@@ -174,29 +173,6 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
     }
   }
 
-  String compressJson(Map<String, dynamic> jsonData) {
-    // Convert JSON data to string
-    final jsonString = jsonEncode(jsonData);
-
-    // Compress using zlib
-    final compressedData = zlib.encode(utf8.encode(jsonString));
-
-    // Encode to Base64 to ensure JSON-compatible transmission
-    return base64.encode(compressedData);
-  }
-
-  // Function to decompress JSON data
-  Map<String, dynamic> decompressJson(String base64Data) {
-    // Decode Base64 to binary data
-    final compressedData = base64.decode(base64Data);
-
-    // Decompress using zlib
-    final decompressedString = utf8.decode(zlib.decode(compressedData));
-
-    // Convert back to JSON
-    return jsonDecode(decompressedString);
-  }
-
   Future<void> _handleReceiveEntities(
     DataReceiverEvent event,
     PeerToPeerEmitter emit,
@@ -216,10 +192,21 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
             .contains(selectedBoundaryCode);
 
         if (isValidBoundary) {
-          final entityList = decompressJson(compressedMessage).entries;
+          final entityList =
+              DataMapEncryptor.decrypt(compressedMessage).entries;
 
           for (var entity in entityList) {
             entityType = entity.key;
+
+            double? diskSpace = 0;
+            // [TODO: Move the function DiskSpace.getFreeDiskSpace to utils
+            diskSpace = await DiskSpace
+                .getFreeDiskSpace; // Returns the device available space in MB
+            // diskSpace in MB * 1000 comparison with serverTotalCount * 150KB * Number of entities * 2
+            if ((diskSpace ?? 0) * 1000 < (totalCount ?? 0 * 150 * 2)) {
+              emit(PeerToPeerState.failedToReceive(
+                  error: i18.beneficiaryDetails.insufficientStorage));
+            }
 
             if (entityType == 'DownsyncCriteria') {
               final existingDownSyncData = await downSyncLocalRepository.search(

@@ -70,7 +70,11 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
     final textTheme = theme.digitTextTheme(context);
 
     return PopScope(
-      onPopInvoked: (pop) {},
+      onPopInvoked: (pop) {
+        for (var e in widget.connectedDevices) {
+          nearbyService.disconnectPeer(deviceID: e.deviceId);
+        }
+      },
       child: BlocListener<PeerToPeerBloc, PeerToPeerState>(
         listener: (context, state) {
           if (state is FailedDataTransfer) {
@@ -194,6 +198,7 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                               children: [
                                 Center(
                                   child: Lottie.asset(downloadSuccess,
+                                      repeat: false,
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.15),

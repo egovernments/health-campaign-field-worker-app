@@ -1,7 +1,9 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 
+import '../../blocs/scanner.dart';
 import 'camera_view.dart';
 
 enum DetectorViewMode { liveFeed, gallery }
