@@ -1,4 +1,5 @@
 import 'package:petitparser/petitparser.dart';
+
 import 'math_functions.dart';
 
 /// Creates a function based on the given left, value, and right arguments
@@ -13,32 +14,28 @@ import 'math_functions.dart';
 /// value = 5.6 or 9 // can be a number (int / double / num)
 /// right = [)]
 dynamic _createFunction(left, value, right) {
-  if (left.runtimeType == List) {
-    /// check if the value is a list of multiple arguments
-    /// eg. [1, 2, 3]
-    /// To handle math functions with more than one argument
-    /// Eg., ADD, MUL, DIVI, AVG, POWER
-    /// value is List<Object?> - check is for petitparser 4.4.0
-    /// where in petitparser 5.x it is List<dynamic>
-    if (value.runtimeType == List || value is List<Object?>) {
-      // Convert value to a list of numbers
-      List v = value
-          .toString()
-          .replaceAll(RegExp(r'[\[\]]'), '')
-          .split(',')
-          .toList();
-      List<num> args = v.map((e) {
-        return double.parse(e);
-      }).toList();
-      return mathFunction(left[0], args);
+  if (left is List) {
+    String functionName = left[0].toLowerCase();
+
+    if (value is List) {
+      // Convert to List<num> safely
+      List<num> args = [];
+      for (var item in value) {
+        if (item is num) {
+          args.add(item);
+        } else {
+          throw "Function $functionName requires numeric arguments";
+        }
+      }
+      return mathFunction(functionName, args);
     }
 
-    // handle math functions with only one argument
-    if ([int, double, num].contains(value.runtimeType)) {
-      return mathFunction(left[0], [value]);
+    if (value is num) {
+      return mathFunction(functionName, [value]);
     }
+
+    throw "Function $functionName requires numeric arguments";
   }
-
   return value;
 }
 
@@ -125,7 +122,14 @@ final parser = () {
     ..left(char('>').trim(),
         (a, op, b) => mathFunction('GT', [a as num, b as num]));
 
-  builder.group().left(char(',').trim(), (a, op, b) => [a, b]);
+  // FIXED: Comma operator to create flat lists
+  builder.group().left(char(',').trim(), (a, op, b) {
+    if (a is List) {
+      return [...a, b]; // Flatten nested lists
+    } else {
+      return [a, b];
+    }
+  });
 
   return builder.build().end();
 }();

@@ -17,8 +17,6 @@ import 'package:registration_delivery/pages/beneficiary/beneficiary_details.dart
     as _i2;
 import 'package:registration_delivery/pages/beneficiary/beneficiary_id_downsync.dart'
     as _i4;
-import 'package:registration_delivery/pages/beneficiary/facility_selection.dart'
-    as _i5;
 import 'package:registration_delivery/pages/beneficiary/household_overview.dart'
     as _i7;
 import 'package:registration_delivery/pages/beneficiary/parent_overview.dart'
@@ -79,16 +77,6 @@ abstract class $RegistrationDeliveryRoute extends _i11.AutoRouterModule {
         child: _i4.BeneficiaryIdDownSyncPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    FacilitySelectionRoute.name: (routeData) {
-      final args = routeData.argsAs<FacilitySelectionRouteArgs>();
-      return _i11.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i5.FacilitySelectionPage(
-          key: args.key,
-          facilities: args.facilities,
         ),
       );
     },

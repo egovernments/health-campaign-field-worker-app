@@ -263,6 +263,8 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
           .toString();
     }
 
+    dynamic quantityFromCondition = 0;
+
     final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
       final condition = criteria.condition;
       if (condition != null) {
@@ -348,13 +350,17 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               'gender'
             ]);
             final error = expression;
-            if (error["value"] == null || !error["value"]) {
+            if (error["value"] == null || (error is bool && !error["value"])) {
               errorMessages.add(condition);
             }
             if (error["value"] == null) {
               expressionParser.add(false);
-            } else {
+            } else if (error is bool && error["value"] == true) {
               expressionParser.add(error["value"]);
+            } else {
+              /// if some value is coming from condition
+              expressionParser.add(true);
+              quantityFromCondition = error["value"];
             }
           }
 
@@ -366,8 +372,23 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
       return false;
     }).toList();
 
-    deliveryDoseCriteria =
-        (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
+    if ((filteredCriteria ?? []).isNotEmpty) {
+      final firstCriteria = filteredCriteria!.first;
+      final int? roundedQuantity = quantityFromCondition != 0
+          ? quantityFromCondition.ceil() // Convert double to int by rounding up
+          : null;
+
+      final updatedVariant = roundedQuantity != null
+          ? firstCriteria.productVariants?.first
+              .copyWith(quantity: roundedQuantity)
+          : firstCriteria.productVariants?.first;
+
+      deliveryDoseCriteria = firstCriteria.copyWith(
+        productVariants: updatedVariant != null ? [updatedVariant] : null,
+      );
+    } else {
+      deliveryDoseCriteria = null;
+    }
   }
 
   // Remove duplicate error messages
@@ -398,23 +419,6 @@ class CustomFormulaParser {
     List<String>? stringKeys,
   } // Accept stringKeys as nullable
       ) {
-    final upper = condition.trim().toUpperCase();
-
-    if (upper.startsWith('MIN(') || upper.startsWith('MAX(')) {
-      final isMin = upper.startsWith('MIN(');
-
-      // Remove the top-level MIN/MAX and get the inner arguments
-      final values = _evaluateFunctionArguments(condition, variables);
-
-      if (values.isEmpty) return {'value': null};
-
-      final result = isMin
-          ? values.reduce((a, b) => a < b ? a : b)
-          : values.reduce((a, b) => a > b ? a : b);
-
-      return {'value': result};
-    }
-
     // If stringKeys is null or empty, default to FormulaParser for all conditions
     if (stringKeys == null || stringKeys.isEmpty) {
       return _parseAsFormula(condition, variables);
@@ -433,59 +437,6 @@ class CustomFormulaParser {
 
     // If no string-specific comparison, use FormulaParser for numeric evaluation
     return _parseAsFormula(condition, variables);
-  }
-
-  static List<num> _evaluateFunctionArguments(
-    String condition,
-    Map<String, dynamic> variables,
-  ) {
-    final startIndex = condition.indexOf('(');
-    final endIndex = condition.lastIndexOf(')');
-
-    if (startIndex == -1 || endIndex == -1 || endIndex <= startIndex) {
-      return [];
-    }
-
-    final innerContent = condition.substring(startIndex + 1, endIndex);
-    final args = _splitArguments(innerContent);
-
-    final List<num> results = [];
-
-    for (var arg in args) {
-      final parsed = FormulaParser(arg, variables).parse;
-      final value = parsed["value"];
-      if (value is num) {
-        results.add(value);
-      }
-    }
-
-    return results;
-  }
-
-  /// Handles splitting arguments inside MIN(...), accounting for nested functions
-  static List<String> _splitArguments(String input) {
-    final List<String> args = [];
-    final buffer = StringBuffer();
-    int bracketCount = 0;
-
-    for (int i = 0; i < input.length; i++) {
-      final char = input[i];
-
-      if (char == ',' && bracketCount == 0) {
-        args.add(buffer.toString());
-        buffer.clear();
-      } else {
-        if (char == '(') bracketCount++;
-        if (char == ')') bracketCount--;
-        buffer.write(char);
-      }
-    }
-
-    if (buffer.isNotEmpty) {
-      args.add(buffer.toString());
-    }
-
-    return args.map((e) => e.trim()).toList();
   }
 
   // Handle string comparison
