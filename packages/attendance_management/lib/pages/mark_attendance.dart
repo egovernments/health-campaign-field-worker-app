@@ -55,8 +55,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   late FormGroup form;
   var entryTime = 0, exitTime = 0;
   var currentSelectedDate =
-          DateTime.now().getFormattedDate('dd MMM yyyy').toString(),
-      selectedSession = 0;
+      DateTime.now().getFormattedDate('dd MMM yyyy').toString();
   bool markManualAttendance = false;
   String? manualAttendanceReason;
   String? manualAttendanceComment;
@@ -127,7 +126,9 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                       ? widget.registerModel.endDate!
                       : DateTime.now().millisecondsSinceEpoch,
                   entryTime: entryTime,
-                  isSingleSession: false,
+                  isSingleSession: widget.registerModel
+                          .additionalDetails?[EnumValues.sessions.toValue()] !=
+                      2,
                   exitTime: exitTime,
                   registerId: widget.registerModel.id,
                   tenantId: widget.registerModel.tenantId.toString(),
@@ -243,7 +244,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                                             .id,
                                                                     status: 1.0,
                                                                     isSingleSession:
-                                                                        false,
+                                                                        widget.registerModel.additionalDetails?[EnumValues.sessions.toValue()] !=
+                                                                            2,
                                                                     entryTime:
                                                                         entryTime,
                                                                     exitTime:
@@ -576,20 +578,25 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                       ],
                                     ),
                                   ),
-                                  DigitLabeledToggle(
-                                    value: isMorning,
-                                    onChanged: (val) {
-                                      setState(() {
-                                        isMorning = val;
-                                      });
-                                      setRegisterData();
-                                      searchByName();
-                                    },
-                                    activeLabel: localizations.translate(
-                                        i18.attendance.morningSession),
-                                    inactiveLabel: localizations.translate(
-                                        i18.attendance.eveningSession),
-                                  ),
+                                  widget.registerModel.additionalDetails?[
+                                              EnumValues.sessions.toValue()] !=
+                                          2
+                                      ? const SizedBox.shrink()
+                                      : DigitLabeledToggle(
+                                          value: isMorning,
+                                          onChanged: (val) {
+                                            setState(() {
+                                              isMorning = val;
+                                            });
+                                            setRegisterData();
+                                            searchByName();
+                                          },
+                                          activeLabel: localizations.translate(
+                                              i18.attendance.morningSession),
+                                          inactiveLabel:
+                                              localizations.translate(i18
+                                                  .attendance.eveningSession),
+                                        ),
                                 ],
                               ),
                               if (!AttendanceDateTimeManagement.isToday(
@@ -650,7 +657,13 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                         registerId: individual
                                                             .registerId!,
                                                         status: 1.0,
-                                                        isSingleSession: false,
+                                                        isSingleSession: widget
+                                                                    .registerModel
+                                                                    .additionalDetails?[
+                                                                EnumValues
+                                                                    .sessions
+                                                                    .toValue()] !=
+                                                            2,
                                                         entryTime: entryTime,
                                                         exitTime: exitTime,
                                                         additionalFields:
@@ -674,7 +687,13 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                         registerId: individual
                                                             .registerId!,
                                                         status: 0.0,
-                                                        isSingleSession: false,
+                                                        isSingleSession: widget
+                                                                    .registerModel
+                                                                    .additionalDetails?[
+                                                                EnumValues
+                                                                    .sessions
+                                                                    .toValue()] !=
+                                                            2,
                                                         entryTime: entryTime,
                                                         exitTime: exitTime,
                                                         additionalFields:
@@ -819,7 +838,9 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                     selectedDate:
                         AttendanceDateTimeManagement.getFormattedDateToDateTime(
                             currentSelectedDate)!,
-                    isSingleSession: false,
+                    isSingleSession: widget.registerModel.additionalDetails?[
+                            EnumValues.sessions.toValue()] !=
+                        2,
                     createOplog: type != EnumValues.draft.toValue(),
                     latitude: latitude,
                     longitude: longitude,
@@ -899,7 +920,10 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                   selectedDate: AttendanceDateTimeManagement
                                       .getFormattedDateToDateTime(
                                           currentSelectedDate)!,
-                                  isSingleSession: false,
+                                  isSingleSession:
+                                      widget.registerModel.additionalDetails?[
+                                              EnumValues.sessions.toValue()] !=
+                                          2,
                                   createOplog:
                                       type != EnumValues.draft.toValue(),
                                   latitude: latitude,
@@ -972,17 +996,28 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
         ? DateTime.fromMillisecondsSinceEpoch(widget.registerModel.endDate!)
         : AttendanceDateTimeManagement.getFormattedDateToDateTime(
             currentSelectedDate)!;
-    entryTime = AttendanceDateTimeManagement.getMillisecondEpoch(
-      dateSession,
-      isMorning ? 0 : 1,
-      "entryTime",
-    );
 
-    exitTime = AttendanceDateTimeManagement.getMillisecondEpoch(
-      dateSession,
-      isMorning ? 0 : 1,
-      "exitTime",
-    );
+    entryTime = widget.registerModel
+                .additionalDetails?[EnumValues.sessions.toValue()] ==
+            2
+        ? AttendanceDateTimeManagement.getMillisecondEpoch(
+            dateSession,
+            isMorning ? 0 : 1,
+            "entryTime",
+          )
+        : (DateTime(dateSession.year, dateSession.month, dateSession.day, 9)
+            .millisecondsSinceEpoch);
+
+    exitTime = widget.registerModel
+                .additionalDetails?[EnumValues.sessions.toValue()] ==
+            2
+        ? AttendanceDateTimeManagement.getMillisecondEpoch(
+            dateSession,
+            isMorning ? 0 : 1,
+            "exitTime",
+          )
+        : (DateTime(dateSession.year, dateSession.month, dateSession.day, 18)
+            .millisecondsSinceEpoch);
 
     individualLogBloc!.add(
       AttendanceIndividualLogSearchEvent(
@@ -991,13 +1026,13 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
             : [],
         limit: 10,
         offset: 0,
-        currentDate: AttendanceDateTimeManagement.getMillisecondEpoch(
-            AttendanceDateTimeManagement.getFormattedDateToDateTime(
-                currentSelectedDate)!,
-            isMorning ? 0 : 1,
-            'entryTime'),
+        currentDate: AttendanceDateTimeManagement.getFormattedDateToDateTime(
+                currentSelectedDate)!
+            .millisecondsSinceEpoch,
         entryTime: entryTime,
-        isSingleSession: false,
+        isSingleSession: widget.registerModel
+                .additionalDetails?[EnumValues.sessions.toValue()] !=
+            2,
         exitTime: exitTime,
         registerId: widget.registerModel.id,
         tenantId: widget.registerModel.tenantId.toString(),
@@ -1114,15 +1149,15 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                             : [],
                         limit: 10,
                         offset: 0,
-                        currentDate:
-                            AttendanceDateTimeManagement.getMillisecondEpoch(
-                                AttendanceDateTimeManagement
-                                    .getFormattedDateToDateTime(
-                                        currentSelectedDate)!,
-                                selectedSession,
-                                'entryTime'),
+                        currentDate: AttendanceDateTimeManagement
+                                .getFormattedDateToDateTime(
+                                    currentSelectedDate)!
+                            .millisecondsSinceEpoch,
                         entryTime: entryTime,
-                        isSingleSession: false,
+                        isSingleSession:
+                            widget.registerModel.additionalDetails?[
+                                    EnumValues.sessions.toValue()] !=
+                                2,
                         exitTime: exitTime,
                         registerId: widget.registerModel.id,
                         tenantId: widget.registerModel.tenantId.toString(),

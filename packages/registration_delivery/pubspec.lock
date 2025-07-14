@@ -454,10 +454,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: "28adcdadbb25f03031fa1b65a987467873deafdef5fad71c707c8a0c6fe7954f"
+      sha256: "1a67c66237588f50aa2e7029aac86e9e0e220f4316bcef467bc930e310bcc8d7"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.2"
+    version: "1.1.2+1"
   digit_scanner:
     dependency: "direct main"
     description:
@@ -478,10 +478,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: c07a13efd5d23fe869a87f7ab12b7b82bdb0b911d4c9ed7f4bb1a5c4310847f5
+      sha256: "94bfc92dc2bd7dbec934a04e80155beb2dd71e76e166d14095c129880b0c0e36"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.2+4"
+    version: "0.2.2+5"
   dio:
     dependency: "direct main"
     description:

@@ -27,6 +27,7 @@ import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/inventory_management.init.dart'
     as inventory_mappers;
 import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
@@ -567,6 +568,13 @@ void attemptSyncUp(BuildContext context) async {
           ),
         );
   }
+}
+
+Future<File> getDownSyncFilePath() async  {
+  final downloadsDirectory = await getDownloadsDirectory();
+  final file = File('${downloadsDirectory!.path}/down_sync_data.json');
+  
+  return file;
 }
 
 class LocalizationParams {

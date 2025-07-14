@@ -495,26 +495,31 @@ class AttendanceScannerPageState extends DigitScannerPageState {
               LabelValueItem(
                 label: localizations.translate(i18.common.coreCommonName),
                 labelFlex: 5,
+                maxLines: 2,
                 value: scannedData.name,
               ),
               LabelValueItem(
                 label: localizations.translate(i18.common.coreCommonAge),
                 labelFlex: 5,
+                maxLines: 2,
                 value: scannedData.age?.toString() ?? '-',
               ),
               LabelValueItem(
                 label: localizations.translate(i18.attendance.qrCreatedTime),
                 labelFlex: 5,
+                maxLines: 2,
                 value: formattedTime,
               ),
               LabelValueItem(
                 label: localizations.translate(i18.attendance.individualId),
                 labelFlex: 5,
+                maxLines: 2,
                 value: scannedData.individualId,
               ),
               LabelValueItem(
                 label: localizations.translate(i18.common.locationLabel),
                 labelFlex: 5,
+                maxLines: 2,
                 value: scannedData.locality,
               ),
             ],

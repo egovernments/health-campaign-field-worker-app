@@ -184,13 +184,15 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
               projectId: [RegistrationDeliverySingleton().projectId.toString()],
               beneficiaryClientReferenceId:
                   individualsList.map((e) => e.clientReferenceId).toList()));
-
+      final tasks = await taskDataRepository.search(TaskSearchModel(
+          projectBeneficiaryClientReferenceId: projectBeneficiariesList
+              .map((e) => e.beneficiaryClientReferenceId!)
+              .toList()));
       if (!event.globalSearchParams.filter!
           .contains(Status.beneficiaryReferred.name)) {
-        finalResults.forEach((element) {
-          taskList.add(element);
-        });
+        taskList.addAll(tasks);
       } else {
+        taskList.addAll(tasks);
         finalResults.forEach((element) {
           referralsList.add(element);
         });

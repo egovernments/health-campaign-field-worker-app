@@ -106,7 +106,7 @@ class AttendanceIndividualBloc
               status = newStatus;
             } else if (status == 1 && newStatus == 1) {
               status = 1;
-            } else if (status == 0.5 && event.isSingleSession) {
+            } else if (event.isSingleSession) {
               status = 0;
             } else {
               status = newStatus;

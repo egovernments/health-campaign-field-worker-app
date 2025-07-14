@@ -1,3 +1,7 @@
+## 1.0.6+2
+
+* Updated component of input with DigitInput
+
 ## 1.0.6+1
 
 * Modified scanner page with method to override and incorporate attendance features
