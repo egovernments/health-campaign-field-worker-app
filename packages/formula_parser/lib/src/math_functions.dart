@@ -22,7 +22,20 @@ final List<String> availableFunctions = [
   ...functionsWithOneListArg.keys
 ];
 
-final comparisonFunctions = {
+// Add this helper function to convert dynamic values to num
+List<num> _convertToNumbers(List<dynamic> args) {
+  return args.map((e) {
+    if (e is num) return e;
+    if (e is int) return e.toDouble();
+    if (e is double) return e;
+    if (e is String) return double.tryParse(e) ?? 0;
+    return 0;
+  }).toList();
+}
+
+// Update function maps with explicit types
+
+final Map<String, bool Function(dynamic, dynamic)> comparisonFunctions = {
   'lt': (a, b) => a < b,
   'gt': (a, b) => a > b,
   'lte': (a, b) => a <= b,
@@ -31,11 +44,11 @@ final comparisonFunctions = {
   'ne': (a, b) => a != b,
 };
 
-final functionsWithOneBoolArg = {
+final Map<String, bool Function(bool)> functionsWithOneBoolArg = {
   'not': (bool a) => !a,
 };
 
-final functionsWithOneNumberArg = {
+final Map<String, num Function(num)> functionsWithOneNumberArg = {
   'exp': math.exp,
   'log': math.log,
   'sin': math.sin,
@@ -45,59 +58,56 @@ final functionsWithOneNumberArg = {
   'tan': math.tan,
   'atan': math.atan,
   'sqrt': math.sqrt,
-  'ceil': (num a) => a.ceil(),
-  'floor': (num a) => a.floor(),
-  'round': (num a) => a.round(),
-  'abs': (num a) => a.abs(),
+  'ceil': (num a) => a.ceil().toDouble(),
+  'floor': (num a) => a.floor().toDouble(),
+  'round': (num a) => a.round().toDouble(),
+  'abs': (num a) => a.abs().toDouble(),
 };
 
-final functionsWithTwoNumberArg = {
+final Map<String, num Function(num, num)> functionsWithTwoNumberArg = {
   'add': (num a, num b) => a + b,
   'sub': (num a, num b) => a - b,
   'mul': (num a, num b) => a * b,
   'divi': (num a, num b) => a / b,
-  'min': (List<num> l) => l.reduce((a, b) => a < b ? a : b),
-  'max': (List<num> l) => l.reduce((a, b) => a > b ? a : b),
-  'power': (num a, num b) => math.pow(a, b),
+  'power': (num a, num b) => math.pow(a, b).toDouble(),
 };
 
-final functionsWithOneListArg = {
+final Map<String, num Function(List<num>)> functionsWithOneListArg = {
   'avg': (List<num> l) {
+    if (l.isEmpty) throw ArgumentError("avg requires at least one argument");
     num sum = l.fold(0, (num v1, num v2) => v1 + v2);
     return sum / l.length;
   },
-  'min': (List<num> l) => l.reduce((a, b) => a < b ? a : b),
-  'max': (List<num> l) => l.reduce((a, b) => a > b ? a : b),
+  'min': (List<num> l) {
+    if (l.isEmpty) throw ArgumentError("min requires at least one argument");
+    return l.reduce((a, b) => a < b ? a : b);
+  },
+  'max': (List<num> l) {
+    if (l.isEmpty) throw ArgumentError("max requires at least one argument");
+    return l.reduce((a, b) => a > b ? a : b);
+  },
 };
 
 /// Common mathematical functions.
-dynamic mathFunction(String name, List<num> args) {
-  if (args.isEmpty) {
-    return null;
-  }
+dynamic mathFunction(String name, List<dynamic> arguments) {
+  final args = _convertToNumbers(arguments);
+  if (args.isEmpty) return null;
 
   final String fnName = name.toLowerCase();
 
-  if (!availableFunctions.contains(fnName)) {
-    return null;
+  if (functionsWithOneNumberArg.containsKey(fnName) && args.length == 1) {
+    return functionsWithOneNumberArg[fnName]!(args[0]);
   }
 
-  if (args.length == 1 && functionsWithOneNumberArg.keys.contains(fnName)) {
-    num v1 = args[0];
-    return functionsWithOneNumberArg[fnName]!(v1);
+  if (comparisonFunctions.containsKey(fnName) && args.length == 2) {
+    return comparisonFunctions[fnName]!(args[0], args[1]);
   }
 
-  if (args.length == 2 && comparisonFunctions.keys.contains(fnName)) {
-    dynamic v1 = args[0], v2 = args[1];
-    return comparisonFunctions[fnName]!(v1, v2);
+  if (functionsWithTwoNumberArg.containsKey(fnName) && args.length == 2) {
+    return functionsWithTwoNumberArg[fnName]!(args[0], args[1]);
   }
 
-  if (args.length == 2 && functionsWithTwoNumberArg.keys.contains(fnName)) {
-    num v1 = args[0], v2 = args[1];
-    return functionsWithTwoNumberArg[fnName]!(v1, v2);
-  }
-
-  if (args.isNotEmpty && functionsWithOneListArg.keys.contains(fnName)) {
+  if (functionsWithOneListArg.containsKey(fnName) && args.isNotEmpty) {
     return functionsWithOneListArg[fnName]!(args);
   }
 

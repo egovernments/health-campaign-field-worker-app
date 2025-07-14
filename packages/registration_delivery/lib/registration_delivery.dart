@@ -34,7 +34,6 @@ export 'models/entities/side_effect.dart';
 export 'models/entities/task.dart';
 export 'models/entities/task_resource.dart';
 export 'pages/beneficiary/beneficiary_details.dart';
-export 'pages/beneficiary/facility_selection.dart';
 export 'pages/beneficiary/household_overview.dart';
 export 'pages/beneficiary/widgets/household_acknowledgement.dart';
 export 'pages/beneficiary/widgets/past_delivery.dart';

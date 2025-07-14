@@ -1,6 +1,5 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
-import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -34,24 +33,6 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
 class ResourceBeneficiaryCardState
     extends LocalizedState<ResourceBeneficiaryCard> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  List<ProductVariantModel> filterMatchingElements(
-      List<ProductVariantModel> listA, List<DeliveryProductVariant>? listB) {
-    final bIds = listB?.map((b) => b.productVariantId).toSet();
-    if (bIds == null || bIds.isEmpty) return [];
-    return listA.where((a) => bIds.contains(a.id)).toList();
-  }
-
-  Future<List<ProductVariantModel>> fetchAndFilterProductVariants() async {
-    return [];
-
-    //TODO: need to check different type in smc
-  }
-
-  @override
   Widget build(BuildContext context) {
     return DigitCard(cardType: CardType.secondary, children: [
       BlocBuilder<ProductVariantBloc, ProductVariantState>(
@@ -59,69 +40,39 @@ class ResourceBeneficiaryCardState
           return productState.maybeWhen(
             orElse: () => const Offstage(),
             fetched: (productVariants) {
-              // final List<DeliveryProductVariant>? data = fetchProductVariant(
-              //         RegistrationDeliverySingleton()
-              //             .selectedProject
-              //             ?.additionalDetails
-              //             ?.projectType
-              //             ?.cycles![bloc!.state.cycle - 1]
-              //             .deliveries?[bloc!.state.dose - 1],
-              //         overViewbloc!.state.selectedIndividual,
-              //         overViewbloc!.state.householdMemberWrapper.household)
-              //     ?.expand((e) => e.productVariants!)
-              //     .toList();
-              // final List<ProductVariantModel> filteredProductVariantModel =
-              //     filterMatchingElements(productVariants, data);
-
-              return FutureBuilder<List<ProductVariantModel>>(
-                  future: fetchAndFilterProductVariants(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: DigitLoaders.inlineLoader());
-                    }
-
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    }
-
-                    final filteredProductVariantModel =
-                        snapshot.data as List<ProductVariantModel> ?? [];
-                    return SelectionCard<ProductVariantModel>(
-                      width: MediaQuery.of(context).size.width * .8,
-                      showParentContainer: true,
-                      options: filteredProductVariantModel,
-                      onSelectionChanged: (selectedOptions) {
-                        if (selectedOptions.isNotEmpty) {
-                          var selectedOption = selectedOptions.first;
-                          widget.form
-                              .control('resourceDelivered.${widget.cardIndex}')
-                              .value = selectedOption;
-                        } else {
-                          widget.form
-                              .control('resourceDelivered.${widget.cardIndex}')
-                              .value = null;
-                        }
-                      },
-                      initialSelection: widget.form
-                                  .control(
-                                      'resourceDelivered.${widget.cardIndex}')
-                                  .value !=
-                              null
-                          ? [
-                              widget.form
-                                  .control(
-                                      'resourceDelivered.${widget.cardIndex}')
-                                  .value
-                            ]
-                          : [],
-                      valueMapper: (value) {
-                        return localizations.translate(
-                          value.sku ?? value.id,
-                        );
-                      },
-                      allowMultipleSelection: false,
-                    );
-                  });
+              return SelectionCard<ProductVariantModel>(
+                width: MediaQuery.of(context).size.width * .8,
+                showParentContainer: true,
+                options: productVariants,
+                onSelectionChanged: (selectedOptions) {
+                  if (selectedOptions.isNotEmpty) {
+                    var selectedOption = selectedOptions.first;
+                    widget.form
+                        .control('resourceDelivered.${widget.cardIndex}')
+                        .value = selectedOption;
+                  } else {
+                    widget.form
+                        .control('resourceDelivered.${widget.cardIndex}')
+                        .value = null;
+                  }
+                },
+                initialSelection: widget.form
+                            .control('resourceDelivered.${widget.cardIndex}')
+                            .value !=
+                        null
+                    ? [
+                        widget.form
+                            .control('resourceDelivered.${widget.cardIndex}')
+                            .value
+                      ]
+                    : [],
+                valueMapper: (value) {
+                  return localizations.translate(
+                    value.sku ?? value.id,
+                  );
+                },
+                allowMultipleSelection: false,
+              );
             },
           );
         },
@@ -135,7 +86,15 @@ class ResourceBeneficiaryCardState
           child: DigitNumericFormInput(
             minValue: 1,
             step: 1,
-            initialValue: "0",
+            initialValue: widget.form
+                        .control('quantityDistributed.${widget.cardIndex}')
+                        .value !=
+                    null
+                ? widget.form
+                    .control('quantityDistributed.${widget.cardIndex}')
+                    .value
+                    .toString()
+                : '0',
             onChange: (value) {
               widget.form
                   .control('quantityDistributed.${widget.cardIndex}')
