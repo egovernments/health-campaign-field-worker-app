@@ -367,21 +367,6 @@ enum DigitProgressDialogType {
   pendingSync,
 }
 
-DataModelType getDataModelTypeFromModel(EntityModel entity) {
-  if (entity is HouseholdModel) {
-    return DataModelType.household;
-  } else if (entity is HouseholdMemberModel) {
-    return DataModelType.householdMember;
-  } else if (entity is IndividualModel) {
-    return DataModelType.individual;
-  } else if (entity is ProjectBeneficiaryModel) {
-    return DataModelType.projectBeneficiary;
-  } else {
-    return DataModelType.householdMember; // or throw if this should not happen
-  }
-}
-
-
 class DownloadBeneficiary {
   String title;
   String projectId;

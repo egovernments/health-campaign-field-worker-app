@@ -10,7 +10,6 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -99,10 +98,6 @@ class _BoundarySelectionPageState
             return Scaffold(
               body: Builder(
                 builder: (context) {
-                  // final labelCodeList = state.selectedBoundaryMap.keys.map((key) => '${envConfig.variables.hierarchyType}_$key').toList();
-                  //
-                  // LocalizationParams().setCode(labelCodeList);
-
                   if (state.loading) {
                     return const Center(
                       child: CircularProgressIndicator(),
@@ -117,13 +112,18 @@ class _BoundarySelectionPageState
                         BlocListener<BoundaryBloc, BoundaryState>(
                       listener: (context, state) {
                         if (state.boundaryList.isNotEmpty) {
-                          final finalCodes = state.boundaryList.map((e) => e.code!).toList();
+                          final finalCodes =
+                              state.boundaryList.map((e) => e.code!).toList();
 
                           final labelCodeList = state.selectedBoundaryMap.keys
-                              .map((key) => '${envConfig.variables.hierarchyType}_$key')
+                              .map((key) =>
+                                  '${envConfig.variables.hierarchyType}_$key')
                               .toList();
 
-                          final combinedCodes = [...finalCodes, ...labelCodeList];
+                          final combinedCodes = [
+                            ...finalCodes,
+                            ...labelCodeList
+                          ];
 
                           LocalizationParams().setCode(combinedCodes);
                           context.read<LocalizationBloc>().add(
@@ -615,8 +615,8 @@ class _BoundarySelectionPageState
                                             },
                                             builder: (field) => LabeledField(
                                               capitalizedFirstLetter: false,
-                                              label: localizations
-                                                  .translate('${envConfig.variables.hierarchyType}_$label'),
+                                              label: localizations.translate(
+                                                  '${envConfig.variables.hierarchyType}_$label'),
                                               isRequired: true,
                                               child:
                                                   DigitDropdown<BoundaryModel>(

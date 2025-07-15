@@ -34,9 +34,6 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
     return Scaffold(
       body: MultiBlocProvider(
         providers: [
-          // BlocProvider(
-          //   create: (_) => FormsBloc(),
-          // ),
           BlocProvider(
             create: (context) {
               return RegistrationBloc(

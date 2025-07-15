@@ -342,7 +342,7 @@ class SearchEntityRepository extends LocalRepository {
             final latVal = row.read<double>('latitude');
             lat = (latVal is int) ? latVal.toDouble() : latVal as double?;
           } catch (e) {
-            print('Failed to read latitude: $e');
+            debugPrint('Failed to read latitude: $e');
             lat = null;
           }
 
@@ -350,17 +350,17 @@ class SearchEntityRepository extends LocalRepository {
             final lonVal = row.read<double>('longitude');
             lon = (lonVal is int) ? lonVal.toDouble() : lonVal as double?;
           } catch (e) {
-            print('Failed to read longitude: $e');
+            debugPrint('Failed to read longitude: $e');
             lon = null;
           }
 
           if (lat == null || lon == null) {
-            print('Skipping row due to null lat/lon');
+            debugPrint('Skipping row due to null lat/lon');
             return false;
           }
 
           final distance = haversine(centerLat!, centerLon!, lat, lon);
-          print('Lat: $lat, Lon: $lon → Distance: $distance km');
+          debugPrint('Lat: $lat, Lon: $lon → Distance: $distance km');
           return distance <= radiusInKm!;
         }).length;
       } else {
@@ -543,7 +543,7 @@ EntityModel dynamicEntityModelFromMap(
       return TaskModelMapper.fromMap(map);
 
     default:
-      throw Exception('Unknown model: $modelName');
+      return EntityModelMapper.fromMap(map);
   }
 }
 

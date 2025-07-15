@@ -36,12 +36,11 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
               children: [
                 if (showBackNavigation)
                   DigitBackButton(
-                    label:
-                    FormLocalization.of(context).translate(
+                    label: FormLocalization.of(context).translate(
                       'CORE_COMMON_BACK',
                     ),
                     digitBackButtonThemeData:
-                    const DigitBackButtonThemeData().copyWith(
+                        const DigitBackButtonThemeData().copyWith(
                       context: context,
                       backDigitButtonIcon: Icon(
                         Icons.arrow_left,
@@ -60,17 +59,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
             ),
           ),
           SizedBox(width: showHelp ? spacer2 * 2 : 0),
-          // if (showHelp)
-          //   DigitButton(
-          //     label: RegistrationDeliveryLocalization.of(context)
-          //         .translate(i18.common.coreCommonHelp),
-          //     type: DigitButtonType.tertiary,
-          //     size: DigitButtonSize.small,
-          //     suffixIcon: Icons.help_outline_outlined,
-          //     onPressed: () => helpClicked,
-          //   ),
-          // SizedBox(width: showcaseButton != null && showHelp ? 16 : 0),
-          // if (showcaseButton != null && showHelp) showcaseButton!,
+          //// TODO: need to pick showcase later
         ],
       ),
     );
