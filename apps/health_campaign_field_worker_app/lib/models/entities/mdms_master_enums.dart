@@ -11,6 +11,8 @@ enum MasterEnums {
   symptomTypes,
   @MappableValue("REFERRAL_REASONS")
   referralReasons,
+  @MappableValue("MANUAL_ATTENDANCE_REASONS")
+  manualAttendanceReasons,
   @MappableValue("HOUSE_STRUCTURE_TYPES")
   houseStructureTypes,
   @MappableValue("REFUSAL_REASONS")
@@ -59,4 +61,6 @@ enum MasterEnums {
   privacyPolicy,
   @MappableValue("dashboardConfig")
   dashboardConfig,
+  @MappableValue("TRANSIT_POST_TYPE")
+  transitPostType,
 }

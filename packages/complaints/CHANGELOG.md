@@ -1,3 +1,7 @@
+## 1.0.3
+
+* Updated with latest packages
+
 ## 1.0.3-dev.1-enumeration
 
 * Updated with data_model changes

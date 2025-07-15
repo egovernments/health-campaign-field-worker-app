@@ -84,7 +84,11 @@ class AppConfiguration {
   @Name('SEARCH_CLF_FILTERS')
   late List<SearchCLFFilters>? searchCLFFilters;
 
+  @Name('TRANSIT_POST_TYPE')
+  late List<TransitPostType>? transitPostType;
+
   late List<ReferralReasons>? referralReasons;
+  late List<ManualAttendanceReasons>? manualAttendanceReasons;
   late List<HouseStructureTypes>? houseStructureTypes;
   late List<RefusalReasons>? refusalReasons;
   late PrivacyPolicy? privacyPolicyConfig;
@@ -201,6 +205,13 @@ class SearchHouseHoldFilters {
 }
 
 @embedded
+class TransitPostType {
+  late String name;
+  late String code;
+  late bool active;
+}
+
+@embedded
 class SearchCLFFilters {
   late String name;
   late String code;
@@ -237,6 +248,12 @@ class SymptomsTypes {
 
 @embedded
 class ReferralReasons {
+  late String code;
+  late String name;
+  late bool active;
+}
+@embedded
+class ManualAttendanceReasons{
   late String code;
   late String name;
   late bool active;

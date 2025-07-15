@@ -40,6 +40,7 @@ class AttendeeModel extends EntityModel with AttendeeModelMappable {
   final double? status;
   final String? identifierID;
   final String? individualNumber;
+  final String? tag;
   final AttendeeAdditionalFields? additionalFields;
 
   AttendeeModel({
@@ -53,6 +54,7 @@ class AttendeeModel extends EntityModel with AttendeeModelMappable {
     this.nonRecoverableError = false,
     this.rowVersion,
     this.name,
+    this.tag,
     this.identifierID,
     this.individualNumber,
     this.status = -1,

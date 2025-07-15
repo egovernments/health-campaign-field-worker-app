@@ -1,10 +1,13 @@
 // GENERATED using mason_cli
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:disk_space_update/disk_space_update.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:survey_form/models/entities/service.dart';
 import 'package:sync_service/sync_service_lib.dart';
@@ -15,6 +18,7 @@ import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../models/downsync/downsync.dart';
 import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
+import '../../utils/utils.dart';
 
 part 'project_beneficiaries_downsync.freezed.dart';
 
@@ -42,6 +46,7 @@ class BeneficiaryDownSyncBloc
       referralLocalRepository;
   final LocalRepository<ServiceModel, ServiceSearchModel>
       serviceLocalRepository;
+
   BeneficiaryDownSyncBloc({
     required this.individualLocalRepository,
     required this.downSyncRemoteRepository,
@@ -203,8 +208,13 @@ class BeneficiaryDownSyncBloc
                 isDeleted: true,
               ),
             );
+            emit(BeneficiaryDownSyncState.inProgress(
+                offset, downSyncResults["DownsyncCriteria"]["totalCount"]));
+
             // check if the API response is there or it failed
             if (downSyncResults.isNotEmpty) {
+              await writeToFile(event.projectId, event.boundaryCode,
+                  event.boundaryName, downSyncResults);
               await SyncServiceSingleton()
                   .entityMapper
                   ?.writeToEntityDB(downSyncResults, [
@@ -262,6 +272,86 @@ class BeneficiaryDownSyncBloc
         await LocalSecureStore.instance.setManualSyncTrigger(false);
         emit(const BeneficiaryDownSyncState.failed());
       }
+    }
+  }
+
+  writeToFile(
+    String projectId,
+    String selectedBoundaryCode,
+    String selectedBoundaryName,
+    Map<String, dynamic> response,
+  ) async {
+    Map<String, dynamic> storedData = {};
+
+    // Get the Downloads directory
+    final downloadsDirectory = await getDownloadsDirectory();
+    if (downloadsDirectory == null) {
+      if (kDebugMode) {
+        print("Downloads directory is not available.");
+      }
+      return;
+    }
+
+    final file = await getDownSyncFilePath();
+
+    // Read existing file content if available
+    if (file.existsSync()) {
+      final content = await file.readAsString();
+      if (content.isNotEmpty) {
+        storedData = jsonDecode(content);
+      }
+    } else {
+      // Create the file if it doesn't exist
+      await file.create(recursive: true);
+      await file.writeAsString(jsonEncode({}));
+    }
+    var downSyncModel = response["DownsyncCriteria"];
+    String offsetKey = '${downSyncModel["offset"]}';
+
+    // Prepare the boundary data
+    Map<String, dynamic> boundaryData = {
+      "boundaryCode": selectedBoundaryCode,
+      "boundaryName": selectedBoundaryName,
+      "response": DataMapEncryptor().encryptWithRandomKey(response)
+    };
+
+    // Initialize the offset entry if it doesn't exist
+    storedData[offsetKey] ??= {"totalCount": 0, "boundaries": []};
+
+    // Always update totalCount to reflect latest info
+    storedData[offsetKey]["totalCount"] += downSyncModel["totalCount"];
+
+    // Fetch or initialize the list of boundaries
+    List<dynamic> boundaries = storedData[offsetKey]["boundaries"];
+
+    // Check if boundary already exists
+    bool exists = boundaries
+        .any((entry) => entry["boundaryCode"] == selectedBoundaryCode);
+
+    if (!exists) {
+      boundaries.add(boundaryData);
+      storedData[offsetKey]["boundaries"] = boundaries;
+
+      if (kDebugMode) {
+        print(
+            "Added new boundary: $selectedBoundaryCode under offset: $offsetKey");
+      }
+    } else {
+      if (kDebugMode) {
+        print(
+            "Boundary '$selectedBoundaryCode' already exists under offset $offsetKey.");
+      }
+    }
+
+    // Convert map to JSON string
+    String storedDataString = jsonEncode(storedData);
+    debugPrint("Stored data: $storedDataString");
+
+    // Write back to file
+    await file.writeAsString(storedDataString);
+
+    if (kDebugMode) {
+      print("Data successfully written to ${file.path}");
     }
   }
 

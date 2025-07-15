@@ -157,6 +157,11 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
       referralReasonList: (json['REFERRAL_REASONS'] as List<dynamic>?)
           ?.map((e) => ReferralReasonType.fromJson(e as Map<String, dynamic>))
           .toList(),
+      manualAttendanceReasonList: (json['MANUAL_ATTENDANCE_REASONS']
+              as List<dynamic>?)
+          ?.map((e) =>
+              ManualAttendanceReasonType.fromJson(e as Map<String, dynamic>))
+          .toList(),
       houseStructureTypes: (json['HOUSE_STRUCTURE_TYPES'] as List<dynamic>?)
           ?.map((e) => CommonMasterModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -165,6 +170,9 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
           .toList(),
       firebaseConfig: (json['FIREBASE_CONFIG'] as List<dynamic>?)
           ?.map((e) => FirebaseConfig.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      transitPostType: (json['TRANSIT_POST_TYPE'] as List<dynamic>?)
+          ?.map((e) => TransitPostType.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
@@ -191,9 +199,11 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'SEARCH_HOUSEHOLD_FILTERS': instance.searchHouseHoldFilters,
       'SEARCH_CLF_FILTERS': instance.searchCLFFilters,
       'REFERRAL_REASONS': instance.referralReasonList,
+      'MANUAL_ATTENDANCE_REASONS': instance.manualAttendanceReasonList,
       'HOUSE_STRUCTURE_TYPES': instance.houseStructureTypes,
       'REFUSAL_REASONS': instance.refusalReasons,
       'FIREBASE_CONFIG': instance.firebaseConfig,
+      'TRANSIT_POST_TYPE': instance.transitPostType,
     };
 
 _$AppConfigSecondaryWrapperModelImpl
@@ -533,6 +543,22 @@ _$SearchCLFFiltersImpl _$$SearchCLFFiltersImplFromJson(
 
 Map<String, dynamic> _$$SearchCLFFiltersImplToJson(
         _$SearchCLFFiltersImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'code': instance.code,
+      'active': instance.active,
+    };
+
+_$TransitPostTypeImpl _$$TransitPostTypeImplFromJson(
+        Map<String, dynamic> json) =>
+    _$TransitPostTypeImpl(
+      name: json['name'] as String,
+      code: json['code'] as String,
+      active: json['active'] as bool,
+    );
+
+Map<String, dynamic> _$$TransitPostTypeImplToJson(
+        _$TransitPostTypeImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,

@@ -43,7 +43,8 @@ class _BoundarySelectionPageState
   int i = 0;
   int pendingSyncCount = 0;
   final clickedStatus = ValueNotifier<bool>(false);
-  StreamController<double> downloadProgress = StreamController<double>();
+  StreamController<double> downloadProgress =
+      StreamController<double>.broadcast();
 
   Map<String, TextEditingController> dropdownControllers = {};
   late StreamSubscription syncSubscription;
@@ -74,6 +75,7 @@ class _BoundarySelectionPageState
     clickedStatus.value = true;
     clickedStatus.dispose();
     syncSubscription.cancel();
+    downloadProgress.close();
     super.dispose();
   }
 
