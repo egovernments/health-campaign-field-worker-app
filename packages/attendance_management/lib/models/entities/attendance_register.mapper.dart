@@ -28,6 +28,9 @@ class AttendanceRegisterSearchModelMapper
   static String? _$staffId(AttendanceRegisterSearchModel v) => v.staffId;
   static const Field<AttendanceRegisterSearchModel, String> _f$staffId =
       Field('staffId', _$staffId, opt: true);
+  static String? _$attendeeId(AttendanceRegisterSearchModel v) => v.attendeeId;
+  static const Field<AttendanceRegisterSearchModel, String> _f$attendeeId =
+      Field('attendeeId', _$attendeeId, opt: true);
   static String? _$registerNumber(AttendanceRegisterSearchModel v) =>
       v.registerNumber;
   static const Field<AttendanceRegisterSearchModel, String> _f$registerNumber =
@@ -53,6 +56,11 @@ class AttendanceRegisterSearchModelMapper
       v.localityCode;
   static const Field<AttendanceRegisterSearchModel, String> _f$localityCode =
       Field('localityCode', _$localityCode, opt: true);
+  static bool? _$includeTaggedAttendees(AttendanceRegisterSearchModel v) =>
+      v.includeTaggedAttendees;
+  static const Field<AttendanceRegisterSearchModel, bool>
+      _f$includeTaggedAttendees =
+      Field('includeTaggedAttendees', _$includeTaggedAttendees, opt: true);
   static String? _$boundaryCode(AttendanceRegisterSearchModel v) =>
       v.boundaryCode;
   static const Field<AttendanceRegisterSearchModel, String> _f$boundaryCode =
@@ -73,6 +81,7 @@ class AttendanceRegisterSearchModelMapper
   final MappableFields<AttendanceRegisterSearchModel> fields = const {
     #id: _f$id,
     #staffId: _f$staffId,
+    #attendeeId: _f$attendeeId,
     #registerNumber: _f$registerNumber,
     #status: _f$status,
     #serviceCode: _f$serviceCode,
@@ -80,6 +89,7 @@ class AttendanceRegisterSearchModelMapper
     #offSet: _f$offSet,
     #limit: _f$limit,
     #localityCode: _f$localityCode,
+    #includeTaggedAttendees: _f$includeTaggedAttendees,
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
@@ -99,6 +109,7 @@ class AttendanceRegisterSearchModelMapper
     return AttendanceRegisterSearchModel.ignoreDeleted(
         id: data.dec(_f$id),
         staffId: data.dec(_f$staffId),
+        attendeeId: data.dec(_f$attendeeId),
         registerNumber: data.dec(_f$registerNumber),
         status: data.dec(_f$status),
         serviceCode: data.dec(_f$serviceCode),
@@ -106,6 +117,7 @@ class AttendanceRegisterSearchModelMapper
         offSet: data.dec(_f$offSet),
         limit: data.dec(_f$limit),
         localityCode: data.dec(_f$localityCode),
+        includeTaggedAttendees: data.dec(_f$includeTaggedAttendees),
         boundaryCode: data.dec(_f$boundaryCode));
   }
 
@@ -172,6 +184,7 @@ abstract class AttendanceRegisterSearchModelCopyWith<
   $R call(
       {String? id,
       String? staffId,
+      String? attendeeId,
       String? registerNumber,
       String? status,
       String? serviceCode,
@@ -179,6 +192,7 @@ abstract class AttendanceRegisterSearchModelCopyWith<
       int? offSet,
       int? limit,
       String? localityCode,
+      bool? includeTaggedAttendees,
       String? boundaryCode});
   AttendanceRegisterSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -199,6 +213,7 @@ class _AttendanceRegisterSearchModelCopyWithImpl<$R, $Out>
   $R call(
           {Object? id = $none,
           Object? staffId = $none,
+          Object? attendeeId = $none,
           Object? registerNumber = $none,
           Object? status = $none,
           Object? serviceCode = $none,
@@ -206,10 +221,12 @@ class _AttendanceRegisterSearchModelCopyWithImpl<$R, $Out>
           Object? offSet = $none,
           Object? limit = $none,
           Object? localityCode = $none,
+          Object? includeTaggedAttendees = $none,
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (staffId != $none) #staffId: staffId,
+        if (attendeeId != $none) #attendeeId: attendeeId,
         if (registerNumber != $none) #registerNumber: registerNumber,
         if (status != $none) #status: status,
         if (serviceCode != $none) #serviceCode: serviceCode,
@@ -217,6 +234,8 @@ class _AttendanceRegisterSearchModelCopyWithImpl<$R, $Out>
         if (offSet != $none) #offSet: offSet,
         if (limit != $none) #limit: limit,
         if (localityCode != $none) #localityCode: localityCode,
+        if (includeTaggedAttendees != $none)
+          #includeTaggedAttendees: includeTaggedAttendees,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
@@ -224,6 +243,7 @@ class _AttendanceRegisterSearchModelCopyWithImpl<$R, $Out>
       AttendanceRegisterSearchModel.ignoreDeleted(
           id: data.get(#id, or: $value.id),
           staffId: data.get(#staffId, or: $value.staffId),
+          attendeeId: data.get(#attendeeId, or: $value.attendeeId),
           registerNumber: data.get(#registerNumber, or: $value.registerNumber),
           status: data.get(#status, or: $value.status),
           serviceCode: data.get(#serviceCode, or: $value.serviceCode),
@@ -231,6 +251,8 @@ class _AttendanceRegisterSearchModelCopyWithImpl<$R, $Out>
           offSet: data.get(#offSet, or: $value.offSet),
           limit: data.get(#limit, or: $value.limit),
           localityCode: data.get(#localityCode, or: $value.localityCode),
+          includeTaggedAttendees: data.get(#includeTaggedAttendees,
+              or: $value.includeTaggedAttendees),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
@@ -319,6 +341,9 @@ class AttendanceRegisterModelMapper
   static const Field<AttendanceRegisterModel, Map<String, dynamic>>
       _f$additionalDetails =
       Field('additionalDetails', _$additionalDetails, opt: true);
+  static String? _$tag(AttendanceRegisterModel v) => v.tag;
+  static const Field<AttendanceRegisterModel, String> _f$tag =
+      Field('tag', _$tag, opt: true);
   static AuditDetails? _$auditDetails(AttendanceRegisterModel v) =>
       v.auditDetails;
   static const Field<AttendanceRegisterModel, AuditDetails> _f$auditDetails =
@@ -352,6 +377,7 @@ class AttendanceRegisterModelMapper
     #completedDays: _f$completedDays,
     #attendanceLog: _f$attendanceLog,
     #additionalDetails: _f$additionalDetails,
+    #tag: _f$tag,
     #auditDetails: _f$auditDetails,
     #clientAuditDetails: _f$clientAuditDetails,
     #isDeleted: _f$isDeleted,
@@ -387,6 +413,7 @@ class AttendanceRegisterModelMapper
         completedDays: data.dec(_f$completedDays),
         attendanceLog: data.dec(_f$attendanceLog),
         additionalDetails: data.dec(_f$additionalDetails),
+        tag: data.dec(_f$tag),
         auditDetails: data.dec(_f$auditDetails),
         clientAuditDetails: data.dec(_f$clientAuditDetails),
         isDeleted: data.dec(_f$isDeleted));
@@ -486,6 +513,7 @@ abstract class AttendanceRegisterModelCopyWith<
       int? completedDays,
       List<Map<DateTime, bool>>? attendanceLog,
       Map<String, dynamic>? additionalDetails,
+      String? tag,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -566,6 +594,7 @@ class _AttendanceRegisterModelCopyWithImpl<$R, $Out>
           Object? completedDays = $none,
           Object? attendanceLog = $none,
           Object? additionalDetails = $none,
+          Object? tag = $none,
           Object? auditDetails = $none,
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
@@ -589,6 +618,7 @@ class _AttendanceRegisterModelCopyWithImpl<$R, $Out>
         if (completedDays != $none) #completedDays: completedDays,
         if (attendanceLog != $none) #attendanceLog: attendanceLog,
         if (additionalDetails != $none) #additionalDetails: additionalDetails,
+        if (tag != $none) #tag: tag,
         if (auditDetails != $none) #auditDetails: auditDetails,
         if (clientAuditDetails != $none)
           #clientAuditDetails: clientAuditDetails,
@@ -616,6 +646,7 @@ class _AttendanceRegisterModelCopyWithImpl<$R, $Out>
       attendanceLog: data.get(#attendanceLog, or: $value.attendanceLog),
       additionalDetails:
           data.get(#additionalDetails, or: $value.additionalDetails),
+      tag: data.get(#tag, or: $value.tag),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
       clientAuditDetails:
           data.get(#clientAuditDetails, or: $value.clientAuditDetails),

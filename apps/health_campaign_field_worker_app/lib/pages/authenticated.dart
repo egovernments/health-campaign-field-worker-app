@@ -40,6 +40,8 @@ import '../router/authenticated_route_observer.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
+import '../widgets/error_screen.dart';
+import 'error_boundary.dart';
 
 @RoutePage()
 class AuthenticatedPageWrapper extends StatelessWidget {
@@ -146,8 +148,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           if (!bloc.isClosed) {
                             bloc.add(SyncRefreshEvent(userId));
                           }
-/* Every time when the user changes the screen
- this will refresh the data of sync count */
+    /* Every time when the user changes the screen
+     this will refresh the data of sync count */
                           isar.opLogs
                               .filter()
                               .createdByEqualTo(userId)
@@ -231,24 +233,28 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                         create: (_) => FormsBloc(),
                       ),
                     ],
-                    child: AutoRouter(
-                      navigatorObservers: () => [
-                        AuthenticatedRouteObserver(
-                          onNavigated: () {
-                            bool shouldShowDrawer;
-                            switch (context.router.topRoute.name) {
-                              case ProjectSelectionRoute.name:
-                              case BoundarySelectionRoute.name:
-                                shouldShowDrawer = false;
-                                break;
-                              default:
-                                shouldShowDrawer = true;
-                            }
+                    child: ErrorBoundary(
+                      builder: (context, error) {
+                        return error != null ? const ErrorScreen() : AutoRouter(
+                          navigatorObservers: () => [
+                            AuthenticatedRouteObserver(
+                              onNavigated: () {
+                                bool shouldShowDrawer;
+                                switch (context.router.topRoute.name) {
+                                  case ProjectSelectionRoute.name:
+                                  case BoundarySelectionRoute.name:
+                                    shouldShowDrawer = false;
+                                    break;
+                                  default:
+                                    shouldShowDrawer = true;
+                                }
 
-                            _drawerVisibilityController.add(shouldShowDrawer);
-                          },
-                        ),
-                      ],
+                                _drawerVisibilityController.add(shouldShowDrawer);
+                              },
+                            ),
+                          ],
+                        );
+                      }
                     ),
                   ),
                 ),
@@ -396,7 +402,21 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                       Navigator.of(context, rootNavigator: true).pop();
                       context.router.push(const BeneficiariesReportRoute());
                     },
-                  )
+                  ),
+
+                  // TODO: Non system user
+
+                  SidebarItem(
+                    title: AppLocalizations.of(context).translate(
+                      //TODO: TO append the total count of non- system users
+                      i18.nonMobileUser.nonMobileUserLabel,
+                    ),
+                    icon: Icons.group,
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      context.router.push(const NonMobileUserListRoute());
+                    },
+                  ),
                 ],
               ],
               logOutDigitButtonLabel: AppLocalizations.of(context)

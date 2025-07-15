@@ -1,3 +1,15 @@
+## 1.0.5+1
+
+* Accommodated single sessions for registers
+* Updated package versions
+
+## 1.0.5
+
+* Attendance Revamp
+    * Introduced qr scan for marking attendance
+    * Modified Mark attendance page with new UI
+    * Updated to latest digit_ui_components
+
 ## 1.0.4+2
 
 * Updated latest package versions

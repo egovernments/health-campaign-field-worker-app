@@ -49,6 +49,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.5.0"
+  asn1lib:
+    dependency: transitive
+    description:
+      name: asn1lib
+      sha256: "9a8f69025044eb466b9b60ef3bc3ac99b4dc6c158ae9c56d25eeccf5bc56d024"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.6.5"
   async:
     dependency: "direct main"
     description:
@@ -57,13 +65,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
-  attendance_management:
-    dependency: "direct overridden"
-    description:
-      path: "../attendance_management"
-      relative: true
-    source: path
-    version: "1.0.4+2"
   audioplayers:
     dependency: transitive
     description:
@@ -233,7 +234,7 @@ packages:
     source: hosted
     version: "0.11.0+2"
   camera_android_camerax:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: camera_android_camerax
       sha256: "594b40a5ea0e144fdfe49e4036abe4ec9bd578b2ce3aabdb0668a02db376a1e8"
@@ -332,10 +333,10 @@ packages:
     dependency: "direct main"
     description:
       name: connectivity_plus
-      sha256: "051849e2bd7c7b3bc5844ea0d096609ddc3a859890ec3a9ac4a65a2620cc1f99"
+      sha256: "04bf81bb0b77de31557b58d052b24b3eee33f09a6e7a8c68a3e247c7df19ec27"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.4"
+    version: "6.1.3"
   connectivity_plus_platform_interface:
     dependency: transitive
     description:
@@ -405,7 +406,7 @@ packages:
     description:
       path: "packages/dart_mappable_builder"
       ref: master
-      resolved-ref: "9eb891657db6122039e462b4fb1920b93f819b80"
+      resolved-ref: ab088b8fc21a07ed7a56bf81c935ee51481ad253
       url: "https://github.com/egovernments/health-campaign-field-worker-app/"
     source: git
     version: "4.2.3"
@@ -417,14 +418,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
-  db_viewer:
-    dependency: transitive
-    description:
-      name: db_viewer
-      sha256: "5f7e3cfcde9663321797d8f6f0c876f7c13f0825a2e77ec1ef065656797144d9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   dbus:
     dependency: transitive
     description:
@@ -457,48 +450,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.1"
-  digit_crud_bloc:
-    dependency: "direct overridden"
-    description:
-      path: "../digit_crud_bloc"
-      relative: true
-    source: path
-    version: "0.0.1-dev"
-  digit_data_converter:
-    dependency: "direct overridden"
-    description:
-      path: "../digit_data_converter"
-      relative: true
-    source: path
-    version: "0.0.1-dev"
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../digit_data_model"
-      relative: true
-    source: path
-    version: "1.1.0"
-  digit_forms_engine:
-    dependency: "direct overridden"
-    description:
-      path: "../digit_forms_engine"
-      relative: true
-    source: path
-    version: "0.0.1-dev"
+      name: digit_data_model
+      sha256: "1a67c66237588f50aa2e7029aac86e9e0e220f4316bcef467bc930e310bcc8d7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.2+1"
   digit_scanner:
     dependency: "direct main"
     description:
-      path: "../digit_scanner"
-      relative: true
-    source: path
-    version: "1.0.5+1"
+      name: digit_scanner
+      sha256: "4bbfd96e1bc7ce4b9b9a0a92a5944ce1ee2220f9cc3c9c86c7ceb73b2988c549"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.6"
   digit_showcase:
     dependency: "direct main"
     description:
-      path: "../digit_showcase"
-      relative: true
-    source: path
-    version: "1.0.2+1"
+      name: digit_showcase
+      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   digit_ui_components:
     dependency: "direct main"
     description:
@@ -539,14 +514,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.18.0"
-  drift_db_viewer:
-    dependency: transitive
-    description:
-      name: drift_db_viewer
-      sha256: "5ea77858c52b55460a1e8f34ab5f88324621d486717d876fd745765fbc227f3f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
   drift_dev:
     dependency: "direct dev"
     description:
@@ -555,6 +522,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.18.0"
+  encrypt:
+    dependency: transitive
+    description:
+      name: encrypt
+      sha256: "62d9aa4670cc2a8798bab89b39fc71b6dfbacf615de6cf5001fb39f7e4a996a2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.3"
   fake_async:
     dependency: transitive
     description:
@@ -588,7 +563,7 @@ packages:
     source: hosted
     version: "8.0.0+1"
   file_selector_linux:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: file_selector_linux
       sha256: "045d372bf19b02aeb69cacf8b4009555fb5f6f0b7ad8016e5f46dd1387ddd492"
@@ -604,7 +579,7 @@ packages:
     source: hosted
     version: "0.9.4"
   file_selector_platform_interface:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: file_selector_platform_interface
       sha256: a3994c26f10378a039faa11de174d7b78eb8f79e4dd0af2a451410c1a5c3f66b
@@ -649,7 +624,7 @@ packages:
     source: hosted
     version: "3.0.7"
   flutter_dropzone_platform_interface:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: flutter_dropzone_platform_interface
       sha256: b4e2df75364bab2f4c3ca32b87193267d786b6e158c3f345c3a1daeb911d82b9
@@ -778,10 +753,11 @@ packages:
   formula_parser:
     dependency: "direct main"
     description:
-      path: "../formula_parser"
-      relative: true
-    source: path
-    version: "0.0.1"
+      name: formula_parser
+      sha256: af9e9ae2961ec1dab54c5de97d9a6bef0593ddb998720e3785bd91ef05353359
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   freezed:
     dependency: "direct dev"
     description:
@@ -1298,10 +1274,10 @@ packages:
     dependency: transitive
     description:
       name: petitparser
-      sha256: c15605cd28af66339f8eb6fbe0e541bfe2d1b72d5825efc6598f3e0a31b9ad27
+      sha256: cb3798bef7fc021ac45b308f4b51208a152792445cce0448c9a4ba5879dd8750
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.2"
+    version: "5.4.0"
   platform:
     dependency: transitive
     description:
@@ -1326,6 +1302,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.0.0"
+  pointycastle:
+    dependency: transitive
+    description:
+      name: pointycastle
+      sha256: "4be0097fcf3fd3e8449e53730c631200ebc7b88016acecab2b0da2f0149222fe"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.9.1"
   pool:
     dependency: transitive
     description:
@@ -1526,9 +1510,10 @@ packages:
   survey_form:
     dependency: "direct main"
     description:
-      path: "../survey_form"
-      relative: true
-    source: path
+      name: survey_form
+      sha256: "26c02064d6d74928ce458fe25eb037ee9a131952f3aa6e03480b70277473b635"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.3"
   synchronized:
     dependency: transitive
@@ -1790,10 +1775,10 @@ packages:
     dependency: transitive
     description:
       name: xml
-      sha256: b015a8ad1c488f66851d762d3090a21c600e479dc75e68328c52774040cf9226
+      sha256: "5bc72e1e45e941d825fd7468b9b4cc3b9327942649aeb6fc5cdbf135f0a86e84"
       url: "https://pub.dev"
     source: hosted
-    version: "6.5.0"
+    version: "6.3.0"
   yaml:
     dependency: transitive
     description:
@@ -1803,5 +1788,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.0 <4.0.0"
+  dart: ">=3.4.0 <3.9.0"
   flutter: ">=3.22.0"

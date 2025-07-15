@@ -4,6 +4,7 @@ const common = Common();
 const login = Login();
 const forgotPassword = ForgotPassword();
 const home = Home();
+const dataShare = DataShare();
 const acknowledgementSuccess = AcknowledgementSuccess();
 const adverseEvents = AdverseEvents();
 const projectSelection = ProjectSelection();
@@ -33,6 +34,8 @@ const complaintTypeShowcase = ComplaintTypeShowcase();
 const complaintsDetailsShowcase = ComplaintsDetailsShowcase();
 const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
 const complaintsInboxShowcase = ComplaintsInboxShowcase();
+
+const nonMobileUser = NonMobileUser();
 
 class Common {
   const Common();
@@ -78,6 +81,10 @@ class Common {
   String get coreCommonHelp => 'CORE_COMMON_HELP';
 
   String get coreCommonHome => 'CORE_COMMON_HOME';
+
+  String get coreCommonGoHome => 'CORE_COMMON_GO_HOME';
+
+  String get coreCommonAttention => 'CORE_COMMON_ATTENTION';
 
   String get coreCommonViewDownloadedData => 'CORE_COMMON_VIEW_DOWNLOADED_DATA';
 
@@ -137,6 +144,13 @@ class Common {
   String get locationCapturing => 'CAPTURING_LOCATION';
 
   String get profileUpdateSuccess => 'PROFILE_UPDATE_SUCCESS';
+  String get coreCommonError => 'CORE_COMMON_UNKNOWN_ERROR_OCCURRED';
+  String get coreCommonErrorDescription => 'CORE_COMMON_UNKNOWN_ERROR_DESCRIPTION';
+
+
+  String get qrInventory => 'QR_INVENTORY';
+
+  String get qrAttendance => 'QR_ATTENDANCE';
 }
 
 class HomeShowcase {
@@ -571,6 +585,8 @@ class Home {
 
   String get db => 'HOME_DB_LABEL';
 
+  String get dataShare => 'HOME_DATA_SHARE_LABEL';
+
   String get dashboard => 'HOME_DASHBOARD_LABEL';
 
   String get beneficiaryIdLabel => 'HOME_BENEFICIARY_ID_LABEL';
@@ -579,9 +595,76 @@ class Home {
 
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
 
+  String get transitPostLabel => 'HOME_TRANSIT_POST_LABEL';
+
   String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
 
   String get clfLabel => "HOME_COMMUNAL_LIVING_FACILITIES_LABEL";
+}
+
+class DataShare {
+  const DataShare();
+
+  String get sendAction => 'SEND_ACTION';
+
+  String get dataUnSyncedDesc => 'DATA_UN_SYNCED_DESCRIPTION';
+
+  String get sendActionDescription => 'SEND_ACTION_DESCRIPTION';
+
+  String get receiveAction => 'RECEIVE_ACTION';
+
+  String get receiveActionDescription => 'RECEIVE_ACTION_DESCRIPTION';
+
+  String get selectRecipients => 'SELECT_RECIPIENTS';
+
+  String get noRecipientsSelected => 'NO_RECIPIENTS_SELECTED';
+
+  String get noDevicesConnected => 'NO_DEVICES_CONNECTED';
+
+  String get sendActionMessage => 'SEND_ACTION_MESSAGE';
+
+  String get sendingActionMessage => 'SENDING_ACTION_MESSAGE';
+
+  String get dataTransferCompleted => 'DATA_TRANSFER_COMPLETED';
+
+  String get receiveActionMessage => 'RECEIVE_ACTION_MESSAGE';
+
+  String get receivingActionMessage => 'RECEIVING_ACTION_MESSAGE';
+
+  String get receivedSuccessMessage => 'RECEIVED_SUCCESS_MESSAGE';
+
+  String get receiverDialogTitle => 'RECEIVER_DIALOG_TITLE';
+
+  String get receiverDialogDescription => 'RECEIVER_DIALOG_DESCRIPTION';
+
+  String get senderDialogTitle => 'SENDER_DIALOG_TITLE';
+
+  String get senderDialogDescription => 'SENDER_DIALOG_DESCRIPTION';
+
+  String get dataSharingLabel => 'DATA_SHARING_LABEL';
+
+  String get projectMisMatchError => 'PROJECT_MISMATCH_ERROR';
+
+  String get invalidFileError => 'INVALID_FILE_FORMAT_ERROR';
+
+  String get fileNotFoundError => 'FILE_NOT_FOUND_ERROR';
+
+  String get failedToTransfer => 'FAILED_TO_TRANSFER';
+
+  String get failedToTransferDesc => 'FAILED_TO_TRANSFER_DESCRIPTION';
+
+  String get dateReceivedForBoundaries => 'DATA_RECEIVED_FOR_BOUNDARIES';
+
+  String get noBoundariesMatchedTitle => 'NO_BOUNDARIES_MATCHED_ERROR_TITLE';
+
+  String get noBoundariesMatchedDesc =>
+      'NO_BOUNDARIES_MATCHED_ERROR_DESCRIPTION';
+
+  String get failedToTransferDescription => 'FAILED_TO_TRANSFER_DESCRIPTION';
+
+  String get failedToReceive => 'FAILED_TO_RECEIVE';
+
+  String get failedToReceiveDescription => 'FAILED_TO_RECEIVE_DESCRIPTION';
 }
 
 class AcknowledgementSuccess {
@@ -1090,4 +1173,14 @@ class Dashboard {
   const Dashboard();
 
   String get dashboardHeaderLabel => 'DASHBOARD_HEADER';
+}
+
+class NonMobileUser {
+  const NonMobileUser();
+
+  String get nonMobileUserLabel => 'NON_MOBILE_USER_LABEL';
+
+  String get showQrCodeBtnLabel => 'NON_MOBILE_USER_QR_BTN_LABEL';
+
+  String get showQrCodeLabel => 'NON_MOBILE_USER_QR_LABEL';
 }

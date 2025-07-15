@@ -1,3 +1,17 @@
+## 1.1.2+1
+
+* Updated encryption utils function to compress and decompress data
+
+## 1.1.2
+
+* Added tag for attendee table
+* Updated to latest components
+* Added utils function to encrypt and decrypt
+
+## 1.1.1
+
+* Added name field in projectProductVariant
+
 ## 1.1.0
 
 * Merged Enumeration and IdGen

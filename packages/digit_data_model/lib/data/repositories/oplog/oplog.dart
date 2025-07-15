@@ -134,6 +134,7 @@ abstract class OpLogManager<T extends EntityModel> {
         .where(
           (element) =>
               element.entityType != DataModelType.userLocation &&
+              element.entityType != DataModelType.userAction &&
               element.entityType != DataModelType.complaints,
         )
         .toList();

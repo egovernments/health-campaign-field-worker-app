@@ -8,16 +8,20 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:attendance_management/attendance_management.dart' as _i9;
+import 'package:attendance_management/attendance_management.dart' as _i11;
 import 'package:attendance_management/blocs/app_localization.dart' as _i7;
 import 'package:attendance_management/models/entities/attendance_register.dart'
-    as _i8;
+    as _i9;
+import 'package:attendance_management/models/entities/scanned_individual_data.dart'
+    as _i10;
 import 'package:attendance_management/pages/manage_attendance.dart' as _i3;
 import 'package:attendance_management/pages/mark_attendance.dart' as _i4;
-import 'package:attendance_management/pages/session_select.dart' as _i2;
 import 'package:attendance_management/widgets/attendance_acknowledgement.dart'
     as _i1;
+import 'package:attendance_management/widgets/attendance_qr_scanner.dart'
+    as _i2;
 import 'package:auto_route/auto_route.dart' as _i5;
+import 'package:flutter/foundation.dart' as _i8;
 import 'package:flutter/material.dart' as _i6;
 
 abstract class $AttendanceRoute extends _i5.AutoRouterModule {
@@ -42,15 +46,17 @@ abstract class $AttendanceRoute extends _i5.AutoRouterModule {
         ),
       );
     },
-    AttendanceDateSessionSelectionRoute.name: (routeData) {
-      final args = routeData.argsAs<AttendanceDateSessionSelectionRouteArgs>();
+    AttendanceDigitScannerRoute.name: (routeData) {
+      final args = routeData.argsAs<AttendanceDigitScannerRouteArgs>();
       return _i5.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i2.AttendanceDateSessionSelectionPage(
-          registers: args.registers,
-          registerID: args.registerID,
+        child: _i2.AttendanceDigitScannerPage(
           key: args.key,
-          appLocalizations: args.appLocalizations,
+          registerModel: args.registerModel,
+          onScanResult: args.onScanResult,
+          quantity: args.quantity,
+          singleValue: args.singleValue,
+          isGS1code: args.isGS1code,
         ),
       );
     },
@@ -65,13 +71,7 @@ abstract class $AttendanceRoute extends _i5.AutoRouterModule {
       return _i5.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i4.MarkAttendancePage(
-          attendees: args.attendees,
-          registerId: args.registerId,
-          tenantId: args.tenantId,
-          dateTime: args.dateTime,
-          entryTime: args.entryTime,
-          exitTime: args.exitTime,
-          session: args.session,
+          registerModel: args.registerModel,
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -165,51 +165,67 @@ class AttendanceAcknowledgementRouteArgs {
 }
 
 /// generated route for
-/// [_i2.AttendanceDateSessionSelectionPage]
-class AttendanceDateSessionSelectionRoute
-    extends _i5.PageRouteInfo<AttendanceDateSessionSelectionRouteArgs> {
-  AttendanceDateSessionSelectionRoute({
-    required List<_i8.AttendanceRegisterModel> registers,
-    required String registerID,
-    _i6.Key? key,
-    _i7.AttendanceLocalization? appLocalizations,
+/// [_i2.AttendanceDigitScannerPage]
+class AttendanceDigitScannerRoute
+    extends _i5.PageRouteInfo<AttendanceDigitScannerRouteArgs> {
+  AttendanceDigitScannerRoute({
+    _i8.Key? key,
+    required _i9.AttendanceRegisterModel registerModel,
+    required void Function(
+      _i10.ScannedIndividualDataModel,
+      _i2.AttendanceValidationResult,
+    ) onScanResult,
+    required int quantity,
+    bool singleValue = false,
+    required bool isGS1code,
     List<_i5.PageRouteInfo>? children,
   }) : super(
-          AttendanceDateSessionSelectionRoute.name,
-          args: AttendanceDateSessionSelectionRouteArgs(
-            registers: registers,
-            registerID: registerID,
+          AttendanceDigitScannerRoute.name,
+          args: AttendanceDigitScannerRouteArgs(
             key: key,
-            appLocalizations: appLocalizations,
+            registerModel: registerModel,
+            onScanResult: onScanResult,
+            quantity: quantity,
+            singleValue: singleValue,
+            isGS1code: isGS1code,
           ),
           initialChildren: children,
         );
 
-  static const String name = 'AttendanceDateSessionSelectionRoute';
+  static const String name = 'AttendanceDigitScannerRoute';
 
-  static const _i5.PageInfo<AttendanceDateSessionSelectionRouteArgs> page =
-      _i5.PageInfo<AttendanceDateSessionSelectionRouteArgs>(name);
+  static const _i5.PageInfo<AttendanceDigitScannerRouteArgs> page =
+      _i5.PageInfo<AttendanceDigitScannerRouteArgs>(name);
 }
 
-class AttendanceDateSessionSelectionRouteArgs {
-  const AttendanceDateSessionSelectionRouteArgs({
-    required this.registers,
-    required this.registerID,
+class AttendanceDigitScannerRouteArgs {
+  const AttendanceDigitScannerRouteArgs({
     this.key,
-    this.appLocalizations,
+    required this.registerModel,
+    required this.onScanResult,
+    required this.quantity,
+    this.singleValue = false,
+    required this.isGS1code,
   });
 
-  final List<_i8.AttendanceRegisterModel> registers;
+  final _i8.Key? key;
 
-  final String registerID;
+  final _i9.AttendanceRegisterModel registerModel;
 
-  final _i6.Key? key;
+  final void Function(
+    _i10.ScannedIndividualDataModel,
+    _i2.AttendanceValidationResult,
+  ) onScanResult;
 
-  final _i7.AttendanceLocalization? appLocalizations;
+  final int quantity;
+
+  final bool singleValue;
+
+  final bool isGS1code;
 
   @override
   String toString() {
-    return 'AttendanceDateSessionSelectionRouteArgs{registers: $registers, registerID: $registerID, key: $key, appLocalizations: $appLocalizations}';
+    return 'AttendanceDigitScannerRouteArgs{key: $key, registerModel: $registerModel, onScanResult: $onScanResult, quantity: $quantity, singleValue: $singleValue, isGS1code: $isGS1code}';
   }
 }
 
@@ -231,26 +247,14 @@ class ManageAttendanceRoute extends _i5.PageRouteInfo<void> {
 /// [_i4.MarkAttendancePage]
 class MarkAttendanceRoute extends _i5.PageRouteInfo<MarkAttendanceRouteArgs> {
   MarkAttendanceRoute({
-    required List<_i9.AttendeeModel> attendees,
-    required String registerId,
-    required String tenantId,
-    required DateTime dateTime,
-    required int entryTime,
-    required int exitTime,
-    int? session,
+    required _i11.AttendanceRegisterModel registerModel,
     _i6.Key? key,
-    _i9.AttendanceLocalization? appLocalizations,
+    _i11.AttendanceLocalization? appLocalizations,
     List<_i5.PageRouteInfo>? children,
   }) : super(
           MarkAttendanceRoute.name,
           args: MarkAttendanceRouteArgs(
-            attendees: attendees,
-            registerId: registerId,
-            tenantId: tenantId,
-            dateTime: dateTime,
-            entryTime: entryTime,
-            exitTime: exitTime,
-            session: session,
+            registerModel: registerModel,
             key: key,
             appLocalizations: appLocalizations,
           ),
@@ -265,37 +269,19 @@ class MarkAttendanceRoute extends _i5.PageRouteInfo<MarkAttendanceRouteArgs> {
 
 class MarkAttendanceRouteArgs {
   const MarkAttendanceRouteArgs({
-    required this.attendees,
-    required this.registerId,
-    required this.tenantId,
-    required this.dateTime,
-    required this.entryTime,
-    required this.exitTime,
-    this.session,
+    required this.registerModel,
     this.key,
     this.appLocalizations,
   });
 
-  final List<_i9.AttendeeModel> attendees;
-
-  final String registerId;
-
-  final String tenantId;
-
-  final DateTime dateTime;
-
-  final int entryTime;
-
-  final int exitTime;
-
-  final int? session;
+  final _i11.AttendanceRegisterModel registerModel;
 
   final _i6.Key? key;
 
-  final _i9.AttendanceLocalization? appLocalizations;
+  final _i11.AttendanceLocalization? appLocalizations;
 
   @override
   String toString() {
-    return 'MarkAttendanceRouteArgs{attendees: $attendees, registerId: $registerId, tenantId: $tenantId, dateTime: $dateTime, entryTime: $entryTime, exitTime: $exitTime, session: $session, key: $key, appLocalizations: $appLocalizations}';
+    return 'MarkAttendanceRouteArgs{registerModel: $registerModel, key: $key, appLocalizations: $appLocalizations}';
   }
 }

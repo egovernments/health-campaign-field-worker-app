@@ -375,6 +375,15 @@ class MdmsRepository {
       return searchFilters;
     }).toList();
 
+    appConfiguration.transitPostType =
+        result.hcmWrapperModel?.transitPostType?.map((e) {
+      final transitPostType = TransitPostType()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+      return transitPostType;
+    }).toList();
+
     appConfiguration.symptomsTypes =
         result.hcmWrapperModel?.symptomsTypeList?.map((e) {
       final symptomTypes = SymptomsTypes()
@@ -394,6 +403,17 @@ class MdmsRepository {
 
       return reasonTypes;
     }).toList();
+
+    appConfiguration.manualAttendanceReasons =
+        result.hcmWrapperModel?.manualAttendanceReasonList?.map((e) {
+      final manualAttendanceTypes = ManualAttendanceReasons()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+
+      return manualAttendanceTypes;
+    }).toList();
+
     appConfiguration.houseStructureTypes =
         result.hcmWrapperModel?.houseStructureTypes?.map((e) {
       final structureTypes = HouseStructureTypes()

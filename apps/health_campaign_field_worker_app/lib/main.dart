@@ -12,6 +12,7 @@ import 'blocs/app_bloc_observer.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/local_store/secure_store/secure_store.dart';
 import 'data/remote_client.dart';
+import 'pages/error_boundary.dart';
 import 'router/app_router.dart';
 import 'utils/background_service.dart';
 import 'utils/environment_config.dart';
@@ -27,6 +28,7 @@ void main() async {
 
   await initializeAllMappers();
   final info = await PackageInfo.fromPlatform();
+  setupErrorWidget();
 
   Bloc.observer = AppBlocObserver();
   await AppSharedPreferences().init();

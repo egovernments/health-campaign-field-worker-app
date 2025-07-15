@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:digit_data_model/data/local_store/sql_store/tables/localization.dart';
+import 'package:digit_data_model/data/local_store/sql_store/tables/user_action.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/foundation.dart';
@@ -105,6 +106,7 @@ part 'sql_store.g.dart';
   SideEffect,
   Referral,
   Localization,
+  UserAction,
   UniqueIdPool
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
@@ -117,7 +119,8 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
   int get schemaVersion => 6; // Increment schema version
 
   @override
-  MigrationStrategy get migration => MigrationStrategy(
+  MigrationStrategy get migration =>
+      MigrationStrategy(
         onUpgrade: (migrator, from, to) async {
           if (from < 5) {
             //Add column for projectType in Project Table
@@ -275,6 +278,16 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
               if (kDebugMode) {
                 print(
                     "Failed to add columns for serviceAttributes - serviceClientReferenceId, id, identifier - individualClientReferenceId, individualId");
+              }
+            }
+          }
+          if (from < 8) {
+            try {
+              await migrator.addColumn(
+                  attendee, attendee.tag);
+            } catch (e) {
+              if (kDebugMode) {
+                print("Failed to add columns for attendee, tag");
               }
             }
           }
