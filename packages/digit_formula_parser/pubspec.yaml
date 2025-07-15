@@ -1,6 +1,6 @@
-name: formula_parser
-description: "A new Flutter package project."
-version: 0.0.1
+name: digit_formula_parser
+description: A dart plugin to to parse and evaluate mathematical expressions.
+version: 1.0.0
 homepage:
 
 environment:
