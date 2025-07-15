@@ -70,6 +70,7 @@ class BoundaryModel extends EntityModel with BoundaryModelMappable {
     this.children = const [],
     this.boundaryType,
     super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
   }) : super();
 

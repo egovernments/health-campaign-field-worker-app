@@ -26,6 +26,7 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
   ) {
     on(_onLoadLocalization);
     on(_onUpdateLocalizationIndex);
+    on(_onRemoteLoadLocalization);
   }
 
   FutureOr<void> _onLoadLocalization(
@@ -98,6 +99,40 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
     } catch (error) {
       rethrow;
     } finally {
+      emit(state.copyWith(loading: false, retryModule: null));
+    }
+  }
+
+  FutureOr<void> _onRemoteLoadLocalization(
+      OnRemoteLoadLocalizationEvent event,
+      LocalizationEmitter emit,
+      ) async {
+    emit(state.copyWith(loading: true));
+
+    try {
+      final allModules = event.module.split(',');
+
+      try {
+        var localizationList;
+
+          var results = await localizationRepository.loadLocalization(
+            path: event.path,
+            locale: event.locale,
+            module: allModules.join(','),
+            tenantId: event.tenantId,
+          );
+          localizationList = await LocalizationLocalRepository().create(results, sql);
+
+      } catch (error) {
+        debugPrint('error in fetching modules localization $error');
+        emit(state.copyWith(loading: false, retryModule: allModules.join(',')));
+      }
+
+      final List codes = event.locale.split('_');
+      await _loadLocale(codes);
+    } catch (error) {
+      rethrow;
+    } finally {
       emit(state.copyWith(loading: false));
     }
   }
@@ -126,6 +161,13 @@ class LocalizationEvent with _$LocalizationEvent {
     required String locale,
     required String path,
   }) = OnLoadLocalizationEvent;
+
+  const factory LocalizationEvent.onRemoteLoadLocalization({
+    required String module,
+    required String tenantId,
+    required String locale,
+    required String path,
+  }) = OnRemoteLoadLocalizationEvent;
 
   const factory LocalizationEvent.onUpdateLocalizationIndex({
     required int index,

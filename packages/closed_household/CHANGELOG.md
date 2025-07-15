@@ -1,3 +1,7 @@
+## 1.1.0-dev.1-console
+
+* Upgrade packages to latest version
+
 ## 1.0.5+1
 
 * Upgrade packages to latest version

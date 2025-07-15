@@ -1,5 +1,6 @@
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 
@@ -45,32 +46,18 @@ class BeneficiaryCard extends StatelessWidget {
                     status == Status.registered.toValue() ||
                     status == Status.administeredSuccess.toValue() ||
                     status == Status.delivered.toValue()
-                ? DigitButton(
-                    prefixIcon: Icons.check_circle,
+                ? Tag(
                     label: RegistrationDeliveryLocalization.of(context)
                         .translate(status.toString() ==
                                 Status.administeredSuccess.toValue()
                             ? '${RegistrationDeliverySingleton().selectedProject!.projectType}_${status.toString()}'
                             : status.toString()),
-                    capitalizeLetters: false,
-                    textColor: theme.colorTheme.alert.success,
-                    iconColor: theme.colorTheme.alert.success,
-                    isDisabled: true,
-                    onPressed: () {},
-                    type: DigitButtonType.tertiary,
-                    size: DigitButtonSize.medium,
+                    type: TagType.success,
                   )
-                : DigitButton(
-                    prefixIcon: Icons.info_rounded,
+                : Tag(
                     label: RegistrationDeliveryLocalization.of(context)
                         .translate(status.toString()),
-                    capitalizeLetters: false,
-                    textColor: theme.colorTheme.alert.error,
-                    iconColor: theme.colorTheme.alert.error,
-                    type: DigitButtonType.tertiary,
-                    size: DigitButtonSize.medium,
-                    isDisabled: true,
-                    onPressed: () {},
+                    type: TagType.error,
                   ),
           ),
         if (subtitle != null)

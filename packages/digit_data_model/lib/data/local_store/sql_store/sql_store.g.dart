@@ -9496,11 +9496,11 @@ class $ProjectTable extends Project with TableInfo<$ProjectTable, ProjectData> {
   late final GeneratedColumn<String> description = GeneratedColumn<String>(
       'description', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _referenceIdMeta =
-      const VerificationMeta('referenceId');
+  static const VerificationMeta _referenceIDMeta =
+      const VerificationMeta('referenceID');
   @override
-  late final GeneratedColumn<String> referenceId = GeneratedColumn<String>(
-      'reference_id', aliasedName, true,
+  late final GeneratedColumn<String> referenceID = GeneratedColumn<String>(
+      'reference_i_d', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _projectHierarchyMeta =
       const VerificationMeta('projectHierarchy');
@@ -9618,7 +9618,7 @@ class $ProjectTable extends Project with TableInfo<$ProjectTable, ProjectData> {
         name,
         department,
         description,
-        referenceId,
+        referenceID,
         projectHierarchy,
         auditCreatedBy,
         nonRecoverableError,
@@ -9703,11 +9703,11 @@ class $ProjectTable extends Project with TableInfo<$ProjectTable, ProjectData> {
           description.isAcceptableOrUnknown(
               data['description']!, _descriptionMeta));
     }
-    if (data.containsKey('reference_id')) {
+    if (data.containsKey('reference_i_d')) {
       context.handle(
-          _referenceIdMeta,
-          referenceId.isAcceptableOrUnknown(
-              data['reference_id']!, _referenceIdMeta));
+          _referenceIDMeta,
+          referenceID.isAcceptableOrUnknown(
+              data['reference_i_d']!, _referenceIDMeta));
     }
     if (data.containsKey('project_hierarchy')) {
       context.handle(
@@ -9826,8 +9826,8 @@ class $ProjectTable extends Project with TableInfo<$ProjectTable, ProjectData> {
           .read(DriftSqlType.string, data['${effectivePrefix}department']),
       description: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}description']),
-      referenceId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}reference_id']),
+      referenceID: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}reference_i_d']),
       projectHierarchy: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}project_hierarchy']),
       auditCreatedBy: attachedDatabase.typeMapping.read(
@@ -9880,7 +9880,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
   final String name;
   final String? department;
   final String? description;
-  final String? referenceId;
+  final String? referenceID;
   final String? projectHierarchy;
   final String? auditCreatedBy;
   final bool? nonRecoverableError;
@@ -9908,7 +9908,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
       required this.name,
       this.department,
       this.description,
-      this.referenceId,
+      this.referenceID,
       this.projectHierarchy,
       this.auditCreatedBy,
       this.nonRecoverableError,
@@ -9954,8 +9954,8 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
     }
-    if (!nullToAbsent || referenceId != null) {
-      map['reference_id'] = Variable<String>(referenceId);
+    if (!nullToAbsent || referenceID != null) {
+      map['reference_i_d'] = Variable<String>(referenceID);
     }
     if (!nullToAbsent || projectHierarchy != null) {
       map['project_hierarchy'] = Variable<String>(projectHierarchy);
@@ -10035,9 +10035,9 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
-      referenceId: referenceId == null && nullToAbsent
+      referenceID: referenceID == null && nullToAbsent
           ? const Value.absent()
-          : Value(referenceId),
+          : Value(referenceID),
       projectHierarchy: projectHierarchy == null && nullToAbsent
           ? const Value.absent()
           : Value(projectHierarchy),
@@ -10103,7 +10103,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
       name: serializer.fromJson<String>(json['name']),
       department: serializer.fromJson<String?>(json['department']),
       description: serializer.fromJson<String?>(json['description']),
-      referenceId: serializer.fromJson<String?>(json['referenceId']),
+      referenceID: serializer.fromJson<String?>(json['referenceID']),
       projectHierarchy: serializer.fromJson<String?>(json['projectHierarchy']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       nonRecoverableError:
@@ -10137,7 +10137,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
       'name': serializer.toJson<String>(name),
       'department': serializer.toJson<String?>(department),
       'description': serializer.toJson<String?>(description),
-      'referenceId': serializer.toJson<String?>(referenceId),
+      'referenceID': serializer.toJson<String?>(referenceID),
       'projectHierarchy': serializer.toJson<String?>(projectHierarchy),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
@@ -10168,7 +10168,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
           String? name,
           Value<String?> department = const Value.absent(),
           Value<String?> description = const Value.absent(),
-          Value<String?> referenceId = const Value.absent(),
+          Value<String?> referenceID = const Value.absent(),
           Value<String?> projectHierarchy = const Value.absent(),
           Value<String?> auditCreatedBy = const Value.absent(),
           Value<bool?> nonRecoverableError = const Value.absent(),
@@ -10201,7 +10201,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
         name: name ?? this.name,
         department: department.present ? department.value : this.department,
         description: description.present ? description.value : this.description,
-        referenceId: referenceId.present ? referenceId.value : this.referenceId,
+        referenceID: referenceID.present ? referenceID.value : this.referenceID,
         projectHierarchy: projectHierarchy.present
             ? projectHierarchy.value
             : this.projectHierarchy,
@@ -10253,7 +10253,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
           ..write('name: $name, ')
           ..write('department: $department, ')
           ..write('description: $description, ')
-          ..write('referenceId: $referenceId, ')
+          ..write('referenceID: $referenceID, ')
           ..write('projectHierarchy: $projectHierarchy, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('nonRecoverableError: $nonRecoverableError, ')
@@ -10286,7 +10286,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
         name,
         department,
         description,
-        referenceId,
+        referenceID,
         projectHierarchy,
         auditCreatedBy,
         nonRecoverableError,
@@ -10318,7 +10318,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
           other.name == this.name &&
           other.department == this.department &&
           other.description == this.description &&
-          other.referenceId == this.referenceId &&
+          other.referenceID == this.referenceID &&
           other.projectHierarchy == this.projectHierarchy &&
           other.auditCreatedBy == this.auditCreatedBy &&
           other.nonRecoverableError == this.nonRecoverableError &&
@@ -10348,7 +10348,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
   final Value<String> name;
   final Value<String?> department;
   final Value<String?> description;
-  final Value<String?> referenceId;
+  final Value<String?> referenceID;
   final Value<String?> projectHierarchy;
   final Value<String?> auditCreatedBy;
   final Value<bool?> nonRecoverableError;
@@ -10377,7 +10377,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
     this.name = const Value.absent(),
     this.department = const Value.absent(),
     this.description = const Value.absent(),
-    this.referenceId = const Value.absent(),
+    this.referenceID = const Value.absent(),
     this.projectHierarchy = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.nonRecoverableError = const Value.absent(),
@@ -10407,7 +10407,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
     required String name,
     this.department = const Value.absent(),
     this.description = const Value.absent(),
-    this.referenceId = const Value.absent(),
+    this.referenceID = const Value.absent(),
     this.projectHierarchy = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.nonRecoverableError = const Value.absent(),
@@ -10438,7 +10438,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
     Expression<String>? name,
     Expression<String>? department,
     Expression<String>? description,
-    Expression<String>? referenceId,
+    Expression<String>? referenceID,
     Expression<String>? projectHierarchy,
     Expression<String>? auditCreatedBy,
     Expression<bool>? nonRecoverableError,
@@ -10468,7 +10468,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
       if (name != null) 'name': name,
       if (department != null) 'department': department,
       if (description != null) 'description': description,
-      if (referenceId != null) 'reference_id': referenceId,
+      if (referenceID != null) 'reference_i_d': referenceID,
       if (projectHierarchy != null) 'project_hierarchy': projectHierarchy,
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (nonRecoverableError != null)
@@ -10502,7 +10502,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
       Value<String>? name,
       Value<String?>? department,
       Value<String?>? description,
-      Value<String?>? referenceId,
+      Value<String?>? referenceID,
       Value<String?>? projectHierarchy,
       Value<String?>? auditCreatedBy,
       Value<bool?>? nonRecoverableError,
@@ -10531,7 +10531,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
       name: name ?? this.name,
       department: department ?? this.department,
       description: description ?? this.description,
-      referenceId: referenceId ?? this.referenceId,
+      referenceID: referenceID ?? this.referenceID,
       projectHierarchy: projectHierarchy ?? this.projectHierarchy,
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
@@ -10585,8 +10585,8 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
     if (description.present) {
       map['description'] = Variable<String>(description.value);
     }
-    if (referenceId.present) {
-      map['reference_id'] = Variable<String>(referenceId.value);
+    if (referenceID.present) {
+      map['reference_i_d'] = Variable<String>(referenceID.value);
     }
     if (projectHierarchy.present) {
       map['project_hierarchy'] = Variable<String>(projectHierarchy.value);
@@ -10655,7 +10655,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
           ..write('name: $name, ')
           ..write('department: $department, ')
           ..write('description: $description, ')
-          ..write('referenceId: $referenceId, ')
+          ..write('referenceID: $referenceID, ')
           ..write('projectHierarchy: $projectHierarchy, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('nonRecoverableError: $nonRecoverableError, ')
@@ -40373,7 +40373,7 @@ class $LocalizationTable extends Localization
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {locale, code, module};
   @override
   LocalizationData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -46187,7 +46187,7 @@ typedef $$ProjectTableInsertCompanionBuilder = ProjectCompanion Function({
   required String name,
   Value<String?> department,
   Value<String?> description,
-  Value<String?> referenceId,
+  Value<String?> referenceID,
   Value<String?> projectHierarchy,
   Value<String?> auditCreatedBy,
   Value<bool?> nonRecoverableError,
@@ -46217,7 +46217,7 @@ typedef $$ProjectTableUpdateCompanionBuilder = ProjectCompanion Function({
   Value<String> name,
   Value<String?> department,
   Value<String?> description,
-  Value<String?> referenceId,
+  Value<String?> referenceID,
   Value<String?> projectHierarchy,
   Value<String?> auditCreatedBy,
   Value<bool?> nonRecoverableError,
@@ -46266,7 +46266,7 @@ class $$ProjectTableTableManager extends RootTableManager<
             Value<String> name = const Value.absent(),
             Value<String?> department = const Value.absent(),
             Value<String?> description = const Value.absent(),
-            Value<String?> referenceId = const Value.absent(),
+            Value<String?> referenceID = const Value.absent(),
             Value<String?> projectHierarchy = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
             Value<bool?> nonRecoverableError = const Value.absent(),
@@ -46296,7 +46296,7 @@ class $$ProjectTableTableManager extends RootTableManager<
             name: name,
             department: department,
             description: description,
-            referenceId: referenceId,
+            referenceID: referenceID,
             projectHierarchy: projectHierarchy,
             auditCreatedBy: auditCreatedBy,
             nonRecoverableError: nonRecoverableError,
@@ -46326,7 +46326,7 @@ class $$ProjectTableTableManager extends RootTableManager<
             required String name,
             Value<String?> department = const Value.absent(),
             Value<String?> description = const Value.absent(),
-            Value<String?> referenceId = const Value.absent(),
+            Value<String?> referenceID = const Value.absent(),
             Value<String?> projectHierarchy = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
             Value<bool?> nonRecoverableError = const Value.absent(),
@@ -46356,7 +46356,7 @@ class $$ProjectTableTableManager extends RootTableManager<
             name: name,
             department: department,
             description: description,
-            referenceId: referenceId,
+            referenceID: referenceID,
             projectHierarchy: projectHierarchy,
             auditCreatedBy: auditCreatedBy,
             nonRecoverableError: nonRecoverableError,
@@ -46443,8 +46443,8 @@ class $$ProjectTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get referenceId => $state.composableBuilder(
-      column: $state.table.referenceId,
+  ColumnFilters<String> get referenceID => $state.composableBuilder(
+      column: $state.table.referenceID,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -46582,8 +46582,8 @@ class $$ProjectTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get referenceId => $state.composableBuilder(
-      column: $state.table.referenceId,
+  ColumnOrderings<String> get referenceID => $state.composableBuilder(
+      column: $state.table.referenceID,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 

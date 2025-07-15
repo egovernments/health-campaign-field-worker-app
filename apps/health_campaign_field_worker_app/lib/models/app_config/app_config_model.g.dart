@@ -55,12 +55,14 @@ _$MdmsMasterDetailModelImpl _$$MdmsMasterDetailModelImplFromJson(
         Map<String, dynamic> json) =>
     _$MdmsMasterDetailModelImpl(
       json['name'] as String,
+      filter: json['filter'] as String?,
     );
 
 Map<String, dynamic> _$$MdmsMasterDetailModelImplToJson(
         _$MdmsMasterDetailModelImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
+      'filter': instance.filter,
     };
 
 _$AppConfigPrimaryWrapperModelImpl _$$AppConfigPrimaryWrapperModelImplFromJson(

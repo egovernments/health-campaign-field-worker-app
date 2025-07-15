@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/blocs/closed_household.dart';
 import 'package:closed_household/closed_household.dart';
+import 'package:digit_crud_bloc/repositories/local/search_entity_repository.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
@@ -82,6 +83,14 @@ class MainApplicationState extends State<MainApplication>
           create: (context) => IndividualGlobalSearchRepository(
             widget.sql,
             IndividualOpLogManager(widget.isar),
+          ),
+        ),
+        RepositoryProvider<SearchEntityRepository>(
+          create: (context) => SearchEntityRepository(
+            widget.sql,
+            IndividualOpLogManager(widget.isar),
+
+            /// todo: need to be changed to make is generic as this won't affect anything right now
           ),
         ),
         RepositoryProvider<HouseHoldGlobalSearchRepository>(
@@ -192,7 +201,7 @@ class MainApplicationState extends State<MainApplication>
                                   LocalizationEvent.onLoadLocalization(
                                     module:
                                         "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
-                                    tenantId: appConfig.tenantId.toString(),
+                                    tenantId: envConfig.variables.tenantId,
                                     locale: firstLanguage,
                                     path: Constants.localizationApiPath,
                                   ),

@@ -146,7 +146,8 @@ class ClosedHouseholdBloc
         ),
       );
       var identifier = IdentifierModel(
-        clientReferenceId: individual.clientReferenceId,
+        clientReferenceId: IdGen.i.identifier,
+        individualClientReferenceId: individual.clientReferenceId,
         tenantId: ClosedHouseholdSingleton().tenantId,
         rowVersion: 1,
         clientAuditDetails: ClientAuditDetails(
