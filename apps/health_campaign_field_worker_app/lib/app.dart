@@ -1,6 +1,7 @@
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/blocs/closed_household.dart';
 import 'package:closed_household/closed_household.dart';
+import 'package:digit_crud_bloc/repositories/local/search_entity_repository.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
@@ -20,10 +21,9 @@ import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:survey_form/survey_form.dart';
-import 'package:forms_engine/blocs/forms/forms.dart';
+
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
-import 'package:registration_bloc/repositories/local/search_entity_repository.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
 import 'data/local_store/app_shared_preferences.dart';
@@ -83,7 +83,9 @@ class MainApplicationState extends State<MainApplication>
         RepositoryProvider<SearchEntityRepository>(
           create: (context) => SearchEntityRepository(
             widget.sql,
-            IndividualOpLogManager(widget.isar), /// todo: need to be changed to make is generic as this won't affect anything right now
+            IndividualOpLogManager(widget.isar),
+
+            /// todo: need to be changed to make is generic as this won't affect anything right now
           ),
         ),
         RepositoryProvider<HouseHoldGlobalSearchRepository>(
