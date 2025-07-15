@@ -9,9 +9,9 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i2;
+import 'package:digit_forms_engine/blocs/app_localization.dart' as _i4;
+import 'package:digit_forms_engine/pages/forms_render.dart' as _i1;
 import 'package:flutter/material.dart' as _i3;
-import 'package:forms_engine/blocs/app_localization.dart' as _i4;
-import 'package:forms_engine/pages/forms_render.dart' as _i1;
 
 abstract class $FormsRoute extends _i2.AutoRouterModule {
   @override

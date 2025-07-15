@@ -1,10 +1,11 @@
 library json_schema_builder;
 
-import 'dart:ffi';
-
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_forms_engine/blocs/app_localization.dart';
+import 'package:digit_forms_engine/helper/form_builder_helper.dart';
+import 'package:digit_forms_engine/helper/validator_helper.dart';
+import 'package:digit_forms_engine/models/property_schema/property_schema.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
-import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/models/RadioButtonModel.dart';
@@ -15,36 +16,31 @@ import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/utils/utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_dob_picker.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
-import 'package:digit_ui_components/widgets/atoms/tooltip_2.dart';
-import 'package:forms_engine/helper/form_builder_helper.dart';
-import '../blocs/forms/forms.dart';
-import 'localized.dart';
+import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
-import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:forms_engine/blocs/app_localization.dart';
-import 'package:forms_engine/helper/validator_helper.dart';
-import 'package:forms_engine/models/property_schema/property_schema.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+
 import '../helper/validation_message_helper.dart';
 import '../utils/utils.dart';
+import 'localized.dart';
 
-part 'integer_builder.dart';
-part 'number_builder.dart';
-part 'date_picker_builder.dart';
-part 'dropdown_builder.dart';
-part 'string_builder.dart';
-part 'json_form_builder.dart';
-part 'selection_builder.dart';
-part 'lat_lng_builder.dart';
 part 'checkbox_builder.dart';
-part 'radio_builder.dart';
+part 'date_picker_builder.dart';
 part 'dob_builder.dart';
-part 'scanner_builder.dart';
+part 'dropdown_builder.dart';
 part 'id_populator_builder.dart';
+part 'integer_builder.dart';
+part 'json_form_builder.dart';
+part 'lat_lng_builder.dart';
+part 'number_builder.dart';
+part 'radio_builder.dart';
+part 'scanner_builder.dart';
+part 'selection_builder.dart';
+part 'string_builder.dart';
 
 abstract class JsonSchemaBuilder<T> extends StatelessWidget {
   final FormGroup form;

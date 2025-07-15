@@ -10,7 +10,7 @@ import 'package:attendance_management/attendance_management.dart';
 import 'package:complaints/complaints.dart';
 import 'package:complaints/complaints.init.dart' as complaints_mappers;
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:digit_data_model/data_model.dart' as data_model;
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
 import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_dss/digit_dss.dart' as dss_mappers;
@@ -36,6 +36,7 @@ import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:survey_form/models/entities/service.dart';
 import 'package:survey_form/survey_form.init.dart' as survey_form_mappers;
 import 'package:sync_service/blocs/sync/sync.dart';
 
@@ -46,8 +47,6 @@ import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/app_config/app_config_model.dart';
-import '../models/data_model.init.dart';
-import '../models/tenant_boundary/tenant_boundary_model.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
@@ -374,8 +373,8 @@ void showDownloadDialog(
 }
 
 // Existing _findLeastLevelBoundaryCode method remains unchanged
-String _findLeastLevelBoundaryCode(List<data_model.BoundaryModel> boundaries) {
-  data_model.BoundaryModel? highestBoundary;
+String _findLeastLevelBoundaryCode(List<BoundaryModel> boundaries) {
+  BoundaryModel? highestBoundary;
 
   // Find the boundary with the highest boundaryNum
   for (var boundary in boundaries) {
@@ -407,8 +406,7 @@ String _findLeastLevelBoundaryCode(List<data_model.BoundaryModel> boundaries) {
 }
 
 // Recursive function to find the least level boundary codes
-List<String> findLeastLevelBoundaries(
-    List<data_model.BoundaryModel> boundaries) {
+List<String> findLeastLevelBoundaries(List<BoundaryModel> boundaries) {
   // Find the least level boundary type
   String leastLevelType = _findLeastLevelBoundaryCode(boundaries);
 

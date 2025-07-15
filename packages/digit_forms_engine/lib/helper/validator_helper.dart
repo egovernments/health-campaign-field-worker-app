@@ -1,6 +1,7 @@
+import 'package:digit_forms_engine/helper/form_builder_helper.dart';
 import 'package:flutter/foundation.dart';
-import 'package:forms_engine/helper/form_builder_helper.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+
 import '../models/property_schema/property_schema.dart';
 
 List<Validator<T>> buildValidators<T>(PropertySchema schema) {
@@ -12,7 +13,7 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
         case 'minLength':
           final parsedValue = parseIntValue(rule.value);
 
-          if(schema.type != PropertySchemaType.integer) {
+          if (schema.type != PropertySchemaType.integer) {
             if (parsedValue != null) {
               validators.add(Validators.composeOR([
                 Validators.minLength(parsedValue) as Validator<T>,
@@ -25,7 +26,8 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
 
         case 'maxLength':
           final parsedValue = parseIntValue(rule.value);
-          if (parsedValue != null && schema.type != PropertySchemaType.integer) {
+          if (parsedValue != null &&
+              schema.type != PropertySchemaType.integer) {
             validators.add(Validators.composeOR([
               Validators.maxLength(parsedValue) as Validator<T>,
               Validators.equals(null),
