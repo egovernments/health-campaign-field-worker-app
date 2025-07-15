@@ -7,10 +7,8 @@ import 'package:digit_crud_bloc/models/global_search_params.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:registration_delivery/models/entities/household.dart';
-import 'package:registration_delivery/models/entities/household_member.dart';
-import 'package:registration_delivery/models/entities/project_beneficiary.dart';
-import 'package:registration_delivery/models/entities/task.dart';
+
+import '../../utils/utils.dart';
 
 class SearchEntityRepository extends LocalRepository {
   SearchEntityRepository(super.sql, super.opLogManager);
@@ -130,9 +128,9 @@ class SearchEntityRepository extends LocalRepository {
       final modelName = row['modelName'] as String;
       if (!select.contains(modelName)) continue;
 
-      final entity =
-          dynamicEntityModelFromMap(modelName, snakeToCamelDeep(row));
-      groupedResults.putIfAbsent(modelName, () => []).add(entity);
+      final entity = DynamicEntityModelListener()
+          .dynamicEntityModelFromMap(modelName, snakeToCamelDeep(row));
+      groupedResults.putIfAbsent(modelName, () => []).add(entity!);
     }
 
     return (groupedResults, totalCount);
@@ -525,25 +523,6 @@ class SearchEntityRepository extends LocalRepository {
     }
 
     return args;
-  }
-}
-
-EntityModel dynamicEntityModelFromMap(
-    String modelName, Map<String, dynamic> map) {
-  switch (modelName) {
-    case 'individual':
-      return IndividualModelMapper.fromMap(map);
-    case 'household':
-      return HouseholdModelMapper.fromMap(map);
-    case 'projectBeneficiary':
-      return ProjectBeneficiaryModelMapper.fromMap(map);
-    case 'householdMember':
-      return HouseholdMemberModelMapper.fromMap(map);
-    case 'task':
-      return TaskModelMapper.fromMap(map);
-
-    default:
-      return EntityModelMapper.fromMap(map);
   }
 }
 

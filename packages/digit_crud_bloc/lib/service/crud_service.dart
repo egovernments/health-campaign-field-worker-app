@@ -2,39 +2,24 @@ import 'dart:async';
 
 import 'package:digit_crud_bloc/repositories/local/search_entity_repository.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/utils/typedefs.dart';
-import 'package:registration_delivery/models/entities/household.dart';
-import 'package:registration_delivery/models/entities/household_member.dart';
-import 'package:registration_delivery/models/entities/project_beneficiary.dart';
-import 'package:registration_delivery/models/entities/task.dart';
-import 'package:registration_delivery/utils/typedefs.dart';
 
 import '../models/global_search_params.dart';
 
 class RegistrationService {
-  final List<RelationshipMapping> relationshipMap;
-  final List<NestedModelMapping> nestedModelMappings;
+  final List<RelationshipMapping>? relationshipMap;
+  final List<NestedModelMapping>? nestedModelMappings;
 
   late final Map<String, List<RelationshipMapping>> _relationshipGraph;
   late final Map<String, Map<String, NestedFieldMapping>> _nestedMappingLookup;
 
-  final SearchEntityRepository searchEntityRepository;
-  final IndividualDataRepository individualRepository;
-  final HouseholdDataRepository householdRepository;
-  final HouseholdMemberDataRepository householdMemberRepository;
-  final ProjectBeneficiaryDataRepository projectBeneficiaryRepository;
-  final TaskDataRepository taskDataRepository;
+  final SearchEntityRepository? searchEntityRepository;
+  final List<LocalRepository>? localRepositories;
 
-  RegistrationService({
-    required this.relationshipMap,
-    required this.nestedModelMappings,
-    required this.individualRepository,
-    required this.householdRepository,
-    required this.householdMemberRepository,
-    required this.projectBeneficiaryRepository,
-    required this.taskDataRepository,
-    required this.searchEntityRepository,
-  });
+  RegistrationService(
+      {this.relationshipMap,
+      this.nestedModelMappings,
+      this.searchEntityRepository,
+      this.localRepositories});
 
   void init() {
     _buildRelationshipGraph();
@@ -44,7 +29,7 @@ class RegistrationService {
   void _buildRelationshipGraph() {
     _relationshipGraph = {};
 
-    for (final mapping in relationshipMap) {
+    for (final mapping in relationshipMap ?? []) {
       // Forward mapping
       _relationshipGraph.putIfAbsent(mapping.from, () => []);
       _relationshipGraph[mapping.from]!.add(mapping);
@@ -64,7 +49,7 @@ class RegistrationService {
 
   void _initNestedMappings() {
     _nestedMappingLookup = {
-      for (final mapping in nestedModelMappings)
+      for (final mapping in nestedModelMappings ?? [])
         mapping.rootModel: mapping.fields,
     };
   }
@@ -72,51 +57,42 @@ class RegistrationService {
   Future<(Map<String, List<EntityModel>>, int)> searchHouseholds({
     required GlobalSearchParameters query,
   }) async {
-    return searchEntityRepository.searchEntities(
-      filters: query.filters,
-      relationshipGraph: _relationshipGraph,
-      nestedModelMapping: _nestedMappingLookup,
-      select: query.select,
-      primaryTable: query.primaryModel,
-      pagination: query.pagination,
-    );
+    if (searchEntityRepository == null) {
+      return Future.value((<String, List<EntityModel>>{}, 0));
+    } else {
+      return searchEntityRepository!.searchEntities(
+        filters: query.filters,
+        relationshipGraph: _relationshipGraph,
+        nestedModelMapping: _nestedMappingLookup,
+        select: query.select,
+        primaryTable: query.primaryModel,
+        pagination: query.pagination,
+      );
+    }
   }
 
   Future<void> registerEntities(List<EntityModel> entities) async {
     for (final entity in entities) {
       final repository = getRepositoryForEntity(entity);
-      await repository.create(entity);
+      await repository?.create(entity);
     }
   }
 
   Future<void> updateEntities(List<EntityModel> entities) async {
     for (final entity in entities) {
       final repository = getRepositoryForEntity(entity);
-      await repository.update(entity);
+      await repository?.update(entity);
     }
   }
 
   Future<void> deleteEntities(List<EntityModel> entities) async {
     for (final entity in entities) {
       final repository = getRepositoryForEntity(entity);
-      await repository.delete(entity);
+      await repository?.delete(entity);
     }
   }
 
-  DataRepository getRepositoryForEntity(EntityModel entity) {
-    if (entity is HouseholdModel) {
-      return householdRepository;
-    } else if (entity is IndividualModel) {
-      return individualRepository;
-    } else if (entity is HouseholdMemberModel) {
-      return householdMemberRepository;
-    } else if (entity is ProjectBeneficiaryModel) {
-      return projectBeneficiaryRepository;
-    } else if (entity is TaskModel) {
-      return taskDataRepository;
-    } else {
-      throw Exception(
-          'No repository found for entity type: ${entity.runtimeType}');
-    }
+  DataRepository? getRepositoryForEntity(EntityModel entity) {
+    return null;
   }
 }
