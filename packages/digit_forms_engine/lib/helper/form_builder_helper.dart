@@ -1,5 +1,4 @@
 import 'package:digit_forms_engine/helper/validator_helper.dart';
-import 'package:digit_forms_engine/utils/utils.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../models/property_schema/property_schema.dart';
@@ -50,10 +49,17 @@ FormControl buildFormControl(
           validators: validators,
         );
       } else if (format == PropertySchemaFormat.idPopulator) {
-        final idNumber = IdGen.i.identifier.toString();
+        final availableIDs = defaultValues?['availableIDs'];
+
+        // Determine which ID to use and its label
+        final selectedLabel = availableIDs?['UNIQUE_BENEFICIARY_ID'] != null
+            ? 'UNIQUE_BENEFICIARY_ID'
+            : 'DEFAULT';
+        final selectedId = availableIDs?[selectedLabel]?.toString();
+
         return FormControl<String>(
           value: schema.hidden == true
-              ? "DEFAULT, $idNumber"
+              ? '$selectedLabel, $selectedId'
               : rawValue?.toString(),
           validators: validators,
         );
