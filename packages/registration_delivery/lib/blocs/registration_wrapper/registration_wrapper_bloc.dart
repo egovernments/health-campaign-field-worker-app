@@ -436,17 +436,17 @@ class RegistrationWrapperBloc
         lastAction: RegistrationWrapperActionType.none,
         householdMembers: [
           event.householdWrapper.copyWith(
-              tasks: tasks,
-              sideEffects: sideEffects,
-              referrals: referrals,
-              projectBeneficiaries: beneficiaries,
-              household: household,
-              members: allMembers,
-              individuals: allIndividuals,
-              headOfHousehold: allIndividuals.first
+            tasks: tasks,
+            sideEffects: sideEffects,
+            referrals: referrals,
+            projectBeneficiaries: beneficiaries,
+            household: household,
+            members: allMembers,
+            individuals: allIndividuals,
+            headOfHousehold: allIndividuals.firstOrNull,
 
-              /// todo: need to recheck this logic
-              )
+            /// todo: need to recheck this logic
+          )
         ],
         deliveryWrapper: deliveryState,
         loading: false,

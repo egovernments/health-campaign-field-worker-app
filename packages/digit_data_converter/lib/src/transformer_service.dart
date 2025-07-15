@@ -1,6 +1,7 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/foundation.dart';
-import 'model_factory_registory.dart';
+
+import '../utils/utils.dart';
 
 class FormEntityMapper {
   final Map<String, dynamic> config;
@@ -33,7 +34,9 @@ class FormEntityMapper {
     // Map unmapped fields if fallback string and config present
     if (fallbackFormDataString != null && unmapped.isNotEmpty) {
       final fallbackModelName = fallbackFormDataString;
-      final factory = modelFactoryRegistry[fallbackModelName];
+      final factory = DataConverterSingleton()
+          .dynamicEntityModelListener
+          ?.modelFactoryRegistry[fallbackModelName];
 
       if (factory != null) {
         try {
@@ -108,7 +111,9 @@ class FormEntityMapper {
     required Map<String, dynamic> modelConfig,
     required Map<String, dynamic> context,
   }) {
-    final factory = modelFactoryRegistry[existingModel.runtimeType.toString()];
+    final factory = DataConverterSingleton()
+        .dynamicEntityModelListener
+        ?.modelFactoryRegistry[existingModel.runtimeType.toString()];
     if (factory == null) {
       throw Exception('Factory not found for ${existingModel.runtimeType}');
     }
@@ -131,9 +136,8 @@ class FormEntityMapper {
         );
 
         if (value != null) {
-          updatedMap[targetKey] = value is DateTime
-              ? value.millisecondsSinceEpoch
-              : value;
+          updatedMap[targetKey] =
+              value is DateTime ? value.millisecondsSinceEpoch : value;
         }
       }
 
@@ -142,8 +146,6 @@ class FormEntityMapper {
 
     return factory(updatedMap);
   }
-
-
 
   EntityModel _mapModel(
     String modelName,
@@ -187,7 +189,9 @@ class FormEntityMapper {
           value is DateTime ? value.millisecondsSinceEpoch : value;
     }
 
-    final factory = modelFactoryRegistry[modelName];
+    final factory = DataConverterSingleton()
+        .dynamicEntityModelListener
+        ?.modelFactoryRegistry[modelName];
     if (factory == null) throw Exception('No model factory for $modelName');
 
     return factory(mapped);
@@ -245,11 +249,11 @@ class FormEntityMapper {
   }
 
   Map<String, dynamic>? _mapAdditionalFields(
-      Map<String, dynamic> fieldsMap,
-      Map<String, dynamic> formValues,
-      String modelName,
-      Map<String, dynamic> context,
-      ) {
+    Map<String, dynamic> fieldsMap,
+    Map<String, dynamic> formValues,
+    String modelName,
+    Map<String, dynamic> context,
+  ) {
     final fieldsList = <Map<String, dynamic>>[];
 
     fieldsMap.forEach((customKey, path) {
@@ -375,7 +379,8 @@ class FormEntityMapper {
       // Correct way: split before the first `{`
       final braceIndex = switchContent.indexOf('{');
       if (braceIndex == -1) {
-        throw Exception('Invalid __switch format, missing "{" for mapping block.');
+        throw Exception(
+            'Invalid __switch format, missing "{" for mapping block.');
       }
 
       final rawKeyInstruction = switchContent.substring(0, braceIndex).trim();
@@ -385,19 +390,24 @@ class FormEntityMapper {
       final mappingString = switchContent.substring(braceIndex).trim();
 
       // Recursively resolve key — handles __context:, __ref:, etc.
-      final keyValue = getValueFromMapping(keyInstruction, data, currentModel, context);
+      final keyValue =
+          getValueFromMapping(keyInstruction, data, currentModel, context);
       if (keyValue == null) {
-        throw Exception('Key value "$keyInstruction" resolved to null in __switch');
+        throw Exception(
+            'Key value "$keyInstruction" resolved to null in __switch');
       }
 
       final mapping = _parseSwitchMapping(mappingString);
-      final resolvedInstruction = mapping[keyValue.toString()] ?? mapping['default'];
+      final resolvedInstruction =
+          mapping[keyValue.toString()] ?? mapping['default'];
 
       if (resolvedInstruction == null) {
-        throw Exception('No switch case found for "$keyValue" in instruction "$instruction"');
+        throw Exception(
+            'No switch case found for "$keyValue" in instruction "$instruction"');
       }
 
-      return getValueFromMapping(resolvedInstruction, data, currentModel, context);
+      return getValueFromMapping(
+          resolvedInstruction, data, currentModel, context);
     }
 
     if (instruction.startsWith('__context:')) {
@@ -421,7 +431,8 @@ class FormEntityMapper {
     return map;
   }
 
-  dynamic resolveDynamicPath(String path, Map<String, dynamic> data, Map<String, dynamic> context) {
+  dynamic resolveDynamicPath(
+      String path, Map<String, dynamic> data, Map<String, dynamic> context) {
     if (path.startsWith('__context:')) {
       return _getValueFromPath(context, path.replaceFirst('__context:', ''));
     } else if (path.startsWith('formData:')) {
@@ -440,7 +451,9 @@ class FormEntityMapper {
       final key = match.group(1);
       final indexStr = match.group(2);
 
-      if (current is Map<String, dynamic> && key != null && current.containsKey(key)) {
+      if (current is Map<String, dynamic> &&
+          key != null &&
+          current.containsKey(key)) {
         current = current[key];
       } else if (current is List &&
           current.length == 1 &&
@@ -491,15 +504,15 @@ class FormEntityMapper {
   }
 
   Map<String, dynamic> mergeAdditionalFields(
-      Map<String, dynamic> existingModelData,
-      Map<String, dynamic> newFields,
-      String modelName,
-      ) {
+    Map<String, dynamic> existingModelData,
+    Map<String, dynamic> newFields,
+    String modelName,
+  ) {
     // Clone existing data to avoid mutation
     final mergedData = Map<String, dynamic>.from(existingModelData);
 
     final existingAdditionalFields =
-    mergedData['additionalFields'] as Map<String, dynamic>?;
+        mergedData['additionalFields'] as Map<String, dynamic>?;
 
     // Filter out empty string values
     final filteredNewFields = newFields.entries
@@ -513,8 +526,8 @@ class FormEntityMapper {
     if (existingAdditionalFields != null) {
       // Merge existing additional fields list with new ones, avoid duplicate keys
       final existingFieldsList =
-      (existingAdditionalFields['fields'] as List<dynamic>? ?? [])
-          .cast<Map<String, dynamic>>();
+          (existingAdditionalFields['fields'] as List<dynamic>? ?? [])
+              .cast<Map<String, dynamic>>();
 
       final existingKeys = existingFieldsList.map((f) => f['key']).toSet();
 

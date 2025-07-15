@@ -16,14 +16,19 @@ class CRUDBlocSingleton {
   static CRUDBlocSingleton get instance => _instance;
 
   RegistrationService? _registrationService;
+  DynamicEntityModelListener? _dynamicEntityModelListener;
 
   void setData({
     required RegistrationService registrationService,
+    DynamicEntityModelListener? dynamicEntityModelListener,
   }) {
     _registrationService = registrationService;
+    _dynamicEntityModelListener = dynamicEntityModelListener;
   }
 
   RegistrationService? get registrationService => _registrationService;
+  DynamicEntityModelListener? get dynamicEntityModelListener =>
+      _dynamicEntityModelListener;
 }
 
 class DynamicEntityModelListener {

@@ -128,8 +128,9 @@ class SearchEntityRepository extends LocalRepository {
       final modelName = row['modelName'] as String;
       if (!select.contains(modelName)) continue;
 
-      final entity = DynamicEntityModelListener()
-          .dynamicEntityModelFromMap(modelName, snakeToCamelDeep(row));
+      final entity = CRUDBlocSingleton()
+          .dynamicEntityModelListener
+          ?.dynamicEntityModelFromMap(modelName, snakeToCamelDeep(row));
       groupedResults.putIfAbsent(modelName, () => []).add(entity!);
     }
 
