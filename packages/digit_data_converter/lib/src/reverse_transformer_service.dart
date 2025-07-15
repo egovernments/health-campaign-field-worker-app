@@ -152,6 +152,7 @@ class ReverseFormMapper {
       final listModelConfig = listModelEntry.value;
       final mappings = listModelConfig['mappings'] ?? {};
 
+      //// TODO: need to check mapping for list
       // You may override the key used to extract items from model if defined in config
       final listFieldName = listModelConfig['field'] ??
           listKey[0].toLowerCase() + listKey.substring(1);

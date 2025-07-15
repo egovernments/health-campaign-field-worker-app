@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../service/crud_service.dart';
-import '../utils/typedefs.dart';
 
 part 'crud_bloc.freezed.dart';
 
@@ -47,6 +46,8 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
     try {
       final (results, totalCount) =
+
+          //// TODO: NEED TO MAKE SEARCH GENERIC
           await service.searchHouseholds(query: event.searchParams);
       emit(RegistrationState.loaded(
         results: results,

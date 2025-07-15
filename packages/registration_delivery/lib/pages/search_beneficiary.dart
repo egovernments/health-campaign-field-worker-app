@@ -126,7 +126,7 @@ class _SearchBeneficiaryPageState
               individualModel.identifiers != null &&
               individualModel.identifiers?.first.identifierId != null &&
               individualModel.identifiers?.first.identifierType ==
-                  'UNIQUE_BENEFICIARY_ID') {
+                  IdentifierTypes.uniqueBeneficiaryID.toValue()) {
             context.read<UniqueIdBloc>().add(UniqueIdEvent.updateStatus(
                 id: individualModel.identifiers!.first.identifierId!));
           }
@@ -801,6 +801,7 @@ class _SearchBeneficiaryPageState
                                   type: ToastType.error,
                                 );
                               } else {
+                                /// TODO: MULTIPLE CALLS: NEED TO CREATE A COMMON METHOD
                                 context.router.push(FormsRenderRoute(
                                   currentSchemaKey: 'REGISTRATIONFLOW',
                                   pageName: pageName,

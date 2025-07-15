@@ -28,9 +28,8 @@ class BeneficiaryErrorPageState extends LocalizedState<BeneficiaryErrorPage> {
         padding: const EdgeInsets.all(spacer2),
         child: PanelCard(
           type: PanelType.error,
-          title: localizations.translate('FAILED_TO_REGISTER_BENEFICIARY'),
-          description: localizations
-              .translate('FAILED_TO_REGISTER_BENEFICIARY_DESCRIPTION'),
+          title: localizations.translate(i18.common.failedToRegister),
+          description: localizations.translate(i18.common.failedToRegisterDesc),
           actions: [
             DigitButton(
                 label: localizations

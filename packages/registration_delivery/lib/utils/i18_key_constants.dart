@@ -143,6 +143,9 @@ class Common {
   String get coreCommonNoInternet => 'CORE_COMMON_NO_INTERNET';
 
   String get coreCommonDownloading => 'CORE_COMMON_DOWNLOADING';
+  String get failedToRegister => 'FAILED_TO_REGISTER_BENEFICIARY';
+  String get failedToRegisterDesc =>
+      'FAILED_TO_REGISTER_BENEFICIARY_DESCRIPTION';
 }
 
 class SearchBeneficiary {

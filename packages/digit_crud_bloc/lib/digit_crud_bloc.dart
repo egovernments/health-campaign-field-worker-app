@@ -1,7 +1,5 @@
-library registration_bloc;
+library digit_crud_bloc;
 
-/// A Calculator.
-// class Calculator {
-//   /// Returns [value] plus 1.
-//   int addOne(int value) => value + 1;
-// }
+export 'bloc/crud_bloc.dart';
+export 'models/global_search_params.dart';
+export 'service/crud_service.dart';

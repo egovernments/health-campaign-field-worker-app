@@ -148,7 +148,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           if (!bloc.isClosed) {
                             bloc.add(SyncRefreshEvent(userId));
                           }
-    /* Every time when the user changes the screen
+                          /* Every time when the user changes the screen
      this will refresh the data of sync count */
                           isar.opLogs
                               .filter()
@@ -233,29 +233,30 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                         create: (_) => FormsBloc(),
                       ),
                     ],
-                    child: ErrorBoundary(
-                      builder: (context, error) {
-                        return error != null ? const ErrorScreen() : AutoRouter(
-                          navigatorObservers: () => [
-                            AuthenticatedRouteObserver(
-                              onNavigated: () {
-                                bool shouldShowDrawer;
-                                switch (context.router.topRoute.name) {
-                                  case ProjectSelectionRoute.name:
-                                  case BoundarySelectionRoute.name:
-                                    shouldShowDrawer = false;
-                                    break;
-                                  default:
-                                    shouldShowDrawer = true;
-                                }
+                    child: ErrorBoundary(builder: (context, error) {
+                      return error != null
+                          ? const ErrorScreen()
+                          : AutoRouter(
+                              navigatorObservers: () => [
+                                AuthenticatedRouteObserver(
+                                  onNavigated: () {
+                                    bool shouldShowDrawer;
+                                    switch (context.router.topRoute.name) {
+                                      case ProjectSelectionRoute.name:
+                                      case BoundarySelectionRoute.name:
+                                        shouldShowDrawer = false;
+                                        break;
+                                      default:
+                                        shouldShowDrawer = true;
+                                    }
 
-                                _drawerVisibilityController.add(shouldShowDrawer);
-                              },
-                            ),
-                          ],
-                        );
-                      }
-                    ),
+                                    _drawerVisibilityController
+                                        .add(shouldShowDrawer);
+                                  },
+                                ),
+                              ],
+                            );
+                    }),
                   ),
                 ),
               );
@@ -451,6 +452,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                   (ele) => ele.value.toString() == e.value.toString(),
                 );
 
+                /// TODO: NEED TO EXTRACT THIS AS UTIL FUNCTION
                 String? dynamicModule;
                 final isInRegistrationFlow = context.router.current.name
                     .contains(RegistrationDeliveryWrapperRoute.name);

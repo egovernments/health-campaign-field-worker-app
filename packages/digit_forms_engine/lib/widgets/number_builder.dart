@@ -27,7 +27,6 @@ class JsonSchemaNumberBuilder extends JsonSchemaBuilder<int> {
 
   @override
   Widget build(BuildContext context) {
-
     final loc = FormLocalization.of(context);
     final validationMessages = buildValidationMessages(validations, loc);
     final inputFormatter = getPatternFormatter(validations);
@@ -59,9 +58,10 @@ class JsonSchemaNumberBuilder extends JsonSchemaBuilder<int> {
                   return;
                 }
                 form.control(formControlName).value = int.parse(value);
-                if(getMinLength(validations) != null && value.length < getMinLength(validations)!) {
+                if (getMinLength(validations) != null &&
+                    value.length < getMinLength(validations)!) {
                   form.control(formControlName).setErrors({'minLength': true});
-                }else{
+                } else {
                   form.control(formControlName).removeError('minLength');
                 }
               },
@@ -73,11 +73,14 @@ class JsonSchemaNumberBuilder extends JsonSchemaBuilder<int> {
       },
     );
   }
-  String? _getNumberErrorMessage(AbstractControl<dynamic> control, BuildContext context) {
+
+  String? _getNumberErrorMessage(
+      AbstractControl<dynamic> control, BuildContext context) {
     final loc = FormLocalization.of(context);
 
     for (final rule in validations ?? []) {
       if (control.hasError(rule.type) && control.touched) {
+        /// todo: need to create a constant
         return loc.translate(rule.message ?? 'Invalid');
       }
     }
