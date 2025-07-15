@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
+import 'package:digit_crud_bloc/models/global_search_params.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:registration_bloc/bloc/registration_bloc.dart';
-import 'package:registration_bloc/models/global_search_params.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../models/entities/additional_fields_type.dart';

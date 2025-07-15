@@ -1,0 +1,49 @@
+name: digit_crud_bloc
+description: This package provides the core logic and services for managing entity-based data flows in a modular and extensible way. It supports dynamic entity mapping, relationship traversal, nested field resolution, and repository-driven CRUD operations.
+version: 0.0.1-dev
+homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/digit_crud_bloc
+repository: https://github.com/egovernments/health-campaign-field-worker-app
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.1.5
+  freezed_annotation: ^2.4.1
+  intl: ^0.19.0
+  dart_mappable: ^4.2.2
+  drift: ^2.18.0
+  digit_data_model: ^1.0.6+1
+  collection: ^1.18.0
+  dio: ^5.4.3+1
+  uuid: ^4.4.0
+  recase: ^4.1.0
+  pluto_grid: ^8.0.0
+  stream_transform: ^2.1.0
+  registration_delivery: 1.0.6+2
+  async: ^2.11.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  freezed: ^2.1.0+1
+  json_serializable: ^6.4.0
+  drift_dev: ^2.14.1
+  bloc_test: ^9.1.0
+  mocktail: ^1.0.2
+  build_runner: ^2.4.11
+  dart_mappable_builder:
+    git:
+      url: https://github.com/egovernments/health-campaign-field-worker-app/
+      ref: master
+      path: ./packages/dart_mappable_builder
+  auto_route_generator: ^8.0.0
+
+flutter:
+  assets:
+    - assets/images/
+    - assets/icons/svg/
