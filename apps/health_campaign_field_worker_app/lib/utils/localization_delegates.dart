@@ -6,13 +6,15 @@ import 'package:closed_household/blocs/app_localization.dart'
     as closed_household_localization;
 import 'package:complaints/blocs/localization/app_localization.dart'
     as complaints_localization;
-import 'package:digit_ui_components/services/AppLocalization.dart'
-    as component_localization;
 import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:digit_dss/blocs/app_localization.dart'
     as digit_dss_localization;
+import 'package:digit_forms_engine/blocs/app_localization.dart'
+    as forms_engine_localization;
 import 'package:digit_scanner/blocs/app_localization.dart'
     as scanner_localization;
+import 'package:digit_ui_components/services/AppLocalization.dart'
+    as component_localization;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:inventory_management/blocs/app_localization.dart'
     as inventory_localization;
@@ -84,6 +86,10 @@ getAppLocalizationDelegates({
       appConfig.languages!,
     ),
     transit_post_localization.TransitPostLocalization.getDelegate(
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
+      appConfig.languages!,
+    ),
+    forms_engine_localization.FormLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),

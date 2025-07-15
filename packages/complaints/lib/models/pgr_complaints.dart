@@ -13,12 +13,13 @@ class PgrComplaintModel extends EntityModel with PgrComplaintModelMappable {
   final PgrServiceModel service;
   final PgrWorkflowModel? workflow;
 
-  const PgrComplaintModel({
-    required this.service,
-    this.workflow,
-    super.isDeleted = false,
-    super.auditDetails,
-  }) : super();
+  const PgrComplaintModel(
+      {required this.service,
+      this.workflow,
+      super.isDeleted = false,
+      super.auditDetails,
+      super.clientAuditDetails})
+      : super();
 }
 
 @MappableClass(ignoreNull: true)
@@ -91,6 +92,7 @@ class PgrRolesModel extends EntityModel with PgrRolesModelMappable {
     required this.code,
     super.isDeleted = false,
     super.auditDetails,
+    super.clientAuditDetails,
   }) : super();
 }
 

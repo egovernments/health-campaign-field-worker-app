@@ -15,7 +15,7 @@ class ProjectSearchModel extends EntitySearchModel
   final bool? isTaskEnabled;
   final String? parent;
   final String? department;
-  final String? referenceId;
+  final String? referenceID;
   final String? tenantId;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
@@ -29,7 +29,7 @@ class ProjectSearchModel extends EntitySearchModel
     this.isTaskEnabled,
     this.parent,
     this.department,
-    this.referenceId,
+    this.referenceID,
     this.projectType,
     this.tenantId,
     int? startDate,
@@ -53,7 +53,7 @@ class ProjectSearchModel extends EntitySearchModel
     this.isTaskEnabled,
     this.parent,
     this.department,
-    this.referenceId,
+    this.referenceID,
     this.tenantId,
     this.projectType,
     int? startDate,
@@ -85,7 +85,7 @@ class ProjectModel extends EntityModel with ProjectModelMappable {
   final String name;
   final String? department;
   final String? description;
-  final String? referenceId;
+  final String? referenceID;
   final String? projectHierarchy;
   final bool? nonRecoverableError;
   final String? tenantId;
@@ -111,7 +111,7 @@ class ProjectModel extends EntityModel with ProjectModelMappable {
     required this.name,
     this.department,
     this.description,
-    this.referenceId,
+    this.referenceID,
     this.projectHierarchy,
     this.nonRecoverableError = false,
     this.tenantId,
@@ -160,7 +160,7 @@ class ProjectModel extends EntityModel with ProjectModelMappable {
       name: Value(name),
       department: Value(department),
       description: Value(description),
-      referenceId: Value(referenceId),
+      referenceID: Value(referenceID),
       projectHierarchy: Value(projectHierarchy),
       nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),

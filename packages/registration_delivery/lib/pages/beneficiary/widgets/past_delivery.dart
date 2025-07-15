@@ -7,47 +7,99 @@ import 'package:digit_ui_components/widgets/molecules/digit_table.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../../../utils/registration_component_keys.dart' as registration_keys;
 import '../../../utils/utils.dart';
 import '../../../widgets/table_card/table_card.dart';
 
 // This function builds a table with the given data and headers
 Widget buildTableContent(
-  DeliverInterventionState deliverInterventionState,
+  RegistrationWrapperState state,
   BuildContext context,
   List<ProductVariantModel>? variant,
   IndividualModel? individualModel,
   HouseholdModel? householdModel,
 ) {
+  final pageKey = BeneficiaryDetailsRoute.name.replaceAll('Route', '');
+  final beneficiaryDetailsTableConfig = RegistrationDeliverySingleton()
+      .templateConfigs?[pageKey]
+      ?.properties?[registration_keys.beneficiaryDetailsKeys.tableCardKey];
+
+  final deliverInterventionState = state.deliveryWrapper;
   // Calculate the current cycle. If deliverInterventionState.cycle is negative, set it to 0.
-  final currentCycle =
-      deliverInterventionState.cycle >= 0 ? deliverInterventionState.cycle : 0;
+  final currentCycle = (deliverInterventionState?.cycle ?? 0) >= 0
+      ? deliverInterventionState?.cycle
+      : 0;
 
   // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
-  final currentDose =
-      deliverInterventionState.dose >= 0 ? deliverInterventionState.dose : 0;
+  final currentDose = (deliverInterventionState?.dose ?? 0) >= 0
+      ? deliverInterventionState?.dose
+      : 0;
   final localizations = RegistrationDeliveryLocalization.of(context);
 
   // Defining a list of table headers for resource popup
-  final columnListResource = [
-    DigitTableColumn(
-      header: localizations.translate(i18.beneficiaryDetails.beneficiaryDose),
-      cellValue: 'dose',
-    ),
-    DigitTableColumn(
-      header:
-          localizations.translate(i18.beneficiaryDetails.beneficiaryResources),
-      cellValue: 'resources',
-    ),
-  ];
+  final columnListResource = beneficiaryDetailsTableConfig?.hidden != true &&
+          (beneficiaryDetailsTableConfig?.enums ?? []).isNotEmpty
+      ? beneficiaryDetailsTableConfig?.enums
+          ?.map(
+            (header) => DigitTableColumn(
+              header: localizations.translate(header['code']),
+              cellValue: header['fieldKey'],
+            ),
+          )
+          .toList()
+      : [
+          DigitTableColumn(
+            header:
+                localizations.translate(i18.beneficiaryDetails.beneficiaryDose),
+            cellValue: 'dose',
+          ),
+          DigitTableColumn(
+            header: localizations
+                .translate(i18.beneficiaryDetails.beneficiaryResources),
+            cellValue: 'resources',
+          ),
+        ];
 
   // Calculate the height of the container based on the number of items in the table
 
   final ProjectTypeModel projectType =
       RegistrationDeliverySingleton().projectType!;
-  final item =
-      projectType.cycles?[currentCycle - 1].deliveries?[currentDose - 1];
+  final item = projectType.cycles
+      ?.firstWhere((c) => c.id == currentCycle)
+      .deliveries
+      ?.firstWhere(
+          (d) => d.id == currentDose); //todo: need to check again for cycles
+
+  final condition = getProductVariant(
+          item, individualModel, householdModel, context)?['criteria']
+      ?.condition;
+
+  String? translatedCondition;
+
+  if (condition != null && condition.contains('MIN(')) {
+    // Example condition: MIN(ROUND(memberCount/2), 3)
+    final regex = RegExp(r'MIN\(ROUND\(memberCount/(\d+)\),\s*(\d+)\)');
+    final match = regex.firstMatch(condition);
+
+    if (match != null) {
+      final divisor = int.tryParse(match.group(1)!);
+      final cap = int.tryParse(match.group(2)!);
+
+      if (divisor != null && cap != null) {
+        final template = localizations
+            .translate(i18.beneficiaryDetails.minDeliveryCondition);
+
+        translatedCondition = template
+            .replaceAll('{membersPerNet}', divisor.toString())
+            .replaceAll('{maxBednets}', cap.toString());
+      }
+    }
+  } else if (condition != null) {
+    translatedCondition = localizations.translate(condition);
+  }
 
   return Container(
     padding: const EdgeInsets.only(
@@ -64,21 +116,13 @@ Widget buildTableContent(
         Padding(
           padding: const EdgeInsets.only(bottom: spacer1),
           child: DigitTableCard(
-            topPadding: const EdgeInsets.only(top: 0.0),
-            fraction: 2.5,
-            element: {
-              localizations.translate(
-                i18.beneficiaryDetails.beneficiaryAge,
-              ): getProductVariant(item, individualModel, householdModel,
-                              context)['criteria']
-                          .condition !=
-                      null
-                  ? localizations.translate(getProductVariant(item,
-                          individualModel, householdModel, context)!['criteria']
-                      .condition!)
-                  : null,
-            },
-          ),
+              topPadding: const EdgeInsets.only(top: 0.0),
+              fraction: 2.5,
+              element: {
+                localizations
+                        .translate(i18.beneficiaryDetails.deliveryCondition):
+                    translatedCondition,
+              }),
         ),
         const DigitDivider(),
         const SizedBox(
@@ -95,7 +139,19 @@ Widget buildTableContent(
             withColumnDividers: false,
             showSelectedState: false,
             showPagination: false,
-            columns: columnListResource,
+            columns: columnListResource ??
+                [
+                  DigitTableColumn(
+                    header: localizations
+                        .translate(i18.beneficiaryDetails.beneficiaryDose),
+                    cellValue: 'dose',
+                  ),
+                  DigitTableColumn(
+                    header: localizations
+                        .translate(i18.beneficiaryDetails.beneficiaryResources),
+                    cellValue: 'resources',
+                  ),
+                ],
             rows: [
               ...getProductVariant(item, individualModel, householdModel,
                       context)!['criteria']
@@ -120,7 +176,7 @@ Widget buildTableContent(
                                 ?.indexOf(e) ==
                             0
                         ? DigitTableData(
-                            '${localizations.translate(i18.deliverIntervention.dose)} ${deliverInterventionState.dose}',
+                            '${localizations.translate(columnListResource?.first.header ?? i18.deliverIntervention.dose)} ${deliverInterventionState?.dose}',
                             cellKey: 'dose',
                           )
                         : DigitTableData('', cellKey: ''),
