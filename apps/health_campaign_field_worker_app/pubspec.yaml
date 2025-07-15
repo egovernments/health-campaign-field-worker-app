@@ -73,7 +73,6 @@ dependencies:
   encrypt: ^5.0.3
   chopper: ^6.1.1
   swagger_dart_code_generator: 2.15.0
-  form_data_transformer: 0.0.1
 
 dev_dependencies:
   flutter_test:

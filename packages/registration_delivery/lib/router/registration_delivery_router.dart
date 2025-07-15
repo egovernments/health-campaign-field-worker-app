@@ -1,5 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:forms_engine/router/forms_router.dart';
+import 'package:digit_forms_engine/router/forms_router.dart';
 
 import 'registration_delivery_router.gm.dart';
 
