@@ -1,4 +1,4 @@
-import 'package:forms_engine/utils/utils.dart';
+import 'package:digit_forms_engine/utils/utils.dart';
 
 import '../blocs/app_localization.dart';
 import '../models/property_schema/property_schema.dart';

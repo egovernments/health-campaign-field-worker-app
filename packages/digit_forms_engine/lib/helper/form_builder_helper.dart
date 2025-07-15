@@ -1,5 +1,5 @@
-import 'package:forms_engine/helper/validator_helper.dart';
-import 'package:forms_engine/utils/utils.dart';
+import 'package:digit_forms_engine/helper/validator_helper.dart';
+import 'package:digit_forms_engine/utils/utils.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../models/property_schema/property_schema.dart';

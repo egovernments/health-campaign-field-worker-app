@@ -1,8 +1,8 @@
 library json_forms;
 
+import 'package:digit_forms_engine/utils/utils.dart';
+import 'package:digit_forms_engine/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:forms_engine/utils/utils.dart';
-import 'package:forms_engine/widgets/widgets.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'helper/form_builder_helper.dart';
@@ -20,11 +20,11 @@ class JsonForms extends StatelessWidget {
     this.defaultValues,
   });
 
-   static Map<String, AbstractControl<dynamic>> getFormControls(
-      PropertySchema schema, {
-        String? defaultLatlng,
-        Map<String, dynamic>? defaultValues,
-      }) {
+  static Map<String, AbstractControl<dynamic>> getFormControls(
+    PropertySchema schema, {
+    String? defaultLatlng,
+    Map<String, dynamic>? defaultValues,
+  }) {
     assert(schema.properties != null);
 
     final Map<String, AbstractControl<dynamic>> controls = {
@@ -43,11 +43,12 @@ class JsonForms extends StatelessWidget {
   }
 
   static Map<String, dynamic> getFormValues(
-      FormGroup form,
-      PropertySchema schema,
-      ) {
+    FormGroup form,
+    PropertySchema schema,
+  ) {
     final values = schema.properties!.entries
-        .where((entry) => (!isHidden(entry.value) || entry.value.includeInForm==true)) // Skip hidden fields
+        .where((entry) => (!isHidden(entry.value) ||
+            entry.value.includeInForm == true)) // Skip hidden fields
         .map((e) => _getParsedValues(form, e.key, e.value))
         .whereType<MapEntry<String, dynamic>>()
         .toList();
@@ -56,11 +57,10 @@ class JsonForms extends StatelessWidget {
   }
 
   static MapEntry<String, dynamic>? _getParsedValues(
-      FormGroup form,
-      String name,
-      PropertySchema schema,
-
-      ) {
+    FormGroup form,
+    String name,
+    PropertySchema schema,
+  ) {
     if (schema.type == PropertySchemaType.object) {
       final results = schema.properties!.entries.map((e) {
         return _getParsedValues(form, e.key, e.value);
@@ -78,11 +78,8 @@ class JsonForms extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => JsonFormBuilder(
-    schema: propertySchema,
-    formControlName: '/',
-    components: childrens,
-  );
+        schema: propertySchema,
+        formControlName: '/',
+        components: childrens,
+      );
 }
-
-
-

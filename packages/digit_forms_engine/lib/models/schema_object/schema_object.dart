@@ -1,6 +1,6 @@
 // ignore_for_file: invalid_annotation_target
 
-import 'package:forms_engine/models/property_schema/property_schema.dart';
+import 'package:digit_forms_engine/models/property_schema/property_schema.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'schema_object.freezed.dart';
@@ -12,7 +12,7 @@ class SchemaObject with _$SchemaObject {
   const factory SchemaObject({
     required String name,
     required int version,
-    @Default(false)bool summary,
+    @Default(false) bool summary,
     @Default({}) Map<String, PropertySchema> pages,
     List<ActionSchema>? actionSchema,
   }) = _SchemaObject;

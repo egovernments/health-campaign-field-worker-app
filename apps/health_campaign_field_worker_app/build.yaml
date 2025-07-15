@@ -1,28 +1,6 @@
 targets:
   $default:
-    sources:
-      - lib/**
-      - swagger/**
-      - package/**
-    builders:  
-      swagger_dart_code_generator:
-        options:
-          input_folder: 'swagger'
-          output_folder: "lib/swagger_generated_code/"
-          # input_urls:
-          #   - url: "https://raw.githubusercontent.com/epam-cross-platform-lab/swagger-dart-code-generator/master/example/input_folder/pet_service_json.json"
-          #     file_name: "some_file_name.json"
-          #   - url: "https://raw.githubusercontent.com/epam-cross-platform-lab/swagger-dart-code-generator/master/example/input_folder/pet_service_yaml.yaml"
-          with_base_url: true
-          with_converter: true
-          use_path_for_request_names: true
-          use_default_null_for_lists: false
-          override_equals_and_hashcode: true
-          build_only_models: true
-          separate_models: true
-          additional_headers:
-            - "Cache-Control"
- # <-- your Swagger file inside the folder          
+    builders:
       auto_route_generator:auto_route_generator:
         options:
         generate_for:
