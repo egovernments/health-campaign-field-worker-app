@@ -101,18 +101,3 @@ await registrationService.deleteEntities(entitiesToDelete);
 ```
 
 Calls repository.delete(entity) for each entity.
-
-## ⚠️ Limitations & Future Scope
-
-Currently, this package depends on the `registration_delivery` package for access to models like:
-
-- `HouseholdModel`
-- `IndividualModel`
-- `ProjectBeneficiaryModel`
-- and other entity types
-
----
-
-### 🛠️ Planned Improvements
-
-- Make the package **framework-agnostic** and **reusable across domains** without tight coupling to specific implementations.

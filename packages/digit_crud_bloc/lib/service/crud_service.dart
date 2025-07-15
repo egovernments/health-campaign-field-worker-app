@@ -13,13 +13,12 @@ class RegistrationService {
   late final Map<String, Map<String, NestedFieldMapping>> _nestedMappingLookup;
 
   final SearchEntityRepository? searchEntityRepository;
-  final List<LocalRepository>? localRepositories;
 
-  RegistrationService(
-      {this.relationshipMap,
-      this.nestedModelMappings,
-      this.searchEntityRepository,
-      this.localRepositories});
+  RegistrationService({
+    this.relationshipMap,
+    this.nestedModelMappings,
+    this.searchEntityRepository,
+  });
 
   void init() {
     _buildRelationshipGraph();
