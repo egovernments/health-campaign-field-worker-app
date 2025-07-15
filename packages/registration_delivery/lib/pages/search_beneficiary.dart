@@ -1292,6 +1292,7 @@ class _SearchBeneficiaryPageState
                     }
                   },
                 ));
+                searchController.clear();
               }
             } else {
               fetchBeneficiaryIdCount();
