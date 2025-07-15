@@ -6,7 +6,6 @@ import 'package:digit_ui_components/widgets/atoms/table_cell.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_table.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
-import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
@@ -74,6 +73,34 @@ Widget buildTableContent(
       ?.firstWhere(
           (d) => d.id == currentDose); //todo: need to check again for cycles
 
+  final condition = getProductVariant(
+          item, individualModel, householdModel, context)?['criteria']
+      ?.condition;
+
+  String? translatedCondition;
+
+  if (condition != null && condition.contains('MIN(')) {
+    // Example condition: MIN(ROUND(memberCount/2), 3)
+    final regex = RegExp(r'MIN\(ROUND\(memberCount/(\d+)\),\s*(\d+)\)');
+    final match = regex.firstMatch(condition);
+
+    if (match != null) {
+      final divisor = int.tryParse(match.group(1)!);
+      final cap = int.tryParse(match.group(2)!);
+
+      if (divisor != null && cap != null) {
+        final template = localizations
+            .translate(i18.beneficiaryDetails.minDeliveryCondition);
+
+        translatedCondition = template
+            .replaceAll('{membersPerNet}', divisor.toString())
+            .replaceAll('{maxBednets}', cap.toString());
+      }
+    }
+  } else if (condition != null) {
+    translatedCondition = localizations.translate(condition);
+  }
+
   return Container(
     padding: const EdgeInsets.only(
       left: spacer2,
@@ -89,21 +116,13 @@ Widget buildTableContent(
         Padding(
           padding: const EdgeInsets.only(bottom: spacer1),
           child: DigitTableCard(
-            topPadding: const EdgeInsets.only(top: 0.0),
-            fraction: 2.5,
-            element: {
-              localizations.translate(
-                i18.beneficiaryDetails.beneficiaryAge,
-              ): getProductVariant(item, individualModel, householdModel,
-                              context)['criteria']
-                          .condition !=
-                      null
-                  ? localizations.translate(getProductVariant(item,
-                          individualModel, householdModel, context)!['criteria']
-                      .condition!)
-                  : null,
-            },
-          ),
+              topPadding: const EdgeInsets.only(top: 0.0),
+              fraction: 2.5,
+              element: {
+                localizations
+                        .translate(i18.beneficiaryDetails.deliveryCondition):
+                    translatedCondition,
+              }),
         ),
         const DigitDivider(),
         const SizedBox(

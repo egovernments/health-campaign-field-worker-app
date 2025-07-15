@@ -104,6 +104,8 @@ class _HouseholdOverviewPageState
                             context
                                 .read<RegistrationWrapperBloc>()
                                 .add(const RegistrationWrapperEvent.clear());
+                            context.router.popUntilRouteWithName(
+                                SearchBeneficiaryRoute.name);
                           },
                         ),
                       ),

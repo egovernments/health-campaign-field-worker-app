@@ -513,34 +513,8 @@ class BeneficiaryDetailsPageState
                                       true)
                                     DigitTableCard(
                                       element: buildEnumValueMap(
-                                                  HouseholdWrapper(
-                                                    household:
-                                                        householdMemberWrapper
-                                                            .first.household,
-                                                    headOfHousehold:
-                                                        RegistrationDeliverySingleton()
-                                                                    .beneficiaryType !=
-                                                                BeneficiaryType
-                                                                    .individual
-                                                            ? householdMemberWrapper
-                                                                .first
-                                                                .headOfHousehold
-                                                            : state
-                                                                .selectedIndividual,
-                                                    tasks:
-                                                        householdMemberWrapper
-                                                            .first.tasks,
-                                                    projectBeneficiaries:
-                                                        householdMemberWrapper
-                                                            .first
-                                                            .projectBeneficiaries,
-                                                    sideEffects:
-                                                        householdMemberWrapper
-                                                            .first.sideEffects,
-                                                    referrals:
-                                                        householdMemberWrapper
-                                                            .first.referrals,
-                                                  ),
+                                                  state.householdMembers
+                                                      .firstOrNull,
                                                   beneficiaryDetailsTemplate
                                                       ?.properties?[
                                                           registration_keys

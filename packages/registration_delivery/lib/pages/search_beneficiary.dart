@@ -124,9 +124,11 @@ class _SearchBeneficiaryPageState
           if (createState.lastAction == RegistrationWrapperActionType.created &&
               individualModel != null &&
               individualModel.identifiers != null &&
-              individualModel.identifiers?.first.id != null) {
+              individualModel.identifiers?.first.identifierId != null &&
+              individualModel.identifiers?.first.identifierType ==
+                  'UNIQUE_BENEFICIARY_ID') {
             context.read<UniqueIdBloc>().add(UniqueIdEvent.updateStatus(
-                id: individualModel.identifiers!.first.id!));
+                id: individualModel.identifiers!.first.identifierId!));
           }
 
           if (householdModel != null) {
@@ -759,14 +761,18 @@ class _SearchBeneficiaryPageState
                                                             ?.code ??
                                                         ''),
                                             'nameOfIndividual':
-                                                searchController.text,
+                                                isBeneficiaryIdSearchEnabled
+                                                    ? null
+                                                    : searchController.text,
                                             'availableIDs': {
                                               'DEFAULT':
                                                   IdGen.instance.identifier,
-                                              'UNIQUE_ID': currentUniqueId?.id,
+                                              'UNIQUE_BENEFICIARY_ID':
+                                                  currentUniqueId?.id,
                                             }
                                           },
                                         ));
+                                        searchController.clear();
                                       }
                                     }
                                   });
@@ -805,7 +811,10 @@ class _SearchBeneficiaryPageState
                                                     .boundary
                                                     ?.code ??
                                                 ''),
-                                    'nameOfIndividual': searchController.text,
+                                    'nameOfIndividual':
+                                        isBeneficiaryIdSearchEnabled
+                                            ? null
+                                            : searchController.text,
                                     'availableIDs': {
                                       'DEFAULT': IdGen.instance.identifier,
                                       'UNIQUE_BENEFICIARY_ID':
@@ -813,6 +822,7 @@ class _SearchBeneficiaryPageState
                                     }
                                   },
                                 ));
+                                searchController.clear();
                               }
                             }
                             if (availableIdCount <= 0) {
@@ -863,6 +873,7 @@ class _SearchBeneficiaryPageState
                                             }
                                           },
                                         ));
+                                        searchController.clear();
                                       }
                                     });
                               });
@@ -1289,7 +1300,6 @@ class _SearchBeneficiaryPageState
             context
                 .read<DigitScannerBloc>()
                 .add(const DigitScannerEvent.handleScanner());
-            searchController.clear();
             selectedFilters = [];
             blocWrapper.add(const RegistrationWrapperEvent.clear());
           },

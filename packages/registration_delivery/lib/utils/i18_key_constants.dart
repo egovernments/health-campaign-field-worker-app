@@ -222,6 +222,10 @@ class BeneficiaryDetails {
 
   String get beneficiaryAge => 'BENEFICIARY_AGE';
 
+  String get minDeliveryCondition => 'BENEFICIARY_MIN_MAX_DELIVERY_CONDITION';
+
+  String get deliveryCondition => "BENEFICIARY_DELIVERY_CONDITION_LABEL";
+
   String get beneficiaryId => 'BENEFICIARY_ID';
 
   String get ctaProceed => 'PROCEED';
