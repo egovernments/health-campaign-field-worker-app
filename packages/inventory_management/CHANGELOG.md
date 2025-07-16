@@ -1,128 +1,73 @@
 ## 1.0.6-dev.1
-
-- This change is for Nampula campaign
-- Changed receiverId type to list in StockSearchModel
-
+* This change is for Nampula campaign
+* Changed receiverId type to list in StockSearchModel
 ## 1.0.6
-
-- Updated with latest packages data_model and digit_ui_components
-
+* Updated with latest packages data_model and digit_ui_components
 ## 1.0.6-dev.1-enumeration
-
-- Updated with data_model changes
-
+* Updated with data_model changes
 ## 1.0.5+1
-
-- Bug Fix:
-  - Double selection of dropdown items fields, productVariant, reason, transport type
-- Updated to latest digit_components
-
+* Bug Fix:
+    * Double selection of dropdown items fields, productVariant, reason, transport type
+* Updated to latest digit_components
 ## 1.0.5
-
-- Upgraded to latest versions
-- Added the boundary new variable in inventory singleton class to get the code of the selected
+* Upgraded to latest versions
+* Added the boundary new variable in inventory singleton class to get the code of the selected
   boundary
-- UI/UX fixes
-
+* UI/UX fixes
 ## 1.0.4
-
-- Upgrade to Flutter 3.22
-- Updated digit_data_model, digit_scanner to latest version
-- Migrated to digit_ui_components
-
+* Upgrade to Flutter 3.22
+* Updated digit_data_model, digit_scanner to latest version
+* Migrated to digit_ui_components
 ## 1.0.3+5
-
-- Added audit and client audit details in stock reconciliation
-- Updated digit_data_model and components to latest version
-
+* Added audit and client audit details in stock reconciliation
+* Updated digit_data_model and components to latest version
 ## 1.0.3+4
-
-- Updated wayBillNumber validation
-
+* Updated wayBillNumber validation
 ## 1.0.3+3
-
-- Updated key name of waybillNumber to wayBillNumber
-- Return transaction type logic change in stock_details and report_details bloc
-
+* Updated key name of waybillNumber to wayBillNumber
+* Return transaction type logic change in stock_details and report_details bloc
 ## 1.0.3+2
-
-- Updated digit_scanner package, digit_components, digit_data_model
-
+* Updated digit_scanner package, digit_components, digit_data_model
 ## 1.0.3+1
-
-- Updated scanner package
-
+* Updated scanner package
 ## 1.0.3
-
-- Added missing DeliveryTeam Facility in record stock screen
-- Added missing scanned resources to additional fields during entry
-- Added name of logged user to additional fields during entry
-
+* Added missing DeliveryTeam Facility in record stock screen
+* Added missing scanned resources to additional fields during entry
+* Added name of logged user to additional fields during entry
 ## 1.0.3-dev.2
-
-- Added name of logged user to additional fields during entry
-
+* Added name of logged user to additional fields during entry
 ## 1.0.3-dev.1
-
-- Added missing DeliveryTeam Facility in record stock screen
-- Added missing scanned resources to additional fields during entry
-
+* Added missing DeliveryTeam Facility in record stock screen
+* Added missing scanned resources to additional fields during entry
 ## 0.0.0-dev.10
-
-- Updated PageState class to public for customization
-- Updated digit_components
-
+* Updated PageState class to public for customization
+* Updated digit_components
 ## 1.0.2+1
-
-- Get Precise location on Submitting latitude longitude details
-
+* Get Precise location on Submitting latitude longitude details
 ## 1.0.2
-
-- Localization support added for missing fields
-- Added try catch for local repository to handle db lock
-
+* Localization support added for missing fields
+* Added try catch for local repository to handle db lock
 ## 1.0.1
-
-- Bug fixes and enhancements
-- Updated digit_components and digit_scanner to latest versions
-
+* Bug fixes and enhancements
+* Updated digit_components and digit_scanner to latest versions
 ## 1.0.0
-
-- Initial stable Release
-
+* Initial stable Release
 ## 0.0.0-dev.9
-
-- Updated digit_scanner to latest version
-
+* Updated digit_scanner to latest version
 ## 0.0.0-dev.8
-
-- Updated digit_scanner to latest version
-
+* Updated digit_scanner to latest version
 ## 0.0.0-dev.7
-
-- Fixed Lost report type mapping to value
-
+* Fixed Lost report type mapping to value
 ## 0.0.0-dev.6
-
-- Updated digit_data_model to latest version
-- Fixed Report Type mapping to value
-
+* Updated digit_data_model to latest version
+* Fixed Report Type mapping to value
 ## 0.0.0-dev.5
-
-- Updated digit_components version for dropdown fix
-
+* Updated digit_components version for dropdown fix
 ## 0.0.0-dev.4
-
-- Removed fonts references from pubspec.yaml
-
+* Removed fonts references from pubspec.yaml
 ## 0.0.0-dev.3
-
-- Updated intl package version
-
+* Updated intl package version
 ## 0.0.0-dev.2
-
-- Removed unused package dependencies from pubspec.yaml
-
+* Removed unused package dependencies from pubspec.yaml
 ## 0.0.0-dev.1
-
-- Inventory Management Initial Release
+* Inventory Management Initial Release
