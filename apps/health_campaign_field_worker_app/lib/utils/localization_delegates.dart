@@ -9,6 +9,8 @@ import 'package:complaints/blocs/localization/app_localization.dart'
 import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:digit_dss/blocs/app_localization.dart'
     as digit_dss_localization;
+import 'package:digit_forms_engine/blocs/app_localization.dart'
+    as forms_engine_localization;
 import 'package:digit_scanner/blocs/app_localization.dart'
     as scanner_localization;
 import 'package:digit_ui_components/services/AppLocalization.dart'
@@ -22,6 +24,8 @@ import 'package:registration_delivery/blocs/app_localization.dart'
     as registration_delivery_localization;
 import 'package:survey_form/blocs/app_localization.dart'
     as survey_form_localization;
+import 'package:transit_post/blocs/app_localization.dart'
+    as transit_post_localization;
 
 import '../blocs/localization/app_localization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';

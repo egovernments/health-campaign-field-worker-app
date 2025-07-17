@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
 import '../models/entities/additional_fields_type.dart';
 import '../models/entities/referral.dart';
@@ -353,7 +355,7 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
             }
             if (error["value"] == null) {
               expressionParser.add(false);
-            } else if (error is bool && error["value"] == true) {
+            } else if (error["value"] is bool && error["value"] == true) {
               expressionParser.add(error["value"]);
             } else {
               /// if some value is coming from condition
