@@ -1,3 +1,7 @@
+/// digit_crud_bloc
+///
+/// Exports core BLoC, models, services, and utilities for CRUD operations.
+///
 library digit_crud_bloc;
 
 export 'bloc/crud_bloc.dart';

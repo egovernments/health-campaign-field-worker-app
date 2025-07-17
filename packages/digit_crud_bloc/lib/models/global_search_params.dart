@@ -1,8 +1,9 @@
+/// Models for global search parameters, filters, pagination, and relationship/nested mappings.
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'global_search_params.freezed.dart';
 part 'global_search_params.g.dart';
-
 
 @freezed
 class GlobalSearchParameters with _$GlobalSearchParameters {
@@ -12,12 +13,11 @@ class GlobalSearchParameters with _$GlobalSearchParameters {
     PaginationParams? pagination,
     @Default([]) List<RelationshipMapping> relationshipMappings,
     @Default([]) List<NestedModelMapping> nestedMappings,
-    /// Optional: If set, pagination and count are applied only for this model.
+    /// If set, pagination and count are applied only for this model.
     String? primaryModel,
   }) = _GlobalSearchParameters;
 
-  factory GlobalSearchParameters.fromJson(Map<String, dynamic> json) =>
-      _$GlobalSearchParametersFromJson(json);
+  factory GlobalSearchParameters.fromJson(Map<String, dynamic> json) => _$GlobalSearchParametersFromJson(json);
 }
 
 @freezed
@@ -30,8 +30,7 @@ class SearchFilter with _$SearchFilter {
     LatLng? coordinates,
   }) = _SearchFilter;
 
-  factory SearchFilter.fromJson(Map<String, dynamic> json) =>
-      _$SearchFilterFromJson(json);
+  factory SearchFilter.fromJson(Map<String, dynamic> json) => _$SearchFilterFromJson(json);
 }
 
 @freezed
@@ -41,8 +40,7 @@ class LatLng with _$LatLng {
     required double longitude,
   }) = _LatLng;
 
-  factory LatLng.fromJson(Map<String, dynamic> json) =>
-      _$LatLngFromJson(json);
+  factory LatLng.fromJson(Map<String, dynamic> json) => _$LatLngFromJson(json);
 }
 
 @freezed
@@ -52,8 +50,7 @@ class PaginationParams with _$PaginationParams {
     required int offset,
   }) = _PaginationParams;
 
-  factory PaginationParams.fromJson(Map<String, dynamic> json) =>
-      _$PaginationParamsFromJson(json);
+  factory PaginationParams.fromJson(Map<String, dynamic> json) => _$PaginationParamsFromJson(json);
 }
 
 @freezed
@@ -65,8 +62,7 @@ class RelationshipMapping with _$RelationshipMapping {
     required String foreignKey,
   }) = _RelationshipMapping;
 
-  factory RelationshipMapping.fromJson(Map<String, dynamic> json) =>
-      _$RelationshipMappingFromJson(json);
+  factory RelationshipMapping.fromJson(Map<String, dynamic> json) => _$RelationshipMappingFromJson(json);
 }
 
 enum NestedMappingType {
@@ -77,24 +73,22 @@ enum NestedMappingType {
 @freezed
 class NestedFieldMapping with _$NestedFieldMapping {
   const factory NestedFieldMapping({
-    required String table, // actual SQL table name
+    required String table,
     required String localKey,
     required String foreignKey,
     required NestedMappingType type,
   }) = _NestedFieldMapping;
 
-  factory NestedFieldMapping.fromJson(Map<String, dynamic> json) =>
-      _$NestedFieldMappingFromJson(json);
+  factory NestedFieldMapping.fromJson(Map<String, dynamic> json) => _$NestedFieldMappingFromJson(json);
 }
 
 @freezed
 class NestedModelMapping with _$NestedModelMapping {
   const factory NestedModelMapping({
-    required String rootModel, // e.g., 'Individual'
-    required Map<String, NestedFieldMapping> fields, // e.g., 'name' → mapping
+    required String rootModel,
+    required Map<String, NestedFieldMapping> fields,
   }) = _NestedModelMapping;
 
-  factory NestedModelMapping.fromJson(Map<String, dynamic> json) =>
-      _$NestedModelMappingFromJson(json);
+  factory NestedModelMapping.fromJson(Map<String, dynamic> json) => _$NestedModelMappingFromJson(json);
 }
 

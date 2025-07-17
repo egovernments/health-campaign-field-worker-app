@@ -18,9 +18,9 @@ This package provides the core logic and services for managing entity-based data
 
 ## 🔨 Core Features
 
-### `RegistrationService`
+### `CrudService`
 A centralized service that orchestrates:
-- Entity registration and update
+- Entity creation, update, and deletion
 - Relationship-based queries
 - Repository resolution per entity type
 
@@ -31,22 +31,43 @@ A centralized service that orchestrates:
 
 #### Public Methods
 - `init()`: Initializes relationship graph and nested mapping lookup.
-- `searchHouseholds(query)`: Performs a global search using filters, pagination, and nested field resolution.
-- `registerEntities(entities)`: Creates a list of entities using their mapped repository.
+- `searchEntities(query)`: Performs a global search using filters, pagination, and nested field resolution.
+- `createEntities(entities)`: Creates a list of entities using their mapped repository.
 - `updateEntities(entities)`: Updates a list of entities.
 - `deleteEntities(entities)`: Deletes a list of entities.
 
 ---
 
+## 🧩 Modular Helpers
+
+- `QueryBuilder`: SQL and filter utilities for query construction and argument building.
+- `HydrationHelper`: Handles hydration of nested model data.
+- `RelationshipGraphHelper`: Finds relationship paths between models for advanced queries.
+
+---
+
+## 🏗️ Required Setup
+
+Before using any CRUD features, you **must** initialize the singleton with all required dependencies:
+
+```dart
+CrudBlocSingleton.instance.setData(
+  crudService: myCrudService,
+  dynamicEntityModelListener: myListener,
+);
+```
+
+---
+
 ## 🔁 CRUD Operations
 
-The `RegistrationService` supports full **CRUD operations** for all supported entity types. Internally, it resolves the appropriate repository based on the runtime type of the entity.
+The `CrudService` supports full **CRUD operations** for all supported entity types. Internally, it resolves the appropriate repository based on the runtime type of the entity.
 
 ### 1. **Create**
 Registers new entities to local storage.
 
 ```dart
-await registrationService.registerEntities(entities);
+await crudService.createEntities(entities);
 ```
 
 Internally calls repository.create(entity) for each entity. Suitable for bulk registration of household, members, tasks, etc.
@@ -71,12 +92,12 @@ final searchParams = GlobalSearchParameters(
     'projectBeneficiary',
     'task',
   ],
-  pagination: Pagination(limit: 10, offset: 0),
+  pagination: PaginationParams(limit: 10, offset: 0),
 );
 
 // Perform the global search
 final (results, totalCount) =
-    await registrationService.searchHouseholds(query: searchParams);
+    await crudService.searchEntities(query: searchParams);
 ```
 
 Uses SearchEntityRepository.
@@ -86,8 +107,7 @@ Supports filters, pagination, relationship traversal, and nested field lookup.
 Updates existing entities in the local repository.
 
 ```dart
-await registrationService.updateEntities(updatedEntities);
-
+await crudService.updateEntities(updatedEntities);
 ```
 
 Calls repository.update(entity) for each provided entity.
@@ -97,7 +117,7 @@ Supports batch updates for any entity type.
 Deletes entities from the local repository.
 
 ```dart
-await registrationService.deleteEntities(entitiesToDelete);
+await crudService.deleteEntities(entitiesToDelete);
 ```
 
 Calls repository.delete(entity) for each entity.
