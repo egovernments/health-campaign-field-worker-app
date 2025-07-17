@@ -1,8 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:collection/collection.dart';
-import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/entities/identifier_types.dart';
-import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';

@@ -574,6 +574,7 @@ class _HomePageState extends LocalizedState<HomePage> {
               triggerLocalization();
               isTriggerLocalisation = false;
             }
+            ;
             context.router.push(const ManageAttendanceRoute());
           },
         ),
@@ -615,6 +616,7 @@ class _HomePageState extends LocalizedState<HomePage> {
               triggerLocalization();
               isTriggerLocalisation = false;
             }
+            ;
             context.router.push(const UserDashboardRoute());
           },
         ),
@@ -663,6 +665,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
+      i18.home.db: homeShowcaseData.db.showcaseKey,
       i18.home.closedHouseHoldLabel:
           homeShowcaseData.closedHouseHold.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
