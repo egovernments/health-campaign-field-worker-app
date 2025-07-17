@@ -500,8 +500,6 @@ void attemptSyncUp(BuildContext context) async {
             localRepositories: [
               // INFO : Need to add local repo of package Here
               context.read<
-                  LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-              context.read<
                   LocalRepository<IndividualModel, IndividualSearchModel>>(),
               context.read<
                   LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
