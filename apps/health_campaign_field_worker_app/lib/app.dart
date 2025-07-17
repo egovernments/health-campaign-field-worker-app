@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/blocs/closed_household.dart';
 import 'package:closed_household/closed_household.dart';
@@ -10,7 +8,6 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/inventory_management.dart';
@@ -41,7 +38,6 @@ import 'router/app_router.dart';
 import 'utils/environment_config.dart';
 import 'utils/localization_delegates.dart';
 import 'utils/utils.dart';
-import 'widgets/digit_error_widget.dart';
 import 'widgets/network_manager_provider_wrapper.dart';
 
 class MainApplication extends StatefulWidget {
@@ -358,86 +354,85 @@ class MainApplicationState extends State<MainApplication>
                         ),
                         BlocProvider(
                           create: (_) => ErrorBloc(),
-                    ),
+                        ),
                       ],
                       child: BlocBuilder<ErrorBloc, ErrorState>(
-                        builder: (context, errorState) {
+                          builder: (context, errorState) {
+                        return BlocBuilder<LocalizationBloc, LocalizationState>(
+                          builder: (context, langState) {
+                            final selectedLocale =
+                                AppSharedPreferences().getSelectedLocale ??
+                                    firstLanguage;
 
-                          return BlocBuilder<LocalizationBloc, LocalizationState>(
-                            builder: (context, langState) {
-                              final selectedLocale =
-                                  AppSharedPreferences().getSelectedLocale ??
-                                      firstLanguage;
+                            return MaterialApp.router(
+                              debugShowCheckedModeBanner: false,
+                              builder: (context, child) {
+                                final env = envConfig.variables.envType;
+                                if (env == EnvType.prod) {
+                                  return child ?? const SizedBox.shrink();
+                                }
 
-                              return MaterialApp.router(
-                                debugShowCheckedModeBanner: false,
-                                builder: (context, child) {
+                                return Banner(
+                                  message: envConfig.variables.envType.name,
+                                  location: BannerLocation.topEnd,
+                                  color: () {
+                                    switch (envConfig.variables.envType) {
+                                      case EnvType.uat || EnvType.demo:
+                                        return Colors.green;
+                                      case EnvType.qa:
+                                        return Colors.pink;
+                                      default:
+                                        return Colors.red;
+                                    }
+                                  }(),
+                                  child: child,
+                                );
+                              },
+                              supportedLocales: languages != null
+                                  ? languages.map((e) {
+                                      final results = e.value.split('_');
 
-                                  final env = envConfig.variables.envType;
-                                  if (env == EnvType.prod) {
-                                    return child ?? const SizedBox.shrink();
-                                  }
-
-                                  return Banner(
-                                    message: envConfig.variables.envType.name,
-                                    location: BannerLocation.topEnd,
-                                    color: () {
-                                      switch (envConfig.variables.envType) {
-                                        case EnvType.uat || EnvType.demo:
-                                          return Colors.green;
-                                        case EnvType.qa:
-                                          return Colors.pink;
-                                        default:
-                                          return Colors.red;
-                                      }
-                                    }(),
-                                    child: child,
-                                  );
-                                },
-                                supportedLocales: languages != null
-                                    ? languages.map((e) {
-                                        final results = e.value.split('_');
-
-                                        return results.isNotEmpty
-                                            ? Locale(results.first, results.last)
-                                            : firstLanguage;
-                                      })
-                                    : [firstLanguage],
-                                localizationsDelegates: getAppLocalizationDelegates(
-                                  sql: widget.sql,
-                                  appConfig: appConfig,
-                                  selectedLocale: Locale(
-                                    selectedLocale!.split("_").first,
-                                    selectedLocale.split("_").last,
-                                  ),
+                                      return results.isNotEmpty
+                                          ? Locale(results.first, results.last)
+                                          : firstLanguage;
+                                    })
+                                  : [firstLanguage],
+                              localizationsDelegates:
+                                  getAppLocalizationDelegates(
+                                sql: widget.sql,
+                                appConfig: appConfig,
+                                selectedLocale: Locale(
+                                  selectedLocale!.split("_").first,
+                                  selectedLocale.split("_").last,
                                 ),
-                                locale: languages != null
-                                    ? Locale(
-                                        selectedLocale!.split("_").first,
-                                        selectedLocale.split("_").last,
-                                      )
-                                    : firstLanguage,
-                                theme: DigitExtendedTheme.instance.getLightTheme(),
-                                routeInformationParser:
-                                    widget.appRouter.defaultRouteParser(),
-                                scaffoldMessengerKey: scaffoldMessengerKey,
-                                routerDelegate: AutoRouterDelegate.declarative(
-                                  widget.appRouter,
-                                  navigatorObservers: () => [AppRouterObserver()],
-                                  routes: (handler) => authState.maybeWhen(
-                                    orElse: () => [
-                                      const UnauthenticatedRouteWrapper(),
-                                    ],
-                                    authenticated: (_, __, ___, ____, _____) => [
-                                      AuthenticatedRouteWrapper(),
-                                    ],
-                                  ),
+                              ),
+                              locale: languages != null
+                                  ? Locale(
+                                      selectedLocale!.split("_").first,
+                                      selectedLocale.split("_").last,
+                                    )
+                                  : firstLanguage,
+                              theme:
+                                  DigitExtendedTheme.instance.getLightTheme(),
+                              routeInformationParser:
+                                  widget.appRouter.defaultRouteParser(),
+                              scaffoldMessengerKey: scaffoldMessengerKey,
+                              routerDelegate: AutoRouterDelegate.declarative(
+                                widget.appRouter,
+                                navigatorObservers: () => [AppRouterObserver()],
+                                routes: (handler) => authState.maybeWhen(
+                                  orElse: () => [
+                                    const UnauthenticatedRouteWrapper(),
+                                  ],
+                                  authenticated: (_, __, ___, ____, _____) => [
+                                    AuthenticatedRouteWrapper(),
+                                  ],
                                 ),
-                              );
-                            },
-                          );
-                        }
-                      ),
+                              ),
+                            );
+                          },
+                        );
+                      }),
                     );
                   },
                 );
