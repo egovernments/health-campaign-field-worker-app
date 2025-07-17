@@ -1,6 +1,7 @@
 library app_utils;
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart'
@@ -34,11 +35,13 @@ import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/models/entities/service.dart';
 import 'package:survey_form/survey_form.init.dart' as survey_form_mappers;
 import 'package:sync_service/blocs/sync/sync.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
@@ -47,6 +50,7 @@ import '../models/app_config/app_config_model.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
+import 'environment_config.dart';
 import 'extensions/extensions.dart';
 
 export 'app_exception.dart';
