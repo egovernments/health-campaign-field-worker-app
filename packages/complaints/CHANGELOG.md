@@ -1,3 +1,8 @@
+## 1.1.0-dev.1-console
+
+* Updated with latest packages
+* Added clientAuditDetails in super for PGRComplaints
+
 ## 1.0.3
 
 * Updated with latest packages

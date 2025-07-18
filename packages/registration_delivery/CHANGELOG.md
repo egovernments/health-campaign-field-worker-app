@@ -1,3 +1,13 @@
+## 1.1.0-dev.1-console
+
+* Revamped with configuration based flow
+* Integrated with digit_crud_bloc, digit_data_converter, digit_forms_engine
+    * Limitations:
+        * Depends on form configuration and template configuration
+        * Supports single round delivery
+        * Supports single filter search
+* Integrated with digit_formula_parser for custom formula
+
 ## 1.0.7+1
 
 * Updated lister of searchState with stream

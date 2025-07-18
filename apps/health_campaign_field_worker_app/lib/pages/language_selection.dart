@@ -80,7 +80,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                             context.read<LocalizationBloc>().add(
                                 LocalizationEvent.onLoadLocalization(
                                     module: state.retryModule.toString(),
-                                    tenantId: appConfig.tenantId ?? "default",
+                                    tenantId: envConfig.variables.tenantId ?? "default",
                                     locale: AppSharedPreferences()
                                         .getSelectedLocale
                                         .toString(),
@@ -127,7 +127,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                               triggerLanguageChange(
                                 index,
                                 localizationModulesList,
-                                appConfig.tenantId ?? "default",
+                                envConfig.variables.tenantId ?? "default",
                                 value.value.toString(),
                               );
                             },
