@@ -926,6 +926,7 @@ class _HouseholdOverviewPageState
                                           );
 
                                           return MemberCard(
+                                            showAddChildAction: false,
                                             isHead: isHead,
                                             individual: e,
                                             household: household,
