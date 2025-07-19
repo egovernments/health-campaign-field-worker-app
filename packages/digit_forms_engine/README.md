@@ -2,8 +2,6 @@
 
 A dynamic form rendering engine for Flutter, built on top of the `digit_ui_components` package. It allows you to define flexible, multi-page forms using a JSON schema. The engine renders fields and pages based on configuration, with automatic validation, navigation, and summary generation.
 
-[![pub package](https://img.shields.io/pub/v/digit_forms_engine.svg)](https://pub.dev/packages/digit_forms_engine)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ---
 
@@ -215,47 +213,19 @@ Fields support various validation rules:
 
 ```json
 {
-  "name": {
-    "type": "string",
-    "label": "Name",
-    "minLength": 2,
-    "maxLength": 50,
-    "pattern": "^[a-zA-Z\\s]+$"
-  },
-  "age": {
-    "type": "integer",
-    "label": "Age",
-    "minimum": 18,
-    "maximum": 100
-  }
+  "type": "string",
+  "format": "text",
+  "label": "Name",
+  "validations": [
+    { "type": "required", "value": true, "message": "Name is required" },
+    { "type": "minLength", "value": 2, "message": "Name too short" },
+    { "type": "maxLength", "value": 50 }
+  ]
 }
 ```
 
 ---
 
-## 🎨 Customization
-
-### Custom Field Builders
-
-You can create custom field builders by extending `JsonSchemaBuilder`:
-
-```dart
-class CustomFieldBuilder extends JsonSchemaBuilder<String> {
-  const CustomFieldBuilder({
-    required super.formControlName,
-    required super.form,
-    super.label,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ReactiveTextField(
-      formControlName: formControlName,
-      decoration: InputDecoration(labelText: label),
-    );
-  }
-}
-```
 
 ### Theming
 
@@ -268,55 +238,7 @@ MaterialApp(
 )
 ```
 
----
 
-## 🧪 Testing
-
-The package includes comprehensive testing utilities:
-
-```dart
-import 'package:flutter_test/flutter_test.dart';
-import 'package:bloc_test/bloc_test.dart';
-import 'package:digit_forms_engine/forms_engine.dart';
-
-void main() {
-  group('FormsBloc Tests', () {
-    blocTest<FormsBloc, FormsState>(
-      'emits loaded state when schema is loaded',
-      build: () => FormsBloc(),
-      act: (bloc) => bloc.add(FormsEvent.load(schemas: [testSchema])),
-      expect: () => [isA<FormsState>()],
-    );
-  });
-}
-```
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-### Development Setup
-
-1. Clone the repository
-2. Run `flutter pub get`
-3. Run `flutter pub run build_runner build` to generate code
-4. Run tests with `flutter test`
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- Built on top of [digit_ui_components](https://pub.dev/packages/digit_ui_components)
-- Uses [reactive_forms](https://pub.dev/packages/reactive_forms) for form handling
-- Powered by [flutter_bloc](https://pub.dev/packages/flutter_bloc) for state management
 
 
 
