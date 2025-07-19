@@ -27,7 +27,7 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
       validationMessages: validationMessages,
       showErrors: (control) => control.invalid && control.touched,
       builder: (field) => DigitDobPicker(
-        initialDate: initialDate,
+        initialDate: initialDate ?? DateTime(1900),
         datePickerFormControl: formControlName,
         datePickerLabel: label ?? 'date of birth',
         ageFieldLabel: loc.translate('AGE_LABEL_TEXT'),
@@ -40,12 +40,14 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
         separatorLabel: loc.translate(
           'SEPARATOR_LABEL_TEXT',
         ),
-        cancelText: loc
-            .translate('CORE_COMMON_CANCEL'),
-        confirmText: loc
-            .translate('CORE_COMMON_OK'),
-        initialValue: form.control(formControlName).value != null && (form.control(formControlName).value as String).trim().isNotEmpty
-            ? form.control(formControlName).value as String : null,
+        cancelText: loc.translate('CORE_COMMON_CANCEL'),
+        confirmText: loc.translate('CORE_COMMON_OK'),
+        initialValue: form.control(formControlName).value != null &&
+                (form.control(formControlName).value as String)
+                    .trim()
+                    .isNotEmpty
+            ? form.control(formControlName).value as String
+            : null,
         yearsAndMonthsErrMsg: '',
         errorMessage: _getDobErrorMessage(field.control, context),
         onChangeOfFormControl: (value) {
@@ -62,7 +64,7 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
 
   (int years, int months)? _parseAgeConstraint(String type) {
     final rule = validations?.firstWhere(
-          (v) => v.type == type,
+      (v) => v.type == type,
       orElse: () => const ValidationRule(type: '', value: null),
     );
 
@@ -79,11 +81,11 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
   }
 
   void _handleDobValidation(
-      DateTime? dob,
-      AbstractControl control,
-      (int years, int months)? minAge,
-      (int years, int months)? maxAge,
-      ) {
+    DateTime? dob,
+    AbstractControl control,
+    (int years, int months)? minAge,
+    (int years, int months)? maxAge,
+  ) {
     control.removeError('required');
     control.removeError('minAge');
     control.removeError('maxAge');
@@ -123,7 +125,8 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
     control.value = formatted;
   }
 
-  String? _getDobErrorMessage(AbstractControl<dynamic> control, BuildContext context) {
+  String? _getDobErrorMessage(
+      AbstractControl<dynamic> control, BuildContext context) {
     final loc = FormLocalization.of(context);
 
     for (final rule in validations ?? []) {
@@ -144,4 +147,3 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
     }
   }
 }
-
