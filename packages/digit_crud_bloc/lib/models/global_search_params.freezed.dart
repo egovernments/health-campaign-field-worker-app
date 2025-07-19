@@ -29,7 +29,7 @@ mixin _$GlobalSearchParameters {
   List<NestedModelMapping> get nestedMappings =>
       throw _privateConstructorUsedError;
 
-  /// Optional: If set, pagination and count are applied only for this model.
+  /// If set, pagination and count are applied only for this model.
   String? get primaryModel => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -242,7 +242,7 @@ class _$GlobalSearchParametersImpl implements _GlobalSearchParameters {
     return EqualUnmodifiableListView(_nestedMappings);
   }
 
-  /// Optional: If set, pagination and count are applied only for this model.
+  /// If set, pagination and count are applied only for this model.
   @override
   final String? primaryModel;
 
@@ -318,7 +318,7 @@ abstract class _GlobalSearchParameters implements GlobalSearchParameters {
   List<NestedModelMapping> get nestedMappings;
   @override
 
-  /// Optional: If set, pagination and count are applied only for this model.
+  /// If set, pagination and count are applied only for this model.
   String? get primaryModel;
   @override
   @JsonKey(ignore: true)
@@ -1074,8 +1074,7 @@ NestedFieldMapping _$NestedFieldMappingFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$NestedFieldMapping {
-  String get table =>
-      throw _privateConstructorUsedError; // actual SQL table name
+  String get table => throw _privateConstructorUsedError;
   String get localKey => throw _privateConstructorUsedError;
   String get foreignKey => throw _privateConstructorUsedError;
   NestedMappingType get type => throw _privateConstructorUsedError;
@@ -1204,7 +1203,6 @@ class _$NestedFieldMappingImpl implements _NestedFieldMapping {
 
   @override
   final String table;
-// actual SQL table name
   @override
   final String localKey;
   @override
@@ -1262,7 +1260,7 @@ abstract class _NestedFieldMapping implements NestedFieldMapping {
 
   @override
   String get table;
-  @override // actual SQL table name
+  @override
   String get localKey;
   @override
   String get foreignKey;
@@ -1280,8 +1278,7 @@ NestedModelMapping _$NestedModelMappingFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$NestedModelMapping {
-  String get rootModel =>
-      throw _privateConstructorUsedError; // e.g., 'Individual'
+  String get rootModel => throw _privateConstructorUsedError;
   Map<String, NestedFieldMapping> get fields =>
       throw _privateConstructorUsedError;
 
@@ -1380,9 +1377,7 @@ class _$NestedModelMappingImpl implements _NestedModelMapping {
 
   @override
   final String rootModel;
-// e.g., 'Individual'
   final Map<String, NestedFieldMapping> _fields;
-// e.g., 'Individual'
   @override
   Map<String, NestedFieldMapping> get fields {
     if (_fields is EqualUnmodifiableMapView) return _fields;
@@ -1436,7 +1431,7 @@ abstract class _NestedModelMapping implements NestedModelMapping {
 
   @override
   String get rootModel;
-  @override // e.g., 'Individual'
+  @override
   Map<String, NestedFieldMapping> get fields;
   @override
   @JsonKey(ignore: true)

@@ -1,3 +1,14 @@
+import 'dart:async';
+
+import 'package:digit_crud_bloc/models/global_search_params.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../service/crud_service.dart';
+
+part 'crud_bloc.freezed.dart';
+
 /// CrudBloc handles CRUD operations for dynamic entities using CrudService.
 ///
 /// Events:
@@ -14,21 +25,10 @@
 ///   - persisted: Data persisted (created/updated/deleted).
 ///   - error: Operation failed.
 
-import 'dart:async';
-
-import 'package:digit_crud_bloc/models/global_search_params.dart';
-import 'package:digit_data_model/data_model.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-import '../service/crud_service.dart';
-
-part 'crud_bloc.freezed.dart';
-
 typedef CrudEmitter = Emitter<CrudState>;
 
 class CrudBloc extends Bloc<CrudEvent, CrudState> {
-  final RegistrationService service;
+  final CrudService service;
 
   CrudBloc({required this.service}) : super(const CrudState.initial()) {
     on<CrudEventInitialize>(_onInitialize);
@@ -57,7 +57,7 @@ class CrudBloc extends Bloc<CrudEvent, CrudState> {
     }
     try {
       final (results, totalCount) =
-          await service.searchHouseholds(query: event.searchParams);
+          await service.searchEntities(query: event.searchParams);
       emit(CrudState.loaded(
         results: results,
         totalCount: totalCount > -1 ? totalCount : null,
@@ -73,7 +73,7 @@ class CrudBloc extends Bloc<CrudEvent, CrudState> {
   ) async {
     emit(const CrudState.loading());
     try {
-      await service.registerEntities(event.entities);
+      await service.createEntities(event.entities);
       emit(CrudState.persisted(event.entities));
     } catch (e) {
       emit(CrudState.error('Create failed: ${e.toString()}'));

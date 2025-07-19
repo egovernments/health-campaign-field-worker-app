@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
-import 'package:digit_crud_bloc/models/global_search_params.dart';
+import 'package:digit_crud_bloc/digit_crud_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -18,7 +17,7 @@ typedef RegistrationWrapperEmitter = Emitter<RegistrationWrapperState>;
 
 class RegistrationWrapperBloc
     extends Bloc<RegistrationWrapperEvent, RegistrationWrapperState> {
-  final RegistrationBloc globalRegistrationBloc;
+  final CrudBloc globalRegistrationBloc;
 
   RegistrationWrapperBloc({required this.globalRegistrationBloc})
       : super(const RegistrationWrapperState()) {
@@ -37,8 +36,7 @@ class RegistrationWrapperBloc
     emit(state.copyWith(loading: true));
 
     try {
-      globalRegistrationBloc
-          .add(RegistrationEvent.create(entities: event.entities));
+      globalRegistrationBloc.add(CrudEventCreate(entities: event.entities));
 
       final wrappers = groupEntitiesIntoWrappers(event.entities);
 
@@ -71,8 +69,7 @@ class RegistrationWrapperBloc
         return entity.copyWith(clientAuditDetails: updatedClientAudit);
       }).toList();
 
-      globalRegistrationBloc
-          .add(RegistrationEvent.update(entities: updatedEntities));
+      globalRegistrationBloc.add(CrudEventUpdate(entities: updatedEntities));
 
       final wrappers = groupEntitiesIntoWrappers(event.entities);
 
@@ -93,8 +90,7 @@ class RegistrationWrapperBloc
     emit(state.copyWith(loading: true));
 
     try {
-      globalRegistrationBloc
-          .add(RegistrationEvent.delete(entities: event.entities));
+      globalRegistrationBloc.add(CrudEventDelete(entities: event.entities));
     } catch (e) {
       emit(state.copyWith(loading: false, error: e.toString()));
     }
@@ -109,14 +105,14 @@ class RegistrationWrapperBloc
       lastAction: RegistrationWrapperActionType.none,
     ));
 
-    final completer = Completer<RegistrationStateLoaded>();
+    final completer = Completer<CrudStateLoaded>();
 
     late final StreamSubscription subscription;
     subscription = globalRegistrationBloc.stream.listen((globalState) {
-      if (globalState is RegistrationStateLoaded) {
+      if (globalState is CrudStateLoaded) {
         subscription.cancel();
         if (!completer.isCompleted) completer.complete(globalState);
-      } else if (globalState is RegistrationStateError) {
+      } else if (globalState is CrudStateError) {
         subscription.cancel();
         if (!completer.isCompleted) {
           completer.completeError(globalState.message ?? 'Unknown error');
@@ -125,7 +121,7 @@ class RegistrationWrapperBloc
     });
 
     // Trigger the global load
-    globalRegistrationBloc.add(RegistrationEvent.search(event.searchParams));
+    globalRegistrationBloc.add(CrudEventSearch(event.searchParams));
 
     try {
       final globalState = await completer.future;
@@ -264,14 +260,14 @@ class RegistrationWrapperBloc
       pagination: null,
     );
 
-    final completer = Completer<RegistrationStateLoaded>();
+    final completer = Completer<CrudStateLoaded>();
     late final StreamSubscription subscription;
 
     subscription = globalRegistrationBloc.stream.listen((globalState) {
-      if (globalState is RegistrationStateLoaded) {
+      if (globalState is CrudStateLoaded) {
         subscription.cancel();
         if (!completer.isCompleted) completer.complete(globalState);
-      } else if (globalState is RegistrationStateError) {
+      } else if (globalState is CrudStateError) {
         subscription.cancel();
         if (!completer.isCompleted) {
           completer.completeError(globalState.message ?? 'Unknown error');
@@ -279,7 +275,7 @@ class RegistrationWrapperBloc
       }
     });
 
-    globalRegistrationBloc.add(RegistrationEvent.search(searchParams));
+    globalRegistrationBloc.add(CrudEventSearch(searchParams));
 
     try {
       final globalState = await completer.future;
