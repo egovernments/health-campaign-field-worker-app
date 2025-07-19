@@ -97,8 +97,8 @@ class QueryBuilder {
     return args;
   }
 
-  Future<List<Map<String, dynamic>>> queryRawTable({
-    required dynamic sql,
+  static Future<List<Map<String, dynamic>>> queryRawTable({
+    required LocalSqlDataStore sql,
     required String table,
     required List<SearchFilter> filters,
     required List<String> select,
