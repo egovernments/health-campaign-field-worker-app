@@ -51,6 +51,8 @@ class UserActionModel extends EntityModel with UserActionModelMappable {
   final String projectId;
   final String boundaryCode;
   final String action;
+  final String? beneficiaryTag;
+  final String? resourceTag;
   final UserActionAdditionalFields? additionalFields;
 
   UserActionModel({
@@ -64,6 +66,8 @@ class UserActionModel extends EntityModel with UserActionModelMappable {
     required this.projectId,
     required this.boundaryCode,
     required this.action,
+    this.beneficiaryTag,
+    this.resourceTag,
     this.nonRecoverableError = false,
     this.tenantId,
     this.rowVersion,
@@ -84,6 +88,8 @@ class UserActionModel extends EntityModel with UserActionModelMappable {
       isDeleted: Value(isDeleted),
       clientReferenceId: Value(clientReferenceId),
       action: Value(action),
+      beneficiaryTag: Value(beneficiaryTag),
+      resourceTag: Value(resourceTag),
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
