@@ -84,11 +84,14 @@ class LocalizationLocalRepository {
       required String locale,
       required String module}) async {
     return retryLocalCallOperation(() async {
+      final moduleList = module.split(',').map((e) => e.trim()).toList();
 
       final query = sql.select(sql.localization).join([])
         ..where(
-          sql.localization.module.contains(module) &
-          sql.localization.locale.equals(locale),
+          buildAnd([
+            sql.localization.locale.equals(locale),
+            sql.localization.module.isIn(moduleList),
+          ]),
         );
 
       final results = await query.get();
