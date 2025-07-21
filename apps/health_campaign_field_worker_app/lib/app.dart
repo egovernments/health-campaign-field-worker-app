@@ -187,7 +187,7 @@ class MainApplicationState extends State<MainApplication>
                       providers: [
                         BlocProvider(
                           create: (localizationModulesList != null &&
-                                  firstLanguage != null)
+                                  selectedLocale != null)
                               ? (context) => LocalizationBloc(
                                   const LocalizationState(),
                                   LocalizationRepository(
@@ -198,7 +198,7 @@ class MainApplicationState extends State<MainApplication>
                                     module:
                                         "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
                                     tenantId: envConfig.variables.tenantId,
-                                    locale: firstLanguage,
+                                    locale: selectedLocale,
                                     path: Constants.localizationApiPath,
                                   ),
                                 )
