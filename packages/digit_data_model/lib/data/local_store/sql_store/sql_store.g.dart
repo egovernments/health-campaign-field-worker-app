@@ -40649,6 +40649,18 @@ class $UserActionTable extends UserAction
   late final GeneratedColumn<String> action = GeneratedColumn<String>(
       'action', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _beneficiaryTagMeta =
+      const VerificationMeta('beneficiaryTag');
+  @override
+  late final GeneratedColumn<String> beneficiaryTag = GeneratedColumn<String>(
+      'beneficiary_tag', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _resourceTagMeta =
+      const VerificationMeta('resourceTag');
+  @override
+  late final GeneratedColumn<String> resourceTag = GeneratedColumn<String>(
+      'resource_tag', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _auditCreatedTimeMeta =
       const VerificationMeta('auditCreatedTime');
   @override
@@ -40732,6 +40744,8 @@ class $UserActionTable extends UserAction
         projectId,
         boundaryCode,
         action,
+        beneficiaryTag,
+        resourceTag,
         auditCreatedTime,
         clientCreatedTime,
         clientModifiedBy,
@@ -40828,6 +40842,18 @@ class $UserActionTable extends UserAction
     } else if (isInserting) {
       context.missing(_actionMeta);
     }
+    if (data.containsKey('beneficiary_tag')) {
+      context.handle(
+          _beneficiaryTagMeta,
+          beneficiaryTag.isAcceptableOrUnknown(
+              data['beneficiary_tag']!, _beneficiaryTagMeta));
+    }
+    if (data.containsKey('resource_tag')) {
+      context.handle(
+          _resourceTagMeta,
+          resourceTag.isAcceptableOrUnknown(
+              data['resource_tag']!, _resourceTagMeta));
+    }
     if (data.containsKey('audit_created_time')) {
       context.handle(
           _auditCreatedTimeMeta,
@@ -40922,6 +40948,10 @@ class $UserActionTable extends UserAction
           .read(DriftSqlType.string, data['${effectivePrefix}boundary_code'])!,
       action: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}action'])!,
+      beneficiaryTag: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}beneficiary_tag']),
+      resourceTag: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}resource_tag']),
       auditCreatedTime: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: attachedDatabase.typeMapping.read(
@@ -40966,6 +40996,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
   final String projectId;
   final String boundaryCode;
   final String action;
+  final String? beneficiaryTag;
+  final String? resourceTag;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
   final String? clientModifiedBy;
@@ -40990,6 +41022,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
       required this.projectId,
       required this.boundaryCode,
       required this.action,
+      this.beneficiaryTag,
+      this.resourceTag,
       this.auditCreatedTime,
       this.clientCreatedTime,
       this.clientModifiedBy,
@@ -41022,6 +41056,12 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
     map['project_id'] = Variable<String>(projectId);
     map['boundary_code'] = Variable<String>(boundaryCode);
     map['action'] = Variable<String>(action);
+    if (!nullToAbsent || beneficiaryTag != null) {
+      map['beneficiary_tag'] = Variable<String>(beneficiaryTag);
+    }
+    if (!nullToAbsent || resourceTag != null) {
+      map['resource_tag'] = Variable<String>(resourceTag);
+    }
     if (!nullToAbsent || auditCreatedTime != null) {
       map['audit_created_time'] = Variable<int>(auditCreatedTime);
     }
@@ -41078,6 +41118,12 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
       projectId: Value(projectId),
       boundaryCode: Value(boundaryCode),
       action: Value(action),
+      beneficiaryTag: beneficiaryTag == null && nullToAbsent
+          ? const Value.absent()
+          : Value(beneficiaryTag),
+      resourceTag: resourceTag == null && nullToAbsent
+          ? const Value.absent()
+          : Value(resourceTag),
       auditCreatedTime: auditCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(auditCreatedTime),
@@ -41129,6 +41175,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
       projectId: serializer.fromJson<String>(json['projectId']),
       boundaryCode: serializer.fromJson<String>(json['boundaryCode']),
       action: serializer.fromJson<String>(json['action']),
+      beneficiaryTag: serializer.fromJson<String?>(json['beneficiaryTag']),
+      resourceTag: serializer.fromJson<String?>(json['resourceTag']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
       clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
@@ -41158,6 +41206,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
       'projectId': serializer.toJson<String>(projectId),
       'boundaryCode': serializer.toJson<String>(boundaryCode),
       'action': serializer.toJson<String>(action),
+      'beneficiaryTag': serializer.toJson<String?>(beneficiaryTag),
+      'resourceTag': serializer.toJson<String?>(resourceTag),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
       'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
@@ -41185,6 +41235,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
           String? projectId,
           String? boundaryCode,
           String? action,
+          Value<String?> beneficiaryTag = const Value.absent(),
+          Value<String?> resourceTag = const Value.absent(),
           Value<int?> auditCreatedTime = const Value.absent(),
           Value<int?> clientCreatedTime = const Value.absent(),
           Value<String?> clientModifiedBy = const Value.absent(),
@@ -41211,6 +41263,9 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
         projectId: projectId ?? this.projectId,
         boundaryCode: boundaryCode ?? this.boundaryCode,
         action: action ?? this.action,
+        beneficiaryTag:
+            beneficiaryTag.present ? beneficiaryTag.value : this.beneficiaryTag,
+        resourceTag: resourceTag.present ? resourceTag.value : this.resourceTag,
         auditCreatedTime: auditCreatedTime.present
             ? auditCreatedTime.value
             : this.auditCreatedTime,
@@ -41255,6 +41310,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
           ..write('projectId: $projectId, ')
           ..write('boundaryCode: $boundaryCode, ')
           ..write('action: $action, ')
+          ..write('beneficiaryTag: $beneficiaryTag, ')
+          ..write('resourceTag: $resourceTag, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
           ..write('clientModifiedBy: $clientModifiedBy, ')
@@ -41284,6 +41341,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
         projectId,
         boundaryCode,
         action,
+        beneficiaryTag,
+        resourceTag,
         auditCreatedTime,
         clientCreatedTime,
         clientModifiedBy,
@@ -41312,6 +41371,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
           other.projectId == this.projectId &&
           other.boundaryCode == this.boundaryCode &&
           other.action == this.action &&
+          other.beneficiaryTag == this.beneficiaryTag &&
+          other.resourceTag == this.resourceTag &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
           other.clientModifiedBy == this.clientModifiedBy &&
@@ -41338,6 +41399,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
   final Value<String> projectId;
   final Value<String> boundaryCode;
   final Value<String> action;
+  final Value<String?> beneficiaryTag;
+  final Value<String?> resourceTag;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
   final Value<String?> clientModifiedBy;
@@ -41363,6 +41426,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
     this.projectId = const Value.absent(),
     this.boundaryCode = const Value.absent(),
     this.action = const Value.absent(),
+    this.beneficiaryTag = const Value.absent(),
+    this.resourceTag = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
     this.clientModifiedBy = const Value.absent(),
@@ -41389,6 +41454,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
     required String projectId,
     required String boundaryCode,
     required String action,
+    this.beneficiaryTag = const Value.absent(),
+    this.resourceTag = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
     this.clientModifiedBy = const Value.absent(),
@@ -41422,6 +41489,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
     Expression<String>? projectId,
     Expression<String>? boundaryCode,
     Expression<String>? action,
+    Expression<String>? beneficiaryTag,
+    Expression<String>? resourceTag,
     Expression<int>? auditCreatedTime,
     Expression<int>? clientCreatedTime,
     Expression<String>? clientModifiedBy,
@@ -41449,6 +41518,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
       if (projectId != null) 'project_id': projectId,
       if (boundaryCode != null) 'boundary_code': boundaryCode,
       if (action != null) 'action': action,
+      if (beneficiaryTag != null) 'beneficiary_tag': beneficiaryTag,
+      if (resourceTag != null) 'resource_tag': resourceTag,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
       if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
@@ -41478,6 +41549,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
       Value<String>? projectId,
       Value<String>? boundaryCode,
       Value<String>? action,
+      Value<String?>? beneficiaryTag,
+      Value<String?>? resourceTag,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
       Value<String?>? clientModifiedBy,
@@ -41503,6 +41576,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
       projectId: projectId ?? this.projectId,
       boundaryCode: boundaryCode ?? this.boundaryCode,
       action: action ?? this.action,
+      beneficiaryTag: beneficiaryTag ?? this.beneficiaryTag,
+      resourceTag: resourceTag ?? this.resourceTag,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
       clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
@@ -41556,6 +41631,12 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
     }
     if (action.present) {
       map['action'] = Variable<String>(action.value);
+    }
+    if (beneficiaryTag.present) {
+      map['beneficiary_tag'] = Variable<String>(beneficiaryTag.value);
+    }
+    if (resourceTag.present) {
+      map['resource_tag'] = Variable<String>(resourceTag.value);
     }
     if (auditCreatedTime.present) {
       map['audit_created_time'] = Variable<int>(auditCreatedTime.value);
@@ -41611,6 +41692,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
           ..write('projectId: $projectId, ')
           ..write('boundaryCode: $boundaryCode, ')
           ..write('action: $action, ')
+          ..write('beneficiaryTag: $beneficiaryTag, ')
+          ..write('resourceTag: $resourceTag, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
           ..write('clientModifiedBy: $clientModifiedBy, ')
@@ -58637,6 +58720,8 @@ typedef $$UserActionTableInsertCompanionBuilder = UserActionCompanion Function({
   required String projectId,
   required String boundaryCode,
   required String action,
+  Value<String?> beneficiaryTag,
+  Value<String?> resourceTag,
   Value<int?> auditCreatedTime,
   Value<int?> clientCreatedTime,
   Value<String?> clientModifiedBy,
@@ -58663,6 +58748,8 @@ typedef $$UserActionTableUpdateCompanionBuilder = UserActionCompanion Function({
   Value<String> projectId,
   Value<String> boundaryCode,
   Value<String> action,
+  Value<String?> beneficiaryTag,
+  Value<String?> resourceTag,
   Value<int?> auditCreatedTime,
   Value<int?> clientCreatedTime,
   Value<String?> clientModifiedBy,
@@ -58709,6 +58796,8 @@ class $$UserActionTableTableManager extends RootTableManager<
             Value<String> projectId = const Value.absent(),
             Value<String> boundaryCode = const Value.absent(),
             Value<String> action = const Value.absent(),
+            Value<String?> beneficiaryTag = const Value.absent(),
+            Value<String?> resourceTag = const Value.absent(),
             Value<int?> auditCreatedTime = const Value.absent(),
             Value<int?> clientCreatedTime = const Value.absent(),
             Value<String?> clientModifiedBy = const Value.absent(),
@@ -58735,6 +58824,8 @@ class $$UserActionTableTableManager extends RootTableManager<
             projectId: projectId,
             boundaryCode: boundaryCode,
             action: action,
+            beneficiaryTag: beneficiaryTag,
+            resourceTag: resourceTag,
             auditCreatedTime: auditCreatedTime,
             clientCreatedTime: clientCreatedTime,
             clientModifiedBy: clientModifiedBy,
@@ -58761,6 +58852,8 @@ class $$UserActionTableTableManager extends RootTableManager<
             required String projectId,
             required String boundaryCode,
             required String action,
+            Value<String?> beneficiaryTag = const Value.absent(),
+            Value<String?> resourceTag = const Value.absent(),
             Value<int?> auditCreatedTime = const Value.absent(),
             Value<int?> clientCreatedTime = const Value.absent(),
             Value<String?> clientModifiedBy = const Value.absent(),
@@ -58787,6 +58880,8 @@ class $$UserActionTableTableManager extends RootTableManager<
             projectId: projectId,
             boundaryCode: boundaryCode,
             action: action,
+            beneficiaryTag: beneficiaryTag,
+            resourceTag: resourceTag,
             auditCreatedTime: auditCreatedTime,
             clientCreatedTime: clientCreatedTime,
             clientModifiedBy: clientModifiedBy,
@@ -58875,6 +58970,16 @@ class $$UserActionTableFilterComposer
 
   ColumnFilters<String> get action => $state.composableBuilder(
       column: $state.table.action,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get beneficiaryTag => $state.composableBuilder(
+      column: $state.table.beneficiaryTag,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get resourceTag => $state.composableBuilder(
+      column: $state.table.resourceTag,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -58994,6 +59099,16 @@ class $$UserActionTableOrderingComposer
 
   ColumnOrderings<String> get action => $state.composableBuilder(
       column: $state.table.action,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get beneficiaryTag => $state.composableBuilder(
+      column: $state.table.beneficiaryTag,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get resourceTag => $state.composableBuilder(
+      column: $state.table.resourceTag,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
