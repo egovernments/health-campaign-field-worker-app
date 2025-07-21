@@ -1,6 +1,6 @@
 name: inventory_management
 description: This package offers inventory management features, allowing users to view stock reports and perform inventory resource reconciliation.
-version: 1.0.6-dev.1
+version: 1.0.7-dev.1
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/inventory_management
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 
