@@ -366,6 +366,13 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
+            if (isTriggerLocalisation) {
+              final moduleName =
+                  'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
+              triggerLocalization(module: moduleName);
+              isTriggerLocalisation = false;
+            }
+
             final prefs = await SharedPreferences.getInstance();
             final schemaJsonRaw = prefs.getString('app_config_schemas');
 
@@ -412,13 +419,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                     .setRegistrationConfig(registrationConfig);
                 RegistrationDeliverySingleton()
                     .setDeliveryConfig(deliveryConfig);
-              }
-
-              if (isTriggerLocalisation) {
-                final moduleName =
-                    'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
-                triggerLocalization(module: moduleName);
-                isTriggerLocalisation = false;
               }
             }
             RegistrationDeliverySingleton()

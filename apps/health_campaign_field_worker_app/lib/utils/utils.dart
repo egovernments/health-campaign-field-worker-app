@@ -1,7 +1,6 @@
 library app_utils;
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart'
@@ -35,7 +34,6 @@ import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/models/entities/service.dart';
 import 'package:survey_form/survey_form.init.dart' as survey_form_mappers;
 import 'package:sync_service/blocs/sync/sync.dart';
@@ -693,42 +691,24 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
 
 Future<void> triggerLocalizationIfUpdated({
   required BuildContext context,
-  required String moduleKey, // e.g., 'REGISTRATIONFLOW'
+  required String moduleKey, // e.g., 'REGISTRATIONFLOW,DELIVERYFLOW'
   required String projectReferenceId,
   required String locale,
 }) async {
-  final prefs = await SharedPreferences.getInstance();
-  final rawSchemas = prefs.getString('app_config_schemas');
-  if (rawSchemas == null) return;
+  final keys = moduleKey.split(',').map((e) => e.trim()).toList();
 
-  final allSchemas = json.decode(rawSchemas) as Map<String, dynamic>;
-  final schemaEntry = allSchemas[moduleKey] as Map<String, dynamic>?;
+  final moduleNames = keys
+      .map((key) => 'hcm-${key.toLowerCase()}-$projectReferenceId')
+      .toList();
 
-  if (schemaEntry == null) return;
+  final fullModuleString = moduleNames.join(',');
 
-  final currentVersion = schemaEntry['currentVersion'];
-  final previousVersion = schemaEntry['previousVersion'];
-  final schemaData = schemaEntry['data'] as Map<String, dynamic>?;
-
-  if (schemaData == null) return;
-
-  final moduleName =
-      'hcm-${schemaData['name'].toLowerCase()}-$projectReferenceId';
-
-  ///TODO; removing check to check current and previous version will refetch localization every time
-  // if (currentVersion != previousVersion) {
   context
       .read<LocalizationBloc>()
       .add(LocalizationEvent.onRemoteLoadLocalization(
-        module: moduleName,
+        module: fullModuleString,
         tenantId: envConfig.variables.tenantId,
         locale: AppSharedPreferences().getSelectedLocale!,
         path: Constants.localizationApiPath,
       ));
-
-  // Update stored previous version
-  schemaEntry['previousVersion'] = currentVersion;
-  allSchemas[moduleKey] = schemaEntry;
-  await prefs.setString('app_config_schemas', json.encode(allSchemas));
-  // }
 }
