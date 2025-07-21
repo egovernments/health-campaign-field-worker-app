@@ -1,124 +1,244 @@
 # digit_forms_engine
 
-`digit_forms_engine` is a dynamic form rendering engine for Flutter, built on top of the `digit_ui_components` package. It allows you to define flexible, multi-page forms using a JSON schema. The engine renders fields and pages based on configuration, with automatic validation, navigation, and summary generation.
+A dynamic form rendering engine for Flutter, built on top of the `digit_ui_components` package. It allows you to define flexible, multi-page forms using a JSON schema. The engine renders fields and pages based on configuration, with automatic validation, navigation, and summary generation.
+
 
 ---
 
 ## ✨ Features
 
-- JSON-driven multi-page forms
-- Dynamic rendering of widgets: dropdowns, text fields, geolocation, etc.
-- Locality and LatLng field types supported
-- Custom page-level and field-level configurations
-- Validation and conditional logic support
-- Theming via `digit_ui_components`
-- Built-in form state management using `Bloc`
+- **JSON-driven multi-page forms** - Define complex forms using simple JSON schemas
+- **Dynamic widget rendering** - Supports dropdowns, text fields, geolocation, checkboxes, radio buttons, and more
+- **Built-in validation** - Field-level and page-level validation with custom rules
+- **Navigation management** - Automatic page navigation with back/forward support
+- **Form state management** - Powered by BLoC pattern for efficient state handling
+- **Theming support** - Integrates seamlessly with `digit_ui_components` theming
+- **Localization ready** - Built-in support for multi-language forms
+- **Type-safe** - Full type safety with generated models
+- **Memory efficient** - Optimized for large forms with many fields
 
 ---
 
-## Installation
+## 📦 Installation
+
+Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  digit_forms_engine: ^0.0.1-dev
-  ````
+  digit_forms_engine: ^1.0.0
+```
 
-### Install the dependency:
+Then run:
 
-```yaml
+```bash
 flutter pub get
-  ````
+```
 
-### 🧾 Configuration Example
+---
+
+## 🚀 Quick Start
+
+### 1. Define Your Form Schema
 
 ```json
 {
-  "name": "ADDRESS_FLOW",
+  "name": "USER_REGISTRATION",
   "version": 1,
   "pages": {
-    "beneficiaryLocation": {
+    "personalInfo": {
       "type": "object",
-      "label": "Beneficiary Location Screen",
+      "label": "Personal Information",
+      "required": ["name", "email", "dateOfBirth"],
       "properties": {
-        "administrativeArea": {
+        "name": {
           "type": "string",
-          "format": "locality",
-          "label": "Administrative Area *",
-          "value": ""
+          "label": "Full Name",
+          "hint": "Enter your full name",
+          "minLength": 2,
+          "maxLength": 50
         },
-        "latlng": {
+        "email": {
           "type": "string",
-          "format": "latLng",
-          "label": "Lat/Long *"
+          "label": "Email Address",
+          "format": "email",
+          "hint": "Enter your email address"
         },
+        "dateOfBirth": {
+          "type": "string",
+          "format": "date",
+          "label": "Date of Birth",
+          "hint": "Select your date of birth"
+        },
+        "gender": {
+          "type": "string",
+          "label": "Gender",
+          "format": "dropdown",
+          "enums": ["Male", "Female", "Other", "Prefer not to say"]
+        }
+      }
+    },
+    "address": {
+      "type": "object",
+      "label": "Address Information",
+      "properties": {
         "addressLine1": {
           "type": "string",
           "label": "Address Line 1"
         },
-        "addressLine2": {
+        "city": {
           "type": "string",
-          "label": "Address Line 2"
+          "format": "locality",
+          "label": "City"
         },
-        "landmark": {
+        "location": {
           "type": "string",
-          "label": "Land Mark"
-        },
-        "pinCode": {
-          "type": "string",
-          "label": "PostalCode"
+          "format": "latLng",
+          "label": "Location"
         }
       }
     }
   }
 }
-````
-
-### 🛠️ Usage
-
-#### Load a form:
-
-```dart
-final schema = jsonEncode(yourSchemaMap);
-context.read<FormsBloc>().add(FormsEvent.load(schemas: [schema]));
 ```
 
-#### Clear a form:
+### 2. Load and Display the Form
+
 ```dart
-context.read<FormsBloc>().add(
-const FormsEvent.clearForm(schemaKey: 'ADDRESS_FLOW'),
-);
+import 'package:digit_forms_engine/forms_engine.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class MyFormPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => FormsBloc(),
+      child: Scaffold(
+        appBar: AppBar(title: Text('User Registration')),
+        body: BlocBuilder<FormsBloc, FormsState>(
+          builder: (context, state) {
+            // Load the form schema
+            if (state.cachedSchemas.isEmpty) {
+              context.read<FormsBloc>().add(
+                FormsEvent.load(schemas: [yourSchemaJson]),
+              );
+              return Center(child: CircularProgressIndicator());
+            }
+
+            // Get the first page
+            final schema = state.cachedSchemas['USER_REGISTRATION'];
+            final firstPage = schema.pages.keys.first;
+            
+            return FormsRenderPage(
+              pageName: firstPage,
+              currentSchemaKey: 'USER_REGISTRATION',
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
 ```
 
-#### Listen for submission state:
+### 3. Handle Form Submission
+
 ```dart
 BlocListener<FormsBloc, FormsState>(
-listener: (context, formState) {
-if (formState is FormsSubmittedState) {
-final formData = formState.formData;
-if (formData.isEmpty) return;
-
-// Use submitted formData here
-}
-},
-);
+  listener: (context, state) {
+    if (state is FormsSubmittedState) {
+      final formData = state.formData;
+      
+      // Process the submitted form data
+      print('Form submitted: $formData');
+      
+      // Navigate to next screen or show success message
+      Navigator.pushNamed(context, '/success');
+    }
+  },
+  child: YourFormWidget(),
+)
 ```
 
-### 🧩 Schema Concepts
+---
 
-- **`pages`**: A map of page names to their config
-- **`properties`**: A map of field names to their configuration
+## 📚 API Reference
 
-#### Field Types
-- `string`
-- `integer`
-- etc.
+### Core Classes
 
-#### Format Options
-- `dropdown`
-- `locality`
-- `latLng`
-- `text`
-- etc.
+#### `FormsBloc`
+The main BLoC for managing form state and operations.
+
+**Events:**
+- `FormsEvent.load(schemas: List<String>)` - Load form schemas
+- `FormsEvent.submit(schemaKey: String)` - Submit the form
+- `FormsEvent.clearForm(schemaKey: String)` - Reset form to initial state
+- `FormsEvent.updateField(schemaKey: String, key: String, value: dynamic)` - Update field value
+
+**States:**
+- `FormsState` - Default state with cached schemas
+- `FormsSubmittedState` - Emitted when form is submitted
+
+#### `FormsRenderPage`
+The main widget for rendering forms.
+
+**Parameters:**
+- `pageName: String` - Name of the page to render
+- `currentSchemaKey: String` - Key of the schema to use
+- `isSummary: bool` - Whether to show summary view
+- `isEdit: bool` - Whether in edit mode
+- `defaultValues: Map<String, dynamic>?` - Default values for fields
+
+### Field Types
+
+The engine supports various field types through the `type` and `format` properties:
+
+#### Basic Types
+- `string` - Text input
+- `integer` - Number input
+- `boolean` - Checkbox
+
+#### Format Types
+- `dropdown` - Dropdown selection
+- `radio` - Radio button group
+- `date` - Date picker
+- `latLng` - Location picker
+- `locality` - Location search
+- `scanner` - QR/Barcode scanner
+- `dob` - Date of birth picker
+
+### Validation
+
+Fields support various validation rules:
+
+```json
+{
+  "type": "string",
+  "format": "text",
+  "label": "Name",
+  "validations": [
+    { "type": "required", "value": true, "message": "Name is required" },
+    { "type": "minLength", "value": 2, "message": "Name too short" },
+    { "type": "maxLength", "value": 50 }
+  ]
+}
+```
+
+---
+
+
+### Theming
+
+The package integrates with `digit_ui_components` theming:
+
+```dart
+MaterialApp(
+  theme: DigitTheme.light,
+  home: YourFormPage(),
+)
+```
+
+
 
 
 
