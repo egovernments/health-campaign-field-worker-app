@@ -378,13 +378,16 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
           ? quantityFromCondition.ceil() // Convert double to int by rounding up
           : null;
 
-      final updatedVariant = roundedQuantity != null
-          ? firstCriteria.productVariants?.first
-              .copyWith(quantity: roundedQuantity)
-          : firstCriteria.productVariants?.first;
+      final updatedVariants = roundedQuantity != null
+          ? firstCriteria.productVariants
+              ?.map((variant) => variant.copyWith(quantity: roundedQuantity))
+              .toList()
+          : firstCriteria.productVariants;
 
       deliveryDoseCriteria = firstCriteria.copyWith(
-        productVariants: updatedVariant != null ? [updatedVariant] : null,
+        productVariants: updatedVariants != null && updatedVariants.isNotEmpty
+            ? updatedVariants
+            : null,
       );
     } else {
       deliveryDoseCriteria = null;
@@ -666,7 +669,9 @@ class RegistrationDeliverySingleton {
   int? get beneficiaryIdBatchSize => _beneficiaryIdBatchSize;
 
   Map<String, TemplateConfig>? get templateConfigs => _templateConfigs;
+
   String? get regisrationConfig => _registrationConfig;
+
   String? get deliveryConfig => _deliveryConfig;
 }
 
