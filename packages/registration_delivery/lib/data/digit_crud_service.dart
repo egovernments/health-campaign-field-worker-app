@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
-class DigitCrudService extends RegistrationService {
+class DigitCrudService extends CrudService {
   final BuildContext context;
 
   DigitCrudService(

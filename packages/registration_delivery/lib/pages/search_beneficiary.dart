@@ -71,9 +71,7 @@ class _SearchBeneficiaryPageState
     // Initialize the BlocWrapper with instances of SearchHouseholdsBloc, SearchMemberBloc, and ProximitySearchBloc
 
     Future.microtask(() {
-      context
-          .read<RegistrationBloc>()
-          .add(const RegistrationEvent.initialize());
+      context.read<CrudBloc>().add(const CrudEventInitialize());
     });
     blocWrapper = context.read<RegistrationWrapperBloc>();
     context.read<LocationBloc>().add(const LoadLocationEvent());
