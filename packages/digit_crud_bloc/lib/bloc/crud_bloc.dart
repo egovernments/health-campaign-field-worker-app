@@ -9,128 +9,125 @@ import '../service/crud_service.dart';
 
 part 'crud_bloc.freezed.dart';
 
-typedef RegistrationEmitter = Emitter<RegistrationState>;
+/// CrudBloc handles CRUD operations for dynamic entities using CrudService.
+///
+/// Events:
+///   - initialize: Initializes the service.
+///   - search: Searches entities with filters.
+///   - create: Creates new entities.
+///   - update: Updates existing entities.
+///   - delete: Deletes entities.
+///
+/// States:
+///   - initial: Initial state.
+///   - loading: Operation in progress.
+///   - loaded: Data loaded successfully.
+///   - persisted: Data persisted (created/updated/deleted).
+///   - error: Operation failed.
 
-class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
-  final RegistrationService service;
+typedef CrudEmitter = Emitter<CrudState>;
 
-  RegistrationBloc({
-    required this.service,
-  }) : super(const RegistrationState.initial()) {
-    on<RegistrationEventInitialize>(_handleInitialize);
-    on<RegistrationEventSearch>(_handleSearch);
-    on<RegistrationEventCreate>(_handleCreate);
-    on<RegistrationEventDelete>(_handleDelete);
-    on<RegistrationEventUpdate>(_handleUpdate);
+class CrudBloc extends Bloc<CrudEvent, CrudState> {
+  final CrudService service;
+
+  CrudBloc({required this.service}) : super(const CrudState.initial()) {
+    on<CrudEventInitialize>(_onInitialize);
+    on<CrudEventSearch>(_onSearch);
+    on<CrudEventCreate>(_onCreate);
+    on<CrudEventUpdate>(_onUpdate);
+    on<CrudEventDelete>(_onDelete);
   }
 
-  FutureOr<void> _handleInitialize(
-    RegistrationEventInitialize event,
-    RegistrationEmitter emit,
+  FutureOr<void> _onInitialize(
+    CrudEventInitialize event,
+    CrudEmitter emit,
   ) async {
-    service.init(); // Call your init logic here
+    service.init();
+    emit(const CrudState.initial());
   }
 
-  /// Handles the search event for households
-  FutureOr<void> _handleSearch(
-    RegistrationEventSearch event,
-    RegistrationEmitter emit,
+  FutureOr<void> _onSearch(
+    CrudEventSearch event,
+    CrudEmitter emit,
   ) async {
-    emit(const RegistrationState.loading());
-
+    emit(const CrudState.loading());
     if (event.searchParams.filters.isEmpty) {
-      emit(
-          const RegistrationState.error('Search failed: No filters provided.'));
+      emit(const CrudState.error('Search failed: No filters provided.'));
       return;
     }
-
     try {
       final (results, totalCount) =
-
-          //// TODO: NEED TO MAKE SEARCH GENERIC
-          await service.searchHouseholds(query: event.searchParams);
-      emit(RegistrationState.loaded(
+          await service.searchEntities(query: event.searchParams);
+      emit(CrudState.loaded(
         results: results,
-        totalCount: totalCount > -1
-            ? totalCount
-            : null, // or just totalCount if it's already nullable
+        totalCount: totalCount > -1 ? totalCount : null,
       ));
     } catch (e) {
-      emit(RegistrationState.error('Search failed: ${e.toString()}'));
+      emit(CrudState.error('Search failed: ${e.toString()}'));
     }
   }
 
-  /// Handles the create event for entities (like households, individuals, etc.)
-  FutureOr<void> _handleCreate(
-    RegistrationEventCreate event,
-    RegistrationEmitter emit,
+  FutureOr<void> _onCreate(
+    CrudEventCreate event,
+    CrudEmitter emit,
   ) async {
-    emit(const RegistrationState.loading());
+    emit(const CrudState.loading());
     try {
-      await service.registerEntities(event.entities);
-      emit(RegistrationState.persisted(event.entities));
+      await service.createEntities(event.entities);
+      emit(CrudState.persisted(event.entities));
     } catch (e) {
-      emit(RegistrationState.error('Create failed: ${e.toString()}'));
+      emit(CrudState.error('Create failed: ${e.toString()}'));
     }
   }
 
-  /// Handles the update event for entities (like households, individuals, etc.)
-  FutureOr<void> _handleUpdate(
-    RegistrationEventUpdate event,
-    RegistrationEmitter emit,
+  FutureOr<void> _onUpdate(
+    CrudEventUpdate event,
+    CrudEmitter emit,
   ) async {
-    emit(const RegistrationState.loading());
+    emit(const CrudState.loading());
     try {
       await service.updateEntities(event.entities);
-      emit(RegistrationState.persisted(event.entities));
+      emit(CrudState.persisted(event.entities));
     } catch (e) {
-      emit(RegistrationState.error('Update failed: ${e.toString()}'));
+      emit(CrudState.error('Update failed: ${e.toString()}'));
     }
   }
 
-  /// Handles the delete event for a household and re-triggers search
-  FutureOr<void> _handleDelete(
-    RegistrationEventDelete event,
-    RegistrationEmitter emit,
+  FutureOr<void> _onDelete(
+    CrudEventDelete event,
+    CrudEmitter emit,
   ) async {
-    emit(const RegistrationState.loading());
+    emit(const CrudState.loading());
     try {
       await service.deleteEntities(event.entities);
-      emit(RegistrationState.persisted(event.entities));
+      emit(CrudState.persisted(event.entities));
     } catch (e) {
-      emit(RegistrationState.error('Delete failed: ${e.toString()}'));
+      emit(CrudState.error('Delete failed: ${e.toString()}'));
     }
   }
 }
 
 @freezed
-class RegistrationEvent with _$RegistrationEvent {
-  const factory RegistrationEvent.initialize() = RegistrationEventInitialize;
-  const factory RegistrationEvent.search(
-      final GlobalSearchParameters searchParams) = RegistrationEventSearch;
-  const factory RegistrationEvent.create({
-    required List<EntityModel> entities,
-  }) = RegistrationEventCreate;
-  const factory RegistrationEvent.update({
-    required List<EntityModel> entities,
-  }) = RegistrationEventUpdate;
-  const factory RegistrationEvent.delete({
-    required List<EntityModel> entities,
-  }) = RegistrationEventDelete;
+class CrudEvent with _$CrudEvent {
+  const factory CrudEvent.initialize() = CrudEventInitialize;
+  const factory CrudEvent.search(GlobalSearchParameters searchParams) =
+      CrudEventSearch;
+  const factory CrudEvent.create({required List<EntityModel> entities}) =
+      CrudEventCreate;
+  const factory CrudEvent.update({required List<EntityModel> entities}) =
+      CrudEventUpdate;
+  const factory CrudEvent.delete({required List<EntityModel> entities}) =
+      CrudEventDelete;
 }
 
 @freezed
-class RegistrationState with _$RegistrationState {
-  const factory RegistrationState.initial() = RegistrationStateInitial;
-  const factory RegistrationState.loading() = RegistrationStateLoading;
-
-  /// Updated: totalCount is optional, returned only when requested (e.g., when primaryModel is used)
-  const factory RegistrationState.loaded({
-    required Map<String, List<EntityModel>> results,
-    int? totalCount,
-  }) = RegistrationStateLoaded;
-  const factory RegistrationState.persisted(List<EntityModel> entities) =
-      RegistrationStatePersisted;
-  const factory RegistrationState.error(String message) =
-      RegistrationStateError;
+class CrudState with _$CrudState {
+  const factory CrudState.initial() = CrudStateInitial;
+  const factory CrudState.loading() = CrudStateLoading;
+  const factory CrudState.loaded(
+      {required Map<String, List<EntityModel>> results,
+      int? totalCount}) = CrudStateLoaded;
+  const factory CrudState.persisted(List<EntityModel> entities) =
+      CrudStatePersisted;
+  const factory CrudState.error(String message) = CrudStateError;
 }

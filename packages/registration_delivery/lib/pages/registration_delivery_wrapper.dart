@@ -27,8 +27,8 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
     final serviceDefinition = context.repository<ServiceDefinitionModel,
         ServiceDefinitionSearchModel>(context);
 
-    CRUDBlocSingleton().setData(
-      registrationService: DigitCrudService(
+    CrudBlocSingleton().setData(
+      crudService: DigitCrudService(
         context: context,
         relationshipMap: [
           const RelationshipMapping(
@@ -138,15 +138,15 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) {
-              return RegistrationBloc(
-                service: CRUDBlocSingleton().registrationService!,
+              return CrudBloc(
+                service: CrudBlocSingleton().crudService,
               );
             },
           ),
           BlocProvider(
             create: (context) {
               return RegistrationWrapperBloc(
-                  globalRegistrationBloc: context.read<RegistrationBloc>());
+                  globalRegistrationBloc: context.read<CrudBloc>());
             },
           ),
           BlocProvider(
