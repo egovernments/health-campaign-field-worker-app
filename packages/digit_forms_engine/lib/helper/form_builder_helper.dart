@@ -108,13 +108,8 @@ int? parseIntValue(dynamic value) {
 
 bool? parseBoolValue(dynamic value) {
   if (value == null) return null;
-  if (value is bool) return value;
-  if (value is String)
-    return value.toLowerCase() == 'true'
-        ? true
-        : value.toLowerCase() == 'false'
-            ? false
-            : null;
+  if (value is bool && value == true) return value;
+  if (value is String) return value.toLowerCase() == 'true' ? true : null;
   return null;
 }
 
