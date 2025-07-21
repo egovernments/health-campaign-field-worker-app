@@ -93,20 +93,19 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
         debugPrint('error in other modules localization $error');
         emit(state.copyWith(loading: false, retryModule: allModules.join(',')));
       }
-
-      final List codes = event.locale.split('_');
-      await _loadLocale(codes);
     } catch (error) {
       rethrow;
     } finally {
+      final List codes = event.locale.split('_');
+      await _loadLocale(codes);
       emit(state.copyWith(loading: false, retryModule: null));
     }
   }
 
   FutureOr<void> _onRemoteLoadLocalization(
-      OnRemoteLoadLocalizationEvent event,
-      LocalizationEmitter emit,
-      ) async {
+    OnRemoteLoadLocalizationEvent event,
+    LocalizationEmitter emit,
+  ) async {
     emit(state.copyWith(loading: true));
 
     try {
@@ -115,14 +114,14 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
       try {
         var localizationList;
 
-          var results = await localizationRepository.loadLocalization(
-            path: event.path,
-            locale: event.locale,
-            module: allModules.join(','),
-            tenantId: event.tenantId,
-          );
-          localizationList = await LocalizationLocalRepository().create(results, sql);
-
+        var results = await localizationRepository.loadLocalization(
+          path: event.path,
+          locale: event.locale,
+          module: allModules.join(','),
+          tenantId: event.tenantId,
+        );
+        localizationList =
+            await LocalizationLocalRepository().create(results, sql);
       } catch (error) {
         debugPrint('error in fetching modules localization $error');
         emit(state.copyWith(loading: false, retryModule: allModules.join(',')));
