@@ -1,3 +1,7 @@
+## 1.1.0-dev.2-console
+
+* Updated formula parser utils function to capture error and values
+
 ## 1.1.0-dev.1-console
 
 * Revamped with configuration based flow
