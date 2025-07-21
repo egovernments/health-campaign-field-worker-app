@@ -1,3 +1,7 @@
+## 1.1.3
+
+* Updated user_action entity and table with beneficiaryTag and resourceTag fields
+
 ## 1.2.0-dev.1-console
 
 * Renamed referenceId to referenceID in project model
