@@ -212,39 +212,80 @@ class FormEntityMapper {
           'Missing listMappings config for $listModelName in $parentModel');
     }
 
+    // If listSource is defined, use it to fetch a list and map each item
+    final listSourcePath = listConfig['listSource'] as String?;
+    if (listSourcePath != null) {
+      final listData = getValueFromMapping(
+          listSourcePath, formValues, listModelName, context);
+      if (listData is! List) return [];
+      final mappings = listConfig['mappings'] as Map<String, dynamic>;
+      final items = <Map<String, dynamic>>[];
+      for (final item in listData) {
+        final newItem = <String, dynamic>{};
+        for (final entry in mappings.entries) {
+          final targetKey = entry.key;
+          final sourcePath = entry.value;
+          if (sourcePath is String) {
+            // If the mapping path starts with the listSourcePath + '.', resolve relative to the item
+            if (sourcePath.startsWith(listSourcePath + '.')) {
+              final relativePath = sourcePath
+                  .substring(listSourcePath.length + 1); // skip the dot
+              newItem[targetKey] = getValueFromMapping(
+                  relativePath, item, listModelName, context);
+            } else {
+              newItem[targetKey] =
+                  getValueFromMapping(sourcePath, item, listModelName, context);
+            }
+          }
+          if (targetKey == 'additionalFields' &&
+              sourcePath is Map<String, dynamic>) {
+            newItem[targetKey] = _mapAdditionalFields(
+                sourcePath, formValues, listModelName, context);
+            continue;
+          }
+          if (sourcePath is Map<String, dynamic>) {
+            newItem[targetKey] =
+                _mapNestedObject(sourcePath, formValues, targetKey, context);
+            continue;
+          }
+          if (sourcePath is String && sourcePath.startsWith('list:')) {
+            newItem[targetKey] = _mapListModel(
+                sourcePath, formValues, listModelName, listConfig, context);
+            continue;
+          }
+        }
+        items.add(newItem);
+      }
+      return items;
+    }
+
+    // Fallback to current logic (single item mapping)
     final mappings = listConfig['mappings'] as Map<String, dynamic>;
-
     final newItem = <String, dynamic>{};
-
     for (final entry in mappings.entries) {
       final targetKey = entry.key;
       final sourcePath = entry.value;
-
       if (targetKey == 'additionalFields' &&
           sourcePath is Map<String, dynamic>) {
         newItem[targetKey] = _mapAdditionalFields(
             sourcePath, formValues, listModelName, context);
         continue;
       }
-
       if (sourcePath is Map<String, dynamic>) {
         newItem[targetKey] =
             _mapNestedObject(sourcePath, formValues, targetKey, context);
         continue;
       }
-
       if (sourcePath is String && sourcePath.startsWith('list:')) {
         newItem[targetKey] = _mapListModel(
             sourcePath, formValues, listModelName, listConfig, context);
         continue;
       }
-
       final value =
           getValueFromMapping(sourcePath, formValues, listModelName, context);
       newItem[targetKey] =
           value is DateTime ? value.millisecondsSinceEpoch : value;
     }
-
     return newItem.isNotEmpty ? [newItem] : [];
   }
 

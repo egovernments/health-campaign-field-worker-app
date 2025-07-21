@@ -94,7 +94,8 @@ final jsonConfig = {
               "identifierId": "beneficiaryDetails.identifiers[1]",
               "boundaryCode": "__context:selectedBoundaryCode",
               "nonRecoverableError": "error.nonRecoverable",
-              "individualClientReferenceId": "__ref:IndividualModel.clientReferenceId",
+              "individualClientReferenceId":
+                  "__ref:IndividualModel.clientReferenceId",
               "clientReferenceId": "__generate:uuid",
               "tenantId": "__context:tenantId",
               "rowVersion": "meta.rowVersion",
@@ -190,9 +191,10 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "projectBeneficiaryId": "taskDetails.projectBeneficiaryId",
           "projectBeneficiaryClientReferenceId":
-          "__context:projectBeneficiaryModel.clientReferenceId",
+              "__context:projectBeneficiaryModel.clientReferenceId",
           "createdBy": "__context:userId",
-          "status": "__value:ADMINISTRATION_SUCCESS",  // todo: need to update later for multiround campaign
+          "status":
+              "__value:ADMINISTRATION_SUCCESS", // todo: need to update later for multiround campaign
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "resources": "list:TaskResourceModel",
@@ -239,12 +241,14 @@ final jsonConfig = {
         },
         "listMappings": {
           "TaskResourceModel": {
+            "listSource": "DeliveryDetails.resourceCard",
             "mappings": {
               "id": "id",
               "clientReferenceId": "__generate:uuid",
               "taskId": "taskId",
-              "productVariantId": "DeliveryDetails.resourceCard[0].resourceDelivered.productId",
-              "quantity": "DeliveryDetails.resourceCard[0].quantityDistributed",
+              "productVariantId":
+                  "DeliveryDetails.resourceCard.resourceDelivered.productId",
+              "quantity": "DeliveryDetails.resourceCard.quantityDistributed",
               "isDelivered": "__value:true",
               "deliveryComment": "DeliveryDetails.deliveryComment",
               "nonRecoverableError": "error.nonRecoverable",
