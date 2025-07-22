@@ -3,6 +3,7 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -109,7 +110,7 @@ class ResourceBeneficiaryCardState
             (widget.cardIndex == widget.totalItems - 1 && widget.totalItems > 1)
                 ? DigitButton(
                     onPressed: () async {
-                      final submit = await showDialog<bool>(
+                      final submit = await showCustomPopup(
                         context: context,
                         builder: (ctx) => Popup(
                           title: localizations.translate(
