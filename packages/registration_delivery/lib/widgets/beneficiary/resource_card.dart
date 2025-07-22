@@ -96,9 +96,21 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                               color: theme.colorTheme.primary.primary2,
                             ),
                           ),
-                          ..._controllers.map((e) => ResourceBeneficiaryCard(
+                          const SizedBox(
+                            height: spacer2,
+                          ),
+                          Column(
+                            children:
+                                List.generate(_controllers.length * 2 - 1, (i) {
+                              if (i.isOdd) {
+                                return const SizedBox(
+                                    height: 16); // Middle spacing
+                              }
+                              final index = i ~/ 2;
+                              final controller = _controllers[index];
+                              return ResourceBeneficiaryCard(
                                 form: form,
-                                cardIndex: _controllers.indexOf(e),
+                                cardIndex: index,
                                 totalItems: _controllers.length,
                                 onDelete: (index) {
                                   (form.control(_resourceDeliveredKey)
@@ -110,7 +122,12 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                                   _controllers.removeAt(index);
                                   setState(() {});
                                 },
-                              )),
+                              );
+                            }),
+                          ),
+                          const SizedBox(
+                            height: spacer4,
+                          ),
                           Center(
                             child: DigitButton(
                               label: localizations.translate(
