@@ -777,7 +777,6 @@ class _SearchBeneficiaryPageState
                             } else if (availableIdCount >=
                                 RegistrationDeliverySingleton()
                                     .beneficiaryIdMinCount!) {
-                              FocusManager.instance.primaryFocus?.unfocus();
                               context.read<FormsBloc>().add(
                                   const FormsEvent.clearForm(
                                       schemaKey: 'REGISTRATIONFLOW'));
@@ -823,6 +822,7 @@ class _SearchBeneficiaryPageState
                                 ));
                                 searchController.clear();
                               }
+                              FocusManager.instance.primaryFocus?.unfocus();
                             }
                             if (availableIdCount <= 0) {
                               WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -831,8 +831,6 @@ class _SearchBeneficiaryPageState
                                     showSkip: true,
                                     localizations: localizations,
                                     shouldProceedFurther: (bool skip) {
-                                      FocusManager.instance.primaryFocus
-                                          ?.unfocus();
                                       context.read<FormsBloc>().add(
                                           const FormsEvent.clearForm(
                                               schemaKey: 'REGISTRATIONFLOW'));
@@ -875,6 +873,7 @@ class _SearchBeneficiaryPageState
                                         searchController.clear();
                                       }
                                     });
+                                FocusManager.instance.primaryFocus?.unfocus();
                               });
                             }
                           },
@@ -1258,7 +1257,6 @@ class _SearchBeneficiaryPageState
           isDisabled: isTextShort,
           onPressed: () {
             if (template?.properties?['searchByID']?.hidden == true) {
-              FocusManager.instance.primaryFocus?.unfocus();
               context.read<FormsBloc>().add(
                   const FormsEvent.clearForm(schemaKey: 'REGISTRATIONFLOW'));
 
@@ -1292,6 +1290,7 @@ class _SearchBeneficiaryPageState
                   },
                 ));
                 searchController.clear();
+                FocusManager.instance.primaryFocus?.unfocus();
               }
             } else {
               fetchBeneficiaryIdCount();
