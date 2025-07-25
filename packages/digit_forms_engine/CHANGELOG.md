@@ -1,7 +1,6 @@
-## 0.0.1
+## 0.0.2-dev
 
 ### Added
-- Initial stable release of digit_forms_engine
 - Dynamic form rendering engine based on JSON schema
 - Page configuration with map-based pages (keyed by page name)
 - Support for multiple field types: `text`, `dropdown`, `latLng`, `locality`, etc.

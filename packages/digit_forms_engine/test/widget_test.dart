@@ -4,7 +4,6 @@ import 'package:digit_forms_engine/pages/forms_render.dart';
 import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -30,12 +29,7 @@ class TestFormLocalizationDelegate
 
 Widget wrapWithMaterialApp(Widget child) {
   return MaterialApp(
-    localizationsDelegates: const [
-      TestFormLocalizationDelegate(),
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-      GlobalCupertinoLocalizations.delegate,
-    ],
+    localizationsDelegates: const [TestFormLocalizationDelegate()],
     supportedLocales: const [Locale('en', 'US')],
     home: child,
   );

@@ -1,4 +1,4 @@
-## 0.0.1
+## 0.0.2-dev
 
 - Major refactor for maintainability and clarity. No logic changes.
 - All BLoC, service, and singleton naming is now generic (CrudBloc, CrudService, etc.).

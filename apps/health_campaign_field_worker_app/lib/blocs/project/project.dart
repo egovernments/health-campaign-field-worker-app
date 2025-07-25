@@ -727,7 +727,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     emit(state.copyWith(
-      projects: [],
       selectedProject: event.model,
       loading: false,
       syncError: null,

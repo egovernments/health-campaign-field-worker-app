@@ -1,6 +1,6 @@
 name: digit_crud_bloc
 description: This package provides the core logic and services for managing entity-based data flows in a modular and extensible way. It supports dynamic entity mapping, relationship traversal, nested field resolution, and repository-driven CRUD operations.
-version: 0.0.1-dev
+version: 0.0.2-dev
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/digit_crud_bloc
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 

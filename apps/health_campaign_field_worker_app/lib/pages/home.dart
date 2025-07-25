@@ -516,7 +516,8 @@ class _HomePageState extends LocalizedState<HomePage> {
               label: i18.home.syncDataLabel,
               onPressed: () async {
                 if (envConfig.variables.envType == EnvType.qa ||
-                    envConfig.variables.envType == EnvType.dev) {
+                    envConfig.variables.envType == EnvType.dev ||
+                    envConfig.variables.envType == EnvType.uat) {
                   if (context.mounted) attemptSyncUp(context);
                 } else {
                   if (snapshot.data?['enablesManualSync'] == true) {
