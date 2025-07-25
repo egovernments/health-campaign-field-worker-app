@@ -8,4 +8,7 @@ class Localization extends Table {
   TextColumn get code => text().withLength(min: 1, max: 255)();
   TextColumn get message => text().withLength(min: 1, max: 500)();
   TextColumn get module => text().withLength(min: 1, max: 255)();
+
+  @override
+  Set<Column> get primaryKey => { locale, code, module};
 }

@@ -6,6 +6,7 @@ import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/router/dashboard_router.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
+import 'package:digit_forms_engine/router/forms_router.dart';
 import 'package:digit_scanner/router/digit_scanner_router.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,6 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:survey_form/router/survey_form_router.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:transit_post/router/transit_post_router.dart';
-import 'package:transit_post/router/transit_post_router.gm.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
@@ -26,12 +26,12 @@ import '../pages/boundary_selection.dart';
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
+import '../pages/non_mobile_user/non_mobile_user_list.dart';
 import '../pages/peer_to_peer/data_receiver.dart';
 import '../pages/peer_to_peer/data_share_home.dart';
 import '../pages/peer_to_peer/data_transfer.dart';
 import '../pages/peer_to_peer/devices_list.dart';
 import '../pages/peer_to_peer/peer_to_peer_wrapper.dart';
-import '../pages/non_mobile_user/non_mobile_user_list.dart';
 import '../pages/profile.dart';
 import '../pages/project_facility_selection.dart';
 import '../pages/project_selection.dart';
@@ -55,6 +55,7 @@ part 'app_router.gr.dart';
     SurveyFormRoute,
     ComplaintsRoute,
     TransitPostRoute,
+    FormsRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -73,6 +74,7 @@ class AppRouter extends _$AppRouter {
           initial: true,
         ),
         AutoRoute(page: LoginRoute.page, path: 'login'),
+        AutoRoute(page: DigitScannerRoute.page, path: 'scanner'),
       ],
     ),
     AutoRoute(
@@ -129,10 +131,6 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: ProjectFacilitySelectionRoute.page,
           path: 'select-project-facilities',
-        ),
-        AutoRoute(
-          page: FacilitySelectionRoute.page,
-          path: 'select-facilities',
         ),
 
         /// Project Selection
@@ -212,6 +210,9 @@ class AppRouter extends _$AppRouter {
 
         // Referral Reconciliation Route
         ...ReferralReconciliationRoute().routes,
+
+        // Forms Route
+        ...FormsRoute().routes,
 
         ...TransitPostRoute().routes,
 

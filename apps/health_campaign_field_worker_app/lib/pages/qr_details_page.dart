@@ -19,6 +19,7 @@ import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
+import '../widgets/no_result_card/no_result_card.dart';
 
 @RoutePage()
 class UserQRDetailsPage extends LocalizedStatefulWidget {
@@ -193,92 +194,108 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
       return attendanceState.maybeWhen(
           orElse: () => const SizedBox.shrink(),
           registerLoaded: (registers, offset, limit) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 1.25,
-                  height: MediaQuery.of(context).size.width / 1.25,
-                  child: Padding(
-                    padding: const EdgeInsets.all(spacer2),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(spacer1)),
-                          border: Border.all(
-                            color: theme.colorTheme.primary.primary1,
-                            width: 2,
-                          )),
-                      child: QrImageView(
-                        data: DataMapEncryptor().encryptWithRandomKey(
-                            ScannedIndividualDataModel(
-                                    name: registers.first.individualList!.first
-                                        .name!.givenName!,
-                                    individualId: registers.first
-                                        .individualList!.first.individualId,
-                                    age: getAge(registers.first.individualList!
-                                        .first.dateOfBirth),
-                                    locality: localizations.translate(registers
-                                            .first
-                                            .individualList
-                                            ?.first
-                                            .address
-                                            ?.first
-                                            .locality
-                                            ?.code ??
-                                        ''),
-                                    qrCreatedTime:
-                                        DateTime.now().millisecondsSinceEpoch)
-                                .toMap()),
-                        version: QrVersions.auto,
-                        size: MediaQuery.of(context).size.width / 1.25,
+            return registers.isNotEmpty
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 1.25,
+                        height: MediaQuery.of(context).size.width / 1.25,
+                        child: Padding(
+                          padding: const EdgeInsets.all(spacer2),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(spacer1)),
+                                border: Border.all(
+                                  color: theme.colorTheme.primary.primary1,
+                                  width: 2,
+                                )),
+                            child: QrImageView(
+                              data: DataMapEncryptor().encryptWithRandomKey(
+                                  ScannedIndividualDataModel(
+                                          name: registers.first.individualList!
+                                              .first.name!.givenName!,
+                                          individualId: registers
+                                              .first
+                                              .individualList!
+                                              .first
+                                              .individualId,
+                                          age: getAge(registers
+                                              .first
+                                              .individualList!
+                                              .first
+                                              .dateOfBirth),
+                                          locality: localizations.translate(
+                                              registers
+                                                      .first
+                                                      .individualList
+                                                      ?.first
+                                                      .address
+                                                      ?.first
+                                                      .locality
+                                                      ?.code ??
+                                                  ''),
+                                          qrCreatedTime: DateTime.now()
+                                              .millisecondsSinceEpoch)
+                                      .toMap()),
+                              version: QrVersions.auto,
+                              size: MediaQuery.of(context).size.width / 1.25,
+                            ),
+                          ),
+                        ),
                       ),
+                      const SizedBox(height: spacer4),
+                      Center(
+                        child: Text(
+                          registers
+                              .first.individualList!.first.name!.givenName!,
+                          style: DigitTheme
+                              .instance.mobileTheme.textTheme.headlineMedium
+                              ?.apply(
+                            color: DigitTheme.instance.colorScheme.shadow,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: spacer2,
+                      ),
+                      Center(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width / 1.32,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: spacer1, vertical: spacer1),
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(
+                                Radius.circular(spacer1)),
+                            border: Border(
+                                left: BorderSide(
+                                    color: theme.colorTheme.generic.divider),
+                                right: BorderSide(
+                                    color: theme.colorTheme.generic.divider),
+                                bottom: BorderSide(
+                                    color: theme.colorTheme.generic.divider),
+                                top: BorderSide(
+                                    color: theme.colorTheme.generic.divider)),
+                            color: theme.colorTheme.paper.secondary,
+                          ),
+                          child: Center(
+                            child: Text(
+                                registers
+                                    .first.individualList!.first.individualId!,
+                                style: textTheme.headingXS.copyWith(
+                                    color: theme.colorTheme.primary.primary2)),
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                : NoResultCard(
+                    align: Alignment.center,
+                    label: localizations.translate(
+                      i18.common.noResultsFound,
                     ),
-                  ),
-                ),
-                const SizedBox(height: spacer4),
-                Center(
-                  child: Text(
-                    registers.first.individualList!.first.name!.givenName!,
-                    style: DigitTheme
-                        .instance.mobileTheme.textTheme.headlineMedium
-                        ?.apply(
-                      color: DigitTheme.instance.colorScheme.shadow,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: spacer2,
-                ),
-                Center(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width / 1.32,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: spacer1, vertical: spacer1),
-                    decoration: BoxDecoration(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(spacer1)),
-                      border: Border(
-                          left: BorderSide(
-                              color: theme.colorTheme.generic.divider),
-                          right: BorderSide(
-                              color: theme.colorTheme.generic.divider),
-                          bottom: BorderSide(
-                              color: theme.colorTheme.generic.divider),
-                          top: BorderSide(
-                              color: theme.colorTheme.generic.divider)),
-                      color: theme.colorTheme.paper.secondary,
-                    ),
-                    child: Center(
-                      child: Text(
-                          registers.first.individualList!.first.individualId!,
-                          style: textTheme.headingXS.copyWith(
-                              color: theme.colorTheme.primary.primary2)),
-                    ),
-                  ),
-                )
-              ],
-            );
+                  );
           });
     });
   }

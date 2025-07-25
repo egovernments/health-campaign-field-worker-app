@@ -44,7 +44,10 @@ class MdmsModuleDetailModel with _$MdmsModuleDetailModel {
 
 @freezed
 class MdmsMasterDetailModel with _$MdmsMasterDetailModel {
-  const factory MdmsMasterDetailModel(String name) = _MdmsMasterDetailModel;
+  const factory MdmsMasterDetailModel(
+      String name, {
+        String? filter,
+      }) = _MdmsMasterDetailModel;
 
   factory MdmsMasterDetailModel.fromJson(Map<String, dynamic> json) =>
       _$MdmsMasterDetailModelFromJson(json);

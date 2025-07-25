@@ -26,9 +26,7 @@ class AppLocalizations {
     final listOfLocalizations =
         await LocalizationLocalRepository().returnLocalizationFromSQL(sql);
 
-    if (listOfLocalizations.isNotEmpty) {
-      _localizedStrings.clear();
-    }
+    _localizedStrings.clear();
 
     _localizedStrings.addAll(listOfLocalizations);
 

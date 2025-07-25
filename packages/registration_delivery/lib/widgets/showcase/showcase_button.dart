@@ -69,34 +69,6 @@ class ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
         return searchBeneficiariesShowcaseData.showcaseData.map(
           (e) => e.showcaseKey,
         );
-      case HouseholdLocationRoute.name:
-        return (widget.isCommunity)
-            ? clfLocationShowCaseData.showcaseData.map(
-                (e) => e.showcaseKey,
-              )
-            : householdLocationShowcaseData.showcaseData.map(
-                (e) => e.showcaseKey,
-              );
-      case HouseHoldDetailsRoute.name:
-        return (widget.isCommunity)
-            ? clfDetailsShowcaseData.showcaseData.map(
-                (e) => e.showcaseKey,
-              )
-            : householdDetailsShowcaseData.showcaseData.map(
-                (e) => e.showcaseKey,
-              );
-      case IndividualDetailsRoute.name:
-        return individualDetailsShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
-      case HouseholdOverviewRoute.name:
-        return householdOverviewShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
-      case DeliverInterventionRoute.name:
-        return deliverInterventionShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
       default:
         return null;
     }

@@ -84,11 +84,13 @@ class LocalizationLocalRepository {
       required String locale,
       required String module}) async {
     return retryLocalCallOperation(() async {
+      final moduleList = module.split(',').map((e) => e.trim()).toList();
+
       final query = sql.select(sql.localization).join([])
         ..where(
-          buildOr([
+          buildAnd([
             sql.localization.locale.equals(locale),
-            sql.localization.module.contains(module),
+            sql.localization.module.isIn(moduleList),
           ]),
         );
 
@@ -115,7 +117,7 @@ class LocalizationLocalRepository {
     if (result.isEmpty) return;
     return retryLocalCallOperation(() async {
       return sql.batch((batch) {
-        batch.insertAll(sql.localization, result);
+        batch.insertAllOnConflictUpdate(sql.localization, result);
       });
     });
   }

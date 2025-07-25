@@ -80,7 +80,6 @@ class AttendanceRegisterModel extends EntityModel
   final Map<String, dynamic>? additionalDetails;
   final int? completedDays;
   final List<Map<DateTime, bool>>? attendanceLog;
-  final String? tag;
 
   AttendanceRegisterModel({
     required this.id,
@@ -101,7 +100,6 @@ class AttendanceRegisterModel extends EntityModel
     this.completedDays = 0,
     this.attendanceLog = const [],
     this.additionalDetails,
-    this.tag,
     super.auditDetails,
     super.clientAuditDetails,
     super.isDeleted = false,

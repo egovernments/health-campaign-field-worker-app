@@ -1,3 +1,8 @@
+## 1.0.5+2
+
+* Updated Readme
+* Modified unwanted field from Register Model
+
 ## 1.0.5+1
 
 * Accommodated single sessions for registers

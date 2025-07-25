@@ -21,6 +21,9 @@ mixin _$LocalizationEvent {
     required TResult Function(
             String module, String tenantId, String locale, String path)
         onLoadLocalization,
+    required TResult Function(
+            String module, String tenantId, String locale, String path)
+        onRemoteLoadLocalization,
     required TResult Function(int index, String code) onUpdateLocalizationIndex,
   }) =>
       throw _privateConstructorUsedError;
@@ -29,6 +32,9 @@ mixin _$LocalizationEvent {
     TResult? Function(
             String module, String tenantId, String locale, String path)?
         onLoadLocalization,
+    TResult? Function(
+            String module, String tenantId, String locale, String path)?
+        onRemoteLoadLocalization,
     TResult? Function(int index, String code)? onUpdateLocalizationIndex,
   }) =>
       throw _privateConstructorUsedError;
@@ -37,6 +43,9 @@ mixin _$LocalizationEvent {
     TResult Function(
             String module, String tenantId, String locale, String path)?
         onLoadLocalization,
+    TResult Function(
+            String module, String tenantId, String locale, String path)?
+        onRemoteLoadLocalization,
     TResult Function(int index, String code)? onUpdateLocalizationIndex,
     required TResult orElse(),
   }) =>
@@ -44,6 +53,8 @@ mixin _$LocalizationEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(OnLoadLocalizationEvent value) onLoadLocalization,
+    required TResult Function(OnRemoteLoadLocalizationEvent value)
+        onRemoteLoadLocalization,
     required TResult Function(OnUpdateLocalizationIndexEvent value)
         onUpdateLocalizationIndex,
   }) =>
@@ -51,6 +62,8 @@ mixin _$LocalizationEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(OnLoadLocalizationEvent value)? onLoadLocalization,
+    TResult? Function(OnRemoteLoadLocalizationEvent value)?
+        onRemoteLoadLocalization,
     TResult? Function(OnUpdateLocalizationIndexEvent value)?
         onUpdateLocalizationIndex,
   }) =>
@@ -58,6 +71,8 @@ mixin _$LocalizationEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(OnLoadLocalizationEvent value)? onLoadLocalization,
+    TResult Function(OnRemoteLoadLocalizationEvent value)?
+        onRemoteLoadLocalization,
     TResult Function(OnUpdateLocalizationIndexEvent value)?
         onUpdateLocalizationIndex,
     required TResult orElse(),
@@ -182,6 +197,9 @@ class _$OnLoadLocalizationEventImpl implements OnLoadLocalizationEvent {
     required TResult Function(
             String module, String tenantId, String locale, String path)
         onLoadLocalization,
+    required TResult Function(
+            String module, String tenantId, String locale, String path)
+        onRemoteLoadLocalization,
     required TResult Function(int index, String code) onUpdateLocalizationIndex,
   }) {
     return onLoadLocalization(module, tenantId, locale, path);
@@ -193,6 +211,9 @@ class _$OnLoadLocalizationEventImpl implements OnLoadLocalizationEvent {
     TResult? Function(
             String module, String tenantId, String locale, String path)?
         onLoadLocalization,
+    TResult? Function(
+            String module, String tenantId, String locale, String path)?
+        onRemoteLoadLocalization,
     TResult? Function(int index, String code)? onUpdateLocalizationIndex,
   }) {
     return onLoadLocalization?.call(module, tenantId, locale, path);
@@ -204,6 +225,9 @@ class _$OnLoadLocalizationEventImpl implements OnLoadLocalizationEvent {
     TResult Function(
             String module, String tenantId, String locale, String path)?
         onLoadLocalization,
+    TResult Function(
+            String module, String tenantId, String locale, String path)?
+        onRemoteLoadLocalization,
     TResult Function(int index, String code)? onUpdateLocalizationIndex,
     required TResult orElse(),
   }) {
@@ -217,6 +241,8 @@ class _$OnLoadLocalizationEventImpl implements OnLoadLocalizationEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(OnLoadLocalizationEvent value) onLoadLocalization,
+    required TResult Function(OnRemoteLoadLocalizationEvent value)
+        onRemoteLoadLocalization,
     required TResult Function(OnUpdateLocalizationIndexEvent value)
         onUpdateLocalizationIndex,
   }) {
@@ -227,6 +253,8 @@ class _$OnLoadLocalizationEventImpl implements OnLoadLocalizationEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(OnLoadLocalizationEvent value)? onLoadLocalization,
+    TResult? Function(OnRemoteLoadLocalizationEvent value)?
+        onRemoteLoadLocalization,
     TResult? Function(OnUpdateLocalizationIndexEvent value)?
         onUpdateLocalizationIndex,
   }) {
@@ -237,6 +265,8 @@ class _$OnLoadLocalizationEventImpl implements OnLoadLocalizationEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(OnLoadLocalizationEvent value)? onLoadLocalization,
+    TResult Function(OnRemoteLoadLocalizationEvent value)?
+        onRemoteLoadLocalization,
     TResult Function(OnUpdateLocalizationIndexEvent value)?
         onUpdateLocalizationIndex,
     required TResult orElse(),
@@ -261,6 +291,206 @@ abstract class OnLoadLocalizationEvent implements LocalizationEvent {
   String get path;
   @JsonKey(ignore: true)
   _$$OnLoadLocalizationEventImplCopyWith<_$OnLoadLocalizationEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$OnRemoteLoadLocalizationEventImplCopyWith<$Res> {
+  factory _$$OnRemoteLoadLocalizationEventImplCopyWith(
+          _$OnRemoteLoadLocalizationEventImpl value,
+          $Res Function(_$OnRemoteLoadLocalizationEventImpl) then) =
+      __$$OnRemoteLoadLocalizationEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String module, String tenantId, String locale, String path});
+}
+
+/// @nodoc
+class __$$OnRemoteLoadLocalizationEventImplCopyWithImpl<$Res>
+    extends _$LocalizationEventCopyWithImpl<$Res,
+        _$OnRemoteLoadLocalizationEventImpl>
+    implements _$$OnRemoteLoadLocalizationEventImplCopyWith<$Res> {
+  __$$OnRemoteLoadLocalizationEventImplCopyWithImpl(
+      _$OnRemoteLoadLocalizationEventImpl _value,
+      $Res Function(_$OnRemoteLoadLocalizationEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? module = null,
+    Object? tenantId = null,
+    Object? locale = null,
+    Object? path = null,
+  }) {
+    return _then(_$OnRemoteLoadLocalizationEventImpl(
+      module: null == module
+          ? _value.module
+          : module // ignore: cast_nullable_to_non_nullable
+              as String,
+      tenantId: null == tenantId
+          ? _value.tenantId
+          : tenantId // ignore: cast_nullable_to_non_nullable
+              as String,
+      locale: null == locale
+          ? _value.locale
+          : locale // ignore: cast_nullable_to_non_nullable
+              as String,
+      path: null == path
+          ? _value.path
+          : path // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$OnRemoteLoadLocalizationEventImpl
+    implements OnRemoteLoadLocalizationEvent {
+  const _$OnRemoteLoadLocalizationEventImpl(
+      {required this.module,
+      required this.tenantId,
+      required this.locale,
+      required this.path});
+
+  @override
+  final String module;
+  @override
+  final String tenantId;
+  @override
+  final String locale;
+  @override
+  final String path;
+
+  @override
+  String toString() {
+    return 'LocalizationEvent.onRemoteLoadLocalization(module: $module, tenantId: $tenantId, locale: $locale, path: $path)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$OnRemoteLoadLocalizationEventImpl &&
+            (identical(other.module, module) || other.module == module) &&
+            (identical(other.tenantId, tenantId) ||
+                other.tenantId == tenantId) &&
+            (identical(other.locale, locale) || other.locale == locale) &&
+            (identical(other.path, path) || other.path == path));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, module, tenantId, locale, path);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$OnRemoteLoadLocalizationEventImplCopyWith<
+          _$OnRemoteLoadLocalizationEventImpl>
+      get copyWith => __$$OnRemoteLoadLocalizationEventImplCopyWithImpl<
+          _$OnRemoteLoadLocalizationEventImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            String module, String tenantId, String locale, String path)
+        onLoadLocalization,
+    required TResult Function(
+            String module, String tenantId, String locale, String path)
+        onRemoteLoadLocalization,
+    required TResult Function(int index, String code) onUpdateLocalizationIndex,
+  }) {
+    return onRemoteLoadLocalization(module, tenantId, locale, path);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            String module, String tenantId, String locale, String path)?
+        onLoadLocalization,
+    TResult? Function(
+            String module, String tenantId, String locale, String path)?
+        onRemoteLoadLocalization,
+    TResult? Function(int index, String code)? onUpdateLocalizationIndex,
+  }) {
+    return onRemoteLoadLocalization?.call(module, tenantId, locale, path);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            String module, String tenantId, String locale, String path)?
+        onLoadLocalization,
+    TResult Function(
+            String module, String tenantId, String locale, String path)?
+        onRemoteLoadLocalization,
+    TResult Function(int index, String code)? onUpdateLocalizationIndex,
+    required TResult orElse(),
+  }) {
+    if (onRemoteLoadLocalization != null) {
+      return onRemoteLoadLocalization(module, tenantId, locale, path);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(OnLoadLocalizationEvent value) onLoadLocalization,
+    required TResult Function(OnRemoteLoadLocalizationEvent value)
+        onRemoteLoadLocalization,
+    required TResult Function(OnUpdateLocalizationIndexEvent value)
+        onUpdateLocalizationIndex,
+  }) {
+    return onRemoteLoadLocalization(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(OnLoadLocalizationEvent value)? onLoadLocalization,
+    TResult? Function(OnRemoteLoadLocalizationEvent value)?
+        onRemoteLoadLocalization,
+    TResult? Function(OnUpdateLocalizationIndexEvent value)?
+        onUpdateLocalizationIndex,
+  }) {
+    return onRemoteLoadLocalization?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(OnLoadLocalizationEvent value)? onLoadLocalization,
+    TResult Function(OnRemoteLoadLocalizationEvent value)?
+        onRemoteLoadLocalization,
+    TResult Function(OnUpdateLocalizationIndexEvent value)?
+        onUpdateLocalizationIndex,
+    required TResult orElse(),
+  }) {
+    if (onRemoteLoadLocalization != null) {
+      return onRemoteLoadLocalization(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class OnRemoteLoadLocalizationEvent implements LocalizationEvent {
+  const factory OnRemoteLoadLocalizationEvent(
+      {required final String module,
+      required final String tenantId,
+      required final String locale,
+      required final String path}) = _$OnRemoteLoadLocalizationEventImpl;
+
+  String get module;
+  String get tenantId;
+  String get locale;
+  String get path;
+  @JsonKey(ignore: true)
+  _$$OnRemoteLoadLocalizationEventImplCopyWith<
+          _$OnRemoteLoadLocalizationEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -346,6 +576,9 @@ class _$OnUpdateLocalizationIndexEventImpl
     required TResult Function(
             String module, String tenantId, String locale, String path)
         onLoadLocalization,
+    required TResult Function(
+            String module, String tenantId, String locale, String path)
+        onRemoteLoadLocalization,
     required TResult Function(int index, String code) onUpdateLocalizationIndex,
   }) {
     return onUpdateLocalizationIndex(index, code);
@@ -357,6 +590,9 @@ class _$OnUpdateLocalizationIndexEventImpl
     TResult? Function(
             String module, String tenantId, String locale, String path)?
         onLoadLocalization,
+    TResult? Function(
+            String module, String tenantId, String locale, String path)?
+        onRemoteLoadLocalization,
     TResult? Function(int index, String code)? onUpdateLocalizationIndex,
   }) {
     return onUpdateLocalizationIndex?.call(index, code);
@@ -368,6 +604,9 @@ class _$OnUpdateLocalizationIndexEventImpl
     TResult Function(
             String module, String tenantId, String locale, String path)?
         onLoadLocalization,
+    TResult Function(
+            String module, String tenantId, String locale, String path)?
+        onRemoteLoadLocalization,
     TResult Function(int index, String code)? onUpdateLocalizationIndex,
     required TResult orElse(),
   }) {
@@ -381,6 +620,8 @@ class _$OnUpdateLocalizationIndexEventImpl
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(OnLoadLocalizationEvent value) onLoadLocalization,
+    required TResult Function(OnRemoteLoadLocalizationEvent value)
+        onRemoteLoadLocalization,
     required TResult Function(OnUpdateLocalizationIndexEvent value)
         onUpdateLocalizationIndex,
   }) {
@@ -391,6 +632,8 @@ class _$OnUpdateLocalizationIndexEventImpl
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(OnLoadLocalizationEvent value)? onLoadLocalization,
+    TResult? Function(OnRemoteLoadLocalizationEvent value)?
+        onRemoteLoadLocalization,
     TResult? Function(OnUpdateLocalizationIndexEvent value)?
         onUpdateLocalizationIndex,
   }) {
@@ -401,6 +644,8 @@ class _$OnUpdateLocalizationIndexEventImpl
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(OnLoadLocalizationEvent value)? onLoadLocalization,
+    TResult Function(OnRemoteLoadLocalizationEvent value)?
+        onRemoteLoadLocalization,
     TResult Function(OnUpdateLocalizationIndexEvent value)?
         onUpdateLocalizationIndex,
     required TResult orElse(),
