@@ -169,12 +169,9 @@ class FormEntityMapper {
       final sourcePath = entry.value;
 
       if (sourcePath is String) {
-        final value = getValueFromMapping(
-          sourcePath,
-          formValues,
-          existingModel.runtimeType.toString(),
-          context,
-        );
+        final value = getValueFromMapping(sourcePath, formValues,
+            existingModel.runtimeType.toString(), context,
+            updateMapping: true);
 
         if (value != null) {
           updatedMap[targetKey] =
@@ -395,13 +392,10 @@ class FormEntityMapper {
     return result.isNotEmpty ? result : null;
   }
 
-  dynamic getValueFromMapping(
-    String instruction,
-    Map<String, dynamic> data,
-    String currentModel,
-    Map<String, dynamic> context,
-  ) {
-    if (instruction == '__generate:uuid') {
+  dynamic getValueFromMapping(String instruction, Map<String, dynamic> data,
+      String currentModel, Map<String, dynamic> context,
+      {updateMapping = false}) {
+    if (instruction == '__generate:uuid' && updateMapping == false) {
       final uuid = IdGen.i.identifier;
       generatedValues.putIfAbsent(currentModel, () => {})['clientReferenceId'] =
           uuid;
@@ -423,7 +417,7 @@ class FormEntityMapper {
       return valueStr; // fallback to string
     }
 
-    if (instruction == '__generate:clientAudit') {
+    if (instruction == '__generate:clientAudit' && updateMapping == false) {
       final now = DateTime.now().millisecondsSinceEpoch;
       return {
         "createdBy": context['userUUID'],
@@ -433,7 +427,7 @@ class FormEntityMapper {
       };
     }
 
-    if (instruction == '__generate:audit') {
+    if (instruction == '__generate:audit' && updateMapping == false) {
       final now = DateTime.now().millisecondsSinceEpoch;
       return {
         "createdBy": context['userUUID'],
@@ -441,7 +435,7 @@ class FormEntityMapper {
       };
     }
 
-    if (instruction.startsWith('__ref:')) {
+    if (instruction.startsWith('__ref:') && updateMapping == false) {
       final parts = instruction.replaceFirst('__ref:', '').split('.');
       if (parts.length != 2) {
         throw Exception('Invalid __ref: format for instruction: $instruction');
@@ -455,7 +449,7 @@ class FormEntityMapper {
       return refValue;
     }
 
-    if (instruction.startsWith('__switch:')) {
+    if (instruction.startsWith('__switch:') && updateMapping == false) {
       final switchContent = instruction.replaceFirst('__switch:', '');
 
       // Correct way: split before the first `{`
