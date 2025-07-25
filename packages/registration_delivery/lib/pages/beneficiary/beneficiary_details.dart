@@ -66,7 +66,10 @@ class BeneficiaryDetailsPageState
                       .beneficiaryType !=
                   BeneficiaryType.individual
               ? householdMemberWrapper.firstOrNull?.projectBeneficiaries != null
-                  ? [householdMemberWrapper.first.projectBeneficiaries?.first]
+                  ? [
+                      householdMemberWrapper
+                          .first.projectBeneficiaries?.firstOrNull
+                    ]
                   : householdMemberWrapper.firstOrNull?.projectBeneficiaries
                       ?.where(
                         (element) =>
@@ -79,10 +82,10 @@ class BeneficiaryDetailsPageState
           // Extracting task data related to the selected project beneficiary
 
           final taskData = projectBeneficiary != null
-              ? state.householdMembers.first.tasks
+              ? state.householdMembers.firstOrNull?.tasks
                   ?.where((element) =>
                       element.projectBeneficiaryClientReferenceId ==
-                      projectBeneficiary.first?.clientReferenceId)
+                      projectBeneficiary.firstOrNull?.clientReferenceId)
                   .toList()
               : null;
           final deliverState = state.deliveryWrapper;
@@ -537,8 +540,8 @@ class BeneficiaryDetailsPageState
                                                         .beneficiaryType !=
                                                     BeneficiaryType.individual
                                                 ? householdMemberWrapper
-                                                    .first
-                                                    .headOfHousehold
+                                                    .firstOrNull
+                                                    ?.headOfHousehold
                                                     ?.name
                                                     ?.givenName
                                                 : state.selectedIndividual?.name
@@ -554,8 +557,8 @@ class BeneficiaryDetailsPageState
                                                           BeneficiaryType
                                                               .individual
                                                       ? householdMemberWrapper
-                                                          .first
-                                                          .headOfHousehold
+                                                          .firstOrNull
+                                                          ?.headOfHousehold
                                                           ?.identifiers
                                                       : state.selectedIndividual
                                                           ?.identifiers;
@@ -579,8 +582,8 @@ class BeneficiaryDetailsPageState
                                                           BeneficiaryType
                                                               .individual
                                                       ? householdMemberWrapper
-                                                          .first
-                                                          .headOfHousehold
+                                                          .firstOrNull
+                                                          ?.headOfHousehold
                                                           ?.identifiers
                                                       : state.selectedIndividual
                                                           ?.identifiers;
@@ -602,8 +605,8 @@ class BeneficiaryDetailsPageState
                                                           BeneficiaryType
                                                               .individual
                                                       ? householdMemberWrapper
-                                                          .first
-                                                          .headOfHousehold
+                                                          .firstOrNull
+                                                          ?.headOfHousehold
                                                           ?.dateOfBirth
                                                       : state.selectedIndividual
                                                           ?.dateOfBirth;
@@ -636,8 +639,8 @@ class BeneficiaryDetailsPageState
                                                         .beneficiaryType !=
                                                     BeneficiaryType.individual
                                                 ? householdMemberWrapper
-                                                    .first
-                                                    .headOfHousehold
+                                                    .firstOrNull
+                                                    ?.headOfHousehold
                                                     ?.gender
                                                     ?.name
                                                     .sentenceCase
@@ -653,8 +656,8 @@ class BeneficiaryDetailsPageState
                                                         .beneficiaryType !=
                                                     BeneficiaryType.individual
                                                 ? householdMemberWrapper
-                                                    .first
-                                                    .headOfHousehold
+                                                    .firstOrNull
+                                                    ?.headOfHousehold
                                                     ?.mobileNumber
                                                 : state.selectedIndividual
                                                         ?.mobileNumber ??
@@ -663,7 +666,8 @@ class BeneficiaryDetailsPageState
                                                 .deliverIntervention
                                                 .dateOfRegistrationLabel): () {
                                               final date = projectBeneficiary
-                                                  ?.first?.dateOfRegistration;
+                                                  ?.firstOrNull
+                                                  ?.dateOfRegistration;
 
                                               final registrationDate = DateTime
                                                   .fromMillisecondsSinceEpoch(

@@ -541,14 +541,14 @@ packages:
       path: "../../packages/digit_crud_bloc"
       relative: true
     source: path
-    version: "0.0.1-dev"
+    version: "0.0.2-dev"
   digit_data_converter:
     dependency: "direct main"
     description:
       path: "../../packages/digit_data_converter"
       relative: true
     source: path
-    version: "0.0.1-dev"
+    version: "0.0.3-dev"
   digit_data_model:
     dependency: "direct main"
     description:
@@ -577,7 +577,7 @@ packages:
       path: "../../packages/digit_forms_engine"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "0.0.2-dev"
   digit_formula_parser:
     dependency: transitive
     description:

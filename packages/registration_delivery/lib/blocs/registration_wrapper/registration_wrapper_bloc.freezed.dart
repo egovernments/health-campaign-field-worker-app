@@ -30,6 +30,9 @@ mixin _$RegistrationWrapperEvent {
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
     required TResult Function(List<EntityModel> entities) delete,
+    required TResult Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)
+        createAndUpdate,
     required TResult Function() clear,
   }) =>
       throw _privateConstructorUsedError;
@@ -47,6 +50,9 @@ mixin _$RegistrationWrapperEvent {
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
     TResult? Function(List<EntityModel> entities)? delete,
+    TResult? Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)?
+        createAndUpdate,
     TResult? Function()? clear,
   }) =>
       throw _privateConstructorUsedError;
@@ -64,6 +70,9 @@ mixin _$RegistrationWrapperEvent {
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
     TResult Function(List<EntityModel> entities)? delete,
+    TResult Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)?
+        createAndUpdate,
     TResult Function()? clear,
     required TResult orElse(),
   }) =>
@@ -76,6 +85,7 @@ mixin _$RegistrationWrapperEvent {
     required TResult Function(Create value) create,
     required TResult Function(Update value) update,
     required TResult Function(Delete value) delete,
+    required TResult Function(CreateAndUpdate value) createAndUpdate,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) =>
       throw _privateConstructorUsedError;
@@ -86,6 +96,7 @@ mixin _$RegistrationWrapperEvent {
     TResult? Function(Create value)? create,
     TResult? Function(Update value)? update,
     TResult? Function(Delete value)? delete,
+    TResult? Function(CreateAndUpdate value)? createAndUpdate,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) =>
       throw _privateConstructorUsedError;
@@ -96,6 +107,7 @@ mixin _$RegistrationWrapperEvent {
     TResult Function(Create value)? create,
     TResult Function(Update value)? update,
     TResult Function(Delete value)? delete,
+    TResult Function(CreateAndUpdate value)? createAndUpdate,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) =>
@@ -224,6 +236,9 @@ class _$RegistrationWrapperLoadFromGlobalImpl
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
     required TResult Function(List<EntityModel> entities) delete,
+    required TResult Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)
+        createAndUpdate,
     required TResult Function() clear,
   }) {
     return loadFromGlobal(searchParams, beneficiaryType);
@@ -244,6 +259,9 @@ class _$RegistrationWrapperLoadFromGlobalImpl
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
     TResult? Function(List<EntityModel> entities)? delete,
+    TResult? Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)?
+        createAndUpdate,
     TResult? Function()? clear,
   }) {
     return loadFromGlobal?.call(searchParams, beneficiaryType);
@@ -264,6 +282,9 @@ class _$RegistrationWrapperLoadFromGlobalImpl
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
     TResult Function(List<EntityModel> entities)? delete,
+    TResult Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)?
+        createAndUpdate,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -282,6 +303,7 @@ class _$RegistrationWrapperLoadFromGlobalImpl
     required TResult Function(Create value) create,
     required TResult Function(Update value) update,
     required TResult Function(Delete value) delete,
+    required TResult Function(CreateAndUpdate value) createAndUpdate,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) {
     return loadFromGlobal(this);
@@ -295,6 +317,7 @@ class _$RegistrationWrapperLoadFromGlobalImpl
     TResult? Function(Create value)? create,
     TResult? Function(Update value)? update,
     TResult? Function(Delete value)? delete,
+    TResult? Function(CreateAndUpdate value)? createAndUpdate,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) {
     return loadFromGlobal?.call(this);
@@ -308,6 +331,7 @@ class _$RegistrationWrapperLoadFromGlobalImpl
     TResult Function(Create value)? create,
     TResult Function(Update value)? update,
     TResult Function(Delete value)? delete,
+    TResult Function(CreateAndUpdate value)? createAndUpdate,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) {
@@ -458,6 +482,9 @@ class _$FetchDeliveryDetailsImpl implements FetchDeliveryDetails {
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
     required TResult Function(List<EntityModel> entities) delete,
+    required TResult Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)
+        createAndUpdate,
     required TResult Function() clear,
   }) {
     return fetchDeliveryDetails(
@@ -479,6 +506,9 @@ class _$FetchDeliveryDetailsImpl implements FetchDeliveryDetails {
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
     TResult? Function(List<EntityModel> entities)? delete,
+    TResult? Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)?
+        createAndUpdate,
     TResult? Function()? clear,
   }) {
     return fetchDeliveryDetails?.call(
@@ -500,6 +530,9 @@ class _$FetchDeliveryDetailsImpl implements FetchDeliveryDetails {
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
     TResult Function(List<EntityModel> entities)? delete,
+    TResult Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)?
+        createAndUpdate,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -519,6 +552,7 @@ class _$FetchDeliveryDetailsImpl implements FetchDeliveryDetails {
     required TResult Function(Create value) create,
     required TResult Function(Update value) update,
     required TResult Function(Delete value) delete,
+    required TResult Function(CreateAndUpdate value) createAndUpdate,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) {
     return fetchDeliveryDetails(this);
@@ -532,6 +566,7 @@ class _$FetchDeliveryDetailsImpl implements FetchDeliveryDetails {
     TResult? Function(Create value)? create,
     TResult? Function(Update value)? update,
     TResult? Function(Delete value)? delete,
+    TResult? Function(CreateAndUpdate value)? createAndUpdate,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) {
     return fetchDeliveryDetails?.call(this);
@@ -545,6 +580,7 @@ class _$FetchDeliveryDetailsImpl implements FetchDeliveryDetails {
     TResult Function(Create value)? create,
     TResult Function(Update value)? update,
     TResult Function(Delete value)? delete,
+    TResult Function(CreateAndUpdate value)? createAndUpdate,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) {
@@ -654,6 +690,9 @@ class _$CreateImpl implements Create {
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
     required TResult Function(List<EntityModel> entities) delete,
+    required TResult Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)
+        createAndUpdate,
     required TResult Function() clear,
   }) {
     return create(entities);
@@ -674,6 +713,9 @@ class _$CreateImpl implements Create {
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
     TResult? Function(List<EntityModel> entities)? delete,
+    TResult? Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)?
+        createAndUpdate,
     TResult? Function()? clear,
   }) {
     return create?.call(entities);
@@ -694,6 +736,9 @@ class _$CreateImpl implements Create {
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
     TResult Function(List<EntityModel> entities)? delete,
+    TResult Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)?
+        createAndUpdate,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -712,6 +757,7 @@ class _$CreateImpl implements Create {
     required TResult Function(Create value) create,
     required TResult Function(Update value) update,
     required TResult Function(Delete value) delete,
+    required TResult Function(CreateAndUpdate value) createAndUpdate,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) {
     return create(this);
@@ -725,6 +771,7 @@ class _$CreateImpl implements Create {
     TResult? Function(Create value)? create,
     TResult? Function(Update value)? update,
     TResult? Function(Delete value)? delete,
+    TResult? Function(CreateAndUpdate value)? createAndUpdate,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) {
     return create?.call(this);
@@ -738,6 +785,7 @@ class _$CreateImpl implements Create {
     TResult Function(Create value)? create,
     TResult Function(Update value)? update,
     TResult Function(Delete value)? delete,
+    TResult Function(CreateAndUpdate value)? createAndUpdate,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) {
@@ -841,6 +889,9 @@ class _$UpdateImpl implements Update {
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
     required TResult Function(List<EntityModel> entities) delete,
+    required TResult Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)
+        createAndUpdate,
     required TResult Function() clear,
   }) {
     return update(entities);
@@ -861,6 +912,9 @@ class _$UpdateImpl implements Update {
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
     TResult? Function(List<EntityModel> entities)? delete,
+    TResult? Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)?
+        createAndUpdate,
     TResult? Function()? clear,
   }) {
     return update?.call(entities);
@@ -881,6 +935,9 @@ class _$UpdateImpl implements Update {
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
     TResult Function(List<EntityModel> entities)? delete,
+    TResult Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)?
+        createAndUpdate,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -899,6 +956,7 @@ class _$UpdateImpl implements Update {
     required TResult Function(Create value) create,
     required TResult Function(Update value) update,
     required TResult Function(Delete value) delete,
+    required TResult Function(CreateAndUpdate value) createAndUpdate,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) {
     return update(this);
@@ -912,6 +970,7 @@ class _$UpdateImpl implements Update {
     TResult? Function(Create value)? create,
     TResult? Function(Update value)? update,
     TResult? Function(Delete value)? delete,
+    TResult? Function(CreateAndUpdate value)? createAndUpdate,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) {
     return update?.call(this);
@@ -925,6 +984,7 @@ class _$UpdateImpl implements Update {
     TResult Function(Create value)? create,
     TResult Function(Update value)? update,
     TResult Function(Delete value)? delete,
+    TResult Function(CreateAndUpdate value)? createAndUpdate,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) {
@@ -1028,6 +1088,9 @@ class _$DeleteImpl implements Delete {
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
     required TResult Function(List<EntityModel> entities) delete,
+    required TResult Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)
+        createAndUpdate,
     required TResult Function() clear,
   }) {
     return delete(entities);
@@ -1048,6 +1111,9 @@ class _$DeleteImpl implements Delete {
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
     TResult? Function(List<EntityModel> entities)? delete,
+    TResult? Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)?
+        createAndUpdate,
     TResult? Function()? clear,
   }) {
     return delete?.call(entities);
@@ -1068,6 +1134,9 @@ class _$DeleteImpl implements Delete {
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
     TResult Function(List<EntityModel> entities)? delete,
+    TResult Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)?
+        createAndUpdate,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -1086,6 +1155,7 @@ class _$DeleteImpl implements Delete {
     required TResult Function(Create value) create,
     required TResult Function(Update value) update,
     required TResult Function(Delete value) delete,
+    required TResult Function(CreateAndUpdate value) createAndUpdate,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) {
     return delete(this);
@@ -1099,6 +1169,7 @@ class _$DeleteImpl implements Delete {
     TResult? Function(Create value)? create,
     TResult? Function(Update value)? update,
     TResult? Function(Delete value)? delete,
+    TResult? Function(CreateAndUpdate value)? createAndUpdate,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) {
     return delete?.call(this);
@@ -1112,6 +1183,7 @@ class _$DeleteImpl implements Delete {
     TResult Function(Create value)? create,
     TResult Function(Update value)? update,
     TResult Function(Delete value)? delete,
+    TResult Function(CreateAndUpdate value)? createAndUpdate,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) {
@@ -1129,6 +1201,233 @@ abstract class Delete implements RegistrationWrapperEvent {
   List<EntityModel> get entities;
   @JsonKey(ignore: true)
   _$$DeleteImplCopyWith<_$DeleteImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$CreateAndUpdateImplCopyWith<$Res> {
+  factory _$$CreateAndUpdateImplCopyWith(_$CreateAndUpdateImpl value,
+          $Res Function(_$CreateAndUpdateImpl) then) =
+      __$$CreateAndUpdateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call(
+      {List<EntityModel> entitiesToCreate, List<EntityModel> entitiesToUpdate});
+}
+
+/// @nodoc
+class __$$CreateAndUpdateImplCopyWithImpl<$Res>
+    extends _$RegistrationWrapperEventCopyWithImpl<$Res, _$CreateAndUpdateImpl>
+    implements _$$CreateAndUpdateImplCopyWith<$Res> {
+  __$$CreateAndUpdateImplCopyWithImpl(
+      _$CreateAndUpdateImpl _value, $Res Function(_$CreateAndUpdateImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? entitiesToCreate = null,
+    Object? entitiesToUpdate = null,
+  }) {
+    return _then(_$CreateAndUpdateImpl(
+      entitiesToCreate: null == entitiesToCreate
+          ? _value._entitiesToCreate
+          : entitiesToCreate // ignore: cast_nullable_to_non_nullable
+              as List<EntityModel>,
+      entitiesToUpdate: null == entitiesToUpdate
+          ? _value._entitiesToUpdate
+          : entitiesToUpdate // ignore: cast_nullable_to_non_nullable
+              as List<EntityModel>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$CreateAndUpdateImpl implements CreateAndUpdate {
+  const _$CreateAndUpdateImpl(
+      {required final List<EntityModel> entitiesToCreate,
+      required final List<EntityModel> entitiesToUpdate})
+      : _entitiesToCreate = entitiesToCreate,
+        _entitiesToUpdate = entitiesToUpdate;
+
+  final List<EntityModel> _entitiesToCreate;
+  @override
+  List<EntityModel> get entitiesToCreate {
+    if (_entitiesToCreate is EqualUnmodifiableListView)
+      return _entitiesToCreate;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_entitiesToCreate);
+  }
+
+  final List<EntityModel> _entitiesToUpdate;
+  @override
+  List<EntityModel> get entitiesToUpdate {
+    if (_entitiesToUpdate is EqualUnmodifiableListView)
+      return _entitiesToUpdate;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_entitiesToUpdate);
+  }
+
+  @override
+  String toString() {
+    return 'RegistrationWrapperEvent.createAndUpdate(entitiesToCreate: $entitiesToCreate, entitiesToUpdate: $entitiesToUpdate)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CreateAndUpdateImpl &&
+            const DeepCollectionEquality()
+                .equals(other._entitiesToCreate, _entitiesToCreate) &&
+            const DeepCollectionEquality()
+                .equals(other._entitiesToUpdate, _entitiesToUpdate));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_entitiesToCreate),
+      const DeepCollectionEquality().hash(_entitiesToUpdate));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CreateAndUpdateImplCopyWith<_$CreateAndUpdateImpl> get copyWith =>
+      __$$CreateAndUpdateImplCopyWithImpl<_$CreateAndUpdateImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)
+        loadFromGlobal,
+    required TResult Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)
+        fetchDeliveryDetails,
+    required TResult Function(List<EntityModel> entities) create,
+    required TResult Function(List<EntityModel> entities) update,
+    required TResult Function(List<EntityModel> entities) delete,
+    required TResult Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)
+        createAndUpdate,
+    required TResult Function() clear,
+  }) {
+    return createAndUpdate(entitiesToCreate, entitiesToUpdate);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)?
+        loadFromGlobal,
+    TResult? Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)?
+        fetchDeliveryDetails,
+    TResult? Function(List<EntityModel> entities)? create,
+    TResult? Function(List<EntityModel> entities)? update,
+    TResult? Function(List<EntityModel> entities)? delete,
+    TResult? Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)?
+        createAndUpdate,
+    TResult? Function()? clear,
+  }) {
+    return createAndUpdate?.call(entitiesToCreate, entitiesToUpdate);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)?
+        loadFromGlobal,
+    TResult Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)?
+        fetchDeliveryDetails,
+    TResult Function(List<EntityModel> entities)? create,
+    TResult Function(List<EntityModel> entities)? update,
+    TResult Function(List<EntityModel> entities)? delete,
+    TResult Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)?
+        createAndUpdate,
+    TResult Function()? clear,
+    required TResult orElse(),
+  }) {
+    if (createAndUpdate != null) {
+      return createAndUpdate(entitiesToCreate, entitiesToUpdate);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(RegistrationWrapperLoadFromGlobal value)
+        loadFromGlobal,
+    required TResult Function(FetchDeliveryDetails value) fetchDeliveryDetails,
+    required TResult Function(Create value) create,
+    required TResult Function(Update value) update,
+    required TResult Function(Delete value) delete,
+    required TResult Function(CreateAndUpdate value) createAndUpdate,
+    required TResult Function(RegistrationWrapperClear value) clear,
+  }) {
+    return createAndUpdate(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult? Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult? Function(Create value)? create,
+    TResult? Function(Update value)? update,
+    TResult? Function(Delete value)? delete,
+    TResult? Function(CreateAndUpdate value)? createAndUpdate,
+    TResult? Function(RegistrationWrapperClear value)? clear,
+  }) {
+    return createAndUpdate?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult Function(Create value)? create,
+    TResult Function(Update value)? update,
+    TResult Function(Delete value)? delete,
+    TResult Function(CreateAndUpdate value)? createAndUpdate,
+    TResult Function(RegistrationWrapperClear value)? clear,
+    required TResult orElse(),
+  }) {
+    if (createAndUpdate != null) {
+      return createAndUpdate(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class CreateAndUpdate implements RegistrationWrapperEvent {
+  const factory CreateAndUpdate(
+          {required final List<EntityModel> entitiesToCreate,
+          required final List<EntityModel> entitiesToUpdate}) =
+      _$CreateAndUpdateImpl;
+
+  List<EntityModel> get entitiesToCreate;
+  List<EntityModel> get entitiesToUpdate;
+  @JsonKey(ignore: true)
+  _$$CreateAndUpdateImplCopyWith<_$CreateAndUpdateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1186,6 +1485,9 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
     required TResult Function(List<EntityModel> entities) delete,
+    required TResult Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)
+        createAndUpdate,
     required TResult Function() clear,
   }) {
     return clear();
@@ -1206,6 +1508,9 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
     TResult? Function(List<EntityModel> entities)? delete,
+    TResult? Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)?
+        createAndUpdate,
     TResult? Function()? clear,
   }) {
     return clear?.call();
@@ -1226,6 +1531,9 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
     TResult Function(List<EntityModel> entities)? delete,
+    TResult Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)?
+        createAndUpdate,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -1244,6 +1552,7 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
     required TResult Function(Create value) create,
     required TResult Function(Update value) update,
     required TResult Function(Delete value) delete,
+    required TResult Function(CreateAndUpdate value) createAndUpdate,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) {
     return clear(this);
@@ -1257,6 +1566,7 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
     TResult? Function(Create value)? create,
     TResult? Function(Update value)? update,
     TResult? Function(Delete value)? delete,
+    TResult? Function(CreateAndUpdate value)? createAndUpdate,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) {
     return clear?.call(this);
@@ -1270,6 +1580,7 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
     TResult Function(Create value)? create,
     TResult Function(Update value)? update,
     TResult Function(Delete value)? delete,
+    TResult Function(CreateAndUpdate value)? createAndUpdate,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) {

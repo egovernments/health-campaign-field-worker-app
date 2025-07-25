@@ -77,6 +77,8 @@ final jsonConfig = {
             "individualClientReferenceId":
                 "__ref:IndividualModel.clientReferenceId",
             "givenName": "beneficiaryDetails.nameOfIndividual",
+            "clientAuditDetails": "__generate:clientAudit",
+            "auditDetails": "__generate:audit",
           },
           "bloodGroup": "health.bloodGroup",
           "gender": "beneficiaryDetails.gender",
