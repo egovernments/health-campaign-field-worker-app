@@ -1080,6 +1080,8 @@ class _SearchBeneficiaryPageState
                                       onOpenPressed: () async {
                                         final scannerBloc =
                                             context.read<DigitScannerBloc>();
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
 
                                         if ((i.tasks?.lastOrNull?.status ==
                                                     Status.closeHousehold
