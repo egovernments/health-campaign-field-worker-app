@@ -27,6 +27,7 @@ class RegistrationWrapperBloc
     on<Create>(_handleCreate);
     on<Update>(_handleUpdate);
     on<Delete>(_handleDelete);
+    on<CreateAndUpdate>(_handleCreateAndUpdate);
   }
 
   FutureOr<void> _handleCreate(
@@ -91,6 +92,45 @@ class RegistrationWrapperBloc
 
     try {
       globalRegistrationBloc.add(CrudEventDelete(entities: event.entities));
+    } catch (e) {
+      emit(state.copyWith(loading: false, error: e.toString()));
+    }
+  }
+
+  FutureOr<void> _handleCreateAndUpdate(
+    CreateAndUpdate event,
+    RegistrationWrapperEmitter emit,
+  ) async {
+    emit(state.copyWith(loading: true));
+    try {
+      if (event.entitiesToCreate.isNotEmpty) {
+        globalRegistrationBloc
+            .add(CrudEventCreate(entities: event.entitiesToCreate));
+      }
+      if (event.entitiesToUpdate.isNotEmpty) {
+        // Update audit fields for each entity
+        final updatedEntities = event.entitiesToUpdate.map((entity) {
+          final clientAudit = entity.clientAuditDetails;
+
+          final updatedClientAudit = clientAudit?.copyWith(
+            lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid,
+            lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+          );
+
+          return entity.copyWith(clientAuditDetails: updatedClientAudit);
+        }).toList();
+        globalRegistrationBloc.add(CrudEventUpdate(entities: updatedEntities));
+      }
+
+      final wrappers = groupEntitiesIntoWrappers([
+        ...event.entitiesToCreate,
+        ...event.entitiesToUpdate,
+      ]);
+      emit(state.copyWith(
+        loading: false,
+        lastAction: RegistrationWrapperActionType.createAndUpdate,
+        householdMembers: [...state.householdMembers, ...wrappers],
+      ));
     } catch (e) {
       emit(state.copyWith(loading: false, error: e.toString()));
     }
@@ -575,6 +615,11 @@ class RegistrationWrapperEvent with _$RegistrationWrapperEvent {
   const factory RegistrationWrapperEvent.delete(
       {required List<EntityModel> entities}) = Delete;
 
+  const factory RegistrationWrapperEvent.createAndUpdate({
+    required List<EntityModel> entitiesToCreate,
+    required List<EntityModel> entitiesToUpdate,
+  }) = CreateAndUpdate;
+
   const factory RegistrationWrapperEvent.clear() = RegistrationWrapperClear;
 }
 
@@ -624,4 +669,10 @@ class DeliveryWrapper with _$DeliveryWrapper {
   }) = _DeliveryWrapper;
 }
 
-enum RegistrationWrapperActionType { none, created, updated, deleted }
+enum RegistrationWrapperActionType {
+  none,
+  created,
+  updated,
+  deleted,
+  createAndUpdate
+}

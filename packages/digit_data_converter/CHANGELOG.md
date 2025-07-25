@@ -1,3 +1,7 @@
+## 0.0.3-dev
+
+- fixed update model mapping function to create entities which does not exists
+
 ## 0.0.2-dev
 
 - Added list generation of models based on the given listSource

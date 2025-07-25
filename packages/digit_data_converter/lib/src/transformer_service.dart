@@ -81,13 +81,17 @@ class FormEntityMapper {
     required Map<String, dynamic> context,
   }) {
     final List<EntityModel> updatedModels = [];
+    final Set<String> existingModelTypes =
+        existingModels.map((model) => model.runtimeType.toString()).toSet();
 
+    prepopulateGeneratedValuesFromExisting(existingModels, modelsConfig);
+
+    // Update existing models if config exists, else keep unchanged
     for (final model in existingModels) {
       final modelType = model.runtimeType.toString();
       final modelConfig = modelsConfig[modelType];
 
       if (modelConfig == null) {
-        // No config — just keep the model unchanged
         updatedModels.add(model);
         continue;
       }
@@ -102,7 +106,44 @@ class FormEntityMapper {
       updatedModels.add(updatedModel);
     }
 
+    // Create missing models from modelsConfig
+    for (final modelName in modelsConfig.keys) {
+      if (!existingModelTypes.contains(modelName)) {
+        try {
+          final modelConfig = modelsConfig[modelName];
+          final newModel =
+              _mapModel(modelName, formValues, modelConfig, context);
+          updatedModels.add(newModel);
+        } catch (e) {
+          throw Exception('Error creating missing model $modelName: $e');
+        }
+      }
+    }
+
     return updatedModels;
+  }
+
+  void prepopulateGeneratedValuesFromExisting(
+    List<EntityModel> existingModels,
+    Map<String, dynamic> modelsConfig,
+  ) {
+    for (final model in existingModels) {
+      final modelName = model.runtimeType.toString();
+      final modelConfig = modelsConfig[modelName];
+      if (modelConfig == null) continue;
+
+      final mappings = modelConfig['mappings'] as Map<String, dynamic>? ?? {};
+      final modelMap = model.toMap();
+
+      for (final entry in mappings.entries) {
+        final targetKey = entry.key;
+        final sourcePath = entry.value;
+        if (sourcePath is String && sourcePath.startsWith('__generate:')) {
+          generatedValues.putIfAbsent(modelName, () => {})[targetKey] =
+              modelMap[targetKey];
+        }
+      }
+    }
   }
 
   EntityModel updateModelFromForm({

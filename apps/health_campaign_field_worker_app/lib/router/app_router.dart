@@ -18,7 +18,6 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:survey_form/router/survey_form_router.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:transit_post/router/transit_post_router.dart';
-import 'package:transit_post/router/transit_post_router.gm.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
@@ -132,10 +131,6 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: ProjectFacilitySelectionRoute.page,
           path: 'select-project-facilities',
-        ),
-        AutoRoute(
-          page: FacilitySelectionRoute.page,
-          path: 'select-facilities',
         ),
 
         /// Project Selection
