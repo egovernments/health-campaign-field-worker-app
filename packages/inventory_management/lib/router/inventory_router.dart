@@ -8,21 +8,29 @@ class InventoryRoute extends $InventoryRoute {
 
   List<AutoRoute> routes = [
     AutoRoute(
-      page: ManageStocksRoute.page,
-      path: 'manage-stocks',
-    ),
-    AutoRoute(
-        page: RecordStockWrapperRoute.page,
-        path: 'record-stock',
+        page: ManageStockWrapperRoute.page,
+        path: 'manage-stock-wrapper',
         children: [
           AutoRoute(
-              page: WarehouseDetailsRoute.page,
-              path: 'warehouse-details',
-              initial: true),
-          AutoRoute(page: StockDetailsRoute.page, path: 'details'),
+            page: ManageStocksRoute.page,
+            path: 'manage-stocks',
+            initial: true,
+          ),
           AutoRoute(
-              page: ViewAllTransactionsRoute.page,
-              path: 'view-all-transactions')
+            page: RecordStockWrapperRoute.page,
+            path: 'record-stock',
+            children: [
+              AutoRoute(
+                page: WarehouseDetailsRoute.page,
+                path: 'warehouse-details',
+                initial: true,
+              ),
+              AutoRoute(page: StockDetailsRoute.page, path: 'details'),
+              AutoRoute(
+                  page: ViewAllTransactionsRoute.page,
+                  path: 'view-all-transactions')
+            ],
+          ),
         ]),
     AutoRoute(
         page: InventoryFacilitySelectionRoute.page,

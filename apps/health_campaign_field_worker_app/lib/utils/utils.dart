@@ -681,7 +681,7 @@ const String inventoryConfigData = '''{
             "administrativeArea": {
               "type": "string",
               "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_administrativeArea",
-              "order": 2,
+              "order": 3,
               "value": "",
               "format": "locality",
               "hidden": false,
@@ -707,7 +707,7 @@ const String inventoryConfigData = '''{
             "facilityId": {
               "type": "dynamic",
               "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich",
-              "order": 3,
+              "order": 4,
               "value": "",
               "format": "custom",
               "hidden": false,
@@ -737,7 +737,6 @@ const String inventoryConfigData = '''{
             "type": "template"
           }
         },
-        
         "stockDetails": {
           "label": "APPONE_INVENTORY_PRODUCTDETAILS_SCREEN_HEADING",
           "order": 2,
@@ -746,7 +745,6 @@ const String inventoryConfigData = '''{
           "description": "APPONE_INVENTORY_PRODUCTDETAILS_SCREEN_DESCRIPTION",
           "actionLabel": "APPONE_INVENTORY_PRODUCTDETAILS_ACTION_BUTTON_LABEL_1",
           "properties": {
-            
             "productDetails": {
               "type": "string",
               "label": "APPONE_INVENTORY_PRODUCTDETAILS_LABEL",
@@ -768,20 +766,12 @@ const String inventoryConfigData = '''{
               "isMultiSelect": false,
               "enums": [
                 {
-                  "code": "BENEFICIARY_ABSENT",
-                  "name": "Beneficiary Absent"
+                  "code": "PVR_87_12",
+                  "name": "SPAQ1"
                 },
                 {
-                  "code": "BENEFICIARY_REFUSED",
-                  "name": "Beneficiary Refused"
-                },
-                {
-                  "code": "INSUFFICIENT_RESOURCES",
-                  "name": "Insufficient Resources"
-                },
-                {
-                  "code": "SUCCESSFUL_DELIVERY",
-                  "name": "Delivery Successful"
+                  "code": "PVR_87_13",
+                  "name": "SPAQ2"
                 }
               ]
             },
@@ -812,7 +802,7 @@ const String inventoryConfigData = '''{
               "includeInForm": true,
               "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR"
             },
-             "transportType": {
+            "transportType": {
               "type": "string",
               "label": "APPONE_INVENTORY_TRANSPORT_LABEL",
               "order": 1,
@@ -863,7 +853,6 @@ const String inventoryConfigData = '''{
               "isMultiSelect": false,
               "enums": null
             }
-           
           },
           "value": null,
           "required": null,
@@ -882,7 +871,106 @@ const String inventoryConfigData = '''{
           "includeInSummary": null,
           "autoEnable": null,
           "navigateTo": {
-            "name": "household-acknowledgement",
+            "name": "stock-acknowledgement",
+            "type": "template"
+          }
+        },
+        "dynamicTabDetails": {
+          "label": "APPONE_INVENTORY_DYNAMIC_TAB_SCREEN_HEADING",
+          "order": 3,
+          "type": "object",
+          "format": null,
+          "description": "APPONE_INVENTORY_DYNAMIC_TAB_SCREEN_DESCRIPTION",
+          "actionLabel": "APPONE_INVENTORY_DYNAMIC_TAB_ACTION_BUTTON_LABEL_1",
+          "properties": {
+            "wayBillNumber": {
+              "type": "string",
+              "label": "APPONE_INVENTORY_WAYBILLNUMBER_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "wayBillNumber",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            },
+            "batchNumber": {
+              "type": "string",
+              "label": "APPONE_INVENTORY_BATCH_NUMBER_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Select the facility to which the stock is being sent",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "batchNumber",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Required"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "includeInForm": true,
+              "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR"
+            },
+            "qtyReceived": {
+              "type": "string",
+              "label": "APPONE_INVENTORY_QTY_RECEIVED_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "qtyReceived",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            }
+          },
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "navigateTo": {
+            "name": "stock-acknowledgement",
             "type": "template"
           }
         }

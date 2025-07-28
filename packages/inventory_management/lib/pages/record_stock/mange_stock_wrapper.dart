@@ -2,9 +2,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/blocs/enitty_create/entity_create.dart';
 import 'package:inventory_management/inventory_management.dart';
 
 import 'package:forms_engine/blocs/forms/forms.dart';
+import 'package:inventory_management/utils/extensions/extensions.dart';
 
 // This class is a wrapper for the RecordStock page.
 // It is a stateless widget that implements the AutoRouteWrapper interface.
@@ -30,7 +32,12 @@ class ManageStockWrapperPage extends StatelessWidget
         child: Text('No project selected'),
       );
     } else {
-      return this;
+      return BlocProvider(
+        create: (context) => EntityCreateBloc(
+            stockDataRepository:
+                context.repository<StockModel, StockSearchModel>(context)),
+        child: this,
+      );
     }
   }
 

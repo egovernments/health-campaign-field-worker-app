@@ -4,6 +4,7 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/blocs/enitty_create/entity_create.dart';
@@ -59,146 +60,214 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
 
-    return BlocListener<FormsBloc, FormsState>(
-      listener: (context, formState) {
-        if (formState is FormsSubmittedState) {
-          DigitLoaders.overlayLoader(context: context);
+    return BlocListener<EntityCreateBloc, EntityCreateState>(
+      listener: (context, createState) {
+        if (createState is EntityCreateLoadingState) {
+        } else if (createState is EntityCreatePersistedState) {
+          Navigator.of(context, rootNavigator: true).pop();
 
-          final formData = formState.formData;
-          if (formData.isEmpty) return;
+          final currentSchema = context
+              .read<FormsBloc>()
+              .state
+              .cachedSchemas[context.read<FormsBloc>().state.activeSchemaKey];
 
-          try {
-            final modelsConfig = (jsonConfig['stockManagement']?['models']
-                as Map<String, dynamic>);
+          // Reset to prevent re-handling
+          context.read<FormsBloc>().add(
+                const FormsEvent.clearForm(
+                    schemaKey: 'MANAGESTOCK'), // or create a FormsResetEvent
+              );
 
-            final fallBackModel =
-                (jsonConfig['stockManagement']?['fallbackModel'] as String?);
+          final pages = currentSchema?.pages.entries.toList()
+            ?..sort(
+                (a, b) => (a.value.order ?? 0).compareTo(b.value.order ?? 0));
 
-            final formEntityMapper = FormEntityMapper(config: jsonConfig);
+          final lastPage = pages?.isNotEmpty == true ? pages!.last.value : null;
 
-            // final householdMember =
-            //     blocWrapper.state.householdMembers.firstOrNull;
-            // final household = householdMember?.household?.toMap();
-            // final projectBeneficiary =
-            //     householdMember?.projectBeneficiaries?.firstOrNull?.toMap();
+          final nextAction = lastPage?.navigateTo;
+          if (nextAction != null) {
+            if (nextAction.type == 'template') {
+              final nextPath = routerMap[nextAction.name];
+              if (nextPath != null) {
+                context.router.push(nextPath);
+              }
+            } else {
+              if (nextAction.name == 'MANAGESTOCK') {
+                final pageName = context
+                    .read<FormsBloc>()
+                    .state
+                    .cachedSchemas['MANAGESTOCK']
+                    ?.pages
+                    .entries
+                    .first
+                    .key;
 
-            final entities = formEntityMapper.mapFormToEntities(
-              formValues: formData,
-              modelsConfig: modelsConfig,
-              context: {
-                "tenantId": InventorySingleton().tenantId,
-                "userUUID": InventorySingleton().loggedInUserUuid,
-              },
-              fallbackFormDataString: fallBackModel,
-            );
+                if (pageName == null) {
+                  Toast.showToast(
+                    context,
+                    message: localizations
+                        .translate('NO_FORM_FOUND_FOR_REGISTRATION'),
+                    type: ToastType.error,
+                  );
+                } else {
+                  context.router.push(FormsRenderRoute(
+                      currentSchemaKey: 'MANAGESTOCK',
+                      pageName: pageName,
+                      defaultValues: {
+                        'locality': localizations.translate(
+                            InventorySingleton().boundary?.code ?? '')
+                      }));
+                }
+              } else {
+                final pageName = context
+                    .read<FormsBloc>()
+                    .state
+                    .cachedSchemas['MANAGESTOCK']
+                    ?.pages
+                    .entries
+                    .first
+                    .key;
 
-            print(entities);
-
-            context.read<EntityCreateBloc>().add(
-                  EntityCreateEvent.create(entities: entities),
-                );
-          } catch (e) {
-            Navigator.of(context, rootNavigator: true).pop();
-            // Reset to prevent re-handling
-            context.read<FormsBloc>().add(
-                  const FormsEvent.clearForm(
-                      schemaKey: 'MANAGESTOCK'), // or create a FormsResetEvent
-                );
-            //TODO ::: to check later
-            // context.router
-            //     .push(BeneficiaryErrorRoute(enableViewHousehold: false));
-            print('Error: $e');
+                if (pageName == null) {
+                  Toast.showToast(
+                    context,
+                    message:
+                        localizations.translate('NO_FORM_FOUND_FOR_DELIVERY'),
+                    type: ToastType.error,
+                  );
+                } else {
+                  context.router.push(FormsRenderRoute(
+                    currentSchemaKey: 'MANAGESTOCK',
+                    pageName: pageName,
+                    defaultValues: {
+                      'locality': localizations
+                          .translate(InventorySingleton().boundary?.code ?? '')
+                    },
+                    customComponents: const [
+                      //{'resourceCard': ResourceCard()}
+                    ],
+                  ));
+                }
+              }
+            }
+          } else {
+            context.router
+                .push(InventoryAcknowledgementRoute()); // fallback page
           }
+        } else if (createState is EntityCreateErrorState) {
+          Navigator.of(context, rootNavigator: true).pop();
+          // Reset to prevent re-handling
+          // context.read<FormsBloc>().add(
+          //       const FormsEvent.clearForm(
+          //           schemaKey:
+          //               'REGISTRATIONFLOW'), // or create a FormsResetEvent
+          //     );
+          // context.router
+          //     .push(BeneficiaryErrorRoute(enableViewHousehold: false));
+          // if (kDebugMode) {
+          //   print(createState.message);
+          // }
         }
       },
-      child: Scaffold(
-        body: ScrollableContent(
-          header: const BackNavigationHelpHeaderWidget(
-            showHelp: false,
-          ),
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: spacer2,
-                      right: spacer2,
-                      bottom: spacer4,
-                      top: spacer4),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      localizations.translate(
-                        localizations.translate(i18.manageStock.label),
+      child: BlocListener<FormsBloc, FormsState>(
+        listener: (context, formState) {
+          if (formState is FormsSubmittedState) {
+            DigitLoaders.overlayLoader(context: context);
+
+            final formData = formState.formData;
+            if (formData.isEmpty) return;
+
+            try {
+              final modelsConfig = (jsonConfig['stockManagement']?['models']
+                  as Map<String, dynamic>);
+
+              final fallBackModel =
+                  (jsonConfig['stockManagement']?['fallbackModel'] as String?);
+
+              final formEntityMapper = FormEntityMapper(config: jsonConfig);
+
+              // final householdMember =
+              //     blocWrapper.state.householdMembers.firstOrNull;
+              // final household = householdMember?.household?.toMap();
+              // final projectBeneficiary =
+              //     householdMember?.projectBeneficiaries?.firstOrNull?.toMap();
+
+              final entities = formEntityMapper.mapFormToEntities(
+                formValues: formData,
+                modelsConfig: modelsConfig,
+                context: {
+                  "tenantId": InventorySingleton().tenantId,
+                  "userUUID": InventorySingleton().loggedInUserUuid,
+                },
+                fallbackFormDataString: fallBackModel,
+              );
+
+              print(entities);
+
+              context.read<EntityCreateBloc>().add(
+                    EntityCreateEvent.create(entities: entities),
+                  );
+            } catch (e) {
+              Navigator.of(context, rootNavigator: true).pop();
+              // Reset to prevent re-handling
+              context.read<FormsBloc>().add(
+                    const FormsEvent.clearForm(
+                        schemaKey:
+                            'MANAGESTOCK'), // or create a FormsResetEvent
+                  );
+              //TODO ::: to check later
+              // context.router
+              //     .push(BeneficiaryErrorRoute(enableViewHousehold: false));
+              print('Error: $e');
+            }
+          }
+        },
+        child: Scaffold(
+          body: ScrollableContent(
+            header: const BackNavigationHelpHeaderWidget(
+              showHelp: false,
+            ),
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: spacer2,
+                        right: spacer2,
+                        bottom: spacer4,
+                        top: spacer4),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        localizations.translate(
+                          localizations.translate(i18.manageStock.label),
+                        ),
+                        style: textTheme.headingXl,
+                        textAlign: TextAlign.center,
                       ),
-                      style: textTheme.headingXl,
-                      textAlign: TextAlign.center,
                     ),
                   ),
-                ),
-                Column(children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: spacer2, right: spacer2),
-                    child: Stack(children: [
-                      Align(
-                        alignment: Alignment.center,
-                        child: SizedBox(
-                          width: 0.94 * MediaQuery.of(context).size.width,
-                          child: MenuCard(
-                            heading: localizations.translate(
-                                i18.manageStock.recordStockReceiptLabel),
-                            description: insertNewlines(localizations.translate(
-                                i18.manageStock.recordStockReceiptDescription)),
-                            icon: Icons.file_download_outlined,
-                            onTap: () {
-                              showStockReceiptDialog(context);
-                            },
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 0,
-                        bottom: 0,
-                        right: 16,
-                        child: Center(
-                            child: GestureDetector(
-                          onTap: () {
-                            showStockReceiptDialog(context);
-                          },
-                          child: Icon(
-                            Icons.arrow_circle_right,
-                            color: Colors.orange[800],
-                            size: Base.height,
-                          ),
-                        )),
-                      ),
-                    ]),
-                  ),
-                  const SizedBox(
-                    height: spacer4,
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: spacer2, right: spacer2),
-                    child: Stack(
-                      children: [
+                  Column(children: [
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: spacer2, right: spacer2),
+                      child: Stack(children: [
                         Align(
                           alignment: Alignment.center,
                           child: SizedBox(
                             width: 0.94 * MediaQuery.of(context).size.width,
                             child: MenuCard(
-                                heading: localizations.translate(
-                                    i18.manageStock.recordStockIssuedLabel),
-                                description: insertNewlines(
-                                    localizations.translate(i18.manageStock
-                                        .recordStockIssuedDescription)),
-                                icon: Icons.file_upload_outlined,
-                                onTap: () {
-                                  showStockIssueDialog(context);
-                                }),
+                              heading: localizations.translate(
+                                  i18.manageStock.recordStockReceiptLabel),
+                              description: insertNewlines(
+                                  localizations.translate(i18.manageStock
+                                      .recordStockReceiptDescription)),
+                              icon: Icons.file_download_outlined,
+                              onTap: () {
+                                showStockReceiptDialog(context);
+                              },
+                            ),
                           ),
                         ),
                         Positioned(
@@ -208,7 +277,7 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                           child: Center(
                               child: GestureDetector(
                             onTap: () {
-                              showStockIssueDialog(context);
+                              showStockReceiptDialog(context);
                             },
                             child: Icon(
                               Icons.arrow_circle_right,
@@ -217,13 +286,11 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                             ),
                           )),
                         ),
-                      ],
+                      ]),
                     ),
-                  ),
-                  const SizedBox(
-                    height: spacer4,
-                  ),
-                  if (!InventorySingleton().isCDD)
+                    const SizedBox(
+                      height: spacer4,
+                    ),
                     Padding(
                       padding:
                           const EdgeInsets.only(left: spacer2, right: spacer2),
@@ -235,15 +302,13 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                               width: 0.94 * MediaQuery.of(context).size.width,
                               child: MenuCard(
                                   heading: localizations.translate(
-                                      i18.manageStock.recordStockReturnedLabel),
+                                      i18.manageStock.recordStockIssuedLabel),
                                   description: insertNewlines(
-                                    localizations.translate(
-                                      "i18.stockDetails.recordStockReturnedDescription",
-                                    ),
-                                  ),
-                                  icon: Icons.settings_backup_restore,
+                                      localizations.translate(i18.manageStock
+                                          .recordStockIssuedDescription)),
+                                  icon: Icons.file_upload_outlined,
                                   onTap: () {
-                                    showStockReturnDialog(context);
+                                    showStockIssueDialog(context);
                                   }),
                             ),
                           ),
@@ -254,7 +319,7 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                             child: Center(
                                 child: GestureDetector(
                               onTap: () {
-                                showStockReturnDialog(context);
+                                showStockIssueDialog(context);
                               },
                               child: Icon(
                                 Icons.arrow_circle_right,
@@ -266,11 +331,58 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                         ],
                       ),
                     ),
-                ]),
-                const SizedBox(height: spacer4),
-              ],
-            ),
-          ],
+                    const SizedBox(
+                      height: spacer4,
+                    ),
+                    if (!InventorySingleton().isCDD)
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: spacer2, right: spacer2),
+                        child: Stack(
+                          children: [
+                            Align(
+                              alignment: Alignment.center,
+                              child: SizedBox(
+                                width: 0.94 * MediaQuery.of(context).size.width,
+                                child: MenuCard(
+                                    heading: localizations.translate(i18
+                                        .manageStock.recordStockReturnedLabel),
+                                    description: insertNewlines(
+                                      localizations.translate(
+                                        "i18.stockDetails.recordStockReturnedDescription",
+                                      ),
+                                    ),
+                                    icon: Icons.settings_backup_restore,
+                                    onTap: () {
+                                      showStockReturnDialog(context);
+                                    }),
+                              ),
+                            ),
+                            Positioned(
+                              top: 0,
+                              bottom: 0,
+                              right: 16,
+                              child: Center(
+                                  child: GestureDetector(
+                                onTap: () {
+                                  showStockReturnDialog(context);
+                                },
+                                child: Icon(
+                                  Icons.arrow_circle_right,
+                                  color: Colors.orange[800],
+                                  size: Base.height,
+                                ),
+                              )),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ]),
+                  const SizedBox(height: spacer4),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
