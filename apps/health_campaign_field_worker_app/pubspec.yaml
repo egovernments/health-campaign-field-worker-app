@@ -62,7 +62,7 @@ dependencies:
   inventory_management: ^1.0.6
   referral_reconciliation: ^1.0.6
   digit_data_model: ^1.2.0-dev.1-console
-  registration_delivery: ^1.1.0-dev.1-console
+  registration_delivery: ^1.1.0-dev.4-console
   disable_battery_optimization: ^1.1.1
   digit_dss: ^1.0.4+2
   closed_household: ^1.1.0-dev.1-console
@@ -79,9 +79,9 @@ dependencies:
       ref: master
   percent_indicator: ^4.2.4
   lottie: ^3.1.0
-  digit_crud_bloc: ^0.0.1-dev
-  digit_data_converter: ^0.0.1-dev
-  digit_forms_engine: ^0.0.1-dev
+  digit_crud_bloc: ^0.0.2-dev
+  digit_data_converter: ^0.0.2-dev
+  digit_forms_engine: ^0.0.2-dev
 
 dev_dependencies:
   flutter_test:

@@ -1,10 +1,16 @@
+## 1.1.0-dev.4-console
+
+* BugFix:
+    * Formula parser bug fix
+    * Updated normalizeKnownFlatFieldsRecursively for nested mapping for audit,clientAudit and
+      locality
+
 ## 1.1.0-dev.3-console
 
 * BugFix:
-  * Fixed only single resource was showing issue
-  * Fixed flow for register household of any other project
+    * Fixed only single resource was showing issue
+    * Fixed flow for register household of any other project
 * Updated dependencies to latest versions
-
 
 ## 1.1.0-dev.2-console
 
