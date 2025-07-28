@@ -745,7 +745,7 @@ const String inventoryConfigData = '''{
           "description": "APPONE_INVENTORY_PRODUCTDETAILS_SCREEN_DESCRIPTION",
           "actionLabel": "APPONE_INVENTORY_PRODUCTDETAILS_ACTION_BUTTON_LABEL_1",
           "properties": {
-            "productDetails": {
+            "productVariantId": {
               "type": "string",
               "label": "APPONE_INVENTORY_PRODUCTDETAILS_LABEL",
               "order": 1,

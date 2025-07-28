@@ -533,7 +533,9 @@ class _HomePageState extends LocalizedState<HomePage> {
               }
             }
 
-            await context.router.push(ManageStocksRoute());
+// TODO:: Todo
+            await context.router.push(const ManageStockWrapperRoute());
+            //await context.router.push(ManageStocksRoute());
 
 // end
             // context.router.push(ManageStocksRoute());
