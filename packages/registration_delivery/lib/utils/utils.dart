@@ -350,10 +350,12 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               'gender'
             ]);
             final error = expression;
-            if (error["value"] == null || (error is bool && !error["value"])) {
+            if (error["value"] == null ||
+                (error["value"] is bool && !error["value"])) {
               errorMessages.add(condition);
             }
-            if (error["value"] == null) {
+            if (error["value"] == null ||
+                (error["value"] is bool && !error["value"])) {
               expressionParser.add(false);
             } else if (error["value"] is bool && error["value"] == true) {
               expressionParser.add(error["value"]);
