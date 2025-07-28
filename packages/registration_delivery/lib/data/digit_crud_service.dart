@@ -41,7 +41,7 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
   @override
   EntityModel? dynamicEntityModelFromMap(
       String modelName, Map<String, dynamic> map) {
-    final normalizedMap = normalizeAuditKeysRecursive(map);
+    final normalizedMap = normalizeKnownFlatFieldsRecursively(map);
 
     switch (modelName) {
       case 'individual':
@@ -60,17 +60,24 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
     }
   }
 
-  Map<String, dynamic> normalizeAuditKeysRecursive(Map<String, dynamic> map) {
+  /// Temporary normalization function to transform known flat keys
+  /// (like audit fields and locality info) into nested objects.
+  ///
+  /// NOTE: This is a quick fix for current needs. Should be generalized
+  /// later to support dynamic mapping via config or schema.
+
+  Map<String, dynamic> normalizeKnownFlatFieldsRecursively(
+      Map<String, dynamic> map) {
     final newMap = <String, dynamic>{};
 
-    // First, recursively normalize all values
+    // Recursively normalize all values
     map.forEach((key, value) {
       if (value is Map<String, dynamic>) {
-        newMap[key] = normalizeAuditKeysRecursive(value);
+        newMap[key] = normalizeKnownFlatFieldsRecursively(value);
       } else if (value is List) {
         newMap[key] = value
             .map((item) => item is Map<String, dynamic>
-                ? normalizeAuditKeysRecursive(item)
+                ? normalizeKnownFlatFieldsRecursively(item)
                 : item)
             .toList();
       } else {
@@ -78,7 +85,7 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
       }
     });
 
-    // Now, build auditDetails and clientAuditDetails if flat keys exist at this level
+    // Flattened audit -> nested auditDetails
     final auditDetails = <String, dynamic>{};
     if (newMap.containsKey('auditCreatedBy')) {
       auditDetails['createdBy'] = newMap['auditCreatedBy'];
@@ -96,6 +103,7 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
       newMap['auditDetails'] = auditDetails;
     }
 
+    // Flattened client audit -> nested clientAuditDetails
     final clientAuditDetails = <String, dynamic>{};
     if (newMap.containsKey('clientCreatedBy')) {
       clientAuditDetails['createdBy'] = newMap['clientCreatedBy'];
@@ -111,6 +119,14 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
     }
     if (clientAuditDetails.isNotEmpty) {
       newMap['clientAuditDetails'] = clientAuditDetails;
+    }
+
+    // Flattened locality -> LocalityModel-like map
+    if (newMap['localityBoundaryCode'] != null) {
+      newMap['locality'] = {
+        'code': newMap['localityBoundaryCode'],
+        'name': newMap['localityBoundaryName'],
+      };
     }
 
     return newMap;
