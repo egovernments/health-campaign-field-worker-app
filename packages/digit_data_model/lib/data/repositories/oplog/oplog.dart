@@ -118,6 +118,35 @@ abstract class OpLogManager<T extends EntityModel> {
         .entityTypeEqualTo(type)
         .findAllSync();
 
+    var updateOplogs = isar.opLogs
+        .filter()
+        .syncedUpEqualTo(false)
+        .operationEqualTo(DataOperation.update)
+        .serverGeneratedIdIsNull()
+        .syncDownRetryCountLessThan(
+            DigitDataModelSingleton().syncDownRetryCount)
+        .syncedDownEqualTo(false)
+        .entityTypeEqualTo(type)
+        .findAllSync();
+
+    List<OpLog> retryOplog = [];
+
+    if (updateOplogs.isNotEmpty) {
+      for (OpLog updateLog in updateOplogs) {
+        var clientRefId = updateLog.clientReferenceId;
+        var createOplog = oplogs
+            .where((element) =>
+                element.clientReferenceId == clientRefId &&
+                element.serverGeneratedId != null)
+            .firstOrNull;
+        if (createOplog != null) {
+          retryOplog.add(updateLog);
+        }
+      }
+    }
+
+    oplogs.addAll(retryOplog);
+
     oplogs = oplogs
         .sortedBy((element) => element.createdAt)
         .where(
