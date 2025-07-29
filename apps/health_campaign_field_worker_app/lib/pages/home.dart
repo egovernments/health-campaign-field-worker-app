@@ -714,6 +714,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
       filteredLabels.remove(i18.home.db);
     }
+
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
 
