@@ -1128,7 +1128,19 @@ class _SearchBeneficiaryPageState
                                             pageName: pageName!,
 
                                             /// as registration is there assuming form won't be null
-                                            defaultValues: formData,
+                                            defaultValues: {
+                                              ...formData,
+                                              'administrativeArea':
+                                                  localizations.translate(
+                                                      RegistrationDeliverySingleton()
+                                                              .boundary
+                                                              ?.code ??
+                                                          ''),
+                                              'availableIDs': {
+                                                'DEFAULT':
+                                                    IdGen.instance.identifier,
+                                              }
+                                            },
                                           ));
 
                                           blocWrapper.add(RegistrationWrapperEvent

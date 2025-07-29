@@ -152,37 +152,228 @@ class FormEntityMapper {
     required Map<String, dynamic> modelConfig,
     required Map<String, dynamic> context,
   }) {
+    final modelType = existingModel.runtimeType.toString();
     final factory = DataConverterSingleton()
         .dynamicEntityModelListener
-        ?.modelFactoryRegistry[existingModel.runtimeType.toString()];
+        ?.modelFactoryRegistry[modelType];
+
     if (factory == null) {
-      throw Exception('Factory not found for ${existingModel.runtimeType}');
+      throw Exception('Factory not found for $modelType');
     }
 
-    // Start from the existing model's JSON
-    final updatedMap = Map<String, dynamic>.from(existingModel.toMap());
-
+    final existingMap = Map<String, dynamic>.from(existingModel.toMap());
     final mappings = modelConfig['mappings'] as Map<String, dynamic>? ?? {};
 
-    for (final entry in mappings.entries) {
-      final targetKey = entry.key;
-      final sourcePath = entry.value;
+    void applyUpdate(
+      Map<String, dynamic> target,
+      Map<String, dynamic> formData,
+      Map<String, dynamic> mapping,
+      String parentPath,
+    ) {
+      for (final entry in mapping.entries) {
+        final targetKey = entry.key;
+        final sourcePath = entry.value;
 
-      if (sourcePath is String) {
-        final value = getValueFromMapping(sourcePath, formValues,
-            existingModel.runtimeType.toString(), context,
-            updateMapping: true);
+        final fullPath =
+            parentPath.isEmpty ? targetKey : '$parentPath.$targetKey';
 
-        if (value != null) {
-          updatedMap[targetKey] =
-              value is DateTime ? value.millisecondsSinceEpoch : value;
+        if (targetKey == 'additionalFields' &&
+            sourcePath is Map<String, dynamic>) {
+          final existingAdditional =
+              target['additionalFields'] as Map<String, dynamic>? ?? {};
+
+          final updatedAdditional = _updateAdditionalFieldsFromMapping(
+            existingAdditionalFields: existingAdditional,
+            updateMapping: sourcePath,
+            formValues: formValues,
+            modelName: modelType,
+          );
+
+          if (updatedAdditional != null) {
+            target['additionalFields'] = updatedAdditional;
+          }
+
+          continue;
+        } else if (sourcePath is Map<String, dynamic>) {
+          if (target[targetKey] is Map<String, dynamic>) {
+            final nestedTarget = Map<String, dynamic>.from(target[targetKey]);
+            applyUpdate(nestedTarget, formData, sourcePath, fullPath);
+            target[targetKey] = nestedTarget;
+          } else if (target[targetKey] is List) {
+            // 🔥 handle structured list logic
+            final modelList = target[targetKey] as List;
+
+            final listMappingConfig = modelConfig['listMappings']?[targetKey];
+            if (listMappingConfig is Map<String, dynamic>) {
+              final updatedList = _updateListWithMatchingStrategy(
+                originalList: target[targetKey] as List? ?? [],
+                listMapping: listMappingConfig,
+                formValues: formValues,
+                context: context,
+                modelType: targetKey,
+              );
+              target[targetKey] = updatedList;
+            }
+          }
+        } else if (sourcePath is String) {
+          final formValue =
+              getStrictValueFromFormDataOnly(sourcePath, formData);
+
+          if (formValue != null) {
+            target[targetKey] = formValue is DateTime
+                ? formValue.millisecondsSinceEpoch
+                : formValue;
+          }
         }
       }
-
-      // You can add nested mappings or additionalFields support if needed
     }
 
-    return factory(updatedMap);
+    applyUpdate(existingMap, formValues, mappings, '');
+
+    return factory(existingMap);
+  }
+
+  List<Map<String, dynamic>> _updateListWithMatchingStrategy({
+    required List<dynamic> originalList,
+    required Map<String, dynamic> listMapping,
+    required Map<String, dynamic> formValues,
+    required Map<String, dynamic> context,
+    required String modelType,
+  }) {
+    final updatedList = <Map<String, dynamic>>[];
+
+    final mappings = listMapping['mappings'] as Map<String, dynamic>? ?? {};
+    final listSourcePath = listMapping['listSource'] as String?;
+
+    if (listSourcePath == null) {
+      debugPrint('listSource missing in listMapping');
+      return originalList.cast<Map<String, dynamic>>();
+    }
+
+    final listSourceValue =
+        getStrictValueFromFormDataOnly(listSourcePath, formValues);
+
+    if (listSourceValue == null) {
+      return originalList.cast<Map<String, dynamic>>();
+    }
+
+    bool matched = false;
+
+    for (final existingItem in originalList.cast<Map<String, dynamic>>()) {
+      if (existingItem.values.contains(listSourceValue.toString())) {
+        // Match found — update only values that match from form
+        final updated = Map<String, dynamic>.from(existingItem);
+        for (final entry in mappings.entries) {
+          final modelField = entry.key;
+          final mappingPath = entry.value;
+
+          if (mappingPath is String) {
+            final formValue =
+                getStrictValueFromFormDataOnly(mappingPath, formValues);
+            if (formValue != null) {
+              updated[modelField] = formValue;
+            }
+          }
+        }
+        updatedList.add(updated);
+        matched = true;
+      } else {
+        // No match — keep original
+        updatedList.add(existingItem);
+      }
+    }
+
+    if (!matched) {
+      // Add new entry based on mappings
+      final newEntry = _mapListModel(
+          listSourcePath, formValues, modelType, listMapping, context);
+
+      if (newEntry.isNotEmpty) {
+        updatedList.add(newEntry.first);
+      }
+    }
+
+    return updatedList;
+  }
+
+  Map<String, dynamic>? _updateAdditionalFieldsFromMapping({
+    required Map<String, dynamic> existingAdditionalFields,
+    required Map<String, dynamic> updateMapping,
+    required Map<String, dynamic> formValues,
+    required String modelName,
+  }) {
+    final updatedFields = <String, String>{};
+
+    updateMapping.forEach((customKey, path) {
+      final value = getStrictValueFromFormDataOnly(path, formValues);
+
+      if (value != null && value.toString().trim().isNotEmpty) {
+        updatedFields[customKey] = value.toString();
+      }
+    });
+
+    if (updatedFields.isEmpty) return null;
+
+    final existingFields = <String, String>{};
+    if (existingAdditionalFields['fields'] is List) {
+      for (final field in existingAdditionalFields['fields']) {
+        if (field['key'] != null && field['value'] != null) {
+          existingFields[field['key']] = field['value'];
+        }
+      }
+    }
+
+    // merge updates into existing
+    updatedFields.forEach((key, value) {
+      existingFields[key] = value;
+    });
+
+    final mergedFields = existingFields.entries
+        .map((e) => {'key': e.key, 'value': e.value})
+        .toList();
+
+    return {
+      'schema': existingAdditionalFields['schema'] ?? modelName,
+      'version': existingAdditionalFields['version'] ?? 1,
+      'fields': mergedFields,
+    };
+  }
+
+  dynamic getStrictValueFromFormDataOnly(
+      String path, Map<String, dynamic> formValues) {
+    final regex = RegExp(r'([^\[\].]+)(?:\[(\d+)\])?');
+
+    dynamic current = formValues;
+    for (final match in regex.allMatches(path)) {
+      final key = match.group(1);
+      final indexStr = match.group(2);
+
+      if (current is Map<String, dynamic> &&
+          key != null &&
+          current.containsKey(key)) {
+        current = current[key];
+      } else if (current is List &&
+          current.length == 1 &&
+          current.first is Map<String, dynamic> &&
+          key != null &&
+          (current.first as Map<String, dynamic>).containsKey(key)) {
+        current = (current.first as Map<String, dynamic>)[key];
+      } else {
+        return null;
+      }
+
+      if (indexStr != null && current is String) {
+        final index = int.tryParse(indexStr);
+        final parts = current.split(',');
+        if (index != null && index >= 0 && index < parts.length) {
+          current = parts[index].trim();
+        } else {
+          return null;
+        }
+      }
+    }
+
+    return current;
   }
 
   EntityModel _mapModel(
@@ -255,46 +446,47 @@ class FormEntityMapper {
     if (listSourcePath != null) {
       final listData = getValueFromMapping(
           listSourcePath, formValues, listModelName, context);
-      if (listData is! List) return [];
-      final mappings = listConfig['mappings'] as Map<String, dynamic>;
-      final items = <Map<String, dynamic>>[];
-      for (final item in listData) {
-        final newItem = <String, dynamic>{};
-        for (final entry in mappings.entries) {
-          final targetKey = entry.key;
-          final sourcePath = entry.value;
-          if (sourcePath is String) {
-            // If the mapping path starts with the listSourcePath + '.', resolve relative to the item
-            if (sourcePath.startsWith(listSourcePath + '.')) {
-              final relativePath = sourcePath
-                  .substring(listSourcePath.length + 1); // skip the dot
-              newItem[targetKey] = getValueFromMapping(
-                  relativePath, item, listModelName, context);
-            } else {
+      if (listData is List) {
+        final mappings = listConfig['mappings'] as Map<String, dynamic>;
+        final items = <Map<String, dynamic>>[];
+        for (final item in listData) {
+          final newItem = <String, dynamic>{};
+          for (final entry in mappings.entries) {
+            final targetKey = entry.key;
+            final sourcePath = entry.value;
+            if (sourcePath is String) {
+              // If the mapping path starts with the listSourcePath + '.', resolve relative to the item
+              if (sourcePath.startsWith(listSourcePath + '.')) {
+                final relativePath = sourcePath
+                    .substring(listSourcePath.length + 1); // skip the dot
+                newItem[targetKey] = getValueFromMapping(
+                    relativePath, item, listModelName, context);
+              } else {
+                newItem[targetKey] = getValueFromMapping(
+                    sourcePath, item, listModelName, context);
+              }
+            }
+            if (targetKey == 'additionalFields' &&
+                sourcePath is Map<String, dynamic>) {
+              newItem[targetKey] = _mapAdditionalFields(
+                  sourcePath, formValues, listModelName, context);
+              continue;
+            }
+            if (sourcePath is Map<String, dynamic>) {
               newItem[targetKey] =
-                  getValueFromMapping(sourcePath, item, listModelName, context);
+                  _mapNestedObject(sourcePath, formValues, targetKey, context);
+              continue;
+            }
+            if (sourcePath is String && sourcePath.startsWith('list:')) {
+              newItem[targetKey] = _mapListModel(
+                  sourcePath, formValues, listModelName, listConfig, context);
+              continue;
             }
           }
-          if (targetKey == 'additionalFields' &&
-              sourcePath is Map<String, dynamic>) {
-            newItem[targetKey] = _mapAdditionalFields(
-                sourcePath, formValues, listModelName, context);
-            continue;
-          }
-          if (sourcePath is Map<String, dynamic>) {
-            newItem[targetKey] =
-                _mapNestedObject(sourcePath, formValues, targetKey, context);
-            continue;
-          }
-          if (sourcePath is String && sourcePath.startsWith('list:')) {
-            newItem[targetKey] = _mapListModel(
-                sourcePath, formValues, listModelName, listConfig, context);
-            continue;
-          }
+          items.add(newItem);
         }
-        items.add(newItem);
+        return items;
       }
-      return items;
     }
 
     // Fallback to current logic (single item mapping)
