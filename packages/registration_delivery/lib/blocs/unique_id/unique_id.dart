@@ -7,7 +7,6 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/models/entities/id_status.dart';
-import 'package:registration_delivery/models/entities/unique_id_pool.dart';
 
 import '../../data/repositories/remote/unique_id_pool.dart';
 import '../../utils/utils.dart';

@@ -4,8 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 
-import '../../../models/entities/unique_id_pool.dart';
-
 class UniqueIdPoolLocalRepository
     extends LocalRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel> {
   UniqueIdPoolLocalRepository(super.sql, super.opLogManager);

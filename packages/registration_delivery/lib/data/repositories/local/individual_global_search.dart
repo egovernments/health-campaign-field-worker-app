@@ -7,10 +7,7 @@ import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 
-import '../../../models/entities/referral.dart';
 import '../../../models/entities/status.dart';
-import '../../../models/entities/task.dart';
-import '../../../models/entities/task_resource.dart';
 import '../../../utils/global_search_parameters.dart';
 
 class IndividualGlobalSearchRepository extends LocalRepository {

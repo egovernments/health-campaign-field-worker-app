@@ -1,8 +1,8 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/task_resource.dart';
 import 'package:drift/drift.dart';
-import 'package:registration_delivery/models/entities/task_resource.dart';
 
 part 'task.mapper.dart';
 

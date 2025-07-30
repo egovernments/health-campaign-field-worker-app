@@ -1,6 +1,9 @@
 import 'package:auto_route/annotations.dart';
+import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
+import 'package:digit_crud_bloc/utils/utils.dart';
 import 'package:digit_flow_builder/widgets/localized.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'flow_builder.dart';
 
@@ -25,6 +28,14 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
     final config = FlowRegistry.getByName(widget.pageName);
     if (config == null) return const Center(child: Text('Page not found'));
 
-    return ScreenBuilder(config: config);
+    return MultiBlocProvider(providers: [
+      BlocProvider(
+        create: (context) {
+          return CrudBloc(
+            service: CrudBlocSingleton().crudService,
+          );
+        },
+      ),
+    ], child: ScreenBuilder(config: config));
   }
 }

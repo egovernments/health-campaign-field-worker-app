@@ -1,7 +1,6 @@
 // Generated using mason. Do not modify by hand
 
 import 'package:digit_data_model/data_model.dart';
-import 'package:registration_delivery/models/entities/household_member.dart';
 
 class HouseholdMemberRemoteRepository
     extends RemoteRepository<HouseholdMemberModel, HouseholdMemberSearchModel> {

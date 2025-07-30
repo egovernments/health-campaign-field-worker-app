@@ -1,12 +1,4 @@
 import 'package:digit_data_model/data_model.dart';
-import 'package:registration_delivery/models/entities/unique_id_pool.dart';
-
-import '../../../models/entities/household.dart';
-import '../../../models/entities/household_member.dart';
-import '../../../models/entities/project_beneficiary.dart';
-import '../../../models/entities/referral.dart';
-import '../../../models/entities/side_effect.dart';
-import '../../../models/entities/task.dart';
 
 class HouseholdOpLogManager extends OpLogManager<HouseholdModel> {
   HouseholdOpLogManager(super.isar);

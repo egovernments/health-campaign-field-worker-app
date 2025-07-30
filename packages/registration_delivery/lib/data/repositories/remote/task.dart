@@ -1,7 +1,6 @@
 // Generated using mason. Do not modify by hand
 
 import 'package:digit_data_model/data_model.dart';
-import 'package:registration_delivery/models/entities/task.dart';
 
 class TaskRemoteRepository
     extends RemoteRepository<TaskModel, TaskSearchModel> {

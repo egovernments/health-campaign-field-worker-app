@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
-import 'package:registration_delivery/models/entities/referral.dart';
 
 class ReferralLocalRepository
     extends LocalRepository<ReferralModel, ReferralSearchModel> {

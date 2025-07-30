@@ -18,7 +18,6 @@ import 'package:provider/provider.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:registration_delivery/data/repositories/local/unique_id_pool.dart';
 import 'package:registration_delivery/data/repositories/remote/unique_id_pool.dart';
-import 'package:registration_delivery/models/entities/unique_id_pool.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
