@@ -12,7 +12,7 @@ part of 'property_schema.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 PropertySchema _$PropertySchemaFromJson(Map<String, dynamic> json) {
   return _PropertySchema.fromJson(json);
@@ -58,6 +58,8 @@ mixin _$PropertySchema {
   bool? get includeInForm => throw _privateConstructorUsedError;
   bool? get includeInSummary => throw _privateConstructorUsedError;
   NavigateToConfig? get navigateTo => throw _privateConstructorUsedError;
+  VisibilityCondition? get visibilityCondition =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -106,10 +108,12 @@ abstract class $PropertySchemaCopyWith<$Res> {
       List<ValidationRule>? validations,
       bool? includeInForm,
       bool? includeInSummary,
-      NavigateToConfig? navigateTo});
+      NavigateToConfig? navigateTo,
+      VisibilityCondition? visibilityCondition});
 
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
   $NavigateToConfigCopyWith<$Res>? get navigateTo;
+  $VisibilityConditionCopyWith<$Res>? get visibilityCondition;
 }
 
 /// @nodoc
@@ -158,6 +162,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? includeInForm = freezed,
     Object? includeInSummary = freezed,
     Object? navigateTo = freezed,
+    Object? visibilityCondition = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -292,6 +297,10 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.navigateTo
           : navigateTo // ignore: cast_nullable_to_non_nullable
               as NavigateToConfig?,
+      visibilityCondition: freezed == visibilityCondition
+          ? _value.visibilityCondition
+          : visibilityCondition // ignore: cast_nullable_to_non_nullable
+              as VisibilityCondition?,
     ) as $Val);
   }
 
@@ -316,6 +325,19 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
 
     return $NavigateToConfigCopyWith<$Res>(_value.navigateTo!, (value) {
       return _then(_value.copyWith(navigateTo: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $VisibilityConditionCopyWith<$Res>? get visibilityCondition {
+    if (_value.visibilityCondition == null) {
+      return null;
+    }
+
+    return $VisibilityConditionCopyWith<$Res>(_value.visibilityCondition!,
+        (value) {
+      return _then(_value.copyWith(visibilityCondition: value) as $Val);
     });
   }
 }
@@ -363,12 +385,15 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       List<ValidationRule>? validations,
       bool? includeInForm,
       bool? includeInSummary,
-      NavigateToConfig? navigateTo});
+      NavigateToConfig? navigateTo,
+      VisibilityCondition? visibilityCondition});
 
   @override
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
   @override
   $NavigateToConfigCopyWith<$Res>? get navigateTo;
+  @override
+  $VisibilityConditionCopyWith<$Res>? get visibilityCondition;
 }
 
 /// @nodoc
@@ -415,6 +440,7 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? includeInForm = freezed,
     Object? includeInSummary = freezed,
     Object? navigateTo = freezed,
+    Object? visibilityCondition = freezed,
   }) {
     return _then(_$PropertySchemaImpl(
       type: null == type
@@ -549,6 +575,10 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.navigateTo
           : navigateTo // ignore: cast_nullable_to_non_nullable
               as NavigateToConfig?,
+      visibilityCondition: freezed == visibilityCondition
+          ? _value.visibilityCondition
+          : visibilityCondition // ignore: cast_nullable_to_non_nullable
+              as VisibilityCondition?,
     ));
   }
 }
@@ -592,7 +622,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
       final List<ValidationRule>? validations,
       this.includeInForm,
       this.includeInSummary,
-      this.navigateTo})
+      this.navigateTo,
+      this.visibilityCondition})
       : _properties = properties,
         _enums = enums,
         _conditions = conditions,
@@ -703,10 +734,12 @@ class _$PropertySchemaImpl implements _PropertySchema {
   final bool? includeInSummary;
   @override
   final NavigateToConfig? navigateTo;
+  @override
+  final VisibilityCondition? visibilityCondition;
 
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition)';
   }
 
   @override
@@ -770,7 +803,9 @@ class _$PropertySchemaImpl implements _PropertySchema {
             (identical(other.includeInSummary, includeInSummary) ||
                 other.includeInSummary == includeInSummary) &&
             (identical(other.navigateTo, navigateTo) ||
-                other.navigateTo == navigateTo));
+                other.navigateTo == navigateTo) &&
+            (identical(other.visibilityCondition, visibilityCondition) ||
+                other.visibilityCondition == visibilityCondition));
   }
 
   @JsonKey(ignore: true)
@@ -809,7 +844,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
         const DeepCollectionEquality().hash(_validations),
         includeInForm,
         includeInSummary,
-        navigateTo
+        navigateTo,
+        visibilityCondition
       ]);
 
   @JsonKey(ignore: true)
@@ -863,7 +899,8 @@ abstract class _PropertySchema implements PropertySchema {
       final List<ValidationRule>? validations,
       final bool? includeInForm,
       final bool? includeInSummary,
-      final NavigateToConfig? navigateTo}) = _$PropertySchemaImpl;
+      final NavigateToConfig? navigateTo,
+      final VisibilityCondition? visibilityCondition}) = _$PropertySchemaImpl;
 
   factory _PropertySchema.fromJson(Map<String, dynamic> json) =
       _$PropertySchemaImpl.fromJson;
@@ -938,6 +975,8 @@ abstract class _PropertySchema implements PropertySchema {
   bool? get includeInSummary;
   @override
   NavigateToConfig? get navigateTo;
+  @override
+  VisibilityCondition? get visibilityCondition;
   @override
   @JsonKey(ignore: true)
   _$$PropertySchemaImplCopyWith<_$PropertySchemaImpl> get copyWith =>
@@ -1618,5 +1657,144 @@ abstract class _NavigateToConfig implements NavigateToConfig {
   @override
   @JsonKey(ignore: true)
   _$$NavigateToConfigImplCopyWith<_$NavigateToConfigImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+VisibilityCondition _$VisibilityConditionFromJson(Map<String, dynamic> json) {
+  return _VisibilityCondition.fromJson(json);
+}
+
+/// @nodoc
+mixin _$VisibilityCondition {
+  String get expression => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $VisibilityConditionCopyWith<VisibilityCondition> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $VisibilityConditionCopyWith<$Res> {
+  factory $VisibilityConditionCopyWith(
+          VisibilityCondition value, $Res Function(VisibilityCondition) then) =
+      _$VisibilityConditionCopyWithImpl<$Res, VisibilityCondition>;
+  @useResult
+  $Res call({String expression});
+}
+
+/// @nodoc
+class _$VisibilityConditionCopyWithImpl<$Res, $Val extends VisibilityCondition>
+    implements $VisibilityConditionCopyWith<$Res> {
+  _$VisibilityConditionCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? expression = null,
+  }) {
+    return _then(_value.copyWith(
+      expression: null == expression
+          ? _value.expression
+          : expression // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$VisibilityConditionImplCopyWith<$Res>
+    implements $VisibilityConditionCopyWith<$Res> {
+  factory _$$VisibilityConditionImplCopyWith(_$VisibilityConditionImpl value,
+          $Res Function(_$VisibilityConditionImpl) then) =
+      __$$VisibilityConditionImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String expression});
+}
+
+/// @nodoc
+class __$$VisibilityConditionImplCopyWithImpl<$Res>
+    extends _$VisibilityConditionCopyWithImpl<$Res, _$VisibilityConditionImpl>
+    implements _$$VisibilityConditionImplCopyWith<$Res> {
+  __$$VisibilityConditionImplCopyWithImpl(_$VisibilityConditionImpl _value,
+      $Res Function(_$VisibilityConditionImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? expression = null,
+  }) {
+    return _then(_$VisibilityConditionImpl(
+      expression: null == expression
+          ? _value.expression
+          : expression // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$VisibilityConditionImpl implements _VisibilityCondition {
+  const _$VisibilityConditionImpl({required this.expression});
+
+  factory _$VisibilityConditionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$VisibilityConditionImplFromJson(json);
+
+  @override
+  final String expression;
+
+  @override
+  String toString() {
+    return 'VisibilityCondition(expression: $expression)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$VisibilityConditionImpl &&
+            (identical(other.expression, expression) ||
+                other.expression == expression));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, expression);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$VisibilityConditionImplCopyWith<_$VisibilityConditionImpl> get copyWith =>
+      __$$VisibilityConditionImplCopyWithImpl<_$VisibilityConditionImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$VisibilityConditionImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _VisibilityCondition implements VisibilityCondition {
+  const factory _VisibilityCondition({required final String expression}) =
+      _$VisibilityConditionImpl;
+
+  factory _VisibilityCondition.fromJson(Map<String, dynamic> json) =
+      _$VisibilityConditionImpl.fromJson;
+
+  @override
+  String get expression;
+  @override
+  @JsonKey(ignore: true)
+  _$$VisibilityConditionImplCopyWith<_$VisibilityConditionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

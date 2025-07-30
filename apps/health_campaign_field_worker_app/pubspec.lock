@@ -579,12 +579,11 @@ packages:
     source: path
     version: "0.0.2-dev"
   digit_formula_parser:
-    dependency: transitive
+    dependency: "direct main"
     description:
-      name: digit_formula_parser
-      sha256: "2d17f51516f62d100facc4a85e0501a4cf6cf52b245486a6f2c7be6cbeca2564"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_formula_parser"
+      relative: true
+    source: path
     version: "1.0.0"
   digit_location_tracker:
     dependency: "direct main"
@@ -2445,5 +2444,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.1 <4.0.0"
+  dart: ">=3.4.0 <4.0.0"
   flutter: ">=3.22.0"
