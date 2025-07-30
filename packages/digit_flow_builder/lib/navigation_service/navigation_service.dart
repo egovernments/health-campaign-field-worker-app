@@ -12,12 +12,12 @@ abstract class NavigationService {
   });
 }
 
-class AppNavigationService implements NavigationService {
+class FlowBuilderNavigationService implements NavigationService {
   final BuildContext context;
   final Map<String, PageRouteInfo Function(Map<String, dynamic>? data)>
       routeMap;
 
-  AppNavigationService(this.context, this.routeMap);
+  FlowBuilderNavigationService(this.context, this.routeMap);
 
   @override
   void navigateTo({
@@ -74,6 +74,6 @@ class NavigationRegistry {
       }
     }
 
-    NavigationRegistry.init(AppNavigationService(context, routeMap));
+    NavigationRegistry.init(FlowBuilderNavigationService(context, routeMap));
   }
 }
