@@ -541,18 +541,16 @@ packages:
   digit_crud_bloc:
     dependency: "direct main"
     description:
-      name: digit_crud_bloc
-      sha256: bb490186c910064cc242f4dfa9d7423d86f6368db638703f9fc807de6e876ca3
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_crud_bloc"
+      relative: true
+    source: path
     version: "0.0.2-dev"
   digit_data_converter:
     dependency: "direct main"
     description:
-      name: digit_data_converter
-      sha256: "7b86a04b5455b913767919f660e5b8cd05cba3a3c0543011b472dd4e7e02f363"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_data_converter"
+      relative: true
+    source: path
     version: "0.0.3-dev"
   digit_data_model:
     dependency: "direct main"
@@ -578,13 +576,19 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.1"
+  digit_flow_builder:
+    dependency: "direct main"
+    description:
+      path: "../../packages/digit_flow_builder"
+      relative: true
+    source: path
+    version: "0.0.1"
   digit_forms_engine:
     dependency: "direct main"
     description:
-      name: digit_forms_engine
-      sha256: efbe2b82837cecdb4db1ca6556b1fa6eebe8d3fc1ddbb12f0f261cc17e45bf4c
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_forms_engine"
+      relative: true
+    source: path
     version: "0.0.2-dev"
   digit_formula_parser:
     dependency: transitive
@@ -1897,10 +1901,9 @@ packages:
   registration_delivery:
     dependency: "direct main"
     description:
-      name: registration_delivery
-      sha256: "8e44fb96946a4001f00def549ca36ceace69645a3bd0c89d0843b3bfef71950b"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/registration_delivery"
+      relative: true
+    source: path
     version: "1.1.0-dev.4-console"
   rxdart:
     dependency: transitive

@@ -193,6 +193,7 @@ abstract class _$AppRouter extends RootStackRouter {
     ...ComplaintsRoute().pagesMap,
     ...TransitPostRoute().pagesMap,
     ...FormsRoute().pagesMap,
+    ...FlowBuilderRoute().pagesMap,
   };
 }
 

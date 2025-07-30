@@ -453,18 +453,16 @@ packages:
   digit_crud_bloc:
     dependency: "direct main"
     description:
-      name: digit_crud_bloc
-      sha256: bb490186c910064cc242f4dfa9d7423d86f6368db638703f9fc807de6e876ca3
-      url: "https://pub.dev"
-    source: hosted
+      path: "../digit_crud_bloc"
+      relative: true
+    source: path
     version: "0.0.2-dev"
   digit_data_converter:
     dependency: "direct main"
     description:
-      name: digit_data_converter
-      sha256: "7b86a04b5455b913767919f660e5b8cd05cba3a3c0543011b472dd4e7e02f363"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../digit_data_converter"
+      relative: true
+    source: path
     version: "0.0.3-dev"
   digit_data_model:
     dependency: "direct main"
@@ -477,10 +475,9 @@ packages:
   digit_forms_engine:
     dependency: "direct main"
     description:
-      name: digit_forms_engine
-      sha256: efbe2b82837cecdb4db1ca6556b1fa6eebe8d3fc1ddbb12f0f261cc17e45bf4c
-      url: "https://pub.dev"
-    source: hosted
+      path: "../digit_forms_engine"
+      relative: true
+    source: path
     version: "0.0.2-dev"
   digit_formula_parser:
     dependency: "direct main"
@@ -1812,5 +1809,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.3 <3.9.0"
+  dart: ">=3.4.1 <3.9.0"
   flutter: ">=3.22.0"

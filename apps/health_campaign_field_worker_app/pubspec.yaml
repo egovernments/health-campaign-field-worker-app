@@ -82,6 +82,8 @@ dependencies:
   digit_crud_bloc: ^0.0.2-dev
   digit_data_converter: ^0.0.2-dev
   digit_forms_engine: ^0.0.2-dev
+  digit_flow_builder:
+    path: ../../packages/digit_flow_builder
 
 dev_dependencies:
   flutter_test:
