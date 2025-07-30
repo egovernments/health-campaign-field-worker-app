@@ -1,5 +1,6 @@
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
+import 'package:digit_ui_components/widgets/atoms/switch.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 
@@ -43,6 +44,7 @@ class WidgetRegistry {
             onAction(action);
           }
         },
+        mainAxisSize: MainAxisSize.max,
         type: DigitButtonType.primary,
         size: DigitButtonSize.large,
       );
@@ -75,6 +77,32 @@ class WidgetRegistry {
       ]);
     });
 
+    WidgetRegistry.register('filter', (json, context, onAction) {
+      return DigitButton(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        label: json['label'] ?? '',
+        onPressed: () {
+          if (json['onAction'] != null) {
+            final action = ActionConfig.fromJson(
+                Map<String, dynamic>.from(json['onAction']));
+            onAction(action);
+          }
+        },
+        type: DigitButtonType.tertiary,
+        size: DigitButtonSize.large,
+        suffixIcon: Icons.filter_alt_sharp,
+      );
+    });
+
+    WidgetRegistry.register('infoCard', (json, context, onAction) {
+      return InfoCard(
+        type: InfoType.info,
+        title: json['label'] ?? '',
+        description: json['description'] ?? '',
+      );
+    });
+
     WidgetRegistry.register('column', (json, context, onAction) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,28 +127,24 @@ class WidgetRegistry {
     });
 
     WidgetRegistry.register('switch', (json, context, onAction) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(json['label'] ?? ''),
-          Switch(
-            value: false, // Add state linkage if needed
-            onChanged: (value) {
-              if (json['onAction'] != null) {
-                final raw = Map<String, dynamic>.from(json['onAction']);
-                raw['properties'] ??= {};
-                raw['properties']['data'] = [
-                  {
-                    'key': json['fieldName'] ?? 'switch',
-                    'value': value,
-                  }
-                ];
-                final action = ActionConfig.fromJson(raw);
-                onAction(action);
+      return DigitSwitch(
+        label: json['label'] ?? '',
+        value: false, // Add state linkage if needed
+        mainAxisAlignment: MainAxisAlignment.start,
+        onChanged: (value) {
+          if (json['onAction'] != null) {
+            final raw = Map<String, dynamic>.from(json['onAction']);
+            raw['properties'] ??= {};
+            raw['properties']['data'] = [
+              {
+                'key': json['fieldName'] ?? 'switch',
+                'value': value,
               }
-            },
-          )
-        ],
+            ];
+            final action = ActionConfig.fromJson(raw);
+            onAction(action);
+          }
+        },
       );
     });
   }
