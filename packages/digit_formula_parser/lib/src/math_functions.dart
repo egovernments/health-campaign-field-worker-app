@@ -33,15 +33,92 @@ List<num> _convertToNumbers(List<dynamic> args) {
   }).toList();
 }
 
+// Helper function to check if all arguments are numeric
+bool _areAllNumeric(List<dynamic> args) {
+  return args.every((arg) => arg is num || (arg is String && double.tryParse(arg) != null));
+}
+
 // Update function maps with explicit types
 
 final Map<String, bool Function(dynamic, dynamic)> comparisonFunctions = {
-  'lt': (a, b) => a < b,
-  'gt': (a, b) => a > b,
-  'lte': (a, b) => a <= b,
-  'gte': (a, b) => a >= b,
-  'eq': (a, b) => a == b,
-  'ne': (a, b) => a != b,
+  'lt': (a, b) {
+    if (a is String && b is String) return a.compareTo(b) < 0;
+    if (a is num && b is num) return a < b;
+    if (a is String && b is num) {
+      final parsedA = double.tryParse(a);
+      return parsedA != null ? parsedA < b : false;
+    }
+    if (a is num && b is String) {
+      final parsedB = double.tryParse(b);
+      return parsedB != null ? a < parsedB : false;
+    }
+    return a.toString().compareTo(b.toString()) < 0;
+  },
+  'gt': (a, b) {
+    if (a is String && b is String) return a.compareTo(b) > 0;
+    if (a is num && b is num) return a > b;
+    if (a is String && b is num) {
+      final parsedA = double.tryParse(a);
+      return parsedA != null ? parsedA > b : false;
+    }
+    if (a is num && b is String) {
+      final parsedB = double.tryParse(b);
+      return parsedB != null ? a > parsedB : false;
+    }
+    return a.toString().compareTo(b.toString()) > 0;
+  },
+  'lte': (a, b) {
+    if (a is String && b is String) return a.compareTo(b) <= 0;
+    if (a is num && b is num) return a <= b;
+    if (a is String && b is num) {
+      final parsedA = double.tryParse(a);
+      return parsedA != null ? parsedA <= b : false;
+    }
+    if (a is num && b is String) {
+      final parsedB = double.tryParse(b);
+      return parsedB != null ? a <= parsedB : false;
+    }
+    return a.toString().compareTo(b.toString()) <= 0;
+  },
+  'gte': (a, b) {
+    if (a is String && b is String) return a.compareTo(b) >= 0;
+    if (a is num && b is num) return a >= b;
+    if (a is String && b is num) {
+      final parsedA = double.tryParse(a);
+      return parsedA != null ? parsedA >= b : false;
+    }
+    if (a is num && b is String) {
+      final parsedB = double.tryParse(b);
+      return parsedB != null ? a >= parsedB : false;
+    }
+    return a.toString().compareTo(b.toString()) >= 0;
+  },
+  'eq': (a, b) {
+    if (a is String && b is String) return a == b;
+    if (a is num && b is num) return a == b;
+    if (a is String && b is num) {
+      final parsedA = double.tryParse(a);
+      return parsedA != null ? parsedA == b : false;
+    }
+    if (a is num && b is String) {
+      final parsedB = double.tryParse(b);
+      return parsedB != null ? a == parsedB : false;
+    }
+    return a.toString() == b.toString();
+  },
+  'ne': (a, b) {
+    if (a is String && b is String) return a != b;
+    if (a is num && b is num) return a != b;
+    if (a is String && b is num) {
+      final parsedA = double.tryParse(a);
+      return parsedA != null ? parsedA != b : true;
+    }
+    if (a is num && b is String) {
+      final parsedB = double.tryParse(b);
+      return parsedB != null ? a != parsedB : true;
+    }
+    return a.toString() != b.toString();
+  },
 };
 
 final Map<String, bool Function(bool)> functionsWithOneBoolArg = {
@@ -90,25 +167,29 @@ final Map<String, num Function(List<num>)> functionsWithOneListArg = {
 
 /// Common mathematical functions.
 dynamic mathFunction(String name, List<dynamic> arguments) {
-  final args = _convertToNumbers(arguments);
-  if (args.isEmpty) return null;
-
   final String fnName = name.toLowerCase();
 
-  if (functionsWithOneNumberArg.containsKey(fnName) && args.length == 1) {
-    return functionsWithOneNumberArg[fnName]!(args[0]);
+  // Handle comparison functions that can work with strings and numbers
+  if (comparisonFunctions.containsKey(fnName) && arguments.length == 2) {
+    return comparisonFunctions[fnName]!(arguments[0], arguments[1]);
   }
 
-  if (comparisonFunctions.containsKey(fnName) && args.length == 2) {
-    return comparisonFunctions[fnName]!(args[0], args[1]);
-  }
+  // For numeric functions, convert arguments to numbers
+  if (_areAllNumeric(arguments)) {
+    final args = _convertToNumbers(arguments);
+    if (args.isEmpty) return null;
 
-  if (functionsWithTwoNumberArg.containsKey(fnName) && args.length == 2) {
-    return functionsWithTwoNumberArg[fnName]!(args[0], args[1]);
-  }
+    if (functionsWithOneNumberArg.containsKey(fnName) && args.length == 1) {
+      return functionsWithOneNumberArg[fnName]!(args[0]);
+    }
 
-  if (functionsWithOneListArg.containsKey(fnName) && args.isNotEmpty) {
-    return functionsWithOneListArg[fnName]!(args);
+    if (functionsWithTwoNumberArg.containsKey(fnName) && args.length == 2) {
+      return functionsWithTwoNumberArg[fnName]!(args[0], args[1]);
+    }
+
+    if (functionsWithOneListArg.containsKey(fnName) && args.isNotEmpty) {
+      return functionsWithOneListArg[fnName]!(args);
+    }
   }
 
   return null;

@@ -27,10 +27,10 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
           unknownValue: PropertySchemaFormat.text),
       startDate: _stringOrNull(json['startDate']),
       endDate: _stringOrNull(json['endDate']),
-      minValue: json['minValue'] as int?,
-      maxValue: json['maxValue'] as int?,
-      minLength: json['minLength'] as int?,
-      maxLength: json['maxLength'] as int?,
+      minValue: (json['minValue'] as num?)?.toInt(),
+      maxValue: (json['maxValue'] as num?)?.toInt(),
+      minLength: (json['minLength'] as num?)?.toInt(),
+      maxLength: (json['maxLength'] as num?)?.toInt(),
       helpText: json['helpText'] as String?,
       tooltip: json['tooltip'] as String?,
       prefixText: json['prefixText'] as String?,
@@ -44,7 +44,7 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
           : DisplayBehavior.fromJson(
               json['displayBehavior'] as Map<String, dynamic>),
       conditions: json['conditions'] as Map<String, dynamic>?,
-      order: json['order'] as int?,
+      order: (json['order'] as num?)?.toInt(),
       actionLabel: json['actionLabel'] as String?,
       description: json['description'] as String?,
       validations: (json['validations'] as List<dynamic>?)
@@ -56,6 +56,10 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
           ? null
           : NavigateToConfig.fromJson(
               json['navigateTo'] as Map<String, dynamic>),
+      visibilityCondition: json['visibilityCondition'] == null
+          ? null
+          : VisibilityCondition.fromJson(
+              json['visibilityCondition'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -104,6 +108,7 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('includeInForm', instance.includeInForm);
   writeNotNull('includeInSummary', instance.includeInSummary);
   writeNotNull('navigateTo', instance.navigateTo?.toJson());
+  writeNotNull('visibilityCondition', instance.visibilityCondition?.toJson());
   return val;
 }
 
@@ -193,4 +198,16 @@ Map<String, dynamic> _$$NavigateToConfigImplToJson(
     <String, dynamic>{
       'type': instance.type,
       'name': instance.name,
+    };
+
+_$VisibilityConditionImpl _$$VisibilityConditionImplFromJson(
+        Map<String, dynamic> json) =>
+    _$VisibilityConditionImpl(
+      expression: json['expression'] as String,
+    );
+
+Map<String, dynamic> _$$VisibilityConditionImplToJson(
+        _$VisibilityConditionImpl instance) =>
+    <String, dynamic>{
+      'expression': instance.expression,
     };

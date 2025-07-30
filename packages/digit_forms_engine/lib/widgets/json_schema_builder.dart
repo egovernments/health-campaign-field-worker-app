@@ -2,9 +2,9 @@ library json_schema_builder;
 
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_forms_engine/blocs/app_localization.dart';
+import 'package:digit_forms_engine/forms_engine.dart';
 import 'package:digit_forms_engine/helper/form_builder_helper.dart';
 import 'package:digit_forms_engine/helper/validator_helper.dart';
-import 'package:digit_forms_engine/models/property_schema/property_schema.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:digit_ui_components/digit_components.dart';

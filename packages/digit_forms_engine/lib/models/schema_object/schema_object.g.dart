@@ -9,7 +9,7 @@ part of 'schema_object.dart';
 _$SchemaObjectImpl _$$SchemaObjectImplFromJson(Map<String, dynamic> json) =>
     _$SchemaObjectImpl(
       name: json['name'] as String,
-      version: json['version'] as int,
+      version: (json['version'] as num).toInt(),
       summary: json['summary'] as bool? ?? false,
       pages: (json['pages'] as Map<String, dynamic>?)?.map(
             (k, e) =>
