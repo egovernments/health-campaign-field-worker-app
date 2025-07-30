@@ -46,7 +46,6 @@ import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
-import '../main.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../utils/debound.dart';
@@ -90,7 +89,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         }
       }
     });
-    setupNavigation(context); // injects navigation service
+    NavigationRegistry.setupNavigation(context);
     //// Function to set initial Data required for the packages to run
     setPackagesSingleton(context);
   }
@@ -977,23 +976,4 @@ class _HomeItemDataModel {
   final List<GlobalKey> showcaseKeys;
 
   const _HomeItemDataModel(this.homeItems, this.showcaseKeys);
-}
-
-void setupNavigation(BuildContext context) {
-  final Map<String, PageRouteInfo<dynamic> Function(Map<String, dynamic>?)>
-      routeMap = {};
-
-  for (final flow in sampleFlows) {
-    final screenType = flow['screenType'];
-    final name = flow['name'];
-
-    if (screenType != null && name != null) {
-      final routeKey = '$screenType::$name';
-
-      // Provide a function that returns the appropriate PageRouteInfo
-      routeMap[routeKey] = (_) => FlowBuilderHomeRoute(pageName: name);
-    }
-  }
-
-  NavigationRegistry.init(AppNavigationService(context, routeMap));
 }

@@ -16,6 +16,11 @@ class FlowBuilderHomePage extends LocalizedStatefulWidget {
 
 class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final config = FlowRegistry.getByName(widget.pageName);
     if (config == null) return const Center(child: Text('Page not found'));

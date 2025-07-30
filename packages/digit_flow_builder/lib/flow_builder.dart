@@ -18,5 +18,9 @@ class FlowRegistry {
     }
   }
 
+  static Map<String, Map<String, dynamic>> getAllConfigs() {
+    return Map.unmodifiable(_flowMap);
+  }
+
   static Map<String, dynamic>? getByName(String name) => _flowMap[name];
 }
