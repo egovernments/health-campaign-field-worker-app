@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/repositories/local/project_beneficiary.dart';
-import '../../models/entities/project_beneficiary.dart';
 import '../../utils/utils.dart';
 import '../progress_indicator/progress_indicator.dart';
 

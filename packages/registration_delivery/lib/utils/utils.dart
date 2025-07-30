@@ -12,14 +12,10 @@ import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
-import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
 import '../models/entities/additional_fields_type.dart';
-import '../models/entities/referral.dart';
-import '../models/entities/side_effect.dart';
 import '../models/entities/status.dart';
-import '../models/entities/task.dart';
 
 /// This class contains custom validators for form controls.
 class CustomValidator {

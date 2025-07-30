@@ -16,10 +16,6 @@ import 'package:location/location.dart';
 import 'package:registration_delivery/data/repositories/local/household_global_search.dart';
 import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
 import 'package:registration_delivery/data/repositories/oplog/oplog.dart';
-import 'package:registration_delivery/models/entities/household.dart';
-import 'package:registration_delivery/models/entities/household_member.dart';
-import 'package:registration_delivery/models/entities/project_beneficiary.dart';
-import 'package:registration_delivery/models/entities/task.dart';
 import 'package:survey_form/survey_form.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';

@@ -4,8 +4,6 @@ import 'dart:math' as math;
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 
-import '../../../models/entities/household.dart';
-
 class RegistrationDeliveryAddressRepo extends AddressLocalRepository {
   RegistrationDeliveryAddressRepo(
     super.sql,

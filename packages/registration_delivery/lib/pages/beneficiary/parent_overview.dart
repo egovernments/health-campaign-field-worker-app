@@ -16,7 +16,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/widgets/member_card/member_card.dart';
 
-import '../../models/entities/household.dart';
 import '../../models/entities/status.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';

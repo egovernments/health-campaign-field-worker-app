@@ -1,10 +1,7 @@
 import 'dart:async';
 
-import 'package:digit_data_model/data/local_store/sql_store/tables/package_tables/household_member_relationship.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
-import 'package:registration_delivery/models/entities/household_member.dart';
-import 'package:registration_delivery/models/entities/household_member_relationship.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 class HouseholdMemberLocalRepository
@@ -72,78 +69,81 @@ class HouseholdMemberLocalRepository
 
         // Fetch relationships based on clientReferenceId
         final val = await (sql.select(sql.householdMemberRelationShip)
-          ..where(
+              ..where(
                 (tbl) => tbl.selfClientReferenceId.equals(
-              householdMember.clientReferenceId ?? '',
-            ),
-          ))
+                  householdMember.clientReferenceId ?? '',
+                ),
+              ))
             .get();
 
         final res = val
             .map((relation) {
-
-          return HouseholdMemberRelationShipModel(
-            selfClientReferenceId: relation.selfClientReferenceId,
-            relationshipType: relation.relationshipType,
-            relativeClientReferenceId: relation.relativeClientReferenceId,
-            tenantId: relation.tenantId,
-            isDeleted: relation.isDeleted,
-            rowVersion: relation.rowVersion,
-            clientReferenceId: relation.clientReferenceId,
-            clientAuditDetails: (relation.clientCreatedBy != null &&
-                relation.clientCreatedTime != null)
-                ? ClientAuditDetails(
-              createdBy: relation.clientCreatedBy!,
-              createdTime: relation.clientCreatedTime!,
-              lastModifiedBy: relation.clientModifiedBy,
-              lastModifiedTime: relation.clientModifiedTime,
-            )
-                : null,
-            auditDetails: (relation.auditCreatedBy != null &&
-                relation.auditCreatedTime != null)
-                ? AuditDetails(
-              createdBy: relation.auditCreatedBy!,
-              createdTime: relation.auditCreatedTime!,
-              lastModifiedBy: relation.auditModifiedBy,
-              lastModifiedTime: relation.auditModifiedTime,
-            )
-                : null,
-            additionalFields: relation.additionalFields != null
-                ? HouseholdMemberRelationShipAdditionalFieldsMapper.fromJson(
-                relation.additionalFields!)
-                : null,
-          );
-                  return null;
-        }).whereType<HouseholdMemberRelationShipModel>().toList();
+              return HouseholdMemberRelationShipModel(
+                selfClientReferenceId: relation.selfClientReferenceId,
+                relationshipType: relation.relationshipType,
+                relativeClientReferenceId: relation.relativeClientReferenceId,
+                tenantId: relation.tenantId,
+                isDeleted: relation.isDeleted,
+                rowVersion: relation.rowVersion,
+                clientReferenceId: relation.clientReferenceId,
+                clientAuditDetails: (relation.clientCreatedBy != null &&
+                        relation.clientCreatedTime != null)
+                    ? ClientAuditDetails(
+                        createdBy: relation.clientCreatedBy!,
+                        createdTime: relation.clientCreatedTime!,
+                        lastModifiedBy: relation.clientModifiedBy,
+                        lastModifiedTime: relation.clientModifiedTime,
+                      )
+                    : null,
+                auditDetails: (relation.auditCreatedBy != null &&
+                        relation.auditCreatedTime != null)
+                    ? AuditDetails(
+                        createdBy: relation.auditCreatedBy!,
+                        createdTime: relation.auditCreatedTime!,
+                        lastModifiedBy: relation.auditModifiedBy,
+                        lastModifiedTime: relation.auditModifiedTime,
+                      )
+                    : null,
+                additionalFields: relation.additionalFields != null
+                    ? HouseholdMemberRelationShipAdditionalFieldsMapper
+                        .fromJson(relation.additionalFields!)
+                    : null,
+              );
+              return null;
+            })
+            .whereType<HouseholdMemberRelationShipModel>()
+            .toList();
 
         householdMembers.add(
           HouseholdMemberModel(
             id: householdMember.id,
             householdId: householdMember.householdId,
-            householdClientReferenceId: householdMember.householdClientReferenceId,
+            householdClientReferenceId:
+                householdMember.householdClientReferenceId,
             individualId: householdMember.individualId,
-            individualClientReferenceId: householdMember.individualClientReferenceId,
+            individualClientReferenceId:
+                householdMember.individualClientReferenceId,
             isHeadOfHousehold: householdMember.isHeadOfHousehold,
             isDeleted: householdMember.isDeleted,
             tenantId: householdMember.tenantId,
             rowVersion: householdMember.rowVersion,
             auditDetails: (householdMember.auditCreatedBy != null &&
-                householdMember.auditCreatedTime != null)
+                    householdMember.auditCreatedTime != null)
                 ? AuditDetails(
-              createdBy: householdMember.auditCreatedBy!,
-              createdTime: householdMember.auditCreatedTime!,
-              lastModifiedBy: householdMember.auditModifiedBy,
-              lastModifiedTime: householdMember.auditModifiedTime,
-            )
+                    createdBy: householdMember.auditCreatedBy!,
+                    createdTime: householdMember.auditCreatedTime!,
+                    lastModifiedBy: householdMember.auditModifiedBy,
+                    lastModifiedTime: householdMember.auditModifiedTime,
+                  )
                 : null,
             clientAuditDetails: (householdMember.clientCreatedBy != null &&
-                householdMember.clientCreatedTime != null)
+                    householdMember.clientCreatedTime != null)
                 ? ClientAuditDetails(
-              createdBy: householdMember.clientCreatedBy!,
-              createdTime: householdMember.clientCreatedTime!,
-              lastModifiedBy: householdMember.clientModifiedBy,
-              lastModifiedTime: householdMember.clientModifiedTime,
-            )
+                    createdBy: householdMember.clientCreatedBy!,
+                    createdTime: householdMember.clientCreatedTime!,
+                    lastModifiedBy: householdMember.clientModifiedBy,
+                    lastModifiedTime: householdMember.clientModifiedTime,
+                  )
                 : null,
             clientReferenceId: householdMember.clientReferenceId,
             memberRelationships: res,
@@ -151,7 +151,9 @@ class HouseholdMemberLocalRepository
         );
       }
 
-      return householdMembers.where((element) => element.isDeleted != true).toList();
+      return householdMembers
+          .where((element) => element.isDeleted != true)
+          .toList();
     });
   }
 
@@ -164,11 +166,12 @@ class HouseholdMemberLocalRepository
     return retryLocalCallOperation(() async {
       final householdMemberCompanion = entity.companion;
       final relationshipCompanions =
-      entity.memberRelationships?.map((e) => e.companion).toList();
+          entity.memberRelationships?.map((e) => e.companion).toList();
 
       await sql.batch((batch) {
         batch.insert(sql.householdMember, householdMemberCompanion);
-        if (relationshipCompanions != null && relationshipCompanions.isNotEmpty) {
+        if (relationshipCompanions != null &&
+            relationshipCompanions.isNotEmpty) {
           batch.insertAll(
             sql.householdMemberRelationShip,
             relationshipCompanions,
@@ -190,7 +193,8 @@ class HouseholdMemberLocalRepository
           entities.map((e) => e.companion).toList();
 
       // Collect all relationship companions from all entities
-      final List<HouseholdMemberRelationShipCompanion> relationshipCompanions = [];
+      final List<HouseholdMemberRelationShipCompanion> relationshipCompanions =
+          [];
 
       for (final entity in entities) {
         if (entity.memberRelationships != null) {
@@ -222,7 +226,7 @@ class HouseholdMemberLocalRepository
   FutureOr<void> update(
     HouseholdMemberModel entity, {
     bool createOpLog = true,
-        DataOperation dataOperation = DataOperation.update,
+    DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
       final householdMemberCompanion = entity.companion;
@@ -237,7 +241,6 @@ class HouseholdMemberLocalRepository
           ),
         );
 
-
         // Update each relationship individually with correct where clause
         if (relationships != null && relationships.isNotEmpty) {
           for (final relationship in relationships) {
@@ -250,7 +253,6 @@ class HouseholdMemberLocalRepository
             );
           }
         }
-
       });
 
       await super.update(entity, createOpLog: createOpLog);
@@ -275,17 +277,23 @@ class HouseholdMemberLocalRepository
               )
             : null,
         rowVersion: entity.rowVersion?.increment,
-        memberRelationships: entity.memberRelationships?.map((e) => e.copyWith(isDeleted: true,
-          clientAuditDetails: (e.clientAuditDetails?.createdBy != null &&
-              e.clientAuditDetails?.createdTime != null)
-              ? ClientAuditDetails(
-                createdBy: e.clientAuditDetails!.createdBy,
-                createdTime: e.clientAuditDetails!.createdTime,
-                lastModifiedBy: e.clientAuditDetails!.lastModifiedBy,
-                lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-              ): null,
-          rowVersion: e.rowVersion?.increment,
-        )).toList(),
+        memberRelationships: entity.memberRelationships
+            ?.map((e) => e.copyWith(
+                  isDeleted: true,
+                  clientAuditDetails: (e.clientAuditDetails?.createdBy !=
+                              null &&
+                          e.clientAuditDetails?.createdTime != null)
+                      ? ClientAuditDetails(
+                          createdBy: e.clientAuditDetails!.createdBy,
+                          createdTime: e.clientAuditDetails!.createdTime,
+                          lastModifiedBy: e.clientAuditDetails!.lastModifiedBy,
+                          lastModifiedTime:
+                              DateTime.now().millisecondsSinceEpoch,
+                        )
+                      : null,
+                  rowVersion: e.rowVersion?.increment,
+                ))
+            .toList(),
       );
       final relationships = entity.memberRelationships;
 
@@ -293,12 +301,14 @@ class HouseholdMemberLocalRepository
         for (final relationship in relationships) {
           final updatedRetionship = relationship.copyWith(
             isDeleted: true,
-            clientAuditDetails: (relationship.clientAuditDetails?.createdBy != null &&
+            clientAuditDetails: (relationship.clientAuditDetails?.createdBy !=
+                        null &&
                     relationship.clientAuditDetails?.createdTime != null)
                 ? ClientAuditDetails(
                     createdBy: relationship.clientAuditDetails!.createdBy,
                     createdTime: relationship.clientAuditDetails!.createdTime,
-                    lastModifiedBy: relationship.clientAuditDetails!.lastModifiedBy,
+                    lastModifiedBy:
+                        relationship.clientAuditDetails!.lastModifiedBy,
                     lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
                   )
                 : null,

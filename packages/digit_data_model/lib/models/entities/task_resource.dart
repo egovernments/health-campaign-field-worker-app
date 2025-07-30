@@ -1,34 +1,33 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:drift/drift.dart';
-
 import 'package:digit_data_model/data_model.dart';
+import 'package:drift/drift.dart';
 
 part 'task_resource.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class TaskResourceSearchModel extends EntitySearchModel with TaskResourceSearchModelMappable {
+class TaskResourceSearchModel extends EntitySearchModel
+    with TaskResourceSearchModelMappable {
   final String? id;
   final String? tenantId;
-  
+
   TaskResourceSearchModel({
     this.id,
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   TaskResourceSearchModel.ignoreDeleted({
     this.id,
     this.tenantId,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class TaskResourceModel extends EntityModel with TaskResourceModelMappable {
-
   static const schemaName = 'TaskResource';
 
   final String clientReferenceId;
@@ -57,9 +56,10 @@ class TaskResourceModel extends EntityModel with TaskResourceModelMappable {
     this.nonRecoverableError = false,
     this.tenantId,
     this.rowVersion,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   TaskResourceCompanion get companion {
     return TaskResourceCompanion(
@@ -84,16 +84,16 @@ class TaskResourceModel extends EntityModel with TaskResourceModelMappable {
       nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
-      );
+    );
   }
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class TaskResourceAdditionalFields extends AdditionalFields with TaskResourceAdditionalFieldsMappable {
+class TaskResourceAdditionalFields extends AdditionalFields
+    with TaskResourceAdditionalFieldsMappable {
   TaskResourceAdditionalFields({
     super.schema = 'TaskResource',
     required super.version,
     super.fields,
   });
 }
-

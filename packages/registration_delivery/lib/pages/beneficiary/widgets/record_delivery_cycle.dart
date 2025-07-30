@@ -15,7 +15,6 @@ import 'package:registration_delivery/utils/utils.dart';
 import '../../../models/entities/additional_fields_type.dart';
 import '../../../models/entities/deliver_strategy_type.dart';
 import '../../../models/entities/status.dart';
-import '../../../models/entities/task.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/registration_component_keys.dart' as registration_keys;
 import '../../../widgets/localized.dart';

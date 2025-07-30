@@ -5,8 +5,6 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 
-import '../../../models/entities/household.dart';
-
 class HouseholdLocalRepository
     extends LocalRepository<HouseholdModel, HouseholdSearchModel> {
   HouseholdLocalRepository(super.sql, super.opLogManager);
@@ -228,7 +226,7 @@ class HouseholdLocalRepository
   FutureOr<void> update(
     HouseholdModel entity, {
     bool createOpLog = true,
-        DataOperation dataOperation = DataOperation.update,
+    DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
       final householdCompanion = entity.companion;

@@ -6,7 +6,6 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 import 'package:registration_delivery/models/entities/id_status.dart';
-import 'package:registration_delivery/models/entities/unique_id_pool.dart';
 
 class UniqueIdPoolRemoteRepository
     extends RemoteRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel> {

@@ -8,14 +8,10 @@ import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
-import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import '../../blocs/app_localization.dart';
-import '../../models/entities/household.dart';
-import '../../models/entities/side_effect.dart';
 import '../../models/entities/status.dart';
-import '../../models/entities/task.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 

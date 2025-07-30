@@ -16,7 +16,6 @@ import 'package:survey_form/models/entities/service_definition.dart';
 
 import '../blocs/unique_id/unique_id.dart';
 import '../data/repositories/remote/unique_id_pool.dart';
-import '../models/entities/unique_id_pool.dart';
 
 @RoutePage()
 class RegistrationDeliveryWrapperPage extends StatelessWidget {

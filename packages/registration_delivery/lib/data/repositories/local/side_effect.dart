@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
-import 'package:registration_delivery/models/entities/side_effect.dart';
 
 class SideEffectLocalRepository
     extends LocalRepository<SideEffectModel, SideEffectSearchModel> {
@@ -148,7 +147,7 @@ class SideEffectLocalRepository
   FutureOr<void> update(
     SideEffectModel entity, {
     bool createOpLog = true,
-        DataOperation dataOperation = DataOperation.update,
+    DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
       final sideEffectsCompanion = entity.companion;
