@@ -1,12 +1,14 @@
 import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
+import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:isar/isar.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+
 import 'app.dart';
 import 'blocs/app_bloc_observer.dart';
 import 'data/local_store/app_shared_preferences.dart';
@@ -46,6 +48,8 @@ void main() async {
   await Constants().initialize(info.version);
   _isar = await Constants().isar;
   await initializeService(_dio, _isar);
+  FlowRegistry.setConfig(sampleFlows);
+  WidgetRegistry().initializeDefaultWidgetRegistry();
 
   runApp(MainApplication(
     appRouter: AppRouter(),
@@ -73,3 +77,98 @@ class AppLifecycleObserver extends WidgetsBindingObserver {
     }
   }
 }
+
+final List<Map<String, dynamic>> sampleFlows = [
+  {
+    "screenType": "TEMPLATE",
+    "name": "searchBeneficiary",
+    "heading": "Search Beneficiary",
+    "description": "Search using filters",
+    "body": [
+      {
+        "format": "searchBar",
+        "label": "Enter Name",
+        "fieldName": "searchName",
+        "onAction": {
+          "action": "ONTAP",
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "type": "SEARCH_EVENT",
+            "name": "ENTITY // INDIVIDUAL",
+            "data": [
+              {"key": "name", "value": "field.value", "operation": "contains"}
+            ]
+          }
+        }
+      },
+      {
+        "format": "button",
+        "label": "Register New Beneficiary",
+        "onAction": {
+          "action": "ONTAP",
+          "actionType": "NAVIGATION",
+          "properties": {"type": "TEMPLATE", "name": "beneficiaryOverview"}
+        }
+      }
+    ]
+  },
+  {
+    "screenType": "TEMPLATE",
+    "name": "beneficiaryOverview",
+    "heading": "Beneficiary Details",
+    "description": "Overview of selected beneficiary",
+    "body": [
+      {
+        "format": "card",
+        "child": {
+          "format": "column",
+          "children": [
+            {"format": "text", "value": "Name: {{item.name}}"},
+            {"format": "text", "value": "Address: {{item.address}}"},
+            {
+              "format": "button",
+              "label": "Edit",
+              "onAction": {
+                "action": "ONTAP",
+                "actionType": "NAVIGATION",
+                "properties": {"type": "TEMPLATE", "name": "editBeneficiary"}
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "screenType": "TEMPLATE",
+    "name": "editBeneficiary",
+    "heading": "Edit Beneficiary",
+    "description": "Modify details",
+    "body": [
+      {
+        "format": "switch",
+        "label": "Is Head of Household?",
+        "fieldName": "isHead",
+        "onAction": {
+          "action": "ONTAP",
+          "actionType": "UPDATE_EVENT",
+          "properties": {
+            "entity": "INDIVIDUAL",
+            "data": [
+              {"key": "isHead", "value": "field.value"}
+            ]
+          }
+        }
+      },
+      {
+        "format": "button",
+        "label": "Save & Go to Home",
+        "onAction": {
+          "action": "ONTAP",
+          "actionType": "NAVIGATION",
+          "properties": {"type": "TEMPLATE", "name": "searchBeneficiary"}
+        }
+      }
+    ]
+  }
+];

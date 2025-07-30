@@ -15,10 +15,11 @@ import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
+import 'package:digit_flow_builder/flow_builder.dart';
+import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
 import 'package:digit_location_tracker/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
-import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -45,6 +46,7 @@ import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
+import '../main.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../utils/debound.dart';
@@ -88,6 +90,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         }
       }
     });
+    setupNavigation(context); // injects navigation service
     //// Function to set initial Data required for the packages to run
     setPackagesSingleton(context);
   }
@@ -585,13 +588,20 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.table_chart,
           label: i18.home.db,
           onPressed: () async {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => DriftDbViewer(
-                  context.read<LocalSqlDataStore>(),
-                ),
-              ),
-            );
+            // Navigator.of(context).push(
+            //   MaterialPageRoute(
+            //     builder: (context) => DriftDbViewer(
+            //       context.read<LocalSqlDataStore>(),
+            //     ),
+            //   ),
+            // );
+            try {
+              context.router.push(
+                FlowBuilderHomeRoute(pageName: 'searchBeneficiary'),
+              );
+            } catch (e) {
+              debugPrint('error $e');
+            }
           },
         ),
       ),
@@ -967,4 +977,23 @@ class _HomeItemDataModel {
   final List<GlobalKey> showcaseKeys;
 
   const _HomeItemDataModel(this.homeItems, this.showcaseKeys);
+}
+
+void setupNavigation(BuildContext context) {
+  final Map<String, PageRouteInfo<dynamic> Function(Map<String, dynamic>?)>
+      routeMap = {};
+
+  for (final flow in sampleFlows) {
+    final screenType = flow['screenType'];
+    final name = flow['name'];
+
+    if (screenType != null && name != null) {
+      final routeKey = '$screenType::$name';
+
+      // Provide a function that returns the appropriate PageRouteInfo
+      routeMap[routeKey] = (_) => FlowBuilderHomeRoute(pageName: name);
+    }
+  }
+
+  NavigationRegistry.init(AppNavigationService(context, routeMap));
 }

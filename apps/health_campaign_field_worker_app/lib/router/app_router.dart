@@ -6,6 +6,8 @@ import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/router/dashboard_router.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
+import 'package:digit_flow_builder/router/flow_builder_routes.dart';
+import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
 import 'package:digit_forms_engine/router/forms_router.dart';
 import 'package:digit_scanner/router/digit_scanner_router.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
@@ -56,6 +58,7 @@ part 'app_router.gr.dart';
     ComplaintsRoute,
     TransitPostRoute,
     FormsRoute,
+    FlowBuilderRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -213,6 +216,7 @@ class AppRouter extends _$AppRouter {
 
         // Forms Route
         ...FormsRoute().routes,
+        AutoRoute(page: FlowBuilderHomeRoute.page, path: 'dynamic/:pageName'),
 
         ...TransitPostRoute().routes,
 
