@@ -15,7 +15,6 @@ import 'package:intl/intl.dart';
 import 'package:recase/recase.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
-import 'package:registration_delivery/pages/beneficiary/widgets/past_delivery.dart';
 import 'package:registration_delivery/widgets/beneficiary/resource_card.dart';
 
 import '../../router/registration_delivery_router.gm.dart';
@@ -229,132 +228,147 @@ class BeneficiaryDetailsPageState
                                                       if (productVariants[
                                                               'criteria'] ==
                                                           null) {
-                                                        showCustomPopup(
-                                                          context: context,
-                                                          builder: (BuildContext context) => Popup(
-                                                              title: localizations
-                                                                  .translate(i18
-                                                                      .common
-                                                                      .coreCommonError),
-                                                              description: localizations.translate(
-                                                                      'CONDITION_FAILED') +
-                                                                  productVariants[
-                                                                          'errors']
-                                                                      .toString()
-                                                                      .replaceAll(
-                                                                          '[', '')
-                                                                      .replaceAll(
-                                                                          ']', ''),
-                                                              type: PopUpType
-                                                                  .alert,
-                                                              actions: [
-                                                                DigitButton(
-                                                                    label: localizations
-                                                                        .translate(i18
-                                                                            .common
-                                                                            .corecommonclose),
-                                                                    onPressed:
-                                                                        () {
-                                                                      Navigator
-                                                                          .of(
-                                                                        context,
-                                                                        rootNavigator:
-                                                                            true,
-                                                                      ).pop();
-                                                                    },
-                                                                    type: DigitButtonType
-                                                                        .secondary,
-                                                                    size: DigitButtonSize
-                                                                        .large)
-                                                              ]),
-                                                        );
+                                                        if (beneficiaryDetailsTemplate
+                                                                ?.properties?[
+                                                                    registration_keys
+                                                                        .beneficiaryDetailsKeys
+                                                                        .showDeliveryPopUp]
+                                                                ?.hidden !=
+                                                            true) {
+                                                          showCustomPopup(
+                                                            context: context,
+                                                            builder: (BuildContext context) => Popup(
+                                                                title: localizations
+                                                                    .translate(i18
+                                                                        .common
+                                                                        .coreCommonError),
+                                                                description: localizations.translate(
+                                                                        'CONDITION_FAILED') +
+                                                                    productVariants['errors']
+                                                                        .toString()
+                                                                        .replaceAll(
+                                                                            '[',
+                                                                            '')
+                                                                        .replaceAll(
+                                                                            ']',
+                                                                            ''),
+                                                                type: PopUpType
+                                                                    .alert,
+                                                                actions: [
+                                                                  DigitButton(
+                                                                      label: localizations.translate(i18
+                                                                          .common
+                                                                          .corecommonclose),
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator
+                                                                            .of(
+                                                                          context,
+                                                                          rootNavigator:
+                                                                              true,
+                                                                        ).pop();
+                                                                      },
+                                                                      type: DigitButtonType
+                                                                          .secondary,
+                                                                      size: DigitButtonSize
+                                                                          .large)
+                                                                ]),
+                                                          );
+                                                        } else {
+                                                          showCustomPopup(
+                                                            context: context,
+                                                            builder: (BuildContext context) => Popup(
+                                                                title: localizations
+                                                                    .translate(i18
+                                                                        .common
+                                                                        .coreCommonError),
+                                                                description: localizations.translate(
+                                                                        'CONDITION_FAILED') +
+                                                                    productVariants['errors']
+                                                                        .toString()
+                                                                        .replaceAll(
+                                                                            '[',
+                                                                            '')
+                                                                        .replaceAll(
+                                                                            ']',
+                                                                            ''),
+                                                                type: PopUpType
+                                                                    .alert,
+                                                                actions: [
+                                                                  DigitButton(
+                                                                      label: localizations.translate(i18
+                                                                          .common
+                                                                          .corecommonclose),
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator
+                                                                            .of(
+                                                                          context,
+                                                                          rootNavigator:
+                                                                              true,
+                                                                        ).pop();
+                                                                      },
+                                                                      type: DigitButtonType
+                                                                          .secondary,
+                                                                      size: DigitButtonSize
+                                                                          .large)
+                                                                ]),
+                                                          );
+                                                        }
                                                       } else {
-                                                        showCustomPopup(
-                                                          context: context,
-                                                          builder: (popUpContext) => Popup(
-                                                              title: localizations
-                                                                  .translate(i18
-                                                                      .beneficiaryDetails
-                                                                      .resourcesTobeDelivered),
-                                                              type: PopUpType
-                                                                  .simple,
-                                                              contentPadding:
-                                                                  EdgeInsets
-                                                                      .zero,
-                                                              additionalWidgets: [
-                                                                buildTableContent(
-                                                                    deliverState,
-                                                                    context,
-                                                                    variant,
-                                                                    state
-                                                                        .selectedIndividual,
-                                                                    state
-                                                                        .householdMembers
-                                                                        .first
-                                                                        .household),
-                                                              ],
-                                                              actions: [
-                                                                DigitButton(
-                                                                    label: localizations.translate(i18
-                                                                        .beneficiaryDetails
-                                                                        .ctaProceed),
-                                                                    onPressed:
-                                                                        () {
-                                                                      Navigator
-                                                                          .of(
-                                                                        context,
-                                                                        rootNavigator:
-                                                                            true,
-                                                                      ).pop();
-                                                                      if (beneficiaryDetailsTemplate
-                                                                              ?.navigateTo !=
-                                                                          null) {
-                                                                        if (beneficiaryDetailsTemplate?.navigateTo?.type ==
-                                                                            'form') {
-                                                                          final pageName = context
-                                                                              .read<FormsBloc>()
-                                                                              .state
-                                                                              .cachedSchemas['DELIVERYFLOW']
-                                                                              ?.pages
-                                                                              .entries
-                                                                              .firstOrNull
-                                                                              ?.key;
+                                                        if (beneficiaryDetailsTemplate
+                                                                ?.navigateTo !=
+                                                            null) {
+                                                          if (beneficiaryDetailsTemplate
+                                                                  ?.navigateTo
+                                                                  ?.type ==
+                                                              'form') {
+                                                            final pageName = context
+                                                                .read<
+                                                                    FormsBloc>()
+                                                                .state
+                                                                .cachedSchemas[
+                                                                    'DELIVERYFLOW']
+                                                                ?.pages
+                                                                .entries
+                                                                .firstOrNull
+                                                                ?.key;
 
-                                                                          if (pageName ==
-                                                                              null) {
-                                                                            Toast.showToast(
-                                                                              context,
-                                                                              message: localizations.translate('NO_FORM_FOUND_FOR_DELIVERY'),
-                                                                              type: ToastType.error,
-                                                                            );
-                                                                          } else {
-                                                                            context.router.push(FormsRenderRoute(
-                                                                              currentSchemaKey: 'DELIVERYFLOW',
-                                                                              pageName: pageName,
-                                                                              defaultValues: {
-                                                                                'locality': localizations.translate(RegistrationDeliverySingleton().boundary?.code ?? '')
-                                                                              },
-                                                                              customComponents: const [
-                                                                                {
-                                                                                  'resourceCard': ResourceCard()
-                                                                                }
-                                                                              ],
-                                                                            ));
-                                                                          }
-                                                                        }
-                                                                      } else {
-                                                                        //TODO: need to figure out multiple cycle logic
-                                                                      }
-                                                                      // router.push(
-                                                                      //   DeliverInterventionRoute(),
-                                                                      // );
-                                                                    },
-                                                                    type: DigitButtonType
-                                                                        .primary,
-                                                                    size: DigitButtonSize
-                                                                        .large),
-                                                              ]),
-                                                        );
+                                                            if (pageName ==
+                                                                null) {
+                                                              Toast.showToast(
+                                                                context,
+                                                                message: localizations
+                                                                    .translate(
+                                                                        'NO_FORM_FOUND_FOR_DELIVERY'),
+                                                                type: ToastType
+                                                                    .error,
+                                                              );
+                                                            } else {
+                                                              context.router.push(
+                                                                  FormsRenderRoute(
+                                                                currentSchemaKey:
+                                                                    'DELIVERYFLOW',
+                                                                pageName:
+                                                                    pageName,
+                                                                defaultValues: {
+                                                                  'locality': localizations
+                                                                      .translate(
+                                                                          RegistrationDeliverySingleton().boundary?.code ??
+                                                                              '')
+                                                                },
+                                                                customComponents: const [
+                                                                  {
+                                                                    'resourceCard':
+                                                                        ResourceCard()
+                                                                  }
+                                                                ],
+                                                              ));
+                                                            }
+                                                          }
+                                                        } else {
+                                                          //TODO: need to figure out multiple cycle logic
+                                                        }
                                                       }
                                                     }
                                                   },
