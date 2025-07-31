@@ -16,10 +16,10 @@ import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
-import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
 import 'package:digit_location_tracker/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -588,20 +588,20 @@ class _HomePageState extends LocalizedState<HomePage> {
           label: i18.home.db,
           onPressed: () async {
             WidgetRegistry().initializeDefaultWidgetRegistry();
-            // Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (context) => DriftDbViewer(
-            //       context.read<LocalSqlDataStore>(),
-            //     ),
-            //   ),
-            // );
-            try {
-              context.router.push(
-                FlowBuilderHomeRoute(pageName: 'searchBeneficiary'),
-              );
-            } catch (e) {
-              debugPrint('error $e');
-            }
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => DriftDbViewer(
+                  context.read<LocalSqlDataStore>(),
+                ),
+              ),
+            );
+            // try {
+            //   context.router.push(
+            //     FlowBuilderHomeRoute(pageName: 'searchBeneficiary'),
+            //   );
+            // } catch (e) {
+            //   debugPrint('error $e');
+            // }
           },
         ),
       ),
