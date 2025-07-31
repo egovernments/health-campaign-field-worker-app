@@ -3,7 +3,7 @@ import 'package:digit_data_model/blocs/product_variant/product_variant.dart';
 import 'package:digit_data_model/models/entities/beneficiary_type.dart';
 import 'package:digit_data_model/models/entities/product_variant.dart';
 import 'package:digit_data_model/models/entities/project_type.dart';
-import 'package:digit_forms_engine/blocs/forms/forms.dart';
+import 'package:digit_forms_engine/forms_engine.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
@@ -18,9 +18,14 @@ import 'package:registration_delivery/widgets/localized.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 
 class ResourceCard extends LocalizedStatefulWidget {
+  final String? label;
+  final bool readOnly;
+
   const ResourceCard({
     super.key,
     super.appLocalizations,
+    this.label,
+    this.readOnly = false,
   });
 
   @override
@@ -41,6 +46,38 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
+
+    final pages =
+        context.read<FormsBloc>().state.cachedSchemas['DELIVERYFLOW']?.pages;
+
+    bool isReadOnlyFromSchema = false;
+    String? labelFromSchema;
+
+    void walk(Map<String, PropertySchema> node, List<String> pathSoFar) {
+      for (final entry in node.entries) {
+        final key = entry.key;
+        final schema = entry.value;
+
+        final currentPath = [...pathSoFar, key];
+
+        if (key == 'resourceCard') {
+          // Found it; pull values
+          isReadOnlyFromSchema =
+              (schema.readOnly == true) || (schema.displayOnly == true);
+          labelFromSchema = schema.label ?? schema.innerLabel;
+          return; // stop once found
+        }
+
+        if (schema.properties != null && schema.properties!.isNotEmpty) {
+          walk(schema.properties!, currentPath);
+          if (labelFromSchema != null || isReadOnlyFromSchema)
+            return; // early exit
+        }
+      }
+    }
+
+// Kick off the recursive search
+    walk(pages!, []);
 
     return ProductVariantBlocWrapper(
       child: BlocBuilder<RegistrationWrapperBloc, RegistrationWrapperState>(
@@ -86,19 +123,23 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                       }
 
                       return Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            localizations.translate(
-                              i18.deliverIntervention
-                                  .deliverInterventionResourceLabel,
+                          if (labelFromSchema != null &&
+                              localizations
+                                  .translate(labelFromSchema!)
+                                  .isNotEmpty) ...[
+                            Text(
+                              localizations.translate(labelFromSchema!),
+                              style: textTheme.bodyL.copyWith(
+                                color: theme.colorTheme.text.primary,
+                              ),
                             ),
-                            style: textTheme.headingXl.copyWith(
-                              color: theme.colorTheme.primary.primary2,
+                            const SizedBox(
+                              height: spacer1,
                             ),
-                          ),
-                          const SizedBox(
-                            height: spacer2,
-                          ),
+                          ],
                           Column(
                             children:
                                 List.generate(_controllers.length * 2 - 1, (i) {
@@ -109,6 +150,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                               final index = i ~/ 2;
                               final controller = _controllers[index];
                               return ResourceBeneficiaryCard(
+                                readOnly: isReadOnlyFromSchema,
                                 form: form,
                                 cardIndex: index,
                                 totalItems: _controllers.length,
