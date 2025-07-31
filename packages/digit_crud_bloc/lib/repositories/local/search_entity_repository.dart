@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:digit_crud_bloc/models/global_search_params.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 
+import '../../models/global_search_params.dart';
 import '../../utils/utils.dart';
 import '../helpers/hydration_helper.dart';
 import '../helpers/query_builder.dart';
@@ -31,7 +31,7 @@ class SearchEntityRepository extends LocalRepository {
     String? primaryTable,
     PaginationParams? pagination,
   }) async {
-    // ✅ 1. Build query plan
+    // 1. Build query plan
     final plan = await QueryPlanner.build(
       filters: filters,
       relationshipGraph: relationshipGraph,
@@ -40,7 +40,7 @@ class SearchEntityRepository extends LocalRepository {
       pagination: pagination,
     );
 
-    // ✅ 2. Execute optimized join query
+    // 2. Execute optimized join query
     var totalCount = 0;
     final rawRows = await QueryBuilder.queryWithJoins(
       sql: sql,
@@ -49,26 +49,57 @@ class SearchEntityRepository extends LocalRepository {
       onCountFetched: (count) => totalCount = count,
     );
 
-    // ✅ 3. Hydrate nested models (uses your current logic)
-    final hydrated = await HydrationHelper.hydrateRawRows(
-      sql,
-      this,
-      rawRows,
-      nestedModelMapping,
-      plan.rootTable,
-    );
+    // 3. Split joined rows into per-model raw maps
+    final modelToRawRows = <String, List<Map<String, dynamic>>>{};
+    for (final raw in rawRows) {
+      // For each selected model, extract its slice from the flat row.
+      for (final model in select) {
+        final snakeModel = QueryBuilder.camelToSnake(model);
+        final modelSlice = <String, dynamic>{};
 
-    // ✅ 4. Convert to grouped EntityModel list
+        raw.forEach((key, value) {
+          // Expect aliasing in the form of "table_column" (e.g., individual_given_name)
+          if (!key.startsWith('${snakeModel}_')) return;
+          final columnName = key
+              .substring(snakeModel.length + 1); // remove prefix + underscore
+          modelSlice[columnName] = value;
+        });
+
+        if (modelSlice.isEmpty) continue;
+
+        // Optionally include modelName for compatibility if something downstream expects it
+        modelSlice['modelName'] = model;
+
+        modelToRawRows.putIfAbsent(model, () => []).add(modelSlice);
+      }
+    }
+
+    // 4. Hydrate nested models per model (if there are nested mappings for that model)
+    final modelToHydratedRows = <String, List<Map<String, dynamic>>>{};
+    for (final model in modelToRawRows.keys) {
+      final rows = modelToRawRows[model]!;
+      final hydrated = await HydrationHelper.hydrateRawRows(
+        sql,
+        this,
+        rows,
+        nestedModelMapping,
+        model,
+      );
+      modelToHydratedRows[model] = hydrated;
+    }
+
+    // 5. Convert to EntityModel instances grouped by model
     final groupedResults = <String, List<EntityModel>>{};
-    for (final row in hydrated) {
-      final modelName = row['modelName'] as String;
-      if (!select.contains(modelName)) continue;
-
-      final entity = CrudBlocSingleton.instance.dynamicEntityModelListener
-          .dynamicEntityModelFromMap(
-              modelName, QueryBuilder.snakeToCamelDeep(row));
-      if (entity != null) {
-        groupedResults.putIfAbsent(modelName, () => []).add(entity);
+    for (final model in modelToHydratedRows.keys) {
+      final hydratedRows = modelToHydratedRows[model]!;
+      for (final row in hydratedRows) {
+        if (!select.contains(model)) continue;
+        final entity = CrudBlocSingleton.instance.dynamicEntityModelListener
+            .dynamicEntityModelFromMap(
+                model, QueryBuilder.snakeToCamelDeep(row));
+        if (entity != null) {
+          groupedResults.putIfAbsent(model, () => []).add(entity);
+        }
       }
     }
 
