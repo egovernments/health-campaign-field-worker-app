@@ -9,6 +9,8 @@ import 'package:drift/drift.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/query_plan.dart';
+
 class QueryBuilder {
   static String camelToSnake(String input) {
     return input.replaceAllMapped(
@@ -43,6 +45,200 @@ class QueryBuilder {
     final parts = input.split('_');
     return parts.first +
         parts.skip(1).map((p) => p[0].toUpperCase() + p.substring(1)).join();
+  }
+
+  static Future<List<Map<String, dynamic>>> queryWithJoins({
+    required LocalSqlDataStore sql,
+    required QueryPlan plan,
+    bool applyCount = false,
+    void Function(int count)? onCountFetched,
+  }) async {
+    final root = camelToSnake(plan.rootTable);
+    final filters = plan.filters;
+    final joins = plan.joins;
+    final selects = plan.selects;
+
+    final buffer = StringBuffer();
+    final args = <dynamic>[];
+
+    double? centerLat, centerLon, radiusInKm;
+
+    // SELECT
+    buffer.write('SELECT ');
+    buffer.write(selects.map((s) => '${camelToSnake(s.table)}.*').join(', '));
+
+    // FROM
+    buffer.write(' FROM $root');
+
+    // JOINs (deduplicated)
+    final emittedJoins = <String>{};
+
+    for (final join in joins) {
+      final fromTable = camelToSnake(join.fromTable);
+      final toTable = camelToSnake(join.toTable);
+      final joinKey = '$fromTable->$toTable';
+
+      if (emittedJoins.contains(joinKey)) continue;
+      emittedJoins.add(joinKey);
+
+      buffer.write(
+          ' LEFT JOIN $toTable ON $fromTable.${camelToSnake(join.localKey)} = $toTable.${camelToSnake(join.foreignKey)}');
+    }
+
+    // WHERE
+    final whereClauses = <String>[];
+
+    for (final filter in filters) {
+      final table = camelToSnake(filter.root);
+      final column = camelToSnake(filter.field);
+      final col = '$table.$column';
+
+      if (filter.operator == 'geoWithin' || filter.operator == 'within') {
+        if (filter.coordinates == null || filter.value == null) {
+          throw Exception(
+              "Missing coordinates or radius for 'within' operator");
+        }
+
+        centerLat = filter.coordinates!.latitude;
+        centerLon = filter.coordinates!.longitude;
+        radiusInKm = (filter.value as num).toDouble();
+
+        const earthRadius = 6371.0;
+        const degToRad = math.pi / 180.0;
+
+        final deltaLat = radiusInKm / earthRadius;
+        final deltaLon =
+            radiusInKm / (earthRadius * math.cos(centerLat * degToRad));
+
+        final minLat = centerLat - deltaLat;
+        final maxLat = centerLat + deltaLat;
+        final minLon = centerLon - deltaLon;
+        final maxLon = centerLon + deltaLon;
+
+        whereClauses.add('$table.latitude BETWEEN ? AND ?');
+        args.add(minLat);
+        args.add(maxLat);
+
+        whereClauses.add('$table.longitude BETWEEN ? AND ?');
+        args.add(minLon);
+        args.add(maxLon);
+        continue;
+      }
+
+      switch (filter.operator.toLowerCase()) {
+        case '=':
+        case 'equals':
+          whereClauses.add('$col = ?');
+          args.add(filter.value);
+          break;
+
+        case 'contains':
+          whereClauses.add('$col LIKE ?');
+          args.add('%${filter.value}%');
+          break;
+
+        case 'isnotnull':
+          whereClauses.add('$col IS NOT NULL');
+          break;
+
+        case 'isnull':
+          whereClauses.add('$col IS NULL');
+          break;
+
+        case 'in':
+          final values = filter.value as List;
+          final placeholders = List.filled(values.length, '?').join(', ');
+          whereClauses.add('$col IN ($placeholders)');
+          args.addAll(values);
+          break;
+
+        case 'notin':
+          final values = filter.value as List;
+          final placeholders = List.filled(values.length, '?').join(', ');
+          whereClauses.add('$col NOT IN ($placeholders)');
+          args.addAll(values);
+          break;
+
+        case '>':
+        case '<':
+        case '>=':
+        case '<=':
+        case '!=':
+          whereClauses.add('$col ${filter.operator.trim()} ?');
+          args.add(filter.value);
+          break;
+
+        default:
+          throw UnsupportedError(
+              "Unsupported filter operator: ${filter.operator}");
+      }
+    }
+
+    if (whereClauses.isNotEmpty) {
+      buffer.write(' WHERE ');
+      buffer.write(whereClauses.join(' AND '));
+    }
+
+    // COUNT
+    if (applyCount && onCountFetched != null) {
+      final countQuery = buffer.toString().replaceFirst(
+            RegExp(r'^SELECT .+? FROM', dotAll: true),
+            'SELECT COUNT(*) FROM',
+          );
+      final countVariables = args.map((arg) => Variable<Object>(arg)).toList();
+
+      final countResult = await sql
+          .customSelect(countQuery, variables: countVariables)
+          .getSingleOrNull();
+
+      final count = countResult?.data.values.first as int? ?? 0;
+      onCountFetched(count);
+    }
+
+    // Pagination
+    if (plan.pagination != null) {
+      buffer.write(' LIMIT ? OFFSET ?');
+      args.add(plan.pagination!.limit);
+      args.add(plan.pagination!.offset);
+    }
+
+    final variables = args.map((arg) => Variable<Object>(arg)).toList();
+
+    final rawResults =
+        await sql.customSelect(buffer.toString(), variables: variables).get();
+
+    var results = rawResults.map((row) => row.data).toList();
+
+    // Final Haversine filtering
+    if (centerLat != null && centerLon != null && radiusInKm != null) {
+      const earthRadius = 6371.0;
+      const degToRad = math.pi / 180.0;
+
+      double haversine(double lat1, double lon1, double lat2, double lon2) {
+        final dLat = (lat2 - lat1) * degToRad;
+        final dLon = (lon2 - lon1) * degToRad;
+        final a = math.sin(dLat / 2) * math.sin(dLat / 2) +
+            math.cos(lat1 * degToRad) *
+                math.cos(lat2 * degToRad) *
+                math.sin(dLon / 2) *
+                math.sin(dLon / 2);
+        final c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
+        return earthRadius * c;
+      }
+
+      results = results.where((row) {
+        final lat = row['latitude'] as double?;
+        final lon = row['longitude'] as double?;
+        if (lat == null || lon == null) return false;
+        return haversine(centerLat!, centerLon!, lat, lon) <= radiusInKm!;
+      }).toList();
+
+      if (applyCount && onCountFetched != null) {
+        onCountFetched(results.length);
+      }
+    }
+
+    return results;
   }
 
   static String buildWhereClauseRaw(List<SearchFilter> filters) {
