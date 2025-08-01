@@ -1,6 +1,6 @@
 name: digit_data_converter
 description: digit_data_converter is a Dart package designed to provide robust and flexible transformation of structured form data into Dart model objects. It supports advanced mapping configurations including nested objects, dynamic fields, and runtime-driven behavior.
-version: 0.0.3-dev
+version: 0.0.4-dev
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/digit_data_converter
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 

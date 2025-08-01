@@ -1,3 +1,7 @@
+## 0.0.4-dev
+
+- fixed mapping for update flow
+
 ## 0.0.3-dev
 
 - fixed update model mapping function to create entities which does not exists
