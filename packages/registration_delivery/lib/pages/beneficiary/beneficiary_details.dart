@@ -233,7 +233,7 @@ class BeneficiaryDetailsPageState
                                                                     registration_keys
                                                                         .beneficiaryDetailsKeys
                                                                         .showDeliveryPopUp]
-                                                                ?.hidden !=
+                                                                ?.hidden ==
                                                             true) {
                                                           showCustomPopup(
                                                             context: context,
