@@ -329,6 +329,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.18.0"
+  connectivity_plus:
+    dependency: transitive
+    description:
+      name: connectivity_plus
+      sha256: "051849e2bd7c7b3bc5844ea0d096609ddc3a859890ec3a9ac4a65a2620cc1f99"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.4"
+  connectivity_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: connectivity_plus_platform_interface
+      sha256: "42657c1715d48b167930d5f34d00222ac100475f73d10162ddf43e714932f204"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   convert:
     dependency: transitive
     description:
@@ -410,6 +426,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  dbus:
+    dependency: transitive
+    description:
+      name: dbus
+      sha256: "79e0c23480ff85dc68de79e2cd6334add97e48f7f4865d17686dd6ea81a47e8c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.11"
+  device_info_plus:
+    dependency: transitive
+    description:
+      name: device_info_plus
+      sha256: "77f757b789ff68e4eaf9c56d1752309bd9f7ad557cb105b938a7f8eb89e59110"
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.1.2"
+  device_info_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: device_info_plus_platform_interface
+      sha256: "0b04e02b30791224b31969eb1b50d723498f402971bff3630bca2ba839bd1ed2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.2"
   diff_match_patch:
     dependency: transitive
     description:
@@ -422,18 +462,18 @@ packages:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: "28adcdadbb25f03031fa1b65a987467873deafdef5fad71c707c8a0c6fe7954f"
+      sha256: "1ecec018de0a07fc98fb1cdef0ae89e1192a3e3182e608c96fdd182aa2e95046"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.2"
+    version: "1.1.4"
   digit_scanner:
     dependency: "direct main"
     description:
       name: digit_scanner
-      sha256: c8f82938906a11c516d445d7e5e27b7e6c6a1d07e0a608c2f90f63dd234241a5
+      sha256: "1bf24bdaf71f99de0f1281136478bb141f058a984752176ffa63ad580b467e18"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5+1"
+    version: "1.0.6+2"
   digit_showcase:
     dependency: "direct main"
     description:
@@ -446,10 +486,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "94bfc92dc2bd7dbec934a04e80155beb2dd71e76e166d14095c129880b0c0e36"
+      sha256: "37c5c974bbc60567588f71bf6cddf49dc69d3248d0b4bca4525af837cf67a8f2"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.2+5"
+    version: "0.2.2+8"
   dio:
     dependency: transitive
     description:
@@ -1142,6 +1182,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  nm:
+    dependency: transitive
+    description:
+      name: nm
+      sha256: "2c9aae4127bdc8993206464fcc063611e0e36e72018696cd9631023a31b24254"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0"
   node_preamble:
     dependency: transitive
     description:
@@ -1346,10 +1394,10 @@ packages:
     dependency: "direct main"
     description:
       name: registration_delivery
-      sha256: "9d91b6cdfc034c2b8181e58145c1f4dd448b93cccd3118aa61f9f0ea6e3f297f"
+      sha256: d4f425342adecd02eb813c1dbbffbba0b5d8d95b9ef2535e70659269f920fe74
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.6+1"
+    version: "1.0.7+1"
   rxdart:
     dependency: transitive
     description:
@@ -1503,10 +1551,10 @@ packages:
     dependency: transitive
     description:
       name: survey_form
-      sha256: "384860a28db67acbbf94725a1ec0a41c3e9eebeb9d196c02e441f8cdb53c793e"
+      sha256: "26c02064d6d74928ce458fe25eb037ee9a131952f3aa6e03480b70277473b635"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1+1"
+    version: "1.0.3"
   synchronized:
     dependency: transitive
     description:
@@ -1755,6 +1803,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.2.0"
+  win32_registry:
+    dependency: transitive
+    description:
+      name: win32_registry
+      sha256: "41fd8a189940d8696b1b810efb9abcf60827b6cbfab90b0c43e8439e3a39d85a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.2"
   xdg_directories:
     dependency: transitive
     description:

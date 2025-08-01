@@ -1,3 +1,8 @@
+## 1.0.5+2
+
+* BugFix:
+    * Fixed individual create issue during create
+
 ## 1.0.5+1
 
 * Upgrade packages to latest version

@@ -202,9 +202,9 @@ class ClosedHouseholdBloc
         ],
         identifiers: [
           identifier.copyWith(
-            identifierId: IdGen.i.identifier,
-            identifierType: 'DEFAULT',
-          ),
+              identifierId: IdGen.i.identifier,
+              identifierType: 'DEFAULT',
+              individualClientReferenceId: individual.clientReferenceId),
         ],
         auditDetails: AuditDetails(
           createdBy: ClosedHouseholdSingleton().loggedInUserUuid.toString(),

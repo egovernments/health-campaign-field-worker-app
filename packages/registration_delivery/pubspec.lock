@@ -478,10 +478,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "94bfc92dc2bd7dbec934a04e80155beb2dd71e76e166d14095c129880b0c0e36"
+      sha256: "37c5c974bbc60567588f71bf6cddf49dc69d3248d0b4bca4525af837cf67a8f2"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.2+5"
+    version: "0.2.2+8"
   dio:
     dependency: "direct main"
     description:
