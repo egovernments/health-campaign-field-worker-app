@@ -1,3 +1,8 @@
+## 1.1.0-dev.5-console
+
+* Added configuration for resource card
+* Updated digit_ui_components to latest version
+
 ## 1.1.0-dev.4-console
 
 * BugFix:
