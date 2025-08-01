@@ -17,6 +17,7 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
   final FormGroup form;
   final int totalItems;
   final bool readOnly;
+  final int? maxQuantity;
 
   const ResourceBeneficiaryCard({
     super.key,
@@ -25,6 +26,7 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
     required this.cardIndex,
     required this.form,
     required this.totalItems,
+    this.maxQuantity,
     this.readOnly = false,
   });
 
@@ -91,6 +93,7 @@ class ResourceBeneficiaryCardState
             minValue: 1,
             step: 1,
             readOnly: widget.readOnly,
+            maxValue: widget.maxQuantity ?? 1000,
             initialValue: widget.form
                         .control('quantityDistributed.${widget.cardIndex}')
                         .value !=

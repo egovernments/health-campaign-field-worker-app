@@ -39,6 +39,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
 
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
+  late List<int?> _maxQuantities;
 
   bool _listenersAdded = false;
 
@@ -150,6 +151,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                               final index = i ~/ 2;
                               final controller = _controllers[index];
                               return ResourceBeneficiaryCard(
+                                maxQuantity: _maxQuantities[i],
                                 readOnly: isReadOnlyFromSchema,
                                 form: form,
                                 cardIndex: index,
@@ -267,6 +269,11 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
         : variant?.productVariants.length ?? 0;
 
     _controllers.addAll(List.generate(count, (index) => index));
+
+    _maxQuantities = List<int?>.generate(
+      _controllers.length,
+      (_) => variant?.productVariants?.first?.quantity,
+    );
 
     return fb.group(<String, Object>{
       _resourceDeliveredKey: FormArray<ProductVariantModel>(
