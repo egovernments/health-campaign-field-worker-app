@@ -130,6 +130,7 @@ const _$PropertySchemaFormatEnumMap = {
   PropertySchemaFormat.idPopulator: 'idPopulator',
   PropertySchemaFormat.mobileNumber: 'mobileNumber',
   PropertySchemaFormat.text: 'text',
+  PropertySchemaFormat.searchableDropdown: 'searchableDropdown',
 };
 
 _$ValidationRuleImpl _$$ValidationRuleImplFromJson(Map<String, dynamic> json) =>

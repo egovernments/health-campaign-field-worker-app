@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_forms_engine/forms_engine.dart';
+import 'package:digit_forms_engine/router/forms_router.gm.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:digit_ui_components/enum/app_enums.dart';
@@ -7,6 +9,7 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_info_card.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_toast.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,6 +54,20 @@ class _SearchReferralReconciliationsPageState
     context.read<DigitScannerBloc>().add(
           const DigitScannerEvent.handleScanner(),
         );
+    final schemas = [
+      ReferralReconSingleton().referralConfig,
+    ]
+        .where((s) =>
+            s != null &&
+            s.trim().isNotEmpty &&
+            s.trim().toLowerCase() != 'null')
+        .cast<String>()
+        .toList();
+
+    if (schemas.isNotEmpty) {
+      context.read<FormsBloc>().add(FormsEvent.load(schemas: schemas));
+    }
+
     super.initState();
   }
 
@@ -175,7 +192,9 @@ class _SearchReferralReconciliationsPageState
                                                 ServiceSearchEvent(
                                                   serviceSearchModel:
                                                       ServiceSearchModel(
-                                                    referenceIds: [i.clientReferenceId],
+                                                    referenceIds: [
+                                                      i.clientReferenceId
+                                                    ],
                                                   ),
                                                 ),
                                               );
@@ -217,18 +236,54 @@ class _SearchReferralReconciliationsPageState
                           onPressed = () {
                             FocusManager.instance.primaryFocus?.unfocus();
                             final bloc = context.read<SearchReferralsBloc>();
-                            router.push(
-                              HFCreateReferralWrapperRoute(
-                                viewOnly: false,
-                                referralReconciliation: HFReferralModel(
-                                  clientReferenceId: IdGen.i.identifier,
-                                  name: state.searchQuery,
-                                  beneficiaryId: state.tag,
-                                ),
-                                projectId: ReferralReconSingleton().projectId,
-                                cycles: ReferralReconSingleton().cycles,
-                              ),
-                            );
+                            //TODO: commmented for now
+                            // router.push(
+                            //   HFCreateReferralWrapperRoute(
+                            //     viewOnly: false,
+                            //     referralReconciliation: HFReferralModel(
+                            //       clientReferenceId: IdGen.i.identifier,
+                            //       name: state.searchQuery,
+                            //       beneficiaryId: state.tag,
+                            //     ),
+                            //     projectId: ReferralReconSingleton().projectId,
+                            //     cycles: ReferralReconSingleton().cycles,
+                            //   ),
+                            // );
+
+                            context.read<FormsBloc>().add(
+                                const FormsEvent.clearForm(
+                                    schemaKey: 'HFREFERALFLOW'));
+
+                            final pageName = context
+                                .read<FormsBloc>()
+                                .state
+                                .cachedSchemas['HFREFERALFLOW']
+                                ?.pages
+                                .entries
+                                .first
+                                .key;
+
+                            if (pageName == null) {
+                              Toast.showToast(
+                                context,
+                                message: localizations.translate(
+                                    'NO_FORM_FOUND_FOR_HFREFERALFLOW'),
+                                type: ToastType.error,
+                              );
+                            } else {
+                              context.router.push(FormsRenderRoute(
+                                currentSchemaKey: 'HFREFERALFLOW',
+                                pageName: pageName,
+                                defaultValues: {
+                                  'administrativeUnitKey': localizations
+                                      .translate(ReferralReconSingleton()
+                                              .boundary
+                                              ?.code ??
+                                          ''),
+                                },
+                              ));
+                            }
+
                             searchController.clear();
                             bloc.add(
                               const SearchReferralsClearEvent(),

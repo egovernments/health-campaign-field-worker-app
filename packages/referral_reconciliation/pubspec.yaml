@@ -37,6 +37,7 @@ dependencies:
   digit_data_model: ^1.1.0
   stream_transform: ^2.1.0
   survey_form: ^1.0.3
+  digit_forms_engine: ^0.0.2-dev
 
 
 dev_dependencies:

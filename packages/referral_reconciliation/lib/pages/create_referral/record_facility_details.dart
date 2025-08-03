@@ -53,6 +53,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
             value.viewOnly ? value.hfReferralModel?.projectFacilityId : null,
       );
     });
+
     super.initState();
   }
 

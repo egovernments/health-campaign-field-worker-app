@@ -124,7 +124,8 @@ enum PropertySchemaFormat {
   scanner,
   idPopulator,
   mobileNumber,
-  text;
+  text,
+  searchableDropdown;
 }
 
 enum PropertySchemaType { object, string, integer, boolean, dynamic }

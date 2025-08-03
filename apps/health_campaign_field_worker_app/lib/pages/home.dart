@@ -51,6 +51,7 @@ import '../utils/debound.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/least_level_boundary_singleton.dart';
+import '../utils/sample_data.dart';
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
@@ -548,6 +549,47 @@ class _HomePageState extends LocalizedState<HomePage> {
               triggerLocalization();
               isTriggerLocalisation = false;
             }
+//sample
+            // TODO:: I need to add here
+
+            const schemaJsonRaw = sample;
+
+            // final prefs = await SharedPreferences.getInstance();
+            // final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+            if (schemaJsonRaw != null) {
+              final allSchemas =
+                  json.decode(schemaJsonRaw) as Map<String, dynamic>;
+
+              final registrationSchemaEntry =
+                  allSchemas['HFREFERALFLOW'] as Map<String, dynamic>?;
+
+              final registrationSchemaData = registrationSchemaEntry?['data'];
+
+              if (registrationSchemaData != null) {
+                // Extract templates from both schemas
+                final regTemplatesRaw = registrationSchemaData?['templates'];
+
+                final Map<String, dynamic> regTemplateMap =
+                    regTemplatesRaw is Map<String, dynamic>
+                        ? regTemplatesRaw
+                        : {};
+
+                final templates = {
+                  for (final entry in {...regTemplateMap}.entries)
+                    entry.key: TemplateConfig.fromJson(
+                        entry.value as Map<String, dynamic>)
+                };
+
+                final registrationConfig = json.encode(registrationSchemaData);
+
+                RegistrationDeliverySingleton().setTemplateConfigs(templates);
+                // .setRegistrationConfig(registrationConfig);
+                ReferralReconSingleton()
+                    .setHfReferralConfig(registrationConfig);
+              }
+            }
+
             context.router.push(SearchReferralReconciliationsRoute());
           },
         ),
