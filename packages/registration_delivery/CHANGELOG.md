@@ -1,3 +1,8 @@
+## 1.1.0-dev.6-console
+
+* BugFix:
+  * Fixed index issue for resource card
+
 ## 1.1.0-dev.5-console
 
 * Added configuration for resource card
