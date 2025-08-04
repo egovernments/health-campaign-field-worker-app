@@ -37,6 +37,7 @@ class WidgetRegistry {
     WidgetRegistry.register('button', (json, context, onAction) {
       return DigitButton(
         label: json['label'] ?? '',
+        type: parseButtonType(json['type'] as String?),
         onPressed: () {
           if (json['onAction'] != null) {
             final action = ActionConfig.fromJson(
@@ -45,7 +46,6 @@ class WidgetRegistry {
           }
         },
         mainAxisSize: MainAxisSize.max,
-        type: DigitButtonType.primary,
         size: DigitButtonSize.large,
       );
     });
@@ -147,5 +147,18 @@ class WidgetRegistry {
         },
       );
     });
+  }
+
+  DigitButtonType parseButtonType(String? raw) {
+    switch ((raw ?? '').toLowerCase()) {
+      case 'primary':
+        return DigitButtonType.primary;
+      case 'secondary':
+        return DigitButtonType.secondary;
+      case 'tertiary':
+        return DigitButtonType.tertiary;
+      default:
+        return DigitButtonType.primary; // fallback
+    }
   }
 }

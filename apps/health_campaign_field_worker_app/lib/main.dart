@@ -87,6 +87,7 @@ final List<Map<String, dynamic>> sampleFlows = [
       {
         "format": "button",
         "label": "register beneficiary",
+        "type": "primary",
         "onAction": {
           "actionType": "NAVIGATION",
           "properties": {
@@ -101,6 +102,7 @@ final List<Map<String, dynamic>> sampleFlows = [
       {
         "format": "button",
         "label": "scan beneficiary",
+        "type": "secondary",
         "onAction": {
           "actionType": "EVENT",
           "properties": {
@@ -253,6 +255,10 @@ final List<Map<String, dynamic>> sampleFlows = [
   {
     "screenType": "FORM",
     "name": "HOUSEHOLD",
+    "project": "CMP-2025-08-04-004846",
+    "version": 1,
+    "disabled": false,
+    "isSelected": true,
     "pages": [
       {
         "page": "beneficiaryLocation",
@@ -279,11 +285,11 @@ final List<Map<String, dynamic>> sampleFlows = [
             "innerLabel": "",
             "systemDate": false,
             "validations": [
-              {
-                "type": "required",
-                "value": true,
-                "message": "Required field cannot be empty"
-              }
+              // {
+              //   "type": "required",
+              //   "value": true,
+              //   "message": "Required field cannot be empty"
+              // }
             ],
             "errorMessage": "",
             "isMultiSelect": false
