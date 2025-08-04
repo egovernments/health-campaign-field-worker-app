@@ -627,6 +627,14 @@ final List<Map<String, dynamic>> sampleFlows = [
             "readOnly": false,
             "fieldName": "identifiers",
             "deleteFlag": false,
+            "enums": [
+              {"code": "DEFAULT", "name": "DEFAULT"},
+              {
+                "code": "UNIQUE_BENEFICIARY_ID",
+                "name": "UNIQUE_BENEFICIARY_ID"
+              },
+              {"code": "OTHER", "name": "OTHER"}
+            ],
             "innerLabel": "",
             "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR",
             "systemDate": false,
@@ -678,6 +686,11 @@ final List<Map<String, dynamic>> sampleFlows = [
             "schemaCode": "common-masters.GenderType",
             "systemDate": false,
             "validations": [],
+            "enums": [
+              {"code": "MALE", "name": "MALE"},
+              {"code": "FEMALE", "name": "FEMALE"},
+              {"code": "OTHER", "name": "OTHER"}
+            ],
             "errorMessage": "",
             "isMultiSelect": false
           },
