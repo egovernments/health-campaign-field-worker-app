@@ -151,7 +151,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                               final index = i ~/ 2;
                               final controller = _controllers[index];
                               return ResourceBeneficiaryCard(
-                                maxQuantity: _maxQuantities[i],
+                                maxQuantity: _maxQuantities[index],
                                 readOnly: isReadOnlyFromSchema,
                                 form: form,
                                 cardIndex: index,
