@@ -3599,11 +3599,11 @@ const String sample = '''{
           "properties": {
             "cycle": {
             "enums":[],
-              "type": "string",
+              "type": "dynamic",
               "label": "APPONE_REFERRALDETAILS_SCREEN_cycle_label",
               "order": 1,
               "value": "",
-              "format": "dropdown",
+              "format": "custom",
               "hidden": false,
               "tooltip": "",
               "helpText": "APPONE_REFERRALDETAILS_SCREEN_cycle_helpText_label",

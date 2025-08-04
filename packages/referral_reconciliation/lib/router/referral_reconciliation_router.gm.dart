@@ -43,6 +43,7 @@ abstract class $ReferralReconciliationRoute extends _i9.AutoRouterModule {
           viewOnly: args.viewOnly,
           referralReconciliation: args.referralReconciliation,
           cycles: args.cycles,
+          onInitComplete: args.onInitComplete,
         ),
       );
     },
@@ -145,6 +146,7 @@ class HFCreateReferralWrapperRoute
     bool viewOnly = false,
     _i11.HFReferralModel? referralReconciliation,
     required List<String> cycles,
+    void Function(_i10.BuildContext)? onInitComplete,
     List<_i9.PageRouteInfo>? children,
   }) : super(
           HFCreateReferralWrapperRoute.name,
@@ -154,6 +156,7 @@ class HFCreateReferralWrapperRoute
             viewOnly: viewOnly,
             referralReconciliation: referralReconciliation,
             cycles: cycles,
+            onInitComplete: onInitComplete,
           ),
           initialChildren: children,
         );
@@ -171,6 +174,7 @@ class HFCreateReferralWrapperRouteArgs {
     this.viewOnly = false,
     this.referralReconciliation,
     required this.cycles,
+    this.onInitComplete,
   });
 
   final _i10.Key? key;
@@ -183,9 +187,11 @@ class HFCreateReferralWrapperRouteArgs {
 
   final List<String> cycles;
 
+  final void Function(_i10.BuildContext)? onInitComplete;
+
   @override
   String toString() {
-    return 'HFCreateReferralWrapperRouteArgs{key: $key, projectId: $projectId, viewOnly: $viewOnly, referralReconciliation: $referralReconciliation, cycles: $cycles}';
+    return 'HFCreateReferralWrapperRouteArgs{key: $key, projectId: $projectId, viewOnly: $viewOnly, referralReconciliation: $referralReconciliation, cycles: $cycles, onInitComplete: $onInitComplete}';
   }
 }
 

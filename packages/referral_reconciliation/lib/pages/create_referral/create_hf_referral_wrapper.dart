@@ -18,6 +18,7 @@ class HFCreateReferralWrapperPage extends LocalizedStatefulWidget {
   final HFReferralModel? referralReconciliation;
   final List<String> cycles;
   final String projectId;
+  final void Function(BuildContext context)? onInitComplete;
 
   const HFCreateReferralWrapperPage({
     super.key,
@@ -25,6 +26,7 @@ class HFCreateReferralWrapperPage extends LocalizedStatefulWidget {
     this.viewOnly = false,
     this.referralReconciliation,
     required this.cycles,
+    this.onInitComplete,
   });
 
   @override
@@ -34,9 +36,16 @@ class HFCreateReferralWrapperPage extends LocalizedStatefulWidget {
 
 class _HFCreateReferralWrapperPageState
     extends State<HFCreateReferralWrapperPage> {
+  bool _didInit = false;
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_didInit && widget.onInitComplete != null) {
+      _didInit = true;
+      // Ensure context is fully initialized
+      Future.microtask(() => widget.onInitComplete!(context));
+    }
   }
 
   @override
@@ -49,23 +58,31 @@ class _HFCreateReferralWrapperPageState
     } else {
       return ProjectFacilityBlocWrapper(
         projectId: widget.projectId,
-        child: BlocProvider(
-          create: (_) => ReferralReconServiceDefinitionBloc(
-            const ReferralReconServiceDefinitionEmptyState(),
-            serviceDefinitionDataRepository: context.repository<
-                ServiceDefinitionModel, ServiceDefinitionSearchModel>(context),
-          )..add(const ReferralReconServiceDefinitionFetchEvent()),
-          child: BlocProvider(
-            create: (_) => ServiceBloc(
-              const ServiceEmptyState(),
-              serviceDataRepository:
-                  context.repository<ServiceModel, ServiceSearchModel>(context),
-            )..add(ServiceSearchEvent(
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (_) => ReferralReconServiceDefinitionBloc(
+                const ReferralReconServiceDefinitionEmptyState(),
+                serviceDefinitionDataRepository: context.repository<
+                    ServiceDefinitionModel, ServiceDefinitionSearchModel>(
+                  context,
+                ),
+              )..add(const ReferralReconServiceDefinitionFetchEvent()),
+            ),
+            BlocProvider(
+              create: (_) => ServiceBloc(
+                const ServiceEmptyState(),
+                serviceDataRepository: context
+                    .repository<ServiceModel, ServiceSearchModel>(context),
+              )..add(ServiceSearchEvent(
                   serviceSearchModel: ServiceSearchModel(
-                referenceIds:
-                    [widget.referralReconciliation?.clientReferenceId ?? ''],
-              ))),
-            child: BlocProvider(
+                    referenceIds: [
+                      widget.referralReconciliation?.clientReferenceId ?? ''
+                    ],
+                  ),
+                )),
+            ),
+            BlocProvider(
               create: (_) => RecordHFReferralBloc(
                 RecordHFReferralState.create(
                   projectId: widget.projectId,
@@ -74,11 +91,12 @@ class _HFCreateReferralWrapperPageState
                 ),
                 referralReconDataRepository:
                     context.repository<HFReferralModel, HFReferralSearchModel>(
-                        context),
+                  context,
+                ),
               ),
-              child: const AutoRouter(),
             ),
-          ),
+          ],
+          child: const AutoRouter(),
         ),
       );
     }

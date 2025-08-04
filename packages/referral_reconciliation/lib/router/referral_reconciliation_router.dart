@@ -20,9 +20,10 @@ class ReferralReconciliationRoute extends $ReferralReconciliationRoute {
         path: 'referral-reconciliation',
         children: [
           AutoRoute(
-              page: ReferralFacilityRoute.page,
-              path: 'facility-details',
-              initial: true),
+            page: ReferralFacilityRoute.page,
+            path: 'facility-details',
+            //initial: true
+          ),
           AutoRoute(
               page: RecordReferralDetailsRoute.page, path: 'referral-details'),
           AutoRoute(

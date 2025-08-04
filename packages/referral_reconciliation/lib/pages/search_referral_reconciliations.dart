@@ -15,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:referral_reconciliation/utils/extensions/extensions.dart';
+import 'package:referral_reconciliation/widgets/custom_cycle_widget.dart';
+import 'package:referral_reconciliation/widgets/evaluation_facility_widget.dart';
 import 'package:survey_form/survey_form.dart';
 
 import '../blocs/search_referral_reconciliations.dart';
@@ -250,39 +252,94 @@ class _SearchReferralReconciliationsPageState
                             //   ),
                             // );
 
-                            context.read<FormsBloc>().add(
-                                const FormsEvent.clearForm(
-                                    schemaKey: 'HFREFERALFLOW'));
+                            // context.read<FormsBloc>().add(
+                            //     const FormsEvent.clearForm(
+                            //         schemaKey: 'HFREFERALFLOW'));
 
-                            final pageName = context
-                                .read<FormsBloc>()
-                                .state
-                                .cachedSchemas['HFREFERALFLOW']
-                                ?.pages
-                                .entries
-                                .first
-                                .key;
+                            // final pageName = context
+                            //     .read<FormsBloc>()
+                            //     .state
+                            //     .cachedSchemas['HFREFERALFLOW']
+                            //     ?.pages
+                            //     .entries
+                            //     .first
+                            //     .key;
 
-                            if (pageName == null) {
-                              Toast.showToast(
-                                context,
-                                message: localizations.translate(
-                                    'NO_FORM_FOUND_FOR_HFREFERALFLOW'),
-                                type: ToastType.error,
-                              );
-                            } else {
-                              context.router.push(FormsRenderRoute(
-                                currentSchemaKey: 'HFREFERALFLOW',
-                                pageName: pageName,
-                                defaultValues: {
-                                  'administrativeUnitKey': localizations
-                                      .translate(ReferralReconSingleton()
-                                              .boundary
-                                              ?.code ??
-                                          ''),
+                            // if (pageName == null) {
+                            //   Toast.showToast(
+                            //     context,
+                            //     message: localizations.translate(
+                            //         'NO_FORM_FOUND_FOR_HFREFERALFLOW'),
+                            //     type: ToastType.error,
+                            //   );
+                            // } else {
+                            //   context.router.push(FormsRenderRoute(
+                            //     currentSchemaKey: 'HFREFERALFLOW',
+                            //     pageName: pageName,
+                            //     defaultValues: {
+                            //       'administrativeUnitKey': localizations
+                            //           .translate(ReferralReconSingleton()
+                            //                   .boundary
+                            //                   ?.code ??
+                            //               ''),
+                            //     },
+                            //   ));
+                            // }
+
+                            context.router.push(
+                              HFCreateReferralWrapperRoute(
+                                viewOnly: false,
+                                referralReconciliation: HFReferralModel(
+                                  clientReferenceId: IdGen.i.identifier,
+                                  name: state.searchQuery,
+                                  beneficiaryId: state.tag,
+                                ),
+                                projectId: ReferralReconSingleton().projectId,
+                                cycles: ReferralReconSingleton().cycles,
+                                onInitComplete: (ctx) {
+                                  final pageName = ctx
+                                      .read<FormsBloc>()
+                                      .state
+                                      .cachedSchemas['HFREFERALFLOW']
+                                      ?.pages
+                                      .entries
+                                      .first
+                                      .key;
+
+                                  if (pageName == null) {
+                                    Toast.showToast(
+                                      ctx,
+                                      message: localizations.translate(
+                                          'NO_FORM_FOUND_FOR_HFREFERALFLOW'),
+                                      type: ToastType.error,
+                                    );
+                                    return;
+                                  }
+
+                                  ctx.router.push(
+                                    FormsRenderRoute(
+                                        currentSchemaKey: 'HFREFERALFLOW',
+                                        pageName: pageName,
+                                        defaultValues: {
+                                          'administrativeUnitKey':
+                                              localizations.translate(
+                                            ReferralReconSingleton()
+                                                    .boundary
+                                                    ?.code ??
+                                                '',
+                                          ),
+                                        },
+                                        customComponents: const [
+                                          {'cycle': CycleDropDown()},
+                                          {
+                                            'evaluationFacilityKey':
+                                                EvaluationKeyDropDown()
+                                          }
+                                        ]),
+                                  );
                                 },
-                              ));
-                            }
+                              ),
+                            );
 
                             searchController.clear();
                             bloc.add(
