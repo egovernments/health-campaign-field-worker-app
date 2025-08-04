@@ -53,6 +53,24 @@ class BeneficiaryTypeMapper extends EnumMapper<BeneficiaryType> {
         return BeneficiaryType.vasRed;
       case "VAS-BLUE":
         return BeneficiaryType.vasBlue;
+      case "SUMISHIELD":
+        return BeneficiaryType.sumishield;
+      case "KLYPSON500WG":
+        return BeneficiaryType.klypson500wg;
+      case "FLUDORA":
+        return BeneficiaryType.fludora;
+      case "VECTRON":
+        return BeneficiaryType.vectron;
+      case "DELTAMETRINA":
+        return BeneficiaryType.deltametrina;
+      case "DDT":
+        return BeneficiaryType.ddt;
+      case "ACTELLIC":
+        return BeneficiaryType.actellic;
+      case "FICAM":
+        return BeneficiaryType.ficam;
+      case "2GUARD":
+        return BeneficiaryType.twoGuard;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -89,6 +107,24 @@ class BeneficiaryTypeMapper extends EnumMapper<BeneficiaryType> {
         return "VAS-RED";
       case BeneficiaryType.vasBlue:
         return "VAS-BLUE";
+      case BeneficiaryType.sumishield:
+        return "SUMISHIELD";
+      case BeneficiaryType.klypson500wg:
+        return "KLYPSON500WG";
+      case BeneficiaryType.fludora:
+        return "FLUDORA";
+      case BeneficiaryType.vectron:
+        return "VECTRON";
+      case BeneficiaryType.deltametrina:
+        return "DELTAMETRINA";
+      case BeneficiaryType.ddt:
+        return "DDT";
+      case BeneficiaryType.actellic:
+        return "ACTELLIC";
+      case BeneficiaryType.ficam:
+        return "FICAM";
+      case BeneficiaryType.twoGuard:
+        return "2GUARD";
     }
   }
 }
