@@ -6,6 +6,8 @@ export 'layout_renderer.dart';
 export 'navigation_service/navigation_service.dart';
 export 'router/flow_builder_routes.dart';
 export 'screen_builder.dart';
+export 'utils/context_utility.dart';
+export 'utils/utils.dart';
 export 'widget_registry.dart';
 
 class FlowRegistry {

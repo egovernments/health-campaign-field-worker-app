@@ -121,6 +121,7 @@ extension ContextUtilityExtensions on BuildContext {
     TransitPostSingleton().setBoundary(boundary: selectedBoundary);
     LocationTrackerSingleton()
         .setBoundaryName(boundaryName: selectedBoundary.code!);
+    FlowBuilderSingleton().setBoundary(boundary: selectedBoundary);
     return selectedBoundary;
   }
 
