@@ -33,5 +33,23 @@ enum BeneficiaryType {
   vasRed,
   @MappableValue("VAS-BLUE")
   vasBlue,
+  @MappableValue("SUMISHIELD")
+  sumishield,
+  @MappableValue("KLYPSON500WG")
+  klypson500wg,
+  @MappableValue("FLUDORA")
+  fludora,
+  @MappableValue("VECTRON")
+  vectron,
+  @MappableValue("DELTAMETRINA")
+  deltametrina,
+  @MappableValue("DDT")
+  ddt,
+  @MappableValue("ACTELLIC")
+  actellic,
+  @MappableValue("FICAM")
+  ficam,
+  @MappableValue("2GUARD")
+  twoGuard,
   ;
 }
