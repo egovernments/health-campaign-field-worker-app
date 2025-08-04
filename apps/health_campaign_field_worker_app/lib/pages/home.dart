@@ -20,6 +20,7 @@ import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
 import 'package:digit_location_tracker/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -426,7 +427,19 @@ class _HomePageState extends LocalizedState<HomePage> {
             RegistrationDeliverySingleton()
                 .setHouseholdType(HouseholdType.family);
 
-            await context.router.push(const RegistrationDeliveryWrapperRoute());
+            FlowBuilderSingleton().setPersistenceConfiguration(
+                persistenceConfiguration:
+                    PersistenceConfiguration.offlineFirst);
+            WidgetRegistry().initializeDefaultWidgetRegistry();
+            try {
+              context.router.push(
+                FlowBuilderHomeRoute(pageName: 'searchBeneficiary'),
+              );
+            } catch (e) {
+              debugPrint('error $e');
+            }
+
+            // await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
       ),
@@ -587,21 +600,13 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.table_chart,
           label: i18.home.db,
           onPressed: () async {
-            WidgetRegistry().initializeDefaultWidgetRegistry();
-            // Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (context) => DriftDbViewer(
-            //       context.read<LocalSqlDataStore>(),
-            //     ),
-            //   ),
-            // );
-            try {
-              context.router.push(
-                FlowBuilderHomeRoute(pageName: 'searchBeneficiary'),
-              );
-            } catch (e) {
-              debugPrint('error $e');
-            }
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => DriftDbViewer(
+                  context.read<LocalSqlDataStore>(),
+                ),
+              ),
+            );
           },
         ),
       ),
@@ -794,6 +799,15 @@ void setPackagesSingleton(BuildContext context) {
           projectId: context.selectedProject.id,
           minAge: context.selectedProjectType?.validMinAge,
           maxAge: context.selectedProjectType?.validMaxAge,
+        );
+        FlowBuilderSingleton().setInitialData(
+          loggedInUser: context.loggedInUserModel,
+          loggedInUserUuid: context.loggedInUserUuid,
+          maxRadius: appConfiguration.maxRadius!,
+          projectId: context.projectId,
+          selectedBeneficiaryType: context.beneficiaryType,
+          projectType: context.selectedProjectType,
+          selectedProject: context.selectedProject,
         );
         ComplaintsSingleton().setInitialData(
           tenantId: envConfig.variables.tenantId,

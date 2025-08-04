@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:auto_route/annotations.dart';
-import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_crud_bloc/utils/utils.dart';
 import 'package:digit_flow_builder/util/utils.dart';
 import 'package:digit_flow_builder/widgets/localized.dart';
@@ -9,6 +8,7 @@ import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'blocs/flow_crud_bloc.dart';
 import 'flow_builder.dart';
 
 @RoutePage()
@@ -48,14 +48,24 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
     }
     if (config == null) return const Center(child: Text('Page not found'));
 
-    return MultiBlocProvider(providers: [
-      BlocProvider(
-        create: (context) {
-          return CrudBloc(
-            service: CrudBlocSingleton().crudService,
-          );
-        },
-      ),
-    ], child: ScreenBuilder(config: config));
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) {
+            final crudService = CrudBlocSingleton().crudService;
+
+            return FlowCrudBloc(
+              flowConfig: config,
+              service: crudService,
+              onUpdate: (screenKey, state) {
+                // Optional: notify parent coordinator bloc here
+                // context.read<FlowCoordinatorBloc>().add(...);
+              },
+            );
+          },
+        ),
+      ],
+      child: ScreenBuilder(config: config),
+    );
   }
 }
