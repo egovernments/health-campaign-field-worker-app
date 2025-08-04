@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_converter/utils/utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_forms_engine/forms_engine.dart';
 import 'package:digit_forms_engine/router/forms_router.gm.dart';
@@ -8,18 +9,21 @@ import 'package:digit_ui_components/enum/app_enums.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_info_card.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_toast.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:referral_reconciliation/data/repositories/transfomer_config.dart';
 import 'package:referral_reconciliation/utils/extensions/extensions.dart';
 import 'package:referral_reconciliation/widgets/custom_cycle_widget.dart';
 import 'package:referral_reconciliation/widgets/evaluation_facility_widget.dart';
 import 'package:survey_form/survey_form.dart';
 
 import '../blocs/search_referral_reconciliations.dart';
+import '../data/digit_data_convertor.dart';
 import '../models/entities/hf_referral.dart';
 import '../router/referral_reconciliation_router.gm.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -27,6 +31,8 @@ import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 import '../widgets/view_referral_card.dart';
+import 'package:digit_data_converter/src/reverse_transformer_service.dart';
+import 'package:digit_data_converter/src/transformer_service.dart';
 
 @RoutePage()
 class SearchReferralReconciliationsPage extends LocalizedStatefulWidget {
@@ -48,6 +54,9 @@ class _SearchReferralReconciliationsPageState
 
   @override
   void initState() {
+    DataConverterSingleton()
+        .setData(dynamicEntityModelListener: EntityModelJsonMapper());
+
     searchReferralsBloc = SearchReferralsBloc(
       const SearchReferralsState(),
       referralReconDataRepository:
@@ -75,319 +84,422 @@ class _SearchReferralReconciliationsPageState
 
   @override
   Widget build(BuildContext context) {
+    final pageKey =
+        SearchReferralReconciliationsRoute.name.replaceAll('Route', '');
+    final searchTemplate = ReferralReconSingleton().templateConfigs?[pageKey];
+
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
-    return KeyboardVisibilityBuilder(
-        builder: (context, isKeyboardVisible) => BlocProvider<
-                SearchReferralsBloc>(
-            create: (context) => searchReferralsBloc!
-              ..add(
-                const SearchReferralsClearEvent(),
-              ),
-            child: Scaffold(
-              body: BlocListener<DigitScannerBloc, DigitScannerState>(
-                  listener: (context, scannerState) {
-                    if (scannerState.qrCodes.isNotEmpty) {
-                      context
-                          .read<SearchReferralsBloc>()
-                          .add(SearchReferralsEvent.searchByTag(
-                            tag: scannerState.qrCodes.last,
-                          ));
-                    }
-                  },
-                  child: BlocProvider(
-                      create: (_) => ServiceBloc(
-                            const ServiceEmptyState(),
-                            serviceDataRepository: context.repository<
-                                ServiceModel, ServiceSearchModel>(context),
-                          ),
-                      child: BlocBuilder<SearchReferralsBloc,
-                          SearchReferralsState>(
-                        builder: (context, searchState) {
-                          return ScrollableContent(
-                            header: const Column(children: [
-                              BackNavigationHelpHeaderWidget(),
-                            ]),
-                            slivers: [
-                              SliverToBoxAdapter(
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.all(theme.spacerTheme.spacer2),
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.all(
-                                            theme.spacerTheme.spacer2),
-                                        child: Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Text(
-                                            localizations.translate(
-                                              i18.referralReconciliation
-                                                  .searchReferralsHeader,
-                                            ),
-                                            style: textTheme.headingXl,
-                                            textAlign: TextAlign.left,
-                                          ),
-                                        ),
-                                      ),
-                                      Column(
-                                        children: [
-                                          DigitSearchBar(
-                                            controller: searchController,
-                                            hintText: localizations.translate(
-                                              i18.referralReconciliation
-                                                  .referralSearchHintText,
-                                            ),
-                                            textCapitalization:
-                                                TextCapitalization.words,
-                                            onChanged: (value) {
-                                              final bloc = context
-                                                  .read<SearchReferralsBloc>();
-                                              if (value.trim().length < 2) {
-                                                bloc.add(
-                                                  const SearchReferralsClearEvent(),
-                                                );
+    return BlocListener<FormsBloc, FormsState>(
+      listener: (context, formState) {
+        // TODO: implement listener
 
-                                                return;
-                                              } else {
-                                                bloc.add(
-                                                    SearchReferralsByNameEvent(
-                                                  searchText: value.trim(),
-                                                ));
-                                              }
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                          height:
-                                              theme.spacerTheme.spacer2 * 2),
-                                      if (searchState.resultsNotFound &&
-                                          searchController.text.isNotEmpty)
-                                        InfoCard(
-                                          title: localizations.translate(i18
-                                              .referralReconciliation
-                                              .beneficiaryInfoTitle),
-                                          type: InfoType.info,
-                                          description: localizations.translate(
-                                            i18.referralReconciliation
-                                                .referralInfoDescription,
+        if (formState is FormsSubmittedState) {
+          DigitLoaders.overlayLoader(context: context);
+
+          final formData = formState.formData;
+          if (formData.isEmpty) return;
+
+          try {
+            final formEntityMapper = FormEntityMapper(config: jsonConfig);
+
+            // final householdMember =
+            //     blocWrapper.state.householdMembers.firstOrNull;
+            // final household = householdMember?.household;
+            // final projectBeneficiary =
+            //     householdMember?.projectBeneficiaries?.firstOrNull;
+
+            // final individual = householdMember?.individuals?.firstOrNull;
+
+            // final member = householdMember?.members?.firstOrNull;
+
+            final modelsConfig =
+                (jsonConfig['referral']?['models'] as Map<String, dynamic>);
+
+            try {
+              print("object");
+              print(ReferralReconSingleton().userUUid);
+              final entities = formEntityMapper.mapFormToEntities(
+                modelsConfig: modelsConfig,
+                formValues: formData,
+                // existingModels: [
+                //   // if (household != null) household,
+                //   // if (individual != null) individual,
+                //   // if (projectBeneficiary != null) projectBeneficiary,
+                //   // if (member != null) member
+                // ],
+                context: {
+                  "tenantId": ReferralReconSingleton().tenantId,
+                  "userId": ReferralReconSingleton().userUUid,
+                  "userUUID": ReferralReconSingleton().userUUid,
+                  "formVersion": 1,
+                  "timeStamp": 12756547474,
+                  "projectId": ReferralReconSingleton().projectId,
+                },
+              );
+
+              final toCreate = <EntityModel>[];
+              final toUpdate = [...entities];
+
+              // blocWrapper.add(
+              //   RegistrationWrapperEvent.createAndUpdate(
+              //     entitiesToCreate: toCreate,
+              //     entitiesToUpdate: toUpdate,
+              //   ),
+              // );
+            } catch (e) {
+              Navigator.of(context, rootNavigator: true).pop();
+              // Reset to prevent re-handling
+              context.read<FormsBloc>().add(
+                    const FormsEvent.clearForm(
+                        schemaKey:
+                            'REGISTRATIONFLOW'), // or create a FormsResetEvent
+                  );
+              // context.router
+              //     .push(BeneficiaryErrorRoute(enableViewHousehold: false));
+            }
+          } catch (e) {
+            Navigator.of(context, rootNavigator: true).pop();
+            // Reset to prevent re-handling
+            context.read<FormsBloc>().add(
+                  const FormsEvent.clearForm(
+                      schemaKey:
+                          'REGISTRATIONFLOW'), // or create a FormsResetEvent
+                );
+            // context.router
+            //     .push(BeneficiaryErrorRoute(enableViewHousehold: false));
+            print('Error: $e');
+          }
+        }
+        // end
+      },
+      child: KeyboardVisibilityBuilder(
+          builder: (context, isKeyboardVisible) => BlocProvider<
+                  SearchReferralsBloc>(
+              create: (context) => searchReferralsBloc!
+                ..add(
+                  const SearchReferralsClearEvent(),
+                ),
+              child: Scaffold(
+                body: BlocListener<DigitScannerBloc, DigitScannerState>(
+                    listener: (context, scannerState) {
+                      if (scannerState.qrCodes.isNotEmpty) {
+                        context
+                            .read<SearchReferralsBloc>()
+                            .add(SearchReferralsEvent.searchByTag(
+                              tag: scannerState.qrCodes.last,
+                            ));
+                      }
+                    },
+                    child: BlocProvider(
+                        create: (_) => ServiceBloc(
+                              const ServiceEmptyState(),
+                              serviceDataRepository: context.repository<
+                                  ServiceModel, ServiceSearchModel>(context),
+                            ),
+                        child: BlocBuilder<SearchReferralsBloc,
+                            SearchReferralsState>(
+                          builder: (context, searchState) {
+                            return ScrollableContent(
+                              header: const Column(children: [
+                                BackNavigationHelpHeaderWidget(),
+                              ]),
+                              slivers: [
+                                SliverToBoxAdapter(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(
+                                        theme.spacerTheme.spacer2),
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.all(
+                                              theme.spacerTheme.spacer2),
+                                          child: Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Text(
+                                              searchTemplate?.label != null
+                                                  ? localizations.translate(
+                                                      searchTemplate!.label,
+                                                    )
+                                                  : localizations.translate(
+                                                      i18.referralReconciliation
+                                                          .searchReferralsHeader,
+                                                    ),
+                                              style: textTheme.headingXl,
+                                              textAlign: TextAlign.left,
+                                            ),
                                           ),
                                         ),
-                                    ],
+                                        Column(
+                                          children: [
+                                            DigitSearchBar(
+                                              controller: searchController,
+                                              hintText: searchTemplate
+                                                          ?.properties?[
+                                                              'searchBar']
+                                                          ?.label !=
+                                                      null
+                                                  ? localizations.translate(
+                                                      searchTemplate!
+                                                          .properties![
+                                                              'searchBar']!
+                                                          .label)
+                                                  : localizations.translate(
+                                                      i18.referralReconciliation
+                                                          .referralSearchHintText,
+                                                    ),
+                                              textCapitalization:
+                                                  TextCapitalization.words,
+                                              onChanged: (value) {
+                                                final bloc = context.read<
+                                                    SearchReferralsBloc>();
+                                                if (value.trim().length < 2) {
+                                                  bloc.add(
+                                                    const SearchReferralsClearEvent(),
+                                                  );
+
+                                                  return;
+                                                } else {
+                                                  bloc.add(
+                                                      SearchReferralsByNameEvent(
+                                                    searchText: value.trim(),
+                                                  ));
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                            height:
+                                                theme.spacerTheme.spacer2 * 2),
+                                        if (searchState.resultsNotFound &&
+                                            searchController.text.isNotEmpty)
+                                          InfoCard(
+                                            title: localizations.translate(i18
+                                                .referralReconciliation
+                                                .beneficiaryInfoTitle),
+                                            type: InfoType.info,
+                                            description:
+                                                localizations.translate(
+                                              i18.referralReconciliation
+                                                  .referralInfoDescription,
+                                            ),
+                                          ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SliverList(
-                                delegate: SliverChildBuilderDelegate(
-                                  (ctx, index) {
-                                    final i =
-                                        searchState.referrals.elementAt(index);
+                                SliverList(
+                                  delegate: SliverChildBuilderDelegate(
+                                    (ctx, index) {
+                                      final i = searchState.referrals
+                                          .elementAt(index);
 
-                                    return Container(
-                                      margin: EdgeInsets.only(
-                                          bottom: theme.spacerTheme.spacer2),
-                                      child: ViewReferralCard(
-                                        hfReferralModel: i,
-                                        onOpenPressed: () {
-                                          context.read<ServiceBloc>().add(
-                                                ServiceSearchEvent(
-                                                  serviceSearchModel:
-                                                      ServiceSearchModel(
-                                                    referenceIds: [
-                                                      i.clientReferenceId
-                                                    ],
+                                      return Container(
+                                        margin: EdgeInsets.only(
+                                            bottom: theme.spacerTheme.spacer2),
+                                        child: ViewReferralCard(
+                                          hfReferralModel: i,
+                                          onOpenPressed: () {
+                                            context.read<ServiceBloc>().add(
+                                                  ServiceSearchEvent(
+                                                    serviceSearchModel:
+                                                        ServiceSearchModel(
+                                                      referenceIds: [
+                                                        i.clientReferenceId
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                              );
-                                          context.router.push(
-                                            HFCreateReferralWrapperRoute(
-                                              viewOnly: true,
-                                              referralReconciliation: i,
-                                              projectId:
-                                                  ReferralReconSingleton()
-                                                      .projectId,
-                                              cycles: ReferralReconSingleton()
-                                                  .cycles,
+                                                );
+                                            context.router.push(
+                                              HFCreateReferralWrapperRoute(
+                                                viewOnly: true,
+                                                referralReconciliation: i,
+                                                projectId:
+                                                    ReferralReconSingleton()
+                                                        .projectId,
+                                                cycles: ReferralReconSingleton()
+                                                    .cycles,
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    childCount: searchState.referrals.length,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ))),
+                bottomNavigationBar: Card(
+                  margin: const EdgeInsets.all(0),
+                  child: Container(
+                    padding: EdgeInsets.all(theme.spacerTheme.spacer2),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        BlocBuilder<SearchReferralsBloc, SearchReferralsState>(
+                          builder: (context, state) {
+                            final router = context.router;
+
+                            VoidCallback? onPressed;
+
+                            onPressed = () {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                              final bloc = context.read<SearchReferralsBloc>();
+                              //TODO: commmented for now
+                              // router.push(
+                              //   HFCreateReferralWrapperRoute(
+                              //     viewOnly: false,
+                              //     referralReconciliation: HFReferralModel(
+                              //       clientReferenceId: IdGen.i.identifier,
+                              //       name: state.searchQuery,
+                              //       beneficiaryId: state.tag,
+                              //     ),
+                              //     projectId: ReferralReconSingleton().projectId,
+                              //     cycles: ReferralReconSingleton().cycles,
+                              //   ),
+                              // );
+
+                              // context.read<FormsBloc>().add(
+                              //     const FormsEvent.clearForm(
+                              //         schemaKey: 'HFREFERALFLOW'));
+
+                              // final pageName = context
+                              //     .read<FormsBloc>()
+                              //     .state
+                              //     .cachedSchemas['HFREFERALFLOW']
+                              //     ?.pages
+                              //     .entries
+                              //     .first
+                              //     .key;
+
+                              // if (pageName == null) {
+                              //   Toast.showToast(
+                              //     context,
+                              //     message: localizations.translate(
+                              //         'NO_FORM_FOUND_FOR_HFREFERALFLOW'),
+                              //     type: ToastType.error,
+                              //   );
+                              // } else {
+                              //   context.router.push(FormsRenderRoute(
+                              //     currentSchemaKey: 'HFREFERALFLOW',
+                              //     pageName: pageName,
+                              //     defaultValues: {
+                              //       'administrativeUnitKey': localizations
+                              //           .translate(ReferralReconSingleton()
+                              //                   .boundary
+                              //                   ?.code ??
+                              //               ''),
+                              //     },
+                              //   ));
+                              // }
+
+                              context.router.push(
+                                HFCreateReferralWrapperRoute(
+                                  viewOnly: false,
+                                  referralReconciliation: HFReferralModel(
+                                    clientReferenceId: IdGen.i.identifier,
+                                    name: state.searchQuery,
+                                    beneficiaryId: state.tag,
+                                  ),
+                                  projectId: ReferralReconSingleton().projectId,
+                                  cycles: ReferralReconSingleton().cycles,
+                                  onInitComplete: (ctx) {
+                                    final pageName = ctx
+                                        .read<FormsBloc>()
+                                        .state
+                                        .cachedSchemas['HFREFERALFLOW']
+                                        ?.pages
+                                        .entries
+                                        .first
+                                        .key;
+
+                                    if (pageName == null) {
+                                      Toast.showToast(
+                                        ctx,
+                                        message: localizations.translate(
+                                            'NO_FORM_FOUND_FOR_HFREFERALFLOW'),
+                                        type: ToastType.error,
+                                      );
+                                      return;
+                                    }
+
+                                    ctx.router.push(
+                                      FormsRenderRoute(
+                                          currentSchemaKey: 'HFREFERALFLOW',
+                                          pageName: pageName,
+                                          defaultValues: {
+                                            'administrativeUnitKey':
+                                                localizations.translate(
+                                              ReferralReconSingleton()
+                                                      .boundary
+                                                      ?.code ??
+                                                  '',
                                             ),
-                                          );
-                                        },
-                                      ),
+                                          },
+                                          customComponents: const [
+                                            {'cycle': CycleDropDown()},
+                                            {
+                                              'evaluationFacilityKey':
+                                                  EvaluationKeyDropDown()
+                                            }
+                                          ]),
                                     );
                                   },
-                                  childCount: searchState.referrals.length,
                                 ),
-                              ),
-                            ],
-                          );
-                        },
-                      ))),
-              bottomNavigationBar: Card(
-                margin: const EdgeInsets.all(0),
-                child: Container(
-                  padding: EdgeInsets.all(theme.spacerTheme.spacer2),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      BlocBuilder<SearchReferralsBloc, SearchReferralsState>(
-                        builder: (context, state) {
-                          final router = context.router;
-
-                          VoidCallback? onPressed;
-
-                          onPressed = () {
-                            FocusManager.instance.primaryFocus?.unfocus();
-                            final bloc = context.read<SearchReferralsBloc>();
-                            //TODO: commmented for now
-                            // router.push(
-                            //   HFCreateReferralWrapperRoute(
-                            //     viewOnly: false,
-                            //     referralReconciliation: HFReferralModel(
-                            //       clientReferenceId: IdGen.i.identifier,
-                            //       name: state.searchQuery,
-                            //       beneficiaryId: state.tag,
-                            //     ),
-                            //     projectId: ReferralReconSingleton().projectId,
-                            //     cycles: ReferralReconSingleton().cycles,
-                            //   ),
-                            // );
-
-                            // context.read<FormsBloc>().add(
-                            //     const FormsEvent.clearForm(
-                            //         schemaKey: 'HFREFERALFLOW'));
-
-                            // final pageName = context
-                            //     .read<FormsBloc>()
-                            //     .state
-                            //     .cachedSchemas['HFREFERALFLOW']
-                            //     ?.pages
-                            //     .entries
-                            //     .first
-                            //     .key;
-
-                            // if (pageName == null) {
-                            //   Toast.showToast(
-                            //     context,
-                            //     message: localizations.translate(
-                            //         'NO_FORM_FOUND_FOR_HFREFERALFLOW'),
-                            //     type: ToastType.error,
-                            //   );
-                            // } else {
-                            //   context.router.push(FormsRenderRoute(
-                            //     currentSchemaKey: 'HFREFERALFLOW',
-                            //     pageName: pageName,
-                            //     defaultValues: {
-                            //       'administrativeUnitKey': localizations
-                            //           .translate(ReferralReconSingleton()
-                            //                   .boundary
-                            //                   ?.code ??
-                            //               ''),
-                            //     },
-                            //   ));
-                            // }
-
-                            context.router.push(
-                              HFCreateReferralWrapperRoute(
-                                viewOnly: false,
-                                referralReconciliation: HFReferralModel(
-                                  clientReferenceId: IdGen.i.identifier,
-                                  name: state.searchQuery,
-                                  beneficiaryId: state.tag,
-                                ),
-                                projectId: ReferralReconSingleton().projectId,
-                                cycles: ReferralReconSingleton().cycles,
-                                onInitComplete: (ctx) {
-                                  final pageName = ctx
-                                      .read<FormsBloc>()
-                                      .state
-                                      .cachedSchemas['HFREFERALFLOW']
-                                      ?.pages
-                                      .entries
-                                      .first
-                                      .key;
-
-                                  if (pageName == null) {
-                                    Toast.showToast(
-                                      ctx,
-                                      message: localizations.translate(
-                                          'NO_FORM_FOUND_FOR_HFREFERALFLOW'),
-                                      type: ToastType.error,
-                                    );
-                                    return;
-                                  }
-
-                                  ctx.router.push(
-                                    FormsRenderRoute(
-                                        currentSchemaKey: 'HFREFERALFLOW',
-                                        pageName: pageName,
-                                        defaultValues: {
-                                          'administrativeUnitKey':
-                                              localizations.translate(
-                                            ReferralReconSingleton()
-                                                    .boundary
-                                                    ?.code ??
-                                                '',
-                                          ),
-                                        },
-                                        customComponents: const [
-                                          {'cycle': CycleDropDown()},
-                                          {
-                                            'evaluationFacilityKey':
-                                                EvaluationKeyDropDown()
-                                          }
-                                        ]),
-                                  );
-                                },
-                              ),
-                            );
-
-                            searchController.clear();
-                            bloc.add(
-                              const SearchReferralsClearEvent(),
-                            );
-                          };
-                          return DigitButton(
-                            size: DigitButtonSize.large,
-                            label: localizations.translate(
-                              i18.referralReconciliation.createReferralLabel,
-                            ),
-                            mainAxisSize: MainAxisSize.max,
-                            isDisabled: !(searchController.text.isNotEmpty &&
-                                searchController.text.length >= 2),
-                            onPressed: () {
-                              if (onPressed != null) {
-                                onPressed();
-                              }
-                            },
-                            type: DigitButtonType.primary,
-                          );
-                        },
-                      ),
-                      SizedBox(
-                        height: theme.spacerTheme.spacer2,
-                      ),
-                      DigitButton(
-                        size: DigitButtonSize.large,
-                        label: localizations
-                            .translate(i18.referralReconciliation.scannerLabel),
-                        onPressed: () async {
-                          context.read<DigitScannerBloc>().add(
-                                const DigitScannerEvent.handleScanner(),
                               );
-                          context.router.push(DigitScannerRoute(
-                            quantity: 1,
-                            isGS1code: false,
-                            singleValue: true,
-                          ));
-                        },
-                        type: DigitButtonType.secondary,
-                        prefixIcon: Icons.qr_code,
-                        mainAxisSize: MainAxisSize.max,
-                      ),
-                    ],
+
+                              searchController.clear();
+                              bloc.add(
+                                const SearchReferralsClearEvent(),
+                              );
+                            };
+                            return DigitButton(
+                              size: DigitButtonSize.large,
+                              label: localizations.translate(
+                                i18.referralReconciliation.createReferralLabel,
+                              ),
+                              mainAxisSize: MainAxisSize.max,
+                              isDisabled: !(searchController.text.isNotEmpty &&
+                                  searchController.text.length >= 2),
+                              onPressed: () {
+                                if (onPressed != null) {
+                                  onPressed();
+                                }
+                              },
+                              type: DigitButtonType.primary,
+                            );
+                          },
+                        ),
+                        SizedBox(
+                          height: theme.spacerTheme.spacer2,
+                        ),
+                        DigitButton(
+                          size: DigitButtonSize.large,
+                          label: localizations.translate(
+                              i18.referralReconciliation.scannerLabel),
+                          onPressed: () async {
+                            context.read<DigitScannerBloc>().add(
+                                  const DigitScannerEvent.handleScanner(),
+                                );
+                            context.router.push(DigitScannerRoute(
+                              quantity: 1,
+                              isGS1code: false,
+                              singleValue: true,
+                            ));
+                          },
+                          type: DigitButtonType.secondary,
+                          prefixIcon: Icons.qr_code,
+                          mainAxisSize: MainAxisSize.max,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            )));
+              ))),
+    );
   }
 }

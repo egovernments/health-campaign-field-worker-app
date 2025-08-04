@@ -7,6 +7,9 @@ class ReferralReconciliationRoute extends $ReferralReconciliationRoute {
   RouteType get defaultRouteType => const RouteType.material();
 
   List<AutoRoute> routes = [
+    // AutoRoute(page:
+    // ),
+
     AutoRoute(
       page: SearchReferralReconciliationsRoute.page,
       path: 'search-referrals',

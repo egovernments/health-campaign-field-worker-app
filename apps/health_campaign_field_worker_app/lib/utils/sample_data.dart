@@ -3423,10 +3423,169 @@ const String sample = '''{
   },
   "HFREFERALFLOW": {
     "data": {
-   
+    
+      "templates": {
+        "SearchReferralReconciliations": {
+          "label": "APPONE_REGISTRATION_BENEFICIARY_SEARCH_SCREEN_HEADING",
+          "order": 1,
+          "type": "template",
+          "format": null,
+          "description": "APPONE_REGISTRATION_BENEFICIARY_SEARCH_SCREEN_DESCRIPTION",
+          "actionLabel": "",
+          "properties": {
+            "searchByProximity": {
+              "type": "template",
+              "label": "APPONE_REGISTRATION_BENEFICIARY_SEARCH_BY_PROXIMITY",
+              "order": 1,
+              "value": true,
+              "format": "searchByProximity",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "searchByProximity",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true
+            },
+            "searchBar": {
+              "type": "template",
+              "label": "APPONE_REGISTRATION_BENEFICIARY_SEARCH_BAR",
+              "order": 2,
+              "value": "",
+              "format": "searchBar",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "searchBar",
+              "deleteFlag": false,
+              "innerLabel": "enter the name of household",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Required field cannot be empty"
+                }
+              ],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true
+            },
+            "filter": {
+              "type": "template",
+              "label": "APPONE_REGISTRATION_BENEFICIARY_FILTER_LABEL",
+              "order": 3,
+              "value": [],
+              "format": "filter",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "filter",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true
+            },
+            "PrimaryButton": {
+              "type": "template",
+              "label": "APPONE_REGISTRATION_BENEFICIARY_REGISTRATION_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "PrimaryButton",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "PrimaryButton",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Required field cannot be empty"
+                }
+              ],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true
+            },
+            "SecondaryButton": {
+              "type": "template",
+              "label": "APPONE_REGISTRATION_BENEFICIARY_QR_LABEL",
+              "order": 5,
+              "value": true,
+              "format": "SecondaryButton",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "SecondaryButton",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true
+            }
+          },
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "prefixText": null,
+          "suffixText": null,
+          "navigateTo": {
+            "name": "facilityDetails",
+            "type": "form"
+          }
+        }
+      }
+    ,
+
+
+
+    
+    
       "name": "HFREFERALFLOW",
       "version": 2,
       "pages": {
+       
+      
         "facilityDetails": {
         "navigateTo": {
             "name": "referralDetails",
@@ -3831,7 +3990,7 @@ const String sample = '''{
           "suffixText": null
         }
       },
-      "summary": true
+      "summary": false
     },
     "currentVersion": 2,
     "previousVersion": null

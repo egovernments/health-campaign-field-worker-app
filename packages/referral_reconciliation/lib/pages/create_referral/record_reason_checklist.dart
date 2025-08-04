@@ -117,6 +117,8 @@ class _ReferralReasonChecklistPageState
                             }
                             final itemsAttributes = initialAttributes;
 
+                            print(itemsAttributes.toString());
+
                             for (int i = 0; i < controller.length; i++) {
                               if (itemsAttributes?[i].required == true &&
                                   ((itemsAttributes?[i].dataType ==
