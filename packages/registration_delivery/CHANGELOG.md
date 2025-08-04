@@ -1,7 +1,11 @@
-## 1.1.0-dev.6-console
+## 1.1.0-dev.7-console
 
 * BugFix:
   * Fixed index issue for resource card
+
+## 1.1.0-dev.6-console
+
+* Added limitation for max count for resource card
 
 ## 1.1.0-dev.5-console
 
