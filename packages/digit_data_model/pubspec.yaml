@@ -1,6 +1,6 @@
 name: digit_data_model
 description: The digit_data_model package is a data modeling library. It defines various classes, enums, and functions.
-version: 1.0.6-dev.4
+version: 1.0.6-dev.5
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/digit_data_model
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 

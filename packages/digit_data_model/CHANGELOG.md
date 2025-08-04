@@ -1,7 +1,10 @@
+## 1.0.6-dev.5
+
+* Added additional beneficiary types in BeneficiaryType enum
+
 ## 1.0.6-dev.4
 
 * Added a retry for individual update in oplog
-
 
 ## 1.0.6-dev.3
 
