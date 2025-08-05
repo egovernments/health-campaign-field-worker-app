@@ -454,10 +454,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_crud_bloc
-      sha256: bb490186c910064cc242f4dfa9d7423d86f6368db638703f9fc807de6e876ca3
+      sha256: "194a3f455aa1e6448b52ef66352a83b086a0bb444d374501b1290e6bab2bab62"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2-dev"
+    version: "0.0.3-dev"
   digit_data_converter:
     dependency: "direct main"
     description:
