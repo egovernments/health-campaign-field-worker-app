@@ -931,6 +931,7 @@ class _HouseholdOverviewPageState
                                             individual: e,
                                             household: household,
                                             // children: childBeneficiaries,
+                                            overviewTemplate: overviewTemplate,
                                             projectBeneficiaries:
                                                 projectBeneficiary ?? [],
                                             tasks: taskData,
