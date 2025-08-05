@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:auto_route/annotations.dart';
 import 'package:digit_crud_bloc/utils/utils.dart';
-import 'package:digit_flow_builder/util/utils.dart';
 import 'package:digit_flow_builder/widgets/localized.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:flutter/material.dart';
