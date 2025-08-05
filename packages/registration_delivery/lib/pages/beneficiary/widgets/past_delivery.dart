@@ -81,7 +81,7 @@ Widget buildTableContent(
 
   if (condition != null && condition.contains('MIN(')) {
     // Example condition: MIN(ROUND(memberCount/2), 3)
-    final regex = RegExp(r'MIN\(ROUND\(memberCount/(\d+)\),\s*(\d+)\)');
+    final regex = RegExp(r'MIN\(CEIL\(memberCount/(\d+)\),\s*(\d+)\)');
     final match = regex.firstMatch(condition);
 
     if (match != null) {
