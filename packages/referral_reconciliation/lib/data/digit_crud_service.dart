@@ -35,7 +35,7 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
     final normalizedMap = normalizeKnownFlatFieldsRecursively(map);
 
     switch (modelName) {
-      case 'hfReferal':
+      case 'hFReferral':
         return HFReferralModelMapper.fromMap(normalizedMap);
 
       default:

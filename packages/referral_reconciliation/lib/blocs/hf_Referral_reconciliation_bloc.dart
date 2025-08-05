@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:digit_crud_bloc/digit_crud_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -165,7 +164,7 @@ class HFReferalWrapperBloc
 
       // ✅ Now you are still within async handler scope, so this is safe
       final wrappers = <HFReferalWrapper>[];
-      final allHfReferals = (globalState.results['hfReferrals'] ?? [])
+      final allHfReferals = (globalState.results['hFReferral'] ?? [])
           .whereType<HFReferralModel>()
           .toList();
 
