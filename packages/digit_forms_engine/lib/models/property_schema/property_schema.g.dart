@@ -60,6 +60,10 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
           ? null
           : VisibilityCondition.fromJson(
               json['visibilityCondition'] as Map<String, dynamic>),
+      conditionalNavigateTo: (json['conditionalNavigateTo'] as List<dynamic>?)
+          ?.map(
+              (e) => ConditionalNavigateTo.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -109,6 +113,8 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('includeInSummary', instance.includeInSummary);
   writeNotNull('navigateTo', instance.navigateTo?.toJson());
   writeNotNull('visibilityCondition', instance.visibilityCondition?.toJson());
+  writeNotNull('conditionalNavigateTo',
+      instance.conditionalNavigateTo?.map((e) => e.toJson()).toList());
   return val;
 }
 
@@ -134,6 +140,7 @@ const _$PropertySchemaFormatEnumMap = {
   PropertySchemaFormat.scanner: 'scanner',
   PropertySchemaFormat.idPopulator: 'idPopulator',
   PropertySchemaFormat.mobileNumber: 'mobileNumber',
+  PropertySchemaFormat.textArea: 'textArea',
   PropertySchemaFormat.text: 'text',
 };
 
@@ -210,4 +217,19 @@ Map<String, dynamic> _$$VisibilityConditionImplToJson(
         _$VisibilityConditionImpl instance) =>
     <String, dynamic>{
       'expression': instance.expression,
+    };
+
+_$ConditionalNavigateToImpl _$$ConditionalNavigateToImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ConditionalNavigateToImpl(
+      condition: json['condition'] as String,
+      navigateTo:
+          NavigateToConfig.fromJson(json['navigateTo'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$$ConditionalNavigateToImplToJson(
+        _$ConditionalNavigateToImpl instance) =>
+    <String, dynamic>{
+      'condition': instance.condition,
+      'navigateTo': instance.navigateTo,
     };
