@@ -207,7 +207,7 @@ class RegistrationWrapperBloc
                 (m) => m.individualClientReferenceId == i.clientReferenceId))
             .toList();
 
-        final householdBeneficiaries = event.beneficiaryType == 'INDIVIDUAL'
+        final householdBeneficiaries = event.beneficiaryType == 'individual'
             ? allBeneficiaries
                 .where((b) => householdIndividuals.any((i) =>
                     i.clientReferenceId == b.beneficiaryClientReferenceId))

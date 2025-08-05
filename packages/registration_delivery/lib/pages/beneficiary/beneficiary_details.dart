@@ -219,7 +219,7 @@ class BeneficiaryDetailsPageState
                                                           fetchProductVariant(
                                                               items,
                                                               state
-                                                                  .householdMembers.first.individuals?.firstOrNull,
+                                                                  .selectedIndividual,
                                                               state
                                                                   .householdMembers
                                                                   .first
