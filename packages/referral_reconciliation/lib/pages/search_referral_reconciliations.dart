@@ -2,17 +2,20 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_data_converter/utils/utils.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_forms_engine/forms_engine.dart';
 import 'package:digit_forms_engine/router/forms_router.gm.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:digit_ui_components/enum/app_enums.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_info_card.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_toast.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +39,7 @@ import '../widgets/localized.dart';
 import '../widgets/view_referral_card.dart';
 import 'package:digit_data_converter/src/reverse_transformer_service.dart';
 import 'package:digit_data_converter/src/transformer_service.dart';
+import 'package:digit_crud_bloc/models/global_search_params.dart' as reg_params;
 
 @RoutePage()
 class SearchReferralReconciliationsPage extends LocalizedStatefulWidget {
@@ -56,6 +60,9 @@ class _SearchReferralReconciliationsPageState
   SearchReferralsBloc? searchReferralsBloc;
 
   late final HFReferalWrapperBloc blocWrapper;
+  List<String> selectedFilters = [];
+  int offset = 0;
+  int limit = 10;
 
   @override
   void initState() {
@@ -326,8 +333,8 @@ class _SearchReferralReconciliationsPageState
                                 serviceDataRepository: context.repository<
                                     ServiceModel, ServiceSearchModel>(context),
                               ),
-                          child: BlocBuilder<SearchReferralsBloc,
-                              SearchReferralsState>(
+                          child: BlocBuilder<HFReferalWrapperBloc,
+                              HFReferalWrapperState>(
                             builder: (context, searchState) {
                               return ScrollableContent(
                                 header: const Column(children: [
@@ -380,19 +387,24 @@ class _SearchReferralReconciliationsPageState
                                                 textCapitalization:
                                                     TextCapitalization.words,
                                                 onChanged: (value) {
-                                                  final bloc = context.read<
-                                                      SearchReferralsBloc>();
-                                                  if (value.trim().length < 2) {
-                                                    bloc.add(
-                                                      const SearchReferralsClearEvent(),
-                                                    );
+                                                  // final bloc = context.read<
+                                                  //     SearchReferralsBloc>();
+                                                  // if (value.trim().length < 2) {
+                                                  //   bloc.add(
+                                                  //     const SearchReferralsClearEvent(),
+                                                  //   );
 
-                                                    return;
-                                                  } else {
-                                                    bloc.add(
-                                                        SearchReferralsByNameEvent(
-                                                      searchText: value.trim(),
-                                                    ));
+                                                  //   return;
+                                                  // } else {
+                                                  //   bloc.add(
+                                                  //       SearchReferralsByNameEvent(
+                                                  //     searchText: value.trim(),
+                                                  //   ));
+                                                  // }
+
+                                                  if (value.isEmpty ||
+                                                      value.trim().length > 2) {
+                                                    triggerGlobalSearchEvent();
                                                   }
                                                 },
                                               ),
@@ -402,7 +414,8 @@ class _SearchReferralReconciliationsPageState
                                               height:
                                                   theme.spacerTheme.spacer2 *
                                                       2),
-                                          if (searchState.resultsNotFound &&
+                                          if (searchState
+                                                  .hFReferalMembers.isEmpty &&
                                               searchController.text.isNotEmpty)
                                             InfoCard(
                                               title: localizations.translate(i18
@@ -422,7 +435,7 @@ class _SearchReferralReconciliationsPageState
                                   SliverList(
                                     delegate: SliverChildBuilderDelegate(
                                       (ctx, index) {
-                                        final i = searchState.referrals
+                                        final i = searchState.hFReferalMembers
                                             .elementAt(index);
 
                                         return Container(
@@ -430,14 +443,16 @@ class _SearchReferralReconciliationsPageState
                                               bottom:
                                                   theme.spacerTheme.spacer2),
                                           child: ViewReferralCard(
-                                            hfReferralModel: i,
+                                            hfReferralModel: i.hfReferrals!,
                                             onOpenPressed: () {
                                               context.read<ServiceBloc>().add(
                                                     ServiceSearchEvent(
                                                       serviceSearchModel:
                                                           ServiceSearchModel(
                                                         referenceIds: [
-                                                          i.clientReferenceId
+                                                          i.hfReferrals
+                                                                  ?.clientReferenceId ??
+                                                              ''
                                                         ],
                                                       ),
                                                     ),
@@ -445,7 +460,8 @@ class _SearchReferralReconciliationsPageState
                                               context.router.push(
                                                 HFCreateReferralWrapperRoute(
                                                   viewOnly: true,
-                                                  referralReconciliation: i,
+                                                  referralReconciliation:
+                                                      i.hfReferrals,
                                                   projectId:
                                                       ReferralReconSingleton()
                                                           .projectId,
@@ -458,186 +474,240 @@ class _SearchReferralReconciliationsPageState
                                           ),
                                         );
                                       },
-                                      childCount: searchState.referrals.length,
+                                      childCount:
+                                          searchState.hFReferalMembers.length,
                                     ),
                                   ),
                                 ],
                               );
                             },
                           ))),
-                  bottomNavigationBar: Card(
-                    margin: const EdgeInsets.all(0),
-                    child: Container(
-                      padding: EdgeInsets.all(theme.spacerTheme.spacer2),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          BlocBuilder<SearchReferralsBloc,
-                              SearchReferralsState>(
-                            builder: (context, state) {
-                              final router = context.router;
-
-                              VoidCallback? onPressed;
-
-                              onPressed = () {
-                                FocusManager.instance.primaryFocus?.unfocus();
-                                final bloc =
-                                    context.read<SearchReferralsBloc>();
-                                //TODO: commmented for now
-                                // router.push(
-                                //   HFCreateReferralWrapperRoute(
-                                //     viewOnly: false,
-                                //     referralReconciliation: HFReferralModel(
-                                //       clientReferenceId: IdGen.i.identifier,
-                                //       name: state.searchQuery,
-                                //       beneficiaryId: state.tag,
-                                //     ),
-                                //     projectId: ReferralReconSingleton().projectId,
-                                //     cycles: ReferralReconSingleton().cycles,
-                                //   ),
-                                // );
-
-                                // context.read<FormsBloc>().add(
-                                //     const FormsEvent.clearForm(
-                                //         schemaKey: 'HFREFERALFLOW'));
-
-                                // final pageName = context
-                                //     .read<FormsBloc>()
-                                //     .state
-                                //     .cachedSchemas['HFREFERALFLOW']
-                                //     ?.pages
-                                //     .entries
-                                //     .first
-                                //     .key;
-
-                                // if (pageName == null) {
-                                //   Toast.showToast(
-                                //     context,
-                                //     message: localizations.translate(
-                                //         'NO_FORM_FOUND_FOR_HFREFERALFLOW'),
-                                //     type: ToastType.error,
-                                //   );
-                                // } else {
-                                //   context.router.push(FormsRenderRoute(
-                                //     currentSchemaKey: 'HFREFERALFLOW',
-                                //     pageName: pageName,
-                                //     defaultValues: {
-                                //       'administrativeUnitKey': localizations
-                                //           .translate(ReferralReconSingleton()
-                                //                   .boundary
-                                //                   ?.code ??
-                                //               ''),
-                                //     },
-                                //   ));
-                                // }
-
-                                context.router.push(
-                                  HFCreateReferralWrapperRoute(
-                                    viewOnly: false,
-                                    referralReconciliation: HFReferralModel(
-                                      clientReferenceId: IdGen.i.identifier,
-                                      name: state.searchQuery,
-                                      beneficiaryId: state.tag,
-                                    ),
-                                    projectId:
-                                        ReferralReconSingleton().projectId,
-                                    cycles: ReferralReconSingleton().cycles,
-                                    onInitComplete: (ctx) {
-                                      final pageName = ctx
-                                          .read<FormsBloc>()
-                                          .state
-                                          .cachedSchemas['HFREFERALFLOW']
-                                          ?.pages
-                                          .entries
-                                          .first
-                                          .key;
-
-                                      if (pageName == null) {
-                                        Toast.showToast(
-                                          ctx,
-                                          message: localizations.translate(
-                                              'NO_FORM_FOUND_FOR_HFREFERALFLOW'),
-                                          type: ToastType.error,
-                                        );
-                                        return;
-                                      }
-
-                                      ctx.router.push(
-                                        FormsRenderRoute(
-                                            currentSchemaKey: 'HFREFERALFLOW',
-                                            pageName: pageName,
-                                            defaultValues: {
-                                              'administrativeUnitKey':
-                                                  localizations.translate(
-                                                ReferralReconSingleton()
-                                                        .boundary
-                                                        ?.code ??
-                                                    '',
-                                              ),
-                                            },
-                                            customComponents: const [
-                                              {'cycle': CycleDropDown()},
-                                              {
-                                                'evaluationFacilityKey':
-                                                    EvaluationKeyDropDown()
-                                              }
-                                            ]),
-                                      );
-                                    },
-                                  ),
-                                );
-
-                                searchController.clear();
-                                bloc.add(
-                                  const SearchReferralsClearEvent(),
-                                );
-                              };
-                              return DigitButton(
-                                size: DigitButtonSize.large,
-                                label: localizations.translate(
-                                  i18.referralReconciliation
-                                      .createReferralLabel,
-                                ),
-                                mainAxisSize: MainAxisSize.max,
-                                isDisabled:
-                                    !(searchController.text.isNotEmpty &&
-                                        searchController.text.length >= 2),
-                                onPressed: () {
-                                  if (onPressed != null) {
-                                    onPressed();
-                                  }
-                                },
-                                type: DigitButtonType.primary,
-                              );
-                            },
+                  bottomNavigationBar: ValueListenableBuilder<TextEditingValue>(
+                      valueListenable: searchController,
+                      builder: (context, value, _) {
+                        final isTextShort = value.text.length < 3;
+                        return Offstage(
+                          offstage: false,
+                          child: DigitCard(
+                            margin: const EdgeInsets.only(top: spacer2),
+                            padding: const EdgeInsets.all(spacer4),
+                            children: [
+                              ...buildSearchButtons(
+                                  context, value, isTextShort, searchTemplate)
+                            ],
                           ),
-                          SizedBox(
-                            height: theme.spacerTheme.spacer2,
-                          ),
-                          DigitButton(
-                            size: DigitButtonSize.large,
-                            label: localizations.translate(
-                                i18.referralReconciliation.scannerLabel),
-                            onPressed: () async {
-                              context.read<DigitScannerBloc>().add(
-                                    const DigitScannerEvent.handleScanner(),
-                                  );
-                              context.router.push(DigitScannerRoute(
-                                quantity: 1,
-                                isGS1code: false,
-                                singleValue: true,
-                              ));
-                            },
-                            type: DigitButtonType.secondary,
-                            prefixIcon: Icons.qr_code,
-                            mainAxisSize: MainAxisSize.max,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                        );
+                      }),
                 ))),
       ),
     );
+  }
+
+  List<DigitButton> buildSearchButtons(
+    BuildContext context,
+    TextEditingValue value,
+    bool isTextShort,
+    TemplateConfig? template,
+  ) {
+    final primaryProp = template?.properties?['PrimaryButton'];
+    final secondaryProp = template?.properties?['SecondaryButton'];
+
+    final entries = <MapEntry<int, DigitButton>>[];
+
+    // — Primary button — (respect hidden + enableViewHousehold logic if any)
+    if (primaryProp?.hidden != true) {
+      final order = primaryProp?.order ?? 0;
+      entries.add(MapEntry(
+        order,
+        DigitButton(
+          capitalizeLetters: false,
+          label: localizations.translate(primaryProp?.label ??
+              i18.referralReconciliation.createReferralLabel),
+          mainAxisSize: MainAxisSize.max,
+          type: DigitButtonType.primary,
+          size: DigitButtonSize.large,
+          isDisabled: isTextShort,
+          onPressed: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+            final bloc = context.read<SearchReferralsBloc>();
+            //TODO: commmented for now
+
+            // context.router.push(
+            // HFCreateReferralWrapperRoute(
+            //   viewOnly: false,
+            //   referralReconciliation: HFReferralModel(
+            //     clientReferenceId: IdGen.i.identifier,
+            //     //TODO:: need to change
+            //     name: "state.searchQuery",
+            //     beneficiaryId: "state.tag",
+            //   ),
+            //   projectId: ReferralReconSingleton().projectId,
+            //   cycles: ReferralReconSingleton().cycles,
+            //   onInitComplete: (ctx) {
+            //     final pageName = ctx
+            //         .read<FormsBloc>()
+            //         .state
+            //         .cachedSchemas['HFREFERALFLOW']
+            //         ?.pages
+            //         .entries
+            //         .first
+            //         .key;
+
+            //     if (pageName == null) {
+            //       Toast.showToast(
+            //         ctx,
+            //         message: localizations
+            //             .translate('NO_FORM_FOUND_FOR_HFREFERALFLOW'),
+            //         type: ToastType.error,
+            //       );
+            //       return;
+            //     }
+
+            //     ctx.router.push(
+            //       FormsRenderRoute(
+            //           currentSchemaKey: 'HFREFERALFLOW',
+            //           pageName: pageName,
+            //           defaultValues: {
+            //             'administrativeUnitKey': localizations.translate(
+            //               ReferralReconSingleton().boundary?.code ?? '',
+            //             ),
+            //           },
+            //           customComponents: const [
+            //             {'cycle': CycleDropDown()},
+            //             {'evaluationFacilityKey': EvaluationKeyDropDown()}
+            //           ]),
+            //     );
+            //   },
+            // ),
+
+            // );
+            final pageName = context
+                .read<FormsBloc>()
+                .state
+                .cachedSchemas['HFREFERALFLOW']
+                ?.pages
+                .entries
+                .first
+                .key;
+
+            if (pageName == null) {
+              Toast.showToast(
+                context,
+                message:
+                    localizations.translate('NO_FORM_FOUND_FOR_HFREFERALFLOW'),
+                type: ToastType.error,
+              );
+              return;
+            }
+
+            context.router.push(
+              FormsRenderRoute(
+                  currentSchemaKey: 'HFREFERALFLOW',
+                  pageName: pageName,
+                  defaultValues: {
+                    'administrativeUnitKey': localizations.translate(
+                      ReferralReconSingleton().boundary?.code ?? '',
+                    ),
+                  },
+                  customComponents: const [
+                    {'cycle': CycleDropDown()},
+                    {'evaluationFacilityKey': EvaluationKeyDropDown()}
+                  ]),
+            );
+
+            searchController.clear();
+            bloc.add(
+              const SearchReferralsClearEvent(),
+            );
+          },
+        ),
+      ));
+    }
+
+    // — Secondary button —
+    if (secondaryProp?.hidden != true) {
+      final order = secondaryProp?.order ?? 1;
+      entries.add(MapEntry(
+        order,
+        DigitButton(
+          capitalizeLetters: false,
+          type: DigitButtonType.secondary,
+          size: DigitButtonSize.large,
+          mainAxisSize: MainAxisSize.max,
+          onPressed: () {
+            blocWrapper.add(const HFReferalWrapperEvent.clear());
+            //TODO: need to do
+            /// selectedFilters = [];
+            searchController.clear();
+            // Navigator.of(context).push(
+            //   MaterialPageRoute(
+            //     builder: (context) => const DigitScannerPage(
+            //       quantity: 1,
+            //       isGS1code: false,
+            //       singleValue: true,
+            //     ),
+            //     settings: const RouteSettings(name: '/qr-scanner'),
+            //   ),
+            // );
+
+            context.read<DigitScannerBloc>().add(
+                  const DigitScannerEvent.handleScanner(),
+                );
+            context.router.push(DigitScannerRoute(
+              quantity: 1,
+              isGS1code: false,
+              singleValue: true,
+            ));
+          },
+          prefixIcon: Icons.qr_code,
+          label: secondaryProp?.label != null
+              ? localizations.translate(secondaryProp?.label ?? '')
+              : localizations
+                  .translate(i18.referralReconciliation.scannerLabel),
+        ),
+      ));
+    }
+
+    // Sort by order and return only the DigitButtons
+    entries.sort((a, b) => a.key.compareTo(b.key));
+    return entries.map((e) => e.value).toList(growable: false);
+  }
+
+  void triggerGlobalSearchEvent({bool isPagination = false}) {
+    if (!isPagination) {
+      blocWrapper.add(const HFReferalWrapperEvent.clear());
+    }
+
+    if (isProximityEnabled ||
+        selectedFilters.isNotEmpty ||
+        (searchController.text.isNotEmpty &&
+            searchController.text.length > 2)) {
+      final params = reg_params.GlobalSearchParameters(
+        filters: [
+          if (searchController.text.isNotEmpty &&
+              searchController.text.length > 2)
+            reg_params.SearchFilter(
+              root:
+                  'hFReferral', // or 'individual', based on what you're searching
+              field: 'name',
+              operator: 'contains',
+              value: searchController.text,
+            ),
+        ], // Optional: if you're resolving linked entities
+        primaryModel: 'hFReferral',
+        select: [
+          'hFReferral',
+        ], // Optional: which fields to return
+        pagination: isPagination
+            ? reg_params.PaginationParams(
+                limit: blocWrapper.state.limit ?? limit,
+                offset: (blocWrapper.state.offset ?? offset) +
+                    (blocWrapper.state.limit ?? limit))
+            : reg_params.PaginationParams(limit: limit, offset: offset),
+      );
+      blocWrapper.add(HFReferalWrapperEvent.loadFromGlobal(
+        searchParams: params,
+      ));
+    }
   }
 }

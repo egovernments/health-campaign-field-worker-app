@@ -8,13 +8,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
 import 'package:referral_reconciliation/blocs/hf_Referral_reconciliation_bloc.dart';
+import 'package:referral_reconciliation/blocs/referral_recon_service_definition.dart';
 import 'package:referral_reconciliation/data/digit_crud_service.dart';
 import 'package:referral_reconciliation/data/digit_data_convertor.dart';
 import 'package:referral_reconciliation/models/entities/hf_referral.dart';
 import 'package:referral_reconciliation/utils/extensions/extensions.dart';
+import 'package:referral_reconciliation/utils/utils.dart';
 
 import 'package:survey_form/blocs/service_definition.dart';
 import 'package:survey_form/models/entities/service_definition.dart';
+import 'package:survey_form/survey_form.dart';
 
 @RoutePage()
 class HFReferralWrapperPage extends StatelessWidget {
@@ -139,6 +142,39 @@ class HFReferralWrapperPage extends StatelessWidget {
           //     serviceDefinitionDataRepository: serviceDefinition,
           //   )..add(const ServiceDefinitionFetchEvent()),
           // ),
+
+          ///
+          ///
+          BlocProvider(
+            create: (_) => ReferralReconServiceDefinitionBloc(
+              const ReferralReconServiceDefinitionEmptyState(),
+              serviceDefinitionDataRepository: context.repository<
+                  ServiceDefinitionModel, ServiceDefinitionSearchModel>(
+                context,
+              ),
+            )..add(const ReferralReconServiceDefinitionFetchEvent()),
+          ),
+          BlocProvider(
+            create: (_) => ServiceBloc(
+              const ServiceEmptyState(),
+              serviceDataRepository:
+                  context.repository<ServiceModel, ServiceSearchModel>(context),
+            )..add(ServiceSearchEvent(
+                serviceSearchModel: ServiceSearchModel(
+                  referenceIds: [IdGen.i.identifier ?? ''],
+                ),
+              )),
+          ),
+
+          BlocProvider<ProjectFacilityBloc>(
+            create: (_) => ProjectFacilityBloc(
+              const ProjectFacilityEmptyState(),
+              projectFacilityDataRepository: context.repository<
+                  ProjectFacilityModel, ProjectFacilitySearchModel>(context),
+            )..add(ProjectFacilityLoadEvent(
+                query: ProjectFacilitySearchModel(
+                    projectId: [ReferralReconSingleton().projectId]))),
+          )
         ],
         child: const AutoRouter(),
       ),
