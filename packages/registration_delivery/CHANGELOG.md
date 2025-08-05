@@ -1,3 +1,7 @@
+## 1.1.0-dev.8-console
+* Update localization for bednet condition
+* Updated the digit crud bloc version
+
 ## 1.1.0-dev.7-console
 
 * BugFix:
