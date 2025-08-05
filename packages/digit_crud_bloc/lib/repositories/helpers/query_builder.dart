@@ -107,7 +107,7 @@ class QueryBuilder {
     void Function(int count)? onCountFetched,
   }) async {
     final dynamicTable = sql.allTables.firstWhere(
-      (t) => t.actualTableName == table,
+      (t) => t.actualTableName == camelToSnake(table),
       orElse: () => throw Exception('Table $table not found'),
     );
 
