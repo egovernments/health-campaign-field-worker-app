@@ -190,6 +190,68 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                     ),
                                   );
 
+                              final currentPage =
+                                  schemaObject.pages.entries.elementAt(index);
+                              final conditionalNavigateList =
+                                  currentPage.value.conditionalNavigateTo;
+
+                              // Evaluate conditionalNavigateTo (if present)
+                              if (conditionalNavigateList != null) {
+                                for (final conditionItem
+                                    in conditionalNavigateList) {
+                                  final condition = conditionItem.condition;
+                                  final navigateTo = conditionItem.navigateTo;
+
+                                  final formState =
+                                      context.read<FormsBloc>().state;
+                                  final currentPageKey = AutoRouter.of(context)
+                                      .current
+                                      .pathParams
+                                      .getString('pageName');
+
+                                  final currentSchemaKey =
+                                      AutoRouter.of(context)
+                                          .current
+                                          .queryParams
+                                          .getString('currentSchemaKey');
+
+                                  final values =
+                                      buildVisibilityEvaluationContext(
+                                    currentPageKey: currentPageKey,
+                                    currentForm: formGroup,
+                                    pages: formState
+                                        .cachedSchemas[currentSchemaKey]!.pages,
+
+                                    /// TODO: fix hardcode not null condition
+                                  );
+
+                                  final isConditionTrue =
+                                      evaluateVisibilityExpression(
+                                          condition, values);
+
+                                  if (isConditionTrue) {
+                                    final targetPageName =
+                                        navigateTo.name as String?;
+                                    final targetPageType =
+                                        navigateTo.type as String?;
+
+                                    if (targetPageName != null &&
+                                        targetPageType == 'form') {
+                                      context.router.push(FormsRenderRoute(
+                                        isEdit: widget.isEdit,
+                                        customComponents:
+                                            widget.customComponents,
+                                        currentSchemaKey:
+                                            widget.currentSchemaKey,
+                                        pageName: targetPageName,
+                                        defaultValues: widget.defaultValues,
+                                      ));
+                                      return; // Skip default logic
+                                    }
+                                  }
+                                }
+                              }
+
                               if ((index) < schemaObject.pages.length - 1) {
                                 context.router.push(FormsRenderRoute(
                                   isEdit: widget.isEdit,

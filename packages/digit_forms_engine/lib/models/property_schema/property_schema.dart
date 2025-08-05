@@ -54,6 +54,7 @@ class PropertySchema with _$PropertySchema {
     bool? includeInSummary,
     NavigateToConfig? navigateTo,
     VisibilityCondition? visibilityCondition,
+    List<ConditionalNavigateTo>? conditionalNavigateTo,
   }) = _PropertySchema;
 
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>
@@ -113,6 +114,17 @@ class VisibilityCondition with _$VisibilityCondition {
 
   factory VisibilityCondition.fromJson(Map<String, dynamic> json) =>
       _$VisibilityConditionFromJson(json);
+}
+
+@freezed
+class ConditionalNavigateTo with _$ConditionalNavigateTo {
+  const factory ConditionalNavigateTo({
+    required String condition,
+    required NavigateToConfig navigateTo,
+  }) = _ConditionalNavigateTo;
+
+  factory ConditionalNavigateTo.fromJson(Map<String, dynamic> json) =>
+      _$ConditionalNavigateToFromJson(json);
 }
 
 String? _stringOrNull(dynamic value) {
