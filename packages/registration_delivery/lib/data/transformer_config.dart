@@ -30,7 +30,13 @@ final jsonConfig = {
             "street": "address.street",
             "type": "beneficiaryLocation.typeOfAddress",
             "boundaryType": "address.boundaryType",
-            "localityBoundaryCode": "beneficiaryLocation.administrativeArea",
+            "locality": {
+              "code": "__context:selectedBoundaryCode",
+              "name": "__context:boundary.name",
+              "nonRecoverableError": "address.nonRecoverable",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion",
+            },
             "boundary": "address.boundary",
             "nonRecoverableError": "address.nonRecoverable",
             "tenantId": "__context:tenantId",
@@ -84,6 +90,7 @@ final jsonConfig = {
         },
         "listMappings": {
           "IdentifierModel": {
+            "listSource": "beneficiaryDetails.identifiers[0]",
             "mappings": {
               "id": "id",
               "identifierType": "beneficiaryDetails.identifiers[0]",
@@ -118,7 +125,13 @@ final jsonConfig = {
               "buildingName": "address.buildingName",
               "street": "address.street",
               "boundaryType": "address.boundaryType",
-              "localityBoundaryCode": "beneficiaryLocation.administrativeArea",
+              "locality": {
+                "code": "__context:selectedBoundaryCode",
+                "name": "__context:boundary.name",
+                "nonRecoverableError": "address.nonRecoverable",
+                "tenantId": "__context:tenantId",
+                "rowVersion": "meta.rowVersion",
+              },
               "boundary": "address.boundary",
               "nonRecoverableError": "address.nonRecoverable",
               "tenantId": "__context:tenantId",

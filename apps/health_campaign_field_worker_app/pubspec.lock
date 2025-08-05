@@ -550,10 +550,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_data_converter
-      sha256: "7b86a04b5455b913767919f660e5b8cd05cba3a3c0543011b472dd4e7e02f363"
+      sha256: ef7287c98a8ca7fe87a8b7a4e7516d70513b55fa09ba04bbd6e6be4b0bd5c78c
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.3-dev"
+    version: "0.0.4-dev"
   digit_data_model:
     dependency: "direct main"
     description:
@@ -622,10 +622,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: b2dda81f96bc971306815aee9e7cf471bed94217c68ca1df0d0289debbb86a7b
+      sha256: "37c5c974bbc60567588f71bf6cddf49dc69d3248d0b4bca4525af837cf67a8f2"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.2+7"
+    version: "0.2.2+8"
   dio:
     dependency: "direct main"
     description:
@@ -1898,10 +1898,10 @@ packages:
     dependency: "direct main"
     description:
       name: registration_delivery
-      sha256: "8e44fb96946a4001f00def549ca36ceace69645a3bd0c89d0843b3bfef71950b"
+      sha256: "61e437835c2666687c47befb83d5ed2737ddea8ef8b3dc6f930a6dc53eb4e416"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0-dev.4-console"
+    version: "1.1.0-dev.5-console"
   rxdart:
     dependency: transitive
     description:
