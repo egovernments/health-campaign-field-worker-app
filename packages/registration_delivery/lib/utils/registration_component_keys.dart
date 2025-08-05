@@ -28,8 +28,8 @@ class HouseholdOverViewKeys {
   String get editHouseholdKey => 'editHousehold';
   String get editIndividualKey => 'editIndividual';
   String get individualSecondaryButtonKey =>
-      'IndividualDeliverySecondaryButton';
-  String get individualPrimaryButtonKey => 'IndividualDeliveryPrimaryButton';
+      'SecondaryButton';
+  String get individualPrimaryButtonKey => 'PrimaryButton';
   String get addMemberKey => 'addMember';
   String get householdSecondaryButtonKey => 'SecondaryButton';
   String get householdPrimaryButtonKey => 'PrimaryButton';

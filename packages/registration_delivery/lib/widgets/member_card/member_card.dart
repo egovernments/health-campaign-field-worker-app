@@ -1,13 +1,17 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_data_model/models/templates/template_config.dart';
+import 'package:digit_forms_engine/blocs/forms/forms.dart';
+import 'package:digit_forms_engine/router/forms_router.gm.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
@@ -18,6 +22,7 @@ import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
+import '../beneficiary/resource_card.dart';
 
 class MemberCard extends StatelessWidget {
   final String name;
@@ -44,6 +49,7 @@ class MemberCard extends StatelessWidget {
   final bool isBeneficiaryRefused;
   final bool isBeneficiaryReferred;
   final String? projectBeneficiaryClientReferenceId;
+  final TemplateConfig? overviewTemplate;
 
   const MemberCard({
     super.key,
@@ -71,6 +77,7 @@ class MemberCard extends StatelessWidget {
     this.editMemberActionProperties,
     this.primaryButtonProperties,
     this.secondaryButtonProperties,
+    this.overviewTemplate,
   });
 
   @override
@@ -327,6 +334,61 @@ class MemberCard extends StatelessWidget {
                                             ),
                                       onPressed: () {
                                         //// TODO: need to write for logic for eligibility checklist and other flows
+                                        final nextAction = overviewTemplate?.navigateTo;
+                                        if (nextAction != null) {
+                                          if (nextAction.type == 'template') {
+                                            final nextPath = routerMap[nextAction
+                                                .name];
+                                            if (nextPath != null) {
+                                              context.router.push(nextPath);
+                                            }
+                                          } else {
+                                            final pageName = context
+                                                .read<FormsBloc>()
+                                                .state
+                                                .cachedSchemas['DELIVERYFLOW']
+                                                ?.pages
+                                                .entries
+                                                .first
+                                                .key;
+
+                                            if (pageName == null) {
+                                              Toast.showToast(
+                                                context,
+                                                message:
+                                                localizations.translate(
+                                                    'NO_FORM_FOUND_FOR_DELIVERY'),
+                                                type: ToastType.error,
+                                              );
+                                            } else {
+                                              context.router.push(
+                                                  FormsRenderRoute(
+                                                    currentSchemaKey: 'DELIVERYFLOW',
+                                                    pageName: pageName,
+                                                    defaultValues: {
+                                                      'administrativeArea': localizations
+                                                          .translate(
+                                                          RegistrationDeliverySingleton()
+                                                              .boundary?.code ??
+                                                              '')
+                                                    },
+                                                    customComponents: const [
+                                                      {
+                                                        'resourceCard': ResourceCard()
+                                                      }
+                                                    ],
+                                                  ));
+                                            }
+                                          }
+                                        }else{
+                                          Toast.showToast(
+                                            context,
+                                            message:
+                                            localizations.translate(
+                                                'NO_NAVIGATION_ACTION_FOUND'),
+                                            type: ToastType.error,
+                                          );
+                                        }
                                       },
                                     ),
                                   )
