@@ -3426,16 +3426,16 @@ const String sample = '''{
     
       "templates": {
         "SearchReferralReconciliations": {
-          "label": "APPONE_REGISTRATION_BENEFICIARY_SEARCH_SCREEN_HEADING",
+          "label": "APPONE_HFREFERALFLOW_SEARCH_SCREEN_HEADING",
           "order": 1,
           "type": "template",
           "format": null,
-          "description": "APPONE_REGISTRATION_BENEFICIARY_SEARCH_SCREEN_DESCRIPTION",
+          "description": "APPONE_HFREFERALFLOW_SEARCH_SCREEN_DESCRIPTION",
           "actionLabel": "",
           "properties": {
             "searchByProximity": {
               "type": "template",
-              "label": "APPONE_REGISTRATION_BENEFICIARY_SEARCH_BY_PROXIMITY",
+              "label": "APPONE_HFREFERALFLOW_SEARCH_BY_PROXIMITY",
               "order": 1,
               "value": true,
               "format": "searchByProximity",
@@ -3456,7 +3456,7 @@ const String sample = '''{
             },
             "searchBar": {
               "type": "template",
-              "label": "APPONE_REGISTRATION_BENEFICIARY_SEARCH_BAR",
+              "label": "APPONE_HFREFERALFLOW_SEARCH_BAR",
               "order": 2,
               "value": "",
               "format": "searchBar",
@@ -3483,7 +3483,7 @@ const String sample = '''{
             },
             "filter": {
               "type": "template",
-              "label": "APPONE_REGISTRATION_BENEFICIARY_FILTER_LABEL",
+              "label": "APPONE_HFREFERALFLOW_FILTER_LABEL",
               "order": 3,
               "value": [],
               "format": "filter",
@@ -3504,7 +3504,7 @@ const String sample = '''{
             },
             "PrimaryButton": {
               "type": "template",
-              "label": "APPONE_REGISTRATION_BENEFICIARY_REGISTRATION_LABEL",
+              "label": "APPONE_HFREFERALFLOW_REGISTRATION_LABEL",
               "order": 4,
               "value": "",
               "format": "PrimaryButton",
@@ -3531,7 +3531,7 @@ const String sample = '''{
             },
             "SecondaryButton": {
               "type": "template",
-              "label": "APPONE_REGISTRATION_BENEFICIARY_QR_LABEL",
+              "label": "APPONE_HFREFERALFLOW_QR_LABEL",
               "order": 5,
               "value": true,
               "format": "SecondaryButton",
@@ -3746,8 +3746,8 @@ const String sample = '''{
         },
         "referralDetails": {
          "navigateTo": {
-            "name": "facilityDetails",
-            "type": "form"
+            "name": "referral-acknowledgement",
+            "type": "template"
           },
           "label": "APPONE_REFERRALDETAILS_SCREEN_HEADING",
           "order": 2,

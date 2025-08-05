@@ -583,14 +583,15 @@ class _HomePageState extends LocalizedState<HomePage> {
 
                 final registrationConfig = json.encode(registrationSchemaData);
 
-                RegistrationDeliverySingleton().setTemplateConfigs(templates);
+                ReferralReconSingleton().setTemplateConfigs(templates);
                 // .setRegistrationConfig(registrationConfig);
                 ReferralReconSingleton()
                     .setHfReferralConfig(registrationConfig);
               }
             }
 
-            context.router.push(SearchReferralReconciliationsRoute());
+            // context.router.push(SearchReferralReconciliationsRoute());
+            context.router.push(const HFReferralWrapperRoute());
           },
         ),
       ),
