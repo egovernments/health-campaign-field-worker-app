@@ -387,24 +387,9 @@ class _SearchReferralReconciliationsPageState
                                                 textCapitalization:
                                                     TextCapitalization.words,
                                                 onChanged: (value) {
-                                                  // final bloc = context.read<
-                                                  //     SearchReferralsBloc>();
-                                                  // if (value.trim().length < 2) {
-                                                  //   bloc.add(
-                                                  //     const SearchReferralsClearEvent(),
-                                                  //   );
-
-                                                  //   return;
-                                                  // } else {
-                                                  //   bloc.add(
-                                                  //       SearchReferralsByNameEvent(
-                                                  //     searchText: value.trim(),
-                                                  //   ));
-                                                  // }
-
                                                   if (value.isEmpty ||
                                                       value.trim().length > 2) {
-                                                    triggerGlobalSearchEvent();
+                                                    //triggerGlobalSearchEvent();
                                                   }
                                                 },
                                               ),

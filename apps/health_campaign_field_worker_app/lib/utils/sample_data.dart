@@ -3433,31 +3433,11 @@ const String sample = '''{
           "description": "APPONE_HFREFERALFLOW_SEARCH_SCREEN_DESCRIPTION",
           "actionLabel": "",
           "properties": {
-            "searchByProximity": {
-              "type": "template",
-              "label": "APPONE_HFREFERALFLOW_SEARCH_BY_PROXIMITY",
-              "order": 1,
-              "value": true,
-              "format": "searchByProximity",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "searchByProximity",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "includeInSummary": true
-            },
+            
             "searchBar": {
               "type": "template",
               "label": "APPONE_HFREFERALFLOW_SEARCH_BAR",
-              "order": 2,
+              "order": 1,
               "value": "",
               "format": "searchBar",
               "hidden": false,
@@ -3481,27 +3461,7 @@ const String sample = '''{
               "isMultiSelect": false,
               "includeInSummary": true
             },
-            "filter": {
-              "type": "template",
-              "label": "APPONE_HFREFERALFLOW_FILTER_LABEL",
-              "order": 3,
-              "value": [],
-              "format": "filter",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "filter",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "includeInSummary": true
-            },
+            
             "PrimaryButton": {
               "type": "template",
               "label": "APPONE_HFREFERALFLOW_REGISTRATION_LABEL",
@@ -3573,14 +3533,104 @@ const String sample = '''{
             "name": "facilityDetails",
             "type": "form"
           }
+        },
+        
+        "ReferralReconAcknowledgement": {
+          "label": "APPONE_HFREFERALFLOW_ACKNOWLEDGEMENT_SCREEN_HEADING",
+          "order": 7,
+          "type": "template",
+          "format": null,
+          "description": "APPONE_HFREFERALFLOW_ACKNOWLEDGEMENT_SCREEN_DESCRIPTION",
+          "actionLabel": "",
+          "properties": {
+            "AcknowledgementTitle": {
+              "type": "template",
+              "label": "HFREFERALFLOW_ACKNOWLEDGEMENT_TITLE",
+              "order": 1,
+              "value": "",
+              "format": "AcknowledgementTitle",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "AcknowledgementTitle",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true
+            },
+            "AcknowledgementDescription": {
+              "type": "template",
+              "label": "HFREFERALFLOW_ACKNOWLEDGEMENT_DESCRIPTION",
+              "order": 2,
+              "value": "",
+              "format": "AcknowledgementDescription",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "AcknowledgementDescription",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true
+            },
+            
+            "PrimaryButton": {
+              "type": "template",
+              "label": "HFREFERALFLOW_ACKNOWLEDGEMENT_PRIMARY_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "PrimaryButton",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "PrimaryButton",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false,
+              "includeInSummary": true
+            }
+          },
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "prefixText": null,
+          "suffixText": null,
+          "navigateTo": null
         }
       }
     ,
 
-
-
-    
-    
       "name": "HFREFERALFLOW",
       "version": 2,
       "pages": {

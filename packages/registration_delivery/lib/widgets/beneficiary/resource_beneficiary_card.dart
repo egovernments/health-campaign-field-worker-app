@@ -49,7 +49,7 @@ class ResourceBeneficiaryCardState
                 width: MediaQuery.of(context).size.width * .8,
                 showParentContainer: true,
                 options: productVariants,
-                readOnly: widget.readOnly,
+                //readOnly: widget.readOnly,
                 onSelectionChanged: (selectedOptions) {
                   if (selectedOptions.isNotEmpty) {
                     var selectedOption = selectedOptions.first;
