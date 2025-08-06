@@ -13,6 +13,7 @@ class BeneficiaryDetailsKeys {
 
   String get detailsCardKey => 'DetailsCard';
   String get tableCardKey => 'Table';
+  String get showDeliveryPopUp => 'deliveryConditionDialog';
 }
 
 class CommonKeys {

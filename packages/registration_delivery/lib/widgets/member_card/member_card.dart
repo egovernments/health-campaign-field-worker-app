@@ -296,7 +296,7 @@ class MemberCard extends StatelessWidget {
                             ? const Offstage()
                             : !isNotEligible
                                 ? Offstage(
-                                    offstage: primaryButtonProperties?.hidden !=
+                                    offstage: beneficiaryType != BeneficiaryType.individual && primaryButtonProperties?.hidden !=
                                             null &&
                                         primaryButtonProperties?.hidden == true,
                                     child: DigitButton(
