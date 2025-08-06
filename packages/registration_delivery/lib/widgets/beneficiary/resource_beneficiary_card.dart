@@ -16,6 +16,8 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
   final int cardIndex;
   final FormGroup form;
   final int totalItems;
+  final bool readOnly;
+  final int? maxQuantity;
 
   const ResourceBeneficiaryCard({
     super.key,
@@ -24,6 +26,8 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
     required this.cardIndex,
     required this.form,
     required this.totalItems,
+    this.maxQuantity,
+    this.readOnly = false,
   });
 
   @override
@@ -45,6 +49,7 @@ class ResourceBeneficiaryCardState
                 width: MediaQuery.of(context).size.width * .8,
                 showParentContainer: true,
                 options: productVariants,
+                readOnly: widget.readOnly,
                 onSelectionChanged: (selectedOptions) {
                   if (selectedOptions.isNotEmpty) {
                     var selectedOption = selectedOptions.first;
@@ -87,6 +92,8 @@ class ResourceBeneficiaryCardState
           child: DigitNumericFormInput(
             minValue: 1,
             step: 1,
+            readOnly: widget.readOnly,
+            maxValue: widget.maxQuantity ?? 1000,
             initialValue: widget.form
                         .control('quantityDistributed.${widget.cardIndex}')
                         .value !=

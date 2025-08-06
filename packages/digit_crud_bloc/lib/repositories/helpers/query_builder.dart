@@ -107,7 +107,7 @@ class QueryBuilder {
     void Function(int count)? onCountFetched,
   }) async {
     final dynamicTable = sql.allTables.firstWhere(
-      (t) => t.actualTableName == table,
+      (t) => t.actualTableName == camelToSnake(table),
       orElse: () => throw Exception('Table $table not found'),
     );
 
@@ -213,7 +213,7 @@ class QueryBuilder {
       if (centerLat != null && centerLon != null && radiusInKm != null) {
         // Need lat/lon values for Haversine filtering
         final countQuery = sql.customSelect(
-          'SELECT latitude, longitude FROM $table WHERE $whereClause',
+          'SELECT latitude, longitude FROM ${camelToSnake(table)} WHERE $whereClause',
           variables: whereArgs,
         );
 
@@ -266,7 +266,7 @@ class QueryBuilder {
       } else {
         // Original optimized COUNT query
         final countQuery = sql.customSelect(
-          'SELECT COUNT(*) AS total FROM $table WHERE $whereClause',
+          'SELECT COUNT(*) AS total FROM ${camelToSnake(table)} WHERE $whereClause',
           variables: whereArgs,
         );
 

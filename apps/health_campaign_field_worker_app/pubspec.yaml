@@ -18,7 +18,7 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.11+1
   path_provider: ^2.1.3
   path: ^1.9.0
-  digit_ui_components: ^0.2.2+7
+  digit_ui_components: ^0.2.2+8
   auto_route: ^8.3.0
   flutter_bloc: ^8.1.5
   collection: ^1.18.0
@@ -62,7 +62,7 @@ dependencies:
   inventory_management: ^1.0.6
   referral_reconciliation: ^1.0.6
   digit_data_model: ^1.2.0-dev.1-console
-  registration_delivery: ^1.1.0-dev.4-console
+  registration_delivery: ^1.1.0-dev.5-console
   disable_battery_optimization: ^1.1.1
   digit_dss: ^1.0.4+2
   closed_household: ^1.1.0-dev.1-console
