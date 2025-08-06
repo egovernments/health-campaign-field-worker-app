@@ -24,8 +24,9 @@ class LayoutRendererPage extends StatelessWidget {
         footer: actions.isNotEmpty
             ? DigitCard(
                 children: actions
-                    .map((e) =>
-                        LayoutMapper.map(e, context, ActionHandler.execute))
+                    .map((e) => LayoutMapper.map(e, context, (action) {
+                          ActionHandler.execute(action, context, {});
+                        }))
                     .toList(),
               )
             : null,
@@ -49,8 +50,9 @@ class LayoutRendererPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 16), // space below heading
                 ...body
-                    .map((e) =>
-                        LayoutMapper.map(e, context, ActionHandler.execute))
+                    .map((e) => LayoutMapper.map(e, context, (action) {
+                          ActionHandler.execute(action, context, {});
+                        }))
                     .expand((widget) => [
                           widget,
                           const SizedBox(height: 16),

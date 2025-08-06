@@ -783,7 +783,7 @@ final List<Map<String, dynamic>> sampleFlows = [
   },
   {
     "screenType": "TEMPLATE",
-    "name": "beneficiaryOverview",
+    "name": "householdOverview",
     "heading": "Beneficiary Details",
     "description": "Overview of selected beneficiary",
     "body": [

@@ -1,9 +1,11 @@
+import 'package:digit_data_model/utils/utils.dart';
+import 'package:digit_flow_builder/widgets/localized.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:digit_forms_engine/pages/forms_render.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'layout_renderer.dart';
+import 'flow_builder.dart';
 
 class ScreenBuilder extends StatelessWidget {
   final Map<String, dynamic> config;
@@ -31,11 +33,27 @@ class ScreenBuilder extends StatelessWidget {
     }
 
     return BlocListener<FormsBloc, FormsState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is FormsSubmittedState) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Successfully saved')),
-          );
+          final onSubmit = config['onSubmit'] as List<dynamic>?;
+
+          // Build initial contextData (add more as needed)
+          Map<String, dynamic> contextData = {
+            'formData': state.formData,
+            // Add user, project, etc. here if needed
+          };
+
+          if (onSubmit != null) {
+            for (final actionJson in onSubmit) {
+              final action = ActionConfig.fromJson(actionJson);
+              contextData =
+                  await ActionHandler.execute(action, context, contextData);
+            }
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Successfully saved')),
+            );
+          }
         }
       },
       child: screen,
@@ -43,7 +61,7 @@ class ScreenBuilder extends StatelessWidget {
   }
 }
 
-class _FormScreenWrapper extends StatefulWidget {
+class _FormScreenWrapper extends LocalizedStatefulWidget {
   final String schemaKey;
   final Map<String, dynamic>? defaultValues;
 
@@ -56,7 +74,7 @@ class _FormScreenWrapper extends StatefulWidget {
   State<_FormScreenWrapper> createState() => _FormScreenWrapperState();
 }
 
-class _FormScreenWrapperState extends State<_FormScreenWrapper> {
+class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FormsBloc, FormsState>(builder: (context, state) {
@@ -68,7 +86,13 @@ class _FormScreenWrapperState extends State<_FormScreenWrapper> {
         return FormsRenderPage(
           pageName: pageName,
           currentSchemaKey: widget.schemaKey,
-          defaultValues: widget.defaultValues,
+          // defaultValues: widget.defaultValues,
+          /// TODO: adding default dummy data for create
+          defaultValues: {
+            'administrativeArea': localizations
+                .translate(FlowBuilderSingleton().boundary?.code ?? ''),
+            'availableIDs': {'DEFAULT': IdGen.instance.identifier}
+          },
         );
       }
       return const Center(child: CircularProgressIndicator());
