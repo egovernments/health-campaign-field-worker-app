@@ -78,12 +78,15 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
   }
 
   bool validateSurveyForm() {
-
-    if(initialAttributes == null || initialAttributes!.isEmpty) return true;
-    for(int i = 0; i < initialAttributes!.length; i++){
+    if (initialAttributes == null || initialAttributes!.isEmpty) return true;
+    for (int i = 0; i < initialAttributes!.length; i++) {
       final child = initialAttributes![i];
-      final parent = getParentQuestion(child.code.toString(), initialAttributes ?? []);
-      if(parent != null && initialAttributes?.indexOf(parent) != null && !visibleSurveyFormIndexes.contains(initialAttributes?.indexOf(parent))) {
+      final parent =
+          getParentQuestion(child.code.toString(), initialAttributes ?? []);
+      if (parent != null &&
+          initialAttributes?.indexOf(parent) != null &&
+          !visibleSurveyFormIndexes
+              .contains(initialAttributes?.indexOf(parent))) {
         visibleSurveyFormIndexes.remove(initialAttributes?.indexOf(child));
       }
     }
@@ -127,7 +130,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
             createdTime: context.millisecondsSinceEpoch(),
           ),
           attributeCode: '${attribute?[i].code}',
-          dataType: attribute?[i].dataType,
+          dataType: initialAttributes?[i].dataType,
           clientReferenceId: attReferenceId,
           serviceClientReferenceId: serviceReferenceId,
           referenceId: serviceReferenceId,
@@ -241,6 +244,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
             createdBy: SurveyFormSingleton().loggedInUserUuid,
             createdTime: context.millisecondsSinceEpoch(),
           ),
+          dataType: initialAttributes?[i].dataType,
           value: attribute?[i].dataType != 'SingleValueList' &&
                   attribute?[i].dataType != 'MultiValueList'
               ? controller[i].text.trim().isNotEmpty
@@ -1664,9 +1668,9 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
   }
 
   AttributesModel? getParentQuestion(
-      String childCode,
-      List<AttributesModel> surveyFormItems,
-      ) {
+    String childCode,
+    List<AttributesModel> surveyFormItems,
+  ) {
     final segments = childCode.split('.');
 
     if (segments.length < 2) return null;
@@ -1675,7 +1679,6 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
 
     return surveyFormItems.firstWhereOrNull((item) => item.code == parentCode);
   }
-
 
   int countDots(String inputString) {
     int dotCount = 0;

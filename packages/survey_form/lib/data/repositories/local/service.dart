@@ -279,8 +279,7 @@ class ServiceLocalRepository
                           )
                         : e.dataType == 'MultiValueList'
                             ? e.copyWith(
-                                value:
-                                    value == 'NOT_SELECTED' ? [value] : value,
+                                value: [value],
                                 additionalDetails: e.additionalDetails != null
                                     ? {"value": e.additionalDetails}
                                     : null,

@@ -1510,10 +1510,9 @@ packages:
   survey_form:
     dependency: "direct main"
     description:
-      name: survey_form
-      sha256: "26c02064d6d74928ce458fe25eb037ee9a131952f3aa6e03480b70277473b635"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../survey_form"
+      relative: true
+    source: path
     version: "1.0.3"
   synchronized:
     dependency: transitive
