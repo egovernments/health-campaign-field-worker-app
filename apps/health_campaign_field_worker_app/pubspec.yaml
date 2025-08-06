@@ -79,7 +79,7 @@ dependencies:
       ref: master
   percent_indicator: ^4.2.4
   lottie: ^3.1.0
-  digit_crud_bloc: ^0.0.2-dev
+  digit_crud_bloc: ^0.0.3-dev
   digit_data_converter: ^0.0.2-dev
   digit_forms_engine: ^0.0.2-dev
 

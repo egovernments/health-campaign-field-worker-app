@@ -117,10 +117,6 @@ class _SearchReferralReconciliationsPageState
           Navigator.of(context, rootNavigator: true).pop();
           final householdModel = createState.hFReferalMembers ?? [];
 
-          if (householdModel != null) {
-            // blocWrapper.add( CreateAndUpdate());
-          }
-
           final currentSchema = context
               .read<FormsBloc>()
               .state
@@ -389,7 +385,7 @@ class _SearchReferralReconciliationsPageState
                                                 onChanged: (value) {
                                                   if (value.isEmpty ||
                                                       value.trim().length > 2) {
-                                                    //triggerGlobalSearchEvent();
+                                                    triggerGlobalSearchEvent();
                                                   }
                                                 },
                                               ),
@@ -430,31 +426,65 @@ class _SearchReferralReconciliationsPageState
                                           child: ViewReferralCard(
                                             hfReferralModel: i.hfReferrals!,
                                             onOpenPressed: () {
-                                              context.read<ServiceBloc>().add(
-                                                    ServiceSearchEvent(
-                                                      serviceSearchModel:
-                                                          ServiceSearchModel(
-                                                        referenceIds: [
-                                                          i.hfReferrals
-                                                                  ?.clientReferenceId ??
-                                                              ''
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  );
-                                              context.router.push(
-                                                HFCreateReferralWrapperRoute(
-                                                  viewOnly: true,
-                                                  referralReconciliation:
-                                                      i.hfReferrals,
-                                                  projectId:
-                                                      ReferralReconSingleton()
-                                                          .projectId,
-                                                  cycles:
-                                                      ReferralReconSingleton()
-                                                          .cycles,
-                                                ),
+                                              // TODO:: need to integrate
+
+                                              final scannerBloc = context
+                                                  .read<DigitScannerBloc>();
+                                              FocusManager.instance.primaryFocus
+                                                  ?.unfocus();
+
+                                              blocWrapper.add(
+                                                  const HFReferalWrapperEvent
+                                                      .clear());
+
+                                              final mapper = ReverseFormMapper(
+                                                formConfig:
+                                                    jsonConfig['referral']!,
+                                                modelInstances: [
+                                                  i.hfReferrals!
+                                                ],
                                               );
+
+                                              final formData =
+                                                  mapper.buildFormData();
+
+                                              final pageName = context
+                                                  .read<FormsBloc>()
+                                                  .state
+                                                  .cachedSchemas[
+                                                      'HFREFERALFLOW']
+                                                  ?.pages
+                                                  .entries
+                                                  .first
+                                                  .key;
+
+                                              context.router.push(
+                                                  FormsRenderRoute(
+                                                      isEdit: true,
+                                                      currentSchemaKey:
+                                                          'HFREFERALFLOW',
+                                                      pageName: pageName!,
+
+                                                      /// as registration is there assuming form won't be null
+                                                      defaultValues: {
+                                                    ...formData,
+                                                    'administrativeUnitKey':
+                                                        localizations.translate(
+                                                            ReferralReconSingleton()
+                                                                    .boundary
+                                                                    ?.code ??
+                                                                ''),
+                                                  },
+                                                      customComponents: const [
+                                                    {'cycle': CycleDropDown()},
+                                                    {
+                                                      'evaluationFacilityKey':
+                                                          EvaluationKeyDropDown()
+                                                    }
+                                                  ]));
+
+                                              searchController.clear();
+                                              selectedFilters.clear();
                                             },
                                           ),
                                         );
