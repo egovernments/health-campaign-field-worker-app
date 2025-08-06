@@ -204,16 +204,10 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
                                   final formState =
                                       context.read<FormsBloc>().state;
-                                  final currentPageKey = AutoRouter.of(context)
-                                      .current
-                                      .pathParams
-                                      .getString('pageName');
+                                  final currentPageKey = widget.pageName;
 
                                   final currentSchemaKey =
-                                      AutoRouter.of(context)
-                                          .current
-                                          .queryParams
-                                          .getString('currentSchemaKey');
+                                      widget.currentSchemaKey;
 
                                   final values =
                                       buildVisibilityEvaluationContext(
