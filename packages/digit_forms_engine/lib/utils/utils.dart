@@ -6,7 +6,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:uuid/uuid.dart';
 
 import '../blocs/app_localization.dart';
-import '../json_forms.dart';
 import '../models/property_schema/property_schema.dart';
 
 class Constants {
@@ -184,7 +183,7 @@ Map<String, dynamic> buildVisibilityEvaluationContext({
     Map<String, dynamic> pageValues;
 
     if (pageKey == currentPageKey) {
-      pageValues = JsonForms.getFormValues(currentForm, pageSchema);
+      pageValues = getFormValues(currentForm, pageSchema);
     } else if (!isPastCurrentPage) {
       pageValues = {
         for (final propEntry in pageSchema.properties!.entries)
@@ -208,4 +207,38 @@ Map<String, dynamic> buildVisibilityEvaluationContext({
   }
 
   return flatContext;
+}
+
+Map<String, dynamic> getFormValues(
+  FormGroup form,
+  PropertySchema schema,
+) {
+  final values = schema.properties!.entries
+      .map((e) => getParsedValues(form, e.key, e.value))
+      .whereType<MapEntry<String, dynamic>>()
+      .toList();
+
+  return Map.fromEntries(values);
+}
+
+MapEntry<String, dynamic>? getParsedValues(
+  FormGroup form,
+  String name,
+  PropertySchema schema,
+) {
+  if (schema.type == PropertySchemaType.object) {
+    final results = schema.properties!.entries.map((e) {
+      return getParsedValues(form, e.key, e.value);
+    });
+    return MapEntry(
+      name,
+      Map.fromEntries(results.whereType<MapEntry<String, dynamic>>()),
+    );
+  } else {
+    final value = form.control(name).value;
+    if (value == null) {
+      return MapEntry(name, "");
+    }
+    return MapEntry(name, value);
+  }
 }

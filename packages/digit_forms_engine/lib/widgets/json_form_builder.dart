@@ -4,6 +4,8 @@ class JsonFormBuilder extends LocalizedStatefulWidget {
   final String formControlName;
   final PropertySchema schema;
   final List<Map<String, Widget>>? components;
+  final String pageName;
+  final String currentSchemaKey;
 
   const JsonFormBuilder({
     super.key,
@@ -11,6 +13,8 @@ class JsonFormBuilder extends LocalizedStatefulWidget {
     required this.formControlName,
     required this.schema,
     this.components,
+    required this.pageName,
+    required this.currentSchemaKey,
   });
 
   @override
@@ -38,13 +42,9 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     final visibility = widget.schema.visibilityCondition;
     if (visibility != null && visibility.expression.isNotEmpty) {
       final formState = context.read<FormsBloc>().state;
-      final currentPageKey =
-          AutoRouter.of(context).current.pathParams.getString('pageName');
+      final currentPageKey = widget.pageName;
 
-      final currentSchemaKey = AutoRouter.of(context)
-          .current
-          .queryParams
-          .getString('currentSchemaKey');
+      final currentSchemaKey = widget.currentSchemaKey;
 
       final values = buildVisibilityEvaluationContext(
         currentPageKey: currentPageKey,
@@ -56,6 +56,12 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
 
       final result =
           evaluateVisibilityExpression(visibility.expression, values);
+      VisibilityManager(schemaMap: {
+        widget.formControlName: widget.schema,
+      }, formData: form.rawValue, form: form)
+          .toggleControlVisibility(
+              widget.formControlName, result, widget.schema);
+
       return !result;
     }
 
@@ -362,6 +368,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
             final subName = mapEntry.key;
 
             final field = JsonFormBuilder(
+              pageName: widget.pageName,
+              currentSchemaKey: widget.currentSchemaKey,
               formControlName: subName,
               schema: subSchema,
               components: widget.components,
