@@ -308,16 +308,72 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
   }
 
   getProductVariants(RegistrationWrapperState state) {
-    return fetchProductVariant(
+    final projectType =
+        RegistrationDeliverySingleton().projectType;
+    final cycles = projectType?.cycles;
+    final selectedCycle = cycles
+        ?.firstWhereOrNull((c) =>
+    c.id ==
+        state.
+        deliveryWrapper
+            ?.cycle);
+
+    if (selectedCycle != null) {
+      final currentCycle =
+      (state.deliveryWrapper
+          ?.cycle ??
+          0) >=
+          0
+          ? state
+          .deliveryWrapper
+          ?.cycle
+          : 0;
+
+      // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
+      final currentDose =
+      (state.deliveryWrapper
+          ?.dose ??
+          0) >=
+          0
+          ? state
+          .deliveryWrapper
+          ?.dose
+          : 0;
+
+      final items =
       RegistrationDeliverySingleton()
-          .selectedProject
-          ?.additionalDetails
-          ?.projectType
-          ?.cycles?[0]
-          .deliveries?[0],
-      state.selectedIndividual,
-      state.householdMembers.first.household,
-      context: context,
-    );
+          .projectType
+          ?.cycles
+          ?.firstWhere((c) =>
+      c.id ==
+          currentCycle)
+          .deliveries
+          ?.firstWhere((d) =>
+      d.id ==
+          currentDose);
+
+      return fetchProductVariant(
+          items,
+          state
+              .householdMembers.first.individuals?.firstOrNull,
+          state
+              .householdMembers
+              .first
+              .household,
+          context: context);
+    }
+    else {
+      return fetchProductVariant(
+        RegistrationDeliverySingleton()
+            .selectedProject
+            ?.additionalDetails
+            ?.projectType
+            ?.cycles?[0]
+            .deliveries?[0],
+        state.householdMembers.first.individuals?.first,
+        state.householdMembers.first.household,
+        context: context,
+      );
+    }
   }
 }
