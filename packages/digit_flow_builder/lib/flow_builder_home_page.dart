@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:auto_route/annotations.dart';
+import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_crud_bloc/utils/utils.dart';
 import 'package:digit_flow_builder/widgets/localized.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
@@ -57,8 +58,9 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
               flowConfig: config,
               service: crudService,
               onUpdate: (screenKey, state) {
-                // Optional: notify parent coordinator bloc here
-                // context.read<FlowCoordinatorBloc>().add(...);
+                if (state is CrudStatePersisted) {
+                  debugPrint('print ${state.entities}');
+                }
               },
             );
           },
