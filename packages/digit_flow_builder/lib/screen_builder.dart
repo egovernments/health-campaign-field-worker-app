@@ -14,19 +14,32 @@ class ScreenBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenType = config['screenType'];
 
+    Widget screen;
+
     if (screenType == 'FORM') {
       final schemaKey = config['name'] ?? '';
       final defaultValues = config['defaultValues'] as Map<String, dynamic>?;
 
-      return _FormScreenWrapper(
+      screen = _FormScreenWrapper(
         schemaKey: schemaKey,
         defaultValues: defaultValues,
       );
     } else if (screenType == 'TEMPLATE') {
-      return LayoutRendererPage(config: config);
+      screen = LayoutRendererPage(config: config);
     } else {
-      return const Center(child: Text('Unsupported screen type'));
+      screen = const Center(child: Text('Unsupported screen type'));
     }
+
+    return BlocListener<FormsBloc, FormsState>(
+      listener: (context, state) {
+        if (state is FormsSubmittedState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Successfully saved')),
+          );
+        }
+      },
+      child: screen,
+    );
   }
 }
 
@@ -44,34 +57,21 @@ class _FormScreenWrapper extends StatefulWidget {
 }
 
 class _FormScreenWrapperState extends State<_FormScreenWrapper> {
-  bool _schemaLoaded = false;
-
   @override
   Widget build(BuildContext context) {
-    return BlocListener<FormsBloc, FormsState>(
-      listener: (context, state) {
-        if (state.initialSchemas[widget.schemaKey] != null) {
-          setState(() {
-            _schemaLoaded = true;
-          });
-        }
-      },
-      child: _schemaLoaded
-          ? Builder(builder: (context) {
-              final schemaObject = context
-                  .read<FormsBloc>()
-                  .state
-                  .cachedSchemas[widget.schemaKey]!;
+    return BlocBuilder<FormsBloc, FormsState>(builder: (context, state) {
+      if (state.initialSchemas[widget.schemaKey] != null) {
+        final schemaObject = state.cachedSchemas[widget.schemaKey]!;
 
-              // Derive pageName as first page key if none specified externally
-              final pageName = schemaObject.pages.entries.first.key;
-              return FormsRenderPage(
-                pageName: pageName,
-                currentSchemaKey: widget.schemaKey,
-                defaultValues: widget.defaultValues,
-              );
-            })
-          : const Center(child: CircularProgressIndicator()),
-    );
+        // Derive pageName as first page key if none specified externally
+        final pageName = schemaObject.pages.entries.first.key;
+        return FormsRenderPage(
+          pageName: pageName,
+          currentSchemaKey: widget.schemaKey,
+          defaultValues: widget.defaultValues,
+        );
+      }
+      return const Center(child: CircularProgressIndicator());
+    });
   }
 }
