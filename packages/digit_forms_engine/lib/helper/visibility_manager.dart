@@ -29,7 +29,7 @@ class VisibilityManager {
 
       final isVisible = evaluateVisibilityExpression(expression, flatValues);
 
-      _toggleControlVisibility(key, isVisible, schema);
+      toggleControlVisibility(key, isVisible, schema);
     }
   }
 
@@ -47,7 +47,7 @@ class VisibilityManager {
     return result;
   }
 
-  void _toggleControlVisibility(
+  void toggleControlVisibility(
     String key,
     bool isVisible,
     PropertySchema schema,
@@ -57,7 +57,9 @@ class VisibilityManager {
     if (isVisible) {
       control.setValidators(buildValidators(schema));
     } else {
-      control.clearValidators();
+      control
+        ..clearValidators()
+        ..reset(); // 👈 clears value and marks untouched
     }
 
     control.updateValueAndValidity();

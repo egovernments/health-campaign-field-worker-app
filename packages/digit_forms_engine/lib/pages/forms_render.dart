@@ -15,7 +15,6 @@ import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../widgets/localized.dart';
-import '../helper/visibility_manager.dart';
 import '../models/property_schema/property_schema.dart';
 import '../models/schema_object/schema_object.dart';
 import '../utils/utils.dart';
@@ -79,19 +78,19 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       ),
                     ),
                 builder: (context, formGroup, child) {
-                  final manager = VisibilityManager(
-                      schemaMap: schema.properties!,
-                      form: formGroup,
-                      formData: buildVisibilityEvaluationContext(
-                        currentPageKey: widget.pageName,
-                        currentForm: formGroup,
-                        pages: schemaObject.pages,
-                      ));
-
-                  // Reevaluate every time the form changes
-                  formGroup.valueChanges.listen((_) {
-                    manager.evaluateVisibility();
-                  });
+                  // final manager = VisibilityManager(
+                  //     schemaMap: schema.properties!,
+                  //     form: formGroup,
+                  //     formData: buildVisibilityEvaluationContext(
+                  //       currentPageKey: widget.pageName,
+                  //       currentForm: formGroup,
+                  //       pages: schemaObject.pages,
+                  //     ));
+                  //
+                  // // Reevaluate every time the form changes
+                  // formGroup.valueChanges.listen((_) {
+                  //   manager.evaluateVisibility();
+                  // });
 
                   return ScrollableContent(
                     enableFixedDigitButton: true,
@@ -246,14 +245,29 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                 }
                               }
 
-                              if ((index) < schemaObject.pages.length - 1) {
+                              final pages = schemaObject.pages;
+                              final currentPageKey =
+                                  pages.entries.elementAt(index).key;
+                              final currentOrder =
+                                  pages[currentPageKey]?.order ?? 0;
+
+// Find the next page with an integer order > currentOrder.floor()
+                              final nextPageEntry = pages.entries.where((e) {
+                                final order = e.value.order;
+                                return order != null &&
+                                    order > currentOrder &&
+                                    order % 1 ==
+                                        0; // Only integers (e.g. 6.0, not 5.1)
+                              }).toList()
+                                ..sort((a, b) =>
+                                    a.value.order!.compareTo(b.value.order!));
+
+                              if (nextPageEntry.isNotEmpty) {
                                 context.router.push(FormsRenderRoute(
                                   isEdit: widget.isEdit,
                                   customComponents: widget.customComponents,
                                   currentSchemaKey: widget.currentSchemaKey,
-                                  pageName: schemaObject.pages.entries
-                                      .elementAt(index + 1)
-                                      .key,
+                                  pageName: nextPageEntry.first.key,
                                   defaultValues: widget.defaultValues,
                                 ));
                               } else {
@@ -325,6 +339,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                           ],
                           JsonForms(
                             propertySchema: schema,
+                            pageName: widget.pageName,
+                            currentSchemaKey: widget.currentSchemaKey,
                             childrens: widget.customComponents,
                             defaultValues: const {
                               // 'locality': context.boundary.code,
@@ -358,6 +374,15 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
   }
 
   Widget _buildSummaryPage(BuildContext context, SchemaObject schemaObject) {
+    final shownPages = schemaObject.pages.entries.where((entry) {
+      final pageSchema = entry.value;
+
+      final values = pageSchema.properties?.values.map((field) => field.value);
+
+      return values?.any((v) => v != null && v.toString().trim().isNotEmpty) ??
+          false;
+    }).toList();
+
     return ScrollableContent(
         enableFixedDigitButton: true,
         header: const Padding(
@@ -385,7 +410,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           ],
         ),
         children: [
-          for (final entry in schemaObject.pages.entries)
+          for (final entry in shownPages)
             DigitCard(
               margin: const EdgeInsets.all(spacer2),
               children: [
