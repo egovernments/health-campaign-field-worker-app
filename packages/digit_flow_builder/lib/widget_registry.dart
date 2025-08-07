@@ -1,10 +1,13 @@
+import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
 import 'package:digit_ui_components/widgets/atoms/switch.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 
 import 'action_handler/action_config.dart';
+import 'blocs/flow_crud_bloc.dart';
 import 'layout_renderer.dart';
 
 typedef WidgetBuilderFn = Widget Function(
@@ -45,7 +48,7 @@ class WidgetRegistry {
             onAction(action);
           }
         },
-        mainAxisSize: MainAxisSize.max,
+        mainAxisSize: MainAxisSize.min,
         size: DigitButtonSize.large,
       );
     });
@@ -72,9 +75,13 @@ class WidgetRegistry {
     });
 
     WidgetRegistry.register('card', (json, context, onAction) {
-      return DigitCard(children: [
-        LayoutMapper.map(json['child'], context, onAction),
-      ]);
+      return DigitCard(
+        cardType: parseCardType(json['type'] as String? ?? 'primary'),
+        children: (json['children'] as List)
+            .map<Widget>(
+                (childJson) => LayoutMapper.map(childJson, context, onAction))
+            .toList(),
+      );
     });
 
     WidgetRegistry.register('filter', (json, context, onAction) {
@@ -104,17 +111,28 @@ class WidgetRegistry {
     });
 
     WidgetRegistry.register('column', (json, context, onAction) {
+      final children = (json['children'] as List)
+          .map<Widget>(
+              (childJson) => LayoutMapper.map(childJson, context, onAction))
+          .expand((widget) => [
+                widget,
+                const SizedBox(height: 16),
+              ])
+          .toList();
+
+      if (children.isNotEmpty) {
+        children.removeLast(); // Remove trailing SizedBox
+      }
+
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: (json['children'] as List)
-            .map<Widget>(
-                (childJson) => LayoutMapper.map(childJson, context, onAction))
-            .toList(),
+        children: children,
       );
     });
 
     WidgetRegistry.register('row', (json, context, onAction) {
       return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: (json['children'] as List)
             .map<Widget>(
                 (childJson) => LayoutMapper.map(childJson, context, onAction))
@@ -123,7 +141,13 @@ class WidgetRegistry {
     });
 
     WidgetRegistry.register('text', (json, context, onAction) {
-      return Text(json['value'] ?? '');
+      final value = json['value'] ?? '';
+      const watchedKeys = 'FORM::HOUSEHOLD';
+
+      final crudState = FlowCrudStateRegistry().get(watchedKeys);
+
+      final interpolated = _interpolateWithCrudStates(value, crudState);
+      return Text(interpolated);
     });
 
     WidgetRegistry.register('switch', (json, context, onAction) {
@@ -147,6 +171,54 @@ class WidgetRegistry {
         },
       );
     });
+
+    WidgetRegistry.register('tag', (json, context, onAction) {
+      return Tag(
+        label: json['label'] ?? '',
+        type: TagType.error,
+      );
+    });
+
+    WidgetRegistry.register('listView', (json, context, onAction) {
+      // Resolve the data source
+      dynamic dataSource = json['data'];
+
+      /// TODO: WILL UPDATE THE DATA SOURCE LOGIC LATER FOR NOW TAKING DUMMY VALUE
+      // If it's a variable reference like '{{members}}', resolve from context/state
+      // if (dataSource is String && dataSource.startsWith('{{') && dataSource.endsWith('}}')) {
+      //   final variableName = dataSource.substring(2, dataSource.length - 2).trim();
+      //   // For demo: try to get from ModalRoute or InheritedWidget, or fallback to empty list
+      //   // In real app, wire this to your state management solution
+      //   dataSource = ModalRoute.of(context)?.settings.arguments != null &&
+      //           (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?)?.containsKey(variableName) == true
+      //       ? (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)[variableName]
+      //       : [];
+      // }
+      // if (dataSource == null) dataSource = [];
+      dataSource = [
+        {
+          "name": "HEADDF",
+          "gender": "Female",
+          "age": 35,
+          "months": 0,
+          "status": "Not visited",
+          "childrenCount": 3,
+          "id": "1"
+        }
+      ];
+
+      return Column(
+        children: (dataSource as List)
+            .map<Widget>((item) {
+              final childJson = Map<String, dynamic>.from(json['child']);
+              childJson['item'] = item;
+              return LayoutMapper.map(childJson, context, onAction);
+            })
+            .expand((widget) => [widget, const SizedBox(height: 16)])
+            .toList()
+          ..removeLast(), // removes trailing SizedBox
+      );
+    });
   }
 
   DigitButtonType parseButtonType(String? raw) {
@@ -160,5 +232,58 @@ class WidgetRegistry {
       default:
         return DigitButtonType.primary; // fallback
     }
+  }
+
+  CardType parseCardType(String? raw) {
+    switch ((raw ?? '').toLowerCase()) {
+      case 'primary':
+        return CardType.primary;
+      case 'secondary':
+        return CardType.secondary;
+      default:
+        return CardType.primary; // fallback
+    }
+  }
+
+  String _interpolateWithCrudStates(
+    String template,
+    CrudState? states,
+  ) {
+    if (states == null) return template;
+
+    if (states is CrudStatePersisted) {
+      final regex =
+          RegExp(r'\{\{\s*context\.([A-Za-z_][\w]*)\.([\w.]+)\s*\}\}');
+      final modelMap = <String, Map<String, dynamic>>{};
+
+      for (final entity in states.entities) {
+        final type = entity.runtimeType.toString();
+        modelMap[type] = entity.toMap();
+      }
+
+      return template.replaceAllMapped(regex, (match) {
+        final modelName = match.group(1);
+        final fieldPath = match.group(2); // could be 'name.givenName'
+
+        if (modelName == null || fieldPath == null) return match.group(0)!;
+
+        final model = modelMap[modelName];
+        if (model == null) return '';
+
+        // Traverse nested fields
+        dynamic value = model;
+        for (final part in fieldPath.split('.')) {
+          if (value is Map<String, dynamic> && value.containsKey(part)) {
+            value = value[part];
+          } else {
+            return ''; // invalid path
+          }
+        }
+
+        return value?.toString() ?? '';
+      });
+    }
+
+    return template;
   }
 }

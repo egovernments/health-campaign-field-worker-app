@@ -784,27 +784,94 @@ final List<Map<String, dynamic>> sampleFlows = [
   {
     "screenType": "TEMPLATE",
     "name": "householdOverview",
-    "heading": "Beneficiary Details",
-    "description": "Overview of selected beneficiary",
+    "heading": "Household Overview",
+    "description": "Overview of beneficiary",
     "body": [
       {
         "format": "card",
-        "child": {
-          "format": "column",
-          "children": [
-            {"format": "text", "value": "Name: {{item.name}}"},
-            {"format": "text", "value": "Address: {{item.address}}"},
-            {
-              "format": "button",
-              "label": "Edit",
-              "onAction": {
-                "action": "ONTAP",
-                "actionType": "NAVIGATION",
-                "properties": {"type": "TEMPLATE", "name": "editBeneficiary"}
-              }
+        "type": "primary",
+        "children": [
+          {"format": "button", "label": "Edit Household", "type": "tertiary"},
+          {
+            "format": "listView",
+            "data":
+                "{{members}}", // This should be a list of members from your state
+            "child": {
+              "format": "card",
+              "type": "secondary",
+              "children": [
+                {
+                  "format": "column",
+                  "children": [
+                    {
+                      "format": "row",
+                      "children": [
+                        {
+                          "format": "text",
+                          "value": "{{context.IndividualModel.name.givenName}}",
+                          "style": "headingL"
+                        },
+                        {
+                          "format": "button",
+                          "label": "Edit",
+                          "type": "tertiary",
+                          "onAction": {
+                            "actionType": "NAVIGATION",
+                            "properties": {
+                              "type": "TEMPLATE",
+                              "name": "editBeneficiary",
+                              "data": [
+                                {"key": "id", "value": "{{item.id}}"}
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "format": "text",
+                      "value":
+                          "{{context.IndividualModel.gender}} | {{context.IndividualModel.age}} date of birth"
+                    },
+                    {"format": "tag", "type": "", "label": "Not visited"},
+                    {
+                      "format": "button",
+                      "label": "Deliver Intervention",
+                      "type": "primary",
+                      "onAction": {
+                        "actionType": "NAVIGATION",
+                        "properties": {
+                          "type": "TEMPLATE",
+                          "name": "deliverIntervention",
+                          "data": [
+                            {"key": "id", "value": "{{item.id}}"}
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "format": "button",
+                      "label": "Unable To Deliver ?",
+                      "type": "secondary"
+                    },
+                    {
+                      "format": "row",
+                      "children": [
+                        {
+                          "format": "button",
+                          "label": "Add Child",
+                          "icon": "add",
+                          "type": "tertiary"
+                        },
+                      ]
+                    }
+                  ]
+                }
+              ]
             }
-          ]
-        }
+          },
+          {"format": "button", "label": "Add Member", "type": "tertiary"}
+        ]
       }
     ]
   },
