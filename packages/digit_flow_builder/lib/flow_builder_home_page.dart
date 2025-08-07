@@ -2,13 +2,17 @@ import 'dart:convert';
 
 import 'package:auto_route/annotations.dart';
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
+import 'package:digit_crud_bloc/repositories/local/search_entity_repository.dart';
 import 'package:digit_crud_bloc/utils/utils.dart';
+import 'package:digit_data_converter/utils/utils.dart';
 import 'package:digit_flow_builder/widgets/localized.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'blocs/flow_crud_bloc.dart';
+import 'data/digit_crud_service.dart';
+import 'data/digit_data_converter.dart';
 import 'flow_builder.dart';
 
 @RoutePage()
@@ -48,8 +52,28 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
     }
     if (config == null) return const Center(child: Text('Page not found'));
 
+    CrudBlocSingleton().setData(
+      crudService: DigitCrudService(
+        context: context,
+        relationshipMap: [],
+        nestedModelMappings: [],
+        searchEntityRepository: context.read<SearchEntityRepository>(),
+      ),
+      dynamicEntityModelListener: EntityModelMapMapper(),
+    );
+
+    DataConverterSingleton()
+        .setData(dynamicEntityModelListener: EntityModelJsonMapper());
+
     return MultiBlocProvider(
       providers: [
+        BlocProvider(
+          create: (context) {
+            return CrudBloc(
+              service: CrudBlocSingleton().crudService,
+            );
+          },
+        ),
         BlocProvider(
           create: (context) {
             final crudService = CrudBlocSingleton().crudService;
