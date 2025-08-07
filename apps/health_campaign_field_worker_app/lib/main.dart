@@ -87,7 +87,12 @@ final List<Map<String, dynamic>> sampleFlows = [
       {
         "format": "button",
         "label": "register beneficiary",
-        "type": "primary",
+        "properties": {
+          "type": "primary",
+          "size": "large",
+          "mainAxisSize": "max",
+          "mainAxisAlignment": "center"
+        },
         "onAction": {
           "actionType": "NAVIGATION",
           "properties": {
@@ -102,7 +107,12 @@ final List<Map<String, dynamic>> sampleFlows = [
       {
         "format": "button",
         "label": "scan beneficiary",
-        "type": "secondary",
+        "properties": {
+          "type": "secondary",
+          "size": "large",
+          "mainAxisSize": "max",
+          "mainAxisAlignment": "center"
+        },
         "onAction": {
           "actionType": "EVENT",
           "properties": {
@@ -745,7 +755,7 @@ final List<Map<String, dynamic>> sampleFlows = [
       {
         "actionType": "FETCH_TRANSFORMER_CONFIG",
         "properties": {
-          "configName": "beneficiaryCreate",
+          "configName": "beneficiaryRegistration",
           "onError": [
             {
               "actionType": "SHOW_TOAST",
@@ -791,7 +801,16 @@ final List<Map<String, dynamic>> sampleFlows = [
         "format": "card",
         "type": "primary",
         "children": [
-          {"format": "button", "label": "Edit Household", "type": "tertiary"},
+          {
+            "format": "button",
+            "label": "Edit Household",
+            "properties": {
+              "type": "tertiary",
+              "size": "large",
+              "mainAxisSize": "min",
+              "mainAxisAlignment": "center"
+            },
+          },
           {
             "format": "listView",
             "data":
@@ -814,7 +833,12 @@ final List<Map<String, dynamic>> sampleFlows = [
                         {
                           "format": "button",
                           "label": "Edit",
-                          "type": "tertiary",
+                          "properties": {
+                            "type": "tertiary",
+                            "size": "large",
+                            "mainAxisSize": "min",
+                            "mainAxisAlignment": "center"
+                          },
                           "onAction": {
                             "actionType": "NAVIGATION",
                             "properties": {
@@ -834,34 +858,51 @@ final List<Map<String, dynamic>> sampleFlows = [
                           "{{context.IndividualModel.gender}} | {{context.IndividualModel.age}} date of birth"
                     },
                     {"format": "tag", "type": "", "label": "Not visited"},
-                    {
-                      "format": "button",
-                      "label": "Deliver Intervention",
-                      "type": "primary",
-                      "onAction": {
-                        "actionType": "NAVIGATION",
-                        "properties": {
-                          "type": "TEMPLATE",
-                          "name": "deliverIntervention",
-                          "data": [
-                            {"key": "id", "value": "{{item.id}}"}
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "format": "button",
-                      "label": "Unable To Deliver ?",
-                      "type": "secondary"
-                    },
+                    // {
+                    //   "format": "button",
+                    //   "label": "Deliver Intervention",
+                    //   "type": "primary",
+                    //   "properties": {
+                    //     "type": "primary",
+                    //     "size": "medium",
+                    //     "mainAxisSize": "max",
+                    //     "mainAxisAlignment": "center"
+                    //   },
+                    //   "onAction": {
+                    //     "actionType": "NAVIGATION",
+                    //     "properties": {
+                    //       "type": "TEMPLATE",
+                    //       "name": "deliverIntervention",
+                    //       "data": [
+                    //         {"key": "id", "value": "{{item.id}}"}
+                    //       ]
+                    //     }
+                    //   }
+                    // },
+                    // {
+                    //   "format": "button",
+                    //   "properties": {
+                    //     "type": "secondary",
+                    //     "size": "medium",
+                    //     "mainAxisSize": "max",
+                    //     "mainAxisAlignment": "center"
+                    //   },
+                    //   "label": "Unable To Deliver ?",
+                    //   "type": "secondary"
+                    // },
                     {
                       "format": "row",
                       "children": [
                         {
                           "format": "button",
+                          "properties": {
+                            "type": "tertiary",
+                            "size": "medium",
+                            "mainAxisSize": "min",
+                            "mainAxisAlignment": "center"
+                          },
                           "label": "Add Child",
-                          "icon": "add",
-                          "type": "tertiary"
+                          "icon": "add"
                         },
                       ]
                     }
@@ -870,19 +911,215 @@ final List<Map<String, dynamic>> sampleFlows = [
               ]
             }
           },
-          {"format": "button", "label": "Add Member", "type": "tertiary"}
+          {
+            "format": "button",
+            "label": "Add Member",
+            "properties": {
+              "type": "tertiary",
+              "size": "large",
+              "mainAxisSize": "min",
+              "mainAxisAlignment": "center"
+            },
+          }
         ]
+      }
+    ],
+    "actions": [
+      {
+        "format": "button",
+        "label": "Delivery",
+        "properties": {
+          "type": "primary",
+          "size": "large",
+          "mainAxisSize": "max",
+          "mainAxisAlignment": "center"
+        },
+        "onAction": {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "type": "FORM",
+            "name": "DELIVERY",
+            "data": [
+              {"key": "nameOfIndividual", "value": "searchBar.value"}
+            ]
+          }
+        }
+      }
+    ],
+  },
+  {
+    "screenType": "FORM",
+    "name": "DELIVERY",
+    "project": "CMP-2025-08-04-004846",
+    "version": 1,
+    "disabled": false,
+    "isSelected": true,
+    "pages": [
+      {
+        "page": "DeliveryDetails",
+        "type": "object",
+        "label": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_HEADING",
+        "order": 1,
+        "navigateTo": {"name": "household-acknowledgement", "type": "template"},
+        "properties": [
+          {
+            "type": "integer",
+            "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_dateOfDelivery",
+            "order": 1,
+            "value": "",
+            "format": "date",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": true,
+            "fieldName": "dateOfRegistration",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": true,
+            "validations": [],
+            "errorMessage": "",
+            "includeInForm": true,
+            "isMultiSelect": false,
+            "includeInSummary": true
+          },
+          // {
+          //   "type": "dynamic",
+          //   "enums": [
+          //     {
+          //       "code": "SP1",
+          //       "name": "SP1"
+          //     },
+          //     {
+          //       "code": "SP2",
+          //       "name": "SP2"
+          //     },
+          //     {
+          //       "code": "AQ1",
+          //       "name": "AQ1"
+          //     },
+          //     {
+          //       "code": "AQ2",
+          //       "name": "AQ2"
+          //     }
+          //   ],
+          //   "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_resource",
+          //   "order": 2,
+          //   "value": "",
+          //   "format": "custom",
+          //   "hidden": false,
+          //   "tooltip": "",
+          //   "helpText": "",
+          //   "infoText": "",
+          //   "readOnly": false,
+          //   "fieldName": "resourceCard",
+          //   "deleteFlag": false,
+          //   "innerLabel": "",
+          //   "systemDate": false,
+          //   "validations": [],
+          //   "errorMessage": "",
+          //   "includeInForm": true,
+          //   "isMultiSelect": false,
+          //   "includeInSummary": true
+          // },
+          {
+            "type": "string",
+            "label":
+                "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_deliveryComments",
+            "order": 3,
+            "value": "",
+            "format": "dropdown",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "deliveryComment",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
+            "systemDate": false,
+            "validations": [],
+            "errorMessage": "",
+            "includeInForm": true,
+            "isMultiSelect": false,
+            "includeInSummary": true
+          },
+          {
+            "type": "string",
+            "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_scanner",
+            "order": 4,
+            "value": "",
+            "format": "scanner",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "scanner",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false,
+            "validations": [],
+            "errorMessage": "",
+            "includeInForm": true,
+            "isMultiSelect": false,
+            "includeInSummary": true
+          }
+        ],
+        "actionLabel":
+            "APPONE_REGISTRATION_DELIVERYDETAILS_ACTION_BUTTON_LABEL_1",
+        "description": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION"
+      }
+    ],
+    "onSubmit": [
+      {
+        "actionType": "FETCH_TRANSFORMER_CONFIG",
+        "properties": {
+          "configName": "delivery",
+          "onError": [
+            {
+              "actionType": "SHOW_TOAST",
+              "properties": {"message": "Failed to fetch config."}
+            }
+          ]
+        }
+      },
+      {
+        "actionType": "CREATE_EVENT",
+        "properties": {
+          "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
+          "onError": [
+            {
+              "actionType": "SHOW_TOAST",
+              "properties": {"message": "Failed to create household."}
+            }
+          ]
+        }
+      },
+      {
+        "actionType": "NAVIGATION",
+        "properties": {
+          "type": "TEMPLATE",
+          "name": "deliverySuccess",
+          "onError": [
+            {
+              "actionType": "SHOW_TOAST",
+              "properties": {"message": "Navigation failed."}
+            }
+          ]
+        }
       }
     ]
   },
   {
     "screenType": "TEMPLATE",
-    "name": "editBeneficiary",
-    "heading": "Edit Beneficiary",
-    "description": "Modify details",
+    "name": "deliverySuccess",
+    "heading": "Successful Delivery",
+    "description": "The delivery is successful",
     "body": [
       {
-        "format": "switch",
+        "format": "panelCard",
         "label": "Is Head of Household?",
         "fieldName": "isHead",
         "onAction": {

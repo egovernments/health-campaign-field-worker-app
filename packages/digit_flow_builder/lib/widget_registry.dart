@@ -38,18 +38,24 @@ class WidgetRegistry {
 
   void initializeDefaultWidgetRegistry() {
     WidgetRegistry.register('button', (json, context, onAction) {
+      final props = Map<String, dynamic>.from(json['properties'] ?? {});
+
       return DigitButton(
         label: json['label'] ?? '',
-        type: parseButtonType(json['type'] as String?),
         onPressed: () {
           if (json['onAction'] != null) {
             final action = ActionConfig.fromJson(
-                Map<String, dynamic>.from(json['onAction']));
+              Map<String, dynamic>.from(json['onAction']),
+            );
             onAction(action);
           }
         },
-        mainAxisSize: MainAxisSize.min,
-        size: DigitButtonSize.large,
+        type: _parseButtonType(props['type']),
+        size: _parseButtonSize(props['size']),
+        mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
+        mainAxisAlignment: _parseMainAxisAlignment(props['mainAxisAlignment']),
+        suffixIcon:
+            json['suffixIcon'] != null ? _parseIcon(json['suffixIcon']) : null,
       );
     });
 
@@ -221,8 +227,8 @@ class WidgetRegistry {
     });
   }
 
-  DigitButtonType parseButtonType(String? raw) {
-    switch ((raw ?? '').toLowerCase()) {
+  DigitButtonType _parseButtonType(String? type) {
+    switch (type) {
       case 'primary':
         return DigitButtonType.primary;
       case 'secondary':
@@ -230,7 +236,56 @@ class WidgetRegistry {
       case 'tertiary':
         return DigitButtonType.tertiary;
       default:
-        return DigitButtonType.primary; // fallback
+        return DigitButtonType.primary;
+    }
+  }
+
+  DigitButtonSize _parseButtonSize(String? size) {
+    switch (size) {
+      case 'small':
+        return DigitButtonSize.small;
+      case 'medium':
+        return DigitButtonSize.medium;
+      case 'large':
+        return DigitButtonSize.large;
+      default:
+        return DigitButtonSize.large;
+    }
+  }
+
+  MainAxisSize? _parseMainAxisSize(String? size) {
+    switch (size) {
+      case 'max':
+        return MainAxisSize.max;
+      case 'min':
+        return MainAxisSize.min;
+      default:
+        return null;
+    }
+  }
+
+  MainAxisAlignment? _parseMainAxisAlignment(String? alignment) {
+    switch (alignment) {
+      case 'start':
+        return MainAxisAlignment.start;
+      case 'center':
+        return MainAxisAlignment.center;
+      case 'end':
+        return MainAxisAlignment.end;
+      default:
+        return null;
+    }
+  }
+
+  IconData? _parseIcon(String? iconName) {
+    // Add more mappings if needed
+    switch (iconName) {
+      case 'filter':
+        return Icons.filter_alt_sharp;
+      case 'edit':
+        return Icons.edit;
+      default:
+        return null;
     }
   }
 
