@@ -4,6 +4,8 @@ class JsonFormBuilder extends LocalizedStatefulWidget {
   final String formControlName;
   final PropertySchema schema;
   final List<Map<String, Widget>>? components;
+  final String pageName;
+  final String currentSchemaKey;
 
   const JsonFormBuilder({
     super.key,
@@ -11,6 +13,8 @@ class JsonFormBuilder extends LocalizedStatefulWidget {
     required this.formControlName,
     required this.schema,
     this.components,
+    required this.pageName,
+    required this.currentSchemaKey,
   });
 
   @override
@@ -34,24 +38,34 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
   bool _shouldHideField(FormGroup form) {
     final hidden = widget.schema.hidden;
     if (hidden != null && hidden == true) return true;
-    final display = widget.schema.displayBehavior;
-    if (display == null) return false;
 
-    final oneOf = display.oneOf;
-    final allOf = display.allOf;
+    final visibility = widget.schema.visibilityCondition;
+    if (visibility != null && visibility.expression.isNotEmpty) {
+      final formState = context.read<FormsBloc>().state;
+      final currentPageKey = widget.pageName;
 
-    final values = (oneOf ?? allOf!).map((e) {
-      final value = form.control(e).value;
-      if (value is bool?) return !(value ?? false);
-      if (value is String?) return value?.isNotEmpty ?? false;
-      return false;
-    }).toList();
+      final currentSchemaKey = widget.currentSchemaKey;
 
-    final result = oneOf != null && oneOf.isNotEmpty
-        ? values.fold(true, (prev, curr) => prev && curr)
-        : values.fold(false, (prev, curr) => prev || curr);
+      final values = buildVisibilityEvaluationContext(
+        currentPageKey: currentPageKey,
+        currentForm: form,
+        pages: formState.cachedSchemas[currentSchemaKey]!.pages,
 
-    return display.behavior == FormulaBehavior.hide && result;
+        /// TODO: fix hardcode not null condition
+      );
+
+      final result =
+          evaluateVisibilityExpression(visibility.expression, values);
+      VisibilityManager(schemaMap: {
+        widget.formControlName: widget.schema,
+      }, formData: form.rawValue, form: form)
+          .toggleControlVisibility(
+              widget.formControlName, result, widget.schema);
+
+      return !result;
+    }
+
+    return false;
   }
 
   /// Dispatch to builder based on property type
@@ -213,9 +227,9 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         return JsonSchemaNumberBuilder(
           form: form,
           prefixText:
-          translateIfPresent(widget.schema.prefixText, localizations),
+              translateIfPresent(widget.schema.prefixText, localizations),
           suffixText:
-          translateIfPresent(widget.schema.suffixText, localizations),
+              translateIfPresent(widget.schema.suffixText, localizations),
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
           inputType: TextInputType.number,
@@ -354,6 +368,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
             final subName = mapEntry.key;
 
             final field = JsonFormBuilder(
+              pageName: widget.pageName,
+              currentSchemaKey: widget.currentSchemaKey,
               formControlName: subName,
               schema: subSchema,
               components: widget.components,

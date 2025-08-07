@@ -53,6 +53,8 @@ class PropertySchema with _$PropertySchema {
     bool? includeInForm,
     bool? includeInSummary,
     NavigateToConfig? navigateTo,
+    VisibilityCondition? visibilityCondition,
+    List<ConditionalNavigateTo>? conditionalNavigateTo,
   }) = _PropertySchema;
 
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>
@@ -104,6 +106,27 @@ class NavigateToConfig with _$NavigateToConfig {
       _$NavigateToConfigFromJson(json);
 }
 
+@freezed
+class VisibilityCondition with _$VisibilityCondition {
+  const factory VisibilityCondition({
+    required String expression,
+  }) = _VisibilityCondition;
+
+  factory VisibilityCondition.fromJson(Map<String, dynamic> json) =>
+      _$VisibilityConditionFromJson(json);
+}
+
+@freezed
+class ConditionalNavigateTo with _$ConditionalNavigateTo {
+  const factory ConditionalNavigateTo({
+    required String condition,
+    required NavigateToConfig navigateTo,
+  }) = _ConditionalNavigateTo;
+
+  factory ConditionalNavigateTo.fromJson(Map<String, dynamic> json) =>
+      _$ConditionalNavigateToFromJson(json);
+}
+
 String? _stringOrNull(dynamic value) {
   return value is String ? value : null;
 }
@@ -124,8 +147,8 @@ enum PropertySchemaFormat {
   scanner,
   idPopulator,
   mobileNumber,
-  text,
-  searchableDropdown;
+  textArea,
+  text;
 }
 
 enum PropertySchemaType { object, string, integer, boolean, dynamic }
