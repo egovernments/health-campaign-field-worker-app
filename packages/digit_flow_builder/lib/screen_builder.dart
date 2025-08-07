@@ -40,19 +40,19 @@ class ScreenBuilder extends StatelessWidget {
           // Build initial contextData (add more as needed)
           Map<String, dynamic> contextData = {
             'formData': state.formData,
-            // Add user, project, etc. here if needed
           };
 
           if (onSubmit != null) {
+            context.read<FormsBloc>().add(
+                  FormsEvent.clearForm(
+                      schemaKey:
+                          config['name'] ?? ''), // or create a FormsResetEvent
+                );
             for (final actionJson in onSubmit) {
               final action = ActionConfig.fromJson(actionJson);
               contextData =
                   await ActionHandler.execute(action, context, contextData);
             }
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Successfully saved')),
-            );
           }
         }
       },
