@@ -67,14 +67,7 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) {
-            return CrudBloc(
-              service: CrudBlocSingleton().crudService,
-            );
-          },
-        ),
-        BlocProvider(
+        BlocProvider<CrudBloc>(
           create: (context) {
             final crudService = CrudBlocSingleton().crudService;
 
@@ -83,7 +76,8 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
               service: crudService,
               onUpdate: (screenKey, state) {
                 if (state is CrudStatePersisted) {
-                  debugPrint('print ${state.entities}');
+                  debugPrint(
+                      '✅ onUpdate called → $screenKey → ${state.entities}');
                 }
               },
             );
