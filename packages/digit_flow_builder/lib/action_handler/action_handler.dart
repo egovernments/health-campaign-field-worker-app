@@ -20,13 +20,13 @@ class ActionHandler {
     switch (action.actionType) {
       case 'FETCH_TRANSFORMER_CONFIG':
         final configName = action.properties['configName'];
-        final transformerConfig = jsonConfig['beneficiaryRegistration']
-            ?['models'] as Map<String, dynamic>;
+        final transformerConfig =
+            jsonConfig[configName]?['models'] as Map<String, dynamic>;
 
         final formEntityMapper = FormEntityMapper(config: jsonConfig);
 
         final fallBackModel =
-            jsonConfig['beneficiaryRegistration']?['fallbackModel'] as String?;
+            jsonConfig[configName]?['fallbackModel'] as String?;
 
         final entities = formEntityMapper.mapFormToEntities(
           formValues: contextData['formData'],
