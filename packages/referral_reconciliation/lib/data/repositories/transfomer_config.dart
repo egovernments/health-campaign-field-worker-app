@@ -71,5 +71,37 @@ final jsonConfig = {
         }
       }
     }
+  },
+  "service": {
+    "fallbackModel": "ServiceModel",
+    "models": {
+      "ServiceModel": {
+        "mappings": {
+          "id": "serviceDetails.id",
+          "tenantId": "__context:tenantId",
+          "clientId": "serviceDetails.clientId",
+          "serviceDefId": "serviceDetails.serviceDefId",
+          "referenceId": "serviceDetails.referenceId",
+          "isActive": "serviceDetails.isActive",
+          "accountId": "__context:projectId",
+          "additionalDetails": "serviceDetails.additionalDetails",
+          "createdAt": "__generate:createdAt",
+          "nonRecoverableError": "serviceDetails.nonRecoverable",
+          "rowVersion": "meta.rowVersion",
+          "attributes": "serviceDetails.attributes",
+          "auditDetails": "__generate:audit",
+          "clientAuditDetails": "__generate:clientAudit",
+          "additionalFields": {
+            "schema": "__value:Service",
+            "version": "__context:formVersion",
+            "fields": {
+              "relatedClientReferenceId":
+                  "serviceDetails.relatedClientReferenceId",
+              "boundaryCode": "serviceDetails.boundaryCode"
+            }
+          }
+        }
+      }
+    }
   }
 };
