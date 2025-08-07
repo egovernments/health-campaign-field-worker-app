@@ -63,6 +63,7 @@ class _SearchReferralReconciliationsPageState
   List<String> selectedFilters = [];
   int offset = 0;
   int limit = 10;
+  String selectedTag = "";
 
   @override
   void initState() {
@@ -316,11 +317,18 @@ class _SearchReferralReconciliationsPageState
                   body: BlocListener<DigitScannerBloc, DigitScannerState>(
                       listener: (context, scannerState) {
                         if (scannerState.qrCodes.isNotEmpty) {
-                          context
-                              .read<SearchReferralsBloc>()
-                              .add(SearchReferralsEvent.searchByTag(
-                                tag: scannerState.qrCodes.last,
-                              ));
+                          //TODO: commented
+                          // context
+                          //     .read<SearchReferralsBloc>()
+                          //     .add(SearchReferralsEvent.searchByTag(
+                          //       tag: scannerState.qrCodes.last,
+                          //     ));
+
+                          setState(() {
+                            selectedTag = scannerState.qrCodes.lastOrNull ?? "";
+                          });
+
+                          triggerGlobalSearchEvent();
                         }
                       },
                       child: BlocProvider(
@@ -696,9 +704,18 @@ class _SearchReferralReconciliationsPageState
     if (isProximityEnabled ||
         selectedFilters.isNotEmpty ||
         (searchController.text.isNotEmpty &&
-            searchController.text.length > 2)) {
+            searchController.text.length > 2) ||
+        selectedTag != "") {
       final params = reg_params.GlobalSearchParameters(
         filters: [
+          if (selectedTag != "")
+            reg_params.SearchFilter(
+              root: 'hFReferral',
+              // or 'individual', based on what you're searching
+              field: 'beneficiaryId',
+              operator: 'contains',
+              value: selectedTag,
+            ),
           if (searchController.text.isNotEmpty &&
               searchController.text.length > 2)
             reg_params.SearchFilter(
