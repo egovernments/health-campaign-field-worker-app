@@ -1,3 +1,4 @@
+import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_data_model/utils/utils.dart';
 import 'package:digit_flow_builder/widgets/localized.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
@@ -5,7 +6,54 @@ import 'package:digit_forms_engine/pages/forms_render.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'blocs/flow_crud_bloc.dart';
 import 'flow_builder.dart';
+
+class ScreenKeyListener extends StatefulWidget {
+  final String screenKey;
+  final Widget Function(BuildContext context, CrudState? state) builder;
+
+  const ScreenKeyListener({
+    super.key,
+    required this.screenKey,
+    required this.builder,
+  });
+
+  @override
+  State<ScreenKeyListener> createState() => _ScreenKeyListenerState();
+}
+
+class _ScreenKeyListenerState extends State<ScreenKeyListener> {
+  CrudState? _state;
+
+  @override
+  void initState() {
+    super.initState();
+    _state = FlowCrudStateRegistry().get(widget.screenKey);
+
+    FlowCrudStateRegistry().addListener(_onUpdate);
+  }
+
+  @override
+  void dispose() {
+    FlowCrudStateRegistry().removeListener(_onUpdate);
+    super.dispose();
+  }
+
+  void _onUpdate() {
+    final updatedState = FlowCrudStateRegistry().get(widget.screenKey);
+    if (_state != updatedState) {
+      setState(() {
+        _state = updatedState;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.builder(context, _state);
+  }
+}
 
 class ScreenBuilder extends StatelessWidget {
   final Map<String, dynamic> config;
@@ -15,49 +63,64 @@ class ScreenBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenType = config['screenType'];
+    final screenKey = '$screenType::${config['name']}';
 
-    Widget screen;
+    return ScreenKeyListener(
+      screenKey: screenKey,
+      builder: (context, crudState) {
+        return BlocListener<FormsBloc, FormsState>(
+          listener: (context, state) async {
+            if (state is FormsSubmittedState) {
+              final onSubmit = config['onSubmit'] as List<dynamic>?;
 
+              Map<String, dynamic> contextData = {
+                'formData': state.formData,
+              };
+
+              if (onSubmit != null) {
+                context.read<FormsBloc>().add(
+                      FormsEvent.clearForm(schemaKey: config['name'] ?? ''),
+                    );
+                for (final actionJson in onSubmit) {
+                  final action = ActionConfig.fromJson(actionJson);
+                  contextData =
+                      await ActionHandler.execute(action, context, contextData);
+                }
+              }
+            }
+          },
+          child: _buildScreen(context, screenType, config, crudState),
+        );
+      },
+    );
+  }
+
+  Widget _buildScreen(
+    BuildContext context,
+    String screenType,
+    Map<String, dynamic> config,
+    CrudState? crudState,
+  ) {
     if (screenType == 'FORM') {
       final schemaKey = config['name'] ?? '';
       final defaultValues = config['defaultValues'] as Map<String, dynamic>?;
 
-      screen = _FormScreenWrapper(
+      return _FormScreenWrapper(
         schemaKey: schemaKey,
         defaultValues: defaultValues,
       );
     } else if (screenType == 'TEMPLATE') {
-      screen = LayoutRendererPage(config: config);
+      return LayoutRendererPage(
+        config: config,
+        watchedScreenKeys: const [
+          // TODO: Need to map the dependent screens dynamically from form
+          'FORM::HOUSEHOLD',
+          // or whatever the dependent form screenKey is
+        ],
+      );
     } else {
-      screen = const Center(child: Text('Unsupported screen type'));
+      return const Center(child: Text('Unsupported screen type'));
     }
-
-    return BlocListener<FormsBloc, FormsState>(
-      listener: (context, state) async {
-        if (state is FormsSubmittedState) {
-          final onSubmit = config['onSubmit'] as List<dynamic>?;
-
-          // Build initial contextData (add more as needed)
-          Map<String, dynamic> contextData = {
-            'formData': state.formData,
-          };
-
-          if (onSubmit != null) {
-            context.read<FormsBloc>().add(
-                  FormsEvent.clearForm(
-                      schemaKey:
-                          config['name'] ?? ''), // or create a FormsResetEvent
-                );
-            for (final actionJson in onSubmit) {
-              final action = ActionConfig.fromJson(actionJson);
-              contextData =
-                  await ActionHandler.execute(action, context, contextData);
-            }
-          }
-        }
-      },
-      child: screen,
-    );
   }
 }
 
