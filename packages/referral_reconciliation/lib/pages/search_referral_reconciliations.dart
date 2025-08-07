@@ -195,7 +195,7 @@ class _SearchReferralReconciliationsPageState
                           ReferralReconSingleton().boundary?.code ?? '')
                     },
                     customComponents: const [
-                      {'cycle': CycleDropDown()},
+                      {'referralCycle': CycleDropDown()},
                       {'evaluationFacilityKey': EvaluationKeyDropDown()}
                     ],
                   ));
@@ -278,8 +278,10 @@ class _SearchReferralReconciliationsPageState
                 //     entitiesToUpdate: toUpdate,
                 //   ),
                 // );
-                blocWrapper
-                    .add(HFReferalWrapperEvent.create(entities: entities));
+                if (!(formState.isView != null && formState.isView == true)) {
+                  blocWrapper
+                      .add(HFReferalWrapperEvent.create(entities: entities));
+                }
               } catch (e) {
                 Navigator.of(context, rootNavigator: true).pop();
                 // Reset to prevent re-handling
@@ -467,14 +469,14 @@ class _SearchReferralReconciliationsPageState
                                                   .key;
 
                                               context.router.push(
-                                                  FormsRenderRoute(
-                                                      isEdit: true,
-                                                      currentSchemaKey:
-                                                          'HFREFERALFLOW',
-                                                      pageName: pageName!,
+                                                FormsRenderRoute(
+                                                  isEdit: false,
+                                                  currentSchemaKey:
+                                                      'HFREFERALFLOW',
+                                                  pageName: pageName!,
 
-                                                      /// as registration is there assuming form won't be null
-                                                      defaultValues: {
+                                                  /// as registration is there assuming form won't be null
+                                                  defaultValues: {
                                                     ...formData,
                                                     'administrativeUnitKey':
                                                         localizations.translate(
@@ -483,13 +485,19 @@ class _SearchReferralReconciliationsPageState
                                                                     ?.code ??
                                                                 ''),
                                                   },
-                                                      customComponents: const [
-                                                    {'cycle': CycleDropDown()},
+                                                  customComponents: const [
+                                                    {
+                                                      'referralCycle':
+                                                          CycleDropDown()
+                                                    },
                                                     {
                                                       'evaluationFacilityKey':
                                                           EvaluationKeyDropDown()
                                                     }
-                                                  ]));
+                                                  ],
+                                                  isView: true,
+                                                ),
+                                              );
 
                                               searchController.clear();
                                               selectedFilters.clear();
@@ -631,9 +639,11 @@ class _SearchReferralReconciliationsPageState
                     'administrativeUnitKey': localizations.translate(
                       ReferralReconSingleton().boundary?.code ?? '',
                     ),
+                    'nameOfChild': searchController.text.trim(),
+                    'hfCoordinatorKey': ReferralReconSingleton().userName
                   },
                   customComponents: const [
-                    {'cycle': CycleDropDown()},
+                    {'referralCycle': CycleDropDown()},
                     {'evaluationFacilityKey': EvaluationKeyDropDown()}
                   ]),
             );

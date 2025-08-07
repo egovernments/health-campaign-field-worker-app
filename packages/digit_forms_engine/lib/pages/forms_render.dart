@@ -27,6 +27,7 @@ class FormsRenderPage extends LocalizedStatefulWidget {
   final List<Map<String, Widget>>? customComponents;
   final bool isSummary;
   final bool isEdit;
+  final bool isView;
 
   const FormsRenderPage({
     super.key,
@@ -34,6 +35,7 @@ class FormsRenderPage extends LocalizedStatefulWidget {
     @QueryParam() this.currentSchemaKey = '',
     @PathParam() required this.pageName,
     @QueryParam() this.isEdit = false,
+    @QueryParam() this.isView = false,
     this.customComponents,
     this.defaultValues,
     @QueryParam() this.isSummary = false,
@@ -238,6 +240,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                             widget.currentSchemaKey,
                                         pageName: targetPageName,
                                         defaultValues: widget.defaultValues,
+                                        isView: widget.isView,
                                       ));
                                       return; // Skip default logic
                                     }
@@ -269,6 +272,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                   currentSchemaKey: widget.currentSchemaKey,
                                   pageName: nextPageEntry.first.key,
                                   defaultValues: widget.defaultValues,
+                                  isView: widget.isView,
                                 ));
                               } else {
                                 if (schemaObject.summary) {
@@ -279,12 +283,16 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                     isEdit: widget.isEdit,
                                     isSummary: true,
                                     defaultValues: widget.defaultValues,
+                                    isView: widget.isView,
                                   ));
                                 } else {
-                                  context.read<FormsBloc>().add(
-                                      FormsSubmitEvent(
-                                          isEdit: widget.isEdit,
-                                          schemaKey: widget.currentSchemaKey));
+                                  context
+                                      .read<FormsBloc>()
+                                      .add(FormsSubmitEvent(
+                                        isEdit: widget.isEdit,
+                                        schemaKey: widget.currentSchemaKey,
+                                        isView: widget.isView,
+                                      ));
 
                                   // Pop all form pages (FormsRenderRoute)
                                   context.router.popUntil((route) {
@@ -345,6 +353,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                             defaultValues: const {
                               // 'locality': context.boundary.code,
                             },
+                            isView: widget.isView,
                           )
                         ],
                       ),

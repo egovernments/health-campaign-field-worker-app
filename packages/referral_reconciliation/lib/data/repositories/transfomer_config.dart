@@ -60,7 +60,7 @@ final jsonConfig = {
           "auditDetails": "__generate:audit",
           "additionalFields": {
             "boundaryCode": "facilityDetails.administrativeUnitKey",
-            "cycle": "referralDetails.cycle",
+            "referralCycle": "referralDetails.referralCycle",
             "gender": "referralDetails.gender",
             "age": "referralDetails.age",
             "nameOfReferral": "referralDetails.nameOfChild",

@@ -19,7 +19,7 @@ class CycleDropDown extends LocalizedStatefulWidget {
 }
 
 class _CycleDropDownState extends LocalizedState<CycleDropDown> {
-  static const _cycleKey = 'cycle';
+  static const _cycleKey = 'referralCycle';
   static const _schemaKey = 'HFREFERALFLOW';
   static const _pageKey = 'referralDetails';
 

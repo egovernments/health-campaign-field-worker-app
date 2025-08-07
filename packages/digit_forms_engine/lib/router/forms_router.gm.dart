@@ -30,6 +30,10 @@ abstract class $FormsRoute extends _i2.AutoRouterModule {
                   'isEdit',
                   false,
                 ),
+                isView: queryParams.getBool(
+                  'isView',
+                  false,
+                ),
                 isSummary: queryParams.getBool(
                   'isSummary',
                   false,
@@ -43,6 +47,7 @@ abstract class $FormsRoute extends _i2.AutoRouterModule {
           currentSchemaKey: args.currentSchemaKey,
           pageName: args.pageName,
           isEdit: args.isEdit,
+          isView: args.isView,
           customComponents: args.customComponents,
           defaultValues: args.defaultValues,
           isSummary: args.isSummary,
@@ -61,6 +66,7 @@ class FormsRenderRoute extends _i2.PageRouteInfo<FormsRenderRouteArgs> {
     String currentSchemaKey = '',
     required String pageName,
     bool isEdit = false,
+    bool isView = false,
     List<Map<String, _i3.Widget>>? customComponents,
     Map<String, dynamic>? defaultValues,
     bool isSummary = false,
@@ -73,6 +79,7 @@ class FormsRenderRoute extends _i2.PageRouteInfo<FormsRenderRouteArgs> {
             currentSchemaKey: currentSchemaKey,
             pageName: pageName,
             isEdit: isEdit,
+            isView: isView,
             customComponents: customComponents,
             defaultValues: defaultValues,
             isSummary: isSummary,
@@ -81,6 +88,7 @@ class FormsRenderRoute extends _i2.PageRouteInfo<FormsRenderRouteArgs> {
           rawQueryParams: {
             'currentSchemaKey': currentSchemaKey,
             'isEdit': isEdit,
+            'isView': isView,
             'isSummary': isSummary,
           },
           initialChildren: children,
@@ -99,6 +107,7 @@ class FormsRenderRouteArgs {
     this.currentSchemaKey = '',
     required this.pageName,
     this.isEdit = false,
+    this.isView = false,
     this.customComponents,
     this.defaultValues,
     this.isSummary = false,
@@ -114,6 +123,8 @@ class FormsRenderRouteArgs {
 
   final bool isEdit;
 
+  final bool isView;
+
   final List<Map<String, _i3.Widget>>? customComponents;
 
   final Map<String, dynamic>? defaultValues;
@@ -122,6 +133,6 @@ class FormsRenderRouteArgs {
 
   @override
   String toString() {
-    return 'FormsRenderRouteArgs{key: $key, appLocalizations: $appLocalizations, currentSchemaKey: $currentSchemaKey, pageName: $pageName, isEdit: $isEdit, customComponents: $customComponents, defaultValues: $defaultValues, isSummary: $isSummary}';
+    return 'FormsRenderRouteArgs{key: $key, appLocalizations: $appLocalizations, currentSchemaKey: $currentSchemaKey, pageName: $pageName, isEdit: $isEdit, isView: $isView, customComponents: $customComponents, defaultValues: $defaultValues, isSummary: $isSummary}';
   }
 }
