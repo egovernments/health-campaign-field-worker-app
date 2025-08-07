@@ -61,6 +61,8 @@ class _LayoutRendererPageState extends State<LayoutRendererPage> {
         ? FlowCrudStateRegistry().get(screenKeyToShow)
         : null;
 
+    print(crudState.toString());
+
     final isPersisted = crudState is CrudStatePersisted;
 
     return Scaffold(
