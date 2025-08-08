@@ -9,11 +9,12 @@ import 'package:flutter/material.dart';
 import 'action_handler/action_config.dart';
 import 'action_handler/action_handler.dart';
 import 'blocs/flow_crud_bloc.dart';
+import 'blocs/state_wrapper_builder.dart';
 import 'widget_registry.dart';
 
 class LayoutRendererPage extends StatefulWidget {
   final Map<String, dynamic> config;
-  final List<String>? watchedScreenKeys; // screen keys to watch (optional)
+  final List<String>? watchedScreenKeys;
 
   const LayoutRendererPage({
     super.key,
@@ -26,10 +27,13 @@ class LayoutRendererPage extends StatefulWidget {
 }
 
 class _LayoutRendererPageState extends State<LayoutRendererPage> {
+  List<dynamic> _wrappers = [];
+
   @override
   void initState() {
     super.initState();
     FlowCrudStateRegistry().addListener(_onCrudStateChange);
+    _onCrudStateChange(); // Initial build
   }
 
   @override
@@ -55,15 +59,20 @@ class _LayoutRendererPageState extends State<LayoutRendererPage> {
     final List<dynamic> body = widget.config['body'] ?? [];
     final List<dynamic> actions = widget.config['actions'] ?? [];
 
-    // You can prioritize one key or show aggregate
     final screenKeyToShow = widget.watchedScreenKeys?.first;
     final crudState = screenKeyToShow != null
         ? FlowCrudStateRegistry().get(screenKeyToShow)
         : null;
 
-    print(crudState.toString());
-
     final isPersisted = crudState is CrudStatePersisted;
+
+    // ✅ Build wrappers if we have loaded state
+    List<dynamic> wrapperData = [];
+    if (crudState is CrudStateLoaded) {
+      final entities = crudState.results.values.expand((list) => list).toList();
+      wrapperData =
+          WrapperBuilder(entities, body[0]['wrapperConfig'] ?? {}).build();
+    }
 
     return Scaffold(
       body: ScrollableContent(
@@ -84,7 +93,9 @@ class _LayoutRendererPageState extends State<LayoutRendererPage> {
             ? DigitCard(
                 children: actions
                     .map((e) => LayoutMapper.map(e, context, (action) {
-                          ActionHandler.execute(action, context, {});
+                          ActionHandler.execute(action, context, {
+                            'wrappers': _wrappers,
+                          });
                         }))
                     .toList(),
               )
@@ -108,7 +119,9 @@ class _LayoutRendererPageState extends State<LayoutRendererPage> {
                 const SizedBox(height: 16),
                 ...body
                     .map((e) => LayoutMapper.map(e, context, (action) {
-                          ActionHandler.execute(action, context, {});
+                          ActionHandler.execute(action, context, {
+                            'wrappers': _wrappers,
+                          });
                         }))
                     .expand((widget) => [
                           widget,

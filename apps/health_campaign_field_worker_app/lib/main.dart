@@ -126,6 +126,81 @@ final List<Map<String, dynamic>> sampleFlows = [
       }
     ],
     "body": [
+      {
+        "wrapperConfig": {
+          "wrapperName": "HouseholdWrapper",
+          "rootEntity": "HouseholdMemberModel",
+          "filters": [
+            {"field": "isHeadOfHousehold", "equals": true}
+          ],
+          "relations": [
+            {
+              "name": "household",
+              "entity": "HouseholdModel",
+              "match": {
+                "field": "clientReferenceId",
+                "equalsFrom": "householdClientReferenceId"
+              }
+            },
+            {
+              "name": "members",
+              "entity": "HouseholdMemberModel",
+              "match": {
+                "field": "householdClientReferenceId",
+                "equalsFrom": "household.clientReferenceId"
+              }
+            },
+            {
+              "name": "headOfHousehold",
+              "entity": "IndividualModel",
+              "match": {
+                "field": "clientReferenceId",
+                "equalsFrom": "household.headOfHouseholdClientReferenceId"
+              }
+            },
+            {
+              "name": "individuals",
+              "entity": "IndividualModel",
+              "match": {
+                "field": "clientReferenceId",
+                "inFrom": "members.individualClientReferenceId"
+              }
+            },
+            {
+              "name": "projectBeneficiaries",
+              "entity": "ProjectBeneficiaryModel",
+              "match": {
+                "field": "beneficiaryClientReferenceId",
+                "equalsFrom": "household.clientReferenceId"
+              }
+            },
+            {
+              "name": "tasks",
+              "entity": "TaskModel",
+              "match": {
+                "field": "projectBeneficiaryClientReferenceId",
+                "inFrom": "projectBeneficiaries.clientReferenceId"
+              }
+            },
+            {
+              "name": "sideEffects",
+              "entity": "SideEffectModel",
+              "match": {
+                "field": "clientReferenceId",
+                "equalsFrom": "household.clientReferenceId"
+              }
+            },
+            {
+              "name": "referrals",
+              "entity": "ReferralModel",
+              "match": {
+                "field": "clientReferenceId",
+                "equalsFrom": "household.clientReferenceId"
+              }
+            }
+          ]
+        }
+      },
       //// everything inside the body will come
       {
         "format": "switch",
@@ -196,74 +271,71 @@ final List<Map<String, dynamic>> sampleFlows = [
           }
         }
       },
-      // {
-      //   "format": "listView",
-      //   "hidden": "stateWrapper.empty",
-      //   "fieldName": "listRender",
-      //   "child": {
-      //     "format": "card",
-      //     "child": {
-      //       "format": "column",
-      //       "children": [
-      //         {
-      //           "format": "row",
-      //           "children": [
-      //             {
-      //               "format": "text",
-      //               "value":
-      //                   "stateWrapper.headOfName /// THINK LATER TO MAP EXACT VALUES"
-      //             },
-      //             {
-      //               "format": "button",
-      //               "label": "Open",
-      //               "onAction": {
-      //                 "actionType": "NAVIGATION",
-      //                 "properties": {
-      //                   "type": "TEMPLATE",
-      //                   "name": "householdOverview"
-      //                 }
-      //               }
-      //             }
-      //           ]
-      //         },
-      //         {
-      //           "format": "column",
-      //           "children": [
-      //             {"format": "text", "value": "{{item.address}}"},
-      //             {
-      //               "format": "button",
-      //               "label": "View",
-      //               "onAction": {
-      //                 "actionType": "NAVIGATION",
-      //                 "properties": {
-      //                   "type": "FORM",
-      //                   "name": "INDIVIDUAL",
-      //                   "data": [
-      //                     {"key": "id", "value": "{{item.id}}"}
-      //                   ]
-      //                 }
-      //               }
-      //             },
-      //             {
-      //               "format": "table",
-      //               "columns": [
-      //                 {"label": "Task", "key": "taskName"},
-      //                 {"label": "Status", "key": "taskStatus"}
-      //               ],
-      //               "data":
-      //                   "{{stateWrapper.household /// NEED TO DO EXACT MAPPING}}"
-      //             },
-      //             {
-      //               "format": "tag",
-      //               "type": "item.status",
-      //               "label": "{{item.status}}"
-      //             }
-      //           ]
-      //         }
-      //       ]
-      //     }
-      //   }
-      // }
+      {
+        "format": "listView",
+        "hidden": "stateWrapper.empty",
+        "fieldName": "listRender",
+        "child": {
+          "format": "card",
+          "children": [
+            {
+              "format": "column",
+              "children": [
+                {
+                  "format": "row",
+                  "children": [
+                    {"format": "text", "value": "stateWrapper.headOfName"},
+                    {
+                      "format": "button",
+                      "label": "Open",
+                      "onAction": {
+                        "actionType": "NAVIGATION",
+                        "properties": {
+                          "type": "TEMPLATE",
+                          "name": "householdOverview"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "format": "column",
+                  "children": [
+                    {"format": "text", "value": "{{item.address}}"},
+                    {
+                      "format": "button",
+                      "label": "View",
+                      "onAction": {
+                        "actionType": "NAVIGATION",
+                        "properties": {
+                          "type": "FORM",
+                          "name": "INDIVIDUAL",
+                          "data": [
+                            {"key": "id", "value": "{{item.id}}"}
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "format": "table",
+                      "columns": [
+                        {"label": "Task", "key": "taskName"},
+                        {"label": "Status", "key": "taskStatus"}
+                      ],
+                      "data": "{{stateWrapper.household}}"
+                    },
+                    {
+                      "format": "tag",
+                      "type": "item.status",
+                      "label": "{{item.status}}"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
     ],
   },
   {
