@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:digit_data_converter/utils/utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
+import 'package:survey_form/survey_form.dart';
 
 class EntityModelJsonMapper extends DynamicEntityModelListener {
   @override
@@ -14,6 +15,7 @@ class EntityModelJsonMapper extends DynamicEntityModelListener {
         'ProjectTypeModel': (json) =>
             ProjectTypeModelMapper.fromJson(jsonEncode(json)),
         'HFReferralModel': (json) =>
-            HFReferralModelMapper.fromJson(jsonEncode(json))
+            HFReferralModelMapper.fromJson(jsonEncode(json)),
+        'ServiceModel': (json) => ServiceModelMapper.fromJson(jsonEncode(json)),
       };
 }

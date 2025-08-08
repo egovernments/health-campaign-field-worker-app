@@ -3,6 +3,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/utils/extensions/extensions.dart';
+import 'package:survey_form/survey_form.dart';
 
 class DigitCrudService extends CrudService {
   final BuildContext context;
@@ -19,6 +20,8 @@ class DigitCrudService extends CrudService {
     if (entity is HFReferralModel) {
       return context
           .repository<HFReferralModel, HFReferralSearchModel>(context);
+    } else if (entity is ServiceModel) {
+      return context.repository<ServiceModel, ServiceSearchModel>(context);
     } else {
       return context
           .repository<HFReferralModel, HFReferralSearchModel>(context);
@@ -37,6 +40,9 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
     switch (modelName) {
       case 'hFReferral':
         return HFReferralModelMapper.fromMap(normalizedMap);
+
+      case 'service':
+        return ServiceModelMapper.fromMap(normalizedMap);
 
       default:
         return EntityModelMapper.fromMap(normalizedMap);

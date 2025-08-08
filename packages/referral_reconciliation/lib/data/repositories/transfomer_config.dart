@@ -69,22 +69,16 @@ final jsonConfig = {
             "hfCoordinator": "facilityDetails.hfCoordinatorKey"
           }
         }
-      }
-    }
-  },
-  "service": {
-    "fallbackModel": "ServiceModel",
-    "models": {
+      },
       "ServiceModel": {
         "mappings": {
           "id": "serviceDetails.id",
           "tenantId": "__context:tenantId",
-          "clientId": "serviceDetails.clientId",
-          "serviceDefId": "serviceDetails.serviceDefId",
-          "referenceId": "serviceDetails.referenceId",
-          "isActive": "serviceDetails.isActive",
+          "clientId": "__context:referenceId",
+          "serviceDefId": "__context:serviceDefId",
+          "referenceId": "__context:referenceId",
+          "isActive": "__context:referenceId",
           "accountId": "__context:projectId",
-          "additionalDetails": "serviceDetails.additionalDetails",
           "createdAt": "__generate:createdAt",
           "nonRecoverableError": "serviceDetails.nonRecoverable",
           "rowVersion": "meta.rowVersion",
@@ -101,29 +95,70 @@ final jsonConfig = {
           "ServiceAttributesModel": {
             "listSource": "serviceDetails.attributes",
             "mappings": {
-              "id": "id",
+              //"id": "id",
               "attributeCode": "attributeCode",
-              "value": "value",
-              "dataType": "dataType",
-              "referenceId": "referenceId",
-              "additionalDetails": "additionalDetails",
+              "value": "__context:tenantId",
+              "dataType": "__context:tenantId",
+              "referenceId": "__context:referenceId",
               "nonRecoverableError": "nonRecoverableError",
-              "clientReferenceId": "clientReferenceId",
-              "serviceClientReferenceId": "serviceClientReferenceId",
-              "tenantId": "tenantId",
-              "rowVersion": "rowVersion",
+              "clientReferenceId": "__context:referenceId",
+              "serviceClientReferenceId": "__context:referenceId",
+              "tenantId": "__context:tenantId",
+              //"rowVersion": "rowVersion",
               "auditDetails": "__generate:audit",
               "clientAuditDetails": "__generate:clientAudit",
-              "isDeleted": "isDeleted",
-              "additionalFields": {
-                "schema": "additionalFields.schema",
-                "version": "additionalFields.version",
-                "fields": "additionalFields.fields"
-              }
+              // "isDeleted": "isDeleted"
             }
           }
         }
       }
-    }
-  }
+    },
+  },
+  // "service": {
+  //   "fallbackModel": "ServiceModel",
+  //   "models": {
+  //     "ServiceModel": {
+  //       "mappings": {
+  //         "id": "serviceDetails.id",
+  //         "tenantId": "__context:tenantId",
+  //         "clientId": "__context:referenceId",
+  //         "serviceDefId": "serviceDetails.serviceDefId",
+  //         "referenceId": "__context:referenceId",
+  //         "isActive": "serviceDetails.isActive",
+  //         "accountId": "__context:projectId",
+  //         "createdAt": "__generate:createdAt",
+  //         "nonRecoverableError": "serviceDetails.nonRecoverable",
+  //         "rowVersion": "meta.rowVersion",
+  //         "attributes": "list:ServiceAttributesModel",
+  //         "auditDetails": "__generate:audit",
+  //         "clientAuditDetails": "__generate:clientAudit",
+  //         "additionalFields": {
+  //           "relatedClientReferenceId":
+  //               "serviceDetails.relatedClientReferenceId",
+  //           "boundaryCode": "serviceDetails.boundaryCode"
+  //         }
+  //       },
+  //       "listMappings": {
+  //         "ServiceAttributesModel": {
+  //           "listSource": "serviceDetails.attributes",
+  //           "mappings": {
+  //             //"id": "id",
+  //             "attributeCode": "attributeCode",
+  //             "value": "value",
+  //             "dataType": "dataType",
+  //             "referenceId": "__context:referenceId",
+  //             "nonRecoverableError": "nonRecoverableError",
+  //             "clientReferenceId": "clientReferenceId",
+  //             "serviceClientReferenceId": "serviceClientReferenceId",
+  //             "tenantId": "tenantId",
+  //             "rowVersion": "rowVersion",
+  //             "auditDetails": "__generate:audit",
+  //             "clientAuditDetails": "__generate:clientAudit",
+  //             "isDeleted": "isDeleted"
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 };
