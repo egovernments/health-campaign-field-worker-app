@@ -1080,25 +1080,23 @@ const String sample = '''
               "fieldName": "gender",
               "deleteFlag": false,
               "innerLabel": "",
-              "schemaCode": "HCM.common-masters",
+              
               "systemDate": false,
-              "enums":[
-               {
-        "code": "MALE",
-        "active": true
-      },
-      {
-        "code": "FEMALE",
-        "active": true
-      },{
-        "code": "TRANSGENDER",
-        "active": true
-      },
-      {
-        "code": "OTHERS",
-        "active": false
-      }
-              ],
+              "schemaCode": "common-masters.GenderType",
+                            "enums": [
+                                {
+                                    "code": "OTHER",
+                                    "name": "OTHER"
+                                },
+                                {
+                                    "code": "FEMALE",
+                                    "name": "FEMALE"
+                                },
+                                {
+                                    "code": "MALE",
+                                    "name": "MALE"
+                                }
+                            ],
               "validations": [
                 {
                   "type": "required",

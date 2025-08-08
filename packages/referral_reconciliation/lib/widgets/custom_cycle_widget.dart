@@ -1,3 +1,4 @@
+import 'package:digit_forms_engine/models/property_schema/property_schema.dart';
 import 'package:digit_ui_components/widgets/atoms/dropdown_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -26,6 +27,36 @@ class _CycleDropDownState extends LocalizedState<CycleDropDown> {
   @override
   Widget build(BuildContext context) {
     final cycles = ReferralReconSingleton().cycles;
+    final pages =
+        context.read<FormsBloc>().state.cachedSchemas['HFREFERALFLOW']?.pages;
+    bool isReadOnlyFromSchema = false;
+    String? labelFromSchema;
+
+    void walk(Map<String, PropertySchema> node, List<String> pathSoFar) {
+      for (final entry in node.entries) {
+        final key = entry.key;
+        final schema = entry.value;
+
+        final currentPath = [...pathSoFar, key];
+
+        if (key == 'referralCycle') {
+          // Found it; pull values
+          isReadOnlyFromSchema =
+              (schema.readOnly == true) || (schema.displayOnly == true);
+          labelFromSchema = schema.label ?? schema.innerLabel;
+          return; // stop once found
+        }
+
+        if (schema.properties != null && schema.properties!.isNotEmpty) {
+          walk(schema.properties!, currentPath);
+          if (labelFromSchema != null || isReadOnlyFromSchema)
+            return; // early exit
+        }
+      }
+    }
+
+// Kick off the recursive search
+    walk(pages!, []);
 
     return ReactiveFormBuilder(
         form: buildForm,
@@ -40,11 +71,14 @@ class _CycleDropDownState extends LocalizedState<CycleDropDown> {
             builder: (field) {
               return LabeledField(
                 isRequired: true,
-                label: localizations.translate(
-                  i18.referralReconciliation.selectCycle,
-                ),
+                label: labelFromSchema != null &&
+                        localizations.translate(labelFromSchema!).isNotEmpty
+                    ? localizations.translate(labelFromSchema!)
+                    : localizations.translate(
+                        i18.referralReconciliation.selectCycle,
+                      ),
                 child: Dropdown(
-                  readOnly: false,
+                  readOnly: isReadOnlyFromSchema,
                   selectedOption: cycles
                       .map((cycle) => DropdownItem(
                             name:

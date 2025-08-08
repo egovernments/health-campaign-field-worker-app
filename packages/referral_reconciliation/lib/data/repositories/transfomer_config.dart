@@ -88,16 +88,38 @@ final jsonConfig = {
           "createdAt": "__generate:createdAt",
           "nonRecoverableError": "serviceDetails.nonRecoverable",
           "rowVersion": "meta.rowVersion",
-          "attributes": "serviceDetails.attributes",
+          "attributes": "list:ServiceAttributesModel",
           "auditDetails": "__generate:audit",
           "clientAuditDetails": "__generate:clientAudit",
           "additionalFields": {
-            "schema": "__value:Service",
-            "version": "__context:formVersion",
-            "fields": {
-              "relatedClientReferenceId":
-                  "serviceDetails.relatedClientReferenceId",
-              "boundaryCode": "serviceDetails.boundaryCode"
+            "relatedClientReferenceId":
+                "serviceDetails.relatedClientReferenceId",
+            "boundaryCode": "serviceDetails.boundaryCode"
+          }
+        },
+        "listMappings": {
+          "ServiceAttributesModel": {
+            "listSource": "serviceDetails.attributes",
+            "mappings": {
+              "id": "id",
+              "attributeCode": "attributeCode",
+              "value": "value",
+              "dataType": "dataType",
+              "referenceId": "referenceId",
+              "additionalDetails": "additionalDetails",
+              "nonRecoverableError": "nonRecoverableError",
+              "clientReferenceId": "clientReferenceId",
+              "serviceClientReferenceId": "serviceClientReferenceId",
+              "tenantId": "tenantId",
+              "rowVersion": "rowVersion",
+              "auditDetails": "__generate:audit",
+              "clientAuditDetails": "__generate:clientAudit",
+              "isDeleted": "isDeleted",
+              "additionalFields": {
+                "schema": "additionalFields.schema",
+                "version": "additionalFields.version",
+                "fields": "additionalFields.fields"
+              }
             }
           }
         }
