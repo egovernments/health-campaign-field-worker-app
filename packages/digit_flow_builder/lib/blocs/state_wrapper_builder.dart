@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 
 /// Utility for reading field values from any EntityModel using generated toMap()
@@ -12,7 +11,6 @@ class EntityFieldAccessor {
 /// Enhanced field accessor that handles entity field access safely
 class EnhancedEntityFieldAccessor {
   static dynamic getFieldValue(EntityModel entity, String fieldName) {
-    // Handle common fields that exist on all EntityModel instances
     switch (fieldName) {
       case 'boundaryCode':
         return entity.boundaryCode;
@@ -23,32 +21,30 @@ class EnhancedEntityFieldAccessor {
       case 'clientAuditDetails':
         return entity.clientAuditDetails;
       default:
-        // For other fields, use the toMap() method which is available on all Mappable entities
         try {
           final map = entity.toMap();
           if (map.containsKey(fieldName)) {
             return map[fieldName];
-          } else {
-            // Try with different field name variations
-            final variations = [
-              fieldName,
-              fieldName.toLowerCase(),
-              fieldName.toUpperCase(),
-              _camelCase(fieldName),
-              _snakeCase(fieldName),
-            ];
-
-            for (final variation in variations) {
-              if (map.containsKey(variation)) {
-                return map[variation];
-              }
-            }
-
-            throw Exception(
-              'Field "$fieldName" not found on entity of type ${entity.runtimeType}. '
-              'Available fields: ${map.keys.join(', ')}',
-            );
           }
+
+          final variations = [
+            fieldName,
+            fieldName.toLowerCase(),
+            fieldName.toUpperCase(),
+            _camelCase(fieldName),
+            _snakeCase(fieldName),
+          ];
+
+          for (final variation in variations) {
+            if (map.containsKey(variation)) {
+              return map[variation];
+            }
+          }
+
+          throw Exception(
+            'Field "$fieldName" not found on entity of type ${entity.runtimeType}. '
+            'Available fields: ${map.keys.join(', ')}',
+          );
         } catch (e) {
           throw Exception(
             'Error accessing field "$fieldName" on entity of type ${entity.runtimeType}: $e',
@@ -57,13 +53,11 @@ class EnhancedEntityFieldAccessor {
     }
   }
 
-  /// Convert to camelCase
   static String _camelCase(String input) {
     if (input.isEmpty) return input;
     return input[0].toLowerCase() + input.substring(1);
   }
 
-  /// Convert to snake_case
   static String _snakeCase(String input) {
     return input.replaceAllMapped(
       RegExp(r'[A-Z]'),
@@ -82,30 +76,21 @@ class WrapperBuilder {
     final entityMap = _groupEntitiesByType();
     final List<dynamic> wrappers = [];
 
-    // Find "root" entities based on filters
     final rootEntityType = config['rootEntity'];
     final roots = entityMap[rootEntityType] ?? [];
 
     for (final root in roots) {
-      // Apply filters
       if (!_passesFilters(root, entityMap)) continue;
 
       final wrapperData = <String, dynamic>{rootEntityType: root};
 
-      // Process relations
       for (final relation in config['relations'] ?? []) {
         final relatedEntities =
             _findRelatedEntities(root, relation, wrapperData, entityMap);
         wrapperData[relation['name']] = relatedEntities;
       }
 
-      // Special fields (like headOfHousehold)
-      if (config.containsKey('headOfHousehold')) {
-        wrapperData['headOfHousehold'] = _findRelatedEntity(
-            root, config['headOfHousehold'], wrapperData, entityMap);
-      }
-
-      wrappers.add(wrapperData); // Could map to a class if needed
+      wrappers.add(wrapperData);
     }
 
     return wrappers;
@@ -125,39 +110,47 @@ class WrapperBuilder {
     if (filters == null || filters.isEmpty) return true;
 
     for (final filter in filters) {
-      final entityType = filter['entity'];
-      final condition = filter['condition'];
-      final join = filter['join'];
+      final field = filter['field'];
+      final equals = filter['equals'];
 
-      // Get entities of the filter type
-      final filterEntities = entityMap[entityType] ?? [];
+      if (!filter.containsKey('entity')) {
+        // Apply filter directly to the root entity
+        final value = EnhancedEntityFieldAccessor.getFieldValue(root, field);
+        if (equals != null && value != equals) {
+          return false;
+        }
+      } else {
+        // Original entity-based filter logic
+        final entityType = filter['entity'];
+        final condition = filter['condition'];
+        final join = filter['join'];
 
-      // Check if any entity matches the condition and join criteria
-      bool hasMatchingEntity = false;
-      for (final entity in filterEntities) {
-        // Check condition
-        bool conditionMatches = false;
-        if (condition['equals'] != null) {
-          final fieldValue = EnhancedEntityFieldAccessor.getFieldValue(
-              entity, condition['field']);
-          conditionMatches = fieldValue == condition['equals'];
+        final filterEntities = entityMap[entityType] ?? [];
+
+        bool hasMatchingEntity = false;
+        for (final entity in filterEntities) {
+          bool conditionMatches = false;
+          if (condition['equals'] != null) {
+            final fieldValue = EnhancedEntityFieldAccessor.getFieldValue(
+                entity, condition['field']);
+            conditionMatches = fieldValue == condition['equals'];
+          }
+
+          if (conditionMatches && join != null) {
+            final sourceValue = EnhancedEntityFieldAccessor.getFieldValue(
+                entity, join['sourceField']);
+            final targetValue = EnhancedEntityFieldAccessor.getFieldValue(
+                root, join['targetField']);
+            hasMatchingEntity = sourceValue == targetValue;
+          } else if (conditionMatches) {
+            hasMatchingEntity = true;
+          }
+
+          if (hasMatchingEntity) break;
         }
 
-        if (conditionMatches && join != null) {
-          // Check join criteria
-          final sourceValue = EnhancedEntityFieldAccessor.getFieldValue(
-              entity, join['sourceField']);
-          final targetValue = EnhancedEntityFieldAccessor.getFieldValue(
-              root, join['targetField']);
-          hasMatchingEntity = sourceValue == targetValue;
-        } else if (conditionMatches) {
-          hasMatchingEntity = true;
-        }
-
-        if (hasMatchingEntity) break;
+        if (!hasMatchingEntity) return false;
       }
-
-      if (!hasMatchingEntity) return false;
     }
 
     return true;
@@ -187,26 +180,17 @@ class WrapperBuilder {
     }).toList();
   }
 
-  dynamic _findRelatedEntity(dynamic root, Map<String, dynamic> relation,
-      Map<String, dynamic> wrapperData, Map<String, List<dynamic>> entityMap) {
-    return _findRelatedEntities(root, relation, wrapperData, entityMap)
-        .firstOrNull;
-  }
-
   dynamic _resolveValue(
       String path, dynamic root, Map<String, dynamic> wrapperData) {
-    // Resolve "HouseholdModel.clientReferenceId" or "members.individualClientReferenceId"
     final parts = path.split('.');
 
     if (parts.length == 1) {
-      // Direct field on root entity
       if (root is EntityModel) {
         return EnhancedEntityFieldAccessor.getFieldValue(root, parts[0]);
       }
       return null;
     }
 
-    // Navigate through wrapper data
     dynamic current = wrapperData;
     for (final part in parts) {
       if (current is Map) {
@@ -222,7 +206,6 @@ class WrapperBuilder {
   }
 
   List<dynamic> _resolveList(String path, Map<String, dynamic> wrapperData) {
-    // Resolve to list of values
     final value = _resolveValue(path, null, wrapperData);
     if (value is List) {
       return value;

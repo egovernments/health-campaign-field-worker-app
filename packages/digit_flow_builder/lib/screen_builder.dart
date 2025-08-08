@@ -114,7 +114,7 @@ class ScreenBuilder extends StatelessWidget {
         config: config,
         watchedScreenKeys: const [
           // TODO: Need to map the dependent screens dynamically from form
-          'FORM::HOUSEHOLD',
+          'TEMPLATE::searchBeneficiary',
           // or whatever the dependent form screenKey is
         ],
       );
