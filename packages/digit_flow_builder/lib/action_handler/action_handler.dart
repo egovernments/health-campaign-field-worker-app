@@ -1,4 +1,5 @@
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
+import 'package:digit_crud_bloc/models/global_search_params.dart';
 import 'package:digit_data_converter/src/transformer_service.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
@@ -53,6 +54,32 @@ class ActionHandler {
         final entities = contextData['entities'];
 
         context.read<CrudBloc>().add(CrudEventCreate(entities: entities));
+
+        break;
+      case 'SEARCH_EVENT':
+        final data = action.properties;
+
+        final searchParams = GlobalSearchParameters(
+          filters: [
+            SearchFilter(
+              root: data['name'],
+              field: data['data'][0]['key'],
+              operator: data['data'][0]['operation'],
+              value: data['data'][0]['value'],
+            ),
+          ], // Optional: if you're resolving linked entities
+          primaryModel: 'household',
+          select: [
+            'individual',
+            'household',
+            'householdMember',
+            'projectBeneficiary',
+            'task'
+          ],
+          pagination: null,
+        );
+
+        context.read<CrudBloc>().add(CrudEventSearch(searchParams));
 
         break;
       case 'NAVIGATION':

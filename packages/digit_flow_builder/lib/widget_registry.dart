@@ -66,13 +66,13 @@ class WidgetRegistry {
           if (json['onAction'] != null) {
             final raw = Map<String, dynamic>.from(json['onAction']);
             raw['properties'] ??= {};
-            raw['properties']['data'] = [
-              {
-                'key': json['fieldName'] ?? 'search',
-                'value': value,
-                'operation': 'contains',
-              }
-            ];
+
+            final data = raw['properties']['data'];
+            if (data is List &&
+                data.isNotEmpty &&
+                data[0] is Map<String, dynamic>) {
+              data[0]['value'] = value;
+            }
             final action = ActionConfig.fromJson(raw);
             onAction(action);
           }
