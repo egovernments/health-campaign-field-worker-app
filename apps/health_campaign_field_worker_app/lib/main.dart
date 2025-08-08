@@ -154,9 +154,13 @@ final List<Map<String, dynamic>> sampleFlows = [
           "actionType": "SEARCH_EVENT",
           "properties": {
             "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT",
-            "name": "ENTITY // NAME",
+            "name": "name",
             "data": [
-              {"key": "name", "value": "field.value", "operation": "contains"}
+              {
+                "key": "givenName",
+                "value": "field.value",
+                "operation": "contains"
+              }
             ]
           }
         }
