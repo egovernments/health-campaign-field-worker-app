@@ -155,7 +155,7 @@ final List<Map<String, dynamic>> sampleFlows = [
               "entity": "IndividualModel",
               "match": {
                 "field": "clientReferenceId",
-                "equalsFrom": "household.headOfHouseholdClientReferenceId"
+                "equalsFrom": "HouseholdMemberModel.individualClientReferenceId"
               }
             },
             {
