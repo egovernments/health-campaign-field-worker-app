@@ -71,7 +71,8 @@ class _LayoutRendererPageState extends State<LayoutRendererPage> {
     if (crudState is CrudStateLoaded) {
       final entities = crudState.results.values.expand((list) => list).toList();
       wrapperData =
-          WrapperBuilder(entities, body[0]['wrapperConfig'] ?? {}).build();
+          WrapperBuilder(entities, widget.config['wrapperConfig'] ?? {})
+              .build();
     }
 
     return Scaffold(
