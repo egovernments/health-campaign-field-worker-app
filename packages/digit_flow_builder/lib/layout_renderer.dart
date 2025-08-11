@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'action_handler/action_config.dart';
 import 'action_handler/action_handler.dart';
 import 'blocs/flow_crud_bloc.dart';
-import 'blocs/state_wrapper_builder.dart';
 import 'widget_registry.dart';
 
 class LayoutRendererPage extends StatefulWidget {
@@ -65,15 +64,6 @@ class _LayoutRendererPageState extends State<LayoutRendererPage> {
         : null;
 
     final isPersisted = crudState is CrudStatePersisted;
-
-    // ✅ Build wrappers if we have loaded state
-    List<dynamic> wrapperData = [];
-    if (crudState is CrudStateLoaded) {
-      final entities = crudState.results.values.expand((list) => list).toList();
-      wrapperData =
-          WrapperBuilder(entities, widget.config['wrapperConfig'] ?? {})
-              .build();
-    }
 
     return Scaffold(
       body: ScrollableContent(

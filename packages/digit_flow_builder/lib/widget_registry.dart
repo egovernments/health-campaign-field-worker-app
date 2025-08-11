@@ -1,4 +1,3 @@
-import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
@@ -150,9 +149,9 @@ class WidgetRegistry {
       final value = json['value'] ?? '';
       const watchedKeys = 'FORM::HOUSEHOLD';
 
-      final crudState = FlowCrudStateRegistry().get(watchedKeys);
-
-      final interpolated = _interpolateWithCrudStates(value, crudState);
+      final flowState = FlowCrudStateRegistry().get(watchedKeys);
+      final wrapperData = flowState?.stateWrapper;
+      final interpolated = _interpolateWithCrudStates(value, wrapperData);
       return Text(interpolated);
     });
 
@@ -302,43 +301,38 @@ class WidgetRegistry {
 
   String _interpolateWithCrudStates(
     String template,
-    CrudState? states,
+    List<dynamic>? state,
   ) {
-    if (states == null) return template;
+    if (state == null) return template;
 
-    if (states is CrudStatePersisted) {
-      final regex =
-          RegExp(r'\{\{\s*context\.([A-Za-z_][\w]*)\.([\w.]+)\s*\}\}');
-      final modelMap = <String, Map<String, dynamic>>{};
+    final regex = RegExp(r'\{\{\s*context\.([A-Za-z_][\w]*)\.([\w.]+)\s*\}\}');
+    final modelMap = <String, Map<String, dynamic>>{};
 
-      for (final entity in states.entities) {
-        final type = entity.runtimeType.toString();
-        modelMap[type] = entity.toMap();
-      }
-
-      return template.replaceAllMapped(regex, (match) {
-        final modelName = match.group(1);
-        final fieldPath = match.group(2); // could be 'name.givenName'
-
-        if (modelName == null || fieldPath == null) return match.group(0)!;
-
-        final model = modelMap[modelName];
-        if (model == null) return '';
-
-        // Traverse nested fields
-        dynamic value = model;
-        for (final part in fieldPath.split('.')) {
-          if (value is Map<String, dynamic> && value.containsKey(part)) {
-            value = value[part];
-          } else {
-            return ''; // invalid path
-          }
-        }
-
-        return value?.toString() ?? '';
-      });
+    for (final entity in state) {
+      final type = entity.runtimeType.toString();
+      modelMap[type] = entity.toMap();
     }
 
-    return template;
+    return template.replaceAllMapped(regex, (match) {
+      final modelName = match.group(1);
+      final fieldPath = match.group(2); // could be 'name.givenName'
+
+      if (modelName == null || fieldPath == null) return match.group(0)!;
+
+      final model = modelMap[modelName];
+      if (model == null) return '';
+
+      // Traverse nested fields
+      dynamic value = model;
+      for (final part in fieldPath.split('.')) {
+        if (value is Map<String, dynamic> && value.containsKey(part)) {
+          value = value[part];
+        } else {
+          return ''; // invalid path
+        }
+      }
+
+      return value?.toString() ?? '';
+    });
   }
 }

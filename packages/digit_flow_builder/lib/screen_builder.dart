@@ -1,4 +1,3 @@
-import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_data_model/utils/utils.dart';
 import 'package:digit_flow_builder/widgets/localized.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
@@ -11,7 +10,7 @@ import 'flow_builder.dart';
 
 class ScreenKeyListener extends StatefulWidget {
   final String screenKey;
-  final Widget Function(BuildContext context, CrudState? state) builder;
+  final Widget Function(BuildContext context, FlowCrudState? state) builder;
 
   const ScreenKeyListener({
     super.key,
@@ -24,7 +23,7 @@ class ScreenKeyListener extends StatefulWidget {
 }
 
 class _ScreenKeyListenerState extends State<ScreenKeyListener> {
-  CrudState? _state;
+  FlowCrudState? _state;
 
   @override
   void initState() {
@@ -99,7 +98,7 @@ class ScreenBuilder extends StatelessWidget {
     BuildContext context,
     String screenType,
     Map<String, dynamic> config,
-    CrudState? crudState,
+    FlowCrudState? crudState,
   ) {
     if (screenType == 'FORM') {
       final schemaKey = config['name'] ?? '';

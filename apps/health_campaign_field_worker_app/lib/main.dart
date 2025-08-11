@@ -998,6 +998,79 @@ final List<Map<String, dynamic>> sampleFlows = [
         ]
       }
     ],
+    "wrapperConfig": {
+      "wrapperName": "HouseholdWrapper",
+      "rootEntity": "HouseholdMemberModel",
+      "filters": [
+        {"field": "isHeadOfHousehold", "equals": true}
+      ],
+      "relations": [
+        {
+          "name": "household",
+          "entity": "HouseholdModel",
+          "match": {
+            "field": "clientReferenceId",
+            "equalsFrom": "householdClientReferenceId"
+          }
+        },
+        {
+          "name": "members",
+          "entity": "HouseholdMemberModel",
+          "match": {
+            "field": "householdClientReferenceId",
+            "equalsFrom": "household.clientReferenceId"
+          }
+        },
+        {
+          "name": "headOfHousehold",
+          "entity": "IndividualModel",
+          "match": {
+            "field": "clientReferenceId",
+            "equalsFrom": "HouseholdMemberModel.individualClientReferenceId"
+          }
+        },
+        {
+          "name": "individuals",
+          "entity": "IndividualModel",
+          "match": {
+            "field": "clientReferenceId",
+            "inFrom": "members.individualClientReferenceId"
+          }
+        },
+        {
+          "name": "projectBeneficiaries",
+          "entity": "ProjectBeneficiaryModel",
+          "match": {
+            "field": "beneficiaryClientReferenceId",
+            "equalsFrom": "household.clientReferenceId"
+          }
+        },
+        {
+          "name": "tasks",
+          "entity": "TaskModel",
+          "match": {
+            "field": "projectBeneficiaryClientReferenceId",
+            "inFrom": "projectBeneficiaries.clientReferenceId"
+          }
+        },
+        {
+          "name": "sideEffects",
+          "entity": "SideEffectModel",
+          "match": {
+            "field": "clientReferenceId",
+            "equalsFrom": "household.clientReferenceId"
+          }
+        },
+        {
+          "name": "referrals",
+          "entity": "ReferralModel",
+          "match": {
+            "field": "clientReferenceId",
+            "equalsFrom": "household.clientReferenceId"
+          }
+        }
+      ]
+    },
     "actions": [
       {
         "format": "button",
