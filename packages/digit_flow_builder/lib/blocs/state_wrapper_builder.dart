@@ -193,10 +193,16 @@ class WrapperBuilder {
 
     dynamic current = wrapperData;
     for (final part in parts) {
+      // TODO: WRITTING THIS TO FETCH SINGLE DATA.. WILL LOOK LATER FOR MULTIPLE DATA;
+      if (current is List && current.length == 1) {
+        current = current.first;
+      }
       if (current is Map) {
         current = current[part];
       } else if (current is List && int.tryParse(part) != null) {
         current = current[int.parse(part)];
+      } else if (current is EntityModel) {
+        current = EnhancedEntityFieldAccessor.getFieldValue(current, part);
       } else {
         return null;
       }
