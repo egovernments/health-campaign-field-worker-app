@@ -170,10 +170,12 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
               flowConfig: config,
               service: crudService,
               onUpdate: (screenKey, state) {
-                if (state is CrudStatePersisted) {
-                  debugPrint(
-                      '✅ onUpdate called → $screenKey → ${state.entities}');
-                }
+                /// FIXME: update directly need to check if requires here
+                // if (state is CrudStatePersisted) {
+                //   debugPrint(
+                //       '✅ onUpdate called → $screenKey → ${state.entities}');
+                // }
+                setState(() {});
               },
             )..add(const CrudEventInitialize());
           },
