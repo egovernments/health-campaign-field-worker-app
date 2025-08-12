@@ -545,17 +545,18 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.supervised_user_circle_rounded,
           label: i18.home.beneficiaryReferralLabel,
           onPressed: () async {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
+            final moduleName =
+                'hcm-hfreferalflow-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+
 //sample
             // TODO:: I need to add here
 
-            const schemaJsonRaw = sample;
+            // const schemaJsonRaw = sample;
 
-            // final prefs = await SharedPreferences.getInstance();
-            // final schemaJsonRaw = prefs.getString('app_config_schemas');
+            final prefs = await SharedPreferences.getInstance();
+            final schemaJsonRaw = prefs.getString('app_config_schemas');
 
             if (schemaJsonRaw != null) {
               final allSchemas =
