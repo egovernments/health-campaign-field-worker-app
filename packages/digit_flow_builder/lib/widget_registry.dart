@@ -1,3 +1,6 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
@@ -147,12 +150,32 @@ class WidgetRegistry {
 
     WidgetRegistry.register('text', (json, context, onAction) {
       final value = json['value'] ?? '';
-      const watchedKeys = 'FORM::HOUSEHOLD';
 
-      final flowState = FlowCrudStateRegistry().get(watchedKeys);
+      final stack = context.router.stack;
+      String? watchedKey;
+
+      if (stack.length > 1) {
+        final previousRoute = stack[stack.length - 1];
+        final args = previousRoute.arguments;
+
+        if (args is FlowBuilderHomeRouteArgs) {
+          watchedKey = args.pageName;
+        }
+      }
+
+      if (watchedKey == null) {
+        watchedKey = 'DEFAULT_KEY'; // fallback
+      }
+
+      final flowState = FlowCrudStateRegistry().get(watchedKey);
       final wrapperData = flowState?.stateWrapper;
-      final interpolated = _interpolateWithCrudStates(value, wrapperData);
-      return Text(interpolated);
+
+      String? interpolated;
+      if (wrapperData != null && wrapperData.isNotEmpty) {
+        interpolated = _interpolateWithCrudStates(value, wrapperData);
+      }
+
+      return Text(interpolated ?? '');
     });
 
     WidgetRegistry.register('switch', (json, context, onAction) {
@@ -310,7 +333,19 @@ class WidgetRegistry {
 
     for (final entity in state) {
       final type = entity.runtimeType.toString();
-      modelMap[type] = entity.toMap();
+
+      if (entity is Map<String, dynamic>) {
+        modelMap[type] = entity;
+      } else if (entity is EntityModel) {
+        modelMap[type] = entity.toMap(); // Assuming EntityModel has toMap()
+      } else {
+        // Fallback: try jsonEncode/decode to Map if it's something else
+        try {
+          modelMap[type] = Map<String, dynamic>.from(entity as Map);
+        } catch (_) {
+          debugPrint('Unsupported entity type for interpolation: $type');
+        }
+      }
     }
 
     return template.replaceAllMapped(regex, (match) {
