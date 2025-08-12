@@ -64,7 +64,8 @@ class _EvaluationKeyDropDownState
                   builder: (field) {
                     return LabeledField(
                       isRequired: true,
-                      label: localizations.translate("Evaluation Key"),
+                      label: localizations.translate(
+                          "APPONE_HFREFERALFLOW_EVALUATION_FACILITY_KEY_LABEL"),
                       child: Dropdown(
                         readOnly: false,
                         selectedOption: _mapItems(projectFacilities).firstWhere(
