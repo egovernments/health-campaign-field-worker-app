@@ -128,7 +128,7 @@ class ReferralReconSingleton {
 }
 
 final Map<String, PageRouteInfo> routerMap = {
-  'referral-acknowledgement': ReferralReconAcknowledgementRoute(),
+  'ReferralReconAcknowledgement': ReferralReconAcknowledgementRoute(),
 
   // Add more routes here
 };
