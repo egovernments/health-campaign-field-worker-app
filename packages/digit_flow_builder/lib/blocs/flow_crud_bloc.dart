@@ -12,7 +12,7 @@ class FlowCrudBloc extends CrudBloc {
     required this.flowConfig,
     required super.service,
     this.onUpdate,
-  }) : screenKey = '${flowConfig["screenType"]}::${flowConfig["name"]}' {
+  }) : screenKey = '${flowConfig["name"]}' {
     // We don't listen directly anymore — handled in onTransition
   }
 

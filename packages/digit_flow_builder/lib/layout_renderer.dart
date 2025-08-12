@@ -26,7 +26,7 @@ class LayoutRendererPage extends StatefulWidget {
 }
 
 class _LayoutRendererPageState extends State<LayoutRendererPage> {
-  List<dynamic> _wrappers = [];
+  final List<dynamic> _wrappers = [];
 
   @override
   void initState() {
