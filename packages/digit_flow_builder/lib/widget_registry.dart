@@ -151,31 +151,32 @@ class WidgetRegistry {
     WidgetRegistry.register('text', (json, context, onAction) {
       final value = json['value'] ?? '';
 
-      final stack = context.router.stack;
-      String? watchedKey;
-
-      if (stack.length > 1) {
-        final previousRoute = stack[stack.length - 1];
-        final args = previousRoute.arguments;
-
-        if (args is FlowBuilderHomeRouteArgs) {
-          watchedKey = args.pageName;
+      String? pageName;
+      final stack = context.router.stackData;
+      if (stack.length >= 2) {
+        final prevRouteData = stack[stack.length - 1];
+        final prevArgs = prevRouteData.args;
+        if (prevArgs is FlowBuilderHomeRouteArgs) {
+          pageName = prevArgs.pageName;
         }
       }
 
-      if (watchedKey == null) {
-        watchedKey = 'DEFAULT_KEY'; // fallback
+      var finalText = value;
+      if (pageName != null) {
+        final stateData = extractCrudStateData(pageName);
+
+        // Get index if present
+        final index =
+            json['__listIndex'] is int ? json['__listIndex'] as int : null;
+
+        finalText = interpolateWithCrudStates(
+          template: value,
+          stateData: stateData,
+          listIndex: index, // 👈 tell interpolation which row we’re in
+        );
       }
 
-      final flowState = FlowCrudStateRegistry().get(watchedKey);
-      final wrapperData = flowState?.stateWrapper;
-
-      String? interpolated;
-      if (wrapperData != null && wrapperData.isNotEmpty) {
-        interpolated = _interpolateWithCrudStates(value, wrapperData);
-      }
-
-      return Text(interpolated ?? '');
+      return Text(finalText ?? value);
     });
 
     WidgetRegistry.register('switch', (json, context, onAction) {
@@ -208,43 +209,30 @@ class WidgetRegistry {
     });
 
     WidgetRegistry.register('listView', (json, context, onAction) {
-      // Resolve the data source
-      dynamic dataSource = json['data'];
+      final screenKey =
+          getScreenKeyFromArgs(context) ?? context.router.currentPath;
 
-      /// TODO: WILL UPDATE THE DATA SOURCE LOGIC LATER FOR NOW TAKING DUMMY VALUE
-      // If it's a variable reference like '{{members}}', resolve from context/state
-      // if (dataSource is String && dataSource.startsWith('{{') && dataSource.endsWith('}}')) {
-      //   final variableName = dataSource.substring(2, dataSource.length - 2).trim();
-      //   // For demo: try to get from ModalRoute or InheritedWidget, or fallback to empty list
-      //   // In real app, wire this to your state management solution
-      //   dataSource = ModalRoute.of(context)?.settings.arguments != null &&
-      //           (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?)?.containsKey(variableName) == true
-      //       ? (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)[variableName]
-      //       : [];
-      // }
-      // if (dataSource == null) dataSource = [];
-      dataSource = [
-        {
-          "name": "HEADDF",
-          "gender": "Female",
-          "age": 35,
-          "months": 0,
-          "status": "Not visited",
-          "childrenCount": 3,
-          "id": "1"
-        }
-      ];
+      final crudData = extractCrudStateData(screenKey);
+
+      final items = crudData.rawState;
+      if (items.isEmpty) {
+        return const SizedBox.shrink();
+      }
 
       return Column(
-        children: (dataSource as List)
-            .map<Widget>((item) {
-              final childJson = Map<String, dynamic>.from(json['child']);
-              childJson['item'] = item;
-              return LayoutMapper.map(childJson, context, onAction);
-            })
-            .expand((widget) => [widget, const SizedBox(height: 16)])
-            .toList()
-          ..removeLast(), // removes trailing SizedBox
+        children: List.generate(items.length, (index) {
+          final item = items[index];
+          final safeItem = (item is Map)
+              ? item.map((k, v) => MapEntry(k.toString(), v))
+              : {};
+
+          final childJson = Map<String, dynamic>.from(json['child']);
+          childJson['item'] = safeItem;
+          childJson['__listIndex'] = index; // 👈 pass the index
+
+          return LayoutMapper.map(childJson, context, onAction);
+        }).expand((widget) => [widget, const SizedBox(height: 8)]).toList()
+          ..removeLast(),
       );
     });
   }
@@ -322,52 +310,142 @@ class WidgetRegistry {
     }
   }
 
-  String _interpolateWithCrudStates(
-    String template,
-    List<dynamic>? state,
-  ) {
-    if (state == null) return template;
+  /// Recursively walks a dynamic structure (Map, List, String, etc.)
+  /// and applies [transform] to every String value.
+  dynamic deepMapStrings(dynamic input, String Function(String) transform) {
+    if (input is String) {
+      return transform(input);
+    } else if (input is Map) {
+      return input.map((key, value) => MapEntry(
+            key,
+            deepMapStrings(value, transform),
+          ));
+    } else if (input is List) {
+      return input.map((value) => deepMapStrings(value, transform)).toList();
+    }
+    return input;
+  }
+}
 
-    final regex = RegExp(r'\{\{\s*context\.([A-Za-z_][\w]*)\.([\w.]+)\s*\}\}');
-    final modelMap = <String, Map<String, dynamic>>{};
+class CrudStateData {
+  final Map<String, List<Map<String, dynamic>>> modelMap;
+  final List<dynamic> rawState;
 
-    for (final entity in state) {
-      final type = entity.runtimeType.toString();
+  CrudStateData(this.modelMap, this.rawState);
+}
 
-      if (entity is Map<String, dynamic>) {
-        modelMap[type] = entity;
-      } else if (entity is EntityModel) {
-        modelMap[type] = entity.toMap(); // Assuming EntityModel has toMap()
-      } else {
-        // Fallback: try jsonEncode/decode to Map if it's something else
-        try {
-          modelMap[type] = Map<String, dynamic>.from(entity as Map);
-        } catch (_) {
-          debugPrint('Unsupported entity type for interpolation: $type');
+String? getScreenKeyFromArgs(BuildContext context) {
+  final args = ModalRoute.of(context)?.settings.arguments;
+
+  if (args is Map<String, dynamic>) {
+    return args['screenKey']?.toString();
+  }
+
+  if (args is FlowBuilderHomeRouteArgs) {
+    return args.pageName; // this is your pageName param
+  }
+
+  return null;
+}
+
+CrudStateData extractCrudStateData(String screenKey) {
+  final crudState = FlowCrudStateRegistry().get(screenKey);
+  final List<dynamic>? state =
+      crudState is FlowCrudState ? crudState.stateWrapper : null;
+
+  final Map<String, List<Map<String, dynamic>>> modelMap = {};
+
+  void addEntity(dynamic entity, {String? overrideKey}) {
+    final typeKey = overrideKey ?? getEntityKey(entity);
+    Map<String, dynamic>? map;
+    if (entity is Map<String, dynamic>) {
+      map = entity;
+    } else if (entity is EntityModel) {
+      map = entity.toMap();
+    }
+    if (map != null) {
+      modelMap.putIfAbsent(typeKey, () => []).add(map);
+      for (final entry in map.entries) {
+        if (entry.value is List) {
+          for (final item in entry.value) {
+            addEntity(item, overrideKey: entry.key);
+          }
         }
       }
     }
+  }
 
-    return template.replaceAllMapped(regex, (match) {
-      final modelName = match.group(1);
-      final fieldPath = match.group(2); // could be 'name.givenName'
+  if (state != null) {
+    for (final entity in state) {
+      addEntity(entity);
+    }
+  }
 
-      if (modelName == null || fieldPath == null) return match.group(0)!;
+  return CrudStateData(modelMap, state ?? []);
+}
 
-      final model = modelMap[modelName];
-      if (model == null) return '';
+String interpolateWithCrudStates({
+  required String template,
+  required CrudStateData stateData,
+  int? listIndex,
+  Map<String, dynamic>? item,
+}) {
+  final regex = RegExp(
+    r'\{\{\s*(context|item)\.([A-Za-z_][\w]*)'
+    r'(?:\[(\d+)\])?'
+    r'(?:\.([\w.]+))?\s*\}\}',
+  );
 
-      // Traverse nested fields
-      dynamic value = model;
-      for (final part in fieldPath.split('.')) {
-        if (value is Map<String, dynamic> && value.containsKey(part)) {
-          value = value[part];
-        } else {
-          return ''; // invalid path
+  return template.replaceAllMapped(regex, (match) {
+    final source = match.group(1); // context or item
+    final modelNameOrKey = match.group(2);
+    final indexStr = match.group(3);
+    final fieldPath = match.group(4);
+
+    if (source == 'context') {
+      final models = stateData.modelMap[modelNameOrKey] ?? [];
+      final index = indexStr != null ? int.parse(indexStr) : (listIndex ?? 0);
+
+      if (index < 0 || index >= models.length) return '';
+      dynamic value = models[index];
+
+      if (fieldPath != null) {
+        for (final part in fieldPath.split('.')) {
+          if (value is Map<String, dynamic> && value.containsKey(part)) {
+            value = value[part];
+          } else {
+            return '';
+          }
         }
       }
-
       return value?.toString() ?? '';
-    });
+    } else if (source == 'item' && item != null) {
+      dynamic value = item[modelNameOrKey];
+      if (fieldPath != null) {
+        for (final part in fieldPath.split('.')) {
+          if (value is Map && value.containsKey(part)) {
+            value = value[part];
+          } else {
+            return '';
+          }
+        }
+      }
+      return value?.toString() ?? '';
+    }
+
+    return '';
+  });
+}
+
+String getEntityKey(dynamic entity) {
+  if (entity is EntityModel) {
+    return entity.runtimeType
+        .toString()
+        .replaceAll(RegExp(r'^_+\$?'), '')
+        .replaceAll(RegExp(r'Impl$'), '');
   }
+  if (entity is Map<String, dynamic> && entity.containsKey('type')) {
+    return entity['type'].toString();
+  }
+  return entity.runtimeType.toString();
 }
