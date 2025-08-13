@@ -1,10 +1,15 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:complaints/blocs/complaint_wrapper/complaint_wrapper_bloc.dart';
+import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
+import 'package:digit_crud_bloc/models/global_search_params.dart';
+import 'package:digit_crud_bloc/repositories/local/search_entity_repository.dart';
+import 'package:digit_crud_bloc/utils/utils.dart';
+import 'package:digit_data_converter/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:complaints/blocs/complaints_inbox/complaints_inbox.dart';
-import 'package:complaints/utils/utils.dart';
-import '/models/pgr_complaints.dart';
+import '../../data/digit_crud_service.dart';
+import '../../data/digit_data_converter.dart';
 
 @RoutePage()
 class ComplaintsInboxWrapperPage extends StatelessWidget {
@@ -14,17 +19,55 @@ class ComplaintsInboxWrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ComplaintsInboxBloc(
-        const ComplaintInboxState.complaints(),
-        pgrRepository:context.repository<PgrServiceModel, PgrServiceSearchModel>(context),
-      )..add(
-        ComplaintInboxLoadComplaintsEvent(
-          createdByUserId: ComplaintsSingleton().loggedInUserUuid,
-        ),
+    CrudBlocSingleton().setData(
+      crudService: DigitCrudService(
+        context: context,
+        relationshipMap: [],
+        nestedModelMappings: [
+          const NestedModelMapping(
+            rootModel: 'pgrService',
+            fields: {
+              'user': NestedFieldMapping(
+                table: 'pgrComplainant',
+                localKey: 'clientReferenceId',
+                foreignKey: 'complaintClientReferenceId',
+                type: NestedMappingType.one,
+              ),
+              'address': NestedFieldMapping(
+                table: 'address',
+                localKey: 'clientReferenceId',
+                foreignKey: 'relatedClientReferenceId',
+                type: NestedMappingType.many,
+              )
+            },
+          ),
+        ],
+        searchEntityRepository: context.read<SearchEntityRepository>(),
       ),
-      child: const AutoRouter(),
+      dynamicEntityModelListener: EntityModelMapMapper(),
     );
 
+    DataConverterSingleton()
+        .setData(dynamicEntityModelListener: EntityModelJsonMapper());
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) {
+            return CrudBloc(
+              service: CrudBlocSingleton().crudService,
+            );
+          },
+        ),
+        BlocProvider(
+          create: (context) {
+            return ComplaintWrapperBloc(
+                globalCrudBloc: context.read<CrudBloc>()
+                  ..add(const CrudEventInitialize()));
+          },
+        ),
+      ],
+      child: const AutoRouter(),
+    );
   }
 }

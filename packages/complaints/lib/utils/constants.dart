@@ -3,3 +3,12 @@ class Constants {
   static RegExp mobileNumberRegExp =
       RegExp(r'^(?=.{10}$)[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
 }
+
+const complaintKeys = ComplaintKeys();
+
+class ComplaintKeys {
+  const ComplaintKeys();
+  String get complaintForm => 'COMPLAINTFLOW';
+  String get primaryButtonKey => 'PrimaryButton';
+  String get title => 'title';
+}
