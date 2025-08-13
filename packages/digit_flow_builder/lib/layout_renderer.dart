@@ -135,6 +135,41 @@ class LayoutMapper {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    return WidgetRegistry.build(json, context, onAction);
+    // Ensure children get item + index from parent
+    final enrichedJson = _propagateListContext(json);
+
+    return WidgetRegistry.build(enrichedJson, context, onAction);
+  }
+
+  static Map<String, dynamic> _propagateListContext(Map<String, dynamic> json) {
+    final hasItem = json.containsKey('item');
+    final hasIndex = json.containsKey('__listIndex');
+
+    // Only merge into children if present
+    if (json.containsKey('children') && json['children'] is List) {
+      json = Map<String, dynamic>.from(json);
+      json['children'] = (json['children'] as List).map((child) {
+        if (child is Map<String, dynamic>) {
+          return {
+            ...child,
+            if (hasItem) 'item': json['item'],
+            if (hasIndex) '__listIndex': json['__listIndex'],
+          };
+        }
+        return child;
+      }).toList();
+    }
+
+    // Also handle a single 'child' property
+    if (json.containsKey('child') && json['child'] is Map<String, dynamic>) {
+      json = Map<String, dynamic>.from(json);
+      json['child'] = {
+        ...json['child'],
+        if (hasItem) 'item': json['item'],
+        if (hasIndex) '__listIndex': json['__listIndex'],
+      };
+    }
+
+    return json;
   }
 }
