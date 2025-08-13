@@ -271,8 +271,9 @@ final List<Map<String, dynamic>> sampleFlows = [
       },
       {
         "format": "listView",
-        "hidden": "stateWrapper.empty",
-        "fieldName": "listRender",
+        "hidden": "{{ context.household.empty }}",
+        "fieldName": "listView",
+        "data": "{{ context.household }}",
         "child": {
           "format": "card",
           "children": [
@@ -282,7 +283,10 @@ final List<Map<String, dynamic>> sampleFlows = [
                 {
                   "format": "row",
                   "children": [
-                    {"format": "text", "value": "stateWrapper.headOfName"},
+                    {
+                      "format": "text",
+                      "value": "{{ context.headOfHousehold.name.givenName }}"
+                    },
                     {
                       "format": "button",
                       "label": "Open",
@@ -299,7 +303,10 @@ final List<Map<String, dynamic>> sampleFlows = [
                 {
                   "format": "column",
                   "children": [
-                    {"format": "text", "value": "{{item.address}}"},
+                    {
+                      "format": "text",
+                      "value": "{{ context.members.isHeadOfHousehold }}"
+                    },
                     {
                       "format": "button",
                       "label": "View",
@@ -320,12 +327,12 @@ final List<Map<String, dynamic>> sampleFlows = [
                         {"label": "Task", "key": "taskName"},
                         {"label": "Status", "key": "taskStatus"}
                       ],
-                      "data": "{{stateWrapper.household}}"
+                      "data": "{{ context.tasks }}"
                     },
                     {
                       "format": "tag",
                       "type": "item.status",
-                      "label": "{{item.status}}"
+                      "label": "{{ item.status }}"
                     }
                   ]
                 }
