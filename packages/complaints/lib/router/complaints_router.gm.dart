@@ -8,30 +8,33 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i12;
-import 'package:complaints/blocs/localization/app_localization.dart' as _i14;
-import 'package:complaints/models/pgr_complaints.dart' as _i15;
+import 'package:auto_route/auto_route.dart' as _i13;
+import 'package:complaints/blocs/localization/app_localization.dart' as _i15;
+import 'package:complaints/models/pgr_complaints.dart' as _i16;
 import 'package:complaints/pages/complaints_acknowledgement.dart' as _i2;
 import 'package:complaints/pages/inbox/complaints_details_view.dart' as _i4;
-import 'package:complaints/pages/inbox/complaints_inbox.dart' as _i6;
-import 'package:complaints/pages/inbox/complaints_inbox_filter.dart' as _i5;
-import 'package:complaints/pages/inbox/complaints_inbox_search.dart' as _i7;
-import 'package:complaints/pages/inbox/complaints_inbox_sort.dart' as _i8;
-import 'package:complaints/pages/inbox/complaints_inbox_wrapper.dart' as _i9;
+import 'package:complaints/pages/inbox/complaints_inbox.dart' as _i7;
+import 'package:complaints/pages/inbox/complaints_inbox_dialog.dart' as _i5;
+import 'package:complaints/pages/inbox/complaints_inbox_filter.dart' as _i6;
+import 'package:complaints/pages/inbox/complaints_inbox_search.dart' as _i8;
+import 'package:complaints/pages/inbox/complaints_inbox_sort.dart' as _i9;
+import 'package:complaints/pages/inbox/complaints_inbox_wrapper.dart' as _i10;
 import 'package:complaints/pages/registration/complaint_type.dart' as _i1;
 import 'package:complaints/pages/registration/complaints_details.dart' as _i3;
-import 'package:complaints/pages/registration/complaints_location.dart' as _i10;
+import 'package:complaints/pages/registration/complaints_location.dart' as _i11;
 import 'package:complaints/pages/registration/complaints_registration_wrapper.dart'
-    as _i11;
-import 'package:flutter/material.dart' as _i13;
+    as _i12;
+import 'package:complaints/utils/constants.dart' as _i17;
+import 'package:flutter/material.dart' as _i14;
+import 'package:reactive_forms/reactive_forms.dart' as _i18;
 
-abstract class $ComplaintsRoute extends _i12.AutoRouterModule {
+abstract class $ComplaintsRoute extends _i13.AutoRouterModule {
   @override
-  final Map<String, _i12.PageFactory> pagesMap = {
+  final Map<String, _i13.PageFactory> pagesMap = {
     ComplaintTypeRoute.name: (routeData) {
       final args = routeData.argsAs<ComplaintTypeRouteArgs>(
           orElse: () => const ComplaintTypeRouteArgs());
-      return _i12.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i1.ComplaintTypePage(
           key: args.key,
@@ -42,7 +45,7 @@ abstract class $ComplaintsRoute extends _i12.AutoRouterModule {
     ComplaintsAcknowledgementRoute.name: (routeData) {
       final args = routeData.argsAs<ComplaintsAcknowledgementRouteArgs>(
           orElse: () => const ComplaintsAcknowledgementRouteArgs());
-      return _i12.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i2.ComplaintsAcknowledgementPage(
           key: args.key,
@@ -53,7 +56,7 @@ abstract class $ComplaintsRoute extends _i12.AutoRouterModule {
     ComplaintsDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<ComplaintsDetailsRouteArgs>(
           orElse: () => const ComplaintsDetailsRouteArgs());
-      return _i12.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i3.ComplaintsDetailsPage(
           key: args.key,
@@ -63,7 +66,7 @@ abstract class $ComplaintsRoute extends _i12.AutoRouterModule {
     },
     ComplaintsDetailsViewRoute.name: (routeData) {
       final args = routeData.argsAs<ComplaintsDetailsViewRouteArgs>();
-      return _i12.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i4.ComplaintsDetailsViewPage(
           key: args.key,
@@ -71,12 +74,27 @@ abstract class $ComplaintsRoute extends _i12.AutoRouterModule {
         ),
       );
     },
+    ComplaintsInboxDialogRoute.name: (routeData) {
+      final args = routeData.argsAs<ComplaintsInboxDialogRouteArgs>();
+      return _i13.AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: _i5.ComplaintsInboxDialogPage(
+          key: args.key,
+          type: args.type,
+          buildForm: args.buildForm,
+          buildFields: args.buildFields,
+          titleKey: args.titleKey,
+          ctaKey: args.ctaKey,
+          onSubmit: args.onSubmit,
+        ),
+      );
+    },
     ComplaintsInboxFilterRoute.name: (routeData) {
       final args = routeData.argsAs<ComplaintsInboxFilterRouteArgs>(
           orElse: () => const ComplaintsInboxFilterRouteArgs());
-      return _i12.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i5.ComplaintsInboxFilterPage(
+        child: _i6.ComplaintsInboxFilterPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -85,9 +103,9 @@ abstract class $ComplaintsRoute extends _i12.AutoRouterModule {
     ComplaintsInboxRoute.name: (routeData) {
       final args = routeData.argsAs<ComplaintsInboxRouteArgs>(
           orElse: () => const ComplaintsInboxRouteArgs());
-      return _i12.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i6.ComplaintsInboxPage(
+        child: _i7.ComplaintsInboxPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -96,9 +114,9 @@ abstract class $ComplaintsRoute extends _i12.AutoRouterModule {
     ComplaintsInboxSearchRoute.name: (routeData) {
       final args = routeData.argsAs<ComplaintsInboxSearchRouteArgs>(
           orElse: () => const ComplaintsInboxSearchRouteArgs());
-      return _i12.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i7.ComplaintsInboxSearchPage(
+        child: _i8.ComplaintsInboxSearchPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -107,26 +125,26 @@ abstract class $ComplaintsRoute extends _i12.AutoRouterModule {
     ComplaintsInboxSortRoute.name: (routeData) {
       final args = routeData.argsAs<ComplaintsInboxSortRouteArgs>(
           orElse: () => const ComplaintsInboxSortRouteArgs());
-      return _i12.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i8.ComplaintsInboxSortPage(
+        child: _i9.ComplaintsInboxSortPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
       );
     },
     ComplaintsInboxWrapperRoute.name: (routeData) {
-      return _i12.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i9.ComplaintsInboxWrapperPage(),
+        child: const _i10.ComplaintsInboxWrapperPage(),
       );
     },
     ComplaintsLocationRoute.name: (routeData) {
       final args = routeData.argsAs<ComplaintsLocationRouteArgs>(
           orElse: () => const ComplaintsLocationRouteArgs());
-      return _i12.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i10.ComplaintsLocationPage(
+        child: _i11.ComplaintsLocationPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -135,10 +153,10 @@ abstract class $ComplaintsRoute extends _i12.AutoRouterModule {
     ComplaintsRegistrationWrapperRoute.name: (routeData) {
       final args = routeData.argsAs<ComplaintsRegistrationWrapperRouteArgs>(
           orElse: () => const ComplaintsRegistrationWrapperRouteArgs());
-      return _i12.AutoRoutePage<dynamic>(
+      return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i12.WrappedRoute(
-            child: _i11.ComplaintsRegistrationWrapperPage(
+        child: _i13.WrappedRoute(
+            child: _i12.ComplaintsRegistrationWrapperPage(
           key: args.key,
           pgrServiceModel: args.pgrServiceModel,
         )),
@@ -149,11 +167,11 @@ abstract class $ComplaintsRoute extends _i12.AutoRouterModule {
 
 /// generated route for
 /// [_i1.ComplaintTypePage]
-class ComplaintTypeRoute extends _i12.PageRouteInfo<ComplaintTypeRouteArgs> {
+class ComplaintTypeRoute extends _i13.PageRouteInfo<ComplaintTypeRouteArgs> {
   ComplaintTypeRoute({
-    _i13.Key? key,
-    _i14.ComplaintsLocalization? appLocalizations,
-    List<_i12.PageRouteInfo>? children,
+    _i14.Key? key,
+    _i15.ComplaintsLocalization? appLocalizations,
+    List<_i13.PageRouteInfo>? children,
   }) : super(
           ComplaintTypeRoute.name,
           args: ComplaintTypeRouteArgs(
@@ -165,8 +183,8 @@ class ComplaintTypeRoute extends _i12.PageRouteInfo<ComplaintTypeRouteArgs> {
 
   static const String name = 'ComplaintTypeRoute';
 
-  static const _i12.PageInfo<ComplaintTypeRouteArgs> page =
-      _i12.PageInfo<ComplaintTypeRouteArgs>(name);
+  static const _i13.PageInfo<ComplaintTypeRouteArgs> page =
+      _i13.PageInfo<ComplaintTypeRouteArgs>(name);
 }
 
 class ComplaintTypeRouteArgs {
@@ -175,9 +193,9 @@ class ComplaintTypeRouteArgs {
     this.appLocalizations,
   });
 
-  final _i13.Key? key;
+  final _i14.Key? key;
 
-  final _i14.ComplaintsLocalization? appLocalizations;
+  final _i15.ComplaintsLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -188,11 +206,11 @@ class ComplaintTypeRouteArgs {
 /// generated route for
 /// [_i2.ComplaintsAcknowledgementPage]
 class ComplaintsAcknowledgementRoute
-    extends _i12.PageRouteInfo<ComplaintsAcknowledgementRouteArgs> {
+    extends _i13.PageRouteInfo<ComplaintsAcknowledgementRouteArgs> {
   ComplaintsAcknowledgementRoute({
-    _i13.Key? key,
-    _i14.ComplaintsLocalization? appLocalizations,
-    List<_i12.PageRouteInfo>? children,
+    _i14.Key? key,
+    _i15.ComplaintsLocalization? appLocalizations,
+    List<_i13.PageRouteInfo>? children,
   }) : super(
           ComplaintsAcknowledgementRoute.name,
           args: ComplaintsAcknowledgementRouteArgs(
@@ -204,8 +222,8 @@ class ComplaintsAcknowledgementRoute
 
   static const String name = 'ComplaintsAcknowledgementRoute';
 
-  static const _i12.PageInfo<ComplaintsAcknowledgementRouteArgs> page =
-      _i12.PageInfo<ComplaintsAcknowledgementRouteArgs>(name);
+  static const _i13.PageInfo<ComplaintsAcknowledgementRouteArgs> page =
+      _i13.PageInfo<ComplaintsAcknowledgementRouteArgs>(name);
 }
 
 class ComplaintsAcknowledgementRouteArgs {
@@ -214,9 +232,9 @@ class ComplaintsAcknowledgementRouteArgs {
     this.appLocalizations,
   });
 
-  final _i13.Key? key;
+  final _i14.Key? key;
 
-  final _i14.ComplaintsLocalization? appLocalizations;
+  final _i15.ComplaintsLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -227,11 +245,11 @@ class ComplaintsAcknowledgementRouteArgs {
 /// generated route for
 /// [_i3.ComplaintsDetailsPage]
 class ComplaintsDetailsRoute
-    extends _i12.PageRouteInfo<ComplaintsDetailsRouteArgs> {
+    extends _i13.PageRouteInfo<ComplaintsDetailsRouteArgs> {
   ComplaintsDetailsRoute({
-    _i13.Key? key,
-    _i14.ComplaintsLocalization? appLocalizations,
-    List<_i12.PageRouteInfo>? children,
+    _i14.Key? key,
+    _i15.ComplaintsLocalization? appLocalizations,
+    List<_i13.PageRouteInfo>? children,
   }) : super(
           ComplaintsDetailsRoute.name,
           args: ComplaintsDetailsRouteArgs(
@@ -243,8 +261,8 @@ class ComplaintsDetailsRoute
 
   static const String name = 'ComplaintsDetailsRoute';
 
-  static const _i12.PageInfo<ComplaintsDetailsRouteArgs> page =
-      _i12.PageInfo<ComplaintsDetailsRouteArgs>(name);
+  static const _i13.PageInfo<ComplaintsDetailsRouteArgs> page =
+      _i13.PageInfo<ComplaintsDetailsRouteArgs>(name);
 }
 
 class ComplaintsDetailsRouteArgs {
@@ -253,9 +271,9 @@ class ComplaintsDetailsRouteArgs {
     this.appLocalizations,
   });
 
-  final _i13.Key? key;
+  final _i14.Key? key;
 
-  final _i14.ComplaintsLocalization? appLocalizations;
+  final _i15.ComplaintsLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -266,11 +284,11 @@ class ComplaintsDetailsRouteArgs {
 /// generated route for
 /// [_i4.ComplaintsDetailsViewPage]
 class ComplaintsDetailsViewRoute
-    extends _i12.PageRouteInfo<ComplaintsDetailsViewRouteArgs> {
+    extends _i13.PageRouteInfo<ComplaintsDetailsViewRouteArgs> {
   ComplaintsDetailsViewRoute({
-    _i13.Key? key,
-    required _i15.PgrServiceModel complaint,
-    List<_i12.PageRouteInfo>? children,
+    _i14.Key? key,
+    required _i16.PgrServiceModel complaint,
+    List<_i13.PageRouteInfo>? children,
   }) : super(
           ComplaintsDetailsViewRoute.name,
           args: ComplaintsDetailsViewRouteArgs(
@@ -282,8 +300,8 @@ class ComplaintsDetailsViewRoute
 
   static const String name = 'ComplaintsDetailsViewRoute';
 
-  static const _i12.PageInfo<ComplaintsDetailsViewRouteArgs> page =
-      _i12.PageInfo<ComplaintsDetailsViewRouteArgs>(name);
+  static const _i13.PageInfo<ComplaintsDetailsViewRouteArgs> page =
+      _i13.PageInfo<ComplaintsDetailsViewRouteArgs>(name);
 }
 
 class ComplaintsDetailsViewRouteArgs {
@@ -292,9 +310,9 @@ class ComplaintsDetailsViewRouteArgs {
     required this.complaint,
   });
 
-  final _i13.Key? key;
+  final _i14.Key? key;
 
-  final _i15.PgrServiceModel complaint;
+  final _i16.PgrServiceModel complaint;
 
   @override
   String toString() {
@@ -303,13 +321,89 @@ class ComplaintsDetailsViewRouteArgs {
 }
 
 /// generated route for
-/// [_i5.ComplaintsInboxFilterPage]
+/// [_i5.ComplaintsInboxDialogPage]
+class ComplaintsInboxDialogRoute
+    extends _i13.PageRouteInfo<ComplaintsInboxDialogRouteArgs> {
+  ComplaintsInboxDialogRoute({
+    _i14.Key? key,
+    required _i17.ComplaintsInboxDialogType type,
+    required _i18.FormGroup Function() buildForm,
+    required _i14.Widget Function(
+      _i14.BuildContext,
+      _i18.FormGroup,
+    ) buildFields,
+    required String titleKey,
+    required String ctaKey,
+    required void Function(
+      _i14.BuildContext,
+      _i18.FormGroup,
+    ) onSubmit,
+    List<_i13.PageRouteInfo>? children,
+  }) : super(
+          ComplaintsInboxDialogRoute.name,
+          args: ComplaintsInboxDialogRouteArgs(
+            key: key,
+            type: type,
+            buildForm: buildForm,
+            buildFields: buildFields,
+            titleKey: titleKey,
+            ctaKey: ctaKey,
+            onSubmit: onSubmit,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ComplaintsInboxDialogRoute';
+
+  static const _i13.PageInfo<ComplaintsInboxDialogRouteArgs> page =
+      _i13.PageInfo<ComplaintsInboxDialogRouteArgs>(name);
+}
+
+class ComplaintsInboxDialogRouteArgs {
+  const ComplaintsInboxDialogRouteArgs({
+    this.key,
+    required this.type,
+    required this.buildForm,
+    required this.buildFields,
+    required this.titleKey,
+    required this.ctaKey,
+    required this.onSubmit,
+  });
+
+  final _i14.Key? key;
+
+  final _i17.ComplaintsInboxDialogType type;
+
+  final _i18.FormGroup Function() buildForm;
+
+  final _i14.Widget Function(
+    _i14.BuildContext,
+    _i18.FormGroup,
+  ) buildFields;
+
+  final String titleKey;
+
+  final String ctaKey;
+
+  final void Function(
+    _i14.BuildContext,
+    _i18.FormGroup,
+  ) onSubmit;
+
+  @override
+  String toString() {
+    return 'ComplaintsInboxDialogRouteArgs{key: $key, type: $type, buildForm: $buildForm, buildFields: $buildFields, titleKey: $titleKey, ctaKey: $ctaKey, onSubmit: $onSubmit}';
+  }
+}
+
+/// generated route for
+/// [_i6.ComplaintsInboxFilterPage]
 class ComplaintsInboxFilterRoute
-    extends _i12.PageRouteInfo<ComplaintsInboxFilterRouteArgs> {
+    extends _i13.PageRouteInfo<ComplaintsInboxFilterRouteArgs> {
   ComplaintsInboxFilterRoute({
-    _i13.Key? key,
-    _i14.ComplaintsLocalization? appLocalizations,
-    List<_i12.PageRouteInfo>? children,
+    _i14.Key? key,
+    _i15.ComplaintsLocalization? appLocalizations,
+    List<_i13.PageRouteInfo>? children,
   }) : super(
           ComplaintsInboxFilterRoute.name,
           args: ComplaintsInboxFilterRouteArgs(
@@ -321,8 +415,8 @@ class ComplaintsInboxFilterRoute
 
   static const String name = 'ComplaintsInboxFilterRoute';
 
-  static const _i12.PageInfo<ComplaintsInboxFilterRouteArgs> page =
-      _i12.PageInfo<ComplaintsInboxFilterRouteArgs>(name);
+  static const _i13.PageInfo<ComplaintsInboxFilterRouteArgs> page =
+      _i13.PageInfo<ComplaintsInboxFilterRouteArgs>(name);
 }
 
 class ComplaintsInboxFilterRouteArgs {
@@ -331,9 +425,9 @@ class ComplaintsInboxFilterRouteArgs {
     this.appLocalizations,
   });
 
-  final _i13.Key? key;
+  final _i14.Key? key;
 
-  final _i14.ComplaintsLocalization? appLocalizations;
+  final _i15.ComplaintsLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -342,13 +436,13 @@ class ComplaintsInboxFilterRouteArgs {
 }
 
 /// generated route for
-/// [_i6.ComplaintsInboxPage]
+/// [_i7.ComplaintsInboxPage]
 class ComplaintsInboxRoute
-    extends _i12.PageRouteInfo<ComplaintsInboxRouteArgs> {
+    extends _i13.PageRouteInfo<ComplaintsInboxRouteArgs> {
   ComplaintsInboxRoute({
-    _i13.Key? key,
-    _i14.ComplaintsLocalization? appLocalizations,
-    List<_i12.PageRouteInfo>? children,
+    _i14.Key? key,
+    _i15.ComplaintsLocalization? appLocalizations,
+    List<_i13.PageRouteInfo>? children,
   }) : super(
           ComplaintsInboxRoute.name,
           args: ComplaintsInboxRouteArgs(
@@ -360,8 +454,8 @@ class ComplaintsInboxRoute
 
   static const String name = 'ComplaintsInboxRoute';
 
-  static const _i12.PageInfo<ComplaintsInboxRouteArgs> page =
-      _i12.PageInfo<ComplaintsInboxRouteArgs>(name);
+  static const _i13.PageInfo<ComplaintsInboxRouteArgs> page =
+      _i13.PageInfo<ComplaintsInboxRouteArgs>(name);
 }
 
 class ComplaintsInboxRouteArgs {
@@ -370,9 +464,9 @@ class ComplaintsInboxRouteArgs {
     this.appLocalizations,
   });
 
-  final _i13.Key? key;
+  final _i14.Key? key;
 
-  final _i14.ComplaintsLocalization? appLocalizations;
+  final _i15.ComplaintsLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -381,13 +475,13 @@ class ComplaintsInboxRouteArgs {
 }
 
 /// generated route for
-/// [_i7.ComplaintsInboxSearchPage]
+/// [_i8.ComplaintsInboxSearchPage]
 class ComplaintsInboxSearchRoute
-    extends _i12.PageRouteInfo<ComplaintsInboxSearchRouteArgs> {
+    extends _i13.PageRouteInfo<ComplaintsInboxSearchRouteArgs> {
   ComplaintsInboxSearchRoute({
-    _i13.Key? key,
-    _i14.ComplaintsLocalization? appLocalizations,
-    List<_i12.PageRouteInfo>? children,
+    _i14.Key? key,
+    _i15.ComplaintsLocalization? appLocalizations,
+    List<_i13.PageRouteInfo>? children,
   }) : super(
           ComplaintsInboxSearchRoute.name,
           args: ComplaintsInboxSearchRouteArgs(
@@ -399,8 +493,8 @@ class ComplaintsInboxSearchRoute
 
   static const String name = 'ComplaintsInboxSearchRoute';
 
-  static const _i12.PageInfo<ComplaintsInboxSearchRouteArgs> page =
-      _i12.PageInfo<ComplaintsInboxSearchRouteArgs>(name);
+  static const _i13.PageInfo<ComplaintsInboxSearchRouteArgs> page =
+      _i13.PageInfo<ComplaintsInboxSearchRouteArgs>(name);
 }
 
 class ComplaintsInboxSearchRouteArgs {
@@ -409,9 +503,9 @@ class ComplaintsInboxSearchRouteArgs {
     this.appLocalizations,
   });
 
-  final _i13.Key? key;
+  final _i14.Key? key;
 
-  final _i14.ComplaintsLocalization? appLocalizations;
+  final _i15.ComplaintsLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -420,13 +514,13 @@ class ComplaintsInboxSearchRouteArgs {
 }
 
 /// generated route for
-/// [_i8.ComplaintsInboxSortPage]
+/// [_i9.ComplaintsInboxSortPage]
 class ComplaintsInboxSortRoute
-    extends _i12.PageRouteInfo<ComplaintsInboxSortRouteArgs> {
+    extends _i13.PageRouteInfo<ComplaintsInboxSortRouteArgs> {
   ComplaintsInboxSortRoute({
-    _i13.Key? key,
-    _i14.ComplaintsLocalization? appLocalizations,
-    List<_i12.PageRouteInfo>? children,
+    _i14.Key? key,
+    _i15.ComplaintsLocalization? appLocalizations,
+    List<_i13.PageRouteInfo>? children,
   }) : super(
           ComplaintsInboxSortRoute.name,
           args: ComplaintsInboxSortRouteArgs(
@@ -438,8 +532,8 @@ class ComplaintsInboxSortRoute
 
   static const String name = 'ComplaintsInboxSortRoute';
 
-  static const _i12.PageInfo<ComplaintsInboxSortRouteArgs> page =
-      _i12.PageInfo<ComplaintsInboxSortRouteArgs>(name);
+  static const _i13.PageInfo<ComplaintsInboxSortRouteArgs> page =
+      _i13.PageInfo<ComplaintsInboxSortRouteArgs>(name);
 }
 
 class ComplaintsInboxSortRouteArgs {
@@ -448,9 +542,9 @@ class ComplaintsInboxSortRouteArgs {
     this.appLocalizations,
   });
 
-  final _i13.Key? key;
+  final _i14.Key? key;
 
-  final _i14.ComplaintsLocalization? appLocalizations;
+  final _i15.ComplaintsLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -459,9 +553,9 @@ class ComplaintsInboxSortRouteArgs {
 }
 
 /// generated route for
-/// [_i9.ComplaintsInboxWrapperPage]
-class ComplaintsInboxWrapperRoute extends _i12.PageRouteInfo<void> {
-  const ComplaintsInboxWrapperRoute({List<_i12.PageRouteInfo>? children})
+/// [_i10.ComplaintsInboxWrapperPage]
+class ComplaintsInboxWrapperRoute extends _i13.PageRouteInfo<void> {
+  const ComplaintsInboxWrapperRoute({List<_i13.PageRouteInfo>? children})
       : super(
           ComplaintsInboxWrapperRoute.name,
           initialChildren: children,
@@ -469,17 +563,17 @@ class ComplaintsInboxWrapperRoute extends _i12.PageRouteInfo<void> {
 
   static const String name = 'ComplaintsInboxWrapperRoute';
 
-  static const _i12.PageInfo<void> page = _i12.PageInfo<void>(name);
+  static const _i13.PageInfo<void> page = _i13.PageInfo<void>(name);
 }
 
 /// generated route for
-/// [_i10.ComplaintsLocationPage]
+/// [_i11.ComplaintsLocationPage]
 class ComplaintsLocationRoute
-    extends _i12.PageRouteInfo<ComplaintsLocationRouteArgs> {
+    extends _i13.PageRouteInfo<ComplaintsLocationRouteArgs> {
   ComplaintsLocationRoute({
-    _i13.Key? key,
-    _i14.ComplaintsLocalization? appLocalizations,
-    List<_i12.PageRouteInfo>? children,
+    _i14.Key? key,
+    _i15.ComplaintsLocalization? appLocalizations,
+    List<_i13.PageRouteInfo>? children,
   }) : super(
           ComplaintsLocationRoute.name,
           args: ComplaintsLocationRouteArgs(
@@ -491,8 +585,8 @@ class ComplaintsLocationRoute
 
   static const String name = 'ComplaintsLocationRoute';
 
-  static const _i12.PageInfo<ComplaintsLocationRouteArgs> page =
-      _i12.PageInfo<ComplaintsLocationRouteArgs>(name);
+  static const _i13.PageInfo<ComplaintsLocationRouteArgs> page =
+      _i13.PageInfo<ComplaintsLocationRouteArgs>(name);
 }
 
 class ComplaintsLocationRouteArgs {
@@ -501,9 +595,9 @@ class ComplaintsLocationRouteArgs {
     this.appLocalizations,
   });
 
-  final _i13.Key? key;
+  final _i14.Key? key;
 
-  final _i14.ComplaintsLocalization? appLocalizations;
+  final _i15.ComplaintsLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -512,13 +606,13 @@ class ComplaintsLocationRouteArgs {
 }
 
 /// generated route for
-/// [_i11.ComplaintsRegistrationWrapperPage]
+/// [_i12.ComplaintsRegistrationWrapperPage]
 class ComplaintsRegistrationWrapperRoute
-    extends _i12.PageRouteInfo<ComplaintsRegistrationWrapperRouteArgs> {
+    extends _i13.PageRouteInfo<ComplaintsRegistrationWrapperRouteArgs> {
   ComplaintsRegistrationWrapperRoute({
-    _i13.Key? key,
-    _i15.PgrServiceModel? pgrServiceModel,
-    List<_i12.PageRouteInfo>? children,
+    _i14.Key? key,
+    _i16.PgrServiceModel? pgrServiceModel,
+    List<_i13.PageRouteInfo>? children,
   }) : super(
           ComplaintsRegistrationWrapperRoute.name,
           args: ComplaintsRegistrationWrapperRouteArgs(
@@ -530,8 +624,8 @@ class ComplaintsRegistrationWrapperRoute
 
   static const String name = 'ComplaintsRegistrationWrapperRoute';
 
-  static const _i12.PageInfo<ComplaintsRegistrationWrapperRouteArgs> page =
-      _i12.PageInfo<ComplaintsRegistrationWrapperRouteArgs>(name);
+  static const _i13.PageInfo<ComplaintsRegistrationWrapperRouteArgs> page =
+      _i13.PageInfo<ComplaintsRegistrationWrapperRouteArgs>(name);
 }
 
 class ComplaintsRegistrationWrapperRouteArgs {
@@ -540,9 +634,9 @@ class ComplaintsRegistrationWrapperRouteArgs {
     this.pgrServiceModel,
   });
 
-  final _i13.Key? key;
+  final _i14.Key? key;
 
-  final _i15.PgrServiceModel? pgrServiceModel;
+  final _i16.PgrServiceModel? pgrServiceModel;
 
   @override
   String toString() {

@@ -22,7 +22,13 @@ class ComplaintsInboxWrapperPage extends StatelessWidget {
     CrudBlocSingleton().setData(
       crudService: DigitCrudService(
         context: context,
-        relationshipMap: [],
+        relationshipMap: [
+          const RelationshipMapping(
+              from: 'pgrComplainant',
+              to: 'pgrService',
+              localKey: 'complaintClientReferenceId',
+              foreignKey: 'clientReferenceId'),
+        ],
         nestedModelMappings: [
           const NestedModelMapping(
             rootModel: 'pgrService',
@@ -37,7 +43,7 @@ class ComplaintsInboxWrapperPage extends StatelessWidget {
                 table: 'address',
                 localKey: 'clientReferenceId',
                 foreignKey: 'relatedClientReferenceId',
-                type: NestedMappingType.many,
+                type: NestedMappingType.one,
               )
             },
           ),

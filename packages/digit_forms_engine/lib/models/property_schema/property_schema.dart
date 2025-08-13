@@ -52,8 +52,10 @@ class PropertySchema with _$PropertySchema {
     List<ValidationRule>? validations,
     bool? includeInForm,
     bool? includeInSummary,
-    NavigateToConfig? navigateTo,
+    @JsonKey(fromJson: _navigateToConfigOrNull) NavigateToConfig? navigateTo,
+    @JsonKey(fromJson: _visibilityConditionOrNull)
     VisibilityCondition? visibilityCondition,
+    @JsonKey(fromJson: _conditionalNavigateListOrNull)
     List<ConditionalNavigateTo>? conditionalNavigateTo,
   }) = _PropertySchema;
 
@@ -129,6 +131,37 @@ class ConditionalNavigateTo with _$ConditionalNavigateTo {
 
 String? _stringOrNull(dynamic value) {
   return value is String ? value : null;
+}
+
+NavigateToConfig? _navigateToConfigOrNull(dynamic value) {
+  if (value is Map && value.isEmpty) {
+    return null; // Treat {} as null
+  }
+  if (value is Map<String, dynamic>) {
+    return NavigateToConfig.fromJson(value);
+  }
+  return null;
+}
+
+VisibilityCondition? _visibilityConditionOrNull(dynamic value) {
+  if (value is Map && value.isEmpty) {
+    return null;
+  }
+  if (value is Map<String, dynamic>) {
+    return VisibilityCondition.fromJson(value);
+  }
+  return null;
+}
+
+List<ConditionalNavigateTo>? _conditionalNavigateListOrNull(dynamic value) {
+  if (value is List) {
+    if (value.isEmpty) return null;
+    return value
+        .whereType<Map<String, dynamic>>() // ignore nulls / wrong types
+        .map((map) => ConditionalNavigateTo.fromJson(map))
+        .toList();
+  }
+  return null;
 }
 
 enum FormulaBehavior { show, hide }

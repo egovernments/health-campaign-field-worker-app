@@ -1,13 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 
+import '../pages/inbox/complaints_inbox_dialog.dart';
 import 'complaints_router.gm.dart';
 
 /// Complaint Inbox and registration Router
 @AutoRouterConfig.module()
 class ComplaintsRoute extends $ComplaintsRoute {
-
   RouteType get defaultRouteType => const RouteType.material();
-
 
   List<AutoRoute> routes = [
     /// Complaints Inbox
@@ -19,6 +18,9 @@ class ComplaintsRoute extends $ComplaintsRoute {
           page: ComplaintsInboxRoute.page,
           path: 'complaints-inbox-items',
           initial: true,
+        ),
+        AutoRoute(
+          page: ComplaintsInboxDialogRoute.page,
         ),
         AutoRoute(
           page: ComplaintsInboxFilterRoute.page,
@@ -57,7 +59,6 @@ class ComplaintsRoute extends $ComplaintsRoute {
           page: ComplaintsDetailsRoute.page,
           path: 'complaints-details',
         ),
-
       ],
     ),
 
@@ -66,6 +67,5 @@ class ComplaintsRoute extends $ComplaintsRoute {
       page: ComplaintsAcknowledgementRoute.page,
       path: 'complaints-acknowledgement',
     ),
-
   ];
 }

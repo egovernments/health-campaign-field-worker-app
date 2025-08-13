@@ -52,18 +52,11 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
           .toList(),
       includeInForm: json['includeInForm'] as bool?,
       includeInSummary: json['includeInSummary'] as bool?,
-      navigateTo: json['navigateTo'] == null
-          ? null
-          : NavigateToConfig.fromJson(
-              json['navigateTo'] as Map<String, dynamic>),
-      visibilityCondition: json['visibilityCondition'] == null
-          ? null
-          : VisibilityCondition.fromJson(
-              json['visibilityCondition'] as Map<String, dynamic>),
-      conditionalNavigateTo: (json['conditionalNavigateTo'] as List<dynamic>?)
-          ?.map(
-              (e) => ConditionalNavigateTo.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      navigateTo: _navigateToConfigOrNull(json['navigateTo']),
+      visibilityCondition:
+          _visibilityConditionOrNull(json['visibilityCondition']),
+      conditionalNavigateTo:
+          _conditionalNavigateListOrNull(json['conditionalNavigateTo']),
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
