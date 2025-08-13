@@ -551,7 +551,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             isTriggerLocalisation = false;
 
 //sample
-            // TODO:: I need to add here
+            // DEBUG:: sample , hardcoded json config for initial development
 
             // const schemaJsonRaw = sample;
 

@@ -116,7 +116,6 @@ class _SearchReferralReconciliationsPageState
             createState.lastAction ==
                 HFReferalWrapperActionType.createAndUpdate) {
           Navigator.of(context, rootNavigator: true).pop();
-          final householdModel = createState.hFReferalMembers ?? [];
 
           final currentSchema = context
               .read<FormsBloc>()
@@ -234,22 +233,10 @@ class _SearchReferralReconciliationsPageState
             try {
               final formEntityMapper = FormEntityMapper(config: jsonConfig);
 
-              // final householdMember =
-              //     blocWrapper.state.householdMembers.firstOrNull;
-              // final household = householdMember?.household;
-              // final projectBeneficiary =
-              //     householdMember?.projectBeneficiaries?.firstOrNull;
-
-              // final individual = householdMember?.individuals?.firstOrNull;
-
-              // final member = householdMember?.members?.firstOrNull;
-
               final modelsConfig =
                   (jsonConfig['referral']?['models'] as Map<String, dynamic>);
 
               try {
-                print("object");
-                print(ReferralReconSingleton().userUUid);
                 final entities = formEntityMapper.mapFormToEntities(
                   modelsConfig: modelsConfig,
                   formValues: formData,
@@ -564,57 +551,7 @@ class _SearchReferralReconciliationsPageState
           onPressed: () {
             FocusManager.instance.primaryFocus?.unfocus();
             final bloc = context.read<SearchReferralsBloc>();
-            //TODO: commmented for now
 
-            // context.router.push(
-            // HFCreateReferralWrapperRoute(
-            //   viewOnly: false,
-            //   referralReconciliation: HFReferralModel(
-            //     clientReferenceId: IdGen.i.identifier,
-            //     //TODO:: need to change
-            //     name: "state.searchQuery",
-            //     beneficiaryId: "state.tag",
-            //   ),
-            //   projectId: ReferralReconSingleton().projectId,
-            //   cycles: ReferralReconSingleton().cycles,
-            //   onInitComplete: (ctx) {
-            //     final pageName = ctx
-            //         .read<FormsBloc>()
-            //         .state
-            //         .cachedSchemas['HFREFERALFLOW']
-            //         ?.pages
-            //         .entries
-            //         .first
-            //         .key;
-
-            //     if (pageName == null) {
-            //       Toast.showToast(
-            //         ctx,
-            //         message: localizations
-            //             .translate('NO_FORM_FOUND_FOR_HFREFERALFLOW'),
-            //         type: ToastType.error,
-            //       );
-            //       return;
-            //     }
-
-            //     ctx.router.push(
-            //       FormsRenderRoute(
-            //           currentSchemaKey: 'HFREFERALFLOW',
-            //           pageName: pageName,
-            //           defaultValues: {
-            //             'administrativeUnitKey': localizations.translate(
-            //               ReferralReconSingleton().boundary?.code ?? '',
-            //             ),
-            //           },
-            //           customComponents: const [
-            //             {'cycle': CycleDropDown()},
-            //             {'evaluationFacilityKey': EvaluationKeyDropDown()}
-            //           ]),
-            //     );
-            //   },
-            // ),
-
-            // );
             final pageName = context
                 .read<FormsBloc>()
                 .state
@@ -675,16 +612,6 @@ class _SearchReferralReconciliationsPageState
             //TODO: need to do
             /// selectedFilters = [];
             searchController.clear();
-            // Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (context) => const DigitScannerPage(
-            //       quantity: 1,
-            //       isGS1code: false,
-            //       singleValue: true,
-            //     ),
-            //     settings: const RouteSettings(name: '/qr-scanner'),
-            //   ),
-            // );
 
             context.read<DigitScannerBloc>().add(
                   const DigitScannerEvent.handleScanner(),

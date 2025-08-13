@@ -62,11 +62,11 @@ final jsonConfig = {
             "boundaryCode": "facilityDetails.administrativeUnitKey",
             "referralCycle": "referralDetails.referralCycle",
             "gender": "referralDetails.gender",
-            "age": "referralDetails.age",
+            "ageInMonths": "referralDetails.ageInMonths",
             "nameOfReferral": "referralDetails.nameOfChild",
             "dateOfEvaluation": "facilityDetails.dateOfEvaluation",
             "referredBy": "facilityDetails.referredByKey",
-            "hfCoordinator": "facilityDetails.hfCoordinatorKey",
+            "hfCoordinatorKey": "facilityDetails.hfCoordinatorKey",
             // for checklist
             "sideEffectQ1": "sideEffectFromCurrentCycle.sideEffectQ1",
             "sideEffectQ2": "sideEffectFromCurrentCycle.sideEffectQ2",
