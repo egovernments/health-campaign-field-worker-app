@@ -197,6 +197,21 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
         );
 
+      case PropertySchemaFormat.textArea:
+        return JsonSchemaTextAreaBuilder(
+          form: form,
+          label: translateIfPresent(widget.schema.label, localizations),
+          formControlName: widget.formControlName,
+          value: widget.schema.value?.toString(),
+          validations: widget.schema.validations,
+          readOnly: widget.schema.readOnly ?? false,
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
+        );
+
       default:
         return JsonSchemaStringBuilder(
           form: form,

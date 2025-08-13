@@ -201,7 +201,7 @@ class ComplaintWrapperBloc
       if (event.complaintTypeCode != null &&
           (c?.serviceCode ?? '') != event.complaintTypeCode) return false;
       if (event.locality != null &&
-          (c?.address.locality?.name ?? '') != event.locality) return false;
+          (c?.address.locality?.code ?? '') != event.locality) return false;
       if (event.complaintStatus != null && event.complaintStatus!.isNotEmpty) {
         if (!event.complaintStatus!.contains(c?.applicationStatus)) {
           return false;
@@ -236,12 +236,20 @@ class ComplaintWrapperBloc
     // Use globalCrudBloc to search using search params
     final searchParams = GlobalSearchParameters(
       filters: [
-        SearchFilter(
-          root: 'pgrService',
-          field: 'tenantId',
-          operator: 'equals',
-          value: ComplaintsSingleton().tenantId,
-        ),
+        if (event.mobileNumber != null && event.mobileNumber!.isNotEmpty)
+          SearchFilter(
+            root: 'pgrComplainant',
+            field: 'mobileNumber',
+            operator: 'contains',
+            value: event.mobileNumber,
+          ),
+        if (event.complaintNumber != null && event.complaintNumber!.isNotEmpty)
+          SearchFilter(
+            root: 'pgrService',
+            field: 'serviceCode',
+            operator: 'contains',
+            value: event.complaintNumber,
+          ),
       ],
       primaryModel: 'pgrService',
       select: ['pgrService'],

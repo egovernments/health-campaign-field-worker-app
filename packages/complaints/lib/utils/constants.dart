@@ -11,4 +11,9 @@ class ComplaintKeys {
   String get complaintForm => 'COMPLAINTFLOW';
   String get primaryButtonKey => 'PrimaryButton';
   String get title => 'title';
+  String get searchComplaints => 'searchComplaints';
+  String get filterComplaints => 'filter';
+  String get sortComplaints => 'sortComplaints';
 }
+
+enum ComplaintsInboxDialogType { search, filter, sort }

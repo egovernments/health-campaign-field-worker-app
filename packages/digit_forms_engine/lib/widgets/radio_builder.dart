@@ -33,6 +33,8 @@ class JsonSchemaRadioBuilder extends JsonSchemaBuilder<bool> {
           label: label,
           infoText: tooltipText,
           child: RadioList(
+            containerPadding:
+                const EdgeInsets.only(bottom: spacer4, top: spacer2),
             readOnly: readOnly,
             groupValue: form.control(formControlName).value.toString(),
             errorMessage: field.errorText,

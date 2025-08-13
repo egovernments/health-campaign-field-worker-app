@@ -57,9 +57,12 @@ mixin _$PropertySchema {
   List<ValidationRule>? get validations => throw _privateConstructorUsedError;
   bool? get includeInForm => throw _privateConstructorUsedError;
   bool? get includeInSummary => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _navigateToConfigOrNull)
   NavigateToConfig? get navigateTo => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _visibilityConditionOrNull)
   VisibilityCondition? get visibilityCondition =>
       throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _conditionalNavigateListOrNull)
   List<ConditionalNavigateTo>? get conditionalNavigateTo =>
       throw _privateConstructorUsedError;
 
@@ -110,8 +113,10 @@ abstract class $PropertySchemaCopyWith<$Res> {
       List<ValidationRule>? validations,
       bool? includeInForm,
       bool? includeInSummary,
-      NavigateToConfig? navigateTo,
+      @JsonKey(fromJson: _navigateToConfigOrNull) NavigateToConfig? navigateTo,
+      @JsonKey(fromJson: _visibilityConditionOrNull)
       VisibilityCondition? visibilityCondition,
+      @JsonKey(fromJson: _conditionalNavigateListOrNull)
       List<ConditionalNavigateTo>? conditionalNavigateTo});
 
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
@@ -393,8 +398,10 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       List<ValidationRule>? validations,
       bool? includeInForm,
       bool? includeInSummary,
-      NavigateToConfig? navigateTo,
+      @JsonKey(fromJson: _navigateToConfigOrNull) NavigateToConfig? navigateTo,
+      @JsonKey(fromJson: _visibilityConditionOrNull)
       VisibilityCondition? visibilityCondition,
+      @JsonKey(fromJson: _conditionalNavigateListOrNull)
       List<ConditionalNavigateTo>? conditionalNavigateTo});
 
   @override
@@ -636,8 +643,9 @@ class _$PropertySchemaImpl implements _PropertySchema {
       final List<ValidationRule>? validations,
       this.includeInForm,
       this.includeInSummary,
-      this.navigateTo,
-      this.visibilityCondition,
+      @JsonKey(fromJson: _navigateToConfigOrNull) this.navigateTo,
+      @JsonKey(fromJson: _visibilityConditionOrNull) this.visibilityCondition,
+      @JsonKey(fromJson: _conditionalNavigateListOrNull)
       final List<ConditionalNavigateTo>? conditionalNavigateTo})
       : _properties = properties,
         _enums = enums,
@@ -749,11 +757,14 @@ class _$PropertySchemaImpl implements _PropertySchema {
   @override
   final bool? includeInSummary;
   @override
+  @JsonKey(fromJson: _navigateToConfigOrNull)
   final NavigateToConfig? navigateTo;
   @override
+  @JsonKey(fromJson: _visibilityConditionOrNull)
   final VisibilityCondition? visibilityCondition;
   final List<ConditionalNavigateTo>? _conditionalNavigateTo;
   @override
+  @JsonKey(fromJson: _conditionalNavigateListOrNull)
   List<ConditionalNavigateTo>? get conditionalNavigateTo {
     final value = _conditionalNavigateTo;
     if (value == null) return null;
@@ -928,8 +939,11 @@ abstract class _PropertySchema implements PropertySchema {
           final List<ValidationRule>? validations,
           final bool? includeInForm,
           final bool? includeInSummary,
+          @JsonKey(fromJson: _navigateToConfigOrNull)
           final NavigateToConfig? navigateTo,
+          @JsonKey(fromJson: _visibilityConditionOrNull)
           final VisibilityCondition? visibilityCondition,
+          @JsonKey(fromJson: _conditionalNavigateListOrNull)
           final List<ConditionalNavigateTo>? conditionalNavigateTo}) =
       _$PropertySchemaImpl;
 
@@ -1005,10 +1019,13 @@ abstract class _PropertySchema implements PropertySchema {
   @override
   bool? get includeInSummary;
   @override
+  @JsonKey(fromJson: _navigateToConfigOrNull)
   NavigateToConfig? get navigateTo;
   @override
+  @JsonKey(fromJson: _visibilityConditionOrNull)
   VisibilityCondition? get visibilityCondition;
   @override
+  @JsonKey(fromJson: _conditionalNavigateListOrNull)
   List<ConditionalNavigateTo>? get conditionalNavigateTo;
   @override
   @JsonKey(ignore: true)
