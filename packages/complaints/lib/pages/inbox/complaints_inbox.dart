@@ -324,28 +324,51 @@ class ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                                                     FormControl<String>(),
                                                 'complaintAssignmentType':
                                                     FormControl<String>(),
-                                                'complaintStatus':
-                                                    FormControl<String>(),
+                                                'complaintStatus': FormControl<
+                                                    PgrServiceApplicationStatus>(),
                                               }),
                                               buildFields:
                                                   buildComplaintFilterFields,
                                               onSubmit: (ctx, form) {
-                                                final status = form
-                                                    .control('status')
+                                                final complaintType = form
+                                                    .control('complaintType')
                                                     .value as String?;
-                                                final priority = form
-                                                    .control('priority')
+                                                final complaintLocality = form
+                                                    .control(
+                                                        'complaintLocality')
                                                     .value as String?;
+                                                final complaintAssignmentType = form
+                                                    .control(
+                                                        'complaintAssignmentType')
+                                                    .value as String?;
+                                                final complaintStatus = form
+                                                        .control('complaintStatus')
+                                                        .value
+                                                    as List<
+                                                        PgrServiceApplicationStatus>?;
 
-                                                if ((status != null &&
-                                                        status.isNotEmpty) ||
-                                                    (priority != null &&
-                                                        priority.isNotEmpty)) {
-                                                  // TODO: Dispatch filter event to BLoC
-                                                  // ctx.read<ComplaintsInboxBloc>().add(
-                                                  //   ComplaintInboxFilterEvent(status: status, priority: priority),
-                                                  // );
-                                                }
+                                                context
+                                                    .read<
+                                                        ComplaintWrapperBloc>()
+                                                    .add(
+                                                      ComplaintWrapperEvent
+                                                          .filter(
+                                                        createdByUserId:
+                                                            ComplaintsSingleton()
+                                                                .loggedInUserUuid,
+                                                        currentUserName:
+                                                            ComplaintsSingleton()
+                                                                .userName,
+                                                        complaintAssignedTo:
+                                                            complaintAssignmentType,
+                                                        complaintTypeCode:
+                                                            complaintType,
+                                                        locality:
+                                                            complaintLocality,
+                                                        complaintStatus:
+                                                            complaintStatus,
+                                                      ),
+                                                    );
                                                 context.router.pop();
                                               },
                                             ),
@@ -599,6 +622,26 @@ class ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
     const _complaintStatus = "complaintStatus";
     Set<PgrServiceApplicationStatus> statuses = HashSet();
 
+    final state = context.read<ComplaintWrapperBloc>().state;
+    for (var e in state.complaints) {
+      complaintTypes.add(e.complaint!.serviceCode.toString());
+
+      if (e.address?.locality?.code != null) {
+        locality.add(
+          e.address?.locality?.code ?? "",
+        );
+      }
+
+      var status = e.complaint!.applicationStatus;
+      uniqueStatuses.add(status);
+      if (statusCount.containsKey(status.index)) {
+        int count = statusCount[status.index] ?? 0;
+        statusCount[status.index] = count + 1;
+      } else {
+        statusCount[status.index] = 1;
+      }
+    }
+
     return Padding(
       padding: EdgeInsets.zero,
       // padding: const EdgeInsets.all(spacer2 * 2),
@@ -685,14 +728,26 @@ class ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                             value: selected[e] ?? false,
                             onChanged: (value) {
                               setState(() {
-                                if (selected[e]!) {
-                                  statuses.remove(e);
-                                  selected[e] = false;
-                                  return;
-                                }
+                                final formControl =
+                                    form.control('_complaintStatus')
+                                        as FormControl<
+                                            List<PgrServiceApplicationStatus>>;
 
-                                selected[e] = true;
-                                statuses.add(e);
+                                if (selected[e] ?? false) {
+                                  // remove from UI selection
+                                  selected[e] = false;
+                                  statuses.remove(e);
+
+                                  // update form
+                                  formControl.updateValue([...statuses]);
+                                } else {
+                                  // add to UI selection
+                                  selected[e] = true;
+                                  statuses.add(e);
+
+                                  // update form
+                                  formControl.updateValue([...statuses]);
+                                }
                               });
                             },
                           ),
