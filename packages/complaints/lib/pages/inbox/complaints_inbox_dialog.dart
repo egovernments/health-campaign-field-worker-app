@@ -8,8 +8,10 @@ import 'package:digit_ui_components/widgets/helper_widget/button_list.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../blocs/complaint_wrapper/complaint_wrapper_bloc.dart';
 import '../../utils/constants.dart';
 
 @RoutePage()
@@ -102,6 +104,9 @@ class _ComplaintsInboxDialogPageState
                       label: 'Clear all',
                       onPressed: () {
                         _formGroup.reset();
+                        context
+                            .read<ComplaintWrapperBloc>()
+                            .add(const ComplaintWrapperEvent.loadFromGlobal());
                       },
                     ),
                     DigitButton(

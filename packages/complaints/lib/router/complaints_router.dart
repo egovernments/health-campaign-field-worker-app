@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 
-import '../pages/inbox/complaints_inbox_dialog.dart';
 import 'complaints_router.gm.dart';
 
 /// Complaint Inbox and registration Router
@@ -37,27 +36,6 @@ class ComplaintsRoute extends $ComplaintsRoute {
         AutoRoute(
           page: ComplaintsDetailsViewRoute.page,
           path: 'complaints-inbox-view-details',
-        ),
-      ],
-    ),
-
-    /// Complaints registration
-    AutoRoute(
-      page: ComplaintsRegistrationWrapperRoute.page,
-      path: 'complaints-registration',
-      children: [
-        AutoRoute(
-          page: ComplaintTypeRoute.page,
-          path: 'complaints-type',
-          initial: true,
-        ),
-        AutoRoute(
-          page: ComplaintsLocationRoute.page,
-          path: 'complaints-location',
-        ),
-        AutoRoute(
-          page: ComplaintsDetailsRoute.page,
-          path: 'complaints-details',
         ),
       ],
     ),

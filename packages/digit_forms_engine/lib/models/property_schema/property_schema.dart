@@ -57,6 +57,9 @@ class PropertySchema with _$PropertySchema {
     VisibilityCondition? visibilityCondition,
     @JsonKey(fromJson: _conditionalNavigateListOrNull)
     List<ConditionalNavigateTo>? conditionalNavigateTo,
+    // New: AutoFillCondition list
+    @JsonKey(fromJson: _autoFillConditionListOrNull)
+    List<AutoFillCondition>? autoFillCondition,
   }) = _PropertySchema;
 
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>
@@ -129,6 +132,17 @@ class ConditionalNavigateTo with _$ConditionalNavigateTo {
       _$ConditionalNavigateToFromJson(json);
 }
 
+@freezed
+class AutoFillCondition with _$AutoFillCondition {
+  const factory AutoFillCondition({
+    required String expression,
+    required dynamic value, // could be a string, number, template, etc.
+  }) = _AutoFillCondition;
+
+  factory AutoFillCondition.fromJson(Map<String, dynamic> json) =>
+      _$AutoFillConditionFromJson(json);
+}
+
 String? _stringOrNull(dynamic value) {
   return value is String ? value : null;
 }
@@ -159,6 +173,18 @@ List<ConditionalNavigateTo>? _conditionalNavigateListOrNull(dynamic value) {
     return value
         .whereType<Map<String, dynamic>>() // ignore nulls / wrong types
         .map((map) => ConditionalNavigateTo.fromJson(map))
+        .toList();
+  }
+  return null;
+}
+
+// New: AutoFillCondition parser
+List<AutoFillCondition>? _autoFillConditionListOrNull(dynamic value) {
+  if (value is List) {
+    if (value.isEmpty) return null;
+    return value
+        .whereType<Map<String, dynamic>>()
+        .map((map) => AutoFillCondition.fromJson(map))
         .toList();
   }
   return null;

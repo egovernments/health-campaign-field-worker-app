@@ -57,6 +57,8 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
           _visibilityConditionOrNull(json['visibilityCondition']),
       conditionalNavigateTo:
           _conditionalNavigateListOrNull(json['conditionalNavigateTo']),
+      autoFillCondition:
+          _autoFillConditionListOrNull(json['autoFillCondition']),
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -108,6 +110,8 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('visibilityCondition', instance.visibilityCondition?.toJson());
   writeNotNull('conditionalNavigateTo',
       instance.conditionalNavigateTo?.map((e) => e.toJson()).toList());
+  writeNotNull('autoFillCondition',
+      instance.autoFillCondition?.map((e) => e.toJson()).toList());
   return val;
 }
 
@@ -225,4 +229,18 @@ Map<String, dynamic> _$$ConditionalNavigateToImplToJson(
     <String, dynamic>{
       'condition': instance.condition,
       'navigateTo': instance.navigateTo,
+    };
+
+_$AutoFillConditionImpl _$$AutoFillConditionImplFromJson(
+        Map<String, dynamic> json) =>
+    _$AutoFillConditionImpl(
+      expression: json['expression'] as String,
+      value: json['value'],
+    );
+
+Map<String, dynamic> _$$AutoFillConditionImplToJson(
+        _$AutoFillConditionImpl instance) =>
+    <String, dynamic>{
+      'expression': instance.expression,
+      'value': instance.value,
     };
