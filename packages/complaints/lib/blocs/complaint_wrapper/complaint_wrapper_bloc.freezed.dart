@@ -2484,6 +2484,7 @@ mixin _$ComplaintWrapperState {
   bool get isFiltered => throw _privateConstructorUsedError;
   PgrFilters? get filters => throw _privateConstructorUsedError;
   PgrSearchKeys? get searchKeys => throw _privateConstructorUsedError;
+  String? get sortOrder => throw _privateConstructorUsedError;
   List<ComplaintsInboxItem> get savedItems =>
       throw _privateConstructorUsedError;
   int? get offset => throw _privateConstructorUsedError;
@@ -2511,6 +2512,7 @@ abstract class $ComplaintWrapperStateCopyWith<$Res> {
       bool isFiltered,
       PgrFilters? filters,
       PgrSearchKeys? searchKeys,
+      String? sortOrder,
       List<ComplaintsInboxItem> savedItems,
       int? offset,
       int? limit,
@@ -2539,6 +2541,7 @@ class _$ComplaintWrapperStateCopyWithImpl<$Res,
     Object? isFiltered = null,
     Object? filters = freezed,
     Object? searchKeys = freezed,
+    Object? sortOrder = freezed,
     Object? savedItems = null,
     Object? offset = freezed,
     Object? limit = freezed,
@@ -2571,6 +2574,10 @@ class _$ComplaintWrapperStateCopyWithImpl<$Res,
           ? _value.searchKeys
           : searchKeys // ignore: cast_nullable_to_non_nullable
               as PgrSearchKeys?,
+      sortOrder: freezed == sortOrder
+          ? _value.sortOrder
+          : sortOrder // ignore: cast_nullable_to_non_nullable
+              as String?,
       savedItems: null == savedItems
           ? _value.savedItems
           : savedItems // ignore: cast_nullable_to_non_nullable
@@ -2615,6 +2622,7 @@ abstract class _$$ComplaintWrapperStateImplCopyWith<$Res>
       bool isFiltered,
       PgrFilters? filters,
       PgrSearchKeys? searchKeys,
+      String? sortOrder,
       List<ComplaintsInboxItem> savedItems,
       int? offset,
       int? limit,
@@ -2641,6 +2649,7 @@ class __$$ComplaintWrapperStateImplCopyWithImpl<$Res>
     Object? isFiltered = null,
     Object? filters = freezed,
     Object? searchKeys = freezed,
+    Object? sortOrder = freezed,
     Object? savedItems = null,
     Object? offset = freezed,
     Object? limit = freezed,
@@ -2673,6 +2682,10 @@ class __$$ComplaintWrapperStateImplCopyWithImpl<$Res>
           ? _value.searchKeys
           : searchKeys // ignore: cast_nullable_to_non_nullable
               as PgrSearchKeys?,
+      sortOrder: freezed == sortOrder
+          ? _value.sortOrder
+          : sortOrder // ignore: cast_nullable_to_non_nullable
+              as String?,
       savedItems: null == savedItems
           ? _value._savedItems
           : savedItems // ignore: cast_nullable_to_non_nullable
@@ -2711,6 +2724,7 @@ class _$ComplaintWrapperStateImpl implements _ComplaintWrapperState {
       this.isFiltered = false,
       this.filters,
       this.searchKeys,
+      this.sortOrder,
       final List<ComplaintsInboxItem> savedItems = const [],
       this.offset,
       this.limit,
@@ -2750,6 +2764,8 @@ class _$ComplaintWrapperStateImpl implements _ComplaintWrapperState {
   final PgrFilters? filters;
   @override
   final PgrSearchKeys? searchKeys;
+  @override
+  final String? sortOrder;
   final List<ComplaintsInboxItem> _savedItems;
   @override
   @JsonKey()
@@ -2774,7 +2790,7 @@ class _$ComplaintWrapperStateImpl implements _ComplaintWrapperState {
 
   @override
   String toString() {
-    return 'ComplaintWrapperState(loading: $loading, complaints: $complaints, filteredComplaints: $filteredComplaints, isFiltered: $isFiltered, filters: $filters, searchKeys: $searchKeys, savedItems: $savedItems, offset: $offset, limit: $limit, error: $error, totalCount: $totalCount, lastAction: $lastAction)';
+    return 'ComplaintWrapperState(loading: $loading, complaints: $complaints, filteredComplaints: $filteredComplaints, isFiltered: $isFiltered, filters: $filters, searchKeys: $searchKeys, sortOrder: $sortOrder, savedItems: $savedItems, offset: $offset, limit: $limit, error: $error, totalCount: $totalCount, lastAction: $lastAction)';
   }
 
   @override
@@ -2792,6 +2808,8 @@ class _$ComplaintWrapperStateImpl implements _ComplaintWrapperState {
             (identical(other.filters, filters) || other.filters == filters) &&
             (identical(other.searchKeys, searchKeys) ||
                 other.searchKeys == searchKeys) &&
+            (identical(other.sortOrder, sortOrder) ||
+                other.sortOrder == sortOrder) &&
             const DeepCollectionEquality()
                 .equals(other._savedItems, _savedItems) &&
             (identical(other.offset, offset) || other.offset == offset) &&
@@ -2812,6 +2830,7 @@ class _$ComplaintWrapperStateImpl implements _ComplaintWrapperState {
       isFiltered,
       filters,
       searchKeys,
+      sortOrder,
       const DeepCollectionEquality().hash(_savedItems),
       offset,
       limit,
@@ -2835,6 +2854,7 @@ abstract class _ComplaintWrapperState implements ComplaintWrapperState {
           final bool isFiltered,
           final PgrFilters? filters,
           final PgrSearchKeys? searchKeys,
+          final String? sortOrder,
           final List<ComplaintsInboxItem> savedItems,
           final int? offset,
           final int? limit,
@@ -2855,6 +2875,8 @@ abstract class _ComplaintWrapperState implements ComplaintWrapperState {
   PgrFilters? get filters;
   @override
   PgrSearchKeys? get searchKeys;
+  @override
+  String? get sortOrder;
   @override
   List<ComplaintsInboxItem> get savedItems;
   @override

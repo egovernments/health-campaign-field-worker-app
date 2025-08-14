@@ -98,6 +98,7 @@ class ComplaintWrapperBloc
         totalCount: globalState.totalCount ?? wrappers.length,
         searchKeys: null,
         filters: null,
+        sortOrder: null,
       ));
     } catch (e) {
       emit(state.copyWith(loading: false, error: e.toString(), complaints: []));
@@ -198,9 +199,13 @@ class ComplaintWrapperBloc
     }
 
     emit(state.copyWith(
-        loading: false,
-        complaints: listToSort,
-        filteredComplaints: listToSort));
+      loading: false,
+      filters: null,
+      searchKeys: null,
+      isFiltered: true,
+      filteredComplaints: listToSort,
+      sortOrder: event.sortOrder,
+    ));
   }
 
   FutureOr<void> _handleFilter(
@@ -229,6 +234,8 @@ class ComplaintWrapperBloc
         loading: false,
         filteredComplaints: filtered,
         isFiltered: true,
+        searchKeys: null,
+        sortOrder: null,
         filters: PgrFilters(
           complaintAssignedTo: event.complaintAssignedTo,
           complaintStatus: event.complaintStatus,
@@ -301,6 +308,8 @@ class ComplaintWrapperBloc
           loading: false,
           filteredComplaints: wrappers,
           isFiltered: true,
+          filters: null,
+          sortOrder: null,
           searchKeys: PgrSearchKeys(
               complaintNumber: event.complaintNumber,
               complainantMobileNumber: event.mobileNumber)));
@@ -358,6 +367,7 @@ class ComplaintWrapperState with _$ComplaintWrapperState {
     @Default(false) bool isFiltered,
     PgrFilters? filters,
     PgrSearchKeys? searchKeys,
+    String? sortOrder,
     @Default([]) List<ComplaintsInboxItem> savedItems,
     int? offset,
     int? limit,
