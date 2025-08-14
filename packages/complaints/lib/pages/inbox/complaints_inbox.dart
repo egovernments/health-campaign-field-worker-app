@@ -385,7 +385,8 @@ class ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                                                     buildForm: () => fb.group({
                                                       'sortOrder':
                                                           FormControl<String>(
-                                                              value: ""),
+                                                              value: state
+                                                                  .sortOrder),
                                                     }),
                                                     buildFields:
                                                         buildComplaintSortFields,
