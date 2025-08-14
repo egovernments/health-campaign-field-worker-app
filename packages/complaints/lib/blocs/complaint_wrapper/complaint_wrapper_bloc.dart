@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '/models/complaints.dart';
+import '/utils/i18_key_constants.dart' as i18;
 import '/utils/utils.dart';
 import '../../models/pgr_complaints.dart';
 
@@ -214,10 +215,12 @@ class ComplaintWrapperBloc
 
     final filtered = state.complaints.where((w) {
       final c = w.complaint;
-      // if (event.complaintAssignedTo != null &&
-      //     (c?.assignedTo ?? '') != event.complaintAssignedTo) return false;
-      if (event.currentUserName != null &&
-          (c?.user.userName ?? '') != event.currentUserName) return false;
+
+      if (event.complaintAssignedTo != null &&
+          event.complaintAssignedTo == i18.complaints.assignedToSelf) {
+        if (event.currentUserName != null &&
+            (c?.user.userName ?? '') != event.currentUserName) return false;
+      }
       if (event.complaintTypeCode != null &&
           (c?.serviceCode ?? '') != event.complaintTypeCode) return false;
       if (event.locality != null &&
