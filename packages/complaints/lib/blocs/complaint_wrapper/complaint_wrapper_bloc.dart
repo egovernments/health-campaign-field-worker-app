@@ -219,7 +219,7 @@ class ComplaintWrapperBloc
       if (event.complaintAssignedTo != null &&
           event.complaintAssignedTo == i18.complaints.assignedToSelf) {
         if (event.currentUserName != null &&
-            (c?.user.userName ?? '') != event.currentUserName) return false;
+            (c?.user.name ?? '') != event.currentUserName) return false;
       }
       if (event.complaintTypeCode != null &&
           (c?.serviceCode ?? '') != event.complaintTypeCode) return false;

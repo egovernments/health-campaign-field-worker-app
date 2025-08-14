@@ -22,18 +22,6 @@ class ComplaintsRoute extends $ComplaintsRoute {
           page: ComplaintsInboxDialogRoute.page,
         ),
         AutoRoute(
-          page: ComplaintsInboxFilterRoute.page,
-          path: 'complaints-inbox-filter',
-        ),
-        AutoRoute(
-          page: ComplaintsInboxSearchRoute.page,
-          path: 'complaints-inbox-search',
-        ),
-        AutoRoute(
-          page: ComplaintsInboxSortRoute.page,
-          path: 'complaints-inbox-sort',
-        ),
-        AutoRoute(
           page: ComplaintsDetailsViewRoute.page,
           path: 'complaints-inbox-view-details',
         ),
