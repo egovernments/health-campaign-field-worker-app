@@ -19,46 +19,20 @@ import 'package:complaints/pages/inbox/complaints_inbox_filter.dart' as _i6;
 import 'package:complaints/pages/inbox/complaints_inbox_search.dart' as _i8;
 import 'package:complaints/pages/inbox/complaints_inbox_sort.dart' as _i9;
 import 'package:complaints/pages/inbox/complaints_inbox_wrapper.dart' as _i10;
-import 'package:complaints/pages/registration/complaint_type.dart' as _i1;
-import 'package:complaints/pages/registration/complaints_details.dart' as _i3;
-import 'package:complaints/pages/registration/complaints_location.dart' as _i11;
-import 'package:complaints/pages/registration/complaints_registration_wrapper.dart'
-    as _i12;
 import 'package:complaints/utils/constants.dart' as _i17;
+import 'package:flutter/foundation.dart' as _i19;
 import 'package:flutter/material.dart' as _i14;
 import 'package:reactive_forms/reactive_forms.dart' as _i18;
 
 abstract class $ComplaintsRoute extends _i13.AutoRouterModule {
   @override
   final Map<String, _i13.PageFactory> pagesMap = {
-    ComplaintTypeRoute.name: (routeData) {
-      final args = routeData.argsAs<ComplaintTypeRouteArgs>(
-          orElse: () => const ComplaintTypeRouteArgs());
-      return _i13.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i1.ComplaintTypePage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
     ComplaintsAcknowledgementRoute.name: (routeData) {
       final args = routeData.argsAs<ComplaintsAcknowledgementRouteArgs>(
           orElse: () => const ComplaintsAcknowledgementRouteArgs());
       return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i2.ComplaintsAcknowledgementPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    ComplaintsDetailsRoute.name: (routeData) {
-      final args = routeData.argsAs<ComplaintsDetailsRouteArgs>(
-          orElse: () => const ComplaintsDetailsRouteArgs());
-      return _i13.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i3.ComplaintsDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -137,29 +111,6 @@ abstract class $ComplaintsRoute extends _i13.AutoRouterModule {
       return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const _i10.ComplaintsInboxWrapperPage(),
-      );
-    },
-    ComplaintsLocationRoute.name: (routeData) {
-      final args = routeData.argsAs<ComplaintsLocationRouteArgs>(
-          orElse: () => const ComplaintsLocationRouteArgs());
-      return _i13.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i11.ComplaintsLocationPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    ComplaintsRegistrationWrapperRoute.name: (routeData) {
-      final args = routeData.argsAs<ComplaintsRegistrationWrapperRouteArgs>(
-          orElse: () => const ComplaintsRegistrationWrapperRouteArgs());
-      return _i13.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i13.WrappedRoute(
-            child: _i12.ComplaintsRegistrationWrapperPage(
-          key: args.key,
-          pgrServiceModel: args.pgrServiceModel,
-        )),
       );
     },
   };
@@ -440,7 +391,7 @@ class ComplaintsInboxFilterRouteArgs {
 class ComplaintsInboxRoute
     extends _i13.PageRouteInfo<ComplaintsInboxRouteArgs> {
   ComplaintsInboxRoute({
-    _i14.Key? key,
+    _i19.Key? key,
     _i15.ComplaintsLocalization? appLocalizations,
     List<_i13.PageRouteInfo>? children,
   }) : super(
@@ -464,7 +415,7 @@ class ComplaintsInboxRouteArgs {
     this.appLocalizations,
   });
 
-  final _i14.Key? key;
+  final _i19.Key? key;
 
   final _i15.ComplaintsLocalization? appLocalizations;
 

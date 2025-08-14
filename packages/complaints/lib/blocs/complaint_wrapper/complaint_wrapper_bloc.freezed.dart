@@ -18,8 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$ComplaintWrapperEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(GlobalSearchParameters searchParams)
-        loadFromGlobal,
+    required TResult Function() loadFromGlobal,
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
     required TResult Function(List<EntityModel> entities) delete,
@@ -44,7 +43,7 @@ mixin _$ComplaintWrapperEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult? Function()? loadFromGlobal,
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
     TResult? Function(List<EntityModel> entities)? delete,
@@ -68,7 +67,7 @@ mixin _$ComplaintWrapperEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult Function()? loadFromGlobal,
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
     TResult Function(List<EntityModel> entities)? delete,
@@ -162,10 +161,6 @@ abstract class _$$ComplaintWrapperLoadFromGlobalImplCopyWith<$Res> {
           _$ComplaintWrapperLoadFromGlobalImpl value,
           $Res Function(_$ComplaintWrapperLoadFromGlobalImpl) then) =
       __$$ComplaintWrapperLoadFromGlobalImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({GlobalSearchParameters searchParams});
-
-  $GlobalSearchParametersCopyWith<$Res> get searchParams;
 }
 
 /// @nodoc
@@ -177,68 +172,33 @@ class __$$ComplaintWrapperLoadFromGlobalImplCopyWithImpl<$Res>
       _$ComplaintWrapperLoadFromGlobalImpl _value,
       $Res Function(_$ComplaintWrapperLoadFromGlobalImpl) _then)
       : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? searchParams = null,
-  }) {
-    return _then(_$ComplaintWrapperLoadFromGlobalImpl(
-      searchParams: null == searchParams
-          ? _value.searchParams
-          : searchParams // ignore: cast_nullable_to_non_nullable
-              as GlobalSearchParameters,
-    ));
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $GlobalSearchParametersCopyWith<$Res> get searchParams {
-    return $GlobalSearchParametersCopyWith<$Res>(_value.searchParams, (value) {
-      return _then(_value.copyWith(searchParams: value));
-    });
-  }
 }
 
 /// @nodoc
 
 class _$ComplaintWrapperLoadFromGlobalImpl
     implements ComplaintWrapperLoadFromGlobal {
-  const _$ComplaintWrapperLoadFromGlobalImpl({required this.searchParams});
-
-  @override
-  final GlobalSearchParameters searchParams;
+  const _$ComplaintWrapperLoadFromGlobalImpl();
 
   @override
   String toString() {
-    return 'ComplaintWrapperEvent.loadFromGlobal(searchParams: $searchParams)';
+    return 'ComplaintWrapperEvent.loadFromGlobal()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ComplaintWrapperLoadFromGlobalImpl &&
-            (identical(other.searchParams, searchParams) ||
-                other.searchParams == searchParams));
+            other is _$ComplaintWrapperLoadFromGlobalImpl);
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, searchParams);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ComplaintWrapperLoadFromGlobalImplCopyWith<
-          _$ComplaintWrapperLoadFromGlobalImpl>
-      get copyWith => __$$ComplaintWrapperLoadFromGlobalImplCopyWithImpl<
-          _$ComplaintWrapperLoadFromGlobalImpl>(this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(GlobalSearchParameters searchParams)
-        loadFromGlobal,
+    required TResult Function() loadFromGlobal,
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
     required TResult Function(List<EntityModel> entities) delete,
@@ -260,13 +220,13 @@ class _$ComplaintWrapperLoadFromGlobalImpl
         saveComplaints,
     required TResult Function(ComplaintsInboxItem? complaintInboxItem) addItem,
   }) {
-    return loadFromGlobal(searchParams);
+    return loadFromGlobal();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult? Function()? loadFromGlobal,
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
     TResult? Function(List<EntityModel> entities)? delete,
@@ -287,13 +247,13 @@ class _$ComplaintWrapperLoadFromGlobalImpl
         saveComplaints,
     TResult? Function(ComplaintsInboxItem? complaintInboxItem)? addItem,
   }) {
-    return loadFromGlobal?.call(searchParams);
+    return loadFromGlobal?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult Function()? loadFromGlobal,
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
     TResult Function(List<EntityModel> entities)? delete,
@@ -316,7 +276,7 @@ class _$ComplaintWrapperLoadFromGlobalImpl
     required TResult orElse(),
   }) {
     if (loadFromGlobal != null) {
-      return loadFromGlobal(searchParams);
+      return loadFromGlobal();
     }
     return orElse();
   }
@@ -379,15 +339,8 @@ class _$ComplaintWrapperLoadFromGlobalImpl
 }
 
 abstract class ComplaintWrapperLoadFromGlobal implements ComplaintWrapperEvent {
-  const factory ComplaintWrapperLoadFromGlobal(
-          {required final GlobalSearchParameters searchParams}) =
+  const factory ComplaintWrapperLoadFromGlobal() =
       _$ComplaintWrapperLoadFromGlobalImpl;
-
-  GlobalSearchParameters get searchParams;
-  @JsonKey(ignore: true)
-  _$$ComplaintWrapperLoadFromGlobalImplCopyWith<
-          _$ComplaintWrapperLoadFromGlobalImpl>
-      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -461,8 +414,7 @@ class _$CreateImpl implements Create {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(GlobalSearchParameters searchParams)
-        loadFromGlobal,
+    required TResult Function() loadFromGlobal,
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
     required TResult Function(List<EntityModel> entities) delete,
@@ -490,7 +442,7 @@ class _$CreateImpl implements Create {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult? Function()? loadFromGlobal,
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
     TResult? Function(List<EntityModel> entities)? delete,
@@ -517,7 +469,7 @@ class _$CreateImpl implements Create {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult Function()? loadFromGlobal,
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
     TResult Function(List<EntityModel> entities)? delete,
@@ -683,8 +635,7 @@ class _$UpdateImpl implements Update {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(GlobalSearchParameters searchParams)
-        loadFromGlobal,
+    required TResult Function() loadFromGlobal,
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
     required TResult Function(List<EntityModel> entities) delete,
@@ -712,7 +663,7 @@ class _$UpdateImpl implements Update {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult? Function()? loadFromGlobal,
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
     TResult? Function(List<EntityModel> entities)? delete,
@@ -739,7 +690,7 @@ class _$UpdateImpl implements Update {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult Function()? loadFromGlobal,
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
     TResult Function(List<EntityModel> entities)? delete,
@@ -905,8 +856,7 @@ class _$DeleteImpl implements Delete {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(GlobalSearchParameters searchParams)
-        loadFromGlobal,
+    required TResult Function() loadFromGlobal,
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
     required TResult Function(List<EntityModel> entities) delete,
@@ -934,7 +884,7 @@ class _$DeleteImpl implements Delete {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult? Function()? loadFromGlobal,
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
     TResult? Function(List<EntityModel> entities)? delete,
@@ -961,7 +911,7 @@ class _$DeleteImpl implements Delete {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult Function()? loadFromGlobal,
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
     TResult Function(List<EntityModel> entities)? delete,
@@ -1152,8 +1102,7 @@ class _$CreateAndUpdateImpl implements CreateAndUpdate {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(GlobalSearchParameters searchParams)
-        loadFromGlobal,
+    required TResult Function() loadFromGlobal,
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
     required TResult Function(List<EntityModel> entities) delete,
@@ -1181,7 +1130,7 @@ class _$CreateAndUpdateImpl implements CreateAndUpdate {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult? Function()? loadFromGlobal,
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
     TResult? Function(List<EntityModel> entities)? delete,
@@ -1208,7 +1157,7 @@ class _$CreateAndUpdateImpl implements CreateAndUpdate {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult Function()? loadFromGlobal,
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
     TResult Function(List<EntityModel> entities)? delete,
@@ -1376,8 +1325,7 @@ class _$ComplaintWrapperSortImpl implements ComplaintWrapperSort {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(GlobalSearchParameters searchParams)
-        loadFromGlobal,
+    required TResult Function() loadFromGlobal,
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
     required TResult Function(List<EntityModel> entities) delete,
@@ -1405,7 +1353,7 @@ class _$ComplaintWrapperSortImpl implements ComplaintWrapperSort {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult? Function()? loadFromGlobal,
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
     TResult? Function(List<EntityModel> entities)? delete,
@@ -1432,7 +1380,7 @@ class _$ComplaintWrapperSortImpl implements ComplaintWrapperSort {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult Function()? loadFromGlobal,
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
     TResult Function(List<EntityModel> entities)? delete,
@@ -1668,8 +1616,7 @@ class _$ComplaintWrapperFilterImpl implements ComplaintWrapperFilter {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(GlobalSearchParameters searchParams)
-        loadFromGlobal,
+    required TResult Function() loadFromGlobal,
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
     required TResult Function(List<EntityModel> entities) delete,
@@ -1698,7 +1645,7 @@ class _$ComplaintWrapperFilterImpl implements ComplaintWrapperFilter {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult? Function()? loadFromGlobal,
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
     TResult? Function(List<EntityModel> entities)? delete,
@@ -1726,7 +1673,7 @@ class _$ComplaintWrapperFilterImpl implements ComplaintWrapperFilter {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult Function()? loadFromGlobal,
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
     TResult Function(List<EntityModel> entities)? delete,
@@ -1911,8 +1858,7 @@ class _$ComplaintWrapperSearchImpl implements ComplaintWrapperSearch {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(GlobalSearchParameters searchParams)
-        loadFromGlobal,
+    required TResult Function() loadFromGlobal,
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
     required TResult Function(List<EntityModel> entities) delete,
@@ -1940,7 +1886,7 @@ class _$ComplaintWrapperSearchImpl implements ComplaintWrapperSearch {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult? Function()? loadFromGlobal,
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
     TResult? Function(List<EntityModel> entities)? delete,
@@ -1967,7 +1913,7 @@ class _$ComplaintWrapperSearchImpl implements ComplaintWrapperSearch {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult Function()? loadFromGlobal,
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
     TResult Function(List<EntityModel> entities)? delete,
@@ -2143,8 +2089,7 @@ class _$ComplaintWrapperSaveImpl implements ComplaintWrapperSave {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(GlobalSearchParameters searchParams)
-        loadFromGlobal,
+    required TResult Function() loadFromGlobal,
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
     required TResult Function(List<EntityModel> entities) delete,
@@ -2172,7 +2117,7 @@ class _$ComplaintWrapperSaveImpl implements ComplaintWrapperSave {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult? Function()? loadFromGlobal,
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
     TResult? Function(List<EntityModel> entities)? delete,
@@ -2199,7 +2144,7 @@ class _$ComplaintWrapperSaveImpl implements ComplaintWrapperSave {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult Function()? loadFromGlobal,
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
     TResult Function(List<EntityModel> entities)? delete,
@@ -2379,8 +2324,7 @@ class _$ComplaintWrapperAddItemImpl implements ComplaintWrapperAddItem {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(GlobalSearchParameters searchParams)
-        loadFromGlobal,
+    required TResult Function() loadFromGlobal,
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
     required TResult Function(List<EntityModel> entities) delete,
@@ -2408,7 +2352,7 @@ class _$ComplaintWrapperAddItemImpl implements ComplaintWrapperAddItem {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult? Function()? loadFromGlobal,
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
     TResult? Function(List<EntityModel> entities)? delete,
@@ -2435,7 +2379,7 @@ class _$ComplaintWrapperAddItemImpl implements ComplaintWrapperAddItem {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(GlobalSearchParameters searchParams)? loadFromGlobal,
+    TResult Function()? loadFromGlobal,
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
     TResult Function(List<EntityModel> entities)? delete,

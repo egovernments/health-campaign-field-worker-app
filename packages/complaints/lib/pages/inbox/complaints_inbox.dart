@@ -4,7 +4,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:complaints/blocs/complaint_wrapper/complaint_wrapper_bloc.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:complaints/utils/constants.dart';
-import 'package:digit_crud_bloc/models/global_search_params.dart';
 import 'package:digit_data_converter/src/transformer_service.dart';
 import 'package:digit_data_model/models/entities/pgr_application_status.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
@@ -16,6 +15,7 @@ import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,24 +45,9 @@ class ComplaintsInboxPage extends LocalizedStatefulWidget {
 class ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
   @override
   void initState() {
-    // Use globalCrudBloc to search using search params
-    final searchParams = GlobalSearchParameters(
-      filters: [
-        SearchFilter(
-          root: 'pgrService',
-          field: 'tenantId',
-          operator: 'equals',
-          value: ComplaintsSingleton().tenantId,
-        ),
-      ],
-      primaryModel: 'pgrService',
-      select: ['pgrService'],
-      pagination: null,
-    );
-
     context
         .read<ComplaintWrapperBloc>()
-        .add(ComplaintWrapperEvent.loadFromGlobal(searchParams: searchParams));
+        .add(const ComplaintWrapperEvent.loadFromGlobal());
 
     final schemas = [
       ComplaintsSingleton().complaintConfig,
@@ -90,388 +75,440 @@ class ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
     final router = context.router;
 
     return Scaffold(
-      body: BlocListener<FormsBloc, FormsState>(listener: (context, formState) {
-        if (formState is FormsSubmittedState) {
-          DigitLoaders.overlayLoader(context: context);
+      body: BlocListener<ComplaintWrapperBloc, ComplaintWrapperState>(
+          listener: (context, wrapperState) {
+            if (wrapperState.lastAction == ComplaintWrapperActionType.created) {
+              Navigator.of(context, rootNavigator: true).pop();
+              final currentSchema =
+                  context.read<FormsBloc>().state.cachedSchemas[
+                      context.read<FormsBloc>().state.activeSchemaKey];
 
-          final formData = formState.formData;
-          if (formData.isEmpty) return;
+              context.read<FormsBloc>().add(
+                    FormsEvent.clearForm(
+                        schemaKey: complaintKeys
+                            .complaintForm), // or create a FormsResetEvent
+                  );
 
-          context.read<FormsBloc>().add(
-                FormsEvent.clearForm(
-                    schemaKey: complaintKeys
-                        .complaintForm), // or create a FormsResetEvent
-              );
+              final pages = currentSchema?.pages.entries.toList()
+                ?..sort((a, b) =>
+                    (a.value.order ?? 0).compareTo(b.value.order ?? 0));
 
-          try {
-            final modelsConfig = (jsonConfig['complaintRegistration']?['models']
-                as Map<String, dynamic>);
+              final lastPage =
+                  pages?.isNotEmpty == true ? pages!.last.value : null;
 
-            final fallBackModel = jsonConfig['complaintRegistration']
-                ?['fallbackModel'] as String?;
+              final nextAction = lastPage?.navigateTo;
 
-            final formEntityMapper = FormEntityMapper(config: jsonConfig);
+              context
+                  .read<ComplaintWrapperBloc>()
+                  .add(const ComplaintWrapperEvent.loadFromGlobal());
 
-            final entities = formEntityMapper.mapFormToEntities(
-              formValues: formData,
-              modelsConfig: modelsConfig,
-              context: {
-                "tenantId": ComplaintsSingleton().tenantId,
-                "selectedBoundaryCode": ComplaintsSingleton().boundary?.code,
-                'userName': ComplaintsSingleton().loggedInUserName,
-                'userId': ComplaintsSingleton().loggedInUserUuid,
-                'userUUID': ComplaintsSingleton().loggedInUserUuid,
-              },
-              fallbackFormDataString: fallBackModel,
-            );
+              if (nextAction != null) {
+                if (nextAction.type == 'template') {
+                  final nextPath = routerMap[nextAction.name];
+                  if (nextPath != null) {
+                    context.router.push(nextPath);
+                  }
+                }
+              } else {
+                // context.router.push(BeneficiaryAcknowledgementRoute(
+                //     enableViewHousehold: true)); // fallback page
+              }
+            } else if (wrapperState.error != null) {
+              Navigator.of(context, rootNavigator: true).pop();
+              // Reset to prevent re-handling
+              context.read<FormsBloc>().add(
+                    FormsEvent.clearForm(
+                        schemaKey: complaintKeys
+                            .complaintForm), // or create a FormsResetEvent
+                  );
+              // context.router
+              //     .push(BeneficiaryErrorRoute(enableViewHousehold: false));
+              if (kDebugMode) {
+                print(wrapperState.error);
+              }
+            }
+          },
+          child: BlocListener<FormsBloc, FormsState>(
+              listener: (context, formState) {
+            if (formState is FormsSubmittedState) {
+              DigitLoaders.overlayLoader(context: context);
 
-            context.read<ComplaintWrapperBloc>().add(
-                  Create(entities: entities),
+              final formData = formState.formData;
+              if (formData.isEmpty) return;
+
+              try {
+                final modelsConfig = (jsonConfig['complaintRegistration']
+                    ?['models'] as Map<String, dynamic>);
+
+                final fallBackModel = jsonConfig['complaintRegistration']
+                    ?['fallbackModel'] as String?;
+
+                final formEntityMapper = FormEntityMapper(config: jsonConfig);
+
+                final entities = formEntityMapper.mapFormToEntities(
+                  formValues: formData,
+                  modelsConfig: modelsConfig,
+                  context: {
+                    "tenantId": ComplaintsSingleton().tenantId,
+                    "selectedBoundaryCode":
+                        ComplaintsSingleton().boundary?.code,
+                    'userName': ComplaintsSingleton().loggedInUserName,
+                    'userId': ComplaintsSingleton().loggedInUserUuid,
+                    'userUUID': ComplaintsSingleton().loggedInUserUuid,
+                  },
+                  fallbackFormDataString: fallBackModel,
                 );
 
-            // Use globalCrudBloc to search using search params
-            final searchParams = GlobalSearchParameters(
-              filters: [
-                SearchFilter(
-                  root: 'pgrService',
-                  field: 'tenantId',
-                  operator: 'equals',
-                  value: ComplaintsSingleton().tenantId,
-                ),
-              ],
-              primaryModel: 'pgrService',
-              select: ['pgrService'],
-              pagination: null,
-            );
+                context.read<ComplaintWrapperBloc>().add(
+                      Create(entities: entities),
+                    );
+              } catch (e) {
+                Navigator.of(context, rootNavigator: true).pop();
+                // Reset to prevent re-handling
+                context.read<FormsBloc>().add(
+                      FormsEvent.clearForm(
+                          schemaKey: complaintKeys
+                              .complaintForm), // or create a FormsResetEvent
+                    );
+              }
+            }
+          }, child: BlocBuilder<ComplaintWrapperBloc, ComplaintWrapperState>(
+            builder: (context, state) {
+              final inboxItems = state.isFiltered
+                  ? state.filteredComplaints
+                  : state.complaints;
 
-            context.read<ComplaintWrapperBloc>().add(
-                ComplaintWrapperEvent.loadFromGlobal(
-                    searchParams: searchParams));
-
-            Navigator.of(context, rootNavigator: true).pop();
-          } catch (e) {
-            Navigator.of(context, rootNavigator: true).pop();
-            // Reset to prevent re-handling
-            context.read<FormsBloc>().add(
-                  FormsEvent.clearForm(
-                      schemaKey: complaintKeys
-                          .complaintForm), // or create a FormsResetEvent
-                );
-          }
-        }
-      }, child: BlocBuilder<ComplaintWrapperBloc, ComplaintWrapperState>(
-        builder: (context, state) {
-          final inboxItems =
-              state.isFiltered ? state.filteredComplaints : state.complaints;
-
-          return Column(
-            children: [
-              Expanded(
-                child: ScrollableContent(
-                  header: const Column(
-                    children: [
-                      BackNavigationHelpHeaderWidget(),
-                    ],
-                  ),
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          left: spacer2 * 2,
-                          bottom: spacer2,
-                        ),
-                        child: Text(
-                          localizations.translate(inboxTemplate?.label ?? ""),
-                          style: textTheme.headingXl.copyWith(
-                              color: theme.colorTheme.primary.primary2),
-                        ),
+              return Column(
+                children: [
+                  Expanded(
+                    child: ScrollableContent(
+                      header: const Column(
+                        children: [
+                          BackNavigationHelpHeaderWidget(),
+                        ],
                       ),
-                    ),
-                    if (inboxTemplate
-                                ?.properties?[complaintKeys.searchComplaints]
-                                ?.hidden !=
-                            true ||
-                        inboxTemplate
-                                ?.properties?[complaintKeys.filterComplaints]
-                                ?.hidden !=
-                            true ||
-                        inboxTemplate?.properties?[complaintKeys.sortComplaints]
-                                ?.hidden !=
-                            true) ...[
-                      SliverToBoxAdapter(
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: spacer2),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              if (inboxTemplate
-                                      ?.properties?[
-                                          complaintKeys.searchComplaints]
-                                      ?.hidden !=
-                                  true)
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: spacer2 * 2),
-                                  child: DigitButton(
-                                    type: DigitButtonType.tertiary,
-                                    size: DigitButtonSize.medium,
-                                    prefixIcon: Icons.search,
-                                    label: localizations.translate(inboxTemplate
-                                            ?.properties?[
-                                                complaintKeys.searchComplaints]
-                                            ?.label ??
-                                        ""),
-                                    onPressed: () {
-                                      context.router.push(
-                                        ComplaintsInboxDialogRoute(
-                                          type:
-                                              ComplaintsInboxDialogType.search,
-                                          titleKey: 'Search Complaints',
-                                          ctaKey: "SEARCH",
-                                          buildForm: () => fb.group({
-                                            'complaintNumber':
-                                                FormControl<String>(
-                                                    value: state.searchKeys
-                                                        ?.complaintNumber),
-                                            'mobileNumber': FormControl<String>(
-                                              value: state.searchKeys
-                                                  ?.complainantMobileNumber,
-                                              validators: [
-                                                Validators.delegate(
-                                                  (validator) => CustomValidator
-                                                      .validMobileNumber(
-                                                          validator),
-                                                )
-                                              ],
-                                            ),
-                                          }),
-                                          buildFields:
-                                              buildComplaintSearchFields,
-                                          onSubmit: (ctx, form) {
-                                            final complaintNumber = form
-                                                .control('complaintNumber')
-                                                .value as String?;
-                                            final mobileNumber = form
-                                                .control('mobileNumber')
-                                                .value as String?;
-                                            context
-                                                .read<ComplaintWrapperBloc>()
-                                                .add(ComplaintWrapperEvent
-                                                    .search(
-                                                        mobileNumber:
-                                                            mobileNumber,
-                                                        complaintNumber:
-                                                            complaintNumber));
-                                            context.router.pop();
-                                          },
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              if (inboxTemplate
-                                      ?.properties?[
-                                          complaintKeys.filterComplaints]
-                                      ?.hidden !=
-                                  true)
-                                Padding(
-                                  padding: EdgeInsets.zero,
-                                  child: DigitButton(
-                                    type: DigitButtonType.tertiary,
-                                    size: DigitButtonSize.medium,
-                                    label: localizations.translate(inboxTemplate
-                                            ?.properties?[
-                                                complaintKeys.filterComplaints]
-                                            ?.label ??
-                                        ""),
-                                    prefixIcon: Icons.filter_list_alt,
-                                    onPressed: () => {
-                                      context.router.push(
-                                        ComplaintsInboxDialogRoute(
-                                          type:
-                                              ComplaintsInboxDialogType.filter,
-                                          titleKey: i18.complaints
-                                              .complaintInboxFilterHeading,
-                                          ctaKey: i18.complaints.filterCTA,
-                                          buildForm: () => fb.group({
-                                            'complaintType':
-                                                FormControl<String>(),
-                                            'complaintLocality':
-                                                FormControl<String>(),
-                                            'complaintAssignmentType':
-                                                FormControl<String>(),
-                                            'complaintStatus':
-                                                FormControl<String>(),
-                                          }),
-                                          buildFields:
-                                              buildComplaintFilterFields,
-                                          onSubmit: (ctx, form) {
-                                            final status = form
-                                                .control('status')
-                                                .value as String?;
-                                            final priority = form
-                                                .control('priority')
-                                                .value as String?;
-
-                                            if ((status != null &&
-                                                    status.isNotEmpty) ||
-                                                (priority != null &&
-                                                    priority.isNotEmpty)) {
-                                              // TODO: Dispatch filter event to BLoC
-                                              // ctx.read<ComplaintsInboxBloc>().add(
-                                              //   ComplaintInboxFilterEvent(status: status, priority: priority),
-                                              // );
-                                            }
-                                            context.router.pop();
-                                          },
-                                        ),
-                                      )
-                                    },
-                                  ),
-                                ),
-                              if (inboxTemplate
-                                      ?.properties?[
-                                          complaintKeys.sortComplaints]
-                                      ?.hidden !=
-                                  true)
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(right: spacer2 * 2),
-                                  child: DigitButton(
-                                      type: DigitButtonType.tertiary,
-                                      size: DigitButtonSize.medium,
-                                      label: localizations.translate(
-                                          inboxTemplate
-                                                  ?.properties?[complaintKeys
-                                                      .sortComplaints]
-                                                  ?.label ??
-                                              ""),
-                                      prefixIcon: Icons.segment,
-                                      onPressed: () => {
-                                            context.router.push(
-                                              ComplaintsInboxDialogRoute(
-                                                type: ComplaintsInboxDialogType
-                                                    .sort,
-                                                titleKey: i18.complaints
-                                                    .complaintInboxSortHeading,
-                                                ctaKey: i18.complaints.sortCTA,
-                                                buildForm: () => fb.group({
-                                                  'sortOrder':
-                                                      FormControl<String>(
-                                                          value: ""),
-                                                }),
-                                                buildFields:
-                                                    buildComplaintSortFields,
-                                                // ⬅ Reused function
-                                                onSubmit: (ctx, form) {
-                                                  final sortOrder = form
-                                                      .control('sortOrder')
-                                                      .value as String?;
-                                                  if (sortOrder != null &&
-                                                      sortOrder.isNotEmpty) {
-                                                    ctx
-                                                        .read<
-                                                            ComplaintWrapperBloc>()
-                                                        .add(
-                                                            ComplaintWrapperEvent
-                                                                .sort(
-                                                                    sortOrder));
-                                                  }
-                                                  context.router.pop();
-                                                },
-                                              ),
-                                            )
-                                          }),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            final item = inboxItems.elementAt(index);
-
-                            return _ComplaintsInboxItem(
-                              item: item.complaint!,
-                              localizations: localizations,
-                            );
-                          },
-                          childCount: inboxItems.length,
-                        ),
-                      ),
-                    ],
-                  ],
-                  children: [
-                    if (inboxItems.isEmpty)
-                      Expanded(
-                        child: Center(
+                      slivers: [
+                        SliverToBoxAdapter(
                           child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: NoResultCard(
-                              align: Alignment.center,
-                              label: localizations
-                                  .translate(i18.complaints.noComplaintsExist),
+                            padding: const EdgeInsets.only(
+                              left: spacer2 * 2,
+                              bottom: spacer2,
+                            ),
+                            child: Text(
+                              localizations
+                                  .translate(inboxTemplate?.label ?? ""),
+                              style: textTheme.headingXl.copyWith(
+                                  color: theme.colorTheme.primary.primary2),
                             ),
                           ),
                         ),
-                      ),
-                  ],
-                ),
-              ),
-              DigitCard(
-                  cardType: CardType.primary,
-                  margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
-                  children: [
-                    if (inboxTemplate?.properties?['PrimaryButton']?.hidden !=
-                        true)
-                      DigitButton(
-                        label: localizations.translate(inboxTemplate
-                                ?.properties?[complaintKeys.primaryButtonKey]
-                                ?.label ??
-                            ""),
-                        type: DigitButtonType.primary,
-                        size: DigitButtonSize.large,
-                        mainAxisSize: MainAxisSize.max,
-                        onPressed: () async {
-                          var loggedInUserUuid =
-                              ComplaintsSingleton().loggedInUserUuid;
-                          context.read<FormsBloc>().add(FormsEvent.clearForm(
-                              schemaKey: complaintKeys.complaintForm));
+                        if (inboxTemplate
+                                    ?.properties?[
+                                        complaintKeys.searchComplaints]
+                                    ?.hidden !=
+                                true ||
+                            inboxTemplate
+                                    ?.properties?[
+                                        complaintKeys.filterComplaints]
+                                    ?.hidden !=
+                                true ||
+                            inboxTemplate
+                                    ?.properties?[complaintKeys.sortComplaints]
+                                    ?.hidden !=
+                                true) ...[
+                          SliverToBoxAdapter(
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: spacer2),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  if (inboxTemplate
+                                          ?.properties?[
+                                              complaintKeys.searchComplaints]
+                                          ?.hidden !=
+                                      true)
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: spacer2 * 2),
+                                      child: DigitButton(
+                                        type: DigitButtonType.tertiary,
+                                        size: DigitButtonSize.medium,
+                                        prefixIcon: Icons.search,
+                                        label: localizations.translate(
+                                            inboxTemplate
+                                                    ?.properties?[complaintKeys
+                                                        .searchComplaints]
+                                                    ?.label ??
+                                                ""),
+                                        onPressed: () {
+                                          context.router.push(
+                                            ComplaintsInboxDialogRoute(
+                                              type: ComplaintsInboxDialogType
+                                                  .search,
+                                              titleKey: 'Search Complaints',
+                                              ctaKey: "SEARCH",
+                                              buildForm: () => fb.group({
+                                                'complaintNumber':
+                                                    FormControl<String>(
+                                                        value: state.searchKeys
+                                                            ?.complaintNumber),
+                                                'mobileNumber':
+                                                    FormControl<String>(
+                                                  value: state.searchKeys
+                                                      ?.complainantMobileNumber,
+                                                  validators: [
+                                                    Validators.delegate(
+                                                      (validator) =>
+                                                          CustomValidator
+                                                              .validMobileNumber(
+                                                                  validator),
+                                                    )
+                                                  ],
+                                                ),
+                                              }),
+                                              buildFields:
+                                                  buildComplaintSearchFields,
+                                              onSubmit: (ctx, form) {
+                                                final complaintNumber = form
+                                                    .control('complaintNumber')
+                                                    .value as String?;
+                                                final mobileNumber = form
+                                                    .control('mobileNumber')
+                                                    .value as String?;
+                                                context
+                                                    .read<
+                                                        ComplaintWrapperBloc>()
+                                                    .add(ComplaintWrapperEvent
+                                                        .search(
+                                                            mobileNumber:
+                                                                mobileNumber,
+                                                            complaintNumber:
+                                                                complaintNumber));
+                                                context.router.pop();
+                                              },
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  if (inboxTemplate
+                                          ?.properties?[
+                                              complaintKeys.filterComplaints]
+                                          ?.hidden !=
+                                      true)
+                                    Padding(
+                                      padding: EdgeInsets.zero,
+                                      child: DigitButton(
+                                        type: DigitButtonType.tertiary,
+                                        size: DigitButtonSize.medium,
+                                        label: localizations.translate(
+                                            inboxTemplate
+                                                    ?.properties?[complaintKeys
+                                                        .filterComplaints]
+                                                    ?.label ??
+                                                ""),
+                                        prefixIcon: Icons.filter_list_alt,
+                                        onPressed: () => {
+                                          context.router.push(
+                                            ComplaintsInboxDialogRoute(
+                                              type: ComplaintsInboxDialogType
+                                                  .filter,
+                                              titleKey: i18.complaints
+                                                  .complaintInboxFilterHeading,
+                                              ctaKey: i18.complaints.filterCTA,
+                                              buildForm: () => fb.group({
+                                                'complaintType':
+                                                    FormControl<String>(),
+                                                'complaintLocality':
+                                                    FormControl<String>(),
+                                                'complaintAssignmentType':
+                                                    FormControl<String>(),
+                                                'complaintStatus':
+                                                    FormControl<String>(),
+                                              }),
+                                              buildFields:
+                                                  buildComplaintFilterFields,
+                                              onSubmit: (ctx, form) {
+                                                final status = form
+                                                    .control('status')
+                                                    .value as String?;
+                                                final priority = form
+                                                    .control('priority')
+                                                    .value as String?;
 
-                          final pageName = context
-                              .read<FormsBloc>()
-                              .state
-                              .cachedSchemas[complaintKeys.complaintForm]
-                              ?.pages
-                              .entries
-                              .first
-                              .key;
+                                                if ((status != null &&
+                                                        status.isNotEmpty) ||
+                                                    (priority != null &&
+                                                        priority.isNotEmpty)) {
+                                                  // TODO: Dispatch filter event to BLoC
+                                                  // ctx.read<ComplaintsInboxBloc>().add(
+                                                  //   ComplaintInboxFilterEvent(status: status, priority: priority),
+                                                  // );
+                                                }
+                                                context.router.pop();
+                                              },
+                                            ),
+                                          )
+                                        },
+                                      ),
+                                    ),
+                                  if (inboxTemplate
+                                          ?.properties?[
+                                              complaintKeys.sortComplaints]
+                                          ?.hidden !=
+                                      true)
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: spacer2 * 2),
+                                      child: DigitButton(
+                                          type: DigitButtonType.tertiary,
+                                          size: DigitButtonSize.medium,
+                                          label: localizations.translate(
+                                              inboxTemplate
+                                                      ?.properties?[
+                                                          complaintKeys
+                                                              .sortComplaints]
+                                                      ?.label ??
+                                                  ""),
+                                          prefixIcon: Icons.segment,
+                                          onPressed: () => {
+                                                context.router.push(
+                                                  ComplaintsInboxDialogRoute(
+                                                    type:
+                                                        ComplaintsInboxDialogType
+                                                            .sort,
+                                                    titleKey: i18.complaints
+                                                        .complaintInboxSortHeading,
+                                                    ctaKey:
+                                                        i18.complaints.sortCTA,
+                                                    buildForm: () => fb.group({
+                                                      'sortOrder':
+                                                          FormControl<String>(
+                                                              value: ""),
+                                                    }),
+                                                    buildFields:
+                                                        buildComplaintSortFields,
+                                                    // ⬅ Reused function
+                                                    onSubmit: (ctx, form) {
+                                                      final sortOrder = form
+                                                          .control('sortOrder')
+                                                          .value as String?;
+                                                      if (sortOrder != null &&
+                                                          sortOrder
+                                                              .isNotEmpty) {
+                                                        ctx
+                                                            .read<
+                                                                ComplaintWrapperBloc>()
+                                                            .add(ComplaintWrapperEvent
+                                                                .sort(
+                                                                    sortOrder));
+                                                      }
+                                                      context.router.pop();
+                                                    },
+                                                  ),
+                                                )
+                                              }),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                final item = inboxItems.elementAt(index);
 
-                          if (pageName == null) {
-                            Toast.showToast(
-                              context,
-                              message: localizations
-                                  .translate('NO_FORM_FOUND_FOR_COMPLAINT'),
-                              type: ToastType.error,
-                            );
-                          } else {
-                            context.router.push(FormsRenderRoute(
-                              currentSchemaKey: complaintKeys.complaintForm,
-                              pageName: pageName,
-                              defaultValues: {
-                                'administrativeArea': localizations.translate(
-                                    ComplaintsSingleton().boundary?.code ?? ''),
+                                return _ComplaintsInboxItem(
+                                  item: item.complaint!,
+                                  localizations: localizations,
+                                );
                               },
-                            ));
-                          }
-                        },
-                      ),
-                  ]),
-            ],
-          );
-        },
-      )),
+                              childCount: inboxItems.length,
+                            ),
+                          ),
+                        ],
+                      ],
+                      children: [
+                        if (inboxItems.isEmpty)
+                          Expanded(
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: NoResultCard(
+                                  align: Alignment.center,
+                                  label: localizations.translate(
+                                      i18.complaints.noComplaintsExist),
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  DigitCard(
+                      cardType: CardType.primary,
+                      margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
+                      children: [
+                        if (inboxTemplate
+                                ?.properties?['PrimaryButton']?.hidden !=
+                            true)
+                          DigitButton(
+                            label: localizations.translate(inboxTemplate
+                                    ?.properties?[
+                                        complaintKeys.primaryButtonKey]
+                                    ?.label ??
+                                ""),
+                            type: DigitButtonType.primary,
+                            size: DigitButtonSize.large,
+                            mainAxisSize: MainAxisSize.max,
+                            onPressed: () async {
+                              var loggedInUserUuid =
+                                  ComplaintsSingleton().loggedInUserUuid;
+                              context.read<FormsBloc>().add(
+                                  FormsEvent.clearForm(
+                                      schemaKey: complaintKeys.complaintForm));
+
+                              final pageName = context
+                                  .read<FormsBloc>()
+                                  .state
+                                  .cachedSchemas[complaintKeys.complaintForm]
+                                  ?.pages
+                                  .entries
+                                  .first
+                                  .key;
+
+                              if (pageName == null) {
+                                Toast.showToast(
+                                  context,
+                                  message: localizations
+                                      .translate('NO_FORM_FOUND_FOR_COMPLAINT'),
+                                  type: ToastType.error,
+                                );
+                              } else {
+                                context.router.push(FormsRenderRoute(
+                                  currentSchemaKey: complaintKeys.complaintForm,
+                                  pageName: pageName,
+                                  defaultValues: {
+                                    'administrativeArea': localizations
+                                        .translate(ComplaintsSingleton()
+                                                .boundary
+                                                ?.code ??
+                                            ''),
+                                    'loggedInUserName':
+                                        ComplaintsSingleton().loggedInUserName,
+                                    'loggedInUserMobileNumber':
+                                        ComplaintsSingleton().userMobileNumber
+                                  },
+                                ));
+                              }
+                            },
+                          ),
+                      ]),
+                ],
+              );
+            },
+          ))),
     );
   }
 

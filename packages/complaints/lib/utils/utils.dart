@@ -1,3 +1,5 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -112,3 +114,7 @@ class CustomValidator {
     return {'mobileNumber': true};
   }
 }
+
+final Map<String, PageRouteInfo> routerMap = {
+  'ComplaintsAcknowledgement': ComplaintsAcknowledgementRoute(),
+};

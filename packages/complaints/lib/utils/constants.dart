@@ -14,6 +14,9 @@ class ComplaintKeys {
   String get searchComplaints => 'searchComplaints';
   String get filterComplaints => 'filter';
   String get sortComplaints => 'sortComplaints';
+  String get acknowledgementTitle => 'AcknowledgementTitle';
+  String get acknowledgementDescription => 'AcknowledgementDescription';
+  String get secondaryActionLabel => 'SecondaryButton';
 }
 
 enum ComplaintsInboxDialogType { search, filter, sort }

@@ -41,6 +41,21 @@ class ComplaintWrapperBloc
     emit(state.copyWith(
         loading: true, lastAction: ComplaintWrapperActionType.none));
 
+    // Use globalCrudBloc to search using search params
+    final searchParams = GlobalSearchParameters(
+      filters: [
+        SearchFilter(
+          root: 'pgrService',
+          field: 'tenantId',
+          operator: 'equals',
+          value: ComplaintsSingleton().tenantId,
+        ),
+      ],
+      primaryModel: 'pgrService',
+      select: ['pgrService'],
+      pagination: null,
+    );
+
     final completer = Completer<CrudStateLoaded>();
     late final StreamSubscription subscription;
 
@@ -56,7 +71,7 @@ class ComplaintWrapperBloc
     });
 
     // Trigger global search via CrudBloc
-    globalCrudBloc.add(CrudEventSearch(event.searchParams));
+    globalCrudBloc.add(CrudEventSearch(searchParams));
 
     try {
       final globalState = await completer.future;
@@ -81,8 +96,8 @@ class ComplaintWrapperBloc
         filteredComplaints: [],
         isFiltered: false,
         totalCount: globalState.totalCount ?? wrappers.length,
-        limit: event.searchParams.pagination?.limit,
-        offset: event.searchParams.pagination?.offset,
+        searchKeys: null,
+        filters: null,
       ));
     } catch (e) {
       emit(state.copyWith(loading: false, error: e.toString(), complaints: []));
@@ -246,7 +261,7 @@ class ComplaintWrapperBloc
         if (event.complaintNumber != null && event.complaintNumber!.isNotEmpty)
           SearchFilter(
             root: 'pgrService',
-            field: 'serviceCode',
+            field: 'serviceRequestId',
             operator: 'contains',
             value: event.complaintNumber,
           ),
@@ -297,9 +312,8 @@ class ComplaintWrapperBloc
 
 @freezed
 class ComplaintWrapperEvent with _$ComplaintWrapperEvent {
-  const factory ComplaintWrapperEvent.loadFromGlobal({
-    required GlobalSearchParameters searchParams,
-  }) = ComplaintWrapperLoadFromGlobal;
+  const factory ComplaintWrapperEvent.loadFromGlobal() =
+      ComplaintWrapperLoadFromGlobal;
 
   const factory ComplaintWrapperEvent.create(
       {required List<EntityModel> entities}) = Create;
