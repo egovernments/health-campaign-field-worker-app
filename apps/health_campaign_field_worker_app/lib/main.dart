@@ -255,25 +255,19 @@ final List<Map<String, dynamic>> sampleFlows = [
       },
       {
         "format": "infoCard",
-        "hidden": "!stateWrapper.empty",
-        "label": "Filter Search",
-        "fieldName": "searchByFilter",
-        "onAction": {
-          "actionType": "SEARCH_EVENT",
-          "properties": {
-            "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT",
-            "name": "ENTITY // TASK",
-            "data": [
-              {"key": "STATUS", "value": "field.value", "operation": "equals"}
-            ]
-          }
-        }
+        "hidden": "{{ context.household.notEmpty }}",
+        // ✅ Now works with .notEmpty helper
+        "label": "No households found",
+        "description":
+            "Use the search above to find households or register a new one"
       },
       {
         "format": "listView",
         "hidden": "{{ context.household.empty }}",
+        // ✅ Now works with .empty helper
         "fieldName": "listView",
-        "data": "{{ context.household }}",
+        "data": "household",
+        // ✅ Just the entity name
         "child": {
           "format": "card",
           "children": [
@@ -294,7 +288,13 @@ final List<Map<String, dynamic>> sampleFlows = [
                         "actionType": "NAVIGATION",
                         "properties": {
                           "type": "TEMPLATE",
-                          "name": "householdOverview"
+                          "name": "householdOverview",
+                          "data": [
+                            {
+                              "key": "selectedIndividual",
+                              "value": "item.individual.id"
+                            }
+                          ]
                         }
                       }
                     }
@@ -306,6 +306,7 @@ final List<Map<String, dynamic>> sampleFlows = [
                     {
                       "format": "text",
                       "value": "{{ context.members.isHeadOfHousehold }}"
+                      // ✅ This works
                     },
                     {
                       "format": "button",
@@ -316,24 +317,19 @@ final List<Map<String, dynamic>> sampleFlows = [
                           "type": "FORM",
                           "name": "INDIVIDUAL",
                           "data": [
-                            {"key": "id", "value": "{{item.id}}"}
+                            {"key": "id", "value": "{{ item.id }}"}
+                            // ✅ Now item context works
                           ]
                         }
                       }
-                    },
-                    {
-                      "format": "table",
-                      "columns": [
-                        {"label": "Task", "key": "taskName"},
-                        {"label": "Status", "key": "taskStatus"}
-                      ],
-                      "data": "{{ context.tasks }}"
-                    },
-                    {
-                      "format": "tag",
-                      "type": "item.status",
-                      "label": "{{ item.status }}"
                     }
+                    // For the table and tag, you need to add tasks to your wrapperConfig
+                    // OR reference existing data like:
+                    // {
+                    //   "format": "tag",
+                    //   "type": "info",
+                    //   "label": "{{ item.householdType }}" // Use actual fields from household
+                    // }
                   ]
                 }
               ]
@@ -894,8 +890,10 @@ final List<Map<String, dynamic>> sampleFlows = [
           },
           {
             "format": "listView",
-            "data":
-                "{{members}}", // This should be a list of members from your state
+            "hidden": "{{ context.household.empty }}",
+            // ✅ Now works with .empty helper
+            "fieldName": "listView",
+            "data": "household",
             "child": {
               "format": "card",
               "type": "secondary",
@@ -908,7 +906,8 @@ final List<Map<String, dynamic>> sampleFlows = [
                       "children": [
                         {
                           "format": "text",
-                          "value": "{{context.IndividualModel.name.givenName}}",
+                          "value":
+                              "{{ context.headOfHousehold.name.givenName }}",
                           "style": "headingL"
                         },
                         {
@@ -936,7 +935,7 @@ final List<Map<String, dynamic>> sampleFlows = [
                     {
                       "format": "text",
                       "value":
-                          "{{context.IndividualModel.gender}} | {{context.IndividualModel.age}} date of birth"
+                          "{{ context.individual.gender }} | {{context.individual.age}} date of birth"
                     },
                     {"format": "tag", "type": "", "label": "Not visited"},
                     // {

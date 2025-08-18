@@ -175,7 +175,6 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
                 //   debugPrint(
                 //       '✅ onUpdate called → $screenKey → ${state.entities}');
                 // }
-                setState(() {});
               },
             )..add(const CrudEventInitialize());
           },

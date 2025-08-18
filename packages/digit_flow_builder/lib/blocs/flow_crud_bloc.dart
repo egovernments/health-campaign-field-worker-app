@@ -41,22 +41,29 @@ class FlowCrudBloc extends CrudBloc {
   }
 }
 
-class FlowCrudStateRegistry extends ChangeNotifier {
+class FlowCrudStateRegistry {
+  final Map<String, ValueNotifier<FlowCrudState?>> _map = {};
+
   static final FlowCrudStateRegistry _instance =
       FlowCrudStateRegistry._internal();
-
-  final Map<String, FlowCrudState> _stateMap = {};
 
   FlowCrudStateRegistry._internal();
 
   factory FlowCrudStateRegistry() => _instance;
 
-  void update(String screenKey, FlowCrudState state) {
-    _stateMap[screenKey] = state;
-    notifyListeners(); // Notifies all listeners
+  void update(String key, FlowCrudState state) {
+    if (!_map.containsKey(key)) {
+      _map[key] = ValueNotifier<FlowCrudState?>(state);
+    } else {
+      _map[key]!.value = state;
+    }
   }
 
-  FlowCrudState? get(String screenKey) => _stateMap[screenKey];
+  ValueNotifier<FlowCrudState?> listen(String key) {
+    return _map.putIfAbsent(key, () => ValueNotifier<FlowCrudState?>(null));
+  }
+
+  FlowCrudState? get(String key) => _map[key]?.value;
 }
 
 class FlowCrudState {

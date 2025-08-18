@@ -1,4 +1,5 @@
-import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:digit_forms_engine/widgets/back_header/back_navigation_help_header.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -11,7 +12,7 @@ import 'action_handler/action_handler.dart';
 import 'blocs/flow_crud_bloc.dart';
 import 'widget_registry.dart';
 
-class LayoutRendererPage extends StatefulWidget {
+class LayoutRendererPage extends StatelessWidget {
   final Map<String, dynamic> config;
   final List<String>? watchedScreenKeys;
 
@@ -22,109 +23,95 @@ class LayoutRendererPage extends StatefulWidget {
   });
 
   @override
-  State<LayoutRendererPage> createState() => _LayoutRendererPageState();
-}
-
-class _LayoutRendererPageState extends State<LayoutRendererPage> {
-  final List<dynamic> _wrappers = [];
-
-  @override
-  void initState() {
-    super.initState();
-    FlowCrudStateRegistry().addListener(_onCrudStateChange);
-    _onCrudStateChange(); // Initial build
-  }
-
-  @override
-  void dispose() {
-    FlowCrudStateRegistry().removeListener(_onCrudStateChange);
-    super.dispose();
-  }
-
-  void _onCrudStateChange() {
-    final keys = widget.watchedScreenKeys;
-    if (keys == null || keys.isEmpty) {
-      setState(() {}); // Rebuild on any update
-    } else {
-      final updated = keys.any(
-        (key) => FlowCrudStateRegistry().get(key) != null,
-      );
-      if (updated) setState(() {});
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final List<dynamic> body = widget.config['body'] ?? [];
-    final List<dynamic> actions = widget.config['actions'] ?? [];
+    final List<dynamic> body = config['body'] ?? [];
+    final List<dynamic> actions = config['actions'] ?? [];
 
-    final screenKeyToShow = widget.watchedScreenKeys?.first;
-    final crudState = screenKeyToShow != null
-        ? FlowCrudStateRegistry().get(screenKeyToShow)
-        : null;
+    final screenKey =
+        getScreenKeyFromArgs(context) ?? context.router.currentPath;
 
-    final isPersisted = crudState is CrudStatePersisted;
+    return ValueListenableBuilder(
+      valueListenable: FlowCrudStateRegistry().listen(screenKey),
+      builder: (context, _, __) {
+        final stateData = extractCrudStateData(screenKey);
 
-    return Scaffold(
-      body: ScrollableContent(
-        header: Column(
-          children: [
-            const BackNavigationHelpHeaderWidget(),
-            if (isPersisted)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(
-                  '✔ Data saved',
-                  style: TextStyle(color: Colors.green.shade700),
-                ),
-              ),
-          ],
-        ),
-        footer: actions.isNotEmpty
-            ? DigitCard(
-                children: actions
-                    .map((e) => LayoutMapper.map(e, context, (action) {
-                          ActionHandler.execute(action, context, {
-                            'wrappers': _wrappers,
-                          });
-                        }))
-                    .toList(),
-              )
-            : null,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 16.0, left: 16, right: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        return Scaffold(
+          body: ScrollableContent(
+            header: const Column(
               children: [
-                DigitTextBlock(
-                  padding: EdgeInsets.zero,
-                  heading: widget.config['heading'] ?? "",
-                  headingStyle: Theme.of(context)
-                      .digitTextTheme(context)
-                      .headingXl
-                      .copyWith(
-                          color: Theme.of(context).colorTheme.primary.primary2),
-                  description: widget.config['description'] ?? "",
-                ),
-                const SizedBox(height: 16),
-                ...body
-                    .map((e) => LayoutMapper.map(e, context, (action) {
-                          ActionHandler.execute(action, context, {
-                            'wrappers': _wrappers,
-                          });
-                        }))
-                    .expand((widget) => [
-                          widget,
-                          const SizedBox(height: 16),
-                        ])
-                    .toList()
-                  ..removeLast(),
+                BackNavigationHelpHeaderWidget(),
               ],
             ),
-          )
-        ],
-      ),
+            footer: actions.isNotEmpty
+                ? DigitCard(
+                    children: actions
+                        .map((e) => LayoutMapper.map(
+                              preprocessConfigWithState(e, stateData),
+                              stateData,
+                              context,
+                              screenKey: screenKey,
+                              (action) {
+                                ActionHandler.execute(action, context, {
+                                  'wrappers': const [],
+                                });
+                              },
+                            ))
+                        .toList(),
+                  )
+                : null,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0, left: 16, right: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DigitTextBlock(
+                      padding: EdgeInsets.zero,
+                      heading: config['heading'] ?? "",
+                      headingStyle: Theme.of(context)
+                          .digitTextTheme(context)
+                          .headingXl
+                          .copyWith(
+                              color: Theme.of(context)
+                                  .colorTheme
+                                  .primary
+                                  .primary2),
+                      description: config['description'] ?? "",
+                    ),
+                    const SizedBox(height: 16),
+                    ...body
+                        .map((e) {
+                          final processed =
+                              preprocessConfigWithState(e, stateData);
+
+                          return CrudItemContext(
+                            stateData: stateData,
+                            screenKey: screenKey,
+                            child: LayoutMapper.map(
+                              processed,
+                              stateData,
+                              context,
+                              (action) {
+                                ActionHandler.execute(action, context, {
+                                  'wrappers': const [],
+                                });
+                              },
+                            ),
+                          );
+                        })
+                        .expand((widget) => [
+                              widget,
+                              const SizedBox(height: 16),
+                            ])
+                        .toList()
+                      ..removeLast(),
+                  ],
+                ),
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -132,44 +119,28 @@ class _LayoutRendererPageState extends State<LayoutRendererPage> {
 class LayoutMapper {
   static Widget map(
     Map<String, dynamic> json,
+    CrudStateData? stateData,
     BuildContext context,
-    void Function(ActionConfig) onAction,
-  ) {
-    // Ensure children get item + index from parent
-    final enrichedJson = _propagateListContext(json);
+    void Function(ActionConfig) onAction, {
+    Map<String, dynamic>? item,
+    int? listIndex,
+    String? screenKey,
+  }) {
+    debugPrint('index in layourMapper ${listIndex.toString()}');
 
-    return WidgetRegistry.build(enrichedJson, context, onAction);
-  }
-
-  static Map<String, dynamic> _propagateListContext(Map<String, dynamic> json) {
-    final hasItem = json.containsKey('item');
-    final hasIndex = json.containsKey('__listIndex');
-
-    // Only merge into children if present
-    if (json.containsKey('children') && json['children'] is List) {
-      json = Map<String, dynamic>.from(json);
-      json['children'] = (json['children'] as List).map((child) {
-        if (child is Map<String, dynamic>) {
-          return {
-            ...child,
-            if (hasItem) 'item': json['item'],
-            if (hasIndex) '__listIndex': json['__listIndex'],
-          };
-        }
-        return child;
-      }).toList();
-    }
-
-    // Also handle a single 'child' property
-    if (json.containsKey('child') && json['child'] is Map<String, dynamic>) {
-      json = Map<String, dynamic>.from(json);
-      json['child'] = {
-        ...json['child'],
-        if (hasItem) 'item': json['item'],
-        if (hasIndex) '__listIndex': json['__listIndex'],
-      };
-    }
-
-    return json;
+    return CrudItemContext(
+      stateData: stateData,
+      listIndex: listIndex,
+      item: item,
+      screenKey: screenKey ?? CrudItemContext.of(context)?.screenKey,
+      child: ValueListenableBuilder(
+        valueListenable: FlowCrudStateRegistry().listen(
+          screenKey ?? CrudItemContext.of(context)?.screenKey ?? "",
+        ),
+        builder: (context, _, __) {
+          return WidgetRegistry.build(json, context, onAction);
+        },
+      ),
+    );
   }
 }
