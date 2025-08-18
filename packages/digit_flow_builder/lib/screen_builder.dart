@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'blocs/flow_crud_bloc.dart';
 import 'flow_builder.dart';
 
-class ScreenKeyListener extends StatefulWidget {
+class ScreenKeyListener extends StatelessWidget {
   final String screenKey;
   final Widget Function(BuildContext context, FlowCrudState? state) builder;
 
@@ -19,38 +19,14 @@ class ScreenKeyListener extends StatefulWidget {
   });
 
   @override
-  State<ScreenKeyListener> createState() => _ScreenKeyListenerState();
-}
-
-class _ScreenKeyListenerState extends State<ScreenKeyListener> {
-  FlowCrudState? _state;
-
-  @override
-  void initState() {
-    super.initState();
-    _state = FlowCrudStateRegistry().get(widget.screenKey);
-
-    FlowCrudStateRegistry().addListener(_onUpdate);
-  }
-
-  @override
-  void dispose() {
-    FlowCrudStateRegistry().removeListener(_onUpdate);
-    super.dispose();
-  }
-
-  void _onUpdate() {
-    final updatedState = FlowCrudStateRegistry().get(widget.screenKey);
-    if (_state != updatedState) {
-      setState(() {
-        _state = updatedState;
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return widget.builder(context, _state);
+    return ValueListenableBuilder(
+      valueListenable: FlowCrudStateRegistry().listen(screenKey),
+      builder: (context, _, __) {
+        final state = FlowCrudStateRegistry().get(screenKey);
+        return builder(context, state);
+      },
+    );
   }
 }
 
@@ -88,7 +64,13 @@ class ScreenBuilder extends StatelessWidget {
               }
             }
           },
-          child: _buildScreen(context, screenType, config, crudState),
+          child: _buildScreen(
+            context,
+            screenType,
+            config,
+            crudState,
+            screenKey, // ✅ pass screenKey here
+          ),
         );
       },
     );
@@ -99,6 +81,7 @@ class ScreenBuilder extends StatelessWidget {
     String screenType,
     Map<String, dynamic> config,
     FlowCrudState? crudState,
+    String screenKey, // ✅ added param
   ) {
     if (screenType == 'FORM') {
       final schemaKey = config['name'] ?? '';
@@ -111,11 +94,6 @@ class ScreenBuilder extends StatelessWidget {
     } else if (screenType == 'TEMPLATE') {
       return LayoutRendererPage(
         config: config,
-        watchedScreenKeys: const [
-          // TODO: Need to map the dependent screens dynamically from form
-          'TEMPLATE::searchBeneficiary',
-          // or whatever the dependent form screenKey is
-        ],
       );
     } else {
       return const Center(child: Text('Unsupported screen type'));
