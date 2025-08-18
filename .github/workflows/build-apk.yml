@@ -114,13 +114,23 @@ jobs:
 
       - name: Install Project Dependencies
         run: |
-          chmod +x ./tools/install_bricks.sh
-          ./tools/install_bricks.sh
+          # Install global dependencies without running local setup scripts
+          dart pub global activate mason_cli
+          dart pub global activate melos
+          
+          # Get dependencies for the app without overriding local configurations
+          cd apps/health_campaign_field_worker_app
+          flutter pub get
 
       - name: Generate Code
         run: |
           cd apps/health_campaign_field_worker_app
-          dart run build_runner build --delete-conflicting-outputs
+          # Only run build_runner if generated files don't exist or are outdated
+          if [ ! -d ".dart_tool/build" ] || [ ! -f "lib/models/data_model.dart" ]; then
+            dart run build_runner build --delete-conflicting-outputs
+          else
+            echo "Generated files appear up to date, skipping build_runner"
+          fi
 
       - name: Build APK
         run: |
