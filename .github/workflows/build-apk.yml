@@ -39,31 +39,6 @@ on:
           - UAT
           - DEMO
           - PROD
-      sync_down_retry_count:
-        description: 'Sync Down Retry Count'
-        required: false
-        default: '3'
-        type: string
-      retry_time_interval:
-        description: 'Retry Time Interval (seconds)'
-        required: false
-        default: '5'
-        type: string
-      connect_timeout:
-        description: 'Connection Timeout (milliseconds)'
-        required: false
-        default: '120000'
-        type: string
-      receive_timeout:
-        description: 'Receive Timeout (milliseconds)'
-        required: false
-        default: '120000'
-        type: string
-      send_timeout:
-        description: 'Send Timeout (milliseconds)'
-        required: false
-        default: '120000'
-        type: string
       check_bandwidth_api:
         description: 'Check Bandwidth API Path'
         required: false
@@ -125,11 +100,11 @@ jobs:
           ACTIONS_API_PATH="${{ inputs.actions_api_path }}"
           HIERARCHY_TYPE="${{ inputs.hierarchy_type }}"
           ENV_NAME="${{ inputs.env_name }}"
-          SYNC_DOWN_RETRY_COUNT="${{ inputs.sync_down_retry_count }}"
-          RETRY_TIME_INTERVAL="${{ inputs.retry_time_interval }}"
-          CONNECT_TIMEOUT="${{ inputs.connect_timeout }}"
-          RECEIVE_TIMEOUT="${{ inputs.receive_timeout }}"
-          SEND_TIMEOUT="${{ inputs.send_timeout }}"
+           SYNC_DOWN_RETRY_COUNT=3
+           RETRY_TIME_INTERVAL=5
+           CONNECT_TIMEOUT=120000
+           RECEIVE_TIMEOUT=120000
+           SEND_TIMEOUT=120000
           CHECK_BANDWIDTH_API="${{ inputs.check_bandwidth_api }}"
           EOF
 
