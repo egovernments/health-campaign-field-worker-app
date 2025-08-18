@@ -114,10 +114,6 @@ jobs:
 
       - name: Install Project Dependencies
         run: |
-          # Install global dependencies without running local setup scripts
-          dart pub global activate mason_cli
-          dart pub global activate melos
-          
           cd apps/health_campaign_field_worker_app
           
           # Backup original pubspec.lock if it exists
@@ -129,16 +125,17 @@ jobs:
           # Run pub get to install dependencies
           flutter pub get
           
-          # Restore original pubspec.lock to avoid committing changes
+          # If backup exists, restore it (preserve overrides)
           if [ -f "pubspec.lock.backup" ]; then
-            mv pubspec.lock.backup pubspec.lock
-            echo "Restored original pubspec.lock"
+            cp pubspec.lock.backup pubspec.lock
+            echo "Restored original pubspec.lock with overrides"
+          else
+            echo "No existing lock file found, keeping generated one"
           fi
 
       - name: Generate Code
         run: |
           cd apps/health_campaign_field_worker_app
-          # Only run build_runner if generated files don't exist or are outdated
           if [ ! -d ".dart_tool/build" ] || [ ! -f "lib/models/data_model.dart" ]; then
             dart run build_runner build --delete-conflicting-outputs
           else
