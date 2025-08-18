@@ -235,8 +235,6 @@ class WidgetRegistry {
     WidgetRegistry.register('text', (json, context, onAction) {
       final crudCtx = CrudItemContext.of(context);
 
-      debugPrint('index ${crudCtx?.listIndex.toString()}');
-
       final value = json['value'] ?? '';
       final finalText = (crudCtx?.stateData != null && value is String)
           ? interpolateWithCrudStates(
@@ -293,8 +291,6 @@ class WidgetRegistry {
     // LISTVIEW
     WidgetRegistry.register('listView', (json, context, onAction) {
       final crudCtx = CrudItemContext.of(context);
-      debugPrint("CrudItemContext available? ${crudCtx != null}");
-
       final stateData = crudCtx?.stateData;
       final items = crudCtx?.stateData?.rawState ?? [];
 
