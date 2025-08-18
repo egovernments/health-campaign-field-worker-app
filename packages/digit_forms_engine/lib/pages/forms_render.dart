@@ -363,8 +363,6 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
             .join(', ');
       } else if (rawValue is DateTime) {
         displayValue = dateFormatter.format(rawValue);
-      } else if (rawValue is String && isDateTime(rawValue)) {
-        displayValue = dateFormatter.format(DateTime.parse(rawValue));
       } else if (rawValue is String && isDateLike(rawValue)) {
         try {
           final parsed = parseDate(rawValue);

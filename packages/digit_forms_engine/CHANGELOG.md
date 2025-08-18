@@ -1,3 +1,8 @@
+## 0.0.3-dev
+
+### Added
+- Added mobile number for type string
+
 ## 0.0.2-dev
 
 ### Added
