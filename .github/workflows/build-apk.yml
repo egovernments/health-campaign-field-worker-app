@@ -78,14 +78,14 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
+          flutter-version: '3.22.2'
           channel: 'stable'
           cache: true
 
       - name: Setup Dart SDK
         uses: dart-lang/setup-dart@v1
         with:
-          sdk: 3.0.0
+          sdk: ">=3.3.0 <4.0.0"
 
       - name: Install Global Dependencies
         run: |
