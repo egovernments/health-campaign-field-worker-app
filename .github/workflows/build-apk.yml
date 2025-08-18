@@ -68,6 +68,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          submodules: true   # ensure packages like ../../packages/complaints are pulled
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -96,11 +98,11 @@ jobs:
           ACTIONS_API_PATH="${{ inputs.actions_api_path }}"
           HIERARCHY_TYPE="${{ inputs.hierarchy_type }}"
           ENV_NAME="${{ inputs.env_name }}"
-           SYNC_DOWN_RETRY_COUNT=3
-           RETRY_TIME_INTERVAL=5
-           CONNECT_TIMEOUT=120000
-           RECEIVE_TIMEOUT=120000
-           SEND_TIMEOUT=120000
+          SYNC_DOWN_RETRY_COUNT=3
+          RETRY_TIME_INTERVAL=5
+          CONNECT_TIMEOUT=120000
+          RECEIVE_TIMEOUT=120000
+          SEND_TIMEOUT=120000
           CHECK_BANDWIDTH_API="${{ inputs.check_bandwidth_api }}"
           EOF
 
@@ -112,25 +114,26 @@ jobs:
           echo "Tenant ID: ${{ inputs.tenant_id }}"
           echo "Build Type: ${{ inputs.build_type }}"
 
-      - name: Install Project Dependencies
+      - name: Install Project Dependencies (respect lock file)
         run: |
           cd apps/health_campaign_field_worker_app
-          
-          # Backup original pubspec.lock if it exists
+
+          # Backup committed lock file
           if [ -f "pubspec.lock" ]; then
             cp pubspec.lock pubspec.lock.backup
-            echo "Backed up existing pubspec.lock"
+            echo "Backed up committed pubspec.lock"
           fi
-          
-          # Run pub get to install dependencies
-          flutter pub get
-          
-          # If backup exists, restore it (preserve overrides)
+
+          # Install strictly according to lock file
           if [ -f "pubspec.lock.backup" ]; then
-            cp pubspec.lock.backup pubspec.lock
-            echo "Restored original pubspec.lock with overrides"
+            flutter pub get --offline --enforce-lockfile || {
+              echo "❌ Failed to resolve with committed lockfile"
+              exit 1
+            }
+            echo "Dependencies installed using committed lockfile"
           else
-            echo "No existing lock file found, keeping generated one"
+            flutter pub get
+            echo "No lock file found, generated a new one"
           fi
 
       - name: Generate Code
