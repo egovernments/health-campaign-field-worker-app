@@ -24,7 +24,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:referral_reconciliation/blocs/hf_Referral_reconciliation_bloc.dart';
 import 'package:referral_reconciliation/data/repositories/transfomer_config.dart';
 import 'package:referral_reconciliation/utils/extensions/extensions.dart';
-import 'package:referral_reconciliation/widgets/custom_cycle_widget.dart';
+import 'package:referral_reconciliation/widgets/project_cycle_dropdown.dart';
 import 'package:referral_reconciliation/widgets/evaluation_facility_widget.dart';
 import 'package:survey_form/survey_form.dart';
 
@@ -124,8 +124,7 @@ class _SearchReferralReconciliationsPageState
 
           // Reset to prevent re-handling
           context.read<FormsBloc>().add(
-                const FormsEvent.clearForm(
-                    schemaKey: 'HFREFERALFLOW'), // or create a FormsResetEvent
+                const FormsEvent.clearForm(schemaKey: 'HFREFERALFLOW'),
               );
 
           final pages = currentSchema?.pages.entries.toList()
@@ -202,7 +201,6 @@ class _SearchReferralReconciliationsPageState
               }
             }
           } else {
-            //TODO::
             context.router
                 .push(ReferralReconAcknowledgementRoute()); // fallback page
           }
@@ -210,11 +208,9 @@ class _SearchReferralReconciliationsPageState
           Navigator.of(context, rootNavigator: true).pop();
           // Reset to prevent re-handling
           context.read<FormsBloc>().add(
-                const FormsEvent.clearForm(
-                    schemaKey: 'HFREFERALFLOW'), // or create a FormsResetEvent
+                const FormsEvent.clearForm(schemaKey: 'HFREFERALFLOW'),
               );
-          // context.router
-          //     .push(BeneficiaryErrorRoute(enableViewHousehold: false));
+
           if (kDebugMode) {
             print(createState.error);
           }
@@ -222,8 +218,6 @@ class _SearchReferralReconciliationsPageState
       },
       child: BlocListener<FormsBloc, FormsState>(
         listener: (context, formState) {
-          // TODO: implement listener
-
           if (formState is FormsSubmittedState) {
             DigitLoaders.overlayLoader(context: context);
 
@@ -240,12 +234,6 @@ class _SearchReferralReconciliationsPageState
                 final entities = formEntityMapper.mapFormToEntities(
                   modelsConfig: modelsConfig,
                   formValues: formData,
-                  // existingModels: [
-                  //   // if (household != null) household,
-                  //   // if (individual != null) individual,
-                  //   // if (projectBeneficiary != null) projectBeneficiary,
-                  //   // if (member != null) member
-                  // ],
                   context: {
                     "tenantId": ReferralReconSingleton().tenantId,
                     "userId": ReferralReconSingleton().userUUid,
