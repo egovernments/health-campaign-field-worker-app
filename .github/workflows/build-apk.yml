@@ -118,9 +118,22 @@ jobs:
           dart pub global activate mason_cli
           dart pub global activate melos
           
-          # Get dependencies for the app without overriding local configurations
           cd apps/health_campaign_field_worker_app
+          
+          # Backup original pubspec.lock if it exists
+          if [ -f "pubspec.lock" ]; then
+            cp pubspec.lock pubspec.lock.backup
+            echo "Backed up existing pubspec.lock"
+          fi
+          
+          # Run pub get to install dependencies
           flutter pub get
+          
+          # Restore original pubspec.lock to avoid committing changes
+          if [ -f "pubspec.lock.backup" ]; then
+            mv pubspec.lock.backup pubspec.lock
+            echo "Restored original pubspec.lock"
+          fi
 
       - name: Generate Code
         run: |
