@@ -1,6 +1,7 @@
 name: 'Build APK with your Environment'
 
 on:
+  pull_request:
   workflow_dispatch:
     inputs:
       base_url:
