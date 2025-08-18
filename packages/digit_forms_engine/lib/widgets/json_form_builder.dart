@@ -115,6 +115,21 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           helpText: translateIfPresent(widget.schema.helpText, localizations),
         );
 
+      case PropertySchemaFormat.mobileNumber:
+        return JsonSchemaStringBuilder(
+          form: form,
+          label: translateIfPresent(widget.schema.label, localizations),
+          formControlName: widget.formControlName,
+          inputType: TextInputType.number,
+          readOnly: widget.schema.readOnly ?? false,
+          validations: widget.schema.validations,
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
+        );
+
       case PropertySchemaFormat.dob:
         return JsonSchemaDOBBuilder(
           label: translateIfPresent(widget.schema.label, localizations),
@@ -213,9 +228,9 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         return JsonSchemaNumberBuilder(
           form: form,
           prefixText:
-          translateIfPresent(widget.schema.prefixText, localizations),
+              translateIfPresent(widget.schema.prefixText, localizations),
           suffixText:
-          translateIfPresent(widget.schema.suffixText, localizations),
+              translateIfPresent(widget.schema.suffixText, localizations),
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
           inputType: TextInputType.number,
