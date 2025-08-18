@@ -52,11 +52,8 @@ class FlowCrudStateRegistry {
   factory FlowCrudStateRegistry() => _instance;
 
   void update(String key, FlowCrudState state) {
-    if (!_map.containsKey(key)) {
-      _map[key] = ValueNotifier<FlowCrudState?>(state);
-    } else {
-      _map[key]!.value = state;
-    }
+    _map.putIfAbsent(key, () => ValueNotifier<FlowCrudState?>(null)).value =
+        state;
   }
 
   ValueNotifier<FlowCrudState?> listen(String key) {
@@ -65,18 +62,17 @@ class FlowCrudStateRegistry {
 
   FlowCrudState? get(String key) => _map[key]?.value;
 
+  /// 🔹 Instead of dispose/remove, just reset the value to null
   void clear(String key) {
     if (_map.containsKey(key)) {
-      _map[key]!.dispose();
-      _map.remove(key);
+      _map[key]!.value = null;
     }
   }
 
   void clearAll() {
     for (final notifier in _map.values) {
-      notifier.dispose();
+      notifier.value = null;
     }
-    _map.clear();
   }
 }
 

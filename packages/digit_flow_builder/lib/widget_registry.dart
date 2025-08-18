@@ -7,6 +7,7 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 
 import 'action_handler/action_config.dart';
+import 'blocs/flow_crud_bloc.dart';
 import 'layout_renderer.dart';
 
 /// Provides stateData, listIndex, item, screenKey automatically down the tree
@@ -94,17 +95,21 @@ class WidgetRegistry {
       return DigitSearchBar(
         hintText: json['label'] ?? '',
         onChanged: (value) {
-          if (json['onAction'] != null) {
-            final raw = Map<String, dynamic>.from(json['onAction']);
-            raw['properties'] ??= {};
-            final data = raw['properties']['data'];
-            if (data is List &&
-                data.isNotEmpty &&
-                data[0] is Map<String, dynamic>) {
-              data[0]['value'] = value;
+          if (value.isNotEmpty) {
+            if (json['onAction'] != null) {
+              final raw = Map<String, dynamic>.from(json['onAction']);
+              raw['properties'] ??= {};
+              final data = raw['properties']['data'];
+              if (data is List &&
+                  data.isNotEmpty &&
+                  data[0] is Map<String, dynamic>) {
+                data[0]['value'] = value;
+              }
+              final action = ActionConfig.fromJson(raw);
+              onAction(action);
             }
-            final action = ActionConfig.fromJson(raw);
-            onAction(action);
+          } else {
+            FlowCrudStateRegistry().clearAll();
           }
         },
       );
