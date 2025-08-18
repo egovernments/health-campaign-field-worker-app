@@ -42,6 +42,12 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
   }
 
   @override
+  void dispose() {
+    FlowCrudStateRegistry().clear(widget.pageName);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final config = FlowRegistry.getByName(widget.pageName);
     if (config?['screenType'] == 'FORM') {
