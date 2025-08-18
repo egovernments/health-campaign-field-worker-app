@@ -58,6 +58,12 @@ on:
         required: false
         default: 'health-campaign-app'
         type: string
+      override_dependencies:
+        description: 'Override local path dependencies (use packages/* from this repo)'
+        required: false
+        default: 'false'
+        type: choice
+        options: [true, false]
 
 jobs:
   build:
@@ -69,7 +75,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          submodules: true   # ensure packages like ../../packages/complaints are pulled
+          submodules: true
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -113,27 +119,84 @@ jobs:
           echo "Base URL: ${{ inputs.base_url }}"
           echo "Tenant ID: ${{ inputs.tenant_id }}"
           echo "Build Type: ${{ inputs.build_type }}"
+          echo "Override Deps: ${{ inputs.override_dependencies }}"
 
-      - name: Install Project Dependencies (respect lock file)
+      - name: Install Project Dependencies (with optional local overrides)
         run: |
-          cd apps/health_campaign_field_worker_app
+          set -e
+          APP_DIR="apps/health_campaign_field_worker_app"
+          cd "$APP_DIR"
 
-          # Backup committed lock file
-          if [ -f "pubspec.lock" ]; then
-            cp pubspec.lock pubspec.lock.backup
-            echo "Backed up committed pubspec.lock"
-          fi
-
-          # Install strictly according to lock file
-          if [ -f "pubspec.lock.backup" ]; then
-            flutter pub get --offline --enforce-lockfile || {
-              echo "❌ Failed to resolve with committed lockfile"
-              exit 1
-            }
-            echo "Dependencies installed using committed lockfile"
-          else
+          if [[ "${{ inputs.override_dependencies }}" == "true" ]]; then
+            echo "⚡ Using local packages - adding dependency_overrides to pubspec.yaml"
+            
+            # Backup original pubspec.yaml
+            cp pubspec.yaml pubspec.yaml.original
+            
+            # List of packages to override
+            PACKAGES=(
+              "attendance_management"
+              "digit_data_model"
+              "registration_delivery"
+              "digit_dss"
+              "survey_form"
+              "inventory_management"
+              "digit_scanner"
+              "digit_showcase"
+              "closed_household"
+              "sync_service"
+              "referral_reconciliation"
+              "complaints"
+              "digit_forms_engine"
+              "digit_data_converter"
+              "digit_crud_bloc"
+              "digit_formula_parser"
+            )
+            
+            # Verify all local packages exist
+            PKG_ROOT="$GITHUB_WORKSPACE/packages"
+            for package in "${PACKAGES[@]}"; do
+              if [ ! -d "$PKG_ROOT/$package" ]; then
+                echo "❌ Missing package: $PKG_ROOT/$package"
+                exit 1
+              fi
+            done
+            
+            # Check if dependency_overrides section exists
+            if grep -q "^dependency_overrides:" pubspec.yaml; then
+              echo "Found existing dependency_overrides section, will append to it"
+              # Add each package under existing dependency_overrides
+              for package in "${PACKAGES[@]}"; do
+                # Add package with proper indentation after dependency_overrides:
+                sed -i "/^dependency_overrides:/a\\  ${package}:\\n    path: ../../../packages/${package}" pubspec.yaml
+                echo "✅ Added override for $package"
+              done
+            else
+              echo "No dependency_overrides section found, creating new one"
+              # Append dependency_overrides section at the end of pubspec.yaml
+              echo "" >> pubspec.yaml
+              echo "# Local package overrides for CI build" >> pubspec.yaml
+              echo "dependency_overrides:" >> pubspec.yaml
+              for package in "${PACKAGES[@]}"; do
+                echo "  ${package}:" >> pubspec.yaml
+                echo "    path: ../../../packages/${package}" >> pubspec.yaml
+                echo "✅ Added override for $package"
+              done
+            fi
+            
+            echo "Modified pubspec.yaml with dependency_overrides"
+            echo "Running flutter pub get..."
             flutter pub get
-            echo "No lock file found, generated a new one"
+            
+            echo "✅ Dependencies installed using local packages"
+          else
+            echo "📦 Using published packages from pub.dev"
+            if [ -f "pubspec.lock" ]; then
+              echo "Found existing pubspec.lock, backing it up"
+              cp pubspec.lock pubspec.lock.backup
+            fi
+            flutter pub get
+            echo "✅ Dependencies installed from pub.dev"
           fi
 
       - name: Generate Code
@@ -182,6 +245,7 @@ jobs:
           echo "| Base URL | ${{ inputs.base_url }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Tenant ID | ${{ inputs.tenant_id }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Build Type | ${{ inputs.build_type }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Override Deps | ${{ inputs.override_dependencies }} |" >> $GITHUB_STEP_SUMMARY
           echo "| APK Name | ${{ env.APK_NAME }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "✅ APK has been successfully built and uploaded as an artifact." >> $GITHUB_STEP_SUMMARY
