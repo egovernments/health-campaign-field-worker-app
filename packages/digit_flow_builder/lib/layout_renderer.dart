@@ -126,8 +126,6 @@ class LayoutMapper {
     int? listIndex,
     String? screenKey,
   }) {
-    debugPrint('index in layourMapper ${listIndex.toString()}');
-
     return CrudItemContext(
       stateData: stateData,
       listIndex: listIndex,
