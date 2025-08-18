@@ -25,6 +25,8 @@ class JsonFormBuilder extends LocalizedStatefulWidget {
 }
 
 class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
+  bool _autoReadOnly = false; // ← runtime overlay
+
   @override
   Widget build(BuildContext context) {
     final form = ReactiveForm.of(context) as FormGroup;
@@ -35,6 +37,61 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     }
 
     return _buildByType(form, widget.isView);
+  }
+
+  bool get _isReadOnly => (widget.schema.readOnly ?? false) || _autoReadOnly;
+
+  void _checkAutoFill(FormGroup form) {
+    final autoFillConditions = widget.schema.autoFillCondition;
+
+    if (autoFillConditions == null || autoFillConditions.isEmpty) return;
+
+    final formState = context.read<FormsBloc>().state;
+    final currentPageKey = widget.pageName;
+    final currentSchemaKey = widget.currentSchemaKey;
+
+    final values = buildVisibilityEvaluationContext(
+      currentPageKey: currentPageKey,
+      currentForm: form,
+      pages: formState.cachedSchemas[currentSchemaKey]!.pages,
+    );
+
+    bool matched = false;
+
+    for (final condition in autoFillConditions) {
+      final result = evaluateVisibilityExpression(condition.expression, values);
+      if (result) {
+        matched = true;
+
+        // Access defaultValues via Provider
+        final defaultValues = context.read<Map<String, dynamic>>();
+
+        final key = _stripCurlyBraces(condition.value);
+        final filledValue = defaultValues[key];
+
+        form.control(widget.formControlName).value = filledValue;
+
+        _autoReadOnly = true;
+
+        /// make field as non editable
+
+        break;
+      }
+    }
+
+    if (!matched && _autoReadOnly) {
+      // Condition not met — reset to default
+      form.control(widget.formControlName).value = widget.schema.value;
+      _autoReadOnly = widget.schema.readOnly ?? false; // ← back to editable
+    }
+  }
+
+  String _stripCurlyBraces(String value) {
+    final regex = RegExp(r'^\{\{(.+)\}\}$'); // Matches {{...}}
+    final match = regex.firstMatch(value.trim());
+    return match != null
+        ? match.group(1)!
+        : value; // Return inside if matched, else original
   }
 
   /// Conditionally hide based on display behavior
@@ -132,6 +189,21 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           helpText: translateIfPresent(widget.schema.helpText, localizations),
         );
 
+      case PropertySchemaFormat.mobileNumber:
+        return JsonSchemaStringBuilder(
+          form: form,
+          label: translateIfPresent(widget.schema.label, localizations),
+          formControlName: widget.formControlName,
+          inputType: TextInputType.number,
+          readOnly: widget.schema.readOnly ?? false,
+          validations: widget.schema.validations,
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
+        );
+
       case PropertySchemaFormat.dob:
         return JsonSchemaDOBBuilder(
           label: translateIfPresent(widget.schema.label, localizations),
@@ -198,6 +270,41 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label: translateIfPresent(widget.schema.label, localizations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+        );
+
+      case PropertySchemaFormat.textArea:
+        return JsonSchemaTextAreaBuilder(
+          form: form,
+          label: translateIfPresent(widget.schema.label, localizations),
+          formControlName: widget.formControlName,
+          value: widget.schema.value?.toString(),
+          validations: widget.schema.validations,
+          readOnly: widget.schema.readOnly ?? false,
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
+        );
+
+      case PropertySchemaFormat.mobileNumber:
+        return JsonSchemaStringBuilder(
+          form: form,
+          inputType: TextInputType.number,
+          prefixText:
+              translateIfPresent(widget.schema.prefixText, localizations),
+          suffixText:
+              translateIfPresent(widget.schema.suffixText, localizations),
+          label: translateIfPresent(widget.schema.label, localizations),
+          formControlName: widget.formControlName,
+          value: widget.schema.value?.toString(),
+          validations: widget.schema.validations,
+          readOnly: _isReadOnly,
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
         );
 
       default:

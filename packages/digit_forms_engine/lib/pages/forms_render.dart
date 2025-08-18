@@ -311,40 +311,56 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                     ),
                     children: [
                       DigitCard(
-                        margin: const EdgeInsets.symmetric(horizontal: spacer2),
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: spacer2,
+                        ),
                         children: [
-                          if (schema.label != null) ...[
-                            Text(
-                              localizations.translate(schema.label!),
-                              style: Theme.of(context)
-                                  .digitTextTheme(context)
-                                  .headingXl
-                                  .copyWith(
-                                      color: Theme.of(context)
-                                          .colorTheme
-                                          .primary
-                                          .primary2),
-                            ),
-                            if (schema.description != null &&
-                                translateIfPresent(
-                                        schema.description, localizations) !=
-                                    null &&
-                                translateIfPresent(
-                                        schema.description, localizations)!
-                                    .isNotEmpty) ...[
-                              Text(
-                                localizations.translate(schema.description!),
-                                style: Theme.of(context)
-                                    .digitTextTheme(context)
-                                    .bodyS
-                                    .copyWith(
-                                        color: Theme.of(context)
-                                            .colorTheme
-                                            .text
-                                            .secondary),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                height: 0,
                               ),
+                              if (schema.label != null) ...[
+                                Text(
+                                  localizations.translate(schema.label!),
+                                  style: Theme.of(context)
+                                      .digitTextTheme(context)
+                                      .headingXl
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorTheme
+                                              .primary
+                                              .primary2),
+                                ),
+                                if (schema.description != null &&
+                                    translateIfPresent(schema.description,
+                                            localizations) !=
+                                        null &&
+                                    translateIfPresent(
+                                            schema.description, localizations)!
+                                        .isNotEmpty) ...[
+                                  const SizedBox(
+                                    height: spacer1,
+                                  ),
+                                  Text(
+                                    localizations
+                                        .translate(schema.description!),
+                                    style: Theme.of(context)
+                                        .digitTextTheme(context)
+                                        .bodyS
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorTheme
+                                                .text
+                                                .secondary),
+                                  ),
+                                ],
+                              ],
                             ],
-                          ],
+                          ),
                           JsonForms(
                             propertySchema: schema,
                             pageName: widget.pageName,

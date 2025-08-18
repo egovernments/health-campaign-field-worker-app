@@ -337,10 +337,46 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.announcement,
           label: i18.home.fileComplaint,
-          onPressed: () {
+          onPressed: () async {
             if (isTriggerLocalisation) {
-              triggerLocalization();
+              final moduleName =
+                  'hcm-complaintflow-${context.selectedProject.referenceID}';
+              triggerLocalization(module: moduleName);
               isTriggerLocalisation = false;
+            }
+
+            final prefs = await SharedPreferences.getInstance();
+            final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+            if (schemaJsonRaw != null) {
+              final allSchemas =
+                  json.decode(schemaJsonRaw) as Map<String, dynamic>;
+
+              final complaintSchemaEntry =
+                  allSchemas['COMPLAINTFLOW'] as Map<String, dynamic>?;
+
+              final complaintSchemaData = complaintSchemaEntry?['data'];
+
+              if (complaintSchemaData != null) {
+                // Extract templates from both schemas
+                final regTemplatesRaw = complaintSchemaData?['templates'];
+
+                final Map<String, dynamic> complaintTemplateMap =
+                    regTemplatesRaw is Map<String, dynamic>
+                        ? regTemplatesRaw
+                        : {};
+
+                final templates = {
+                  for (final entry in complaintTemplateMap.entries)
+                    entry.key: TemplateConfig.fromJson(
+                        entry.value as Map<String, dynamic>)
+                };
+
+                final complaintConfig = json.encode(complaintSchemaData);
+
+                ComplaintsSingleton().setTemplateConfigs(templates);
+                ComplaintsSingleton().setComplaintConfig(complaintConfig);
+              }
             }
             context.router.push(const ComplaintsInboxWrapperRoute());
           },

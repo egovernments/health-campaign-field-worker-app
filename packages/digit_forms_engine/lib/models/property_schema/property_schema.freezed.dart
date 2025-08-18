@@ -57,10 +57,16 @@ mixin _$PropertySchema {
   List<ValidationRule>? get validations => throw _privateConstructorUsedError;
   bool? get includeInForm => throw _privateConstructorUsedError;
   bool? get includeInSummary => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _navigateToConfigOrNull)
   NavigateToConfig? get navigateTo => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _visibilityConditionOrNull)
   VisibilityCondition? get visibilityCondition =>
       throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _conditionalNavigateListOrNull)
   List<ConditionalNavigateTo>? get conditionalNavigateTo =>
+      throw _privateConstructorUsedError; // New: AutoFillCondition list
+  @JsonKey(fromJson: _autoFillConditionListOrNull)
+  List<AutoFillCondition>? get autoFillCondition =>
       throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -110,9 +116,13 @@ abstract class $PropertySchemaCopyWith<$Res> {
       List<ValidationRule>? validations,
       bool? includeInForm,
       bool? includeInSummary,
-      NavigateToConfig? navigateTo,
+      @JsonKey(fromJson: _navigateToConfigOrNull) NavigateToConfig? navigateTo,
+      @JsonKey(fromJson: _visibilityConditionOrNull)
       VisibilityCondition? visibilityCondition,
-      List<ConditionalNavigateTo>? conditionalNavigateTo});
+      @JsonKey(fromJson: _conditionalNavigateListOrNull)
+      List<ConditionalNavigateTo>? conditionalNavigateTo,
+      @JsonKey(fromJson: _autoFillConditionListOrNull)
+      List<AutoFillCondition>? autoFillCondition});
 
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
   $NavigateToConfigCopyWith<$Res>? get navigateTo;
@@ -167,6 +177,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? navigateTo = freezed,
     Object? visibilityCondition = freezed,
     Object? conditionalNavigateTo = freezed,
+    Object? autoFillCondition = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -309,6 +320,10 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.conditionalNavigateTo
           : conditionalNavigateTo // ignore: cast_nullable_to_non_nullable
               as List<ConditionalNavigateTo>?,
+      autoFillCondition: freezed == autoFillCondition
+          ? _value.autoFillCondition
+          : autoFillCondition // ignore: cast_nullable_to_non_nullable
+              as List<AutoFillCondition>?,
     ) as $Val);
   }
 
@@ -393,9 +408,13 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       List<ValidationRule>? validations,
       bool? includeInForm,
       bool? includeInSummary,
-      NavigateToConfig? navigateTo,
+      @JsonKey(fromJson: _navigateToConfigOrNull) NavigateToConfig? navigateTo,
+      @JsonKey(fromJson: _visibilityConditionOrNull)
       VisibilityCondition? visibilityCondition,
-      List<ConditionalNavigateTo>? conditionalNavigateTo});
+      @JsonKey(fromJson: _conditionalNavigateListOrNull)
+      List<ConditionalNavigateTo>? conditionalNavigateTo,
+      @JsonKey(fromJson: _autoFillConditionListOrNull)
+      List<AutoFillCondition>? autoFillCondition});
 
   @override
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
@@ -451,6 +470,7 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? navigateTo = freezed,
     Object? visibilityCondition = freezed,
     Object? conditionalNavigateTo = freezed,
+    Object? autoFillCondition = freezed,
   }) {
     return _then(_$PropertySchemaImpl(
       type: null == type
@@ -593,6 +613,10 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value._conditionalNavigateTo
           : conditionalNavigateTo // ignore: cast_nullable_to_non_nullable
               as List<ConditionalNavigateTo>?,
+      autoFillCondition: freezed == autoFillCondition
+          ? _value._autoFillCondition
+          : autoFillCondition // ignore: cast_nullable_to_non_nullable
+              as List<AutoFillCondition>?,
     ));
   }
 }
@@ -636,14 +660,18 @@ class _$PropertySchemaImpl implements _PropertySchema {
       final List<ValidationRule>? validations,
       this.includeInForm,
       this.includeInSummary,
-      this.navigateTo,
-      this.visibilityCondition,
-      final List<ConditionalNavigateTo>? conditionalNavigateTo})
+      @JsonKey(fromJson: _navigateToConfigOrNull) this.navigateTo,
+      @JsonKey(fromJson: _visibilityConditionOrNull) this.visibilityCondition,
+      @JsonKey(fromJson: _conditionalNavigateListOrNull)
+      final List<ConditionalNavigateTo>? conditionalNavigateTo,
+      @JsonKey(fromJson: _autoFillConditionListOrNull)
+      final List<AutoFillCondition>? autoFillCondition})
       : _properties = properties,
         _enums = enums,
         _conditions = conditions,
         _validations = validations,
-        _conditionalNavigateTo = conditionalNavigateTo;
+        _conditionalNavigateTo = conditionalNavigateTo,
+        _autoFillCondition = autoFillCondition;
 
   factory _$PropertySchemaImpl.fromJson(Map<String, dynamic> json) =>
       _$$PropertySchemaImplFromJson(json);
@@ -749,11 +777,14 @@ class _$PropertySchemaImpl implements _PropertySchema {
   @override
   final bool? includeInSummary;
   @override
+  @JsonKey(fromJson: _navigateToConfigOrNull)
   final NavigateToConfig? navigateTo;
   @override
+  @JsonKey(fromJson: _visibilityConditionOrNull)
   final VisibilityCondition? visibilityCondition;
   final List<ConditionalNavigateTo>? _conditionalNavigateTo;
   @override
+  @JsonKey(fromJson: _conditionalNavigateListOrNull)
   List<ConditionalNavigateTo>? get conditionalNavigateTo {
     final value = _conditionalNavigateTo;
     if (value == null) return null;
@@ -763,9 +794,23 @@ class _$PropertySchemaImpl implements _PropertySchema {
     return EqualUnmodifiableListView(value);
   }
 
+// New: AutoFillCondition list
+  final List<AutoFillCondition>? _autoFillCondition;
+// New: AutoFillCondition list
+  @override
+  @JsonKey(fromJson: _autoFillConditionListOrNull)
+  List<AutoFillCondition>? get autoFillCondition {
+    final value = _autoFillCondition;
+    if (value == null) return null;
+    if (_autoFillCondition is EqualUnmodifiableListView)
+      return _autoFillCondition;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition)';
   }
 
   @override
@@ -833,7 +878,9 @@ class _$PropertySchemaImpl implements _PropertySchema {
             (identical(other.visibilityCondition, visibilityCondition) ||
                 other.visibilityCondition == visibilityCondition) &&
             const DeepCollectionEquality()
-                .equals(other._conditionalNavigateTo, _conditionalNavigateTo));
+                .equals(other._conditionalNavigateTo, _conditionalNavigateTo) &&
+            const DeepCollectionEquality()
+                .equals(other._autoFillCondition, _autoFillCondition));
   }
 
   @JsonKey(ignore: true)
@@ -874,7 +921,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
         includeInSummary,
         navigateTo,
         visibilityCondition,
-        const DeepCollectionEquality().hash(_conditionalNavigateTo)
+        const DeepCollectionEquality().hash(_conditionalNavigateTo),
+        const DeepCollectionEquality().hash(_autoFillCondition)
       ]);
 
   @JsonKey(ignore: true)
@@ -894,44 +942,48 @@ class _$PropertySchemaImpl implements _PropertySchema {
 
 abstract class _PropertySchema implements PropertySchema {
   const factory _PropertySchema(
-          {@JsonKey(name: 'type', unknownEnumValue: PropertySchemaType.string)
-          required final PropertySchemaType type,
-          final bool? readOnly,
-          final bool? displayOnly,
-          final bool? hidden,
-          final Map<String, PropertySchema>? properties,
-          final List<Option>? enums,
-          final String? schemaCode,
-          final bool? systemDate,
-          final bool? charCount,
-          @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
-          final PropertySchemaFormat? format,
-          @JsonKey(fromJson: _stringOrNull) final String? startDate,
-          @JsonKey(fromJson: _stringOrNull) final String? endDate,
-          final int? minValue,
-          final int? maxValue,
-          final int? minLength,
-          final int? maxLength,
-          final String? helpText,
-          final String? tooltip,
-          final String? prefixText,
-          final String? suffixText,
-          final String? innerLabel,
-          final String? label,
-          final bool? isMultiSelect,
-          final dynamic value,
-          final DisplayBehavior? displayBehavior,
-          final Map<String, dynamic>? conditions,
-          final int? order,
-          final String? actionLabel,
-          final String? description,
-          final List<ValidationRule>? validations,
-          final bool? includeInForm,
-          final bool? includeInSummary,
-          final NavigateToConfig? navigateTo,
-          final VisibilityCondition? visibilityCondition,
-          final List<ConditionalNavigateTo>? conditionalNavigateTo}) =
-      _$PropertySchemaImpl;
+      {@JsonKey(name: 'type', unknownEnumValue: PropertySchemaType.string)
+      required final PropertySchemaType type,
+      final bool? readOnly,
+      final bool? displayOnly,
+      final bool? hidden,
+      final Map<String, PropertySchema>? properties,
+      final List<Option>? enums,
+      final String? schemaCode,
+      final bool? systemDate,
+      final bool? charCount,
+      @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
+      final PropertySchemaFormat? format,
+      @JsonKey(fromJson: _stringOrNull) final String? startDate,
+      @JsonKey(fromJson: _stringOrNull) final String? endDate,
+      final int? minValue,
+      final int? maxValue,
+      final int? minLength,
+      final int? maxLength,
+      final String? helpText,
+      final String? tooltip,
+      final String? prefixText,
+      final String? suffixText,
+      final String? innerLabel,
+      final String? label,
+      final bool? isMultiSelect,
+      final dynamic value,
+      final DisplayBehavior? displayBehavior,
+      final Map<String, dynamic>? conditions,
+      final int? order,
+      final String? actionLabel,
+      final String? description,
+      final List<ValidationRule>? validations,
+      final bool? includeInForm,
+      final bool? includeInSummary,
+      @JsonKey(fromJson: _navigateToConfigOrNull)
+      final NavigateToConfig? navigateTo,
+      @JsonKey(fromJson: _visibilityConditionOrNull)
+      final VisibilityCondition? visibilityCondition,
+      @JsonKey(fromJson: _conditionalNavigateListOrNull)
+      final List<ConditionalNavigateTo>? conditionalNavigateTo,
+      @JsonKey(fromJson: _autoFillConditionListOrNull)
+      final List<AutoFillCondition>? autoFillCondition}) = _$PropertySchemaImpl;
 
   factory _PropertySchema.fromJson(Map<String, dynamic> json) =
       _$PropertySchemaImpl.fromJson;
@@ -1005,11 +1057,17 @@ abstract class _PropertySchema implements PropertySchema {
   @override
   bool? get includeInSummary;
   @override
+  @JsonKey(fromJson: _navigateToConfigOrNull)
   NavigateToConfig? get navigateTo;
   @override
+  @JsonKey(fromJson: _visibilityConditionOrNull)
   VisibilityCondition? get visibilityCondition;
   @override
+  @JsonKey(fromJson: _conditionalNavigateListOrNull)
   List<ConditionalNavigateTo>? get conditionalNavigateTo;
+  @override // New: AutoFillCondition list
+  @JsonKey(fromJson: _autoFillConditionListOrNull)
+  List<AutoFillCondition>? get autoFillCondition;
   @override
   @JsonKey(ignore: true)
   _$$PropertySchemaImplCopyWith<_$PropertySchemaImpl> get copyWith =>
@@ -2006,4 +2064,162 @@ abstract class _ConditionalNavigateTo implements ConditionalNavigateTo {
   @JsonKey(ignore: true)
   _$$ConditionalNavigateToImplCopyWith<_$ConditionalNavigateToImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+AutoFillCondition _$AutoFillConditionFromJson(Map<String, dynamic> json) {
+  return _AutoFillCondition.fromJson(json);
+}
+
+/// @nodoc
+mixin _$AutoFillCondition {
+  String get expression => throw _privateConstructorUsedError;
+  dynamic get value => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $AutoFillConditionCopyWith<AutoFillCondition> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $AutoFillConditionCopyWith<$Res> {
+  factory $AutoFillConditionCopyWith(
+          AutoFillCondition value, $Res Function(AutoFillCondition) then) =
+      _$AutoFillConditionCopyWithImpl<$Res, AutoFillCondition>;
+  @useResult
+  $Res call({String expression, dynamic value});
+}
+
+/// @nodoc
+class _$AutoFillConditionCopyWithImpl<$Res, $Val extends AutoFillCondition>
+    implements $AutoFillConditionCopyWith<$Res> {
+  _$AutoFillConditionCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? expression = null,
+    Object? value = freezed,
+  }) {
+    return _then(_value.copyWith(
+      expression: null == expression
+          ? _value.expression
+          : expression // ignore: cast_nullable_to_non_nullable
+              as String,
+      value: freezed == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$AutoFillConditionImplCopyWith<$Res>
+    implements $AutoFillConditionCopyWith<$Res> {
+  factory _$$AutoFillConditionImplCopyWith(_$AutoFillConditionImpl value,
+          $Res Function(_$AutoFillConditionImpl) then) =
+      __$$AutoFillConditionImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String expression, dynamic value});
+}
+
+/// @nodoc
+class __$$AutoFillConditionImplCopyWithImpl<$Res>
+    extends _$AutoFillConditionCopyWithImpl<$Res, _$AutoFillConditionImpl>
+    implements _$$AutoFillConditionImplCopyWith<$Res> {
+  __$$AutoFillConditionImplCopyWithImpl(_$AutoFillConditionImpl _value,
+      $Res Function(_$AutoFillConditionImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? expression = null,
+    Object? value = freezed,
+  }) {
+    return _then(_$AutoFillConditionImpl(
+      expression: null == expression
+          ? _value.expression
+          : expression // ignore: cast_nullable_to_non_nullable
+              as String,
+      value: freezed == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$AutoFillConditionImpl implements _AutoFillCondition {
+  const _$AutoFillConditionImpl(
+      {required this.expression, required this.value});
+
+  factory _$AutoFillConditionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AutoFillConditionImplFromJson(json);
+
+  @override
+  final String expression;
+  @override
+  final dynamic value;
+
+  @override
+  String toString() {
+    return 'AutoFillCondition(expression: $expression, value: $value)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AutoFillConditionImpl &&
+            (identical(other.expression, expression) ||
+                other.expression == expression) &&
+            const DeepCollectionEquality().equals(other.value, value));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, expression, const DeepCollectionEquality().hash(value));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AutoFillConditionImplCopyWith<_$AutoFillConditionImpl> get copyWith =>
+      __$$AutoFillConditionImplCopyWithImpl<_$AutoFillConditionImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$AutoFillConditionImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _AutoFillCondition implements AutoFillCondition {
+  const factory _AutoFillCondition(
+      {required final String expression,
+      required final dynamic value}) = _$AutoFillConditionImpl;
+
+  factory _AutoFillCondition.fromJson(Map<String, dynamic> json) =
+      _$AutoFillConditionImpl.fromJson;
+
+  @override
+  String get expression;
+  @override
+  dynamic get value;
+  @override
+  @JsonKey(ignore: true)
+  _$$AutoFillConditionImplCopyWith<_$AutoFillConditionImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

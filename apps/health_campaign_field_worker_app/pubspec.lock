@@ -541,18 +541,16 @@ packages:
   digit_crud_bloc:
     dependency: "direct main"
     description:
-      name: digit_crud_bloc
-      sha256: bb490186c910064cc242f4dfa9d7423d86f6368db638703f9fc807de6e876ca3
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.2-dev"
+      path: "../../packages/digit_crud_bloc"
+      relative: true
+    source: path
+    version: "0.0.3-dev"
   digit_data_converter:
     dependency: "direct main"
     description:
-      name: digit_data_converter
-      sha256: ef7287c98a8ca7fe87a8b7a4e7516d70513b55fa09ba04bbd6e6be4b0bd5c78c
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_data_converter"
+      relative: true
+    source: path
     version: "0.0.4-dev"
   digit_data_model:
     dependency: "direct main"
@@ -1897,11 +1895,10 @@ packages:
   registration_delivery:
     dependency: "direct main"
     description:
-      name: registration_delivery
-      sha256: "61e437835c2666687c47befb83d5ed2737ddea8ef8b3dc6f930a6dc53eb4e416"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0-dev.5-console"
+      path: "../../packages/registration_delivery"
+      relative: true
+    source: path
+    version: "1.1.0-dev.8-console"
   rxdart:
     dependency: transitive
     description:

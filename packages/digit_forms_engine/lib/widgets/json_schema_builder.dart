@@ -42,6 +42,7 @@ part 'radio_builder.dart';
 part 'scanner_builder.dart';
 part 'selection_builder.dart';
 part 'string_builder.dart';
+part 'text_area_builder.dart';
 
 abstract class JsonSchemaBuilder<T> extends StatelessWidget {
   final FormGroup form;
