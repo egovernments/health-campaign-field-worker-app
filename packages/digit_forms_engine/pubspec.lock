@@ -369,6 +369,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.1"
+  digit_formula_parser:
+    dependency: "direct overridden"
+    description:
+      path: "../digit_formula_parser"
+      relative: true
+    source: path
+    version: "1.0.0"
   digit_scanner:
     dependency: "direct main"
     description:
