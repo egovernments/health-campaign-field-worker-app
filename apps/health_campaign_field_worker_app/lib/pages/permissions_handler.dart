@@ -58,7 +58,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     );
 
     if (allGranted && mounted) {
-      context.router.replace(const LanguageSelectionRoute());
+      context.router.replace(ProjectSelectionRoute());
     }
 
     return allGranted;

@@ -891,7 +891,6 @@ final List<Map<String, dynamic>> sampleFlows = [
           {
             "format": "listView",
             "hidden": "{{ context.household.empty }}",
-            // ✅ Now works with .empty helper
             "fieldName": "listView",
             "data": "household",
             "child": {
@@ -908,7 +907,6 @@ final List<Map<String, dynamic>> sampleFlows = [
                           "format": "text",
                           "value":
                               "{{ context.headOfHousehold.name.givenName }}",
-                          "style": "headingL"
                         },
                         {
                           "format": "button",
