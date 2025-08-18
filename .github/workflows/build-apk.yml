@@ -82,11 +82,6 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Setup Dart SDK
-        uses: dart-lang/setup-dart@v1
-        with:
-          sdk: ">=3.3.0 <4.0.0"
-
       - name: Install Global Dependencies
         run: |
           dart pub global activate mason_cli
