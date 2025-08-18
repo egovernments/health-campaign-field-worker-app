@@ -144,9 +144,21 @@ class Common {
   String get locationCapturing => 'CAPTURING_LOCATION';
 
   String get profileUpdateSuccess => 'PROFILE_UPDATE_SUCCESS';
-  String get coreCommonError => 'CORE_COMMON_UNKNOWN_ERROR_OCCURRED';
-  String get coreCommonErrorDescription => 'CORE_COMMON_UNKNOWN_ERROR_DESCRIPTION';
 
+  String get coreCommonError => 'CORE_COMMON_UNKNOWN_ERROR_OCCURRED';
+
+  String get coreCommonErrorDescription =>
+      'CORE_COMMON_UNKNOWN_ERROR_DESCRIPTION';
+
+  String get coreCommonPermissionsError => 'CORE_COMMON_PERMISSIONS_ERROR';
+
+  String get allowPermissions => 'CORE_COMMON_ALLOW_PERMISSIONS';
+
+  String get grantPermission => 'GRANT';
+
+  String get permissionNotGranted => 'CORE_COMMON_PERMISSIONS_NOT_GRANTED';
+
+  String get permissionGranted => 'CORE_COMMON_PERMISSIONS_GRANTED';
 
   String get qrInventory => 'QR_INVENTORY';
 
@@ -371,6 +383,7 @@ class Login {
   String get actionLabel => 'LOGIN_ACTION_LABEL';
 
   String get unableToLoginText => 'UNABLE_TO_LOGIN';
+
   String get qrLogin => 'QR_LOGIN';
 }
 

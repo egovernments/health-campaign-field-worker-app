@@ -34,6 +34,7 @@ import '../pages/peer_to_peer/data_share_home.dart';
 import '../pages/peer_to_peer/data_transfer.dart';
 import '../pages/peer_to_peer/devices_list.dart';
 import '../pages/peer_to_peer/peer_to_peer_wrapper.dart';
+import '../pages/permissions_handler.dart';
 import '../pages/profile.dart';
 import '../pages/project_facility_selection.dart';
 import '../pages/project_selection.dart';
@@ -72,9 +73,13 @@ class AppRouter extends _$AppRouter {
       path: '/',
       children: [
         AutoRoute(
+          page: PermissionsRoute.page,
+          path: 'permissions-page',
+          initial: true,
+        ),
+        AutoRoute(
           page: LanguageSelectionRoute.page,
           path: 'language_selection',
-          initial: true,
         ),
         AutoRoute(page: LoginRoute.page, path: 'login'),
         AutoRoute(page: DigitScannerRoute.page, path: 'scanner'),
