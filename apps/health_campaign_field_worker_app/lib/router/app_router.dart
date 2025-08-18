@@ -73,14 +73,9 @@ class AppRouter extends _$AppRouter {
       path: '/',
       children: [
         AutoRoute(
-          page: PermissionsRoute.page,
-          path: 'permissions-page',
-          initial: true,
-        ),
-        AutoRoute(
-          page: LanguageSelectionRoute.page,
-          path: 'language_selection',
-        ),
+            page: LanguageSelectionRoute.page,
+            path: 'language_selection',
+            initial: true),
         AutoRoute(page: LoginRoute.page, path: 'login'),
         AutoRoute(page: DigitScannerRoute.page, path: 'scanner'),
       ],
@@ -89,6 +84,11 @@ class AppRouter extends _$AppRouter {
       page: AuthenticatedRouteWrapper.page,
       path: '/',
       children: [
+        AutoRoute(
+          page: PermissionsRoute.page,
+          path: 'permissions-page',
+          initial: true,
+        ),
         AutoRoute(page: HomeRoute.page, path: 'home'),
         AutoRoute(page: ProfileRoute.page, path: 'profile'),
         AutoRoute(page: UserQRDetailsRoute.page, path: 'user-qr-code'),
@@ -145,7 +145,6 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: ProjectSelectionRoute.page,
           path: 'select-project',
-          initial: true,
         ),
 
         /// Boundary Selection
