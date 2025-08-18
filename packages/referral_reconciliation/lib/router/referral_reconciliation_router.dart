@@ -21,13 +21,7 @@ class ReferralReconciliationRoute extends $ReferralReconciliationRoute {
             path: 'referral-project-facility',
           ),
           //
-          AutoRoute(
-            page: ReferralFacilityRoute.page,
-            path: 'facility-details',
-            //initial: true
-          ),
-          AutoRoute(
-              page: RecordReferralDetailsRoute.page, path: 'referral-details'),
+
           AutoRoute(
             page: ReferralReasonChecklistRoute.page,
             path: 'referral-checklist-create',
