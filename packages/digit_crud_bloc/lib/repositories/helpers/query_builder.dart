@@ -17,6 +17,13 @@ class QueryBuilder {
     );
   }
 
+  static String snakeToCamel(String input) {
+    return input.replaceAllMapped(
+      RegExp(r'_([a-z])'),
+      (match) => match.group(1)!.toUpperCase(),
+    );
+  }
+
   static Map<String, dynamic> snakeToCamelDeep(Map<String, dynamic> input) {
     return input.map((key, value) {
       final newKey = _snakeToCamel(key);
