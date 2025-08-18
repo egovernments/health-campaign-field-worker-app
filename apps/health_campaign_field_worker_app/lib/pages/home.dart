@@ -51,7 +51,6 @@ import '../utils/debound.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/least_level_boundary_singleton.dart';
-import '../utils/sample_data.dart';
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
@@ -586,11 +585,6 @@ class _HomePageState extends LocalizedState<HomePage> {
             triggerLocalization(module: moduleName);
             isTriggerLocalisation = false;
 
-//sample
-            // DEBUG:: sample , hardcoded json config for initial development
-
-            // const schemaJsonRaw = sample;
-
             final prefs = await SharedPreferences.getInstance();
             final schemaJsonRaw = prefs.getString('app_config_schemas');
 
@@ -601,29 +595,28 @@ class _HomePageState extends LocalizedState<HomePage> {
               final registrationSchemaEntry =
                   allSchemas['HFREFERALFLOW'] as Map<String, dynamic>?;
 
-              final registrationSchemaData = registrationSchemaEntry?['data'];
+              final referralSchemaData = registrationSchemaEntry?['data'];
 
-              if (registrationSchemaData != null) {
+              if (referralSchemaData != null) {
                 // Extract templates from both schemas
-                final regTemplatesRaw = registrationSchemaData?['templates'];
+                final refTemplatesRaw = referralSchemaData?['templates'];
 
-                final Map<String, dynamic> regTemplateMap =
-                    regTemplatesRaw is Map<String, dynamic>
-                        ? regTemplatesRaw
+                final Map<String, dynamic> refTemplateMap =
+                    refTemplatesRaw is Map<String, dynamic>
+                        ? refTemplatesRaw
                         : {};
 
                 final templates = {
-                  for (final entry in {...regTemplateMap}.entries)
+                  for (final entry in {...refTemplateMap}.entries)
                     entry.key: TemplateConfig.fromJson(
                         entry.value as Map<String, dynamic>)
                 };
 
-                final registrationConfig = json.encode(registrationSchemaData);
+                final referralConfig = json.encode(referralSchemaData);
 
                 ReferralReconSingleton().setTemplateConfigs(templates);
-                // .setRegistrationConfig(registrationConfig);
-                ReferralReconSingleton()
-                    .setHfReferralConfig(registrationConfig);
+
+                ReferralReconSingleton().setHfReferralConfig(referralConfig);
               }
             }
 

@@ -20,27 +20,21 @@ class ReferralReconciliationRoute extends $ReferralReconciliationRoute {
             page: ReferralReconProjectFacilitySelectionRoute.page,
             path: 'referral-project-facility',
           ),
+          //
           AutoRoute(
-            page: HFCreateReferralWrapperRoute.page,
-            path: 'referral-reconciliation',
-            children: [
-              AutoRoute(
-                page: ReferralFacilityRoute.page,
-                path: 'facility-details',
-                //initial: true
-              ),
-              AutoRoute(
-                  page: RecordReferralDetailsRoute.page,
-                  path: 'referral-details'),
-              AutoRoute(
-                page: ReferralReasonChecklistRoute.page,
-                path: 'referral-checklist-create',
-              ),
-              AutoRoute(
-                page: ReferralReasonChecklistPreviewRoute.page,
-                path: 'referral-checklist-view',
-              ),
-            ],
+            page: ReferralFacilityRoute.page,
+            path: 'facility-details',
+            //initial: true
+          ),
+          AutoRoute(
+              page: RecordReferralDetailsRoute.page, path: 'referral-details'),
+          AutoRoute(
+            page: ReferralReasonChecklistRoute.page,
+            path: 'referral-checklist-create',
+          ),
+          AutoRoute(
+            page: ReferralReasonChecklistPreviewRoute.page,
+            path: 'referral-checklist-view',
           ),
         ]),
     AutoRoute(

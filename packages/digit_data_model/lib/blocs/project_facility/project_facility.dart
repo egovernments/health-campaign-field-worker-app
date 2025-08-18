@@ -40,11 +40,6 @@ class ProjectFacilityBloc
         await projectFacilityDataRepository.search(
       event.query,
     );
-    List<ProjectFacilityModel> ss = [
-      ProjectFacilityModel(
-          id: 'ier-383-dhd', facilityId: "FCT-YU-09", projectId: "demo"),
-    ];
-    results.addAll(ss);
 
     if (results.isEmpty) {
       emit(const ProjectFacilityEmptyState());
