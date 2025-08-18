@@ -64,6 +64,20 @@ class FlowCrudStateRegistry {
   }
 
   FlowCrudState? get(String key) => _map[key]?.value;
+
+  void clear(String key) {
+    if (_map.containsKey(key)) {
+      _map[key]!.dispose();
+      _map.remove(key);
+    }
+  }
+
+  void clearAll() {
+    for (final notifier in _map.values) {
+      notifier.dispose();
+    }
+    _map.clear();
+  }
 }
 
 class FlowCrudState {
