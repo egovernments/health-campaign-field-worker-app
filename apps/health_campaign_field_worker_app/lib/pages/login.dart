@@ -191,6 +191,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         label: localizations.translate(
                           i18.forgotPassword.actionLabel,
                         ),
+                        capitalizeLetters: false,
                         mainAxisSize: MainAxisSize.max,
                         type: DigitButtonType.tertiary,
                         size: DigitButtonSize.medium,
