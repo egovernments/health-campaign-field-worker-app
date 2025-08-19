@@ -30,61 +30,107 @@ DIGIT Flow Builder is a powerful JSON-driven dynamic UI rendering framework that
 
 ## Architecture
 
-### High-Level Architecture Flow
+[//]: # (### High-Level Architecture Flow)
 
-```mermaid
-graph TB
-    subgraph "Configuration Layer"
-        JSON[JSON Configuration]
-        FlowRegistry[Flow Registry]
-    end
-    
-    subgraph "Screen Layer"
-        ScreenBuilder[Screen Builder]
-        ScreenKeyListener[Screen Key Listener]
-    end
-    
-    subgraph "Rendering Layer"
-        LayoutRenderer[Layout Renderer]
-        FormsEngine[Forms Engine]
-        WidgetRegistry[Widget Registry]
-    end
-    
-    subgraph "State Management"
-        FlowCrudBloc[Flow CRUD Bloc]
-        StateRegistry[State Registry]
-        CrudItemContext[CRUD Item Context]
-    end
-    
-    subgraph "Action System"
-        ActionHandler[Action Handler]
-        ActionConfig[Action Config]
-        NavigationService[Navigation Service]
-    end
-    
-    subgraph "Data Processing"
-        Interpolation[Interpolation Engine]
-        WrapperBuilder[Wrapper Builder]
-        FormEntityMapper[Form Entity Mapper]
-    end
-    
-    JSON --> FlowRegistry
-    FlowRegistry --> ScreenBuilder
-    ScreenBuilder --> |FORM| FormsEngine
-    ScreenBuilder --> |TEMPLATE| LayoutRenderer
-    ScreenBuilder --> ScreenKeyListener
-    ScreenKeyListener --> StateRegistry
-    LayoutRenderer --> WidgetRegistry
-    FormsEngine --> ActionHandler
-    WidgetRegistry --> ActionHandler
-    ActionHandler --> FlowCrudBloc
-    FlowCrudBloc --> WrapperBuilder
-    FlowCrudBloc --> StateRegistry
-    StateRegistry --> CrudItemContext
-    CrudItemContext --> Interpolation
-    Interpolation --> WidgetRegistry
-    ActionHandler --> FormEntityMapper
-```
+[//]: # (```mermaid)
+
+[//]: # (graph TB)
+
+[//]: # (    subgraph "Configuration Layer")
+
+[//]: # (        JSON[JSON Configuration])
+
+[//]: # (        FlowRegistry[Flow Registry])
+
+[//]: # (    end)
+
+[//]: # (    )
+[//]: # (    subgraph "Screen Layer")
+
+[//]: # (        ScreenBuilder[Screen Builder])
+
+[//]: # (        ScreenKeyListener[Screen Key Listener])
+
+[//]: # (    end)
+
+[//]: # (    )
+[//]: # (    subgraph "Rendering Layer")
+
+[//]: # (        LayoutRenderer[Layout Renderer])
+
+[//]: # (        FormsEngine[Forms Engine])
+
+[//]: # (        WidgetRegistry[Widget Registry])
+
+[//]: # (    end)
+
+[//]: # (    )
+[//]: # (    subgraph "State Management")
+
+[//]: # (        FlowCrudBloc[Flow CRUD Bloc])
+
+[//]: # (        StateRegistry[State Registry])
+
+[//]: # (        CrudItemContext[CRUD Item Context])
+
+[//]: # (    end)
+
+[//]: # (    )
+[//]: # (    subgraph "Action System")
+
+[//]: # (        ActionHandler[Action Handler])
+
+[//]: # (        ActionConfig[Action Config])
+
+[//]: # (        NavigationService[Navigation Service])
+
+[//]: # (    end)
+
+[//]: # (    )
+[//]: # (    subgraph "Data Processing")
+
+[//]: # (        Interpolation[Interpolation Engine])
+
+[//]: # (        WrapperBuilder[Wrapper Builder])
+
+[//]: # (        FormEntityMapper[Form Entity Mapper])
+
+[//]: # (    end)
+
+[//]: # (    )
+[//]: # (    JSON --> FlowRegistry)
+
+[//]: # (    FlowRegistry --> ScreenBuilder)
+
+[//]: # (    ScreenBuilder --> |FORM| FormsEngine)
+
+[//]: # (    ScreenBuilder --> |TEMPLATE| LayoutRenderer)
+
+[//]: # (    ScreenBuilder --> ScreenKeyListener)
+
+[//]: # (    ScreenKeyListener --> StateRegistry)
+
+[//]: # (    LayoutRenderer --> WidgetRegistry)
+
+[//]: # (    FormsEngine --> ActionHandler)
+
+[//]: # (    WidgetRegistry --> ActionHandler)
+
+[//]: # (    ActionHandler --> FlowCrudBloc)
+
+[//]: # (    FlowCrudBloc --> WrapperBuilder)
+
+[//]: # (    FlowCrudBloc --> StateRegistry)
+
+[//]: # (    StateRegistry --> CrudItemContext)
+
+[//]: # (    CrudItemContext --> Interpolation)
+
+[//]: # (    Interpolation --> WidgetRegistry)
+
+[//]: # (    ActionHandler --> FormEntityMapper)
+
+[//]: # (```)
 
 ### Data Flow Sequence
 

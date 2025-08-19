@@ -121,8 +121,9 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                   final granted = status?.isGranted ?? false;
 
                   return DigitCard(
+                    margin: const EdgeInsets.all(spacer2),
                     padding: const EdgeInsets.all(spacer2),
-                    cardType: CardType.secondary,
+                    cardType: CardType.primary,
                     borderColor: granted
                         ? theme.colorTheme.paper.primary
                         : theme.colorTheme.primary.primaryBg,
@@ -139,7 +140,8 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                         title: Text(
                           localizations.translate(
                               'CORE_COMMON_PERMISSION_${permission.toString().split('.').last.toUpperCase()}'),
-                          style: textTheme.bodyL,
+                          style: textTheme.headingS.copyWith(
+                              color: theme.colorTheme.primary.primary2),
                         ),
                         subtitle: Text(
                           localizations.translate(granted
