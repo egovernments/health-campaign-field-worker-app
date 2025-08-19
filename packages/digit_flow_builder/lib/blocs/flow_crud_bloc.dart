@@ -77,11 +77,11 @@ class FlowCrudStateRegistry {
 }
 
 class FlowCrudState {
-  final CrudState base;
+  final CrudState? base;
   final List<dynamic>? stateWrapper;
 
   const FlowCrudState({
-    required this.base,
+    this.base,
     this.stateWrapper,
   });
 

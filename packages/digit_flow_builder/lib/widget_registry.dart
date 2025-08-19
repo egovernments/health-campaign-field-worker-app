@@ -297,7 +297,16 @@ class WidgetRegistry {
     WidgetRegistry.register('listView', (json, context, onAction) {
       final crudCtx = CrudItemContext.of(context);
       final stateData = crudCtx?.stateData;
-      final items = crudCtx?.stateData?.rawState ?? [];
+
+      // Read `dataSource` from config (ex: "members")
+      final dataSourceKey = json['dataSource'] as String?;
+
+      // Default to full rawState if no key provided
+      final rawState = stateData?.rawState ?? [];
+      var items = rawState;
+      if (dataSourceKey != null && rawState.isNotEmpty) {
+        items = rawState[0]?[dataSourceKey];
+      }
 
       if (items.isEmpty) return const SizedBox.shrink();
 

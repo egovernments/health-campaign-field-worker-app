@@ -959,19 +959,19 @@ final List<Map<String, dynamic>> sampleFlows = [
           ]
         }
       },
-      {
-        "actionType": "SEARCH_EVENT",
-        "properties": {
-          "name": "household",
-          "data": [
-            {
-              "key": "clientReferenceId",
-              "value": "{{contextData.HouseholdModel.clientReferenceId}}",
-              "operation": "equals"
-            }
-          ]
-        }
-      }
+      // {
+      //   "actionType": "SEARCH_EVENT",
+      //   "properties": {
+      //     "name": "household",
+      //     "data": [
+      //       {
+      //         "key": "clientReferenceId",
+      //         "value": "{{contextData.HouseholdModel.clientReferenceId}}",
+      //         "operation": "equals"
+      //       }
+      //     ]
+      //   }
+      // }
     ]
   },
   {
@@ -1068,6 +1068,44 @@ final List<Map<String, dynamic>> sampleFlows = [
         "type": "primary",
         "children": [
           {
+            "format": "row",
+            "properties": {"mainAxisAlignment": "end"},
+            "children": [
+              {
+                "format": "button",
+                "label": "Edit",
+                "properties": {
+                  "type": "tertiary",
+                  "size": "large",
+                  "mainAxisSize": "min",
+                  "mainAxisAlignment": "center"
+                },
+                "onAction": {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "type": "FORM",
+                    "name": "HOUSEHOLD",
+                    "data": [
+                      {"key": "id", "value": "{{item.id}}"}
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "format": "text",
+            "value": "{{ context.headOfHousehold.name.givenName }}",
+          },
+          {
+            "format": "text",
+            "value": "{{ context.headOfHousehold.name.givenName }}",
+          },
+          {
+            "format": "text",
+            "value": "{{ context.headOfHousehold.name.givenName }}",
+          },
+          {
             "format": "button",
             "label": "Edit Household",
             "properties": {
@@ -1081,7 +1119,7 @@ final List<Map<String, dynamic>> sampleFlows = [
             "format": "listView",
             "hidden": "{{ context.household.empty }}",
             "fieldName": "listView",
-            "data": "household",
+            "dataSource": "members",
             "child": {
               "format": "card",
               "type": "secondary",
@@ -1191,79 +1229,6 @@ final List<Map<String, dynamic>> sampleFlows = [
         ]
       }
     ],
-    "wrapperConfig": {
-      "wrapperName": "HouseholdWrapper",
-      "rootEntity": "HouseholdMemberModel",
-      "filters": [
-        {"field": "isHeadOfHousehold", "equals": true}
-      ],
-      "relations": [
-        {
-          "name": "household",
-          "entity": "HouseholdModel",
-          "match": {
-            "field": "clientReferenceId",
-            "equalsFrom": "householdClientReferenceId"
-          }
-        },
-        {
-          "name": "members",
-          "entity": "HouseholdMemberModel",
-          "match": {
-            "field": "householdClientReferenceId",
-            "equalsFrom": "household.clientReferenceId"
-          }
-        },
-        {
-          "name": "headOfHousehold",
-          "entity": "IndividualModel",
-          "match": {
-            "field": "clientReferenceId",
-            "equalsFrom": "HouseholdMemberModel.individualClientReferenceId"
-          }
-        },
-        {
-          "name": "individuals",
-          "entity": "IndividualModel",
-          "match": {
-            "field": "clientReferenceId",
-            "inFrom": "members.individualClientReferenceId"
-          }
-        },
-        {
-          "name": "projectBeneficiaries",
-          "entity": "ProjectBeneficiaryModel",
-          "match": {
-            "field": "beneficiaryClientReferenceId",
-            "equalsFrom": "household.clientReferenceId"
-          }
-        },
-        {
-          "name": "tasks",
-          "entity": "TaskModel",
-          "match": {
-            "field": "projectBeneficiaryClientReferenceId",
-            "inFrom": "projectBeneficiaries.clientReferenceId"
-          }
-        },
-        {
-          "name": "sideEffects",
-          "entity": "SideEffectModel",
-          "match": {
-            "field": "clientReferenceId",
-            "equalsFrom": "household.clientReferenceId"
-          }
-        },
-        {
-          "name": "referrals",
-          "entity": "ReferralModel",
-          "match": {
-            "field": "clientReferenceId",
-            "equalsFrom": "household.clientReferenceId"
-          }
-        }
-      ]
-    },
     "actions": [
       {
         "format": "button",
