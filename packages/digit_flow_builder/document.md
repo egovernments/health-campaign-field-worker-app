@@ -1,118 +1,660 @@
-# DIGIT Flow Builder - Technical Documentation
+# DIGIT Flow Builder Documentation
+
+## Table of Contents
+1. [Overview](#overview)
+2. [Architecture](#architecture)
+3. [Core Components](#core-components)
+4. [Widget Registry](#widget-registry)
+5. [Action System](#action-system)
+6. [State Management](#state-management)
+7. [Data Flow & Interpolation](#data-flow--interpolation)
+8. [Configuration Structure](#configuration-structure)
+9. [Usage Examples](#usage-examples)
+10. [API Reference](#api-reference)
+11. [Best Practices](#best-practices)
+12. [Troubleshooting](#troubleshooting)
 
 ## Overview
 
-The `digit_flow_builder` package is a JSON-driven dynamic UI system that enables creating configurable screens, forms, and user flows without requiring code changes. It allows non-developers to define complex UI workflows through declarative JSON configurations.
+DIGIT Flow Builder is a powerful JSON-driven dynamic UI rendering framework that enables the creation of configurable forms and templates without code changes. It provides a declarative approach to building complex user interfaces with integrated state management, data binding, and action handling capabilities.
 
-## Architecture Components
+### Key Features
+- **Dynamic UI Generation**: Create forms and templates from JSON configurations
+- **Bidirectional Data Binding**: Automatic synchronization between UI and data models  
+- **State Management**: Integrated CRUD state management with reactive updates
+- **Action System**: Comprehensive event handling for navigation, CRUD operations, and UI interactions
+- **Widget Registry**: Extensible widget system with 11+ pre-built components
+- **Interpolation Support**: Dynamic content rendering with context-aware data binding
+- **Form Integration**: Seamless integration with digit_forms_engine for complex forms
+- **Wrapper System**: Data relationship mapping for complex entity hierarchies
 
-### Core Components
+## Architecture
+
+### High-Level Architecture Flow
 
 ```mermaid
 graph TB
-    A[JSON Configuration] --> B[FlowRegistry]
-    B --> C[ScreenBuilder]
-    C --> D[LayoutRenderer]
-    C --> E[FormsEngine]
-    D --> F[WidgetRegistry]
-    F --> G[UI Components]
-    H[ActionHandler] --> I[CrudBloc/FormsBloc]
-    I --> J[FlowCrudStateRegistry]
-    J --> K[State Updates]
+    subgraph "Configuration Layer"
+        JSON[JSON Configuration]
+        FlowRegistry[Flow Registry]
+    end
+    
+    subgraph "Screen Layer"
+        ScreenBuilder[Screen Builder]
+        ScreenKeyListener[Screen Key Listener]
+    end
+    
+    subgraph "Rendering Layer"
+        LayoutRenderer[Layout Renderer]
+        FormsEngine[Forms Engine]
+        WidgetRegistry[Widget Registry]
+    end
+    
+    subgraph "State Management"
+        FlowCrudBloc[Flow CRUD Bloc]
+        StateRegistry[State Registry]
+        CrudItemContext[CRUD Item Context]
+    end
+    
+    subgraph "Action System"
+        ActionHandler[Action Handler]
+        ActionConfig[Action Config]
+        NavigationService[Navigation Service]
+    end
+    
+    subgraph "Data Processing"
+        Interpolation[Interpolation Engine]
+        WrapperBuilder[Wrapper Builder]
+        FormEntityMapper[Form Entity Mapper]
+    end
+    
+    JSON --> FlowRegistry
+    FlowRegistry --> ScreenBuilder
+    ScreenBuilder --> |FORM| FormsEngine
+    ScreenBuilder --> |TEMPLATE| LayoutRenderer
+    ScreenBuilder --> ScreenKeyListener
+    ScreenKeyListener --> StateRegistry
+    LayoutRenderer --> WidgetRegistry
+    FormsEngine --> ActionHandler
+    WidgetRegistry --> ActionHandler
+    ActionHandler --> FlowCrudBloc
+    FlowCrudBloc --> WrapperBuilder
+    FlowCrudBloc --> StateRegistry
+    StateRegistry --> CrudItemContext
+    CrudItemContext --> Interpolation
+    Interpolation --> WidgetRegistry
+    ActionHandler --> FormEntityMapper
 ```
 
-### Component Details
+### Data Flow Sequence
 
-#### 1. FlowRegistry (`flow_builder.dart:13-28`)
-**Purpose**: Central configuration store for all flow definitions
-- Stores flow configurations by name
-- Provides lookup methods for screen configurations
-- Simple map-based storage system
+```mermaid
+sequenceDiagram
+    participant User
+    participant UI
+    participant WidgetRegistry
+    participant ActionHandler
+    participant FlowCrudBloc
+    participant StateRegistry
+    participant WrapperBuilder
+    
+    User->>UI: Interact with Widget
+    UI->>WidgetRegistry: Trigger onAction
+    WidgetRegistry->>ActionHandler: Execute Action
+    ActionHandler->>FlowCrudBloc: Dispatch Event
+    FlowCrudBloc->>FlowCrudBloc: Process Event
+    FlowCrudBloc->>WrapperBuilder: Build Relations
+    WrapperBuilder-->>FlowCrudBloc: Return Wrapper
+    FlowCrudBloc->>StateRegistry: Update State
+    StateRegistry-->>UI: Notify Listeners
+    UI->>UI: Rebuild with New State
+```
+
+## Core Components
+
+### 1. FlowRegistry
+**File**: `flow_builder.dart`
+
+Central registry for managing all flow configurations. Acts as a singleton configuration store.
 
 ```dart
 class FlowRegistry {
   static final Map<String, Map<String, dynamic>> _flowMap = {};
   
-  static void setConfig(List<Map<String, dynamic>> flows);
-  static Map<String, dynamic>? getByName(String name);
+  // Register multiple flow configurations at once
+  static void setConfig(List<Map<String, dynamic>> flows) {
+    for (final flow in flows) {
+      final name = flow['name'] ?? flow['pageName'];
+      if (name != null) _flowMap[name] = flow;
+    }
+  }
+  
+  // Retrieve configuration by name
+  static Map<String, dynamic>? getByName(String name) => _flowMap[name];
+  
+  // Get all registered configurations (read-only)
+  static Map<String, Map<String, dynamic>> getAllConfigs() {
+    return Map.unmodifiable(_flowMap);
+  }
 }
 ```
 
-#### 2. ScreenBuilder (`screen_builder.dart:57-124`)
-**Purpose**: Main screen orchestrator that determines rendering strategy
-- Handles two screen types: FORM and TEMPLATE
-- Manages screen-level state and lifecycle
-- Integrates with forms engine and layout renderer
+### 2. ScreenBuilder
+**File**: `screen_builder.dart`
 
-**Screen Types**:
-- **FORM**: Uses `digit_forms_engine` for structured form rendering
-- **TEMPLATE**: Uses `LayoutRenderer` for flexible UI compositions
+Main orchestrator that determines rendering strategy based on screen type.
 
-#### 3. LayoutRenderer (`layout_renderer.dart:14-141`)
-**Purpose**: Renders TEMPLATE-type screens with dynamic layouts
-- Processes body and actions from configuration
-- Handles header, footer, and content areas
-- Manages screen-level actions and navigation
+```dart
+class ScreenBuilder extends StatelessWidget {
+  final Map<String, dynamic> config;
+  
+  // Determines screen type and renders:
+  // - FORM: Uses digit_forms_engine
+  // - TEMPLATE: Uses LayoutRenderer
+  // Manages screen-level state listening
+}
+```
 
-#### 4. WidgetRegistry (`widget_registry.dart:18-338`)
-**Purpose**: Maps JSON format strings to Flutter widgets
-- Supports 11 widget formats (button, card, listView, etc.)
-- Handles widget properties and styling
-- Manages widget-level actions and events
+**Features**:
+- Screen type detection (FORM vs TEMPLATE)
+- State listener integration via `ScreenKeyListener`
+- Form submission handling with action chain execution
+- Default value injection for forms
 
-**Supported Widget Formats**:
-- `button` - Interactive buttons with various styles
-- `searchBar` - Search input with real-time filtering
-- `card` - Container widgets with different types
-- `filter` - Filter buttons for data manipulation
-- `infoCard` - Informational display cards
-- `column` - Vertical layout container
-- `row` - Horizontal layout container
-- `text` - Text display with interpolation
-- `switch` - Toggle switches
-- `tag` - Status/label tags
-- `listView` - Dynamic list rendering
+### 3. LayoutRenderer
+**File**: `layout_renderer.dart`
 
-#### 5. ActionHandler (`action_handler/action_handler.dart:14-124`)
-**Purpose**: Executes business logic and handles user interactions
+Handles template-based screen rendering with dynamic layouts.
 
-**Supported Action Types**:
-- `FETCH_TRANSFORMER_CONFIG` - Data transformation setup
-- `CREATE_EVENT` - Entity creation via CrudBloc
-- `SEARCH_EVENT` - Search operations
-- `NAVIGATION` - Screen transitions
-- `SHOW_TOAST` - User notifications
+```dart
+class LayoutRendererPage extends StatelessWidget {
+  final Map<String, dynamic> config;
+  
+  // Renders:
+  // - Header with back navigation
+  // - Body with dynamic widgets
+  // - Footer with action buttons
+  // - State-aware content via ValueListenableBuilder
+}
+```
+
+**Features**:
+- Scrollable content wrapper
+- Dynamic body rendering with state interpolation
+- Action button footer
+- Responsive to state changes
+
+### 4. CrudItemContext
+**File**: `widget_registry.dart`
+
+Provides hierarchical data context throughout the widget tree using InheritedWidget pattern.
+
+```dart
+class CrudItemContext extends InheritedWidget {
+  final CrudStateData? stateData;  // Global state data
+  final int? listIndex;             // Current list item index
+  final Map<String, dynamic>? item; // Current item data
+  final String? screenKey;          // Screen identifier
+  
+  // Provides automatic context to child widgets
+  static CrudItemContext? of(BuildContext context);
+}
+```
+
+## Widget Registry
+
+### Supported Widget Types
+
+| Widget Format | Description | Key Properties | Example Use Case |
+|--------------|-------------|----------------|------------------|
+| `button` | Interactive button | `label`, `type`, `size`, `onAction` | Submit, navigation |
+| `searchBar` | Search input field | `label`, `hintText`, `onAction` | Real-time search |
+| `card` | Container widget | `type`, `children` | Group related content |
+| `filter` | Filter button | `label`, `onAction` | Data filtering |
+| `infoCard` | Information display | `title`, `description`, `type` | Empty states, hints |
+| `column` | Vertical layout | `children` | Stack widgets vertically |
+| `row` | Horizontal layout | `children` | Side-by-side widgets |
+| `text` | Text display | `value`, `style` | Dynamic text with interpolation |
+| `switch` | Toggle switch | `label`, `value`, `onChanged` | Boolean settings |
+| `tag` | Status/label tag | `label`, `type` | Status indicators |
+| `listView` | Dynamic list | `data`, `child` | Render collections |
+
+### Widget Registration Example
+
+```dart
+// Initialize default widgets
+void initializeDefaultWidgetRegistry() {
+  // Register button widget
+  WidgetRegistry.register('button', (json, context, onAction) {
+    final props = Map<String, dynamic>.from(json['properties'] ?? {});
+    return DigitButton(
+      label: json['label'] ?? '',
+      onPressed: () {
+        if (json['onAction'] != null) {
+          final action = ActionConfig.fromJson(
+            Map<String, dynamic>.from(json['onAction']),
+          );
+          onAction(action);
+        }
+      },
+      type: _parseButtonType(props['type']),
+      size: _parseButtonSize(props['size']),
+    );
+  });
+  
+  // Register custom widget
+  WidgetRegistry.register('customWidget', (json, context, onAction) {
+    return CustomWidget(
+      property: json['property'],
+      onTap: () => onAction(ActionConfig.fromJson(json['onAction'])),
+    );
+  });
+}
+```
+
+## Action System
+
+### Action Types and Flow
+
+```mermaid
+graph LR
+    subgraph "Action Types"
+        FETCH[FETCH_TRANSFORMER_CONFIG]
+        CREATE[CREATE_EVENT]
+        SEARCH[SEARCH_EVENT]
+        NAV[NAVIGATION]
+        TOAST[SHOW_TOAST]
+    end
+    
+    subgraph "Processing"
+        Transform[Transform Data]
+        Persist[Persist Entities]
+        Query[Query Database]
+        Route[Route to Screen]
+        Notify[Show Message]
+    end
+    
+    FETCH --> Transform
+    CREATE --> Persist
+    SEARCH --> Query
+    NAV --> Route
+    TOAST --> Notify
+```
+
+### Action Configuration Structure
+
+```json
+{
+  "actionType": "CREATE_EVENT",
+  "properties": {
+    "entity": "HOUSEHOLD, INDIVIDUAL",
+    "data": [
+      {"key": "field", "value": "{{context.value}}"}
+    ],
+    "onError": [
+      {
+        "actionType": "SHOW_TOAST",
+        "properties": {"message": "Error occurred"}
+      }
+    ]
+  }
+}
+```
+
+### Action Handler Implementation
+
+```dart
+class ActionHandler {
+  static Future<Map<String, dynamic>> execute(
+    ActionConfig action,
+    BuildContext context,
+    Map<String, dynamic> contextData,
+  ) async {
+    switch (action.actionType) {
+      case 'FETCH_TRANSFORMER_CONFIG':
+        // Fetch and apply data transformation configuration
+        final configName = action.properties['configName'];
+        final transformerConfig = jsonConfig[configName]?['models'];
+        final formEntityMapper = FormEntityMapper(config: jsonConfig);
+        
+        final entities = formEntityMapper.mapFormToEntities(
+          formValues: contextData['formData'],
+          modelsConfig: transformerConfig,
+          context: {
+            "projectId": FlowBuilderSingleton().selectedProject?.id,
+            "tenantId": FlowBuilderSingleton().selectedProject?.tenantId,
+            // ... other context data
+          },
+        );
+        contextData['entities'] = entities;
+        break;
+        
+      case 'CREATE_EVENT':
+        // Create entities via CRUD bloc
+        final entities = contextData['entities'];
+        context.read<CrudBloc>().add(CrudEventCreate(entities: entities));
+        break;
+        
+      case 'SEARCH_EVENT':
+        // Execute search with filters
+        final data = action.properties;
+        final searchParams = GlobalSearchParameters(
+          filters: [
+            SearchFilter(
+              root: data['name'],
+              field: data['data'][0]['key'],
+              operator: data['data'][0]['operation'],
+              value: data['data'][0]['value'],
+            ),
+          ],
+          primaryModel: 'household',
+          select: ['individual', 'household', 'householdMember'],
+        );
+        context.read<CrudBloc>().add(CrudEventSearch(searchParams));
+        break;
+        
+      case 'NAVIGATION':
+        // Navigate to screen
+        NavigationRegistry.navigateTo(action.properties);
+        break;
+        
+      case 'SHOW_TOAST':
+        // Display user notification
+        final message = action.properties['message'] ?? 'Unknown error';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+        break;
+    }
+    return contextData;
+  }
+}
+```
+
+## State Management
+
+### FlowCrudBloc Architecture
+
+```mermaid
+graph TB
+    subgraph "FlowCrudBloc"
+        Event[CRUD Event]
+        State[CRUD State]
+        Transition[onTransition]
+    end
+    
+    subgraph "State Processing"
+        WrapperBuilder[Wrapper Builder]
+        Relations[Build Relations]
+    end
+    
+    subgraph "State Registry"
+        Registry[FlowCrudStateRegistry]
+        Notifier[ValueNotifier]
+        Listeners[UI Listeners]
+    end
+    
+    Event --> State
+    State --> Transition
+    Transition --> WrapperBuilder
+    WrapperBuilder --> Relations
+    Relations --> Registry
+    Registry --> Notifier
+    Notifier --> Listeners
+```
+
+### State Registry Implementation
+
+```dart
+class FlowCrudStateRegistry {
+  // Singleton pattern for global state access
+  static final FlowCrudStateRegistry _instance = 
+      FlowCrudStateRegistry._internal();
+  
+  // State storage with reactive notifications
+  final Map<String, ValueNotifier<FlowCrudState?>> _map = {};
+  
+  factory FlowCrudStateRegistry() => _instance;
+  
+  // Update state for a screen
+  void update(String key, FlowCrudState state) {
+    _map.putIfAbsent(key, () => ValueNotifier<FlowCrudState?>(null))
+        .value = state;
+  }
+  
+  // Listen to state changes
+  ValueNotifier<FlowCrudState?> listen(String key) {
+    return _map.putIfAbsent(key, () => ValueNotifier<FlowCrudState?>(null));
+  }
+  
+  // Get current state
+  FlowCrudState? get(String key) => _map[key]?.value;
+  
+  // Clear specific state
+  void clear(String key) {
+    if (_map.containsKey(key)) {
+      _map[key]!.value = null;
+    }
+  }
+  
+  // Clear all states
+  void clearAll() {
+    for (final notifier in _map.values) {
+      notifier.value = null;
+    }
+  }
+}
+```
+
+### FlowCrudState Structure
+
+```dart
+class FlowCrudState {
+  final CrudState base;           // Base CRUD state
+  final List<dynamic>? stateWrapper; // Wrapped entities with relations
+  
+  const FlowCrudState({
+    required this.base,
+    this.stateWrapper,
+  });
+}
+```
+
+## Data Flow & Interpolation
+
+### Interpolation System
+
+The interpolation system enables dynamic content rendering using template expressions.
+
+```mermaid
+graph LR
+    Template[Template String] --> Parser[Regex Parser]
+    Parser --> Context[Context Resolution]
+    Parser --> Item[Item Resolution]
+    Context --> ModelMap[Model Map Lookup]
+    Item --> ItemData[Item Data Lookup]
+    ModelMap --> Value[Extract Value]
+    ItemData --> Value
+    Value --> Rendered[Rendered String]
+```
+
+### Supported Interpolation Patterns
+
+```dart
+// Context interpolation - access state wrapper data
+"{{ context.modelName.field }}"        // Direct field access
+"{{ context.modelName.nested.field }}" // Nested field access
+
+// Item interpolation - access current list item
+"{{ item.property }}"                  // Item property
+"{{ item.nested.property }}"           // Nested item property
+```
+
+### Interpolation Implementation
+
+```dart
+String interpolateWithCrudStates({
+  required String template,
+  required CrudStateData stateData,
+  int? listIndex,
+  Map<String, dynamic>? item,
+}) {
+  final regex = RegExp(
+    r'\{\{\s*(context|item)\.([A-Za-z_][\w]*)'
+    r'(?:\.([\w.]+))?\s*\}\}',
+  );
+  
+  return template.replaceAllMapped(regex, (match) {
+    final source = match.group(1); // context or item
+    final modelNameOrKey = match.group(2);
+    final fieldPath = match.group(3);
+    
+    if (source == 'context') {
+      // Resolve from state wrapper
+      final models = stateData.modelMap[modelNameOrKey] ?? [];
+      if (models.isEmpty) return '';
+      
+      dynamic value = models[listIndex ?? 0];
+      if (fieldPath != null) {
+        // Navigate nested fields
+        for (final part in fieldPath.split('.')) {
+          if (value is Map<String, dynamic> && value.containsKey(part)) {
+            value = value[part];
+          } else {
+            return '';
+          }
+        }
+      }
+      return value?.toString() ?? '';
+      
+    } else if (source == 'item' && item != null) {
+      // Resolve from current item
+      dynamic value = item[modelNameOrKey];
+      if (fieldPath != null) {
+        for (final part in fieldPath.split('.')) {
+          if (value is Map && value.containsKey(part)) {
+            value = value[part];
+          } else {
+            return '';
+          }
+        }
+      }
+      return value?.toString() ?? '';
+    }
+    
+    return '';
+  });
+}
+```
 
 ## Configuration Structure
 
-### Basic Screen Configuration
+### Screen Configuration Types
+
+#### 1. Form Configuration
+
 ```json
 {
-  "screenType": "TEMPLATE|FORM",
-  "name": "screenKey",
-  "heading": "Screen Title",
-  "description": "Screen Description",
-  "body": [...], // UI components
-  "actions": [...], // Footer actions
-  "wrapperConfig": {...}, // Data binding rules
-  "onSubmit": [...] // Action chain on form submission
+  "screenType": "FORM",
+  "name": "HOUSEHOLD",
+  "project": "PROJECT-ID",
+  "version": 1,
+  "pages": [
+    {
+      "page": "householdDetails",
+      "type": "object",
+      "label": "Household Details",
+      "order": 1,
+      "navigateTo": {"name": "nextPage", "type": "form"},
+      "properties": [
+        {
+          "type": "string",
+          "label": "Name",
+          "fieldName": "nameOfIndividual",
+          "format": "text",
+          "validations": [
+            {"type": "required", "value": true, "message": "Required"},
+            {"type": "minLength", "value": "2", "message": "Min 2 chars"}
+          ]
+        }
+      ]
+    }
+  ],
+  "onSubmit": [
+    {
+      "actionType": "FETCH_TRANSFORMER_CONFIG",
+      "properties": {"configName": "beneficiaryRegistration"}
+    },
+    {
+      "actionType": "CREATE_EVENT",
+      "properties": {"entity": "HOUSEHOLD, INDIVIDUAL"}
+    }
+  ]
 }
 ```
 
-### Widget Configuration
+#### 2. Template Configuration
+
 ```json
 {
-  "format": "widgetType",
-  "label": "Widget Label",
-  "fieldName": "fieldIdentifier",
-  "properties": {...}, // Widget-specific properties
-  "onAction": {...}, // Action configuration
-  "hidden": "{{expression}}", // Conditional visibility
-  "children": [...] // Child widgets for containers
+  "screenType": "TEMPLATE",
+  "name": "searchBeneficiary",
+  "heading": "Search Beneficiary",
+  "description": "Search for existing beneficiaries",
+  "body": [
+    {
+      "format": "searchBar",
+      "label": "Enter name",
+      "fieldName": "searchBar",
+      "onAction": {
+        "actionType": "SEARCH_EVENT",
+        "properties": {
+          "name": "individual",
+          "data": [
+            {"key": "givenName", "value": "field.value", "operation": "contains"}
+          ]
+        }
+      }
+    },
+    {
+      "format": "infoCard",
+      "hidden": "{{ context.household.notEmpty }}",
+      "label": "No households found",
+      "description": "Search above or register new"
+    },
+    {
+      "format": "listView",
+      "hidden": "{{ context.household.empty }}",
+      "data": "household",
+      "child": {
+        "format": "card",
+        "children": [
+          {
+            "format": "text",
+            "value": "{{ context.headOfHousehold.name.givenName }}"
+          }
+        ]
+      }
+    }
+  ],
+  "actions": [
+    {
+      "format": "button",
+      "label": "Register New",
+      "properties": {"type": "primary"},
+      "onAction": {
+        "actionType": "NAVIGATION",
+        "properties": {"type": "FORM", "name": "HOUSEHOLD"}
+      }
+    }
+  ]
 }
 ```
 
-### Data Wrapper Configuration
+### Wrapper Configuration
+
+Defines data relationships and entity mappings:
+
 ```json
 {
   "wrapperConfig": {
@@ -129,406 +671,401 @@ class FlowRegistry {
           "field": "clientReferenceId",
           "equalsFrom": "householdClientReferenceId"
         }
+      },
+      {
+        "name": "members",
+        "entity": "HouseholdMemberModel",
+        "match": {
+          "field": "householdClientReferenceId",
+          "equalsFrom": "household.clientReferenceId"
+        }
+      },
+      {
+        "name": "individuals",
+        "entity": "IndividualModel",
+        "match": {
+          "field": "clientReferenceId",
+          "inFrom": "members.individualClientReferenceId"
+        }
       }
     ]
   }
 }
 ```
 
-## CRITICAL ISSUES AND LIMITATIONS
+## Usage Examples
 
-### 🚨 Issue #1: ListView Data Context Problem
+### 1. Initialize Flow Builder
 
-**Location**: `widget_registry.dart:187-226`
-
-**Current Implementation**:
 ```dart
-WidgetRegistry.register('listView', (json, context, onAction) {
-  // PROBLEM: Hardcoded dummy data
-  dataSource = [
-    {
-      "name": "HEADDF",
-      "gender": "Female",
-      "age": 35,
-      // ... more hardcoded data
-    }
-  ];
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   
-  return Column(
-    children: (dataSource as List)
-        .map<Widget>((item) {
-          final childJson = Map<String, dynamic>.from(json['child']);
-          childJson['item'] = item; // PROBLEM: Direct JSON mutation
-          return LayoutMapper.map(childJson, context, onAction);
-        })
-  );
-});
-```
-
-**Issues**:
-1. **Hardcoded Data**: Uses dummy data instead of dynamic resolution
-2. **No Context Isolation**: List items don't have isolated data contexts
-3. **JSON Mutation**: Direct modification of configuration objects
-4. **Missing Data Binding**: No proper interpolation for item-specific data
-
-**Impact**:
-- All list items show the same hardcoded data
-- No dynamic data binding to state wrapper
-- Configuration objects get corrupted
-- Poor performance and memory usage
-
-### 🚨 Issue #2: Limited Data Interpolation
-
-**Location**: `widget_registry.dart:302-337`
-
-**Current Implementation**:
-```dart
-String _interpolateWithCrudStates(String template, List<dynamic>? state) {
-  // Only supports: {{context.ModelName.field}}
-  final regex = RegExp(r'\{\{\s*context\.([A-Za-z_][\w]*)\.([\w.]+)\s*\}\}');
-  // Missing: {{item.field}}, {{global.field}}, conditional expressions
+  // Register flow configurations
+  FlowRegistry.setConfig([
+    searchBeneficiaryFlow,
+    householdRegistrationFlow,
+    deliveryFlow,
+  ]);
+  
+  // Initialize widget registry
+  WidgetRegistry().initializeDefaultWidgetRegistry();
+  
+  // Initialize services
+  await initializeAllMappers();
+  
+  runApp(MyApp());
 }
 ```
 
-**Issues**:
-1. **Single Pattern Support**: Only `{{context.Model.field}}` pattern
-2. **No Item Interpolation**: Missing `{{item.field}}` for list items
-3. **No Global Context**: No `{{global.field}}` support
-4. **No Expressions**: No conditional or computed expressions
-5. **No Fallback Values**: No default value mechanism
-
-**Impact**:
-- Limited dynamic content capabilities
-- Poor list item rendering
-- No conditional content
-- Brittle template system
-
-### 🚨 Issue #3: Weak State Management
-
-**Problems**:
-1. **Global Singleton**: `FlowCrudStateRegistry` is a global singleton
-2. **No State Scoping**: No isolation between screens or components
-3. **Memory Leaks**: Persistent listeners without proper cleanup
-4. **No Type Safety**: Dynamic typing throughout state system
-5. **No Validation**: No state structure validation
-
-**Impact**:
-- Unpredictable state behavior
-- Memory leaks in production
-- Difficult debugging
-- Poor performance with multiple screens
-
-### 🚨 Issue #4: Inflexible Widget System
-
-**Problems**:
-1. **Hardcoded Builders**: All widgets hardcoded in single registry
-2. **No Plugin Architecture**: Cannot extend with custom widgets
-3. **No Validation**: No configuration schema validation
-4. **No Fallback**: No graceful degradation for unknown widgets
-5. **Poor Error Handling**: Limited error reporting and recovery
-
-**Impact**:
-- Difficult to extend
-- Poor developer experience
-- Runtime failures
-- Maintenance complexity
-
-## PROPOSED SOLUTIONS
-
-### Solution #1: Enhanced Data Context System
+### 2. Navigate to Flow Screen
 
 ```dart
-class DataContext extends InheritedWidget {
-  final Map<String, dynamic> globalData;
-  final Map<String, dynamic>? itemContext;
-  final List<dynamic>? stateWrapper;
-  final String? screenKey;
+// Using auto_route
+context.router.push(
+  FlowBuilderHomeRoute(pageName: 'searchBeneficiary'),
+);
+
+// Using Navigator
+Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => ScreenBuilder(
+      config: FlowRegistry.getByName('searchBeneficiary')!,
+    ),
+  ),
+);
+```
+
+### 3. Create Custom Widget
+
+```dart
+class CustomCardWidget extends StatelessWidget {
+  final Map<String, dynamic> config;
+  final void Function(ActionConfig) onAction;
   
-  // Provide hierarchical data resolution
-  dynamic getValue(String key) {
-    return itemContext?[key] ?? 
-           globalData[key] ?? 
-           _resolveFromStateWrapper(key);
+  @override
+  Widget build(BuildContext context) {
+    final crudCtx = CrudItemContext.of(context);
+    final title = interpolateWithCrudStates(
+      template: config['title'] ?? '',
+      stateData: crudCtx?.stateData ?? CrudStateData({}, []),
+      item: crudCtx?.item,
+    );
+    
+    return Card(
+      child: ListTile(
+        title: Text(title),
+        onTap: () {
+          if (config['onAction'] != null) {
+            onAction(ActionConfig.fromJson(config['onAction']));
+          }
+        },
+      ),
+    );
+  }
+}
+
+// Register the widget
+WidgetRegistry.register('customCard', (json, context, onAction) {
+  return CustomCardWidget(config: json, onAction: onAction);
+});
+```
+
+### 4. Handle Form Submission
+
+```dart
+// In configuration
+{
+  "onSubmit": [
+    {
+      "actionType": "FETCH_TRANSFORMER_CONFIG",
+      "properties": {
+        "configName": "beneficiaryRegistration",
+        "onError": [
+          {
+            "actionType": "SHOW_TOAST",
+            "properties": {"message": "Configuration fetch failed"}
+          }
+        ]
+      }
+    },
+    {
+      "actionType": "CREATE_EVENT",
+      "properties": {
+        "entity": "HOUSEHOLD",
+        "onError": [
+          {
+            "actionType": "SHOW_TOAST",
+            "properties": {"message": "Creation failed"}
+          }
+        ]
+      }
+    },
+    {
+      "actionType": "NAVIGATION",
+      "properties": {
+        "type": "TEMPLATE",
+        "name": "success"
+      }
+    }
+  ]
+}
+```
+
+## API Reference
+
+### FlowRegistry API
+
+| Method | Parameters | Returns | Description |
+|--------|------------|---------|-------------|
+| `setConfig` | `List<Map<String, dynamic>> flows` | `void` | Register multiple flow configurations |
+| `getByName` | `String name` | `Map<String, dynamic>?` | Get configuration by name |
+| `getAllConfigs` | - | `Map<String, Map<String, dynamic>>` | Get all registered configurations |
+
+### WidgetRegistry API
+
+| Method | Parameters | Returns | Description |
+|--------|------------|---------|-------------|
+| `register` | `String format, WidgetBuilderFn builder` | `void` | Register widget builder function |
+| `build` | `Map json, BuildContext context, Function onAction` | `Widget` | Build widget from configuration |
+
+### ActionHandler API
+
+| Method | Parameters | Returns | Description |
+|--------|------------|---------|-------------|
+| `execute` | `ActionConfig action, BuildContext context, Map contextData` | `Future<Map>` | Execute action asynchronously |
+
+### State Registry API
+
+| Method | Parameters | Returns | Description |
+|--------|------------|---------|-------------|
+| `update` | `String key, FlowCrudState state` | `void` | Update state for screen |
+| `listen` | `String key` | `ValueNotifier<FlowCrudState?>` | Get notifier for state changes |
+| `get` | `String key` | `FlowCrudState?` | Get current state |
+| `clear` | `String key` | `void` | Clear specific state |
+| `clearAll` | - | `void` | Clear all states |
+
+## Best Practices
+
+### 1. Configuration Design
+
+```json
+// ✅ Good: Explicit data binding
+{
+  "format": "text",
+  "value": "{{ context.individual.name }}"
+}
+
+// ❌ Bad: Hardcoded values
+{
+  "format": "text",
+  "value": "John Doe"
+}
+```
+
+### 2. State Management
+
+```dart
+// ✅ Good: Clean up states
+@override
+void dispose() {
+  FlowCrudStateRegistry().clear(screenKey);
+  super.dispose();
+}
+
+// ❌ Bad: Leave states in memory
+// No cleanup
+```
+
+### 3. Error Handling
+
+```json
+// ✅ Good: Provide error handlers
+{
+  "actionType": "CREATE_EVENT",
+  "properties": {
+    "entity": "HOUSEHOLD",
+    "onError": [
+      {
+        "actionType": "SHOW_TOAST",
+        "properties": {"message": "Failed to create household"}
+      }
+    ]
   }
 }
 ```
 
-### Solution #2: Advanced Interpolation Engine
+### 4. Widget Registration
 
 ```dart
-class InterpolationEngine {
-  static String interpolate(String template, {
-    Map<String, dynamic>? itemContext,
-    List<dynamic>? stateWrapper,
-    Map<String, dynamic>? globalContext,
-  });
-  
-  // Support patterns:
-  // {{item.field}}              - Current list item
-  // {{context.Model.field}}     - State wrapper data
-  // {{global.field}}            - Global application data
-  // {{field || defaultValue}}   - Fallback values
-  // {{#if condition}}...{{/if}} - Conditional blocks
-}
-```
-
-### Solution #3: Plugin-based Widget Registry
-
-```dart
-abstract class WidgetBuilder {
-  String get format;
-  Widget build(Map<String, dynamic> config, BuildContext context);
-  bool validate(Map<String, dynamic> config);
-  Map<String, dynamic> getSchema();
-}
-
-class PluggableWidgetRegistry {
-  static void register(WidgetBuilder builder);
-  static void unregister(String format);
-  static Widget build(Map<String, dynamic> config, BuildContext context);
-}
-```
-
-### Solution #4: Scoped State Management
-
-```dart
-class FlowStateManager {
-  final String screenKey;
-  final StreamController<FlowState> _controller;
-  
-  void setState(FlowState state);
-  Stream<FlowState> get stateStream;
-  void dispose(); // Proper cleanup
-}
-```
-
-## IMPROVEMENT ROADMAP
-
-### Phase 1: Critical Fixes (Priority: HIGH)
-- [ ] **Fix ListView Data Binding**: Implement proper data context isolation
-- [ ] **Enhanced Interpolation**: Support multiple interpolation patterns
-- [ ] **State Management**: Implement scoped state management
-- [ ] **Error Handling**: Add comprehensive error handling and reporting
-- [ ] **Memory Management**: Fix memory leaks and implement proper cleanup
-
-### Phase 2: Enhanced Features (Priority: MEDIUM)
-- [ ] **Conditional Rendering**: Support `hidden` expressions and conditional blocks
-- [ ] **Expression Engine**: Implement expression evaluation for dynamic content
-- [ ] **Plugin System**: Create pluggable widget architecture
-- [ ] **Schema Validation**: Add configuration schema validation
-- [ ] **Performance Optimization**: Optimize rendering and state updates
-
-### Phase 3: Developer Experience (Priority: MEDIUM)
-- [ ] **Configuration Editor**: Visual configuration editor tool
-- [ ] **Documentation Generator**: Auto-generate widget documentation
-- [ ] **Debug Tools**: Runtime debugging and inspection tools
-- [ ] **Testing Framework**: Testing utilities for configurations
-- [ ] **Migration Tools**: Configuration migration and validation tools
-
-### Phase 4: Advanced Capabilities (Priority: LOW)
-- [ ] **Animation Support**: Transition and animation configurations
-- [ ] **Accessibility**: Enhanced accessibility features
-- [ ] **Internationalization**: Multi-language support
-- [ ] **Theming**: Dynamic theme support
-- [ ] **Real-time Updates**: Live configuration updates
-
-## DEVELOPMENT GUIDELINES
-
-### Configuration Design Principles
-
-1. **Declarative Over Imperative**
-   ```json
-   ✅ Good: { "format": "text", "value": "{{item.name}}" }
-   ❌ Bad:  { "format": "text", "getValue": "getName" }
-   ```
-
-2. **Explicit Data Binding**
-   ```json
-   ✅ Good: { "data": "{{stateWrapper.members}}" }
-   ❌ Bad:  { "data": "members" }
-   ```
-
-3. **Consistent Property Names**
-   ```json
-   ✅ Good: "fieldName", "actionType", "properties"
-   ❌ Bad:  "field", "type", "props"
-   ```
-
-4. **Validation-First Design**
-   ```json
-   ✅ Good: Include schema validation for all configurations
-   ❌ Bad:  Runtime discovery of configuration issues
-   ```
-
-### Widget Development Guidelines
-
-1. **Always Validate Configuration**
-   ```dart
-   @override
-   Widget build(Map<String, dynamic> config, BuildContext context) {
-     if (!validate(config)) {
-       return ErrorWidget('Invalid configuration for ${format}');
-     }
-     // ... build widget
-   }
-   ```
-
-2. **Provide Fallback Values**
-   ```dart
-   final label = config['label'] as String? ?? 'Default Label';
-   final isVisible = config['hidden'] == null || !evaluateExpression(config['hidden']);
-   ```
-
-3. **Support Accessibility**
-   ```dart
-   return Semantics(
-     label: config['semanticsLabel'] ?? config['label'],
-     child: widget,
-   );
-   ```
-
-4. **Handle Loading States**
-   ```dart
-   return FutureBuilder(
-     future: loadData(),
-     builder: (context, snapshot) {
-       if (snapshot.connectionState == ConnectionState.waiting) {
-         return const CircularProgressIndicator();
-       }
-       return buildWidget(snapshot.data);
-     },
-   );
-   ```
-
-### State Management Guidelines
-
-1. **Use Scoped State**
-   ```dart
-   // ✅ Good: Scoped to screen/component
-   final stateManager = FlowStateManager(screenKey: 'searchBeneficiary');
-   
-   // ❌ Bad: Global singleton
-   FlowCrudStateRegistry().setState(state);
-   ```
-
-2. **Implement Proper Cleanup**
-   ```dart
-   @override
-   void dispose() {
-     stateManager.dispose();
-     super.dispose();
-   }
-   ```
-
-3. **Validate State Transitions**
-   ```dart
-   bool canTransitionTo(FlowState newState) {
-     return validTransitions[currentState.type]?.contains(newState.type) ?? false;
-   }
-   ```
-
-## TESTING STRATEGY
-
-### Unit Testing
-```dart
-// Test widget builders
-testWidgets('Button widget renders correctly', (tester) async {
-  final config = {
-    'format': 'button',
-    'label': 'Test Button',
-    'properties': {'type': 'primary'}
-  };
-  
-  final widget = WidgetRegistry.build(config, context, onAction);
-  expect(widget, isA<DigitButton>());
-});
-
-// Test interpolation
-test('Interpolation handles item context', () {
-  final result = InterpolationEngine.interpolate(
-    '{{item.name}}',
-    itemContext: {'name': 'John'},
-  );
-  expect(result, equals('John'));
+// ✅ Good: Validate configuration
+WidgetRegistry.register('custom', (json, context, onAction) {
+  // Validate required fields
+  if (json['requiredField'] == null) {
+    return ErrorWidget('Missing required field');
+  }
+  return CustomWidget(...);
 });
 ```
 
-### Integration Testing
+### 5. Performance Optimization
+
 ```dart
-// Test complete screen rendering
-testWidgets('Search screen renders with data', (tester) async {
-  final config = FlowRegistry.getByName('searchBeneficiary');
-  final screen = ScreenBuilder(config: config!);
-  
-  await tester.pumpWidget(screen);
-  expect(find.text('Search Beneficiary'), findsOneWidget);
-});
+// ✅ Good: Use ValueListenableBuilder for specific state
+ValueListenableBuilder(
+  valueListenable: FlowCrudStateRegistry().listen(screenKey),
+  builder: (context, _, __) {
+    // Rebuild only when state changes
+    return buildWidget();
+  },
+)
+
+// ❌ Bad: Rebuild entire screen on any change
+StreamBuilder(
+  stream: globalStateStream,
+  builder: (context, snapshot) {
+    return buildEntireScreen();
+  },
+)
 ```
 
-### E2E Testing
+## Troubleshooting
+
+### Common Issues and Solutions
+
+#### 1. Widget Not Rendering
+
+**Problem**: Widget shows "Unknown widget format"
+
+**Solution**:
 ```dart
-// Test complete user workflows
-testWidgets('Complete beneficiary registration flow', (tester) async {
-  // Navigate to search screen
-  // Search for beneficiary
-  // Navigate to registration form
-  // Fill and submit form
-  // Verify success screen
-});
+// Check if widget is registered
+WidgetRegistry().initializeDefaultWidgetRegistry();
+// Or register custom widget
+WidgetRegistry.register('myWidget', builder);
 ```
 
-## MIGRATION STRATEGY
+#### 2. State Not Updating
 
-### Backward Compatibility
-1. **Maintain Existing APIs**: Keep current FlowRegistry interface
-2. **Gradual Migration**: Allow both old and new systems to coexist
-3. **Deprecation Warnings**: Provide clear migration paths
-4. **Configuration Versioning**: Support multiple configuration versions
+**Problem**: UI doesn't reflect state changes
 
-### Migration Steps
-1. **Phase 1**: Implement new systems alongside existing ones
-2. **Phase 2**: Migrate critical screens to new system
-3. **Phase 3**: Deprecate old system with warnings
-4. **Phase 4**: Remove deprecated code
-
-### Migration Tools
+**Solution**:
 ```dart
-class ConfigurationMigrator {
-  static Map<String, dynamic> migrateToV2(Map<String, dynamic> v1Config);
-  static List<MigrationWarning> validate(Map<String, dynamic> config);
-  static String generateMigrationReport();
+// Ensure screen key matches
+final screenKey = '${config["screenType"]}::${config["name"]}';
+// Verify state registry is updated
+FlowCrudStateRegistry().update(screenKey, newState);
+```
+
+#### 3. Interpolation Not Working
+
+**Problem**: Shows raw template instead of data
+
+**Solution**:
+```dart
+// Check expression syntax
+"{{ context.modelName.field }}"  // Correct
+"{{context.modelName.field}}"    // Also correct
+"{ context.modelName.field }"    // Wrong - single braces
+
+// Verify data exists in state
+final state = FlowCrudStateRegistry().get(screenKey);
+print(state?.stateWrapper); // Check if data is present
+```
+
+#### 4. Action Not Executing
+
+**Problem**: Button clicks don't trigger actions
+
+**Solution**:
+```json
+// Ensure action configuration is complete
+{
+  "onAction": {
+    "actionType": "NAVIGATION",  // Required
+    "properties": {               // Required
+      "type": "TEMPLATE",
+      "name": "screenName"
+    }
+  }
 }
 ```
 
-## PERFORMANCE CONSIDERATIONS
+#### 5. Form Not Submitting
 
-### Current Performance Issues
-1. **Excessive Widget Rebuilds**: Poor state management causes unnecessary rebuilds
-2. **Memory Leaks**: Persistent listeners and global state
-3. **Large Configuration Parsing**: JSON parsing on every render
-4. **Inefficient List Rendering**: No virtualization for large lists
+**Problem**: Form submission doesn't trigger onSubmit
 
-### Optimization Recommendations
-1. **Widget Caching**: Cache parsed widget configurations
-2. **Virtual Scrolling**: Implement virtualization for large lists
-3. **State Optimization**: Use immutable state and selective updates
-4. **Configuration Compilation**: Pre-compile configurations for better performance
+**Solution**:
+```dart
+// Check FormsBloc is provided
+BlocProvider<FormsBloc>(
+  create: (context) => FormsBloc(),
+  child: ScreenBuilder(config: formConfig),
+)
+```
 
-## SECURITY CONSIDERATIONS
+### Debug Tips
 
-### Current Security Gaps
-1. **No Input Validation**: Configurations not validated for malicious content
-2. **Expression Injection**: No protection against code injection in expressions
-3. **State Exposure**: Global state could leak sensitive information
+1. **Enable Debug Logging**:
+```dart
+debugPrint('screenKey: $screenKey');
+debugPrint('state: ${FlowCrudStateRegistry().get(screenKey)}');
+```
 
-### Security Recommendations
-1. **Configuration Sanitization**: Validate and sanitize all configurations
-2. **Expression Sandboxing**: Secure expression evaluation environment
-3. **Access Control**: Implement role-based configuration access
-4. **Audit Logging**: Log configuration changes and access
+2. **Validate JSON Configuration**:
+```dart
+try {
+  final config = jsonDecode(jsonString);
+  assert(config['screenType'] != null);
+  assert(config['name'] != null);
+} catch (e) {
+  print('Invalid configuration: $e');
+}
+```
 
-## CONCLUSION
+3. **Monitor State Changes**:
+```dart
+FlowCrudStateRegistry().listen(screenKey).addListener(() {
+  print('State updated for $screenKey');
+});
+```
 
-The digit_flow_builder package provides a powerful foundation for dynamic UI generation but requires significant improvements to be production-ready. The proposed solutions address critical issues while maintaining backward compatibility and providing a clear upgrade path.
+## Performance Considerations
 
-Priority should be given to fixing the ListView data context problem and implementing proper state management, as these issues directly impact functionality and user experience.
+### Optimization Strategies
+
+1. **Lazy Loading**: Load configurations on demand
+2. **Widget Caching**: Cache frequently used widgets
+3. **State Scoping**: Use specific state keys to limit rebuilds
+4. **Debouncing**: Implement debounce for search operations
+5. **Virtual Scrolling**: Use ListView.builder for large lists
+
+### Memory Management
+
+```dart
+// Clean up when screen is disposed
+@override
+void dispose() {
+  // Clear screen-specific state
+  FlowCrudStateRegistry().clear(screenKey);
+  
+  // Cancel any subscriptions
+  _subscription?.cancel();
+  
+  super.dispose();
+}
+```
+
+## Conclusion
+
+DIGIT Flow Builder provides a powerful, flexible system for building dynamic UIs through JSON configurations. By leveraging its widget registry, action system, and state management capabilities, developers can create complex workflows with minimal code while maintaining flexibility and maintainability.
+
+The framework's strength lies in its:
+- **Declarative approach** to UI definition
+- **Extensible widget system** 
+- **Comprehensive state management**
+- **Flexible action handling**
+- **Dynamic data binding** through interpolation
+
+For the latest updates and additional resources, refer to the official DIGIT documentation and repository.
