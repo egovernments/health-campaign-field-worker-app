@@ -77,7 +77,6 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
-      appBar: AppBar(),
       body: ScrollableContent(
         enableFixedDigitButton: true,
         footer:
@@ -94,7 +93,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                   Toast.showToast(
                     context,
                     message: localizations.translate(
-                      i18.common.coreCommonPermissionsError,
+                      i18.common.coreCommonPermissionsAlert,
                     ),
                     type: ToastType.error,
                   );
@@ -103,60 +102,72 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
             },
           )
         ]),
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(spacer2),
-            child: Text(
-              localizations.translate(i18.common.allowPermissions),
-              style: textTheme.headingXl.copyWith(
-                color: theme.colorTheme.primary.primary2,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          ...requiredPermissions.keys.map((permission) {
-            final status = statuses[permission];
-            final granted = status?.isGranted ?? false;
-
-            return DigitCard(
-              padding: const EdgeInsets.all(spacer2),
-              cardType: CardType.secondary,
-              borderColor: granted
-                  ? theme.colorTheme.paper.primary
-                  : theme.colorTheme.primary.primaryBg,
+        slivers: [
+          SliverToBoxAdapter(
+            child: Column(
               children: [
-                ListTile(
-                  leading: Icon(
-                    granted
-                        ? Icons.check_circle
-                        : permissionIcons[permission] ?? Icons.help,
-                    color: granted ? Colors.green : Colors.red,
-                  ),
-                  title: Text(
-                    '_CORE_COMMON_PERMISSION_${permission.toString().split('.').last.toUpperCase()}',
-                    style: textTheme.bodyL,
-                  ),
-                  subtitle: Text(
-                    localizations.translate(granted
-                        ? i18.common.permissionGranted
-                        : i18.common.permissionNotGranted),
-                    style: textTheme.bodyS.copyWith(
-                      color: granted ? Colors.green : Colors.red,
+                Padding(
+                  padding: const EdgeInsets.all(spacer2),
+                  child: Text(
+                    localizations.translate(i18.common.allowPermissions),
+                    style: textTheme.headingXl.copyWith(
+                      color: theme.colorTheme.primary.primary2,
                     ),
+                    textAlign: TextAlign.left,
                   ),
-                  trailing: !granted
-                      ? DigitButton(
-                          onPressed: () => _requestPermission(permission),
-                          label: localizations
-                              .translate(i18.common.grantPermission),
-                          type: DigitButtonType.primary,
-                          size: DigitButtonSize.small,
-                        )
-                      : null,
-                )
+                ),
+                ...requiredPermissions.keys.map((permission) {
+                  final status = statuses[permission];
+                  final granted = status?.isGranted ?? false;
+
+                  return DigitCard(
+                    padding: const EdgeInsets.all(spacer2),
+                    cardType: CardType.secondary,
+                    borderColor: granted
+                        ? theme.colorTheme.paper.primary
+                        : theme.colorTheme.primary.primaryBg,
+                    children: [
+                      ListTile(
+                        leading: Icon(
+                          granted
+                              ? Icons.check_circle
+                              : permissionIcons[permission] ?? Icons.help,
+                          color: granted
+                              ? theme.colorTheme.alert.success
+                              : theme.colorTheme.alert.error,
+                        ),
+                        title: Text(
+                          localizations.translate(
+                              'CORE_COMMON_PERMISSION_${permission.toString().split('.').last.toUpperCase()}'),
+                          style: textTheme.bodyL,
+                        ),
+                        subtitle: Text(
+                          localizations.translate(granted
+                              ? i18.common.permissionGranted
+                              : i18.common.permissionNotGranted),
+                          style: textTheme.bodyS.copyWith(
+                            color: granted
+                                ? theme.colorTheme.alert.success
+                                : theme.colorTheme.alert.error,
+                          ),
+                        ),
+                        trailing: !granted
+                            ? DigitButton(
+                                onPressed: () => _requestPermission(permission),
+                                label: localizations
+                                    .translate(i18.common.grantPermission),
+                                type: DigitButtonType.primary,
+                                size: DigitButtonSize.small,
+                                capitalizeLetters: false,
+                              )
+                            : null,
+                      )
+                    ],
+                  );
+                })
               ],
-            );
-          })
+            ),
+          )
         ],
       ),
     );
