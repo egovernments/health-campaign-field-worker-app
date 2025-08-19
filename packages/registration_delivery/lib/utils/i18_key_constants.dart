@@ -53,6 +53,9 @@ class Common {
 
   String get corecommonclose => 'CORE_COMMON_CLOSE';
 
+  String get stockInsufficientHeading => 'STOCK_INSUFFICIENT_HEADING';
+  String get stockInsufficientDescription => 'STOCK_INSUFFICIENT_DESCRIPTION';
+
   String get coreCommonOk => 'CORE_COMMON_OK';
 
   String get coreCommonNA => 'CORE_COMMON_NA';

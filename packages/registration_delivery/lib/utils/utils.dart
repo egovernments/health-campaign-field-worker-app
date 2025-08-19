@@ -541,6 +541,7 @@ class RegistrationDeliverySingleton {
   Map<String, TemplateConfig>? _templateConfigs;
   String? _registrationConfig;
   String? _deliveryConfig;
+  int? _stockCount = 0;
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
@@ -551,28 +552,30 @@ class RegistrationDeliverySingleton {
     _persistenceConfiguration = persistenceConfiguration;
   }
 
-  void setInitialData(
-      {required String loggedInUserUuid,
-      required double maxRadius,
-      required String projectId,
-      required BeneficiaryType selectedBeneficiaryType,
-      required ProjectTypeModel? projectType,
-      required ProjectModel selectedProject,
-      required List<String>? genderOptions,
-      required List<String>? idTypeOptions,
-      List<String>? memberRelationTypeOptions,
-      required List<String>? householdDeletionReasonOptions,
-      required List<String>? householdMemberDeletionReasonOptions,
-      required List<String>? deliveryCommentOptions,
-      required List<String>? symptomsTypes,
-      required List<String>? searchHouseHoldFilter,
-      required List<String>? searchCLFFilters,
-      required List<String>? referralReasons,
-      required List<String>? houseStructureTypes,
-      required List<String>? refusalReasons,
-      required UserModel? loggedInUser,
-      required int? beneficiaryIdMinCount,
-      required int? beneficiaryIdBatchSize}) {
+  void setInitialData({
+    required String loggedInUserUuid,
+    required double maxRadius,
+    required String projectId,
+    required BeneficiaryType selectedBeneficiaryType,
+    required ProjectTypeModel? projectType,
+    required ProjectModel selectedProject,
+    required List<String>? genderOptions,
+    required List<String>? idTypeOptions,
+    List<String>? memberRelationTypeOptions,
+    required List<String>? householdDeletionReasonOptions,
+    required List<String>? householdMemberDeletionReasonOptions,
+    required List<String>? deliveryCommentOptions,
+    required List<String>? symptomsTypes,
+    required List<String>? searchHouseHoldFilter,
+    required List<String>? searchCLFFilters,
+    required List<String>? referralReasons,
+    required List<String>? houseStructureTypes,
+    required List<String>? refusalReasons,
+    required UserModel? loggedInUser,
+    required int? beneficiaryIdMinCount,
+    required int? beneficiaryIdBatchSize,
+    int? stockCount,
+  }) {
     _loggedInUserUuid = loggedInUserUuid;
     _maxRadius = maxRadius;
     _projectId = projectId;
@@ -595,6 +598,7 @@ class RegistrationDeliverySingleton {
     _loggedInUser = loggedInUser;
     _beneficiaryIdMinCount = beneficiaryIdMinCount;
     _beneficiaryIdBatchSize = beneficiaryIdBatchSize;
+    _stockCount = stockCount;
   }
 
   void setTenantId(String tenantId) {
@@ -675,6 +679,8 @@ class RegistrationDeliverySingleton {
   String? get regisrationConfig => _registrationConfig;
 
   String? get deliveryConfig => _deliveryConfig;
+
+  int? get stockCount => _stockCount;
 }
 
 /// Safely converts HouseholdMemberWrapper into structured map
