@@ -160,3 +160,100 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
     rethrow;
   }
 }
+
+String? resolveValue(dynamic value, dynamic contextData) {
+  if (value is String) {
+    final interpolationRegex = RegExp(r'^\{\{(.+?)\}\}$');
+    final match = interpolationRegex.firstMatch(value.trim());
+    if (match != null) {
+      var path = match.group(1)!.trim();
+      if (path.startsWith('contextData.')) {
+        path = path.substring('contextData.'.length);
+      }
+      return _resolvePath(contextData, path);
+    }
+    return value;
+  }
+  return value?.toString();
+}
+
+/// Utility to resolve "contextData.householdModel.clientReferenceId" like paths
+String? _resolvePath(dynamic root, String path) {
+  var parts = path.split('.');
+
+  dynamic current = root;
+  for (var part in parts) {
+    // Handle array index like members[0]
+    final listMatch = RegExp(r'^(\w+)\[(\d+)\]$').firstMatch(part);
+    if (listMatch != null) {
+      final key = listMatch.group(1)!;
+      final index = int.parse(listMatch.group(2)!);
+
+      if (current is Map<String, dynamic> && current.containsKey(key)) {
+        final listVal = current[key];
+        if (listVal is List && index < listVal.length) {
+          current = listVal[index];
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
+    }
+    // Normal map lookup
+    else if (current is Map<String, dynamic>) {
+      if (!current.containsKey(part)) return null;
+      current = current[part];
+    }
+    // List access
+    else if (current is List) {
+      final idx = int.tryParse(part);
+      if (idx != null) {
+        if (idx < 0 || idx >= current.length) return null;
+        current = current[idx];
+      } else {
+        dynamic foundItem;
+        for (var item in current) {
+          try {
+            final typeString = item.runtimeType.toString().toLowerCase();
+            if (typeString == part.toLowerCase()) {
+              foundItem = item;
+              break;
+            }
+          } catch (e) {
+            // Ignore
+          }
+        }
+
+        if (foundItem != null) {
+          current = foundItem;
+        } else {
+          return null;
+        }
+      }
+    }
+    // EntityModel access
+    else if (current is EntityModel) {
+      final map = current.toMap();
+      if (map.containsKey(part)) {
+        current = map[part];
+      } else {
+        return null;
+      }
+    }
+    // If it's an object (like EntityModel), try .toJson()
+    else {
+      try {
+        if (current.toJson() is Map<String, dynamic>) {
+          final map = current.toJson() as Map<String, dynamic>;
+          current = map[part];
+        } else {
+          return null;
+        }
+      } catch (_) {
+        return null;
+      }
+    }
+  }
+  return current?.toString();
+}

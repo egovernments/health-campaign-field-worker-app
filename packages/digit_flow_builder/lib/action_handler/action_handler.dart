@@ -57,6 +57,10 @@ class ActionHandler {
         break;
       case 'SEARCH_EVENT':
         final data = action.properties;
+        final contexts = contextData['entities'];
+        final rawValue = data['data'][0]['value'];
+        final resolvedValue = resolveValue(rawValue, contexts);
+
         final config =
             FlowRegistry.getByName(getScreenKeyFromArgs(context) ?? '');
         final searchParams = GlobalSearchParameters(
@@ -65,7 +69,7 @@ class ActionHandler {
               root: data['name'],
               field: data['data'][0]['key'],
               operator: data['data'][0]['operation'],
-              value: data['data'][0]['value'],
+              value: resolvedValue,
             ),
           ], // Optional: if you're resolving linked entities
           primaryModel: config?['wrapperConfig']['searchConfig']['primary'],
