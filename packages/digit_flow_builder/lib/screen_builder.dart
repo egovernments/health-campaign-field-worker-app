@@ -39,7 +39,6 @@ class ScreenBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenType = config['screenType'];
     final screenKey = '$screenType::${config['name']}';
-    debugPrint('screeName $screenKey');
     return ScreenKeyListener(
       screenKey: screenKey,
       builder: (context, crudState) {

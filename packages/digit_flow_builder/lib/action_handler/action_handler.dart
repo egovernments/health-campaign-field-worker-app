@@ -3,13 +3,12 @@ import 'package:digit_crud_bloc/models/global_search_params.dart';
 import 'package:digit_data_converter/src/transformer_service.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
+import 'package:digit_flow_builder/flow_builder.dart';
+import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../data/transformer_config.dart';
-import '../navigation_service/navigation_service.dart';
-import '../utils/utils.dart';
-import 'action_config.dart';
 
 class ActionHandler {
   /// New async, context-aware version for flow builder onSubmit
@@ -58,7 +57,8 @@ class ActionHandler {
         break;
       case 'SEARCH_EVENT':
         final data = action.properties;
-
+        final config =
+            FlowRegistry.getByName(getScreenKeyFromArgs(context) ?? '');
         final searchParams = GlobalSearchParameters(
           filters: [
             SearchFilter(
@@ -68,14 +68,8 @@ class ActionHandler {
               value: data['data'][0]['value'],
             ),
           ], // Optional: if you're resolving linked entities
-          primaryModel: 'household',
-          select: [
-            'individual',
-            'household',
-            'householdMember',
-            'projectBeneficiary',
-            'task'
-          ],
+          primaryModel: config?['wrapperConfig']['searchConfig']['primary'],
+          select: config?['wrapperConfig']['searchConfig']['select'],
           pagination: null,
         );
 
