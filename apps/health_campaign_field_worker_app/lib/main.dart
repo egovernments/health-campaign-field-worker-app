@@ -975,6 +975,22 @@ final List<Map<String, dynamic>> sampleFlows = [
     ]
   },
   {
+    "initActions": [
+      {
+        "actionType": "SEARCH_EVENT",
+        "properties": {
+          "type": "SEARCH_EVENT",
+          "name": "household",
+          "data": [
+            {
+              "key": "householdId",
+              "value": "{{ contextData.HouseholdModel.clientReferenceId }}",
+              "operation": "equals"
+            }
+          ],
+        }
+      }
+    ],
     "screenType": "TEMPLATE",
     "name": "householdOverview",
     "heading": "Household Overview",

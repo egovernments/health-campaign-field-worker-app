@@ -71,7 +71,7 @@ class ActionHandler {
               root: data['name'],
               field: data['data'][0]['key'],
               operator: data['data'][0]['operation'],
-              value: resolvedValue,
+              value: data['value'] ?? resolvedValue,
             ),
           ], // Optional: if you're resolving linked entities
           primaryModel: config?['wrapperConfig']['searchConfig']['primary'],
