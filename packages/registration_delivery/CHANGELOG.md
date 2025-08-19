@@ -1,3 +1,8 @@
+## 1.1.1-dev.1-console
+
+* Added stock count in singleton
+* Added stock count validation alert in delivery
+
 ## 1.1.0-dev.9-console
 
 * Updated forms-engine package
