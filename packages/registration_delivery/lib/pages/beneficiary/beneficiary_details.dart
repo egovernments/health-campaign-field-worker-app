@@ -268,6 +268,50 @@ class BeneficiaryDetailsPageState
                                                                         .large)
                                                               ]),
                                                         );
+                                                      } else if (RegistrationDeliverySingleton()
+                                                                  .stockCount !=
+                                                              null &&
+                                                          productVariants[
+                                                                      'criteria']
+                                                                  ?.productVariants
+                                                                  ?.first
+                                                                  ?.quantity >
+                                                              RegistrationDeliverySingleton()
+                                                                  .stockCount) {
+                                                        showCustomPopup(
+                                                          context: context,
+                                                          builder: (BuildContext context) => Popup(
+                                                              title: localizations
+                                                                  .translate(i18
+                                                                      .common
+                                                                      .stockInsufficientHeading),
+                                                              description: localizations
+                                                                  .translate(i18
+                                                                      .common
+                                                                      .stockInsufficientDescription),
+                                                              type: PopUpType
+                                                                  .alert,
+                                                              actions: [
+                                                                DigitButton(
+                                                                    label: localizations
+                                                                        .translate(i18
+                                                                            .common
+                                                                            .corecommonclose),
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator
+                                                                          .of(
+                                                                        context,
+                                                                        rootNavigator:
+                                                                            true,
+                                                                      ).pop();
+                                                                    },
+                                                                    type: DigitButtonType
+                                                                        .secondary,
+                                                                    size: DigitButtonSize
+                                                                        .large)
+                                                              ]),
+                                                        );
                                                       } else {
                                                         if (beneficiaryDetailsTemplate
                                                                 ?.properties?[
