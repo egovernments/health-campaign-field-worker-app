@@ -196,7 +196,17 @@ final List<Map<String, dynamic>> sampleFlows = [
             "equalsFrom": "household.clientReferenceId"
           }
         }
-      ]
+      ],
+      "searchConfig": {
+        "primary": "household",
+        "select": [
+          "individual",
+          "household",
+          "householdMember",
+          "projectBeneficiary",
+          "task"
+        ]
+      }
     },
     "body": [
       //// everything inside the body will come
