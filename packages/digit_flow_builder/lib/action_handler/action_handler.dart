@@ -82,6 +82,7 @@ class ActionHandler {
         break;
       case 'NAVIGATION':
         NavigationRegistry.navigateTo(action.properties);
+        await Future.delayed(Duration(seconds: 1));
         break;
       case 'SHOW_TOAST':
         final message = action.properties['message'] ?? 'Unknown error';
@@ -93,30 +94,5 @@ class ActionHandler {
         break;
     }
     return contextData;
-  }
-
-  // --- Helper methods (replace with your real logic) ---
-  static Future<Map<String, dynamic>> fetchTransformerConfig(
-      String? name) async {
-    return {'configName': name, 'models': {}};
-  }
-
-  static List<Map<String, dynamic>> createEntities(
-    Map<String, dynamic>? transformerConfig,
-    Map<String, dynamic>? formData,
-    Map<String, dynamic> contextData,
-  ) {
-    return [
-      {
-        'entityType': 'ExampleEntity',
-        'data': formData,
-        'configUsed': transformerConfig,
-      }
-    ];
-  }
-
-  static Future<void> persistEntities(
-      List<Map<String, dynamic>> entities) async {
-    await Future.delayed(const Duration(milliseconds: 100));
   }
 }
