@@ -150,15 +150,15 @@ class Common {
   String get coreCommonErrorDescription =>
       'CORE_COMMON_UNKNOWN_ERROR_DESCRIPTION';
 
-  String get coreCommonPermissionsError => 'CORE_COMMON_PERMISSIONS_ERROR';
+  String get coreCommonPermissionsAlert => 'CORE_COMMON_PERMISSIONS_ALERT';
 
   String get allowPermissions => 'CORE_COMMON_ALLOW_PERMISSIONS';
 
-  String get grantPermission => 'GRANT';
+  String get grantPermission => 'GRANT_PERMISSION';
 
-  String get permissionNotGranted => 'CORE_COMMON_PERMISSIONS_NOT_GRANTED';
+  String get permissionNotGranted => 'CORE_COMMON_PERMISSION_NOT_GRANTED';
 
-  String get permissionGranted => 'CORE_COMMON_PERMISSIONS_GRANTED';
+  String get permissionGranted => 'CORE_COMMON_PERMISSION_GRANTED';
 
   String get qrInventory => 'QR_INVENTORY';
 
