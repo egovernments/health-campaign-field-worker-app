@@ -8,6 +8,8 @@ import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/flow_crud_bloc.dart';
+import '../blocs/state_wrapper_builder.dart';
 import '../data/transformer_config.dart';
 
 class ActionHandler {
@@ -82,7 +84,19 @@ class ActionHandler {
         break;
       case 'NAVIGATION':
         NavigationRegistry.navigateTo(action.properties);
-        await Future.delayed(Duration(seconds: 1));
+        // await Future.delayed(Duration(seconds: 1));
+        final entities = contextData['entities'];
+        final config = FlowRegistry.getByName(action.properties['name']);
+        if (entities != null) {
+          final wrapper =
+              WrapperBuilder(entities, config?['wrapperConfig']).build();
+          final flowState = const FlowCrudState().copyWith(
+            stateWrapper: wrapper,
+          );
+
+          FlowCrudStateRegistry().update(config?["name"], flowState);
+        }
+
         break;
       case 'SHOW_TOAST':
         final message = action.properties['message'] ?? 'Unknown error';
