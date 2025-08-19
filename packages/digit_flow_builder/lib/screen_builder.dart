@@ -30,22 +30,44 @@ class ScreenKeyListener extends StatelessWidget {
   }
 }
 
-class ScreenBuilder extends StatelessWidget {
+class ScreenBuilder extends StatefulWidget {
   final Map<String, dynamic> config;
 
   const ScreenBuilder({super.key, required this.config});
 
   @override
+  State<ScreenBuilder> createState() => _ScreenBuilderState();
+}
+
+class _ScreenBuilderState extends State<ScreenBuilder> {
+  @override
+  void initState() {
+    super.initState();
+
+    if (mounted) {
+      final initActions = widget.config['initActions'] as List? ?? [];
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        for (final action in initActions) {
+          final parsed = ActionConfig.fromJson(action); // you already have this
+          ActionHandler.execute(parsed, context, {
+            'wrappers': const [],
+          });
+        }
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final screenType = config['screenType'];
-    final screenKey = '$screenType::${config['name']}';
+    final screenType = widget.config['screenType'];
+    final screenKey = '$screenType::${widget.config['name']}';
     return ScreenKeyListener(
       screenKey: screenKey,
       builder: (context, crudState) {
         return BlocListener<FormsBloc, FormsState>(
           listener: (context, state) async {
             if (state is FormsSubmittedState) {
-              final onSubmit = config['onSubmit'] as List<dynamic>?;
+              final onSubmit = widget.config['onSubmit'] as List<dynamic>?;
 
               Map<String, dynamic> contextData = {
                 'formData': state.formData,
@@ -53,7 +75,8 @@ class ScreenBuilder extends StatelessWidget {
 
               if (onSubmit != null) {
                 context.read<FormsBloc>().add(
-                      FormsEvent.clearForm(schemaKey: config['name'] ?? ''),
+                      FormsEvent.clearForm(
+                          schemaKey: widget.config['name'] ?? ''),
                     );
                 for (final actionJson in onSubmit) {
                   final action = ActionConfig.fromJson(actionJson);
@@ -66,7 +89,7 @@ class ScreenBuilder extends StatelessWidget {
           child: _buildScreen(
             context,
             screenType,
-            config,
+            widget.config,
             crudState,
             screenKey,
           ),
