@@ -574,7 +574,6 @@ class RegistrationDeliverySingleton {
     required UserModel? loggedInUser,
     required int? beneficiaryIdMinCount,
     required int? beneficiaryIdBatchSize,
-    int? stockCount,
   }) {
     _loggedInUserUuid = loggedInUserUuid;
     _maxRadius = maxRadius;
@@ -598,6 +597,9 @@ class RegistrationDeliverySingleton {
     _loggedInUser = loggedInUser;
     _beneficiaryIdMinCount = beneficiaryIdMinCount;
     _beneficiaryIdBatchSize = beneficiaryIdBatchSize;
+  }
+
+  void setStockCount(int stockCount) {
     _stockCount = stockCount;
   }
 
