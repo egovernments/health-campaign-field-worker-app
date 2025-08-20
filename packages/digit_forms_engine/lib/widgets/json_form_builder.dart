@@ -218,6 +218,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           value: widget.schema.value as String?,
           formControlName: widget.formControlName,
           label: translateIfPresent(widget.schema.label, localizations),
+          validations: widget.schema.validations,
         );
 
       case PropertySchemaFormat.date:
