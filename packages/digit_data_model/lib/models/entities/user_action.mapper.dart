@@ -237,6 +237,12 @@ class UserActionModelMapper extends SubClassMapperBase<UserActionModel> {
   static String _$action(UserActionModel v) => v.action;
   static const Field<UserActionModel, String> _f$action =
       Field('action', _$action);
+  static String? _$beneficiaryTag(UserActionModel v) => v.beneficiaryTag;
+  static const Field<UserActionModel, String> _f$beneficiaryTag =
+      Field('beneficiaryTag', _$beneficiaryTag, opt: true);
+  static String? _$resourceTag(UserActionModel v) => v.resourceTag;
+  static const Field<UserActionModel, String> _f$resourceTag =
+      Field('resourceTag', _$resourceTag, opt: true);
   static bool? _$nonRecoverableError(UserActionModel v) =>
       v.nonRecoverableError;
   static const Field<UserActionModel, bool> _f$nonRecoverableError = Field(
@@ -275,6 +281,8 @@ class UserActionModelMapper extends SubClassMapperBase<UserActionModel> {
     #projectId: _f$projectId,
     #boundaryCode: _f$boundaryCode,
     #action: _f$action,
+    #beneficiaryTag: _f$beneficiaryTag,
+    #resourceTag: _f$resourceTag,
     #nonRecoverableError: _f$nonRecoverableError,
     #tenantId: _f$tenantId,
     #rowVersion: _f$rowVersion,
@@ -306,6 +314,8 @@ class UserActionModelMapper extends SubClassMapperBase<UserActionModel> {
         projectId: data.dec(_f$projectId),
         boundaryCode: data.dec(_f$boundaryCode),
         action: data.dec(_f$action),
+        beneficiaryTag: data.dec(_f$beneficiaryTag),
+        resourceTag: data.dec(_f$resourceTag),
         nonRecoverableError: data.dec(_f$nonRecoverableError),
         tenantId: data.dec(_f$tenantId),
         rowVersion: data.dec(_f$rowVersion),
@@ -387,6 +397,8 @@ abstract class UserActionModelCopyWith<$R, $In extends UserActionModel, $Out>
       String? projectId,
       String? boundaryCode,
       String? action,
+      String? beneficiaryTag,
+      String? resourceTag,
       bool? nonRecoverableError,
       String? tenantId,
       int? rowVersion,
@@ -430,6 +442,8 @@ class _UserActionModelCopyWithImpl<$R, $Out>
           String? projectId,
           String? boundaryCode,
           String? action,
+          Object? beneficiaryTag = $none,
+          Object? resourceTag = $none,
           Object? nonRecoverableError = $none,
           Object? tenantId = $none,
           Object? rowVersion = $none,
@@ -448,6 +462,8 @@ class _UserActionModelCopyWithImpl<$R, $Out>
         if (projectId != null) #projectId: projectId,
         if (boundaryCode != null) #boundaryCode: boundaryCode,
         if (action != null) #action: action,
+        if (beneficiaryTag != $none) #beneficiaryTag: beneficiaryTag,
+        if (resourceTag != $none) #resourceTag: resourceTag,
         if (nonRecoverableError != $none)
           #nonRecoverableError: nonRecoverableError,
         if (tenantId != $none) #tenantId: tenantId,
@@ -473,6 +489,8 @@ class _UserActionModelCopyWithImpl<$R, $Out>
       projectId: data.get(#projectId, or: $value.projectId),
       boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
       action: data.get(#action, or: $value.action),
+      beneficiaryTag: data.get(#beneficiaryTag, or: $value.beneficiaryTag),
+      resourceTag: data.get(#resourceTag, or: $value.resourceTag),
       nonRecoverableError:
           data.get(#nonRecoverableError, or: $value.nonRecoverableError),
       tenantId: data.get(#tenantId, or: $value.tenantId),

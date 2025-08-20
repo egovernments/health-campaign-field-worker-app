@@ -13,20 +13,15 @@ import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:registration_delivery/blocs/parent_overview/parent_overview.dart';
+import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/widgets/member_card/member_card.dart';
 
-import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
-import '../../blocs/delivery_intervention/deliver_intervention.dart';
-import '../../blocs/household_overview/household_overview.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/status.dart';
-import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
-import '../../widgets/table_card/table_card.dart';
 
 @RoutePage()
 class ParentOverviewPage extends LocalizedStatefulWidget {
@@ -39,14 +34,6 @@ class ParentOverviewPage extends LocalizedStatefulWidget {
 class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
   @override
   void initState() {
-    final bloc = context.read<ParentOverviewBloc>();
-    bloc.add(
-      ParentOverviewReloadEvent(
-        projectId: RegistrationDeliverySingleton().projectId!,
-        projectBeneficiaryType:
-            RegistrationDeliverySingleton().beneficiaryType!,
-      ),
-    );
     super.initState();
   }
 
@@ -60,7 +47,7 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
       onPopInvoked: (didPop) async {
         context.router.maybePop();
       },
-      child: BlocBuilder<ParentOverviewBloc, ParentOverviewState>(
+      child: BlocBuilder<RegistrationWrapperBloc, RegistrationWrapperState>(
         builder: (ctx, state) {
           return Scaffold(
             body: state.loading
@@ -78,7 +65,7 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
-                                  if ((state.householdMemberWrapper
+                                  if ((state.householdMembers.first
                                               .projectBeneficiaries ??
                                           [])
                                       .isNotEmpty)
@@ -90,65 +77,7 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                               RegistrationDeliverySingleton()
                                                   .projectId!;
 
-                                          final bloc = context
-                                              .read<HouseholdOverviewBloc>();
-                                          bloc.add(
-                                            HouseholdOverviewReloadEvent(
-                                              projectId: projectId,
-                                              projectBeneficiaryType:
-                                                  beneficiaryType,
-                                            ),
-                                          );
-
-                                          final address = state
-                                              .householdMemberWrapper
-                                              .household
-                                              ?.address;
-                                          if (address == null) {
-                                            return;
-                                          }
-                                          bloc.add(
-                                            HouseholdOverviewReloadEvent(
-                                              projectId: projectId,
-                                              projectBeneficiaryType:
-                                                  RegistrationDeliverySingleton()
-                                                          .beneficiaryType ??
-                                                      BeneficiaryType.household,
-                                            ),
-                                          );
-
-                                          await context.router.root.push(
-                                            BeneficiaryRegistrationWrapperRoute(
-                                              initialState:
-                                                  BeneficiaryRegistrationEditIndividualState(
-                                                individualModel:
-                                                    state.selectedIndividual!,
-                                                householdModel: state
-                                                    .householdMemberWrapper
-                                                    .household!,
-                                                addressModel: address,
-                                                projectBeneficiaryModel: state
-                                                    .householdMemberWrapper
-                                                    .projectBeneficiaries
-                                                    ?.where((e) =>
-                                                        e.beneficiaryClientReferenceId ==
-                                                        state.selectedIndividual
-                                                            ?.clientReferenceId)
-                                                    .firstOrNull,
-                                                individualChecklists: state
-                                                    .householdMemberWrapper
-                                                    .individualChecklists!
-                                                    .where((e) =>
-                                                        e.referenceId ==
-                                                        state.selectedIndividual
-                                                            ?.clientReferenceId)
-                                                    .toList(),
-                                              ),
-                                              children: [
-                                                IndividualDetailsRoute(),
-                                              ],
-                                            ),
-                                          );
+                                          /// TODO: need to rewrite logic for parent card
                                         },
                                         label: localizations.translate(
                                           i18.memberCard.editIndividualDetails,
@@ -158,80 +87,16 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                         prefixIcon: Icons.edit,
                                       ),
                                     ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: spacer2,
-                                      right: spacer2,
-                                    ),
-                                    child: BlocBuilder<DeliverInterventionBloc,
-                                            DeliverInterventionState>(
-                                        builder:
-                                            (ctx, deliverInterventionState) {
-                                      bool shouldShowStatus = beneficiaryType ==
-                                          BeneficiaryType.household;
-
-                                      return Column(
-                                        children: [
-                                          DigitTableCard(
-                                            element: {
-                                              localizations.translate(i18
-                                                  .individualDetails
-                                                  .nameLabelText): state
-                                                      .selectedIndividual
-                                                      ?.name
-                                                      ?.givenName ??
-                                                  localizations.translate(
-                                                      i18.common.coreCommonNA),
-                                              localizations.translate(
-                                                i18.householdOverView
-                                                    .householdOverViewAge,
-                                              ): getAge(
-                                                  state.selectedIndividual!),
-                                              localizations.translate(
-                                                i18.individualDetails
-                                                    .genderLabelText,
-                                              ): localizations.translate(state
-                                                  .selectedIndividual?.gender
-                                                  ?.toValue()),
-                                              if (state.householdMemberWrapper
-                                                      .individualChecklists
-                                                      ?.where((e) =>
-                                                          e.referenceId ==
-                                                          state
-                                                              .selectedIndividual
-                                                              ?.clientReferenceId)
-                                                      .isNotEmpty ??
-                                                  false)
-                                                for (var attribute in state
-                                                        .householdMemberWrapper
-                                                        .individualChecklists!
-                                                        .where((e) =>
-                                                            e.referenceId ==
-                                                            state
-                                                                .selectedIndividual
-                                                                ?.clientReferenceId)
-                                                        .first
-                                                        .attributes ??
-                                                    [])
-                                                  localizations.translate(
-                                                          '${RegistrationDeliverySingleton().selectedProject?.name}.INDIVIDUAL.DISTRIBUTOR.${attribute?.attributeCode}' //TODO:
-                                                          ):
-                                                      localizations
-                                                          .translate(attribute?.value)
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    }),
-                                  ),
                                   Column(
-                                    children: (state
-                                                .householdMemberWrapper.members
+                                    children: (state.householdMembers.first
+                                                .individuals
                                                 ?.where((m) {
-                                              final parentBeneficiary = state
-                                                  .householdMemberWrapper
-                                                  .householdMembers
-                                                  ?.where((element) =>
+                                              final parentBeneficiary = (state
+                                                          .householdMembers
+                                                          .firstOrNull
+                                                          ?.members ??
+                                                      [])
+                                                  .where((element) =>
                                                       element
                                                           .individualClientReferenceId ==
                                                       state.selectedIndividual
@@ -239,8 +104,9 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                                   .firstOrNull;
                                               // Check if any other member has this member as parent
                                               final hasChild = state
-                                                  .householdMemberWrapper
                                                   .householdMembers
+                                                  .first
+                                                  .members
                                                   ?.any((member) =>
                                                       member.individualClientReferenceId ==
                                                           m.clientReferenceId &&
@@ -259,14 +125,16 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                         .map(
                                       (e) {
                                         final isHead = state
-                                                .householdMemberWrapper
+                                                .householdMembers
+                                                .first
                                                 .headOfHousehold
                                                 ?.clientReferenceId ==
                                             e.clientReferenceId;
                                         final household = state
-                                            .householdMemberWrapper.household;
+                                            .householdMembers.first.household;
                                         final projectBeneficiaryId = state
-                                            .householdMemberWrapper
+                                            .householdMembers
+                                            .first
                                             .projectBeneficiaries
                                             ?.firstWhereOrNull((b) =>
                                                 b.beneficiaryClientReferenceId ==
@@ -274,7 +142,8 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                             ?.clientReferenceId;
 
                                         final projectBeneficiary = state
-                                            .householdMemberWrapper
+                                            .householdMembers
+                                            .first
                                             .projectBeneficiaries
                                             ?.where(
                                               (element) => (element
@@ -285,7 +154,8 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                                               .individual
                                                       ? e.clientReferenceId
                                                       : state
-                                                          .householdMemberWrapper
+                                                          .householdMembers
+                                                          .first
                                                           .household
                                                           ?.clientReferenceId)),
                                             )
@@ -294,7 +164,7 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                         final taskData = (projectBeneficiary ??
                                                     [])
                                                 .isNotEmpty
-                                            ? state.householdMemberWrapper.tasks
+                                            ? state.householdMembers.first.tasks
                                                 ?.where((element) =>
                                                     element
                                                         .projectBeneficiaryClientReferenceId ==
@@ -305,7 +175,7 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                         final referralData = (projectBeneficiary ??
                                                     [])
                                                 .isNotEmpty
-                                            ? state.householdMemberWrapper
+                                            ? state.householdMembers.first
                                                 .referrals
                                                 ?.where((element) =>
                                                     element
@@ -317,7 +187,7 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                         final sideEffectData = taskData !=
                                                     null &&
                                                 taskData.isNotEmpty
-                                            ? state.householdMemberWrapper
+                                            ? state.householdMembers.first
                                                 .sideEffects
                                                 ?.where((element) =>
                                                     element
@@ -336,12 +206,6 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                               ).years
                                             : 0;
 
-                                        final individualChecklist = state
-                                            .householdMemberWrapper
-                                            .individualChecklists
-                                            ?.firstWhereOrNull((element) =>
-                                                element.referenceId ==
-                                                e.clientReferenceId);
                                         final ageInMonths =
                                             e.dateOfBirth != null
                                                 ? DigitDateUtils.calculateAge(
@@ -382,8 +246,7 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                               projectBeneficiary,
                                           projectBeneficiaryClientReferenceId:
                                               projectBeneficiaryId,
-                                          individualChecklist:
-                                              individualChecklist,
+                                          // individualChecklist: individualChecklist,
                                           name: e.name?.givenName ?? ' - - ',
                                           localizations: localizations,
                                           years: (e.dateOfBirth == null
@@ -395,33 +258,12 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                                       ) ??
                                                       DateTime.now(),
                                                 ).years),
-                                          isNotEligible: RegistrationDeliverySingleton()
-                                                      .projectType
-                                                      ?.cycles !=
-                                                  null
-                                              ? !checkEligibilityForAgeAndSideEffect(
-                                                        DigitDOBAgeConvertor(
-                                                          years: ageInYears,
-                                                          months: ageInMonths,
-                                                        ),
-                                                        RegistrationDeliverySingleton()
-                                                            .projectType,
-                                                        (taskData ?? [])
-                                                                .isNotEmpty
-                                                            ? taskData
-                                                                ?.lastOrNull
-                                                            : null,
-                                                        sideEffectData,
-                                                      ) ||
-                                                      (taskData ?? [])
-                                                          .isNotEmpty
-                                                  ? (taskData ?? [])
-                                                          .isNotEmpty &&
-                                                      taskData?.last.status ==
-                                                          Status.ineligible
-                                                              .toValue()
-                                                              .toString()
-                                                  : !checkEligibilityForAgeAndSideEffect(
+                                          isNotEligible:
+                                              RegistrationDeliverySingleton()
+                                                          .projectType
+                                                          ?.cycles !=
+                                                      null
+                                                  ? !checkEligibilityForAgeAndSideEffect(
                                                       DigitDOBAgeConvertor(
                                                         years: ageInYears,
                                                         months: ageInMonths,
@@ -434,7 +276,7 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                                           : null,
                                                       sideEffectData,
                                                     )
-                                              : false,
+                                                  : false,
                                           months: (e.dateOfBirth == null
                                               ? null
                                               : DigitDateUtils.calculateAge(
@@ -463,72 +305,9 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                                   ? true
                                                   : false,
                                           editMemberAction: () async {
-                                            final bloc = context
-                                                .read<HouseholdOverviewBloc>();
-
-                                            final parentClientReferenceId = bloc
-                                                .state
-                                                .householdMemberWrapper
-                                                .householdMembers
-                                                ?.where((e) =>
-                                                    e.individualClientReferenceId ==
-                                                    state.selectedIndividual
-                                                        ?.clientReferenceId)
-                                                .firstOrNull
-                                                ?.clientReferenceId;
-
-                                            Navigator.of(
-                                              context,
-                                              rootNavigator: true,
-                                            ).pop();
-
-                                            final address = household?.address;
-                                            if (address == null) {
-                                              return;
-                                            }
-
-                                            final projectId =
-                                                RegistrationDeliverySingleton()
-                                                    .projectId!;
-                                            bloc.add(
-                                              HouseholdOverviewReloadEvent(
-                                                projectId: projectId,
-                                                projectBeneficiaryType:
-                                                    RegistrationDeliverySingleton()
-                                                            .beneficiaryType ??
-                                                        BeneficiaryType
-                                                            .household,
-                                              ),
-                                            );
-
-                                            await context.router.root.push(
-                                              BeneficiaryRegistrationWrapperRoute(
-                                                initialState:
-                                                    BeneficiaryRegistrationEditIndividualState(
-                                                  individualModel: e,
-                                                  householdModel: household!,
-                                                  addressModel: address,
-                                                  projectBeneficiaryModel:
-                                                      projectBeneficiary?.first,
-                                                  individualChecklists:
-                                                      individualChecklist !=
-                                                              null
-                                                          ? [
-                                                              individualChecklist
-                                                            ]
-                                                          : null,
-                                                ),
-                                                children: [
-                                                  IndividualDetailsRoute(
-                                                      parentClientReferenceId:
-                                                          parentClientReferenceId),
-                                                ],
-                                              ),
-                                            );
+                                            /// TODO: need to first write the logic for adding a child
                                           },
                                           deleteMemberAction: () {
-                                            final bloc = context
-                                                .read<HouseholdOverviewBloc>();
                                             showCustomPopup(
                                               context: context,
                                               builder: (BuildContext context) {
@@ -545,26 +324,7 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                                                   .householdOverView
                                                                   .householdOverViewPrimaryActionLabel),
                                                           onPressed: () {
-                                                            Navigator.of(
-                                                              context,
-                                                              rootNavigator:
-                                                                  true,
-                                                            )
-                                                              ..pop()
-                                                              ..pop();
-                                                            bloc.add(
-                                                              HouseholdOverviewEvent
-                                                                  .selectedIndividual(
-                                                                individualModel:
-                                                                    e,
-                                                              ),
-                                                            );
-                                                            context.router.push(
-                                                              ReasonForDeletionRoute(
-                                                                isHousholdDelete:
-                                                                    false,
-                                                              ),
-                                                            );
+                                                            /// need to check the logic for deletion and where it should navigate
                                                           },
                                                           type: DigitButtonType
                                                               .primary,
@@ -601,13 +361,13 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                   ),
                                   Center(
                                     child: DigitButton(
-                                      isDisabled: (state.householdMemberWrapper
+                                      isDisabled: (state.householdMembers.first
                                                   .projectBeneficiaries ??
                                               [])
                                           .isEmpty,
                                       onPressed: () => addIndividual(
                                           context,
-                                          state.householdMemberWrapper
+                                          state.householdMembers.first
                                               .household!,
                                           false,
                                           state.selectedIndividual!),
@@ -636,39 +396,7 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
 
   addIndividual(BuildContext context, HouseholdModel household, bool isChild,
       IndividualModel individual) async {
-    if (household != null) {
-      final bloc = context.read<HouseholdOverviewBloc>();
-
-      final address = household?.address;
-
-      if (address == null) return;
-      bloc.add(
-        HouseholdOverviewReloadEvent(
-          projectId: RegistrationDeliverySingleton().projectId!,
-          projectBeneficiaryType:
-              RegistrationDeliverySingleton().beneficiaryType!,
-        ),
-      );
-      final parentClientReferenceId = bloc
-          .state.householdMemberWrapper.householdMembers
-          ?.where((e) =>
-              e.individualClientReferenceId == individual.clientReferenceId)
-          .firstOrNull
-          ?.clientReferenceId;
-
-      await context.router.root.push(
-        BeneficiaryRegistrationWrapperRoute(
-          initialState: BeneficiaryRegistrationAddMemberState(
-              addressModel: address,
-              householdModel: household,
-              parentClientReferenceId: parentClientReferenceId),
-          children: [
-            IndividualDetailsRoute(
-                parentClientReferenceId: parentClientReferenceId),
-          ],
-        ),
-      );
-    }
+    /// need to rewrite the logic for adding a child
   }
 
   bool isOutsideProjectDateRange() {
@@ -685,31 +413,32 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
     return false;
   }
 
-  getStatusAttributes(HouseholdOverviewState state,
-      DeliverInterventionState deliverInterventionState) {
+  getStatusAttributes(RegistrationWrapperState state) {
     var textLabel =
         i18.householdOverView.householdOverViewNotRegisteredIconLabel;
     var color = DigitTheme.instance.colorScheme.error;
     var icon = Icons.info_rounded;
 
-    if ((state.householdMemberWrapper.projectBeneficiaries ?? []).isNotEmpty) {
-      textLabel = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
-          ? getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue() ==
+    if ((state.householdMembers.firstOrNull?.projectBeneficiaries ?? [])
+        .isNotEmpty) {
+      textLabel = state.householdMembers.firstOrNull?.tasks?.isNotEmpty ?? false
+          ? getTaskStatus(state.householdMembers.firstOrNull?.tasks ?? [])
+                      .toValue() ==
                   Status.administeredSuccess.toValue()
-              ? '${RegistrationDeliverySingleton().selectedProject!.projectType}_${getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue()}'
-              : getTaskStatus(state.householdMemberWrapper.tasks ?? [])
+              ? '${RegistrationDeliverySingleton().selectedProject!.projectType}_${getTaskStatus(state.householdMembers.firstOrNull?.tasks ?? []).toValue()}'
+              : getTaskStatus(state.householdMembers.firstOrNull?.tasks ?? [])
                   .toValue()
           : Status.registered.toValue();
 
-      color = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
-          ? (state.householdMemberWrapper.tasks?.lastOrNull?.status ==
+      color = state.householdMembers.firstOrNull?.tasks?.isNotEmpty ?? false
+          ? (state.householdMembers.firstOrNull?.tasks?.lastOrNull?.status ==
                   Status.administeredSuccess.toValue()
               ? DigitTheme.instance.colorScheme.onSurfaceVariant
               : DigitTheme.instance.colorScheme.error)
           : DigitTheme.instance.colorScheme.onSurfaceVariant;
 
-      icon = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
-          ? (state.householdMemberWrapper.tasks?.lastOrNull?.status ==
+      icon = state.householdMembers.firstOrNull?.tasks?.isNotEmpty ?? false
+          ? (state.householdMembers.firstOrNull?.tasks?.lastOrNull?.status ==
                   Status.administeredSuccess.toValue()
               ? Icons.check_circle
               : Icons.info_rounded)
@@ -724,7 +453,8 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
   }
 
   void navigateToChecklist(BuildContext ctx) async {
-    await context.router.push(BeneficiaryChecklistRoute());
+    /// TODO: need to handle navigation for eligibility checklist
+    // await context.router.push(BeneficiaryChecklistRoute());
   }
 
   getAge(IndividualModel e) {

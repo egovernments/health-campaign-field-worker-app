@@ -29,6 +29,7 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
     on(_fetchIdCount);
     on(_fetchUniqueIdsFromServer);
     on(_fetchAUniqueId);
+    on(_updateStatus);
   }
 
   FutureOr<void> _fetchIdCount(
@@ -47,7 +48,8 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
           userUuid: RegistrationDeliverySingleton().loggedInUserUuid,
         ),
       );
-      emit(UniqueIdState.idCount(count.length, totalCount.length));
+      emit(UniqueIdState.idCount(count.length, totalCount.length,
+          count.isNotEmpty ? count.first : null));
     } catch (e) {
       emit(UniqueIdState.failed(e.toString()));
     }
@@ -156,6 +158,24 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
       emit(UniqueIdState.failed(e.toString()));
     }
   }
+
+  FutureOr<void> _updateStatus(
+      UpdateStatusEvent event, Emitter<UniqueIdState> emit) async {
+    emit(const UniqueIdState.loading());
+
+    try {
+      var id = await uniqueIdPoolLocalRepository
+          .search(UniqueIdPoolSearchModel(id: event.id));
+
+      uniqueIdPoolLocalRepository.update(id.firstOrNull!.copyWith(
+        status: IdStatus.assigned.toValue(),
+      ));
+
+      emit(const UniqueIdState.updatedID());
+    } catch (e) {
+      emit(UniqueIdState.failed(e.toString()));
+    }
+  }
 }
 
 @freezed
@@ -166,6 +186,9 @@ class UniqueIdEvent with _$UniqueIdEvent {
       FetchUniqueIdsEvent;
 
   const factory UniqueIdEvent.fetchAUniqueId() = FetchAUniqueIdEvent;
+
+  const factory UniqueIdEvent.updateStatus({required String id}) =
+      UpdateStatusEvent;
 }
 
 @freezed
@@ -175,13 +198,16 @@ class UniqueIdState with _$UniqueIdState {
   const factory UniqueIdState.fetching(int progress, int totalCount) =
       FetchingState;
 
-  const factory UniqueIdState.idCount(int count, int totalCount) =
+  const factory UniqueIdState.idCount(
+          int count, int totalCount, UniqueIdPoolModel? currentUniqueId) =
       FetchedIdCountState;
 
   const factory UniqueIdState.ids(List<UniqueIdPoolModel> ids) =
       FetchedUniqueIdsState;
 
   const factory UniqueIdState.failed(String? error) = FailedState;
+
+  const factory UniqueIdState.updatedID() = UpdatedIDState;
 
   const factory UniqueIdState.aUniqueId(UniqueIdPoolModel aUniqueId) =
       FetchedUniqueIdState;

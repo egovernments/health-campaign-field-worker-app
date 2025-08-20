@@ -31,10 +31,9 @@ class Common {
   String get coreCommonAge => 'CORE_COMMON_AGE';
 
   String get coreCommonName => 'CORE_COMMON_NAME';
+  String get coreCommonError => 'CORE_COMMON_ERROR';
 
   String get coreCommonEmailId => 'CORE_COMMON_EMAIL_ID';
-
-  String get coreCommonError => 'CORE_COMMON_ERROR';
 
   String get coreCommonGender => 'CORE_COMMON_GENDER';
 
@@ -53,6 +52,9 @@ class Common {
   String get coreCommonReasonRequired => 'CORE_COMMON_REASON_REQUIRED';
 
   String get corecommonclose => 'CORE_COMMON_CLOSE';
+
+  String get stockInsufficientHeading => 'STOCK_INSUFFICIENT_HEADING';
+  String get stockInsufficientDescription => 'STOCK_INSUFFICIENT_DESCRIPTION';
 
   String get coreCommonOk => 'CORE_COMMON_OK';
 
@@ -144,6 +146,9 @@ class Common {
   String get coreCommonNoInternet => 'CORE_COMMON_NO_INTERNET';
 
   String get coreCommonDownloading => 'CORE_COMMON_DOWNLOADING';
+  String get failedToRegister => 'FAILED_TO_REGISTER_BENEFICIARY';
+  String get failedToRegisterDesc =>
+      'FAILED_TO_REGISTER_BENEFICIARY_DESCRIPTION';
 }
 
 class SearchBeneficiary {
@@ -222,6 +227,10 @@ class BeneficiaryDetails {
   String get resourcesTobeProvided => 'RESOURCES_TO_BE_PROVIDED';
 
   String get beneficiaryAge => 'BENEFICIARY_AGE';
+
+  String get minDeliveryCondition => 'BENEFICIARY_MIN_MAX_DELIVERY_CONDITION';
+
+  String get deliveryCondition => "BENEFICIARY_DELIVERY_CONDITION_LABEL";
 
   String get beneficiaryId => 'BENEFICIARY_ID';
 

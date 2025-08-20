@@ -63,7 +63,12 @@ mixin EntityModelMappable {
 abstract class EntityModelCopyWith<$R, $In extends EntityModel, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
-  $R call({AuditDetails? auditDetails, bool? isDeleted});
+  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
+      get clientAuditDetails;
+  $R call(
+      {AuditDetails? auditDetails,
+      ClientAuditDetails? clientAuditDetails,
+      bool? isDeleted});
   EntityModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
