@@ -84,7 +84,6 @@ dependencies:
   digit_forms_engine: ^0.0.2-dev
   digit_formula_parser: ^1.0.0
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
