@@ -220,7 +220,6 @@ jobs:
         run: |
           cd apps/health_campaign_field_worker_app/build/app/outputs/flutter-apk
           APK_NAME="${{ inputs.artifact_name }}-${{ inputs.env_name }}.apk"
-          fi
           echo "APK_NAME=$APK_NAME" >> $GITHUB_ENV
 
       - name: Upload APK Artifact
