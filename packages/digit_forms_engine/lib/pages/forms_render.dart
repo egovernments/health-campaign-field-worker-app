@@ -78,20 +78,6 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       ),
                     ),
                 builder: (context, formGroup, child) {
-                  // final manager = VisibilityManager(
-                  //     schemaMap: schema.properties!,
-                  //     form: formGroup,
-                  //     formData: buildVisibilityEvaluationContext(
-                  //       currentPageKey: widget.pageName,
-                  //       currentForm: formGroup,
-                  //       pages: schemaObject.pages,
-                  //     ));
-                  //
-                  // // Reevaluate every time the form changes
-                  // formGroup.valueChanges.listen((_) {
-                  //   manager.evaluateVisibility();
-                  // });
-
                   return ScrollableContent(
                     enableFixedDigitButton: true,
                     header: const Column(
@@ -285,7 +271,6 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                       FormsSubmitEvent(
                                           isEdit: widget.isEdit,
                                           schemaKey: widget.currentSchemaKey));
-
                                   // Pop all form pages (FormsRenderRoute)
                                   context.router.popUntil((route) {
                                     return route.settings.name !=
