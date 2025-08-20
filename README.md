@@ -1534,7 +1534,7 @@ After the build completes successfully:
 - ✅ Custom APK naming
 - ✅ Automatic artifact upload
 
-## **💡 Pro Tips**
+## **Tips**
 - Use `release` build for production deployment
 - Use `profile` build for performance testing
 - Local packages are perfect for testing unreleased features
