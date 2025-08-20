@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../models/entities/status.dart';
+import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 
 class StatusFilter extends LocalizedStatefulWidget {
@@ -181,11 +182,20 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
   }
 
   getFilters() {
+    final pageKey = SearchBeneficiaryRoute.name.replaceAll('Route', '');
+    final searchTemplate =
+    RegistrationDeliverySingleton().templateConfigs?[pageKey];
     var finalStatues = <Status>[];
     finalStatues.addAll((RegistrationDeliverySingleton().householdType ==
                 HouseholdType.community
             ? RegistrationDeliverySingleton().searchCLFFilters ?? []
-            : RegistrationDeliverySingleton().searchHouseHoldFilter ?? [])
+    :
+    (searchTemplate
+        ?.properties?['filter']?.enums ?? []).isNotEmpty
+        ? (searchTemplate
+        ?.properties?['filter']?.enums ?? [])
+        :
+    RegistrationDeliverySingleton().searchHouseHoldFilter ?? [])
         .map((e) => Status.values.where((element) => element.toValue() == e))
         .expand((element) => element)
         .toList());
