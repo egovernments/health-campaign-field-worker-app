@@ -55,7 +55,7 @@ on:
       artifact_name:
         description: 'Custom APK artifact name (optional)'
         required: false
-        default: 'hcm'
+        default: 'HCM'
         type: string
       override_dependencies:
         description: 'Override local path dependencies (use packages/* from this repo)'
