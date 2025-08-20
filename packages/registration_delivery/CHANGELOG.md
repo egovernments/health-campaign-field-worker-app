@@ -1,3 +1,7 @@
+## 1.1.1-dev.2-console
+
+* Moved set stock count in singleton to separate function
+
 ## 1.1.1-dev.1-console
 
 * Added stock count in singleton
