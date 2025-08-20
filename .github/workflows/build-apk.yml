@@ -1,0 +1,247 @@
+name: 'Build APK with your Environment'
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: 'Base URL for the service'
+        required: true
+        default: 'https://unified-dev.digit.org/'
+        type: string
+      mdms_api_path:
+        description: 'MDMS API Path'
+        required: true
+        default: 'egov-mdms-service/v1/_search'
+        type: string
+      tenant_id:
+        description: 'Tenant ID'
+        required: true
+        default: 'dev'
+        type: string
+      actions_api_path:
+        description: 'Actions API Path'
+        required: true
+        default: 'access/v1/actions/mdms/_get'
+        type: string
+      hierarchy_type:
+        description: 'Hierarchy Type'
+        required: true
+        default: 'ADMIN'
+        type: string
+      env_name:
+        description: 'Environment Name'
+        required: true
+        default: 'DEV'
+        type: choice
+        options:
+          - DEV
+          - QA
+          - UAT
+          - DEMO
+          - PROD
+      check_bandwidth_api:
+        description: 'Check Bandwidth API Path'
+        required: false
+        default: '/health-project/check/bandwidth'
+        type: string
+      build_type:
+        description: 'Build Type'
+        required: true
+        default: 'release'
+        type: choice
+        options:
+          - release
+          - profile
+      artifact_name:
+        description: 'Custom APK artifact name (optional)'
+        required: false
+        default: 'HCM'
+        type: string
+      override_dependencies:
+        description: 'Override local path dependencies (use packages/* from this repo)'
+        required: false
+        default: 'false'
+        type: choice
+        options: [true, false]
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.2'
+          channel: 'stable'
+          cache: true
+
+      - name: Install Global Dependencies
+        run: |
+          dart pub global activate mason_cli
+          dart pub global activate melos
+
+      - name: Create Environment Configuration
+        run: |
+          cat > apps/health_campaign_field_worker_app/.env << EOF
+          BASE_URL="${{ inputs.base_url }}"
+          MDMS_API_PATH="${{ inputs.mdms_api_path }}"
+          TENANT_ID="${{ inputs.tenant_id }}"
+          ACTIONS_API_PATH="${{ inputs.actions_api_path }}"
+          HIERARCHY_TYPE="${{ inputs.hierarchy_type }}"
+          ENV_NAME="${{ inputs.env_name }}"
+          SYNC_DOWN_RETRY_COUNT=3
+          RETRY_TIME_INTERVAL=5
+          CONNECT_TIMEOUT=120000
+          RECEIVE_TIMEOUT=120000
+          SEND_TIMEOUT=120000
+          CHECK_BANDWIDTH_API="${{ inputs.check_bandwidth_api }}"
+          EOF
+
+      - name: Display Configuration
+        run: |
+          echo "Building APK with the following configuration:"
+          echo "Environment: ${{ inputs.env_name }}"
+          echo "Base URL: ${{ inputs.base_url }}"
+          echo "Tenant ID: ${{ inputs.tenant_id }}"
+          echo "Build Type: ${{ inputs.build_type }}"
+          echo "Override Deps: ${{ inputs.override_dependencies }}"
+
+      - name: Install Project Dependencies (with optional local overrides)
+        run: |
+          set -e
+          APP_DIR="apps/health_campaign_field_worker_app"
+          cd "$APP_DIR"
+
+          if [[ "${{ inputs.override_dependencies }}" == "true" ]]; then
+            echo "⚡ Using local packages - adding dependency_overrides to pubspec.yaml"
+          
+            # Backup original pubspec.yaml
+            cp pubspec.yaml pubspec.yaml.original
+          
+            # List of packages to override (all local packages used by the app)
+            PACKAGES=(
+              "attendance_management"
+              "digit_data_model"
+              "registration_delivery"
+              "digit_dss"
+              "survey_form"
+              "inventory_management"
+              "digit_scanner"
+              "digit_showcase"
+              "closed_household"
+              "sync_service"
+              "referral_reconciliation"
+              "complaints"
+              "digit_forms_engine"
+              "digit_data_converter"
+              "digit_crud_bloc"
+              "digit_formula_parser"
+              "digit_firebase_services"
+              "digit_location_tracker"
+              "transit_post"
+            )
+          
+            # Verify all local packages exist
+            PKG_ROOT="$GITHUB_WORKSPACE/packages"
+            for package in "${PACKAGES[@]}"; do
+              if [ ! -d "$PKG_ROOT/$package" ]; then
+                echo "❌ Missing package: $PKG_ROOT/$package"
+                exit 1
+              fi
+            done
+          
+            # Check if dependency_overrides section exists
+            if grep -q "^dependency_overrides:" pubspec.yaml; then
+              echo "Found existing dependency_overrides section, will append to it"
+              # Add each package under existing dependency_overrides
+              for package in "${PACKAGES[@]}"; do
+                # Add package with proper indentation after dependency_overrides:
+                sed -i "/^dependency_overrides:/a\\  ${package}:\\n    path: ../../packages/${package}" pubspec.yaml
+                echo "✅ Added override for $package"
+              done
+            else
+              echo "No dependency_overrides section found, creating new one"
+              # Append dependency_overrides section at the end of pubspec.yaml
+              echo "" >> pubspec.yaml
+              echo "# Local package overrides for CI build" >> pubspec.yaml
+              echo "dependency_overrides:" >> pubspec.yaml
+              for package in "${PACKAGES[@]}"; do
+                echo "  ${package}:" >> pubspec.yaml
+                echo "    path: ../../packages/${package}" >> pubspec.yaml
+                echo "✅ Added override for $package"
+              done
+            fi
+          
+            echo "Modified pubspec.yaml with dependency_overrides"
+            echo "Running flutter pub get..."
+            flutter pub get
+          
+            echo "✅ Dependencies installed using local packages"
+          else
+            echo "📦 Using published packages from pub.dev"
+            if [ -f "pubspec.lock" ]; then
+              echo "Found existing pubspec.lock, backing it up"
+              cp pubspec.lock pubspec.lock.backup
+            fi
+            flutter pub get
+            echo "✅ Dependencies installed from pub.dev"
+          fi
+
+      - name: Generate Code
+        run: |
+          cd apps/health_campaign_field_worker_app
+          echo "Generating code for main app..."
+          dart run build_runner build --delete-conflicting-outputs
+
+      - name: Build APK
+        run: |
+          cd apps/health_campaign_field_worker_app
+          if [ "${{ inputs.build_type }}" == "release" ]; then
+            flutter build apk --release
+          elif [ "${{ inputs.build_type }}" == "profile" ]; then
+            flutter build apk -t lib/main_driver.dart --profile
+          fi
+
+      - name: Rename APK
+        run: |
+          cd apps/health_campaign_field_worker_app/build/app/outputs/flutter-apk
+          APK_NAME="${{ inputs.artifact_name }}-${{ inputs.env_name }}.apk"
+          echo "APK_NAME=$APK_NAME" >> $GITHUB_ENV
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.APK_NAME }}
+          path: apps/health_campaign_field_worker_app/build/app/outputs/flutter-apk/${{ env.APK_NAME }}
+          retention-days: 30
+
+      - name: Create Release Summary
+        run: |
+          echo "## 📱 APK Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Parameter | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Environment | ${{ inputs.env_name }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Base URL | ${{ inputs.base_url }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Tenant ID | ${{ inputs.tenant_id }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Build Type | ${{ inputs.build_type }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Override Deps | ${{ inputs.override_dependencies }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| APK Name | ${{ env.APK_NAME }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ APK has been successfully built and uploaded as an artifact." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📥 You can download the APK from the **Artifacts** section of this workflow run." >> $GITHUB_STEP_SUMMARY

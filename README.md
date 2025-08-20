@@ -1474,6 +1474,76 @@ Contributions are welcome! Follow these steps to contribute:
 
 5.  Open a pull request.
 
+Build APK with GitHub Actions
+==================================
+
+Build your HCM Field Worker App APK directly from GitHub without any local setup! Our automated workflow supports building from any branch with your custom environment configuration.
+
+## **Quick Start**
+
+1. **Navigate to Actions** → Go to the [Actions tab](../../actions) in this repository
+2. **Select Workflow** → Click on **"Build APK with your Environment"**
+3. **Run Workflow** → Click **"Run workflow"** button
+4. **Choose Branch** → Select the branch you want to build from
+5. **Configure** → Set your environment parameters (see below)
+6. **Build** → Click **"Run workflow"** to start building
+7. **Download** → Get your APK from the Artifacts section once complete
+
+## **Configuration Parameters**
+
+| Parameter | Description | Example |
+|-----------|-------------|---------|
+| **Base URL** | Your backend service URL | `https://your-environment.digit.org/` |
+| **Environment** | Target environment | `DEV`, `QA`, `UAT`, `DEMO`, `PROD` |
+| **Tenant ID** | Your tenant identifier | `pg`, `uk`, `mz` |
+| **Build Type** | APK build variant | `release` (production), `profile` (testing) |
+| **APK Name** | Custom name for your APK | `my-hcm-app` |
+
+## **Local vs Published Packages**
+
+### **Published Packages (Recommended)**
+- **When to use**: Production builds, stable releases
+- **Setting**: Keep `Override Dependencies` = `false`
+- **Benefits**: Faster builds, stable versions
+- **Use case**: Regular deployments
+
+### **Local Packages (Development)**
+- **When to use**: Testing unreleased features, custom modifications
+- **Setting**: Set `Override Dependencies` = `true`
+- **Benefits**: Test latest changes, custom package versions
+- **Use case**: Development testing, feature validation
+
+## **📱 Getting Your APK**
+
+After the build completes successfully:
+
+1. **Go to your workflow run** → Click on the completed workflow
+2. **Scroll to Artifacts section** → Find your generated APK
+3. **Download** → Click to download `your-app-name-ENV.apk`
+4. **Install** → Transfer to your Android device and install
+
+## **Build Time**
+- **Published packages**: ~8-12 minutes
+- **Local packages**: ~15-20 minutes
+
+## **Supported Features**
+- ✅ Any branch selection
+- ✅ Custom environment configuration
+- ✅ Release and Profile builds
+- ✅ Local package development
+- ✅ Custom APK naming
+- ✅ Automatic artifact upload
+
+## **Tips**
+- Use `release` build for production deployment
+- Use `profile` build for performance testing
+- Local packages are perfect for testing unreleased features
+- APK name helps identify different environment builds
+
+---
+
+**Need help?** Check the [workflow logs](../../actions) for detailed build information or create an issue for support.
+
 
 Documentation
 -------------
