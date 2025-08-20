@@ -160,6 +160,9 @@ class Common {
 
   String get permissionGranted => 'CORE_COMMON_PERMISSION_GRANTED';
 
+  String get allowBackgroundActivityDesc =>
+      'CORE_COMMON_ALLOW_BACKGROUND_ACTIVITY';
+
   String get qrInventory => 'QR_INVENTORY';
 
   String get qrAttendance => 'QR_ATTENDANCE';
