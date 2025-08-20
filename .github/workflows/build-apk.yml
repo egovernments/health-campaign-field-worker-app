@@ -1,7 +1,6 @@
 name: 'Build APK with your Environment'
 
 on:
-  pull_request:
   workflow_dispatch:
     inputs:
       base_url:
@@ -133,7 +132,7 @@ jobs:
             # Backup original pubspec.yaml
             cp pubspec.yaml pubspec.yaml.original
             
-            # List of packages to override
+            # List of packages to override (all local packages used by the app)
             PACKAGES=(
               "attendance_management"
               "digit_data_model"
@@ -151,6 +150,9 @@ jobs:
               "digit_data_converter"
               "digit_crud_bloc"
               "digit_formula_parser"
+              "digit_firebase_services"
+              "digit_location_tracker"
+              "transit_post"
             )
             
             # Verify all local packages exist
@@ -168,7 +170,7 @@ jobs:
               # Add each package under existing dependency_overrides
               for package in "${PACKAGES[@]}"; do
                 # Add package with proper indentation after dependency_overrides:
-                sed -i "/^dependency_overrides:/a\\  ${package}:\\n    path: ../../../packages/${package}" pubspec.yaml
+                sed -i "/^dependency_overrides:/a\\  ${package}:\\n    path: ../../packages/${package}" pubspec.yaml
                 echo "✅ Added override for $package"
               done
             else
@@ -179,7 +181,7 @@ jobs:
               echo "dependency_overrides:" >> pubspec.yaml
               for package in "${PACKAGES[@]}"; do
                 echo "  ${package}:" >> pubspec.yaml
-                echo "    path: ../../../packages/${package}" >> pubspec.yaml
+                echo "    path: ../../packages/${package}" >> pubspec.yaml
                 echo "✅ Added override for $package"
               done
             fi
@@ -202,10 +204,46 @@ jobs:
       - name: Generate Code
         run: |
           cd apps/health_campaign_field_worker_app
-          if [ ! -d ".dart_tool/build" ] || [ ! -f "lib/models/data_model.dart" ]; then
+          
+          if [[ "${{ inputs.override_dependencies }}" == "true" ]]; then
+            echo "Using local packages - need to generate code for all packages first"
+            
+            # Generate code for all local packages that need it
+            cd "$GITHUB_WORKSPACE"
+            PACKAGES_NEEDING_CODEGEN=(
+              "packages/digit_data_model"
+              "packages/attendance_management" 
+              "packages/inventory_management"
+              "packages/registration_delivery"
+              "packages/survey_form"
+              "packages/referral_reconciliation"
+              "packages/complaints"
+              "packages/closed_household"
+              "packages/digit_forms_engine"
+              "packages/digit_crud_bloc"
+              "packages/sync_service"
+            )
+            
+            for package in "${PACKAGES_NEEDING_CODEGEN[@]}"; do
+              if [ -f "$package/pubspec.yaml" ] && grep -q "build_runner" "$package/pubspec.yaml"; then
+                echo "Generating code for $package..."
+                cd "$package"
+                flutter pub get
+                dart run build_runner build --delete-conflicting-outputs
+                cd "$GITHUB_WORKSPACE"
+              fi
+            done
+            
+            # Now generate code for the main app
+            cd apps/health_campaign_field_worker_app
+            echo "Generating code for main app..."
             dart run build_runner build --delete-conflicting-outputs
           else
-            echo "Generated files appear up to date, skipping build_runner"
+            if [ ! -d ".dart_tool/build" ] || [ ! -f "lib/models/data_model.dart" ]; then
+              dart run build_runner build --delete-conflicting-outputs
+            else
+              echo "Generated files appear up to date, skipping build_runner"
+            fi
           fi
 
       - name: Build APK
