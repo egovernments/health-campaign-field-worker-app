@@ -88,7 +88,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
             mainAxisSize: MainAxisSize.max,
             onPressed: () async {
               bool granted = await _checkPermissions();
-              if (granted) {
+              if (!granted) {
                 if (mounted) {
                   Toast.showToast(
                     context,
