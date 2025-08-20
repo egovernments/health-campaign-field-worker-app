@@ -12,12 +12,16 @@ class JsonForms extends StatelessWidget {
   final PropertySchema propertySchema;
   final List<Map<String, Widget>>? childrens;
   final Map<String, dynamic>? defaultValues;
+  final String pageName;
+  final String currentSchemaKey;
 
   const JsonForms({
     super.key,
     required this.propertySchema,
     this.childrens,
     this.defaultValues,
+    required this.pageName,
+    required this.currentSchemaKey,
   });
 
   static Map<String, AbstractControl<dynamic>> getFormControls(
@@ -81,5 +85,7 @@ class JsonForms extends StatelessWidget {
         schema: propertySchema,
         formControlName: '/',
         components: childrens,
+        pageName: pageName,
+        currentSchemaKey: currentSchemaKey,
       );
 }

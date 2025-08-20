@@ -21,7 +21,14 @@ class FormulaParser {
         _isReservedWordsUsed = true;
         _reservedWordsUsed.add(key);
       } else {
-        tempExp = tempExp.replaceAll(key, value!.toString());
+        // Handle empty string values by wrapping them in quotes
+        String replacementValue;
+        if (value == null || value.toString().isEmpty) {
+          replacementValue = '""';
+        } else {
+          replacementValue = value.toString();
+        }
+        tempExp = tempExp.replaceAll(key, replacementValue);
       }
     });
 

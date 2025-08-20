@@ -1,3 +1,21 @@
+## 1.1.0-dev.8-console
+* Update localization for bednet condition
+* Updated the digit crud bloc version
+
+## 1.1.0-dev.7-console
+
+* BugFix:
+  * Fixed index issue for resource card
+
+## 1.1.0-dev.6-console
+
+* Added limitation for max count for resource card
+
+## 1.1.0-dev.5-console
+
+* Added configuration for resource card
+* Updated digit_ui_components to latest version
+
 ## 1.1.0-dev.4-console
 
 * BugFix:
