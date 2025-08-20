@@ -19,10 +19,7 @@ _$TemplateConfigImpl _$$TemplateConfigImplFromJson(Map<String, dynamic> json) =>
       features: (json['features'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as bool),
       ),
-      navigateTo: json['navigateTo'] == null
-          ? null
-          : NavigateToConfig.fromJson(
-              json['navigateTo'] as Map<String, dynamic>),
+      navigateTo: _navigateToConfigOrNull(json['navigateTo']),
     );
 
 Map<String, dynamic> _$$TemplateConfigImplToJson(

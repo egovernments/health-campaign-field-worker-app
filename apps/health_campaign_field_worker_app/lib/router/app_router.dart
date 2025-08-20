@@ -2,7 +2,6 @@ import 'package:attendance_management/router/attendance_router.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:closed_household/router/closed_household_router.dart';
 import 'package:complaints/router/complaints_router.dart';
-import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/router/dashboard_router.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
@@ -153,62 +152,6 @@ class AppRouter extends _$AppRouter {
           path: 'select-boundary',
         ),
 
-        // INFO : Need to add Router of package Here
-        AutoRoute(
-          page: ComplaintsInboxWrapperRoute.page,
-          path: 'complaints-inbox',
-          children: [
-            AutoRoute(
-              page: ComplaintsInboxRoute.page,
-              path: 'complaints-inbox-items',
-              initial: true,
-            ),
-            AutoRoute(
-              page: ComplaintsInboxFilterRoute.page,
-              path: 'complaints-inbox-filter',
-            ),
-            AutoRoute(
-              page: ComplaintsInboxSearchRoute.page,
-              path: 'complaints-inbox-search',
-            ),
-            AutoRoute(
-              page: ComplaintsInboxSortRoute.page,
-              path: 'complaints-inbox-sort',
-            ),
-            AutoRoute(
-              page: ComplaintsDetailsViewRoute.page,
-              path: 'complaints-inbox-view-details',
-            ),
-          ],
-        ),
-
-        /// Complaints registration
-        AutoRoute(
-          page: ComplaintsRegistrationWrapperRoute.page,
-          path: 'complaints-registration',
-          children: [
-            AutoRoute(
-              page: ComplaintTypeRoute.page,
-              path: 'complaints-type',
-              initial: true,
-            ),
-            AutoRoute(
-              page: ComplaintsLocationRoute.page,
-              path: 'complaints-location',
-            ),
-            AutoRoute(
-              page: ComplaintsDetailsRoute.page,
-              path: 'complaints-details',
-            ),
-          ],
-        ),
-
-        /// Complaints Acknowledgemnet
-        AutoRoute(
-          page: ComplaintsAcknowledgementRoute.page,
-          path: 'complaints-acknowledgement',
-        ),
-
         // Attendance Route
         ...AttendanceRoute().routes,
 
@@ -223,6 +166,8 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: FlowBuilderHomeRoute.page, path: 'dynamic/:pageName'),
 
         ...TransitPostRoute().routes,
+
+        ...ComplaintsRoute().routes,
 
         AutoRoute(
           page: DataShareHomeRoute.page,

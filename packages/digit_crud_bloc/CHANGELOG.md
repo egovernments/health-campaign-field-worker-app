@@ -1,3 +1,7 @@
+## 0.0.3-dev
+
+- Fixed query for count fetching
+
 ## 0.0.2-dev
 
 - Major refactor for maintainability and clarity. No logic changes.

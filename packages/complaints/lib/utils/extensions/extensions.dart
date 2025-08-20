@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-
 import '/utils/utils.dart';
 
 part 'context_utility.dart';
@@ -16,9 +15,9 @@ extension EpochToDateTime on int? {
 }
 
 extension DateTimeExtension on DateTime? {
-  String? getFormattedDate([String format = 'dd-MM-yyyy']) {
+  String? getFormattedDate({String format = 'dd MMM yyyy', String? locale}) {
     if (this == null) return null;
 
-    return DateFormat(format).format(this!);
+    return DateFormat(format, locale).format(this!);
   }
 }

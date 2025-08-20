@@ -219,7 +219,7 @@ class BeneficiaryDetailsPageState
                                                           fetchProductVariant(
                                                               items,
                                                               state
-                                                                  .selectedIndividual,
+                                                                  .householdMembers.first.individuals?.firstOrNull,
                                                               state
                                                                   .householdMembers
                                                                   .first
@@ -269,92 +269,147 @@ class BeneficiaryDetailsPageState
                                                               ]),
                                                         );
                                                       } else {
-                                                        showCustomPopup(
-                                                          context: context,
-                                                          builder: (popUpContext) => Popup(
-                                                              title: localizations
-                                                                  .translate(i18
-                                                                      .beneficiaryDetails
-                                                                      .resourcesTobeDelivered),
-                                                              type: PopUpType
-                                                                  .simple,
-                                                              contentPadding:
-                                                                  EdgeInsets
-                                                                      .zero,
-                                                              additionalWidgets: [
-                                                                buildTableContent(
-                                                                    deliverState,
-                                                                    context,
-                                                                    variant,
-                                                                    state
-                                                                        .selectedIndividual,
-                                                                    state
-                                                                        .householdMembers
-                                                                        .first
-                                                                        .household),
-                                                              ],
-                                                              actions: [
-                                                                DigitButton(
-                                                                    label: localizations.translate(i18
-                                                                        .beneficiaryDetails
-                                                                        .ctaProceed),
-                                                                    onPressed:
-                                                                        () {
-                                                                      Navigator
-                                                                          .of(
-                                                                        context,
-                                                                        rootNavigator:
-                                                                            true,
-                                                                      ).pop();
-                                                                      if (beneficiaryDetailsTemplate
-                                                                              ?.navigateTo !=
-                                                                          null) {
-                                                                        if (beneficiaryDetailsTemplate?.navigateTo?.type ==
-                                                                            'form') {
-                                                                          final pageName = context
-                                                                              .read<FormsBloc>()
-                                                                              .state
-                                                                              .cachedSchemas['DELIVERYFLOW']
-                                                                              ?.pages
-                                                                              .entries
-                                                                              .firstOrNull
-                                                                              ?.key;
+                                                        if (beneficiaryDetailsTemplate
+                                                                ?.properties?[
+                                                                    registration_keys
+                                                                        .beneficiaryDetailsKeys
+                                                                        .showDeliveryPopUp]
+                                                                ?.hidden ==
+                                                            true) {
+                                                          if (beneficiaryDetailsTemplate
+                                                                  ?.navigateTo !=
+                                                              null) {
+                                                            if (beneficiaryDetailsTemplate
+                                                                    ?.navigateTo
+                                                                    ?.type ==
+                                                                'form') {
+                                                              final pageName = context
+                                                                  .read<
+                                                                      FormsBloc>()
+                                                                  .state
+                                                                  .cachedSchemas[
+                                                                      'DELIVERYFLOW']
+                                                                  ?.pages
+                                                                  .entries
+                                                                  .firstOrNull
+                                                                  ?.key;
 
-                                                                          if (pageName ==
-                                                                              null) {
-                                                                            Toast.showToast(
-                                                                              context,
-                                                                              message: localizations.translate('NO_FORM_FOUND_FOR_DELIVERY'),
-                                                                              type: ToastType.error,
-                                                                            );
-                                                                          } else {
-                                                                            context.router.push(FormsRenderRoute(
-                                                                              currentSchemaKey: 'DELIVERYFLOW',
-                                                                              pageName: pageName,
-                                                                              defaultValues: {
-                                                                                'locality': localizations.translate(RegistrationDeliverySingleton().boundary?.code ?? '')
-                                                                              },
-                                                                              customComponents: const [
-                                                                                {
-                                                                                  'resourceCard': ResourceCard()
-                                                                                }
-                                                                              ],
-                                                                            ));
+                                                              if (pageName ==
+                                                                  null) {
+                                                                Toast.showToast(
+                                                                  context,
+                                                                  message: localizations
+                                                                      .translate(
+                                                                          'NO_FORM_FOUND_FOR_DELIVERY'),
+                                                                  type: ToastType
+                                                                      .error,
+                                                                );
+                                                              } else {
+                                                                context.router.push(
+                                                                    FormsRenderRoute(
+                                                                  currentSchemaKey:
+                                                                      'DELIVERYFLOW',
+                                                                  pageName:
+                                                                      pageName,
+                                                                  defaultValues: {
+                                                                    'locality':
+                                                                        localizations.translate(
+                                                                            RegistrationDeliverySingleton().boundary?.code ??
+                                                                                '')
+                                                                  },
+                                                                  customComponents: const [
+                                                                    {
+                                                                      'resourceCard':
+                                                                          ResourceCard()
+                                                                    }
+                                                                  ],
+                                                                ));
+                                                              }
+                                                            }
+                                                          } else {
+                                                            //TODO: need to figure out multiple cycle logic
+                                                          }
+                                                        } else {
+                                                          showCustomPopup(
+                                                            context: context,
+                                                            builder: (popUpContext) => Popup(
+                                                                title: localizations
+                                                                    .translate(i18
+                                                                        .beneficiaryDetails
+                                                                        .resourcesTobeDelivered),
+                                                                type: PopUpType
+                                                                    .simple,
+                                                                contentPadding:
+                                                                    EdgeInsets
+                                                                        .zero,
+                                                                additionalWidgets: [
+                                                                  buildTableContent(
+                                                                      deliverState,
+                                                                      context,
+                                                                      variant,
+                                                                      state
+                                                                          .selectedIndividual,
+                                                                      state
+                                                                          .householdMembers
+                                                                          .first
+                                                                          .household),
+                                                                ],
+                                                                actions: [
+                                                                  DigitButton(
+                                                                      label: localizations.translate(i18
+                                                                          .beneficiaryDetails
+                                                                          .ctaProceed),
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator
+                                                                            .of(
+                                                                          context,
+                                                                          rootNavigator:
+                                                                              true,
+                                                                        ).pop();
+                                                                        if (beneficiaryDetailsTemplate?.navigateTo !=
+                                                                            null) {
+                                                                          if (beneficiaryDetailsTemplate?.navigateTo?.type ==
+                                                                              'form') {
+                                                                            final pageName =
+                                                                                context.read<FormsBloc>().state.cachedSchemas['DELIVERYFLOW']?.pages.entries.firstOrNull?.key;
+
+                                                                            if (pageName ==
+                                                                                null) {
+                                                                              Toast.showToast(
+                                                                                context,
+                                                                                message: localizations.translate('NO_FORM_FOUND_FOR_DELIVERY'),
+                                                                                type: ToastType.error,
+                                                                              );
+                                                                            } else {
+                                                                              context.router.push(FormsRenderRoute(
+                                                                                currentSchemaKey: 'DELIVERYFLOW',
+                                                                                pageName: pageName,
+                                                                                defaultValues: {
+                                                                                  'locality': localizations.translate(RegistrationDeliverySingleton().boundary?.code ?? '')
+                                                                                },
+                                                                                customComponents: const [
+                                                                                  {
+                                                                                    'resourceCard': ResourceCard()
+                                                                                  }
+                                                                                ],
+                                                                              ));
+                                                                            }
                                                                           }
+                                                                        } else {
+                                                                          //TODO: need to figure out multiple cycle logic
                                                                         }
-                                                                      } else {
-                                                                        //TODO: need to figure out multiple cycle logic
-                                                                      }
-                                                                      // router.push(
-                                                                      //   DeliverInterventionRoute(),
-                                                                      // );
-                                                                    },
-                                                                    type: DigitButtonType
-                                                                        .primary,
-                                                                    size: DigitButtonSize
-                                                                        .large),
-                                                              ]),
-                                                        );
+                                                                        // router.push(
+                                                                        //   DeliverInterventionRoute(),
+                                                                        // );
+                                                                      },
+                                                                      type: DigitButtonType
+                                                                          .primary,
+                                                                      size: DigitButtonSize
+                                                                          .large),
+                                                                ]),
+                                                          );
+                                                        }
                                                       }
                                                     }
                                                   },

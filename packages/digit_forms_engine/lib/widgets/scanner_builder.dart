@@ -60,9 +60,10 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                       ),
                       DigitButton(label: '', onPressed: (){
                         context.router.push(DigitScannerRoute(
-                          quantity: 1,
-                          isGS1code: false,
-                          singleValue: true,
+                          quantity: validations?.firstWhereOrNull((v) => v.type == 'scanLimit')?.value ?? 1,
+                          isGS1code: validations?.firstWhereOrNull((v) => v.type == 'isGS1')?.value ?? false,
+                          singleValue: validations?.firstWhereOrNull((v) => v.type == 'scanLimit')?.value == 1 ? true : false,
+                          regex: validations?.firstWhereOrNull((v) => v.type == 'pattern')?.value,
                         ));
                       }, type: DigitButtonType.tertiary, size: DigitButtonSize.medium, prefixIcon: Icons.edit,)
                     ],
@@ -77,9 +78,11 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                       const DigitScannerEvent.handleScanner(),
                     );
                     context.router.push(DigitScannerRoute(
-                      quantity: 1,
-                      isGS1code: false,
-                      singleValue: true,
+                      quantity: validations?.firstWhereOrNull((v) => v.type == 'scanLimit')?.value ?? 1,
+                      isGS1code: validations?.firstWhereOrNull((v) => v.type == 'isGS1')?.value ?? false,
+                      singleValue: validations?.firstWhereOrNull((v) => v.type == 'scanLimit')?.value == 1 ? true : false,
+                        regex: validations?.firstWhereOrNull((v) => v.type == 'pattern')?.value,
+
                     ));
                   },
                   type: DigitButtonType.secondary,
