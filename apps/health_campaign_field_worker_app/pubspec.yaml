@@ -1,7 +1,7 @@
 name: health_campaign_field_worker_app
 description: A new Flutter project.
 publish_to: 'none'
-version: 1.8.0
+version: 0.2.0
 
 environment:
   sdk: '>=3.0.0 <=4.0.0'
@@ -18,7 +18,7 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.11+1
   path_provider: ^2.1.3
   path: ^1.9.0
-  digit_ui_components: ^0.2.2+4
+  digit_ui_components: ^0.2.2+8
   auto_route: ^8.3.0
   flutter_bloc: ^8.1.5
   collection: ^1.18.0
@@ -44,7 +44,7 @@ dependencies:
   pretty_dio_logger: ^1.3.1
   pluto_grid: ^8.0.0
   flutter_portal: ^1.1.4
-  flutter_background_service: ^5.0.5
+  flutter_background_service: ^5.1.0
   flutter_local_notifications: ^17.1.2
   device_info_plus: ^9.1.2
   battery_plus: ^6.0.1
@@ -61,15 +61,17 @@ dependencies:
   digit_scanner: ^1.0.6+1
   inventory_management: ^1.0.6
   referral_reconciliation: ^1.0.6
-  digit_data_model: ^1.1.2+1
-  registration_delivery: ^1.0.7+1
+  digit_data_model: ^1.2.0-dev.1-console
+  registration_delivery: ^1.1.0-dev.5-console
   disable_battery_optimization: ^1.1.1
   digit_dss: ^1.0.4+2
-  closed_household: ^1.0.5+1
+  closed_household: ^1.1.0-dev.1-console
   digit_location_tracker: ^1.0.0
   permission_handler: ^11.3.1
   survey_form: ^1.0.3
-  complaints: ^1.0.3
+  complaints: ^1.1.0-dev.1-console
+  encrypt: ^5.0.3
+  chopper: ^6.1.1
   transit_post: ^1.0.0
   flutter_nearby_connections:
     git:
@@ -77,6 +79,11 @@ dependencies:
       ref: master
   percent_indicator: ^4.2.4
   lottie: ^3.1.0
+  digit_crud_bloc: ^0.0.2-dev
+  digit_data_converter: ^0.0.2-dev
+  digit_forms_engine: ^0.0.2-dev
+  digit_formula_parser: ^1.0.0
+
 
 dev_dependencies:
   flutter_test:
@@ -99,6 +106,7 @@ dev_dependencies:
   isar_generator: ^3.1.0+1
   flutter_launcher_icons: ^0.13.1
   hrk_flutter_test_batteries: ^0.8.0
+  chopper_generator: ^6.0.0
 
 flutter_icons:
   android: 'ic_launcher'

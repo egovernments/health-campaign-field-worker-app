@@ -1,3 +1,12 @@
+## 1.1.3
+
+* Updated user_action entity and table with beneficiaryTag and resourceTag fields
+
+## 1.2.0-dev.1-console
+
+* Renamed referenceId to referenceID in project model
+* Made individualClientReferenceId mandatory in identifier
+
 ## 1.1.2+1
 
 * Updated encryption utils function to compress and decompress data

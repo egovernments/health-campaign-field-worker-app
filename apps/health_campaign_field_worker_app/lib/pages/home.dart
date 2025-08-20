@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
@@ -9,6 +10,7 @@ import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
+import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
@@ -29,6 +31,7 @@ import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
@@ -333,10 +336,46 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.announcement,
           label: i18.home.fileComplaint,
-          onPressed: () {
+          onPressed: () async {
             if (isTriggerLocalisation) {
-              triggerLocalization();
+              final moduleName =
+                  'hcm-complaintflow-${context.selectedProject.referenceID}';
+              triggerLocalization(module: moduleName);
               isTriggerLocalisation = false;
+            }
+
+            final prefs = await SharedPreferences.getInstance();
+            final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+            if (schemaJsonRaw != null) {
+              final allSchemas =
+                  json.decode(schemaJsonRaw) as Map<String, dynamic>;
+
+              final complaintSchemaEntry =
+                  allSchemas['COMPLAINTFLOW'] as Map<String, dynamic>?;
+
+              final complaintSchemaData = complaintSchemaEntry?['data'];
+
+              if (complaintSchemaData != null) {
+                // Extract templates from both schemas
+                final regTemplatesRaw = complaintSchemaData?['templates'];
+
+                final Map<String, dynamic> complaintTemplateMap =
+                    regTemplatesRaw is Map<String, dynamic>
+                        ? regTemplatesRaw
+                        : {};
+
+                final templates = {
+                  for (final entry in complaintTemplateMap.entries)
+                    entry.key: TemplateConfig.fromJson(
+                        entry.value as Map<String, dynamic>)
+                };
+
+                final complaintConfig = json.encode(complaintSchemaData);
+
+                ComplaintsSingleton().setTemplateConfigs(templates);
+                ComplaintsSingleton().setComplaintConfig(complaintConfig);
+              }
             }
             context.router.push(const ComplaintsInboxWrapperRoute());
           },
@@ -363,12 +402,64 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
-            RegistrationDeliverySingleton()
-                .setHouseholdType(HouseholdType.family);
             if (isTriggerLocalisation) {
-              triggerLocalization();
+              final moduleName =
+                  'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
+              triggerLocalization(module: moduleName);
               isTriggerLocalisation = false;
             }
+
+            final prefs = await SharedPreferences.getInstance();
+            final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+            if (schemaJsonRaw != null) {
+              final allSchemas =
+                  json.decode(schemaJsonRaw) as Map<String, dynamic>;
+
+              final registrationSchemaEntry =
+                  allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
+              final deliverySchemaEntry =
+                  allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
+
+              final registrationSchemaData = registrationSchemaEntry?['data'];
+              final deliverySchemaData = deliverySchemaEntry?['data'];
+
+              if (registrationSchemaData != null ||
+                  deliverySchemaData != null) {
+                // Extract templates from both schemas
+                final regTemplatesRaw = registrationSchemaData?['templates'];
+                final delTemplatesRaw = deliverySchemaData?['templates'];
+
+                final Map<String, dynamic> regTemplateMap =
+                    regTemplatesRaw is Map<String, dynamic>
+                        ? regTemplatesRaw
+                        : {};
+
+                final Map<String, dynamic> delTemplateMap =
+                    delTemplatesRaw is Map<String, dynamic>
+                        ? delTemplatesRaw
+                        : {};
+
+                final templates = {
+                  for (final entry
+                      in {...regTemplateMap, ...delTemplateMap}.entries)
+                    entry.key: TemplateConfig.fromJson(
+                        entry.value as Map<String, dynamic>)
+                };
+
+                final registrationConfig = json.encode(registrationSchemaData);
+                final deliveryConfig = json.encode(deliverySchemaData);
+
+                RegistrationDeliverySingleton().setTemplateConfigs(templates);
+                RegistrationDeliverySingleton()
+                    .setRegistrationConfig(registrationConfig);
+                RegistrationDeliverySingleton()
+                    .setDeliveryConfig(deliveryConfig);
+              }
+            }
+            RegistrationDeliverySingleton()
+                .setHouseholdType(HouseholdType.family);
+
             await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
@@ -461,7 +552,8 @@ class _HomePageState extends LocalizedState<HomePage> {
               label: i18.home.syncDataLabel,
               onPressed: () async {
                 if (envConfig.variables.envType == EnvType.qa ||
-                    envConfig.variables.envType == EnvType.dev) {
+                    envConfig.variables.envType == EnvType.dev ||
+                    envConfig.variables.envType == EnvType.uat) {
                   if (context.mounted) attemptSyncUp(context);
                 } else {
                   if (snapshot.data?['enablesManualSync'] == true) {
@@ -519,6 +611,7 @@ class _HomePageState extends LocalizedState<HomePage> {
               triggerLocalization();
               isTriggerLocalisation = false;
             }
+            ;
             context.router.push(const ManageAttendanceRoute());
           },
         ),
@@ -560,6 +653,7 @@ class _HomePageState extends LocalizedState<HomePage> {
               triggerLocalization();
               isTriggerLocalisation = false;
             }
+            ;
             context.router.push(const UserDashboardRoute());
           },
         ),
@@ -608,6 +702,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
+      i18.home.db: homeShowcaseData.db.showcaseKey,
       i18.home.closedHouseHoldLabel:
           homeShowcaseData.closedHouseHold.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
@@ -664,7 +759,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     );
   }
 
-  void triggerLocalization() {
+  void triggerLocalization({String? module, bool? loadOnline}) {
     context.read<AppInitializationBloc>().state.maybeWhen(
           orElse: () {},
           initialized: (
@@ -677,15 +772,27 @@ class _HomePageState extends LocalizedState<HomePage> {
             final selectedLocale = AppSharedPreferences().getSelectedLocale;
             LocalizationParams()
                 .setCode(LeastLevelBoundarySingleton().boundary);
-            context
-                .read<LocalizationBloc>()
-                .add(LocalizationEvent.onLoadLocalization(
-                  module:
-                      "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
-                  tenantId: appConfig.tenantId ?? "default",
-                  locale: selectedLocale!,
-                  path: Constants.localizationApiPath,
-                ));
+            if (loadOnline == true) {
+              context
+                  .read<LocalizationBloc>()
+                  .add(LocalizationEvent.onRemoteLoadLocalization(
+                    module: module ??
+                        "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                    tenantId: envConfig.variables.tenantId,
+                    locale: selectedLocale!,
+                    path: Constants.localizationApiPath,
+                  ));
+            } else {
+              context
+                  .read<LocalizationBloc>()
+                  .add(LocalizationEvent.onLoadLocalization(
+                    module: module ??
+                        "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                    tenantId: envConfig.variables.tenantId,
+                    locale: selectedLocale!,
+                    path: Constants.localizationApiPath,
+                  ));
+            }
           },
         );
   }

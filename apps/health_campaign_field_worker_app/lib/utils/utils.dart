@@ -9,7 +9,6 @@ import 'package:attendance_management/attendance_management.dart';
 import 'package:complaints/complaints.dart';
 import 'package:complaints/complaints.init.dart' as complaints_mappers;
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:digit_data_model/data_model.dart' as data_model;
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
 import 'package:digit_data_model/models/entities/user_action.dart';
@@ -35,11 +34,12 @@ import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
-import 'package:survey_form/survey_form.dart';
+import 'package:survey_form/models/entities/service.dart';
 import 'package:survey_form/survey_form.init.dart' as survey_form_mappers;
 import 'package:sync_service/blocs/sync/sync.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
@@ -48,6 +48,7 @@ import '../models/app_config/app_config_model.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
+import 'environment_config.dart';
 import 'extensions/extensions.dart';
 
 export 'app_exception.dart';
@@ -370,8 +371,8 @@ void showDownloadDialog(
 }
 
 // Existing _findLeastLevelBoundaryCode method remains unchanged
-String _findLeastLevelBoundaryCode(List<data_model.BoundaryModel> boundaries) {
-  data_model.BoundaryModel? highestBoundary;
+String _findLeastLevelBoundaryCode(List<BoundaryModel> boundaries) {
+  BoundaryModel? highestBoundary;
 
   // Find the boundary with the highest boundaryNum
   for (var boundary in boundaries) {
@@ -403,8 +404,7 @@ String _findLeastLevelBoundaryCode(List<data_model.BoundaryModel> boundaries) {
 }
 
 // Recursive function to find the least level boundary codes
-List<String> findLeastLevelBoundaries(
-    List<data_model.BoundaryModel> boundaries) {
+List<String> findLeastLevelBoundaries(List<BoundaryModel> boundaries) {
   // Find the least level boundary type
   String leastLevelType = _findLeastLevelBoundaryCode(boundaries);
 
@@ -497,8 +497,6 @@ void attemptSyncUp(BuildContext context) async {
             userId: context.loggedInUserUuid,
             localRepositories: [
               // INFO : Need to add local repo of package Here
-              context.read<
-                  LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
               context.read<
                   LocalRepository<IndividualModel, IndividualSearchModel>>(),
               context.read<
@@ -613,4 +611,106 @@ class LocalizationParams {
   Locale? get locale => _locale;
 
   bool? get exclude => _exclude;
+}
+
+// Transforms the input JSON into a new structure where each page's properties
+// are keyed by their fieldName and the main structure is flattened for use.
+Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
+  try {
+    final transformed = <String, dynamic>{
+      'name': inputJson['name'],
+      'version': inputJson['version'],
+      'pages': <String, dynamic>{},
+      'summary': inputJson['summary'],
+      'templates': <String, dynamic>{},
+    };
+
+    for (final page in inputJson['pages'] as List<dynamic>) {
+      final pageMap = page as Map<String, dynamic>;
+      final pageKey = pageMap['page'];
+      final type = pageMap['type'];
+
+      final Map<String, dynamic> properties = {};
+
+      for (final prop in pageMap['properties'] as List<dynamic>) {
+        final property = prop as Map<String, dynamic>;
+        final fieldName = property['fieldName'];
+        if (fieldName != null) {
+          properties[fieldName] = Map<String, dynamic>.from(property);
+        }
+      }
+
+      final transformedPage = <String, dynamic>{
+        'label': pageMap['label'],
+        'order': pageMap['order'],
+        'type': pageMap['type'],
+        'format': pageMap['format'],
+        'description': pageMap['description'],
+        'actionLabel': pageMap['actionLabel'],
+        'properties': properties,
+        'value': pageMap['value'],
+        'required': pageMap['required'],
+        'hidden': pageMap['hidden'],
+        'helpText': pageMap['helpText'],
+        'innerLabel': pageMap['innerLabel'],
+        'validations': pageMap['validations'],
+        'tooltip': pageMap['tooltip'],
+        'startDate': pageMap['startDate'],
+        'endDate': pageMap['endDate'],
+        'readOnly': pageMap['readOnly'],
+        'charCount': pageMap['charCount'],
+        'systemDate': pageMap['systemDate'],
+        'isMultiSelect': pageMap['isMultiSelect'],
+        'includeInForm': pageMap['includeInForm'],
+        'includeInSummary': pageMap['includeInSummary'],
+        'autoEnable': pageMap['autoEnable'],
+        'prefixText': pageMap['prefixText'],
+        'suffixText': pageMap['suffixText'],
+        'navigateTo': pageMap['navigateTo'] is Map<String, dynamic>
+            ? pageMap['navigateTo']
+            : null,
+        'visibilityCondition': pageMap['visibilityCondition'],
+        'conditionalNavigateTo': pageMap['conditionalNavigateTo']
+      };
+
+      if (type == 'template') {
+        (transformed['templates'] as Map<String, dynamic>)[pageKey] =
+            transformedPage;
+      } else {
+        (transformed['pages'] as Map<String, dynamic>)[pageKey] =
+            transformedPage;
+      }
+    }
+
+    return transformed;
+  } catch (e, stackTrace) {
+    // Log and rethrow to propagate error to the outer try-catch
+    debugPrint('Error inside transformJson: $e');
+    debugPrint('$stackTrace');
+    rethrow;
+  }
+}
+
+Future<void> triggerLocalizationIfUpdated({
+  required BuildContext context,
+  required String moduleKey, // e.g., 'REGISTRATIONFLOW,DELIVERYFLOW'
+  required String projectReferenceId,
+  required String locale,
+}) async {
+  final keys = moduleKey.split(',').map((e) => e.trim()).toList();
+
+  final moduleNames = keys
+      .map((key) => 'hcm-${key.toLowerCase()}-$projectReferenceId')
+      .toList();
+
+  final fullModuleString = moduleNames.join(',');
+
+  context
+      .read<LocalizationBloc>()
+      .add(LocalizationEvent.onRemoteLoadLocalization(
+        module: fullModuleString,
+        tenantId: envConfig.variables.tenantId,
+        locale: AppSharedPreferences().getSelectedLocale!,
+        path: Constants.localizationApiPath,
+      ));
 }

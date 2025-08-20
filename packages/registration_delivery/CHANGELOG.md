@@ -1,3 +1,49 @@
+## 1.1.0-dev.8-console
+* Update localization for bednet condition
+* Updated the digit crud bloc version
+
+## 1.1.0-dev.7-console
+
+* BugFix:
+  * Fixed index issue for resource card
+
+## 1.1.0-dev.6-console
+
+* Added limitation for max count for resource card
+
+## 1.1.0-dev.5-console
+
+* Added configuration for resource card
+* Updated digit_ui_components to latest version
+
+## 1.1.0-dev.4-console
+
+* BugFix:
+    * Formula parser bug fix
+    * Updated normalizeKnownFlatFieldsRecursively for nested mapping for audit,clientAudit and
+      locality
+
+## 1.1.0-dev.3-console
+
+* BugFix:
+    * Fixed only single resource was showing issue
+    * Fixed flow for register household of any other project
+* Updated dependencies to latest versions
+
+## 1.1.0-dev.2-console
+
+* Updated formula parser utils function to capture error and values
+
+## 1.1.0-dev.1-console
+
+* Revamped with configuration based flow
+* Integrated with digit_crud_bloc, digit_data_converter, digit_forms_engine
+    * Limitations:
+        * Depends on form configuration and template configuration
+        * Supports single round delivery
+        * Supports single filter search
+* Integrated with digit_formula_parser for custom formula
+
 ## 1.0.7+1
 
 * Updated lister of searchState with stream

@@ -7,14 +7,17 @@ import 'package:digit_ui_components/widgets/molecules/digit_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
+import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:registration_delivery/utils/utils.dart';
 
-import '../../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../../models/entities/additional_fields_type.dart';
 import '../../../models/entities/deliver_strategy_type.dart';
 import '../../../models/entities/status.dart';
 import '../../../models/entities/task.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../../../utils/registration_component_keys.dart' as registration_keys;
 import '../../../widgets/localized.dart';
 
 class RecordDeliveryCycle extends LocalizedStatefulWidget {
@@ -39,25 +42,39 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
 
   @override
   Widget build(BuildContext context) {
+    final pageKey = BeneficiaryDetailsRoute.name.replaceAll('Route', '');
+    final beneficiaryDetailsTableConfig = RegistrationDeliverySingleton()
+        .templateConfigs?[pageKey]
+        ?.properties?[registration_keys.beneficiaryDetailsKeys.tableCardKey];
     final localizations = RegistrationDeliveryLocalization.of(context);
 
-    final headerList = [
-      DigitTableColumn(
-        header:
-            localizations.translate(i18.beneficiaryDetails.beneficiaryDoseNo),
-        cellValue: 'dose',
-      ),
-      DigitTableColumn(
-        header:
-            localizations.translate(i18.beneficiaryDetails.beneficiaryStatus),
-        cellValue: 'status',
-      ),
-      DigitTableColumn(
-        header: localizations
-            .translate(i18.beneficiaryDetails.beneficiaryCompletedOn),
-        cellValue: 'completedOn',
-      ),
-    ]; // List of table headers for displaying cycle and dose information
+    final headerList = beneficiaryDetailsTableConfig?.hidden != true &&
+            (beneficiaryDetailsTableConfig?.enums ?? []).isNotEmpty
+        ? beneficiaryDetailsTableConfig?.enums
+            ?.map(
+              (header) => DigitTableColumn(
+                header: localizations.translate(header['code']),
+                cellValue: header['fieldKey'],
+              ),
+            )
+            .toList()
+        : [
+            DigitTableColumn(
+              header: localizations
+                  .translate(i18.beneficiaryDetails.beneficiaryDoseNo),
+              cellValue: 'dose',
+            ),
+            DigitTableColumn(
+              header: localizations
+                  .translate(i18.beneficiaryDetails.beneficiaryStatus),
+              cellValue: 'status',
+            ),
+            DigitTableColumn(
+              header: localizations
+                  .translate(i18.beneficiaryDetails.beneficiaryCompletedOn),
+              cellValue: 'completedOn',
+            ),
+          ]; // List of table headers for displaying cycle and dose information
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,114 +86,130 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
               orElse: () => const Offstage(),
               fetched: (productVariants) {
                 // Calculate current cycle and dose index
-                return BlocBuilder<DeliverInterventionBloc,
-                    DeliverInterventionState>(
-                  builder: (context, deliverState) {
-                    final pastCycles = deliverState.pastCycles;
+                return BlocBuilder<RegistrationWrapperBloc,
+                    RegistrationWrapperState>(
+                  builder: (context, state) {
+                    final deliverState = state.deliveryWrapper;
+                    final pastCycles = deliverState?.pastCycles;
 
-                    return Column(children: [
-                      deliverState.hasCycleArrived
-                          ? buildCycleAndDoseTable(
-                              widget.projectCycles
-                                  .where(
-                                    (e) => e.id == deliverState.cycle,
-                                  )
-                                  .toList(),
-                              headerList,
-                              deliverState.dose - 1,
-                              true,
-                            )
-                          : const SizedBox.shrink(),
-                      if ((pastCycles ?? []).isNotEmpty)
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            StatefulBuilder(
-                              builder: (context, setState) {
-                                return Column(children: [
-                                  isExpanded
-                                      ? buildCycleAndDoseTable(
-                                          pastCycles ?? [],
-                                          headerList,
-                                          null,
-                                          false,
+                    return beneficiaryDetailsTableConfig?.hidden == true
+                        ? const SizedBox.shrink()
+                        : Column(children: [
+                            deliverState?.hasCycleArrived ?? false
+
+                                /// todo need to check again
+                                ? buildCycleAndDoseTable(
+                                    widget.projectCycles
+                                        .where(
+                                          (e) => e.id == deliverState?.cycle,
                                         )
-                                      : const Offstage(),
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Center(
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            isExpanded = !isExpanded;
-                                            isDivider = !isDivider;
-                                          });
-                                        },
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: spacer2 / 2,
-                                              ),
-                                              child: TextButton(
-                                                style: TextButton.styleFrom(
-                                                  padding: const EdgeInsets.all(
-                                                    0,
-                                                  ),
-                                                ),
-                                                onPressed: null,
-                                                child: Text(
-                                                  style: TextStyle(
-                                                    fontSize: spacer2 * 2,
-                                                    color: Theme.of(context)
-                                                        .colorTheme
-                                                        .primary
-                                                        .primary1,
-                                                  ),
-                                                  isExpanded
-                                                      ? localizations.translate(
-                                                          i18.deliverIntervention
-                                                              .hidePastCycles,
-                                                        )
-                                                      : localizations.translate(
-                                                          i18.deliverIntervention
-                                                              .viewPastCycles,
+                                        .toList(),
+                                    headerList ?? [],
+                                    deliverState?.dose ?? 1 - 1,
+                                    true,
+                                  )
+                                : const SizedBox.shrink(),
+                            if ((pastCycles ?? []).isNotEmpty)
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  StatefulBuilder(
+                                    builder: (context, setState) {
+                                      return Column(children: [
+                                        isExpanded
+                                            ? buildCycleAndDoseTable(
+                                                pastCycles ?? [],
+                                                headerList ?? [],
+                                                null,
+                                                false,
+                                              )
+                                            : const Offstage(),
+                                        SizedBox(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: Center(
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  isExpanded = !isExpanded;
+                                                  isDivider = !isDivider;
+                                                });
+                                              },
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                      horizontal: spacer2 / 2,
+                                                    ),
+                                                    child: TextButton(
+                                                      style:
+                                                          TextButton.styleFrom(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(
+                                                          0,
                                                         ),
-                                                ),
+                                                      ),
+                                                      onPressed: null,
+                                                      child: Text(
+                                                        style: TextStyle(
+                                                          fontSize: spacer2 * 2,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorTheme
+                                                                  .primary
+                                                                  .primary1,
+                                                        ),
+                                                        isExpanded
+                                                            ? localizations
+                                                                .translate(
+                                                                i18.deliverIntervention
+                                                                    .hidePastCycles,
+                                                              )
+                                                            : localizations
+                                                                .translate(
+                                                                i18.deliverIntervention
+                                                                    .viewPastCycles,
+                                                              ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  !isExpanded
+                                                      ? Icon(
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorTheme
+                                                                  .primary
+                                                                  .primary1,
+                                                          Icons
+                                                              .keyboard_arrow_down,
+                                                          size: 24,
+                                                        )
+                                                      : Icon(
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorTheme
+                                                                  .primary
+                                                                  .primary1,
+                                                          Icons
+                                                              .keyboard_arrow_up,
+                                                          size: 24,
+                                                        ),
+                                                ],
                                               ),
                                             ),
-                                            !isExpanded
-                                                ? Icon(
-                                                    color: Theme.of(context)
-                                                        .colorTheme
-                                                        .primary
-                                                        .primary1,
-                                                    Icons.keyboard_arrow_down,
-                                                    size: 24,
-                                                  )
-                                                : Icon(
-                                                    color: Theme.of(context)
-                                                        .colorTheme
-                                                        .primary
-                                                        .primary1,
-                                                    Icons.keyboard_arrow_up,
-                                                    size: 24,
-                                                  ),
-                                          ],
+                                          ),
                                         ),
-                                      ),
-                                    ),
+                                      ]);
+                                    },
                                   ),
-                                ]);
-                              },
-                            ),
-                          ],
-                        ),
-                    ]);
+                                ],
+                              ),
+                          ]);
                   },
                 );
               },
@@ -193,6 +226,10 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
     int? selectedIndex,
     bool isCurrentCycle,
   ) {
+    final pageKey = BeneficiaryDetailsRoute.name.replaceAll('Route', '');
+    final beneficiaryDetailsTableConfig = RegistrationDeliverySingleton()
+        .templateConfigs?[pageKey]
+        ?.properties?[registration_keys.beneficiaryDetailsKeys.tableCardKey];
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
 
@@ -211,12 +248,12 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   isCurrentCycle
-                      ? localizations
-                          .translate(i18.beneficiaryDetails.currentCycleLabel)
-                      : '${localizations.translate(i18.beneficiaryDetails.beneficiaryCycle)} ${e.id}',
-                  style: textTheme.headingL.copyWith(
-                    color: theme.colorTheme.primary.primary2
-                  ),
+                      ? localizations.translate(
+                          beneficiaryDetailsTableConfig?.label ??
+                              i18.beneficiaryDetails.currentCycleLabel)
+                      : '${localizations.translate(beneficiaryDetailsTableConfig?.label ?? i18.beneficiaryDetails.beneficiaryCycle)} ${e.id}',
+                  style: textTheme.headingL
+                      .copyWith(color: theme.colorTheme.primary.primary2),
                   textAlign: TextAlign.left,
                 ),
               ),
@@ -258,7 +295,7 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
 
                     return DigitTableRow(tableRow: [
                       DigitTableData(
-                        '${localizations.translate(i18.deliverIntervention.dose)} ${e.deliveries!.indexOf(item) + 1}',
+                        '${localizations.translate(headerList.first.header ?? i18.deliverIntervention.dose)} ${e.deliveries!.indexOf(item) + 1}',
                         cellKey: 'dose',
                       ),
                       DigitTableData(

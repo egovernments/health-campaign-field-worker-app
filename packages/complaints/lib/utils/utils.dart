@@ -1,7 +1,8 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-
-
 
 export 'extensions/extensions.dart';
 
@@ -25,21 +26,22 @@ class ComplaintsSingleton {
 
   List<String>? _complaintTypes;
   BoundaryModel? _boundaryModel;
-  String? _userName ='';
+  String? _userName = '';
 
   PersistenceConfiguration _persistenceConfiguration = PersistenceConfiguration
       .offlineFirst; // Default to offline first persistence configuration
+
+  Map<String, TemplateConfig>? _templateConfigs;
+  String? _complaintConfig;
 
   void setInitialData({
     String? tenantId,
     String? loggedInUserUuid,
     String? userMobileNumber,
     String? loggedInUserName,
-
     List<String>? complaintTypes,
     String? userName,
-  }){
-
+  }) {
     _tenantId = tenantId;
     _loggedInUserUuid = loggedInUserUuid;
     _userMobileNumber = userMobileNumber;
@@ -47,7 +49,6 @@ class ComplaintsSingleton {
 
     _complaintTypes = complaintTypes;
     _userName = userName;
-
   }
 
   void setPersistenceConfiguration(PersistenceConfiguration configuration) {
@@ -62,6 +63,14 @@ class ComplaintsSingleton {
     _boundaryModel = boundary;
   }
 
+  void setTemplateConfigs(Map<String, TemplateConfig> templateConfigs) {
+    _templateConfigs = templateConfigs;
+  }
+
+  void setComplaintConfig(String complaintConfig) {
+    _complaintConfig = complaintConfig;
+  }
+
   get tenantId => _tenantId;
   get loggedInUserUuid => _loggedInUserUuid;
   get userMobileNumber => _userMobileNumber;
@@ -72,17 +81,19 @@ class ComplaintsSingleton {
   get boundary => _boundaryModel;
   get userName => _userName;
 
+  Map<String, TemplateConfig>? get templateConfigs => _templateConfigs;
 
+  String? get complaintConfig => _complaintConfig;
 }
 
 class CustomValidator {
   /// Validates that control's value must be `true`
   static Map<String, dynamic>? requiredMin(
-      AbstractControl<dynamic> control,
-      ) {
+    AbstractControl<dynamic> control,
+  ) {
     return control.value == null ||
-        control.value.toString().length >= 2 ||
-        control.value.toString().trim().isEmpty
+            control.value.toString().length >= 2 ||
+            control.value.toString().trim().isEmpty
         ? null
         : {'required': true};
   }
@@ -103,3 +114,7 @@ class CustomValidator {
     return {'mobileNumber': true};
   }
 }
+
+final Map<String, PageRouteInfo> routerMap = {
+  'ComplaintsAcknowledgement': ComplaintsAcknowledgementRoute(),
+};

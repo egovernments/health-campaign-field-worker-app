@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_forms_engine/router/forms_router.dart';
 
 import 'registration_delivery_router.gm.dart';
 
@@ -11,102 +12,30 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
             page: RegistrationDeliveryWrapperRoute.page,
             path: 'registration-delivery-wrapper',
             children: [
+              ...FormsRoute().routes,
               AutoRoute(
                   initial: true,
                   page: SearchBeneficiaryRoute.page,
                   path: 'search-beneficiary'),
-
-              /// Beneficiary Registration
               AutoRoute(
-                page: BeneficiaryRegistrationWrapperRoute.page,
-                path: 'beneficiary-registration',
-                children: [
-                  AutoRoute(
-                      page: IndividualDetailsRoute.page,
-                      path: 'individual-details'),
-                  AutoRoute(
-                      page: HouseHoldDetailsRoute.page,
-                      path: 'household-details'),
-                  AutoRoute(
-                      page: HouseDetailsRoute.page, path: 'house-details'),
-                  AutoRoute(
-                    page: HouseholdLocationRoute.page,
-                    path: 'household-location',
-                    initial: true,
-                  ),
-                  AutoRoute(
-                    page: BeneficiaryAcknowledgementRoute.page,
-                    path: 'beneficiary-acknowledgement',
-                  ),
-                  AutoRoute(
-                    page: SummaryRoute.page,
-                    path: 'beneficiary-summary',
-                  ),
-                ],
+                page: BeneficiaryErrorRoute.page,
+                path: 'beneficiary-error',
               ),
               AutoRoute(
-                page: BeneficiaryWrapperRoute.page,
-                path: 'beneficiary',
-                children: [
-                  AutoRoute(
-                    page: HouseholdOverviewRoute.page,
-                    path: 'overview',
-                    initial: true,
-                  ),
-                  AutoRoute(
-                    page: BeneficiaryDetailsRoute.page,
-                    path: 'beneficiary-details',
-                  ),
-                  AutoRoute(
-                    page: BeneficiaryChecklistRoute.page,
-                    path: 'beneficiary-checklist',
-                  ),
-                  AutoRoute(
-                    page: BeneficiaryChecklistRoute.page,
-                    path: 'beneficiary-checklist',
-                  ),
-                  AutoRoute(page: ParentOverviewRoute.page, path: 'parent'),
-                  AutoRoute(
-                    page: DeliverInterventionRoute.page,
-                    path: 'deliver-intervention',
-                  ),
-                  AutoRoute(
-                    page: RefusedDeliveryRoute.page,
-                    path: 'refused-delivery',
-                  ),
-                  AutoRoute(
-                    page: SideEffectsRoute.page,
-                    path: 'side-effects',
-                  ),
-                  AutoRoute(
-                    page: ReferBeneficiaryRoute.page,
-                    path: 'refer-beneficiary',
-                  ),
-                  AutoRoute(
-                    page: DoseAdministeredRoute.page,
-                    path: 'dose-administered',
-                  ),
-                  AutoRoute(
-                    page: SplashAcknowledgementRoute.page,
-                    path: 'splash-acknowledgement',
-                  ),
-                  AutoRoute(
-                    page: ReasonForDeletionRoute.page,
-                    path: 'reason-for-deletion',
-                  ),
-                  AutoRoute(
-                    page: RecordPastDeliveryDetailsRoute.page,
-                    path: 'record-past-delivery-details',
-                  ),
-                  AutoRoute(
-                    page: HouseholdAcknowledgementRoute.page,
-                    path: 'household-acknowledgement',
-                  ),
-                  AutoRoute(
-                    page: DeliverySummaryRoute.page,
-                    path: 'delivery-summary',
-                  ),
-                ],
+                page: BeneficiaryAcknowledgementRoute.page,
+                path: 'beneficiary-acknowledgement',
+              ),
+              AutoRoute(
+                page: HouseholdOverviewRoute.page,
+                path: 'overview',
+              ),
+              AutoRoute(
+                page: BeneficiaryDetailsRoute.page,
+                path: 'beneficiary-details',
+              ),
+              AutoRoute(
+                page: HouseholdAcknowledgementRoute.page,
+                path: 'household-acknowledgement',
               ),
             ]),
         AutoRoute(page: BeneficiaryIdDownSyncRoute.page)

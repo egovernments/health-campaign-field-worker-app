@@ -2,10 +2,10 @@ import 'package:attendance_management/router/attendance_router.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:closed_household/router/closed_household_router.dart';
 import 'package:complaints/router/complaints_router.dart';
-import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/router/dashboard_router.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
+import 'package:digit_forms_engine/router/forms_router.dart';
 import 'package:digit_scanner/router/digit_scanner_router.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,6 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:survey_form/router/survey_form_router.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:transit_post/router/transit_post_router.dart';
-import 'package:transit_post/router/transit_post_router.gm.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
@@ -26,12 +25,12 @@ import '../pages/boundary_selection.dart';
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
+import '../pages/non_mobile_user/non_mobile_user_list.dart';
 import '../pages/peer_to_peer/data_receiver.dart';
 import '../pages/peer_to_peer/data_share_home.dart';
 import '../pages/peer_to_peer/data_transfer.dart';
 import '../pages/peer_to_peer/devices_list.dart';
 import '../pages/peer_to_peer/peer_to_peer_wrapper.dart';
-import '../pages/non_mobile_user/non_mobile_user_list.dart';
 import '../pages/profile.dart';
 import '../pages/project_facility_selection.dart';
 import '../pages/project_selection.dart';
@@ -55,6 +54,7 @@ part 'app_router.gr.dart';
     SurveyFormRoute,
     ComplaintsRoute,
     TransitPostRoute,
+    FormsRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -73,6 +73,7 @@ class AppRouter extends _$AppRouter {
           initial: true,
         ),
         AutoRoute(page: LoginRoute.page, path: 'login'),
+        AutoRoute(page: DigitScannerRoute.page, path: 'scanner'),
       ],
     ),
     AutoRoute(
@@ -130,10 +131,6 @@ class AppRouter extends _$AppRouter {
           page: ProjectFacilitySelectionRoute.page,
           path: 'select-project-facilities',
         ),
-        AutoRoute(
-          page: FacilitySelectionRoute.page,
-          path: 'select-facilities',
-        ),
 
         /// Project Selection
         AutoRoute(
@@ -148,62 +145,6 @@ class AppRouter extends _$AppRouter {
           path: 'select-boundary',
         ),
 
-        // INFO : Need to add Router of package Here
-        AutoRoute(
-          page: ComplaintsInboxWrapperRoute.page,
-          path: 'complaints-inbox',
-          children: [
-            AutoRoute(
-              page: ComplaintsInboxRoute.page,
-              path: 'complaints-inbox-items',
-              initial: true,
-            ),
-            AutoRoute(
-              page: ComplaintsInboxFilterRoute.page,
-              path: 'complaints-inbox-filter',
-            ),
-            AutoRoute(
-              page: ComplaintsInboxSearchRoute.page,
-              path: 'complaints-inbox-search',
-            ),
-            AutoRoute(
-              page: ComplaintsInboxSortRoute.page,
-              path: 'complaints-inbox-sort',
-            ),
-            AutoRoute(
-              page: ComplaintsDetailsViewRoute.page,
-              path: 'complaints-inbox-view-details',
-            ),
-          ],
-        ),
-
-        /// Complaints registration
-        AutoRoute(
-          page: ComplaintsRegistrationWrapperRoute.page,
-          path: 'complaints-registration',
-          children: [
-            AutoRoute(
-              page: ComplaintTypeRoute.page,
-              path: 'complaints-type',
-              initial: true,
-            ),
-            AutoRoute(
-              page: ComplaintsLocationRoute.page,
-              path: 'complaints-location',
-            ),
-            AutoRoute(
-              page: ComplaintsDetailsRoute.page,
-              path: 'complaints-details',
-            ),
-          ],
-        ),
-
-        /// Complaints Acknowledgemnet
-        AutoRoute(
-          page: ComplaintsAcknowledgementRoute.page,
-          path: 'complaints-acknowledgement',
-        ),
-
         // Attendance Route
         ...AttendanceRoute().routes,
 
@@ -213,7 +154,12 @@ class AppRouter extends _$AppRouter {
         // Referral Reconciliation Route
         ...ReferralReconciliationRoute().routes,
 
+        // Forms Route
+        ...FormsRoute().routes,
+
         ...TransitPostRoute().routes,
+
+        ...ComplaintsRoute().routes,
 
         AutoRoute(
           page: DataShareHomeRoute.page,

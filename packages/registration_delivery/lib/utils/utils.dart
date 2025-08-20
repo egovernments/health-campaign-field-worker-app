@@ -1,14 +1,19 @@
 // Importing necessary packages and modules
+import 'dart:convert';
 import 'dart:math';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
+import 'package:digit_data_model/models/templates/template_config.dart';
+import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
-import 'package:flutter/material.dart';
-import 'package:formula_parser/formula_parser.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
 import '../models/entities/additional_fields_type.dart';
 import '../models/entities/referral.dart';
@@ -258,6 +263,8 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
           .toString();
     }
 
+    dynamic quantityFromCondition = 0;
+
     final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
       final condition = criteria.condition;
       if (condition != null) {
@@ -279,10 +286,14 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               'gender'
             ]);
             final error = expression;
-            if (!error["value"]) {
+            if (error["value"] == null || !error["value"]) {
               errorMessages.add(condition);
             }
-            expressionParser.add(error["value"]);
+            if (error["value"] == null) {
+              expressionParser.add(false);
+            } else {
+              expressionParser.add(error["value"]);
+            }
           }
 
           return expressionParser.where((element) => element == true).length ==
@@ -306,10 +317,14 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               'gender'
             ]);
             final error = expression;
-            if (!error["value"]) {
+            if (error["value"] == null || !error["value"]) {
               errorMessages.add(condition);
             }
-            expressionParser.add(error["value"]);
+            if (error["value"] == null) {
+              expressionParser.add(false);
+            } else {
+              expressionParser.add(error["value"]);
+            }
           }
 
           return expressionParser
@@ -335,10 +350,20 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               'gender'
             ]);
             final error = expression;
-            if (!error["value"]) {
+            if (error["value"] == null ||
+                (error["value"] is bool && !error["value"])) {
               errorMessages.add(condition);
             }
-            expressionParser.add(error["value"]);
+            if (error["value"] == null ||
+                (error["value"] is bool && !error["value"])) {
+              expressionParser.add(false);
+            } else if (error["value"] is bool && error["value"] == true) {
+              expressionParser.add(error["value"]);
+            } else {
+              /// if some value is coming from condition
+              expressionParser.add(true);
+              quantityFromCondition = error["value"];
+            }
           }
 
           return expressionParser.where((element) => element == true).length ==
@@ -349,8 +374,26 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
       return false;
     }).toList();
 
-    deliveryDoseCriteria =
-        (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
+    if ((filteredCriteria ?? []).isNotEmpty) {
+      final firstCriteria = filteredCriteria!.first;
+      final int? roundedQuantity = quantityFromCondition != 0
+          ? quantityFromCondition.ceil() // Convert double to int by rounding up
+          : null;
+
+      final updatedVariants = roundedQuantity != null
+          ? firstCriteria.productVariants
+              ?.map((variant) => variant.copyWith(quantity: roundedQuantity))
+              .toList()
+          : firstCriteria.productVariants;
+
+      deliveryDoseCriteria = firstCriteria.copyWith(
+        productVariants: updatedVariants != null && updatedVariants.isNotEmpty
+            ? updatedVariants
+            : null,
+      );
+    } else {
+      deliveryDoseCriteria = null;
+    }
   }
 
   // Remove duplicate error messages
@@ -495,6 +538,9 @@ class RegistrationDeliverySingleton {
   HouseholdType? _householdType;
   int? _beneficiaryIdMinCount;
   int? _beneficiaryIdBatchSize;
+  Map<String, TemplateConfig>? _templateConfigs;
+  String? _registrationConfig;
+  String? _deliveryConfig;
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
@@ -559,6 +605,18 @@ class RegistrationDeliverySingleton {
     _householdType = householdType;
   }
 
+  void setTemplateConfigs(Map<String, TemplateConfig> templateConfigs) {
+    _templateConfigs = templateConfigs;
+  }
+
+  void setRegistrationConfig(String registrationConfig) {
+    _registrationConfig = registrationConfig;
+  }
+
+  void setDeliveryConfig(String deliveryConfig) {
+    _deliveryConfig = deliveryConfig;
+  }
+
   String? get tenantId => _tenantId;
 
   String? get loggedInUserUuid => _loggedInUserUuid;
@@ -611,6 +669,150 @@ class RegistrationDeliverySingleton {
   int? get beneficiaryIdMinCount => _beneficiaryIdMinCount;
 
   int? get beneficiaryIdBatchSize => _beneficiaryIdBatchSize;
+
+  Map<String, TemplateConfig>? get templateConfigs => _templateConfigs;
+
+  String? get regisrationConfig => _registrationConfig;
+
+  String? get deliveryConfig => _deliveryConfig;
+}
+
+/// Safely converts HouseholdMemberWrapper into structured map
+Map<String, dynamic>? _asMap(dynamic obj) {
+  if (obj == null) return null;
+
+  if (obj is Map<String, dynamic>) return obj;
+
+  if (obj is HouseholdWrapper) {
+    return {
+      'HOUSEHOLD': obj.household?.toJson(),
+      'INDIVIDUAL': obj.headOfHousehold?.toJson(),
+      'TASK': (obj.tasks?.isNotEmpty ?? false)
+          ? obj.tasks!.map((e) => e.toJson()).toList().last
+          : null,
+      'SIDE_EFFECT': (obj.sideEffects?.isNotEmpty ?? false)
+          ? obj.sideEffects!.map((e) => e.toJson()).last
+          : null,
+      'REFERRAL': (obj.referrals?.isNotEmpty ?? false)
+          ? obj.referrals!.map((e) => e.toJson()).toList().last
+          : null,
+    };
+  }
+
+  try {
+    return (obj as dynamic).toJson() as Map<String, dynamic>;
+  } catch (_) {
+    return null;
+  }
+}
+
+dynamic _decodeIfString(dynamic v) {
+  if (v is String) {
+    try {
+      return jsonDecode(v);
+    } catch (_) {
+      // not valid JSON → leave it as-is
+    }
+  }
+  return v;
+}
+
+/// Walk a dotted path like "Household.address[0].locality.code".
+/// Only the *first* segment is lower-cased because rootMap stores
+/// "household/individual/…".  Inner keys keep their original case.
+/// Walks path like address[0].locality.code from the given base map
+dynamic _extractNestedValue(Map<String, dynamic>? base, List<String> path) {
+  if (base == null) return null;
+  dynamic current = base;
+
+  for (final raw in path) {
+    current = _decodeIfString(current);
+    final match = RegExp(r'^([^\[\]]+)(?:\[(\d+)\])?$').firstMatch(raw);
+    if (match == null) return null;
+
+    final key = match.group(1)!;
+    final idx = match.group(2);
+
+    if (current is Map<String, dynamic>) {
+      current = current[key];
+    } else {
+      return null;
+    }
+
+    if (idx != null) {
+      if (current is List && int.parse(idx) < current.length) {
+        current = current[int.parse(idx)];
+      } else {
+        return null;
+      }
+    }
+  }
+  return current;
+}
+
+/// Looks for {additionalFields: {fields: [ {key,value}, … ]}}
+dynamic _extractAdditionalField(
+    Map<String, dynamic>? container, String fieldKey) {
+  if (container == null) return null;
+
+  final fields = (container['additionalFields']?['fields']);
+
+  if (fields is List) {
+    final matched = fields.cast<Map>().firstWhere(
+          (e) => e['key'].toString().contains(fieldKey),
+          orElse: () => {},
+        );
+    return matched['value'];
+  }
+  return null;
+}
+
+Map<String, dynamic>? _prepareBase(dynamic raw) {
+  if (raw is Map<String, dynamic>) return raw;
+  if (raw is String) {
+    try {
+      final decoded = jsonDecode(raw);
+      return decoded is Map<String, dynamic> ? decoded : null;
+    } catch (_) {
+      return null;
+    }
+  }
+  return null;
+}
+
+Map<String, dynamic>? buildEnumValueMap(
+  HouseholdWrapper? wrapper,
+  List<Map<String, dynamic>>? enums,
+) {
+  if (wrapper == null || enums == null) return null;
+
+  final rootMap = _asMap(wrapper)!;
+  final result = <String, dynamic>{};
+
+  for (final item in enums) {
+    final code = item['code'] as String;
+    final jsonPath = item['jsonPath'] as String;
+    final fieldKey = item['fieldKey'] as String;
+    final isAdditional = (item['additionalField'] ?? 'false') == 'true';
+
+    final segments = jsonPath.split('.');
+    if (segments.isEmpty) continue;
+
+    final rootKey = segments.first.toUpperCase();
+    final base = _prepareBase(rootMap[rootKey]);
+
+    final value = isAdditional
+        ? _extractAdditionalField(base, fieldKey)
+        : _extractNestedValue(base, segments.sublist(1));
+
+    if (value != null) {
+      result[code] = value;
+    } else {
+      result[code] = 'CORE_COMMON_NA';
+    }
+  }
+
+  return result.isEmpty ? null : result;
 }
 
 bool allDosesDelivered(
@@ -716,3 +918,13 @@ String getStatus(String selectedFilter) {
     return selectedFilter;
   }
 }
+
+final Map<String, PageRouteInfo> routerMap = {
+  'beneficiary-details': BeneficiaryDetailsRoute(),
+  'beneficiary-acknowledgement':
+      BeneficiaryAcknowledgementRoute(enableViewHousehold: true),
+  'household-acknowledgement':
+      HouseholdAcknowledgementRoute(enableViewHousehold: true),
+  'overview': HouseholdOverviewRoute(),
+  // Add more routes here
+};

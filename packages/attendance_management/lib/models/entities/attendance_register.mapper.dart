@@ -341,9 +341,6 @@ class AttendanceRegisterModelMapper
   static const Field<AttendanceRegisterModel, Map<String, dynamic>>
       _f$additionalDetails =
       Field('additionalDetails', _$additionalDetails, opt: true);
-  static String? _$tag(AttendanceRegisterModel v) => v.tag;
-  static const Field<AttendanceRegisterModel, String> _f$tag =
-      Field('tag', _$tag, opt: true);
   static AuditDetails? _$auditDetails(AttendanceRegisterModel v) =>
       v.auditDetails;
   static const Field<AttendanceRegisterModel, AuditDetails> _f$auditDetails =
@@ -377,7 +374,6 @@ class AttendanceRegisterModelMapper
     #completedDays: _f$completedDays,
     #attendanceLog: _f$attendanceLog,
     #additionalDetails: _f$additionalDetails,
-    #tag: _f$tag,
     #auditDetails: _f$auditDetails,
     #clientAuditDetails: _f$clientAuditDetails,
     #isDeleted: _f$isDeleted,
@@ -413,7 +409,6 @@ class AttendanceRegisterModelMapper
         completedDays: data.dec(_f$completedDays),
         attendanceLog: data.dec(_f$attendanceLog),
         additionalDetails: data.dec(_f$additionalDetails),
-        tag: data.dec(_f$tag),
         auditDetails: data.dec(_f$auditDetails),
         clientAuditDetails: data.dec(_f$clientAuditDetails),
         isDeleted: data.dec(_f$isDeleted));
@@ -513,7 +508,6 @@ abstract class AttendanceRegisterModelCopyWith<
       int? completedDays,
       List<Map<DateTime, bool>>? attendanceLog,
       Map<String, dynamic>? additionalDetails,
-      String? tag,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -594,7 +588,6 @@ class _AttendanceRegisterModelCopyWithImpl<$R, $Out>
           Object? completedDays = $none,
           Object? attendanceLog = $none,
           Object? additionalDetails = $none,
-          Object? tag = $none,
           Object? auditDetails = $none,
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
@@ -618,7 +611,6 @@ class _AttendanceRegisterModelCopyWithImpl<$R, $Out>
         if (completedDays != $none) #completedDays: completedDays,
         if (attendanceLog != $none) #attendanceLog: attendanceLog,
         if (additionalDetails != $none) #additionalDetails: additionalDetails,
-        if (tag != $none) #tag: tag,
         if (auditDetails != $none) #auditDetails: auditDetails,
         if (clientAuditDetails != $none)
           #clientAuditDetails: clientAuditDetails,
@@ -646,7 +638,6 @@ class _AttendanceRegisterModelCopyWithImpl<$R, $Out>
       attendanceLog: data.get(#attendanceLog, or: $value.attendanceLog),
       additionalDetails:
           data.get(#additionalDetails, or: $value.additionalDetails),
-      tag: data.get(#tag, or: $value.tag),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
       clientAuditDetails:
           data.get(#clientAuditDetails, or: $value.clientAuditDetails),
