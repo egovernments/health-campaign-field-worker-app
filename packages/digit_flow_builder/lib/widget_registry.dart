@@ -2,8 +2,10 @@ import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
+import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/atoms/switch.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 
 import 'action_handler/action_config.dart';
@@ -210,9 +212,11 @@ class WidgetRegistry {
     WidgetRegistry.register('row', (json, context, onAction) {
       final crudCtx = CrudItemContext.of(context);
       final stateData = crudCtx?.stateData;
+      final props = Map<String, dynamic>.from(json['properties'] ?? {});
 
       return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
+        mainAxisAlignment: _parseMainAxisAlignment(props['mainAxisAlignment']),
         children: (json['children'] as List).map<Widget>((childJson) {
           final processedChild = stateData != null
               ? preprocessConfigWithState(
@@ -250,6 +254,34 @@ class WidgetRegistry {
             )
           : value;
       return Text(finalText);
+    });
+
+    // LabelPairList
+    WidgetRegistry.register('labelPairList', (json, context, onAction) {
+      final crudCtx = CrudItemContext.of(context);
+      final List<dynamic> data = json['data'] ?? [];
+
+      return LabelValueSummary(
+        padding: const EdgeInsets.all(0),
+        items: data.map((e) {
+          final key = e['key'] ?? '';
+          final value = e['value'];
+
+          return LabelValueItem(
+            maxLines: 5,
+            label: key,
+            value: (crudCtx?.stateData != null && value is String)
+                ? interpolateWithCrudStates(
+                    template: value,
+                    stateData: crudCtx!.stateData!,
+                    listIndex: crudCtx.listIndex,
+                    item: crudCtx.item,
+                  )
+                : value,
+            labelFlex: 9,
+          );
+        }).toList(),
+      );
     });
 
     // SWITCH
@@ -377,18 +409,18 @@ class WidgetRegistry {
     }
   }
 
-  MainAxisSize? _parseMainAxisSize(String? size) {
+  MainAxisSize _parseMainAxisSize(String? size) {
     switch (size) {
       case 'max':
         return MainAxisSize.max;
       case 'min':
         return MainAxisSize.min;
       default:
-        return null;
+        return MainAxisSize.max;
     }
   }
 
-  MainAxisAlignment? _parseMainAxisAlignment(String? alignment) {
+  MainAxisAlignment _parseMainAxisAlignment(String? alignment) {
     switch (alignment) {
       case 'start':
         return MainAxisAlignment.start;
@@ -396,8 +428,10 @@ class WidgetRegistry {
         return MainAxisAlignment.center;
       case 'end':
         return MainAxisAlignment.end;
+      case 'spaceBetween':
+        return MainAxisAlignment.spaceBetween;
       default:
-        return null;
+        return MainAxisAlignment.start;
     }
   }
 

@@ -975,22 +975,22 @@ final List<Map<String, dynamic>> sampleFlows = [
     ]
   },
   {
-    "initActions": [
-      {
-        "actionType": "SEARCH_EVENT",
-        "properties": {
-          "type": "SEARCH_EVENT",
-          "name": "household",
-          "data": [
-            {
-              "key": "householdId",
-              "value": "{{ contextData.HouseholdModel.clientReferenceId }}",
-              "operation": "equals"
-            }
-          ],
-        }
-      }
-    ],
+    // "initActions": [
+    //   {
+    //     "actionType": "SEARCH_EVENT",
+    //     "properties": {
+    //       "type": "SEARCH_EVENT",
+    //       "name": "household",
+    //       "data": [
+    //         {
+    //           "key": "householdId",
+    //           "value": "{{ contextData.HouseholdModel.clientReferenceId }}",
+    //           "operation": "equals"
+    //         }
+    //       ],
+    //     }
+    //   }
+    // ],
     "screenType": "TEMPLATE",
     "name": "householdOverview",
     "heading": "Household Overview",
@@ -1110,26 +1110,21 @@ final List<Map<String, dynamic>> sampleFlows = [
             ]
           },
           {
-            "format": "text",
-            "value": "{{ context.headOfHousehold.name.givenName }}",
-          },
-          {
-            "format": "text",
-            "value": "{{ context.headOfHousehold.name.givenName }}",
-          },
-          {
-            "format": "text",
-            "value": "{{ context.headOfHousehold.name.givenName }}",
-          },
-          {
-            "format": "button",
-            "label": "Edit Household",
-            "properties": {
-              "type": "tertiary",
-              "size": "large",
-              "mainAxisSize": "min",
-              "mainAxisAlignment": "center"
-            },
+            "format": "labelPairList",
+            "data": [
+              {
+                "key": "Household head name",
+                "value": "{{context.headOfHousehold.name.givenName}}"
+              },
+              {
+                "key": "Village",
+                "value": "{{context.headOfHousehold.address.locality.code}}"
+              },
+              {
+                "key": "Member Count",
+                "value": "{{context.household.memberCount}}"
+              }
+            ]
           },
           {
             "format": "listView",
@@ -1141,92 +1136,313 @@ final List<Map<String, dynamic>> sampleFlows = [
               "type": "secondary",
               "children": [
                 {
-                  "format": "column",
+                  "format": "row",
+                  "properties": {
+                    "mainAxisAlignment": "spaceBetween",
+                    "mainAxisSize": "max",
+                  },
                   "children": [
                     {
-                      "format": "row",
-                      "children": [
-                        {
-                          "format": "text",
-                          "value":
-                              "{{ context.headOfHousehold.name.givenName }}",
-                        },
-                        {
-                          "format": "button",
-                          "label": "Edit",
-                          "properties": {
-                            "type": "tertiary",
-                            "size": "large",
-                            "mainAxisSize": "min",
-                            "mainAxisAlignment": "center"
-                          },
-                          "onAction": {
-                            "actionType": "NAVIGATION",
-                            "properties": {
-                              "type": "TEMPLATE",
-                              "name": "editBeneficiary",
-                              "data": [
-                                {"key": "id", "value": "{{item.id}}"}
-                              ]
-                            }
-                          }
-                        }
-                      ]
+                      "format": "text",
+                      "value": "{{ context.headOfHousehold.name.givenName }}",
                     },
+                    {
+                      "format": "button",
+                      "label": "Edit",
+                      "properties": {
+                        "type": "tertiary",
+                        "size": "large",
+                        "mainAxisSize": "min",
+                        "mainAxisAlignment": "center"
+                      },
+                      "onAction": {
+                        "actionType": "NAVIGATION",
+                        "properties": {
+                          "type": "TEMPLATE",
+                          "name": "editBeneficiary",
+                          "data": [
+                            {"key": "id", "value": "{{item.id}}"}
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "format": "text",
+                  "value":
+                      "{{ context.headOfHousehold.gender }} | {{context.headOfHousehold.age}} date of birth"
+                },
+                {"format": "tag", "type": "", "label": "Not visited"},
+                {
+                  "format": "row",
+                  "children": [
+                    {
+                      "format": "button",
+                      "properties": {
+                        "type": "tertiary",
+                        "size": "medium",
+                        "mainAxisSize": "min",
+                        "mainAxisAlignment": "center"
+                      },
+                      "label": "Add Child",
+                      "icon": "add"
+                    },
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "format": "button",
+            "label": "Add Member",
+            "properties": {
+              "type": "tertiary",
+              "size": "large",
+              "mainAxisSize": "min",
+              "mainAxisAlignment": "center"
+            },
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "format": "button",
+        "label": "Delivery",
+        "properties": {
+          "type": "primary",
+          "size": "large",
+          "mainAxisSize": "max",
+          "mainAxisAlignment": "center"
+        },
+        "onAction": {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "type": "FORM",
+            "name": "DELIVERY",
+            "data": [
+              {"key": "nameOfIndividual", "value": "searchBar.value"}
+            ]
+          }
+        }
+      }
+    ],
+  },
+  {
+    // "initActions": [
+    //   {
+    //     "actionType": "SEARCH_EVENT",
+    //     "properties": {
+    //       "type": "SEARCH_EVENT",
+    //       "name": "household",
+    //       "data": [
+    //         {
+    //           "key": "householdId",
+    //           "value": "{{ contextData.HouseholdModel.clientReferenceId }}",
+    //           "operation": "equals"
+    //         }
+    //       ],
+    //     }
+    //   }
+    // ],
+    "screenType": "TEMPLATE",
+    "name": "beneficiaryDetails",
+    "heading": "Beneficiary Details",
+    "description": "details of beneficiary",
+    "wrapperConfig": {
+      "wrapperName": "HouseholdWrapper",
+      "rootEntity": "HouseholdMemberModel",
+      "filters": [
+        {"field": "isHeadOfHousehold", "equals": true}
+      ],
+      "relations": [
+        {
+          "name": "household",
+          "entity": "HouseholdModel",
+          "match": {
+            "field": "clientReferenceId",
+            "equalsFrom": "householdClientReferenceId"
+          }
+        },
+        {
+          "name": "members",
+          "entity": "HouseholdMemberModel",
+          "match": {
+            "field": "householdClientReferenceId",
+            "equalsFrom": "household.clientReferenceId"
+          }
+        },
+        {
+          "name": "headOfHousehold",
+          "entity": "IndividualModel",
+          "match": {
+            "field": "clientReferenceId",
+            "equalsFrom": "HouseholdMemberModel.individualClientReferenceId"
+          }
+        },
+        {
+          "name": "individuals",
+          "entity": "IndividualModel",
+          "match": {
+            "field": "clientReferenceId",
+            "inFrom": "members.individualClientReferenceId"
+          }
+        },
+        {
+          "name": "projectBeneficiaries",
+          "entity": "ProjectBeneficiaryModel",
+          "match": {
+            "field": "beneficiaryClientReferenceId",
+            "equalsFrom": "household.clientReferenceId"
+          }
+        },
+        {
+          "name": "tasks",
+          "entity": "TaskModel",
+          "match": {
+            "field": "projectBeneficiaryClientReferenceId",
+            "inFrom": "projectBeneficiaries.clientReferenceId"
+          }
+        },
+        {
+          "name": "sideEffects",
+          "entity": "SideEffectModel",
+          "match": {
+            "field": "clientReferenceId",
+            "equalsFrom": "household.clientReferenceId"
+          }
+        },
+        {
+          "name": "referrals",
+          "entity": "ReferralModel",
+          "match": {
+            "field": "clientReferenceId",
+            "equalsFrom": "household.clientReferenceId"
+          }
+        }
+      ],
+      "searchConfig": {
+        "primary": "household",
+        "select": [
+          "individual",
+          "household",
+          "householdMember",
+          "projectBeneficiary",
+          "task"
+        ]
+      }
+    },
+    "body": [
+      {
+        "format": "card",
+        "type": "primary",
+        "children": [
+          {
+            "format": "row",
+            "properties": {"mainAxisAlignment": "end"},
+            "children": [
+              {
+                "format": "button",
+                "label": "Edit",
+                "properties": {
+                  "type": "tertiary",
+                  "size": "large",
+                  "mainAxisSize": "min",
+                  "mainAxisAlignment": "center"
+                },
+                "onAction": {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "type": "FORM",
+                    "name": "HOUSEHOLD",
+                    "data": [
+                      {"key": "id", "value": "{{item.id}}"}
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "format": "labelPairList",
+            "data": [
+              {
+                "key": "Household head name",
+                "value": "{{context.headOfHousehold.name.givenName}}"
+              },
+              {
+                "key": "Village",
+                "value": "{{context.headOfHousehold.address.locality.code}}"
+              },
+              {
+                "key": "Member Count",
+                "value": "{{context.household.memberCount}}"
+              }
+            ]
+          },
+          {
+            "format": "listView",
+            "hidden": "{{ context.household.empty }}",
+            "fieldName": "listView",
+            "dataSource": "members",
+            "child": {
+              "format": "card",
+              "type": "secondary",
+              "children": [
+                {
+                  "format": "row",
+                  "properties": {
+                    "mainAxisAlignment": "spaceBetween",
+                    "mainAxisSize": "max",
+                  },
+                  "children": [
                     {
                       "format": "text",
-                      "value":
-                          "{{ context.individual.gender }} | {{context.individual.age}} date of birth"
+                      "value": "{{ context.headOfHousehold.name.givenName }}",
                     },
-                    {"format": "tag", "type": "", "label": "Not visited"},
-                    // {
-                    //   "format": "button",
-                    //   "label": "Deliver Intervention",
-                    //   "type": "primary",
-                    //   "properties": {
-                    //     "type": "primary",
-                    //     "size": "medium",
-                    //     "mainAxisSize": "max",
-                    //     "mainAxisAlignment": "center"
-                    //   },
-                    //   "onAction": {
-                    //     "actionType": "NAVIGATION",
-                    //     "properties": {
-                    //       "type": "TEMPLATE",
-                    //       "name": "deliverIntervention",
-                    //       "data": [
-                    //         {"key": "id", "value": "{{item.id}}"}
-                    //       ]
-                    //     }
-                    //   }
-                    // },
-                    // {
-                    //   "format": "button",
-                    //   "properties": {
-                    //     "type": "secondary",
-                    //     "size": "medium",
-                    //     "mainAxisSize": "max",
-                    //     "mainAxisAlignment": "center"
-                    //   },
-                    //   "label": "Unable To Deliver ?",
-                    //   "type": "secondary"
-                    // },
                     {
-                      "format": "row",
-                      "children": [
-                        {
-                          "format": "button",
-                          "properties": {
-                            "type": "tertiary",
-                            "size": "medium",
-                            "mainAxisSize": "min",
-                            "mainAxisAlignment": "center"
-                          },
-                          "label": "Add Child",
-                          "icon": "add"
-                        },
-                      ]
+                      "format": "button",
+                      "label": "Edit",
+                      "properties": {
+                        "type": "tertiary",
+                        "size": "large",
+                        "mainAxisSize": "min",
+                        "mainAxisAlignment": "center"
+                      },
+                      "onAction": {
+                        "actionType": "NAVIGATION",
+                        "properties": {
+                          "type": "TEMPLATE",
+                          "name": "editBeneficiary",
+                          "data": [
+                            {"key": "id", "value": "{{item.id}}"}
+                          ]
+                        }
+                      }
                     }
+                  ]
+                },
+                {
+                  "format": "text",
+                  "value":
+                      "{{ context.headOfHousehold.gender }} | {{context.headOfHousehold.age}} date of birth"
+                },
+                {"format": "tag", "type": "", "label": "Not visited"},
+                {
+                  "format": "row",
+                  "children": [
+                    {
+                      "format": "button",
+                      "properties": {
+                        "type": "tertiary",
+                        "size": "medium",
+                        "mainAxisSize": "min",
+                        "mainAxisAlignment": "center"
+                      },
+                      "label": "Add Child",
+                      "icon": "add"
+                    },
                   ]
                 }
               ]
