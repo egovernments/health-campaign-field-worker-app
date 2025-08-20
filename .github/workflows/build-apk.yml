@@ -55,7 +55,7 @@ on:
       artifact_name:
         description: 'Custom APK artifact name (optional)'
         required: false
-        default: 'health-campaign-app'
+        default: 'hcm'
         type: string
       override_dependencies:
         description: 'Override local path dependencies (use packages/* from this repo)'
@@ -204,47 +204,8 @@ jobs:
       - name: Generate Code
         run: |
           cd apps/health_campaign_field_worker_app
-          
-          if [[ "${{ inputs.override_dependencies }}" == "true" ]]; then
-            echo "Using local packages - need to generate code for all packages first"
-            
-            # Generate code for all local packages that need it
-            cd "$GITHUB_WORKSPACE"
-            PACKAGES_NEEDING_CODEGEN=(
-              "packages/digit_data_model"
-              "packages/attendance_management" 
-              "packages/inventory_management"
-              "packages/registration_delivery"
-              "packages/survey_form"
-              "packages/referral_reconciliation"
-              "packages/complaints"
-              "packages/closed_household"
-              "packages/digit_forms_engine"
-              "packages/digit_crud_bloc"
-              "packages/sync_service"
-            )
-            
-            for package in "${PACKAGES_NEEDING_CODEGEN[@]}"; do
-              if [ -f "$package/pubspec.yaml" ] && grep -q "build_runner" "$package/pubspec.yaml"; then
-                echo "Generating code for $package..."
-                cd "$package"
-                flutter pub get
-                dart run build_runner build --delete-conflicting-outputs
-                cd "$GITHUB_WORKSPACE"
-              fi
-            done
-            
-            # Now generate code for the main app
-            cd apps/health_campaign_field_worker_app
-            echo "Generating code for main app..."
-            dart run build_runner build --delete-conflicting-outputs
-          else
-            if [ ! -d ".dart_tool/build" ] || [ ! -f "lib/models/data_model.dart" ]; then
-              dart run build_runner build --delete-conflicting-outputs
-            else
-              echo "Generated files appear up to date, skipping build_runner"
-            fi
-          fi
+          echo "Generating code for main app..."
+          dart run build_runner build --delete-conflicting-outputs
 
       - name: Build APK
         run: |
@@ -258,11 +219,7 @@ jobs:
       - name: Rename APK
         run: |
           cd apps/health_campaign_field_worker_app/build/app/outputs/flutter-apk
-          APK_NAME="${{ inputs.artifact_name }}-${{ inputs.env_name }}-${{ inputs.build_type }}.apk"
-          if [ "${{ inputs.build_type }}" == "release" ]; then
-            mv app-release.apk "$APK_NAME"
-          elif [ "${{ inputs.build_type }}" == "profile" ]; then
-            mv app-profile.apk "$APK_NAME"
+          APK_NAME="${{ inputs.artifact_name }}-${{ inputs.env_name }}.apk"
           fi
           echo "APK_NAME=$APK_NAME" >> $GITHUB_ENV
 
