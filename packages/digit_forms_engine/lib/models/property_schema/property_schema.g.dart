@@ -59,6 +59,7 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
           _conditionalNavigateListOrNull(json['conditionalNavigateTo']),
       autoFillCondition:
           _autoFillConditionListOrNull(json['autoFillCondition']),
+      showAlertPopUp: _showAlertOrNull(json['showAlertPopUp']),
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -112,6 +113,7 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
       instance.conditionalNavigateTo?.map((e) => e.toJson()).toList());
   writeNotNull('autoFillCondition',
       instance.autoFillCondition?.map((e) => e.toJson()).toList());
+  writeNotNull('showAlertPopUp', instance.showAlertPopUp?.toJson());
   return val;
 }
 
@@ -240,6 +242,36 @@ _$AutoFillConditionImpl _$$AutoFillConditionImplFromJson(
 
 Map<String, dynamic> _$$AutoFillConditionImplToJson(
         _$AutoFillConditionImpl instance) =>
+    <String, dynamic>{
+      'expression': instance.expression,
+      'value': instance.value,
+    };
+
+_$ShowAlertPopUpImpl _$$ShowAlertPopUpImplFromJson(Map<String, dynamic> json) =>
+    _$ShowAlertPopUpImpl(
+      title: json['title'] as String,
+      description: json['description'] as String?,
+      conditions: (json['conditions'] as List<dynamic>?)
+          ?.map((e) => AlertCondition.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$$ShowAlertPopUpImplToJson(
+        _$ShowAlertPopUpImpl instance) =>
+    <String, dynamic>{
+      'title': instance.title,
+      'description': instance.description,
+      'conditions': instance.conditions,
+    };
+
+_$AlertConditionImpl _$$AlertConditionImplFromJson(Map<String, dynamic> json) =>
+    _$AlertConditionImpl(
+      expression: json['expression'] as String,
+      value: json['value'] as String,
+    );
+
+Map<String, dynamic> _$$AlertConditionImplToJson(
+        _$AlertConditionImpl instance) =>
     <String, dynamic>{
       'expression': instance.expression,
       'value': instance.value,

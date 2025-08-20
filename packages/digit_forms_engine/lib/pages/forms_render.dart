@@ -267,6 +267,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                     defaultValues: widget.defaultValues,
                                   ));
                                 } else {
+                                  if (schema.showAlertPopUp != null) {}
                                   context.read<FormsBloc>().add(
                                       FormsSubmitEvent(
                                           isEdit: widget.isEdit,
