@@ -1,4 +1,7 @@
+import 'dart:io'; // Import this
+
 import 'package:attendance_management/widgets/localized.dart';
+import 'package:device_info_plus/device_info_plus.dart'; // Import this
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -17,28 +20,46 @@ class PermissionsPage extends LocalizedStatefulWidget {
 }
 
 class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
-  final Map<Permission, bool> requiredPermissions = {
-    Permission.notification: true,
-    Permission.ignoreBatteryOptimizations: true,
-    Permission.location: true,
-    Permission.nearbyWifiDevices: true,
-    Permission.camera: false,
-  };
-
   final Map<Permission, IconData> permissionIcons = {
     Permission.notification: Icons.notifications_active,
     Permission.ignoreBatteryOptimizations: Icons.battery_alert,
     Permission.location: Icons.location_on,
     Permission.nearbyWifiDevices: Icons.wifi,
+    Permission.bluetoothScan: Icons.wifi,
     Permission.camera: Icons.camera_alt,
   };
 
+  // Declare this as late to initialize it in initState
+  late Map<Permission, bool> requiredPermissions;
+
   Map<Permission, PermissionStatus> statuses = {};
+  bool backgroundActivityConfirmed = false;
 
   @override
   void initState() {
-    _checkPermissions();
+    _initializePermissions(); // Call a new method to set permissions
     super.initState();
+  }
+
+  Future<void> _initializePermissions() async {
+    // Start with common permissions
+    requiredPermissions = {
+      Permission.notification: true,
+      Permission.ignoreBatteryOptimizations: true,
+      Permission.location: true,
+      Permission.camera: false,
+    };
+
+    if (Platform.isAndroid) {
+      final androidInfo = await DeviceInfoPlugin().androidInfo;
+      if (androidInfo.version.sdkInt >= 33) {
+        requiredPermissions[Permission.nearbyWifiDevices] = true;
+      } else if (androidInfo.version.sdkInt >= 31) {
+        requiredPermissions[Permission.bluetoothScan] = true;
+      }
+    }
+
+    _checkPermissions();
   }
 
   Future<bool> _checkPermissions() async {
@@ -66,6 +87,12 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
 
   Future<void> _requestPermission(Permission permission) async {
     final status = await permission.request();
+
+    if (permission == Permission.ignoreBatteryOptimizations &&
+        !status.isGranted) {
+      await openAppSettings();
+    }
+
     setState(() {
       statuses[permission] = status;
     });
@@ -73,6 +100,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Your build method remains the same
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
 
@@ -81,6 +109,30 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
         enableFixedDigitButton: true,
         footer:
             DigitCard(margin: const EdgeInsets.only(top: spacer2), children: [
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: spacer2),
+                child: DigitCheckbox(
+                  value: backgroundActivityConfirmed,
+                  onChanged: (val) {
+                    setState(() {
+                      backgroundActivityConfirmed = val ?? false;
+                    });
+                  },
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  localizations
+                      .translate(i18.common.allowBackgroundActivityDesc),
+                  style: textTheme.bodyS.copyWith(
+                    color: theme.colorTheme.primary.primary2,
+                  ),
+                ),
+              ),
+            ],
+          ),
           DigitButton(
             label: localizations.translate(i18.common.coreCommonContinue),
             type: DigitButtonType.primary,
@@ -88,16 +140,14 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
             mainAxisSize: MainAxisSize.max,
             onPressed: () async {
               bool granted = await _checkPermissions();
-              if (!granted) {
-                if (mounted) {
-                  Toast.showToast(
-                    context,
-                    message: localizations.translate(
-                      i18.common.coreCommonPermissionsAlert,
-                    ),
-                    type: ToastType.error,
-                  );
-                }
+              if (!backgroundActivityConfirmed || !granted && mounted) {
+                Toast.showToast(
+                  context,
+                  message: localizations.translate(
+                    i18.common.coreCommonPermissionsAlert,
+                  ),
+                  type: ToastType.error,
+                );
               }
             },
           )
@@ -139,19 +189,38 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                         ),
                         title: Text(
                           localizations.translate(
-                              'CORE_COMMON_PERMISSION_${permission.toString().split('.').last.toUpperCase()}'),
-                          style: textTheme.headingS.copyWith(
-                              color: theme.colorTheme.primary.primary2),
-                        ),
-                        subtitle: Text(
-                          localizations.translate(granted
-                              ? i18.common.permissionGranted
-                              : i18.common.permissionNotGranted),
-                          style: textTheme.bodyS.copyWith(
-                            color: granted
-                                ? theme.colorTheme.alert.success
-                                : theme.colorTheme.alert.error,
+                            'CORE_COMMON_PERMISSION_${permission.toString().split('.').last.toUpperCase()}',
                           ),
+                          style: textTheme.headingS.copyWith(
+                            color: theme.colorTheme.primary.primary2,
+                          ),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              localizations.translate(granted
+                                  ? i18.common.permissionGranted
+                                  : i18.common.permissionNotGranted),
+                              style: textTheme.bodyS.copyWith(
+                                color: granted
+                                    ? theme.colorTheme.alert.success
+                                    : theme.colorTheme.alert.error,
+                              ),
+                            ),
+                            if (permission ==
+                                    Permission.ignoreBatteryOptimizations &&
+                                granted) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                localizations.translate(
+                                    'CORE_COMMON_PERMISSION_${permission.toString().split('.').last.toUpperCase()}_WARNING'),
+                                style: textTheme.bodyS.copyWith(
+                                  color: theme.colorTheme.alert.warning,
+                                ),
+                              ),
+                            ]
+                          ],
                         ),
                         trailing: !granted
                             ? DigitButton(
@@ -162,11 +231,20 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                                 size: DigitButtonSize.small,
                                 capitalizeLetters: false,
                               )
-                            : null,
+                            : (permission ==
+                                    Permission.ignoreBatteryOptimizations
+                                ? DigitButton(
+                                    onPressed: () => openAppSettings(),
+                                    label: "Open Settings",
+                                    type: DigitButtonType.secondary,
+                                    size: DigitButtonSize.small,
+                                    capitalizeLetters: false,
+                                  )
+                                : null),
                       )
                     ],
                   );
-                })
+                }).toList(), // Convert map to list
               ],
             ),
           )
