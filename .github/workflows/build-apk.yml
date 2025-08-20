@@ -220,6 +220,11 @@ jobs:
         run: |
           cd apps/health_campaign_field_worker_app/build/app/outputs/flutter-apk
           APK_NAME="${{ inputs.artifact_name }}-${{ inputs.env_name }}.apk"
+          if [ "${{ inputs.build_type }}" == "release" ]; then
+            mv app-release.apk "$APK_NAME"
+          else
+            mv app-profile.apk "$APK_NAME"
+          fi
           echo "APK_NAME=$APK_NAME" >> $GITHUB_ENV
 
       - name: Upload APK Artifact
