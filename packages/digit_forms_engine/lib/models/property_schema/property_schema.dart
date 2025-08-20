@@ -60,6 +60,7 @@ class PropertySchema with _$PropertySchema {
     // New: AutoFillCondition list
     @JsonKey(fromJson: _autoFillConditionListOrNull)
     List<AutoFillCondition>? autoFillCondition,
+    @JsonKey(fromJson: _showAlertOrNull) ShowAlertPopUp? showAlertPopUp,
   }) = _PropertySchema;
 
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>
@@ -143,6 +144,29 @@ class AutoFillCondition with _$AutoFillCondition {
       _$AutoFillConditionFromJson(json);
 }
 
+@freezed
+class ShowAlertPopUp with _$ShowAlertPopUp {
+  const factory ShowAlertPopUp({
+    required String title,
+    String? description, // optional
+    List<AlertCondition>? conditions, // optional
+  }) = _ShowAlertPopUp;
+
+  factory ShowAlertPopUp.fromJson(Map<String, dynamic> json) =>
+      _$ShowAlertPopUpFromJson(json);
+}
+
+@freezed
+class AlertCondition with _$AlertCondition {
+  const factory AlertCondition({
+    required String expression, // e.g., condition or "DEFAULT"
+    required String value, // e.g., "To Administer"
+  }) = _AlertCondition;
+
+  factory AlertCondition.fromJson(Map<String, dynamic> json) =>
+      _$AlertConditionFromJson(json);
+}
+
 String? _stringOrNull(dynamic value) {
   return value is String ? value : null;
 }
@@ -186,6 +210,17 @@ List<AutoFillCondition>? _autoFillConditionListOrNull(dynamic value) {
         .whereType<Map<String, dynamic>>()
         .map((map) => AutoFillCondition.fromJson(map))
         .toList();
+  }
+  return null;
+}
+
+ShowAlertPopUp? _showAlertOrNull(dynamic value) {
+  if (value is String) {
+    // if just a simple string is provided
+    return ShowAlertPopUp(title: value);
+  }
+  if (value is Map && value.isNotEmpty) {
+    return ShowAlertPopUp.fromJson(Map<String, dynamic>.from(value));
   }
   return null;
 }
