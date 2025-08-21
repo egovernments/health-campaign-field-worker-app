@@ -71,7 +71,7 @@ class SyncService {
       service?.stopSelf();
     }
 
-    if (syncError != null) throw 'SyncUp Error: ${syncError.error}';
+    if (syncError != null) throw syncError;
 
     // Recursive function which will call the Perform Sync
 
@@ -157,24 +157,25 @@ Future<List<OpLogEntry<EntityModel>>> filterOpLogByBandwidth(
 }
 
 /// The `SyncError` class is an abstract class that represents a sync error.
-///
 /// It extends the `Exception` class and includes a dynamic `error` property.
 abstract class SyncError implements Exception {
   final dynamic error;
 
   const SyncError([this.error]);
+
+  @override
+  String toString() {
+    // runtimeType gives "SyncUpError" or "SyncDownError"
+    return '$runtimeType: $error';
+  }
 }
 
 /// The `SyncUpError` class represents a sync up error.
-///
-/// It extends the `SyncError` class.
 class SyncUpError extends SyncError {
   const SyncUpError([super.error]);
 }
 
 /// The `SyncDownError` class represents a sync down error.
-///
-/// It extends the `SyncError` class.
 class SyncDownError extends SyncError {
   const SyncDownError([super.error]);
 }
