@@ -290,6 +290,10 @@ final List<Map<String, dynamic>> sampleFlows = [
               "children": [
                 {
                   "format": "row",
+                  "properties": {
+                    "mainAxisAlignment": "spaceBetween",
+                    "mainAxisSize": "max",
+                  },
                   "children": [
                     {
                       "format": "text",
