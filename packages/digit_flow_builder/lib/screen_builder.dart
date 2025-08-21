@@ -78,11 +78,11 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
                       FormsEvent.clearForm(
                           schemaKey: widget.config['name'] ?? ''),
                     );
-                for (final actionJson in onSubmit) {
-                  final action = ActionConfig.fromJson(actionJson);
-                  contextData =
-                      await ActionHandler.execute(action, context, contextData);
-                }
+                contextData = await ActionHandler.executeActions(
+                  onSubmit,
+                  context,
+                  contextData,
+                );
               }
             }
           },
