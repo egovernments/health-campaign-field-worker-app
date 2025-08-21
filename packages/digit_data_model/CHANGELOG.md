@@ -1,4 +1,8 @@
-## 1.1.3
+## 1.2.0-dev.2-console
+
+* Modified DioException to throw captured error
+
+## 1.1.4
 
 * Updated user_action entity and table with beneficiaryTag and resourceTag fields
 
