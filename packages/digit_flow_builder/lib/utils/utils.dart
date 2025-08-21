@@ -258,3 +258,22 @@ String? _resolvePath(dynamic root, String path) {
   }
   return current?.toString();
 }
+
+Map<String, dynamic> flattenFormData(Map<String, dynamic> data,
+    {String parentKey = ''}) {
+  final Map<String, dynamic> flatMap = {};
+
+  data.forEach((key, value) {
+    final newKey = parentKey.isEmpty ? key : '$parentKey.$key';
+
+    if (value is Map<String, dynamic>) {
+      // Recursively flatten nested maps
+      flatMap.addAll(flattenFormData(value, parentKey: newKey));
+    } else {
+      // Replace null with empty string
+      flatMap[newKey] = value ?? '';
+    }
+  });
+
+  return flatMap;
+}

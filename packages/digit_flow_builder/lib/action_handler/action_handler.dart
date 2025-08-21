@@ -22,12 +22,14 @@ class ActionHandler {
     final expression = condition['expression'] as String?;
     if (expression == null || expression == 'DEFAULT') return true;
 
+    final flatData = flattenFormData(formData);
+
     try {
       final parser = FormulaParser(
         expression,
-        formData.isEmpty ? {'dummy': {}} : formData,
+        flatData.isEmpty ? {'dummy': {}} : flatData,
       );
-      
+
       final result = parser.parse;
       return result["isSuccess"] && result["value"] == true;
     } catch (e) {
@@ -47,7 +49,7 @@ class ActionHandler {
         // Conditional action block
         final condition = actionJson['condition'] as Map<String, dynamic>;
         final formData = contextData['formData'] as Map<String, dynamic>? ?? {};
-        
+
         if (evaluateCondition(condition, formData)) {
           final subActions = actionJson['actions'] as List? ?? [];
           for (final subActionJson in subActions) {
