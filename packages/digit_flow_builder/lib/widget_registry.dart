@@ -416,7 +416,7 @@ class WidgetRegistry {
       case 'min':
         return MainAxisSize.min;
       default:
-        return MainAxisSize.max;
+        return MainAxisSize.min;
     }
   }
 
