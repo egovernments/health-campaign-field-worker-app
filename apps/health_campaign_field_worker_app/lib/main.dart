@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -28,6 +30,8 @@ int i = 0;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  DartPluginRegistrant.ensureInitialized();
+
   await initializeAllMappers();
   final info = await PackageInfo.fromPlatform();
   setupErrorWidget();
@@ -35,7 +39,7 @@ void main() async {
   Bloc.observer = AppBlocObserver();
   await AppSharedPreferences().init();
   if (AppSharedPreferences().isFirstLaunch) {
-    AppLogger.instance.info('App Launched First Time', title: 'main');
+    AppLogger.instance.info('App Launched First Time', title: 'm  ain');
     await AppSharedPreferences().appLaunchedFirstTime();
     await LocalSecureStore.instance.deleteAll();
   }
@@ -1220,7 +1224,7 @@ final List<Map<String, dynamic>> sampleFlows = [
           "actionType": "NAVIGATION",
           "properties": {
             "type": "FORM",
-            "name": "DELIVERY",
+            "name": "CHECKLIST",
             "data": [
               {"key": "nameOfIndividual", "value": "searchBar.value"}
             ]
@@ -1228,6 +1232,204 @@ final List<Map<String, dynamic>> sampleFlows = [
         }
       }
     ],
+  },
+  {
+    "screenType": "FORM",
+    "name": "CHECKLIST",
+    "project": "CMP-2025-08-04-004846",
+    "version": 1,
+    "disabled": false,
+    "isSelected": true,
+    "pages": [
+      {
+        "page": "eligibilityChecklist",
+        "type": "object",
+        "label": "Eligibility Checklist",
+        "order": 1,
+        "navigateTo": {"name": "household-acknowledgement", "type": "template"},
+        "properties": [
+          {
+            "type": "string",
+            "label": "Is the child sick?",
+            "order": 1,
+            "value": "",
+            "format": "radio",
+            "hidden": false,
+            "tooltip": "",
+            "enums": [
+              {"code": "YES", "name": "YES"},
+              {"code": "NO", "name": "NO"}
+            ],
+            "helpText": "",
+            "infoText": "",
+            "readOnly": true,
+            "fieldName": "ec1",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": true,
+            "validations": [],
+            "errorMessage": "",
+            "includeInForm": true,
+            "isMultiSelect": false,
+            "includeInSummary": true
+          },
+          {
+            "type": "string",
+            "label": "Is the child having fever?",
+            "order": 2,
+            "value": "",
+            "format": "radio",
+            "hidden": false,
+            "tooltip": "",
+            "enums": [
+              {"code": "YES", "name": "YES"},
+              {"code": "NO", "name": "NO"}
+            ],
+            "visibilityCondition": {
+              "expression": "eligibilityChecklist.ec1==YES"
+            },
+            "helpText": "",
+            "infoText": "",
+            "readOnly": true,
+            "fieldName": "ec2",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": true,
+            "validations": [],
+            "errorMessage": "",
+            "includeInForm": true,
+            "isMultiSelect": false,
+            "includeInSummary": true
+          },
+          {
+            "type": "string",
+            "label":
+                "Is there any side effect to SPAQ which was administered last cycle?",
+            "order": 3,
+            "value": "",
+            "format": "radio",
+            "hidden": false,
+            "tooltip": "",
+            "enums": [
+              {"code": "YES", "name": "YES"},
+              {"code": "NO", "name": "NO"}
+            ],
+            "helpText": "",
+            "infoText": "",
+            "readOnly": true,
+            "fieldName": "ec3",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": true,
+            "validations": [],
+            "errorMessage": "",
+            "includeInForm": true,
+            "isMultiSelect": false,
+            "includeInSummary": true
+          },
+          {
+            "type": "string",
+            "label":
+                "Child has taken SP or CTX containing drugs in the past 28 days?",
+            "order": 3,
+            "value": "",
+            "format": "radio",
+            "hidden": false,
+            "tooltip": "",
+            "enums": [
+              {"code": "YES", "name": "YES"},
+              {"code": "NO", "name": "NO"}
+            ],
+            "helpText": "",
+            "infoText": "",
+            "readOnly": true,
+            "fieldName": "ec4",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": true,
+            "validations": [],
+            "errorMessage": "",
+            "includeInForm": true,
+            "isMultiSelect": false,
+            "includeInSummary": true
+          }
+        ],
+        "showAlertPopUp": {
+          "title": "Ready to submit?",
+          "description":
+              "Based on responses you are going to '{value}'. Are you sure you want to proceed?",
+          "primaryActionLabel": "Submit",
+          "secondaryActionLabel": "Cancel",
+          "conditions": [
+            {
+              "expression":
+                  "eligibilityChecklist.ec1==NO && eligibilityChecklist.ec3==NO && eligibilityChecklist.ec4==NO",
+              "value": "To Administer"
+            },
+            {
+              "expression":
+                  "eligibilityChecklist.ec1==NO && eligibilityChecklist.ec3==NO && eligibilityChecklist.ec4==YES",
+              "value": "Ineligible flow"
+            },
+            {"expression": "DEFAULT", "value": "referral flow"}
+          ]
+        },
+        "actionLabel":
+            "APPONE_REGISTRATION_DELIVERYDETAILS_ACTION_BUTTON_LABEL_1",
+        "description": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION"
+      }
+    ],
+    "onSubmit": [
+      {
+        "actionType": "SHOW_POPUP",
+        "properties": {
+          "configName": "",
+          "onError": [
+            {
+              "actionType": "SHOW_TOAST",
+              "properties": {"message": "Failed to fetch config."}
+            }
+          ]
+        }
+      },
+      {
+        "actionType": "FETCH_TRANSFORMER_CONFIG",
+        "properties": {
+          "configName": "",
+          "onError": [
+            {
+              "actionType": "SHOW_TOAST",
+              "properties": {"message": "Failed to fetch config."}
+            }
+          ]
+        }
+      },
+      {
+        "actionType": "CREATE_EVENT",
+        "properties": {
+          "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
+          "onError": [
+            {
+              "actionType": "SHOW_TOAST",
+              "properties": {"message": "Failed to create household."}
+            }
+          ]
+        }
+      },
+      {
+        "actionType": "NAVIGATION",
+        "properties": {
+          "type": "TEMPLATE",
+          "name": "deliverySuccess",
+          "onError": [
+            {
+              "actionType": "SHOW_TOAST",
+              "properties": {"message": "Navigation failed."}
+            }
+          ]
+        }
+      }
+    ]
   },
   {
     // "initActions": [

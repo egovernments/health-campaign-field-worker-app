@@ -251,6 +251,8 @@ _$ShowAlertPopUpImpl _$$ShowAlertPopUpImplFromJson(Map<String, dynamic> json) =>
     _$ShowAlertPopUpImpl(
       title: json['title'] as String,
       description: json['description'] as String?,
+      primaryActionLabel: json['primaryActionLabel'] as String,
+      secondaryActionLabel: json['secondaryActionLabel'] as String,
       conditions: (json['conditions'] as List<dynamic>?)
           ?.map((e) => AlertCondition.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -261,6 +263,8 @@ Map<String, dynamic> _$$ShowAlertPopUpImplToJson(
     <String, dynamic>{
       'title': instance.title,
       'description': instance.description,
+      'primaryActionLabel': instance.primaryActionLabel,
+      'secondaryActionLabel': instance.secondaryActionLabel,
       'conditions': instance.conditions,
     };
 

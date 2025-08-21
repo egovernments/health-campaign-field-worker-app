@@ -141,6 +141,7 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'navigateTo': pageMap['navigateTo'] is Map<String, dynamic>
             ? pageMap['navigateTo']
             : null,
+        'showAlertPopUp': pageMap['showAlertPopUp']
       };
 
       if (type == 'template') {

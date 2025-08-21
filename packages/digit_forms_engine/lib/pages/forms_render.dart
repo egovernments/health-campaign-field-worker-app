@@ -6,8 +6,10 @@ import 'package:digit_forms_engine/widgets/back_header/back_navigation_help_head
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -267,16 +269,81 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                     defaultValues: widget.defaultValues,
                                   ));
                                 } else {
-                                  if (schema.showAlertPopUp != null) {}
-                                  context.read<FormsBloc>().add(
-                                      FormsSubmitEvent(
-                                          isEdit: widget.isEdit,
-                                          schemaKey: widget.currentSchemaKey));
-                                  // Pop all form pages (FormsRenderRoute)
-                                  context.router.popUntil((route) {
-                                    return route.settings.name !=
-                                        FormsRenderRoute.name;
-                                  });
+                                  final contextValue =
+                                      buildVisibilityEvaluationContext(
+                                    currentPageKey: currentPageKey,
+                                    currentForm: formGroup,
+                                    pages: schemaObject.pages,
+
+                                    /// TODO: fix hardcode not null condition
+                                  );
+                                  if (schema.showAlertPopUp != null) {
+                                    showCustomPopup(
+                                      context: context,
+                                      builder: (BuildContext context) => Popup(
+                                          title: localizations.translate(
+                                              _resolveTemplate(
+                                                  schema.showAlertPopUp!.title,
+                                                  schema.showAlertPopUp
+                                                      ?.conditions,
+                                                  contextValue)!),
+                                          description: localizations.translate(
+                                              _resolveTemplate(
+                                                      schema.showAlertPopUp
+                                                          ?.description,
+                                                      schema.showAlertPopUp
+                                                          ?.conditions,
+                                                      contextValue) ??
+                                                  ""),
+
+                                          /// FIXME: need to send null as empty string will take space
+                                          actions: [
+                                            DigitButton(
+                                                label: localizations.translate(
+                                                    schema.showAlertPopUp!
+                                                        .primaryActionLabel),
+                                                onPressed: () {
+                                                  context.read<FormsBloc>().add(
+                                                      FormsSubmitEvent(
+                                                          isEdit: widget.isEdit,
+                                                          schemaKey: widget
+                                                              .currentSchemaKey));
+                                                  // Pop all form pages (FormsRenderRoute)
+                                                  context.router
+                                                      .popUntil((route) {
+                                                    return route
+                                                            .settings.name !=
+                                                        FormsRenderRoute.name;
+                                                  });
+                                                },
+                                                type: DigitButtonType.primary,
+                                                size: DigitButtonSize.large),
+                                            DigitButton(
+                                                label: localizations.translate(
+                                                    schema.showAlertPopUp!
+                                                        .secondaryActionLabel),
+                                                onPressed: () {
+                                                  Navigator.of(
+                                                    context,
+                                                    rootNavigator: true,
+                                                  ).pop();
+                                                },
+                                                type: DigitButtonType.secondary,
+                                                size: DigitButtonSize.large)
+                                          ]),
+                                    );
+                                  } else {
+                                    context.read<FormsBloc>().add(
+                                        FormsSubmitEvent(
+                                            isEdit: widget.isEdit,
+                                            schemaKey:
+                                                widget.currentSchemaKey));
+                                    // Pop all form pages (FormsRenderRoute)
+                                    context.router.popUntil((route) {
+                                      return route.settings.name !=
+                                          FormsRenderRoute.name;
+                                    });
+                                  }
                                 }
                               }
                             },
@@ -373,6 +440,34 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         },
       ),
     );
+  }
+
+  String? _resolveTemplate(
+    String? template,
+    List<AlertCondition>? conditions,
+    Map<String, dynamic> contextValues,
+  ) {
+    if (conditions == null || conditions.isEmpty) {
+      return template;
+    }
+
+    // Find matching condition
+    for (final condition in conditions) {
+      // simple check: if contextValues contain a truthy match
+      final isConditionTrue =
+          evaluateVisibilityExpression(condition.expression, contextValues);
+
+      if (isConditionTrue) {
+        return template?.replaceAll("{value}", condition.value);
+      }
+
+      if (condition.expression == "DEFAULT") {
+        return template?.replaceAll("{value}", condition.value);
+      }
+    }
+
+    // fallback: return template unchanged
+    return template;
   }
 
   Widget _buildSummaryPage(BuildContext context, SchemaObject schemaObject) {
