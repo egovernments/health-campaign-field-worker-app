@@ -404,18 +404,16 @@ abstract class RemoteRepository<D extends EntityModel,
   }) async {
     try {
       return await future();
-    } on DioException catch (error) {
+    } on DioException catch (error, stackTrace) {
       const encoder = JsonEncoder.withIndent('  ');
 
-      String? errorResponse;
-      String? requestBody;
+      String errorResponse;
+      String requestBody;
 
       try {
-        errorResponse = encoder.convert(
-          error.response?.data,
-        );
+        errorResponse = encoder.convert(error.response?.data);
       } catch (_) {
-        errorResponse = 'Could not parse error';
+        errorResponse = 'Could not parse error response';
       }
 
       try {
@@ -423,7 +421,20 @@ abstract class RemoteRepository<D extends EntityModel,
       } catch (_) {
         requestBody = 'Could not parse request body';
       }
-      rethrow;
+
+      final endpoint = error.requestOptions.uri.toString();
+      final method = error.requestOptions.method;
+
+      throw DioException(
+        requestOptions: error.requestOptions,
+        response: error.response,
+        type: error.type,
+        error: '${error.error}\n'
+            'Endpoint: $method $endpoint\n'
+            'Status: ${error.response?.statusCode}\n'
+            'Request: $requestBody\n'
+            'Response: $errorResponse',
+      );
     } catch (error) {
       rethrow;
     }
