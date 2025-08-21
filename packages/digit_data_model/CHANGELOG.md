@@ -1,3 +1,7 @@
+## 1.1.5
+
+* Updated dio exception to capture full error and response
+
 ## 1.1.4
 
 * Updated user_action entity and table with beneficiaryTag and resourceTag fields
