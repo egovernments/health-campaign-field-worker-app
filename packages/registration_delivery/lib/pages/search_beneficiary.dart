@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_crud_bloc/models/global_search_params.dart' as reg_params;
 import 'package:digit_data_converter/src/reverse_transformer_service.dart';
@@ -1410,6 +1411,9 @@ class _SearchBeneficiaryPageState
   }
 
   void triggerGlobalSearchEvent({bool isPagination = false}) {
+    final pageKey = SearchBeneficiaryRoute.name.replaceAll('Route', '');
+    final searchTemplate =
+    RegistrationDeliverySingleton().templateConfigs?[pageKey];
     if (!isPagination) {
       blocWrapper.add(const RegistrationWrapperEvent.clear());
     }
@@ -1460,7 +1464,14 @@ class _SearchBeneficiaryPageState
               root: 'address',
               field: '',
               operator: 'within',
-              value: RegistrationDeliverySingleton().maxRadius,
+              value:
+              searchTemplate
+        ?.properties?['searchByProximity']?.hidden != true && searchTemplate
+                  ?.properties?['searchByProximity']?.validations?.firstWhereOrNull((v) => v.type == 'proximityRadius').value != null ?
+              int.tryParse(searchTemplate
+                  ?.properties?['searchByProximity']?.validations?.firstWhereOrNull((v) => v.type == 'proximityRadius').value)
+              :
+              RegistrationDeliverySingleton().maxRadius,
               coordinates: reg_params.LatLng(
                 latitude: lat,
                 longitude: long,
