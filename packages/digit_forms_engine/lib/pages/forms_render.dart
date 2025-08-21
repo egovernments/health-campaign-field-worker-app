@@ -280,7 +280,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                   if (schema.showAlertPopUp != null) {
                                     showCustomPopup(
                                       context: context,
-                                      builder: (BuildContext context) => Popup(
+                                      builder: (BuildContext ctx) => Popup(
                                           title: localizations.translate(
                                               _resolveTemplate(
                                                   schema.showAlertPopUp!.title,
@@ -309,6 +309,10 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                                           schemaKey: widget
                                                               .currentSchemaKey));
                                                   // Pop all form pages (FormsRenderRoute)
+                                                  Navigator.of(
+                                                    ctx,
+                                                    rootNavigator: true,
+                                                  ).pop();
                                                   context.router
                                                       .popUntil((route) {
                                                     return route
@@ -324,7 +328,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                                         .secondaryActionLabel),
                                                 onPressed: () {
                                                   Navigator.of(
-                                                    context,
+                                                    ctx,
                                                     rootNavigator: true,
                                                   ).pop();
                                                 },
