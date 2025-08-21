@@ -2274,6 +2274,8 @@ ShowAlertPopUp _$ShowAlertPopUpFromJson(Map<String, dynamic> json) {
 mixin _$ShowAlertPopUp {
   String get title => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError; // optional
+  String get primaryActionLabel => throw _privateConstructorUsedError;
+  String get secondaryActionLabel => throw _privateConstructorUsedError;
   List<AlertCondition>? get conditions => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -2289,7 +2291,11 @@ abstract class $ShowAlertPopUpCopyWith<$Res> {
       _$ShowAlertPopUpCopyWithImpl<$Res, ShowAlertPopUp>;
   @useResult
   $Res call(
-      {String title, String? description, List<AlertCondition>? conditions});
+      {String title,
+      String? description,
+      String primaryActionLabel,
+      String secondaryActionLabel,
+      List<AlertCondition>? conditions});
 }
 
 /// @nodoc
@@ -2307,6 +2313,8 @@ class _$ShowAlertPopUpCopyWithImpl<$Res, $Val extends ShowAlertPopUp>
   $Res call({
     Object? title = null,
     Object? description = freezed,
+    Object? primaryActionLabel = null,
+    Object? secondaryActionLabel = null,
     Object? conditions = freezed,
   }) {
     return _then(_value.copyWith(
@@ -2318,6 +2326,14 @@ class _$ShowAlertPopUpCopyWithImpl<$Res, $Val extends ShowAlertPopUp>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
+      primaryActionLabel: null == primaryActionLabel
+          ? _value.primaryActionLabel
+          : primaryActionLabel // ignore: cast_nullable_to_non_nullable
+              as String,
+      secondaryActionLabel: null == secondaryActionLabel
+          ? _value.secondaryActionLabel
+          : secondaryActionLabel // ignore: cast_nullable_to_non_nullable
+              as String,
       conditions: freezed == conditions
           ? _value.conditions
           : conditions // ignore: cast_nullable_to_non_nullable
@@ -2335,7 +2351,11 @@ abstract class _$$ShowAlertPopUpImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String title, String? description, List<AlertCondition>? conditions});
+      {String title,
+      String? description,
+      String primaryActionLabel,
+      String secondaryActionLabel,
+      List<AlertCondition>? conditions});
 }
 
 /// @nodoc
@@ -2351,6 +2371,8 @@ class __$$ShowAlertPopUpImplCopyWithImpl<$Res>
   $Res call({
     Object? title = null,
     Object? description = freezed,
+    Object? primaryActionLabel = null,
+    Object? secondaryActionLabel = null,
     Object? conditions = freezed,
   }) {
     return _then(_$ShowAlertPopUpImpl(
@@ -2362,6 +2384,14 @@ class __$$ShowAlertPopUpImplCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
+      primaryActionLabel: null == primaryActionLabel
+          ? _value.primaryActionLabel
+          : primaryActionLabel // ignore: cast_nullable_to_non_nullable
+              as String,
+      secondaryActionLabel: null == secondaryActionLabel
+          ? _value.secondaryActionLabel
+          : secondaryActionLabel // ignore: cast_nullable_to_non_nullable
+              as String,
       conditions: freezed == conditions
           ? _value._conditions
           : conditions // ignore: cast_nullable_to_non_nullable
@@ -2376,6 +2406,8 @@ class _$ShowAlertPopUpImpl implements _ShowAlertPopUp {
   const _$ShowAlertPopUpImpl(
       {required this.title,
       this.description,
+      required this.primaryActionLabel,
+      required this.secondaryActionLabel,
       final List<AlertCondition>? conditions})
       : _conditions = conditions;
 
@@ -2387,8 +2419,11 @@ class _$ShowAlertPopUpImpl implements _ShowAlertPopUp {
   @override
   final String? description;
 // optional
+  @override
+  final String primaryActionLabel;
+  @override
+  final String secondaryActionLabel;
   final List<AlertCondition>? _conditions;
-// optional
   @override
   List<AlertCondition>? get conditions {
     final value = _conditions;
@@ -2400,7 +2435,7 @@ class _$ShowAlertPopUpImpl implements _ShowAlertPopUp {
 
   @override
   String toString() {
-    return 'ShowAlertPopUp(title: $title, description: $description, conditions: $conditions)';
+    return 'ShowAlertPopUp(title: $title, description: $description, primaryActionLabel: $primaryActionLabel, secondaryActionLabel: $secondaryActionLabel, conditions: $conditions)';
   }
 
   @override
@@ -2411,13 +2446,22 @@ class _$ShowAlertPopUpImpl implements _ShowAlertPopUp {
             (identical(other.title, title) || other.title == title) &&
             (identical(other.description, description) ||
                 other.description == description) &&
+            (identical(other.primaryActionLabel, primaryActionLabel) ||
+                other.primaryActionLabel == primaryActionLabel) &&
+            (identical(other.secondaryActionLabel, secondaryActionLabel) ||
+                other.secondaryActionLabel == secondaryActionLabel) &&
             const DeepCollectionEquality()
                 .equals(other._conditions, _conditions));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, title, description,
+  int get hashCode => Object.hash(
+      runtimeType,
+      title,
+      description,
+      primaryActionLabel,
+      secondaryActionLabel,
       const DeepCollectionEquality().hash(_conditions));
 
   @JsonKey(ignore: true)
@@ -2439,6 +2483,8 @@ abstract class _ShowAlertPopUp implements ShowAlertPopUp {
   const factory _ShowAlertPopUp(
       {required final String title,
       final String? description,
+      required final String primaryActionLabel,
+      required final String secondaryActionLabel,
       final List<AlertCondition>? conditions}) = _$ShowAlertPopUpImpl;
 
   factory _ShowAlertPopUp.fromJson(Map<String, dynamic> json) =
@@ -2449,6 +2495,10 @@ abstract class _ShowAlertPopUp implements ShowAlertPopUp {
   @override
   String? get description;
   @override // optional
+  String get primaryActionLabel;
+  @override
+  String get secondaryActionLabel;
+  @override
   List<AlertCondition>? get conditions;
   @override
   @JsonKey(ignore: true)

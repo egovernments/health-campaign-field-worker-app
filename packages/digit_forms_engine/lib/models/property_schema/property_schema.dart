@@ -149,6 +149,8 @@ class ShowAlertPopUp with _$ShowAlertPopUp {
   const factory ShowAlertPopUp({
     required String title,
     String? description, // optional
+    required String primaryActionLabel,
+    required String secondaryActionLabel,
     List<AlertCondition>? conditions, // optional
   }) = _ShowAlertPopUp;
 
@@ -215,10 +217,6 @@ List<AutoFillCondition>? _autoFillConditionListOrNull(dynamic value) {
 }
 
 ShowAlertPopUp? _showAlertOrNull(dynamic value) {
-  if (value is String) {
-    // if just a simple string is provided
-    return ShowAlertPopUp(title: value);
-  }
   if (value is Map && value.isNotEmpty) {
     return ShowAlertPopUp.fromJson(Map<String, dynamic>.from(value));
   }
