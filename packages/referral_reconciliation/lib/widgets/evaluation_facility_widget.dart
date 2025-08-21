@@ -41,11 +41,6 @@ class _EvaluationKeyDropDownState
     return BlocConsumer<ProjectFacilityBloc, ProjectFacilityState>(
       listener: (BuildContext context, ProjectFacilityState state) {},
       builder: (context, state) {
-        // Replace this with actual state shape that contains evaluation keys
-        // final evaluationKeys = state.facilities
-        //         .where((e) => e.id != 'N/A' && e.id != 'Delivery Team')
-        //         .toList();
-
         return state.maybeWhen(
           orElse: () {
             return const SizedBox.shrink();
@@ -65,7 +60,7 @@ class _EvaluationKeyDropDownState
                     return LabeledField(
                       isRequired: true,
                       label: localizations.translate(
-                          "APPONE_HFREFERALFLOW_EVALUATION_FACILITY_KEY_LABEL"),
+                          i18.referralReconciliation.facilityKeyLabel),
                       child: Dropdown(
                         readOnly: false,
                         selectedOption: _mapItems(projectFacilities).firstWhere(

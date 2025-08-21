@@ -53,26 +53,6 @@ class HFReferralWrapperPage extends StatelessWidget {
                   globalHFReferalBloc: context.read<CrudBloc>());
             },
           ),
-          BlocProvider(
-            create: (_) => ReferralReconServiceDefinitionBloc(
-              const ReferralReconServiceDefinitionEmptyState(),
-              serviceDefinitionDataRepository: context.repository<
-                  ServiceDefinitionModel, ServiceDefinitionSearchModel>(
-                context,
-              ),
-            )..add(const ReferralReconServiceDefinitionFetchEvent()),
-          ),
-          BlocProvider(
-            create: (_) => ServiceBloc(
-              const ServiceEmptyState(),
-              serviceDataRepository:
-                  context.repository<ServiceModel, ServiceSearchModel>(context),
-            )..add(ServiceSearchEvent(
-                serviceSearchModel: ServiceSearchModel(
-                  referenceIds: [IdGen.i.identifier ?? ''],
-                ),
-              )),
-          ),
           BlocProvider<ProjectFacilityBloc>(
             create: (_) => ProjectFacilityBloc(
               const ProjectFacilityEmptyState(),

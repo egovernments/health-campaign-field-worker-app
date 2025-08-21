@@ -23,6 +23,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:referral_reconciliation/blocs/hf_Referral_reconciliation_bloc.dart';
 import 'package:referral_reconciliation/data/repositories/transfomer_config.dart';
+import 'package:referral_reconciliation/utils/constants.dart';
 import 'package:referral_reconciliation/utils/extensions/extensions.dart';
 import 'package:referral_reconciliation/widgets/project_cycle_dropdown.dart';
 import 'package:referral_reconciliation/widgets/evaluation_facility_widget.dart';
@@ -239,23 +240,12 @@ class _SearchReferralReconciliationsPageState
                     "userId": ReferralReconSingleton().userUUid,
                     "userUUID": ReferralReconSingleton().userUUid,
                     "formVersion": 1,
-
                     "projectId": ReferralReconSingleton().projectId,
                     "referenceId": IdGen.i.identifier,
-                    //TODO:: need to change
                     "serviceDefId": IdGen.i.identifier,
                   },
                 );
 
-                final toCreate = <EntityModel>[];
-                final toUpdate = [...entities];
-
-                // blocWrapper.add(
-                //   HFReferalWrapperEvent.createAndUpdate(
-                //     entitiesToCreate: toCreate,
-                //     entitiesToUpdate: toUpdate,
-                //   ),
-                // );
                 if (!(formState.isView != null && formState.isView == true)) {
                   blocWrapper
                       .add(HFReferalWrapperEvent.create(entities: entities));
@@ -264,12 +254,8 @@ class _SearchReferralReconciliationsPageState
                 Navigator.of(context, rootNavigator: true).pop();
                 // Reset to prevent re-handling
                 context.read<FormsBloc>().add(
-                      const FormsEvent.clearForm(
-                          schemaKey:
-                              'REGISTRATIONFLOW'), // or create a FormsResetEvent
+                      const FormsEvent.clearForm(schemaKey: 'REGISTRATIONFLOW'),
                     );
-                // context.router
-                //     .push(BeneficiaryErrorRoute(enableViewHousehold: false));
               }
             } catch (e) {
               Navigator.of(context, rootNavigator: true).pop();
@@ -279,12 +265,8 @@ class _SearchReferralReconciliationsPageState
                         schemaKey:
                             'REGISTRATIONFLOW'), // or create a FormsResetEvent
                   );
-              // context.router
-              //     .push(BeneficiaryErrorRoute(enableViewHousehold: false));
-              print('Error: ');
             }
           }
-          // end
         },
         child: KeyboardVisibilityBuilder(
             builder: (context, isKeyboardVisible) => BlocProvider<
@@ -297,13 +279,6 @@ class _SearchReferralReconciliationsPageState
                   body: BlocListener<DigitScannerBloc, DigitScannerState>(
                       listener: (context, scannerState) {
                         if (scannerState.qrCodes.isNotEmpty) {
-                          //TODO: commented
-                          // context
-                          //     .read<SearchReferralsBloc>()
-                          //     .add(SearchReferralsEvent.searchByTag(
-                          //       tag: scannerState.qrCodes.last,
-                          //     ));
-
                           setState(() {
                             selectedTag = scannerState.qrCodes.lastOrNull ?? "";
                           });
@@ -356,13 +331,13 @@ class _SearchReferralReconciliationsPageState
                                                 controller: searchController,
                                                 hintText: searchTemplate
                                                             ?.properties?[
-                                                                'searchBar']
+                                                                searchBar]
                                                             ?.label !=
                                                         null
                                                     ? localizations.translate(
                                                         searchTemplate!
                                                             .properties![
-                                                                'searchBar']!
+                                                                searchBar]!
                                                             .label)
                                                     : localizations.translate(
                                                         i18.referralReconciliation
@@ -518,8 +493,8 @@ class _SearchReferralReconciliationsPageState
     bool isTextShort,
     TemplateConfig? template,
   ) {
-    final primaryProp = template?.properties?['PrimaryButton'];
-    final secondaryProp = template?.properties?['SecondaryButton'];
+    final primaryProp = template?.properties?[primaryButton];
+    final secondaryProp = template?.properties?[secondaryButton];
 
     final entries = <MapEntry<int, DigitButton>>[];
 

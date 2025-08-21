@@ -8,61 +8,34 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i7;
-import 'package:digit_data_model/data_model.dart' as _i10;
-import 'package:flutter/foundation.dart' as _i11;
-import 'package:flutter/material.dart' as _i8;
-import 'package:referral_reconciliation/blocs/app_localization.dart' as _i9;
-import 'package:referral_reconciliation/pages/acknowledgement.dart' as _i4;
-import 'package:referral_reconciliation/pages/create_referral/reason_checklist_preview.dart'
-    as _i3;
-import 'package:referral_reconciliation/pages/create_referral/record_reason_checklist.dart'
-    as _i2;
+import 'package:auto_route/auto_route.dart' as _i5;
+import 'package:digit_data_model/data_model.dart' as _i8;
+import 'package:flutter/foundation.dart' as _i9;
+import 'package:flutter/material.dart' as _i6;
+import 'package:referral_reconciliation/blocs/app_localization.dart' as _i7;
+import 'package:referral_reconciliation/pages/acknowledgement.dart' as _i2;
 import 'package:referral_reconciliation/pages/project_facility/project_facility_selection.dart'
-    as _i5;
+    as _i3;
 import 'package:referral_reconciliation/pages/referral_wrapper_start.dart'
     as _i1;
 import 'package:referral_reconciliation/pages/search_referral_reconciliations.dart'
-    as _i6;
+    as _i4;
 
-abstract class $ReferralReconciliationRoute extends _i7.AutoRouterModule {
+abstract class $ReferralReconciliationRoute extends _i5.AutoRouterModule {
   @override
-  final Map<String, _i7.PageFactory> pagesMap = {
+  final Map<String, _i5.PageFactory> pagesMap = {
     HFReferralWrapperRoute.name: (routeData) {
-      return _i7.AutoRoutePage<dynamic>(
+      return _i5.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const _i1.HFReferralWrapperPage(),
-      );
-    },
-    ReferralReasonChecklistRoute.name: (routeData) {
-      final args = routeData.argsAs<ReferralReasonChecklistRouteArgs>(
-          orElse: () => const ReferralReasonChecklistRouteArgs());
-      return _i7.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i2.ReferralReasonChecklistPage(
-          key: args.key,
-          referralClientRefId: args.referralClientRefId,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    ReferralReasonChecklistPreviewRoute.name: (routeData) {
-      final args = routeData.argsAs<ReferralReasonChecklistPreviewRouteArgs>(
-          orElse: () => const ReferralReasonChecklistPreviewRouteArgs());
-      return _i7.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i3.ReferralReasonChecklistPreviewPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
       );
     },
     ReferralReconAcknowledgementRoute.name: (routeData) {
       final args = routeData.argsAs<ReferralReconAcknowledgementRouteArgs>(
           orElse: () => const ReferralReconAcknowledgementRouteArgs());
-      return _i7.AutoRoutePage<dynamic>(
+      return _i5.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i4.ReferralReconAcknowledgementPage(
+        child: _i2.ReferralReconAcknowledgementPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -71,9 +44,9 @@ abstract class $ReferralReconciliationRoute extends _i7.AutoRouterModule {
     ReferralReconProjectFacilitySelectionRoute.name: (routeData) {
       final args =
           routeData.argsAs<ReferralReconProjectFacilitySelectionRouteArgs>();
-      return _i7.AutoRoutePage<dynamic>(
+      return _i5.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i5.ReferralReconProjectFacilitySelectionPage(
+        child: _i3.ReferralReconProjectFacilitySelectionPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           projectFacilities: args.projectFacilities,
@@ -83,9 +56,9 @@ abstract class $ReferralReconciliationRoute extends _i7.AutoRouterModule {
     SearchReferralReconciliationsRoute.name: (routeData) {
       final args = routeData.argsAs<SearchReferralReconciliationsRouteArgs>(
           orElse: () => const SearchReferralReconciliationsRouteArgs());
-      return _i7.AutoRoutePage<dynamic>(
+      return _i5.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i6.SearchReferralReconciliationsPage(
+        child: _i4.SearchReferralReconciliationsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -96,8 +69,8 @@ abstract class $ReferralReconciliationRoute extends _i7.AutoRouterModule {
 
 /// generated route for
 /// [_i1.HFReferralWrapperPage]
-class HFReferralWrapperRoute extends _i7.PageRouteInfo<void> {
-  const HFReferralWrapperRoute({List<_i7.PageRouteInfo>? children})
+class HFReferralWrapperRoute extends _i5.PageRouteInfo<void> {
+  const HFReferralWrapperRoute({List<_i5.PageRouteInfo>? children})
       : super(
           HFReferralWrapperRoute.name,
           initialChildren: children,
@@ -105,100 +78,17 @@ class HFReferralWrapperRoute extends _i7.PageRouteInfo<void> {
 
   static const String name = 'HFReferralWrapperRoute';
 
-  static const _i7.PageInfo<void> page = _i7.PageInfo<void>(name);
+  static const _i5.PageInfo<void> page = _i5.PageInfo<void>(name);
 }
 
 /// generated route for
-/// [_i2.ReferralReasonChecklistPage]
-class ReferralReasonChecklistRoute
-    extends _i7.PageRouteInfo<ReferralReasonChecklistRouteArgs> {
-  ReferralReasonChecklistRoute({
-    _i8.Key? key,
-    String? referralClientRefId,
-    _i9.ReferralReconLocalization? appLocalizations,
-    List<_i7.PageRouteInfo>? children,
-  }) : super(
-          ReferralReasonChecklistRoute.name,
-          args: ReferralReasonChecklistRouteArgs(
-            key: key,
-            referralClientRefId: referralClientRefId,
-            appLocalizations: appLocalizations,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ReferralReasonChecklistRoute';
-
-  static const _i7.PageInfo<ReferralReasonChecklistRouteArgs> page =
-      _i7.PageInfo<ReferralReasonChecklistRouteArgs>(name);
-}
-
-class ReferralReasonChecklistRouteArgs {
-  const ReferralReasonChecklistRouteArgs({
-    this.key,
-    this.referralClientRefId,
-    this.appLocalizations,
-  });
-
-  final _i8.Key? key;
-
-  final String? referralClientRefId;
-
-  final _i9.ReferralReconLocalization? appLocalizations;
-
-  @override
-  String toString() {
-    return 'ReferralReasonChecklistRouteArgs{key: $key, referralClientRefId: $referralClientRefId, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [_i3.ReferralReasonChecklistPreviewPage]
-class ReferralReasonChecklistPreviewRoute
-    extends _i7.PageRouteInfo<ReferralReasonChecklistPreviewRouteArgs> {
-  ReferralReasonChecklistPreviewRoute({
-    _i8.Key? key,
-    _i9.ReferralReconLocalization? appLocalizations,
-    List<_i7.PageRouteInfo>? children,
-  }) : super(
-          ReferralReasonChecklistPreviewRoute.name,
-          args: ReferralReasonChecklistPreviewRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ReferralReasonChecklistPreviewRoute';
-
-  static const _i7.PageInfo<ReferralReasonChecklistPreviewRouteArgs> page =
-      _i7.PageInfo<ReferralReasonChecklistPreviewRouteArgs>(name);
-}
-
-class ReferralReasonChecklistPreviewRouteArgs {
-  const ReferralReasonChecklistPreviewRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final _i8.Key? key;
-
-  final _i9.ReferralReconLocalization? appLocalizations;
-
-  @override
-  String toString() {
-    return 'ReferralReasonChecklistPreviewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [_i4.ReferralReconAcknowledgementPage]
+/// [_i2.ReferralReconAcknowledgementPage]
 class ReferralReconAcknowledgementRoute
-    extends _i7.PageRouteInfo<ReferralReconAcknowledgementRouteArgs> {
+    extends _i5.PageRouteInfo<ReferralReconAcknowledgementRouteArgs> {
   ReferralReconAcknowledgementRoute({
-    _i8.Key? key,
-    _i9.ReferralReconLocalization? appLocalizations,
-    List<_i7.PageRouteInfo>? children,
+    _i6.Key? key,
+    _i7.ReferralReconLocalization? appLocalizations,
+    List<_i5.PageRouteInfo>? children,
   }) : super(
           ReferralReconAcknowledgementRoute.name,
           args: ReferralReconAcknowledgementRouteArgs(
@@ -210,8 +100,8 @@ class ReferralReconAcknowledgementRoute
 
   static const String name = 'ReferralReconAcknowledgementRoute';
 
-  static const _i7.PageInfo<ReferralReconAcknowledgementRouteArgs> page =
-      _i7.PageInfo<ReferralReconAcknowledgementRouteArgs>(name);
+  static const _i5.PageInfo<ReferralReconAcknowledgementRouteArgs> page =
+      _i5.PageInfo<ReferralReconAcknowledgementRouteArgs>(name);
 }
 
 class ReferralReconAcknowledgementRouteArgs {
@@ -220,9 +110,9 @@ class ReferralReconAcknowledgementRouteArgs {
     this.appLocalizations,
   });
 
-  final _i8.Key? key;
+  final _i6.Key? key;
 
-  final _i9.ReferralReconLocalization? appLocalizations;
+  final _i7.ReferralReconLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -231,14 +121,14 @@ class ReferralReconAcknowledgementRouteArgs {
 }
 
 /// generated route for
-/// [_i5.ReferralReconProjectFacilitySelectionPage]
+/// [_i3.ReferralReconProjectFacilitySelectionPage]
 class ReferralReconProjectFacilitySelectionRoute
-    extends _i7.PageRouteInfo<ReferralReconProjectFacilitySelectionRouteArgs> {
+    extends _i5.PageRouteInfo<ReferralReconProjectFacilitySelectionRouteArgs> {
   ReferralReconProjectFacilitySelectionRoute({
-    _i8.Key? key,
-    _i9.ReferralReconLocalization? appLocalizations,
-    required List<_i10.ProjectFacilityModel> projectFacilities,
-    List<_i7.PageRouteInfo>? children,
+    _i6.Key? key,
+    _i7.ReferralReconLocalization? appLocalizations,
+    required List<_i8.ProjectFacilityModel> projectFacilities,
+    List<_i5.PageRouteInfo>? children,
   }) : super(
           ReferralReconProjectFacilitySelectionRoute.name,
           args: ReferralReconProjectFacilitySelectionRouteArgs(
@@ -251,8 +141,8 @@ class ReferralReconProjectFacilitySelectionRoute
 
   static const String name = 'ReferralReconProjectFacilitySelectionRoute';
 
-  static const _i7.PageInfo<ReferralReconProjectFacilitySelectionRouteArgs>
-      page = _i7.PageInfo<ReferralReconProjectFacilitySelectionRouteArgs>(name);
+  static const _i5.PageInfo<ReferralReconProjectFacilitySelectionRouteArgs>
+      page = _i5.PageInfo<ReferralReconProjectFacilitySelectionRouteArgs>(name);
 }
 
 class ReferralReconProjectFacilitySelectionRouteArgs {
@@ -262,11 +152,11 @@ class ReferralReconProjectFacilitySelectionRouteArgs {
     required this.projectFacilities,
   });
 
-  final _i8.Key? key;
+  final _i6.Key? key;
 
-  final _i9.ReferralReconLocalization? appLocalizations;
+  final _i7.ReferralReconLocalization? appLocalizations;
 
-  final List<_i10.ProjectFacilityModel> projectFacilities;
+  final List<_i8.ProjectFacilityModel> projectFacilities;
 
   @override
   String toString() {
@@ -275,13 +165,13 @@ class ReferralReconProjectFacilitySelectionRouteArgs {
 }
 
 /// generated route for
-/// [_i6.SearchReferralReconciliationsPage]
+/// [_i4.SearchReferralReconciliationsPage]
 class SearchReferralReconciliationsRoute
-    extends _i7.PageRouteInfo<SearchReferralReconciliationsRouteArgs> {
+    extends _i5.PageRouteInfo<SearchReferralReconciliationsRouteArgs> {
   SearchReferralReconciliationsRoute({
-    _i11.Key? key,
-    _i9.ReferralReconLocalization? appLocalizations,
-    List<_i7.PageRouteInfo>? children,
+    _i9.Key? key,
+    _i7.ReferralReconLocalization? appLocalizations,
+    List<_i5.PageRouteInfo>? children,
   }) : super(
           SearchReferralReconciliationsRoute.name,
           args: SearchReferralReconciliationsRouteArgs(
@@ -293,8 +183,8 @@ class SearchReferralReconciliationsRoute
 
   static const String name = 'SearchReferralReconciliationsRoute';
 
-  static const _i7.PageInfo<SearchReferralReconciliationsRouteArgs> page =
-      _i7.PageInfo<SearchReferralReconciliationsRouteArgs>(name);
+  static const _i5.PageInfo<SearchReferralReconciliationsRouteArgs> page =
+      _i5.PageInfo<SearchReferralReconciliationsRouteArgs>(name);
 }
 
 class SearchReferralReconciliationsRouteArgs {
@@ -303,9 +193,9 @@ class SearchReferralReconciliationsRouteArgs {
     this.appLocalizations,
   });
 
-  final _i11.Key? key;
+  final _i9.Key? key;
 
-  final _i9.ReferralReconLocalization? appLocalizations;
+  final _i7.ReferralReconLocalization? appLocalizations;
 
   @override
   String toString() {

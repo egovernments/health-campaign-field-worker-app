@@ -159,6 +159,9 @@ class AcknowledgementSuccess {
 class ReferralReconciliation {
   const ReferralReconciliation();
 
+  String get facilityKeyLabel =>
+      'APPONE_HFREFERALFLOW_EVALUATION_FACILITY_KEY_LABEL';
+
   String get dateOfReferralLabel => 'REFER_BENEFICIARY_DATE_OF_REFERRAL_LABEL';
   String get dateOfEvaluationLabel =>
       'REFER_BENEFICIARY_DATE_OF_EVALUATION_LABEL';

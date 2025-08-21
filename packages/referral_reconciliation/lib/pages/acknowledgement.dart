@@ -4,6 +4,7 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
+import 'package:referral_reconciliation/utils/constants.dart';
 import 'package:referral_reconciliation/utils/utils.dart';
 
 import '../utils/i18_key_constants.dart' as i18;
@@ -27,25 +28,27 @@ class _AcknowledgementPageState
   Widget build(BuildContext context) {
     final pageKey =
         ReferralReconAcknowledgementRoute.name.replaceAll('Route', '');
-    final searchTemplate = ReferralReconSingleton().templateConfigs?[pageKey];
+    final acknowledgementTemplate =
+        ReferralReconSingleton().templateConfigs?[pageKey];
     final theme = Theme.of(context);
 
     return Scaffold(
       body: PanelCard(
         type: PanelType.success,
         title: localizations.translate(
-          searchTemplate?.properties?["AcknowledgementTitle"]?.label ?? "",
+          acknowledgementTemplate?.properties?[acknowledgementTitle]?.label ??
+              "",
         ),
-        description: (searchTemplate
-                    ?.properties?["AcknowledgementDescription"]?.hidden ==
+        description: (acknowledgementTemplate
+                    ?.properties?[acknowledgementDescription]?.hidden ==
                 true
-            ? ""
+            ? null
             : localizations.translate(
-                searchTemplate
-                        ?.properties?["AcknowledgementDescription"]?.label ??
+                acknowledgementTemplate
+                        ?.properties?[acknowledgementDescription]?.label ??
                     "",
               )),
-        actions: _buildActionButtons(context, searchTemplate),
+        actions: _buildActionButtons(context, acknowledgementTemplate),
       ),
     );
   }
@@ -54,7 +57,7 @@ class _AcknowledgementPageState
     BuildContext context,
     TemplateConfig? template,
   ) {
-    final primaryProp = template?.properties?["PrimaryButton"];
+    final primaryProp = template?.properties?[primaryButton];
     // final secondaryProp = template?.properties?["SecondaryButton"];
 
     final entries = <MapEntry<int, DigitButton>>[];

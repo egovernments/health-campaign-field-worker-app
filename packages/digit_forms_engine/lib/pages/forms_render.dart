@@ -57,7 +57,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           }
 
           if (widget.isSummary) {
-            return _buildSummaryPage(context, schemaObject);
+            return _buildSummaryPage(context, schemaObject, widget.isView);
           }
 
           final schema = schemaObject.pages[widget.pageName];
@@ -286,13 +286,15 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                     isView: widget.isView,
                                   ));
                                 } else {
-                                  context
-                                      .read<FormsBloc>()
-                                      .add(FormsSubmitEvent(
-                                        isEdit: widget.isEdit,
-                                        schemaKey: widget.currentSchemaKey,
-                                        isView: widget.isView,
-                                      ));
+                                  if (widget.isView == false) {
+                                    context
+                                        .read<FormsBloc>()
+                                        .add(FormsSubmitEvent(
+                                          isEdit: widget.isEdit,
+                                          schemaKey: widget.currentSchemaKey,
+                                          isView: widget.isView,
+                                        ));
+                                  }
 
                                   // Pop all form pages (FormsRenderRoute)
                                   context.router.popUntil((route) {
@@ -398,7 +400,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     );
   }
 
-  Widget _buildSummaryPage(BuildContext context, SchemaObject schemaObject) {
+  Widget _buildSummaryPage(
+      BuildContext context, SchemaObject schemaObject, bool isView) {
     final shownPages = schemaObject.pages.entries.where((entry) {
       final pageSchema = entry.value;
 
@@ -421,9 +424,11 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               mainAxisSize: MainAxisSize.max,
               label: localizations.translate('CORE_COMMON_SUBMIT'),
               onPressed: () {
-                context.read<FormsBloc>().add(FormsSubmitEvent(
-                    schemaKey: widget.currentSchemaKey, isEdit: widget.isEdit));
-
+                if (isView == false) {
+                  context.read<FormsBloc>().add(FormsSubmitEvent(
+                      schemaKey: widget.currentSchemaKey,
+                      isEdit: widget.isEdit));
+                }
                 // Pop all form pages (FormsRenderRoute)
                 context.router.popUntil((route) {
                   return route.settings.name != FormsRenderRoute.name;
