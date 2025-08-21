@@ -1394,7 +1394,7 @@ final List<Map<String, dynamic>> sampleFlows = [
             "actionType": "NAVIGATION",
             "properties": {
               "type": "TEMPLATE",
-              "name": "beneficiaryChecklist",
+              "name": "beneficiaryDetails",
               "onError": [
                 {
                   "actionType": "SHOW_TOAST",
@@ -1700,6 +1700,171 @@ final List<Map<String, dynamic>> sampleFlows = [
   {
     "screenType": "FORM",
     "name": "DELIVERY",
+    "project": "CMP-2025-08-04-004846",
+    "version": 1,
+    "disabled": false,
+    "isSelected": true,
+    "pages": [
+      {
+        "page": "DeliveryDetails",
+        "type": "object",
+        "label": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_HEADING",
+        "order": 1,
+        "navigateTo": {"name": "household-acknowledgement", "type": "template"},
+        "properties": [
+          {
+            "type": "integer",
+            "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_dateOfDelivery",
+            "order": 1,
+            "value": "",
+            "format": "date",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": true,
+            "fieldName": "dateOfRegistration",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": true,
+            "validations": [],
+            "errorMessage": "",
+            "includeInForm": true,
+            "isMultiSelect": false,
+            "includeInSummary": true
+          },
+          // {
+          //   "type": "dynamic",
+          //   "enums": [
+          //     {
+          //       "code": "SP1",
+          //       "name": "SP1"
+          //     },
+          //     {
+          //       "code": "SP2",
+          //       "name": "SP2"
+          //     },
+          //     {
+          //       "code": "AQ1",
+          //       "name": "AQ1"
+          //     },
+          //     {
+          //       "code": "AQ2",
+          //       "name": "AQ2"
+          //     }
+          //   ],
+          //   "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_resource",
+          //   "order": 2,
+          //   "value": "",
+          //   "format": "custom",
+          //   "hidden": false,
+          //   "tooltip": "",
+          //   "helpText": "",
+          //   "infoText": "",
+          //   "readOnly": false,
+          //   "fieldName": "resourceCard",
+          //   "deleteFlag": false,
+          //   "innerLabel": "",
+          //   "systemDate": false,
+          //   "validations": [],
+          //   "errorMessage": "",
+          //   "includeInForm": true,
+          //   "isMultiSelect": false,
+          //   "includeInSummary": true
+          // },
+          {
+            "type": "string",
+            "label":
+                "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_deliveryComments",
+            "order": 3,
+            "value": "",
+            "format": "dropdown",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "deliveryComment",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
+            "systemDate": false,
+            "validations": [],
+            "errorMessage": "",
+            "includeInForm": true,
+            "isMultiSelect": false,
+            "includeInSummary": true
+          },
+          {
+            "type": "string",
+            "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_scanner",
+            "order": 4,
+            "value": "",
+            "format": "scanner",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "scanner",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false,
+            "validations": [],
+            "errorMessage": "",
+            "includeInForm": true,
+            "isMultiSelect": false,
+            "includeInSummary": true
+          }
+        ],
+        "actionLabel":
+            "APPONE_REGISTRATION_DELIVERYDETAILS_ACTION_BUTTON_LABEL_1",
+        "description": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION"
+      }
+    ],
+    "onSubmit": [
+      {
+        "actionType": "FETCH_TRANSFORMER_CONFIG",
+        "properties": {
+          "configName": "delivery",
+          "onError": [
+            {
+              "actionType": "SHOW_TOAST",
+              "properties": {"message": "Failed to fetch config."}
+            }
+          ]
+        }
+      },
+      {
+        "actionType": "CREATE_EVENT",
+        "properties": {
+          "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
+          "onError": [
+            {
+              "actionType": "SHOW_TOAST",
+              "properties": {"message": "Failed to create household."}
+            }
+          ]
+        }
+      },
+      {
+        "actionType": "NAVIGATION",
+        "properties": {
+          "type": "TEMPLATE",
+          "name": "deliverySuccess",
+          "onError": [
+            {
+              "actionType": "SHOW_TOAST",
+              "properties": {"message": "Navigation failed."}
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "screenType": "FORM",
+    "name": "REFERRAL",
     "project": "CMP-2025-08-04-004846",
     "version": 1,
     "disabled": false,
