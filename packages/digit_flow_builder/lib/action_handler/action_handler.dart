@@ -5,6 +5,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
+import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,6 +14,57 @@ import '../blocs/state_wrapper_builder.dart';
 import '../data/transformer_config.dart';
 
 class ActionHandler {
+  /// Evaluates condition expressions using FormulaParser
+  static bool evaluateCondition(
+    Map<String, dynamic> condition,
+    Map<String, dynamic> formData,
+  ) {
+    final expression = condition['expression'] as String?;
+    if (expression == null || expression == 'DEFAULT') return true;
+
+    try {
+      final parser = FormulaParser(
+        expression,
+        formData.isEmpty ? {'dummy': {}} : formData,
+      );
+      
+      final result = parser.parse;
+      return result["isSuccess"] && result["value"] == true;
+    } catch (e) {
+      // If parsing fails, return false
+      return false;
+    }
+  }
+
+  /// Execute actions with conditional support
+  static Future<Map<String, dynamic>> executeActions(
+    List<dynamic> actions,
+    BuildContext context,
+    Map<String, dynamic> contextData,
+  ) async {
+    for (final actionJson in actions) {
+      if (actionJson['condition'] != null) {
+        // Conditional action block
+        final condition = actionJson['condition'] as Map<String, dynamic>;
+        final formData = contextData['formData'] as Map<String, dynamic>? ?? {};
+        
+        if (evaluateCondition(condition, formData)) {
+          final subActions = actionJson['actions'] as List? ?? [];
+          for (final subActionJson in subActions) {
+            final action = ActionConfig.fromJson(subActionJson);
+            contextData = await execute(action, context, contextData);
+          }
+          break; // Execute only the first matching condition
+        }
+      } else {
+        // Legacy direct action
+        final action = ActionConfig.fromJson(actionJson);
+        contextData = await execute(action, context, contextData);
+      }
+    }
+    return contextData;
+  }
+
   /// New async, context-aware version for flow builder onSubmit
   static Future<Map<String, dynamic>> execute(
     ActionConfig action,

@@ -1381,77 +1381,132 @@ final List<Map<String, dynamic>> sampleFlows = [
     ],
     "onSubmit": [
       {
-        "actionType": "SHOW_POPUP",
-        "properties": {
-          "configName": "",
-          "onError": [
-            {
-              "actionType": "SHOW_TOAST",
-              "properties": {"message": "Failed to fetch config."}
+        "condition": {
+          "expression":
+              "eligibilityChecklist.ec1==NO && eligibilityChecklist.ec3==NO && eligibilityChecklist.ec4==NO"
+        },
+        "actions": [
+          {
+            "actionType": "NAVIGATION",
+            "properties": {
+              "type": "TEMPLATE",
+              "name": "beneficiaryChecklist",
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {"message": "Navigation failed."}
+                }
+              ]
             }
-          ]
-        }
+          }
+        ]
       },
       {
-        "actionType": "FETCH_TRANSFORMER_CONFIG",
-        "properties": {
-          "configName": "",
-          "onError": [
-            {
-              "actionType": "SHOW_TOAST",
-              "properties": {"message": "Failed to fetch config."}
+        "condition": {
+          "expression":
+              "eligibilityChecklist.ec1==NO && eligibilityChecklist.ec3==NO && eligibilityChecklist.ec4==YES"
+        },
+        "actions": [
+          {
+            "actionType": "FETCH_TRANSFORMER_CONFIG",
+            "properties": {
+              "configName": "ineligibleConfig",
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {
+                    "message": "Failed to fetch ineligible config."
+                  }
+                }
+              ]
             }
-          ]
-        }
+          },
+          {
+            "actionType": "CREATE_EVENT",
+            "properties": {
+              "entity": "TASK",
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {"message": "Failed to create task records."}
+                }
+              ]
+            }
+          },
+          {
+            "actionType": "NAVIGATION",
+            "properties": {
+              "type": "TEMPLATE",
+              "name": "householdOverview",
+              "data": [
+                {"key": "reason", "value": "SP_CTX_TAKEN_RECENTLY"}
+              ],
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {"message": "Navigation to flow failed."}
+                }
+              ]
+            }
+          }
+        ]
       },
       {
-        "actionType": "CREATE_EVENT",
-        "properties": {
-          "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
-          "onError": [
-            {
-              "actionType": "SHOW_TOAST",
-              "properties": {"message": "Failed to create household."}
+        "condition": {"expression": "DEFAULT"},
+        "actions": [
+          {
+            "actionType": "FETCH_TRANSFORMER_CONFIG",
+            "properties": {
+              "configName": "referralConfig",
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {"message": "Failed to fetch referral config."}
+                }
+              ]
             }
-          ]
-        }
-      },
-      {
-        "actionType": "NAVIGATION",
-        "properties": {
-          "type": "TEMPLATE",
-          "name": "deliverySuccess",
-          "onError": [
-            {
-              "actionType": "SHOW_TOAST",
-              "properties": {"message": "Navigation failed."}
+          },
+          {
+            "actionType": "CREATE_EVENT",
+            "properties": {
+              "entity": "TASK",
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {
+                    "message": "Failed to create referral records."
+                  }
+                }
+              ]
             }
-          ]
-        }
+          },
+          {
+            "actionType": "NAVIGATION",
+            "properties": {
+              "type": "FORM",
+              "name": "REFERRAL",
+              "data": [
+                {"key": "referralReason", "value": "HEALTH_COMPLICATIONS"}
+              ],
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {
+                    "message": "Navigation to referral flow failed."
+                  }
+                }
+              ]
+            }
+          }
+        ]
       }
     ]
   },
   {
-    // "initActions": [
-    //   {
-    //     "actionType": "SEARCH_EVENT",
-    //     "properties": {
-    //       "type": "SEARCH_EVENT",
-    //       "name": "household",
-    //       "data": [
-    //         {
-    //           "key": "householdId",
-    //           "value": "{{ contextData.HouseholdModel.clientReferenceId }}",
-    //           "operation": "equals"
-    //         }
-    //       ],
-    //     }
-    //   }
-    // ],
     "screenType": "TEMPLATE",
     "name": "beneficiaryDetails",
     "heading": "Beneficiary Details",
-    "description": "details of beneficiary",
+    "description": "",
     "wrapperConfig": {
       "wrapperName": "HouseholdWrapper",
       "rootEntity": "HouseholdMemberModel",
@@ -1541,124 +1596,76 @@ final List<Map<String, dynamic>> sampleFlows = [
         "type": "primary",
         "children": [
           {
-            "format": "row",
-            "properties": {"mainAxisAlignment": "end"},
-            "children": [
-              {
-                "format": "button",
-                "label": "Edit",
-                "properties": {
-                  "type": "tertiary",
-                  "size": "large",
-                  "mainAxisSize": "min",
-                  "mainAxisAlignment": "center"
-                },
-                "onAction": {
-                  "actionType": "NAVIGATION",
-                  "properties": {
-                    "type": "FORM",
-                    "name": "HOUSEHOLD",
-                    "data": [
-                      {"key": "id", "value": "{{item.id}}"}
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          {
             "format": "labelPairList",
             "data": [
               {
-                "key": "Household head name",
+                "key": "Name",
                 "value": "{{context.headOfHousehold.name.givenName}}"
               },
               {
-                "key": "Village",
+                "key": "ID Type",
                 "value": "{{context.headOfHousehold.address.locality.code}}"
               },
               {
-                "key": "Member Count",
+                "key": "ID Number",
+                "value": "{{context.household.memberCount}}"
+              },
+              {
+                "key": "Age",
+                "value": "{{context.headOfHousehold.name.givenName}}"
+              },
+              {
+                "key": "Gender",
+                "value": "{{context.headOfHousehold.address.locality.code}}"
+              },
+              {
+                "key": "Mobile Number",
+                "value": "{{context.household.memberCount}}"
+              },
+              {
+                "key": "Date of Registration",
                 "value": "{{context.household.memberCount}}"
               }
             ]
-          },
+          }
+        ]
+      },
+      {
+        "format": "card",
+        "type": "primary",
+        "children": [
           {
-            "format": "listView",
-            "hidden": "{{ context.household.empty }}",
-            "fieldName": "listView",
-            "dataSource": "members",
-            "child": {
-              "format": "card",
-              "type": "secondary",
-              "children": [
-                {
-                  "format": "row",
-                  "properties": {
-                    "mainAxisAlignment": "spaceBetween",
-                    "mainAxisSize": "max",
-                  },
-                  "children": [
-                    {
-                      "format": "text",
-                      "value": "{{ context.headOfHousehold.name.givenName }}",
-                    },
-                    {
-                      "format": "button",
-                      "label": "Edit",
-                      "properties": {
-                        "type": "tertiary",
-                        "size": "large",
-                        "mainAxisSize": "min",
-                        "mainAxisAlignment": "center"
-                      },
-                      "onAction": {
-                        "actionType": "NAVIGATION",
-                        "properties": {
-                          "type": "TEMPLATE",
-                          "name": "editBeneficiary",
-                          "data": [
-                            {"key": "id", "value": "{{item.id}}"}
-                          ]
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "format": "text",
-                  "value":
-                      "{{ context.headOfHousehold.gender }} | {{context.headOfHousehold.age}} date of birth"
-                },
-                {"format": "tag", "type": "", "label": "Not visited"},
-                {
-                  "format": "row",
-                  "children": [
-                    {
-                      "format": "button",
-                      "properties": {
-                        "type": "tertiary",
-                        "size": "medium",
-                        "mainAxisSize": "min",
-                        "mainAxisAlignment": "center"
-                      },
-                      "label": "Add Child",
-                      "icon": "add"
-                    },
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "format": "button",
-            "label": "Add Member",
-            "properties": {
-              "type": "tertiary",
-              "size": "large",
-              "mainAxisSize": "min",
-              "mainAxisAlignment": "center"
-            },
+            "format": "table",
+            "data": [
+              {
+                "key": "Name",
+                "value": "{{context.headOfHousehold.name.givenName}}"
+              },
+              {
+                "key": "ID Type",
+                "value": "{{context.headOfHousehold.address.locality.code}}"
+              },
+              {
+                "key": "ID Number",
+                "value": "{{context.household.memberCount}}"
+              },
+              {
+                "key": "Age",
+                "value": "{{context.headOfHousehold.name.givenName}}"
+              },
+              {
+                "key": "Gender",
+                "value": "{{context.headOfHousehold.address.locality.code}}"
+              },
+              {
+                "key": "Mobile Number",
+                "value": "{{context.household.memberCount}}"
+              },
+              {
+                "key": "Date of Registration",
+                "value": "{{context.household.memberCount}}"
+              }
+            ]
           }
         ]
       }
@@ -1684,7 +1691,7 @@ final List<Map<String, dynamic>> sampleFlows = [
           }
         }
       }
-    ],
+    ]
   },
   {
     "screenType": "FORM",
