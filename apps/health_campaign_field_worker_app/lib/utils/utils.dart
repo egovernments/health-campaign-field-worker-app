@@ -5,9 +5,12 @@ import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart'
     as attendance_mappers;
+import 'package:attendance_management/attendance_management.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.dart' as data_model;
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_dss/digit_dss.dart' as dss_mappers;
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -19,7 +22,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:sync_service/blocs/sync/sync.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
@@ -463,6 +468,43 @@ initializeAllMappers() async {
     Future(() => dss_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
+}
+
+void attemptSyncUp(BuildContext context) async {
+  await LocalSecureStore.instance.setManualSyncTrigger(true);
+
+  if (context.mounted) {
+    context.read<SyncBloc>().add(
+          SyncSyncUpEvent(
+            userId: context.loggedInUserUuid,
+            localRepositories: [
+              // INFO : Need to add local repo of package Here
+              context.read<
+                  LocalRepository<AttendanceLogModel,
+                      AttendanceLogSearchModel>>(),
+              context.read<
+                  LocalRepository<UserActionModel, UserActionSearchModel>>(),
+            ],
+            remoteRepositories: [
+              // INFO : Need to add repo repo of package Here
+              context.read<
+                  RemoteRepository<IndividualModel, IndividualSearchModel>>(),
+              context.read<
+                  RemoteRepository<AttendanceLogModel,
+                      AttendanceLogSearchModel>>(),
+              context.read<
+                  RemoteRepository<UserActionModel, UserActionSearchModel>>(),
+            ],
+          ),
+        );
+  }
+}
+
+Future<File> getDownSyncFilePath() async {
+  final downloadsDirectory = await getDownloadsDirectory();
+  final file = File('${downloadsDirectory!.path}/down_sync_data.json');
+
+  return file;
 }
 
 class LocalizationParams {

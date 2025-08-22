@@ -9,9 +9,9 @@ import 'package:sync_service/data/sync_entity_mapper_listener.dart';
 class SyncServiceMapper extends SyncEntityMapperListener {
   @override
   FutureOr<void> writeToEntityDB(
-      Map<String, dynamic> response,
-      List<LocalRepository<EntityModel, EntitySearchModel>>
-          localRepositories) async {
+    Map<String, dynamic> response,
+    List<LocalRepository> localRepositories,
+  ) async {
     try {
       for (int i = 0; i <= response.keys.length - 1; i++) {
         if (response.keys.elementAt(i) != 'DownsyncCriteria') {
@@ -44,6 +44,22 @@ class SyncServiceMapper extends SyncEntityMapperListener {
     }
   }
 
+  void createDbRecords(LocalRepository<EntityModel, EntitySearchModel> local,
+      List<Map<String, dynamic>> entityList, String key) async {
+    switch (key) {
+      case "Individuals":
+        final entity = entityList
+            .map((e) => IndividualModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
+      default:
+        final entity = entityList
+            .map((e) => EntityModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
+    }
+  }
+
   @override
   int getSyncCount(List<OpLog> opLogs) {
     int count = opLogs.where((element) {
@@ -60,6 +76,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           case DataModelType.referral:
           case DataModelType.hFReferral:
           case DataModelType.attendance:
+          case DataModelType.service:
             return true;
           default:
             return false;
@@ -80,6 +97,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           case DataModelType.hFReferral:
           case DataModelType.attendance:
           case DataModelType.userLocation:
+          case DataModelType.userAction:
             return true;
           default:
             return false;
@@ -103,6 +121,10 @@ class SyncServiceMapper extends SyncEntityMapperListener {
     const individualIdentifierIdKey = 'individualIdentifierId';
     const householdAddressIdKey = 'householdAddressId';
     const individualAddressIdKey = 'individualAddressId';
+    const memberRelationshipIdKey = 'memberRelationshipId';
+    const memberRelationshipSelfIdKey = 'memberRelationshipSelfId';
+    const memberRelationshipRelativeIdKey = 'memberRelationshipRelativeId';
+    const serviceAttributesIdKey = 'serviceAttributesId';
 
     switch (typeGroupedEntity.key) {
       case DataModelType.individual:

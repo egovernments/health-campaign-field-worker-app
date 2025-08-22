@@ -57,6 +57,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.5.0"
+  asn1lib:
+    dependency: transitive
+    description:
+      name: asn1lib
+      sha256: "9a8f69025044eb466b9b60ef3bc3ac99b4dc6c158ae9c56d25eeccf5bc56d024"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.6.5"
   async:
     dependency: transitive
     description:
@@ -69,10 +77,10 @@ packages:
     dependency: "direct main"
     description:
       name: attendance_management
-      sha256: "6b7c39aba4f4c26340daee8dcb8fde3823a28e3fae6065fd3abf3ed90d3c74c5"
+      sha256: "1b2dde9e93089f6561a8b1ade1df6c95ffb2b6410d294b8b666cbb7608222719"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4+1"
+    version: "1.0.5+2"
   audioplayers:
     dependency: transitive
     description:
@@ -266,7 +274,7 @@ packages:
     source: hosted
     version: "0.11.0+2"
   camera_android_camerax:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: camera_android_camerax
       sha256: "594b40a5ea0e144fdfe49e4036abe4ec9bd578b2ce3aabdb0668a02db376a1e8"
@@ -297,6 +305,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.3"
+  carousel_slider:
+    dependency: transitive
+    description:
+      name: carousel_slider
+      sha256: "9c695cc963bf1d04a47bd6021f68befce8970bcd61d24938e1fb0918cf5d9c42"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.1"
   characters:
     dependency: transitive
     description:
@@ -494,18 +510,18 @@ packages:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: bcb6c328a75df1442672e39c0dbae32bc9cb067a07a581bded672d2b748957b9
+      sha256: c26e4e0167825b418b58add21ce0ba2701dc04b2f2b8797f7278b4b6cb2d4465
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.6"
+    version: "1.1.5"
   digit_dss:
     dependency: "direct main"
     description:
       name: digit_dss
-      sha256: a58aae4c9ad5fe58562706fd5a83419c3fca316821ccc38e249189663e8a0f20
+      sha256: db2dfe789f67bd6eb9fa09a5121d000a974220f6673afea0305ae7b85410cbbf
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.4+2"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -526,26 +542,26 @@ packages:
     dependency: "direct main"
     description:
       name: digit_scanner
-      sha256: "69580859ba9b63f32e40e6d56bf55a016eb623007ea06552b38f70056ea06dfe"
+      sha256: "1bf24bdaf71f99de0f1281136478bb141f058a984752176ffa63ad580b467e18"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5"
+    version: "1.0.6+2"
   digit_showcase:
     dependency: "direct main"
     description:
       name: digit_showcase
-      sha256: b4f9009c0d1b33b6576fa2d480826cc36f2ba5f62c7330b9f7b436af39508b4e
+      sha256: "4667b29e652738a1621e907359da327594c288417f5dfa3da60e77f0342a4eae"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.2+1"
   digit_ui_components:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "80f3770380963d7ec5fde6be1b67cde8ceb63dec5fc68ae51b70d4ad2278c7dd"
+      sha256: "37c5c974bbc60567588f71bf6cddf49dc69d3248d0b4bca4525af837cf67a8f2"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2-dev.15"
+    version: "0.2.2+8"
   dio:
     dependency: "direct main"
     description:
@@ -602,6 +618,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.18.0"
+  encrypt:
+    dependency: transitive
+    description:
+      name: encrypt
+      sha256: "62d9aa4670cc2a8798bab89b39fc71b6dfbacf615de6cf5001fb39f7e4a996a2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.3"
   equatable:
     dependency: transitive
     description:
@@ -651,7 +675,7 @@ packages:
     source: hosted
     version: "8.0.0+1"
   file_selector_linux:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: file_selector_linux
       sha256: b2b91daf8a68ecfa4a01b778a6f52edef9b14ecd506e771488ea0f2e0784198b
@@ -667,7 +691,7 @@ packages:
     source: hosted
     version: "0.9.4+2"
   file_selector_platform_interface:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: file_selector_platform_interface
       sha256: a3994c26f10378a039faa11de174d7b78eb8f79e4dd0af2a451410c1a5c3f66b
@@ -797,13 +821,13 @@ packages:
     source: hosted
     version: "3.0.7"
   flutter_dropzone_platform_interface:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: flutter_dropzone_platform_interface
-      sha256: "96d2c51c86063ba150551c3b40fd26c5a18785bee071c0c751502d28a545df3b"
+      sha256: b4e2df75364bab2f4c3ca32b87193267d786b6e158c3f345c3a1daeb911d82b9
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "2.0.6"
   flutter_dropzone_web:
     dependency: transitive
     description:
@@ -905,6 +929,15 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_nearby_connections:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: "9ead63aa7e01f7603a453368de1ee2b4dc009ed6"
+      url: "https://github.com/champeauxr/flutter_nearby_connections"
+    source: git
+    version: "1.1.2"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -1406,7 +1439,7 @@ packages:
     source: hosted
     version: "1.2.0"
   lottie:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: lottie
       sha256: "7afc60865a2429d994144f7d66ced2ae4305fe35d82890b8766e3359872d872c"
@@ -1589,6 +1622,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.1"
+  percent_indicator:
+    dependency: "direct main"
+    description:
+      name: percent_indicator
+      sha256: "157d29133bbc6ecb11f923d36e7960a96a3f28837549a20b65e5135729f0f9fd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.5"
   permission_handler:
     dependency: "direct main"
     description:
@@ -1669,6 +1710,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.0.0"
+  pointycastle:
+    dependency: transitive
+    description:
+      name: pointycastle
+      sha256: "4be0097fcf3fd3e8449e53730c631200ebc7b88016acecab2b0da2f0149222fe"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.9.1"
   pool:
     dependency: transitive
     description:

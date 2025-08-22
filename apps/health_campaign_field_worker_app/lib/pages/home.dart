@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
@@ -239,7 +238,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     return count == 0
                         ? const Offstage()
                         : Padding(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: spacer2,
                             ),
                             child: InfoCard(
@@ -279,7 +278,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         action: (ctx) {
           Navigator.pop(ctx);
           // Sync Failed Manual Sync is Enabled
-          _attemptSyncUp(context);
+          attemptSyncUp(context);
         },
       ),
       secondaryAction: DigitDialogActions(
@@ -322,16 +321,21 @@ class _HomePageState extends LocalizedState<HomePage> {
               icon: Icons.sync_alt,
               label: i18.home.syncDataLabel,
               onPressed: () async {
-                if (snapshot.data?['enablesManualSync'] == true) {
-                  if (context.mounted) _attemptSyncUp(context);
+                if (envConfig.variables.envType == EnvType.qa ||
+                    envConfig.variables.envType == EnvType.dev) {
+                  if (context.mounted) attemptSyncUp(context);
                 } else {
-                  if (context.mounted) {
-                    Toast.showToast(
-                      context,
-                      message: localizations
-                          .translate(i18.common.coreCommonSyncInProgress),
-                      type: ToastType.success,
-                    );
+                  if (snapshot.data?['enablesManualSync'] == true) {
+                    if (context.mounted) attemptSyncUp(context);
+                  } else {
+                    if (context.mounted) {
+                      Toast.showToast(
+                        context,
+                        message: localizations
+                            .translate(i18.common.coreCommonSyncInProgress),
+                        type: ToastType.success,
+                      );
+                    }
                   }
                 }
               },
@@ -354,6 +358,19 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.dataShare: homeShowcaseData.dataShare.buildWith(
+        child: HomeItemCard(
+          icon: Icons.send,
+          label: i18.home.dataShare,
+          onPressed: () async {
+            if (isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            }
+            context.router.push(const DataShareHomeRoute());
+          },
+        ),
+      ),
       i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
         child: HomeItemCard(
           icon: Icons.bar_chart_sharp,
@@ -363,7 +380,6 @@ class _HomePageState extends LocalizedState<HomePage> {
               triggerLocalization();
               isTriggerLocalisation = false;
             }
-            ;
             context.router.push(const UserDashboardRoute());
           },
         ),
@@ -373,16 +389,28 @@ class _HomePageState extends LocalizedState<HomePage> {
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
       // INFO : Need to add showcase keys of package Here
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
-      i18.home.db: homeShowcaseData.db.showcaseKey,
+      i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.showcaseKey,
+      i18.home.beneficiaryReferralLabel:
+          homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
+      i18.home.manageAttendanceLabel:
+          homeShowcaseData.manageAttendance.showcaseKey,
+      i18.home.closedHouseHoldLabel:
+          homeShowcaseData.closedHouseHold.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       i18.home.clfLabel: homeShowcaseData.clf.showcaseKey,
+      i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
+      i18.home.db: homeShowcaseData.db.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
       i18.home.syncDataLabel,
-      i18.home.db,
+      i18.home.viewReportsLabel,
+      i18.home.beneficiaryReferralLabel,
+      i18.home.manageAttendanceLabel,
       i18.home.dashboard,
+      i18.home.dataShare,
+      i18.home.db,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -402,7 +430,6 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
       filteredLabels.remove(i18.home.db);
     }
-
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
 
@@ -410,32 +437,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       widgetList,
       showcaseKeys,
     );
-  }
-
-  void _attemptSyncUp(BuildContext context) async {
-    await LocalSecureStore.instance.setManualSyncTrigger(true);
-
-    if (context.mounted) {
-      context.read<SyncBloc>().add(
-            SyncSyncUpEvent(
-              userId: context.loggedInUserUuid,
-              localRepositories: [
-                // INFO : Need to add local repo of package Here
-                context.read<
-                    LocalRepository<IndividualModel, IndividualSearchModel>>(),
-                context.read<
-                    LocalRepository<UserActionModel, UserActionSearchModel>>()
-              ],
-              remoteRepositories: [
-                // INFO : Need to add repo repo of package Here
-                context.read<
-                    RemoteRepository<IndividualModel, IndividualSearchModel>>(),
-                context.read<
-                    RemoteRepository<UserActionModel, UserActionSearchModel>>(),
-              ],
-            ),
-          );
-    }
   }
 
   void triggerLocalization() {

@@ -35,6 +35,15 @@ class CustomSyncRegistry implements SyncUpOperation {
   }
 
   @override
+  Future<void> singleUpdate(EntityModel entity, LocalRepository local) async {
+    try {
+      await remote.singleUpdate(entity);
+    } catch (e) {
+      debugPrint('$e');
+    }
+  }
+
+  @override
   Future<void> create(
       {required List<OpLogEntry<EntityModel>> entry,
       required List<EntityModel> entities,
@@ -58,6 +67,7 @@ class CustomSyncRegistry implements SyncUpOperation {
       LocalRepository<EntityModel, EntitySearchModel> local) async {
     for (final syncedEntity in entity) {
       if (syncedEntity.type == DataModelType.complaints) continue;
+
       await local.markSyncedUp(
         entry: syncedEntity,
         id: syncedEntity.id,
