@@ -286,71 +286,54 @@ final List<Map<String, dynamic>> sampleFlows = [
           "format": "card",
           "children": [
             {
-              "format": "column",
+              "format": "row",
+              "properties": {
+                "mainAxisAlignment": "spaceBetween",
+                "mainAxisSize": "max",
+              },
               "children": [
                 {
-                  "format": "row",
-                  "properties": {
-                    "mainAxisAlignment": "spaceBetween",
-                    "mainAxisSize": "max",
-                  },
-                  "children": [
-                    {
-                      "format": "text",
-                      "value": "{{ context.headOfHousehold.name.givenName }}"
-                    },
-                    {
-                      "format": "button",
-                      "label": "Open",
-                      "onAction": {
-                        "actionType": "NAVIGATION",
-                        "properties": {
-                          "type": "TEMPLATE",
-                          "name": "householdOverview",
-                          "data": [
-                            {
-                              "key": "selectedIndividual",
-                              "value": "item.individual.id"
-                            }
-                          ]
-                        }
-                      }
-                    }
-                  ]
+                  "format": "text",
+                  "value": "{{ context.headOfHousehold.name.givenName }}"
                 },
                 {
-                  "format": "column",
-                  "children": [
-                    {
-                      "format": "text",
-                      "value": "{{ context.members.isHeadOfHousehold }}"
-                      // ✅ This works
-                    },
-                    {
-                      "format": "button",
-                      "label": "View",
-                      "onAction": {
-                        "actionType": "NAVIGATION",
-                        "properties": {
-                          "type": "FORM",
-                          "name": "INDIVIDUAL",
-                          "data": [
-                            {"key": "id", "value": "{{ item.id }}"}
-                            // ✅ Now item context works
-                          ]
+                  "format": "button",
+                  "label": "Open",
+                  "properties": {"type": "secondary", "size": "medium"},
+                  "onAction": {
+                    "actionType": "NAVIGATION",
+                    "properties": {
+                      "type": "TEMPLATE",
+                      "name": "householdOverview",
+                      "data": [
+                        {
+                          "key": "selectedIndividual",
+                          "value": "item.individual.id"
                         }
-                      }
+                      ]
                     }
-                    // For the table and tag, you need to add tasks to your wrapperConfig
-                    // OR reference existing data like:
-                    // {
-                    //   "format": "tag",
-                    //   "type": "info",
-                    //   "label": "{{ item.householdType }}" // Use actual fields from household
-                    // }
-                  ]
+                  }
                 }
               ]
+            },
+            {
+              "format": "text",
+              "value": "{{ context.members.isHeadOfHousehold }}"
+              // ✅ This works
+            },
+            {
+              "format": "table",
+              "data": {
+                "columns": [
+                  {"header": "Dose", "cellValue": "dose"},
+                  {"header": "Resources", "cellValue": "resources"}
+                ],
+                "rows": [
+                  {"dose": "Dose 1", "resources": "2 - Paracetamol"},
+                  {"dose": "Dose 2", "resources": "1 - Paracetamol"},
+                  {"dose": "Dose 3", "resources": "1 - Paracetamol"}
+                ]
+              }
             }
           ]
         }
@@ -1510,7 +1493,7 @@ final List<Map<String, dynamic>> sampleFlows = [
     "screenType": "TEMPLATE",
     "name": "beneficiaryDetails",
     "heading": "Beneficiary Details",
-    "description": "",
+    "description": "Details of beneficiary",
     "wrapperConfig": {
       "wrapperName": "HouseholdWrapper",
       "rootEntity": "HouseholdMemberModel",
@@ -1640,36 +1623,17 @@ final List<Map<String, dynamic>> sampleFlows = [
         "children": [
           {
             "format": "table",
-            "data": [
-              {
-                "key": "Name",
-                "value": "{{context.headOfHousehold.name.givenName}}"
-              },
-              {
-                "key": "ID Type",
-                "value": "{{context.headOfHousehold.address.locality.code}}"
-              },
-              {
-                "key": "ID Number",
-                "value": "{{context.household.memberCount}}"
-              },
-              {
-                "key": "Age",
-                "value": "{{context.headOfHousehold.name.givenName}}"
-              },
-              {
-                "key": "Gender",
-                "value": "{{context.headOfHousehold.address.locality.code}}"
-              },
-              {
-                "key": "Mobile Number",
-                "value": "{{context.household.memberCount}}"
-              },
-              {
-                "key": "Date of Registration",
-                "value": "{{context.household.memberCount}}"
-              }
-            ]
+            "data": {
+              "columns": [
+                {"header": "Dose", "cellValue": "dose"},
+                {"header": "Resources", "cellValue": "resources"}
+              ],
+              "rows": [
+                {"dose": "Dose 1", "resources": "2 - Paracetamol"},
+                {"dose": "Dose 2", "resources": "1 - Paracetamol"},
+                {"dose": "Dose 3", "resources": "1 - Paracetamol"}
+              ]
+            }
           }
         ]
       }

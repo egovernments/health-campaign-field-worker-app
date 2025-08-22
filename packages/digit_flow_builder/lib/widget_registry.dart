@@ -4,7 +4,9 @@ import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/atoms/switch.dart';
+import 'package:digit_ui_components/widgets/atoms/table_cell.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_table.dart';
 import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 
@@ -254,6 +256,43 @@ class WidgetRegistry {
             )
           : value;
       return Text(finalText);
+    });
+
+    WidgetRegistry.register('table', (json, context, onAction) {
+      final data = json['data'] as Map<String, dynamic>? ?? {};
+
+      final columns = (data['columns'] as List<dynamic>?)
+              ?.map((col) => DigitTableColumn(
+                    header: col['header'],
+                    cellValue: col['cellValue'],
+                  ))
+              .toList() ??
+          [];
+
+      final rows = (data['rows'] as List<dynamic>?)
+              ?.map((row) => DigitTableRow(
+                    tableRow: columns.map((col) {
+                      return DigitTableData(
+                        row[col.cellValue]?.toString() ?? 'value',
+                        cellKey: col.cellValue,
+                      );
+                    }).toList(),
+                  ))
+              .toList() ??
+          [];
+
+      return SizedBox(
+        height: (rows.length * 52.0 + 64),
+        child: DigitTable(
+          enableBorder: true,
+          withRowDividers: false,
+          withColumnDividers: false,
+          showSelectedState: false,
+          showPagination: false,
+          columns: columns,
+          rows: rows,
+        ),
+      );
     });
 
     // LabelPairList
