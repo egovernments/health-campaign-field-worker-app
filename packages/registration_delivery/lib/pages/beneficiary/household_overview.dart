@@ -1176,29 +1176,24 @@ class _HouseholdOverviewPageState
                                                     ]),
                                               );
                                             },
-                                            isNotEligible:
-                                                RegistrationDeliverySingleton()
-                                                            .projectType
-                                                            ?.cycles !=
-                                                        null
-                                                    ? !checkEligibilityForAgeAndSideEffect(
-                                                              DigitDOBAgeConvertor(
-                                                                years:
-                                                                    ageInYears,
-                                                                months:
-                                                                    ageInMonths,
-                                                              ),
-                                                              RegistrationDeliverySingleton()
-                                                                  .projectType,
-                                                              (taskData ?? [])
-                                                                      .isNotEmpty
-                                                                  ? taskData
-                                                                      ?.lastOrNull
-                                                                  : null,
-                                                              sideEffectData,
-                                                            ) ||
-                                                            (taskData ?? [])
-                                                                .isNotEmpty
+                                            isNotEligible: RegistrationDeliverySingleton()
+                                                        .projectType
+                                                        ?.cycles !=
+                                                    null
+                                                ? (!checkEligibilityForAgeAndSideEffect(
+                                                      DigitDOBAgeConvertor(
+                                                        years: ageInYears,
+                                                        months: ageInMonths,
+                                                      ),
+                                                      RegistrationDeliverySingleton()
+                                                          .projectType,
+                                                      (taskData ?? [])
+                                                              .isNotEmpty
+                                                          ? taskData?.lastOrNull
+                                                          : null,
+                                                      sideEffectData,
+                                                    )) ||
+                                                    ((taskData ?? []).isNotEmpty
                                                         ? (taskData ?? [])
                                                                 .isNotEmpty &&
                                                             taskData?.last
@@ -1221,8 +1216,8 @@ class _HouseholdOverviewPageState
                                                                     ?.lastOrNull
                                                                 : null,
                                                             sideEffectData,
-                                                          )
-                                                    : false,
+                                                          ))
+                                                : false,
                                             name: e.name?.givenName ?? ' - - ',
                                             years: (e.dateOfBirth == null
                                                 ? null
