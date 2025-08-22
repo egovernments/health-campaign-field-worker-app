@@ -49,12 +49,13 @@ class _ViewReferralCardState extends LocalizedState<ViewReferralCard> {
 
   @override
   Widget build(BuildContext context) {
-    final dateOfEvaluation = int.tryParse(hfReferralModel
-            .additionalFields?.fields
-            .where(
-                (e) => e.key == ReferralReconEnums.dateOfEvaluation.toValue())
-            .first
-            .value
+    final dateOfEvaluation = int.tryParse(DateTime.parse(hfReferralModel
+                .additionalFields?.fields
+                .where((e) =>
+                    e.key == ReferralReconEnums.dateOfEvaluation.toValue())
+                .first
+                .value)
+            .millisecondsSinceEpoch
             .toString() ??
         '');
     return DigitCard(children: [

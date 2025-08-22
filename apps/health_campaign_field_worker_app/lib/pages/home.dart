@@ -580,11 +580,48 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.supervised_user_circle_rounded,
           label: i18.home.beneficiaryReferralLabel,
           onPressed: () async {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
+            final moduleName =
+                'hcm-hfreferalflow-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+
+            final prefs = await SharedPreferences.getInstance();
+            final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+            if (schemaJsonRaw != null) {
+              final allSchemas =
+                  json.decode(schemaJsonRaw) as Map<String, dynamic>;
+
+              final registrationSchemaEntry =
+                  allSchemas['HFREFERALFLOW'] as Map<String, dynamic>?;
+
+              final referralSchemaData = registrationSchemaEntry?['data'];
+
+              if (referralSchemaData != null) {
+                // Extract templates from both schemas
+                final refTemplatesRaw = referralSchemaData?['templates'];
+
+                final Map<String, dynamic> refTemplateMap =
+                    refTemplatesRaw is Map<String, dynamic>
+                        ? refTemplatesRaw
+                        : {};
+
+                final templates = {
+                  for (final entry in {...refTemplateMap}.entries)
+                    entry.key: TemplateConfig.fromJson(
+                        entry.value as Map<String, dynamic>)
+                };
+
+                final referralConfig = json.encode(referralSchemaData);
+
+                ReferralReconSingleton().setTemplateConfigs(templates);
+
+                ReferralReconSingleton().setHfReferralConfig(referralConfig);
+              }
             }
-            context.router.push(SearchReferralReconciliationsRoute());
+
+            // context.router.push(SearchReferralReconciliationsRoute());
+            context.router.push(const HFReferralWrapperRoute());
           },
         ),
       ),
@@ -750,6 +787,8 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
       filteredLabels.remove(i18.home.db);
     }
+    //TODO:
+    // filteredLabels.add(i18.home.beneficiaryReferralLabel);
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
 

@@ -7,6 +7,8 @@ class JsonFormBuilder extends LocalizedStatefulWidget {
   final String pageName;
   final String currentSchemaKey;
 
+  final bool? isView;
+
   const JsonFormBuilder({
     super.key,
     super.appLocalizations,
@@ -15,6 +17,7 @@ class JsonFormBuilder extends LocalizedStatefulWidget {
     this.components,
     required this.pageName,
     required this.currentSchemaKey,
+    this.isView,
   });
 
   @override
@@ -33,9 +36,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       return const SizedBox.shrink();
     }
 
-    _checkAutoFill(form);
-
-    return _buildByType(form);
+    return _buildByType(form, widget.isView);
   }
 
   bool get _isReadOnly => (widget.schema.readOnly ?? false) || _autoReadOnly;
@@ -128,14 +129,14 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
   }
 
   /// Dispatch to builder based on property type
-  Widget _buildByType(FormGroup form) {
+  Widget _buildByType(FormGroup form, bool? isViewType) {
     switch (widget.schema.type) {
       case PropertySchemaType.string:
-        return _buildStringType(form);
+        return _buildStringType(form, isViewType);
       case PropertySchemaType.integer:
-        return _buildIntegerType(form);
+        return _buildIntegerType(form, isViewType);
       case PropertySchemaType.boolean:
-        return _buildBooleanType(form);
+        return _buildBooleanType(form, isViewType);
       case PropertySchemaType.object:
         return _buildObjectType(form);
       case PropertySchemaType.dynamic:
@@ -144,7 +145,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
   }
 
   /// Handle `string` type formats
-  Widget _buildStringType(FormGroup form) {
+  Widget _buildStringType(FormGroup form, bool? isView) {
     final format = widget.schema.format;
 
     switch (format) {
@@ -224,7 +225,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       case PropertySchemaFormat.date:
         return JsonSchemaDatePickerBuilder(
           isRequired: hasRequiredValidation(widget.schema.validations),
-          readOnly: _isReadOnly,
+          readOnly: isView ?? _isReadOnly,
           innerLabel:
               translateIfPresent(widget.schema.innerLabel, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
@@ -318,7 +319,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           formControlName: widget.formControlName,
           value: widget.schema.value?.toString(),
           validations: widget.schema.validations,
-          readOnly: _isReadOnly,
+          readOnly: isView ?? _isReadOnly,
           isRequired: hasRequiredValidation(widget.schema.validations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
@@ -329,7 +330,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
   }
 
   /// Handle `integer` type formats
-  Widget _buildIntegerType(FormGroup form) {
+  Widget _buildIntegerType(FormGroup form, bool? isView) {
     final format = widget.schema.format;
 
     switch (format) {
@@ -343,7 +344,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
           inputType: TextInputType.number,
-          readOnly: _isReadOnly,
+          readOnly: isView ?? _isReadOnly,
           validations: widget.schema.validations,
           isRequired: hasRequiredValidation(widget.schema.validations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
@@ -358,7 +359,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
           inputType: TextInputType.number,
-          readOnly: _isReadOnly,
+          readOnly: isView ?? _isReadOnly,
           validations: widget.schema.validations,
           isRequired: hasRequiredValidation(widget.schema.validations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
@@ -369,7 +370,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
 
       case PropertySchemaFormat.date:
         return JsonSchemaDatePickerBuilder(
-          readOnly: _isReadOnly,
+          readOnly: isView ?? _isReadOnly,
           isRequired: hasRequiredValidation(widget.schema.validations),
           label: translateIfPresent(widget.schema.label, localizations),
           form: form,
@@ -390,7 +391,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           minValue: widget.schema.minValue,
           maxValue: widget.schema.maxValue,
-          readOnly: _isReadOnly,
+          readOnly: isView ?? _isReadOnly,
           validations: widget.schema.validations,
           isRequired: hasRequiredValidation(widget.schema.validations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
@@ -404,7 +405,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           form: form,
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
-          readOnly: _isReadOnly,
+          readOnly: isView ?? _isReadOnly,
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
         );
@@ -412,7 +413,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
   }
 
   /// Handle `boolean` type
-  Widget _buildBooleanType(FormGroup form) {
+  Widget _buildBooleanType(FormGroup form, bool? isView) {
     final format = widget.schema.format;
 
     switch (format) {
@@ -422,7 +423,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           formControlName: widget.formControlName,
           label: translateIfPresent(widget.schema.label, localizations),
           validations: widget.schema.validations,
-          readOnly: widget.schema.readOnly ?? false,
+          readOnly: isView ?? _isReadOnly,
           isRequired: hasRequiredValidation(widget.schema.validations),
         );
 
@@ -435,7 +436,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           label: translateIfPresent(widget.schema.label, localizations),
           enums: widget.schema.enums ?? [],
-          readOnly: widget.schema.readOnly ?? false,
+          readOnly: isView ?? _isReadOnly,
         );
 
       case PropertySchemaFormat.custom:
@@ -447,7 +448,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
           value: widget.schema.value as String?,
-          readOnly: widget.schema.readOnly ?? false,
+          readOnly: isView ?? _isReadOnly,
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
@@ -483,6 +484,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
               formControlName: subName,
               schema: subSchema,
               components: widget.components,
+              isView: widget.isView,
             );
 
             final isLast = index ==

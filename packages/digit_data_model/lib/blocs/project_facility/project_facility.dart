@@ -36,7 +36,8 @@ class ProjectFacilityBloc
     ProjectFacilityEmitter emit,
   ) async {
     emit(const ProjectFacilityLoadingState());
-    final results = await projectFacilityDataRepository.search(
+    List<ProjectFacilityModel> results =
+        await projectFacilityDataRepository.search(
       event.query,
     );
 
