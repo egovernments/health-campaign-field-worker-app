@@ -184,15 +184,40 @@ class ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                       slivers: [
                         SliverToBoxAdapter(
                           child: Padding(
-                            padding: const EdgeInsets.only(
-                              left: spacer2 * 2,
-                              bottom: spacer2,
-                            ),
-                            child: Text(
-                              localizations
-                                  .translate(inboxTemplate?.label ?? ""),
-                              style: textTheme.headingXl.copyWith(
-                                  color: theme.colorTheme.primary.primary2),
+                            padding: const EdgeInsets.all(spacer2),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    localizations.translate(
+                                        inboxTemplate?.label != null
+                                            ? localizations
+                                                .translate(inboxTemplate!.label)
+                                            : ""),
+                                    style: textTheme.headingXl.copyWith(
+                                      color: theme.colorTheme.primary.primary2,
+                                    ),
+                                    textAlign: TextAlign.left,
+                                  ),
+                                  if (inboxTemplate?.description != null &&
+                                      inboxTemplate!.description!.isNotEmpty &&
+                                      localizations
+                                          .translate(inboxTemplate.description!)
+                                          .trim()
+                                          .isNotEmpty)
+                                    Text(
+                                      localizations.translate(
+                                          inboxTemplate.description!),
+                                      style: textTheme.bodyS.copyWith(
+                                        color: theme.colorTheme.text.secondary,
+                                      ),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
