@@ -619,7 +619,7 @@ class _SearchBeneficiaryPageState
                                           TextCapitalization.words,
                                       onChanged: (value) {
                                         if (value.isEmpty ||
-                                            value.trim().length > 2) {
+                                            value.trim().length > (int.tryParse(searchTemplate?.properties?['searchBar']?.validations?.where((e) => e['type'] == 'minSearchChars').firstOrNull?['value'] ?? '2') ?? 2)) {
                                           triggerGlobalSearchEvent();
                                         }
                                       },
@@ -1225,7 +1225,7 @@ class _SearchBeneficiaryPageState
                 final isCommunity =
                     RegistrationDeliverySingleton().householdType ==
                         HouseholdType.community;
-                final isTextShort = value.text.length < 3;
+                final isTextShort = value.text.length < (int.tryParse(searchTemplate?.properties?['searchBar']?.validations?.where((e) => e['type'] == 'minSearchChars').firstOrNull?['value'] ?? '2') ?? 2) ;
 
                 return Offstage(
                   offstage: isCommunity && isTextShort,
@@ -1451,7 +1451,7 @@ class _SearchBeneficiaryPageState
               value: selectedFilters.first,
             ),
           if (searchController.text.isNotEmpty &&
-              searchController.text.length > 2 &&
+              searchController.text.length > (int.tryParse(searchTemplate?.properties?['searchBar']?.validations?.where((e) => e['type'] == 'minSearchChars').firstOrNull?['value'] ?? '2') ?? 2) &&
               isBeneficiaryIdSearchEnabled == false)
             reg_params.SearchFilter(
               root: 'name', // or 'individual', based on what you're searching
