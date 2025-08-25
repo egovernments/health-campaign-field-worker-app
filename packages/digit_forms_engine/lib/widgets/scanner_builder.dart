@@ -78,10 +78,10 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                       const DigitScannerEvent.handleScanner(),
                     );
                     context.router.push(DigitScannerRoute(
-                      quantity: validations?.firstWhereOrNull((v) => v.type == 'scanLimit')?.value ?? 1,
+                      quantity: int.tryParse(validations?.firstWhereOrNull((v) => v.type == 'scanLimit')?.value) ?? 1,
                       isGS1code: validations?.firstWhereOrNull((v) => v.type == 'isGS1')?.value ?? false,
-                      singleValue: validations?.firstWhereOrNull((v) => v.type == 'scanLimit')?.value == 1 ? true : false,
-                        regex: validations?.firstWhereOrNull((v) => v.type == 'pattern')?.value,
+                      singleValue: validations?.firstWhereOrNull((v) => v.type == 'scanLimit')?.value == 1 ||  validations?.firstWhereOrNull((v) => v.type == 'scanLimit')?.value == '1' ?  true : false,
+                      regex: validations?.firstWhereOrNull((v) => v.type == 'pattern')?.value,
 
                     ));
                   },
