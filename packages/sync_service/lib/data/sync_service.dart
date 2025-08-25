@@ -55,7 +55,7 @@ class SyncService {
       );
     } catch (e) {
       syncError = SyncDownError(e);
-      // service?.stopSelf();
+      service?.invoke('stopService');
     }
 
 // Perform the sync up Operation
@@ -68,7 +68,7 @@ class SyncService {
       );
     } catch (e) {
       syncError ??= SyncUpError(e);
-      // service?.stopSelf();
+      service?.invoke('stopService');
     }
 
     if (syncError != null) throw syncError;
