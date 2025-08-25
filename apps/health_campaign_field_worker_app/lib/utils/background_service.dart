@@ -104,7 +104,7 @@ void onStart(ServiceInstance service) async {
   // DartPluginRegistrant.ensureInitialized();
 
   service.on('stopService').listen((event) {
-    // service.stopSelf()
+    service.stopSelf();
   });
   await envConfig.initialize();
   if (Isar.getInstance('HCM') == null) {
@@ -122,7 +122,7 @@ void onStart(ServiceInstance service) async {
       .setTenantId(tenantId: userRequestModel!.tenantId!);
   location_tracker_utils.LocationTrackerSingleton().setInitialData(
       projectId: selectedProject!.id, loggedInUserUuid: userRequestModel.uuid);
-  //
+
   // LocationTrackerService().processLocationData(
   //     interval: 120, createdBy: userRequestModel.uuid, isar: _isar);
 
@@ -145,7 +145,7 @@ void onStart(ServiceInstance service) async {
         if (batteryPercent <=
             appConfiguration
                 .first.backgroundServiceConfig!.batteryPercentCutOff!) {
-          // service.stopSelf();
+          service.invoke("stopService");
         } else {
           final FlutterLocalNotificationsPlugin
               flutterLocalNotificationsPlugin =
@@ -174,7 +174,7 @@ void onStart(ServiceInstance service) async {
                     service.invoke('serviceRunning', {
                       "enablesManualSync": true,
                     });
-                    // service.stopSelf();
+                    service.invoke("stopService");
                     break;
                   }
                 }
@@ -220,7 +220,7 @@ void onStart(ServiceInstance service) async {
                     await LocalSecureStore.instance.isAppInActive;
 
                 if (isSyncCompleted && i >= 2 && isAppInActive) {
-                  // service.stopSelf();
+                  service.invoke("stopService");
                 }
               }
             }
@@ -233,7 +233,7 @@ void onStart(ServiceInstance service) async {
       fireNow: true,
     );
   } else {
-    // service.stopSelf();
+    service.invoke("stopService");
   }
 }
 
