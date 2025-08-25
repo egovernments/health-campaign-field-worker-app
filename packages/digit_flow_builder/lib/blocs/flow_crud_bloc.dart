@@ -79,19 +79,23 @@ class FlowCrudStateRegistry {
 class FlowCrudState {
   final CrudState? base;
   final List<dynamic>? stateWrapper;
+  final Map<String, dynamic>? formData;
 
   const FlowCrudState({
     this.base,
     this.stateWrapper,
+    this.formData,
   });
 
   FlowCrudState copyWith({
     CrudState? base,
     List<dynamic>? stateWrapper,
+    Map<String, dynamic>? formData,
   }) {
     return FlowCrudState(
       base: base ?? this.base,
       stateWrapper: stateWrapper ?? this.stateWrapper,
+      formData: formData ?? this.formData,
     );
   }
 }

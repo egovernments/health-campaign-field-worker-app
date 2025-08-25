@@ -13,6 +13,26 @@ import '../blocs/flow_crud_bloc.dart';
 import '../blocs/state_wrapper_builder.dart';
 import '../data/transformer_config.dart';
 
+// /// Data class to hold page form data with metadata
+// class PageFormData {
+//   final String pageName;
+//   final Map<String, dynamic> formData;
+//   final List<String> entityTypes;
+//   final DateTime timestamp;
+//
+//   PageFormData({
+//     required this.pageName,
+//     required this.formData,
+//     required this.entityTypes,
+//     required this.timestamp,
+//   });
+//
+//   @override
+//   String toString() {
+//     return 'PageFormData(pageName: $pageName, entityTypes: $entityTypes, keys: ${formData.keys.toList()})';
+//   }
+// }
+
 class ActionHandler {
   /// Evaluates condition expressions using FormulaParser
   static bool evaluateCondition(
@@ -76,6 +96,7 @@ class ActionHandler {
     switch (action.actionType) {
       case 'FETCH_TRANSFORMER_CONFIG':
         final configName = action.properties['configName'];
+        final formDataConfig = action.properties['formDataConfig'];
         final transformerConfig =
             jsonConfig[configName]?['models'] as Map<String, dynamic>;
 
@@ -84,8 +105,31 @@ class ActionHandler {
         final fallBackModel =
             jsonConfig[configName]?['fallbackModel'] as String?;
 
+        // Determine which form data to use
+        Map<String, dynamic>? formValuesToUse = contextData['formData'];
+
+        if (formDataConfig != null) {
+          final collectedFormData =
+              FlowCrudStateRegistry().get(formDataConfig)?.formData;
+          if (collectedFormData != null) {
+            // Merge collected data with current form data
+            formValuesToUse = {
+              ...collectedFormData,
+              ...contextData['formData']
+            };
+          }
+        }
+
+        final flowState =
+            const FlowCrudState().copyWith(formData: formValuesToUse);
+
+        final config =
+            FlowRegistry.getByName(getScreenKeyFromArgs(context) ?? '');
+
+        FlowCrudStateRegistry().update(config?["name"], flowState);
+
         final entities = formEntityMapper.mapFormToEntities(
-          formValues: contextData['formData'],
+          formValues: formValuesToUse ?? {},
           modelsConfig: transformerConfig,
           context: {
             "projectId": FlowBuilderSingleton().selectedProject?.id,
@@ -150,6 +194,26 @@ class ActionHandler {
 
           FlowCrudStateRegistry().update(config?["name"], flowState);
         }
+
+        // Determine which form data to use
+        Map<String, dynamic>? formValuesToUse = contextData['formData'];
+        final formDataConfig = action.properties['formDataConfig'];
+        if (formDataConfig != null) {
+          final collectedFormData =
+              FlowCrudStateRegistry().get(formDataConfig)?.formData;
+          if (collectedFormData != null) {
+            // Merge collected data with current form data
+            formValuesToUse = {
+              ...collectedFormData,
+              ...contextData['formData']
+            };
+          }
+        }
+
+        final flowState =
+            const FlowCrudState().copyWith(formData: formValuesToUse);
+
+        FlowCrudStateRegistry().update(config?["name"], flowState);
 
         break;
       case 'SHOW_TOAST':
