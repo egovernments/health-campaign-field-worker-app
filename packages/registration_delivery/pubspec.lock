@@ -478,10 +478,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_forms_engine
-      sha256: "601e0ec69bea9f0be10dcbd023170b71daafbb32018a32389f3ced2aa413af52"
+      sha256: ae14dc3caad5ccf72c1d9d065b7e20d9045a87d98fa5aff20b70bdb0ce4e45a3
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.3-dev"
+    version: "0.0.4-dev"
   digit_formula_parser:
     dependency: "direct main"
     description:
