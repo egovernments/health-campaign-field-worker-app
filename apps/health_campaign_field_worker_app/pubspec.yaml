@@ -56,7 +56,7 @@ dependencies:
   digit_showcase: ^1.0.2+1
   qr_flutter: ^4.1.0
   disk_space_update: ^0.0.2
-  sync_service: ^1.0.2
+  sync_service: ^1.0.4
   attendance_management: ^1.0.5+1
   digit_scanner: ^1.0.6+1
   inventory_management: ^1.0.6
@@ -75,7 +75,7 @@ dependencies:
   transit_post: ^1.0.0
   flutter_nearby_connections:
     git:
-      url: https://github.com/champeauxr/flutter_nearby_connections
+      url: https://github.com/naveenr-egov/flutter_nearby_connections
       ref: master
   percent_indicator: ^4.2.4
   lottie: ^3.1.0
