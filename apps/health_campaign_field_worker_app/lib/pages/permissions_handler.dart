@@ -178,73 +178,88 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                         ? theme.colorTheme.paper.primary
                         : theme.colorTheme.primary.primaryBg,
                     children: [
-                      ListTile(
-                        leading: Icon(
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            granted
+                                ? Icons.check_circle
+                                : permissionIcons[permission] ?? Icons.help,
+                            color: granted
+                                ? theme.colorTheme.alert.success
+                                : theme.colorTheme.alert.error,
+                          ),
+                          const SizedBox(width: spacer2),
+                          Expanded(
+                            child: RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: localizations.translate(
+                                      'CORE_COMMON_PERMISSION_${permission.toString().split('.').last.toUpperCase()}',
+                                    ),
+                                    style: textTheme.headingS.copyWith(
+                                      color: theme.colorTheme.primary.primary2,
+                                    ),
+                                  ),
+                                  if (requiredPermissions[permission] == true)
+                                    TextSpan(
+                                      text: " *",
+                                      style: textTheme.headingS.copyWith(
+                                        color: theme.colorTheme.alert.error,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          if (!granted)
+                            DigitButton(
+                              onPressed: () => _requestPermission(permission),
+                              label: localizations
+                                  .translate(i18.common.grantPermission),
+                              type: DigitButtonType.primary,
+                              size: DigitButtonSize.small,
+                              capitalizeLetters: false,
+                            )
+                          else if (permission ==
+                              Permission.ignoreBatteryOptimizations)
+                            DigitButton(
+                              onPressed: () => openAppSettings(),
+                              label: localizations
+                                  .translate(i18.common.openSettings),
+                              type: DigitButtonType.secondary,
+                              size: DigitButtonSize.small,
+                              capitalizeLetters: false,
+                            ),
+                        ],
+                      ),
+                      Text(
+                        localizations.translate(
                           granted
-                              ? Icons.check_circle
-                              : permissionIcons[permission] ?? Icons.help,
+                              ? i18.common.permissionGranted
+                              : i18.common.permissionNotGranted,
+                        ),
+                        style: textTheme.bodyS.copyWith(
                           color: granted
                               ? theme.colorTheme.alert.success
                               : theme.colorTheme.alert.error,
                         ),
-                        title: Text(
+                      ),
+                      if (permission == Permission.ignoreBatteryOptimizations &&
+                          granted) ...[
+                        Text(
                           localizations.translate(
-                            'CORE_COMMON_PERMISSION_${permission.toString().split('.').last.toUpperCase()}',
+                            'CORE_COMMON_PERMISSION_${permission.toString().split('.').last.toUpperCase()}_WARNING',
                           ),
-                          style: textTheme.headingS.copyWith(
-                            color: theme.colorTheme.primary.primary2,
+                          style: textTheme.bodyS.copyWith(
+                            color: theme.colorTheme.alert.warning,
                           ),
                         ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              localizations.translate(granted
-                                  ? i18.common.permissionGranted
-                                  : i18.common.permissionNotGranted),
-                              style: textTheme.bodyS.copyWith(
-                                color: granted
-                                    ? theme.colorTheme.alert.success
-                                    : theme.colorTheme.alert.error,
-                              ),
-                            ),
-                            if (permission ==
-                                    Permission.ignoreBatteryOptimizations &&
-                                granted) ...[
-                              const SizedBox(height: 4),
-                              Text(
-                                localizations.translate(
-                                    'CORE_COMMON_PERMISSION_${permission.toString().split('.').last.toUpperCase()}_WARNING'),
-                                style: textTheme.bodyS.copyWith(
-                                  color: theme.colorTheme.alert.warning,
-                                ),
-                              ),
-                            ]
-                          ],
-                        ),
-                        trailing: !granted
-                            ? DigitButton(
-                                onPressed: () => _requestPermission(permission),
-                                label: localizations
-                                    .translate(i18.common.grantPermission),
-                                type: DigitButtonType.primary,
-                                size: DigitButtonSize.small,
-                                capitalizeLetters: false,
-                              )
-                            : (permission ==
-                                    Permission.ignoreBatteryOptimizations
-                                ? DigitButton(
-                                    onPressed: () => openAppSettings(),
-                                    label: "Open Settings",
-                                    type: DigitButtonType.secondary,
-                                    size: DigitButtonSize.small,
-                                    capitalizeLetters: false,
-                                  )
-                                : null),
-                      )
+                      ],
                     ],
                   );
-                }).toList(), // Convert map to list
+                }), // Convert map to list
               ],
             ),
           )

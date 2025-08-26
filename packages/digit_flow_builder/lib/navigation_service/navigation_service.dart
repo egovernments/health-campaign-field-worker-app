@@ -70,7 +70,8 @@ class NavigationRegistry {
         final routeKey = '$screenType::$name';
 
         // Provide a function that returns the appropriate PageRouteInfo
-        routeMap[routeKey] = (_) => FlowBuilderHomeRoute(pageName: name);
+        routeMap[routeKey] = (data) =>
+            FlowBuilderHomeRoute(pageName: name, navigationParams: data);
       }
     }
 

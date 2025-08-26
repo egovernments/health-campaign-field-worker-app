@@ -22,6 +22,7 @@ abstract class $FlowBuilderRoute extends _i2.AutoRouterModule {
         child: _i1.FlowBuilderHomePage(
           key: args.key,
           pageName: args.pageName,
+          navigationParams: args.navigationParams,
         ),
       );
     }
@@ -34,12 +35,14 @@ class FlowBuilderHomeRoute extends _i2.PageRouteInfo<FlowBuilderHomeRouteArgs> {
   FlowBuilderHomeRoute({
     _i3.Key? key,
     required String pageName,
+    Map<String, dynamic>? navigationParams,
     List<_i2.PageRouteInfo>? children,
   }) : super(
           FlowBuilderHomeRoute.name,
           args: FlowBuilderHomeRouteArgs(
             key: key,
             pageName: pageName,
+            navigationParams: navigationParams,
           ),
           initialChildren: children,
         );
@@ -54,14 +57,17 @@ class FlowBuilderHomeRouteArgs {
   const FlowBuilderHomeRouteArgs({
     this.key,
     required this.pageName,
+    this.navigationParams,
   });
 
   final _i3.Key? key;
 
   final String pageName;
 
+  final Map<String, dynamic>? navigationParams;
+
   @override
   String toString() {
-    return 'FlowBuilderHomeRouteArgs{key: $key, pageName: $pageName}';
+    return 'FlowBuilderHomeRouteArgs{key: $key, pageName: $pageName, navigationParams: $navigationParams}';
   }
 }
