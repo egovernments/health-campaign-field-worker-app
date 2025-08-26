@@ -5,7 +5,6 @@ import 'dart:ui';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_location_tracker/bloc/location_tracker_service.dart';
 import 'package:digit_location_tracker/utils/utils.dart'
     as location_tracker_utils;
 import 'package:dio/dio.dart';
@@ -68,18 +67,17 @@ Future<void> initializeService(dio, isar) async {
   requestDisableBatteryOptimization();
   await service.configure(
     androidConfiguration: AndroidConfiguration(
-      // this will be executed when app is in foreground or background in separated isolate
-      onStart: onStart,
-      autoStartOnBoot: false,
-      // auto start service
-      autoStart: false,
-      isForegroundMode: true,
-      initialNotificationContent:
-          'BackGround Service Started at ${DateTime.now()}',
-      initialNotificationTitle: 'Background service',
-      notificationChannelId: notificationChannelId,
-      foregroundServiceNotificationId: notificationId,
-    ),
+        // this will be executed when app is in foreground or background in separated isolate
+        onStart: onStart,
+        autoStartOnBoot: false,
+        // auto start service
+        autoStart: false,
+        isForegroundMode: true,
+        initialNotificationContent: 'BackGround Service Started at ${DateTime.now()}',
+        initialNotificationTitle: 'Background service',
+        notificationChannelId: notificationChannelId,
+        foregroundServiceNotificationId: notificationId,
+        foregroundServiceTypes: [AndroidForegroundType.dataSync]),
     iosConfiguration: IosConfiguration(
       // auto start service
       autoStart: false,
@@ -103,7 +101,7 @@ Future<bool> onIosBackground(ServiceInstance service) async {
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
   // Only available for flutter 3.0.0 and later
-  DartPluginRegistrant.ensureInitialized();
+  // DartPluginRegistrant.ensureInitialized();
 
   service.on('stopService').listen((event) {
     service.stopSelf();
@@ -125,8 +123,8 @@ void onStart(ServiceInstance service) async {
   location_tracker_utils.LocationTrackerSingleton().setInitialData(
       projectId: selectedProject!.id, loggedInUserUuid: userRequestModel.uuid);
 
-  LocationTrackerService().processLocationData(
-      interval: 120, createdBy: userRequestModel.uuid, isar: _isar);
+  // LocationTrackerService().processLocationData(
+  //     interval: 120, createdBy: userRequestModel.uuid, isar: _isar);
 
   final appConfiguration = await _isar.appConfigurations.where().findAll();
   final interval =
@@ -147,7 +145,7 @@ void onStart(ServiceInstance service) async {
         if (batteryPercent <=
             appConfiguration
                 .first.backgroundServiceConfig!.batteryPercentCutOff!) {
-          service.stopSelf();
+          service.invoke("stopService");
         } else {
           final FlutterLocalNotificationsPlugin
               flutterLocalNotificationsPlugin =
@@ -176,7 +174,7 @@ void onStart(ServiceInstance service) async {
                     service.invoke('serviceRunning', {
                       "enablesManualSync": true,
                     });
-                    service.stopSelf();
+                    service.invoke("stopService");
                     break;
                   }
                 }
@@ -222,7 +220,7 @@ void onStart(ServiceInstance service) async {
                     await LocalSecureStore.instance.isAppInActive;
 
                 if (isSyncCompleted && i >= 2 && isAppInActive) {
-                  service.stopSelf();
+                  service.invoke("stopService");
                 }
               }
             }
@@ -235,7 +233,7 @@ void onStart(ServiceInstance service) async {
       fireNow: true,
     );
   } else {
-    service.stopSelf();
+    service.invoke("stopService");
   }
 }
 
