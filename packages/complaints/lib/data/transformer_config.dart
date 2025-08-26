@@ -21,7 +21,7 @@ final jsonConfig = {
             "auditDetails": "__generate:audit",
             "clientAuditDetails": "__generate:clientAudit",
             "uuid": "__context:userId",
-            "userName": "__context:userId",
+            "userName": "__context:userName",
             "type": "__value:EMPLOYEE"
           },
           "address": {

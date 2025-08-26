@@ -46,10 +46,10 @@ class ComplaintWrapperBloc
     final searchParams = GlobalSearchParameters(
       filters: [
         SearchFilter(
-          root: 'pgrService',
-          field: 'tenantId',
+          root: 'pgrComplainant',
+          field: 'uuid',
           operator: 'equals',
-          value: ComplaintsSingleton().tenantId,
+          value: ComplaintsSingleton().loggedInUserUuid,
         ),
       ],
       primaryModel: 'pgrService',
