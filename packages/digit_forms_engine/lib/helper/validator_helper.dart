@@ -17,7 +17,8 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
             if (parsedValue != null) {
               validators.add(Validators.composeOR([
                 Validators.minLength(parsedValue) as Validator<T>,
-                Validators.equals(null),
+                Validators.composeOR(
+                    [Validators.equals(''), Validators.equals(null)]),
               ]) as Validator<T>);
             }
           }
@@ -30,7 +31,8 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
               schema.type != PropertySchemaType.integer) {
             validators.add(Validators.composeOR([
               Validators.maxLength(parsedValue) as Validator<T>,
-              Validators.equals(null),
+              Validators.composeOR(
+                  [Validators.equals(''), Validators.equals(null)]),
             ]) as Validator<T>);
           }
           break;

@@ -1,3 +1,9 @@
+## 0.0.4-dev
+
+### BugFix
+- Removed min and maxLength validation for empty string
+
+
 ## 0.0.3-dev
 
 ### Added
