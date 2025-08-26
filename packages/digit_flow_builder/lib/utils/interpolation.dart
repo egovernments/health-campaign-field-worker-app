@@ -90,27 +90,27 @@ CrudStateData extractCrudStateData(String screenKey) {
   return CrudStateData(modelMap, state ?? []);
 }
 
-/// String interpolation helper for {{context.field}} and {{item.field}}
+/// String interpolation helper for {{context.*}}, {{item.*}}, and {{navigation.*}}
 String interpolateWithCrudStates({
   required String template,
   required CrudStateData stateData,
   int? listIndex,
   Map<String, dynamic>? item,
+  Map<String, dynamic>? navigationParams, // ✅ new
 }) {
   final regex = RegExp(
-    r'\{\{\s*(context|item)\.([A-Za-z_][\w]*)'
+    r'\{\{\s*(context|item|navigation)\.([A-Za-z_][\w]*)'
     r'(?:\.([\w.]+))?\s*\}\}',
   );
 
   return template.replaceAllMapped(regex, (match) {
-    final source = match.group(1); // context or item
+    final source = match.group(1); // context, item, or navigation
     final modelNameOrKey = match.group(2);
     final fieldPath = match.group(3);
 
     if (source == 'context') {
       final models = stateData.modelMap[modelNameOrKey] ?? [];
 
-      // Avoid RangeError
       if (models.isEmpty ||
           (listIndex != null &&
               (listIndex < 0 || listIndex >= models.length))) {
@@ -128,8 +128,24 @@ String interpolateWithCrudStates({
         }
       }
       return value?.toString() ?? '';
-    } else if (source == 'item' && item != null) {
+    }
+
+    if (source == 'item' && item != null) {
       dynamic value = item[modelNameOrKey];
+      if (fieldPath != null) {
+        for (final part in fieldPath.split('.')) {
+          if (value is Map && value.containsKey(part)) {
+            value = value[part];
+          } else {
+            return '';
+          }
+        }
+      }
+      return value?.toString() ?? '';
+    }
+
+    if (source == 'navigation' && navigationParams != null) {
+      dynamic value = navigationParams[modelNameOrKey];
       if (fieldPath != null) {
         for (final part in fieldPath.split('.')) {
           if (value is Map && value.containsKey(part)) {
@@ -165,5 +181,53 @@ Map<String, dynamic> preprocessConfigWithState(
   int? listIndex,
   Map<String, dynamic>? item,
 }) {
-  return config;
+  Map<String, dynamic> walk(Map<String, dynamic> node) {
+    final result = <String, dynamic>{};
+
+    node.forEach((key, value) {
+      if (key == "actionType" && value == "NAVIGATION") {
+        final props = node["properties"];
+        if (props is Map<String, dynamic> && props["data"] is List) {
+          final params = <String, dynamic>{};
+
+          for (final entry in (props["data"] as List)) {
+            final k = entry["key"]?.toString();
+            final rawValue = entry["value"]?.toString();
+
+            if (k != null && rawValue != null) {
+              final resolved = interpolateWithCrudStates(
+                template: "{{$rawValue}}",
+                stateData: stateData,
+                listIndex: listIndex,
+                item: item,
+              );
+              params[k] = resolved;
+            }
+          }
+
+          if (params.isNotEmpty) {
+            final screenKey = props["name"]?.toString() ?? "";
+            if (screenKey.isNotEmpty) {
+              FlowCrudStateRegistry().updateNavigationParams(screenKey, params);
+            }
+          }
+        }
+
+        result[key] = value; // keep actionType as is
+      } else if (value is Map<String, dynamic>) {
+        result[key] = walk(value);
+      } else if (value is List) {
+        result[key] = value.map((e) {
+          if (e is Map<String, dynamic>) return walk(e);
+          return e;
+        }).toList();
+      } else {
+        result[key] = value;
+      }
+    });
+
+    return result;
+  }
+
+  return walk(config);
 }

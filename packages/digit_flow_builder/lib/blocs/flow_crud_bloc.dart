@@ -43,6 +43,7 @@ class FlowCrudBloc extends CrudBloc {
 
 class FlowCrudStateRegistry {
   final Map<String, ValueNotifier<FlowCrudState?>> _map = {};
+  final Map<String, Map<String, dynamic>?> _navParams = {};
 
   static final FlowCrudStateRegistry _instance =
       FlowCrudStateRegistry._internal();
@@ -66,12 +67,22 @@ class FlowCrudStateRegistry {
     if (_map.containsKey(key)) {
       _map[key]!.value = null;
     }
+    _navParams.remove(key);
   }
 
   void clearAll() {
     for (final notifier in _map.values) {
       notifier.value = null;
     }
+    _navParams.clear();
+  }
+
+  void updateNavigationParams(String key, Map<String, dynamic>? params) {
+    _navParams[key] = params;
+  }
+
+  Map<String, dynamic>? getNavigationParams(String key) {
+    return _navParams[key];
   }
 }
 

@@ -270,7 +270,6 @@ final List<Map<String, dynamic>> sampleFlows = [
       {
         "format": "infoCard",
         "hidden": "{{ context.household.notEmpty }}",
-        // ✅ Now works with .notEmpty helper
         "label": "No households found",
         "description":
             "Use the search above to find households or register a new one"
@@ -278,10 +277,8 @@ final List<Map<String, dynamic>> sampleFlows = [
       {
         "format": "listView",
         "hidden": "{{ context.household.empty }}",
-        // ✅ Now works with .empty helper
         "fieldName": "listView",
         "data": "household",
-        // ✅ Just the entity name
         "child": {
           "format": "card",
           "children": [
@@ -319,7 +316,6 @@ final List<Map<String, dynamic>> sampleFlows = [
             {
               "format": "text",
               "value": "{{ context.members.isHeadOfHousehold }}"
-              // ✅ This works
             },
             {
               "format": "table",
@@ -947,6 +943,12 @@ final List<Map<String, dynamic>> sampleFlows = [
               "actionType": "SHOW_TOAST",
               "properties": {"message": "Navigation failed."}
             }
+          ],
+          "data": [
+            {
+              "key": "selectedIndividual",
+              "value": "item.household.clientReferenceId"
+            }
           ]
         }
       },
@@ -966,22 +968,22 @@ final List<Map<String, dynamic>> sampleFlows = [
     ]
   },
   {
-    // "initActions": [
-    //   {
-    //     "actionType": "SEARCH_EVENT",
-    //     "properties": {
-    //       "type": "SEARCH_EVENT",
-    //       "name": "household",
-    //       "data": [
-    //         {
-    //           "key": "householdId",
-    //           "value": "{{ contextData.HouseholdModel.clientReferenceId }}",
-    //           "operation": "equals"
-    //         }
-    //       ],
-    //     }
-    //   }
-    // ],
+    "initActions": [
+      {
+        "actionType": "SEARCH_EVENT",
+        "properties": {
+          "type": "SEARCH_EVENT",
+          "name": "household",
+          "data": [
+            {
+              "key": "householdId",
+              "value": "{{navigation.clientReferenceId}}",
+              "operation": "equals"
+            }
+          ],
+        }
+      }
+    ],
     "screenType": "TEMPLATE",
     "name": "householdOverview",
     "heading": "Household Overview",

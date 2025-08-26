@@ -20,14 +20,21 @@ import 'flow_builder.dart';
 @RoutePage()
 class FlowBuilderHomePage extends LocalizedStatefulWidget {
   final String pageName;
+  final Map<String, dynamic>? navigationParams;
 
-  const FlowBuilderHomePage({super.key, required this.pageName});
+  const FlowBuilderHomePage(
+      {super.key, required this.pageName, this.navigationParams});
 
   @override
   State<FlowBuilderHomePage> createState() => _FlowBuilderHomePageState();
 }
 
 class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -39,6 +46,8 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
           .read<FormsBloc>()
           .add(FormsEvent.load(schemas: [schemaJsonString]));
     }
+    final params = FlowCrudStateRegistry().getNavigationParams(widget.pageName);
+    debugPrint("➡️ Navigation params: $params");
   }
 
   @override

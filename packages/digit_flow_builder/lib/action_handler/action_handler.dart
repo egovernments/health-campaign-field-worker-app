@@ -182,7 +182,6 @@ class ActionHandler {
         break;
       case 'NAVIGATION':
         NavigationRegistry.navigateTo(action.properties);
-        // await Future.delayed(Duration(seconds: 1));
         final entities = contextData['entities'];
         final config = FlowRegistry.getByName(action.properties['name']);
         if (entities != null) {
