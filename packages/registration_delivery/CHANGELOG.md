@@ -1,3 +1,7 @@
+## 1.1.1-dev.3-console
+
+* Upgraded to latest digit_forms_engine
+
 ## 1.1.1-dev.2-console
 
 * Moved set stock count in singleton to separate function
