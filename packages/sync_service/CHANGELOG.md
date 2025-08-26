@@ -1,3 +1,7 @@
+## 1.0.5
+
+* Updated background service stop with invoke method
+
 ## 1.0.4
 
 * Updated digit_data_model to latest version
