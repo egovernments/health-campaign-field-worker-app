@@ -619,7 +619,18 @@ class _SearchBeneficiaryPageState
                                           TextCapitalization.words,
                                       onChanged: (value) {
                                         if (value.isEmpty ||
-                                            value.trim().length > (int.tryParse(searchTemplate?.properties?['searchBar']?.validations?.where((e) => e['type'] == 'minSearchChars').firstOrNull?['value'] ?? '2') ?? 2)) {
+                                            value.trim().length >
+                                                (int.tryParse(searchTemplate
+                                                                ?.properties?[
+                                                                    'searchBar']
+                                                                ?.validations
+                                                                ?.where((e) =>
+                                                                    e['type'] ==
+                                                                    'minSearchChars')
+                                                                .firstOrNull?[
+                                                            'value'] ??
+                                                        '2') ??
+                                                    2)) {
                                           triggerGlobalSearchEvent();
                                         }
                                       },
@@ -1225,7 +1236,13 @@ class _SearchBeneficiaryPageState
                 final isCommunity =
                     RegistrationDeliverySingleton().householdType ==
                         HouseholdType.community;
-                final isTextShort = value.text.length < (int.tryParse(searchTemplate?.properties?['searchBar']?.validations?.where((e) => e['type'] == 'minSearchChars').firstOrNull?['value'] ?? '2') ?? 2) ;
+                final isTextShort = value.text.length <
+                    (int.tryParse(searchTemplate
+                                ?.properties?['searchBar']?.validations
+                                ?.where((e) => e['type'] == 'minSearchChars')
+                                .firstOrNull?['value'] ??
+                            '2') ??
+                        2);
 
                 return Offstage(
                   offstage: isCommunity && isTextShort,
@@ -1413,7 +1430,7 @@ class _SearchBeneficiaryPageState
   void triggerGlobalSearchEvent({bool isPagination = false}) {
     final pageKey = SearchBeneficiaryRoute.name.replaceAll('Route', '');
     final searchTemplate =
-    RegistrationDeliverySingleton().templateConfigs?[pageKey];
+        RegistrationDeliverySingleton().templateConfigs?[pageKey];
     if (!isPagination) {
       blocWrapper.add(const RegistrationWrapperEvent.clear());
     }
@@ -1451,7 +1468,13 @@ class _SearchBeneficiaryPageState
               value: selectedFilters.first,
             ),
           if (searchController.text.isNotEmpty &&
-              searchController.text.length > (int.tryParse(searchTemplate?.properties?['searchBar']?.validations?.where((e) => e['type'] == 'minSearchChars').firstOrNull?['value'] ?? '2') ?? 2) &&
+              searchController.text.length >
+                  (int.tryParse(searchTemplate
+                              ?.properties?['searchBar']?.validations
+                              ?.where((e) => e['type'] == 'minSearchChars')
+                              .firstOrNull?['value'] ??
+                          '2') ??
+                      2) &&
               isBeneficiaryIdSearchEnabled == false)
             reg_params.SearchFilter(
               root: 'name', // or 'individual', based on what you're searching
@@ -1464,14 +1487,19 @@ class _SearchBeneficiaryPageState
               root: 'address',
               field: '',
               operator: 'within',
-              value:
-              searchTemplate
-        ?.properties?['searchByProximity']?.hidden != true && searchTemplate
-                  ?.properties?['searchByProximity']?.validations?.firstWhereOrNull((v) => v.type == 'proximityRadius').value != null ?
-              int.tryParse(searchTemplate
-                  ?.properties?['searchByProximity']?.validations?.firstWhereOrNull((v) => v.type == 'proximityRadius').value)
-              :
-              RegistrationDeliverySingleton().maxRadius,
+              value: searchTemplate?.properties?['searchByProximity']?.hidden !=
+                          true &&
+                      searchTemplate
+                              ?.properties?['searchByProximity']?.validations
+                              ?.firstWhereOrNull(
+                                  (v) => v.type == 'proximityRadius')
+                              ?.value !=
+                          null
+                  ? int.tryParse(searchTemplate
+                      ?.properties?['searchByProximity']?.validations
+                      ?.firstWhereOrNull((v) => v.type == 'proximityRadius')
+                      ?.value)
+                  : RegistrationDeliverySingleton().maxRadius,
               coordinates: reg_params.LatLng(
                 latitude: lat,
                 longitude: long,
