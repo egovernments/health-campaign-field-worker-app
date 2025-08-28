@@ -36,6 +36,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       return const SizedBox.shrink();
     }
 
+    _checkAutoFill(form);
+
     return _buildByType(form, widget.isView);
   }
 
