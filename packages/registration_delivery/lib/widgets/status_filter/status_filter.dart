@@ -1,4 +1,4 @@
-import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/beneficiary_type.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_scanner/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -11,11 +11,20 @@ import '../../models/entities/status.dart';
 import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 
+/// Filter option model (code for backend, name for UI)
+class FilterOption {
+  final String code;
+  final String name;
+
+  FilterOption({required this.code, required this.name});
+}
+
 class StatusFilter extends LocalizedStatefulWidget {
-  final List<String>? selectedFilters;
+  final List<String>? selectedFilters; // list of codes
   final bool isCloseIcon;
   final Icon? titleIcon;
   final String? titleText;
+  final List<Map<String, dynamic>>? filters;
 
   const StatusFilter({
     super.key,
@@ -24,6 +33,7 @@ class StatusFilter extends LocalizedStatefulWidget {
     this.titleIcon,
     this.titleText,
     this.selectedFilters,
+    this.filters,
   });
 
   @override
@@ -31,7 +41,7 @@ class StatusFilter extends LocalizedStatefulWidget {
 }
 
 class StatusFilterState extends LocalizedState<StatusFilter> {
-  List<Status> selectedButtons = [];
+  List<FilterOption> selectedButtons = [];
   bool isLoading = false;
 
   @override
@@ -63,9 +73,10 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
                   child: Text(
                     localizations.translate(i18.common.coreCommonLoadingText),
                     style: textTheme.headingM.copyWith(
-                        color: DigitTheme.instance.colorScheme.primary),
+                      color: DigitTheme.instance.colorScheme.primary,
+                    ),
                   ),
-                )
+                ),
               ]
             : [
                 Row(
@@ -98,8 +109,8 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(spacer2),
-                  child: SelectionCard<Status>(
-                    options: getFilters() ?? [],
+                  child: SelectionCard<FilterOption>(
+                    options: getFilters(),
                     allowMultipleSelection: false,
                     width: MediaQuery.of(context).size.width * 0.6,
                     initialSelection: [...selectedButtons],
@@ -108,40 +119,32 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
                         selectedButtons = selected;
                       });
                     },
-                    valueMapper: (value) {
-                      return localizations.translate(value ==
-                              Status.administeredSuccess
-                          ? '${RegistrationDeliverySingleton().selectedProject!.projectType}_${value.toValue().toString()}'
-                          : value.toValue().toString());
-                    },
+                    valueMapper: (value) => localizations
+                        .translate(value.name), // show localized name
                   ),
                 ),
-                const SizedBox(
-                  height: spacer2,
-                ),
+                const SizedBox(height: spacer2),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: spacer2),
                   child: Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceEvenly, // Adjust button spacing
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Expanded(
                         child: DigitButton(
-                            label: localizations.translate(
-                              i18.searchBeneficiary.clearFilter,
-                            ),
-                            isDisabled: selectedButtons.isEmpty,
-                            type: DigitButtonType.secondary,
-                            size: DigitButtonSize.medium,
-                            onPressed: () {
-                              setState(() {
-                                selectedButtons.clear();
-                              });
-                            }),
+                          label: localizations.translate(
+                            i18.searchBeneficiary.clearFilter,
+                          ),
+                          isDisabled: selectedButtons.isEmpty,
+                          type: DigitButtonType.secondary,
+                          size: DigitButtonSize.medium,
+                          onPressed: () {
+                            setState(() {
+                              selectedButtons.clear();
+                            });
+                          },
+                        ),
                       ),
-                      const SizedBox(
-                        width: spacer2,
-                      ),
+                      const SizedBox(width: spacer2),
                       Expanded(
                         child: DigitButton(
                           label: localizations.translate(
@@ -154,11 +157,11 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
                             setState(() {
                               isLoading = true;
                             });
-                            var selected =
-                                selectedButtons.map((e) => e.toValue().toString()).toList();
+                            var selectedCodes =
+                                selectedButtons.map((e) => e.code).toList();
 
                             Future.delayed(const Duration(seconds: 1), () {
-                              Navigator.pop(context, selected);
+                              Navigator.pop(context, selectedCodes);
                             });
                           },
                         ),
@@ -171,48 +174,56 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
     );
   }
 
-  void selectButton(Status button) {
-    setState(() {
-      if (selectedButtons.contains(button)) {
-        selectedButtons.remove(button);
-      } else {
-        selectedButtons.add(button);
-      }
-    });
-  }
-
-  getFilters() {
+  /// Build available filters based on household/beneficiary type
+  List<FilterOption> getFilters() {
     final pageKey = SearchBeneficiaryRoute.name.replaceAll('Route', '');
     final searchTemplate =
-    RegistrationDeliverySingleton().templateConfigs?[pageKey];
-    var finalStatues = <Status>[];
-    finalStatues.addAll((RegistrationDeliverySingleton().householdType ==
+        RegistrationDeliverySingleton().templateConfigs?[pageKey];
+
+    // enums can now be list of objects
+    final rawEnums = (RegistrationDeliverySingleton().householdType ==
                 HouseholdType.community
             ? RegistrationDeliverySingleton().searchCLFFilters ?? []
-    :
-    (searchTemplate
-        ?.properties?['filter']?.enums ?? []).isNotEmpty
-        ? (searchTemplate
-        ?.properties?['filter']?.enums ?? [])
-        :
-    RegistrationDeliverySingleton().searchHouseHoldFilter ?? [])
-        .map((e) => Status.values.where((element) => element.toValue() == e))
-        .expand((element) => element)
-        .toList());
+            : (searchTemplate?.properties?['filter']?.enums ?? []).isNotEmpty
+                ? (searchTemplate?.properties?['filter']?.enums ?? [])
+                : RegistrationDeliverySingleton().searchHouseHoldFilter ?? [])
+        .cast<Map<String, dynamic>>();
 
+    // take only active = true
+    final activeEnums = rawEnums.where((e) => e['active'] == true).toList();
+
+    var finalStatuses = activeEnums
+        .map(
+          (e) => FilterOption(
+            code: e['code'],
+            name: localizations.translate(
+              e['name'] ?? e['code'],
+            ),
+          ),
+        )
+        .toList();
+
+    // remove unwanted for household
     if (RegistrationDeliverySingleton().beneficiaryType ==
         BeneficiaryType.household) {
-      finalStatues.remove(Status.beneficiaryReferred);
+      finalStatuses.removeWhere(
+        (f) => f.code == Status.beneficiaryReferred.toValue(),
+      );
     }
 
-    return finalStatues;
+    return finalStatuses;
   }
 
   void assignSelectedButtons() {
+    if (widget.selectedFilters == null || widget.selectedFilters!.isEmpty) {
+      return;
+    }
+
+    final allFilters = getFilters();
+
     setState(() {
-      selectedButtons = widget.selectedFilters!
-          .map((e) => Status.values.where((element) => element.name == e))
-          .expand((element) => element)
+      selectedButtons = allFilters
+          .where((f) => widget.selectedFilters!.contains(f.code))
           .toList();
     });
   }

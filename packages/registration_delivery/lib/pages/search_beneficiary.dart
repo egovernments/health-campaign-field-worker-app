@@ -1492,12 +1492,12 @@ class _SearchBeneficiaryPageState
                       searchTemplate
                               ?.properties?['searchByProximity']?.validations
                               ?.firstWhereOrNull(
-                                  (v) => v.type == 'proximityRadius')
+                                  (v) => v?.type == 'proximityRadius')
                               ?.value !=
                           null
                   ? int.tryParse(searchTemplate
                       ?.properties?['searchByProximity']?.validations
-                      ?.firstWhereOrNull((v) => v.type == 'proximityRadius')
+                      ?.firstWhereOrNull((v) => v?.type == 'proximityRadius')
                       ?.value)
                   : RegistrationDeliverySingleton().maxRadius,
               coordinates: reg_params.LatLng(
