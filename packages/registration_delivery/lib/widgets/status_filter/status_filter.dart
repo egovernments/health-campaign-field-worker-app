@@ -17,6 +17,16 @@ class FilterOption {
   final String name;
 
   FilterOption({required this.code, required this.name});
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FilterOption &&
+          runtimeType == other.runtimeType &&
+          code == other.code;
+
+  @override
+  int get hashCode => code.hashCode;
 }
 
 class StatusFilter extends LocalizedStatefulWidget {
