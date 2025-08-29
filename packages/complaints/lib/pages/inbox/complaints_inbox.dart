@@ -340,20 +340,20 @@ class ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                               ),
                             ),
                           ),
-                          SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                                final item = inboxItems.elementAt(index);
-
-                                return _ComplaintsInboxItem(
-                                  item: item.complaint!,
-                                  localizations: localizations,
-                                );
-                              },
-                              childCount: inboxItems.length,
-                            ),
-                          ),
                         ],
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              final item = inboxItems.elementAt(index);
+
+                              return _ComplaintsInboxItem(
+                                item: item.complaint!,
+                                localizations: localizations,
+                              );
+                            },
+                            childCount: inboxItems.length,
+                          ),
+                        ),
                       ],
                       children: [
                         if (inboxItems.isEmpty)
