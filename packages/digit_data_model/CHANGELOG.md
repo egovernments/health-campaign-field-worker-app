@@ -1,12 +1,15 @@
-## 1.0.6-dev.5
+## 1.0.6-dev.7
 
 * Added additionalFields in individual search
 
 
+## 1.0.6-dev.6
+
+* Added additional beneficiary types in BeneficiaryType enum
+
 ## 1.0.6-dev.4
 
 * Added a retry for individual update in oplog
-
 
 ## 1.0.6-dev.3
 

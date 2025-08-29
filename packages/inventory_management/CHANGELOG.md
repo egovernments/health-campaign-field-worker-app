@@ -1,3 +1,7 @@
+## 1.0.5-dev.2
+
+* Added lastChangedSince param to stock remote search
+
 ## 1.0.5-dev.1
 
 * This change is for Bauchi campaign
