@@ -1,3 +1,8 @@
+## 1.0.6-dev.7
+
+* Added additionalFields in individual search
+
+
 ## 1.0.6-dev.6
 
 * Added additional beneficiary types in BeneficiaryType enum
