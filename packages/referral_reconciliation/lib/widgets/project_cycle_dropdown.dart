@@ -1,5 +1,6 @@
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:digit_forms_engine/models/property_schema/property_schema.dart';
+import 'package:digit_forms_engine/pages/forms_render.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/dropdown_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,11 @@ class _CycleDropDownState extends LocalizedState<CycleDropDown> {
 
     bool isReadOnlyFromSchema = false;
     String? labelFromSchema;
+
+    /// 👇 Check page-level flag from FormsRenderRoute
+    final isView =
+        context.findAncestorWidgetOfExactType<FormsRenderPage>()?.isView ??
+            false;
 
     void walk(Map<String, PropertySchema> node, List<String> pathSoFar) {
       for (final entry in node.entries) {
@@ -74,7 +80,7 @@ class _CycleDropDownState extends LocalizedState<CycleDropDown> {
                   i18.referralReconciliation.selectCycle,
                 ),
           child: Dropdown(
-            readOnly: isReadOnlyFromSchema,
+            readOnly: isReadOnlyFromSchema || isView,
             selectedOption: cycles
                 .map((cycle) => DropdownItem(
                       name:
@@ -82,9 +88,19 @@ class _CycleDropDownState extends LocalizedState<CycleDropDown> {
                       code: cycle,
                     ))
                 .firstWhere(
-                  (item) => item.code == form.control(_cycleKey).value,
-                  orElse: () => const DropdownItem(name: '', code: ''),
-                ),
+              (item) => item.code == form.control(_cycleKey).value,
+              orElse: () {
+                final currentValue = form.control(_cycleKey).value;
+                if (currentValue != null) {
+                  // fallback to showing whatever value BE/schema provided
+                  return DropdownItem(
+                    name: currentValue.toString(),
+                    code: currentValue,
+                  );
+                }
+                return const DropdownItem(name: '', code: '');
+              },
+            ),
             errorMessage: field.errorText,
             items: cycles
                 .map(

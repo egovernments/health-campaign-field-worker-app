@@ -1,6 +1,7 @@
 import 'package:digit_data_model/blocs/project_facility/project_facility.dart';
 import 'package:digit_data_model/models/entities/project_facility.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
+import 'package:digit_forms_engine/pages/forms_render.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/dropdown_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +51,10 @@ class _EvaluationKeyDropDownState
 
   Widget _buildDropdown(
       BuildContext context, List<ProjectFacilityModel> projectFacilities) {
+    final isView =
+        context.findAncestorWidgetOfExactType<FormsRenderPage>()?.isView ??
+            false;
+
     return ReactiveWrapperField<dynamic>(
       formControlName: _evaluationKey,
       validationMessages: {
@@ -68,7 +73,7 @@ class _EvaluationKeyDropDownState
           label: localizations
               .translate(i18.referralReconciliation.facilityKeyLabel),
           child: Dropdown(
-            readOnly: false,
+            readOnly: isView,
             selectedOption: _mapItems(projectFacilities).firstWhere(
               (item) => item.code == form.control(_evaluationKey).value,
               orElse: () => const DropdownItem(name: '', code: ''),
