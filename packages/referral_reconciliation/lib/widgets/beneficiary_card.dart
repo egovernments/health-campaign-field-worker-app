@@ -1,8 +1,9 @@
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:flutter/material.dart';
-import 'package:referral_reconciliation/models/entities/referral_recon_enums.dart';
 
 import '../blocs/app_localization.dart';
+import '../models/entities/referral_recon_enums.dart';
 
 class ReferralBeneficiaryCard extends StatelessWidget {
   final String title;
@@ -36,9 +37,8 @@ class ReferralBeneficiaryCard extends StatelessWidget {
             style: textTheme.headingS,
           ),
         ),
-        Offstage(
-          offstage: status == null,
-          child: status == ReferralReconEnums.visited.toValue()
+        if (status != null)
+          status == ReferralReconEnums.visited.toValue()
               ? Row(
                   children: [
                     Icon(
@@ -75,20 +75,16 @@ class ReferralBeneficiaryCard extends StatelessWidget {
                     )
                   ],
                 ),
-        ),
         Padding(
-          padding: EdgeInsets.all(theme.spacerTheme.spacer2 / 2),
+          padding: const EdgeInsets.only(bottom: spacer1),
           child: Text(
             subtitle,
             style: textTheme.bodyS,
           ),
         ),
-        Padding(
-          padding: EdgeInsets.all(theme.spacerTheme.spacer2 / 2),
-          child: Text(
-            description,
-            style: textTheme.bodyS,
-          ),
+        Text(
+          description,
+          style: textTheme.bodyS,
         ),
       ],
     );

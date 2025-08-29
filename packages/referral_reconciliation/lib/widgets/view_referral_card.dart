@@ -1,5 +1,4 @@
-import 'package:digit_ui_components/enum/app_enums.dart';
-import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
+import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:referral_reconciliation/models/entities/hf_referral.dart';
@@ -58,31 +57,33 @@ class _ViewReferralCardState extends LocalizedState<ViewReferralCard> {
             .millisecondsSinceEpoch
             .toString() ??
         '');
-    return DigitCard(children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return DigitCard(
+        margin: const EdgeInsets.symmetric(horizontal: spacer2),
         children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width / 1.8,
-            child: ReferralBeneficiaryCard(
-              description: '',
-              subtitle:
-                  '${localizations.translate(i18.referralReconciliation.dateOfEvaluationLabel)}: ${dateOfEvaluation != null ? DigitDateUtils.getDateFromTimestamp(dateOfEvaluation, dateFormat: defaultDateFormat) : localizations.translate(i18.common.coreCommonNA)}',
-              title: hfReferralModel.name.toString(),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 1.8,
+                child: ReferralBeneficiaryCard(
+                  description: '',
+                  subtitle:
+                      '${localizations.translate(i18.referralReconciliation.dateOfEvaluationLabel)}: ${dateOfEvaluation != null ? DigitDateUtils.getDateFromTimestamp(dateOfEvaluation, dateFormat: defaultDateFormat) : localizations.translate(i18.common.coreCommonNA)}',
+                  title: hfReferralModel.name.toString(),
+                ),
+              ),
+              Flexible(
+                child: DigitButton(
+                  size: DigitButtonSize.large,
+                  type: DigitButtonType.secondary,
+                  label: localizations
+                      .translate(i18.referralReconciliation.iconLabel),
+                  onPressed: widget.onOpenPressed ?? () {},
+                ),
+              ),
+            ],
           ),
-          Flexible(
-            child: DigitButton(
-              size: DigitButtonSize.large,
-              type: DigitButtonType.secondary,
-              label:
-                  localizations.translate(i18.referralReconciliation.iconLabel),
-              onPressed: widget.onOpenPressed ?? () {},
-            ),
-          ),
-        ],
-      ),
-    ]);
+        ]);
   }
 }

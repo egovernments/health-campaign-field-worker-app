@@ -1,5 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
+import 'package:digit_crud_bloc/models/global_search_params.dart' as reg_params;
+import 'package:digit_data_converter/src/reverse_transformer_service.dart';
+import 'package:digit_data_converter/src/transformer_service.dart';
 import 'package:digit_data_converter/utils/utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/templates/template_config.dart';
@@ -25,8 +28,8 @@ import 'package:referral_reconciliation/blocs/hf_Referral_reconciliation_bloc.da
 import 'package:referral_reconciliation/data/repositories/transfomer_config.dart';
 import 'package:referral_reconciliation/utils/constants.dart';
 import 'package:referral_reconciliation/utils/extensions/extensions.dart';
-import 'package:referral_reconciliation/widgets/project_cycle_dropdown.dart';
 import 'package:referral_reconciliation/widgets/evaluation_facility_widget.dart';
+import 'package:referral_reconciliation/widgets/project_cycle_dropdown.dart';
 import 'package:survey_form/survey_form.dart';
 
 import '../blocs/search_referral_reconciliations.dart';
@@ -38,9 +41,6 @@ import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 import '../widgets/view_referral_card.dart';
-import 'package:digit_data_converter/src/reverse_transformer_service.dart';
-import 'package:digit_data_converter/src/transformer_service.dart';
-import 'package:digit_crud_bloc/models/global_search_params.dart' as reg_params;
 
 @RoutePage()
 class SearchReferralReconciliationsPage extends LocalizedStatefulWidget {
@@ -301,67 +301,99 @@ class _SearchReferralReconciliationsPageState
                                 ]),
                                 slivers: [
                                   SliverToBoxAdapter(
-                                    child: Padding(
-                                      padding: EdgeInsets.all(
-                                          theme.spacerTheme.spacer2),
-                                      child: Column(
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.all(
-                                                theme.spacerTheme.spacer2),
-                                            child: Align(
-                                              alignment: Alignment.topLeft,
-                                              child: Text(
-                                                searchTemplate?.label != null
-                                                    ? localizations.translate(
-                                                        searchTemplate!.label,
-                                                      )
-                                                    : localizations.translate(
-                                                        i18.referralReconciliation
-                                                            .searchReferralsHeader,
-                                                      ),
-                                                style: textTheme.headingXl,
-                                                textAlign: TextAlign.left,
-                                              ),
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.all(spacer2),
+                                          child: Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  localizations.translate(
+                                                      searchTemplate?.label !=
+                                                              null
+                                                          ? localizations
+                                                              .translate(
+                                                                  searchTemplate!
+                                                                      .label)
+                                                          : ""),
+                                                  style: textTheme.headingXl
+                                                      .copyWith(
+                                                    color: theme.colorTheme
+                                                        .primary.primary2,
+                                                  ),
+                                                  textAlign: TextAlign.left,
+                                                ),
+                                                if (searchTemplate
+                                                            ?.description !=
+                                                        null &&
+                                                    searchTemplate!.description!
+                                                        .isNotEmpty &&
+                                                    localizations
+                                                        .translate(
+                                                            searchTemplate
+                                                                .description!)
+                                                        .trim()
+                                                        .isNotEmpty)
+                                                  Text(
+                                                    localizations.translate(
+                                                        searchTemplate
+                                                            .description!),
+                                                    style: textTheme.bodyS
+                                                        .copyWith(
+                                                      color: theme.colorTheme
+                                                          .text.secondary,
+                                                    ),
+                                                    textAlign: TextAlign.left,
+                                                  ),
+                                              ],
                                             ),
                                           ),
-                                          Column(
-                                            children: [
-                                              DigitSearchBar(
-                                                controller: searchController,
-                                                hintText: searchTemplate
-                                                            ?.properties?[
-                                                                searchBar]
-                                                            ?.label !=
-                                                        null
-                                                    ? localizations.translate(
-                                                        searchTemplate!
-                                                            .properties![
-                                                                searchBar]!
-                                                            .label)
-                                                    : localizations.translate(
-                                                        i18.referralReconciliation
-                                                            .referralSearchHintText,
-                                                      ),
-                                                textCapitalization:
-                                                    TextCapitalization.words,
-                                                onChanged: (value) {
-                                                  if (value.isEmpty ||
-                                                      value.trim().length > 2) {
-                                                    triggerGlobalSearchEvent();
-                                                  }
-                                                },
-                                              ),
-                                            ],
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: spacer2),
+                                          child: DigitSearchBar(
+                                            controller: searchController,
+                                            hintText: searchTemplate
+                                                        ?.properties?[searchBar]
+                                                        ?.label !=
+                                                    null
+                                                ? localizations.translate(
+                                                    searchTemplate!
+                                                        .properties![searchBar]!
+                                                        .label)
+                                                : localizations.translate(
+                                                    i18.referralReconciliation
+                                                        .referralSearchHintText,
+                                                  ),
+                                            textCapitalization:
+                                                TextCapitalization.words,
+                                            onChanged: (value) {
+                                              if (value.isEmpty ||
+                                                  value.trim().length > 2) {
+                                                triggerGlobalSearchEvent();
+                                              }
+                                            },
                                           ),
-                                          SizedBox(
-                                              height:
-                                                  theme.spacerTheme.spacer2 *
-                                                      2),
-                                          if (searchState
-                                                  .hFReferalMembers.isEmpty &&
-                                              searchController.text.isNotEmpty)
-                                            InfoCard(
+                                        ),
+                                        SizedBox(
+                                            height:
+                                                theme.spacerTheme.spacer2 * 2),
+                                        if (searchState
+                                                .hFReferalMembers.isEmpty &&
+                                            searchController.text.isNotEmpty &&
+                                            searchController.text.length > 2)
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: spacer2),
+                                            child: InfoCard(
                                               title: localizations.translate(i18
                                                   .referralReconciliation
                                                   .beneficiaryInfoTitle),
@@ -372,8 +404,8 @@ class _SearchReferralReconciliationsPageState
                                                     .referralInfoDescription,
                                               ),
                                             ),
-                                        ],
-                                      ),
+                                          ),
+                                      ],
                                     ),
                                   ),
                                   SliverList(
