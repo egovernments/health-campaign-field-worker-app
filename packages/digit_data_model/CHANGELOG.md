@@ -1,3 +1,8 @@
+## 1.0.6-dev.5
+
+* Added additionalFields in individual search
+
+
 ## 1.0.6-dev.4
 
 * Added a retry for individual update in oplog

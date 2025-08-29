@@ -222,6 +222,10 @@ class IndividualLocalRepository
                     ),
                   ),
               ],
+              additionalFields: individual.additionalFields != null
+                  ? IndividualAdditionalFieldsMapper.fromJson(
+                      individual.additionalFields.toString())
+                  : null,
             );
           })
           .where((element) => element.isDeleted != true)
