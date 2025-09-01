@@ -538,14 +538,55 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const Padding(
+          padding: EdgeInsets.only(top: spacer2, bottom: spacer2,),
+          child: DigitDivider(),
+        ),
+        const SizedBox(height: spacer2,),
         Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            translated,
-            style: DigitTheme.instance.mobileTheme.textTheme.displayMedium,
+          padding: const EdgeInsets.only(top: spacer2, bottom: spacer2,),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                translated,
+                style: Theme.of(context)
+                    .digitTextTheme(context)
+                    .headingXl
+                    .copyWith(
+                    color: Theme.of(context)
+                        .colorTheme
+                        .primary
+                        .primary2),
+              ),
+              if (widget.schema.sectionDescription != null &&
+                  translateIfPresent(widget.schema.sectionDescription,
+                      localizations) !=
+                      null &&
+                  translateIfPresent(
+                      widget.schema.sectionDescription, localizations)!
+                      .isNotEmpty) ...[
+                const SizedBox(
+                  height: spacer1,
+                ),
+                Text(
+                  localizations
+                      .translate(widget.schema.sectionDescription!),
+                  style: Theme.of(context)
+                      .digitTextTheme(context)
+                      .bodyS
+                      .copyWith(
+                      color: Theme.of(context)
+                          .colorTheme
+                          .text
+                          .secondary),
+                ),
+              ],
+            ],
           ),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: spacer2),
         child,
       ],
     );
