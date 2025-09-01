@@ -9,6 +9,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:referral_reconciliation/models/entities/referral_recon_enums.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:referral_reconciliation/utils/constants.dart';
+import 'package:survey_form/widgets/no_result_card.dart';
 
 import '../../../utils/date_utils.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -403,9 +404,12 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                     ),
                   )
                 : Center(
-                    child: Text(
-                      localizations.translate(
-                        i18.referralReconciliation.noFacilitiesAssigned,
+                    child: Padding(
+                      padding: const EdgeInsets.all(spacer3),
+                      child: NoResultCard(
+                        align: Alignment.center,
+                        label: localizations.translate(
+                            i18.referralReconciliation.noFacilitiesAssigned),
                       ),
                     ),
                   );
@@ -414,9 +418,12 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
             child: CircularProgressIndicator(),
           ),
           empty: () => Center(
-            child: Text(
-              localizations.translate(
-                i18.referralReconciliation.noFacilitiesAssigned,
+            child: Padding(
+              padding: const EdgeInsets.all(spacer3),
+              child: NoResultCard(
+                align: Alignment.center,
+                label: localizations
+                    .translate(i18.referralReconciliation.noFacilitiesAssigned),
               ),
             ),
           ),
