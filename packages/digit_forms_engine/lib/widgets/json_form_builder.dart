@@ -152,7 +152,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
 
     switch (format) {
       case PropertySchemaFormat.select:
-        return LabeledField(
+        return _wrapWithSection(LabeledField(
           infoText: translateIfPresent(widget.schema.tooltip, localizations),
           isRequired: hasRequiredValidation(widget.schema.validations),
           label: translateIfPresent(widget.schema.label, localizations),
@@ -163,37 +163,43 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
             enums: widget.schema.enums ?? [],
             validations: widget.schema.validations,
           ),
-        );
+        ));
 
       case PropertySchemaFormat.idPopulator:
-        return JsonSchemaIdPopulatorBuilder(
-          form: form,
-          label: translateIfPresent(widget.schema.label, localizations),
-          isRequired: hasRequiredValidation(widget.schema.validations),
-          formControlName: widget.formControlName,
-          enums: widget.schema.enums ?? [],
-          validations: widget.schema.validations,
-          helpText: translateIfPresent(widget.schema.helpText, localizations),
-          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
-          innerLabel:
-              translateIfPresent(widget.schema.innerLabel, localizations),
+        return _wrapWithSection(
+          JsonSchemaIdPopulatorBuilder(
+            form: form,
+            label: translateIfPresent(widget.schema.label, localizations),
+            isRequired: hasRequiredValidation(widget.schema.validations),
+            formControlName: widget.formControlName,
+            enums: widget.schema.enums ?? [],
+            validations: widget.schema.validations,
+            helpText: translateIfPresent(widget.schema.helpText, localizations),
+            tooltipText:
+                translateIfPresent(widget.schema.tooltip, localizations),
+            innerLabel:
+                translateIfPresent(widget.schema.innerLabel, localizations),
+          ),
         );
 
       case PropertySchemaFormat.dropdown:
-        return JsonSchemaDropdownBuilder(
-          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
-          isRequired: hasRequiredValidation(widget.schema.validations),
-          label: translateIfPresent(widget.schema.label, localizations),
-          form: form,
-          readOnly: isView ?? _isReadOnly,
-          formControlName: widget.formControlName,
-          enums: widget.schema.enums ?? [],
-          validations: widget.schema.validations,
-          helpText: translateIfPresent(widget.schema.helpText, localizations),
+        return _wrapWithSection(
+          JsonSchemaDropdownBuilder(
+            tooltipText:
+                translateIfPresent(widget.schema.tooltip, localizations),
+            isRequired: hasRequiredValidation(widget.schema.validations),
+            label: translateIfPresent(widget.schema.label, localizations),
+            form: form,
+            readOnly: isView ?? _isReadOnly,
+            formControlName: widget.formControlName,
+            enums: widget.schema.enums ?? [],
+            validations: widget.schema.validations,
+            helpText: translateIfPresent(widget.schema.helpText, localizations),
+          ),
         );
 
       case PropertySchemaFormat.mobileNumber:
-        return JsonSchemaStringBuilder(
+        return _wrapWithSection(JsonSchemaStringBuilder(
           form: form,
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
@@ -205,28 +211,28 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           innerLabel:
               translateIfPresent(widget.schema.innerLabel, localizations),
-        );
+        ));
 
       case PropertySchemaFormat.dob:
-        return JsonSchemaDOBBuilder(
+        return _wrapWithSection(JsonSchemaDOBBuilder(
           label: translateIfPresent(widget.schema.label, localizations),
           form: form,
           formControlName: widget.formControlName,
           validations: widget.schema.validations,
           initialDate: parseDateValue(widget.schema.startDate),
-        );
+        ));
 
       case PropertySchemaFormat.scanner:
-        return JsonSchemaScannerBuilder(
+        return _wrapWithSection(JsonSchemaScannerBuilder(
           form: form,
           value: widget.schema.value as String?,
           formControlName: widget.formControlName,
           label: translateIfPresent(widget.schema.label, localizations),
           validations: widget.schema.validations,
-        );
+        ));
 
       case PropertySchemaFormat.date:
-        return JsonSchemaDatePickerBuilder(
+        return _wrapWithSection(JsonSchemaDatePickerBuilder(
           isRequired: hasRequiredValidation(widget.schema.validations),
           readOnly: isView ?? _isReadOnly,
           innerLabel:
@@ -239,10 +245,10 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           end: parseDateValue(widget.schema.endDate),
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
-        );
+        ));
 
       case PropertySchemaFormat.locality:
-        return JsonSchemaStringBuilder(
+        return _wrapWithSection(JsonSchemaStringBuilder(
           form: form,
           isRequired: hasRequiredValidation(widget.schema.validations),
           value: widget.schema.value as String?,
@@ -251,33 +257,34 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label: translateIfPresent(widget.schema.label, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
-        );
+        ));
 
       case PropertySchemaFormat.radio:
-        return JsonSchemaRadioBuilder(
+        return _wrapWithSection(JsonSchemaRadioBuilder(
           form: form,
           formControlName: widget.formControlName,
           validations: widget.schema.validations,
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           label: translateIfPresent(widget.schema.label, localizations),
           enums: widget.schema.enums ?? [],
-        );
+        ));
 
       case PropertySchemaFormat.custom:
-        return _buildCustomComponent() ?? const SizedBox.shrink();
+        return _wrapWithSection(
+            _buildCustomComponent() ?? const SizedBox.shrink());
 
       case PropertySchemaFormat.latLng:
-        return JsonSchemaLatLngBuilder(
+        return _wrapWithSection(JsonSchemaLatLngBuilder(
           formControlName: widget.formControlName,
           form: form,
           isRequired: hasRequiredValidation(widget.schema.validations),
           label: translateIfPresent(widget.schema.label, localizations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
-        );
+        ));
 
       case PropertySchemaFormat.textArea:
-        return JsonSchemaTextAreaBuilder(
+        return _wrapWithSection(JsonSchemaTextAreaBuilder(
           form: form,
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
@@ -289,10 +296,10 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           innerLabel:
               translateIfPresent(widget.schema.innerLabel, localizations),
-        );
+        ));
 
       case PropertySchemaFormat.mobileNumber:
-        return JsonSchemaStringBuilder(
+        return _wrapWithSection(JsonSchemaStringBuilder(
           form: form,
           inputType: TextInputType.number,
           prefixText:
@@ -309,10 +316,10 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           innerLabel:
               translateIfPresent(widget.schema.innerLabel, localizations),
-        );
+        ));
 
       default:
-        return JsonSchemaStringBuilder(
+        return _wrapWithSection(JsonSchemaStringBuilder(
           form: form,
           prefixText:
               translateIfPresent(widget.schema.prefixText, localizations),
@@ -328,7 +335,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           innerLabel:
               translateIfPresent(widget.schema.innerLabel, localizations),
-        );
+        ));
     }
   }
 
@@ -338,7 +345,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
 
     switch (format) {
       case PropertySchemaFormat.text:
-        return JsonSchemaNumberBuilder(
+        return _wrapWithSection(JsonSchemaNumberBuilder(
           form: form,
           prefixText:
               translateIfPresent(widget.schema.prefixText, localizations),
@@ -354,10 +361,10 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           innerLabel:
               translateIfPresent(widget.schema.innerLabel, localizations),
-        );
+        ));
 
       case PropertySchemaFormat.mobileNumber:
-        return JsonSchemaNumberBuilder(
+        return _wrapWithSection(JsonSchemaNumberBuilder(
           form: form,
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
@@ -369,10 +376,10 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           innerLabel:
               translateIfPresent(widget.schema.innerLabel, localizations),
-        );
+        ));
 
       case PropertySchemaFormat.date:
-        return JsonSchemaDatePickerBuilder(
+        return _wrapWithSection(JsonSchemaDatePickerBuilder(
           readOnly: isView ?? _isReadOnly,
           isRequired: hasRequiredValidation(widget.schema.validations),
           label: translateIfPresent(widget.schema.label, localizations),
@@ -383,10 +390,10 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
-        );
+        ));
 
       case PropertySchemaFormat.numeric:
-        return JsonSchemaIntegerBuilder(
+        return _wrapWithSection(JsonSchemaIntegerBuilder(
           form: form,
           value: parseIntValue(widget.schema.value) ?? 0,
           formControlName: widget.formControlName,
@@ -398,20 +405,21 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           validations: widget.schema.validations,
           isRequired: hasRequiredValidation(widget.schema.validations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
-        );
+        ));
 
       case PropertySchemaFormat.custom:
-        return _buildCustomComponent() ?? const SizedBox.shrink();
+        return _wrapWithSection(
+            _buildCustomComponent() ?? const SizedBox.shrink());
 
       default:
-        return JsonSchemaNumberBuilder(
+        return _wrapWithSection(JsonSchemaNumberBuilder(
           form: form,
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
           readOnly: isView ?? _isReadOnly,
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
-        );
+        ));
     }
   }
 
@@ -421,17 +429,17 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
 
     switch (format) {
       case PropertySchemaFormat.checkbox:
-        return JsonSchemaCheckboxBuilder(
+        return _wrapWithSection(JsonSchemaCheckboxBuilder(
           form: form,
           formControlName: widget.formControlName,
           label: translateIfPresent(widget.schema.label, localizations),
           validations: widget.schema.validations,
           readOnly: isView ?? _isReadOnly,
           isRequired: hasRequiredValidation(widget.schema.validations),
-        );
+        ));
 
       case PropertySchemaFormat.radio:
-        return JsonSchemaRadioBuilder(
+        return _wrapWithSection(JsonSchemaRadioBuilder(
           form: form,
           isBoolean: true,
           formControlName: widget.formControlName,
@@ -440,13 +448,14 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label: translateIfPresent(widget.schema.label, localizations),
           enums: widget.schema.enums ?? [],
           readOnly: isView ?? _isReadOnly,
-        );
+        ));
 
       case PropertySchemaFormat.custom:
-        return _buildCustomComponent() ?? const SizedBox.shrink();
+        return _wrapWithSection(
+            _buildCustomComponent() ?? const SizedBox.shrink());
 
       default:
-        return JsonSchemaStringBuilder(
+        return _wrapWithSection(JsonSchemaStringBuilder(
           form: form,
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
@@ -457,7 +466,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           innerLabel:
               translateIfPresent(widget.schema.innerLabel, localizations),
-        );
+        ));
     }
   }
 
@@ -510,9 +519,31 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     if (widget.components == null || widget.components!.isEmpty) return null;
     for (var component in widget.components!) {
       if (component.containsKey(widget.formControlName)) {
-        return component[widget.formControlName]!;
+        return _wrapWithSection(component[widget.formControlName]!);
       }
     }
     return null;
+  }
+
+  Widget _wrapWithSection(Widget child) {
+    final sectionKey =
+        widget.schema.section; // ← String? section on PropertySchema
+    final translated = sectionKey == null
+        ? null
+        : translateIfPresent(sectionKey, localizations);
+
+    if (translated == null || translated.isEmpty) return child;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          translated,
+          style: DigitTheme.instance.mobileTheme.textTheme.labelMedium,
+        ),
+        const SizedBox(height: 4),
+        child,
+      ],
+    );
   }
 }

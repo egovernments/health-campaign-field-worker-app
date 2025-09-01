@@ -49,6 +49,7 @@ class PropertySchema with _$PropertySchema {
     int? order,
     String? actionLabel,
     String? description,
+    String? section,
     List<ValidationRule>? validations,
     bool? includeInForm,
     bool? includeInSummary,
