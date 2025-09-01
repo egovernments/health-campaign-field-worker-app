@@ -535,11 +535,15 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     if (translated == null || translated.isEmpty) return child;
 
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          translated,
-          style: DigitTheme.instance.mobileTheme.textTheme.labelMedium,
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            translated,
+            style: DigitTheme.instance.mobileTheme.textTheme.displayMedium,
+          ),
         ),
         const SizedBox(height: 4),
         child,
