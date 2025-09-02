@@ -54,6 +54,7 @@ mixin _$PropertySchema {
   int? get order => throw _privateConstructorUsedError;
   String? get actionLabel => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
+  String? get section => throw _privateConstructorUsedError;
   List<ValidationRule>? get validations => throw _privateConstructorUsedError;
   bool? get includeInForm => throw _privateConstructorUsedError;
   bool? get includeInSummary => throw _privateConstructorUsedError;
@@ -113,6 +114,7 @@ abstract class $PropertySchemaCopyWith<$Res> {
       int? order,
       String? actionLabel,
       String? description,
+      String? section,
       List<ValidationRule>? validations,
       bool? includeInForm,
       bool? includeInSummary,
@@ -171,6 +173,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? order = freezed,
     Object? actionLabel = freezed,
     Object? description = freezed,
+    Object? section = freezed,
     Object? validations = freezed,
     Object? includeInForm = freezed,
     Object? includeInSummary = freezed,
@@ -296,6 +299,10 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
+      section: freezed == section
+          ? _value.section
+          : section // ignore: cast_nullable_to_non_nullable
+              as String?,
       validations: freezed == validations
           ? _value.validations
           : validations // ignore: cast_nullable_to_non_nullable
@@ -405,6 +412,7 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       int? order,
       String? actionLabel,
       String? description,
+      String? section,
       List<ValidationRule>? validations,
       bool? includeInForm,
       bool? includeInSummary,
@@ -464,6 +472,7 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? order = freezed,
     Object? actionLabel = freezed,
     Object? description = freezed,
+    Object? section = freezed,
     Object? validations = freezed,
     Object? includeInForm = freezed,
     Object? includeInSummary = freezed,
@@ -589,6 +598,10 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
+      section: freezed == section
+          ? _value.section
+          : section // ignore: cast_nullable_to_non_nullable
+              as String?,
       validations: freezed == validations
           ? _value._validations
           : validations // ignore: cast_nullable_to_non_nullable
@@ -657,6 +670,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
       this.order,
       this.actionLabel,
       this.description,
+      this.section,
       final List<ValidationRule>? validations,
       this.includeInForm,
       this.includeInSummary,
@@ -762,6 +776,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
   final String? actionLabel;
   @override
   final String? description;
+  @override
+  final String? section;
   final List<ValidationRule>? _validations;
   @override
   List<ValidationRule>? get validations {
@@ -810,7 +826,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
 
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, section: $section, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition)';
   }
 
   @override
@@ -867,6 +883,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
                 other.actionLabel == actionLabel) &&
             (identical(other.description, description) ||
                 other.description == description) &&
+            (identical(other.section, section) || other.section == section) &&
             const DeepCollectionEquality()
                 .equals(other._validations, _validations) &&
             (identical(other.includeInForm, includeInForm) ||
@@ -916,6 +933,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
         order,
         actionLabel,
         description,
+        section,
         const DeepCollectionEquality().hash(_validations),
         includeInForm,
         includeInSummary,
@@ -973,6 +991,7 @@ abstract class _PropertySchema implements PropertySchema {
       final int? order,
       final String? actionLabel,
       final String? description,
+      final String? section,
       final List<ValidationRule>? validations,
       final bool? includeInForm,
       final bool? includeInSummary,
@@ -1050,6 +1069,8 @@ abstract class _PropertySchema implements PropertySchema {
   String? get actionLabel;
   @override
   String? get description;
+  @override
+  String? get section;
   @override
   List<ValidationRule>? get validations;
   @override
