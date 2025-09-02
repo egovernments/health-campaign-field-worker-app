@@ -1,3 +1,19 @@
+## 0.0.5-dev
+
+### Added
+- Added support for section and section Description in a form page
+
+## 0.0.4-dev
+
+### BugFix
+- Removed min and maxLength validation for empty string
+
+## 0.0.3-dev
+
+### Added
+- Added mobile number for type string
+
+
 ## 0.0.2-dev
 
 ### Added
