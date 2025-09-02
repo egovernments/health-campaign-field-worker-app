@@ -60,6 +60,7 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
           _conditionalNavigateListOrNull(json['conditionalNavigateTo']),
       autoFillCondition:
           _autoFillConditionListOrNull(json['autoFillCondition']),
+      sectionDescription: json['sectionDescription'] as String?,
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -114,6 +115,7 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
       instance.conditionalNavigateTo?.map((e) => e.toJson()).toList());
   writeNotNull('autoFillCondition',
       instance.autoFillCondition?.map((e) => e.toJson()).toList());
+  writeNotNull('sectionDescription', instance.sectionDescription);
   return val;
 }
 

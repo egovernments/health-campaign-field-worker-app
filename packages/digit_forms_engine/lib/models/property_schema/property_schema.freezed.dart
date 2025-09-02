@@ -69,6 +69,7 @@ mixin _$PropertySchema {
   @JsonKey(fromJson: _autoFillConditionListOrNull)
   List<AutoFillCondition>? get autoFillCondition =>
       throw _privateConstructorUsedError;
+  String? get sectionDescription => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -124,7 +125,8 @@ abstract class $PropertySchemaCopyWith<$Res> {
       @JsonKey(fromJson: _conditionalNavigateListOrNull)
       List<ConditionalNavigateTo>? conditionalNavigateTo,
       @JsonKey(fromJson: _autoFillConditionListOrNull)
-      List<AutoFillCondition>? autoFillCondition});
+      List<AutoFillCondition>? autoFillCondition,
+      String? sectionDescription});
 
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
   $NavigateToConfigCopyWith<$Res>? get navigateTo;
@@ -181,6 +183,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? visibilityCondition = freezed,
     Object? conditionalNavigateTo = freezed,
     Object? autoFillCondition = freezed,
+    Object? sectionDescription = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -331,6 +334,10 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.autoFillCondition
           : autoFillCondition // ignore: cast_nullable_to_non_nullable
               as List<AutoFillCondition>?,
+      sectionDescription: freezed == sectionDescription
+          ? _value.sectionDescription
+          : sectionDescription // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
@@ -422,7 +429,8 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       @JsonKey(fromJson: _conditionalNavigateListOrNull)
       List<ConditionalNavigateTo>? conditionalNavigateTo,
       @JsonKey(fromJson: _autoFillConditionListOrNull)
-      List<AutoFillCondition>? autoFillCondition});
+      List<AutoFillCondition>? autoFillCondition,
+      String? sectionDescription});
 
   @override
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
@@ -480,6 +488,7 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? visibilityCondition = freezed,
     Object? conditionalNavigateTo = freezed,
     Object? autoFillCondition = freezed,
+    Object? sectionDescription = freezed,
   }) {
     return _then(_$PropertySchemaImpl(
       type: null == type
@@ -630,6 +639,10 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value._autoFillCondition
           : autoFillCondition // ignore: cast_nullable_to_non_nullable
               as List<AutoFillCondition>?,
+      sectionDescription: freezed == sectionDescription
+          ? _value.sectionDescription
+          : sectionDescription // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -679,7 +692,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
       @JsonKey(fromJson: _conditionalNavigateListOrNull)
       final List<ConditionalNavigateTo>? conditionalNavigateTo,
       @JsonKey(fromJson: _autoFillConditionListOrNull)
-      final List<AutoFillCondition>? autoFillCondition})
+      final List<AutoFillCondition>? autoFillCondition,
+      this.sectionDescription})
       : _properties = properties,
         _enums = enums,
         _conditions = conditions,
@@ -825,8 +839,11 @@ class _$PropertySchemaImpl implements _PropertySchema {
   }
 
   @override
+  final String? sectionDescription;
+
+  @override
   String toString() {
-    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, section: $section, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, section: $section, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, sectionDescription: $sectionDescription)';
   }
 
   @override
@@ -897,7 +914,9 @@ class _$PropertySchemaImpl implements _PropertySchema {
             const DeepCollectionEquality()
                 .equals(other._conditionalNavigateTo, _conditionalNavigateTo) &&
             const DeepCollectionEquality()
-                .equals(other._autoFillCondition, _autoFillCondition));
+                .equals(other._autoFillCondition, _autoFillCondition) &&
+            (identical(other.sectionDescription, sectionDescription) ||
+                other.sectionDescription == sectionDescription));
   }
 
   @JsonKey(ignore: true)
@@ -940,7 +959,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
         navigateTo,
         visibilityCondition,
         const DeepCollectionEquality().hash(_conditionalNavigateTo),
-        const DeepCollectionEquality().hash(_autoFillCondition)
+        const DeepCollectionEquality().hash(_autoFillCondition),
+        sectionDescription
       ]);
 
   @JsonKey(ignore: true)
@@ -1002,7 +1022,8 @@ abstract class _PropertySchema implements PropertySchema {
       @JsonKey(fromJson: _conditionalNavigateListOrNull)
       final List<ConditionalNavigateTo>? conditionalNavigateTo,
       @JsonKey(fromJson: _autoFillConditionListOrNull)
-      final List<AutoFillCondition>? autoFillCondition}) = _$PropertySchemaImpl;
+      final List<AutoFillCondition>? autoFillCondition,
+      final String? sectionDescription}) = _$PropertySchemaImpl;
 
   factory _PropertySchema.fromJson(Map<String, dynamic> json) =
       _$PropertySchemaImpl.fromJson;
@@ -1089,6 +1110,8 @@ abstract class _PropertySchema implements PropertySchema {
   @override // New: AutoFillCondition list
   @JsonKey(fromJson: _autoFillConditionListOrNull)
   List<AutoFillCondition>? get autoFillCondition;
+  @override
+  String? get sectionDescription;
   @override
   @JsonKey(ignore: true)
   _$$PropertySchemaImplCopyWith<_$PropertySchemaImpl> get copyWith =>

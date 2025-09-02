@@ -61,6 +61,7 @@ class PropertySchema with _$PropertySchema {
     // New: AutoFillCondition list
     @JsonKey(fromJson: _autoFillConditionListOrNull)
     List<AutoFillCondition>? autoFillCondition,
+    String? sectionDescription,
   }) = _PropertySchema;
 
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>
