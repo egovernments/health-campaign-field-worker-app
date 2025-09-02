@@ -32,11 +32,33 @@ class ScreenKeyListener extends StatelessWidget {
 
 class ScreenBuilder extends StatefulWidget {
   final Map<String, dynamic> config;
+  final Map<String, dynamic>? navigationParams;
 
-  const ScreenBuilder({super.key, required this.config});
+  const ScreenBuilder({super.key, required this.config, this.navigationParams});
 
   @override
   State<ScreenBuilder> createState() => _ScreenBuilderState();
+}
+
+dynamic resolveTemplates(dynamic input, Map<String, dynamic> nav) {
+  if (input is String) {
+    return input.replaceAllMapped(RegExp(r'{{(.*?)}}'), (match) {
+      final key = match.group(1)!.trim();
+      if (key.startsWith('navigation.')) {
+        final paramKey = key.split('.').last;
+        return nav[paramKey]?.toString() ?? '';
+      }
+      return match.group(0)!; // leave as-is
+    });
+  } else if (input is Map) {
+    // force keys to String here 👇
+    return input.map(
+      (k, v) => MapEntry(k.toString(), resolveTemplates(v, nav)),
+    );
+  } else if (input is List) {
+    return input.map((v) => resolveTemplates(v, nav)).toList();
+  }
+  return input; // numbers, bools, null untouched
 }
 
 class _ScreenBuilderState extends State<ScreenBuilder> {
@@ -47,11 +69,14 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
     if (mounted) {
       final initActions = widget.config['initActions'] as List? ?? [];
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        for (final action in initActions) {
-          final parsed = ActionConfig.fromJson(action); // you already have this
-          ActionHandler.execute(parsed, context, {
-            'wrappers': const [],
-          });
+        final resolvedActions =
+            resolveTemplates(initActions, widget.navigationParams ?? {});
+
+        for (final action in resolvedActions) {
+          final parsed = ActionConfig.fromJson(
+            Map<String, dynamic>.from(action as Map),
+          );
+          ActionHandler.execute(parsed, context, {'wrappers': const []});
         }
       });
     }

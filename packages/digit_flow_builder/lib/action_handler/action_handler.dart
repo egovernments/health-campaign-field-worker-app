@@ -141,8 +141,9 @@ class ActionHandler {
             'householdType': HouseholdType.family.toValue(),
 
             /// TODO: NEED TO REMOVE THIS
-            "beneficiaryType":
-                FlowBuilderSingleton().beneficiaryType?.toValue(),
+            "beneficiaryType": BeneficiaryType.individual
+                .toValue(), //// FIXME: HARDCODING TO INDIVIDUAL FOR TESTING SMC FLOW
+            // FlowBuilderSingleton().beneficiaryType?.toValue(),
           },
           fallbackFormDataString: fallBackModel,
         );
@@ -181,6 +182,26 @@ class ActionHandler {
 
         break;
       case 'NAVIGATION':
+        // First resolve navigation data if provided
+        final navData = action.properties['data'] as List<dynamic>?;
+        if (navData != null) {
+          final resolvedData = navData.map((entry) {
+            final key = entry['key'];
+            final rawValue = entry['value'];
+
+            // resolve template value using contextData/entities
+            final resolvedValue = resolveValue(rawValue, contextData);
+
+            return {
+              "key": key,
+              "value": resolvedValue,
+            };
+          }).toList();
+
+          // overwrite properties with resolved data
+          action.properties['data'] = resolvedData;
+        }
+
         NavigationRegistry.navigateTo(action.properties);
         final entities = contextData['entities'];
         final config = FlowRegistry.getByName(action.properties['name']);

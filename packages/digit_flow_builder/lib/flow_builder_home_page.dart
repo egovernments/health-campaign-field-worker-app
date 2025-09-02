@@ -189,7 +189,10 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
           },
         ),
       ],
-      child: ScreenBuilder(config: config),
+      child: ScreenBuilder(
+        config: config,
+        navigationParams: widget.navigationParams,
+      ),
     );
   }
 }
