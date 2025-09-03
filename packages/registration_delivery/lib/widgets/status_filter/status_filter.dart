@@ -56,7 +56,9 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
 
   @override
   void initState() {
-    assignSelectedButtons();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      assignSelectedButtons();
+    });
     super.initState();
   }
 
