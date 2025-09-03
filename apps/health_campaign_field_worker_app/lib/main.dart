@@ -1198,8 +1198,8 @@ final List<Map<String, dynamic>> sampleFlows = [
                       "name": "CHECKLIST",
                       "data": [
                         {
-                          "key": "nameOfIndividual",
-                          "value": "item.individual.name.givenName"
+                          "key": "selectedIndividual",
+                          "value": "{{item.IndividualModel.clientReferenceId}}"
                         }
                       ]
                     }
@@ -1727,8 +1727,8 @@ final List<Map<String, dynamic>> sampleFlows = [
               "name": "beneficiaryDetails",
               "data": [
                 {
-                  "key": "householdId",
-                  "value": "{{contextData.HouseholdModel.clientReferenceId}}"
+                  "key": "selectedIndividual",
+                  "value": "{{contextData.navigation.selectedIndividual}}"
                 }
               ],
               "onError": [

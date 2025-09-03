@@ -93,7 +93,10 @@ class WidgetRegistry {
                 final rawValue = entry['value'];
 
                 final crudCtx = CrudItemContext.of(context);
-                final stateData = crudCtx?.item;
+                final stateData =
+                    (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
+                        ? crudCtx.item
+                        : crudCtx?.stateData?.rawState;
 
                 // This helper should resolve {{navigation.x}}, {{item.y}}, etc.
                 final resolvedValue = resolveValue(
