@@ -42,6 +42,7 @@ class LayoutRendererPage extends StatelessWidget {
                 BackNavigationHelpHeaderWidget(),
               ],
             ),
+            enableFixedDigitButton: actions.isNotEmpty ? true : false,
             footer: actions.isNotEmpty
                 ? DigitCard(
                     children: actions

@@ -96,7 +96,7 @@ class WidgetRegistry {
                 final stateData =
                     (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
                         ? crudCtx.item
-                        : crudCtx?.stateData?.rawState;
+                        : crudCtx?.stateData?.rawState.first;
 
                 // This helper should resolve {{navigation.x}}, {{item.y}}, etc.
                 final resolvedValue = resolveValue(
