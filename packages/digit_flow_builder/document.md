@@ -14,6 +14,60 @@
 11. [Best Practices](#best-practices)
 12. [Troubleshooting](#troubleshooting)
 
+```mermaid
+flowchart TD
+subgraph subGraph0["Initialization and Routing"]
+B{"Get Configuration"}
+A["App Loads or Navigates to a Page"]
+C@{ label: "Determine 'screenType'" }
+end
+subgraph subGraph1["Forms Engine Flow"]
+D["Forms Engine"]
+E{"Loads Schema"}
+F["Render Form UI"]
+G("Handle User Input")
+H{"Form Submitted?"}
+I["Update FormsBloc State"]
+J["Action Handler"]
+end
+subgraph subGraph2["Template Engine Flow"]
+K["Layout Renderer Page"]
+L["Render Layout & Widgets"]
+M["Handle User Actions"]
+end
+subgraph subGraph3["State & Action Management"]
+N["Execute Actions"]
+O["FlowCrudBloc"]
+P["State Registry"]
+Q["CrudItemContext"]
+R["Interpolation Engine"]
+end
+subgraph Navigation["Navigation"]
+S["Navigation Service"]
+end
+A --> B
+B --> C
+C -- Type: FORM --> D
+D --> E
+E --> F
+F --> G
+G --> H
+H -- Yes --> I
+I --> J
+C -- Type: TEMPLATE --> K
+K --> L
+L --> M
+M --> J
+J --> N
+N --> O & S
+O --> P
+P --> Q
+Q --> R
+R --> F & L
+S --> A
+C@{ shape: diamond}
+```
+
 ## Overview
 
 DIGIT Flow Builder is a powerful JSON-driven dynamic UI rendering framework that enables the creation of configurable forms and templates without code changes. It provides a declarative approach to building complex user interfaces with integrated state management, data binding, and action handling capabilities.

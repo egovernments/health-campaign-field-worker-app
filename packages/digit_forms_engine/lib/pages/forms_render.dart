@@ -29,6 +29,7 @@ class FormsRenderPage extends LocalizedStatefulWidget {
   final List<Map<String, Widget>>? customComponents;
   final bool isSummary;
   final bool isEdit;
+  final Map<String, dynamic>? navigationParams;
 
   const FormsRenderPage({
     super.key,
@@ -38,6 +39,7 @@ class FormsRenderPage extends LocalizedStatefulWidget {
     @QueryParam() this.isEdit = false,
     this.customComponents,
     this.defaultValues,
+    this.navigationParams,
     @QueryParam() this.isSummary = false,
   });
 
@@ -226,6 +228,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                             widget.currentSchemaKey,
                                         pageName: targetPageName,
                                         defaultValues: widget.defaultValues,
+                                        navigationParams:
+                                            widget.navigationParams,
                                       ));
                                       return; // Skip default logic
                                     }
@@ -252,22 +256,23 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
                               if (nextPageEntry.isNotEmpty) {
                                 context.router.push(FormsRenderRoute(
-                                  isEdit: widget.isEdit,
-                                  customComponents: widget.customComponents,
-                                  currentSchemaKey: widget.currentSchemaKey,
-                                  pageName: nextPageEntry.first.key,
-                                  defaultValues: widget.defaultValues,
-                                ));
+                                    isEdit: widget.isEdit,
+                                    customComponents: widget.customComponents,
+                                    currentSchemaKey: widget.currentSchemaKey,
+                                    pageName: nextPageEntry.first.key,
+                                    defaultValues: widget.defaultValues,
+                                    navigationParams: widget.navigationParams));
                               } else {
                                 if (schemaObject.summary) {
                                   context.router.push(FormsRenderRoute(
-                                    customComponents: widget.customComponents,
-                                    currentSchemaKey: widget.currentSchemaKey,
-                                    pageName: '',
-                                    isEdit: widget.isEdit,
-                                    isSummary: true,
-                                    defaultValues: widget.defaultValues,
-                                  ));
+                                      customComponents: widget.customComponents,
+                                      currentSchemaKey: widget.currentSchemaKey,
+                                      pageName: '',
+                                      isEdit: widget.isEdit,
+                                      isSummary: true,
+                                      defaultValues: widget.defaultValues,
+                                      navigationParams:
+                                          widget.navigationParams));
                                 } else {
                                   final contextValue =
                                       buildVisibilityEvaluationContext(
@@ -343,6 +348,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                             schemaKey:
                                                 widget.currentSchemaKey));
                                     // Pop all form pages (FormsRenderRoute)
+
+                                    /// FIXME: NOT BACKWARD COMPATIBLE
                                     context.router.popUntil((route) {
                                       return route.settings.name !=
                                           FormsRenderRoute.name;
@@ -501,6 +508,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                     schemaKey: widget.currentSchemaKey, isEdit: widget.isEdit));
 
                 // Pop all form pages (FormsRenderRoute)
+                /// FIXME: NOT BACKWARD COMPATIBLE
                 context.router.popUntil((route) {
                   return route.settings.name != FormsRenderRoute.name;
                 });

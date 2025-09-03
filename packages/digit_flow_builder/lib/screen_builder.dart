@@ -78,7 +78,6 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
           );
           ActionHandler.execute(parsed, context, {
             'wrappers': const [],
-            'navigationParams': widget.navigationParams
           });
         }
       });
@@ -101,6 +100,7 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
 
               Map<String, dynamic> contextData = {
                 'formData': state.formData,
+                'navigation': widget.navigationParams ?? {},
               };
 
               if (onSubmit != null) {
@@ -142,6 +142,7 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
       return _FormScreenWrapper(
         schemaKey: schemaKey,
         defaultValues: defaultValues,
+        navigationParams: widget.navigationParams,
       );
     } else if (screenType == 'TEMPLATE') {
       return LayoutRendererPage(
@@ -156,10 +157,12 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
 class _FormScreenWrapper extends LocalizedStatefulWidget {
   final String schemaKey;
   final Map<String, dynamic>? defaultValues;
+  final Map<String, dynamic>? navigationParams;
 
   const _FormScreenWrapper({
     required this.schemaKey,
     this.defaultValues,
+    this.navigationParams,
   });
 
   @override
