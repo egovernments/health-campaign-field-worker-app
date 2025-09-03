@@ -76,7 +76,10 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
           final parsed = ActionConfig.fromJson(
             Map<String, dynamic>.from(action as Map),
           );
-          ActionHandler.execute(parsed, context, {'wrappers': const []});
+          ActionHandler.execute(parsed, context, {
+            'wrappers': const [],
+            'navigationParams': widget.navigationParams
+          });
         }
       });
     }
