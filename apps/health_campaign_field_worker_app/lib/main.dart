@@ -1199,7 +1199,8 @@ final List<Map<String, dynamic>> sampleFlows = [
                       "data": [
                         {
                           "key": "selectedIndividual",
-                          "value": "{{item.IndividualModel.clientReferenceId}}"
+                          "value":
+                              "{{headOfHousehold.IndividualModel.clientReferenceId}}"
                         }
                       ]
                     }
