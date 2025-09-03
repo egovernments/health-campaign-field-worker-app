@@ -305,7 +305,8 @@ final List<Map<String, dynamic>> sampleFlows = [
                       "data": [
                         {
                           "key": "selectedIndividual",
-                          "value": "{{item.headOfHousehold.clientReferenceId}}"
+                          "value":
+                              "{{headOfHousehold.IndividualModel.clientReferenceId}}"
                         }
                       ]
                     }
@@ -1847,11 +1848,11 @@ final List<Map<String, dynamic>> sampleFlows = [
         "actionType": "SEARCH_EVENT",
         "properties": {
           "type": "SEARCH_EVENT",
-          "name": "household",
+          "name": "individual",
           "data": [
             {
               "key": "clientReferenceId",
-              "value": "{{navigation.householdId}}",
+              "value": "{{navigation.selectedIndividual}}",
               "operation": "equals"
             }
           ]

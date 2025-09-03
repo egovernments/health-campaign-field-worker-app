@@ -1,4 +1,5 @@
 import 'package:digit_flow_builder/utils/interpolation.dart';
+import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
@@ -79,9 +80,47 @@ class WidgetRegistry {
         label: json['label'] ?? '',
         onPressed: () {
           if (json['onAction'] != null) {
-            final action = ActionConfig.fromJson(
+            // Parse to ActionConfig
+            var action = ActionConfig.fromJson(
               Map<String, dynamic>.from(json['onAction']),
             );
+
+            // If action has navigation data, resolve templates
+            final navData = action.properties['data'] as List<dynamic>?;
+            if (navData != null) {
+              final resolvedData = navData.map((entry) {
+                final key = entry['key'] as String;
+                final rawValue = entry['value'];
+
+                final crudCtx = CrudItemContext.of(context);
+                final stateData = crudCtx?.item;
+
+                // This helper should resolve {{navigation.x}}, {{item.y}}, etc.
+                final resolvedValue = resolveValue(
+                  rawValue,
+                  stateData,
+                );
+
+                return {
+                  "key": key,
+                  "value": resolvedValue,
+                };
+              }).toList();
+
+              // Replace properties with resolved data
+              action = ActionConfig(
+                action: action.action,
+                actionType: action.actionType,
+                properties: {
+                  ...action.properties,
+                  'data': resolvedData,
+                },
+                condition: action.condition,
+                actions: action.actions,
+              );
+            }
+
+            // Pass resolved action forward
             onAction(action);
           }
         },
