@@ -201,6 +201,10 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       case PropertySchemaFormat.mobileNumber:
         return _wrapWithSection(JsonSchemaStringBuilder(
           form: form,
+          suffixText:
+              translateIfPresent(widget.schema.suffixText, localizations),
+          prefixText:
+              translateIfPresent(widget.schema.prefixText, localizations),
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
           inputType: TextInputType.number,
@@ -369,6 +373,10 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
           inputType: TextInputType.number,
+          prefixText:
+              translateIfPresent(widget.schema.prefixText, localizations),
+          suffixText:
+              translateIfPresent(widget.schema.suffixText, localizations),
           readOnly: isView ?? _isReadOnly,
           validations: widget.schema.validations,
           isRequired: hasRequiredValidation(widget.schema.validations),
@@ -418,6 +426,10 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           formControlName: widget.formControlName,
           readOnly: isView ?? _isReadOnly,
           validations: widget.schema.validations,
+          prefixText:
+              translateIfPresent(widget.schema.prefixText, localizations),
+          suffixText:
+              translateIfPresent(widget.schema.suffixText, localizations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
         ));
     }
@@ -539,12 +551,20 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.only(top: spacer2, bottom: spacer2,),
+          padding: EdgeInsets.only(
+            top: spacer2,
+            bottom: spacer2,
+          ),
           child: DigitDivider(),
         ),
-        const SizedBox(height: spacer2,),
+        const SizedBox(
+          height: spacer2,
+        ),
         Padding(
-          padding: const EdgeInsets.only(top: spacer2, bottom: spacer2,),
+          padding: const EdgeInsets.only(
+            top: spacer2,
+            bottom: spacer2,
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -555,32 +575,25 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
                     .digitTextTheme(context)
                     .headingXl
                     .copyWith(
-                    color: Theme.of(context)
-                        .colorTheme
-                        .primary
-                        .primary2),
+                        color: Theme.of(context).colorTheme.primary.primary2),
               ),
               if (widget.schema.sectionDescription != null &&
-                  translateIfPresent(widget.schema.sectionDescription,
-                      localizations) !=
+                  translateIfPresent(
+                          widget.schema.sectionDescription, localizations) !=
                       null &&
                   translateIfPresent(
-                      widget.schema.sectionDescription, localizations)!
+                          widget.schema.sectionDescription, localizations)!
                       .isNotEmpty) ...[
                 const SizedBox(
                   height: spacer1,
                 ),
                 Text(
-                  localizations
-                      .translate(widget.schema.sectionDescription!),
+                  localizations.translate(widget.schema.sectionDescription!),
                   style: Theme.of(context)
                       .digitTextTheme(context)
                       .bodyS
                       .copyWith(
-                      color: Theme.of(context)
-                          .colorTheme
-                          .text
-                          .secondary),
+                          color: Theme.of(context).colorTheme.text.secondary),
                 ),
               ],
             ],
