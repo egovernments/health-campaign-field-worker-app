@@ -1,3 +1,7 @@
+## 1.0.6+3
+
+* Added scanner validations support for digit_forms_engine
+
 ## 1.0.6+2
 
 * Updated component of input with DigitInput

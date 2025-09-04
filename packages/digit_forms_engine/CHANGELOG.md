@@ -1,3 +1,9 @@
+## 0.0.6-dev
+
+### BugFix
+- Prefix and Suffix Text Fixes
+- Updated digit_scanner package
+
 ## 0.0.5-dev
 
 ### Added
