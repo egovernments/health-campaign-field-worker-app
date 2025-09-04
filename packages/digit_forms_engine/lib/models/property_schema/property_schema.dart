@@ -52,7 +52,15 @@ class PropertySchema with _$PropertySchema {
     List<ValidationRule>? validations,
     bool? includeInForm,
     bool? includeInSummary,
-    NavigateToConfig? navigateTo,
+    @JsonKey(fromJson: _navigateToConfigOrNull) NavigateToConfig? navigateTo,
+    @JsonKey(fromJson: _visibilityConditionOrNull)
+    VisibilityCondition? visibilityCondition,
+    @JsonKey(fromJson: _conditionalNavigateListOrNull)
+    List<ConditionalNavigateTo>? conditionalNavigateTo,
+    // New: AutoFillCondition list
+    @JsonKey(fromJson: _autoFillConditionListOrNull)
+    List<AutoFillCondition>? autoFillCondition,
+    @JsonKey(fromJson: _showAlertOrNull) ShowAlertPopUp? showAlertPopUp,
   }) = _PropertySchema;
 
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>
@@ -104,8 +112,115 @@ class NavigateToConfig with _$NavigateToConfig {
       _$NavigateToConfigFromJson(json);
 }
 
+@freezed
+class VisibilityCondition with _$VisibilityCondition {
+  const factory VisibilityCondition({
+    required String expression,
+  }) = _VisibilityCondition;
+
+  factory VisibilityCondition.fromJson(Map<String, dynamic> json) =>
+      _$VisibilityConditionFromJson(json);
+}
+
+@freezed
+class ConditionalNavigateTo with _$ConditionalNavigateTo {
+  const factory ConditionalNavigateTo({
+    required String condition,
+    required NavigateToConfig navigateTo,
+  }) = _ConditionalNavigateTo;
+
+  factory ConditionalNavigateTo.fromJson(Map<String, dynamic> json) =>
+      _$ConditionalNavigateToFromJson(json);
+}
+
+@freezed
+class AutoFillCondition with _$AutoFillCondition {
+  const factory AutoFillCondition({
+    required String expression,
+    required dynamic value, // could be a string, number, template, etc.
+  }) = _AutoFillCondition;
+
+  factory AutoFillCondition.fromJson(Map<String, dynamic> json) =>
+      _$AutoFillConditionFromJson(json);
+}
+
+@freezed
+class ShowAlertPopUp with _$ShowAlertPopUp {
+  const factory ShowAlertPopUp({
+    required String title,
+    String? description, // optional
+    required String primaryActionLabel,
+    required String secondaryActionLabel,
+    List<AlertCondition>? conditions, // optional
+  }) = _ShowAlertPopUp;
+
+  factory ShowAlertPopUp.fromJson(Map<String, dynamic> json) =>
+      _$ShowAlertPopUpFromJson(json);
+}
+
+@freezed
+class AlertCondition with _$AlertCondition {
+  const factory AlertCondition({
+    required String expression, // e.g., condition or "DEFAULT"
+    required String value, // e.g., "To Administer"
+  }) = _AlertCondition;
+
+  factory AlertCondition.fromJson(Map<String, dynamic> json) =>
+      _$AlertConditionFromJson(json);
+}
+
 String? _stringOrNull(dynamic value) {
   return value is String ? value : null;
+}
+
+NavigateToConfig? _navigateToConfigOrNull(dynamic value) {
+  if (value is Map && value.isEmpty) {
+    return null; // Treat {} as null
+  }
+  if (value is Map<String, dynamic>) {
+    return NavigateToConfig.fromJson(value);
+  }
+  return null;
+}
+
+VisibilityCondition? _visibilityConditionOrNull(dynamic value) {
+  if (value is Map && value.isEmpty) {
+    return null;
+  }
+  if (value is Map<String, dynamic>) {
+    return VisibilityCondition.fromJson(value);
+  }
+  return null;
+}
+
+List<ConditionalNavigateTo>? _conditionalNavigateListOrNull(dynamic value) {
+  if (value is List) {
+    if (value.isEmpty) return null;
+    return value
+        .whereType<Map<String, dynamic>>() // ignore nulls / wrong types
+        .map((map) => ConditionalNavigateTo.fromJson(map))
+        .toList();
+  }
+  return null;
+}
+
+// New: AutoFillCondition parser
+List<AutoFillCondition>? _autoFillConditionListOrNull(dynamic value) {
+  if (value is List) {
+    if (value.isEmpty) return null;
+    return value
+        .whereType<Map<String, dynamic>>()
+        .map((map) => AutoFillCondition.fromJson(map))
+        .toList();
+  }
+  return null;
+}
+
+ShowAlertPopUp? _showAlertOrNull(dynamic value) {
+  if (value is Map && value.isNotEmpty) {
+    return ShowAlertPopUp.fromJson(Map<String, dynamic>.from(value));
+  }
+  return null;
 }
 
 enum FormulaBehavior { show, hide }
@@ -124,6 +239,7 @@ enum PropertySchemaFormat {
   scanner,
   idPopulator,
   mobileNumber,
+  textArea,
   text;
 }
 

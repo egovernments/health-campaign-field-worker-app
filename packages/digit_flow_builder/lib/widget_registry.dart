@@ -1,11 +1,50 @@
+import 'package:digit_flow_builder/utils/interpolation.dart';
+import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
+import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/atoms/switch.dart';
+import 'package:digit_ui_components/widgets/atoms/table_cell.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_table.dart';
+import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 
 import 'action_handler/action_config.dart';
+import 'blocs/flow_crud_bloc.dart';
 import 'layout_renderer.dart';
+
+/// Provides stateData, listIndex, item, screenKey automatically down the tree
+class CrudItemContext extends InheritedWidget {
+  final CrudStateData? stateData;
+  final int? listIndex;
+  final Map<String, dynamic>? item;
+  final String? screenKey;
+
+  const CrudItemContext({
+    super.key,
+    required super.child,
+    this.stateData,
+    this.listIndex,
+    this.item,
+    this.screenKey,
+  });
+
+  static CrudItemContext? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<CrudItemContext>();
+  }
+
+  @override
+  bool updateShouldNotify(CrudItemContext oldWidget) {
+    final stateChanged = stateData?.rawState != oldWidget.stateData?.rawState;
+    final listIndexChanged = listIndex != oldWidget.listIndex;
+    final itemChanged = item.toString() != oldWidget.item.toString();
+    final screenChanged = screenKey != oldWidget.screenKey;
+
+    return stateChanged || listIndexChanged || itemChanged || screenChanged;
+  }
+}
 
 typedef WidgetBuilderFn = Widget Function(
   Map<String, dynamic>,
@@ -34,49 +73,128 @@ class WidgetRegistry {
   }
 
   void initializeDefaultWidgetRegistry() {
+    // BUTTON
     WidgetRegistry.register('button', (json, context, onAction) {
+      final props = Map<String, dynamic>.from(json['properties'] ?? {});
       return DigitButton(
         label: json['label'] ?? '',
         onPressed: () {
           if (json['onAction'] != null) {
-            final action = ActionConfig.fromJson(
-                Map<String, dynamic>.from(json['onAction']));
+            // Parse to ActionConfig
+            var action = ActionConfig.fromJson(
+              Map<String, dynamic>.from(json['onAction']),
+            );
+
+            // If action has navigation data, resolve templates
+            final navData = action.properties['data'] as List<dynamic>?;
+
+            final crudCtx = CrudItemContext.of(context);
+            final stateData =
+                (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
+                    ? crudCtx.item
+                    : crudCtx?.stateData?.rawState != null &&
+                            crudCtx!.stateData!.rawState.isNotEmpty
+                        ? crudCtx.stateData?.rawState.first
+                        : null;
+
+            if (navData != null && stateData != null) {
+              final resolvedData = navData.map((entry) {
+                final key = entry['key'] as String;
+                final rawValue = entry['value'];
+
+                // This helper should resolve {{navigation.x}}, {{item.y}}, etc.
+                final resolvedValue = resolveValue(
+                  rawValue,
+                  stateData,
+                );
+
+                return {
+                  "key": key,
+                  "value": resolvedValue,
+                };
+              }).toList();
+
+              // Replace properties with resolved data
+              action = ActionConfig(
+                action: action.action,
+                actionType: action.actionType,
+                properties: {
+                  ...action.properties,
+                  'data': resolvedData,
+                },
+                condition: action.condition,
+                actions: action.actions,
+              );
+            }
+
+            // Pass resolved action forward
             onAction(action);
           }
         },
-        mainAxisSize: MainAxisSize.max,
-        type: DigitButtonType.primary,
-        size: DigitButtonSize.large,
+        type: _parseButtonType(props['type']),
+        size: _parseButtonSize(props['size']),
+        mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
+        mainAxisAlignment: _parseMainAxisAlignment(props['mainAxisAlignment']),
+        suffixIcon:
+            json['suffixIcon'] != null ? _parseIcon(json['suffixIcon']) : null,
       );
     });
 
+    // SEARCH BAR
     WidgetRegistry.register('searchBar', (json, context, onAction) {
       return DigitSearchBar(
         hintText: json['label'] ?? '',
         onChanged: (value) {
-          if (json['onAction'] != null) {
-            final raw = Map<String, dynamic>.from(json['onAction']);
-            raw['properties'] ??= {};
-            raw['properties']['data'] = [
-              {
-                'key': json['fieldName'] ?? 'search',
-                'value': value,
-                'operation': 'contains',
+          if (value.isNotEmpty) {
+            if (json['onAction'] != null) {
+              final raw = Map<String, dynamic>.from(json['onAction']);
+              raw['properties'] ??= {};
+              final data = raw['properties']['data'];
+              if (data is List &&
+                  data.isNotEmpty &&
+                  data[0] is Map<String, dynamic>) {
+                data[0]['value'] = value;
               }
-            ];
-            final action = ActionConfig.fromJson(raw);
-            onAction(action);
+              final action = ActionConfig.fromJson(raw);
+              onAction(action);
+            }
+          } else {
+            FlowCrudStateRegistry().clearAll();
           }
         },
       );
     });
 
+    // CARD
     WidgetRegistry.register('card', (json, context, onAction) {
-      return DigitCard(children: [
-        LayoutMapper.map(json['child'], context, onAction),
-      ]);
+      final crudCtx = CrudItemContext.of(context);
+      final stateData = crudCtx?.stateData;
+
+      return DigitCard(
+        cardType: parseCardType(json['type'] as String? ?? 'primary'),
+        children: (json['children'] as List).map<Widget>((childJson) {
+          final processed = stateData != null
+              ? preprocessConfigWithState(
+                  Map<String, dynamic>.from(childJson),
+                  stateData,
+                  listIndex: crudCtx?.listIndex,
+                  item: crudCtx?.item,
+                )
+              : Map<String, dynamic>.from(childJson);
+
+          return CrudItemContext(
+            stateData: stateData,
+            listIndex: crudCtx?.listIndex,
+            item: crudCtx?.item,
+            screenKey: crudCtx?.screenKey,
+            child: LayoutMapper.map(processed, stateData, context, onAction,
+                item: crudCtx?.item, listIndex: crudCtx?.listIndex),
+          );
+        }).toList(),
+      );
     });
 
+    // FILTER
     WidgetRegistry.register('filter', (json, context, onAction) {
       return DigitButton(
         mainAxisSize: MainAxisSize.min,
@@ -85,7 +203,8 @@ class WidgetRegistry {
         onPressed: () {
           if (json['onAction'] != null) {
             final action = ActionConfig.fromJson(
-                Map<String, dynamic>.from(json['onAction']));
+              Map<String, dynamic>.from(json['onAction']),
+            );
             onAction(action);
           }
         },
@@ -95,7 +214,11 @@ class WidgetRegistry {
       );
     });
 
+    // INFO CARD
     WidgetRegistry.register('infoCard', (json, context, onAction) {
+      final crudCtx = CrudItemContext.of(context);
+      final items = crudCtx?.stateData?.rawState ?? [];
+      if (items.isNotEmpty) return const SizedBox.shrink();
       return InfoCard(
         type: InfoType.info,
         title: json['label'] ?? '',
@@ -103,33 +226,154 @@ class WidgetRegistry {
       );
     });
 
+    // COLUMN
     WidgetRegistry.register('column', (json, context, onAction) {
+      final crudCtx = CrudItemContext.of(context);
+      final stateData = crudCtx?.stateData;
+
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: (json['children'] as List)
-            .map<Widget>(
-                (childJson) => LayoutMapper.map(childJson, context, onAction))
-            .toList(),
+        children: (json['children'] as List).map<Widget>((childJson) {
+          final processedChild = stateData != null
+              ? preprocessConfigWithState(
+                  Map<String, dynamic>.from(childJson),
+                  stateData,
+                  listIndex: crudCtx?.listIndex,
+                  item: crudCtx?.item,
+                )
+              : Map<String, dynamic>.from(childJson);
+
+          return CrudItemContext(
+            stateData: stateData,
+            listIndex: crudCtx?.listIndex,
+            item: crudCtx?.item,
+            screenKey: crudCtx?.screenKey,
+            child: LayoutMapper.map(
+                processedChild, stateData, context, onAction,
+                listIndex: crudCtx?.listIndex, item: crudCtx?.item),
+          );
+        }).toList(),
       );
     });
 
+    // ROW
     WidgetRegistry.register('row', (json, context, onAction) {
+      final crudCtx = CrudItemContext.of(context);
+      final stateData = crudCtx?.stateData;
+      final props = Map<String, dynamic>.from(json['properties'] ?? {});
+
       return Row(
-        children: (json['children'] as List)
-            .map<Widget>(
-                (childJson) => LayoutMapper.map(childJson, context, onAction))
-            .toList(),
+        mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
+        mainAxisAlignment: _parseMainAxisAlignment(props['mainAxisAlignment']),
+        children: (json['children'] as List).map<Widget>((childJson) {
+          final processedChild = stateData != null
+              ? preprocessConfigWithState(
+                  Map<String, dynamic>.from(childJson),
+                  stateData,
+                  listIndex: crudCtx?.listIndex,
+                  item: crudCtx?.item,
+                )
+              : Map<String, dynamic>.from(childJson);
+
+          return CrudItemContext(
+            stateData: stateData,
+            listIndex: crudCtx?.listIndex,
+            item: crudCtx?.item,
+            screenKey: crudCtx?.screenKey,
+            child: LayoutMapper.map(
+                processedChild, stateData, context, onAction,
+                item: crudCtx?.item, listIndex: crudCtx?.listIndex),
+          );
+        }).toList(),
       );
     });
 
+    // TEXT
     WidgetRegistry.register('text', (json, context, onAction) {
-      return Text(json['value'] ?? '');
+      final crudCtx = CrudItemContext.of(context);
+
+      final value = json['value'] ?? '';
+      final finalText = (crudCtx?.stateData != null && value is String)
+          ? interpolateWithCrudStates(
+              template: value,
+              stateData: crudCtx!.stateData!,
+              listIndex: crudCtx.listIndex,
+              item: crudCtx.item,
+            )
+          : value;
+      return Text(finalText);
     });
 
+    WidgetRegistry.register('table', (json, context, onAction) {
+      final data = json['data'] as Map<String, dynamic>? ?? {};
+
+      final columns = (data['columns'] as List<dynamic>?)
+              ?.map((col) => DigitTableColumn(
+                    header: col['header'],
+                    cellValue: col['cellValue'],
+                  ))
+              .toList() ??
+          [];
+
+      final rows = (data['rows'] as List<dynamic>?)
+              ?.map((row) => DigitTableRow(
+                    tableRow: columns.map((col) {
+                      return DigitTableData(
+                        row[col.cellValue]?.toString() ?? 'value',
+                        cellKey: col.cellValue,
+                      );
+                    }).toList(),
+                  ))
+              .toList() ??
+          [];
+
+      return SizedBox(
+        height: (rows.length * 52.0 + 64),
+        child: DigitTable(
+          enableBorder: true,
+          withRowDividers: false,
+          withColumnDividers: false,
+          showSelectedState: false,
+          showPagination: false,
+          columns: columns,
+          rows: rows,
+        ),
+      );
+    });
+
+    // LabelPairList
+    WidgetRegistry.register('labelPairList', (json, context, onAction) {
+      final crudCtx = CrudItemContext.of(context);
+      final List<dynamic> data = json['data'] ?? [];
+
+      return LabelValueSummary(
+        padding: const EdgeInsets.all(0),
+        items: data.map((e) {
+          final key = e['key'] ?? '';
+          final value = e['value'];
+
+          return LabelValueItem(
+            maxLines: 5,
+            label: key,
+            value: (crudCtx?.stateData != null && value is String)
+                ? interpolateWithCrudStates(
+                    template: value,
+                    stateData: crudCtx!.stateData!,
+                    listIndex: crudCtx.listIndex,
+                    item: crudCtx.item,
+                  )
+                : value,
+            labelFlex: 9,
+          );
+        }).toList(),
+      );
+    });
+
+    // SWITCH
     WidgetRegistry.register('switch', (json, context, onAction) {
       return DigitSwitch(
         label: json['label'] ?? '',
-        value: false, // Add state linkage if needed
+        value: false,
         mainAxisAlignment: MainAxisAlignment.start,
         onChanged: (value) {
           if (json['onAction'] != null) {
@@ -147,5 +391,154 @@ class WidgetRegistry {
         },
       );
     });
+
+    // TAG
+    WidgetRegistry.register('tag', (json, context, onAction) {
+      final crudCtx = CrudItemContext.of(context);
+      final label = json['label'] ?? '';
+      final finalLabel = crudCtx?.stateData != null
+          ? interpolateWithCrudStates(
+              template: label,
+              stateData: crudCtx!.stateData!,
+              listIndex: crudCtx.listIndex,
+              item: crudCtx.item,
+            )
+          : label;
+      return Tag(
+        label: finalLabel,
+        type: TagType.error,
+      );
+    });
+
+    // LISTVIEW
+    WidgetRegistry.register('listView', (json, context, onAction) {
+      final crudCtx = CrudItemContext.of(context);
+      final stateData = crudCtx?.stateData;
+
+      // Read `dataSource` from config (ex: "members")
+      final dataSourceKey = json['dataSource'] as String?;
+
+      // Default to full rawState if no key provided
+      final rawState = stateData?.rawState ?? [];
+      var items = rawState;
+      if (dataSourceKey != null && rawState.isNotEmpty) {
+        items = rawState[0]?[dataSourceKey];
+      }
+
+      if (items.isEmpty) return const SizedBox.shrink();
+
+      return Column(
+        children: List.generate(items.length, (index) {
+          final safeItem = (items[index] is Map)
+              ? Map<String, dynamic>.from(
+                  (items[index] as Map)
+                      .map((k, v) => MapEntry(k.toString(), v)),
+                )
+              : <String, dynamic>{};
+
+          // Deep clone the child JSON for each item
+          final childJson = Map<String, dynamic>.from(json['child'] as Map);
+
+          final processedChild = preprocessConfigWithState(
+            childJson,
+            stateData!,
+            listIndex: index,
+            item: safeItem,
+          );
+
+          return CrudItemContext(
+            stateData: stateData,
+            listIndex: index,
+            item: safeItem,
+            screenKey: crudCtx?.screenKey,
+            child: LayoutMapper.map(
+              processedChild,
+              stateData,
+              context,
+              onAction,
+              listIndex: index,
+              item: safeItem,
+              screenKey: crudCtx?.screenKey,
+            ),
+          );
+        }).expand((widget) => [widget, const SizedBox(height: 8)]).toList()
+          ..removeLast(),
+      );
+    });
+  }
+
+  // --- helpers ---
+  DigitButtonType _parseButtonType(String? type) {
+    switch (type) {
+      case 'primary':
+        return DigitButtonType.primary;
+      case 'secondary':
+        return DigitButtonType.secondary;
+      case 'tertiary':
+        return DigitButtonType.tertiary;
+      default:
+        return DigitButtonType.primary;
+    }
+  }
+
+  DigitButtonSize _parseButtonSize(String? size) {
+    switch (size) {
+      case 'small':
+        return DigitButtonSize.small;
+      case 'medium':
+        return DigitButtonSize.medium;
+      case 'large':
+        return DigitButtonSize.large;
+      default:
+        return DigitButtonSize.large;
+    }
+  }
+
+  MainAxisSize _parseMainAxisSize(String? size) {
+    switch (size) {
+      case 'max':
+        return MainAxisSize.max;
+      case 'min':
+        return MainAxisSize.min;
+      default:
+        return MainAxisSize.min;
+    }
+  }
+
+  MainAxisAlignment _parseMainAxisAlignment(String? alignment) {
+    switch (alignment) {
+      case 'start':
+        return MainAxisAlignment.start;
+      case 'center':
+        return MainAxisAlignment.center;
+      case 'end':
+        return MainAxisAlignment.end;
+      case 'spaceBetween':
+        return MainAxisAlignment.spaceBetween;
+      default:
+        return MainAxisAlignment.start;
+    }
+  }
+
+  IconData? _parseIcon(String? iconName) {
+    switch (iconName) {
+      case 'filter':
+        return Icons.filter_alt_sharp;
+      case 'edit':
+        return Icons.edit;
+      default:
+        return null;
+    }
+  }
+
+  CardType parseCardType(String? raw) {
+    switch ((raw ?? '').toLowerCase()) {
+      case 'primary':
+        return CardType.primary;
+      case 'secondary':
+        return CardType.secondary;
+      default:
+        return CardType.primary;
+    }
   }
 }

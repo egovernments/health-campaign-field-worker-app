@@ -1,16 +1,16 @@
+import 'package:digit_formula_parser/digit_formula_parser.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:flutter/material.dart';
-import '../blocs/app_localization.dart';
-import '../models/property_schema/property_schema.dart';
-import '../models/schema_object/schema_object.dart';
 import 'package:uuid/uuid.dart';
 
-class Constants {
+import '../blocs/app_localization.dart';
+import '../models/property_schema/property_schema.dart';
 
+class Constants {
   static RegExp mobileNumberRegExp =
-  RegExp(r'^(?=.{10}$)[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
+      RegExp(r'^(?=.{10}$)[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
   final String dateFormat = 'dd/MM/yyyy';
   final String communityHealthWorker = 'Community Health Worker';
   final String deliveryTeam = 'Delivery Team';
@@ -42,13 +42,13 @@ String? translateIfPresent(String? key, FormLocalization localizations) {
   if (key == null || key == "" || key.trim().isEmpty) return null;
 
   final value = localizations.translate(key);
-  if(value =="" || value.trim().isEmpty) return null;
+  if (value == "" || value.trim().isEmpty) return null;
   return value.trim();
 }
 
 TextInputFormatter? getPatternFormatter(List<ValidationRule>? validations) {
   final patternRule = validations?.firstWhere(
-        (rule) => rule.type == 'pattern' && rule.value is String,
+    (rule) => rule.type == 'pattern' && rule.value is String,
     orElse: () => const ValidationRule(type: '', value: ''),
   );
 
@@ -56,7 +56,8 @@ TextInputFormatter? getPatternFormatter(List<ValidationRule>? validations) {
     final originalPattern = patternRule.value;
 
     // Try to extract allowed character class from patterns like ^[0-9]{10}$
-    final match = RegExp(r'^\^?\[?([^\]]+)\]?\{\d+\}\$?$').firstMatch(originalPattern);
+    final match =
+        RegExp(r'^\^?\[?([^\]]+)\]?\{\d+\}\$?$').firstMatch(originalPattern);
 
     if (match != null) {
       final characterClass = match.group(1); // e.g. 0-9
@@ -79,7 +80,6 @@ TextInputFormatter? getPatternFormatter(List<ValidationRule>? validations) {
 
   return null;
 }
-
 
 bool shouldHideField(PropertySchema schema, FormGroup form) {
   final hidden = schema.hidden;
@@ -151,11 +151,94 @@ bool isDotSeparatedKey(String input) {
   return RegExp(r'^[a-zA-Z]+(\.[a-zA-Z]+)+$').hasMatch(input);
 }
 
-String formatDateLocalized(BuildContext context, DateTime date, String pattern) {
+String formatDateLocalized(
+    BuildContext context, DateTime date, String pattern) {
   final locale = Localizations.localeOf(context).toString();
   return DateFormat(pattern, locale).format(date);
 }
 
+bool evaluateVisibilityExpression(
+    String expression, Map<String, dynamic> values) {
+  final value = FormulaParser(
+    expression,
+    values.isEmpty ? {'dummy': {}} : values,
+  );
 
+  final error = value.parse;
+  return error["value"] == true;
+}
 
+Map<String, dynamic> buildVisibilityEvaluationContext({
+  required String currentPageKey,
+  required FormGroup currentForm,
+  required Map<String, PropertySchema> pages,
+}) {
+  final Map<String, dynamic> flatContext = {};
+  bool isPastCurrentPage = false;
 
+  for (final entry in pages.entries) {
+    final pageKey = entry.key;
+    final pageSchema = entry.value;
+
+    Map<String, dynamic> pageValues;
+
+    if (pageKey == currentPageKey) {
+      pageValues = getFormValues(currentForm, pageSchema);
+    } else if (!isPastCurrentPage) {
+      pageValues = {
+        for (final propEntry in pageSchema.properties!.entries)
+          propEntry.key: propEntry.value.value,
+      };
+    } else {
+      pageValues = {
+        for (final propEntry in pageSchema.properties!.entries)
+          propEntry.key: null,
+      };
+    }
+
+    // Flatten into dot notation (e.g., beneficiaryLocation.first = 'RACHANA')
+    for (final entry in pageValues.entries) {
+      flatContext['$pageKey.${entry.key}'] = entry.value ?? '';
+    }
+
+    if (pageKey == currentPageKey) {
+      isPastCurrentPage = true;
+    }
+  }
+
+  return flatContext;
+}
+
+Map<String, dynamic> getFormValues(
+  FormGroup form,
+  PropertySchema schema,
+) {
+  final values = schema.properties!.entries
+      .map((e) => getParsedValues(form, e.key, e.value))
+      .whereType<MapEntry<String, dynamic>>()
+      .toList();
+
+  return Map.fromEntries(values);
+}
+
+MapEntry<String, dynamic>? getParsedValues(
+  FormGroup form,
+  String name,
+  PropertySchema schema,
+) {
+  if (schema.type == PropertySchemaType.object) {
+    final results = schema.properties!.entries.map((e) {
+      return getParsedValues(form, e.key, e.value);
+    });
+    return MapEntry(
+      name,
+      Map.fromEntries(results.whereType<MapEntry<String, dynamic>>()),
+    );
+  } else {
+    final value = form.control(name).value;
+    if (value == null) {
+      return MapEntry(name, "");
+    }
+    return MapEntry(name, value);
+  }
+}

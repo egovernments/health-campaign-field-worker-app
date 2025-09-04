@@ -541,14 +541,14 @@ packages:
       path: "../../packages/digit_crud_bloc"
       relative: true
     source: path
-    version: "0.0.2-dev"
+    version: "0.0.3-dev"
   digit_data_converter:
     dependency: "direct main"
     description:
       path: "../../packages/digit_data_converter"
       relative: true
     source: path
-    version: "0.0.3-dev"
+    version: "0.0.4-dev"
   digit_data_model:
     dependency: "direct main"
     description:
@@ -595,10 +595,9 @@ packages:
   digit_location_tracker:
     dependency: "direct main"
     description:
-      name: digit_location_tracker
-      sha256: a93bda5b07db112210e08c7a76f0627957d931d5106c8a7db8876503cc2fd06f
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_location_tracker"
+      relative: true
+    source: path
     version: "1.0.0"
   digit_scanner:
     dependency: "direct main"
@@ -618,10 +617,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: b2dda81f96bc971306815aee9e7cf471bed94217c68ca1df0d0289debbb86a7b
+      sha256: "37c5c974bbc60567588f71bf6cddf49dc69d3248d0b4bca4525af837cf67a8f2"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.2+7"
+    version: "0.2.2+8"
   dio:
     dependency: "direct main"
     description:
@@ -1002,8 +1001,8 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "9ead63aa7e01f7603a453368de1ee2b4dc009ed6"
-      url: "https://github.com/champeauxr/flutter_nearby_connections"
+      resolved-ref: c5dfa1108d04089b8e865d7ac22d74d5472f12ea
+      url: "https://github.com/naveenr-egov/flutter_nearby_connections"
     source: git
     version: "1.1.2"
   flutter_plugin_android_lifecycle:
@@ -1894,7 +1893,7 @@ packages:
       path: "../../packages/registration_delivery"
       relative: true
     source: path
-    version: "1.1.0-dev.4-console"
+    version: "1.1.0-dev.8-console"
   rxdart:
     dependency: transitive
     description:
@@ -2121,7 +2120,7 @@ packages:
       path: "../../packages/sync_service"
       relative: true
     source: path
-    version: "1.0.2"
+    version: "1.0.3"
   synchronized:
     dependency: transitive
     description:

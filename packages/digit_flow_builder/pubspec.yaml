@@ -16,6 +16,8 @@ dependencies:
   digit_ui_components: ^0.2.2+7
   flutter_bloc: ^8.1.5
   auto_route: ^8.1.3
+  digit_data_model: ^1.2.0-dev.1-console
+  digit_formula_parser: ^1.0.0
 
 dev_dependencies:
   flutter_test:

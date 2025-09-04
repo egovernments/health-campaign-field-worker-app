@@ -133,6 +133,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: WrappedRoute(child: const PeerToPeerWrapperPage()),
       );
     },
+    PermissionsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const PermissionsPage(),
+      );
+    },
     ProfileRoute.name: (routeData) {
       final args = routeData.argsAs<ProfileRouteArgs>(
           orElse: () => const ProfileRouteArgs());
@@ -587,6 +593,20 @@ class PeerToPeerWrapperRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'PeerToPeerWrapperRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PermissionsPage]
+class PermissionsRoute extends PageRouteInfo<void> {
+  const PermissionsRoute({List<PageRouteInfo>? children})
+      : super(
+          PermissionsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'PermissionsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

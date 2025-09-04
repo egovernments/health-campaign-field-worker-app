@@ -191,6 +191,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         label: localizations.translate(
                           i18.forgotPassword.actionLabel,
                         ),
+                        capitalizeLetters: false,
                         mainAxisSize: MainAxisSize.max,
                         type: DigitButtonType.tertiary,
                         size: DigitButtonSize.medium,
@@ -233,12 +234,12 @@ class _LoginPageState extends LocalizedState<LoginPage> {
 
   FormGroup buildForm() => fb.group(<String, Object>{
         _userId: FormControl<String>(
-          value: '',
+          value: 'USR-024282',
           validators: [Validators.required],
         ),
         _password: FormControl<String>(
           validators: [Validators.required],
-          value: '',
+          value: 'eGov@123',
         ),
         _privacyCheck: FormControl<bool>(
           value: false,

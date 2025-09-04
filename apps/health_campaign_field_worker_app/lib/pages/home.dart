@@ -16,6 +16,7 @@ import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
+import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
 import 'package:digit_location_tracker/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
@@ -338,10 +339,46 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.announcement,
           label: i18.home.fileComplaint,
-          onPressed: () {
+          onPressed: () async {
             if (isTriggerLocalisation) {
-              triggerLocalization();
+              final moduleName =
+                  'hcm-complaintflow-${context.selectedProject.referenceID}';
+              triggerLocalization(module: moduleName);
               isTriggerLocalisation = false;
+            }
+
+            final prefs = await SharedPreferences.getInstance();
+            final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+            if (schemaJsonRaw != null) {
+              final allSchemas =
+                  json.decode(schemaJsonRaw) as Map<String, dynamic>;
+
+              final complaintSchemaEntry =
+                  allSchemas['COMPLAINTFLOW'] as Map<String, dynamic>?;
+
+              final complaintSchemaData = complaintSchemaEntry?['data'];
+
+              if (complaintSchemaData != null) {
+                // Extract templates from both schemas
+                final regTemplatesRaw = complaintSchemaData?['templates'];
+
+                final Map<String, dynamic> complaintTemplateMap =
+                    regTemplatesRaw is Map<String, dynamic>
+                        ? regTemplatesRaw
+                        : {};
+
+                final templates = {
+                  for (final entry in complaintTemplateMap.entries)
+                    entry.key: TemplateConfig.fromJson(
+                        entry.value as Map<String, dynamic>)
+                };
+
+                final complaintConfig = json.encode(complaintSchemaData);
+
+                ComplaintsSingleton().setTemplateConfigs(templates);
+                ComplaintsSingleton().setComplaintConfig(complaintConfig);
+              }
             }
             context.router.push(const ComplaintsInboxWrapperRoute());
           },
@@ -426,7 +463,19 @@ class _HomePageState extends LocalizedState<HomePage> {
             RegistrationDeliverySingleton()
                 .setHouseholdType(HouseholdType.family);
 
-            await context.router.push(const RegistrationDeliveryWrapperRoute());
+            FlowBuilderSingleton().setPersistenceConfiguration(
+                persistenceConfiguration:
+                    PersistenceConfiguration.offlineFirst);
+            WidgetRegistry().initializeDefaultWidgetRegistry();
+            try {
+              context.router.push(
+                FlowBuilderHomeRoute(pageName: 'searchBeneficiary'),
+              );
+            } catch (e) {
+              debugPrint('error $e');
+            }
+
+            // await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
       ),
@@ -587,7 +636,6 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.table_chart,
           label: i18.home.db,
           onPressed: () async {
-            WidgetRegistry().initializeDefaultWidgetRegistry();
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => DriftDbViewer(
@@ -595,13 +643,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                 ),
               ),
             );
-            // try {
-            //   context.router.push(
-            //     FlowBuilderHomeRoute(pageName: 'searchBeneficiary'),
-            //   );
-            // } catch (e) {
-            //   debugPrint('error $e');
-            // }
           },
         ),
       ),
@@ -794,6 +835,15 @@ void setPackagesSingleton(BuildContext context) {
           projectId: context.selectedProject.id,
           minAge: context.selectedProjectType?.validMinAge,
           maxAge: context.selectedProjectType?.validMaxAge,
+        );
+        FlowBuilderSingleton().setInitialData(
+          loggedInUser: context.loggedInUserModel,
+          loggedInUserUuid: context.loggedInUserUuid,
+          maxRadius: appConfiguration.maxRadius!,
+          projectId: context.projectId,
+          selectedBeneficiaryType: context.beneficiaryType,
+          projectType: context.selectedProjectType,
+          selectedProject: context.selectedProject,
         );
         ComplaintsSingleton().setInitialData(
           tenantId: envConfig.variables.tenantId,

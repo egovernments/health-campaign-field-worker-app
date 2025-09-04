@@ -1,3 +1,7 @@
+## 1.0.3
+
+* Updated sync error to return runtime type and error message
+
 ## 1.0.2
 
 * Updated data_model version to latest

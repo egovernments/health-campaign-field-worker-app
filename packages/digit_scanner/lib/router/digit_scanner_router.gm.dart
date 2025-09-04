@@ -27,6 +27,7 @@ abstract class $DigitScannerPackageRoute extends _i2.AutoRouterModule {
           isGS1code: args.isGS1code,
           singleValue: args.singleValue,
           isEditEnabled: args.isEditEnabled,
+          regex: args.regex,
         ),
       );
     }
@@ -43,6 +44,7 @@ class DigitScannerRoute extends _i2.PageRouteInfo<DigitScannerRouteArgs> {
     required bool isGS1code,
     bool singleValue = false,
     bool isEditEnabled = false,
+    String? regex,
     List<_i2.PageRouteInfo>? children,
   }) : super(
           DigitScannerRoute.name,
@@ -53,6 +55,7 @@ class DigitScannerRoute extends _i2.PageRouteInfo<DigitScannerRouteArgs> {
             isGS1code: isGS1code,
             singleValue: singleValue,
             isEditEnabled: isEditEnabled,
+            regex: regex,
           ),
           initialChildren: children,
         );
@@ -71,6 +74,7 @@ class DigitScannerRouteArgs {
     required this.isGS1code,
     this.singleValue = false,
     this.isEditEnabled = false,
+    this.regex,
   });
 
   final _i3.Key? key;
@@ -85,8 +89,10 @@ class DigitScannerRouteArgs {
 
   final bool isEditEnabled;
 
+  final String? regex;
+
   @override
   String toString() {
-    return 'DigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled}';
+    return 'DigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled, regex: $regex}';
   }
 }
