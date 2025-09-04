@@ -597,6 +597,10 @@ class FormEntityMapper {
     if (instruction.startsWith('__value:')) {
       final valueStr = instruction.replaceFirst('__value:', '').trim();
 
+      if (valueStr == 'DATETIME.NOW') {
+        return DateTime.now().millisecondsSinceEpoch;
+      }
+
       // Try to convert to bool, int, double, or null
       if (valueStr == 'true') return true;
       if (valueStr == 'false') return false;

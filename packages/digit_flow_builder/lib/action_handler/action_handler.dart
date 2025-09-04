@@ -108,6 +108,22 @@ class ActionHandler {
         // Determine which form data to use
         Map<String, dynamic>? formValuesToUse = contextData['formData'];
 
+        // 🔹 Collect extra key-values from action.properties['data']
+        final Map<String, dynamic> extraContext = {};
+        final List<dynamic>? extraData = action.properties['data'];
+        if (extraData != null) {
+          for (final entry in extraData) {
+            final key = entry['key'] as String;
+            final valuePath = entry['value'] as String?;
+            if (valuePath != null) {
+              final resolvedValue = resolveValue(valuePath, contextData);
+              if (resolvedValue != null) {
+                extraContext[key] = resolvedValue;
+              }
+            }
+          }
+        }
+
         if (formDataConfig != null) {
           final collectedFormData =
               FlowCrudStateRegistry().get(formDataConfig)?.formData;
@@ -139,6 +155,7 @@ class ActionHandler {
             // converting in json format to match nested object value as passing model will cause issue
             'userUUID': FlowBuilderSingleton().loggedInUser?.uuid,
             'householdType': HouseholdType.family.toValue(),
+            ...extraContext,
 
             /// TODO: NEED TO REMOVE THIS
             "beneficiaryType": BeneficiaryType.individual
