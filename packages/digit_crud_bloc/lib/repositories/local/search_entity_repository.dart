@@ -51,34 +51,111 @@ class SearchEntityRepository extends LocalRepository {
     required PaginationParams? pagination,
   }) async {
     final rootTable = filters.first.root;
-    final queriedModels = <String>{rootTable};
+    final queriedModels = <String>{};
     final allResults = <Map<String, dynamic>>[];
     var totalCount = 0;
     final modelToResults = <String, List<Map<String, dynamic>>>{};
 
-    final rootResults = await QueryBuilder.queryRawTable(
-      sql: sql,
-      table: rootTable,
-      filters: filters,
-      select: select,
-      pagination: pagination,
-      isPrimaryTable: primaryTable == rootTable,
-      onCountFetched: (count) {
-        totalCount = count;
-      },
-    );
+    // Step 1: If root and primary table are same, just query directly
+    if (rootTable == primaryTable) {
+      final rootResults = await QueryBuilder.queryRawTable(
+        sql: sql,
+        table: rootTable,
+        filters: filters,
+        select: select,
+        pagination: pagination,
+        isPrimaryTable: true,
+        onCountFetched: (count) {
+          totalCount = count;
+        },
+      );
 
-    final hydratedRoot = await HydrationHelper.hydrateRawRows(
-      sql,
-      this,
-      rootResults,
-      nestedModelMapping,
-      rootTable,
-    );
+      final hydratedRoot = await HydrationHelper.hydrateRawRows(
+        sql,
+        this,
+        rootResults,
+        nestedModelMapping,
+        rootTable,
+      );
 
-    modelToResults[rootTable] = hydratedRoot;
-    allResults.addAll(hydratedRoot);
+      modelToResults[rootTable] = hydratedRoot;
+      allResults.addAll(hydratedRoot);
+      queriedModels.add(rootTable);
+    } else {
+      // Step 2: Root filter is on another entity, need to resolve primary table
+      final rootResults = await QueryBuilder.queryRawTable(
+        sql: sql,
+        table: rootTable,
+        filters: filters,
+        select: select,
+        pagination: pagination,
+        isPrimaryTable: false,
+        onCountFetched: (count) {
+          totalCount = count;
+        },
+      );
 
+      final hydratedRoot = await HydrationHelper.hydrateRawRows(
+        sql,
+        this,
+        rootResults,
+        nestedModelMapping,
+        rootTable,
+      );
+
+      modelToResults[rootTable] = hydratedRoot;
+
+      // Traverse to primary table
+      final pathToPrimary = await RelationshipGraphHelper.findShortestPath(
+        fromModels: {rootTable},
+        toModel: primaryTable!,
+        graph: relationshipGraph,
+      );
+
+      var currentRows = hydratedRoot;
+      for (final rel in pathToPrimary) {
+        final fromKey = QueryBuilder.camelToSnake(rel.localKey);
+        final toTable = QueryBuilder.camelToSnake(rel.to);
+        final toKey = QueryBuilder.camelToSnake(rel.foreignKey);
+
+        final joinValues =
+            currentRows.map((row) => row[fromKey]).whereType().toSet().toList();
+        if (joinValues.isEmpty) break;
+
+        final filter = SearchFilter(
+          root: toTable,
+          field: toKey,
+          operator: 'in',
+          value: joinValues,
+        );
+
+        currentRows = await QueryBuilder.queryRawTable(
+          sql: sql,
+          table: toTable,
+          filters: [filter],
+          select: select,
+          isPrimaryTable: toTable == primaryTable,
+          pagination: pagination,
+          onCountFetched: (count) {
+            totalCount = count;
+          },
+        );
+      }
+
+      final hydratedPrimary = await HydrationHelper.hydrateRawRows(
+        sql,
+        this,
+        currentRows,
+        nestedModelMapping,
+        primaryTable!,
+      );
+
+      modelToResults[primaryTable!] = hydratedPrimary;
+      allResults.addAll(hydratedPrimary);
+      queriedModels.add(primaryTable!);
+    }
+
+    // Step 3: Expand all other requested models fully (no original filters, only relationship based)
     for (final model in select) {
       if (queriedModels.contains(model)) continue;
 
@@ -105,6 +182,7 @@ class SearchEntityRepository extends LocalRepository {
             currentRows.map((row) => row[fromKey]).whereType().toSet().toList();
         if (joinValues.isEmpty) break;
 
+        // Only relationship filter, no original user filter here
         final filter = SearchFilter(
           root: toTable,
           field: toKey,
@@ -117,7 +195,7 @@ class SearchEntityRepository extends LocalRepository {
           table: toTable,
           filters: [filter],
           select: select,
-          isPrimaryTable: primaryTable == toTable,
+          isPrimaryTable: toTable == primaryTable,
           pagination: pagination,
           onCountFetched: (count) {
             totalCount = count;
@@ -137,7 +215,7 @@ class SearchEntityRepository extends LocalRepository {
       queriedModels.add(model);
     }
 
-    // Group results by model name
+    // Step 4: Group results by model name
     final Map<String, List<EntityModel>> groupedResults = {};
 
     for (final row in allResults) {
