@@ -87,16 +87,20 @@ class WidgetRegistry {
 
             // If action has navigation data, resolve templates
             final navData = action.properties['data'] as List<dynamic>?;
-            if (navData != null) {
+
+            final crudCtx = CrudItemContext.of(context);
+            final stateData =
+                (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
+                    ? crudCtx.item
+                    : crudCtx?.stateData?.rawState != null &&
+                            crudCtx!.stateData!.rawState.isNotEmpty
+                        ? crudCtx.stateData?.rawState.first
+                        : null;
+
+            if (navData != null && stateData != null) {
               final resolvedData = navData.map((entry) {
                 final key = entry['key'] as String;
                 final rawValue = entry['value'];
-
-                final crudCtx = CrudItemContext.of(context);
-                final stateData =
-                    (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
-                        ? crudCtx.item
-                        : crudCtx?.stateData?.rawState.first;
 
                 // This helper should resolve {{navigation.x}}, {{item.y}}, etc.
                 final resolvedValue = resolveValue(
