@@ -271,7 +271,7 @@ final jsonConfig = {
 
           /// Note: Generate uuid
           "rowVersion": "meta.rowVersion",
-          "dateOfRegistration": "householdDetails.dateOfRegistration",
+          "dateOfRegistration": "__value:DATETIME.NOW",
           "additionalFields": "additionalInfo.fields",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
@@ -281,8 +281,7 @@ final jsonConfig = {
         "mappings": {
           "id": "members.id",
           "householdId": "members.householdId",
-          "householdClientReferenceId":
-              "__context:HouseholdModel.clientReferenceId",
+          "householdClientReferenceId": "__context:HouseholdClientReferenceId",
           "individualId": "members.individualId",
           "individualClientReferenceId":
               "__ref:IndividualModel.clientReferenceId",

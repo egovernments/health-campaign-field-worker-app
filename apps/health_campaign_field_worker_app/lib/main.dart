@@ -1225,8 +1225,8 @@ final List<Map<String, dynamic>> sampleFlows = [
                 "name": "ADD_MEMBER",
                 "data": [
                   {
-                    "key": "nameOfIndividual",
-                    "value": "item.individual.name.givenName"
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{household.HouseholdModel.clientReferenceId}}"
                   }
                 ]
               }
@@ -1531,6 +1531,12 @@ final List<Map<String, dynamic>> sampleFlows = [
               "actionType": "SHOW_TOAST",
               "properties": {"message": "Failed to fetch config."}
             }
+          ],
+          "data": [
+            {
+              "key": "HouseholdClientReferenceId",
+              "value": "{{contextData.navigation.HouseholdClientReferenceId}}"
+            }
           ]
         }
       },
@@ -1559,9 +1565,8 @@ final List<Map<String, dynamic>> sampleFlows = [
           ],
           "data": [
             {
-              "key": "selectedIndividual",
-              "value":
-                  "{{contextData.entities.IndividualModel.clientReferenceId}}"
+              "key": "HouseholdClientReferenceId",
+              "value": "{{contextData.navigation.HouseholdClientReferenceId}}"
             }
           ]
         }
