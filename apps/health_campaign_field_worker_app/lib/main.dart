@@ -166,7 +166,7 @@ final List<Map<String, dynamic>> sampleFlows = [
           "entity": "IndividualModel",
           "match": {
             "field": "clientReferenceId",
-            "inFrom": "individualClientReferenceId"
+            "inFrom": "members.individualClientReferenceId"
           }
         },
         {
@@ -174,7 +174,7 @@ final List<Map<String, dynamic>> sampleFlows = [
           "entity": "ProjectBeneficiaryModel",
           "match": {
             "field": "beneficiaryClientReferenceId",
-            "equalsFrom": "householdMember.individualClientReferenceId"
+            "equalsFrom": "individuals.clientReferenceId"
           }
         },
         {
@@ -1029,7 +1029,7 @@ final List<Map<String, dynamic>> sampleFlows = [
           "entity": "IndividualModel",
           "match": {
             "field": "clientReferenceId",
-            "inFrom": "householdMember.individualClientReferenceId"
+            "inFrom": "HouseholdMemberModel.individualClientReferenceId"
           }
         },
         {
@@ -1037,7 +1037,7 @@ final List<Map<String, dynamic>> sampleFlows = [
           "entity": "ProjectBeneficiaryModel",
           "match": {
             "field": "beneficiaryClientReferenceId",
-            "equalsFrom": "household.clientReferenceId"
+            "equalsFrom": "individuals.clientReferenceId"
           }
         },
         {
@@ -1142,7 +1142,7 @@ final List<Map<String, dynamic>> sampleFlows = [
                   "children": [
                     {
                       "format": "text",
-                      "value": "{{ context.headOfHousehold.name.givenName }}",
+                      "value": "{{ context.individuals.name.givenName }}",
                     },
                     {
                       "format": "button",
@@ -1169,7 +1169,7 @@ final List<Map<String, dynamic>> sampleFlows = [
                 {
                   "format": "text",
                   "value":
-                      "{{ context.headOfHousehold.gender }} | {{context.headOfHousehold.age}} date of birth"
+                      "{{ context.individuals.gender }} | {{context.individuals.dateOfBirth}} date of birth"
                 },
                 {"format": "tag", "type": "", "label": "Not visited"},
                 {
