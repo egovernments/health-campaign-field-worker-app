@@ -157,27 +157,46 @@ class WrapperBuilder {
   }
 
   List<dynamic> _findRelatedEntities(
-      dynamic root,
-      Map<String, dynamic> relation,
-      Map<String, dynamic> wrapperData,
-      Map<String, List<dynamic>> entityMap) {
+    dynamic root,
+    Map<String, dynamic> relation,
+    Map<String, dynamic> wrapperData,
+    Map<String, List<dynamic>> entityMap,
+  ) {
     final entityType = relation['entity'];
     final candidates = entityMap[entityType] ?? [];
-    final match = relation['match'];
 
-    return candidates.where((e) {
-      final field = match['field'];
-      if (match.containsKey('equalsFrom')) {
-        return EnhancedEntityFieldAccessor.getFieldValue(e, field) ==
-            _resolveValue(match['equalsFrom'], root, wrapperData);
-      }
-      if (match.containsKey('inFrom')) {
-        final values = _resolveList(match['inFrom'], wrapperData);
-        return values
-            .contains(EnhancedEntityFieldAccessor.getFieldValue(e, field));
-      }
+    final match = relation['match'] as Map<String, dynamic>?;
+    if (match == null) return [];
+
+    final targetField = match['field'] as String?;
+    final equalsFrom = match['equalsFrom'] as String?;
+    final inFrom = match['inFrom'] as String?;
+
+    final equalsValue = equalsFrom != null
+        ? _resolveValue(equalsFrom, root, wrapperData)
+        : null;
+    final inValues =
+        inFrom != null ? _resolveList(inFrom, wrapperData).toSet() : null;
+
+    var related = candidates.where((e) {
+      if (targetField == null) return false;
+      final candidateValue = _resolveValue(targetField, e, wrapperData);
+      if (equalsValue != null) return candidateValue == equalsValue;
+      if (inValues != null) return inValues.contains(candidateValue);
       return false;
     }).toList();
+
+    final filters = relation['filters'] as List<dynamic>? ?? [];
+    related = related.where((entity) {
+      return filters.every((filter) {
+        final field = filter['field'];
+        final expected = filter['equals'];
+        final actual = _resolveValue(field, entity, wrapperData);
+        return actual == expected;
+      });
+    }).toList();
+
+    return related;
   }
 
   dynamic _resolveValue(
@@ -186,28 +205,80 @@ class WrapperBuilder {
 
     if (parts.length == 1) {
       if (root is EntityModel) {
-        return EnhancedEntityFieldAccessor.getFieldValue(root, parts[0]);
+        final value = EnhancedEntityFieldAccessor.getFieldValue(root, parts[0]);
+        return value;
       }
       return null;
     }
 
     dynamic current = wrapperData;
-    for (final part in parts) {
-      // TODO: WRITTING THIS TO FETCH SINGLE DATA.. WILL LOOK LATER FOR MULTIPLE DATA;
-      if (current is List && current.length == 1) {
-        current = current.first;
-      }
+
+    for (var i = 0; i < parts.length; i++) {
+      final part = parts[i];
+      final isLast = i == parts.length - 1;
+
+      // If current is a Map, index directly
       if (current is Map) {
         current = current[part];
-      } else if (current is List && int.tryParse(part) != null) {
-        current = current[int.parse(part)];
-      } else if (current is EntityModel) {
-        current = EnhancedEntityFieldAccessor.getFieldValue(current, part);
-      } else {
-        return null;
+        continue;
       }
-    }
 
+      // If current is a List:
+      if (current is List) {
+        // Numeric index into the list: members.0.name
+        if (int.tryParse(part) != null) {
+          final idx = int.parse(part);
+          if (idx >= 0 && idx < current.length) {
+            current = current[idx];
+            continue;
+          } else {
+            return null;
+          }
+        }
+
+        // Non-numeric: map each element to the requested field and flatten results
+        final List<dynamic> next = [];
+        for (final item in current) {
+          dynamic val;
+          if (item is Map) {
+            val = item[part];
+          } else if (item is EntityModel) {
+            val = EnhancedEntityFieldAccessor.getFieldValue(item, part);
+          } else if (item is List && int.tryParse(part) != null) {
+            final idx = int.parse(part);
+            if (idx >= 0 && idx < item.length) val = item[idx];
+          }
+
+          if (val != null) {
+            if (val is Iterable && val is! String) {
+              next.addAll(val.where((e) => e != null));
+            } else {
+              next.add(val);
+            }
+          }
+        }
+
+        if (next.isEmpty) return null;
+
+        // If this is the last path part and next has exactly one value,
+        // collapse to the single value to preserve existing scalar semantics.
+        if (isLast && next.length == 1) {
+          current = next.first;
+        } else {
+          current = next;
+        }
+        continue;
+      }
+
+      // If current is an EntityModel, read the field via accessor
+      if (current is EntityModel) {
+        current = EnhancedEntityFieldAccessor.getFieldValue(current, part);
+        continue;
+      }
+
+      // If nothing matched, bail out
+      return null;
+    }
     return current;
   }
 
