@@ -305,8 +305,10 @@ class WidgetRegistry {
     });
 
     WidgetRegistry.register('table', (json, context, onAction) {
-      final data = json['data'] as Map<String, dynamic>? ?? {};
+      final crudCtx = CrudItemContext.of(context);
+      final stateData = crudCtx?.stateData;
 
+      final data = Map<String, dynamic>.from(json['data'] ?? {});
       final columns = (data['columns'] as List<dynamic>?)
               ?.map((col) => DigitTableColumn(
                     header: col['header'],
@@ -315,17 +317,41 @@ class WidgetRegistry {
               .toList() ??
           [];
 
-      final rows = (data['rows'] as List<dynamic>?)
-              ?.map((row) => DigitTableRow(
-                    tableRow: columns.map((col) {
-                      return DigitTableData(
-                        row[col.cellValue]?.toString() ?? 'value',
-                        cellKey: col.cellValue,
-                      );
-                    }).toList(),
-                  ))
-              .toList() ??
-          [];
+      List<dynamic> sourceList = [];
+
+      if (data['source'] != null && stateData != null) {
+        final processed = preprocessConfigWithState(
+          {"value": "${data['source']}"},
+          stateData,
+          listIndex: crudCtx?.listIndex,
+          item: crudCtx?.item,
+        );
+
+        final resolved = processed['value'];
+        if (resolved is List) {
+          sourceList = resolved;
+        }
+      }
+
+      final rows = sourceList.map((rowItem) {
+        return DigitTableRow(
+          tableRow: columns.map((col) {
+            // resolve each cell dynamically against rowItem
+            final processed = preprocessConfigWithState(
+              {"value": col.cellValue},
+              stateData!,
+              listIndex: crudCtx?.listIndex,
+              item: rowItem,
+            );
+
+            final resolvedValue = processed['value'];
+            return DigitTableData(
+              resolvedValue?.toString() ?? '',
+              cellKey: col.cellValue,
+            );
+          }).toList(),
+        );
+      }).toList();
 
       return SizedBox(
         height: (rows.length * 52.0 + 64),

@@ -131,33 +131,34 @@ final List<Map<String, dynamic>> sampleFlows = [
     ],
     "wrapperConfig": {
       "wrapperName": "HouseholdWrapper",
-      "rootEntity": "HouseholdMemberModel",
-      "filters": [
-        {"field": "isHeadOfHousehold", "equals": true}
-      ],
+      "rootEntity": "HouseholdModel",
+      "filters": [],
       "relations": [
-        {
-          "name": "household",
-          "entity": "HouseholdModel",
-          "match": {
-            "field": "clientReferenceId",
-            "equalsFrom": "householdClientReferenceId"
-          }
-        },
         {
           "name": "members",
           "entity": "HouseholdMemberModel",
           "match": {
             "field": "householdClientReferenceId",
-            "equalsFrom": "household.clientReferenceId"
+            "equalsFrom": "clientReferenceId"
           }
         },
         {
           "name": "headOfHousehold",
+          "entity": "HouseholdMemberModel",
+          "match": {
+            "field": "householdClientReferenceId",
+            "equalsFrom": "clientReferenceId"
+          },
+          "filters": [
+            {"field": "isHeadOfHousehold", "equals": true}
+          ]
+        },
+        {
+          "name": "headIndividual",
           "entity": "IndividualModel",
           "match": {
             "field": "clientReferenceId",
-            "equalsFrom": "HouseholdMemberModel.individualClientReferenceId"
+            "equalsFrom": "headOfHousehold.individualClientReferenceId"
           }
         },
         {
@@ -165,7 +166,7 @@ final List<Map<String, dynamic>> sampleFlows = [
           "entity": "IndividualModel",
           "match": {
             "field": "clientReferenceId",
-            "inFrom": "members.individualClientReferenceId"
+            "inFrom": "individualClientReferenceId"
           }
         },
         {
@@ -173,7 +174,7 @@ final List<Map<String, dynamic>> sampleFlows = [
           "entity": "ProjectBeneficiaryModel",
           "match": {
             "field": "beneficiaryClientReferenceId",
-            "equalsFrom": "household.clientReferenceId"
+            "equalsFrom": "householdMember.individualClientReferenceId"
           }
         },
         {
@@ -189,7 +190,7 @@ final List<Map<String, dynamic>> sampleFlows = [
           "entity": "SideEffectModel",
           "match": {
             "field": "clientReferenceId",
-            "equalsFrom": "household.clientReferenceId"
+            "equalsFrom": "clientReferenceId"
           }
         },
         {
@@ -197,15 +198,15 @@ final List<Map<String, dynamic>> sampleFlows = [
           "entity": "ReferralModel",
           "match": {
             "field": "clientReferenceId",
-            "equalsFrom": "household.clientReferenceId"
+            "equalsFrom": "clientReferenceId"
           }
         }
       ],
       "searchConfig": {
         "primary": "household",
         "select": [
-          "individual",
           "household",
+          "individual",
           "householdMember",
           "projectBeneficiary",
           "task"
@@ -278,7 +279,7 @@ final List<Map<String, dynamic>> sampleFlows = [
         "format": "listView",
         "hidden": "{{ context.household.empty }}",
         "fieldName": "listView",
-        "data": "household",
+        "data": "members",
         "child": {
           "format": "card",
           "children": [
@@ -291,7 +292,7 @@ final List<Map<String, dynamic>> sampleFlows = [
               "children": [
                 {
                   "format": "text",
-                  "value": "{{ context.headOfHousehold.name.givenName }}"
+                  "value": "{{ context.headIndividual.name.givenName }}"
                 },
                 {
                   "format": "button",
@@ -306,7 +307,7 @@ final List<Map<String, dynamic>> sampleFlows = [
                         {
                           "key": "selectedIndividual",
                           "value":
-                              "{{headOfHousehold.IndividualModel.clientReferenceId}}"
+                              "{{ headIndividual.IndividualModel.clientReferenceId }}"
                         }
                       ]
                     }
@@ -316,20 +317,23 @@ final List<Map<String, dynamic>> sampleFlows = [
             },
             {
               "format": "text",
-              "value": "{{ context.members.isHeadOfHousehold }}"
+              "value": "{{ context.headOfHousehold.isHeadOfHousehold }}"
             },
             {
               "format": "table",
               "data": {
+                "source": "context.members",
                 "columns": [
-                  {"header": "Dose", "cellValue": "dose"},
-                  {"header": "Resources", "cellValue": "resources"}
+                  {
+                    "header": "Beneficiary",
+                    "cellValue": "context.members.isHeadOfHousehold"
+                  },
+                  {
+                    "header": "Id Number",
+                    "cellValue": "context.individual.identifiers[0].id"
+                  }
                 ],
-                "rows": [
-                  {"dose": "Dose 1", "resources": "2 - Paracetamol"},
-                  {"dose": "Dose 2", "resources": "1 - Paracetamol"},
-                  {"dose": "Dose 3", "resources": "1 - Paracetamol"}
-                ]
+                "rows": []
               }
             }
           ]
@@ -990,7 +994,10 @@ final List<Map<String, dynamic>> sampleFlows = [
       "wrapperName": "HouseholdWrapper",
       "rootEntity": "HouseholdMemberModel",
       "filters": [
-        {"field": "isHeadOfHousehold", "equals": true}
+        {
+          "field": "clientReferenceId",
+          "equalsFrom": "{{context.household.clientReferenceId}}"
+        }
       ],
       "relations": [
         {
@@ -1022,7 +1029,7 @@ final List<Map<String, dynamic>> sampleFlows = [
           "entity": "IndividualModel",
           "match": {
             "field": "clientReferenceId",
-            "inFrom": "members.individualClientReferenceId"
+            "inFrom": "householdMember.individualClientReferenceId"
           }
         },
         {
