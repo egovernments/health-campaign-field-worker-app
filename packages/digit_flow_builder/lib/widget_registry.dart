@@ -320,33 +320,49 @@ class WidgetRegistry {
       List<dynamic> sourceList = [];
 
       if (data['source'] != null && stateData != null) {
-        final processed = preprocessConfigWithState(
-          {"value": "${data['source']}"},
-          stateData,
-          listIndex: crudCtx?.listIndex,
-          item: crudCtx?.item,
-        );
-
-        final resolved = processed['value'];
-        if (resolved is List) {
-          sourceList = resolved;
+        final rawState = stateData.rawState ?? [];
+        if (rawState.isNotEmpty) {
+          sourceList = rawState[0]?[data['source']] ?? [];
         }
       }
 
-      final rows = sourceList.map((rowItem) {
+      if (sourceList.isEmpty) return const SizedBox.shrink();
+
+      final rows = sourceList.asMap().entries.map((entry) {
+        final rowIndex = entry.key;
+        final rowItem = entry.value;
+
+        final safeItem = (rowItem is Map)
+            ? Map<String, dynamic>.from(
+                rowItem.map((k, v) => MapEntry(k.toString(), v)),
+              )
+            : <String, dynamic>{"value": rowItem.toString()};
+
         return DigitTableRow(
           tableRow: columns.map((col) {
-            // resolve each cell dynamically against rowItem
             final processed = preprocessConfigWithState(
               {"value": col.cellValue},
               stateData!,
-              listIndex: crudCtx?.listIndex,
-              item: rowItem,
+              listIndex: rowIndex,
+              item: safeItem,
             );
 
             final resolvedValue = processed['value'];
+
+            final finalText;
+            if ((resolvedValue is String)) {
+              finalText = interpolateWithCrudStates(
+                template: resolvedValue,
+                stateData: stateData,
+                listIndex: rowIndex,
+                item: safeItem,
+              );
+            } else {
+              finalText = resolvedValue;
+            }
+
             return DigitTableData(
-              resolvedValue?.toString() ?? '',
+              finalText?.toString() ?? '',
               cellKey: col.cellValue,
             );
           }).toList(),
