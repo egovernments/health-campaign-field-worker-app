@@ -54,6 +54,7 @@ import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/least_level_boundary_singleton.dart';
 import '../utils/utils.dart';
+import '../widgets/custom_resource_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
@@ -93,6 +94,21 @@ class _HomePageState extends LocalizedState<HomePage> {
     NavigationRegistry.setupNavigation(context);
     //// Function to set initial Data required for the packages to run
     setPackagesSingleton(context);
+    
+    // Register custom components for forms
+    _registerCustomComponents();
+  }
+
+  /// Register custom components for forms engine
+  void _registerCustomComponents() {
+    // Register the custom resource card component
+    CustomComponentRegistry().register(
+      'resourceCard',
+      const CustomResourceCard(),
+    );
+    
+    // You can register more custom components here
+    // CustomComponentRegistry().register('anotherComponent', AnotherCustomWidget());
   }
 
   //  Be sure to cancel subscription after you are done
