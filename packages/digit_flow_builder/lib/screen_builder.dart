@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'blocs/flow_crud_bloc.dart';
+import 'custom_component_registry.dart';
 import 'flow_builder.dart';
 
 class ScreenKeyListener extends StatelessWidget {
@@ -181,6 +182,10 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
         return FormsRenderPage(
           pageName: pageName,
           currentSchemaKey: widget.schemaKey,
+          // Pass custom components from registry
+          customComponents: CustomComponentRegistry().isNotEmpty 
+              ? [CustomComponentRegistry().getAllComponents()]
+              : null,
           // defaultValues: widget.defaultValues,
           /// TODO: adding default dummy data for create
           defaultValues: {

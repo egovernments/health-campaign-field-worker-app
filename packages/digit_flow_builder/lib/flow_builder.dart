@@ -1,5 +1,6 @@
 export 'action_handler/action_config.dart';
 export 'action_handler/action_handler.dart';
+export 'custom_component_registry.dart';
 export 'flow_builder.dart';
 export 'flow_builder_home_page.dart';
 export 'layout_renderer.dart';

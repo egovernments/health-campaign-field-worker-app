@@ -2096,45 +2096,33 @@ final List<Map<String, dynamic>> sampleFlows = [
             "isMultiSelect": false,
             "includeInSummary": true
           },
-          // {
-          //   "type": "dynamic",
-          //   "enums": [
-          //     {
-          //       "code": "SP1",
-          //       "name": "SP1"
-          //     },
-          //     {
-          //       "code": "SP2",
-          //       "name": "SP2"
-          //     },
-          //     {
-          //       "code": "AQ1",
-          //       "name": "AQ1"
-          //     },
-          //     {
-          //       "code": "AQ2",
-          //       "name": "AQ2"
-          //     }
-          //   ],
-          //   "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_resource",
-          //   "order": 2,
-          //   "value": "",
-          //   "format": "custom",
-          //   "hidden": false,
-          //   "tooltip": "",
-          //   "helpText": "",
-          //   "infoText": "",
-          //   "readOnly": false,
-          //   "fieldName": "resourceCard",
-          //   "deleteFlag": false,
-          //   "innerLabel": "",
-          //   "systemDate": false,
-          //   "validations": [],
-          //   "errorMessage": "",
-          //   "includeInForm": true,
-          //   "isMultiSelect": false,
-          //   "includeInSummary": true
-          // },
+          {
+            "type": "dynamic",
+            "enums": [
+              {"code": "SP1", "name": "SP1"},
+              {"code": "SP2", "name": "SP2"},
+              {"code": "AQ1", "name": "AQ1"},
+              {"code": "AQ2", "name": "AQ2"}
+            ],
+            "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_resource",
+            "order": 2,
+            "value": "",
+            "format": "custom",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "resourceCard",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false,
+            "validations": [],
+            "errorMessage": "",
+            "includeInForm": true,
+            "isMultiSelect": false,
+            "includeInSummary": true
+          },
           {
             "type": "string",
             "label":
