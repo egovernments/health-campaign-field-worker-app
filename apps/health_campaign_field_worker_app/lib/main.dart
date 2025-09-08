@@ -305,9 +305,8 @@ final List<Map<String, dynamic>> sampleFlows = [
                       "name": "householdOverview",
                       "data": [
                         {
-                          "key": "selectedIndividual",
-                          "value":
-                              "{{ headIndividual.IndividualModel.clientReferenceId }}"
+                          "key": "HouseholdClientReferenceId",
+                          "value": "{{ HouseholdModel.clientReferenceId }}"
                         }
                       ]
                     }
@@ -322,15 +321,19 @@ final List<Map<String, dynamic>> sampleFlows = [
             {
               "format": "table",
               "data": {
-                "source": "context.members",
+                "source": "individuals",
                 "columns": [
                   {
                     "header": "Beneficiary",
-                    "cellValue": "context.members.isHeadOfHousehold"
+                    "cellValue": "{{context.individuals.name.givenName}}"
                   },
                   {
-                    "header": "Id Number",
-                    "cellValue": "context.individual.identifiers[0].id"
+                    "header": "Age",
+                    "cellValue": "{{context.individuals.dateOfBirth}}"
+                  },
+                  {
+                    "header": "Gender",
+                    "cellValue": "{{context.individuals.gender}}"
                   }
                 ],
                 "rows": []
@@ -960,9 +963,8 @@ final List<Map<String, dynamic>> sampleFlows = [
           ],
           "data": [
             {
-              "key": "selectedIndividual",
-              "value":
-                  "{{contextData.entities.IndividualModel.clientReferenceId}}"
+              "key": "selectedHousehold",
+              "value": "{{contextData.navigation.selectedHousehold}}"
             }
           ]
         }
@@ -975,11 +977,11 @@ final List<Map<String, dynamic>> sampleFlows = [
         "actionType": "SEARCH_EVENT",
         "properties": {
           "type": "SEARCH_EVENT",
-          "name": "individual",
+          "name": "household",
           "data": [
             {
               "key": "clientReferenceId",
-              "value": "{{navigation.selectedIndividual}}",
+              "value": "{{navigation.HouseholdClientReferenceId}}",
               "operation": "equals"
             }
           ],
@@ -992,7 +994,7 @@ final List<Map<String, dynamic>> sampleFlows = [
     "description": "Overview of beneficiary",
     "wrapperConfig": {
       "wrapperName": "HouseholdWrapper",
-      "rootEntity": "HouseholdMemberModel",
+      "rootEntity": "HouseholdModel",
       "filters": [
         {
           "field": "clientReferenceId",
@@ -1005,7 +1007,7 @@ final List<Map<String, dynamic>> sampleFlows = [
           "entity": "HouseholdModel",
           "match": {
             "field": "clientReferenceId",
-            "equalsFrom": "householdClientReferenceId"
+            "equalsFrom": "clientReferenceId"
           }
         },
         {
@@ -1013,15 +1015,26 @@ final List<Map<String, dynamic>> sampleFlows = [
           "entity": "HouseholdMemberModel",
           "match": {
             "field": "householdClientReferenceId",
-            "equalsFrom": "household.clientReferenceId"
+            "equalsFrom": "clientReferenceId"
           }
         },
         {
           "name": "headOfHousehold",
+          "entity": "HouseholdMemberModel",
+          "match": {
+            "field": "householdClientReferenceId",
+            "equalsFrom": "clientReferenceId"
+          },
+          "filters": [
+            {"field": "isHeadOfHousehold", "equals": true}
+          ]
+        },
+        {
+          "name": "headIndividual",
           "entity": "IndividualModel",
           "match": {
             "field": "clientReferenceId",
-            "equalsFrom": "HouseholdMemberModel.individualClientReferenceId"
+            "equalsFrom": "headOfHousehold.individualClientReferenceId"
           }
         },
         {
@@ -1029,7 +1042,7 @@ final List<Map<String, dynamic>> sampleFlows = [
           "entity": "IndividualModel",
           "match": {
             "field": "clientReferenceId",
-            "inFrom": "HouseholdMemberModel.individualClientReferenceId"
+            "inFrom": "members.individualClientReferenceId"
           }
         },
         {
@@ -1052,8 +1065,8 @@ final List<Map<String, dynamic>> sampleFlows = [
           "name": "sideEffects",
           "entity": "SideEffectModel",
           "match": {
-            "field": "clientReferenceId",
-            "equalsFrom": "household.clientReferenceId"
+            "field": "projectBeneficiaryClientReferenceId",
+            "equalsFrom": "projectBeneficiaries.clientReferenceId"
           }
         },
         {
@@ -1061,15 +1074,15 @@ final List<Map<String, dynamic>> sampleFlows = [
           "entity": "ReferralModel",
           "match": {
             "field": "clientReferenceId",
-            "equalsFrom": "household.clientReferenceId"
+            "equalsFrom": "projectBeneficiaries.clientReferenceId"
           }
         }
       ],
       "searchConfig": {
         "primary": "household",
         "select": [
-          "individual",
           "household",
+          "individual",
           "householdMember",
           "projectBeneficiary",
           "task"
@@ -1112,11 +1125,11 @@ final List<Map<String, dynamic>> sampleFlows = [
             "data": [
               {
                 "key": "Household head name",
-                "value": "{{context.headOfHousehold.name.givenName}}"
+                "value": "{{context.headIndividual.name.givenName}}"
               },
               {
                 "key": "Village",
-                "value": "{{context.headOfHousehold.address.locality.code}}"
+                "value": "{{context.headIndividual.address.locality.code}}"
               },
               {
                 "key": "Member Count",
