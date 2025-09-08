@@ -329,7 +329,8 @@ final List<Map<String, dynamic>> sampleFlows = [
                   },
                   {
                     "header": "Age",
-                    "cellValue": "{{context.individuals.dateOfBirth}}"
+                    "cellValue":
+                        "{{fn:calculateAge(context.individuals.dateOfBirth)}}"
                   },
                   {
                     "header": "Gender",
@@ -1182,7 +1183,7 @@ final List<Map<String, dynamic>> sampleFlows = [
                 {
                   "format": "text",
                   "value":
-                      "{{ context.individuals.gender }} | {{context.individuals.dateOfBirth}} date of birth"
+                      "{{ context.individuals.gender }} | {{fn:calculateAge(context.individuals.dateOfBirth)}}"
                 },
                 {"format": "tag", "type": "", "label": "Not visited"},
                 {
