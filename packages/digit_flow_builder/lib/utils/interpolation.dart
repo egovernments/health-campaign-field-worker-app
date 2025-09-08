@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../blocs/flow_crud_bloc.dart';
 import '../router/flow_builder_routes.gm.dart';
+import 'function_registry.dart';
 
 /// Recursively walks a dynamic structure (Map, List, String, etc.)
 /// and applies [transform] to every String value.
@@ -96,66 +97,103 @@ String interpolateWithCrudStates({
   required CrudStateData stateData,
   int? listIndex,
   Map<String, dynamic>? item,
-  Map<String, dynamic>? navigationParams, // ✅ new
+  Map<String, dynamic>? navigationParams,
+  Map<String, dynamic>? rowItem, // row-level override (for table rows)
 }) {
+  // TODO: update row and interpolation to consider row index to render table content
+
+  dynamic traverse(dynamic start, String? path) {
+    if (path == null || path.isEmpty) return start;
+    var value = start;
+    for (final part in path.split('.')) {
+      if (value is Map && value.containsKey(part)) {
+        value = value[part];
+      } else {
+        return null;
+      }
+    }
+    return value;
+  }
+
+  // --- Function resolution first: {{fn:someFunc(arg1, arg2)}}
+  final fnRegex = RegExp(r'\{\{\s*fn:(\w+)\((.*?)\)\s*\}\}');
+  template = template.replaceAllMapped(fnRegex, (match) {
+    final fnName = match.group(1)!;
+    final argsExpr = match.group(2) ?? '';
+
+    final resolvedArgs = argsExpr.trim().isEmpty
+        ? <dynamic>[]
+        : argsExpr.split(',').map((rawArg) {
+            final trimmed = rawArg.trim();
+            final placeholder = '{{ $trimmed }}';
+            return interpolateWithCrudStates(
+              template: placeholder,
+              stateData: stateData,
+              listIndex: listIndex,
+              item: item,
+              navigationParams: navigationParams,
+              rowItem: rowItem,
+            );
+          }).toList();
+
+    return FunctionRegistry.call(fnName, resolvedArgs, stateData)?.toString() ??
+        '';
+  });
+
+  // --- Normal placeholder resolution ---
   final regex = RegExp(
     r'\{\{\s*(context|item|navigation)\.([A-Za-z_][\w]*)'
     r'(?:\.([\w.]+))?\s*\}\}',
   );
 
   return template.replaceAllMapped(regex, (match) {
-    final source = match.group(1); // context, item, or navigation
+    final source = match.group(1);
     final modelNameOrKey = match.group(2);
     final fieldPath = match.group(3);
 
-    if (source == 'context') {
-      final models = stateData.modelMap[modelNameOrKey] ?? [];
-
-      if (models.isEmpty ||
-          (listIndex != null &&
-              (listIndex < 0 || listIndex >= models.length))) {
-        return '';
+    // 1) Row-level data (highest priority)
+    if (rowItem != null) {
+      // Try rowItem directly as the model instance
+      if (rowItem.containsKey(modelNameOrKey)) {
+        final v = traverse(rowItem[modelNameOrKey], fieldPath);
+        return v?.toString() ?? '';
       }
-
-      dynamic value = models[listIndex ?? 0];
-      if (fieldPath != null) {
-        for (final part in fieldPath.split('.')) {
-          if (value is Map<String, dynamic> && value.containsKey(part)) {
-            value = value[part];
-          } else {
-            return '';
-          }
-        }
-      }
-      return value?.toString() ?? '';
+      // Or maybe rowItem itself is the model instance
+      final v = traverse(rowItem, fieldPath ?? modelNameOrKey);
+      if (v != null) return v.toString();
     }
 
+    // 2) Item-level (from parent list view)
     if (source == 'item' && item != null) {
-      dynamic value = item[modelNameOrKey];
-      if (fieldPath != null) {
-        for (final part in fieldPath.split('.')) {
-          if (value is Map && value.containsKey(part)) {
-            value = value[part];
-          } else {
-            return '';
-          }
-        }
-      }
-      return value?.toString() ?? '';
+      dynamic val = item[modelNameOrKey];
+      final resolved = traverse(val, fieldPath);
+      return resolved?.toString() ?? '';
     }
 
-    if (source == 'navigation' && navigationParams != null) {
-      dynamic value = navigationParams[modelNameOrKey];
-      if (fieldPath != null) {
-        for (final part in fieldPath.split('.')) {
-          if (value is Map && value.containsKey(part)) {
-            value = value[part];
-          } else {
-            return '';
-          }
-        }
+    // 3) Context-level (global models)
+    if (source == 'context') {
+      final models = stateData.modelMap[modelNameOrKey];
+
+      if (models == null) return '';
+
+      if (models is List) {
+        // ✅ IMPORTANT CHANGE:
+        // If rowItem exists, IGNORE listIndex (use rowItem only)
+        if (rowItem != null) return '';
+        final idx = listIndex ?? 0;
+        if (idx < 0 || idx >= models.length) return '';
+        final resolved = traverse(models[idx], fieldPath);
+        return resolved?.toString() ?? '';
+      } else {
+        final resolved = traverse(models, fieldPath);
+        return resolved?.toString() ?? '';
       }
-      return value?.toString() ?? '';
+    }
+
+    // 4) Navigation params
+    if (source == 'navigation' && navigationParams != null) {
+      final resolved = traverse(navigationParams[modelNameOrKey], fieldPath);
+      return resolved?.toString() ?? '';
     }
 
     return '';
