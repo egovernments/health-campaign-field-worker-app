@@ -396,32 +396,10 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                                       DateTime.now(),
                                                 ).years),
                                           isNotEligible: RegistrationDeliverySingleton()
-                                                      .projectType
-                                                      ?.cycles !=
-                                                  null
-                                              ? !checkEligibilityForAgeAndSideEffect(
-                                                        DigitDOBAgeConvertor(
-                                                          years: ageInYears,
-                                                          months: ageInMonths,
-                                                        ),
-                                                        RegistrationDeliverySingleton()
-                                                            .projectType,
-                                                        (taskData ?? [])
-                                                                .isNotEmpty
-                                                            ? taskData
-                                                                ?.lastOrNull
-                                                            : null,
-                                                        sideEffectData,
-                                                      ) ||
-                                                      (taskData ?? [])
-                                                          .isNotEmpty
-                                                  ? (taskData ?? [])
-                                                          .isNotEmpty &&
-                                                      taskData?.last.status ==
-                                                          Status.ineligible
-                                                              .toValue()
-                                                              .toString()
-                                                  : !checkEligibilityForAgeAndSideEffect(
+                                                        .projectType
+                                                        ?.cycles !=
+                                                    null
+                                                ? (!checkEligibilityForAgeAndSideEffect(
                                                       DigitDOBAgeConvertor(
                                                         years: ageInYears,
                                                         months: ageInMonths,
@@ -433,8 +411,32 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                                           ? taskData?.lastOrNull
                                                           : null,
                                                       sideEffectData,
-                                                    )
-                                              : false,
+                                                    )) ||
+                                                    ((taskData ?? []).isNotEmpty
+                                                        ? (taskData ?? [])
+                                                                .isNotEmpty &&
+                                                            taskData?.last
+                                                                    .status ==
+                                                                Status
+                                                                    .ineligible
+                                                                    .toValue()
+                                                                    .toString()
+                                                        : !checkEligibilityForAgeAndSideEffect(
+                                                            DigitDOBAgeConvertor(
+                                                              years: ageInYears,
+                                                              months:
+                                                                  ageInMonths,
+                                                            ),
+                                                            RegistrationDeliverySingleton()
+                                                                .projectType,
+                                                            (taskData ?? [])
+                                                                    .isNotEmpty
+                                                                ? taskData
+                                                                    ?.lastOrNull
+                                                                : null,
+                                                            sideEffectData,
+                                                          ))
+                                                : false,
                                           months: (e.dateOfBirth == null
                                               ? null
                                               : DigitDateUtils.calculateAge(
