@@ -1220,7 +1220,7 @@ final List<Map<String, dynamic>> sampleFlows = [
                         {
                           "key": "selectedIndividualClientReferenceId",
                           "value":
-                              "{{headOfHousehold.IndividualModel.clientReferenceId}}"
+                              "{{headIndividual.IndividualModel.clientReferenceId}}"
                         }
                       ]
                     }
@@ -1892,36 +1892,23 @@ final List<Map<String, dynamic>> sampleFlows = [
     "description": "Details of beneficiary",
     "wrapperConfig": {
       "wrapperName": "BeneficiaryWrapper",
-      "rootEntity": "HouseholdMemberModel",
-      "filters": [
-        {
-          "field": "clientReferenceId",
-          "equalsFrom": "{{context.household.clientReferenceId}}"
-        }
-      ],
+      "rootEntity": "IndividualModel",
+      "filters": [],
       "relations": [
+        {
+          "name": "members",
+          "entity": "HouseholdMemberModel",
+          "match": {
+            "field": "individualClientReferenceId",
+            "equalsFrom": "IndividualModel.clientReferenceId"
+          }
+        },
         {
           "name": "household",
           "entity": "HouseholdModel",
           "match": {
             "field": "clientReferenceId",
-            "equalsFrom": "householdClientReferenceId"
-          }
-        },
-        {
-          "name": "members",
-          "entity": "HouseholdMemberModel",
-          "match": {
-            "field": "householdClientReferenceId",
-            "equalsFrom": "household.clientReferenceId"
-          }
-        },
-        {
-          "name": "headOfHousehold",
-          "entity": "IndividualModel",
-          "match": {
-            "field": "clientReferenceId",
-            "equalsFrom": "HouseholdMemberModel.individualClientReferenceId"
+            "equalsFrom": "members.householdClientReferenceId"
           }
         },
         {
@@ -1929,7 +1916,7 @@ final List<Map<String, dynamic>> sampleFlows = [
           "entity": "IndividualModel",
           "match": {
             "field": "clientReferenceId",
-            "inFrom": "HouseholdMemberModel.individualClientReferenceId"
+            "inFrom": "members.individualClientReferenceId"
           }
         },
         {
@@ -1966,7 +1953,7 @@ final List<Map<String, dynamic>> sampleFlows = [
         }
       ],
       "searchConfig": {
-        "primary": "household",
+        "primary": "individual",
         "select": [
           "individual",
           "household",
