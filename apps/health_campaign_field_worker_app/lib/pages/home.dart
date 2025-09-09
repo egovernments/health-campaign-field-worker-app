@@ -54,7 +54,6 @@ import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/least_level_boundary_singleton.dart';
 import '../utils/utils.dart';
-import '../widgets/custom_resource_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
@@ -94,21 +93,36 @@ class _HomePageState extends LocalizedState<HomePage> {
     NavigationRegistry.setupNavigation(context);
     //// Function to set initial Data required for the packages to run
     setPackagesSingleton(context);
-    
+
     // Register custom components for forms
     _registerCustomComponents();
   }
 
   /// Register custom components for forms engine
   void _registerCustomComponents() {
-    // Register the custom resource card component
-    CustomComponentRegistry().register(
+    // Example 1: Register a dynamic resource card with multi-page state access
+    CustomComponentRegistry().registerBuilder(
       'resourceCard',
-      const CustomResourceCard(),
+      (context, stateAccessor) {
+        // Access data from any page in the flow
+        final beneficiaryDetails =
+            stateAccessor.getPageData('beneficiaryDetails');
+
+        return const Text('custom component');
+
+        // Build your component with access to all this data
+        // return CustomResourceCard(
+        //   // You can now pass any data your component needs
+        //   individualAge: individualAge,
+        //   gender: individualGender,
+        //   location: location,
+        //   householdSize: householdSize,
+        //   individuals: individuals,
+        //   household: household,
+        //   debug: stateAccessor.getAllData(), // For debugging
+        // );
+      },
     );
-    
-    // You can register more custom components here
-    // CustomComponentRegistry().register('anotherComponent', AnotherCustomWidget());
   }
 
   //  Be sure to cancel subscription after you are done

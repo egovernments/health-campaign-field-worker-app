@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'blocs/flow_crud_bloc.dart';
-import 'custom_component_registry.dart';
 import 'flow_builder.dart';
 
 class ScreenKeyListener extends StatelessWidget {
@@ -182,10 +181,10 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
         return FormsRenderPage(
           pageName: pageName,
           currentSchemaKey: widget.schemaKey,
-          // Pass custom components from registry
-          customComponents: CustomComponentRegistry().isNotEmpty 
-              ? [CustomComponentRegistry().getAllComponents()]
-              : null,
+          // Pass custom components from registry with enhanced state access
+          customComponents: _buildCustomComponents(
+            context,
+          ),
           // defaultValues: widget.defaultValues,
           /// TODO: adding default dummy data for create
           defaultValues: {
@@ -197,5 +196,30 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
       }
       return const Center(child: CircularProgressIndicator());
     });
+  }
+
+  /// Build custom components with enhanced state access
+  List<Map<String, Widget>>? _buildCustomComponents(BuildContext context) {
+    if (CustomComponentRegistry().isEmpty) return null;
+
+    final Map<String, Widget> components = {};
+    final registry = CustomComponentRegistry();
+
+    // For each component, create a PageStateAccessor for this page
+    for (final componentKey in registry.getRegisteredKeys()) {
+      final stateAccessor = PageStateAccessor(widget.schemaKey);
+
+      final component = registry.buildComponent(
+        componentKey,
+        context,
+        widget.schemaKey, // page name passed here
+      );
+
+      if (component != null) {
+        components[componentKey] = component;
+      }
+    }
+
+    return components.isNotEmpty ? [components] : null;
   }
 }
