@@ -1,3 +1,4 @@
+import 'package:digit_flow_builder/blocs/app_localization.dart';
 import 'package:digit_flow_builder/utils/function_registry.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
@@ -303,7 +304,9 @@ class WidgetRegistry {
               item: crudCtx.item,
             )
           : value;
-      return Text(finalText);
+      return Text(FlowBuilderLocalization.of(context).translate(
+        finalText,
+      ));
     });
 
     WidgetRegistry.register('table', (json, context, onAction) {

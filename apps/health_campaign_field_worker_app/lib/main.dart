@@ -964,8 +964,9 @@ final List<Map<String, dynamic>> sampleFlows = [
           ],
           "data": [
             {
-              "key": "selectedHousehold",
-              "value": "{{contextData.navigation.selectedHousehold}}"
+              "key": "HouseholdClientReferenceId",
+              "value":
+                  "{{contextData.entities.HouseholdModel.clientReferenceId}}"
             }
           ]
         }
@@ -1130,7 +1131,7 @@ final List<Map<String, dynamic>> sampleFlows = [
               },
               {
                 "key": "Village",
-                "value": "{{context.headIndividual.address.locality.code}}"
+                "value": "{{context.household.address.locality.code}}"
               },
               {
                 "key": "Member Count",
