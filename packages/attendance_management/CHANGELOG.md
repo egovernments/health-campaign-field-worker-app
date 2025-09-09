@@ -1,3 +1,7 @@
+## 1.0.5+3
+
+* Updated digit_scanner package
+
 ## 1.0.5+2
 
 * Updated Readme

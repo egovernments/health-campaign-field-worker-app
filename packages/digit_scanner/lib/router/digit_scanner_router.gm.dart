@@ -17,7 +17,8 @@ abstract class $DigitScannerPackageRoute extends _i2.AutoRouterModule {
   @override
   final Map<String, _i2.PageFactory> pagesMap = {
     DigitScannerRoute.name: (routeData) {
-      final args = routeData.argsAs<DigitScannerRouteArgs>();
+      final args = routeData.argsAs<DigitScannerRouteArgs>(
+          orElse: () => const DigitScannerRouteArgs());
       return _i2.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i1.DigitScannerPage(
@@ -28,6 +29,7 @@ abstract class $DigitScannerPackageRoute extends _i2.AutoRouterModule {
           singleValue: args.singleValue,
           isEditEnabled: args.isEditEnabled,
           regex: args.regex,
+          validations: args.validations,
         ),
       );
     }
@@ -40,11 +42,12 @@ class DigitScannerRoute extends _i2.PageRouteInfo<DigitScannerRouteArgs> {
   DigitScannerRoute({
     _i3.Key? key,
     _i4.ScannerLocalization? appLocalizations,
-    required int quantity,
-    required bool isGS1code,
-    bool singleValue = false,
+    int? quantity = 1,
+    bool? isGS1code = false,
+    bool? singleValue = true,
     bool isEditEnabled = false,
     String? regex,
+    List<dynamic>? validations,
     List<_i2.PageRouteInfo>? children,
   }) : super(
           DigitScannerRoute.name,
@@ -56,6 +59,7 @@ class DigitScannerRoute extends _i2.PageRouteInfo<DigitScannerRouteArgs> {
             singleValue: singleValue,
             isEditEnabled: isEditEnabled,
             regex: regex,
+            validations: validations,
           ),
           initialChildren: children,
         );
@@ -70,29 +74,32 @@ class DigitScannerRouteArgs {
   const DigitScannerRouteArgs({
     this.key,
     this.appLocalizations,
-    required this.quantity,
-    required this.isGS1code,
-    this.singleValue = false,
+    this.quantity = 1,
+    this.isGS1code = false,
+    this.singleValue = true,
     this.isEditEnabled = false,
     this.regex,
+    this.validations,
   });
 
   final _i3.Key? key;
 
   final _i4.ScannerLocalization? appLocalizations;
 
-  final int quantity;
+  final int? quantity;
 
-  final bool isGS1code;
+  final bool? isGS1code;
 
-  final bool singleValue;
+  final bool? singleValue;
 
   final bool isEditEnabled;
 
   final String? regex;
 
+  final List<dynamic>? validations;
+
   @override
   String toString() {
-    return 'DigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled, regex: $regex}';
+    return 'DigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled, regex: $regex, validations: $validations}';
   }
 }

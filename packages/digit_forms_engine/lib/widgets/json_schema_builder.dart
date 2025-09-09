@@ -8,6 +8,7 @@ import 'package:digit_forms_engine/helper/form_builder_helper.dart';
 import 'package:digit_forms_engine/helper/validator_helper.dart';
 import 'package:digit_forms_engine/helper/visibility_manager.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/models/RadioButtonModel.dart';
@@ -26,7 +27,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-
 import '../helper/validation_message_helper.dart';
 import '../utils/utils.dart';
 import 'localized.dart';

@@ -1,3 +1,6 @@
+## 1.1.1-dev.4-console
+* Updated digit_scanner and digit_forms_engine packages
+
 ## 1.1.0-dev.8-console
 * Update localization for bednet condition
 * Updated the digit crud bloc version

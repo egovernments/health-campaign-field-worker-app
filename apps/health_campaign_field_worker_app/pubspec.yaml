@@ -57,12 +57,12 @@ dependencies:
   qr_flutter: ^4.1.0
   disk_space_update: ^0.0.2
   sync_service: ^1.0.2
-  attendance_management: ^1.0.5+1
-  digit_scanner: ^1.0.6+1
+  attendance_management: ^1.0.5+3
+  digit_scanner: ^1.0.6+4
   inventory_management: ^1.0.6
   referral_reconciliation: ^1.0.6
   digit_data_model: ^1.2.0-dev.1-console
-  registration_delivery: ^1.1.0-dev.5-console
+  registration_delivery: ^1.1.1-dev.4-console
   disable_battery_optimization: ^1.1.1
   digit_dss: ^1.0.4+2
   closed_household: ^1.1.0-dev.1-console
@@ -81,7 +81,7 @@ dependencies:
   lottie: ^3.1.0
   digit_crud_bloc: ^0.0.3-dev
   digit_data_converter: ^0.0.2-dev
-  digit_forms_engine: ^0.0.2-dev
+  digit_forms_engine: ^0.0.7-dev
   digit_formula_parser: ^1.0.0
 
 dev_dependencies:

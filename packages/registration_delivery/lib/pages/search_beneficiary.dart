@@ -1381,7 +1381,7 @@ class _SearchBeneficiaryPageState
 
             context
                 .read<DigitScannerBloc>()
-                .add(const DigitScannerEvent.handleScanner());
+                .add(const DigitScannerEvent.handleScanner( overwrite: true,));
             selectedFilters = [];
             blocWrapper.add(const RegistrationWrapperEvent.clear());
           },
@@ -1405,10 +1405,9 @@ class _SearchBeneficiaryPageState
             searchController.clear();
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => const DigitScannerPage(
-                  quantity: 1,
-                  isGS1code: false,
-                  singleValue: true,
+                builder: (context) => DigitScannerPage(
+                  validations: secondaryProp?.validations,
+                  // regex: '^[a-zA-Z0-9]+$',
                 ),
                 settings: const RouteSettings(name: '/qr-scanner'),
               ),

@@ -29,17 +29,25 @@ import '../models/entities/scanned_individual_data.dart';
 class AttendanceDigitScannerPage extends DigitScannerPage {
   final AttendanceRegisterModel registerModel;
   final void Function(
-    ScannedIndividualDataModel scannedUser,
-    AttendanceValidationResult result,
-  ) onScanResult;
+      ScannedIndividualDataModel scannedUser,
+      AttendanceValidationResult result,
+      ) onScanResult;
 
-  const AttendanceDigitScannerPage(
-      {super.key,
-      required this.registerModel,
-      required this.onScanResult,
-      required super.quantity,
-      super.singleValue,
-      required super.isGS1code});
+  const AttendanceDigitScannerPage({
+    super.key,
+    required this.registerModel,
+    required this.onScanResult,
+
+    // keep these for backward-compat; the base page now reads from validations anyway
+    required super.quantity,
+    super.singleValue,
+    required super.isGS1code,
+
+    // if your updated DigitScannerPage supports this, pass it when you have it
+    super.validations,
+    super.regex,
+    super.isEditEnabled,
+  });
 
   @override
   AttendanceScannerPageState createState() => AttendanceScannerPageState();
@@ -66,6 +74,7 @@ class AttendanceScannerPageState extends DigitScannerPageState {
 
   @override
   Future<void> handleErrorWrapper(String message) {
+    // Always show the attendance-specific error for duplicates
     return super.handleErrorWrapper(i18.attendance.qrAlreadyScanned);
   }
 
@@ -83,52 +92,53 @@ class AttendanceScannerPageState extends DigitScannerPageState {
             Padding(
               padding: const EdgeInsets.only(top: spacer1),
               child: Text(
-                  localizations.translate(
-                    i18.attendance.manualScanLabel,
-                  ),
-                  style: textTheme.bodyL
-                      .copyWith(color: theme.colorTheme.paper.primary)),
+                localizations.translate(i18.attendance.manualScanLabel),
+                style: textTheme.bodyL.copyWith(
+                  color: theme.colorTheme.paper.primary,
+                ),
+              ),
             ),
             DigitButton(
-                label: localizations.translate(
-                  i18.attendance.enterUniqueCode,
-                ),
-                onPressed: () {
-                  context.read<DigitScannerBloc>().add(
-                        const DigitScannerEvent.handleScanner(
-                          barCode: [],
-                          qrCode: [],
-                        ),
-                      );
-                  setState(() {
-                    manualCode = true;
-                  });
-                },
-                type: DigitButtonType.link,
-                size: DigitButtonSize.large),
+              label: localizations.translate(i18.attendance.enterUniqueCode),
+              onPressed: () {
+                // just clear the arrays; mode/limit/regex stay as already set from validations
+                context.read<DigitScannerBloc>().add(
+                  const DigitScannerEvent.handleScanner(
+                    barCode: [],
+                    qrCode: [],
+                  ),
+                );
+                setState(() {
+                  manualCode = true;
+                });
+              },
+              type: DigitButtonType.link,
+              size: DigitButtonSize.large,
+            ),
             Padding(
               padding: const EdgeInsets.only(top: spacer1),
               child: Text(
-                  localizations.translate(
-                    i18.common.coreCommonOr,
-                  ),
-                  style: textTheme.bodyL
-                      .copyWith(color: theme.colorTheme.paper.primary)),
+                localizations.translate(i18.common.coreCommonOr),
+                style: textTheme.bodyL.copyWith(
+                  color: theme.colorTheme.paper.primary,
+                ),
+              ),
             ),
             DigitButton(
-                label: localizations.translate(
-                  i18.attendance.markAttendanceManually,
-                ),
-                onPressed: () {
-                  showManualAttendanceReasonDialog(
-                      context: context,
-                      reasonList: AttendanceSingleton()
-                          .manualAttendanceReasons
-                          .reversed
-                          .toList());
-                },
-                type: DigitButtonType.link,
-                size: DigitButtonSize.large),
+              label:
+              localizations.translate(i18.attendance.markAttendanceManually),
+              onPressed: () {
+                showManualAttendanceReasonDialog(
+                  context: context,
+                  reasonList: AttendanceSingleton()
+                      .manualAttendanceReasons
+                      .reversed
+                      .toList(),
+                );
+              },
+              type: DigitButtonType.link,
+              size: DigitButtonSize.large,
+            ),
           ],
         ),
       ),
@@ -137,8 +147,11 @@ class AttendanceScannerPageState extends DigitScannerPageState {
 
   @override
   renderScannedResource(
-      ThemeData theme, DigitTextTheme textTheme, DigitScannerState state) {
-    // NOTE: To hide the camera controls
+      ThemeData theme,
+      DigitTextTheme textTheme,
+      DigitScannerState state,
+      ) {
+    // NOTE: Hides the camera controls for attendance flow
     return Positioned(
       bottom: 0,
       width: MediaQuery.of(context).size.width,
@@ -149,69 +162,24 @@ class AttendanceScannerPageState extends DigitScannerPageState {
     );
   }
 
-  @override
-  Future<void> storeCodeWrapper(String code) async {
-    try {
-      final scannedData = ScannedIndividualDataModelMapper.fromMap(
-          DataMapEncryptor.decrypt(code));
-
-      if (validateIndividualAttendance(scannedData, registerModel).isValid) {
-        if (scannedData.manualEntry == null ||
-            scannedData.manualEntry == false) {
-          showAttendanceSuccessPopup(scannedData);
-        }
-      } else {
-        if (mounted) {
-          context.read<DigitScannerBloc>().add(
-                const DigitScannerEvent.handleScanner(
-                  barCode: [],
-                  qrCode: [],
-                ),
-              );
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        context.read<DigitScannerBloc>().add(
-              const DigitScannerEvent.handleScanner(
-                barCode: [],
-                qrCode: [],
-              ),
-            );
-        Toast.showToast(
-          context,
-          type: ToastType.error,
-          message: localizations.translate(i18.attendance.attendeeNotFound),
-        );
-      }
-      if (kDebugMode) {
-        print("Error decoding QR code: $e");
-      }
-      rethrow;
-    }
-
-    return super.storeCodeWrapper(code);
-  }
-
   AttendanceValidationResult validateIndividualAttendance(
-    ScannedIndividualDataModel scannedData,
-    AttendanceRegisterModel registerModel, {
-    int allowedIntervalInMinutes = 2,
-    BuildContext? context,
-  }) {
+      ScannedIndividualDataModel scannedData,
+      AttendanceRegisterModel registerModel, {
+        int allowedIntervalInMinutes = 2,
+        BuildContext? context,
+      }) {
     var callBack = widget as AttendanceDigitScannerPage;
 
     // Manual entry: only check attendee presence
     if (scannedData.manualEntry == true) {
       final found = _isAttendeeInRegister(scannedData, registerModel.attendees);
-      var callBack = widget as AttendanceDigitScannerPage;
-
       callBack.onScanResult(
-          scannedData,
-          AttendanceValidationResult(
-            isValid: found,
-            errorMessage: found ? null : i18.attendance.attendeeNotFound,
-          ));
+        scannedData,
+        AttendanceValidationResult(
+          isValid: found,
+          errorMessage: found ? null : i18.attendance.attendeeNotFound,
+        ),
+      );
       return AttendanceValidationResult(
         isValid: found,
         errorMessage: found ? null : i18.attendance.attendeeNotFound,
@@ -221,11 +189,12 @@ class AttendanceScannerPageState extends DigitScannerPageState {
     final int? qrCreatedTimeMillis = scannedData.qrCreatedTime;
     if (qrCreatedTimeMillis == null) {
       callBack.onScanResult(
-          scannedData,
-          AttendanceValidationResult(
-            isValid: false,
-            errorMessage: i18.attendance.userQRTimeExpiredError,
-          ));
+        scannedData,
+        AttendanceValidationResult(
+          isValid: false,
+          errorMessage: i18.attendance.userQRTimeExpiredError,
+        ),
+      );
       return AttendanceValidationResult(
         isValid: false,
         errorMessage: i18.attendance.userQRTimeExpiredError,
@@ -249,11 +218,12 @@ class AttendanceScannerPageState extends DigitScannerPageState {
 
     if (timeDifference.inMilliseconds > allowedTimeInMillis) {
       callBack.onScanResult(
-          scannedData,
-          AttendanceValidationResult(
-            isValid: false,
-            errorMessage: i18.attendance.userQRTimeExpiredError,
-          ));
+        scannedData,
+        AttendanceValidationResult(
+          isValid: false,
+          errorMessage: i18.attendance.userQRTimeExpiredError,
+        ),
+      );
       return AttendanceValidationResult(
         isValid: false,
         errorMessage: i18.attendance.userQRTimeExpiredError,
@@ -264,11 +234,12 @@ class AttendanceScannerPageState extends DigitScannerPageState {
     final found = _isAttendeeInRegister(scannedData, registerModel.attendees);
     if (!found) {
       callBack.onScanResult(
-          scannedData,
-          AttendanceValidationResult(
-            isValid: false,
-            errorMessage: i18.attendance.attendeeNotFound,
-          ));
+        scannedData,
+        AttendanceValidationResult(
+          isValid: false,
+          errorMessage: i18.attendance.attendeeNotFound,
+        ),
+      );
       return AttendanceValidationResult(
         isValid: false,
         errorMessage: i18.attendance.attendeeNotFound,
@@ -278,9 +249,10 @@ class AttendanceScannerPageState extends DigitScannerPageState {
     return AttendanceValidationResult(isValid: true);
   }
 
-// Helper: Check if individual exists in attendees list
   bool _isAttendeeInRegister(
-      ScannedIndividualDataModel ind, List<AttendeeModel>? attendees) {
+      ScannedIndividualDataModel ind,
+      List<AttendeeModel>? attendees,
+      ) {
     if (ind.individualId == null ||
         ind.individualId!.isEmpty ||
         attendees == null ||
@@ -293,11 +265,12 @@ class AttendanceScannerPageState extends DigitScannerPageState {
       var callBack = widget as AttendanceDigitScannerPage;
 
       callBack.onScanResult(
-          ind,
-          AttendanceValidationResult(
-            isValid: found,
-            errorMessage: found ? null : i18.attendance.attendeeNotFound,
-          ));
+        ind,
+        AttendanceValidationResult(
+          isValid: found,
+          errorMessage: found ? null : i18.attendance.attendeeNotFound,
+        ),
+      );
       if (kDebugMode) {
         print("Individual (ID: ${ind.individualId}) found in register.");
       }
@@ -339,11 +312,11 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                       ReactiveWrapperField(
                         formControlName: _reasonKey,
                         showErrors: (control) =>
-                            control.invalid && control.touched,
+                        control.invalid && control.touched,
                         validationMessages: {
                           'required': (_) => localizations.translate(
-                                i18.common.corecommonRequired,
-                              ),
+                            i18.common.corecommonRequired,
+                          ),
                         },
                         builder: (field) => LabeledField(
                           label: localizations
@@ -352,12 +325,12 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                           isRequired: true,
                           child: DigitDropdown<String>(
                             selectedOption:
-                                (form.control(_reasonKey).value != null)
-                                    ? DropdownItem(
-                                        name: localizations.translate(
-                                            form.control(_reasonKey).value),
-                                        code: form.control(_reasonKey).value)
-                                    : const DropdownItem(name: '', code: ''),
+                            (form.control(_reasonKey).value != null)
+                                ? DropdownItem(
+                                name: localizations.translate(
+                                    form.control(_reasonKey).value),
+                                code: form.control(_reasonKey).value)
+                                : const DropdownItem(name: '', code: ''),
                             items: reasonList,
                             onSelect: (value) {
                               form.control(_reasonKey).markAsTouched();
@@ -387,21 +360,19 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                         ),
                       ),
                       if (form.control(_reasonKey).value == 'OTHERS') ...[
-                        const SizedBox(
-                          height: spacer2,
-                        ),
+                        const SizedBox(height: spacer2),
                         ReactiveWrapperField(
                           formControlName: _reasonCommentKey,
                           showErrors: (control) =>
-                              control.invalid && control.touched,
+                          control.invalid && control.touched,
                           validationMessages: {
                             'required': (object) => localizations.translate(
                                 i18.attendance.validationRequiredError),
                           },
                           builder: (field) => LabeledField(
                             capitalizedFirstLetter: false,
-                            label:
-                                localizations.translate(i18.common.commentKey),
+                            label: localizations
+                                .translate(i18.common.commentKey),
                             isRequired: true,
                             child: DigitTextAreaFormInput(
                               errorMessage: field.errorText,
@@ -413,7 +384,7 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                                 });
                               },
                               initialValue:
-                                  form.control(_reasonCommentKey).value,
+                              form.control(_reasonCommentKey).value,
                             ),
                           ),
                         ),
@@ -435,10 +406,10 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                             form.control(_reasonKey).value?.toString() ?? '';
                         final reasonComment = reason == 'OTHERS'
                             ? form
-                                    .control(_reasonCommentKey)
-                                    .value
-                                    ?.toString() ??
-                                ''
+                            .control(_reasonCommentKey)
+                            .value
+                            ?.toString() ??
+                            ''
                             : null;
 
                         final Map<String, String> result = {
@@ -475,7 +446,7 @@ class AttendanceScannerPageState extends DigitScannerPageState {
   void showAttendanceSuccessPopup(ScannedIndividualDataModel scannedData) {
     final formattedTime = scannedData.qrCreatedTime != null
         ? AttendanceDateTimeManagement.getDateFromTimestamp(
-            scannedData.qrCreatedTime!)
+        scannedData.qrCreatedTime!)
         : '-';
 
     showCustomPopup(
@@ -536,7 +507,7 @@ class AttendanceScannerPageState extends DigitScannerPageState {
           DigitButton(
             capitalizeLetters: false,
             label:
-                localizations.translate(i18.attendance.backToAttendanceManager),
+            localizations.translate(i18.attendance.backToAttendanceManager),
             onPressed: () {
               Navigator.of(ctx).pop();
               Navigator.of(context).pop();
@@ -551,10 +522,13 @@ class AttendanceScannerPageState extends DigitScannerPageState {
 
   @override
   manualEntryWidget(
-      BuildContext context, ThemeData theme, DigitTextTheme textTheme) {
+      BuildContext context,
+      ThemeData theme,
+      DigitTextTheme textTheme,
+      ) {
     return BlocBuilder<DigitScannerBloc, DigitScannerState>(
-        builder: (context, state) {
-      return ReactiveFormBuilder(
+      builder: (context, state) {
+        return ReactiveFormBuilder(
           form: () => buildForm(),
           builder: (context, form, child) {
             return ScrollableContent(
@@ -580,9 +554,7 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                   mainAxisSize: MainAxisSize.max,
                   onPressed: () async {
                     if (form.control(_manualCodeFormKey).value == null ||
-                        form
-                            .control(_manualCodeFormKey)
-                            .value
+                        form.control(_manualCodeFormKey).value
                             .toString()
                             .trim()
                             .isEmpty) {
@@ -594,34 +566,36 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                       );
                     } else {
                       final bloc = context.read<DigitScannerBloc>();
-                      codes.add(DataMapEncryptor().encryptWithRandomKey(
+                      codes.add(
+                        DataMapEncryptor().encryptWithRandomKey(
                           ScannedIndividualDataModel(
-                                  manualEntry: true,
-                                  individualId:
-                                      form.control(_manualCodeFormKey).value)
-                              .toMap()));
-                      storeCodeWrapper(DataMapEncryptor().encryptWithRandomKey(
-                          ScannedIndividualDataModel(
-                                  manualEntry: true,
-                                  individualId:
-                                      form.control(_manualCodeFormKey).value)
-                              .toMap()));
+                            manualEntry: true,
+                            individualId:
+                            form.control(_manualCodeFormKey).value,
+                          ).toMap(),
+                        ),
+                      );
+
+                      // update the scanner bloc list for UI
                       bloc.add(
                         DigitScannerEvent.handleScanner(
                           barCode: state.barCodes,
                           qrCode: codes,
                         ),
                       );
-                      Navigator.of(
-                        context,
-                      ).pop();
-                      if (widget.isGS1code && result.length < widget.quantity) {
+
+                      Navigator.of(context).pop();
+
+                      // ✅ use bloc-derived mode/limit (no direct widget props)
+                      final s = context.read<DigitScannerBloc>().state;
+                      if (s.isGS1 && s.barCodes.length < s.quantity) {
                         DigitScannerUtils().buildDialog(
                           context,
                           localizations,
-                          widget.quantity,
+                          s.quantity,
                         );
                       }
+
                       setState(() {
                         manualCode = false;
                         initializeCameras();
@@ -636,22 +610,23 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                 ),
               ),
               children: [
-                DigitCard(children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      localizations.translate(
-                        i18.attendance.enterUniqueCode,
-                      ),
-                      style: textTheme.headingL.copyWith(
-                        color: theme.colorTheme.text.primary,
+                DigitCard(
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        localizations.translate(
+                          i18.attendance.enterUniqueCode,
+                        ),
+                        style: textTheme.headingL.copyWith(
+                          color: theme.colorTheme.text.primary,
+                        ),
                       ),
                     ),
-                  ),
-                  ReactiveWrapperField(
-                    formControlName: _manualCodeFormKey,
-                    builder: (field) {
-                      return InputField(
+                    ReactiveWrapperField(
+                      formControlName: _manualCodeFormKey,
+                      builder: (field) {
+                        return InputField(
                           label: localizations.translate(
                             i18.attendance.uniqueCodeLabel,
                           ),
@@ -660,14 +635,18 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                           type: InputType.text,
                           onChange: (value) {
                             form.control(_manualCodeFormKey).value = value;
-                          });
-                    },
-                  ),
-                ])
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ],
             );
-          });
-    });
+          },
+        );
+      },
+    );
   }
 }
 

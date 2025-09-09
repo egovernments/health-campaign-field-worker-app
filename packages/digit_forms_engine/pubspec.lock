@@ -381,10 +381,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_scanner
-      sha256: ce162604bb91505444208c7fd853bcd89bf353ea25e907860ce28f2da4adf9b4
+      sha256: "8140d06998b796743f959c9c29b6e5715315435da1847f9d33c5fc9b836ce290"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.6+3"
+    version: "1.0.6+4"
   digit_ui_components:
     dependency: "direct main"
     description:
@@ -686,7 +686,7 @@ packages:
     source: hosted
     version: "2.3.2"
   gs1_barcode_parser:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: gs1_barcode_parser
       sha256: ff171bc40038de3f7178fbc32eaf9eebc3d35a3c4c00bb0281fe4a976d853a42
