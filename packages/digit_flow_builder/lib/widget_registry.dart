@@ -1,3 +1,4 @@
+import 'package:digit_flow_builder/utils/function_registry.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -73,6 +74,7 @@ class WidgetRegistry {
   }
 
   void initializeDefaultWidgetRegistry() {
+    initializeFunctionRegistry();
     // BUTTON
     WidgetRegistry.register('button', (json, context, onAction) {
       final props = Map<String, dynamic>.from(json['properties'] ?? {});
@@ -305,6 +307,7 @@ class WidgetRegistry {
     });
 
     WidgetRegistry.register('table', (json, context, onAction) {
+      // TODO: update row and interpolation to consider row index to render table content
       final crudCtx = CrudItemContext.of(context);
       final stateData = crudCtx?.stateData;
 
@@ -320,9 +323,21 @@ class WidgetRegistry {
       List<dynamic> sourceList = [];
 
       if (data['source'] != null && stateData != null) {
-        final rawState = stateData.rawState ?? [];
-        if (rawState.isNotEmpty) {
-          sourceList = rawState[0]?[data['source']] ?? [];
+        // Case 1: If the current item already has this source (table inside listView)
+        if (crudCtx?.item != null && (crudCtx!.item?[data['source']] != null)) {
+          final localSource = crudCtx.item?[data['source']];
+          if (localSource is List) {
+            sourceList = localSource;
+          } else if (localSource != null) {
+            sourceList = [localSource];
+          }
+        }
+        // Case 2: Fallback to global modelMap
+        else {
+          final modelList = stateData.modelMap[data['source']];
+          if (modelList != null) {
+            sourceList = modelList;
+          }
         }
       }
 
@@ -343,7 +358,6 @@ class WidgetRegistry {
             final processed = preprocessConfigWithState(
               {"value": col.cellValue},
               stateData!,
-              listIndex: rowIndex,
               item: safeItem,
             );
 
