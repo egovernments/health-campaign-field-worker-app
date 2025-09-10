@@ -50,7 +50,9 @@ final jsonConfig = {
           "additionalFields": {
             "childrenCount": "householdDetails.childrenCount",
             "pregnantWomenCount": "householdDetails.pregnantWomenCount",
-            "memberCount": "householdDetails.memberCount"
+            "memberCount": "householdDetails.memberCount",
+            "height": "beneficiaryDetails.height",
+            "weight": "beneficiaryDetails.weight"
           }
         }
       },

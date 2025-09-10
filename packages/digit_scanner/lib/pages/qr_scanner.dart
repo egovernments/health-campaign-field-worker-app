@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:camera/camera.dart';
+import 'package:digit_scanner/utils/extensions/extensions.dart';
 import 'package:digit_scanner/utils/scanner_utils.dart';
 import 'package:digit_scanner/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -23,20 +24,22 @@ import '../widgets/vision_detector_views/detector_view.dart';
 
 @RoutePage()
 class DigitScannerPage extends LocalizedStatefulWidget {
-  final bool singleValue;
-  final int quantity;
-  final bool isGS1code;
+  final bool? singleValue;
+  final int? quantity;
+  final bool? isGS1code;
   final bool isEditEnabled;
   final String? regex;
+  final List<dynamic>? validations;
 
   const DigitScannerPage({
     super.key,
     super.appLocalizations,
-    required this.quantity,
-    required this.isGS1code,
-    this.singleValue = false,
+    this.quantity = 1,
+    this.isGS1code = false,
+    this.singleValue = true,
     this.isEditEnabled = false,
     this.regex,
+    this.validations,
   });
 
   @override
@@ -63,13 +66,97 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
   static const _manualSerialNoFormKey = 'serialNoCode';
   static const _manualExpiryDateFormKey = 'expiryDate';
 
+  // ---------- pull values & messages from validations ----------
+  T? _val<T>(String type) {
+    final list = widget.validations;
+    if (list == null) return null;
+    for (final v in list) {
+      try {
+        if (v is Map<String, dynamic>) {
+          if (v['type'] == type) return v['value'] as T?;
+        } else {
+          final t = (v.type as Object?)?.toString();
+          if (t == type) return (v.value as T?);
+        }
+      } catch (_) {}
+    }
+    return null;
+  }
+
+  bool? _valBool(String type) {
+    final raw = _val<dynamic>(type);
+    if (raw is bool) return raw;
+    if (raw is String) {
+      final s = raw.trim().toLowerCase();
+      if (s == 'true') return true;
+      if (s == 'false') return false;
+    }
+    return null;
+  }
+
+  int? _valInt(String type) {
+    final raw = _val<dynamic>(type);
+    if (raw is int) return raw;
+    if (raw is String) return int.tryParse(raw.trim());
+    return null;
+  }
+
+  String? _valString(String type) {
+    final raw = _val<dynamic>(type);
+    if (raw == null) return null;
+    return raw.toString().trim().isEmpty ? null : raw.toString().trim();
+  }
+
+  String? _valMsg(String type) {
+    final list = widget.validations;
+    if (list == null) return null;
+    for (final v in list) {
+      try {
+        if (v is Map<String, dynamic>) {
+          if (v['type'] == type) return v['message']?.toString();
+        } else {
+          final t = (v.type as Object?)?.toString();
+          if (t == type) return (v.message as Object?)?.toString();
+        }
+      } catch (_) {}
+    }
+    return null;
+  }
+
+  Map<String, String> _messagesFromValidations() {
+    final m = <String, String>{};
+    void put(String k, String? v) {
+      if (v != null && v.trim().isNotEmpty) m[k] = v;
+    }
+    put('scanLimit', _valMsg('scanLimit'));
+    put('pattern',   _valMsg('pattern'));
+    put('duplicate', _valMsg('duplicate'));
+    put('invalidGS1',_valMsg('invalidGS1'));
+    put('scannerFailed', _valMsg('scannerFailed'));
+    return m;
+  }
+
+// ---------- derived config (validations take precedence) ----------
+  bool get _isGS1 => _valBool('isGS1') ?? widget.isGS1code ?? false;
+  int  get _scanLimit => _valInt('scanLimit') ?? widget.quantity ?? 1;
+  String? get _pattern => _valString('pattern') ?? widget.regex;
+
   @override
   void initState() {
     initializeCameras();
+    // Initialize bloc state with config on mount
     if (!widget.isEditEnabled) {
-      context
-          .read<DigitScannerBloc>()
-          .add(const DigitScannerEvent.handleScanner());
+      context.read<DigitScannerBloc>().add(
+        DigitScannerEvent.handleScanner(
+          barCode: [],
+          qrCode: [],
+          overwrite: true,
+          isGS1: _isGS1,
+          quantity: _scanLimit,
+          regex: _pattern,
+          messages: _messagesFromValidations(),
+        ),
+      );
     }
     super.initState();
   }
@@ -80,33 +167,30 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
     final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
-      body: BlocBuilder<DigitScannerBloc, DigitScannerState>(
-        builder: (context, state) {
-          // ▶️ NEW: show toast if bloc emitted an error and clear state
-          if (state.error != null && (state.error?.toString() ?? '').trim().isNotEmpty) {
-            Toast.showToast(
-              context,
-              type: ToastType.error,
-              message: state.error.toString(),
-            );
-            // Clear scanner state (barcodes, qrcodes, and implicitly error)
-            context.read<DigitScannerBloc>().add(
-              const DigitScannerEvent.handleScanner(barCode: [], qrCode: []),
-            );
+      body: BlocConsumer<DigitScannerBloc, DigitScannerState>(
+        listenWhen: (p, c) => p.errorSeq != c.errorSeq,
+        listener: (context, state) {
+          final msg = state.error?.trim();
+          if (msg != null && msg.isNotEmpty) {
+            Toast.showToast(context, type: ToastType.error, message: localizations.translate(msg));
           }
+        },
+
+        builder: (context, state) {
           return _cameras.isNotEmpty
               ? !manualCode
-                  ? scanWidget(context, theme, textTheme, state)
-                  : manualEntryWidget(context, theme, textTheme)
+              ? scanWidget(context, theme, textTheme, state)
+              : manualEntryWidget(context, theme, textTheme)
               : const Center(
-                  child: CircularProgressIndicator(),
-                );
+            child: CircularProgressIndicator(),
+          );
         },
       ),
     );
   }
 
   Future<void> processImage(InputImage inputImage) async {
+    final scannerState = context.read<DigitScannerBloc>().state;
     await DigitScannerUtils().processImage(
       context: context,
       inputImage: inputImage,
@@ -115,24 +199,28 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
       setBusy: (busy) => mounted ? setState(() => _isBusy = busy) : null,
       setText: (text) => mounted ? setState(() => _text = text) : null,
       updateCustomPaint: (customPaint) => _customPaint = customPaint,
-      isGS1code: widget.isGS1code,
-      quantity: widget.quantity,
-      result: result,
+      isGS1code: _isGS1,
+      quantity: _scanLimit,
+      regex: _pattern,
+      result: List<GS1Barcode>.from(scannerState.barCodes),
       handleError: handleErrorWrapper,
-      storeValue: storeValueWrapper,
-      storeCode: storeCodeWrapper,
       cameraLensDirection: _cameraLensDirection,
       barcodeScanner: _barcodeScanner,
       localizations: localizations,
+      validations: _messagesFromValidations(),
     );
   }
 
   Future<void> handleErrorWrapper(String message) async {
+    final scannerState = context.read<DigitScannerBloc>().state;
+    final List<dynamic> existing =
+    (scannerState.isGS1 ? List<dynamic>.from(scannerState.barCodes)
+        : List<dynamic>.from(scannerState.qrCodes));
     await DigitScannerUtils().handleError(
       context: context,
       message: message,
       player: player,
-      result: result,
+      result: existing,
       setStateCallback: () {
         setState(() {
           _canProcess = true;
@@ -143,34 +231,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
     );
   }
 
-  Future<void> storeCodeWrapper(String code) async {
-    await DigitScannerUtils().storeCode(
-      context: context,
-      code: code,
-      player: player,
-      singleValue: widget.singleValue,
-      updateCodes: (newCodes) {
-        setState(() {
-          codes = newCodes;
-        });
-      },
-      initialCodes: codes,
-    );
-  }
 
-  Future<void> storeValueWrapper(GS1Barcode scanData) async {
-    await DigitScannerUtils().storeValue(
-      context: context,
-      scanData: scanData,
-      player: player,
-      updateResult: (newResult) {
-        setState(() {
-          result = newResult;
-        });
-      },
-      initialResult: result,
-    );
-  }
 
   @override
   void dispose() {
@@ -204,7 +265,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
   }
 
   FormGroup buildForm() {
-    if (widget.isGS1code) {
+    if (_isGS1) {
       return fb.group(<String, Object>{
         _manualCodeFormKey: FormControl<String>(
           validators: [Validators.required],
@@ -220,323 +281,83 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
           .group(<String, Object>{_manualCodeFormKey: FormControl<String>()});
     }
   }
+  String? gtinFrom(GS1Barcode b) =>
+      b.elements['01']?.data ?? b.elements['02']?.data;
+
 
   manualEntryWidget(
       BuildContext context, ThemeData theme, DigitTextTheme textTheme) {
-    return widget.isGS1code
+    return _isGS1
         ? BlocBuilder<DigitScannerBloc, DigitScannerState>(
-            builder: (context, state) {
-            return ReactiveFormBuilder(
-                form: () => buildForm(),
-                builder: (context, form, child) {
-                  return ScrollableContent(
-                    backgroundColor: theme.colorScheme.onError,
-                    header: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          manualCode = false;
-                          initializeCameras();
-                        });
+        builder: (context, state) {
+          return ReactiveFormBuilder(
+              form: () => buildForm(),
+              builder: (context, form, child) {
+                return ScrollableContent(
+                  backgroundColor: theme.colorScheme.onError,
+                  header: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        manualCode = false;
+                        initializeCameras();
+                      });
+                    },
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: Icon(
+                        Icons.close,
+                        color: Theme.of(context).colorTheme.text.primary,
+                      ),
+                    ),
+                  ),
+                  footer: Padding(
+                    padding: const EdgeInsets.all(spacer4),
+                    child: DigitButton(
+                      mainAxisSize: MainAxisSize.max,
+                      onPressed: () async {
+                        form.markAllAsTouched();
+                        if (!form.valid) return;
+
+                        final bloc = context.read<DigitScannerBloc>();
+
+                        final barcodeString = DigitScannerUtils().generateGS1Barcode(
+                          serialNumber: form.control(_manualSerialNoFormKey).value.toString().trim(),
+                          expiryDate: form.control(_manualExpiryDateFormKey).value as DateTime,
+                          batchNumber: form.control(_manualCodeFormKey).value.toString().trim(),
+                        );
+
+                        final parser = GS1BarcodeParser.defaultParser();
+                        final parsed = parser.parse(barcodeString);
+
+                        // Append to the BLOC’S current list (no local setState)
+
+                        bloc.add(DigitScannerEvent.handleScanner(
+                          barCode: [parsed],
+                          qrCode: const [],             // ignored in GS1 mode anyway
+                          isGS1: _isGS1,
+                          quantity: _scanLimit,
+                          regex: _pattern,
+                          messages: _messagesFromValidations(),
+                        ));
+
+                        // if (proposed.length < widget.quantity) {
+                        //   DigitScannerUtils().buildDialog(context, localizations, widget.quantity);
+                        // }
+
+                        setState(() => manualCode = false); // UI flag only
+                        initializeCameras();                 // call outside setState
                       },
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        child: Icon(
-                          Icons.close,
-                          color: Theme.of(context).colorTheme.text.primary,
-                        ),
+
+                      type: DigitButtonType.primary,
+                      size: DigitButtonSize.large,
+                      label: localizations.translate(
+                        i18.common.coreCommonSubmit,
                       ),
                     ),
-                    footer: Padding(
-                      padding: const EdgeInsets.all(spacer4),
-                      child: DigitButton(
-                        mainAxisSize: MainAxisSize.max,
-                        onPressed: () async {
-                          if (widget.isGS1code) {
-                            form.markAllAsTouched();
-                            if (!form.valid) return;
-
-                            final bloc = context.read<DigitScannerBloc>();
-                            codes.add(form.control(_manualCodeFormKey).value);
-                            final barcodeString =
-                                DigitScannerUtils().generateGS1Barcode(
-                              serialNumber: form
-                                  .control(_manualSerialNoFormKey)
-                                  .value
-                                  .toString()
-                                  .trim(),
-                              expiryDate: form
-                                  .control(_manualExpiryDateFormKey)
-                                  .value as DateTime,
-                              batchNumber: form
-                                  .control(_manualCodeFormKey)
-                                  .value
-                                  .toString()
-                                  .trim(),
-                            );
-
-// Now parse it using your existing model
-                            final parser = GS1BarcodeParser.defaultParser();
-                            final parsed = parser.parse(barcodeString);
-                            // ✅ Append to existing barcodes; DO NOT touch qrCodes in GS1 mode
-                            final updatedBarcodes = List<GS1Barcode>.from(state.barCodes)..add(parsed);
-
-                            // Keep local mirror in sync (used by UI)
-                            setState(() {
-                              result = updatedBarcodes;
-                              manualCode = false;
-                            });
-
-                            bloc.add(
-                              DigitScannerEvent.handleScanner(
-                                // barCode: state.barCodes,
-                                // barCode: [parsed],
-                                barCode: updatedBarcodes,
-                                qrCode: state.qrCodes,
-                                regex: widget.regex,
-                              ),
-                            );
-                            result.add(parsed);
-                            if (updatedBarcodes.length < widget.quantity) {
-                              DigitScannerUtils().buildDialog(context, localizations, widget.quantity);
-                            }
-                            setState(() {
-                              manualCode = false;
-                            });
-                            // Quantity gate for GS1
-
-                            initializeCameras();
-                          } else {
-                            if (form.control(_manualCodeFormKey).value ==
-                                    null ||
-                                form
-                                    .control(_manualCodeFormKey)
-                                    .value
-                                    .toString()
-                                    .trim()
-                                    .isEmpty) {
-                              Toast.showToast(
-                                context,
-                                type: ToastType.error,
-                                message: localizations
-                                    .translate(i18.scanner.enterManualCode),
-                              );
-                            } else {
-                              final bloc = context.read<DigitScannerBloc>();
-                              final updatedQRCodes = List<String>.from(state.qrCodes)
-                                ..add(form.control(_manualCodeFormKey).value.toString().trim());
-
-                              codes.add(form.control(_manualCodeFormKey).value);
-                              bloc.add(
-                                DigitScannerEvent.handleScanner(
-                                  barCode: state.barCodes,
-                                  qrCode: updatedQRCodes,
-                                  regex: widget.regex
-                                ),
-                              );
-                              final scannedCount = widget.isGS1code
-                                  ? state.barCodes.length
-                                  : state.qrCodes.length;
-
-                              if (scannedCount < widget.quantity) {
-                                DigitScannerUtils().buildDialog(context, localizations, widget.quantity);
-                              }
-
-                              setState(() {
-                                manualCode = false;
-                                initializeCameras();
-                              });
-                            }
-                          }
-
-//
-                        },
-                        type: DigitButtonType.primary,
-                        size: DigitButtonSize.large,
-                        label: localizations.translate(
-                          i18.common.coreCommonSubmit,
-                        ),
-                      ),
-                    ),
-                    children: [
-                      DigitCard(
-                        children: [
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              localizations.translate(
-                                i18.scanner.enterManualCode,
-                              ),
-                              style: textTheme.headingL.copyWith(
-                                color: theme.colorTheme.text.primary,
-                              ),
-                            ),
-                          ),
-                          ReactiveWrapperField(
-                            formControlName: _manualCodeFormKey,
-                            validationMessages: widget.isGS1code
-                                ? {
-                                    'required': (object) =>
-                                        localizations.translate(
-                                          i18.scanner.batchNoRequired,
-                                        ),
-                                  }
-                                : null,
-                            builder: (field) {
-                              return LabeledField(
-                                label: localizations.translate(
-                                  widget.isGS1code
-                                      ? i18.scanner.barCodeBatch
-                                      : i18.scanner.resourceCode,
-                                ),
-                                capitalizedFirstLetter: false,
-                                child: DigitTextFormInput(
-                                    errorMessage: field.errorText,
-                                    isRequired: true,
-                                    onChange: (value) {
-                                      form.control(_manualCodeFormKey).value =
-                                          value;
-                                    }),
-                              );
-                            },
-                          ),
-                          if (widget.isGS1code) ...[
-                            ReactiveWrapperField(
-                              formControlName: _manualSerialNoFormKey,
-                              validationMessages: {
-                                'required': (object) => localizations.translate(
-                                      i18.scanner.serialNoRequired,
-                                    ),
-                              },
-                              builder: (field) {
-                                return LabeledField(
-                                  label: localizations.translate(
-                                    i18.scanner.barCodeSerial,
-                                  ),
-                                  capitalizedFirstLetter: false,
-                                  child: DigitTextFormInput(
-                                      errorMessage: field.errorText,
-                                      isRequired: true,
-                                      onChange: (value) {
-                                        form
-                                            .control(_manualSerialNoFormKey)
-                                            .value = value;
-                                      }),
-                                );
-                              },
-                            ),
-                            ReactiveWrapperField(
-                                formControlName: _manualExpiryDateFormKey,
-                                validationMessages: {
-                                  'required': (object) =>
-                                      localizations.translate(
-                                        i18.scanner.expiryDateRequired,
-                                      ),
-                                },
-                                builder: (field) {
-                                  return LabeledField(
-                                    label: localizations
-                                        .translate(i18.scanner.barCodeExpiry),
-                                    capitalizedFirstLetter: false,
-                                    child: DigitDateFormInput(
-                                      firstDate: DateTime.now(),
-                                      isRequired: true,
-                                      confirmText: localizations.translate(
-                                        i18.common.coreCommonOk,
-                                      ),
-                                      cancelText: localizations.translate(
-                                        i18.common.coreCommonCancel,
-                                      ),
-                                      initialValue: DateFormat('dd/MM/yy')
-                                          .format(field.control.value),
-                                      readOnly: false,
-                                      onChange: (value) {
-                                        form
-                                            .control(_manualExpiryDateFormKey)
-                                            .value = DateFormat(
-                                                "dd/MM/yyyy")
-                                            .parse(value);
-                                      },
-                                    ),
-                                  );
-                                }),
-                          ],
-                        ],
-                      ),
-                    ],
-                  );
-                });
-          })
-        : BlocBuilder<DigitScannerBloc, DigitScannerState>(
-            builder: (context, state) {
-            return ReactiveFormBuilder(
-                form: () => buildForm(),
-                builder: (context, form, child) {
-                  return ScrollableContent(
-                    backgroundColor: theme.colorScheme.onError,
-                    header: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          manualCode = false;
-                          initializeCameras();
-                        });
-                      },
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        child: Icon(
-                          Icons.close,
-                          color: Theme.of(context).colorTheme.text.primary,
-                        ),
-                      ),
-                    ),
-                    footer: Padding(
-                      padding: const EdgeInsets.all(spacer4),
-                      child: DigitButton(
-                        mainAxisSize: MainAxisSize.max,
-                        onPressed: () async {
-                          if (form.control(_manualCodeFormKey).value == null ||
-                              form
-                                  .control(_manualCodeFormKey)
-                                  .value
-                                  .toString()
-                                  .trim()
-                                  .isEmpty) {
-                            Toast.showToast(
-                              context,
-                              type: ToastType.error,
-                              message: localizations
-                                  .translate(i18.scanner.enterManualCode),
-                            );
-                          } else {
-                            final bloc = context.read<DigitScannerBloc>();
-                            final updatedQRCodes = List<String>.from(state.qrCodes)
-                              ..add(form.control(_manualCodeFormKey).value.toString().trim());
-                            codes.add(form.control(_manualCodeFormKey).value);
-                            if (updatedQRCodes.length < widget.quantity) {
-                              DigitScannerUtils().buildDialog(context, localizations, widget.quantity);
-                            }
-                            bloc.add(
-                              DigitScannerEvent.handleScanner(
-                                barCode: state.barCodes,
-                                qrCode: updatedQRCodes,
-                                regex: widget.regex,
-                              ),
-                            );
-
-                            setState(() {
-                              manualCode = false;
-                              initializeCameras();
-                            });
-                          }
-                        },
-                        type: DigitButtonType.primary,
-                        size: DigitButtonSize.large,
-                        label: localizations.translate(
-                          i18.common.coreCommonSubmit,
-                        ),
-                      ),
-                    ),
-                    children: [
-                      DigitCard(children: [
+                  ),
+                  children: [
+                    DigitCard(
+                      children: [
                         Align(
                           alignment: Alignment.topLeft,
                           child: Text(
@@ -550,25 +371,194 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                         ),
                         ReactiveWrapperField(
                           formControlName: _manualCodeFormKey,
-                          builder: (field) {
-                            return InputField(
-                                label: localizations.translate(
-                                  i18.scanner.resourceCode,
+                          validationMessages: _isGS1
+                              ? {
+                            'required': (object) =>
+                                localizations.translate(
+                                  i18.scanner.batchNoRequired,
                                 ),
-                                errorMessage: field.errorText,
-                                isRequired: true,
-                                type: InputType.text,
-                                onChange: (value) {
-                                  form.control(_manualCodeFormKey).value =
-                                      value;
-                                });
+                          }
+                              : null,
+                          builder: (field) {
+                            return LabeledField(
+                              label: localizations.translate(
+                                _isGS1
+                                    ? i18.scanner.barCodeBatch
+                                    : i18.scanner.resourceCode,
+                              ),
+                              capitalizedFirstLetter: false,
+                              child: DigitTextFormInput(
+                                  errorMessage: field.errorText,
+                                  isRequired: true,
+                                  onChange: (value) {
+                                    form.control(_manualCodeFormKey).value =
+                                        value;
+                                  }),
+                            );
                           },
                         ),
-                      ])
-                    ],
-                  );
-                });
-          });
+                        if (_isGS1) ...[
+                          ReactiveWrapperField(
+                            formControlName: _manualSerialNoFormKey,
+                            validationMessages: {
+                              'required': (object) => localizations.translate(
+                                i18.scanner.serialNoRequired,
+                              ),
+                            },
+                            builder: (field) {
+                              return LabeledField(
+                                label: localizations.translate(
+                                  i18.scanner.barCodeSerial,
+                                ),
+                                capitalizedFirstLetter: false,
+                                child: DigitTextFormInput(
+                                    errorMessage: field.errorText,
+                                    isRequired: true,
+                                    onChange: (value) {
+                                      form
+                                          .control(_manualSerialNoFormKey)
+                                          .value = value;
+                                    }),
+                              );
+                            },
+                          ),
+                          ReactiveWrapperField(
+                              formControlName: _manualExpiryDateFormKey,
+                              validationMessages: {
+                                'required': (object) =>
+                                    localizations.translate(
+                                      i18.scanner.expiryDateRequired,
+                                    ),
+                              },
+                              builder: (field) {
+                                return LabeledField(
+                                  label: localizations
+                                      .translate(i18.scanner.barCodeExpiry),
+                                  capitalizedFirstLetter: false,
+                                  child: DigitDateFormInput(
+                                    firstDate: DateTime.now(),
+                                    isRequired: true,
+                                    confirmText: localizations.translate(
+                                      i18.common.coreCommonOk,
+                                    ),
+                                    cancelText: localizations.translate(
+                                      i18.common.coreCommonCancel,
+                                    ),
+                                    initialValue: DateFormat('dd/MM/yy')
+                                        .format(field.control.value),
+                                    readOnly: false,
+                                    onChange: (value) {
+                                      form
+                                          .control(_manualExpiryDateFormKey)
+                                          .value = DateFormat(
+                                          "dd/MM/yyyy")
+                                          .parse(value);
+                                    },
+                                  ),
+                                );
+                              }),
+                        ],
+                      ],
+                    ),
+                  ],
+                );
+              });
+        })
+        : BlocBuilder<DigitScannerBloc, DigitScannerState>(
+        builder: (context, state) {
+          return ReactiveFormBuilder(
+              form: () => buildForm(),
+              builder: (context, form, child) {
+                return ScrollableContent(
+                  backgroundColor: theme.colorScheme.onError,
+                  header: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        manualCode = false;
+                        initializeCameras();
+                      });
+                    },
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: Icon(
+                        Icons.close,
+                        color: Theme.of(context).colorTheme.text.primary,
+                      ),
+                    ),
+                  ),
+                  footer: Padding(
+                    padding: const EdgeInsets.all(spacer4),
+                    child: DigitButton(
+                      mainAxisSize: MainAxisSize.max,
+                      onPressed: () async {
+                        final value = form.control(_manualCodeFormKey).value?.toString().trim() ?? '';
+                        if (value.isEmpty) {
+                          Toast.showToast(context, type: ToastType.error,
+                            message: localizations.translate(i18.scanner.enterManualCode),
+                          );
+                          return;
+                        }
+
+                        final bloc = context.read<DigitScannerBloc>();
+
+                        bloc.add(DigitScannerEvent.handleScanner(
+                          barCode: const [],             // ignored in QR mode
+                          qrCode: [value],
+                          isGS1: _isGS1,
+                          quantity: _scanLimit,
+                          regex: _pattern,
+                          messages: _messagesFromValidations(),
+                        ));
+
+                        // if (proposed.length < widget.quantity) {
+                        //   DigitScannerUtils().buildDialog(context, localizations, widget.quantity);
+                        // }
+
+                        setState(() => manualCode = false); // UI flag only
+                        initializeCameras();                 // call outside setState
+                      },
+
+                      type: DigitButtonType.primary,
+                      size: DigitButtonSize.large,
+                      label: localizations.translate(
+                        i18.common.coreCommonSubmit,
+                      ),
+                    ),
+                  ),
+                  children: [
+                    DigitCard(children: [
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          localizations.translate(
+                            i18.scanner.enterManualCode,
+                          ),
+                          style: textTheme.headingL.copyWith(
+                            color: theme.colorTheme.text.primary,
+                          ),
+                        ),
+                      ),
+                      ReactiveWrapperField(
+                        formControlName: _manualCodeFormKey,
+                        builder: (field) {
+                          return InputField(
+                              label: localizations.translate(
+                                i18.scanner.resourceCode,
+                              ),
+                              errorMessage: field.errorText,
+                              isRequired: true,
+                              type: InputType.text,
+                              onChange: (value) {
+                                form.control(_manualCodeFormKey).value =
+                                    value;
+                              });
+                        },
+                      ),
+                    ])
+                  ],
+                );
+              });
+        });
   }
 
   scanWidget(BuildContext context, ThemeData theme, DigitTextTheme textTheme,
@@ -588,14 +578,19 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
             onImage: processImage,
             initialCameraLensDirection: _cameraLensDirection,
             onCameraLensDirectionChanged: (value) =>
-                _cameraLensDirection = value,
+            _cameraLensDirection = value,
             onBackButtonPressed: () {
               context
                   .read<DigitScannerBloc>()
-                  .add(const DigitScannerEvent.handleScanner(
-                    barCode: [],
-                    qrCode: [],
-                  ));
+                  .add( DigitScannerEvent.handleScanner(
+                barCode: [],
+                qrCode: [],
+                isGS1: _isGS1,
+                quantity: _scanLimit,
+                regex: _pattern,
+                overwrite: true,
+                messages: _messagesFromValidations(),
+              ));
               Navigator.of(context).pop();
             },
           ),
@@ -684,12 +679,15 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                   i18.scanner.enterManualCode,
                 ),
                 onPressed: () {
-                  context.read<DigitScannerBloc>().add(
-                        const DigitScannerEvent.handleScanner(
-                          barCode: [],
-                          qrCode: [],
-                        ),
-                      );
+                  // context.read<DigitScannerBloc>().add(
+                  //        DigitScannerEvent.handleScanner(
+                  //         barCode: [],
+                  //         qrCode: [],
+                  //         isGS1: widget.isGS1code,
+                  //         quantity: widget.quantity,
+                  //         regex: widget.regex,
+                  //       ),
+                  //     );
                   setState(() {
                     manualCode = true;
                   });
@@ -712,7 +710,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
           child: DigitCard(
             margin: const EdgeInsets.only(top: spacer1),
             padding:
-                const EdgeInsets.fromLTRB(spacer3, spacer1, spacer3, spacer1),
+            const EdgeInsets.fromLTRB(spacer3, spacer1, spacer3, spacer1),
             children: [
               DigitButton(
                 label: localizations.translate(i18.common.coreCommonSubmit),
@@ -720,15 +718,15 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                 mainAxisSize: MainAxisSize.max,
                 type: DigitButtonType.primary,
                 onPressed: () async {
-                  final scannedCount = widget.isGS1code
+                  final scannedCount = _isGS1
                       ? state.barCodes.length
                       : state.qrCodes.length;
 
-                  if (scannedCount < widget.quantity) {
+                  if (scannedCount < _scanLimit) {
                     DigitScannerUtils().buildDialog(
                       context,
                       localizations,
-                      widget.quantity,
+                      _scanLimit,
                     );
                     return;
                   } else {
@@ -736,7 +734,10 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                     bloc.add(DigitScannerEvent.handleScanner(
                       barCode: state.barCodes,
                       qrCode: state.qrCodes,
-                      regex: widget.regex,
+                      isGS1: _isGS1,
+                      quantity: _scanLimit,
+                      regex: _pattern,
+                      messages: _messagesFromValidations(),
                     ));
                     Navigator.of(
                       context,
@@ -749,13 +750,13 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
         ),
         Positioned(
           bottom: (spacer1 * 10),
-          height: widget.isGS1code
+          height: _isGS1
               ? state.barCodes.length < 3
-                  ? (state.barCodes.length * 60) + 80
-                  : MediaQuery.of(context).size.height / 3
+              ? (state.barCodes.length * 60) + 80
+              : MediaQuery.of(context).size.height / 3
               : state.qrCodes.length < 2
-                  ? ((state.qrCodes.length + 1) * 60)
-                  : MediaQuery.of(context).size.height / 4,
+              ? ((state.qrCodes.length + 1) * 60)
+              : MediaQuery.of(context).size.height / 4,
           width: MediaQuery.of(context).size.width,
           child: Container(
             width: 100,
@@ -785,21 +786,21 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                     left: spacer3,
                   ),
                   width: MediaQuery.of(context).size.width,
-                  child: widget.isGS1code
+                  child: _isGS1
                       ? Text(
-                          '${state.barCodes.length.toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
-                          style: textTheme.headingM
-                              .copyWith(color: theme.colorTheme.text.primary),
-                        )
+                    '${state.barCodes.length.toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
+                    style: textTheme.headingM
+                        .copyWith(color: theme.colorTheme.text.primary),
+                  )
                       : Text(
-                          '${state.qrCodes.length.toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
-                          style: textTheme.headingM
-                              .copyWith(color: theme.colorTheme.text.primary),
-                        ),
+                    '${state.qrCodes.length.toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
+                    style: textTheme.headingM
+                        .copyWith(color: theme.colorTheme.text.primary),
+                  ),
                 ),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: widget.isGS1code
+                    itemCount: _isGS1
                         ? state.barCodes.length
                         : state.qrCodes.length,
                     itemBuilder: (BuildContext context, int index) {
@@ -829,15 +830,10 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                               Flexible(
                                 child: Text(
                                   overflow: TextOverflow.ellipsis,
-                                  widget.isGS1code
-                                      ? DigitScannerUtils()
-                                          .getGs1CodeFormattedString(
-                                              state.barCodes)
-                                          .entries
-                                          .first
-                                          .value
+                                  _isGS1
+                                      ?  (state.barCodes[index].displayValue() ?? 'Invalid GS1')
                                       : DigitScannerUtils().trimString(
-                                          state.qrCodes[index].toString()),
+                                      state.qrCodes[index].toString()),
                                 ),
                               ),
                               IconButton(
@@ -851,38 +847,29 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                 ),
                                 onPressed: () {
                                   final bloc = context.read<DigitScannerBloc>();
-                                  if (widget.isGS1code) {
-                                    result = List.from(
-                                      state.barCodes,
-                                    );
-                                    result.removeAt(index);
-                                    setState(() {
-                                      result = result;
-                                    });
 
-                                    bloc.add(
-                                      DigitScannerEvent.handleScanner(
-                                        barCode: result,
-                                        qrCode: state.qrCodes,
-                                        regex: widget.regex,
-                                      ),
-                                    );
+                                  if (_isGS1) {
+                                    final updated = List<GS1Barcode>.from(bloc.state.barCodes)..removeAt(index);
+                                    bloc.add(DigitScannerEvent.handleScanner(
+                                      barCode: updated,
+                                      qrCode: const [],
+                                      isGS1: _isGS1,
+                                      quantity: _scanLimit,
+                                      regex: _pattern,
+                                      messages: _messagesFromValidations(),
+                                      overwrite: true,
+                                    ));
                                   } else {
-                                    codes = List.from(
-                                      state.qrCodes,
-                                    );
-                                    codes.removeAt(index);
-                                    setState(() {
-                                      codes = codes;
-                                    });
-
-                                    bloc.add(
-                                      DigitScannerEvent.handleScanner(
-                                        barCode: state.barCodes,
-                                        qrCode: codes,
-                                        regex: widget.regex,
-                                      ),
-                                    );
+                                    final updated = List<String>.from(bloc.state.qrCodes)..removeAt(index);
+                                    bloc.add(DigitScannerEvent.handleScanner(
+                                      barCode: const [],
+                                      qrCode: updated,
+                                      isGS1: _isGS1,
+                                      quantity: _scanLimit,
+                                      regex: _pattern,
+                                      messages: _messagesFromValidations(),
+                                      overwrite: true,
+                                    ));
                                   }
                                 },
                               ),
