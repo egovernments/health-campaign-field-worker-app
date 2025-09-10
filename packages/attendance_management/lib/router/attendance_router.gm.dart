@@ -57,6 +57,9 @@ abstract class $AttendanceRoute extends _i5.AutoRouterModule {
           quantity: args.quantity,
           singleValue: args.singleValue,
           isGS1code: args.isGS1code,
+          validations: args.validations,
+          regex: args.regex,
+          isEditEnabled: args.isEditEnabled,
         ),
       );
     },
@@ -175,9 +178,12 @@ class AttendanceDigitScannerRoute
       _i10.ScannedIndividualDataModel,
       _i2.AttendanceValidationResult,
     ) onScanResult,
-    required int quantity,
-    bool singleValue = false,
-    required bool isGS1code,
+    int? quantity = 1,
+    bool? singleValue = true,
+    bool? isGS1code = false,
+    List<dynamic>? validations,
+    String? regex,
+    bool isEditEnabled = false,
     List<_i5.PageRouteInfo>? children,
   }) : super(
           AttendanceDigitScannerRoute.name,
@@ -188,6 +194,9 @@ class AttendanceDigitScannerRoute
             quantity: quantity,
             singleValue: singleValue,
             isGS1code: isGS1code,
+            validations: validations,
+            regex: regex,
+            isEditEnabled: isEditEnabled,
           ),
           initialChildren: children,
         );
@@ -203,9 +212,12 @@ class AttendanceDigitScannerRouteArgs {
     this.key,
     required this.registerModel,
     required this.onScanResult,
-    required this.quantity,
-    this.singleValue = false,
-    required this.isGS1code,
+    this.quantity = 1,
+    this.singleValue = true,
+    this.isGS1code = false,
+    this.validations,
+    this.regex,
+    this.isEditEnabled = false,
   });
 
   final _i8.Key? key;
@@ -217,15 +229,21 @@ class AttendanceDigitScannerRouteArgs {
     _i2.AttendanceValidationResult,
   ) onScanResult;
 
-  final int quantity;
+  final int? quantity;
 
-  final bool singleValue;
+  final bool? singleValue;
 
-  final bool isGS1code;
+  final bool? isGS1code;
+
+  final List<dynamic>? validations;
+
+  final String? regex;
+
+  final bool isEditEnabled;
 
   @override
   String toString() {
-    return 'AttendanceDigitScannerRouteArgs{key: $key, registerModel: $registerModel, onScanResult: $onScanResult, quantity: $quantity, singleValue: $singleValue, isGS1code: $isGS1code}';
+    return 'AttendanceDigitScannerRouteArgs{key: $key, registerModel: $registerModel, onScanResult: $onScanResult, quantity: $quantity, singleValue: $singleValue, isGS1code: $isGS1code, validations: $validations, regex: $regex, isEditEnabled: $isEditEnabled}';
   }
 }
 

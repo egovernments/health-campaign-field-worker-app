@@ -1,4 +1,9 @@
-## 1.0.5+3
+## 1.0.5+4
+
+* Resolved Attendance Scanner page bugs
+
+
+## 1.0.5+4
 
 * Updated digit_scanner package
 

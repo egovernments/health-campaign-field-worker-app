@@ -3,7 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:digit_data_model/data_model.dart';
-import 'package:disk_space_update/disk_space_update.dart';
+import 'package:get_storage_info/get_storage_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
@@ -200,8 +200,7 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
 
             double? diskSpace = 0;
             // [TODO: Move the function DiskSpace.getFreeDiskSpace to utils
-            diskSpace = await DiskSpace
-                .getFreeDiskSpace; // Returns the device available space in MB
+            diskSpace = await GetStorageInfo.getStorageFreeSpaceInMB;  // Returns the device available space in MB
             // diskSpace in MB * 1024 comparison with serverTotalCount * 150KB * Number of entities * 2
             if ((diskSpace ?? 0) * 1024 < (totalCount ?? 0 * 150 * 2)) {
               emit(PeerToPeerState.failedToReceive(

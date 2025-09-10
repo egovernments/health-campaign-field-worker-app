@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:digit_data_model/data_model.dart';
-import 'package:disk_space_update/disk_space_update.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -19,6 +18,7 @@ import '../../models/downsync/downsync.dart';
 import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
+import 'package:get_storage_info/get_storage_info.dart';
 
 part 'project_beneficiaries_downsync.freezed.dart';
 
@@ -161,8 +161,7 @@ class BeneficiaryDownSyncBloc
     emit(const BeneficiaryDownSyncState.loading(true));
     double? diskSpace = 0;
     // [TODO: Move the function DiskSpace.getFreeDiskSpace to utils
-    diskSpace = await DiskSpace
-        .getFreeDiskSpace; // Returns the device available space in MB
+    diskSpace = await GetStorageInfo.getStorageFreeSpaceInMB; // return double // Returns the device available space in MB
     // diskSpace in MB * 1000 comparison with serverTotalCount * 150KB * Number of entities * 2
     if ((diskSpace ?? 0) * 1000 < (event.initialServerCount * 150 * 2)) {
       emit(const BeneficiaryDownSyncState.insufficientStorage());
