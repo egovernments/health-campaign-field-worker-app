@@ -2,7 +2,10 @@
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/templates/template_config.dart';
+import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:flutter/material.dart';
+
+import 'function_registry.dart';
 
 class FlowBuilderSingleton {
   static final FlowBuilderSingleton _singleton =
@@ -170,6 +173,29 @@ String? resolveValue(dynamic value, dynamic contextData) {
       var path = match.group(1)!.trim();
       if (path.startsWith('contextData.')) {
         path = path.substring('contextData.'.length);
+      }
+      if (path.startsWith('item.')) {
+        path = path.substring('item.'.length);
+      }
+      if (path.startsWith('fn')) {
+        final fnRegex = RegExp(r'\{\{\s*fn:(\w+)\((.*?)\)\s*\}\}');
+        value = value.replaceAllMapped(fnRegex, (match) {
+          final fnName = match.group(1)!;
+          final argsExpr = match.group(2) ?? '';
+
+          final resolvedArgs = argsExpr.trim().isEmpty
+              ? <dynamic>[]
+              : argsExpr.split(',').map((rawArg) {
+                  final trimmed = rawArg.trim();
+                  final placeholder = '{{ $trimmed }}';
+                  return resolveValue(placeholder, contextData);
+                }).toList();
+
+          return FunctionRegistry.call(
+                  fnName, resolvedArgs, CrudStateData({}, []))?.toString() ??
+              '';
+        });
+        return value;
       }
       return _resolvePath(contextData, path);
     }

@@ -334,10 +334,10 @@ class WidgetRegistry {
 
       List<dynamic> sourceList = [];
 
-      if (data['source'] != null && stateData != null) {
+      if (data['rows'] != null && stateData != null) {
         // Case 1: If the current item already has this source (table inside listView)
-        if (crudCtx?.item != null && (crudCtx!.item?[data['source']] != null)) {
-          final localSource = crudCtx.item?[data['source']];
+        if (crudCtx?.item != null && (crudCtx!.item?[data['rows']] != null)) {
+          final localSource = crudCtx.item?[data['rows']];
           if (localSource is List) {
             sourceList = localSource;
           } else if (localSource != null) {
@@ -359,33 +359,9 @@ class WidgetRegistry {
         final rowIndex = entry.key;
         final rowItem = entry.value;
 
-        final safeItem = (rowItem is Map)
-            ? Map<String, dynamic>.from(
-                rowItem.map((k, v) => MapEntry(k.toString(), v)),
-              )
-            : <String, dynamic>{"value": rowItem.toString()};
-
         return DigitTableRow(
           tableRow: columns.map((col) {
-            final processed = preprocessConfigWithState(
-              {"value": col.cellValue},
-              stateData!,
-              item: safeItem,
-            );
-
-            final resolvedValue = processed['value'];
-
-            final finalText;
-            if ((resolvedValue is String)) {
-              finalText = interpolateWithCrudStates(
-                template: resolvedValue,
-                stateData: stateData,
-                listIndex: rowIndex,
-                item: safeItem,
-              );
-            } else {
-              finalText = resolvedValue;
-            }
+            final finalText = resolveValue(col.cellValue, rowItem);
 
             return DigitTableData(
               finalText?.toString() ?? '',
