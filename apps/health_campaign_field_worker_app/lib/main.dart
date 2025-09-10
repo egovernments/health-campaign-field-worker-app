@@ -351,19 +351,15 @@ final dynamic sampleFlows = {
                   "columns": [
                     {
                       "header": "Beneficiary",
-                      "cellValue": "{{context.individuals.name.givenName}}"
+                      "cellValue": "{{item.name.givenName}}"
                     },
                     {
                       "header": "Age",
-                      "cellValue":
-                          "{{fn:calculateAge(context.individuals.dateOfBirth)}}"
+                      "cellValue": "{{fn:calculateAge(item.dateOfBirth)}}"
                     },
-                    {
-                      "header": "Gender",
-                      "cellValue": "{{context.individuals.gender}}"
-                    }
+                    {"header": "Gender", "cellValue": "{{item.gender}}"}
                   ],
-                  "rows": []
+                  "rows": "individuals"
                 }
               }
             ]
