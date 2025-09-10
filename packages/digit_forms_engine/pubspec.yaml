@@ -1,6 +1,6 @@
 name: digit_forms_engine
 description: A dynamic form rendering engine for Flutter, built on top of the `digit_ui_components` package. It supports multi-page, configurable forms based on a JSON schema with automatic validation, navigation, and summary generation.
-version: 0.0.7-dev
+version: 0.0.6-dev
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/digit_forms_engine
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 issue_tracker: https://github.com/egovernments/health-campaign-field-worker-app/issues
@@ -22,10 +22,9 @@ dependencies:
   digit_ui_components: ^0.2.2+7
   flutter_bloc: ^8.1.1
   uuid: ^4.5.1
-  digit_scanner: ^1.0.6+4
+  digit_scanner: ^1.0.6+3
   provider: ^6.1.5
   digit_formula_parser: ^1.0.0
-  gs1_barcode_parser: ^1.0.5
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,3 @@
-## 1.0.6+4
-### FIXES:
-* Scanner form validations fixes and error messages added.
-
 ## 1.0.6+3
 
 * Added scanner validations support for digit_forms_engine

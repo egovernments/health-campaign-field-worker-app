@@ -1,6 +1,6 @@
 name: attendance_management
 description: Digit UI attendance management specification - This tool is designed for tracking user attendance with customizable session counts per day.
-version: 1.0.5+3
+version: 1.0.5+2
 homepage: "https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/attendance_management"
 repository: "https://github.com/egovernments/health-campaign-field-worker-app"
 
@@ -30,7 +30,7 @@ dependencies:
   drift_db_viewer: ^2.0.0
   digit_data_model: ^1.1.2+1
   reactive_forms: ^17.0.0
-  digit_scanner: ^1.0.6+4
+  digit_scanner: ^1.0.6+2
 
 dev_dependencies:
   flutter_test:

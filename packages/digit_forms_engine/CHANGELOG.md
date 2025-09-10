@@ -1,6 +1,3 @@
-## 0.0.7-dev
-- Updated digit_scanner package to 1.0.6+4
-
 ## 0.0.6-dev
 
 ### BugFix
