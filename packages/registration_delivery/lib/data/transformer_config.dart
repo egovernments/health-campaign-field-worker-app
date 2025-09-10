@@ -89,6 +89,10 @@ final jsonConfig = {
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "boundaryCode": "__context:boundary.code",
+          "additionalFields": {
+            "height": "beneficiaryDetails.height",
+            "weight": "beneficiaryDetails.weight"
+          }
         },
         "listMappings": {
           "IdentifierModel": {
