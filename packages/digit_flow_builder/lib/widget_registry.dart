@@ -83,13 +83,9 @@ class WidgetRegistry {
         label: json['label'] ?? '',
         onPressed: () {
           if (json['onAction'] != null) {
-            // Parse to ActionConfig
-            var action = ActionConfig.fromJson(
-              Map<String, dynamic>.from(json['onAction']),
-            );
-
-            // If action has navigation data, resolve templates
-            final navData = action.properties['data'] as List<dynamic>?;
+            // Parse onAction as a list of actions
+            final actionsList =
+                List<Map<String, dynamic>>.from(json['onAction']);
 
             final crudCtx = CrudItemContext.of(context);
             final stateData =
@@ -100,38 +96,41 @@ class WidgetRegistry {
                         ? crudCtx.stateData?.rawState.first
                         : null;
 
-            if (navData != null && stateData != null) {
-              final resolvedData = navData.map((entry) {
-                final key = entry['key'] as String;
-                final rawValue = entry['value'];
+            // Process each action
+            for (var actionJson in actionsList) {
+              var action = ActionConfig.fromJson(actionJson);
 
-                // This helper should resolve {{navigation.x}}, {{item.y}}, etc.
-                final resolvedValue = resolveValue(
-                  rawValue,
-                  stateData,
+              // Resolve navigation data if present
+              final navData = action.properties['data'] as List<dynamic>?;
+
+              if (navData != null && stateData != null) {
+                final resolvedData = navData.map((entry) {
+                  final key = entry['key'] as String;
+                  final rawValue = entry['value'];
+
+                  final resolvedValue = resolveValue(rawValue, stateData);
+
+                  return {
+                    "key": key,
+                    "value": resolvedValue,
+                  };
+                }).toList();
+
+                action = ActionConfig(
+                  action: action.action,
+                  actionType: action.actionType,
+                  properties: {
+                    ...action.properties,
+                    'data': resolvedData,
+                  },
+                  condition: action.condition,
+                  actions: action.actions,
                 );
+              }
 
-                return {
-                  "key": key,
-                  "value": resolvedValue,
-                };
-              }).toList();
-
-              // Replace properties with resolved data
-              action = ActionConfig(
-                action: action.action,
-                actionType: action.actionType,
-                properties: {
-                  ...action.properties,
-                  'data': resolvedData,
-                },
-                condition: action.condition,
-                actions: action.actions,
-              );
+              // Trigger each action
+              onAction(action);
             }
-
-            // Pass resolved action forward
-            onAction(action);
           }
         },
         type: _parseButtonType(props['type']),
@@ -150,16 +149,22 @@ class WidgetRegistry {
         onChanged: (value) {
           if (value.isNotEmpty) {
             if (json['onAction'] != null) {
-              final raw = Map<String, dynamic>.from(json['onAction']);
-              raw['properties'] ??= {};
-              final data = raw['properties']['data'];
-              if (data is List &&
-                  data.isNotEmpty &&
-                  data[0] is Map<String, dynamic>) {
-                data[0]['value'] = value;
+              final actionsList =
+                  List<Map<String, dynamic>>.from(json['onAction']);
+
+              for (var raw in actionsList) {
+                raw['properties'] ??= {};
+                final data = raw['properties']['data'];
+
+                if (data is List &&
+                    data.isNotEmpty &&
+                    data[0] is Map<String, dynamic>) {
+                  data[0]['value'] = value;
+                }
+
+                final action = ActionConfig.fromJson(raw);
+                onAction(action);
               }
-              final action = ActionConfig.fromJson(raw);
-              onAction(action);
             }
           } else {
             FlowCrudStateRegistry().clearAll();
@@ -205,10 +210,14 @@ class WidgetRegistry {
         label: json['label'] ?? '',
         onPressed: () {
           if (json['onAction'] != null) {
-            final action = ActionConfig.fromJson(
-              Map<String, dynamic>.from(json['onAction']),
-            );
-            onAction(action);
+            final actionsList = json['onAction'] is List
+                ? List<Map<String, dynamic>>.from(json['onAction'])
+                : [Map<String, dynamic>.from(json['onAction'])];
+
+            for (var raw in actionsList) {
+              final action = ActionConfig.fromJson(raw);
+              onAction(action);
+            }
           }
         },
         type: DigitButtonType.tertiary,
@@ -436,16 +445,21 @@ class WidgetRegistry {
         mainAxisAlignment: MainAxisAlignment.start,
         onChanged: (value) {
           if (json['onAction'] != null) {
-            final raw = Map<String, dynamic>.from(json['onAction']);
-            raw['properties'] ??= {};
-            raw['properties']['data'] = [
-              {
-                'key': json['fieldName'] ?? 'switch',
-                'value': value,
-              }
-            ];
-            final action = ActionConfig.fromJson(raw);
-            onAction(action);
+            final actionsList = json['onAction'] is List
+                ? List<Map<String, dynamic>>.from(json['onAction'])
+                : [Map<String, dynamic>.from(json['onAction'])];
+
+            for (var raw in actionsList) {
+              raw['properties'] ??= {};
+              raw['properties']['data'] = [
+                {
+                  'key': json['fieldName'] ?? 'switch',
+                  'value': value,
+                }
+              ];
+              final action = ActionConfig.fromJson(raw);
+              onAction(action);
+            }
           }
         },
       );

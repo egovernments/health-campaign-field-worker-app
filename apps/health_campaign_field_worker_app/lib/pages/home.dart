@@ -47,6 +47,7 @@ import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
+import '../main.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../utils/debound.dart';
@@ -499,7 +500,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             WidgetRegistry().initializeDefaultWidgetRegistry();
             try {
               context.router.push(
-                FlowBuilderHomeRoute(pageName: 'searchBeneficiary'),
+                FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
               );
             } catch (e) {
               debugPrint('error $e');

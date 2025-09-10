@@ -96,7 +96,7 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
             if (state is FormsSubmittedState &&
                 widget.config['name'] == state.activeSchemaKey) {
               // final config = FlowRegistry.getByName(state.schema[]);///////
-              final onSubmit = widget.config['onSubmit'] as List<dynamic>?;
+              final onSubmit = widget.config['onAction'] as List<dynamic>?;
 
               Map<String, dynamic> contextData = {
                 'formData': state.formData,
