@@ -577,7 +577,7 @@ packages:
       path: "../../packages/digit_forms_engine"
       relative: true
     source: path
-    version: "0.0.5-dev"
+    version: "0.0.6-dev"
   digit_formula_parser:
     dependency: "direct main"
     description:
@@ -598,7 +598,7 @@ packages:
       path: "../../packages/digit_scanner"
       relative: true
     source: path
-    version: "1.0.6+2"
+    version: "1.0.6+3"
   digit_showcase:
     dependency: "direct main"
     description:
