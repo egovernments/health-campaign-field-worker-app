@@ -55,9 +55,9 @@ dependencies:
   flutter_svg: ^2.0.10+1
   digit_showcase: ^1.0.2+1
   qr_flutter: ^4.1.0
-  get_storage_info: ^0.4.0
+  disk_space_update: ^0.0.2
   sync_service: ^1.0.2
-  attendance_management: ^1.0.5+4
+  attendance_management: ^1.0.5+3
   digit_scanner: ^1.0.6+4
   inventory_management: ^1.0.6
   referral_reconciliation: ^1.0.6

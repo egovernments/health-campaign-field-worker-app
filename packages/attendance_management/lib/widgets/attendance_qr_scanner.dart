@@ -39,9 +39,9 @@ class AttendanceDigitScannerPage extends DigitScannerPage {
     required this.onScanResult,
 
     // keep these for backward-compat; the base page now reads from validations anyway
-    super.quantity,
+    required super.quantity,
     super.singleValue,
-    super.isGS1code,
+    required super.isGS1code,
 
     // if your updated DigitScannerPage supports this, pass it when you have it
     super.validations,

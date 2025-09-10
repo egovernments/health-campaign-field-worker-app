@@ -404,9 +404,11 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      path: "../dart_mappable_builder"
-      relative: true
-    source: path
+      path: "packages/dart_mappable_builder"
+      ref: master
+      resolved-ref: ab088b8fc21a07ed7a56bf81c935ee51481ad253
+      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
+    source: git
     version: "4.2.3"
   dart_style:
     dependency: transitive
@@ -457,62 +459,69 @@ packages:
     source: hosted
     version: "0.4.1"
   digit_crud_bloc:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "../digit_crud_bloc"
-      relative: true
-    source: path
-    version: "0.0.3-dev"
+      name: digit_crud_bloc
+      sha256: "270499860c22a240bae74b9ce26cff49ca3a721123c47b5415c4ee1403de53ad"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1-dev"
   digit_data_converter:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "../digit_data_converter"
-      relative: true
-    source: path
-    version: "0.0.4-dev"
+      name: digit_data_converter
+      sha256: "9fd3b226dfb3ad9ae1617746e3f075b1684c055bb405c4dd6a937ac5f7b0c98e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1-dev"
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../digit_data_model"
-      relative: true
-    source: path
-    version: "1.1.3"
+      name: digit_data_model
+      sha256: "17cb1e128f1c90d7658b95d67a27e02e01ce4f5699df49a60bef77ce17be1a65"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0-dev.1-console"
   digit_forms_engine:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "../digit_forms_engine"
-      relative: true
-    source: path
-    version: "0.0.7-dev"
+      name: digit_forms_engine
+      sha256: d42aa88354ff5cccf0903677ef40a14f33ab0ebc8bdc586e3d9130644da2311f
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1-dev"
   digit_formula_parser:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "../digit_formula_parser"
-      relative: true
-    source: path
+      name: digit_formula_parser
+      sha256: "2d17f51516f62d100facc4a85e0501a4cf6cf52b245486a6f2c7be6cbeca2564"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.0"
   digit_scanner:
     dependency: "direct main"
     description:
-      path: "../digit_scanner"
-      relative: true
-    source: path
-    version: "1.0.6+4"
+      name: digit_scanner
+      sha256: "1bf24bdaf71f99de0f1281136478bb141f058a984752176ffa63ad580b467e18"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.6+2"
   digit_showcase:
     dependency: "direct main"
     description:
-      path: "../digit_showcase"
-      relative: true
-    source: path
-    version: "1.0.2+1"
+      name: digit_showcase
+      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   digit_ui_components:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "37c5c974bbc60567588f71bf6cddf49dc69d3248d0b4bca4525af837cf67a8f2"
+      sha256: "94bfc92dc2bd7dbec934a04e80155beb2dd71e76e166d14095c129880b0c0e36"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.2+8"
+    version: "0.2.2+5"
   dio:
     dependency: transitive
     description:
@@ -1408,10 +1417,11 @@ packages:
   registration_delivery:
     dependency: "direct main"
     description:
-      path: "../registration_delivery"
-      relative: true
-    source: path
-    version: "1.1.1-dev.4-console"
+      name: registration_delivery
+      sha256: bb8327f3f96dec6d129e79ddda8eef3be13136946b91653629556008987d49b6
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0-dev.1-console"
   rxdart:
     dependency: transitive
     description:
@@ -1562,11 +1572,12 @@ packages:
     source: hosted
     version: "1.2.0"
   survey_form:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "../survey_form"
-      relative: true
-    source: path
+      name: survey_form
+      sha256: "26c02064d6d74928ce458fe25eb037ee9a131952f3aa6e03480b70277473b635"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.3"
   synchronized:
     dependency: transitive
@@ -1857,5 +1868,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.0 <4.0.0"
+  dart: ">=3.4.3 <3.9.0"
   flutter: ">=3.22.0"
