@@ -44,11 +44,31 @@ This document provides detailed technical documentation for the dynamic flow con
 
 ## Screen Types
 
-There are two main screen types available:
+| Screen Type | Description | Use Case |
+|-------------|-------------|----------|
+| TEMPLATE | Dynamic content display with search, filtering, and navigation | Search screens, data listing, overview pages |
+| FORM | Multi-step data collection forms | Registration forms, surveys, data entry |
 
-### 1. TEMPLATE Screen
-Template screens are used for displaying dynamic content with search, filtering, and navigation capabilities.
+### Screen Type Properties
 
+| Property | TEMPLATE | FORM | Description |
+|----------|----------|------|-------------|
+| `screenType` | "TEMPLATE" | "FORM" | Type identifier |
+| `name` | ✓ | ✓ | Unique identifier |
+| `heading` | ✓ | ✗ | Display title |
+| `description` | ✓ | ✗ | Optional description |
+| `project` | ✗ | ✓ | Campaign ID |
+| `version` | ✗ | ✓ | Version number |
+| `disabled` | ✗ | ✓ | Enable/disable flag |
+| `isSelected` | ✗ | ✓ | Selection state |
+| `wrapperConfig` | ✓ | ✓ | Data configuration |
+| `body` | ✓ | ✗ | Main content components |
+| `footer` | ✓ | ✗ | Footer components |
+| `initActions` | ✓ | ✗ | Load-time actions |
+| `pages` | ✗ | ✓ | Form pages array |
+| `onAction` | ✗ | ✓ | Form submission actions |
+
+### 1. TEMPLATE Screen Example
 ```json
 {
   "screenType": "TEMPLATE",
@@ -61,19 +81,7 @@ Template screens are used for displaying dynamic content with search, filtering,
 }
 ```
 
-**Properties:**
-- `screenType`: Always "TEMPLATE"
-- `name`: Unique identifier for the screen
-- `heading`: Display title for the screen
-- `description`: Optional description text
-- `wrapperConfig`: Consumable data format for current page 
-- `body`: Array of UI components for the main content area
-- `footer`: Array of UI components for the footer area
-- `initActions`: Optional array of actions to execute when screen loads
-
-### 2. FORM Screen
-Form screens are used for data collection through multi-step forms.
-
+### 2. FORM Screen Example
 ```json
 {
   "screenType": "FORM",
@@ -88,25 +96,39 @@ Form screens are used for data collection through multi-step forms.
 }
 ```
 
-**Properties:**
-- `screenType`: Always "FORM"
-- `name`: Unique identifier for the form
-- `project`: Campaign ID
-- `version`: Form version number
-- `disabled`: Boolean flag to enable/disable the form
-- `isSelected`: Boolean flag for selection state
-- `pages`: Array of form page configurations
-- `wrapperConfig`: Data configuration for the form
-- `onAction`: Array of actions to execute on form submission
-
 ---
 
 ## Action Types
 
-Actions define what happens when users interact with components. Available action types:
+Actions define what happens when users interact with components.
 
-### 1. NAVIGATION
-Navigate to another screen or form.
+| Action Type | Description | Common Use Cases |
+|-------------|-------------|------------------|
+| NAVIGATION | Navigate to another screen or form | Moving between screens, opening forms |
+| SEARCH_EVENT | Trigger a search operation | Filtering data, finding records |
+| CREATE_EVENT | Create new entities in the system | Saving form data, adding records |
+| FETCH_TRANSFORMER_CONFIG | Fetch configuration data for transformations | Loading dynamic configs |
+| EVENT | Generic event action for various operations | Custom business logic |
+| SHOW_TOAST | Display toast message to user | User feedback, notifications |
+| UPDATE_EVENT | Update existing entities | Modifying records |
+| CLEAR_EVENT | Clear search results or form data | Resetting forms, clearing filters |
+
+### Action Type Properties
+
+| Action Type | Required Properties | Optional Properties |
+|-------------|-------------------|-------------------|
+| NAVIGATION | `type`, `name` | `data`, `onError` |
+| SEARCH_EVENT | `type`, `name`, `data` | `onError` |
+| CREATE_EVENT | `entity` | `data`, `onError` |
+| FETCH_TRANSFORMER_CONFIG | `configName` | `data`, `onError` |
+| EVENT | `type`, `name` | `data`, `onError` |
+| SHOW_TOAST | `message` | - |
+| UPDATE_EVENT | `entity`, `data` | `onError` |
+| CLEAR_EVENT | `type` | - |
+
+### Action Examples
+
+#### NAVIGATION
 ```json
 {
   "actionType": "NAVIGATION",
@@ -120,8 +142,7 @@ Navigate to another screen or form.
 }
 ```
 
-### 2. SEARCH_EVENT
-Trigger a search operation.
+#### SEARCH_EVENT
 ```json
 {
   "actionType": "SEARCH_EVENT",
@@ -139,8 +160,7 @@ Trigger a search operation.
 }
 ```
 
-### 3. CREATE_EVENT
-Create new entities in the system.
+#### CREATE_EVENT
 ```json
 {
   "actionType": "CREATE_EVENT",
@@ -156,25 +176,19 @@ Create new entities in the system.
 }
 ```
 
-### 4. FETCH_TRANSFORMER_CONFIG
-Fetch configuration data for transformations.
+#### EVENT
 ```json
 {
-  "actionType": "FETCH_TRANSFORMER_CONFIG",
+  "actionType": "EVENT",
   "properties": {
-    "configName": "beneficiaryRegistration",
-    "onError": [
-      {
-        "actionType": "SHOW_TOAST",
-        "properties": {"message": "Failed to fetch config."}
-      }
-    ]
+    "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT",
+    "name": "ENTITY // ADDRESS",
+    "data": [...]
   }
 }
 ```
 
-### 5. SHOW_TOAST
-Display toast message to user.
+#### SHOW_TOAST
 ```json
 {
   "actionType": "SHOW_TOAST",
@@ -184,39 +198,47 @@ Display toast message to user.
 }
 ```
 
-### 6. UPDATE_EVENT
-Update existing entities.
-```json
-{
-  "actionType": "UPDATE_EVENT",
-  "properties": {
-    "entity": "INDIVIDUAL",
-    "data": [
-      {"key": "isHead", "value": "field.value"}
-    ]
-  }
-}
-```
-
-### 7. CLEAR_EVENT
-Clear search results or form data.
-```json
-{
-  "actionType": "CLEAR_EVENT",
-  "properties": {
-    "type": "CLEAR_EVENT"
-  }
-}
-```
-
 ---
 
 ## Body Components
 
-Body components are rendered in the main content area of the screen. Available formats:
+Body components are rendered in the main content area of the screen.
 
-### 1. switch
-Toggle switch component for boolean values.
+| Component | Description | Interactive | Use Cases |
+|-----------|-------------|-------------|-----------|
+| switch | Toggle switch for boolean values | Yes | Enable/disable features, filters |
+| searchBar | Search input field | Yes | Text search, filtering data |
+| filter | Filter controls for data | Yes | Refining search results |
+| infoCard | Information display card | No | Empty states, notifications |
+| listView | Scrollable list of items | No | Data collections, search results |
+| card | Container for grouped content | No | Layout structure |
+| row | Horizontal layout container | No | Side-by-side content |
+| text | Static or dynamic text display | No | Labels, values, content |
+| button | Interactive action button | Yes | Navigation, actions |
+| table | Tabular data display | No | Structured data, reports |
+| labelPairList | Key-value pairs display | No | Details, summaries |
+| panelCard | Interactive panel with actions | Yes | Forms, settings |
+
+### Component Properties
+
+| Component | Common Properties | Specific Properties |
+|-----------|------------------|-------------------|
+| switch | `format`, `label`, `fieldName` | `onAction` |
+| searchBar | `format`, `label`, `fieldName` | `onAction` |
+| filter | `format`, `label`, `fieldName` | `onAction` |
+| infoCard | `format`, `label`, `description` | `hidden` |
+| listView | `format`, `fieldName`, `data` | `child`, `hidden`, `dataSource` |
+| card | `format`, `children` | `type` |
+| row | `format`, `children` | `properties` (alignment) |
+| text | `format`, `value` | - |
+| button | `format`, `label`, `properties` | `onAction`, `icon` |
+| table | `format`, `data` | `columns`, `rows`, `source` |
+| labelPairList | `format`, `data` | - |
+| panelCard | `format`, `label`, `fieldName` | `onAction` |
+
+### Component Examples
+
+#### Switch Component
 ```json
 {
   "format": "switch",
@@ -226,8 +248,7 @@ Toggle switch component for boolean values.
 }
 ```
 
-### 2. searchBar
-Search input component.
+#### Search Bar Component
 ```json
 {
   "format": "searchBar",
@@ -237,30 +258,7 @@ Search input component.
 }
 ```
 
-### 3. filter
-Filter component for refining search results.
-```json
-{
-  "format": "filter",
-  "label": "Filter Search",
-  "fieldName": "searchByFilter",
-  "onAction": [...]
-}
-```
-
-### 4. infoCard
-Information display card with conditional visibility.
-```json
-{
-  "format": "infoCard",
-  "hidden": "{{ context.household.notEmpty }}",
-  "label": "No households found",
-  "description": "Use the search above to find households or register a new one"
-}
-```
-
-### 5. listView
-Scrollable list component for displaying collections.
+#### List View Component
 ```json
 {
   "format": "listView",
@@ -271,40 +269,7 @@ Scrollable list component for displaying collections.
 }
 ```
 
-### 6. card
-Container component for grouping related content.
-```json
-{
-  "format": "card",
-  "type": "primary",
-  "children": [...]
-}
-```
-
-### 7. row
-Horizontal layout component.
-```json
-{
-  "format": "row",
-  "properties": {
-    "mainAxisAlignment": "spaceBetween",
-    "mainAxisSize": "max"
-  },
-  "children": [...]
-}
-```
-
-### 8. text
-Text display component with dynamic content.
-```json
-{
-  "format": "text",
-  "value": "{{ context.headIndividual.name.givenName }}"
-}
-```
-
-### 9. button
-Interactive button component.
+#### Button Component
 ```json
 {
   "format": "button",
@@ -317,8 +282,7 @@ Interactive button component.
 }
 ```
 
-### 10. table
-Tabular data display component.
+#### Table Component
 ```json
 {
   "format": "table",
@@ -332,31 +296,6 @@ Tabular data display component.
     ],
     "rows": []
   }
-}
-```
-
-### 11. labelPairList
-Key-value pair display component.
-```json
-{
-  "format": "labelPairList",
-  "data": [
-    {
-      "key": "Household head name",
-      "value": "{{context.headIndividual.name.givenName}}"
-    }
-  ]
-}
-```
-
-### 12. panelCard
-Interactive panel component with actions.
-```json
-{
-  "format": "panelCard",
-  "label": "Is Head of Household?",
-  "fieldName": "isHead",
-  "onAction": [...]
 }
 ```
 
@@ -408,21 +347,22 @@ Forms consist of multiple pages with various field types and validation rules.
 ```
 
 ### Field Types (Format)
-Available field formats:
 
-1. **text** - Text input field
-2. **locality** - Location picker
-3. **latLng** - GPS coordinate picker
-4. **date** - Date picker
-5. **numeric** - Number input
-6. **checkbox** - Boolean checkbox
-7. **idPopulator** - ID selection with predefined options
-8. **dob** - Date of birth picker with age calculation
-9. **select** - Single selection dropdown
-10. **scanner** - QR/Barcode scanner input
-11. **radio** - Radio button group
-12. **dropdown** - Dropdown selection
-13. **custom** - Custom component
+| Format | Description | Input Type | Use Cases |
+|--------|-------------|------------|-----------|
+| text | Basic text input field | String | Names, descriptions, addresses |
+| locality | Location/boundary picker | String | Geographic locations |
+| latLng | GPS coordinate picker | String | Coordinates, mapping |
+| date | Date picker component | Date | Registration dates, deadlines |
+| numeric | Number input field | Number | Counts, quantities, ages |
+| checkbox | Boolean checkbox | Boolean | Yes/No questions, flags |
+| idPopulator | ID selection with options | String | Document types, ID categories |
+| dob | Date of birth with age calc | Date | Birth dates, age calculation |
+| select | Single selection dropdown | String | Gender, status, categories |
+| scanner | QR/Barcode scanner input | String | QR codes, barcodes |
+| radio | Radio button group | String | Single choice questions |
+| dropdown | Dropdown selection | String | Predefined options |
+| custom | Custom component | Any | Special UI requirements |
 
 ### Field Properties
 ```json
@@ -450,32 +390,43 @@ Available field formats:
 ```
 
 ### Validation Types
-Available validation types:
 
-1. **required** - Field must have a value
-   ```json
-   {"type": "required", "value": true, "message": "Required field cannot be empty"}
-   ```
+| Validation Type | Description | Applies To | Example Value |
+|----------------|-------------|------------|---------------|
+| required | Field must have a value | All field types | `true` |
+| minLength | Minimum character length | String fields | `"2"` |
+| maxLength | Maximum character length | String fields | `"200"` |
+| min | Minimum numeric value | Numeric fields | `"1"` |
+| max | Maximum numeric value | Numeric fields | `"10"` |
 
-2. **minLength** - Minimum character length
-   ```json
-   {"type": "minLength", "value": "2", "message": "Size must be 2 to 200 characters"}
-   ```
+### Validation Examples
 
-3. **maxLength** - Maximum character length
-   ```json
-   {"type": "maxLength", "value": "200", "message": "Size must be 2 to 200 characters"}
-   ```
+#### Required Validation
+```json
+{
+  "type": "required", 
+  "value": true, 
+  "message": "Required field cannot be empty"
+}
+```
 
-4. **min** - Minimum numeric value
-   ```json
-   {"type": "min", "value": "1", "message": "Total household members cannot be less than 1"}
-   ```
+#### Length Validations
+```json
+{
+  "type": "minLength", 
+  "value": "2", 
+  "message": "Size must be 2 to 200 characters"
+}
+```
 
-5. **max** - Maximum numeric value
-   ```json
-   {"type": "max", "value": "10", "message": "Total household members cannot be more than 10"}
-   ```
+#### Numeric Validations
+```json
+{
+  "type": "min", 
+  "value": "1", 
+  "message": "Total household members cannot be less than 1"
+}
+```
 
 ---
 
@@ -585,21 +536,44 @@ Data can be passed between screens using the `data` array:
 ```
 
 ### Navigation Types
-1. **FORM Navigation**: Navigate to a form screen
-   ```json
-   {
-     "type": "FORM",
-     "name": "HOUSEHOLD"
-   }
-   ```
 
-2. **TEMPLATE Navigation**: Navigate to a template screen
-   ```json
-   {
-     "type": "TEMPLATE",
-     "name": "householdOverview"
-   }
-   ```
+| Navigation Type | Description | Target Screen | Use Cases |
+|----------------|-------------|---------------|-----------|
+| FORM | Navigate to a form screen | Multi-step forms | Data collection, registration |
+| TEMPLATE | Navigate to a template screen | Dynamic content screens | Search, overview, listings |
+
+### Navigation Properties
+
+| Property | Required | Description | Example |
+|----------|----------|-------------|---------|
+| `type` | Yes | Navigation type (FORM/TEMPLATE) | `"FORM"` |
+| `name` | Yes | Target screen identifier | `"HOUSEHOLD"` |
+| `data` | No | Data to pass to target screen | `[{"key": "id", "value": "123"}]` |
+| `onError` | No | Error handling actions | `[{"actionType": "SHOW_TOAST", ...}]` |
+
+### Navigation Examples
+
+#### FORM Navigation
+```json
+{
+  "type": "FORM",
+  "name": "HOUSEHOLD",
+  "data": [
+    {"key": "nameOfIndividual", "value": "searchBar.value"}
+  ]
+}
+```
+
+#### TEMPLATE Navigation
+```json
+{
+  "type": "TEMPLATE",
+  "name": "householdOverview",
+  "data": [
+    {"key": "HouseholdClientReferenceId", "value": "{{item.id}}"}
+  ]
+}
+```
 ---
 
 ## Best Practices
