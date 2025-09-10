@@ -25,7 +25,7 @@ class LayoutRendererPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<dynamic> body = config['body'] ?? [];
-    final List<dynamic> actions = config['actions'] ?? [];
+    final List<dynamic> actions = config['footer'] ?? [];
 
     final screenKey =
         getScreenKeyFromArgs(context) ?? context.router.currentPath;
