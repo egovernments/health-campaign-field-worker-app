@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/project_type.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:intl/intl.dart';
 
 import 'interpolation.dart';
 
@@ -131,17 +132,64 @@ void initializeFunctionRegistry() {
   /// - **Function Name**: `'calculateAge'`
   /// - **Arguments**: A list where the first element is the date of birth string.
   /// - **Returns**: A formatted string like `"1y 2m"` or `"--"` if the input is invalid.
-  FunctionRegistry.register('calculateAge', (args, stateData) {
+  FunctionRegistry.register('formatDate', (args, stateData) {
     if (args.isEmpty) return '--';
 
-    final dobString = args.first?.toString() ?? '';
-    if (dobString.isEmpty) return '--';
+    final rawValue = args.first;
+    if (rawValue == null) return '--';
 
-    final dob = DigitDateUtils.getFormattedDateToDateTime(dobString);
-    if (dob == null) return '--';
+    String? rawType = args.length > 1 ? args[1]?.toString() : null;
 
-    final age = DigitDateUtils.calculateAge(dob);
-    return "${age.years}y ${age.months}m";
+    if (rawType != null) {
+      rawType = rawType.replaceAll(RegExp(r'^\{\{\s*|\s*\}\}$'), '');
+    }
+
+    // now safely remove quotes and lowercase
+    final type =
+        rawType?.replaceAll(RegExp("^['\"]|['\"]\$"), '').toLowerCase() ?? '';
+
+    final format = args.length > 2
+        ? args[2]?.replaceAll(RegExp(r'^\{\{\s*|\s*\}\}$'), '').toString()
+        : null;
+
+    // handle timestamps passed as int
+    DateTime? parseDate(dynamic value) {
+      if (value is int) {
+        return DateTime.fromMillisecondsSinceEpoch(value);
+      }
+      if (value is String) {
+        // Try parsing as int timestamp first
+        final timestamp = int.tryParse(value);
+        if (timestamp != null) {
+          return DateTime.fromMillisecondsSinceEpoch(timestamp);
+        }
+
+        // Otherwise, parse as formatted date string
+        return DigitDateUtils.getFormattedDateToDateTime(value);
+      }
+      return null;
+    }
+
+    switch (type) {
+      case 'age':
+        final dob = parseDate(rawValue);
+        if (dob == null) return '--';
+        final age = DigitDateUtils.calculateAge(dob);
+        return "${age.years}y ${age.months}m";
+
+      case 'date':
+        final date = parseDate(rawValue);
+        if (date == null) return '--';
+        return DateFormat(format ?? "dd/MM/yyyy").format(date);
+
+      case 'datetime':
+        final date = parseDate(rawValue);
+        if (date == null) return '--';
+        return DateFormat(format ?? "dd/MM/yyyy HH:mm").format(date);
+
+      default:
+        return rawValue.toString();
+    }
   });
 
   /// Registers a function to check eligibility for a task based on age and
