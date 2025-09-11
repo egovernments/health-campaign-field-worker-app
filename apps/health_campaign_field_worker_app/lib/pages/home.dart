@@ -58,6 +58,7 @@ import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
+import '../widgets/resource_card/custom_resource_card.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
 
@@ -109,19 +110,10 @@ class _HomePageState extends LocalizedState<HomePage> {
         final beneficiaryDetails =
             stateAccessor.getPageData('beneficiaryDetails');
 
-        return const Text('custom component');
-
         // Build your component with access to all this data
-        // return CustomResourceCard(
-        //   // You can now pass any data your component needs
-        //   individualAge: individualAge,
-        //   gender: individualGender,
-        //   location: location,
-        //   householdSize: householdSize,
-        //   individuals: individuals,
-        //   household: household,
-        //   debug: stateAccessor.getAllData(), // For debugging
-        // );
+        return ResourceCard(
+          stateData: beneficiaryDetails,
+        );
       },
     );
   }
