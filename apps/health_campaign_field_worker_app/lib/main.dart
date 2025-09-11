@@ -355,7 +355,7 @@ final dynamic sampleFlows = {
                     },
                     {
                       "header": "Age",
-                      "cellValue": "{{fn:calculateAge(item.dateOfBirth)}}"
+                      "cellValue": "{{fn:formatDate(item.dateOfBirth, age)}}"
                     },
                     {"header": "Gender", "cellValue": "{{item.gender}}"}
                   ],
@@ -1214,7 +1214,7 @@ final dynamic sampleFlows = {
                   {
                     "format": "text",
                     "value":
-                        "{{ context.individuals.gender }} | {{fn:calculateAge(context.individuals.dateOfBirth)}}"
+                        "{{ context.individuals.gender }} | {{fn:formatDate(context.individuals.dateOfBirth, age)}}"
                   },
                   {"format": "tag", "type": "", "label": "Not visited"},
                   {
@@ -2005,31 +2005,33 @@ final dynamic sampleFlows = {
               "data": [
                 {
                   "key": "Name",
-                  "value": "{{context.headOfHousehold.name.givenName}}"
+                  "value": "{{contextData.individuals.name.givenName}}"
                 },
                 {
                   "key": "ID Type",
-                  "value": "{{context.headOfHousehold.address.locality.code}}"
+                  "value": "{{contextData.individuals.identifiers[0].id}}"
                 },
                 {
                   "key": "ID Number",
-                  "value": "{{context.household.memberCount}}"
+                  "value": "{{contextData.individuals.identifiers[0].idType}}"
                 },
                 {
                   "key": "Age",
-                  "value": "{{context.headOfHousehold.name.givenName}}"
+                  "value":
+                      "{{fn:formatDate(contextData.individuals.dateOfBirth, age)}}"
                 },
                 {
                   "key": "Gender",
-                  "value": "{{context.headOfHousehold.address.locality.code}}"
+                  "value": "{{contextData.individuals.gender}}"
                 },
                 {
                   "key": "Mobile Number",
-                  "value": "{{context.household.memberCount}}"
+                  "value": "{{contextData.individuals.mobileNumber}}"
                 },
                 {
                   "key": "Date of Registration",
-                  "value": "{{context.household.memberCount}}"
+                  "value":
+                      "{{fn:formatDate(contextData.projectBeneficiaries.dateOfRegistration, date, dd MMM yyyy)}}"
                 }
               ]
             }

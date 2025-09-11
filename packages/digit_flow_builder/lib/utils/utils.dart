@@ -187,13 +187,31 @@ String? resolveValue(dynamic value, dynamic contextData) {
               ? <dynamic>[]
               : argsExpr.split(',').map((rawArg) {
                   final trimmed = rawArg.trim();
-                  final placeholder = '{{ $trimmed }}';
-                  return resolveValue(placeholder, contextData);
+
+                  // If it's a placeholder (context/item/navigation or contains a dot)
+                  if (trimmed.contains('.') ||
+                      trimmed.startsWith('context') ||
+                      trimmed.startsWith('item') ||
+                      trimmed.startsWith('navigation')) {
+                    final placeholder = '{{ $trimmed }}';
+                    return resolveValue(placeholder, contextData);
+                  }
+
+                  // Otherwise treat as raw literal, strip surrounding quotes if any
+                  final unquoted = trimmed.replaceAll(
+                    RegExp(r"""^['"]|['"]$"""),
+                    '',
+                  );
+                  return unquoted;
                 }).toList();
 
-          return FunctionRegistry.call(
-                  fnName, resolvedArgs, CrudStateData({}, []))?.toString() ??
-              '';
+          final fnResult = FunctionRegistry.call(
+            fnName,
+            resolvedArgs,
+            CrudStateData({}, []),
+          );
+
+          return fnResult?.toString() ?? '';
         });
         return value;
       }
