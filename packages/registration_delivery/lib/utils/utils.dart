@@ -541,7 +541,7 @@ class RegistrationDeliverySingleton {
   Map<String, TemplateConfig>? _templateConfigs;
   String? _registrationConfig;
   String? _deliveryConfig;
-  int? _stockCount = 0;
+  int? _stockCount;
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
