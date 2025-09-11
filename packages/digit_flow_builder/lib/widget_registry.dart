@@ -11,6 +11,7 @@ import 'package:digit_ui_components/widgets/atoms/table_cell.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_table.dart';
 import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
+import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
 
 import 'action_handler/action_config.dart';
@@ -456,6 +457,17 @@ class WidgetRegistry {
       return Tag(
         label: finalLabel,
         type: TagType.error,
+      );
+    });
+
+    WidgetRegistry.register('panelCard', (json, context, onAction) {
+      final crudCtx = CrudItemContext.of(context);
+      final label = json['label'] ?? '';
+      final description = json['description'] ?? '';
+      return PanelCard(
+        title: label,
+        type: PanelType.success,
+        description: description,
       );
     });
 
