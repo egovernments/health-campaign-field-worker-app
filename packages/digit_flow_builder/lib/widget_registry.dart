@@ -397,17 +397,16 @@ class WidgetRegistry {
           final key = e['key'] ?? '';
           final value = e['value'];
 
+          final valueText = resolveValue(
+              value,
+              crudCtx?.item != null
+                  ? crudCtx!.item
+                  : crudCtx?.stateData?.rawState);
+
           return LabelValueItem(
             maxLines: 5,
             label: key,
-            value: (crudCtx?.stateData != null && value is String)
-                ? interpolateWithCrudStates(
-                    template: value,
-                    stateData: crudCtx!.stateData!,
-                    listIndex: crudCtx.listIndex,
-                    item: crudCtx.item,
-                  )
-                : value,
+            value: valueText,
             labelFlex: 9,
           );
         }).toList(),
