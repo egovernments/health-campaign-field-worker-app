@@ -2401,9 +2401,10 @@ final dynamic sampleFlows = {
       "body": [
         {
           "format": "panelCard",
-          "label": "Is Head of Household?",
+          "label": "Delivery Successful",
+          "description": "The resource is successfully delivered",
           "fieldName": "isHead",
-          "onAction": [
+          "data": [
             {
               "action": "ONTAP",
               "actionType": "UPDATE_EVENT",
