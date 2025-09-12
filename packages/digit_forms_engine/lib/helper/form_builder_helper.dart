@@ -38,8 +38,10 @@ FormControl buildFormControl(
 
     case PropertySchemaType.dynamic:
       return FormControl<dynamic>(
-        validators: validators,
-      );
+
+          /// FIXME: LATER : ADD VALIDATION FOR DYNAMIC FIELDS ALSO
+          // validators: validators,
+          );
 
     case PropertySchemaType.string:
       if (format == PropertySchemaFormat.date) {
