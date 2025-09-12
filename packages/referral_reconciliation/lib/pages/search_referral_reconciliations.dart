@@ -526,7 +526,7 @@ class _SearchReferralReconciliationsPageState
     TemplateConfig? template,
   ) {
     final primaryProp = template?.properties?[primaryButton];
-    final secondaryProp = template?.properties?[secondaryButton];
+    final secondaryProp = template?.properties?['scanner'];
 
     final entries = <MapEntry<int, DigitButton>>[];
 
@@ -620,8 +620,7 @@ class _SearchReferralReconciliationsPageState
           prefixIcon: Icons.qr_code,
           label: secondaryProp?.label != null
               ? localizations.translate(secondaryProp?.label ?? '')
-              : localizations
-                  .translate(i18.referralReconciliation.scannerLabel),
+              : '',
         ),
       ));
     }

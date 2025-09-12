@@ -157,11 +157,98 @@ String formatDateLocalized(
   return DateFormat(pattern, locale).format(date);
 }
 
+class ExpressionPreprocessResult {
+  final String expression;
+  final Map<String, dynamic> values;
+  
+  ExpressionPreprocessResult({
+    required this.expression,
+    required this.values,
+  });
+}
+
+ExpressionPreprocessResult _preprocessExpression(
+    String expression, Map<String, dynamic> values) {
+  String modifiedExpression = expression;
+  Map<String, dynamic> updatedValues = Map.from(values);
+  
+  // Find all function calls in the expression
+  final functionCallPattern = RegExp(r'(\w+)\((.*?)\)');
+  final functionCalls = functionCallPattern.allMatches(expression);
+  
+  for (final match in functionCalls) {
+    final functionName = match.group(1)!;
+    final args = match.group(2)!;
+    final fullFunctionCall = match.group(0)!;
+    
+    // Check if function exists in registry
+    if (functionRegistry.containsKey(functionName)) {
+      // Parse arguments to get the actual key name from the arguments
+      final keyFromArgs = args.trim();
+      
+      // Check if the key from arguments exists in values
+      if (values.containsKey(keyFromArgs)) {
+        // Parse arguments for function execution
+        final argList = _parseArguments(args, values);
+        
+        // Execute function
+        final functionResult = functionRegistry[functionName]!(argList);
+        
+        // Update the original key's value with calculated result
+        updatedValues[keyFromArgs] = functionResult;
+        
+        // Replace function call with the original key name
+        modifiedExpression = modifiedExpression.replaceAll(fullFunctionCall, keyFromArgs);
+      }
+    }
+  }
+  
+  return ExpressionPreprocessResult(
+    expression: modifiedExpression,
+    values: updatedValues,
+  );
+}
+
+List<dynamic> _parseArguments(String args, Map<String, dynamic> values) {
+  if (args.trim().isEmpty) return [];
+  
+  final argList = <dynamic>[];
+  final parts = args.split(',');
+  
+  for (final part in parts) {
+    final trimmed = part.trim();
+    
+    // Check if it's a string literal
+    if ((trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+        (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
+      argList.add(trimmed.substring(1, trimmed.length - 1));
+    }
+    // Check if it's a variable reference
+    else if (values.containsKey(trimmed)) {
+      argList.add(values[trimmed]);
+    }
+    // Try to parse as number
+    else if (double.tryParse(trimmed) != null) {
+      argList.add(double.parse(trimmed));
+    }
+    // Default to string
+    else {
+      argList.add(trimmed);
+    }
+  }
+  
+  return argList;
+}
+
+
 bool evaluateVisibilityExpression(
     String expression, Map<String, dynamic> values) {
+  // Preprocess expression to handle function calls
+  final preprocessResult = _preprocessExpression(expression, values);
+  
   final value = FormulaParser(
-    expression,
-    values.isEmpty ? {'dummy': {}} : values,
+    preprocessResult.expression,
+    preprocessResult.values.isEmpty ? {'dummy': {}} : preprocessResult.values,
   );
 
   final error = value.parse;
@@ -242,3 +329,26 @@ MapEntry<String, dynamic>? getParsedValues(
     return MapEntry(name, value);
   }
 }
+
+final functionRegistry = {
+  'calculateAgeInMonths': (List<dynamic> args) {
+    final dobString = args[0] as String;
+    if (dobString.isEmpty) return 0;
+    
+    DateTime dob;
+    try {
+      // Try parsing as is first (ISO format)
+      dob = DateTime.parse(dobString);
+    } catch (_) {
+      // If that fails, try parsing DD/MM/YYYY format
+      try {
+        dob = parseDate(dobString);
+      } catch (_) {
+        return 0; // Return 0 if date parsing fails
+      }
+    }
+    
+    final today = DateTime.now();
+    return (today.year - dob.year) * 12 + today.month - dob.month;
+  },
+};
