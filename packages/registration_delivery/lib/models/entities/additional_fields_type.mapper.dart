@@ -73,6 +73,8 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
         return AdditionalFieldsType.height;
       case "weight":
         return AdditionalFieldsType.weight;
+      case "isPregnant":
+        return AdditionalFieldsType.isPregnant;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -129,6 +131,8 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
         return "height";
       case AdditionalFieldsType.weight:
         return "weight";
+      case AdditionalFieldsType.isPregnant:
+        return "isPregnant";
     }
   }
 }

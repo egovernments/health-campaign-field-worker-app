@@ -99,6 +99,12 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                     fetched: (productVariants) => productVariants,
                   );
 
+                  final matchedVariants = variant?.where((variant) {
+                    return productVariants?.any((productVariant) =>
+                            productVariant.productVariantId == variant.id) ??
+                        false;
+                  }).toList();
+
                   return ReactiveFormBuilder(
                     form: () => buildForm(context, productVariants, variant),
                     builder: (context, form, child) {
@@ -151,6 +157,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                               final index = i ~/ 2;
                               final controller = _controllers[index];
                               return ResourceBeneficiaryCard(
+                                itemList: matchedVariants,
                                 maxQuantity: _maxQuantities[index],
                                 readOnly: isReadOnlyFromSchema,
                                 form: form,
@@ -299,7 +306,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
             value: RegistrationDeliverySingleton().beneficiaryType !=
                     BeneficiaryType.household
                 ? int.tryParse('0')
-                : variant?.productVariants?.first?.quantity,
+                : productVariants?.first.quantity,
             validators: [Validators.min(1)],
           );
         }).toList(),
@@ -308,61 +315,34 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
   }
 
   getProductVariants(RegistrationWrapperState state) {
-    final projectType =
-        RegistrationDeliverySingleton().projectType;
+    final projectType = RegistrationDeliverySingleton().projectType;
     final cycles = projectType?.cycles;
-    final selectedCycle = cycles
-        ?.firstWhereOrNull((c) =>
-    c.id ==
-        state.
-        deliveryWrapper
-            ?.cycle);
+    final selectedCycle =
+        cycles?.firstWhereOrNull((c) => c.id == state.deliveryWrapper?.cycle);
 
     if (selectedCycle != null) {
-      final currentCycle =
-      (state.deliveryWrapper
-          ?.cycle ??
-          0) >=
-          0
-          ? state
-          .deliveryWrapper
-          ?.cycle
+      final currentCycle = (state.deliveryWrapper?.cycle ?? 0) >= 0
+          ? state.deliveryWrapper?.cycle
           : 0;
 
       // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
-      final currentDose =
-      (state.deliveryWrapper
-          ?.dose ??
-          0) >=
-          0
-          ? state
-          .deliveryWrapper
-          ?.dose
+      final currentDose = (state.deliveryWrapper?.dose ?? 0) >= 0
+          ? state.deliveryWrapper?.dose
           : 0;
 
-      final items =
-      RegistrationDeliverySingleton()
+      final items = RegistrationDeliverySingleton()
           .projectType
           ?.cycles
-          ?.firstWhere((c) =>
-      c.id ==
-          currentCycle)
+          ?.firstWhere((c) => c.id == currentCycle)
           .deliveries
-          ?.firstWhere((d) =>
-      d.id ==
-          currentDose);
+          ?.firstWhere((d) => d.id == currentDose);
 
       return fetchProductVariant(
           items,
-          state
-              .householdMembers.first.individuals?.firstOrNull,
-          state
-              .householdMembers
-              .first
-              .household,
+          state.householdMembers.first.individuals?.firstOrNull,
+          state.householdMembers.first.household,
           context: context);
-    }
-    else {
+    } else {
       return fetchProductVariant(
         RegistrationDeliverySingleton()
             .selectedProject

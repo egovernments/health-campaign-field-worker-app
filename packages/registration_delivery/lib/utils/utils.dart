@@ -213,6 +213,7 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
     String? structureType;
     var weight = 0.0;
     var height = 0.0;
+    var isPregnant = "false";
 
     if (individualModel != null) {
       final individualAge = DigitDateUtils.calculateAge(
@@ -235,6 +236,18 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
                   .value ??
               '0.0') ??
           0.0;
+
+      isPregnant = (individualModel.additionalFields?.fields
+                  .firstWhere(
+                    (element) =>
+                        element.key ==
+                        AdditionalFieldsType.isPregnant.toValue(),
+                    orElse: () => AdditionalField(
+                        AdditionalFieldsType.isPregnant.toValue(), false),
+                  )
+                  .value ??
+              false)
+          .toString();
 
       height = double.tryParse(individualModel.additionalFields?.fields
                   .firstWhere(
@@ -281,6 +294,7 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               if (structureType != null) 'type_of_structure': structureType,
               'weight': weight,
               'height': height,
+              'isPregnant': isPregnant,
             }, stringKeys: [
               'type_of_structure',
               'gender'
@@ -312,6 +326,7 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               if (structureType != null) 'type_of_structure': structureType,
               'weight': weight,
               'height': height,
+              'isPregnant': isPregnant,
             }, stringKeys: [
               'type_of_structure',
               'gender'
@@ -345,6 +360,7 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               if (structureType != null) 'type_of_structure': structureType,
               'weight': weight,
               'height': height,
+              'isPregnant': isPregnant,
             }, stringKeys: [
               'type_of_structure',
               'gender'

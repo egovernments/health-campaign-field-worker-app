@@ -50,9 +50,7 @@ final jsonConfig = {
           "additionalFields": {
             "childrenCount": "householdDetails.childrenCount",
             "pregnantWomenCount": "householdDetails.pregnantWomenCount",
-            "memberCount": "householdDetails.memberCount",
-            "height": "beneficiaryDetails.height",
-            "weight": "beneficiaryDetails.weight"
+            "memberCount": "householdDetails.memberCount"
           }
         }
       },
@@ -91,7 +89,8 @@ final jsonConfig = {
           "boundaryCode": "__context:boundary.code",
           "additionalFields": {
             "height": "beneficiaryDetails.height",
-            "weight": "beneficiaryDetails.weight"
+            "weight": "beneficiaryDetails.weight",
+            "isPregnant": "beneficiaryDetails.isPregnant"
           }
         },
         "listMappings": {

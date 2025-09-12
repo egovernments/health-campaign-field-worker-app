@@ -53,4 +53,6 @@ enum AdditionalFieldsType {
   height,
   @MappableValue("weight")
   weight,
+  @MappableValue("isPregnant")
+  isPregnant,
 }
