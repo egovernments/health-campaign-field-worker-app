@@ -326,10 +326,10 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "projectBeneficiaryId": "taskDetails.projectBeneficiaryId",
           "projectBeneficiaryClientReferenceId":
-              "__context:projectBeneficiaryModel.clientReferenceId",
+              "__context:ProjectBeneficiaryClientReferenceId",
           "createdBy": "__context:userId",
-          "status":
-              "__value:ADMINISTRATION_SUCCESS", // todo: need to update later for multiround campaign
+          "status": "__value:ADMINISTRATION_SUCCESS",
+          // todo: need to update later for multiround campaign
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "resources": "list:TaskResourceModel",
@@ -351,7 +351,7 @@ final jsonConfig = {
             "addressLine2": "address.addressLine2",
             "landmark": "address.landmark",
             "city": "address.city",
-            "type": "__context:householdModel.address.type",
+            "type": "__value:PERMANENT",
             "pincode": "address.pincode",
             "buildingName": "address.buildingName",
             "street": "address.street",
