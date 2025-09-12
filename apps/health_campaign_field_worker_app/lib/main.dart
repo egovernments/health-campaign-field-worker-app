@@ -1926,7 +1926,7 @@ final dynamic sampleFlows = {
       "heading": "Beneficiary Details",
       "description": "Details of beneficiary",
       "wrapperConfig": {
-        "wrapperName": "BeneficiaryWrapper",
+        "wrapperName": "DeliveryWrapper",
         "rootEntity": "IndividualModel",
         "filters": [],
         "relations": [
@@ -1975,7 +1975,7 @@ final dynamic sampleFlows = {
             "entity": "SideEffectModel",
             "match": {
               "field": "clientReferenceId",
-              "equalsFrom": "household.clientReferenceId"
+              "equalsFrom": "projectBeneficiaries.clientReferenceId"
             }
           },
           {
@@ -1983,10 +1983,92 @@ final dynamic sampleFlows = {
             "entity": "ReferralModel",
             "match": {
               "field": "clientReferenceId",
-              "equalsFrom": "household.clientReferenceId"
+              "equalsFrom": "projectBeneficiaries.clientReferenceId"
             }
           }
         ],
+        "fields": {
+          "cycle": {
+            "from": "{{tasks.additionalFields}}",
+            "map": "{{item.additionalFields.fields}}",
+            "where": {
+              "left": "{{item.key}}",
+              "operator": "eq",
+              "right": "CYCLE_INDEX"
+            },
+            "select": "{{item.value}}",
+            "takeLast": true,
+            "default": 1
+          },
+          "dose": {
+            "from": "{{tasks.additionalFields}}",
+            "map": "{{item.additionalFields.fields}}",
+            "where": {
+              "left": "{{item.key}}",
+              "operator": "eq",
+              "right": "DOSE_INDEX"
+            },
+            "select": "{{item.value}}",
+            "takeLast": true,
+            "default": 0
+          },
+          "individual": "{{individuals.0}}"
+        },
+        "computed": {
+          "hasCycleArrived": {
+            "condition": {
+              "left": "{{cycle}}",
+              "operator": "equals",
+              "right": "{{currentRunningCycle}}"
+            },
+            "fallback": false
+          },
+          "isLastDoseOfCycle": {
+            "condition": {
+              "left": "{{dose}}",
+              "operator": "lt",
+              "right": "{{deliveryLength}}"
+            },
+            "fallback": true
+          }
+        },
+        "computedList": {
+          "futureTasks": {
+            "from": "{{tasks}}",
+            "where": {
+              "left": "{{item.additionalFields.deliveryStrategy}}",
+              "operator": "equals",
+              "right": "INDIRECT"
+            }
+          },
+          "futureDeliveries": {
+            "from":
+                "singleton.selectedProject.additionalDetails.projectType.cycles",
+            "map": "{{item.deliveries}}",
+            "skip": {"from": "{{dose}}"},
+            "takeWhile": {
+              "left": "{{item.deliveryStrategy}}",
+              "operator": "equals",
+              "right": "INDIRECT"
+            }
+          },
+          "pastCycles": {
+            "from":
+                "singleton.selectedProject.additionalDetails.projectType.cycles",
+            "where": {
+              "left": "{{item.id}}",
+              "operator": "lt",
+              "right": "{{cycle}}"
+            },
+            "includeCurrentIf": {
+              "condition": {
+                "left": "{{dose}}",
+                "operator": "eq",
+                "right": "{{deliveryLength}}"
+              }
+            }
+          }
+        },
         "searchConfig": {
           "primary": "individual",
           "select": [
@@ -2052,15 +2134,18 @@ final dynamic sampleFlows = {
             {
               "format": "table",
               "data": {
+                "source":
+                    "singleton.selectedProject.additionalDetails.projectType.cycles",
                 "columns": [
-                  {"header": "Dose", "cellValue": "dose"},
-                  {"header": "Resources", "cellValue": "resources"}
+                  {"header": "Dose", "cellValue": "Dose {{item.doseNumber}}"},
+                  {"header": "Status", "cellValue": "{{item.status}}"},
+                  {
+                    "header": "Completed On",
+                    "cellValue":
+                        "{{fn:formatDate(item.completedOn, 'dd/MM/yyyy')}}"
+                  }
                 ],
-                "rows": [
-                  {"dose": "Dose 1", "resources": "2 - Paracetamol"},
-                  {"dose": "Dose 2", "resources": "1 - Paracetamol"},
-                  {"dose": "Dose 3", "resources": "1 - Paracetamol"}
-                ]
+                "rows": "currentCycle.deliveries"
               }
             }
           ]
@@ -2083,7 +2168,10 @@ final dynamic sampleFlows = {
                 "type": "FORM",
                 "name": "DELIVERY",
                 "data": [
-                  {"key": "nameOfIndividual", "value": "searchBar.value"}
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value": "{{ProjectBeneficiaryModel.clientReferenceId}}"
+                  }
                 ]
               }
             }

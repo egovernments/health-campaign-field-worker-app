@@ -165,61 +165,69 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
   }
 }
 
+/// Existing method kept as-is for UI string binding
 String? resolveValue(dynamic value, dynamic contextData) {
+  final resolved = resolveValueRaw(value, contextData);
+  return resolved?.toString();
+}
+
+/// New method: returns actual type (int, double, bool, list, map, entity, etc.)
+dynamic resolveValueRaw(dynamic value, dynamic contextData) {
   if (value is String) {
     final interpolationRegex = RegExp(r'^\{\{(.+?)\}\}$');
     final match = interpolationRegex.firstMatch(value.trim());
     if (match != null) {
       var path = match.group(1)!.trim();
+
       if (path.startsWith('contextData.')) {
         path = path.substring('contextData.'.length);
       }
       if (path.startsWith('item.')) {
         path = path.substring('item.'.length);
       }
+
+      // Handle functions like {{ fn:max(tasks.0.dose, 2) }}
       if (path.startsWith('fn')) {
-        final fnRegex = RegExp(r'\{\{\s*fn:(\w+)\((.*?)\)\s*\}\}');
-        value = value.replaceAllMapped(fnRegex, (match) {
-          final fnName = match.group(1)!;
-          final argsExpr = match.group(2) ?? '';
+        final fnRegex = RegExp(r'fn:(\w+)\((.*?)\)');
+        final fnMatch = fnRegex.firstMatch(path);
+        if (fnMatch != null) {
+          final fnName = fnMatch.group(1)!;
+          final argsExpr = fnMatch.group(2) ?? '';
 
           final resolvedArgs = argsExpr.trim().isEmpty
               ? <dynamic>[]
               : argsExpr.split(',').map((rawArg) {
                   final trimmed = rawArg.trim();
 
-                  // If it's a placeholder (context/item/navigation or contains a dot)
+                  // Nested placeholders
                   if (trimmed.contains('.') ||
                       trimmed.startsWith('context') ||
                       trimmed.startsWith('item') ||
                       trimmed.startsWith('navigation')) {
                     final placeholder = '{{ $trimmed }}';
-                    return resolveValue(placeholder, contextData);
+                    return resolveValueRaw(placeholder, contextData);
                   }
 
-                  // Otherwise treat as raw literal, strip surrounding quotes if any
-                  final unquoted = trimmed.replaceAll(
-                    RegExp(r"""^['"]|['"]$"""),
-                    '',
-                  );
+                  // Raw literal
+                  final unquoted =
+                      trimmed.replaceAll(RegExp(r"""^['"]|['"]$"""), '');
                   return unquoted;
                 }).toList();
 
-          final fnResult = FunctionRegistry.call(
+          return FunctionRegistry.call(
             fnName,
             resolvedArgs,
             CrudStateData({}, []),
           );
-
-          return fnResult?.toString() ?? '';
-        });
-        return value;
+        }
       }
+
+      // Normal path resolution
       return _resolvePath(contextData, path);
     }
     return value;
   }
-  return value?.toString();
+  return value;
 }
 
 /// Utility to resolve "contextData.householdModel.clientReferenceId" like paths

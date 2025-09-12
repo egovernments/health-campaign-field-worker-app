@@ -320,7 +320,6 @@ class WidgetRegistry {
     });
 
     WidgetRegistry.register('table', (json, context, onAction) {
-      // TODO: update row and interpolation to consider row index to render table content
       final crudCtx = CrudItemContext.of(context);
       final stateData = crudCtx?.stateData;
 
@@ -333,6 +332,7 @@ class WidgetRegistry {
               .toList() ??
           [];
 
+      // Step 1: Resolve data source
       List<dynamic> sourceList = [];
 
       if (data['rows'] != null && stateData != null) {
