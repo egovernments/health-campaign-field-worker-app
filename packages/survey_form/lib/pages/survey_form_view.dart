@@ -491,6 +491,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                                           .dataType,
                                                       clientReferenceId:
                                                           IdGen.i.identifier,
+                                                      serviceClientReferenceId:
+                                                          referenceId,
                                                       referenceId: referenceId,
                                                       value: attribute?[i]
                                                                   .dataType !=

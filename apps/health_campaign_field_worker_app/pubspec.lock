@@ -76,11 +76,10 @@ packages:
   attendance_management:
     dependency: "direct main"
     description:
-      name: attendance_management
-      sha256: "1b2dde9e93089f6561a8b1ade1df6c95ffb2b6410d294b8b666cbb7608222719"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.5+2"
+      path: "../../packages/attendance_management"
+      relative: true
+    source: path
+    version: "1.0.5+1"
   audioplayers:
     dependency: transitive
     description:
@@ -356,10 +355,9 @@ packages:
   closed_household:
     dependency: "direct main"
     description:
-      name: closed_household
-      sha256: "699a45db7d868828c342cca94b0938442431bfc12c2f2c4f0fd231e075cefd05"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/closed_household"
+      relative: true
+    source: path
     version: "1.0.5+2"
   code_builder:
     dependency: transitive
@@ -380,10 +378,9 @@ packages:
   complaints:
     dependency: "direct main"
     description:
-      name: complaints
-      sha256: "29f5d26c14438a0717682c26496df41b788a13634e10b2988e344a35f78debae"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/complaints"
+      relative: true
+    source: path
     version: "1.0.3"
   connectivity_plus:
     dependency: "direct main"
@@ -525,18 +522,16 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: c26e4e0167825b418b58add21ce0ba2701dc04b2f2b8797f7278b4b6cb2d4465
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_data_model"
+      relative: true
+    source: path
     version: "1.1.5"
   digit_dss:
     dependency: "direct main"
     description:
-      name: digit_dss
-      sha256: db2dfe789f67bd6eb9fa09a5121d000a974220f6673afea0305ae7b85410cbbf
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_dss"
+      relative: true
+    source: path
     version: "1.0.4+2"
   digit_firebase_services:
     dependency: "direct main"
@@ -557,18 +552,16 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      name: digit_scanner
-      sha256: "1bf24bdaf71f99de0f1281136478bb141f058a984752176ffa63ad580b467e18"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_scanner"
+      relative: true
+    source: path
     version: "1.0.6+2"
   digit_showcase:
     dependency: "direct main"
     description:
-      name: digit_showcase
-      sha256: "4667b29e652738a1621e907359da327594c288417f5dfa3da60e77f0342a4eae"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_showcase"
+      relative: true
+    source: path
     version: "1.0.2+1"
   digit_ui_components:
     dependency: "direct main"
@@ -1361,11 +1354,10 @@ packages:
   inventory_management:
     dependency: "direct main"
     description:
-      name: inventory_management
-      sha256: "0f8cd2635b08afb1aa2c3bd104c18615d5ab33aa693fc06e13c3d43af71782c2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.6"
+      path: "../../packages/inventory_management"
+      relative: true
+    source: path
+    version: "1.0.7-dev.1"
   io:
     dependency: transitive
     description:
@@ -1849,18 +1841,16 @@ packages:
   referral_reconciliation:
     dependency: "direct main"
     description:
-      name: referral_reconciliation
-      sha256: "2f3587105c2229ed089a23bc7084b8a2b2fbd5b69d119e9d1b80850def33848d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.6"
+      path: "../../packages/referral_reconciliation"
+      relative: true
+    source: path
+    version: "1.0.6+1"
   registration_delivery:
     dependency: "direct main"
     description:
-      name: registration_delivery
-      sha256: d4f425342adecd02eb813c1dbbffbba0b5d8d95b9ef2535e70659269f920fe74
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/registration_delivery"
+      relative: true
+    source: path
     version: "1.0.7+1"
   rxdart:
     dependency: transitive
@@ -2070,10 +2060,9 @@ packages:
   survey_form:
     dependency: "direct main"
     description:
-      name: survey_form
-      sha256: "26c02064d6d74928ce458fe25eb037ee9a131952f3aa6e03480b70277473b635"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/survey_form"
+      relative: true
+    source: path
     version: "1.0.3"
   sync_http:
     dependency: transitive
@@ -2089,7 +2078,7 @@ packages:
       path: "../../packages/sync_service"
       relative: true
     source: path
-    version: "1.0.4"
+    version: "1.0.5"
   synchronized:
     dependency: transitive
     description:
@@ -2419,5 +2408,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.0 <3.9.0"
+  dart: ">=3.4.0 <4.0.0"
   flutter: ">=3.22.0"

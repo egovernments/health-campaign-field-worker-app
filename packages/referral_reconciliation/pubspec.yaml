@@ -1,6 +1,6 @@
 name: referral_reconciliation
 description: "This module will enable the health facility supervisors to track referrals made by on-field health workers to different health facilities digitally via the Digit HCM app"
-version: 1.0.6
+version: 1.0.6+1
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/referral_reconciliation
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 

@@ -1,3 +1,7 @@
+## 1.0.6+1
+
+* Updated ui for no results found
+
 ## 1.0.6
 
 * Updated with latest packages data_model and digit_ui_components

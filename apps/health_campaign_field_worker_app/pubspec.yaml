@@ -60,7 +60,7 @@ dependencies:
   attendance_management: ^1.0.5+1
   digit_scanner: ^1.0.6+1
   inventory_management: ^1.0.6
-  referral_reconciliation: ^1.0.6
+  referral_reconciliation: ^1.0.6+1
   digit_data_model: ^1.1.2+1
   registration_delivery: ^1.0.7+1
   disable_battery_optimization: ^1.1.1

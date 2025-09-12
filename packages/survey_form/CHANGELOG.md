@@ -1,3 +1,8 @@
+## 1.0.3+1
+
+* Bug fix:
+    * Added missing serviceClientReferenceId during checklist submit
+
 ## 1.0.3
 
 * Updated with latest packages data_model and digit_ui_components
