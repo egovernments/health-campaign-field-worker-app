@@ -495,22 +495,31 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                                           referenceId,
                                                       referenceId: referenceId,
                                                       value: attribute?[i]
-                                                                  .dataType !=
-                                                              'SingleValueList'
+                                                                      .dataType !=
+                                                                  'SingleValueList' &&
+                                                              attribute?[i]
+                                                                      .dataType !=
+                                                                  'MultiValueList'
                                                           ? controller[i]
                                                                   .text
-                                                                  .toString()
                                                                   .trim()
                                                                   .isNotEmpty
                                                               ? controller[i]
                                                                   .text
-                                                                  .toString()
-                                                              : ''
+                                                              : i18.surveyForm
+                                                                  .notSelectedKey
                                                           : visibleSurveyFormIndexes
                                                                   .contains(i)
                                                               ? controller[i]
-                                                                  .text
-                                                                  .toString()
+                                                                      .text
+                                                                      .trim()
+                                                                      .isNotEmpty
+                                                                  ? controller[
+                                                                          i]
+                                                                      .text
+                                                                  : i18
+                                                                      .surveyForm
+                                                                      .notSelectedKey
                                                               : i18.surveyForm
                                                                   .notSelectedKey,
                                                       rowVersion: 1,

@@ -2,6 +2,7 @@
 
 * Bug fix:
     * Added missing serviceClientReferenceId during checklist submit
+    * Modified attribute value condition with multivalue type
 
 ## 1.0.3
 
