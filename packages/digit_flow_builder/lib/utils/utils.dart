@@ -259,7 +259,7 @@ Map<String, dynamic> _singletonToMap() {
 }
 
 /// Utility to resolve "contextData.householdModel.clientReferenceId" like paths
-String? _resolvePath(dynamic root, String path) {
+dynamic _resolvePath(dynamic root, String path) {
   var parts = path.split('.');
 
   dynamic current = root;
@@ -345,6 +345,9 @@ String? _resolvePath(dynamic root, String path) {
         return null;
       }
     }
+  }
+  if (current is List) {
+    return current;
   }
   return current?.toString();
 }

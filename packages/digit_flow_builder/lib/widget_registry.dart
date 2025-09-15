@@ -349,7 +349,7 @@ class WidgetRegistry {
         }
         // Case 2: If the current item already has this source (table inside listView)
         else if (crudCtx?.item != null && (crudCtx!.item?[rowsKey] != null)) {
-          final localSource = crudCtx.item?[rowsKey];
+          final localSource = resolveValueRaw(rowsKey, crudCtx.item);
           if (localSource is List) {
             sourceList = localSource;
           } else if (localSource != null) {
@@ -358,9 +358,11 @@ class WidgetRegistry {
         }
         // Case 3: Fallback to global modelMap
         else if (stateData != null) {
-          final modelList = stateData.modelMap[data['source']];
-          if (modelList != null) {
-            sourceList = modelList;
+          final localSource = resolveValueRaw(rowsKey, stateData.rawState);
+          if (localSource is List) {
+            sourceList = localSource;
+          } else if (localSource != null) {
+            sourceList = [localSource];
           }
         }
       }
