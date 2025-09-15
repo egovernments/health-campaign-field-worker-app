@@ -2170,7 +2170,12 @@ final dynamic sampleFlows = {
                 "data": [
                   {
                     "key": "ProjectBeneficiaryClientReferenceId",
-                    "value": "{{ProjectBeneficiaryModel.clientReferenceId}}"
+                    "value":
+                        "{{projectBeneficiaries.ProjectBeneficiaryModel.clientReferenceId}}"
+                  },
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{household.HouseholdModel.clientReferenceId}}"
                   }
                 ]
               }
@@ -2307,6 +2312,13 @@ final dynamic sampleFlows = {
                 "actionType": "SHOW_TOAST",
                 "properties": {"message": "Failed to fetch config."}
               }
+            ],
+            "data": [
+              {
+                "key": "ProjectBeneficiaryClientReferenceId",
+                "value":
+                    "{{contextData.navigation.ProjectBeneficiaryClientReferenceId}}"
+              }
             ]
           }
         },
@@ -2331,6 +2343,17 @@ final dynamic sampleFlows = {
               {
                 "actionType": "SHOW_TOAST",
                 "properties": {"message": "Navigation failed."}
+              }
+            ],
+            "data": [
+              {
+                "key": "ProjectBeneficiaryClientReferenceId",
+                "value":
+                    "{{contextData.navigation.ProjectBeneficiaryClientReferenceId}}"
+              },
+              {
+                "key": "HouseholdClientReferenceId",
+                "value": "{{contextData.navigation.HouseholdClientReferenceId}}"
               }
             ]
           }
