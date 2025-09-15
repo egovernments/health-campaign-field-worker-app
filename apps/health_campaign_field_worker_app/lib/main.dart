@@ -2176,7 +2176,9 @@ final dynamic sampleFlows = {
                   {
                     "key": "HouseholdClientReferenceId",
                     "value": "{{household.HouseholdModel.clientReferenceId}}"
-                  }
+                  },
+                  {"key": "cycleIndex", "value": "{{cycle}}"},
+                  {"key": "doseIndex", "value": "{{dose}}"}
                 ]
               }
             }
@@ -2318,7 +2320,9 @@ final dynamic sampleFlows = {
                 "key": "ProjectBeneficiaryClientReferenceId",
                 "value":
                     "{{contextData.navigation.ProjectBeneficiaryClientReferenceId}}"
-              }
+              },
+              {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
+              {"key": "doseIndex", "value": "{{navigation.doseIndex}}"}
             ]
           }
         },
