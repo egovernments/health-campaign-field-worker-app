@@ -254,27 +254,22 @@ class WrapperBuilder {
       list = list.map((item) => _resolveValue(mapExpr, item, wrapperData));
     }
 
-    // where
+    // where - supports both single condition and multiple conditions
     if (fieldConfig.containsKey('where')) {
       final whereConf = fieldConfig['where'];
-      list = list.where((item) {
-        final left = _resolveValue(whereConf['left'], item, wrapperData);
-        final right = whereConf['right'];
-        switch (whereConf['operator']) {
-          case 'eq':
-            return left == right;
-          case 'lt':
-            return left is num && right is num ? left < right : false;
-          case 'lte':
-            return left is num && right is num ? left <= right : false;
-          case 'gt':
-            return left is num && right is num ? left > right : false;
-          case 'gte':
-            return left is num && right is num ? left >= right : false;
-          default:
-            return false;
-        }
-      });
+
+      // Handle multiple where conditions (array of conditions)
+      if (whereConf is List) {
+        list = list.where((item) {
+          return whereConf.every(
+              (condition) => _evaluateCondition(condition, item, wrapperData));
+        });
+      }
+      // Handle single where condition (legacy support)
+      else if (whereConf is Map) {
+        list = list
+            .where((item) => _evaluateCondition(whereConf, item, wrapperData));
+      }
     }
 
     // select
@@ -388,6 +383,36 @@ class WrapperBuilder {
     if (value is List) return value;
     return [value];
   }
+
+  /// Helper to evaluate a single condition for where clauses
+  bool _evaluateCondition(Map<dynamic, dynamic> condition, dynamic item,
+      Map<String, dynamic> wrapperData) {
+    final left = _resolveValue(condition['left'], item, wrapperData);
+    final right = condition['right'];
+
+    switch (condition['operator']) {
+      case 'eq':
+      case 'equals':
+        return left == right;
+      case 'lt':
+        return left is num && right is num ? left < right : false;
+      case 'lte':
+        return left is num && right is num ? left <= right : false;
+      case 'gt':
+        return left is num && right is num ? left > right : false;
+      case 'gte':
+        return left is num && right is num ? left >= right : false;
+      case 'neq':
+      case 'notEquals':
+        return left != right;
+      case 'contains':
+        return left is String && right is String ? left.contains(right) : false;
+      case 'in':
+        return right is List ? right.contains(left) : false;
+      default:
+        return false;
+    }
+  }
 }
 
 Map<String, dynamic> _applyComputed(
@@ -405,6 +430,10 @@ Map<String, dynamic> _applyComputed(
       results[key] =
           ConditionEvaluator.evaluate(wrapperData, conf['condition']) ??
               conf['fallback'];
+    } else if (conf.containsKey('from') &&
+        conf.containsKey('evaluateCondition')) {
+      results[key] =
+          _evaluateWithCondition(wrapperData, conf) ?? conf['fallback'];
     } else if (conf.containsKey('from') && conf.containsKey('reduce')) {
       results[key] = ComputedEvaluator.reduce(wrapperData, conf) ??
           conf['reduce']['fallback'];
@@ -417,6 +446,76 @@ Map<String, dynamic> _applyComputed(
   }
 
   return results;
+}
+
+/// Evaluates list items with condition parsing using formula parser
+dynamic _evaluateWithCondition(
+    Map<String, dynamic> wrapperData, Map<String, dynamic> conf) {
+  final list = resolveValueRaw(conf['from'], wrapperData);
+  if (list is! Iterable) return null;
+
+  final evaluateConfig = conf['evaluateCondition'] as Map<String, dynamic>?;
+  if (evaluateConfig == null) return null;
+
+  // Build context map from context list - completely generic
+  final contextMap = <String, dynamic>{};
+  final contextList = evaluateConfig['context'] as List<dynamic>? ?? [];
+
+  for (int i = 0; i < contextList.length; i++) {
+    final contextValue = resolveValueRaw(contextList[i], wrapperData);
+    contextMap['context$i'] = contextValue;
+  }
+
+  final selectField = conf['select']?.toString();
+  final takeLast = conf['takeLast'] == true;
+  dynamic lastResult;
+
+  // Evaluate each item
+  for (final item in list) {
+    if (item is! Map) continue;
+
+    final condition = resolveValueRaw(
+            evaluateConfig['condition'], {'item': item, ...wrapperData})
+        ?.toString();
+    if (condition == null || condition.isEmpty) continue;
+
+    // Pass everything to formula parser - no hardcoding
+    final evaluationContext = <String, dynamic>{
+      ...contextMap,
+      'item': item,
+      ...wrapperData
+    };
+
+    // TODO: Replace with actual formula parser call
+    // final result = FormulaParser.evaluate(condition, evaluationContext);
+    final result = _placeholderFormulaEvaluation(condition, evaluationContext);
+
+    if (result == true) {
+      final itemResult = selectField != null
+          ? resolveValueRaw(selectField, {'item': item, ...wrapperData})
+          : item;
+
+      if (takeLast) {
+        lastResult = itemResult;
+      } else {
+        return itemResult;
+      }
+    }
+  }
+
+  return takeLast ? lastResult : null;
+}
+
+/// Placeholder for formula parser - will be replaced with actual formula parser
+bool _placeholderFormulaEvaluation(
+    String condition, Map<String, dynamic> context) {
+  // TODO: Replace this with actual formula parser package call
+  // This is just a placeholder until the formula parser is integrated
+  debugPrint('Formula condition: $condition');
+  debugPrint('Context keys: ${context.keys.join(', ')}');
+
+  // Return false for now - will be replaced with actual formula parser
+  return false;
 }
 
 Map<String, dynamic> _applyComputedList(
@@ -438,9 +537,9 @@ Map<String, dynamic> _applyComputedList(
 class ConditionEvaluator {
   static bool? evaluate(
       Map<String, dynamic> context, Map<String, dynamic> conf) {
-    final left = _resolve(context, conf['left']);
+    final left = resolve(context, conf['left']);
     final right = conf['rightIsPath'] == true
-        ? _resolve(context, conf['right'])
+        ? resolve(context, conf['right'])
         : conf['right'];
 
     switch (conf['operator']) {
@@ -461,7 +560,7 @@ class ConditionEvaluator {
     }
   }
 
-  static dynamic _resolve(Map<String, dynamic> ctx, dynamic expr) {
+  static dynamic resolve(Map<String, dynamic> ctx, dynamic expr) {
     if (expr == null) return null;
     return resolveValueRaw(expr, ctx); // 🔑 use your new raw resolver
   }
@@ -507,6 +606,7 @@ class ComputedListEvaluator {
 
     if (conf.containsKey('where')) {
       final whereConf = conf['where'];
+      whereConf['right'] = ConditionEvaluator.resolve(ctx, whereConf['right']);
       result = result.where((item) {
         return ConditionEvaluator.evaluate(
                 item is Map<String, dynamic> ? item : {'item': item},

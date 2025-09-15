@@ -359,7 +359,7 @@ final dynamic sampleFlows = {
                     },
                     {"header": "Gender", "cellValue": "{{item.gender}}"}
                   ],
-                  "rows": "individuals"
+                  "rows": "{{contextData.0.individuals}}"
                 }
               }
             ]
@@ -2032,6 +2032,17 @@ final dynamic sampleFlows = {
           }
         },
         "computedList": {
+          "targetCycle": {
+            "from":
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "where": {
+              "left": "{{id}}",
+              "operator": "equals",
+              "right": "{{cycle}}"
+            },
+            "takeLast": true,
+            "fallback": null
+          },
           "futureTasks": {
             "from": "{{tasks}}",
             "where": {
@@ -2050,6 +2061,27 @@ final dynamic sampleFlows = {
               "operator": "equals",
               "right": "INDIRECT"
             }
+          },
+          "currentDelivery": {
+            "from": "{{targetCycle.0.deliveries}}",
+            "where": {
+              "left": "{{id}}",
+              "operator": "equals",
+              "right": "{{dose}}"
+            },
+            "takeLast": true,
+            "fallback": null
+          },
+          "eligibleProductVariants": {
+            "from": "{{currentDelivery.doseCriteria}}",
+            "evaluateCondition": {
+              "condition": "{{item.condition}}",
+              "context": ["{{individuals}}", "{{household}}", "{{tasks}}"],
+              "parser": "formula"
+            },
+            "select": "ProductVariants",
+            "takeLast": true,
+            "fallback": []
           },
           "pastCycles": {
             "from":
@@ -2133,15 +2165,13 @@ final dynamic sampleFlows = {
             {
               "format": "table",
               "data": {
-                "source":
-                    "singleton.selectedProject.additionalDetails.projectType.cycles",
+                "source": "contextData.targetCycle.deliveries",
                 "columns": [
                   {"header": "Dose", "cellValue": "Dose {{item.doseNumber}}"},
                   {"header": "Status", "cellValue": ""},
                   {"header": "Completed On", "cellValue": ""}
                 ],
-                "rows":
-                    "singleton.selectedProject.additionalDetails.projectType.cycles"
+                "rows": "{{contextData.0.targetCycle.0.deliveries}}"
               }
             }
           ]
