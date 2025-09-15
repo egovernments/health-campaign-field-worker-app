@@ -370,7 +370,10 @@ final jsonConfig = {
             "clientAuditDetails": "__generate:clientAudit",
             "auditDetails": "__generate:audit"
           },
-          "additionalFields": "TaskAdditionalFields",
+          "additionalFields": {
+            "doseIndex": "__context:doseIndex",
+            "cycleIndex": "__context:cycleIndex"
+          },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
         },
