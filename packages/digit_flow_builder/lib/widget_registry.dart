@@ -335,18 +335,29 @@ class WidgetRegistry {
       // Step 1: Resolve data source
       List<dynamic> sourceList = [];
 
-      if (data['rows'] != null && stateData != null) {
-        // Case 1: If the current item already has this source (table inside listView)
-        if (crudCtx?.item != null && (crudCtx!.item?[data['rows']] != null)) {
-          final localSource = crudCtx.item?[data['rows']];
+      if (data['rows'] != null) {
+        final rowsKey = data['rows'].toString();
+
+        // Case 1: Singleton path
+        if (rowsKey.startsWith("singleton")) {
+          final resolved = resolveValueRaw("{{ $rowsKey }}", null);
+          if (resolved is List) {
+            sourceList = resolved;
+          } else if (resolved != null) {
+            sourceList = [resolved];
+          }
+        }
+        // Case 2: If the current item already has this source (table inside listView)
+        else if (crudCtx?.item != null && (crudCtx!.item?[rowsKey] != null)) {
+          final localSource = crudCtx.item?[rowsKey];
           if (localSource is List) {
             sourceList = localSource;
           } else if (localSource != null) {
             sourceList = [localSource];
           }
         }
-        // Case 2: Fallback to global modelMap
-        else {
+        // Case 3: Fallback to global modelMap
+        else if (stateData != null) {
           final modelList = stateData.modelMap[data['source']];
           if (modelList != null) {
             sourceList = modelList;
