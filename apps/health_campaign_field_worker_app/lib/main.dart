@@ -2012,7 +2012,6 @@ final dynamic sampleFlows = {
             "takeLast": true,
             "default": 0
           },
-          "individual": "{{individuals.0}}"
         },
         "computed": {
           "hasCycleArrived": {
@@ -2138,14 +2137,11 @@ final dynamic sampleFlows = {
                     "singleton.selectedProject.additionalDetails.projectType.cycles",
                 "columns": [
                   {"header": "Dose", "cellValue": "Dose {{item.doseNumber}}"},
-                  {"header": "Status", "cellValue": "{{item.status}}"},
-                  {
-                    "header": "Completed On",
-                    "cellValue":
-                        "{{fn:formatDate(item.completedOn, 'dd/MM/yyyy')}}"
-                  }
+                  {"header": "Status", "cellValue": ""},
+                  {"header": "Completed On", "cellValue": ""}
                 ],
-                "rows": "currentCycle.deliveries"
+                "rows":
+                    "singleton.selectedProject.additionalDetails.projectType.cycles"
               }
             }
           ]

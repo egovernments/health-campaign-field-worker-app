@@ -1,5 +1,7 @@
 // create a singleton class for RegistrationDelivery package where set data and get data methods are defined
 
+import 'dart:convert';
+
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
@@ -186,6 +188,12 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData) {
         path = path.substring('item.'.length);
       }
 
+      // Handle singleton access
+      if (path.startsWith('singleton.')) {
+        path = path.substring('singleton.'.length);
+        return _resolvePath(_singletonToMap(), path);
+      }
+
       // Handle functions like {{ fn:max(tasks.0.dose, 2) }}
       if (path.startsWith('fn')) {
         final fnRegex = RegExp(r'fn:(\w+)\((.*?)\)');
@@ -203,6 +211,7 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData) {
                   if (trimmed.contains('.') ||
                       trimmed.startsWith('context') ||
                       trimmed.startsWith('item') ||
+                      trimmed.startsWith('singleton') ||
                       trimmed.startsWith('navigation')) {
                     final placeholder = '{{ $trimmed }}';
                     return resolveValueRaw(placeholder, contextData);
@@ -230,12 +239,41 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData) {
   return value;
 }
 
+/// Helper: Convert FlowBuilderSingleton into a Map<String, dynamic>
+Map<String, dynamic> _singletonToMap() {
+  final s = FlowBuilderSingleton();
+  return {
+    "tenantId": s.tenantId,
+    "loggedInUserUuid": s.loggedInUserUuid,
+    "maxRadius": s.maxRadius,
+    "projectId": s.projectId,
+    "beneficiaryType": s.beneficiaryType,
+    "projectType": s.projectType?.toJson(),
+    "selectedProject": s.selectedProject?.toJson(),
+    "boundary": s.boundary?.toJson(),
+    "persistenceConfiguration": s.persistenceConfiguration?.toString(),
+    "loggedInUser": s.loggedInUser?.toJson(),
+    "templateConfigs":
+        s.templateConfigs?.map((k, v) => MapEntry(k, v.toJson())),
+  };
+}
+
 /// Utility to resolve "contextData.householdModel.clientReferenceId" like paths
 String? _resolvePath(dynamic root, String path) {
   var parts = path.split('.');
 
   dynamic current = root;
   for (var part in parts) {
+    // ✅ If current is JSON string, decode it into Map/List
+    if (current is String &&
+        (current.trim().startsWith('{') || current.trim().startsWith('['))) {
+      try {
+        current = jsonDecode(current);
+      } catch (_) {
+        return null; // invalid JSON, stop
+      }
+    }
+
     // Handle array index like members[0]
     final listMatch = RegExp(r'^(\w+)\[(\d+)\]$').firstMatch(part);
     if (listMatch != null) {
