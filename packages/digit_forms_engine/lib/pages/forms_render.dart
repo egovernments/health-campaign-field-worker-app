@@ -67,333 +67,383 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           }
 
           final index =
-              schemaObject.pages.keys.toList().indexOf(widget.pageName);
+          schemaObject.pages.keys.toList().indexOf(widget.pageName);
           final showcaseKeys = <GlobalKey>[];
 
           return Provider<Map<String, dynamic>>.value(
             value: widget.defaultValues ?? {},
             child: ReactiveFormBuilder(
-                form: () => fb.group(
-                      JsonForms.getFormControls(
-                        schema,
-                        defaultValues: widget.defaultValues ?? {},
-                      ),
-                    ),
-                builder: (context, formGroup, child) {
-                  // final manager = VisibilityManager(
-                  //     schemaMap: schema.properties!,
-                  //     form: formGroup,
-                  //     formData: buildVisibilityEvaluationContext(
-                  //       currentPageKey: widget.pageName,
-                  //       currentForm: formGroup,
-                  //       pages: schemaObject.pages,
-                  //     ));
-                  //
-                  // // Reevaluate every time the form changes
-                  // formGroup.valueChanges.listen((_) {
-                  //   manager.evaluateVisibility();
-                  // });
-
-                  return ScrollableContent(
-                    enableFixedDigitButton: true,
-                    header: const Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(spacer2),
-                          child: BackNavigationHelpHeaderWidget(
-                            showBackNavigation: true,
-                          ),
+              form: () => fb.group(
+                JsonForms.getFormControls(
+                  schema,
+                  defaultValues: widget.defaultValues ?? {},
+                ),
+              ),
+              builder: (context, formGroup, child) {
+                return ScrollableContent(
+                  enableFixedDigitButton: true,
+                  header: const Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(spacer2),
+                        child: BackNavigationHelpHeaderWidget(
+                          showBackNavigation: true,
                         ),
-                        SizedBox.shrink()
-                      ],
-                    ),
-                    footer: DigitCard(
-                      margin: const EdgeInsets.only(top: spacer2),
-                      children: [
-                        ReactiveFormConsumer(
-                          builder: (context, formGroup, child) => DigitButton(
-                            label: (index) < schemaObject.pages.length - 1
-                                ? localizations
-                                    .translate(schema.actionLabel ?? 'Next')
-                                : localizations
-                                    .translate(schema.actionLabel ?? 'Submit'),
-                            onPressed: () {
-                              // 1. Get visible keys only (skip hidden fields)
-                              final currentKeys = schema.properties?.entries
-                                      .where((entry) {
-                                        final isVisible =
-                                            !isHidden(entry.value);
-                                        final includeInForm =
-                                            entry.value.includeInForm == true;
-                                        return isVisible || includeInForm;
-                                      })
-                                      .map((entry) => entry.key)
-                                      .toList() ??
-                                  [];
+                      ),
+                      SizedBox.shrink()
+                    ],
+                  ),
+                  footer: DigitCard(
+                    margin: const EdgeInsets.only(top: spacer2),
+                    children: [
+                      ReactiveFormConsumer(
+                        builder: (context, formGroup, child) => DigitButton(
+                          label: (index) < schemaObject.pages.length - 1
+                              ? localizations
+                              .translate(schema.actionLabel ?? 'Next')
+                              : localizations
+                              .translate(schema.actionLabel ?? 'Submit'),
+                          onPressed: () {
+                            // 1. Get visible keys only (skip hidden fields)
+                            final currentKeys =
+                                schema.properties?.entries.where((entry) {
+                                  final isVisible = !isHidden(entry.value);
+                                  final includeInForm =
+                                      entry.value.includeInForm == true;
+                                  return isVisible || includeInForm;
+                                }).map((entry) => entry.key).toList() ??
+                                    [];
 
-                              // 2. Mark all visible controls as touched and revalidate
-                              for (final key in currentKeys) {
-                                final control = formGroup.control(key);
-                                control.markAsTouched();
-                                // control.updateValueAndValidity();
-                              }
+                            // 2. Mark all visible controls as touched and revalidate
+                            for (final key in currentKeys) {
+                              final control = formGroup.control(key);
+                              control.markAsTouched();
+                              // control.updateValueAndValidity();
+                            }
 
-                              final hasErrors = currentKeys.any((key) {
-                                final control = formGroup.control(key);
-                                return control.errors.isNotEmpty;
-                              });
+                            final hasErrors = currentKeys.any((key) {
+                              final control = formGroup.control(key);
+                              return control.errors.isNotEmpty;
+                            });
 
-                              if (hasErrors) return;
+                            if (hasErrors) return;
 
-                              // 3. Check validity of just the visible controls
-                              final isCurrentPageValid = currentKeys
-                                  .every((key) => formGroup.control(key).valid);
+                            // 3. Check validity of just the visible controls
+                            final isCurrentPageValid = currentKeys
+                                .every((key) => formGroup.control(key).valid);
 
-                              if (!isCurrentPageValid) return;
+                            if (!isCurrentPageValid) return;
 
-                              // 4. Proceed with value extraction and state update
-                              final values = JsonForms.getFormValues(
-                                formGroup,
-                                schema,
-                              );
+                            // 4. Proceed with value extraction and state update
+                            final pageFormValues = JsonForms.getFormValues(
+                              formGroup,
+                              schema,
+                            );
 
-                              final updatedPropertySchema = schema.copyWith(
-                                properties: Map.fromEntries(
-                                  schema.properties?.entries.map(
-                                        (e) => values.containsKey(e.key)
-                                            ? MapEntry(
-                                                e.key,
-                                                e.value.copyWith(
-                                                  value: values[e.key],
-                                                ),
-                                              )
-                                            : MapEntry(e.key, e.value),
-                                      ) ??
-                                      [],
+                            final updatedPropertySchema = schema.copyWith(
+                              properties: Map.fromEntries(
+                                schema.properties?.entries.map(
+                                      (e) => pageFormValues
+                                      .containsKey(e.key)
+                                      ? MapEntry(
+                                    e.key,
+                                    e.value.copyWith(
+                                      value: pageFormValues[e.key],
+                                    ),
+                                  )
+                                      : MapEntry(e.key, e.value),
+                                ) ??
+                                    [],
+                              ),
+                            );
+
+                            // Persist the freshly updated current page into the cached schema
+                            context.read<FormsBloc>().add(
+                              FormsUpdateEvent(
+                                schemaKey: widget.currentSchemaKey,
+                                schema: schemaObject.copyWith(
+                                  pages: Map.fromEntries(
+                                    schemaObject.pages.entries.map(
+                                          (entry) => MapEntry(
+                                        entry.key,
+                                        entry.key == widget.pageName
+                                            ? updatedPropertySchema
+                                            : entry.value,
+                                      ),
+                                    ),
+                                  ),
                                 ),
+                              ),
+                            );
+
+                            // ------- CONDITIONAL NAVIGATION DECISION -------
+                            final currentPage = schemaObject.pages.entries
+                                .elementAt(index);
+                            final conditionalNavigateList =
+                                currentPage.value.conditionalNavigateTo;
+
+                            if (conditionalNavigateList != null &&
+                                conditionalNavigateList.isNotEmpty) {
+                              // Build a merged pages map so evaluator sees freshest values
+                              final mergedPages =
+                              Map<String, PropertySchema>.from(
+                                  schemaObject.pages);
+                              mergedPages[widget.pageName] =
+                                  updatedPropertySchema;
+
+                              final ctx = buildVisibilityEvaluationContext(
+                                currentPageKey: widget.pageName,
+                                currentForm: formGroup,
+                                pages: mergedPages,
                               );
 
-                              context.read<FormsBloc>().add(
-                                    FormsUpdateEvent(
-                                      schemaKey: widget.currentSchemaKey,
-                                      schema: schemaObject.copyWith(
-                                        pages: Map.fromEntries(
-                                          schemaObject.pages.entries.map(
-                                            (entry) => MapEntry(
-                                              entry.key,
-                                              entry.key == widget.pageName
-                                                  ? updatedPropertySchema
-                                                  : entry.value,
-                                            ),
+                              for (final conditionItem
+                              in conditionalNavigateList) {
+                                final condition = conditionItem.condition;
+                                final navigateTo = conditionItem.navigateTo;
+
+                                final isConditionTrue =
+                                evaluateVisibilityExpression(
+                                    condition, ctx);
+
+                                if (isConditionTrue) {
+                                  final targetPageName = navigateTo.name;
+                                  final targetPageType =
+                                  navigateTo.type.toLowerCase();
+
+                                  // Rule for conditional:
+                                  // - If type == 'form' -> navigate to that form page (continue flow)
+                                  // - Else (template/summary/submit/unknown) -> treat current as last:
+                                  //      -> if schemaObject.summary == true, go to Summary widget
+                                  //      -> else submit and close the flow
+                                  if (targetPageType == 'form' &&
+                                      targetPageName.isNotEmpty) {
+                                    context.router.push(FormsRenderRoute(
+                                      isEdit: widget.isEdit,
+                                      customComponents:
+                                      widget.customComponents,
+                                      currentSchemaKey:
+                                      widget.currentSchemaKey,
+                                      pageName: targetPageName,
+                                      defaultValues: widget.defaultValues,
+                                      isView: widget.isView,
+                                    ));
+                                    return; // Skip default logic
+                                  } else {
+
+                                    final sortedEntries = schemaObject.pages.entries.toList()
+                                      ..sort((a, b) => (a.value.order ?? 0).compareTo(b.value.order ?? 0));
+                                    final realLastKey = sortedEntries.isNotEmpty ? sortedEntries.last.key : widget.pageName;
+
+                                    final schemaWithStampedLast = schemaObject.copyWith(
+                                      pages: Map.fromEntries(
+                                        schemaObject.pages.entries.map(
+                                              (e) => MapEntry(
+                                            e.key,
+                                            e.key == realLastKey
+                                                ? e.value.copyWith(navigateTo: navigateTo) // <-- stamp it
+                                                : e.value,
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  );
+                                    );
 
-                              final currentPage =
-                                  schemaObject.pages.entries.elementAt(index);
-                              final conditionalNavigateList =
-                                  currentPage.value.conditionalNavigateTo;
+                                    context.read<FormsBloc>().add(
+                                      FormsUpdateEvent(
+                                        schemaKey: widget.currentSchemaKey,
+                                        schema: schemaWithStampedLast,
+                                      ),
+                                    );
 
-                              // Evaluate conditionalNavigateTo (if present)
-                              if (conditionalNavigateList != null) {
-                                for (final conditionItem
-                                    in conditionalNavigateList) {
-                                  final condition = conditionItem.condition;
-                                  final navigateTo = conditionItem.navigateTo;
-
-                                  final formState =
-                                      context.read<FormsBloc>().state;
-                                  final currentPageKey = widget.pageName;
-
-                                  final currentSchemaKey =
-                                      widget.currentSchemaKey;
-
-                                  final values =
-                                      buildVisibilityEvaluationContext(
-                                    currentPageKey: currentPageKey,
-                                    currentForm: formGroup,
-                                    pages: formState
-                                        .cachedSchemas[currentSchemaKey]!.pages,
-
-                                    /// TODO: fix hardcode not null condition
-                                  );
-
-                                  final isConditionTrue =
-                                      evaluateVisibilityExpression(
-                                          condition, values);
-
-                                  if (isConditionTrue) {
-                                    final targetPageName =
-                                        navigateTo.name as String?;
-                                    final targetPageType =
-                                        navigateTo.type as String?;
-
-                                    if (targetPageName != null &&
-                                        targetPageType == 'form') {
+                                    if (schemaObject.summary) {
+                                      // Go to Summary widget
                                       context.router.push(FormsRenderRoute(
-                                        isEdit: widget.isEdit,
                                         customComponents:
-                                            widget.customComponents,
+                                        widget.customComponents,
                                         currentSchemaKey:
-                                            widget.currentSchemaKey,
-                                        pageName: targetPageName,
+                                        widget.currentSchemaKey,
+                                        pageName: '',
+                                        isEdit: widget.isEdit,
+                                        isSummary: true,
                                         defaultValues: widget.defaultValues,
                                         isView: widget.isView,
                                       ));
-                                      return; // Skip default logic
+                                    } else {
+                                      // Submit & close flow
+                                      if (widget.isView == false) {
+                                        context.read<FormsBloc>().add(
+                                          FormsSubmitEvent(
+                                            isEdit: widget.isEdit,
+                                            schemaKey:
+                                            widget.currentSchemaKey,
+                                            isView: widget.isView,
+                                          ),
+                                        );
+                                      }
+                                      context.router.popUntil((route) {
+                                        return route.settings.name !=
+                                            FormsRenderRoute.name;
+                                      });
                                     }
+                                    return;
                                   }
                                 }
                               }
+                            }
+                            // ------- END CONDITIONAL NAVIGATION DECISION -------
 
-                              final pages = schemaObject.pages;
-                              final currentPageKey =
-                                  pages.entries.elementAt(index).key;
-                              final currentOrder =
-                                  pages[currentPageKey]?.order ?? 0;
+                            // ------- DEFAULT FLOW (UNCHANGED) -------
+                            final pagesMap = schemaObject.pages;
+                            final currentPageKey =
+                                pagesMap.entries.elementAt(index).key;
+                            final currentOrder =
+                                pagesMap[currentPageKey]?.order ?? 0;
 
-// Find the next page with an integer order > currentOrder.floor()
-                              final nextPageEntry = pages.entries.where((e) {
-                                final order = e.value.order;
-                                return order != null &&
-                                    order > currentOrder &&
-                                    order % 1 ==
-                                        0; // Only integers (e.g. 6.0, not 5.1)
-                              }).toList()
-                                ..sort((a, b) =>
-                                    a.value.order!.compareTo(b.value.order!));
+                            // Find the next page with an integer order > currentOrder.floor()
+                            final nextPageEntry = pagesMap.entries
+                                .where((e) {
+                              final order = e.value.order;
+                              return order != null &&
+                                  order > currentOrder &&
+                                  order % 1 ==
+                                      0; // Only integers (e.g. 6.0, not 5.1)
+                            })
+                                .toList()
+                              ..sort((a, b) => a.value.order!
+                                  .compareTo(b.value.order!));
 
-                              if (nextPageEntry.isNotEmpty) {
+                            if (nextPageEntry.isNotEmpty) {
+                              context.router.push(FormsRenderRoute(
+                                isEdit: widget.isEdit,
+                                customComponents: widget.customComponents,
+                                currentSchemaKey: widget.currentSchemaKey,
+                                pageName: nextPageEntry.first.key,
+                                defaultValues: widget.defaultValues,
+                                isView: widget.isView,
+                              ));
+                            } else {
+                              // "Real" last page by order
+                              if (schemaObject.summary) {
+                                // Go to Summary widget when summary is enabled
                                 context.router.push(FormsRenderRoute(
-                                  isEdit: widget.isEdit,
                                   customComponents: widget.customComponents,
                                   currentSchemaKey: widget.currentSchemaKey,
-                                  pageName: nextPageEntry.first.key,
+                                  pageName: '',
+                                  isEdit: widget.isEdit,
+                                  isSummary: true,
                                   defaultValues: widget.defaultValues,
                                   isView: widget.isView,
                                 ));
                               } else {
-                                if (schemaObject.summary) {
-                                  context.router.push(FormsRenderRoute(
-                                    customComponents: widget.customComponents,
-                                    currentSchemaKey: widget.currentSchemaKey,
-                                    pageName: '',
+                                // Submit & close
+                                if (widget.isView == false) {
+                                  context
+                                      .read<FormsBloc>()
+                                      .add(FormsSubmitEvent(
                                     isEdit: widget.isEdit,
-                                    isSummary: true,
-                                    defaultValues: widget.defaultValues,
+                                    schemaKey: widget.currentSchemaKey,
                                     isView: widget.isView,
                                   ));
-                                } else {
-                                  if (widget.isView == false) {
-                                    context
-                                        .read<FormsBloc>()
-                                        .add(FormsSubmitEvent(
-                                          isEdit: widget.isEdit,
-                                          schemaKey: widget.currentSchemaKey,
-                                          isView: widget.isView,
-                                        ));
-                                  }
-
-                                  // Pop all form pages (FormsRenderRoute)
-                                  context.router.popUntil((route) {
-                                    return route.settings.name !=
-                                        FormsRenderRoute.name;
-                                  });
                                 }
+                                context.router.popUntil((route) {
+                                  return route.settings.name !=
+                                      FormsRenderRoute.name;
+                                });
                               }
-                            },
-                            type: DigitButtonType.primary,
-                            size: DigitButtonSize.large,
-                            mainAxisSize: MainAxisSize.max,
-                          ),
+                            }
+                            // ------- END DEFAULT FLOW -------
+                          },
+                          type: DigitButtonType.primary,
+                          size: DigitButtonSize.large,
+                          mainAxisSize: MainAxisSize.max,
                         ),
-                      ],
-                    ),
-                    children: [
-                      DigitCard(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: spacer2,
-                        ),
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height: 0,
+                      ),
+                    ],
+                  ),
+                  children: [
+                    DigitCard(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: spacer2,
+                      ),
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: 0,
+                            ),
+                            if (schema.label != null) ...[
+                              Text(
+                                localizations.translate(schema.label!),
+                                style: Theme.of(context)
+                                    .digitTextTheme(context)
+                                    .headingXl
+                                    .copyWith(
+                                    color: Theme.of(context)
+                                        .colorTheme
+                                        .primary
+                                        .primary2),
                               ),
-                              if (schema.label != null) ...[
+                              if (schema.description != null &&
+                                  translateIfPresent(schema.description,
+                                      localizations) !=
+                                      null &&
+                                  translateIfPresent(
+                                      schema.description, localizations)!
+                                      .isNotEmpty) ...[
+                                const SizedBox(
+                                  height: spacer1,
+                                ),
                                 Text(
-                                  localizations.translate(schema.label!),
+                                  localizations
+                                      .translate(schema.description!),
                                   style: Theme.of(context)
                                       .digitTextTheme(context)
-                                      .headingXl
+                                      .bodyS
                                       .copyWith(
-                                          color: Theme.of(context)
-                                              .colorTheme
-                                              .primary
-                                              .primary2),
+                                      color: Theme.of(context)
+                                          .colorTheme
+                                          .text
+                                          .secondary),
                                 ),
-                                if (schema.description != null &&
-                                    translateIfPresent(schema.description,
-                                            localizations) !=
-                                        null &&
-                                    translateIfPresent(
-                                            schema.description, localizations)!
-                                        .isNotEmpty) ...[
-                                  const SizedBox(
-                                    height: spacer1,
-                                  ),
-                                  Text(
-                                    localizations
-                                        .translate(schema.description!),
-                                    style: Theme.of(context)
-                                        .digitTextTheme(context)
-                                        .bodyS
-                                        .copyWith(
-                                            color: Theme.of(context)
-                                                .colorTheme
-                                                .text
-                                                .secondary),
-                                  ),
-                                ],
                               ],
                             ],
-                          ),
-                          JsonForms(
-                            propertySchema: schema,
-                            pageName: widget.pageName,
-                            currentSchemaKey: widget.currentSchemaKey,
-                            childrens: widget.customComponents,
-                            defaultValues: const {
-                              // 'locality': context.boundary.code,
-                            },
-                            isView: widget.isView,
-                          )
-                        ],
-                      ),
-                      const SizedBox(
-                        height: spacer2,
-                      ),
-                      Center(
-                        child: Text(
-                          'version ${schemaObject.version}',
-                          style: Theme.of(context)
-                              .digitTextTheme(context)
-                              .bodyXS
-                              .copyWith(
-                                  color: Theme.of(context)
-                                      .colorTheme
-                                      .text
-                                      .disabled),
+                          ],
                         ),
-                      )
-                    ],
-                  );
-                }),
+                        JsonForms(
+                          propertySchema: schema,
+                          pageName: widget.pageName,
+                          currentSchemaKey: widget.currentSchemaKey,
+                          childrens: widget.customComponents,
+                          defaultValues: const {
+                            // 'locality': context.boundary.code,
+                          },
+                          isView: widget.isView,
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: spacer2,
+                    ),
+                    Center(
+                      child: Text(
+                        'version ${schemaObject.version}',
+                        style: Theme.of(context)
+                            .digitTextTheme(context)
+                            .bodyXS
+                            .copyWith(
+                            color: Theme.of(context)
+                                .colorTheme
+                                .text
+                                .disabled),
+                      ),
+                    )
+                  ],
+                );
+              },
+            ),
           );
         },
       ),
@@ -412,62 +462,63 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     }).toList();
 
     return ScrollableContent(
-        enableFixedDigitButton: true,
-        header: const Padding(
-          padding: EdgeInsets.all(spacer2),
-          child: BackNavigationHelpHeaderWidget(showBackNavigation: true),
-        ),
-        footer: DigitCard(
-          margin: const EdgeInsets.only(top: spacer2),
-          children: [
-            DigitButton(
-              mainAxisSize: MainAxisSize.max,
-              label: localizations.translate('CORE_COMMON_SUBMIT'),
-              onPressed: () {
-                if (isView == false) {
-                  context.read<FormsBloc>().add(FormsSubmitEvent(
-                      schemaKey: widget.currentSchemaKey,
-                      isEdit: widget.isEdit));
-                }
-                // Pop all form pages (FormsRenderRoute)
-                context.router.popUntil((route) {
-                  return route.settings.name != FormsRenderRoute.name;
-                });
-              },
-              type: DigitButtonType.primary,
-              size: DigitButtonSize.large,
-            ),
-          ],
-        ),
+      enableFixedDigitButton: true,
+      header: const Padding(
+        padding: EdgeInsets.all(spacer2),
+        child: BackNavigationHelpHeaderWidget(showBackNavigation: true),
+      ),
+      footer: DigitCard(
+        margin: const EdgeInsets.only(top: spacer2),
         children: [
-          for (final entry in shownPages)
-            DigitCard(
-              margin: const EdgeInsets.all(spacer2),
-              children: [
-                LabelValueSummary(
-                  padding: EdgeInsets.zero,
-                  heading:
-                      localizations.translate(entry.value.label ?? entry.key),
-                  headingStyle: Theme.of(context)
-                      .digitTextTheme(context)
-                      .headingL
-                      .copyWith(
-                        color: Theme.of(context).colorTheme.primary.primary2,
-                      ),
-                  items: _renderSummaryLabelValueItems(entry.value),
+          DigitButton(
+            mainAxisSize: MainAxisSize.max,
+            label: localizations.translate('CORE_COMMON_SUBMIT'),
+            onPressed: () {
+              if (isView == false) {
+                context.read<FormsBloc>().add(FormsSubmitEvent(
+                    schemaKey: widget.currentSchemaKey,
+                    isEdit: widget.isEdit));
+              }
+              // Pop all form pages (FormsRenderRoute)
+              context.router.popUntil((route) {
+                return route.settings.name != FormsRenderRoute.name;
+              });
+            },
+            type: DigitButtonType.primary,
+            size: DigitButtonSize.large,
+          ),
+        ],
+      ),
+      children: [
+        for (final entry in shownPages)
+          DigitCard(
+            margin: const EdgeInsets.all(spacer2),
+            children: [
+              LabelValueSummary(
+                padding: EdgeInsets.zero,
+                heading:
+                localizations.translate(entry.value.label ?? entry.key),
+                headingStyle: Theme.of(context)
+                    .digitTextTheme(context)
+                    .headingL
+                    .copyWith(
+                  color: Theme.of(context).colorTheme.primary.primary2,
                 ),
-              ],
-            ),
-          const SizedBox(height: spacer2),
-          Center(
-            child: Text(
-              'version ${schemaObject.version}',
-              style: Theme.of(context).digitTextTheme(context).bodyXS.copyWith(
-                    color: Theme.of(context).colorTheme.text.disabled,
-                  ),
+                items: _renderSummaryLabelValueItems(entry.value),
+              ),
+            ],
+          ),
+        const SizedBox(height: spacer2),
+        Center(
+          child: Text(
+            'version ${schemaObject.version}',
+            style: Theme.of(context).digitTextTheme(context).bodyXS.copyWith(
+              color: Theme.of(context).colorTheme.text.disabled,
             ),
           ),
-        ]);
+        ),
+      ],
+    );
   }
 
   List<LabelValueItem> _renderSummaryLabelValueItems(PropertySchema schema) {
@@ -476,7 +527,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
     return properties.entries
         .where((entry) =>
-            entry.value.includeInSummary != false && entry.value.hidden != true)
+    entry.value.includeInSummary != false && entry.value.hidden != true)
         .map((entry) {
       final label = localizations.translate(entry.value.label ?? entry.key);
       final rawValue = entry.value.value;
