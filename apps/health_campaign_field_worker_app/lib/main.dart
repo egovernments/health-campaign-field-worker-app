@@ -823,11 +823,11 @@ final dynamic sampleFlows = {
               "isMultiSelect": false
             },
             {
-              "type": "integer",
+              "type": "string",
               "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone",
               "order": 6,
               "value": "",
-              "format": "text",
+              "format": "mobileNumber",
               "hidden": false,
               "tooltip":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_tooltip",
@@ -1994,7 +1994,7 @@ final dynamic sampleFlows = {
             "where": {
               "left": "{{item.key}}",
               "operator": "eq",
-              "right": "CYCLE_INDEX"
+              "right": "cycleIndex"
             },
             "select": "{{item.value}}",
             "takeLast": true,
@@ -2006,7 +2006,7 @@ final dynamic sampleFlows = {
             "where": {
               "left": "{{item.key}}",
               "operator": "eq",
-              "right": "DOSE_INDEX"
+              "right": "doseIndex"
             },
             "select": "{{item.value}}",
             "takeLast": true,
