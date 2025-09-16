@@ -37,12 +37,12 @@ class ActionHandler {
   /// Evaluates condition expressions using FormulaParser
   static bool evaluateCondition(
     Map<String, dynamic> condition,
-    Map<String, dynamic> formData,
+    Map<String, dynamic> data,
   ) {
     final expression = condition['expression'] as String?;
     if (expression == null || expression == 'DEFAULT') return true;
 
-    final flatData = flattenFormData(formData);
+    final flatData = flattenFormData(data);
 
     try {
       final parser = FormulaParser(
