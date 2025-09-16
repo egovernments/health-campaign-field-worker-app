@@ -65,9 +65,6 @@ class _EvaluationKeyDropDownState
       builder: (field) {
         final form = ReactiveForm.of(context) as FormGroup;
 
-        /// FIXME: REMOVE WHEN YOU ARE DONE TESTING;
-        form.control(_evaluationKey).value = 'dummy';
-
         return LabeledField(
           isRequired: true,
           label: localizations
