@@ -349,6 +349,9 @@ dynamic _resolvePath(dynamic root, String path) {
   if (current is List) {
     return current;
   }
+  if (current is EntityModel) {
+    return current;
+  }
   return current?.toString();
 }
 

@@ -1,5 +1,7 @@
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_forms_engine/utils/utils.dart';
 import 'package:digit_formula_parser/digit_formula_parser.dart';
+import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../utils/utils.dart';
@@ -704,7 +706,9 @@ dynamic _evaluateWithCondition(
         transformations: transformations);
 
     try {
-      final parser = FormulaParser(condition, flatContext);
+      // TODO: Fix condition format in configuration files - replace 'and' with '&&' for proper formula parser syntax
+      final sanitizedCondition = condition.replaceAll(' and ', ' && ').replaceAll('and', '&&');
+      final parser = FormulaParser(sanitizedCondition, flatContext);
       final result = parser.parse;
 
       if (result['isSuccess'] && result['value'] == true) {
@@ -890,14 +894,17 @@ class ComputedListEvaluator {
   }
 
   static int calculateAgeInMonths(String dob) {
-    final birthDate = DateTime.parse(dob);
-    final now = DateTime.now();
-    return (now.year - birthDate.year) * 12 + (now.month - birthDate.month);
+    final dateOfBirth = parseDate(dob);
+    final age = DigitDateUtils.calculateAge(dateOfBirth);
+    return age.months;
   }
 
   /// Builds the context map by extracting only required keys and applying transformations
-  static Map<String, dynamic> buildContextForCondition(Map<String, dynamic> ctx,
-      Map<String, dynamic> conf, Set<String> requiredKeys) {
+  static Map<String, dynamic> buildContextForCondition(
+    Map<String, dynamic> ctx,
+    Map<String, dynamic> conf,
+    Set<String> requiredKeys,
+  ) {
     final evaluateConfig = conf['evaluateCondition'] as Map<String, dynamic>?;
     if (evaluateConfig == null) return {};
 
@@ -907,22 +914,44 @@ class ComputedListEvaluator {
 
     final contextMap = <String, dynamic>{};
 
-    for (int i = 0; i < contextList.length; i++) {
-      final contextItem = resolveValueRaw(contextList[i], ctx);
+    for (final item in contextList) {
+      final contextItem = resolveValueRaw(item, ctx);
 
+      // Convert object to Map if it's a custom model
+      Map<String, dynamic> contextAsMap;
       if (contextItem is Map<String, dynamic>) {
-        for (final key in requiredKeys) {
-          if (contextItem.containsKey(key)) {
-            var value = contextItem[key];
+        contextAsMap = contextItem;
+      } else {
+        // Try converting object to Map using toJson or reflection
+        try {
+          contextAsMap = contextItem.toMap();
+        } catch (_) {
+          // fallback to empty map if cannot convert
+          contextAsMap = {};
+        }
+      }
 
-            // Apply transformation if specified
-            if (transformations.containsKey(key)) {
-              final transform = transformations[key];
-              value = applyTransformation(contextItem, transform);
-            }
+      // Merge additionalFields if exists
+      if (contextAsMap.containsKey('additionalFields') &&
+          contextAsMap['additionalFields'] is Map<String, dynamic>) {
+        contextAsMap.addAll(contextAsMap['additionalFields']);
+      }
 
-            contextMap[key] = value;
+      for (final key in requiredKeys) {
+        // Check if this key needs transformation
+        if (transformations.containsKey(key)) {
+          final transform = transformations[key];
+          final sourceField = transform['source'] as String?;
+
+          // Apply transformation if source field exists in contextAsMap
+          if (sourceField != null && contextAsMap.containsKey(sourceField)) {
+            final transformedValue =
+                applyTransformation(contextAsMap, transform);
+            contextMap[key] = transformedValue;
           }
+        } else if (contextAsMap.containsKey(key)) {
+          // Direct mapping for keys that don't need transformation
+          contextMap[key] = contextAsMap[key];
         }
       }
     }
@@ -938,7 +967,7 @@ class ComputedListEvaluator {
 
     final selectField = conf['select']?.toString();
     final takeLast = conf['takeLast'] == true;
-    dynamic results;
+    final results = <dynamic>[];
 
     final condition = evaluateConfig['condition']?.toString() ?? '';
     if (condition.isEmpty) return [];
@@ -948,29 +977,22 @@ class ComputedListEvaluator {
       if (item is! Map) continue;
 
       // Extract required keys from the condition
-      final requiredKeys = extractKeys(resolveValueRaw(condition, item));
+      final resolvedCondition = resolveValueRaw(condition, item);
+      final requiredKeys = extractKeys(resolvedCondition);
 
       // Build the context map with only required keys and applying transformations
       final flatContext = buildContextForCondition(ctx, conf, requiredKeys);
 
-      // Prepare final context for this item
-      final evaluationContext = {...flatContext, 'item': item, ...ctx};
-
-      final resolvedCondition =
-          resolveValueRaw(evaluateConfig['condition'], evaluationContext)
-              ?.toString();
       if (resolvedCondition == null || resolvedCondition.isEmpty) continue;
 
       try {
-        final parser = FormulaParser(resolvedCondition, evaluationContext);
+        // TODO: Fix condition format in configuration files - replace 'and' with '&&' for proper formula parser syntax
+        final sanitizedCondition = resolvedCondition.replaceAll(' and ', ' && ').replaceAll('and', '&&');
+        final parser = FormulaParser(sanitizedCondition, flatContext);
         final result = parser.parse;
 
         if (result['isSuccess'] && result['value'] == true) {
-          final itemResult = selectField != null
-              ? resolveValueRaw(selectField, evaluationContext)
-              : item;
-
-          return itemResult;
+          results.add(item);
         }
       } catch (e) {
         debugPrint('Formula evaluation error in computedList: $e');
@@ -978,7 +1000,7 @@ class ComputedListEvaluator {
       }
     }
 
-    return [];
+    return results;
   }
 
   static Iterable<T> _takeWhile<T>(

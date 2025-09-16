@@ -2076,9 +2076,9 @@ final dynamic sampleFlows = {
             "from": "{{currentDelivery.0.doseCriteria}}",
             "evaluateCondition": {
               "condition": "{{item.condition}}",
-              "context": ["{{individuals}}", "{{household}}"],
+              "context": ["{{individuals.0}}", "{{household.0}}"],
               "transformations": {
-                "ageInMonths": {"type": "ageInMonths", "source": "dateOfBirth"}
+                "age": {"type": "ageInMonths", "source": "dateOfBirth"}
               }
             },
             "takeLast": false,
