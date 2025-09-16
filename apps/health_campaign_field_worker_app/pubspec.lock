@@ -577,14 +577,14 @@ packages:
       path: "../../packages/digit_forms_engine"
       relative: true
     source: path
-    version: "0.0.4-dev"
+    version: "0.0.10-dev"
   digit_formula_parser:
     dependency: "direct overridden"
     description:
       path: "../../packages/digit_formula_parser"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.1.0"
   digit_location_tracker:
     dependency: "direct main"
     description:
@@ -609,11 +609,12 @@ packages:
   digit_ui_components:
     dependency: "direct main"
     description:
-      name: digit_ui_components
-      sha256: ad9646a4097f5706d3079898d85c51a18c851b514194f2180f4f8720129734b8
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.2+9"
+      path: "flutter/digit-ui-components/digit_components"
+      ref: beneficiary-idgen
+      resolved-ref: "0d90abcdc4faeef92f887bad05a785f15e254793"
+      url: "https://github.com/egovernments/DIGIT-UI-LIBRARIES"
+    source: git
+    version: "0.2.3+1"
   dio:
     dependency: "direct main"
     description:
@@ -1886,7 +1887,7 @@ packages:
       path: "../../packages/registration_delivery"
       relative: true
     source: path
-    version: "1.1.1-dev.3-console"
+    version: "1.1.1-dev.6-console"
   rxdart:
     dependency: transitive
     description:
@@ -2181,10 +2182,9 @@ packages:
   transit_post:
     dependency: "direct main"
     description:
-      name: transit_post
-      sha256: "4d1f8ba6e01c0dd454a340e5b1c9b1f9178b8b8d5a1ea95874bfe2ca62d880ad"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/transit_post"
+      relative: true
+    source: path
     version: "1.0.0"
   type_plus:
     dependency: transitive
