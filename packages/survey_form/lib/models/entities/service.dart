@@ -100,7 +100,8 @@ class ServiceModel extends EntityModel with ServiceModelMappable {
         serviceDefId: Value(serviceDefId),
         isActive: Value(isActive),
         accountId: Value(accountId),
-        additionalDetails: Value(jsonEncode(additionalDetails)),
+        additionalDetails: Value(
+            additionalDetails != null ? jsonEncode(additionalDetails) : null),
         createdAt: Value(createdAt),
         nonRecoverableError: Value(nonRecoverableError),
         tenantId: Value(tenantId),
