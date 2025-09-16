@@ -32,7 +32,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     final form = ReactiveForm.of(context) as FormGroup;
 
     // Handle conditional display logic
-    if (_shouldHideField(form)) {
+    if (_shouldHideField(form, widget.schema, widget.formControlName)) {
       return const SizedBox.shrink();
     }
 
@@ -97,11 +97,12 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
   }
 
   /// Conditionally hide based on display behavior
-  bool _shouldHideField(FormGroup form) {
-    final hidden = widget.schema.hidden;
+  bool _shouldHideField(
+      FormGroup form, PropertySchema schema, String formName) {
+    final hidden = schema.hidden;
     if (hidden != null && hidden == true) return true;
 
-    final visibility = widget.schema.visibilityCondition;
+    final visibility = schema.visibilityCondition;
     if (visibility != null && visibility.expression.isNotEmpty) {
       final formState = context.read<FormsBloc>().state;
       final currentPageKey = widget.pageName;
@@ -119,10 +120,9 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       final result =
           evaluateVisibilityExpression(visibility.expression, values);
       VisibilityManager(schemaMap: {
-        widget.formControlName: widget.schema,
+        formName: schema,
       }, formData: form.rawValue, form: form)
-          .toggleControlVisibility(
-              widget.formControlName, result, widget.schema);
+          .toggleControlVisibility(formName, result, widget.schema);
 
       return !result;
     }
@@ -491,7 +491,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       children: entries
           .where((entry) {
             final subSchema = entry.value;
-            return !shouldHideField(subSchema, form);
+            return !_shouldHideField(form, subSchema, entry.key);
           })
           .toList()
           .asMap()
