@@ -2010,7 +2010,7 @@ final dynamic sampleFlows = {
             },
             "select": "{{item.value}}",
             "takeLast": true,
-            "default": 0
+            "default": 1
           },
         },
         "computed": {
@@ -2073,14 +2073,15 @@ final dynamic sampleFlows = {
             "fallback": null
           },
           "eligibleProductVariants": {
-            "from": "{{currentDelivery.doseCriteria}}",
+            "from": "{{currentDelivery.0.doseCriteria}}",
             "evaluateCondition": {
               "condition": "{{item.condition}}",
-              "context": ["{{individuals}}", "{{household}}", "{{tasks}}"],
-              "parser": "formula"
+              "context": ["{{individuals}}", "{{household}}"],
+              "transformations": {
+                "ageInMonths": {"type": "ageInMonths", "source": "dateOfBirth"}
+              }
             },
-            "select": "ProductVariants",
-            "takeLast": true,
+            "takeLast": false,
             "fallback": []
           },
           "pastCycles": {

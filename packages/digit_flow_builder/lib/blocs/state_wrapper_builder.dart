@@ -1,4 +1,5 @@
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../utils/utils.dart';
@@ -448,6 +449,222 @@ Map<String, dynamic> _applyComputed(
   return results;
 }
 
+/// Flattens context for formula parser by converting model maps to flat key-value pairs
+/// Also applies configurable field transformations
+Map<String, dynamic> _flattenContextForFormulaParser(
+    Map<String, dynamic> context,
+    {Map<String, dynamic>? transformations}) {
+  final flat = <String, dynamic>{};
+
+  context.forEach((key, value) {
+    if (value == null) {
+      // Skip null values
+    } else if (value is EntityModel) {
+      // Convert EntityModel to map and flatten with prefix
+      try {
+        final modelMap = value.toMap();
+        modelMap.forEach((fieldKey, fieldValue) {
+          // Create keys like "Individual.name", "Household.memberCount"
+          flat['${key}.${fieldKey}'] = fieldValue;
+          // Also add without prefix for backward compatibility
+          flat[fieldKey] = fieldValue;
+        });
+      } catch (e) {
+        debugPrint('Error flattening EntityModel $key: $e');
+      }
+    } else if (value is Map) {
+      // Flatten nested maps
+      value.forEach((nestedKey, nestedValue) {
+        if (nestedValue is EntityModel) {
+          // Handle models within maps
+          try {
+            final modelMap = nestedValue.toMap();
+            modelMap.forEach((fieldKey, fieldValue) {
+              flat['${key}.${nestedKey}.${fieldKey}'] = fieldValue;
+            });
+          } catch (e) {
+            debugPrint('Error flattening nested EntityModel: $e');
+          }
+        } else {
+          // Regular nested values
+          flat['${key}.${nestedKey}'] = nestedValue;
+        }
+      });
+    } else if (value is List) {
+      // Handle lists - FormulaParser doesn't directly support lists
+      // so we add list length and indexed access
+      flat['${key}.length'] = value.length;
+      for (int i = 0; i < value.length && i < 10; i++) {
+        // Limit to first 10 items
+        if (value[i] is EntityModel) {
+          try {
+            final modelMap = value[i].toMap();
+            modelMap.forEach((fieldKey, fieldValue) {
+              flat['${key}[$i].${fieldKey}'] = fieldValue;
+            });
+          } catch (e) {
+            debugPrint('Error flattening list EntityModel: $e');
+          }
+        } else {
+          flat['${key}[$i]'] = value[i];
+        }
+      }
+    } else {
+      // Simple values
+      flat[key] = value;
+    }
+  });
+
+  // Apply transformations if provided
+  if (transformations != null) {
+    flat.addAll(_applyFieldTransformations(flat, transformations));
+  }
+
+  return flat;
+}
+
+/// Applies configurable field transformations to the flattened context
+Map<String, dynamic> _applyFieldTransformations(
+    Map<String, dynamic> flat, Map<String, dynamic> transformations) {
+  final transformed = <String, dynamic>{};
+
+  transformations.forEach((transformedFieldName, config) {
+    if (config is! Map<String, dynamic>) return;
+
+    final type = config['type'] as String?;
+    final sourceField = config['source'] as String?;
+
+    if (type == null || sourceField == null) return;
+
+    final sourceValue = flat[sourceField];
+    if (sourceValue == null) return;
+
+    try {
+      switch (type) {
+        case 'ageInMonths':
+          transformed[transformedFieldName] =
+              _calculateAgeInMonths(sourceValue);
+          break;
+        case 'ageInYears':
+          transformed[transformedFieldName] = _calculateAgeInYears(sourceValue);
+          break;
+        case 'dateString':
+          transformed[transformedFieldName] =
+              _formatDateString(sourceValue, config['format']);
+          break;
+        case 'uppercase':
+          transformed[transformedFieldName] =
+              sourceValue.toString().toUpperCase();
+          break;
+        case 'lowercase':
+          transformed[transformedFieldName] =
+              sourceValue.toString().toLowerCase();
+          break;
+        case 'numeric':
+          transformed[transformedFieldName] =
+              num.tryParse(sourceValue.toString()) ?? 0;
+          break;
+        case 'boolean':
+          transformed[transformedFieldName] = _parseBoolean(sourceValue);
+          break;
+        case 'custom':
+          // Allow custom transformation expressions
+          final expression = config['expression'] as String?;
+          if (expression != null) {
+            transformed[transformedFieldName] =
+                _evaluateCustomExpression(expression, flat);
+          }
+          break;
+        default:
+          debugPrint('Unknown transformation type: $type');
+      }
+    } catch (e) {
+      debugPrint('Error applying transformation $transformedFieldName: $e');
+    }
+  });
+
+  return transformed;
+}
+
+/// Calculate age in months from date of birth
+int _calculateAgeInMonths(dynamic dateValue) {
+  DateTime? birthDate;
+
+  if (dateValue is int) {
+    // Assume milliseconds since epoch
+    birthDate = DateTime.fromMillisecondsSinceEpoch(dateValue);
+  } else if (dateValue is String) {
+    // Try to parse date string
+    birthDate = DateTime.tryParse(dateValue);
+  } else if (dateValue is DateTime) {
+    birthDate = dateValue;
+  }
+
+  if (birthDate == null) return 0;
+
+  final now = DateTime.now();
+  final months =
+      (now.year - birthDate.year) * 12 + (now.month - birthDate.month);
+
+  // Adjust if the day hasn't occurred yet this month
+  if (now.day < birthDate.day) {
+    return months - 1;
+  }
+
+  return months;
+}
+
+/// Calculate age in years from date of birth
+int _calculateAgeInYears(dynamic dateValue) {
+  return (_calculateAgeInMonths(dateValue) / 12).floor();
+}
+
+/// Format date as string
+String _formatDateString(dynamic dateValue, String? format) {
+  DateTime? date;
+
+  if (dateValue is int) {
+    date = DateTime.fromMillisecondsSinceEpoch(dateValue);
+  } else if (dateValue is String) {
+    date = DateTime.tryParse(dateValue);
+  } else if (dateValue is DateTime) {
+    date = dateValue;
+  }
+
+  if (date == null) return '';
+
+  // Simple format support - can be extended
+  switch (format) {
+    case 'yyyy-MM-dd':
+      return '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+    case 'dd/MM/yyyy':
+      return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+    default:
+      return date.toIso8601String();
+  }
+}
+
+/// Parse boolean from various formats
+bool _parseBoolean(dynamic value) {
+  if (value is bool) return value;
+  if (value is String) {
+    return value.toLowerCase() == 'true' ||
+        value == '1' ||
+        value.toLowerCase() == 'yes';
+  }
+  if (value is num) return value != 0;
+  return false;
+}
+
+/// Evaluate custom transformation expressions (placeholder)
+dynamic _evaluateCustomExpression(
+    String expression, Map<String, dynamic> context) {
+  // This is a placeholder for custom expressions
+  // Could be extended to support simple arithmetic or string operations
+  debugPrint('Custom expression evaluation not implemented: $expression');
+  return null;
+}
+
 /// Evaluates list items with condition parsing using formula parser
 dynamic _evaluateWithCondition(
     Map<String, dynamic> wrapperData, Map<String, dynamic> conf) {
@@ -479,43 +696,35 @@ dynamic _evaluateWithCondition(
         ?.toString();
     if (condition == null || condition.isEmpty) continue;
 
-    // Pass everything to formula parser - no hardcoding
-    final evaluationContext = <String, dynamic>{
-      ...contextMap,
-      'item': item,
-      ...wrapperData
-    };
+    // Prepare flat context for formula parser with transformations
+    final transformations =
+        evaluateConfig['transformations'] as Map<String, dynamic>?;
+    final flatContext = _flattenContextForFormulaParser(
+        {...contextMap, 'item': item, ...wrapperData},
+        transformations: transformations);
 
-    // TODO: Replace with actual formula parser call
-    // final result = FormulaParser.evaluate(condition, evaluationContext);
-    final result = _placeholderFormulaEvaluation(condition, evaluationContext);
+    try {
+      final parser = FormulaParser(condition, flatContext);
+      final result = parser.parse;
 
-    if (result == true) {
-      final itemResult = selectField != null
-          ? resolveValueRaw(selectField, {'item': item, ...wrapperData})
-          : item;
+      if (result['isSuccess'] && result['value'] == true) {
+        final itemResult = selectField != null
+            ? resolveValueRaw(selectField, {'item': item, ...wrapperData})
+            : item;
 
-      if (takeLast) {
-        lastResult = itemResult;
-      } else {
-        return itemResult;
+        if (takeLast) {
+          lastResult = itemResult;
+        } else {
+          return itemResult;
+        }
       }
+    } catch (e) {
+      debugPrint('Formula evaluation error: $e');
+      // Continue to next item on error
     }
   }
 
   return takeLast ? lastResult : null;
-}
-
-/// Placeholder for formula parser - will be replaced with actual formula parser
-bool _placeholderFormulaEvaluation(
-    String condition, Map<String, dynamic> context) {
-  // TODO: Replace this with actual formula parser package call
-  // This is just a placeholder until the formula parser is integrated
-  debugPrint('Formula condition: $condition');
-  debugPrint('Context keys: ${context.keys.join(', ')}');
-
-  // Return false for now - will be replaced with actual formula parser
-  return false;
 }
 
 Map<String, dynamic> _applyComputedList(
@@ -528,7 +737,8 @@ Map<String, dynamic> _applyComputedList(
   for (final entry in computedList.entries) {
     final key = entry.key;
     final conf = entry.value as Map<String, dynamic>;
-    results[key] = ComputedListEvaluator.evaluate(wrapperData, conf);
+    results[key] =
+        ComputedListEvaluator.evaluate({...wrapperData, ...results}, conf);
   }
 
   return results;
@@ -597,6 +807,11 @@ class ComputedListEvaluator {
     var list = resolveValueRaw(conf['from'], ctx);
     if (list is! Iterable) return [];
 
+    // Handle evaluateCondition for formula-based filtering
+    if (conf.containsKey('evaluateCondition')) {
+      return _evaluateWithConditionInList(ctx, conf, list);
+    }
+
     Iterable result = list;
 
     if (conf.containsKey('skip')) {
@@ -625,6 +840,145 @@ class ComputedListEvaluator {
     }
 
     return result.toList();
+  }
+
+  /// Extracts variable names from the condition string
+  static Set<String> extractKeys(String condition) {
+    final keywords = {"and", "or", "not", "true", "false"};
+    final splitPattern = RegExp(r'and|or|not');
+    final identifierPattern = RegExp(r'^[a-zA-Z_][a-zA-Z0-9_]*$');
+
+    // Add spaces around operators
+    final operatorsPattern = RegExp(r'(<=|>=|!=|==|<|>|=|\+|\-|\*|\/|\(|\))');
+    condition = condition.replaceAllMapped(
+      operatorsPattern,
+      (match) => ' ${match[0]} ',
+    );
+
+    final tokens =
+        condition.split(RegExp(r'\s+')).where((e) => e.isNotEmpty).toList();
+
+    final keys = <String>{};
+
+    for (final token in tokens) {
+      final parts = token
+          .split(splitPattern)
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty);
+
+      for (final part in parts) {
+        // ✅ Only keep identifier-like parts, ignore numbers & operators
+        if (identifierPattern.hasMatch(part) && !keywords.contains(part)) {
+          keys.add(part);
+        }
+      }
+    }
+
+    return keys;
+  }
+
+  /// Applies transformations such as age calculations
+  static dynamic applyTransformation(
+      Map<String, dynamic> item, Map<String, dynamic> transform) {
+    final type = transform['type'];
+    final source = transform['source'];
+
+    if (type == 'ageInMonths' && source == 'dateOfBirth') {
+      return calculateAgeInMonths(item[source]);
+    }
+    return item[source]; // fallback
+  }
+
+  static int calculateAgeInMonths(String dob) {
+    final birthDate = DateTime.parse(dob);
+    final now = DateTime.now();
+    return (now.year - birthDate.year) * 12 + (now.month - birthDate.month);
+  }
+
+  /// Builds the context map by extracting only required keys and applying transformations
+  static Map<String, dynamic> buildContextForCondition(Map<String, dynamic> ctx,
+      Map<String, dynamic> conf, Set<String> requiredKeys) {
+    final evaluateConfig = conf['evaluateCondition'] as Map<String, dynamic>?;
+    if (evaluateConfig == null) return {};
+
+    final contextList = evaluateConfig['context'] as List<dynamic>? ?? [];
+    final transformations =
+        evaluateConfig['transformations'] as Map<String, dynamic>? ?? {};
+
+    final contextMap = <String, dynamic>{};
+
+    for (int i = 0; i < contextList.length; i++) {
+      final contextItem = resolveValueRaw(contextList[i], ctx);
+
+      if (contextItem is Map<String, dynamic>) {
+        for (final key in requiredKeys) {
+          if (contextItem.containsKey(key)) {
+            var value = contextItem[key];
+
+            // Apply transformation if specified
+            if (transformations.containsKey(key)) {
+              final transform = transformations[key];
+              value = applyTransformation(contextItem, transform);
+            }
+
+            contextMap[key] = value;
+          }
+        }
+      }
+    }
+
+    return contextMap;
+  }
+
+  /// Handle evaluateCondition within computedList with optimized context
+  static List<dynamic> _evaluateWithConditionInList(
+      Map<String, dynamic> ctx, Map<String, dynamic> conf, Iterable list) {
+    final evaluateConfig = conf['evaluateCondition'] as Map<String, dynamic>?;
+    if (evaluateConfig == null) return [];
+
+    final selectField = conf['select']?.toString();
+    final takeLast = conf['takeLast'] == true;
+    dynamic results;
+
+    final condition = evaluateConfig['condition']?.toString() ?? '';
+    if (condition.isEmpty) return [];
+
+    // Evaluate each item
+    for (final item in list) {
+      if (item is! Map) continue;
+
+      // Extract required keys from the condition
+      final requiredKeys = extractKeys(resolveValueRaw(condition, item));
+
+      // Build the context map with only required keys and applying transformations
+      final flatContext = buildContextForCondition(ctx, conf, requiredKeys);
+
+      // Prepare final context for this item
+      final evaluationContext = {...flatContext, 'item': item, ...ctx};
+
+      final resolvedCondition =
+          resolveValueRaw(evaluateConfig['condition'], evaluationContext)
+              ?.toString();
+      if (resolvedCondition == null || resolvedCondition.isEmpty) continue;
+
+      try {
+        final parser = FormulaParser(resolvedCondition, evaluationContext);
+        final result = parser.parse;
+
+        if (result['isSuccess'] && result['value'] == true) {
+          final itemResult = selectField != null
+              ? resolveValueRaw(selectField, evaluationContext)
+              : item;
+
+          return itemResult;
+        }
+      } catch (e) {
+        debugPrint('Formula evaluation error in computedList: $e');
+        // Continue to next item on error
+      }
+    }
+
+    return [];
   }
 
   static Iterable<T> _takeWhile<T>(
