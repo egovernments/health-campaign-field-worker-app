@@ -303,16 +303,15 @@ class WidgetRegistry {
       final crudCtx = CrudItemContext.of(context);
 
       final value = json['value'] ?? '';
-      final finalText = (crudCtx?.stateData != null && value is String)
-          ? interpolateWithCrudStates(
-              template: value,
-              stateData: crudCtx!.stateData!,
-              listIndex: crudCtx.listIndex,
-              item: crudCtx.item,
-            )
-          : value;
+      final valueText = resolveTemplate(
+              value,
+              crudCtx?.item != null
+                  ? crudCtx!.item
+                  : crudCtx?.stateData?.rawState) ??
+          '';
+
       return Text(FlowBuilderLocalization.of(context).translate(
-        finalText,
+        valueText,
       ));
     });
 
