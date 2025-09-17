@@ -201,6 +201,8 @@ class ActionHandler {
       case 'NAVIGATION':
         // First resolve navigation data if provided
         final navData = action.properties['data'] as List<dynamic>?;
+        Map<String, dynamic> navigationProperties = Map<String, dynamic>.from(action.properties);
+
         if (navData != null) {
           final resolvedData = navData.map((entry) {
             final key = entry['key'];
@@ -215,11 +217,11 @@ class ActionHandler {
             };
           }).toList();
 
-          // overwrite properties with resolved data
-          action.properties['data'] = resolvedData;
+          // create a copy with resolved data instead of modifying original
+          navigationProperties['data'] = resolvedData;
         }
 
-        NavigationRegistry.navigateTo(action.properties);
+        NavigationRegistry.navigateTo(navigationProperties);
         final entities = contextData['entities'];
         final config = FlowRegistry.getByName(action.properties['name']);
         if (entities != null) {
