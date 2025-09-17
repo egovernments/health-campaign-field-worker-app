@@ -1989,31 +1989,40 @@ final dynamic sampleFlows = {
         ],
         "fields": {
           "cycle": {
-            "from": "{{tasks.additionalFields}}",
-            "map": "{{item.additionalFields.fields}}",
+            "from": "{{tasks.additionalFields.fields}}",
             "where": {
-              "left": "{{item.key}}",
+              "left": "{{key}}",
               "operator": "eq",
               "right": "cycleIndex"
             },
-            "select": "{{item.value}}",
+            "select": "{{value}}",
             "takeLast": true,
             "default": 1
           },
           "dose": {
-            "from": "{{tasks.additionalFields}}",
-            "map": "{{item.additionalFields.fields}}",
+            "from": "{{tasks.additionalFields.fields}}",
             "where": {
-              "left": "{{item.key}}",
+              "left": "{{key}}",
               "operator": "eq",
               "right": "doseIndex"
             },
-            "select": "{{item.value}}",
+            "select": "{{value}}",
             "takeLast": true,
             "default": 1
           },
         },
         "computed": {
+          "currentRunningCycle": {
+            "from":
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "where": [
+              {"left": "{{startDate}}", "operator": "lt", "right": "{{now}}"},
+              {"left": "{{endDate}}", "operator": "gt", "right": "{{now}}"}
+            ],
+            "select": "{{id}}",
+            "takeFirst": true,
+            "default": -1
+          },
           "hasCycleArrived": {
             "condition": {
               "left": "{{cycle}}",
@@ -2038,7 +2047,7 @@ final dynamic sampleFlows = {
             "where": {
               "left": "{{id}}",
               "operator": "equals",
-              "right": "{{cycle}}"
+              "right": "{{currentRunningCycle}}"
             },
             "takeLast": true,
             "fallback": null
@@ -2153,7 +2162,7 @@ final dynamic sampleFlows = {
                 {
                   "key": "Date of Registration",
                   "value":
-                      "{{fn:formatDate(contextData.0.projectBeneficiaries.ProjectBeneficiaryModel.dateOfRegistration, date, dd MMM yyyy)}}"
+                      "{{fn:formatDate(contextData.0.projectBeneficiaries.ProjectBeneficiaryModel.dateOfRegistration, date, dd MMMM yyyy)}}"
                 }
               ]
             }
