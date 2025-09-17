@@ -1039,14 +1039,6 @@ final dynamic sampleFlows = {
             }
           },
           {
-            "name": "members",
-            "entity": "HouseholdMemberModel",
-            "match": {
-              "field": "householdClientReferenceId",
-              "equalsFrom": "clientReferenceId"
-            }
-          },
-          {
             "name": "headOfHousehold",
             "entity": "HouseholdMemberModel",
             "match": {
@@ -1066,44 +1058,46 @@ final dynamic sampleFlows = {
             }
           },
           {
-            "name": "individuals",
-            "entity": "IndividualModel",
+            "name": "members",
+            "entity": "HouseholdMemberModel",
             "match": {
-              "field": "clientReferenceId",
-              "inFrom": "members.individualClientReferenceId"
-            }
-          },
-          {
-            "name": "projectBeneficiaries",
-            "entity": "ProjectBeneficiaryModel",
-            "match": {
-              "field": "beneficiaryClientReferenceId",
-              "equalsFrom": "individuals.clientReferenceId"
-            }
-          },
-          {
-            "name": "tasks",
-            "entity": "TaskModel",
-            "match": {
-              "field": "projectBeneficiaryClientReferenceId",
-              "inFrom": "projectBeneficiaries.clientReferenceId"
-            }
-          },
-          {
-            "name": "sideEffects",
-            "entity": "SideEffectModel",
-            "match": {
-              "field": "projectBeneficiaryClientReferenceId",
-              "equalsFrom": "projectBeneficiaries.clientReferenceId"
-            }
-          },
-          {
-            "name": "referrals",
-            "entity": "ReferralModel",
-            "match": {
-              "field": "clientReferenceId",
-              "equalsFrom": "projectBeneficiaries.clientReferenceId"
-            }
+              "field": "householdClientReferenceId",
+              "equalsFrom": "clientReferenceId"
+            },
+            "relations": [
+              {
+                "name": "individual",
+                "entity": "IndividualModel",
+                "match": {
+                  "field": "clientReferenceId",
+                  "equalsFrom": "individualClientReferenceId"
+                }
+              },
+              {
+                "name": "projectBeneficiary",
+                "entity": "ProjectBeneficiaryModel",
+                "match": {
+                  "field": "beneficiaryClientReferenceId",
+                  "equalsFrom": "individual.clientReferenceId"
+                }
+              },
+              {
+                "name": "task",
+                "entity": "TaskModel",
+                "match": {
+                  "field": "projectBeneficiaryClientReferenceId",
+                  "equalsFrom": "projectBeneficiary.clientReferenceId"
+                }
+              },
+              {
+                "name": "referral",
+                "entity": "ReferralModel",
+                "match": {
+                  "field": "projectBeneficiaryClientReferenceId",
+                  "equalsFrom": "projectBeneficiary.clientReferenceId"
+                }
+              }
+            ]
           }
         ],
         "searchConfig": {
@@ -1188,7 +1182,7 @@ final dynamic sampleFlows = {
                     "children": [
                       {
                         "format": "text",
-                        "value": "{{ context.individuals.name.givenName }}"
+                        "value": "{{ individual.0.name.givenName }}"
                       },
                       {
                         "format": "button",
@@ -1217,7 +1211,7 @@ final dynamic sampleFlows = {
                   {
                     "format": "text",
                     "value":
-                        "{{ context.individuals.gender }} | {{fn:formatDate(context.individuals.dateOfBirth, age)}}"
+                        "{{individual.0.gender }} | {{fn:formatDate(individual.0.dateOfBirth, age)}}"
                   },
                   {"format": "tag", "type": "", "label": "Not visited"},
                   {
@@ -1255,8 +1249,7 @@ final dynamic sampleFlows = {
                           "data": [
                             {
                               "key": "selectedIndividualClientReferenceId",
-                              "value":
-                                  "{{context.individuals.clientReferenceId}}"
+                              "value": "{{individual.0.clientReferenceId}}"
                             }
                           ]
                         }

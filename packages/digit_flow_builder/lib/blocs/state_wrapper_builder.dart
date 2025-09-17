@@ -97,6 +97,35 @@ class WrapperBuilder {
           final relatedEntities =
               _findRelatedEntities(root, relation, wrapperData, entityMap);
           wrapperData[relation['name']] = relatedEntities;
+
+          // Handle nested relations within each related entity
+          if (relation['relations'] != null && relatedEntities is List) {
+            for (int i = 0; i < relatedEntities.length; i++) {
+              final entity = relatedEntities[i];
+              final nestedData = <String, dynamic>{};
+
+              for (final nestedRelation in relation['relations']) {
+                final nestedEntities = _findRelatedEntities(
+                  entity,
+                  nestedRelation,
+                  {...wrapperData, ...nestedData},
+                  entityMap
+                );
+                nestedData[nestedRelation['name']] = nestedEntities;
+              }
+
+              // Add nested relations to the entity
+              if (entity is Map) {
+                entity.addAll(nestedData);
+              } else {
+                // If entity is not a Map, we need to wrap it
+                relatedEntities[i] = {
+                  'entity': entity,
+                  ...nestedData,
+                };
+              }
+            }
+          }
         }
 
         // 2. Apply normal fields (supports String or Map config)
@@ -197,15 +226,22 @@ class WrapperBuilder {
     final targetField = match['field'] as String?;
     final equalsFrom = match['equalsFrom'] as String?;
     final inFrom = match['inFrom'] as String?;
+
+    // Create a local context that includes both the current entity and wrapper data
+    final localContext = <String, dynamic>{
+      ...wrapperData,
+      if (root is EntityModel) root.runtimeType.toString(): root,
+    };
+
     final equalsValue = equalsFrom != null
-        ? _resolveValue(equalsFrom, root, wrapperData)
+        ? _resolveValue(equalsFrom, root, localContext)
         : null;
     final inValues =
-        inFrom != null ? _resolveList(inFrom, wrapperData).toSet() : null;
+        inFrom != null ? _resolveList(inFrom, localContext).toSet() : null;
 
     var related = candidates.where((e) {
       if (targetField == null) return false;
-      final candidateValue = _resolveValue(targetField, e, wrapperData);
+      final candidateValue = _resolveValue(targetField, e, localContext);
       if (equalsValue != null) return candidateValue == equalsValue;
       if (inValues != null) return inValues.contains(candidateValue);
       return false;
@@ -216,7 +252,7 @@ class WrapperBuilder {
       return filters.every((filter) {
         final field = filter['field'];
         final expected = filter['equals'];
-        final actual = _resolveValue(field, entity, wrapperData);
+        final actual = _resolveValue(field, entity, localContext);
         return actual == expected;
       });
     }).toList();
