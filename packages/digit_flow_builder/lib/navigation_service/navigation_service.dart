@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 
+import '../blocs/flow_crud_bloc.dart';
 import '../router/flow_builder_routes.gm.dart';
 
 abstract class NavigationService {
@@ -53,6 +54,11 @@ class NavigationRegistry {
     final data = <String, dynamic>{};
     for (final entry in dataList) {
       data[entry['key']] = entry['value'];
+    }
+
+    // Update navigation params for the target page before navigating
+    if (data.isNotEmpty && name.isNotEmpty) {
+      FlowCrudStateRegistry().updateNavigationParams(name, data);
     }
 
     _service.navigateTo(type: type, name: name, data: data);
