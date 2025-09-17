@@ -2578,30 +2578,38 @@ final dynamic sampleFlows = {
           "format": "panelCard",
           "label": "Delivery Successful",
           "description": "The resource is successfully delivered",
-          "fieldName": "isHead",
-          "data": [
-            {
-              "action": "ONTAP",
-              "actionType": "UPDATE_EVENT",
-              "properties": {
-                "entity": "INDIVIDUAL",
-                "data": [
-                  {"key": "isHead", "value": "field.value"}
-                ]
+          "properties": {"type": "success"},
+          "primaryAction": {
+            "label": "View Household Details",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "type": "TEMPLATE",
+                  "name": "householdOverview",
+                  "data": [
+                    {
+                      "key": "HouseholdClientReferenceId",
+                      "value":
+                          "{{contextData.navigation.HouseholdClientReferenceId}}"
+                    }
+                  ]
+                }
               }
-            }
-          ]
-        },
-        {
-          "format": "button",
-          "label": "Save & Go to Home",
-          "onAction": [
-            {
-              "action": "ONTAP",
-              "actionType": "NAVIGATION",
-              "properties": {"type": "TEMPLATE", "name": "searchBeneficiary"}
-            }
-          ]
+            ]
+          },
+          "secondaryAction": {
+            "label": "Go back to home",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "type": "TEMPLATE",
+                  "name": "searchBeneficiary",
+                }
+              }
+            ]
+          }
         }
       ]
     }
