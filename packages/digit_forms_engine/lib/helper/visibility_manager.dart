@@ -57,9 +57,14 @@ class VisibilityManager {
     if (isVisible) {
       control.setValidators(buildValidators(schema));
     } else {
-      control
-        ..clearValidators()
-        ..reset(); // 👈 clears value and marks untouched
+      control.clearValidators();
+
+      if (schema.value != null) {
+        control.value = schema.value; // Assign default value if present
+      } else {
+        control
+            .markAsUntouched(); // Otherwise, just mark untouched without changing value
+      }
     }
 
     control.updateValueAndValidity();
