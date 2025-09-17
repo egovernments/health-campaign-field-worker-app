@@ -79,23 +79,22 @@ class WidgetRegistry {
     initializeFunctionRegistry();
     // BUTTON
     WidgetRegistry.register('button', (json, context, onAction) {
+      final crudCtx = CrudItemContext.of(context);
+      final stateData = (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
+          ? crudCtx.item
+          : crudCtx?.stateData?.rawState != null &&
+                  crudCtx!.stateData!.rawState.isNotEmpty
+              ? crudCtx.stateData?.rawState.first
+              : null;
+
       final props = Map<String, dynamic>.from(json['properties'] ?? {});
       return DigitButton(
-        label: json['label'] ?? '',
+        label: resolveTemplate(json['label'], stateData) ?? '',
         onPressed: () {
           if (json['onAction'] != null) {
             // Parse onAction as a list of actions
             final actionsList =
                 List<Map<String, dynamic>>.from(json['onAction']);
-
-            final crudCtx = CrudItemContext.of(context);
-            final stateData =
-                (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
-                    ? crudCtx.item
-                    : crudCtx?.stateData?.rawState != null &&
-                            crudCtx!.stateData!.rawState.isNotEmpty
-                        ? crudCtx.stateData?.rawState.first
-                        : null;
 
             // Process each action
             for (var actionJson in actionsList) {
