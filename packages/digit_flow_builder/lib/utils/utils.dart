@@ -191,7 +191,7 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData) {
       // Handle singleton access
       if (path.startsWith('singleton.')) {
         path = path.substring('singleton.'.length);
-        return _resolvePath(_singletonToMap(), path);
+        return _resolvePath(singletonToMap(), path);
       }
 
       // Handle functions like {{ fn:max(tasks.0.dose, 2) }}
@@ -240,7 +240,7 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData) {
 }
 
 /// Helper: Convert FlowBuilderSingleton into a Map<String, dynamic>
-Map<String, dynamic> _singletonToMap() {
+Map<String, dynamic> singletonToMap() {
   final s = FlowBuilderSingleton();
   return {
     "tenantId": s.tenantId,
