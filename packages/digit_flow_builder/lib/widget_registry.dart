@@ -503,8 +503,20 @@ class WidgetRegistry {
             final resolvedData = navData.map((entry) {
               final key = entry['key'] as String;
               final rawValue = entry['value'];
-              final resolvedValue = resolveValue(
-                  rawValue, {...stateData, ...(navigationData ?? {})});
+              final Map<String, dynamic> mergedData = {};
+
+// // Add stateData only if it's a non-null Map<String, dynamic>
+//               if (stateData is Map<String, dynamic>) {
+//                 mergedData.addAll(stateData);
+//               }
+
+// Add navigationData under 'navigation' key only if it's a non-null Map<String, dynamic>
+              if (navigationData is Map<String, dynamic>) {
+                mergedData["navigation"] = navigationData;
+              }
+
+              final resolvedValue = resolveValue(rawValue, mergedData);
+
               return {
                 "key": key,
                 "value": resolvedValue,
