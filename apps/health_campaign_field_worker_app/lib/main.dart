@@ -2222,8 +2222,8 @@ final dynamic sampleFlows = {
                     "key": "HouseholdClientReferenceId",
                     "value": "{{household.HouseholdModel.clientReferenceId}}"
                   },
-                  {"key": "cycleIndex", "value": "{{cycle}}"},
-                  {"key": "doseIndex", "value": "{{dose}}"}
+                  {"key": "cycleIndex", "value": "{{nextCycleId}}"},
+                  {"key": "doseIndex", "value": "{{nextDoseId}}"}
                 ]
               }
             }
