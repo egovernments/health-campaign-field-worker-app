@@ -872,8 +872,22 @@ Map<String, dynamic> _applyComputedList(
 }
 
 class ConditionEvaluator {
-  static bool? evaluate(
+  static dynamic evaluate(
       Map<String, dynamic> context, Map<String, dynamic> conf) {
+    // Handle conditional operations (if-then-else)
+    if (conf.containsKey('if') && conf.containsKey('then')) {
+      final conditionResult = resolve(context, conf['if']);
+      final isTruthy = _isTruthy(conditionResult);
+
+      if (isTruthy) {
+        return _processOperation(context, conf['then']);
+      } else if (conf.containsKey('else')) {
+        return _processOperation(context, conf['else']);
+      }
+      return null;
+    }
+
+    // Handle comparison operations
     final left = resolve(context, conf['left']);
     final right = resolve(context, conf['right']);
 
@@ -893,6 +907,33 @@ class ConditionEvaluator {
       default:
         return null;
     }
+  }
+
+  static bool _isTruthy(dynamic value) {
+    if (value is bool) return value;
+    if (value is String)
+      return value.isNotEmpty && value.toLowerCase() != 'false';
+    if (value is num) return value != 0;
+    if (value is List) return value.isNotEmpty;
+    return value != null;
+  }
+
+  static dynamic _processOperation(
+      Map<String, dynamic> context, dynamic value) {
+    if (value is Map<String, dynamic>) {
+      // Handle increment operation
+      if (value['operation'] == 'increment') {
+        final baseValue = resolve(context, value['value']);
+        if (baseValue is num) {
+          return baseValue + 1;
+        } else {
+          return int.parse(baseValue) + 1;
+        }
+      }
+      // Handle other nested operations
+      return evaluate(context, value);
+    }
+    return resolve(context, value);
   }
 
   static dynamic resolve(Map<String, dynamic> ctx, dynamic expr) {

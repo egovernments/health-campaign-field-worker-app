@@ -173,6 +173,32 @@ String? resolveValue(dynamic value, dynamic contextData) {
   return resolved?.toString();
 }
 
+/// New method: resolves strings with multiple placeholders
+String resolveTemplate(String template, dynamic contextData) {
+  if (!template.contains('{{')) {
+    return template;
+  }
+
+  // Find all {{placeholder}} patterns in the string
+  final placeholderRegex = RegExp(r'\{\{(.+?)\}\}');
+  final matches = placeholderRegex.allMatches(template);
+
+  String result = template;
+
+  for (final match in matches) {
+    final fullPlaceholder = match.group(0)!; // {{nextCycleId}}
+    final placeholder = match.group(1)!.trim(); // nextCycleId
+
+    // Use existing resolveValueRaw to resolve the individual placeholder
+    final resolvedValue = resolveValueRaw('{{$placeholder}}', contextData);
+
+    // Replace the placeholder in the result string
+    result = result.replaceAll(fullPlaceholder, resolvedValue?.toString() ?? '');
+  }
+
+  return result;
+}
+
 /// New method: returns actual type (int, double, bool, list, map, entity, etc.)
 dynamic resolveValueRaw(dynamic value, dynamic contextData) {
   if (value is String) {

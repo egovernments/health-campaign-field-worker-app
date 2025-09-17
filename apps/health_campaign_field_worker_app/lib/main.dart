@@ -2038,6 +2038,22 @@ final dynamic sampleFlows = {
               "right": "{{deliveryLength}}"
             },
             "fallback": true
+          },
+          "nextDoseId": {
+            "condition": {
+              "if": "{{isLastDoseOfCycle}}",
+              "then": 1,
+              "else": {"operation": "increment", "value": "{{dose}}"}
+            },
+            "fallback": "{{dose}}"
+          },
+          "nextCycleId": {
+            "condition": {
+              "if": "{{isLastDoseOfCycle}}",
+              "then": {"operation": "increment", "value": "{{cycle}}"},
+              "else": "{{cycle}}"
+            },
+            "fallback": "{{cycle}}"
           }
         },
         "computedList": {
@@ -2190,7 +2206,7 @@ final dynamic sampleFlows = {
       "footer": [
         {
           "format": "button",
-          "label": "Delivery",
+          "label": "Record Cycle {{nextCycleId}} Dose {{nextDoseId}}",
           "properties": {
             "type": "primary",
             "size": "large",
