@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_forms_engine/utils/utils.dart';
 import 'package:digit_formula_parser/digit_formula_parser.dart';
@@ -229,17 +231,35 @@ class WrapperBuilder {
 
     for (final part in parts) {
       if (current == null) return null;
+
       if (current is Map) {
         current = current[part];
       } else if (current is EntityModel) {
         current = EnhancedEntityFieldAccessor.getFieldValue(current, part);
-      } else {
-        // Fallback for singleton or nested POJO
+      } else if (current is String) {
+        // Try parsing JSON string
         try {
-          final mirror = current;
-          current = (mirror as dynamic)?.toJson()[part];
+          final decoded = jsonDecode(current);
+          if (decoded is Map) {
+            current = decoded[part];
+          } else {
+            return null;
+          }
         } catch (_) {
-          current = null;
+          return null; // not valid JSON
+        }
+      } else {
+        // Fallback for nested POJOs
+        try {
+          if ((current as dynamic).toJson is Function) {
+            current = (current as dynamic).toJson()[part];
+          } else if ((current as dynamic).toMap is Function) {
+            current = (current as dynamic).toMap()[part];
+          } else {
+            return null;
+          }
+        } catch (_) {
+          return null;
         }
       }
     }
@@ -249,8 +269,14 @@ class WrapperBuilder {
   dynamic _evaluateFieldMap(Map<String, dynamic> fieldConfig, dynamic root,
       Map<String, dynamic> wrapperData) {
     var list = _resolveValue(fieldConfig['from'], root, wrapperData);
-    if (list is! Iterable) list = [];
+    debugPrint('FieldMap[from]: ${fieldConfig['from']} -> $list');
+    debugPrint('FieldMap config: $fieldConfig');
 
+    if (list == null) {
+      list = [];
+    } else if (list is! Iterable) {
+      list = [list]; // wrap single object into a list
+    }
     // map
     if (fieldConfig.containsKey('map')) {
       final mapExpr = fieldConfig['map'];
@@ -263,15 +289,22 @@ class WrapperBuilder {
 
       // Handle multiple where conditions (array of conditions)
       if (whereConf is List) {
+        debugPrint('Evaluating multiple where conditions: $whereConf');
         list = list.where((item) {
-          return whereConf.every(
+          final result = whereConf.every(
               (condition) => _evaluateCondition(condition, item, wrapperData));
+          debugPrint('Item $item passed all conditions: $result');
+          return result;
         });
       }
       // Handle single where condition (legacy support)
       else if (whereConf is Map) {
-        list = list
-            .where((item) => _evaluateCondition(whereConf, item, wrapperData));
+        debugPrint('Evaluating single where condition: $whereConf');
+        list = list.where((item) {
+          final result = _evaluateCondition(whereConf, item, wrapperData);
+          debugPrint('Item $item passed condition: $result');
+          return result;
+        });
       }
     }
 
@@ -281,11 +314,18 @@ class WrapperBuilder {
       list = list.map((item) => _resolveValue(sel, item, wrapperData));
     }
 
+    debugPrint('After where: $list');
+
     list = list.toList();
 
     // takeLast
     if (fieldConfig['takeLast'] == true && list.isNotEmpty) {
       list = [list.last];
+    }
+
+    // takeFirst
+    if (fieldConfig['takeFirst'] == true && list.isNotEmpty) {
+      list = [list.first];
     }
 
     // default
@@ -302,37 +342,57 @@ class WrapperBuilder {
   dynamic _resolveValue(
       String path, dynamic root, Map<String, dynamic> wrapperData) {
     try {
-      String expr = path;
+      String expr = path.trim();
+
+      // Strip template braces
       if (expr.startsWith('{{') && expr.endsWith('}}')) {
         expr = expr.substring(2, expr.length - 2).trim();
       }
 
-      // Singleton access
+      // now shortcut
+      if (expr == 'now') return DateTime.now().millisecondsSinceEpoch;
+
+      // singleton access
       if (expr.startsWith('singleton.')) {
-        final singleton = FlowBuilderSingleton();
+        final singleton = singletonToMap();
         final subPath = expr.replaceFirst('singleton.', '');
         return _traverse(singleton, subPath);
       }
 
       final parts = expr.split('.');
-
       dynamic current;
 
       // FIRST check wrapperData
       if (wrapperData.containsKey(parts[0])) {
         current = wrapperData[parts[0]];
         parts.removeAt(0);
-      } else if (root is EntityModel) {
+        if (parts.isEmpty) return current;
+      }
+      // root Map
+      else if (root is Map) {
+        current = root[parts[0]];
+        parts.removeAt(0);
+        if (parts.isEmpty) return current; // ✅ short-circuit for simple fields
+      }
+      // root EntityModel
+      else if (root is EntityModel) {
         current = EnhancedEntityFieldAccessor.getFieldValue(root, parts[0]);
         parts.removeAt(0);
+        if (parts.isEmpty) return current;
+      }
+      // AdditionalField
+      else if (root is AdditionalField) {
+        if (parts[0] == 'key') return root.key;
+        if (parts[0] == 'value') return root.value;
+        return null;
       } else {
-        current = null;
+        return null;
       }
 
+      // traverse remaining parts
       for (var i = 0; i < parts.length; i++) {
         final part = parts[i];
         final isLast = i == parts.length - 1;
-
         if (current == null) return null;
 
         if (current is Map) {
@@ -345,24 +405,38 @@ class WrapperBuilder {
           if (idx != null && idx >= 0 && idx < current.length) {
             current = current[idx];
           } else {
-            // map each item and flatten
             final List<dynamic> next = [];
             for (final item in current) {
               dynamic val;
-              if (item is Map)
+              if (item is Map) {
                 val = item[part];
-              else if (item is EntityModel)
+              } else if (item is EntityModel)
                 val = EnhancedEntityFieldAccessor.getFieldValue(item, part);
+              else if (item is AdditionalField) if ((part == 'key')) {
+                val = item.key;
+              } else {
+                val = (part == 'value') ? item.value : null;
+              }
               if (val != null) {
-                if (val is Iterable && val is! String)
+                if (val is Iterable && val is! String) {
                   next.addAll(val.where((e) => e != null));
-                else
+                } else {
                   next.add(val);
+                }
               }
             }
             if (next.isEmpty) return null;
             current = (isLast && next.length == 1) ? next.first : next;
           }
+          continue;
+        }
+
+        if (current is AdditionalField) {
+          current = (part == 'key')
+              ? current.key
+              : (part == 'value')
+                  ? current.value
+                  : null;
           continue;
         }
 
@@ -376,7 +450,7 @@ class WrapperBuilder {
 
       return current;
     } catch (e) {
-      debugPrint('WrapperBuilder._resolveValue error: $e');
+      debugPrint('WrapperBuilder._resolveValue error: $e for path=$path');
       return null;
     }
   }
@@ -388,33 +462,57 @@ class WrapperBuilder {
   }
 
   /// Helper to evaluate a single condition for where clauses
-  bool _evaluateCondition(Map<dynamic, dynamic> condition, dynamic item,
-      Map<String, dynamic> wrapperData) {
-    final left = _resolveValue(condition['left'], item, wrapperData);
-    final right = condition['right'];
+  bool _evaluateCondition(
+      dynamic condition, dynamic item, Map<String, dynamic> wrapperData) {
+    if (condition is Map<String, dynamic>) {
+      debugPrint('Evaluating condition: $condition on item: $item');
+      // logical operators
+      if (condition.containsKey('and')) {
+        final List list = condition['and'];
+        return list.every((c) => _evaluateCondition(c, item, wrapperData));
+      }
+      if (condition.containsKey('or')) {
+        final List list = condition['or'];
+        return list.any((c) => _evaluateCondition(c, item, wrapperData));
+      }
 
-    switch (condition['operator']) {
-      case 'eq':
-      case 'equals':
-        return left == right;
-      case 'lt':
-        return left is num && right is num ? left < right : false;
-      case 'lte':
-        return left is num && right is num ? left <= right : false;
-      case 'gt':
-        return left is num && right is num ? left > right : false;
-      case 'gte':
-        return left is num && right is num ? left >= right : false;
-      case 'neq':
-      case 'notEquals':
-        return left != right;
-      case 'contains':
-        return left is String && right is String ? left.contains(right) : false;
-      case 'in':
-        return right is List ? right.contains(left) : false;
-      default:
-        return false;
+      final left = _resolveValue(condition['left'], item, wrapperData);
+      final right = _resolveValue(condition['right'], item, wrapperData);
+
+      debugPrint(
+          'Condition evaluation: left=$left (${condition['left']}) ${condition['operator']} right=$right (${condition['right']})');
+
+      // numeric comparison (for milliseconds)
+      switch (condition['operator']) {
+        case 'eq':
+        case 'equals':
+          return left == right;
+        case 'neq':
+        case 'notEquals':
+          return left != right;
+        case 'lt':
+          if (left is num && right is num) return left < right;
+          return false;
+        case 'lte':
+          if (left is num && right is num) return left <= right;
+          return false;
+        case 'gt':
+          if (left is num && right is num) return left > right;
+          return false;
+        case 'gte':
+          if (left is num && right is num) return left >= right;
+          return false;
+        case 'contains':
+          return left is String && right is String
+              ? left.contains(right)
+              : false;
+        case 'in':
+          return right is List ? right.contains(left) : false;
+        default:
+          return false;
+      }
     }
+    return false;
   }
 }
 
@@ -428,24 +526,46 @@ Map<String, dynamic> _applyComputed(
   for (final entry in computed.entries) {
     final key = entry.key;
     final conf = entry.value as Map<String, dynamic>;
+    debugPrint('Computed[$key] config=$conf');
 
     if (conf.containsKey('condition')) {
-      results[key] =
-          ConditionEvaluator.evaluate(wrapperData, conf['condition']) ??
-              conf['fallback'];
+      results[key] = ConditionEvaluator.evaluate(
+              {...wrapperData, ...results}, conf['condition']) ??
+          conf['fallback'];
     } else if (conf.containsKey('from') &&
         conf.containsKey('evaluateCondition')) {
       results[key] =
-          _evaluateWithCondition(wrapperData, conf) ?? conf['fallback'];
+          _evaluateWithCondition({...wrapperData, ...results}, conf) ??
+              conf['fallback'];
     } else if (conf.containsKey('from') && conf.containsKey('reduce')) {
-      results[key] = ComputedEvaluator.reduce(wrapperData, conf) ??
-          conf['reduce']['fallback'];
-    } else if (conf.containsKey('from')) {
       results[key] =
-          resolveValueRaw(conf['from'], wrapperData) ?? conf['fallback'];
+          ComputedEvaluator.reduce({...wrapperData, ...results}, conf) ??
+              conf['reduce']['fallback'];
+    } else if (conf.containsKey('from')) {
+      // ✅ Use _evaluateFieldMap if query operators are present
+      final hasQueryOps = conf.keys.any((k) => [
+            'where',
+            'map',
+            'select',
+            'takeFirst',
+            'takeLast',
+            'default'
+          ].contains(k));
+      if (hasQueryOps) {
+        results[key] = WrapperBuilder([], {})._evaluateFieldMap(
+          Map<String, dynamic>.from(conf),
+          wrapperData[config['rootEntity']], // root entity
+          wrapperData,
+        );
+      } else {
+        results[key] =
+            resolveValueRaw(conf['from'], wrapperData) ?? conf['fallback'];
+      }
     } else {
       results[key] = conf['fallback'];
     }
+
+    debugPrint('Computed[$key] => ${results[key]}');
   }
 
   return results;
@@ -707,7 +827,8 @@ dynamic _evaluateWithCondition(
 
     try {
       // TODO: Fix condition format in configuration files - replace 'and' with '&&' for proper formula parser syntax
-      final sanitizedCondition = condition.replaceAll(' and ', ' && ').replaceAll('and', '&&');
+      final sanitizedCondition =
+          condition.replaceAll(' and ', ' && ').replaceAll('and', '&&');
       final parser = FormulaParser(sanitizedCondition, flatContext);
       final result = parser.parse;
 
@@ -741,6 +862,8 @@ Map<String, dynamic> _applyComputedList(
   for (final entry in computedList.entries) {
     final key = entry.key;
     final conf = entry.value as Map<String, dynamic>;
+    debugPrint('Computed[$key] config=$conf -> ${results[key]}');
+
     results[key] =
         ComputedListEvaluator.evaluate({...wrapperData, ...results}, conf);
   }
@@ -752,9 +875,7 @@ class ConditionEvaluator {
   static bool? evaluate(
       Map<String, dynamic> context, Map<String, dynamic> conf) {
     final left = resolve(context, conf['left']);
-    final right = conf['rightIsPath'] == true
-        ? resolve(context, conf['right'])
-        : conf['right'];
+    final right = resolve(context, conf['right']);
 
     switch (conf['operator']) {
       case 'equals':
@@ -987,7 +1108,9 @@ class ComputedListEvaluator {
 
       try {
         // TODO: Fix condition format in configuration files - replace 'and' with '&&' for proper formula parser syntax
-        final sanitizedCondition = resolvedCondition.replaceAll(' and ', ' && ').replaceAll('and', '&&');
+        final sanitizedCondition = resolvedCondition
+            .replaceAll(' and ', ' && ')
+            .replaceAll('and', '&&');
         final parser = FormulaParser(sanitizedCondition, flatContext);
         final result = parser.parse;
 
