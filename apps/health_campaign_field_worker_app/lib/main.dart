@@ -1256,7 +1256,7 @@ final dynamic sampleFlows = {
                             {
                               "key": "selectedIndividualClientReferenceId",
                               "value":
-                                  "{{headIndividual.IndividualModel.clientReferenceId}}"
+                                  "{{context.individuals.clientReferenceId}}"
                             }
                           ]
                         }
@@ -2008,7 +2008,7 @@ final dynamic sampleFlows = {
             },
             "select": "{{value}}",
             "takeLast": true,
-            "default": 1
+            "default": 0
           },
         },
         "computed": {
@@ -2092,7 +2092,7 @@ final dynamic sampleFlows = {
             "where": {
               "left": "{{id}}",
               "operator": "equals",
-              "right": "{{dose}}"
+              "right": "{{nextDoseId}}"
             },
             "takeLast": true,
             "fallback": null
