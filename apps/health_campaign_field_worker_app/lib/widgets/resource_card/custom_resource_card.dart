@@ -265,32 +265,24 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
   }
 
   getProductVariants() {
+    final data = widget.stateData;
     final projectType = context.selectedProjectType;
     final cycles = projectType?.cycles;
+    final eligible =
+        data?.stateWrapper?.first?['eligibleProductVariants'] as List?;
 
-    if (cycles != null) {
-      ProjectCycle? currentCycle = cycles
-          .where((c) =>
-              DateTime.now().millisecondsSinceEpoch <= c.endDate &&
-              DateTime.now().millisecondsSinceEpoch >= c.startDate)
-          .firstOrNull;
+    final productVariants = (eligible != null && eligible.isNotEmpty)
+        ? (eligible.first['ProductVariants'] as List?)
+                ?.map((e) => DeliveryProductVariantMapper.fromMap(
+                    e as Map<String, dynamic>))
+                .toList() ??
+            []
+        : (data?.stateWrapper?.first?['ProductVariants'] as List?)
+                ?.map((e) => DeliveryProductVariantMapper.fromMap(
+                    e as Map<String, dynamic>))
+                .toList() ??
+            [];
 
-      final currentRunningCycle = (cycles.firstWhereOrNull(
-            (e) =>
-                (e.startDate) < DateTime.now().millisecondsSinceEpoch &&
-                (e.endDate) > DateTime.now().millisecondsSinceEpoch,
-          ))?.id ??
-          0;
-
-      // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
-      final currentDose = 1;
-
-      final items = context.selectedProjectType?.cycles
-          ?.firstWhere((c) => c.id == currentRunningCycle)
-          .deliveries
-          ?.firstWhere((d) => d.id == currentDose);
-//// TODO: NEED TO ADD DOSE CRITERIA CONDITION LATER
-      return items?.doseCriteria?.first.productVariants;
-    }
+    return productVariants;
   }
 }
