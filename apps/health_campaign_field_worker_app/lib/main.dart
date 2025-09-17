@@ -2001,7 +2001,7 @@ final dynamic sampleFlows = {
             },
             "select": "{{value}}",
             "takeLast": true,
-            "default": 0
+            "default": 1
           },
         },
         "computed": {
