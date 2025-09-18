@@ -6,8 +6,10 @@ import 'package:digit_forms_engine/widgets/back_header/back_navigation_help_head
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -184,7 +186,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                               defaultValues: widget.defaultValues,
                             ));
                           } else {
-                            if (schemaObject.summary) {
+                            if (schemaObject.summaryDetails != null &&
+                                schemaObject.summaryDetails!.show) {
                               context.router.push(FormsRenderRoute(
                                 customComponents: widget.customComponents,
                                 currentSchemaKey: widget.currentSchemaKey,
@@ -194,15 +197,64 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                 defaultValues: widget.defaultValues,
                               ));
                             } else {
-                              context.read<FormsBloc>().add(FormsSubmitEvent(
-                                  isEdit: widget.isEdit,
-                                  schemaKey: widget.currentSchemaKey));
+                              if (schemaObject.showAlertPopUp != null) {
+                                showCustomPopup(
+                                  context: context,
+                                  builder: (BuildContext ctx) => Popup(
+                                      title: localizations.translate(
+                                          schemaObject.showAlertPopUp!.title),
+                                      description: localizations.translate(
+                                          schemaObject.showAlertPopUp!
+                                                  .description ??
+                                              ""),
+                                      actions: [
+                                        DigitButton(
+                                            label: localizations.translate(
+                                                schemaObject.showAlertPopUp!
+                                                    .primaryActionLabel),
+                                            onPressed: () {
+                                              context.read<FormsBloc>().add(
+                                                  FormsSubmitEvent(
+                                                      isEdit: widget.isEdit,
+                                                      schemaKey: widget
+                                                          .currentSchemaKey));
+                                              // Pop all form pages (FormsRenderRoute)
+                                              Navigator.of(
+                                                ctx,
+                                                rootNavigator: true,
+                                              ).pop();
+                                              context.router.popUntil((route) {
+                                                return route.settings.name !=
+                                                    FormsRenderRoute.name;
+                                              });
+                                            },
+                                            type: DigitButtonType.primary,
+                                            size: DigitButtonSize.large),
+                                        DigitButton(
+                                            label: localizations.translate(
+                                                schemaObject.showAlertPopUp!
+                                                    .secondaryActionLabel),
+                                            onPressed: () {
+                                              Navigator.of(
+                                                ctx,
+                                                rootNavigator: true,
+                                              ).pop();
+                                            },
+                                            type: DigitButtonType.secondary,
+                                            size: DigitButtonSize.large)
+                                      ]),
+                                );
+                              } else {
+                                context.read<FormsBloc>().add(FormsSubmitEvent(
+                                    isEdit: widget.isEdit,
+                                    schemaKey: widget.currentSchemaKey));
 
-                              // Pop all form pages (FormsRenderRoute)
-                              context.router.popUntil((route) {
-                                return route.settings.name !=
-                                    FormsRenderRoute.name;
-                              });
+                                // Pop all form pages (FormsRenderRoute)
+                                context.router.popUntil((route) {
+                                  return route.settings.name !=
+                                      FormsRenderRoute.name;
+                                });
+                              }
                             }
                           }
                         },
@@ -219,7 +271,15 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                     children: [
                       if (schema.label != null) ...[
                         Text(
-                          localizations.translate(schema.label!),
+                          resolveTemplateVariables(
+                            localizations.translate(schema.label!),
+                            formValues: getFormValues(formGroup, schema),
+                            defaultValues: widget.defaultValues,
+                            allPageValues: _getAllPageValues(
+                                state.cachedSchemas[widget.currentSchemaKey]!,
+                                currentFormGroup: formGroup,
+                                currentSchema: schema),
+                          ),
                           style: Theme.of(context)
                               .digitTextTheme(context)
                               .headingXl
@@ -237,7 +297,15 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                     schema.description, localizations)!
                                 .isNotEmpty) ...[
                           Text(
-                            localizations.translate(schema.description!),
+                            resolveTemplateVariables(
+                              localizations.translate(schema.description!),
+                              formValues: getFormValues(formGroup, schema),
+                              defaultValues: widget.defaultValues,
+                              allPageValues: _getAllPageValues(
+                                  state.cachedSchemas[widget.currentSchemaKey]!,
+                                  currentFormGroup: formGroup,
+                                  currentSchema: schema),
+                            ),
                             style: Theme.of(context)
                                 .digitTextTheme(context)
                                 .bodyS
@@ -255,6 +323,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                         defaultValues: const {
                           // 'locality': context.boundary.code,
                         },
+                        pageName: widget.pageName,
+                        currentSchemaKey: widget.currentSchemaKey,
                       )
                     ],
                   ),
@@ -295,13 +365,57 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               mainAxisSize: MainAxisSize.max,
               label: localizations.translate('CORE_COMMON_SUBMIT'),
               onPressed: () {
-                context.read<FormsBloc>().add(FormsSubmitEvent(
-                    schemaKey: widget.currentSchemaKey, isEdit: widget.isEdit));
+                if (schemaObject.showAlertPopUp != null) {
+                  showCustomPopup(
+                    context: context,
+                    builder: (BuildContext ctx) => Popup(
+                        title: localizations
+                            .translate(schemaObject.showAlertPopUp!.title),
+                        description: localizations.translate(
+                            schemaObject.showAlertPopUp!.description ?? ""),
+                        actions: [
+                          DigitButton(
+                              label: localizations.translate(schemaObject
+                                  .showAlertPopUp!.primaryActionLabel),
+                              onPressed: () {
+                                context.read<FormsBloc>().add(FormsSubmitEvent(
+                                    isEdit: widget.isEdit,
+                                    schemaKey: widget.currentSchemaKey));
+                                // Pop all form pages (FormsRenderRoute)
+                                Navigator.of(
+                                  ctx,
+                                  rootNavigator: true,
+                                ).pop();
+                                context.router.popUntil((route) {
+                                  return route.settings.name !=
+                                      FormsRenderRoute.name;
+                                });
+                              },
+                              type: DigitButtonType.primary,
+                              size: DigitButtonSize.large),
+                          DigitButton(
+                              label: localizations.translate(schemaObject
+                                  .showAlertPopUp!.secondaryActionLabel),
+                              onPressed: () {
+                                Navigator.of(
+                                  ctx,
+                                  rootNavigator: true,
+                                ).pop();
+                              },
+                              type: DigitButtonType.secondary,
+                              size: DigitButtonSize.large)
+                        ]),
+                  );
+                } else {
+                  context.read<FormsBloc>().add(FormsSubmitEvent(
+                      isEdit: widget.isEdit,
+                      schemaKey: widget.currentSchemaKey));
 
-                // Pop all form pages (FormsRenderRoute)
-                context.router.popUntil((route) {
-                  return route.settings.name != FormsRenderRoute.name;
-                });
+                  // Pop all form pages (FormsRenderRoute)
+                  context.router.popUntil((route) {
+                    return route.settings.name != FormsRenderRoute.name;
+                  });
+                }
               },
               type: DigitButtonType.primary,
               size: DigitButtonSize.large,
@@ -309,6 +423,48 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           ],
         ),
         children: [
+          if (schemaObject.summaryDetails != null) ...[
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  resolveTemplateVariables(
+                    localizations
+                        .translate(schemaObject.summaryDetails!.heading),
+                    defaultValues: widget.defaultValues,
+                    allPageValues: _getAllPageValues(schemaObject),
+                  ),
+                  style: Theme.of(context)
+                      .digitTextTheme(context)
+                      .headingXl
+                      .copyWith(
+                          color: Theme.of(context).colorTheme.primary.primary2),
+                ),
+                if (schemaObject.summaryDetails?.description != null &&
+                    translateIfPresent(schemaObject.summaryDetails!.description,
+                            localizations) !=
+                        null &&
+                    translateIfPresent(schemaObject.summaryDetails!.description,
+                            localizations)!
+                        .isNotEmpty) ...[
+                  Text(
+                    resolveTemplateVariables(
+                      localizations
+                          .translate(schemaObject.summaryDetails!.description!),
+                      defaultValues: widget.defaultValues,
+                      allPageValues: _getAllPageValues(schemaObject),
+                    ),
+                    style: Theme.of(context)
+                        .digitTextTheme(context)
+                        .bodyS
+                        .copyWith(
+                            color: Theme.of(context).colorTheme.text.secondary),
+                  ),
+                ],
+              ],
+            )
+          ],
           for (final entry in schemaObject.pages.entries)
             DigitCard(
               margin: const EdgeInsets.all(spacer2),
@@ -388,5 +544,87 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         padding: const EdgeInsets.symmetric(vertical: spacer1),
       );
     }).toList();
+  }
+
+  Map<String, dynamic> _getAllPageValues(SchemaObject schemaObject,
+      {FormGroup? currentFormGroup, PropertySchema? currentSchema}) {
+    final Map<String, dynamic> allValues = {};
+
+    // First add all saved page values from the schema
+    for (final entry in schemaObject.pages.entries) {
+      final pageKey = entry.key;
+      final pageSchema = entry.value;
+
+      if (pageSchema.properties != null) {
+        for (final propEntry in pageSchema.properties!.entries) {
+          final propKey = propEntry.key;
+          final propValue = propEntry.value.value;
+
+          // Store with page prefix
+          allValues['$pageKey.$propKey'] = propValue;
+
+          // Also store without page prefix for direct access
+          allValues[propKey] = propValue;
+
+          // Handle object type properties that may contain nested data
+          if (propValue is Map<String, dynamic>) {
+            // If the value itself is a map, add its nested properties
+            for (final nestedEntry in propValue.entries) {
+              // Store nested values with full path
+              allValues['$pageKey.$propKey.${nestedEntry.key}'] =
+                  nestedEntry.value;
+              allValues['$propKey.${nestedEntry.key}'] = nestedEntry.value;
+
+              // Also check for deeply nested objects
+              if (nestedEntry.value is Map<String, dynamic>) {
+                final deepMap = nestedEntry.value as Map<String, dynamic>;
+                for (final deepEntry in deepMap.entries) {
+                  allValues[
+                          '$pageKey.$propKey.${nestedEntry.key}.${deepEntry.key}'] =
+                      deepEntry.value;
+                  allValues['$propKey.${nestedEntry.key}.${deepEntry.key}'] =
+                      deepEntry.value;
+                }
+              }
+            }
+          }
+
+          // Also check if this property has nested schema properties
+          if (propEntry.value.type == PropertySchemaType.object &&
+              propEntry.value.properties != null) {
+            // Handle nested object properties from schema definition
+            for (final nestedEntry in propEntry.value.properties!.entries) {
+              final nestedKey = nestedEntry.key;
+              final nestedValue = nestedEntry.value.value;
+              // Store nested values with full path
+              allValues['$pageKey.$propKey.$nestedKey'] = nestedValue;
+              allValues['$propKey.$nestedKey'] = nestedValue;
+            }
+          }
+        }
+      }
+    }
+
+    // Override with current form values if provided (these are live values from the current form)
+    if (currentFormGroup != null && currentSchema != null) {
+      final currentValues = getFormValues(currentFormGroup, currentSchema);
+      for (final entry in currentValues.entries) {
+        allValues[entry.key] = entry.value;
+        // Also add with page prefix for the current page
+        allValues['${widget.pageName}.${entry.key}'] = entry.value;
+
+        // If the value is a map, add nested entries
+        if (entry.value is Map<String, dynamic>) {
+          final nestedMap = entry.value as Map<String, dynamic>;
+          for (final nestedEntry in nestedMap.entries) {
+            allValues['${entry.key}.${nestedEntry.key}'] = nestedEntry.value;
+            allValues['${widget.pageName}.${entry.key}.${nestedEntry.key}'] =
+                nestedEntry.value;
+          }
+        }
+      }
+    }
+
+    return allValues;
   }
 }
