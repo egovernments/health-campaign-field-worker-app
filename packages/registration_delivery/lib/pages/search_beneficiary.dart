@@ -795,7 +795,9 @@ class _SearchBeneficiaryPageState
                                                   IdGen.instance.identifier,
                                               'UNIQUE_BENEFICIARY_ID':
                                                   currentUniqueId?.id,
-                                            }
+                                            },
+                                            "distibutionPoint": "ABCD DP",
+                                            "eToken": "879-DE6-623"
                                           },
                                         ));
                                         searchController.clear();
@@ -845,7 +847,9 @@ class _SearchBeneficiaryPageState
                                       'DEFAULT': IdGen.instance.identifier,
                                       'UNIQUE_BENEFICIARY_ID':
                                           currentUniqueId?.id,
-                                    }
+                                    },
+                                    "distibutionPoint": "ABCD DP",
+                                    "eToken": "879-DE6-623"
                                   },
                                 ));
                                 searchController.clear();
@@ -895,7 +899,9 @@ class _SearchBeneficiaryPageState
                                             'availableIDs': {
                                               'DEFAULT':
                                                   IdGen.instance.identifier,
-                                            }
+                                            },
+                                            "distibutionPoint": "ABCD DP",
+                                            "eToken": "879-DE6-623"
                                           },
                                         ));
                                         searchController.clear();
@@ -1139,7 +1145,9 @@ class _SearchBeneficiaryPageState
                                               'availableIDs': {
                                                 'DEFAULT':
                                                     IdGen.instance.identifier,
-                                              }
+                                              },
+                                              "distibutionPoint": "ABCD DP",
+                                              "eToken": "879-DE6-623"
                                             },
                                           ));
 
@@ -1351,7 +1359,9 @@ class _SearchBeneficiaryPageState
                     'nameOfIndividual': value.text,
                     'availableIDs': {
                       'DEFAULT': IdGen.instance.identifier,
-                    }
+                    },
+                    "distibutionPoint": "ABCD DP",
+                    "eToken": "879-DE6-623"
                   },
                 ));
                 searchController.clear();
