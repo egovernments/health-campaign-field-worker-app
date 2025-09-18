@@ -307,23 +307,23 @@ class DigitScannerUtils {
     await Future.delayed(const Duration(seconds: 5));
   }
 
-  Map<String, dynamic> getGs1CodeFormattedString(List<GS1Barcode> barCodes) {
-    final elements = barCodes.last;
-
-    return elements.getAIsData;
+  Map<String, dynamic> getGs1CodeFormattedStringAtIndex(
+      List<GS1Barcode> barCodes, int index) {
+    if (index >= 0 && index < barCodes.length) {
+      final elements = barCodes[index];
+      return elements.getAIsData;
+    }
+    return {};
   }
 
   String generateGS1Barcode({
-  required String batchNumber,
-  required DateTime expiryDate,
-  required String serialNumber,
-}) {
-  const groupSeparator = '\u001d'; // ASCII 29
-  final formattedDate = DateFormat('yyMMdd').format(expiryDate);
+    required String batchNumber,
+    required DateTime expiryDate,
+    required String serialNumber,
+  }) {
+    const groupSeparator = '\u001d'; // ASCII 29
+    final formattedDate = DateFormat('yyMMdd').format(expiryDate);
 
-  return '10$batchNumber${groupSeparator}17${formattedDate}21$serialNumber$groupSeparator';
-}
-
-  
-
+    return '10$batchNumber${groupSeparator}17${formattedDate}21$serialNumber$groupSeparator';
+  }
 }
