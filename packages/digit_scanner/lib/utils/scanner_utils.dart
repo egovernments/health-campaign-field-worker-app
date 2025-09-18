@@ -307,6 +307,12 @@ class DigitScannerUtils {
     await Future.delayed(const Duration(seconds: 5));
   }
 
+  Map<String, dynamic> getGs1CodeFormattedString(List<GS1Barcode> barCodes) {
+    final elements = barCodes.last;
+
+    return elements.getAIsData;
+  }
+
   Map<String, dynamic> getGs1CodeFormattedStringAtIndex(
       List<GS1Barcode> barCodes, int index) {
     if (index >= 0 && index < barCodes.length) {
