@@ -831,8 +831,8 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                   overflow: TextOverflow.ellipsis,
                                   widget.isGS1code
                                       ? DigitScannerUtils()
-                                          .getGs1CodeFormattedString(
-                                              state.barCodes)
+                                          .getGs1CodeFormattedStringAtIndex(
+                                              state.barCodes, index)
                                           .entries
                                           .first
                                           .value
