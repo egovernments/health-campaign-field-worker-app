@@ -453,17 +453,16 @@ class WidgetRegistry {
     // TAG
     WidgetRegistry.register('tag', (json, context, onAction) {
       final crudCtx = CrudItemContext.of(context);
-      final label = json['label'] ?? '';
-      final finalLabel = crudCtx?.stateData != null
-          ? interpolateWithCrudStates(
-              template: label,
-              stateData: crudCtx!.stateData!,
-              listIndex: crudCtx.listIndex,
-              item: crudCtx.item,
-            )
-          : label;
+      final value = json['label'] ?? '';
+      final valueText = resolveTemplate(
+              value,
+              crudCtx?.item != null
+                  ? crudCtx!.item
+                  : crudCtx?.stateData?.rawState) ??
+          '';
+
       return Tag(
-        label: finalLabel,
+        label: valueText,
         type: TagType.error,
       );
     });

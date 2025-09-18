@@ -316,7 +316,7 @@ final dynamic sampleFlows = {
                 "children": [
                   {
                     "format": "text",
-                    "value": "{{ context.headIndividual.name.givenName }}"
+                    "value": "{{ headIndividual.0.name.givenName }}"
                   },
                   {
                     "format": "button",
@@ -342,7 +342,7 @@ final dynamic sampleFlows = {
               },
               {
                 "format": "text",
-                "value": "{{ context.headOfHousehold.isHeadOfHousehold }}"
+                "value": "{{ headOfHousehold.0.isHeadOfHousehold }}"
               },
               {
                 "format": "table",
@@ -1213,7 +1213,12 @@ final dynamic sampleFlows = {
                     "value":
                         "{{individual.0.gender }} | {{fn:formatDate(individual.0.dateOfBirth, age)}}"
                   },
-                  {"format": "tag", "type": "", "label": "Not visited"},
+                  {
+                    "format": "tag",
+                    "type": "",
+                    "label":
+                        "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}}"
+                  },
                   {
                     "format": "row",
                     "children": [
@@ -2001,7 +2006,7 @@ final dynamic sampleFlows = {
             },
             "select": "{{value}}",
             "takeLast": true,
-            "default": 1
+            "default": 0
           },
         },
         "computed": {
@@ -2030,7 +2035,7 @@ final dynamic sampleFlows = {
               "operator": "lt",
               "right": "{{deliveryLength}}"
             },
-            "fallback": true
+            "fallback": false
           },
           "nextDoseId": {
             "condition": {
