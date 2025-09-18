@@ -99,18 +99,14 @@ class WrapperBuilder {
           wrapperData[relation['name']] = relatedEntities;
 
           // Handle nested relations within each related entity
-          if (relation['relations'] != null && relatedEntities is List) {
+          if (relation['relations'] != null) {
             for (int i = 0; i < relatedEntities.length; i++) {
               final entity = relatedEntities[i];
               final nestedData = <String, dynamic>{};
 
               for (final nestedRelation in relation['relations']) {
-                final nestedEntities = _findRelatedEntities(
-                  entity,
-                  nestedRelation,
-                  {...wrapperData, ...nestedData},
-                  entityMap
-                );
+                final nestedEntities = _findRelatedEntities(entity,
+                    nestedRelation, {...wrapperData, ...nestedData}, entityMap);
                 nestedData[nestedRelation['name']] = nestedEntities;
               }
 
@@ -501,24 +497,25 @@ class WrapperBuilder {
   bool _evaluateCondition(
       dynamic condition, dynamic item, Map<String, dynamic> wrapperData) {
     if (condition is Map<String, dynamic>) {
-      debugPrint('Evaluating condition: $condition on item: $item');
-      // logical operators
-      if (condition.containsKey('and')) {
-        final List list = condition['and'];
-        return list.every((c) => _evaluateCondition(c, item, wrapperData));
-      }
-      if (condition.containsKey('or')) {
-        final List list = condition['or'];
-        return list.any((c) => _evaluateCondition(c, item, wrapperData));
-      }
+      final rawLeft = condition['left'];
+      final rawRight = condition['right'];
 
-      final left = _resolveValue(condition['left'], item, wrapperData);
-      final right = _resolveValue(condition['right'], item, wrapperData);
+      // left always goes through resolver (because usually template)
+      final left = _resolveValue(rawLeft, item, wrapperData);
+
+      // right: only resolve if template
+      dynamic right;
+      if (rawRight is String &&
+          rawRight.startsWith('{{') &&
+          rawRight.endsWith('}}')) {
+        right = _resolveValue(rawRight, item, wrapperData);
+      } else {
+        right = rawRight; // literal value
+      }
 
       debugPrint(
-          'Condition evaluation: left=$left (${condition['left']}) ${condition['operator']} right=$right (${condition['right']})');
+          'Condition evaluation: left=$left ($rawLeft) ${condition['operator']} right=$right ($rawRight)');
 
-      // numeric comparison (for milliseconds)
       switch (condition['operator']) {
         case 'eq':
         case 'equals':

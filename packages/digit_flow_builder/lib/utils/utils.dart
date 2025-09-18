@@ -186,14 +186,15 @@ String resolveTemplate(String template, dynamic contextData) {
   String result = template;
 
   for (final match in matches) {
-    final fullPlaceholder = match.group(0)!; // {{nextCycleId}}
-    final placeholder = match.group(1)!.trim(); // nextCycleId
+    final fullPlaceholder = match.group(0)!;
+    final placeholder = match.group(1)!.trim();
 
     // Use existing resolveValueRaw to resolve the individual placeholder
     final resolvedValue = resolveValueRaw('{{$placeholder}}', contextData);
 
     // Replace the placeholder in the result string
-    result = result.replaceAll(fullPlaceholder, resolvedValue?.toString() ?? '');
+    result =
+        result.replaceAll(fullPlaceholder, resolvedValue?.toString() ?? '');
   }
 
   return result;
