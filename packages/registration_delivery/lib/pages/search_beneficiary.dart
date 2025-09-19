@@ -1046,11 +1046,13 @@ class _SearchBeneficiaryPageState
                       final items = blocState.householdMembers;
                       return BlocListener<DigitScannerBloc, DigitScannerState>(
                         listener: (context, scannerState) {
-                          if (scannerState.qrCodes.isNotEmpty) {
+                          if (scannerState.qrCodes.isNotEmpty &&
+                              selectedTag != scannerState.qrCodes.lastOrNull) {
                             setState(() {
                               selectedTag =
                                   scannerState.qrCodes.lastOrNull ?? "";
                             });
+                            triggerGlobalSearchEvent();
                           }
                         },
                         child: BlocBuilder<LocationBloc, LocationState>(
