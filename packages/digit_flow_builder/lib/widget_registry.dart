@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:digit_flow_builder/blocs/app_localization.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
+import 'package:digit_flow_builder/utils/conditional_evaluator.dart';
 import 'package:digit_flow_builder/utils/function_registry.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -320,13 +323,20 @@ class WidgetRegistry {
       final stateData = crudCtx?.stateData;
 
       final data = Map<String, dynamic>.from(json['data'] ?? {});
-      final columns = (data['columns'] as List<dynamic>?)
-              ?.map((col) => DigitTableColumn(
-                    header: col['header'],
-                    cellValue: col['cellValue'],
-                  ))
-              .toList() ??
-          [];
+
+      // Store raw column configuration for later evaluation
+      final rawColumns = (data['columns'] as List<dynamic>?) ?? [];
+
+      // Create column headers
+      // Create columns
+      final columns = rawColumns.map((col) {
+        final cellValue = col['cellValue'];
+
+        return DigitTableColumn(
+          header: col['header']?.toString() ?? '',
+          cellValue: cellValue is String ? cellValue : jsonEncode(cellValue),
+        );
+      }).toList();
 
       // Step 1: Resolve data source
       List<dynamic> sourceList = [];
@@ -370,12 +380,34 @@ class WidgetRegistry {
         final rowItem = entry.value;
 
         return DigitTableRow(
-          tableRow: columns.map((col) {
-            final finalText = resolveValue(col.cellValue, rowItem);
+          tableRow: rawColumns.asMap().entries.map((entry) {
+            final colIndex = entry.key;
+            final colConfig = entry.value;
+
+            // Create evaluation context for this row with full context
+            final evalContext = <String, dynamic>{
+              'currentItem': rowItem,
+              ...((crudCtx?.stateData?.rawState.first
+                      as Map<String, dynamic>?) ??
+                  {}),
+            };
+
+            // Get the raw cellValue configuration
+            final rawCellValue = colConfig['cellValue'];
+
+            // Evaluate cell value (handles both conditional and regular values)
+            final cellValue =
+                ConditionalEvaluator.evaluate(rawCellValue, evalContext);
+
+            // Resolve templates in the evaluated value
+            final finalText =
+                resolveTemplate(cellValue, rowItem).toString() ?? '';
 
             return DigitTableData(
-              finalText?.toString() ?? '',
-              cellKey: col.cellValue,
+              finalText,
+              cellKey: rawCellValue is Map
+                  ? 'conditional_$colIndex'
+                  : rawCellValue?.toString() ?? '',
             );
           }).toList(),
         );
