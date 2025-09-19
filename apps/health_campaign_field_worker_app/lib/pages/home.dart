@@ -489,7 +489,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             FlowBuilderSingleton().setPersistenceConfiguration(
                 persistenceConfiguration:
                     PersistenceConfiguration.offlineFirst);
-            WidgetRegistry().initializeDefaultWidgetRegistry();
+            WidgetRegistry.initialize();
             try {
               context.router.push(
                 FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
