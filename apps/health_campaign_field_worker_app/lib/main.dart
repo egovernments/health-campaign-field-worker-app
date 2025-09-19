@@ -2191,8 +2191,30 @@ final dynamic sampleFlows = {
               "data": {
                 "source": "contextData.targetCycle.deliveries",
                 "columns": [
-                  {"header": "Dose", "cellValue": "Dose {{item.doseNumber}}"},
-                  {"header": "Status", "cellValue": ""},
+                  {"header": "Dose", "cellValue": "Dose {{item.id}}"},
+                  {
+                    "header": "Status",
+                    "cellValue": {
+                      "@condition": [
+                        {
+                          "when":
+                              "{{currentItem.id}} < {{contextData.nextDoseId}}",
+                          "value": "Administered"
+                        },
+                        {
+                          "when":
+                              "{{currentItem.id}} == {{contextData.nextDoseId}}",
+                          "value": "To be administered"
+                        },
+                        {
+                          "when":
+                              "{{currentItem.id}} > {{contextData.nextDoseId}}",
+                          "value": "Incomplete"
+                        }
+                      ],
+                      "@default": "Unknown"
+                    }
+                  },
                   {"header": "Completed On", "cellValue": ""}
                 ],
                 "rows": "{{contextData.0.targetCycle.0.deliveries}}"
