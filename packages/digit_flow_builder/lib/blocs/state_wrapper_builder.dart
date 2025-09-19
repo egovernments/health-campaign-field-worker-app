@@ -1020,11 +1020,19 @@ class ComputedListEvaluator {
 
     if (conf.containsKey('where')) {
       final whereConf = conf['where'];
-      whereConf['right'] = ConditionEvaluator.resolve(ctx, whereConf['right']);
+
+      // ✅ Make a deep copy of whereConf
+      final Map<String, dynamic> whereCopy =
+          Map<String, dynamic>.from(whereConf);
+
+      // Modify only the copy
+      whereCopy['right'] = ConditionEvaluator.resolve(ctx, whereCopy['right']);
+
       result = result.where((item) {
         return ConditionEvaluator.evaluate(
-                item is Map<String, dynamic> ? item : {'item': item},
-                whereConf) ??
+              item is Map<String, dynamic> ? item : {'item': item},
+              whereCopy, // 👈 use the modified copy
+            ) ??
             false;
       });
     }
