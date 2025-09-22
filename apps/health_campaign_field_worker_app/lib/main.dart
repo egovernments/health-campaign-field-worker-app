@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
+import 'package:digit_flow_builder/error_handler/auto_error_logger.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
@@ -52,6 +53,10 @@ void main() async {
   await Constants().initialize(info.version);
   _isar = await Constants().isar;
   await initializeService(_dio, _isar);
+
+  // Initialize auto error logging for digit_flow_builder
+  AutoErrorLogger.initialize();
+
   FlowRegistry.setConfig(sampleFlows["flows"] as List<Map<String, dynamic>>);
 
   runApp(MainApplication(
@@ -113,6 +118,23 @@ final dynamic sampleFlows = {
                 "data": [
                   {"key": "nameOfIndividual", "value": "searchBar.value"}
                 ]
+              }
+            }
+          ]
+        },
+        {
+          "format": "unknownWidget",
+          "label": "Test Unknown Widget Error",
+          "properties": {
+            "type": "primary",
+            "invalidProperty": "this should cause error"
+          },
+          "onAction": [
+            {
+              "actionType": "UNKNOWN_ACTION_TYPE",
+              "properties": {
+                "type": "INVALID_TYPE",
+                "name": "nonExistentScreen"
               }
             }
           ]
@@ -298,6 +320,11 @@ final dynamic sampleFlows = {
           "label": "No households found",
           "description":
               "Use the search above to find households or register a new one"
+        },
+        {
+          "format": "text",
+          "value": "{{ context.nonExistent.invalidPath.missing",
+          "label": "Test Interpolation Error"
         },
         {
           "format": "listView",
