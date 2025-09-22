@@ -113,8 +113,8 @@ class ActionHandler {
         final List<dynamic>? extraData = action.properties['data'];
         if (extraData != null) {
           for (final entry in extraData) {
-            final key = entry['key'] as String;
-            final valuePath = entry['value'] as String?;
+            final key = entry['key'];
+            final valuePath = entry['value'];
             if (valuePath != null) {
               final resolvedValue = resolveValue(valuePath, contextData);
               if (resolvedValue != null) {
@@ -158,8 +158,8 @@ class ActionHandler {
             ...extraContext,
 
             /// TODO: NEED TO REMOVE THIS
-            "beneficiaryType": BeneficiaryType.individual
-                .toValue(), //// FIXME: HARDCODING TO INDIVIDUAL FOR TESTING SMC FLOW
+            "beneficiaryType": BeneficiaryType.individual.toValue(),
+            //// FIXME: HARDCODING TO INDIVIDUAL FOR TESTING SMC FLOW
             // FlowBuilderSingleton().beneficiaryType?.toValue(),
           },
           fallbackFormDataString: fallBackModel,
@@ -201,7 +201,8 @@ class ActionHandler {
       case 'NAVIGATION':
         // First resolve navigation data if provided
         final navData = action.properties['data'] as List<dynamic>?;
-        Map<String, dynamic> navigationProperties = Map<String, dynamic>.from(action.properties);
+        Map<String, dynamic> navigationProperties =
+            Map<String, dynamic>.from(action.properties);
 
         if (navData != null) {
           final resolvedData = navData.map((entry) {

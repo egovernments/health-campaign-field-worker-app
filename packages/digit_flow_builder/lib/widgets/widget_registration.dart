@@ -3,9 +3,11 @@ import 'implementations/button_widget.dart';
 import 'implementations/card_widget.dart';
 import 'implementations/column_widget.dart';
 import 'implementations/filter_widget.dart';
+import 'implementations/icon_widget.dart';
 import 'implementations/info_card_widget.dart';
 import 'implementations/label_pair_list_widget.dart';
 import 'implementations/list_view_widget.dart';
+import 'implementations/menu_card_widget.dart';
 import 'implementations/panel_card_widget.dart';
 import 'implementations/row_widget.dart';
 import 'implementations/search_bar_widget.dart';
@@ -25,7 +27,9 @@ class WidgetRegistration {
     // Register all widget implementations
     FlowWidgetFactory.register(ButtonWidget());
     FlowWidgetFactory.register(TextWidget());
+    FlowWidgetFactory.register(IconWidget());
     FlowWidgetFactory.register(CardWidget());
+    FlowWidgetFactory.register(MenuCardWidget());
     FlowWidgetFactory.register(TableWidget());
     FlowWidgetFactory.register(SearchBarWidget());
     FlowWidgetFactory.register(ColumnWidget());
