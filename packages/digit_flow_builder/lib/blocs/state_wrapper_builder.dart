@@ -381,6 +381,17 @@ class WrapperBuilder {
         expr = expr.substring(2, expr.length - 2).trim();
       }
 
+// Handle .length shortcut
+      if (expr.endsWith('.length')) {
+        final listPath = expr.substring(0, expr.length - '.length'.length);
+
+        var list = _resolveValue(listPath, root, wrapperData); // no {{ }}
+        if (list is Iterable) {
+          return list.length;
+        }
+        return 0; // fallback if null or not iterable
+      }
+
       // now shortcut
       if (expr == 'now') return DateTime.now().millisecondsSinceEpoch;
 
@@ -516,6 +527,17 @@ class WrapperBuilder {
       debugPrint(
           'Condition evaluation: left=$left ($rawLeft) ${condition['operator']} right=$right ($rawRight)');
 
+      // helper to coerce values into int if possible
+      int? toInt(dynamic v) {
+        if (v == null) return null;
+        if (v is int) return v;
+        if (v is String) return int.tryParse(v);
+        return null;
+      }
+
+      final lNum = toInt(left);
+      final rNum = toInt(right);
+
       switch (condition['operator']) {
         case 'eq':
         case 'equals':
@@ -524,17 +546,21 @@ class WrapperBuilder {
         case 'notEquals':
           return left != right;
         case 'lt':
-          if (left is num && right is num) return left < right;
-          return false;
+          return (lNum != null && rNum != null)
+              ? lNum < rNum
+              : left.toString().compareTo(right.toString()) < 0;
         case 'lte':
-          if (left is num && right is num) return left <= right;
-          return false;
+          return (lNum != null && rNum != null)
+              ? lNum <= rNum
+              : left.toString().compareTo(right.toString()) <= 0;
         case 'gt':
-          if (left is num && right is num) return left > right;
-          return false;
+          return (lNum != null && rNum != null)
+              ? lNum > rNum
+              : left.toString().compareTo(right.toString()) > 0;
         case 'gte':
-          if (left is num && right is num) return left >= right;
-          return false;
+          return (lNum != null && rNum != null)
+              ? lNum >= rNum
+              : left.toString().compareTo(right.toString()) >= 0;
         case 'contains':
           return left is String && right is String
               ? left.contains(right)

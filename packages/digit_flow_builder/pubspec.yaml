@@ -13,7 +13,7 @@ dependencies:
   digit_crud_bloc: ^0.0.2-dev
   digit_data_converter: ^0.0.2-dev
   digit_forms_engine: ^0.0.2-dev
-  digit_ui_components: ^0.2.2+7
+  digit_ui_components: ^0.2.2+9
   flutter_bloc: ^8.1.5
   auto_route: ^8.1.3
   digit_data_model: ^1.2.0-dev.1-console

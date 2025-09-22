@@ -1,18 +1,15 @@
-import 'package:digit_ui_components/enum/app_enums.dart';
-import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
-import '../../layout_renderer.dart';
 import '../../utils/conditional_evaluator.dart';
-import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 
-class CardWidget implements FlowWidget {
+class MenuCardWidget implements FlowWidget {
   @override
-  String get format => 'card';
+  String get format => 'menu_card';
 
   @override
   Widget build(
@@ -39,10 +36,8 @@ class CardWidget implements FlowWidget {
       return const SizedBox.shrink();
     }
 
-    return DigitCard(
-      width: MediaQuery.of(context).size.width,
-      cardType: _parseCardType(json['type']?.toString() ?? 'primary'),
-      onPressed: () {
+    return MenuCard(
+      onTap: () {
         if (json['onAction'] != null) {
           final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
 
@@ -80,36 +75,9 @@ class CardWidget implements FlowWidget {
           }
         }
       },
-      children: (json['children'] as List).map<Widget>((childJson) {
-        final processed = stateData != null
-            ? preprocessConfigWithState(
-                Map<String, dynamic>.from(childJson),
-                stateData,
-                listIndex: crudCtx?.listIndex,
-                item: crudCtx?.item,
-              )
-            : Map<String, dynamic>.from(childJson);
-
-        return CrudItemContext(
-          stateData: stateData,
-          listIndex: crudCtx?.listIndex,
-          item: crudCtx?.item,
-          screenKey: crudCtx?.screenKey,
-          child: LayoutMapper.map(processed, stateData, context, onAction,
-              item: crudCtx?.item, listIndex: crudCtx?.listIndex),
-        );
-      }).toList(),
+      heading: json['heading'],
+      description: json['description'],
+      icon: json['icon'],
     );
-  }
-
-  CardType _parseCardType(String? raw) {
-    switch ((raw ?? '').toLowerCase()) {
-      case 'primary':
-        return CardType.primary;
-      case 'secondary':
-        return CardType.secondary;
-      default:
-        return CardType.primary;
-    }
   }
 }
