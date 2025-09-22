@@ -145,8 +145,8 @@ class Common {
 
   String get profileUpdateSuccess => 'PROFILE_UPDATE_SUCCESS';
   String get coreCommonError => 'CORE_COMMON_UNKNOWN_ERROR_OCCURRED';
-  String get coreCommonErrorDescription => 'CORE_COMMON_UNKNOWN_ERROR_DESCRIPTION';
-
+  String get coreCommonErrorDescription =>
+      'CORE_COMMON_UNKNOWN_ERROR_DESCRIPTION';
 
   String get qrInventory => 'QR_INVENTORY';
 
@@ -162,6 +162,10 @@ class HomeShowcase {
 
   String get distributorBeneficiaries {
     return 'DISTRIBUTOR_HOME_SHOWCASE_BENEFICIARIES';
+  }
+
+  String get distributionPoint {
+    return 'DISTRIBUTOR_HOME_SHOWCASE_DISTRIBUTION';
   }
 
   String get distributorFileComplaint {
@@ -554,6 +558,8 @@ class Home {
   const Home();
 
   String get beneficiaryLabel => 'HOME_BENEFICIARY_LABEL';
+
+  String get distributionLabel => 'HOME_DISTRIBUTION_LABEL';
 
   String get manageStockLabel => 'HOME_MANAGE_STOCK_LABEL';
 
