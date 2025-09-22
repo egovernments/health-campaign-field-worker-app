@@ -994,8 +994,8 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "9ead63aa7e01f7603a453368de1ee2b4dc009ed6"
-      url: "https://github.com/champeauxr/flutter_nearby_connections"
+      resolved-ref: c5dfa1108d04089b8e865d7ac22d74d5472f12ea
+      url: "https://github.com/naveenr-egov/flutter_nearby_connections"
     source: git
     version: "1.1.2"
   flutter_plugin_android_lifecycle:
@@ -2113,7 +2113,7 @@ packages:
       path: "../../packages/sync_service"
       relative: true
     source: path
-    version: "1.0.2"
+    version: "1.0.5"
   synchronized:
     dependency: transitive
     description:

@@ -825,8 +825,15 @@ class _HomePageState extends LocalizedState<HomePage> {
               context
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
-                    module: module ??
-                        "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                    module: [
+                      if (module != null && module.isNotEmpty) module,
+                      if (localizationModulesList != null)
+                        localizationModulesList.interfaces
+                            .where((element) =>
+                                element.type == Modules.localizationModule)
+                            .map((e) => e.name.toString())
+                            .join(',')
+                    ].where((s) => s.isNotEmpty).join(','),
                     tenantId: envConfig.variables.tenantId,
                     locale: selectedLocale!,
                     path: Constants.localizationApiPath,

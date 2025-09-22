@@ -1,3 +1,15 @@
+## 1.0.5
+
+* Updated background service stop with invoke method
+
+## 1.0.4
+
+* Updated digit_data_model to latest version
+
+## 1.0.3
+
+* Updated sync error to return runtime type and error message
+
 ## 1.0.2
 
 * Updated data_model version to latest
@@ -18,7 +30,7 @@
 ## 1.0.1
 
 * Bug Fix:
-    * Added missing await in syncUp
+  * Added missing await in syncUp
 
 ## 1.0.0
 
