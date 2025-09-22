@@ -530,7 +530,7 @@ class FormEntityMapper {
     fieldsMap.forEach((customKey, path) {
       final value = getValueFromMapping(path, formValues, path, context);
       if (value != null && value.toString().trim().isNotEmpty) {
-        fieldsList.add({'key': customKey, 'value': value.toString()});
+        fieldsList.add({'key': customKey, 'value': value});
       }
     });
 
