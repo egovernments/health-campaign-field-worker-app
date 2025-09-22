@@ -168,9 +168,9 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
 }
 
 /// Existing method kept as-is for UI string binding
-String? resolveValue(dynamic value, dynamic contextData) {
+dynamic resolveValue(dynamic value, dynamic contextData) {
   final resolved = resolveValueRaw(value, contextData);
-  return resolved?.toString();
+  return resolved;
 }
 
 /// New method: resolves strings with multiple placeholders
@@ -377,6 +377,9 @@ dynamic _resolvePath(dynamic root, String path) {
     return current;
   }
   if (current is EntityModel) {
+    return current;
+  }
+  if (current is num) {
     return current;
   }
   return current?.toString();
