@@ -171,7 +171,7 @@ final jsonConfig = {
           "individualId": "members.individualId",
           "individualClientReferenceId":
               "__ref:IndividualModel.clientReferenceId",
-          "isHeadOfHousehold": "beneficiaryDetails.isHeadOfFamily",
+          "isHeadOfHousehold": "__value:true",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
 
