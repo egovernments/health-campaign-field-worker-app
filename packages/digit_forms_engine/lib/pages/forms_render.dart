@@ -267,6 +267,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                 ),
                 children: [
                   DigitCard(
+                    width: MediaQuery.of(context).size.width,
                     margin: const EdgeInsets.symmetric(horizontal: spacer2),
                     children: [
                       if (schema.label != null) ...[
@@ -424,49 +425,57 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         ),
         children: [
           if (schemaObject.summaryDetails != null) ...[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  resolveTemplateVariables(
-                    localizations
-                        .translate(schemaObject.summaryDetails!.heading),
-                    defaultValues: widget.defaultValues,
-                    allPageValues: _getAllPageValues(schemaObject),
-                  ),
-                  style: Theme.of(context)
-                      .digitTextTheme(context)
-                      .headingXl
-                      .copyWith(
-                          color: Theme.of(context).colorTheme.primary.primary2),
-                ),
-                if (schemaObject.summaryDetails?.description != null &&
-                    translateIfPresent(schemaObject.summaryDetails!.description,
-                            localizations) !=
-                        null &&
-                    translateIfPresent(schemaObject.summaryDetails!.description,
-                            localizations)!
-                        .isNotEmpty) ...[
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
                     resolveTemplateVariables(
                       localizations
-                          .translate(schemaObject.summaryDetails!.description!),
+                          .translate(schemaObject.summaryDetails!.heading),
                       defaultValues: widget.defaultValues,
                       allPageValues: _getAllPageValues(schemaObject),
                     ),
                     style: Theme.of(context)
                         .digitTextTheme(context)
-                        .bodyS
+                        .headingXl
                         .copyWith(
-                            color: Theme.of(context).colorTheme.text.secondary),
+                            color:
+                                Theme.of(context).colorTheme.primary.primary2),
                   ),
+                  if (schemaObject.summaryDetails?.description != null &&
+                      translateIfPresent(
+                              schemaObject.summaryDetails!.description,
+                              localizations) !=
+                          null &&
+                      translateIfPresent(
+                              schemaObject.summaryDetails!.description,
+                              localizations)!
+                          .isNotEmpty) ...[
+                    Text(
+                      resolveTemplateVariables(
+                        localizations.translate(
+                            schemaObject.summaryDetails!.description!),
+                        defaultValues: widget.defaultValues,
+                        allPageValues: _getAllPageValues(schemaObject),
+                      ),
+                      style: Theme.of(context)
+                          .digitTextTheme(context)
+                          .bodyS
+                          .copyWith(
+                              color:
+                                  Theme.of(context).colorTheme.text.secondary),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             )
           ],
           for (final entry in schemaObject.pages.entries)
             DigitCard(
+              width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.all(spacer2),
               children: [
                 LabelValueSummary(
@@ -500,8 +509,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     final dateFormatter = DateFormat('dd MMM yyyy');
 
     return properties.entries
-        .where((entry) =>
-            entry.value.includeInSummary != false && entry.value.hidden != true)
+        .where((entry) => entry.value.includeInSummary != false)
         .map((entry) {
       final label = localizations.translate(entry.value.label ?? entry.key);
       final rawValue = entry.value.value;
