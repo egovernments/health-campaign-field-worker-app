@@ -52,7 +52,7 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
 
   @override
   void dispose() {
-    FlowCrudStateRegistry().clear(widget.pageName);
+    FlowCrudStateRegistry().dispose(widget.pageName);
     super.dispose();
   }
 
