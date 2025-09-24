@@ -83,6 +83,8 @@ export 'models/entities/project_staff.dart';
 export 'models/entities/project_type.dart';
 export 'models/entities/referral.dart';
 export 'models/entities/side_effect.dart';
+export 'models/entities/stock.dart';
+export 'models/entities/stock_reconciliation.dart';
 export 'models/entities/target.dart';
 export 'models/entities/task.dart';
 export 'models/entities/task_resource.dart';

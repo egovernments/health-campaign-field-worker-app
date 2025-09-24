@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/utils/app_exception.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -8,8 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:inventory_management/utils/utils.dart';
 
 import '../../utils/typedefs.dart';
-import '../models/entities/stock.dart';
-import '../models/entities/stock_reconciliation.dart';
 import '../models/entities/transaction_reason.dart';
 import '../models/entities/transaction_type.dart';
 

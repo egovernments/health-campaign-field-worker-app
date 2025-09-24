@@ -28,6 +28,9 @@ class DigitCrudService extends CrudService {
           ProjectBeneficiarySearchModel>(context);
     } else if (entity is TaskModel) {
       return context.repository<TaskModel, TaskSearchModel>(context);
+    } else if (entity is ProjectFacilityModel) {
+      return context.repository<ProjectFacilityModel,
+          ProjectFacilitySearchModel>(context);
     } else {
       return context.repository<HouseholdModel, HouseholdSearchModel>(context);
     }
@@ -51,6 +54,8 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
         return HouseholdMemberModelMapper.fromMap(normalizedMap);
       case 'task':
         return TaskModelMapper.fromMap(normalizedMap);
+      case 'projectFacility':
+        return ProjectFacilityModelMapper.fromMap(normalizedMap);
 
       default:
         return EntityModelMapper.fromMap(normalizedMap);
@@ -102,16 +107,20 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
 
     // Flattened client audit -> nested clientAuditDetails
     final clientAuditDetails = <String, dynamic>{};
-    if (newMap.containsKey('clientCreatedBy')) {
+    if (newMap.containsKey('clientCreatedBy') &&
+        newMap['clientCreatedBy'] != null) {
       clientAuditDetails['createdBy'] = newMap['clientCreatedBy'];
     }
-    if (newMap.containsKey('clientCreatedTime')) {
+    if (newMap.containsKey('clientCreatedTime') &&
+        newMap['clientCreatedTime'] != null) {
       clientAuditDetails['createdTime'] = newMap['clientCreatedTime'];
     }
-    if (newMap.containsKey('clientModifiedBy')) {
+    if (newMap.containsKey('clientModifiedBy') &&
+        newMap['clientModifiedBy'] != null) {
       clientAuditDetails['lastModifiedBy'] = newMap['clientModifiedBy'];
     }
-    if (newMap.containsKey('clientModifiedTime')) {
+    if (newMap.containsKey('clientModifiedTime') &&
+        newMap['clientModifiedTime'] != null) {
       clientAuditDetails['lastModifiedTime'] = newMap['clientModifiedTime'];
     }
     if (clientAuditDetails.isNotEmpty) {

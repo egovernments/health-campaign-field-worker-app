@@ -1,7 +1,4 @@
-import 'package:digit_data_model/data/repositories/oplog/oplog.dart';
-
-import '../../../models/entities/stock.dart';
-import '../../../models/entities/stock_reconciliation.dart';
+import 'package:digit_data_model/data_model.dart';
 
 class StockOpLogManager extends OpLogManager<StockModel> {
   StockOpLogManager(super.isar);

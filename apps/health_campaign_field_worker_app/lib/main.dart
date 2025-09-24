@@ -2868,7 +2868,6 @@ final dynamic sampleInventoryFlows = {
                   "name": "Facility2 LLIN MURRUPULA SEDE49107"
                 }
               ],
-              "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR"
             },
           ],
           "navigateTo": {"name": "stockDetails", "type": "form"}
