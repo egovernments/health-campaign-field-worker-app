@@ -39,6 +39,12 @@ class FlowCrudBloc extends CrudBloc {
     onUpdate?.call(screenKey, flowState);
     FlowCrudStateRegistry().update(screenKey, flowState);
   }
+
+  @override
+  Future<void> close() {
+    FlowCrudStateRegistry().dispose(screenKey);
+    return super.close();
+  }
 }
 
 class FlowCrudStateRegistry {
@@ -74,6 +80,22 @@ class FlowCrudStateRegistry {
     for (final notifier in _map.values) {
       notifier.value = null;
     }
+    _navParams.clear();
+  }
+
+  void dispose(String key) {
+    if (_map.containsKey(key)) {
+      _map[key]!.dispose();
+      _map.remove(key);
+    }
+    _navParams.remove(key);
+  }
+
+  void disposeAll() {
+    for (final notifier in _map.values) {
+      notifier.dispose();
+    }
+    _map.clear();
     _navParams.clear();
   }
 
