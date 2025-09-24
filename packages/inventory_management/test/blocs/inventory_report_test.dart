@@ -1,9 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:inventory_management/inventory_management.dart';
+import 'package:inventory_management/blocs/inventory_report.dart';
 import 'package:inventory_management/utils/typedefs.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:inventory_management/blocs/inventory_report.dart';
 
 import '../constants/test_constants.dart';
 

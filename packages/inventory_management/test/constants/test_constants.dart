@@ -1,8 +1,6 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:intl/intl.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
-import 'package:inventory_management/models/entities/stock.dart';
-import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 
 class InventoryReportConstants {
   static const String facilityId = 'FAC_1';
@@ -16,15 +14,17 @@ class InventoryReportConstants {
   );
   static final StockReconciliationModel stockReconciliationModel =
       StockReconciliationModel(
-    id: '1dcs341-02a2-4844-80ff-b7b40b70123', // replace with a meaningful id
-    clientReferenceId:
-        '11891de8-02a2-5422-80ff-a080b7b40b65', // replace with a meaningful clientReferenceId
+    id: '1dcs341-02a2-4844-80ff-b7b40b70123',
+    // replace with a meaningful id
+    clientReferenceId: '11891de8-02a2-5422-80ff-a080b7b40b65',
+    // replace with a meaningful clientReferenceId
     dateOfReconciliation: DateTime(2024, 1, 1).millisecondsSinceEpoch,
   );
 
   static final ProjectResourceModel projectResourceModel = ProjectResourceModel(
     resource: ProjectProductVariantModel(
-      productVariantId: '1891de8-02a2-4844-80ff-a080b7b40b70', // replace with a meaningful id
+      productVariantId:
+          '1891de8-02a2-4844-80ff-a080b7b40b70', // replace with a meaningful id
     ),
   );
 
@@ -34,7 +34,8 @@ class InventoryReportConstants {
 
   static final ProjectProductVariantModel projectProductVariantModel =
       ProjectProductVariantModel(
-    productVariantId: '1891de8-02a2-4844-80ff-a080b7b40b70', // replace with a meaningful id
+    productVariantId:
+        '1891de8-02a2-4844-80ff-a080b7b40b70', // replace with a meaningful id
   );
 
   static final String dateFormat =

@@ -1,5 +1,6 @@
 // Importing necessary packages and modules
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

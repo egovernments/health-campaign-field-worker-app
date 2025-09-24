@@ -15,8 +15,6 @@ export 'data/repositories/remote/stock_reconciliation.dart';
 export 'inventory_management.init.dart';
 export 'models/entities/inventory_enums.dart';
 export 'models/entities/inventory_transport_type.dart';
-export 'models/entities/stock.dart';
-export 'models/entities/stock_reconciliation.dart';
 export 'models/entities/transaction_reason.dart';
 export 'models/entities/transaction_type.dart';
 export 'pages/acknowledgement.dart';
