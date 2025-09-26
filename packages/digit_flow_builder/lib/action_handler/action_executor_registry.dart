@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'action_config.dart';
 import 'executors/action_executor.dart';
 import 'executors/navigation_executor.dart';
+import 'executors/back_navigation_executor.dart';
 import 'executors/crud_executor.dart';
 import 'executors/search_executor.dart';
 import 'executors/transformer_executor.dart';
@@ -23,6 +24,7 @@ class ActionExecutorRegistry {
   /// Register default built-in executors
   void registerDefaultExecutors() {
     register('NAVIGATION', NavigationExecutor());
+    register('BACK_NAVIGATION', BackNavigationExecutor());
     register('CREATE_EVENT', CrudExecutor());
     register('SEARCH_EVENT', SearchExecutor());
     register('FETCH_TRANSFORMER_CONFIG', TransformerExecutor());
