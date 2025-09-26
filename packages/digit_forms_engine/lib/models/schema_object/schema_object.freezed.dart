@@ -12,7 +12,7 @@ part of 'schema_object.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 SchemaObject _$SchemaObjectFromJson(Map<String, dynamic> json) {
   return _SchemaObject.fromJson(json);
@@ -23,7 +23,10 @@ mixin _$SchemaObject {
   String get name => throw _privateConstructorUsedError;
   int get version => throw _privateConstructorUsedError;
   bool get summary => throw _privateConstructorUsedError;
+  SummaryItem? get summaryDetails => throw _privateConstructorUsedError;
   Map<String, PropertySchema> get pages => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _showAlertOrNull)
+  ShowAlertPopUp? get showAlertPopUp => throw _privateConstructorUsedError;
   List<ActionSchema>? get actionSchema => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -42,8 +45,13 @@ abstract class $SchemaObjectCopyWith<$Res> {
       {String name,
       int version,
       bool summary,
+      SummaryItem? summaryDetails,
       Map<String, PropertySchema> pages,
+      @JsonKey(fromJson: _showAlertOrNull) ShowAlertPopUp? showAlertPopUp,
       List<ActionSchema>? actionSchema});
+
+  $SummaryItemCopyWith<$Res>? get summaryDetails;
+  $ShowAlertPopUpCopyWith<$Res>? get showAlertPopUp;
 }
 
 /// @nodoc
@@ -62,7 +70,9 @@ class _$SchemaObjectCopyWithImpl<$Res, $Val extends SchemaObject>
     Object? name = null,
     Object? version = null,
     Object? summary = null,
+    Object? summaryDetails = freezed,
     Object? pages = null,
+    Object? showAlertPopUp = freezed,
     Object? actionSchema = freezed,
   }) {
     return _then(_value.copyWith(
@@ -78,15 +88,47 @@ class _$SchemaObjectCopyWithImpl<$Res, $Val extends SchemaObject>
           ? _value.summary
           : summary // ignore: cast_nullable_to_non_nullable
               as bool,
+      summaryDetails: freezed == summaryDetails
+          ? _value.summaryDetails
+          : summaryDetails // ignore: cast_nullable_to_non_nullable
+              as SummaryItem?,
       pages: null == pages
           ? _value.pages
           : pages // ignore: cast_nullable_to_non_nullable
               as Map<String, PropertySchema>,
+      showAlertPopUp: freezed == showAlertPopUp
+          ? _value.showAlertPopUp
+          : showAlertPopUp // ignore: cast_nullable_to_non_nullable
+              as ShowAlertPopUp?,
       actionSchema: freezed == actionSchema
           ? _value.actionSchema
           : actionSchema // ignore: cast_nullable_to_non_nullable
               as List<ActionSchema>?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $SummaryItemCopyWith<$Res>? get summaryDetails {
+    if (_value.summaryDetails == null) {
+      return null;
+    }
+
+    return $SummaryItemCopyWith<$Res>(_value.summaryDetails!, (value) {
+      return _then(_value.copyWith(summaryDetails: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ShowAlertPopUpCopyWith<$Res>? get showAlertPopUp {
+    if (_value.showAlertPopUp == null) {
+      return null;
+    }
+
+    return $ShowAlertPopUpCopyWith<$Res>(_value.showAlertPopUp!, (value) {
+      return _then(_value.copyWith(showAlertPopUp: value) as $Val);
+    });
   }
 }
 
@@ -102,8 +144,15 @@ abstract class _$$SchemaObjectImplCopyWith<$Res>
       {String name,
       int version,
       bool summary,
+      SummaryItem? summaryDetails,
       Map<String, PropertySchema> pages,
+      @JsonKey(fromJson: _showAlertOrNull) ShowAlertPopUp? showAlertPopUp,
       List<ActionSchema>? actionSchema});
+
+  @override
+  $SummaryItemCopyWith<$Res>? get summaryDetails;
+  @override
+  $ShowAlertPopUpCopyWith<$Res>? get showAlertPopUp;
 }
 
 /// @nodoc
@@ -120,7 +169,9 @@ class __$$SchemaObjectImplCopyWithImpl<$Res>
     Object? name = null,
     Object? version = null,
     Object? summary = null,
+    Object? summaryDetails = freezed,
     Object? pages = null,
+    Object? showAlertPopUp = freezed,
     Object? actionSchema = freezed,
   }) {
     return _then(_$SchemaObjectImpl(
@@ -136,10 +187,18 @@ class __$$SchemaObjectImplCopyWithImpl<$Res>
           ? _value.summary
           : summary // ignore: cast_nullable_to_non_nullable
               as bool,
+      summaryDetails: freezed == summaryDetails
+          ? _value.summaryDetails
+          : summaryDetails // ignore: cast_nullable_to_non_nullable
+              as SummaryItem?,
       pages: null == pages
           ? _value._pages
           : pages // ignore: cast_nullable_to_non_nullable
               as Map<String, PropertySchema>,
+      showAlertPopUp: freezed == showAlertPopUp
+          ? _value.showAlertPopUp
+          : showAlertPopUp // ignore: cast_nullable_to_non_nullable
+              as ShowAlertPopUp?,
       actionSchema: freezed == actionSchema
           ? _value._actionSchema
           : actionSchema // ignore: cast_nullable_to_non_nullable
@@ -156,7 +215,9 @@ class _$SchemaObjectImpl implements _SchemaObject {
       {required this.name,
       required this.version,
       this.summary = false,
+      this.summaryDetails,
       final Map<String, PropertySchema> pages = const {},
+      @JsonKey(fromJson: _showAlertOrNull) this.showAlertPopUp,
       final List<ActionSchema>? actionSchema})
       : _pages = pages,
         _actionSchema = actionSchema;
@@ -171,6 +232,8 @@ class _$SchemaObjectImpl implements _SchemaObject {
   @override
   @JsonKey()
   final bool summary;
+  @override
+  final SummaryItem? summaryDetails;
   final Map<String, PropertySchema> _pages;
   @override
   @JsonKey()
@@ -180,6 +243,9 @@ class _$SchemaObjectImpl implements _SchemaObject {
     return EqualUnmodifiableMapView(_pages);
   }
 
+  @override
+  @JsonKey(fromJson: _showAlertOrNull)
+  final ShowAlertPopUp? showAlertPopUp;
   final List<ActionSchema>? _actionSchema;
   @override
   List<ActionSchema>? get actionSchema {
@@ -192,7 +258,7 @@ class _$SchemaObjectImpl implements _SchemaObject {
 
   @override
   String toString() {
-    return 'SchemaObject(name: $name, version: $version, summary: $summary, pages: $pages, actionSchema: $actionSchema)';
+    return 'SchemaObject(name: $name, version: $version, summary: $summary, summaryDetails: $summaryDetails, pages: $pages, showAlertPopUp: $showAlertPopUp, actionSchema: $actionSchema)';
   }
 
   @override
@@ -203,7 +269,11 @@ class _$SchemaObjectImpl implements _SchemaObject {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.version, version) || other.version == version) &&
             (identical(other.summary, summary) || other.summary == summary) &&
+            (identical(other.summaryDetails, summaryDetails) ||
+                other.summaryDetails == summaryDetails) &&
             const DeepCollectionEquality().equals(other._pages, _pages) &&
+            (identical(other.showAlertPopUp, showAlertPopUp) ||
+                other.showAlertPopUp == showAlertPopUp) &&
             const DeepCollectionEquality()
                 .equals(other._actionSchema, _actionSchema));
   }
@@ -215,7 +285,9 @@ class _$SchemaObjectImpl implements _SchemaObject {
       name,
       version,
       summary,
+      summaryDetails,
       const DeepCollectionEquality().hash(_pages),
+      showAlertPopUp,
       const DeepCollectionEquality().hash(_actionSchema));
 
   @JsonKey(ignore: true)
@@ -237,7 +309,9 @@ abstract class _SchemaObject implements SchemaObject {
       {required final String name,
       required final int version,
       final bool summary,
+      final SummaryItem? summaryDetails,
       final Map<String, PropertySchema> pages,
+      @JsonKey(fromJson: _showAlertOrNull) final ShowAlertPopUp? showAlertPopUp,
       final List<ActionSchema>? actionSchema}) = _$SchemaObjectImpl;
 
   factory _SchemaObject.fromJson(Map<String, dynamic> json) =
@@ -250,12 +324,191 @@ abstract class _SchemaObject implements SchemaObject {
   @override
   bool get summary;
   @override
+  SummaryItem? get summaryDetails;
+  @override
   Map<String, PropertySchema> get pages;
+  @override
+  @JsonKey(fromJson: _showAlertOrNull)
+  ShowAlertPopUp? get showAlertPopUp;
   @override
   List<ActionSchema>? get actionSchema;
   @override
   @JsonKey(ignore: true)
   _$$SchemaObjectImplCopyWith<_$SchemaObjectImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+SummaryItem _$SummaryItemFromJson(Map<String, dynamic> json) {
+  return _SummaryItem.fromJson(json);
+}
+
+/// @nodoc
+mixin _$SummaryItem {
+  String get heading => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
+  bool get show => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $SummaryItemCopyWith<SummaryItem> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SummaryItemCopyWith<$Res> {
+  factory $SummaryItemCopyWith(
+          SummaryItem value, $Res Function(SummaryItem) then) =
+      _$SummaryItemCopyWithImpl<$Res, SummaryItem>;
+  @useResult
+  $Res call({String heading, String? description, bool show});
+}
+
+/// @nodoc
+class _$SummaryItemCopyWithImpl<$Res, $Val extends SummaryItem>
+    implements $SummaryItemCopyWith<$Res> {
+  _$SummaryItemCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? heading = null,
+    Object? description = freezed,
+    Object? show = null,
+  }) {
+    return _then(_value.copyWith(
+      heading: null == heading
+          ? _value.heading
+          : heading // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      show: null == show
+          ? _value.show
+          : show // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$SummaryItemImplCopyWith<$Res>
+    implements $SummaryItemCopyWith<$Res> {
+  factory _$$SummaryItemImplCopyWith(
+          _$SummaryItemImpl value, $Res Function(_$SummaryItemImpl) then) =
+      __$$SummaryItemImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String heading, String? description, bool show});
+}
+
+/// @nodoc
+class __$$SummaryItemImplCopyWithImpl<$Res>
+    extends _$SummaryItemCopyWithImpl<$Res, _$SummaryItemImpl>
+    implements _$$SummaryItemImplCopyWith<$Res> {
+  __$$SummaryItemImplCopyWithImpl(
+      _$SummaryItemImpl _value, $Res Function(_$SummaryItemImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? heading = null,
+    Object? description = freezed,
+    Object? show = null,
+  }) {
+    return _then(_$SummaryItemImpl(
+      heading: null == heading
+          ? _value.heading
+          : heading // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      show: null == show
+          ? _value.show
+          : show // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$SummaryItemImpl implements _SummaryItem {
+  const _$SummaryItemImpl(
+      {required this.heading, this.description, this.show = false});
+
+  factory _$SummaryItemImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SummaryItemImplFromJson(json);
+
+  @override
+  final String heading;
+  @override
+  final String? description;
+  @override
+  @JsonKey()
+  final bool show;
+
+  @override
+  String toString() {
+    return 'SummaryItem(heading: $heading, description: $description, show: $show)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SummaryItemImpl &&
+            (identical(other.heading, heading) || other.heading == heading) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.show, show) || other.show == show));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, heading, description, show);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SummaryItemImplCopyWith<_$SummaryItemImpl> get copyWith =>
+      __$$SummaryItemImplCopyWithImpl<_$SummaryItemImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$SummaryItemImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _SummaryItem implements SummaryItem {
+  const factory _SummaryItem(
+      {required final String heading,
+      final String? description,
+      final bool show}) = _$SummaryItemImpl;
+
+  factory _SummaryItem.fromJson(Map<String, dynamic> json) =
+      _$SummaryItemImpl.fromJson;
+
+  @override
+  String get heading;
+  @override
+  String? get description;
+  @override
+  bool get show;
+  @override
+  @JsonKey(ignore: true)
+  _$$SummaryItemImplCopyWith<_$SummaryItemImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -468,6 +721,212 @@ abstract class _ActionSchema implements ActionSchema {
   @override
   @JsonKey(ignore: true)
   _$$ActionSchemaImplCopyWith<_$ActionSchemaImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+ShowAlertPopUp _$ShowAlertPopUpFromJson(Map<String, dynamic> json) {
+  return _ShowAlertPopUp.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ShowAlertPopUp {
+  String get title => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError; // optional
+  String get primaryActionLabel => throw _privateConstructorUsedError;
+  String get secondaryActionLabel => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $ShowAlertPopUpCopyWith<ShowAlertPopUp> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ShowAlertPopUpCopyWith<$Res> {
+  factory $ShowAlertPopUpCopyWith(
+          ShowAlertPopUp value, $Res Function(ShowAlertPopUp) then) =
+      _$ShowAlertPopUpCopyWithImpl<$Res, ShowAlertPopUp>;
+  @useResult
+  $Res call(
+      {String title,
+      String? description,
+      String primaryActionLabel,
+      String secondaryActionLabel});
+}
+
+/// @nodoc
+class _$ShowAlertPopUpCopyWithImpl<$Res, $Val extends ShowAlertPopUp>
+    implements $ShowAlertPopUpCopyWith<$Res> {
+  _$ShowAlertPopUpCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? title = null,
+    Object? description = freezed,
+    Object? primaryActionLabel = null,
+    Object? secondaryActionLabel = null,
+  }) {
+    return _then(_value.copyWith(
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      primaryActionLabel: null == primaryActionLabel
+          ? _value.primaryActionLabel
+          : primaryActionLabel // ignore: cast_nullable_to_non_nullable
+              as String,
+      secondaryActionLabel: null == secondaryActionLabel
+          ? _value.secondaryActionLabel
+          : secondaryActionLabel // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$ShowAlertPopUpImplCopyWith<$Res>
+    implements $ShowAlertPopUpCopyWith<$Res> {
+  factory _$$ShowAlertPopUpImplCopyWith(_$ShowAlertPopUpImpl value,
+          $Res Function(_$ShowAlertPopUpImpl) then) =
+      __$$ShowAlertPopUpImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String title,
+      String? description,
+      String primaryActionLabel,
+      String secondaryActionLabel});
+}
+
+/// @nodoc
+class __$$ShowAlertPopUpImplCopyWithImpl<$Res>
+    extends _$ShowAlertPopUpCopyWithImpl<$Res, _$ShowAlertPopUpImpl>
+    implements _$$ShowAlertPopUpImplCopyWith<$Res> {
+  __$$ShowAlertPopUpImplCopyWithImpl(
+      _$ShowAlertPopUpImpl _value, $Res Function(_$ShowAlertPopUpImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? title = null,
+    Object? description = freezed,
+    Object? primaryActionLabel = null,
+    Object? secondaryActionLabel = null,
+  }) {
+    return _then(_$ShowAlertPopUpImpl(
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      primaryActionLabel: null == primaryActionLabel
+          ? _value.primaryActionLabel
+          : primaryActionLabel // ignore: cast_nullable_to_non_nullable
+              as String,
+      secondaryActionLabel: null == secondaryActionLabel
+          ? _value.secondaryActionLabel
+          : secondaryActionLabel // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ShowAlertPopUpImpl implements _ShowAlertPopUp {
+  const _$ShowAlertPopUpImpl(
+      {required this.title,
+      this.description,
+      required this.primaryActionLabel,
+      required this.secondaryActionLabel});
+
+  factory _$ShowAlertPopUpImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ShowAlertPopUpImplFromJson(json);
+
+  @override
+  final String title;
+  @override
+  final String? description;
+// optional
+  @override
+  final String primaryActionLabel;
+  @override
+  final String secondaryActionLabel;
+
+  @override
+  String toString() {
+    return 'ShowAlertPopUp(title: $title, description: $description, primaryActionLabel: $primaryActionLabel, secondaryActionLabel: $secondaryActionLabel)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ShowAlertPopUpImpl &&
+            (identical(other.title, title) || other.title == title) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.primaryActionLabel, primaryActionLabel) ||
+                other.primaryActionLabel == primaryActionLabel) &&
+            (identical(other.secondaryActionLabel, secondaryActionLabel) ||
+                other.secondaryActionLabel == secondaryActionLabel));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, title, description,
+      primaryActionLabel, secondaryActionLabel);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ShowAlertPopUpImplCopyWith<_$ShowAlertPopUpImpl> get copyWith =>
+      __$$ShowAlertPopUpImplCopyWithImpl<_$ShowAlertPopUpImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ShowAlertPopUpImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _ShowAlertPopUp implements ShowAlertPopUp {
+  const factory _ShowAlertPopUp(
+      {required final String title,
+      final String? description,
+      required final String primaryActionLabel,
+      required final String secondaryActionLabel}) = _$ShowAlertPopUpImpl;
+
+  factory _ShowAlertPopUp.fromJson(Map<String, dynamic> json) =
+      _$ShowAlertPopUpImpl.fromJson;
+
+  @override
+  String get title;
+  @override
+  String? get description;
+  @override // optional
+  String get primaryActionLabel;
+  @override
+  String get secondaryActionLabel;
+  @override
+  @JsonKey(ignore: true)
+  _$$ShowAlertPopUpImplCopyWith<_$ShowAlertPopUpImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
