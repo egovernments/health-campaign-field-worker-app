@@ -2726,7 +2726,8 @@ final dynamic sampleInventoryFlows = {
         }
       ],
       "wrapperConfig": {
-        "wrapperName": "FacilityWrapper",
+        "wrapperName": "InventoryWrapper",
+        "groupByType": true,
         "rootEntity": "ProjectFacilityModel",
         "filters": [],
         "relations": [
@@ -2736,17 +2737,14 @@ final dynamic sampleInventoryFlows = {
             "match": {"field": "id", "equalsFrom": "facilityId"}
           },
           {
-            "name": "facilityAddress",
-            "entity": "AddressModel",
-            "match": {
-              "field": "relatedClientReferenceId",
-              "equalsFrom": "facility.clientReferenceId"
-            }
+            "name": "productVariant",
+            "entity": "ProductVariantModel",
+            "match": {"field": "id", "equalsFrom": "resource"}
           }
         ],
         "searchConfig": {
           "primary": "projectFacility",
-          "select": ["projectFacility"]
+          "select": ["projectFacility", "productVariant"]
         }
       },
       "body": [
@@ -2878,80 +2876,6 @@ final dynamic sampleInventoryFlows = {
               "isMultiSelect": false
             },
             {
-              "type": "string",
-              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich",
-              "order": 3,
-              "value": "",
-              "format": "dropdown",
-              "hidden": false,
-              "tooltip": "",
-              "helpText":
-                  "Select the facility to which the stock is being sent",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "facilityToWhich",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message":
-                      "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "enums": [
-                {
-                  "code": "F-2025-01-08-008328",
-                  "name": "Facility2 LLIN MURRUPULA SEDE49106"
-                },
-                {
-                  "code": "F-2025-01-08-008329",
-                  "name": "Facility2 LLIN MURRUPULA SEDE49107"
-                }
-              ],
-            },
-          ],
-          "navigateTo": {"name": "stockDetails", "type": "form"}
-        },
-        {
-          "page": "stockDetails",
-          "label": "APPONE_INVENTORY_PRODUCTDETAILS_SCREEN_HEADING",
-          "order": 2,
-          "type": "object",
-          "format": null,
-          "description": "APPONE_INVENTORY_PRODUCTDETAILS_SCREEN_DESCRIPTION",
-          "actionLabel":
-              "APPONE_INVENTORY_PRODUCTDETAILS_ACTION_BUTTON_LABEL_1",
-          "properties": [
-            {
-              "type": "string",
-              "label": "APPONE_INVENTORY_PRODUCTDETAILS_LABEL",
-              "order": 1,
-              "value": "",
-              "format": "dropdown",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "productdetail",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "enums": [
-                {"code": "PVR_87_12", "name": "SPAQ1"},
-                {"code": "PVR_87_13", "name": "SPAQ2"}
-              ]
-            },
-            {
               "type": "dynamic",
               "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich",
               "order": 3,
@@ -2977,13 +2901,105 @@ final dynamic sampleInventoryFlows = {
               ],
               "errorMessage": "",
               "isMultiSelect": false,
+              "enums": [],
+            },
+            {
+              "type": "string",
+              "visibilityCondition": {
+                "expression": "warehouseDetails.facilityToWhich==Delivery Team"
+              },
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_teamCode",
+              "order": 4,
+              "value": "",
+              "format": "scanner",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Scan Team Code",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "teamCode",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [],
+            },
+          ],
+          "navigateTo": {"name": "stockDetails", "type": "form"}
+        },
+        {
+          "page": "stockDetails",
+          "label": "APPONE_INVENTORY_PRODUCTDETAILS_SCREEN_HEADING",
+          "order": 2,
+          "type": "object",
+          "format": null,
+          "description": "APPONE_INVENTORY_PRODUCTDETAILS_SCREEN_DESCRIPTION",
+          "actionLabel":
+              "APPONE_INVENTORY_PRODUCTDETAILS_ACTION_BUTTON_LABEL_1",
+          "properties": [
+            {
+              "type": "dynamic",
+              "label": "APPONE_INVENTORY_PRODUCTDETAILS_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "productdetail",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": []
+            },
+            {
+              "type": "dynamic",
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityFromWhich",
+              "order": 2,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "tooltip": "",
+              "helpText":
+                  "Select the facility from which the stock is being received",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "facilityToWhich",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
               "includeInForm": true,
               "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR"
             },
             {
               "type": "string",
               "label": "APPONE_INVENTORY_TRANSPORT_LABEL",
-              "order": 1,
+              "order": 3,
               "value": "",
               "format": "dropdown",
               "hidden": false,

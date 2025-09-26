@@ -56,7 +56,16 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
         return TaskModelMapper.fromMap(normalizedMap);
       case 'projectFacility':
         return ProjectFacilityModelMapper.fromMap(normalizedMap);
-
+      case 'facility':
+        return FacilityModelMapper.fromMap(normalizedMap);
+      case 'projectResource':
+        return ProjectResourceModelMapper.fromMap(normalizedMap);
+      case 'productVariant':
+        return ProductVariantModelMapper.fromMap(normalizedMap);
+      case 'projectProductVariant':
+        return ProjectProductVariantModelMapper.fromMap(normalizedMap);
+      case 'address':
+        return AddressModelMapper.fromMap(normalizedMap);
       default:
         return EntityModelMapper.fromMap(normalizedMap);
     }

@@ -60,6 +60,8 @@ import '../utils/least_level_boundary_singleton.dart';
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
+import '../widgets/inventory/custom_facility_widgets.dart';
+import '../widgets/inventory/custom_product_selection_card.dart';
 import '../widgets/localized.dart';
 import '../widgets/resource_card/custom_resource_card.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
@@ -115,6 +117,30 @@ class _HomePageState extends LocalizedState<HomePage> {
         // Build your component with access to all this data
         return ResourceCard(
           stateData: beneficiaryDetails,
+        );
+      },
+    );
+    CustomComponentRegistry().registerBuilder(
+      'facilityToWhich',
+      (context, stateAccessor) {
+        // Access data from any page in the flow
+        final stockData = stateAccessor.getPageData('manageStock');
+
+        // Build your component with access to all this data
+        return FacilityCard(
+          stateData: stockData,
+        );
+      },
+    );
+    CustomComponentRegistry().registerBuilder(
+      'productdetail',
+      (context, stateAccessor) {
+        // Access data from any page in the flow
+        final stockData = stateAccessor.getPageData('manageStock');
+
+        // Build your component with access to all this data
+        return ProductSelectionCard(
+          stateData: stockData,
         );
       },
     );
@@ -663,23 +689,17 @@ class _HomePageState extends LocalizedState<HomePage> {
                         localKey: 'id',
                         foreignKey: 'facilityId'),
                     const RelationshipMapping(
-                        from: 'address',
-                        to: 'facility',
-                        localKey: 'relatedClientReferenceId',
-                        foreignKey: 'clientReferenceId'),
+                        from: 'projectResource',
+                        to: 'projectFacility',
+                        localKey: 'projectId',
+                        foreignKey: 'projectId'),
+                    const RelationshipMapping(
+                        from: 'productVariant',
+                        to: 'projectResource',
+                        localKey: 'id',
+                        foreignKey: 'resource'),
                   ],
                   nestedModelMappings: [
-                    const NestedModelMapping(
-                      rootModel: 'facility',
-                      fields: {
-                        'address': NestedFieldMapping(
-                          table: 'address',
-                          localKey: 'clientReferenceId',
-                          foreignKey: 'relatedClientReferenceId',
-                          type: NestedMappingType.one,
-                        ),
-                      },
-                    ),
                     const NestedModelMapping(
                       rootModel: 'projectFacility',
                       fields: {
@@ -688,6 +708,12 @@ class _HomePageState extends LocalizedState<HomePage> {
                           localKey: 'facilityId',
                           foreignKey: 'id',
                           type: NestedMappingType.one,
+                        ),
+                        'projectResources': NestedFieldMapping(
+                          table: 'projectResource',
+                          localKey: 'projectId',
+                          foreignKey: 'projectId',
+                          type: NestedMappingType.many,
                         ),
                       },
                     ),

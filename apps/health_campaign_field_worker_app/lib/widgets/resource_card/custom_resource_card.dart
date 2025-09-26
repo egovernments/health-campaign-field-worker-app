@@ -201,6 +201,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
     context.read<FormsBloc>().add(
           FormsEvent.updateField(
             schemaKey: 'DELIVERY',
+            context: context,
             key: 'resourceCard',
             value: updatedCards,
           ),
