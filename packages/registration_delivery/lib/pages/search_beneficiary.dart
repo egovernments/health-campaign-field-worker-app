@@ -796,7 +796,6 @@ class _SearchBeneficiaryPageState
                                               'UNIQUE_BENEFICIARY_ID':
                                                   currentUniqueId?.id,
                                             },
-                                            "distibutionPoint": "ABCD DP",
                                             "eToken": currentUniqueId?.id
                                           },
                                         ));
@@ -848,7 +847,6 @@ class _SearchBeneficiaryPageState
                                       'UNIQUE_BENEFICIARY_ID':
                                           currentUniqueId?.id,
                                     },
-                                    "distibutionPoint": "ABCD DP",
                                     "eToken": currentUniqueId?.id
                                   },
                                 ));
@@ -900,7 +898,6 @@ class _SearchBeneficiaryPageState
                                               'DEFAULT':
                                                   IdGen.instance.identifier,
                                             },
-                                            "distibutionPoint": "ABCD DP",
                                             "eToken": ""
                                           },
                                         ));
@@ -1146,7 +1143,6 @@ class _SearchBeneficiaryPageState
                                                 'DEFAULT':
                                                     IdGen.instance.identifier,
                                               },
-                                              "distibutionPoint": "ABCD DP",
                                               "eToken": ""
                                             },
                                           ));
@@ -1360,7 +1356,6 @@ class _SearchBeneficiaryPageState
                     'availableIDs': {
                       'DEFAULT': IdGen.instance.identifier,
                     },
-                    "distibutionPoint": "ABCD DP",
                     "eToken": ""
                   },
                 ));
