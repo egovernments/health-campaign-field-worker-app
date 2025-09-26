@@ -4,6 +4,8 @@ class JsonFormBuilder extends LocalizedStatefulWidget {
   final String formControlName;
   final PropertySchema schema;
   final List<Map<String, Widget>>? components;
+  final String pageName;
+  final String currentSchemaKey;
 
   const JsonFormBuilder({
     super.key,
@@ -11,6 +13,8 @@ class JsonFormBuilder extends LocalizedStatefulWidget {
     required this.formControlName,
     required this.schema,
     this.components,
+    required this.pageName,
+    required this.currentSchemaKey,
   });
 
   @override
@@ -23,7 +27,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     final form = ReactiveForm.of(context) as FormGroup;
 
     // Handle conditional display logic
-    if (_shouldHideField(form)) {
+    // Handle conditional display logic
+    if (_shouldHideField(form, widget.schema, widget.formControlName)) {
       return const SizedBox.shrink();
     }
 
@@ -31,27 +36,37 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
   }
 
   /// Conditionally hide based on display behavior
-  bool _shouldHideField(FormGroup form) {
-    final hidden = widget.schema.hidden;
+  bool _shouldHideField(
+      FormGroup form, PropertySchema schema, String formName) {
+    final hidden = schema.hidden;
     if (hidden != null && hidden == true) return true;
-    final display = widget.schema.displayBehavior;
-    if (display == null) return false;
 
-    final oneOf = display.oneOf;
-    final allOf = display.allOf;
+    final visibility = schema.visibilityCondition;
+    if (visibility != null && visibility.expression.isNotEmpty) {
+      final formState = context.read<FormsBloc>().state;
+      final currentPageKey = widget.pageName;
 
-    final values = (oneOf ?? allOf!).map((e) {
-      final value = form.control(e).value;
-      if (value is bool?) return !(value ?? false);
-      if (value is String?) return value?.isNotEmpty ?? false;
-      return false;
-    }).toList();
+      final currentSchemaKey = widget.currentSchemaKey;
 
-    final result = oneOf != null && oneOf.isNotEmpty
-        ? values.fold(true, (prev, curr) => prev && curr)
-        : values.fold(false, (prev, curr) => prev || curr);
+      final values = buildVisibilityEvaluationContext(
+        currentPageKey: currentPageKey,
+        currentForm: form,
+        pages: formState.cachedSchemas[currentSchemaKey]!.pages,
 
-    return display.behavior == FormulaBehavior.hide && result;
+        /// TODO: fix hardcode not null condition
+      );
+
+      final result =
+          evaluateVisibilityExpression(visibility.expression, values);
+      VisibilityManager(schemaMap: {
+        formName: schema,
+      }, formData: form.rawValue, form: form)
+          .toggleControlVisibility(formName, result, widget.schema);
+
+      return !result;
+    }
+
+    return false;
   }
 
   /// Dispatch to builder based on property type
@@ -357,7 +372,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       children: entries
           .where((entry) {
             final subSchema = entry.value;
-            return !shouldHideField(subSchema, form);
+            return !_shouldHideField(form, subSchema, entry.key);
           })
           .toList()
           .asMap()
@@ -372,6 +387,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
               formControlName: subName,
               schema: subSchema,
               components: widget.components,
+              currentSchemaKey: widget.currentSchemaKey,
+              pageName: widget.pageName,
             );
 
             final isLast = index ==

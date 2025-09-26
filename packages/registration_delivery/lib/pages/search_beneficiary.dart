@@ -795,7 +795,8 @@ class _SearchBeneficiaryPageState
                                                   IdGen.instance.identifier,
                                               'UNIQUE_BENEFICIARY_ID':
                                                   currentUniqueId?.id,
-                                            }
+                                            },
+                                            "eToken": currentUniqueId?.id
                                           },
                                         ));
                                         searchController.clear();
@@ -845,7 +846,8 @@ class _SearchBeneficiaryPageState
                                       'DEFAULT': IdGen.instance.identifier,
                                       'UNIQUE_BENEFICIARY_ID':
                                           currentUniqueId?.id,
-                                    }
+                                    },
+                                    "eToken": currentUniqueId?.id
                                   },
                                 ));
                                 searchController.clear();
@@ -895,7 +897,8 @@ class _SearchBeneficiaryPageState
                                             'availableIDs': {
                                               'DEFAULT':
                                                   IdGen.instance.identifier,
-                                            }
+                                            },
+                                            "eToken": ""
                                           },
                                         ));
                                         searchController.clear();
@@ -1141,7 +1144,8 @@ class _SearchBeneficiaryPageState
                                               'availableIDs': {
                                                 'DEFAULT':
                                                     IdGen.instance.identifier,
-                                              }
+                                              },
+                                              "eToken": ""
                                             },
                                           ));
 
@@ -1353,7 +1357,8 @@ class _SearchBeneficiaryPageState
                     'nameOfIndividual': value.text,
                     'availableIDs': {
                       'DEFAULT': IdGen.instance.identifier,
-                    }
+                    },
+                    "eToken": ""
                   },
                 ));
                 searchController.clear();

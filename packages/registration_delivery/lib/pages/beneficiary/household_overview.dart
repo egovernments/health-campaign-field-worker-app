@@ -14,6 +14,7 @@ import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_chip.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_toast.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
@@ -33,6 +34,7 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/registration_component_keys.dart' as registration_keys;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
+import '../../widgets/beneficiary/resource_card.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/member_card/member_card.dart';
 import '../../widgets/table_card/table_card.dart';
@@ -267,9 +269,69 @@ class _HouseholdOverviewPageState
                                                                       '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
                                                           .toList()
                                                           .isEmpty) {
-                                                        context.router.push(
-                                                          BeneficiaryDetailsRoute(),
-                                                        );
+                                                        if (overviewTemplate
+                                                                ?.navigateTo !=
+                                                            null) {
+                                                          if (overviewTemplate!
+                                                                  .navigateTo
+                                                                  ?.type ==
+                                                              "form") {
+                                                            final pageName = context
+                                                                .read<
+                                                                    FormsBloc>()
+                                                                .state
+                                                                .cachedSchemas[
+                                                                    overviewTemplate
+                                                                        .navigateTo!
+                                                                        .name]
+                                                                ?.pages
+                                                                .entries
+                                                                .first
+                                                                .key;
+
+                                                            if (pageName ==
+                                                                null) {
+                                                              Toast.showToast(
+                                                                context,
+                                                                message: localizations
+                                                                    .translate(
+                                                                        'NO_FORM_FOUND_FOR_REGISTRATION'),
+                                                                type: ToastType
+                                                                    .error,
+                                                              );
+                                                            } else {
+                                                              context.router.push(
+                                                                  FormsRenderRoute(
+                                                                currentSchemaKey:
+                                                                    overviewTemplate
+                                                                        .navigateTo!
+                                                                        .name,
+                                                                pageName:
+                                                                    pageName,
+                                                                defaultValues: {
+                                                                  'administrativeArea':
+                                                                      localizations.translate(
+                                                                          RegistrationDeliverySingleton().boundary?.code ??
+                                                                              '')
+                                                                },
+                                                                customComponents: const [
+                                                                  {
+                                                                    'resourceCard':
+                                                                        ResourceCard()
+                                                                  }
+                                                                ],
+                                                              ));
+                                                            }
+                                                          } else {
+                                                            context.router.push(
+                                                              BeneficiaryDetailsRoute(),
+                                                            );
+                                                          }
+                                                        } else {
+                                                          context.router.push(
+                                                            BeneficiaryDetailsRoute(),
+                                                          );
+                                                        }
                                                       } else {
                                                         navigateToChecklist(
                                                             ctx,

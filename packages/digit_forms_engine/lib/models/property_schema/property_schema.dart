@@ -53,6 +53,8 @@ class PropertySchema with _$PropertySchema {
     bool? includeInForm,
     bool? includeInSummary,
     NavigateToConfig? navigateTo,
+    @JsonKey(fromJson: _visibilityConditionOrNull)
+    VisibilityCondition? visibilityCondition,
   }) = _PropertySchema;
 
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>
@@ -102,6 +104,26 @@ class NavigateToConfig with _$NavigateToConfig {
 
   factory NavigateToConfig.fromJson(Map<String, dynamic> json) =>
       _$NavigateToConfigFromJson(json);
+}
+
+@freezed
+class VisibilityCondition with _$VisibilityCondition {
+  const factory VisibilityCondition({
+    required String expression,
+  }) = _VisibilityCondition;
+
+  factory VisibilityCondition.fromJson(Map<String, dynamic> json) =>
+      _$VisibilityConditionFromJson(json);
+}
+
+VisibilityCondition? _visibilityConditionOrNull(dynamic value) {
+  if (value is Map && value.isEmpty) {
+    return null;
+  }
+  if (value is Map<String, dynamic>) {
+    return VisibilityCondition.fromJson(value);
+  }
+  return null;
 }
 
 String? _stringOrNull(dynamic value) {

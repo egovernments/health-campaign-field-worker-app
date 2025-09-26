@@ -9,13 +9,18 @@ part of 'schema_object.dart';
 _$SchemaObjectImpl _$$SchemaObjectImplFromJson(Map<String, dynamic> json) =>
     _$SchemaObjectImpl(
       name: json['name'] as String,
-      version: json['version'] as int,
+      version: (json['version'] as num).toInt(),
       summary: json['summary'] as bool? ?? false,
+      summaryDetails: json['summaryDetails'] == null
+          ? null
+          : SummaryItem.fromJson(
+              json['summaryDetails'] as Map<String, dynamic>),
       pages: (json['pages'] as Map<String, dynamic>?)?.map(
             (k, e) =>
                 MapEntry(k, PropertySchema.fromJson(e as Map<String, dynamic>)),
           ) ??
           const {},
+      showAlertPopUp: _showAlertOrNull(json['showAlertPopUp']),
       actionSchema: (json['actionSchema'] as List<dynamic>?)
           ?.map((e) => ActionSchema.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -26,7 +31,6 @@ Map<String, dynamic> _$$SchemaObjectImplToJson(_$SchemaObjectImpl instance) {
     'name': instance.name,
     'version': instance.version,
     'summary': instance.summary,
-    'pages': instance.pages.map((k, e) => MapEntry(k, e.toJson())),
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -35,10 +39,27 @@ Map<String, dynamic> _$$SchemaObjectImplToJson(_$SchemaObjectImpl instance) {
     }
   }
 
+  writeNotNull('summaryDetails', instance.summaryDetails?.toJson());
+  val['pages'] = instance.pages.map((k, e) => MapEntry(k, e.toJson()));
+  writeNotNull('showAlertPopUp', instance.showAlertPopUp?.toJson());
   writeNotNull(
       'actionSchema', instance.actionSchema?.map((e) => e.toJson()).toList());
   return val;
 }
+
+_$SummaryItemImpl _$$SummaryItemImplFromJson(Map<String, dynamic> json) =>
+    _$SummaryItemImpl(
+      heading: json['heading'] as String,
+      description: json['description'] as String?,
+      show: json['show'] as bool? ?? false,
+    );
+
+Map<String, dynamic> _$$SummaryItemImplToJson(_$SummaryItemImpl instance) =>
+    <String, dynamic>{
+      'heading': instance.heading,
+      'description': instance.description,
+      'show': instance.show,
+    };
 
 _$ActionSchemaImpl _$$ActionSchemaImplFromJson(Map<String, dynamic> json) =>
     _$ActionSchemaImpl(
@@ -65,6 +86,23 @@ const _$ButtonTypeEnumMap = {
   ButtonType.text: 'text',
   ButtonType.elevated: 'elevated',
 };
+
+_$ShowAlertPopUpImpl _$$ShowAlertPopUpImplFromJson(Map<String, dynamic> json) =>
+    _$ShowAlertPopUpImpl(
+      title: json['title'] as String,
+      description: json['description'] as String?,
+      primaryActionLabel: json['primaryActionLabel'] as String,
+      secondaryActionLabel: json['secondaryActionLabel'] as String,
+    );
+
+Map<String, dynamic> _$$ShowAlertPopUpImplToJson(
+        _$ShowAlertPopUpImpl instance) =>
+    <String, dynamic>{
+      'title': instance.title,
+      'description': instance.description,
+      'primaryActionLabel': instance.primaryActionLabel,
+      'secondaryActionLabel': instance.secondaryActionLabel,
+    };
 
 _$ActionItemSchemaImpl _$$ActionItemSchemaImplFromJson(
         Map<String, dynamic> json) =>

@@ -28,7 +28,7 @@ final jsonConfig = {
             "pincode": "address.pincode",
             "buildingName": "address.buildingName",
             "street": "address.street",
-            "type": "beneficiaryLocation.typeOfAddress",
+            "type": "__value:PERMANENT",
             "boundaryType": "address.boundaryType",
             "locality": {
               "code": "__context:selectedBoundaryCode",
@@ -120,7 +120,7 @@ final jsonConfig = {
               "addressLine2": "addressLine2",
               "landmark": "address.landmark",
               "city": "address.city",
-              "type": "beneficiaryLocation.typeOfAddress",
+              "type": "__value:PERMANENT",
               "pincode": "address.pincode",
               "buildingName": "address.buildingName",
               "street": "address.street",
@@ -171,7 +171,7 @@ final jsonConfig = {
           "individualId": "members.individualId",
           "individualClientReferenceId":
               "__ref:IndividualModel.clientReferenceId",
-          "isHeadOfHousehold": "beneficiaryDetails.isHeadOfFamily",
+          "isHeadOfHousehold": "__value:true",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
 
@@ -219,7 +219,7 @@ final jsonConfig = {
             "addressLine2": "address.addressLine2",
             "landmark": "address.landmark",
             "city": "address.city",
-            "type": "__context:householdModel.address.type",
+            "type": "__value:PERMANENT",
             "pincode": "address.pincode",
             "buildingName": "address.buildingName",
             "street": "address.street",
