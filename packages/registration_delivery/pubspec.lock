@@ -499,14 +499,14 @@ packages:
       path: "../digit_forms_engine"
       relative: true
     source: path
-    version: "0.0.4-dev"
+    version: "0.0.8-dev"
   digit_formula_parser:
     dependency: "direct main"
     description:
       path: "../digit_formula_parser"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.1.0"
   digit_scanner:
     dependency: "direct main"
     description:

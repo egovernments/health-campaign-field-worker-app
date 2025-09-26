@@ -1,7 +1,10 @@
 name: digit_formula_parser
 description: A dart plugin to to parse and evaluate mathematical expressions.
-version: 1.0.0
-homepage:
+version: 1.1.0
+homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/console-master/packages/digit_formula_parser
+repository: https://github.com/egovernments/health-campaign-field-worker-app
+issue_tracker: https://github.com/egovernments/health-campaign-field-worker-app/issues
+documentation: https://github.com/egovernments/health-campaign-field-worker-app/tree/console-master/packages/digit_formula_parser#readme
 
 environment:
   sdk: '>=3.4.1 <4.0.0'

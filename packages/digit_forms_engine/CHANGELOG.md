@@ -1,3 +1,8 @@
+## 0.0.8-dev
+
+- Added dependency field logic
+- Added formula parser to validate dependency
+
 ## 0.0.4-dev
 
 ### BugFix
