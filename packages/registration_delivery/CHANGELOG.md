@@ -1,3 +1,8 @@
+## 1.1.1-dev.5-console
+
+* Upgraded to latest digit_formula_parser
+* Upgraded to latest digit_forms_engine
+
 ## 1.1.1-dev.4-console
 
 * Upgraded to latest digit_formula_parser
