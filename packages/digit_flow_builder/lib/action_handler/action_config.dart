@@ -1,7 +1,7 @@
 class ActionConfig {
   final String action;
   final String actionType;
-  final Map<String, dynamic> properties;
+  final Map<dynamic, dynamic> properties;
   final Map<String, dynamic>? condition;
   final List<ActionConfig>? actions;
 
