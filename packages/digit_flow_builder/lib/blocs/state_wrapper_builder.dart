@@ -85,6 +85,18 @@ class WrapperBuilder {
     try {
       final entityMap = _groupEntitiesByType();
       final rootEntityType = config['rootEntity'];
+      final groupByType = config['groupByType'] == true;
+
+      if (groupByType) {
+        // Return all entities grouped by type
+        final Map<String, List<dynamic>> groupedEntities = {};
+        for (final type in entityMap.keys) {
+          groupedEntities[type] = entityMap[type]!;
+        }
+        return groupedEntities.entries.map((e) => {e.key: e.value}).toList();
+      }
+
+      // Fallback: old behavior, return flat list for rootEntity
       final roots = entityMap[rootEntityType] ?? [];
 
       for (final root in roots) {
@@ -98,7 +110,7 @@ class WrapperBuilder {
               _findRelatedEntities(root, relation, wrapperData, entityMap);
           wrapperData[relation['name']] = relatedEntities;
 
-          // Handle nested relations within each related entity
+          // Handle nested relations
           if (relation['relations'] != null) {
             for (int i = 0; i < relatedEntities.length; i++) {
               final entity = relatedEntities[i];
@@ -110,21 +122,16 @@ class WrapperBuilder {
                 nestedData[nestedRelation['name']] = nestedEntities;
               }
 
-              // Add nested relations to the entity
               if (entity is Map) {
                 entity.addAll(nestedData);
               } else {
-                // If entity is not a Map, we need to wrap it
-                relatedEntities[i] = {
-                  'entity': entity,
-                  ...nestedData,
-                };
+                relatedEntities[i] = {'entity': entity, ...nestedData};
               }
             }
           }
         }
 
-        // 2. Apply normal fields (supports String or Map config)
+        // 2. Apply normal fields
         final fields = config['fields'] as Map<String, dynamic>? ?? {};
         for (final entry in fields.entries) {
           final valueConfig = entry.value;
@@ -139,11 +146,11 @@ class WrapperBuilder {
           }
         }
 
-        // 3. Apply computed fields
+        // 3. Computed fields
         final computed = _applyComputed(wrapperData, config);
         wrapperData.addAll(computed);
 
-        // 4. Apply computed list fields
+        // 4. Computed list fields
         final computedList = _applyComputedList(wrapperData, config);
         wrapperData.addAll(computedList);
 
@@ -152,6 +159,7 @@ class WrapperBuilder {
     } catch (e, st) {
       debugPrint('WrapperBuilder.build error: $e\n$st');
     }
+
     return wrappers;
   }
 

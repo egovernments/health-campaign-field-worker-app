@@ -4,11 +4,11 @@
 // ignore_for_file: unused_element
 
 import 'models/entities/inventory_enums.dart' as p0;
-import 'models/entities/transaction_reason.dart' as p3;
-import 'models/entities/transaction_type.dart' as p4;
+import 'models/entities/transaction_reason.dart' as p1;
+import 'models/entities/transaction_type.dart' as p2;
 
 void initializeMappers() {
   p0.InventoryManagementEnumsMapper.ensureInitialized();
-  p3.TransactionReasonMapper.ensureInitialized();
-  p4.TransactionTypeMapper.ensureInitialized();
+  p1.TransactionReasonMapper.ensureInitialized();
+  p2.TransactionTypeMapper.ensureInitialized();
 }

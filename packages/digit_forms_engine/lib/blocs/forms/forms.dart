@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:digit_forms_engine/forms_engine.dart';
 import 'package:digit_forms_engine/models/schema_object/schema_object.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 part 'forms.freezed.dart';
 
@@ -11,25 +13,25 @@ part 'forms.freezed.dart';
 typedef FormsStateEmitter = Emitter<FormsState>;
 
 /// A BLoC that manages form state and operations for dynamic forms.
-/// 
+///
 /// This BLoC handles loading form schemas, updating field values, clearing forms,
 /// and submitting form data. It maintains both the current form state and the initial
 /// state for reset operations.
-/// 
+///
 /// ## Usage
-/// 
+///
 /// ```dart
 /// // Create and provide the BLoC
 /// BlocProvider(
 ///   create: (context) => FormsBloc(),
 ///   child: YourFormWidget(),
 /// )
-/// 
+///
 /// // Load a form schema
 /// context.read<FormsBloc>().add(
 ///   FormsEvent.load(schemas: [schemaJson]),
 /// );
-/// 
+///
 /// // Update a field value
 /// context.read<FormsBloc>().add(
 ///   FormsEvent.updateField(
@@ -38,15 +40,15 @@ typedef FormsStateEmitter = Emitter<FormsState>;
 ///     value: 'John Doe',
 ///   ),
 /// );
-/// 
+///
 /// // Submit the form
 /// context.read<FormsBloc>().add(
 ///   FormsEvent.submit(schemaKey: 'userRegistration'),
 /// );
 /// ```
-/// 
+///
 /// ## Events
-/// 
+///
 /// - [FormsLoadEvent]: Load form schemas from JSON strings
 /// - [FormsUpdateFieldEvent]: Update a single field's value
 /// - [FormsUpdateEvent]: Update the entire schema
@@ -54,9 +56,9 @@ typedef FormsStateEmitter = Emitter<FormsState>;
 /// - [FormsClearPageEvent]: Clear all fields on a page
 /// - [FormsClearFormEvent]: Reset form to initial state
 /// - [FormsSubmitEvent]: Submit the form and collect data
-/// 
+///
 /// ## States
-/// 
+///
 /// - [FormsState]: Default state with cached schemas
 /// - [FormsSubmittedState]: Emitted when form is submitted
 class FormsBloc extends Bloc<FormsEvent, FormsState> {
@@ -65,14 +67,13 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
     on<FormsLoadEvent>(_onLoad);
     on<FormsUpdateFieldEvent>(_onUpdateField);
     on<FormsUpdateEvent>(_handleUpdateForm);
-    on<FormsClearFieldEvent>(_onClearField);
     on<FormsClearPageEvent>(_onClearPage);
     on<FormsClearFormEvent>(_onClearForm);
     on<FormsSubmitEvent>(_onSubmit);
   }
 
   /// Load and preprocess schemas from raw JSON strings.
-  /// 
+  ///
   /// This method:
   /// - Parses JSON strings into SchemaObject instances
   /// - Sorts pages and properties by their order
@@ -118,12 +119,16 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
   }
 
   /// Update a single field's value in the schema.
-  /// 
+  ///
   /// This method finds the field in the specified schema and updates its value.
   /// The field is identified by the key parameter and can be in any page of the schema.
   void _onUpdateField(FormsUpdateFieldEvent event, FormsStateEmitter emit) {
     final schema = state.cachedSchemas[event.schemaKey];
     if (schema == null) return;
+
+    final form = ReactiveForm.of(event.context) as FormGroup;
+
+    form.control(event.key).value = event.value;
 
     final updatedPages = {
       for (final entry in schema.pages.entries)
@@ -150,7 +155,7 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
   }
 
   /// Update the entire schema directly.
-  /// 
+  ///
   /// This method replaces the entire schema for the specified schema key.
   void _handleUpdateForm(FormsUpdateEvent event, FormsStateEmitter emit) {
     final updatedSchemas = Map<String, SchemaObject>.from(state.cachedSchemas);
@@ -162,19 +167,8 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
     ));
   }
 
-  /// Clear a specific field by setting its value to null.
-  /// 
-  /// This method delegates to _onUpdateField with a null value.
-  void _onClearField(FormsClearFieldEvent event, FormsStateEmitter emit) {
-    add(FormsUpdateFieldEvent(
-      schemaKey: event.schemaKey,
-      key: event.key,
-      value: null,
-    ));
-  }
-
   /// Clear all fields on a single page by setting their values to null.
-  /// 
+  ///
   /// This method finds the specified page and clears all field values in that page.
   void _onClearPage(FormsClearPageEvent event, FormsStateEmitter emit) {
     final schema = state.cachedSchemas[event.schemaKey];
@@ -201,7 +195,7 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
   }
 
   /// Reset the entire form schema to its initial state.
-  /// 
+  ///
   /// This method restores the schema to its original state when it was first loaded.
   void _onClearForm(FormsClearFormEvent event, FormsStateEmitter emit) {
     final initialSchema = state.initialSchemas[event.schemaKey];
@@ -217,7 +211,7 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
   }
 
   /// Submit the form and collect all form data.
-  /// 
+  ///
   /// This method:
   /// - Collects all field values from all pages
   /// - Filters out hidden fields (unless includeInForm is true)
@@ -261,13 +255,13 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
 }
 
 /// Events that can be dispatched to the FormsBloc.
-/// 
+///
 /// These events represent all possible actions that can be performed on forms,
 /// from loading schemas to submitting form data.
 @freezed
 class FormsEvent with _$FormsEvent {
   /// Load list of schema JSON strings.
-  /// 
+  ///
   /// This event parses the provided JSON strings into SchemaObject instances
   /// and stores them in the bloc's state. The schemas are preprocessed to
   /// sort pages and properties by order, and filter out pages where all
@@ -277,17 +271,18 @@ class FormsEvent with _$FormsEvent {
   }) = FormsLoadEvent;
 
   /// Update a single field's value in the schema.
-  /// 
+  ///
   /// This event updates the value of a specific field identified by the key.
   /// The field can be in any page of the specified schema.
   const factory FormsEvent.updateField({
     required String schemaKey,
     required String key,
     required dynamic value,
+    required BuildContext context,
   }) = FormsUpdateFieldEvent;
 
   /// Updates the entire schema directly.
-  /// 
+  ///
   /// This event replaces the entire schema for the specified schema key.
   /// Use this when you need to update the schema structure itself.
   const factory FormsEvent.update({
@@ -295,16 +290,8 @@ class FormsEvent with _$FormsEvent {
     required String schemaKey,
   }) = FormsUpdateEvent;
 
-  /// Clear a specific field (sets value to null).
-  /// 
-  /// This event clears the value of a specific field by setting it to null.
-  const factory FormsEvent.clearField({
-    required String schemaKey,
-    required String key,
-  }) = FormsClearFieldEvent;
-
   /// Clear all fields on a single page.
-  /// 
+  ///
   /// This event clears all field values on the specified page by setting
   /// them to null.
   const factory FormsEvent.clearPage({
@@ -313,7 +300,7 @@ class FormsEvent with _$FormsEvent {
   }) = FormsClearPageEvent;
 
   /// Reset the entire form schema to its initial state.
-  /// 
+  ///
   /// This event restores the schema to its original state when it was
   /// first loaded, effectively resetting all form data.
   const factory FormsEvent.clearForm({
@@ -321,7 +308,7 @@ class FormsEvent with _$FormsEvent {
   }) = FormsClearFormEvent;
 
   /// Submit the form, emitting a summary output of collected form data.
-  /// 
+  ///
   /// This event collects all form data from all pages, filters out hidden
   /// fields (unless includeInForm is true), and emits a FormsSubmittedState
   /// with the collected data.
@@ -332,14 +319,14 @@ class FormsEvent with _$FormsEvent {
 }
 
 /// States that can be emitted by the FormsBloc.
-/// 
+///
 /// These states represent the different states of the form system,
 /// from the default state with cached schemas to the submitted state
 /// with collected form data.
 @freezed
 class FormsState with _$FormsState {
   /// Default state with cached schemas.
-  /// 
+  ///
   /// This state contains the current form schemas and their data.
   /// It is the normal operating state of the form system.
   const factory FormsState({
@@ -349,7 +336,7 @@ class FormsState with _$FormsState {
   }) = _FormsState;
 
   /// State emitted when a form is submitted.
-  /// 
+  ///
   /// This state contains the submitted form data along with the schema
   /// and other state information. It is emitted when a form is successfully
   /// submitted.
