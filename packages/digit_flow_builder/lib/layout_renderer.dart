@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
-import 'package:digit_forms_engine/widgets/back_header/back_navigation_help_header.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/text_block.dart';
@@ -26,6 +25,7 @@ class LayoutRendererPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<dynamic> body = config['body'] ?? [];
     final List<dynamic> actions = config['footer'] ?? [];
+    final List<dynamic> headers = config['header'] ?? [];
 
     final screenKey =
         getScreenKeyFromArgs(context) ?? context.router.currentPath;
@@ -37,11 +37,26 @@ class LayoutRendererPage extends StatelessWidget {
 
         return Scaffold(
           body: ScrollableContent(
-            header: const Column(
-              children: [
-                BackNavigationHelpHeaderWidget(),
-              ],
-            ),
+            header: headers.isNotEmpty
+                ? Padding(
+                    padding: const EdgeInsets.only(top: spacer4, left: spacer4),
+                    child: Row(
+                      children: headers
+                          .map((e) => LayoutMapper.map(
+                                preprocessConfigWithState(e, stateData),
+                                stateData,
+                                context,
+                                screenKey: screenKey,
+                                (action) {
+                                  ActionHandler.execute(action, context, {
+                                    'wrappers': const [],
+                                  });
+                                },
+                              ))
+                          .toList(),
+                    ),
+                  )
+                : null,
             enableFixedDigitButton: actions.isNotEmpty ? true : false,
             footer: actions.isNotEmpty
                 ? DigitCard(
@@ -114,6 +129,24 @@ class LayoutRendererPage extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<void> _handleBackNavigation(BuildContext context) async {
+    final backNavigationConfig = config['header'] as Map<String, dynamic>?;
+
+    if (backNavigationConfig != null) {
+      // Execute configured back navigation action
+      final actionConfig = ActionConfig.fromJson(backNavigationConfig);
+      await ActionHandler.execute(actionConfig, context, {});
+    } else {
+      // Default behavior - single pop
+      final actionConfig = ActionConfig.fromJson({
+        'actionType': 'BACK_NAVIGATION',
+        'properties': {},
+      });
+
+      await ActionHandler.execute(actionConfig, context, {});
+    }
   }
 }
 

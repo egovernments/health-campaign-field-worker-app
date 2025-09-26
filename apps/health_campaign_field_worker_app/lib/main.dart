@@ -94,6 +94,15 @@ final dynamic sampleFlows = {
       "name": "searchBeneficiary",
       "heading": "Search Beneficiary",
       "description": "search beneficiary description",
+      "header": [
+        {
+          "format": "backLink",
+          "label": "Back",
+          "onAction": [
+            {"actionType": "BACK_NAVIGATION", "properties": {}}
+          ]
+        },
+      ],
       "footer": [
         {
           "format": "button",
@@ -1020,6 +1029,18 @@ final dynamic sampleFlows = {
       "name": "householdOverview",
       "heading": "Household Overview",
       "description": "Overview of beneficiary",
+      "header": [
+        {
+          "format": "backLink",
+          "label": "Back",
+          "onAction": [
+            {
+              "actionType": "BACK_NAVIGATION",
+              "properties": {"type": "TEMPLATE", "name": "searchBeneficiary"}
+            }
+          ]
+        },
+      ],
       "wrapperConfig": {
         "wrapperName": "HouseholdWrapper",
         "rootEntity": "HouseholdModel",
@@ -1921,6 +1942,18 @@ final dynamic sampleFlows = {
       ],
       "screenType": "TEMPLATE",
       "name": "beneficiaryDetails",
+      "header": [
+        {
+          "format": "backLink",
+          "label": "Back",
+          "onAction": [
+            {
+              "actionType": "BACK_NAVIGATION",
+              "properties": {"type": "TEMPLATE", "name": "householdOverview"}
+            }
+          ]
+        },
+      ],
       "heading": "Beneficiary Details",
       "description": "Details of beneficiary",
       "wrapperConfig": {
@@ -2593,6 +2626,18 @@ final dynamic sampleFlows = {
       "name": "deliverySuccess",
       "heading": "Successful Delivery",
       "description": "The delivery is successful",
+      "header": [
+        {
+          "format": "backLink",
+          "label": "Back",
+          "onAction": [
+            {
+              "actionType": "BACK_NAVIGATION",
+              "properties": {"type": "TEMPLATE", "name": "householdOverview"}
+            }
+          ]
+        },
+      ],
       "body": [
         {
           "format": "panelCard",
