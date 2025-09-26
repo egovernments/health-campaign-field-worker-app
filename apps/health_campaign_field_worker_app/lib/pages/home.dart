@@ -368,7 +368,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             if (isTriggerLocalisation) {
               final moduleName =
-                  'hcm-registrationflow-${context.selectedProject.referenceID}';
+                  'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
               triggerLocalization(module: moduleName);
               isTriggerLocalisation = false;
             }
