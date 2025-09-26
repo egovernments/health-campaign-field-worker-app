@@ -1,3 +1,5 @@
+import 'package:digit_flow_builder/widgets/implementations/back_link.dart';
+
 import 'flow_widget_interface.dart';
 import 'implementations/button_widget.dart';
 import 'implementations/card_widget.dart';
@@ -41,6 +43,7 @@ class WidgetRegistration {
     FlowWidgetFactory.register(PanelCardWidget());
     FlowWidgetFactory.register(ListViewWidget());
     FlowWidgetFactory.register(LabelPairListWidget());
+    FlowWidgetFactory.register(BackLinkWidget());
 
     _initialized = true;
   }
