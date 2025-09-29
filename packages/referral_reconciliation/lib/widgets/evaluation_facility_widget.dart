@@ -1,6 +1,7 @@
 import 'package:digit_data_model/blocs/project_facility/project_facility.dart';
 import 'package:digit_data_model/models/entities/project_facility.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
+import 'package:digit_forms_engine/models/property_schema/property_schema.dart';
 import 'package:digit_forms_engine/pages/forms_render.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/dropdown_wrapper.dart';
@@ -55,6 +56,35 @@ class _EvaluationKeyDropDownState
         context.findAncestorWidgetOfExactType<FormsRenderPage>()?.isView ??
             false;
 
+    bool isReadOnlyFromSchema = false;
+    String? labelFromSchema;
+
+    final pages =
+        context.read<FormsBloc>().state.cachedSchemas[_schemaKey]?.pages;
+
+    void walk(Map<String, PropertySchema> node, List<String> pathSoFar) {
+      for (final entry in node.entries) {
+        final key = entry.key;
+        final schema = entry.value;
+
+        if (key == _evaluationKey) {
+          isReadOnlyFromSchema =
+              (schema.readOnly == true) || (schema.displayOnly == true);
+          labelFromSchema = schema.label ?? schema.innerLabel;
+          return;
+        }
+
+        if (schema.properties != null && schema.properties!.isNotEmpty) {
+          walk(schema.properties!, [...pathSoFar, key]);
+          if (labelFromSchema != null || isReadOnlyFromSchema) return;
+        }
+      }
+    }
+
+    if (pages != null) {
+      walk(pages, []);
+    }
+
     return ReactiveWrapperField<dynamic>(
       formControlName: _evaluationKey,
       validationMessages: {
@@ -66,7 +96,7 @@ class _EvaluationKeyDropDownState
         final form = ReactiveForm.of(context) as FormGroup;
 
         return LabeledField(
-          isRequired: true,
+          isRequired: isReadOnlyFromSchema,
           label: localizations
               .translate(i18.referralReconciliation.facilityKeyLabel),
           child: Dropdown(

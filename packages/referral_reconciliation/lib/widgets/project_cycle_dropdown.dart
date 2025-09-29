@@ -72,7 +72,7 @@ class _CycleDropDownState extends LocalizedState<CycleDropDown> {
         final form = ReactiveForm.of(context) as FormGroup;
 
         return LabeledField(
-          isRequired: true,
+          isRequired: isReadOnlyFromSchema,
           label: labelFromSchema != null &&
                   localizations.translate(labelFromSchema!).isNotEmpty
               ? localizations.translate(labelFromSchema!)
