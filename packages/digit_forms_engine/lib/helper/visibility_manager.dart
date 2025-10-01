@@ -9,15 +9,24 @@ class VisibilityManager {
   final Map<String, PropertySchema> schemaMap;
   final FormGroup form;
   final Map<String, dynamic> formData;
+  final Map<String, dynamic>? navigationParams;
 
   VisibilityManager({
     required this.schemaMap,
     required this.form,
     required this.formData,
+    this.navigationParams,
   });
 
   void evaluateVisibility() {
     final flatValues = flattenMap(formData);
+
+    // Add navigation params to the evaluation context
+    if (navigationParams != null) {
+      navigationParams!.forEach((key, value) {
+        flatValues['nav.$key'] = value;
+      });
+    }
 
     for (final entry in schemaMap.entries) {
       final key = entry.key;

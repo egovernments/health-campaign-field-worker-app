@@ -172,9 +172,17 @@ Map<String, dynamic> buildVisibilityEvaluationContext({
   required String currentPageKey,
   required FormGroup currentForm,
   required Map<String, PropertySchema> pages,
+  Map<String, dynamic>? navigationParams,
 }) {
   final Map<String, dynamic> flatContext = {};
   bool isPastCurrentPage = false;
+
+  // Add navigation params to the context if provided
+  if (navigationParams != null) {
+    navigationParams.forEach((key, value) {
+      flatContext['navigation.$key'] = value;
+    });
+  }
 
   for (final entry in pages.entries) {
     final pageKey = entry.key;

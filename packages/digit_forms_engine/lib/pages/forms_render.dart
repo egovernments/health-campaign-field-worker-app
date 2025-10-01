@@ -422,6 +422,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                             pageName: widget.pageName,
                             currentSchemaKey: widget.currentSchemaKey,
                             childrens: widget.customComponents,
+                            navigationParams: widget.navigationParams,
                             defaultValues: const {
                               // 'locality': context.boundary.code,
                             },
