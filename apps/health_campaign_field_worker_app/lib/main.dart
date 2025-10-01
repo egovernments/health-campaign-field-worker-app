@@ -3097,6 +3097,33 @@ final dynamic sampleInventoryFlows = {
             },
             {
               "type": "string",
+              "label": "Damaged options",
+              "order": 3,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "damagedOptions",
+              "deleteFlag": false,
+              "visibilityCondition": {
+                "expression": "navigation.stockEntryType==DAMAGED"
+              },
+              "innerLabel": "",
+              "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "", "name": "Bus"},
+                {"code": "TRUCK", "name": "Truck"}
+              ]
+            },
+            {
+              "type": "string",
               "label": "APPONE_INVENTORY_QUANTITY_LABEL",
               "order": 4,
               "value": "",

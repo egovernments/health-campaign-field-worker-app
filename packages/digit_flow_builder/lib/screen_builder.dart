@@ -180,6 +180,7 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
         final pageName = schemaObject.pages.entries.first.key;
         return FormsRenderPage(
           pageName: pageName,
+          navigationParams: widget.navigationParams,
           currentSchemaKey: widget.schemaKey,
           // Pass custom components from registry with enhanced state access
           customComponents: _buildCustomComponents(

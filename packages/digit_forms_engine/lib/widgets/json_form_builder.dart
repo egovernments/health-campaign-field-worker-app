@@ -6,6 +6,7 @@ class JsonFormBuilder extends LocalizedStatefulWidget {
   final List<Map<String, Widget>>? components;
   final String pageName;
   final String currentSchemaKey;
+  final Map<String, dynamic>? navigationParams;
 
   const JsonFormBuilder({
     super.key,
@@ -15,6 +16,7 @@ class JsonFormBuilder extends LocalizedStatefulWidget {
     this.components,
     required this.pageName,
     required this.currentSchemaKey,
+    this.navigationParams,
   });
 
   @override
@@ -109,17 +111,20 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         currentPageKey: currentPageKey,
         currentForm: form,
         pages: formState.cachedSchemas[currentSchemaKey]!.pages,
+        navigationParams: widget.navigationParams,
 
         /// TODO: fix hardcode not null condition
       );
 
       final result =
           evaluateVisibilityExpression(visibility.expression, values);
-      VisibilityManager(schemaMap: {
-        widget.formControlName: widget.schema,
-      }, formData: form.rawValue, form: form)
-          .toggleControlVisibility(
-              widget.formControlName, result, widget.schema);
+      VisibilityManager(
+        schemaMap: {widget.formControlName: widget.schema},
+        formData: form.rawValue,
+        form: form,
+        navigationParams: widget.navigationParams,
+      ).toggleControlVisibility(
+          widget.formControlName, result, widget.schema);
 
       return !result;
     }
@@ -483,6 +488,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
               formControlName: subName,
               schema: subSchema,
               components: widget.components,
+              navigationParams: widget.navigationParams,
             );
 
             final isLast = index ==
