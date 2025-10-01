@@ -71,7 +71,7 @@ class StockReconciliationBloc
     final receivedStocks = (await stockRepository.search(
       StockSearchModel(
           productVariantId: productVariantId,
-          receiverId: facilityId,
+          receiverId: [facilityId!],
           transactionType: [TransactionType.received.toValue()]),
     ))
         .where((element) =>

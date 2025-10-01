@@ -38,7 +38,7 @@ class StockLocalRepository
                 [
                   if (query.id != null) sql.stock.id.equals(query.id!),
                   if (query.receiverId != null)
-                    sql.stock.receiverId.equals(query.receiverId!),
+                    sql.stock.receiverId.isIn(query.receiverId!),
                   if (query.senderId != null)
                     sql.stock.senderId.equals(query.senderId!),
                   if (query.productVariantId != null)
