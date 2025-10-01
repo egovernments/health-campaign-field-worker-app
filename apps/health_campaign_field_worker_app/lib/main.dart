@@ -2708,6 +2708,15 @@ final dynamic sampleInventoryFlows = {
       "name": "manageStock",
       "heading": "Manage Stock",
       "description": "",
+      "header": [
+        {
+          "format": "backLink",
+          "label": "Back",
+          "onAction": [
+            {"actionType": "BACK_NAVIGATION", "properties": {}}
+          ]
+        },
+      ],
       "footer": [],
       "initActions": [
         {
@@ -2752,7 +2761,7 @@ final dynamic sampleInventoryFlows = {
           "format": "menu_card",
           "heading": "Record Stock Receipt",
           "description": "Create records for stock received at the warehouse",
-          "icon": Icons.file_upload_outlined,
+          "icon": 'file_upload_outlined',
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -2760,7 +2769,7 @@ final dynamic sampleInventoryFlows = {
                 "type": "FORM",
                 "name": "MANAGESTOCK",
                 "data": [
-                  {"key": "stockEntryType", "value": "receipt"}
+                  {"key": "stockEntryType", "value": "RECEIVED"}
                 ]
               }
             }
@@ -2770,7 +2779,7 @@ final dynamic sampleInventoryFlows = {
           "format": "menu_card",
           "heading": "Record Stock Issued",
           "description": "Create records for stock sent out from the warehouse",
-          "icon": Icons.file_download_outlined,
+          "icon": 'file_download_outlined',
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -2778,7 +2787,7 @@ final dynamic sampleInventoryFlows = {
                 "type": "FORM",
                 "name": "MANAGESTOCK",
                 "data": [
-                  {"key": "stockEntryType", "value": "dispatch"}
+                  {"key": "stockEntryType", "value": "DISPATCHED"}
                 ]
               }
             }
@@ -2789,7 +2798,7 @@ final dynamic sampleInventoryFlows = {
           "heading": "Stock Returned",
           "description":
               "Create records for the stock returned to the warehouse",
-          "icon": Icons.settings_backup_restore,
+          "icon": 'settings_backup_restore',
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -2797,12 +2806,48 @@ final dynamic sampleInventoryFlows = {
                 "type": "FORM",
                 "name": "MANAGESTOCK",
                 "data": [
-                  {"key": "stockEntryType", "value": "returned"}
+                  {"key": "stockEntryType", "value": "RECEIVED"}
                 ]
               }
             }
           ]
         },
+        {
+          "format": "menu_card",
+          "heading": "Stock Damaged",
+          "description":
+              "Record the list of resources damaged during campaign operations",
+          "icon": 'store',
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "FORM",
+                "name": "MANAGESTOCK",
+                "data": [
+                  {"key": "stockEntryType", "value": "DISPATCHED"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "format": "menu_card",
+          "heading": "Stock Loss",
+          "description":
+              "Record the list of resources lost during campaign operations",
+          "icon": 'store',
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "viewTransaction",
+                "data": []
+              }
+            }
+          ]
+        }
       ]
     },
     {
@@ -2979,7 +3024,7 @@ final dynamic sampleInventoryFlows = {
                   "Select the facility from which the stock is being received",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "facilityToWhich",
+              "fieldName": "facilityFromWhich",
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
@@ -3022,6 +3067,58 @@ final dynamic sampleInventoryFlows = {
             },
             {
               "type": "string",
+              "label": "APPONE_INVENTORY_WAYBILL_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "wayBillNumber",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Required field cannot be empty"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            },
+            {
+              "type": "string",
+              "label": "APPONE_INVENTORY_QUANTITY_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "quantity",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Required field cannot be empty"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            },
+            {
+              "type": "string",
               "label": "APPONE_INVENTORY_COMMENT_LABEL",
               "order": 4,
               "value": "",
@@ -3034,13 +3131,12 @@ final dynamic sampleInventoryFlows = {
               "fieldName": "comment",
               "deleteFlag": false,
               "innerLabel": "",
-              "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
               "systemDate": false,
               "validations": [],
               "errorMessage": "",
               "isMultiSelect": false,
               "enums": null
-            }
+            },
           ],
           "value": null,
           "required": null,
@@ -3061,7 +3157,288 @@ final dynamic sampleInventoryFlows = {
           "navigateTo": {"name": "stock-acknowledgement", "type": "template"}
         },
       ],
-      "onAction": []
-    }
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "configName": "stock",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to fetch config."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "STOCK",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to create stock."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "type": "TEMPLATE",
+            "name": "stockSuccess",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Navigation failed."}
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "screenType": "TEMPLATE",
+      "name": "stockSuccess",
+      "heading": "",
+      "description": "",
+      "body": [
+        {
+          "format": "panelCard",
+          "label": "Material receipt created successfully",
+          "description": "MRN Number {{contextData.mrnNumber}}",
+          "properties": {"type": "success"},
+          "primaryAction": {
+            "label": "View Transaction",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "type": "TEMPLATE",
+                  "name": "stockRecordListScreen",
+                  "data": []
+                }
+              }
+            ]
+          },
+          "secondaryAction": {
+            "label": "Create New Transaction",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "type": "TEMPLATE",
+                  "name": "manageStock",
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "screenType": "TEMPLATE",
+      "name": "viewTransaction",
+      "heading": "Select the MIN number",
+      "description": "",
+      "header": [
+        {
+          "format": "backLink",
+          "label": "Back",
+          "onAction": [
+            {"actionType": "BACK_NAVIGATION", "properties": {}}
+          ]
+        },
+      ],
+      "footer": [],
+      "body": [
+        {
+          "format": "card",
+          "children": [
+            {
+              "format": "row",
+              "properties": {
+                "mainAxisAlignment": "spaceBetween",
+                "mainAxisSize": "max"
+              },
+              "children": [
+                {"format": "tag", "type": "", "label": "MIN-901239"},
+                {"format": "text", "value": "13 Feb 2025"},
+              ]
+            },
+            {
+              "format": "row",
+              "properties": {
+                "mainAxisAlignment": "spaceBetween",
+                "mainAxisSize": "max"
+              },
+              "children": [
+                {
+                  "format": "column",
+                  "properties": {
+                    "mainAxisAlignment": "spaceBetween",
+                    "mainAxisSize": "min"
+                  },
+                  "children": [
+                    {"format": "text", "value": "Issued to"},
+                    {"format": "text", "value": "Ondo State Facility"},
+                  ]
+                },
+                {
+                  "format": "button",
+                  "label": "view QR",
+                  "properties": {
+                    "type": "secondary",
+                    "size": "small",
+                    "mainAxisSize": "min",
+                    "mainAxisAlignment": "center"
+                  },
+                  "onAction": []
+                },
+              ]
+            },
+            {
+              "format": "button",
+              "label": "Select transaction",
+              "properties": {
+                "type": "primary",
+                "size": "large",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              },
+              "onAction": []
+            },
+          ]
+        },
+        {
+          "format": "card",
+          "children": [
+            {
+              "format": "row",
+              "properties": {
+                "mainAxisAlignment": "spaceBetween",
+                "mainAxisSize": "max"
+              },
+              "children": [
+                {"format": "tag", "type": "", "label": "MIN-901239"},
+                {"format": "text", "value": "13 Feb 2025"},
+              ]
+            },
+            {
+              "format": "row",
+              "properties": {
+                "mainAxisAlignment": "spaceBetween",
+                "mainAxisSize": "max"
+              },
+              "children": [
+                {
+                  "format": "column",
+                  "properties": {
+                    "mainAxisAlignment": "spaceBetween",
+                    "mainAxisSize": "min"
+                  },
+                  "children": [
+                    {"format": "text", "value": "Issued to"},
+                    {"format": "text", "value": "Ondo State Facility"},
+                  ]
+                },
+                {
+                  "format": "button",
+                  "label": "view QR",
+                  "properties": {
+                    "type": "secondary",
+                    "size": "small",
+                    "mainAxisSize": "min",
+                    "mainAxisAlignment": "center"
+                  },
+                  "onAction": []
+                },
+              ]
+            },
+            {
+              "format": "button",
+              "label": "Select transaction",
+              "properties": {
+                "type": "primary",
+                "size": "large",
+                "mainAxisSize": "max",
+                "mainAxisAlignment": "center"
+              },
+              "onAction": []
+            },
+          ]
+        },
+        {
+          "format": "infoCard",
+          "hidden": "{{ context.stock.isNotEmpty }}",
+          "label": "No transactions found",
+          "description": "Record new transaction to see the transaction details"
+        },
+        {
+          "format": "listView",
+          "hidden": "{{ context.stock.empty }}",
+          "fieldName": "listView",
+          "dataSource": "",
+          "child": {
+            "format": "card",
+            "children": [
+              {
+                "format": "row",
+                "properties": {
+                  "mainAxisAlignment": "spaceBetween",
+                  "mainAxisSize": "max"
+                },
+                "children": [
+                  {"format": "tag", "type": "", "label": "MIN-901239"},
+                  {"format": "text", "value": "13 Feb 2025"},
+                ]
+              },
+              {
+                "format": "row",
+                "properties": {
+                  "mainAxisAlignment": "spaceBetween",
+                  "mainAxisSize": "max"
+                },
+                "children": [
+                  {
+                    "format": "column",
+                    "properties": {
+                      "mainAxisAlignment": "spaceBetween",
+                      "mainAxisSize": "min"
+                    },
+                    "children": [
+                      {"format": "text", "value": "Issued to"},
+                      {"format": "text", "value": "Ondo State Facility"},
+                    ]
+                  },
+                  {
+                    "format": "button",
+                    "label": "view QR",
+                    "properties": {
+                      "type": "secondary",
+                      "size": "small",
+                      "mainAxisSize": "min",
+                      "mainAxisAlignment": "center"
+                    },
+                    "onAction": []
+                  },
+                ]
+              },
+              {
+                "format": "button",
+                "label": "Select transaction",
+                "properties": {
+                  "type": "primary",
+                  "size": "large",
+                  "mainAxisSize": "max",
+                  "mainAxisAlignment": "center"
+                },
+                "onAction": []
+              },
+            ]
+          }
+        }
+      ]
+    },
   ]
 };

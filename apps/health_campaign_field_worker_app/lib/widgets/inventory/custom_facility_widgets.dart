@@ -29,7 +29,9 @@ class FacilityCard extends LocalizedStatefulWidget {
 
 class _FacilityCardState extends LocalizedState<FacilityCard> {
   static const _facilityToWhichKey = 'facilityToWhich';
+  static const _facilityFromWhichKey = 'facilityFromWhich';
   static const _teamCodeKey = 'teamCode';
+  static const _deliveryTeamKey = 'deliveryTeam';
 
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
@@ -54,9 +56,9 @@ class _FacilityCardState extends LocalizedState<FacilityCard> {
   @override
   Widget build(BuildContext context) {
     // Check if user is distributor but not warehouse manager
-    final isDistributor = InventorySingleton().isDistributor ?? false;
-    final isWareHouseMgr = InventorySingleton().isWareHouseMgr ?? false;
-    final showDeliveryTeamOption = isDistributor && isWareHouseMgr;
+    final isDistributor = InventorySingleton().isDistributor;
+    final isWareHouseMgr = InventorySingleton().isWareHouseMgr;
+    final showDeliveryTeamOption = isDistributor && !isWareHouseMgr;
 
     final pages =
         context.read<FormsBloc>().state.cachedSchemas['MANAGESTOCK']?.pages;
@@ -127,6 +129,16 @@ class _FacilityCardState extends LocalizedState<FacilityCard> {
               value: selectedFacilityId,
             ),
             _teamCodeKey: FormControl<String>(
+              value: scannerState.qrCodes.isNotEmpty
+                  ? scannerState.qrCodes.first
+                  : '',
+              validators: deliveryTeamSelected ? [Validators.required] : [],
+            ),
+            _facilityFromWhichKey: FormControl<dynamic>(
+              validators: [Validators.required],
+              value: selectedFacilityId,
+            ),
+            _deliveryTeamKey: FormControl<String>(
               value: scannerState.qrCodes.isNotEmpty
                   ? scannerState.qrCodes.first
                   : '',

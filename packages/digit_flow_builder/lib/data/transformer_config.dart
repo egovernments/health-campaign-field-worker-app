@@ -400,5 +400,61 @@ final jsonConfig = {
         }
       }
     }
+  },
+  "stock": {
+    "fallbackModel": "StockModel",
+    "models": {
+      "StockModel": {
+        "mappings": {
+          "id": "stockDetails.id",
+          "clientReferenceId": "__generate:uuid",
+          "facilityId": "stockDetails:facilityToWhich",
+          "productVariantId": "stockDetails.productdetail.id",
+          "referenceId": "__context:projectId",
+          "referenceIdType": "__value:PROJECT",
+          "quantity": "stockDetails.quantity",
+          "wayBillNumber": "stockDetails.wayBillNumber",
+          "transactionType": "__context.transactionType",
+          "transactionReason": "stockDetails.transactionReason",
+          "transactingPartyId": "stockDetails.transactingPartyId",
+          "senderId": "stockDetails.facilityFromWhich",
+          "senderType": "__value:WAREHOUSE",
+          "receiverId": "warehouseDetails.facilityToWhich",
+          "receiverType": "__value:WAREHOUSE",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "additionalFields": "additionalInfo.fields",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "dateOfEntryTime": "warehouseDetails.dateOfEntry"
+        }
+      },
+    }
+  },
+  "stockReconciliation": {
+    "fallbackModel": "StockReconciliationModel",
+    "models": {
+      "StockReconciliationModel": {
+        "mappings": {
+          "id": "reconciliation.id",
+          "clientReferenceId": "__generate:uuid",
+          "facilityId": "__context:facilityId",
+          "productVariantId": "reconciliation.productVariantId",
+          "referenceId": "reconciliation.referenceId",
+          "referenceIdType": "reconciliation.referenceIdType",
+          "physicalCount": "reconciliation.physicalCount",
+          "calculatedCount": "reconciliation.calculatedCount",
+          "commentsOnReconciliation": "reconciliation.comments",
+          "dateOfReconciliation": "reconciliation.dateOfReconciliation",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "additionalFields": "additionalInfo.fields",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+        }
+      }
+    }
   }
 };

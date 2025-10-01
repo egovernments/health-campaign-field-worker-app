@@ -31,8 +31,13 @@ class DigitCrudService extends CrudService {
     } else if (entity is ProjectFacilityModel) {
       return context.repository<ProjectFacilityModel,
           ProjectFacilitySearchModel>(context);
+    } else if (entity is ProductVariantModel) {
+      return context
+          .repository<ProductVariantModel, ProductVariantSearchModel>(context);
+    } else if (entity is StockModel) {
+      return context.repository<StockModel, StockSearchModel>(context);
     } else {
-      return context.repository<HouseholdModel, HouseholdSearchModel>(context);
+      return context.repository<EntityModel, EntitySearchModel>(context);
     }
   }
 }
@@ -66,6 +71,10 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
         return ProjectProductVariantModelMapper.fromMap(normalizedMap);
       case 'address':
         return AddressModelMapper.fromMap(normalizedMap);
+      case 'stock':
+        return StockModelMapper.fromMap(normalizedMap);
+      case 'stockRecon':
+        return StockReconciliationModelMapper.fromMap(normalizedMap);
       default:
         return EntityModelMapper.fromMap(normalizedMap);
     }

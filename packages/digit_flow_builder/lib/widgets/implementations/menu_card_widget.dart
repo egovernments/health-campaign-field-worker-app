@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../utils/conditional_evaluator.dart';
+import '../../utils/icon_accessor.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
@@ -77,7 +78,7 @@ class MenuCardWidget implements FlowWidget {
       },
       heading: json['heading'],
       description: json['description'],
-      icon: json['icon'],
+      icon: IconMapper.getIconOrDefault(json['icon']),
     );
   }
 }

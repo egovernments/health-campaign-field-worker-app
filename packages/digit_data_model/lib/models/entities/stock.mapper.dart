@@ -10,6 +10,7 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
   StockSearchModelMapper._();
 
   static StockSearchModelMapper? _instance;
+
   static StockSearchModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = StockSearchModelMapper._());
@@ -23,66 +24,85 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
   static String? _$id(StockSearchModel v) => v.id;
   static const Field<StockSearchModel, String> _f$id =
       Field('id', _$id, opt: true);
+
   static String? _$tenantId(StockSearchModel v) => v.tenantId;
   static const Field<StockSearchModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
+
   static String? _$facilityId(StockSearchModel v) => v.facilityId;
   static const Field<StockSearchModel, String> _f$facilityId =
       Field('facilityId', _$facilityId, opt: true);
+
   static String? _$productVariantId(StockSearchModel v) => v.productVariantId;
   static const Field<StockSearchModel, String> _f$productVariantId =
       Field('productVariantId', _$productVariantId, opt: true);
+
   static String? _$referenceId(StockSearchModel v) => v.referenceId;
   static const Field<StockSearchModel, String> _f$referenceId =
       Field('referenceId', _$referenceId, opt: true);
+
   static String? _$referenceIdType(StockSearchModel v) => v.referenceIdType;
   static const Field<StockSearchModel, String> _f$referenceIdType =
       Field('referenceIdType', _$referenceIdType, opt: true);
+
   static String? _$transactingPartyId(StockSearchModel v) =>
       v.transactingPartyId;
   static const Field<StockSearchModel, String> _f$transactingPartyId =
       Field('transactingPartyId', _$transactingPartyId, opt: true);
+
   static String? _$transactingPartyType(StockSearchModel v) =>
       v.transactingPartyType;
   static const Field<StockSearchModel, String> _f$transactingPartyType =
       Field('transactingPartyType', _$transactingPartyType, opt: true);
-  static String? _$receiverId(StockSearchModel v) => v.receiverId;
-  static const Field<StockSearchModel, String> _f$receiverId =
+
+  static List<String>? _$receiverId(StockSearchModel v) => v.receiverId;
+  static const Field<StockSearchModel, List<String>> _f$receiverId =
       Field('receiverId', _$receiverId, opt: true);
+
   static String? _$receiverType(StockSearchModel v) => v.receiverType;
   static const Field<StockSearchModel, String> _f$receiverType =
       Field('receiverType', _$receiverType, opt: true);
+
   static String? _$senderId(StockSearchModel v) => v.senderId;
   static const Field<StockSearchModel, String> _f$senderId =
       Field('senderId', _$senderId, opt: true);
+
   static String? _$senderType(StockSearchModel v) => v.senderType;
   static const Field<StockSearchModel, String> _f$senderType =
       Field('senderType', _$senderType, opt: true);
+
   static List<String>? _$clientReferenceId(StockSearchModel v) =>
       v.clientReferenceId;
   static const Field<StockSearchModel, List<String>> _f$clientReferenceId =
       Field('clientReferenceId', _$clientReferenceId, opt: true);
+
   static List<String>? _$transactionType(StockSearchModel v) =>
       v.transactionType;
   static const Field<StockSearchModel, List<String>> _f$transactionType =
       Field('transactionType', _$transactionType, opt: true);
+
   static List<String>? _$transactionReason(StockSearchModel v) =>
       v.transactionReason;
   static const Field<StockSearchModel, List<String>> _f$transactionReason =
       Field('transactionReason', _$transactionReason, opt: true);
+
   static int? _$dateOfEntry(StockSearchModel v) => v.dateOfEntry;
   static const Field<StockSearchModel, int> _f$dateOfEntry =
       Field('dateOfEntry', _$dateOfEntry, opt: true);
+
   static String? _$boundaryCode(StockSearchModel v) => v.boundaryCode;
   static const Field<StockSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
+
   static AuditDetails? _$auditDetails(StockSearchModel v) => v.auditDetails;
   static const Field<StockSearchModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, mode: FieldMode.member);
+
   static AdditionalFields? _$additionalFields(StockSearchModel v) =>
       v.additionalFields;
   static const Field<StockSearchModel, AdditionalFields> _f$additionalFields =
       Field('additionalFields', _$additionalFields, mode: FieldMode.member);
+
   static DateTime? _$dateOfEntryTime(StockSearchModel v) => v.dateOfEntryTime;
   static const Field<StockSearchModel, DateTime> _f$dateOfEntryTime =
       Field('dateOfEntryTime', _$dateOfEntryTime, mode: FieldMode.member);
@@ -168,6 +188,7 @@ mixin StockSearchModelMappable {
   StockSearchModelCopyWith<StockSearchModel, StockSearchModel, StockSearchModel>
       get copyWith => _StockSearchModelCopyWithImpl(
           this as StockSearchModel, $identity, $identity);
+
   @override
   String toString() {
     return StockSearchModelMapper.ensureInitialized()
@@ -196,12 +217,17 @@ extension StockSearchModelValueCopy<$R, $Out>
 
 abstract class StockSearchModelCopyWith<$R, $In extends StockSearchModel, $Out>
     implements EntitySearchModelCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get receiverId;
+
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
+
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get transactionType;
+
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get transactionReason;
+
   @override
   $R call(
       {String? id,
@@ -212,7 +238,7 @@ abstract class StockSearchModelCopyWith<$R, $In extends StockSearchModel, $Out>
       String? referenceIdType,
       String? transactingPartyId,
       String? transactingPartyType,
-      String? receiverId,
+      List<String>? receiverId,
       String? receiverType,
       String? senderId,
       String? senderType,
@@ -221,6 +247,7 @@ abstract class StockSearchModelCopyWith<$R, $In extends StockSearchModel, $Out>
       List<String>? transactionReason,
       int? dateOfEntry,
       String? boundaryCode});
+
   StockSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -233,6 +260,16 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<StockSearchModel> $mapper =
       StockSearchModelMapper.ensureInitialized();
+
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get receiverId => $value.receiverId != null
+          ? ListCopyWith(
+              $value.receiverId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(receiverId: v))
+          : null;
+
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId => $value.clientReferenceId != null
@@ -241,6 +278,7 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
               (v, t) => ObjectCopyWith(v, $identity, t),
               (v) => call(clientReferenceId: v))
           : null;
+
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get transactionType => $value.transactionType != null
@@ -249,6 +287,7 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
               (v, t) => ObjectCopyWith(v, $identity, t),
               (v) => call(transactionType: v))
           : null;
+
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get transactionReason => $value.transactionReason != null
@@ -257,6 +296,7 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
               (v, t) => ObjectCopyWith(v, $identity, t),
               (v) => call(transactionReason: v))
           : null;
+
   @override
   $R call(
           {Object? id = $none,
@@ -297,6 +337,7 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
         if (dateOfEntry != $none) #dateOfEntry: dateOfEntry,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
+
   @override
   StockSearchModel $make(CopyWithData data) => StockSearchModel.ignoreDeleted(
       id: data.get(#id, or: $value.id),
@@ -332,6 +373,7 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
   StockModelMapper._();
 
   static StockModelMapper? _instance;
+
   static StockModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = StockModelMapper._());
@@ -345,77 +387,101 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
   static int? _$dateOfEntry(StockModel v) => v.dateOfEntry;
   static const Field<StockModel, int> _f$dateOfEntry =
       Field('dateOfEntry', _$dateOfEntry, opt: true);
+
   static StockAdditionalFields? _$additionalFields(StockModel v) =>
       v.additionalFields;
   static const Field<StockModel, StockAdditionalFields> _f$additionalFields =
       Field('additionalFields', _$additionalFields, opt: true);
+
   static String? _$id(StockModel v) => v.id;
   static const Field<StockModel, String> _f$id = Field('id', _$id, opt: true);
+
   static String? _$tenantId(StockModel v) => v.tenantId;
   static const Field<StockModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
+
   static String? _$facilityId(StockModel v) => v.facilityId;
   static const Field<StockModel, String> _f$facilityId =
       Field('facilityId', _$facilityId, opt: true);
+
   static String? _$productVariantId(StockModel v) => v.productVariantId;
   static const Field<StockModel, String> _f$productVariantId =
       Field('productVariantId', _$productVariantId, opt: true);
+
   static String? _$referenceId(StockModel v) => v.referenceId;
   static const Field<StockModel, String> _f$referenceId =
       Field('referenceId', _$referenceId, opt: true);
+
   static String? _$referenceIdType(StockModel v) => v.referenceIdType;
   static const Field<StockModel, String> _f$referenceIdType =
       Field('referenceIdType', _$referenceIdType, opt: true);
+
   static String? _$transactingPartyId(StockModel v) => v.transactingPartyId;
   static const Field<StockModel, String> _f$transactingPartyId =
       Field('transactingPartyId', _$transactingPartyId, opt: true);
+
   static String? _$transactingPartyType(StockModel v) => v.transactingPartyType;
   static const Field<StockModel, String> _f$transactingPartyType =
       Field('transactingPartyType', _$transactingPartyType, opt: true);
+
   static String? _$quantity(StockModel v) => v.quantity;
   static const Field<StockModel, String> _f$quantity =
       Field('quantity', _$quantity, opt: true);
+
   static String? _$wayBillNumber(StockModel v) => v.wayBillNumber;
   static const Field<StockModel, String> _f$wayBillNumber =
       Field('wayBillNumber', _$wayBillNumber, opt: true);
+
   static String? _$receiverId(StockModel v) => v.receiverId;
   static const Field<StockModel, String> _f$receiverId =
       Field('receiverId', _$receiverId, opt: true);
+
   static String? _$receiverType(StockModel v) => v.receiverType;
   static const Field<StockModel, String> _f$receiverType =
       Field('receiverType', _$receiverType, opt: true);
+
   static String? _$senderId(StockModel v) => v.senderId;
   static const Field<StockModel, String> _f$senderId =
       Field('senderId', _$senderId, opt: true);
+
   static String? _$senderType(StockModel v) => v.senderType;
   static const Field<StockModel, String> _f$senderType =
       Field('senderType', _$senderType, opt: true);
+
   static bool? _$nonRecoverableError(StockModel v) => v.nonRecoverableError;
   static const Field<StockModel, bool> _f$nonRecoverableError = Field(
       'nonRecoverableError', _$nonRecoverableError,
       opt: true, def: false);
+
   static String _$clientReferenceId(StockModel v) => v.clientReferenceId;
   static const Field<StockModel, String> _f$clientReferenceId =
       Field('clientReferenceId', _$clientReferenceId);
+
   static int? _$rowVersion(StockModel v) => v.rowVersion;
   static const Field<StockModel, int> _f$rowVersion =
       Field('rowVersion', _$rowVersion, opt: true);
+
   static String? _$transactionType(StockModel v) => v.transactionType;
   static const Field<StockModel, String> _f$transactionType =
       Field('transactionType', _$transactionType, opt: true);
+
   static String? _$transactionReason(StockModel v) => v.transactionReason;
   static const Field<StockModel, String> _f$transactionReason =
       Field('transactionReason', _$transactionReason, opt: true);
+
   static AuditDetails? _$auditDetails(StockModel v) => v.auditDetails;
   static const Field<StockModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, opt: true);
+
   static ClientAuditDetails? _$clientAuditDetails(StockModel v) =>
       v.clientAuditDetails;
   static const Field<StockModel, ClientAuditDetails> _f$clientAuditDetails =
       Field('clientAuditDetails', _$clientAuditDetails, opt: true);
+
   static bool? _$isDeleted(StockModel v) => v.isDeleted;
   static const Field<StockModel, bool> _f$isDeleted =
       Field('isDeleted', _$isDeleted, opt: true, def: false);
+
   static DateTime? _$dateOfEntryTime(StockModel v) => v.dateOfEntryTime;
   static const Field<StockModel, DateTime> _f$dateOfEntryTime =
       Field('dateOfEntryTime', _$dateOfEntryTime, mode: FieldMode.member);
@@ -512,6 +578,7 @@ mixin StockModelMappable {
 
   StockModelCopyWith<StockModel, StockModel, StockModel> get copyWith =>
       _StockModelCopyWithImpl(this as StockModel, $identity, $identity);
+
   @override
   String toString() {
     return StockModelMapper.ensureInitialized()
@@ -540,11 +607,14 @@ abstract class StockModelCopyWith<$R, $In extends StockModel, $Out>
     implements EntityModelCopyWith<$R, $In, $Out> {
   StockAdditionalFieldsCopyWith<$R, StockAdditionalFields,
       StockAdditionalFields>? get additionalFields;
+
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+
   @override
   ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
       get clientAuditDetails;
+
   @override
   $R call(
       {int? dateOfEntry,
@@ -571,6 +641,7 @@ abstract class StockModelCopyWith<$R, $In extends StockModel, $Out>
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
+
   StockModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -582,18 +653,22 @@ class _StockModelCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<StockModel> $mapper =
       StockModelMapper.ensureInitialized();
+
   @override
   StockAdditionalFieldsCopyWith<$R, StockAdditionalFields,
           StockAdditionalFields>?
       get additionalFields => $value.additionalFields?.copyWith
           .$chain((v) => call(additionalFields: v));
+
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+
   @override
   ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
       get clientAuditDetails => $value.clientAuditDetails?.copyWith
           .$chain((v) => call(clientAuditDetails: v));
+
   @override
   $R call(
           {Object? dateOfEntry = $none,
@@ -650,6 +725,7 @@ class _StockModelCopyWithImpl<$R, $Out>
           #clientAuditDetails: clientAuditDetails,
         if (isDeleted != $none) #isDeleted: isDeleted
       }));
+
   @override
   StockModel $make(CopyWithData data) => StockModel(
       dateOfEntry: data.get(#dateOfEntry, or: $value.dateOfEntry),
@@ -696,6 +772,7 @@ class StockAdditionalFieldsMapper
   StockAdditionalFieldsMapper._();
 
   static StockAdditionalFieldsMapper? _instance;
+
   static StockAdditionalFieldsMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = StockAdditionalFieldsMapper._());
@@ -709,9 +786,11 @@ class StockAdditionalFieldsMapper
   static String _$schema(StockAdditionalFields v) => v.schema;
   static const Field<StockAdditionalFields, String> _f$schema =
       Field('schema', _$schema, opt: true, def: 'Stock');
+
   static int _$version(StockAdditionalFields v) => v.version;
   static const Field<StockAdditionalFields, int> _f$version =
       Field('version', _$version);
+
   static List<AdditionalField> _$fields(StockAdditionalFields v) => v.fields;
   static const Field<StockAdditionalFields, List<AdditionalField>> _f$fields =
       Field('fields', _$fields, opt: true, def: const []);
@@ -767,6 +846,7 @@ mixin StockAdditionalFieldsMappable {
           StockAdditionalFields>
       get copyWith => _StockAdditionalFieldsCopyWithImpl(
           this as StockAdditionalFields, $identity, $identity);
+
   @override
   String toString() {
     return StockAdditionalFieldsMapper.ensureInitialized()
@@ -800,8 +880,10 @@ abstract class StockAdditionalFieldsCopyWith<
   @override
   ListCopyWith<$R, AdditionalField,
       AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>> get fields;
+
   @override
   $R call({String? schema, int? version, List<AdditionalField>? fields});
+
   StockAdditionalFieldsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -814,11 +896,13 @@ class _StockAdditionalFieldsCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<StockAdditionalFields> $mapper =
       StockAdditionalFieldsMapper.ensureInitialized();
+
   @override
   ListCopyWith<$R, AdditionalField,
           AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>>
       get fields => ListCopyWith($value.fields, (v, t) => v.copyWith.$chain(t),
           (v) => call(fields: v));
+
   @override
   $R call({String? schema, int? version, List<AdditionalField>? fields}) =>
       $apply(FieldCopyWithData({
@@ -826,6 +910,7 @@ class _StockAdditionalFieldsCopyWithImpl<$R, $Out>
         if (version != null) #version: version,
         if (fields != null) #fields: fields
       }));
+
   @override
   StockAdditionalFields $make(CopyWithData data) => StockAdditionalFields(
       schema: data.get(#schema, or: $value.schema),
