@@ -2769,7 +2769,8 @@ final dynamic sampleInventoryFlows = {
                 "type": "FORM",
                 "name": "MANAGESTOCK",
                 "data": [
-                  {"key": "stockEntryType", "value": "RECEIVED"}
+                  {"key": "stockEntryType", "value": "RECEIPT"},
+                  {"key": "transactionType", "value": "RECEIVED"}
                 ]
               }
             }
@@ -2787,7 +2788,8 @@ final dynamic sampleInventoryFlows = {
                 "type": "FORM",
                 "name": "MANAGESTOCK",
                 "data": [
-                  {"key": "stockEntryType", "value": "DISPATCHED"}
+                  {"key": "stockEntryType", "value": "ISSUED"},
+                  {"key": "transactionType", "value": "DISPATCHED"}
                 ]
               }
             }
@@ -2806,7 +2808,8 @@ final dynamic sampleInventoryFlows = {
                 "type": "FORM",
                 "name": "MANAGESTOCK",
                 "data": [
-                  {"key": "stockEntryType", "value": "RECEIVED"}
+                  {"key": "stockEntryType", "value": "RETURNED"},
+                  {"key": "transactionType", "value": "RECEIVED"}
                 ]
               }
             }
@@ -2825,7 +2828,8 @@ final dynamic sampleInventoryFlows = {
                 "type": "FORM",
                 "name": "MANAGESTOCK",
                 "data": [
-                  {"key": "stockEntryType", "value": "DISPATCHED"}
+                  {"key": "stockEntryType", "value": "DAMAGED"},
+                  {"key": "transactionType", "value": "DISPATCHED"}
                 ]
               }
             }
