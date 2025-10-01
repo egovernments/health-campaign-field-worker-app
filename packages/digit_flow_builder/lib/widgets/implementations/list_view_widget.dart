@@ -50,8 +50,7 @@ class ListViewWidget implements FlowWidget {
           listIndex: index,
           item: safeItem,
           screenKey: crudCtx?.screenKey,
-          child: LayoutMapper.map(
-              processedChild, stateData, context, onAction,
+          child: LayoutMapper.map(processedChild, stateData, context, onAction,
               item: safeItem, listIndex: index),
         );
       }).expand((widget) => [widget, const SizedBox(height: 8)]).toList()

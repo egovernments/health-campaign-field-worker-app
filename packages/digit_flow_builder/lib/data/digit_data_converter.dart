@@ -28,5 +28,8 @@ class EntityModelJsonMapper extends DynamicEntityModelListener {
             ProjectFacilityModelMapper.fromJson(jsonEncode(json)),
         'ProjectTypeModel': (json) =>
             ProjectTypeModelMapper.fromJson(jsonEncode(json)),
+        'StockModel': (json) => StockModelMapper.fromJson(jsonEncode(json)),
+        'StockReconciliationModel': (json) =>
+            StockReconciliationModelMapper.fromJson(jsonEncode(json)),
       };
 }
