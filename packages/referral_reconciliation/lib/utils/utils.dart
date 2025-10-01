@@ -1,5 +1,8 @@
 // Returns value of the Additional Field Model, by passing the key and additional Fields list as <Map<String, dynamic>>
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/templates/template_config.dart';
+import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 
 dynamic getValueByKey(List<Map<String, dynamic>> data, String key) {
   for (var map in data) {
@@ -48,6 +51,11 @@ class ReferralReconSingleton {
       PersistenceConfiguration.offlineFirst;
   ValidIndividualAgeForCampaign _validIndividualAgeForCampaign =
       ValidIndividualAgeForCampaign(validMinAge: 0, validMaxAge: 0);
+
+  // TODO:
+
+  Map<String, TemplateConfig>? _templateConfigs;
+  String? _referralConfig;
 
   void setInitialData({
     required String userName,
@@ -104,4 +112,23 @@ class ReferralReconSingleton {
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
   }
+
+//TODO::
+  void setTemplateConfigs(Map<String, TemplateConfig> templateConfigs) {
+    _templateConfigs = templateConfigs;
+  }
+
+  void setHfReferralConfig(String registrationConfig) {
+    _referralConfig = registrationConfig;
+  }
+
+  Map<String, TemplateConfig>? get templateConfigs => _templateConfigs;
+
+  String? get referralConfig => _referralConfig;
 }
+
+final Map<String, PageRouteInfo> routerMap = {
+  'ReferralReconAcknowledgement': ReferralReconAcknowledgementRoute(),
+
+  // Add more routes here
+};
