@@ -28,8 +28,10 @@ dependencies:
   path_provider: ^2.0.11
   drift: ^2.18.0
   dio: ^5.1.2
-
-
+  digit_formula_parser: ^1.0.0
+  digit_crud_bloc: ^0.0.3-dev
+  digit_data_converter: ^0.0.4-dev
+  digit_forms_engine: ^0.0.2-dev
 
 dev_dependencies:
   flutter_test:

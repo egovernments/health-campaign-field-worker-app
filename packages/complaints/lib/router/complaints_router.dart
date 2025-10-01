@@ -5,9 +5,7 @@ import 'complaints_router.gm.dart';
 /// Complaint Inbox and registration Router
 @AutoRouterConfig.module()
 class ComplaintsRoute extends $ComplaintsRoute {
-
   RouteType get defaultRouteType => const RouteType.material();
-
 
   List<AutoRoute> routes = [
     /// Complaints Inbox
@@ -21,16 +19,7 @@ class ComplaintsRoute extends $ComplaintsRoute {
           initial: true,
         ),
         AutoRoute(
-          page: ComplaintsInboxFilterRoute.page,
-          path: 'complaints-inbox-filter',
-        ),
-        AutoRoute(
-          page: ComplaintsInboxSearchRoute.page,
-          path: 'complaints-inbox-search',
-        ),
-        AutoRoute(
-          page: ComplaintsInboxSortRoute.page,
-          path: 'complaints-inbox-sort',
+          page: ComplaintsInboxDialogRoute.page,
         ),
         AutoRoute(
           page: ComplaintsDetailsViewRoute.page,
@@ -39,33 +28,10 @@ class ComplaintsRoute extends $ComplaintsRoute {
       ],
     ),
 
-    /// Complaints registration
-    AutoRoute(
-      page: ComplaintsRegistrationWrapperRoute.page,
-      path: 'complaints-registration',
-      children: [
-        AutoRoute(
-          page: ComplaintTypeRoute.page,
-          path: 'complaints-type',
-          initial: true,
-        ),
-        AutoRoute(
-          page: ComplaintsLocationRoute.page,
-          path: 'complaints-location',
-        ),
-        AutoRoute(
-          page: ComplaintsDetailsRoute.page,
-          path: 'complaints-details',
-        ),
-
-      ],
-    ),
-
     /// Complaints Acknowledgement
     AutoRoute(
       page: ComplaintsAcknowledgementRoute.page,
       path: 'complaints-acknowledgement',
     ),
-
   ];
 }

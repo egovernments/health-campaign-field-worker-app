@@ -7,11 +7,11 @@ import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:recase/recase.dart';
 
-import '../../models/pgr_complaints.dart';
 import '/blocs/localization/app_localization.dart';
 import '/utils/i18_key_constants.dart' as i18;
 import '/utils/utils.dart';
 import '/widgets/header/back_navigation_help_header.dart';
+import '../../models/pgr_complaints.dart';
 
 @RoutePage()
 class ComplaintsDetailsViewPage extends StatelessWidget {
@@ -29,6 +29,8 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
     final localizations = ComplaintsLocalization.of(context);
     final textTheme = theme.digitTextTheme(context);
 
+    final defaultLocale = Localizations.localeOf(context).toString();
+
     return Scaffold(
       body: ScrollableContent(
         enableFixedDigitButton: true,
@@ -38,11 +40,12 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: const EdgeInsets.only(left: spacer2, top: spacer2, bottom: spacer2),
+                padding: const EdgeInsets.only(left: spacer2, bottom: spacer2),
                 child: Text(
                   localizations
                       .translate(i18.complaints.complaintsDetailsLabel),
-                  style: textTheme.headingXl,
+                  style: textTheme.headingXl
+                      .copyWith(color: theme.colorTheme.primary.primary2),
                 ),
               ),
             ),
@@ -64,41 +67,48 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
             ]),
         children: [
           DigitCard(
-            margin: const EdgeInsets.all(spacer2),
+              margin: const EdgeInsets.all(spacer2),
               cardType: CardType.primary,
               children: [
-            LabelValueSummary(
-              padding: EdgeInsets.zero,
-                items: [
+                LabelValueSummary(padding: EdgeInsets.zero, items: [
                   LabelValueItem(
-                      label: localizations.translate(i18.complaints.inboxNumberLabel),
-                      value: complaint.serviceRequestId ??
-                          "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
-                      valueTextStyle: complaint.serviceRequestId !=null ? textTheme.bodyS.copyWith(color: theme.colorTheme.primary.primary1) : null ,
+                    label: localizations
+                        .translate(i18.complaints.inboxNumberLabel),
+                    value: complaint.serviceRequestId ??
+                        "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
+                    valueTextStyle: complaint.serviceRequestId != null
+                        ? textTheme.bodyS
+                            .copyWith(color: theme.colorTheme.primary.primary1)
+                        : null,
                     labelFlex: 5,
                   ),
                   LabelValueItem(
-                      label: localizations.translate(i18.complaints.inboxTypeLabel),
-                      value: localizations.translate(
-                        complaint.serviceCode.snakeCase.toUpperCase().trim(),
-                      ),
+                    label:
+                        localizations.translate(i18.complaints.inboxTypeLabel),
+                    value: localizations.translate(
+                      complaint.serviceCode.snakeCase.toUpperCase().trim(),
+                    ),
                     labelFlex: 5,
                   ),
                   LabelValueItem(
-                      label: localizations.translate(i18.complaints.inboxDateLabel),
-                      value: complaint.auditDetails?.createdTime.toDateTime
-                          .getFormattedDate() ??
-                          "",
+                    label:
+                        localizations.translate(i18.complaints.inboxDateLabel),
+                    value: complaint.auditDetails?.createdTime.toDateTime
+                            .getFormattedDate(locale: defaultLocale) ??
+                        "",
                     labelFlex: 5,
                   ),
                   LabelValueItem(
-                    label: localizations.translate(i18.complaints.complainantName),
+                    label:
+                        localizations.translate(i18.complaints.complainantName),
                     value: complaint.user.name ?? "",
                     labelFlex: 5,
                   ),
                   LabelValueItem(
-                    label: localizations.translate(i18.complaints.inboxAreaLabel),
-                    value: complaint.address.locality?.name ?? "",
+                    label:
+                        localizations.translate(i18.complaints.inboxAreaLabel),
+                    value: localizations
+                        .translate(complaint.address.locality?.code ?? ""),
                     labelFlex: 5,
                   ),
                   LabelValueItem(
@@ -109,7 +119,8 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                     labelFlex: 5,
                   ),
                   LabelValueItem(
-                    label: localizations.translate(i18.complaints.inboxStatusLabel),
+                    label: localizations
+                        .translate(i18.complaints.inboxStatusLabel),
                     value: localizations.translate(
                       "COMPLAINTS_STATUS_${complaint.applicationStatus.name.snakeCase.toUpperCase()}",
                     ),
@@ -122,10 +133,10 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                       complaint.description,
                     ),
                     labelFlex: 5,
+                    maxLines: 5,
                   ),
-                ]
-            )
-          ]),
+                ])
+              ]),
         ],
       ),
     );
