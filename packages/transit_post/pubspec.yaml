@@ -1,6 +1,6 @@
 name: transit_post
 description: This package enables transit post vaccinator to deliver vaccines to the beneficiaries who visits the transit post
-version: 1.0.0
+version: 1.0.0+1
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/transit_post
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 
