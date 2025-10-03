@@ -79,7 +79,7 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
 
     return ReactiveFormBuilder(
       form: () => fb.group({
-        _productVariantKey: FormControl<ProductVariantModel>(
+        _productVariantKey: FormControl<List<ProductVariantModel>>(
           validators: [Validators.required],
         ),
       }),
@@ -97,46 +97,51 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
                 labelFromSchema ?? "Select Product",
               ),
               isRequired: true,
-              child: DigitDropdown(
+              child: MultiSelectDropDown(
                 errorMessage: field.errorText,
-                emptyItemText: localizations.translate(
-                  'No Match Found',
-                ),
-                items: enums,
-                selectedOption: (form.control(_productVariantKey).value != null)
-                    ? DropdownItem(
-                        name: localizations.translate(
-                          (form.control(_productVariantKey).value
-                                      as ProductVariantModel)
-                                  .sku ??
-                              (form.control(_productVariantKey).value
-                                      as ProductVariantModel)
-                                  .id,
-                        ),
-                        code: (form.control(_productVariantKey).value
-                                as ProductVariantModel)
-                            .id,
-                      )
-                    : const DropdownItem(name: '', code: ''),
-                onSelect: (value) {
-                  /// Find selected product variant model by matching id
-                  final selectedModel = productVariants!
-                      .map((e) => e as ProductVariantModel)
-                      .firstWhere((m) => m.productId == value.code);
+                helpText: localizations.translate('Select Variants'),
+                options: productVariants!
+                    .map((e) => DropdownItem(
+                          code: e.id,
+                          name: localizations.translate(e.sku ?? e.id),
+                        ))
+                    .toList(),
+                // Convert existing field value into DropdownItems
+                initialOptions: field.value != null
+                    ? (field.value as List<ProductVariantModel>)
+                        .map(
+                          (m) => DropdownItem(
+                            code: m.id,
+                            name: localizations.translate(m.sku ?? m.id),
+                          ),
+                        )
+                        .toList()
+                    : [],
+                onOptionSelected: (selectedValues) {
+                  form.control(_productVariantKey).markAsTouched();
 
-                  /// Update form control with selected product variant model
-                  field.control.value = selectedModel;
+                  // Find selected models from productVariants
+                  final selectedModels = selectedValues
+                      .map((v) => productVariants!
+                          .map((e) => e as ProductVariantModel)
+                          .firstWhere((m) => m.id == v.code))
+                      .toList();
 
-                  /// Push update into FormsBloc
+                  // Update form control with list of models
+                  field.control.value = selectedModels;
+
+                  // Push update into FormsBloc with dot-separated ids (or list if you prefer)
                   context.read<FormsBloc>().add(
                         FormsEvent.updateField(
                           schemaKey: 'MANAGESTOCK',
                           context: context,
                           key: _productVariantKey,
-                          value: {
-                            "id": selectedModel.id,
-                            "sku": selectedModel.sku,
-                          },
+                          value: selectedModels
+                              .map((m) => {
+                                    "id": m.id,
+                                    "sku": m.sku,
+                                  })
+                              .toList(),
                         ),
                       );
                 },

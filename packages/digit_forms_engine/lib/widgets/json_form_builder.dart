@@ -123,8 +123,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         formData: form.rawValue,
         form: form,
         navigationParams: widget.navigationParams,
-      ).toggleControlVisibility(
-          widget.formControlName, result, widget.schema);
+      ).toggleControlVisibility(widget.formControlName, result, widget.schema);
 
       return !result;
     }
@@ -191,6 +190,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           enums: widget.schema.enums ?? [],
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
+          isMultiselect: widget.schema.isMultiSelect ?? false,
         );
 
       case PropertySchemaFormat.mobileNumber:
