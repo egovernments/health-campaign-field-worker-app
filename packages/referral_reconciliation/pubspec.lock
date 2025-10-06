@@ -411,14 +411,14 @@ packages:
     source: hosted
     version: "0.4.1"
   digit_crud_bloc:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../digit_crud_bloc"
       relative: true
     source: path
     version: "0.0.3-dev"
   digit_data_converter:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../digit_data_converter"
       relative: true
@@ -432,7 +432,7 @@ packages:
     source: path
     version: "1.2.0-dev.2-console"
   digit_forms_engine:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../digit_forms_engine"
       relative: true
