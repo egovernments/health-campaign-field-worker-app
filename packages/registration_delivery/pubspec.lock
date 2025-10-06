@@ -65,13 +65,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
-  attendance_management:
-    dependency: "direct overridden"
-    description:
-      path: "../attendance_management"
-      relative: true
-    source: path
-    version: "1.0.5+2"
   audioplayers:
     dependency: transitive
     description:
@@ -241,7 +234,7 @@ packages:
     source: hosted
     version: "0.11.0+2"
   camera_android_camerax:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: camera_android_camerax
       sha256: "594b40a5ea0e144fdfe49e4036abe4ec9bd578b2ce3aabdb0668a02db376a1e8"
@@ -425,14 +418,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
-  db_viewer:
-    dependency: transitive
-    description:
-      name: db_viewer
-      sha256: "5f7e3cfcde9663321797d8f6f0c876f7c13f0825a2e77ec1ef065656797144d9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   dbus:
     dependency: transitive
     description:
@@ -468,58 +453,58 @@ packages:
   digit_crud_bloc:
     dependency: "direct main"
     description:
-      path: "../digit_crud_bloc"
-      relative: true
-    source: path
+      name: digit_crud_bloc
+      sha256: "194a3f455aa1e6448b52ef66352a83b086a0bb444d374501b1290e6bab2bab62"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.3-dev"
   digit_data_converter:
     dependency: "direct main"
     description:
-      path: "../digit_data_converter"
-      relative: true
-    source: path
+      name: digit_data_converter
+      sha256: ef7287c98a8ca7fe87a8b7a4e7516d70513b55fa09ba04bbd6e6be4b0bd5c78c
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.4-dev"
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../digit_data_model"
-      relative: true
-    source: path
+      name: digit_data_model
+      sha256: "05bb5f84cd763b73fb444245966f4a59ef66f4e74a066f747eefc6186f206218"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.2.0-dev.2-console"
-  digit_dss:
-    dependency: "direct overridden"
-    description:
-      path: "../digit_dss"
-      relative: true
-    source: path
-    version: "1.0.4+2"
   digit_forms_engine:
     dependency: "direct main"
     description:
-      path: "../digit_forms_engine"
-      relative: true
-    source: path
+      name: digit_forms_engine
+      sha256: c36ed2752ee83436702a388e9ee23110d07bae57991a9edd0b4be36b3cde89eb
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.8-dev"
   digit_formula_parser:
     dependency: "direct main"
     description:
-      path: "../digit_formula_parser"
-      relative: true
-    source: path
+      name: digit_formula_parser
+      sha256: d8b49e8855ebb1fc81ea9a7ff85b1779c0238c5648ca8ac6d927b1ba1742f072
+      url: "https://pub.dev"
+    source: hosted
     version: "1.1.0"
   digit_scanner:
     dependency: "direct main"
     description:
-      path: "../digit_scanner"
-      relative: true
-    source: path
-    version: "1.0.6+2"
+      name: digit_scanner
+      sha256: "8140d06998b796743f959c9c29b6e5715315435da1847f9d33c5fc9b836ce290"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.6+4"
   digit_showcase:
     dependency: "direct main"
     description:
-      path: "../digit_showcase"
-      relative: true
-    source: path
+      name: digit_showcase
+      sha256: "4667b29e652738a1621e907359da327594c288417f5dfa3da60e77f0342a4eae"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.2+1"
   digit_ui_components:
     dependency: "direct main"
@@ -561,14 +546,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.18.0"
-  drift_db_viewer:
-    dependency: transitive
-    description:
-      name: drift_db_viewer
-      sha256: "5ea77858c52b55460a1e8f34ab5f88324621d486717d876fd745765fbc227f3f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
   drift_dev:
     dependency: "direct dev"
     description:
@@ -618,7 +595,7 @@ packages:
     source: hosted
     version: "8.0.0+1"
   file_selector_linux:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: file_selector_linux
       sha256: "045d372bf19b02aeb69cacf8b4009555fb5f6f0b7ad8016e5f46dd1387ddd492"
@@ -634,7 +611,7 @@ packages:
     source: hosted
     version: "0.9.4"
   file_selector_platform_interface:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: file_selector_platform_interface
       sha256: a3994c26f10378a039faa11de174d7b78eb8f79e4dd0af2a451410c1a5c3f66b
@@ -679,7 +656,7 @@ packages:
     source: hosted
     version: "3.0.7"
   flutter_dropzone_platform_interface:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: flutter_dropzone_platform_interface
       sha256: b4e2df75364bab2f4c3ca32b87193267d786b6e158c3f345c3a1daeb911d82b9
@@ -1245,22 +1222,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
-  package_info_plus:
-    dependency: transitive
-    description:
-      name: package_info_plus
-      sha256: a75164ade98cb7d24cfd0a13c6408927c6b217fa60dee5a7ff5c116a58f28918
-      url: "https://pub.dev"
-    source: hosted
-    version: "8.0.2"
-  package_info_plus_platform_interface:
-    dependency: transitive
-    description:
-      name: package_info_plus_platform_interface
-      sha256: "202a487f08836a592a6bd4f901ac69b3a8f146af552bbd14407b6b41e1c3f086"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.2.1"
   path:
     dependency: transitive
     description:
@@ -1573,9 +1534,10 @@ packages:
   survey_form:
     dependency: "direct main"
     description:
-      path: "../survey_form"
-      relative: true
-    source: path
+      name: survey_form
+      sha256: "26c02064d6d74928ce458fe25eb037ee9a131952f3aa6e03480b70277473b635"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.3"
   synchronized:
     dependency: transitive
@@ -1850,5 +1812,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.0 <4.0.0"
+  dart: ">=3.4.3 <3.9.0"
   flutter: ">=3.22.0"
