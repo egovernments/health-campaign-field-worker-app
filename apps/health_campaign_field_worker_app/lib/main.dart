@@ -281,25 +281,67 @@ final dynamic sampleFlows = {
           ]
         },
         {
-          "format": "filter",
+          "format": "actionPopup",
           "label": "Filter Search",
-          "fieldName": "searchByFilter",
-          "onAction": [
-            {
-              "actionType": "SEARCH_EVENT",
-              "properties": {
-                "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT",
-                "name": "ENTITY // TASK",
-                "data": [
-                  {
-                    "key": "STATUS",
-                    "value": "field.value",
-                    "operation": "equals"
-                  }
-                ]
-              }
+          "properties": {
+            "type": "tertiary",
+            "size": "large",
+            "mainAxisSize": "min",
+            "mainAxisAlignment": "start",
+            "popupConfig": {
+              "type": "default",
+              "title": "Filter Options",
+              "titleIcon": "filter",
+              "showCloseButton": true,
+              "barrierDismissible": true,
+              "body": [
+                {
+                  "format": "selectionCard",
+                  "fieldName": "selectedStatus",
+                  "data": [
+                    {
+                      "code": "ADMINISTRATION_SUCCESS",
+                      "name": "Administration Success"
+                    },
+                    {
+                      "code": "ADMINISTRATION_FAILED",
+                      "name": "Administration Failed"
+                    },
+                  ],
+                }
+              ],
+              "footerActions": [
+                {
+                  "format": "button",
+                  "label": "Clear All",
+                  "properties": {
+                    "type": "secondary",
+                    "size": "large",
+                    "mainAxisSize": "max"
+                  },
+                  "onAction": [
+                    {"actionType": "CLEAR_CURRENT_DATA", "properties": {}}
+                  ]
+                },
+                {
+                  "format": "button",
+                  "label": "Apply Filters",
+                  "properties": {
+                    "type": "primary",
+                    "size": "large",
+                    "mainAxisSize": "max"
+                  },
+                  "onAction": [
+                    {
+                      "actionType": "CLOSE_POPUP",
+                      "properties": {"returnData": true}
+                    }
+                  ]
+                }
+              ]
             }
-          ]
+          },
+          "suffixIcon": "filter"
         },
         {
           "format": "infoCard",

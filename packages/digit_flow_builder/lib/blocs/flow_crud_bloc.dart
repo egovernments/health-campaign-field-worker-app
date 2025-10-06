@@ -112,22 +112,26 @@ class FlowCrudState {
   final CrudState? base;
   final List<dynamic>? stateWrapper;
   final Map<String, dynamic>? formData;
+  final Map<String, dynamic>? widgetData;
 
   const FlowCrudState({
     this.base,
     this.stateWrapper,
     this.formData,
+    this.widgetData,
   });
 
   FlowCrudState copyWith({
     CrudState? base,
     List<dynamic>? stateWrapper,
     Map<String, dynamic>? formData,
+    Map<String, dynamic>? widgetData,
   }) {
     return FlowCrudState(
       base: base ?? this.base,
       stateWrapper: stateWrapper ?? this.stateWrapper,
       formData: formData ?? this.formData,
+      widgetData: widgetData ?? this.widgetData,
     );
   }
 }
