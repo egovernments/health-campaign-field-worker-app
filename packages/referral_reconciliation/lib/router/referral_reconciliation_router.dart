@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_forms_engine/router/forms_router.dart';
 
 import 'referral_reconciliation_router.gm.dart';
 
@@ -9,17 +8,30 @@ class ReferralReconciliationRoute extends $ReferralReconciliationRoute {
 
   List<AutoRoute> routes = [
     AutoRoute(
-        page: HFReferralWrapperRoute.page,
-        path: 'referal-wrapper-start',
+      page: SearchReferralReconciliationsRoute.page,
+      path: 'search-referrals',
+    ),
+    AutoRoute(
+      page: ReferralReconProjectFacilitySelectionRoute.page,
+      path: 'referral-project-facility',
+    ),
+    AutoRoute(
+        page: HFCreateReferralWrapperRoute.page,
+        path: 'referral-reconciliation',
         children: [
-          ...FormsRoute().routes,
           AutoRoute(
-              page: SearchReferralReconciliationsRoute.page,
-              path: 'search-referrals',
+              page: ReferralFacilityRoute.page,
+              path: 'facility-details',
               initial: true),
           AutoRoute(
-            page: ReferralReconProjectFacilitySelectionRoute.page,
-            path: 'referral-project-facility',
+              page: RecordReferralDetailsRoute.page, path: 'referral-details'),
+          AutoRoute(
+            page: ReferralReasonChecklistRoute.page,
+            path: 'referral-checklist-create',
+          ),
+          AutoRoute(
+            page: ReferralReasonChecklistPreviewRoute.page,
+            path: 'referral-checklist-view',
           ),
         ]),
     AutoRoute(
