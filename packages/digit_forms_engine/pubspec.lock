@@ -386,10 +386,11 @@ packages:
   digit_ui_components:
     dependency: "direct main"
     description:
-      name: digit_ui_components
-      sha256: ad9646a4097f5706d3079898d85c51a18c851b514194f2180f4f8720129734b8
-      url: "https://pub.dev"
-    source: hosted
+      path: "flutter/digit-ui-components/digit_components"
+      ref: beneficiary-idgen
+      resolved-ref: f2ea300a7ca6c61920fcba4ebc0c7a74cdadca47
+      url: "https://github.com/egovernments/DIGIT-UI-LIBRARIES"
+    source: git
     version: "0.2.2+9"
   dotted_border:
     dependency: transitive

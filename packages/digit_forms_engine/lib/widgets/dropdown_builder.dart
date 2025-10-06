@@ -14,6 +14,7 @@ class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
     super.helpText,
     super.validations,
     super.tooltipText,
+    super.readOnly,
   });
 
   @override
@@ -32,6 +33,7 @@ class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
         isRequired: isRequired ?? false,
         child: DigitDropdown<String>(
           helpText: helpText,
+          readOnly: readOnly,
           errorMessage: field.errorText,
           selectedOption: field.value != null
               ? DropdownItem(

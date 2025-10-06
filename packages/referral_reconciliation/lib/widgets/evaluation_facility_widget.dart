@@ -97,8 +97,7 @@ class _EvaluationKeyDropDownState
 
         return LabeledField(
           isRequired: isReadOnlyFromSchema,
-          label: localizations
-              .translate(i18.referralReconciliation.facilityKeyLabel),
+          label: localizations.translate(labelFromSchema ?? ""),
           child: Dropdown(
             readOnly: isView,
             selectedOption: _mapItems(projectFacilities).firstWhere(

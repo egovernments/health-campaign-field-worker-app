@@ -31,8 +31,8 @@ import 'package:referral_reconciliation/widgets/project_cycle_dropdown.dart';
 import 'package:survey_form/survey_form.dart';
 
 import '../blocs/referral_wrapper/hf_referral_reconciliation_bloc.dart';
+import '../data/digit_data_converter.dart';
 import '../data/transformer_config.dart';
-import '../models/entities/hf_referral.dart';
 import '../router/referral_reconciliation_router.gm.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
@@ -71,12 +71,6 @@ class _SearchReferralReconciliationsPageState
       context.read<CrudBloc>().add(const CrudEventInitialize());
     });
     blocWrapper = context.read<HFReferalWrapperBloc>();
-
-    searchReferralsBloc = SearchReferralsBloc(
-      const SearchReferralsState(),
-      referralReconDataRepository:
-          context.repository<HFReferralModel, HFReferralSearchModel>(context),
-    );
 
     context.read<DigitScannerBloc>().add(
           const DigitScannerEvent.handleScanner(),
@@ -266,13 +260,7 @@ class _SearchReferralReconciliationsPageState
           }
         },
         child: KeyboardVisibilityBuilder(
-            builder: (context, isKeyboardVisible) => BlocProvider<
-                    SearchReferralsBloc>(
-                create: (context) => searchReferralsBloc!
-                  ..add(
-                    const SearchReferralsClearEvent(),
-                  ),
-                child: Scaffold(
+            builder: (context, isKeyboardVisible) => Scaffold(
                   body: BlocListener<DigitScannerBloc, DigitScannerState>(
                       listener: (context, scannerState) {
                         if (scannerState.qrCodes.isNotEmpty) {
@@ -511,7 +499,7 @@ class _SearchReferralReconciliationsPageState
                           ),
                         );
                       }),
-                ))),
+                )),
       ),
     );
   }
