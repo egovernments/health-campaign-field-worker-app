@@ -83,7 +83,8 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
       body: BlocBuilder<DigitScannerBloc, DigitScannerState>(
         builder: (context, state) {
           // ▶️ NEW: show toast if bloc emitted an error and clear state
-          if (state.error != null && (state.error?.toString() ?? '').trim().isNotEmpty) {
+          if (state.error != null &&
+              (state.error?.toString() ?? '').trim().isNotEmpty) {
             Toast.showToast(
               context,
               type: ToastType.error,
@@ -91,8 +92,9 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
             );
             // Clear scanner state (barcodes, qrcodes, and implicitly error)
             context.read<DigitScannerBloc>().add(
-              const DigitScannerEvent.handleScanner(barCode: [], qrCode: []),
-            );
+                  const DigitScannerEvent.handleScanner(
+                      barCode: [], qrCode: []),
+                );
           }
           return _cameras.isNotEmpty
               ? !manualCode
@@ -278,7 +280,9 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                             final parser = GS1BarcodeParser.defaultParser();
                             final parsed = parser.parse(barcodeString);
                             // ✅ Append to existing barcodes; DO NOT touch qrCodes in GS1 mode
-                            final updatedBarcodes = List<GS1Barcode>.from(state.barCodes)..add(parsed);
+                            final updatedBarcodes =
+                                List<GS1Barcode>.from(state.barCodes)
+                                  ..add(parsed);
 
                             // Keep local mirror in sync (used by UI)
                             setState(() {
@@ -288,16 +292,14 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
 
                             bloc.add(
                               DigitScannerEvent.handleScanner(
-                                // barCode: state.barCodes,
-                                // barCode: [parsed],
                                 barCode: updatedBarcodes,
                                 qrCode: state.qrCodes,
                                 regex: widget.regex,
                               ),
                             );
-                            result.add(parsed);
                             if (updatedBarcodes.length < widget.quantity) {
-                              DigitScannerUtils().buildDialog(context, localizations, widget.quantity);
+                              DigitScannerUtils().buildDialog(
+                                  context, localizations, widget.quantity);
                             }
                             setState(() {
                               manualCode = false;
@@ -322,23 +324,28 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                               );
                             } else {
                               final bloc = context.read<DigitScannerBloc>();
-                              final updatedQRCodes = List<String>.from(state.qrCodes)
-                                ..add(form.control(_manualCodeFormKey).value.toString().trim());
+                              final updatedQRCodes =
+                                  List<String>.from(state.qrCodes)
+                                    ..add(form
+                                        .control(_manualCodeFormKey)
+                                        .value
+                                        .toString()
+                                        .trim());
 
                               codes.add(form.control(_manualCodeFormKey).value);
                               bloc.add(
                                 DigitScannerEvent.handleScanner(
-                                  barCode: state.barCodes,
-                                  qrCode: updatedQRCodes,
-                                  regex: widget.regex
-                                ),
+                                    barCode: state.barCodes,
+                                    qrCode: updatedQRCodes,
+                                    regex: widget.regex),
                               );
                               final scannedCount = widget.isGS1code
                                   ? state.barCodes.length
                                   : state.qrCodes.length;
 
                               if (scannedCount < widget.quantity) {
-                                DigitScannerUtils().buildDialog(context, localizations, widget.quantity);
+                                DigitScannerUtils().buildDialog(
+                                    context, localizations, widget.quantity);
                               }
 
                               setState(() {
@@ -508,11 +515,17 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                             );
                           } else {
                             final bloc = context.read<DigitScannerBloc>();
-                            final updatedQRCodes = List<String>.from(state.qrCodes)
-                              ..add(form.control(_manualCodeFormKey).value.toString().trim());
+                            final updatedQRCodes =
+                                List<String>.from(state.qrCodes)
+                                  ..add(form
+                                      .control(_manualCodeFormKey)
+                                      .value
+                                      .toString()
+                                      .trim());
                             codes.add(form.control(_manualCodeFormKey).value);
                             if (updatedQRCodes.length < widget.quantity) {
-                              DigitScannerUtils().buildDialog(context, localizations, widget.quantity);
+                              DigitScannerUtils().buildDialog(
+                                  context, localizations, widget.quantity);
                             }
                             bloc.add(
                               DigitScannerEvent.handleScanner(

@@ -129,6 +129,22 @@ class _HomePageState extends LocalizedState<HomePage> {
         // Build your component with access to all this data
         return FacilityCard(
           stateData: stockData,
+          formKey: 'facilityToWhich',
+          dependantFormKey: 'teamCode',
+        );
+      },
+    );
+    CustomComponentRegistry().registerBuilder(
+      'facilityFromWhich',
+      (context, stateAccessor) {
+        // Access data from any page in the flow
+        final stockData = stateAccessor.getPageData('manageStock');
+
+        // Build your component with access to all this data
+        return FacilityCard(
+          stateData: stockData,
+          formKey: 'facilityFromWhich',
+          dependantFormKey: 'deliveryTeam',
         );
       },
     );

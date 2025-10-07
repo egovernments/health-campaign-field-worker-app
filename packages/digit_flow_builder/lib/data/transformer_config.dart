@@ -412,9 +412,9 @@ final jsonConfig = {
           "productVariantId": "stockDetails.productdetail.id",
           "referenceId": "__context:projectId",
           "referenceIdType": "__value:PROJECT",
-          "quantity": "stockDetails.quantity",
-          "wayBillNumber": "stockDetails.wayBillNumber",
-          "transactionType": "__context.transactionType",
+          "quantity": "stockProductDetails.quantitySent",
+          "wayBillNumber": "stockProductDetails.wayBillNumber",
+          "transactionType": "__context:transactionType",
           "transactionReason": "stockDetails.transactionReason",
           "transactingPartyId": "stockDetails.transactingPartyId",
           "senderId": "stockDetails.facilityFromWhich",
@@ -424,10 +424,18 @@ final jsonConfig = {
           "nonRecoverableError": "errors.nonRecoverable",
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
-          "additionalFields": "additionalInfo.fields",
+          "additionalFields": {
+            "batchNumber": "stockProductDetails.batchNumber",
+            "expiryDate": "stockProductDetails.expiryDate",
+            "waybill_quantity": "stockProductDetails.quantitySent",
+            "comments": "stockProductDetails.comment",
+            "transportType": "stockDetails.transportType",
+            "vehicle_number": "stockDetails.vehicleNumber",
+            "deliveryTeam": "warehouseDetails.teamCode"
+          },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
-          "dateOfEntryTime": "warehouseDetails.dateOfEntry"
+          "dateOfEntry": "warehouseDetails.dateOfEntry"
         }
       },
     }
