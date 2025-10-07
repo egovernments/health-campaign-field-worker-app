@@ -541,6 +541,7 @@ class RegistrationDeliverySingleton {
   Map<String, TemplateConfig>? _templateConfigs;
   String? _registrationConfig;
   String? _deliveryConfig;
+  List<String>? _extraConfigs;
   int? _stockCount;
 
   void setBoundary({required BoundaryModel boundary}) {
@@ -623,6 +624,10 @@ class RegistrationDeliverySingleton {
     _deliveryConfig = deliveryConfig;
   }
 
+  void setExtraConfigs(List<String> extraConfigs) {
+    _extraConfigs = extraConfigs;
+  }
+
   String? get tenantId => _tenantId;
 
   String? get loggedInUserUuid => _loggedInUserUuid;
@@ -678,9 +683,11 @@ class RegistrationDeliverySingleton {
 
   Map<String, TemplateConfig>? get templateConfigs => _templateConfigs;
 
-  String? get regisrationConfig => _registrationConfig;
+  String? get registrationConfig => _registrationConfig;
 
   String? get deliveryConfig => _deliveryConfig;
+
+  List<String>? get extraConfigs => _extraConfigs;
 
   int? get stockCount => _stockCount;
 }

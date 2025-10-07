@@ -77,8 +77,9 @@ class _SearchBeneficiaryPageState
     context.read<LocationBloc>().add(const LoadLocationEvent());
 
     final schemas = [
-      RegistrationDeliverySingleton().regisrationConfig,
+      RegistrationDeliverySingleton().registrationConfig,
       RegistrationDeliverySingleton().deliveryConfig,
+      ...?RegistrationDeliverySingleton().extraConfigs,
     ]
         .where((s) =>
             s != null &&

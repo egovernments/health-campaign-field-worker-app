@@ -577,14 +577,14 @@ packages:
       path: "../../packages/digit_forms_engine"
       relative: true
     source: path
-    version: "0.0.4-dev"
+    version: "0.0.8-dev"
   digit_formula_parser:
     dependency: "direct overridden"
     description:
       path: "../../packages/digit_formula_parser"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.1.0"
   digit_location_tracker:
     dependency: "direct main"
     description:
@@ -609,10 +609,11 @@ packages:
   digit_ui_components:
     dependency: "direct main"
     description:
-      name: digit_ui_components
-      sha256: ad9646a4097f5706d3079898d85c51a18c851b514194f2180f4f8720129734b8
-      url: "https://pub.dev"
-    source: hosted
+      path: "flutter/digit-ui-components/digit_components"
+      ref: beneficiary-idgen
+      resolved-ref: f2ea300a7ca6c61920fcba4ebc0c7a74cdadca47
+      url: "https://github.com/egovernments/DIGIT-UI-LIBRARIES"
+    source: git
     version: "0.2.2+9"
   dio:
     dependency: "direct main"
@@ -1886,7 +1887,7 @@ packages:
       path: "../../packages/registration_delivery"
       relative: true
     source: path
-    version: "1.1.1-dev.3-console"
+    version: "1.1.1-dev.5-console"
   rxdart:
     dependency: transitive
     description:
