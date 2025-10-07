@@ -2950,6 +2950,7 @@ final dynamic sampleInventoryFlows = {
               ],
               "errorMessage": "",
               "isMultiSelect": false,
+              "includeInForm": true,
               "enums": [],
             },
             {
@@ -2987,13 +2988,12 @@ final dynamic sampleInventoryFlows = {
         },
         {
           "page": "stockDetails",
-          "label": "APPONE_INVENTORY_PRODUCTDETAILS_SCREEN_HEADING",
+          "label": "APPONE_INVENTORY_STOCKDETAILS_SCREEN_HEADING",
           "order": 2,
           "type": "object",
           "format": null,
-          "description": "APPONE_INVENTORY_PRODUCTDETAILS_SCREEN_DESCRIPTION",
-          "actionLabel":
-              "APPONE_INVENTORY_PRODUCTDETAILS_ACTION_BUTTON_LABEL_1",
+          "description": "APPONE_INVENTORY_STOCKDETAILS_SCREEN_DESCRIPTION",
+          "actionLabel": "APPONE_INVENTORY_STOCKDETAILS_ACTION_BUTTON_LABEL",
           "properties": [
             {
               "type": "dynamic",
@@ -3003,7 +3003,7 @@ final dynamic sampleInventoryFlows = {
               "format": "custom",
               "hidden": false,
               "tooltip": "",
-              "helpText": "",
+              "helpText": "Select multiple products which are being recorded",
               "infoText": "",
               "readOnly": false,
               "fieldName": "productdetail",
@@ -3011,9 +3011,15 @@ final dynamic sampleInventoryFlows = {
               "innerLabel": "",
               "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
               "systemDate": false,
-              "validations": [],
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Product selection is required"
+                }
+              ],
               "errorMessage": "",
-              "isMultiSelect": false,
+              "isMultiSelect": true,
               "enums": []
             },
             {
@@ -3047,21 +3053,57 @@ final dynamic sampleInventoryFlows = {
             },
             {
               "type": "string",
+              "visibilityCondition": {
+                "expression":
+                    "warehouseDetails.facilityFromWhich==Delivery Team"
+              },
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_deliveryTeamCode",
+              "order": 4,
+              "value": "",
+              "format": "scanner",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Scan Team Code",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "deliveryTeam",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityFromWhich_mandatory_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [],
+            },
+            {
+              "type": "string",
               "label": "APPONE_INVENTORY_TRANSPORT_LABEL",
               "order": 3,
               "value": "",
               "format": "dropdown",
               "hidden": false,
               "tooltip": "",
-              "helpText": "",
+              "helpText": "Select the type of transport used",
               "infoText": "",
               "readOnly": false,
               "fieldName": "transportType",
               "deleteFlag": false,
               "innerLabel": "",
-              "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
               "systemDate": false,
-              "validations": [],
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Transport type is required"
+                }
+              ],
               "errorMessage": "",
               "isMultiSelect": false,
               "enums": [
@@ -3071,13 +3113,68 @@ final dynamic sampleInventoryFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_INVENTORY_WAYBILL_LABEL",
+              "label": "APPONE_INVENTORY_VEHICLE_NUMBER_LABEL",
               "order": 4,
               "value": "",
               "format": "text",
               "hidden": false,
               "tooltip": "",
-              "helpText": "",
+              "helpText": "Enter the vehicle number",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "vehicleNumber",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Vehicle number is required"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            },
+          ],
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "navigateTo": {"name": "stockProductDetails", "type": "form"}
+        },
+        {
+          "page": "stockProductDetails",
+          "label": "APPONE_INVENTORY_PRODUCTDETAILS_SCREEN_HEADING",
+          "order": 3,
+          "type": "object",
+          "format": null,
+          "description": "APPONE_INVENTORY_PRODUCTDETAILS_SCREEN_DESCRIPTION",
+          "actionLabel":
+              "APPONE_INVENTORY_PRODUCTDETAILS_ACTION_BUTTON_LABEL_1",
+          "properties": [
+            {
+              "type": "string",
+              "label": "APPONE_INVENTORY_WAYBILL_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Enter the waybill number",
               "infoText": "",
               "readOnly": false,
               "fieldName": "wayBillNumber",
@@ -3088,7 +3185,7 @@ final dynamic sampleInventoryFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Required field cannot be empty"
+                  "message": "Waybill number is required"
                 }
               ],
               "errorMessage": "",
@@ -3097,43 +3194,16 @@ final dynamic sampleInventoryFlows = {
             },
             {
               "type": "string",
-              "label": "Damaged options",
-              "order": 3,
-              "value": "",
-              "format": "dropdown",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "damagedOptions",
-              "deleteFlag": false,
-              "visibilityCondition": {
-                "expression": "navigation.stockEntryType==DAMAGED"
-              },
-              "innerLabel": "",
-              "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "enums": [
-                {"code": "", "name": "Bus"},
-                {"code": "TRUCK", "name": "Truck"}
-              ]
-            },
-            {
-              "type": "string",
-              "label": "APPONE_INVENTORY_QUANTITY_LABEL",
-              "order": 4,
+              "label": "APPONE_INVENTORY_BATCH_NUMBER_LABEL",
+              "order": 2,
               "value": "",
               "format": "text",
               "hidden": false,
               "tooltip": "",
-              "helpText": "",
+              "helpText": "Enter the batch number",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "quantity",
+              "fieldName": "batchNumber",
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
@@ -3141,7 +3211,99 @@ final dynamic sampleInventoryFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Required field cannot be empty"
+                  "message": "Batch number is required"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            },
+            {
+              "type": "string",
+              "label": "APPONE_INVENTORY_EXPIRY_DATE_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "date",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Select the expiry date",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "expiryDate",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Expiry date is required"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            },
+            {
+              "type": "string",
+              "label": "APPONE_INVENTORY_QUANTITY_SENT_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Enter the quantity sent by the warehouse",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "quantitySent",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Quantity sent is required"
+                },
+                {
+                  "type": "regex",
+                  "value": r"^[0-9]+$",
+                  "message": "Please enter a valid number"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            },
+            {
+              "type": "string",
+              "label": "APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Enter the actual quantity received",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "quantityReceived",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "visibilityCondition": {
+                "expression":
+                    "stockDetails.facilityFromWhich!=National Warehouse"
+              },
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Quantity received is required"
+                },
+                {
+                  "type": "regex",
+                  "value": r"^[0-9]+$",
+                  "message": "Please enter a valid number"
                 }
               ],
               "errorMessage": "",
@@ -3151,22 +3313,54 @@ final dynamic sampleInventoryFlows = {
             {
               "type": "string",
               "label": "APPONE_INVENTORY_COMMENT_LABEL",
-              "order": 4,
+              "order": 7,
               "value": "",
-              "format": "text",
+              "format": "textArea",
               "hidden": false,
               "tooltip": "",
-              "helpText": "",
+              "helpText": "Add comments if quantities differ",
               "infoText": "",
               "readOnly": false,
               "fieldName": "comment",
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
-              "validations": [],
+              "visibilityCondition": {
+                "expression":
+                    "stockProductDetails.quantitySent!=stockProductDetails.quantityReceived"
+              },
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Comment is required when quantities differ"
+                }
+              ],
               "errorMessage": "",
               "isMultiSelect": false,
               "enums": null
+            },
+            {
+              "type": "string",
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_scanResource",
+              "order": 8,
+              "value": "",
+              "format": "scanner",
+              "validations": [
+                {"type": "isGS1", "value": true, "message": ""}
+              ],
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Scan Resource",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "scanResource",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [],
             },
           ],
           "value": null,
@@ -3193,6 +3387,16 @@ final dynamic sampleInventoryFlows = {
           "actionType": "FETCH_TRANSFORMER_CONFIG",
           "properties": {
             "configName": "stock",
+            "data": [
+              {
+                "key": "stockEntryType",
+                "value": "{{navigation.stockEntryType}}"
+              },
+              {
+                "key": "transactionType",
+                "value": "{{navigation.transactionType}}"
+              }
+            ],
             "onError": [
               {
                 "actionType": "SHOW_TOAST",

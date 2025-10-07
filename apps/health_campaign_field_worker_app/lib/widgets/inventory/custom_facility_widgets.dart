@@ -11,6 +11,8 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../localized.dart';
 
 class FacilityCard extends LocalizedStatefulWidget {
+  final String formKey;
+  final String dependantFormKey;
   final String? label;
   final bool readOnly;
   final dynamic stateData;
@@ -18,6 +20,8 @@ class FacilityCard extends LocalizedStatefulWidget {
   const FacilityCard({
     super.key,
     super.appLocalizations,
+    required this.formKey,
+    required this.dependantFormKey,
     this.label,
     this.readOnly = false,
     this.stateData,
@@ -28,11 +32,6 @@ class FacilityCard extends LocalizedStatefulWidget {
 }
 
 class _FacilityCardState extends LocalizedState<FacilityCard> {
-  static const _facilityToWhichKey = 'facilityToWhich';
-  static const _facilityFromWhichKey = 'facilityFromWhich';
-  static const _teamCodeKey = 'teamCode';
-  static const _deliveryTeamKey = 'deliveryTeam';
-
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
   TextEditingController teamCodeController = TextEditingController();
@@ -45,6 +44,11 @@ class _FacilityCardState extends LocalizedState<FacilityCard> {
           barCode: [],
           qrCode: [],
         ));
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
@@ -79,7 +83,7 @@ class _FacilityCardState extends LocalizedState<FacilityCard> {
         final key = entry.key;
         final schema = entry.value;
 
-        if (key == _facilityToWhichKey) {
+        if (key == widget.formKey) {
           labelFromSchema = schema.label ?? schema.innerLabel;
 
           // Build facility list with Delivery Team option if applicable
@@ -122,108 +126,79 @@ class _FacilityCardState extends LocalizedState<FacilityCard> {
           teamCodeController.text = scannerState.qrCodes.first;
         }
 
-        return ReactiveFormBuilder(
-          form: () => fb.group({
-            _facilityToWhichKey: FormControl<dynamic>(
-              validators: [Validators.required],
-              value: selectedFacilityId,
-            ),
-            _teamCodeKey: FormControl<String>(
-              value: scannerState.qrCodes.isNotEmpty
-                  ? scannerState.qrCodes.first
-                  : '',
-              validators: deliveryTeamSelected ? [Validators.required] : [],
-            ),
-            _facilityFromWhichKey: FormControl<dynamic>(
-              validators: [Validators.required],
-              value: selectedFacilityId,
-            ),
-            _deliveryTeamKey: FormControl<String>(
-              value: scannerState.qrCodes.isNotEmpty
-                  ? scannerState.qrCodes.first
-                  : '',
-              validators: deliveryTeamSelected ? [Validators.required] : [],
-            ),
-          }),
-          builder: (context, form, child) {
-            return Column(
-              children: [
-                ReactiveWrapperField(
-                  formControlName: _facilityToWhichKey,
-                  validationMessages: {
-                    'required': (_) => localizations.translate(
-                          "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message",
-                        ),
-                  },
-                  showErrors: (control) => control.invalid && control.touched,
-                  builder: (field) {
-                    return LabeledField(
-                      label: localizations.translate(
-                        labelFromSchema ?? "Select Facility",
-                      ),
-                      isRequired: true,
-                      child: DigitDropdown(
-                        errorMessage: field.errorText,
-                        emptyItemText: localizations.translate(
-                          'NOT_FOUND',
-                        ),
-                        items: enums,
-                        selectedOption: selectedFacilityId != null
-                            ? DropdownItem(
-                                code: selectedFacilityId!,
-                                name: selectedFacilityId == 'Delivery Team'
-                                    ? 'Delivery Team'
-                                    : localizations
-                                        .translate('FAC_$selectedFacilityId'),
-                              )
-                            : const DropdownItem(name: '', code: ''),
-                        onSelect: (value) {
-                          setState(() {
-                            selectedFacilityId = value.code;
-                            deliveryTeamSelected =
-                                value.code == 'Delivery Team';
-                          });
-
-                          // Clear team code when switching facilities
-                          if (!deliveryTeamSelected) {
-                            form.control(_teamCodeKey).value = '';
-                            teamCodeController.clear();
-                            context.read<DigitScannerBloc>().add(
-                                const DigitScannerEvent.handleScanner(
-                                    barCode: [], qrCode: []));
-                          }
-
-                          field.control.value = value.code;
-
-                          // Update FormsBloc with appropriate values
-                          if (deliveryTeamSelected) {
-                            context.read<FormsBloc>().add(
-                                  FormsEvent.updateField(
-                                    schemaKey: 'MANAGESTOCK',
-                                    context: context,
-                                    key: _facilityToWhichKey,
-                                    value: value.code,
-                                  ),
-                                );
-                          } else {
-                            final selectedModel = projectFacilities!
-                                .map((e) => e as ProjectFacilityModel)
-                                .firstWhere((m) => m.facilityId == value.code);
-
-                            context.read<FormsBloc>().add(
-                                  FormsEvent.updateField(
-                                      schemaKey: 'MANAGESTOCK',
-                                      context: context,
-                                      key: _facilityToWhichKey,
-                                      value: selectedModel.facilityId),
-                                );
-                          }
-                        },
-                      ),
-                    );
-                  },
+        return ReactiveWrapperField(
+          formControlName: widget.formKey,
+          validationMessages: {
+            'required': (_) => localizations.translate(
+                  "APPONE_MANAGESTOCK_WAREHOUSE_label_${widget.formKey}_mandatory_message",
                 ),
-              ],
+          },
+          showErrors: (control) => control.invalid && control.touched,
+          builder: (field) {
+            return LabeledField(
+              label: localizations.translate(
+                labelFromSchema ?? "Select Facility",
+              ),
+              isRequired: true,
+              child: DigitDropdown(
+                errorMessage: field.errorText,
+                emptyItemText: localizations.translate(
+                  'NOT_FOUND',
+                ),
+                items: enums,
+                selectedOption: selectedFacilityId != null
+                    ? DropdownItem(
+                        code: selectedFacilityId!,
+                        name: selectedFacilityId == 'Delivery Team'
+                            ? 'Delivery Team'
+                            : localizations
+                                .translate('FAC_$selectedFacilityId'),
+                      )
+                    : const DropdownItem(name: '', code: ''),
+                onSelect: (value) {
+                  setState(() {
+                    selectedFacilityId = value.code;
+                    deliveryTeamSelected = value.code == 'Delivery Team';
+                  });
+
+                  final form = ReactiveForm.of(context) as FormGroup;
+
+                  // Clear team code when switching facilities
+                  if (!deliveryTeamSelected) {
+                    form.control(widget.dependantFormKey).value = '';
+                    teamCodeController.clear();
+                    context.read<DigitScannerBloc>().add(
+                        const DigitScannerEvent.handleScanner(
+                            barCode: [], qrCode: []));
+                  }
+
+                  field.control.value = value.code;
+
+                  // Update FormsBloc with appropriate values
+                  if (deliveryTeamSelected) {
+                    context.read<FormsBloc>().add(
+                          FormsEvent.updateField(
+                            schemaKey: 'MANAGESTOCK',
+                            context: context,
+                            key: widget.formKey,
+                            value: value.code,
+                          ),
+                        );
+                  } else {
+                    final selectedModel = projectFacilities!
+                        .map((e) => e as ProjectFacilityModel)
+                        .firstWhere((m) => m.facilityId == value.code);
+
+                    context.read<FormsBloc>().add(
+                          FormsEvent.updateField(
+                              schemaKey: 'MANAGESTOCK',
+                              context: context,
+                              key: widget.formKey,
+                              value: selectedModel.facilityId),
+                        );
+                  }
+                },
+              ),
             );
           },
         );
