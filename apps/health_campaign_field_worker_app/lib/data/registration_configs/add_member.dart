@@ -79,10 +79,41 @@ final addMember = '''{
           "errorMessage": "",
           "isMultiSelect": false
         },
+         "identifiers": {
+          "type": "string",
+          "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers",
+          "order": 3,
+          "value": "",
+          "format": "idPopulator",
+          "hidden": false,
+          "tooltip": "",
+          "helpText": "",
+          "infoText": "",
+          "readOnly": false,
+          "fieldName": "identifiers",
+          "deleteFlag": false,
+          "enums": [
+            { "code": "DEFAULT", "name": "DEFAULT" },
+            { "code": "UNIQUE_BENEFICIARY_ID", "name": "UNIQUE_BENEFICIARY_ID" },
+            { "code": "OTHER", "name": "OTHER" }
+          ],
+          "innerLabel": "",
+          "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR",
+          "systemDate": false,
+          "validations": [
+            {
+              "type": "required",
+              "value": true,
+              "message": "Required field cannot be empty"
+            }
+          ],
+          "errorMessage": "",
+          "isMultiSelect": false
+        },
         "dobPicker": {
           "type": "string",
           "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker",
-          "order": 3,
+          "order": 4,
           "value": "",
           "format": "dob",
           "hidden": false,
@@ -101,7 +132,7 @@ final addMember = '''{
         "gender": {
           "type": "string",
           "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender",
-          "order": 4,
+          "order": 5,
           "value": "",
           "format": "select",
           "hidden": false,
@@ -126,7 +157,7 @@ final addMember = '''{
         "phone": {
           "type": "string",
           "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone",
-          "order": 5,
+          "order": 6,
           "value": "",
           "format": "phoneNumber",
           "hidden": false,
@@ -145,7 +176,7 @@ final addMember = '''{
         "scanner": {
           "type": "string",
           "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_scanner",
-          "order": 6,
+          "order": 7,
           "value": "",
           "format": "scanner",
           "hidden": true,
