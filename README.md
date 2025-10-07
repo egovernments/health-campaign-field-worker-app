@@ -1494,10 +1494,15 @@ Build your HCM Field Worker App APK directly from GitHub without any local setup
 | Parameter | Description | Example |
 |-----------|-------------|---------|
 | **Base URL** | Your backend service URL | `https://your-environment.digit.org/` |
-| **Environment** | Target environment | `DEV`, `QA`, `UAT`, `DEMO`, `PROD` |
+| **MDMS API Path** | MDMS service endpoint path | `egov-mdms-service/v1/_search` |
 | **Tenant ID** | Your tenant identifier | `pg`, `uk`, `mz` |
+| **Actions API Path** | Access control API endpoint | `access/v1/actions/mdms/_get` |
+| **Hierarchy Type** | Boundary hierarchy type | `ADMIN`, `MICROPLAN` |
+| **Environment** | Target environment | `DEV`, `QA`, `UAT`, `DEMO`, `PROD` |
+| **Check Bandwidth API** | Network bandwidth check endpoint | `/health-project/check/bandwidth` |
 | **Build Type** | APK build variant | `release` (production), `profile` (testing) |
 | **APK Name** | Custom name for your APK | `my-hcm-app` |
+| **Override Dependencies** | Use local packages from repo | `false` (published), `true` (local) |
 
 ## **Local vs Published Packages**
 
