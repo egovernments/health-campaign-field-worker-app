@@ -140,6 +140,14 @@ class _SearchBeneficiaryPageState
                 beneficiaryType: RegistrationDeliverySingleton()
                     .beneficiaryType
                     ?.toValue()));
+          } else if (individualModel != null) {
+            blocWrapper.add(RegistrationWrapperEvent.fetchDeliveryDetails(
+                projectId: RegistrationDeliverySingleton().selectedProject!.id,
+                selectedIndividual: individualModel,
+                householdWrapper: HouseholdWrapper(household: householdModel),
+                beneficiaryType: RegistrationDeliverySingleton()
+                    .beneficiaryType
+                    ?.toValue()));
           }
           if (taskModel != null) {
             blocWrapper.add(RegistrationWrapperEvent.fetchDeliveryDetails(
@@ -350,14 +358,19 @@ class _SearchBeneficiaryPageState
                       .push(BeneficiaryErrorRoute(enableViewHousehold: false));
                 }
               } else {
-                final modelsConfig = formState.activeSchemaKey == 'DELIVERYFLOW'
-                    ? (jsonConfig['delivery']?['models']
+                final modelsConfig = formState.activeSchemaKey == "ADD_MEMBER"
+                    ? (jsonConfig['individualRegistration']?['models']
                         as Map<String, dynamic>)
-                    : jsonConfig['beneficiaryRegistration']?['models']
-                        as Map<String, dynamic>;
+                    : formState.activeSchemaKey == 'DELIVERYFLOW'
+                        ? (jsonConfig['delivery']?['models']
+                            as Map<String, dynamic>)
+                        : jsonConfig['beneficiaryRegistration']?['models']
+                            as Map<String, dynamic>;
 
-                final fallBackModel =
-                    formState.activeSchemaKey == 'DELIVERYFLOW'
+                final fallBackModel = formState.activeSchemaKey == "ADD_MEMBER"
+                    ? (jsonConfig['individualRegistration']?['fallbackModel']
+                        as String?)
+                    : formState.activeSchemaKey == 'DELIVERYFLOW'
                         ? (jsonConfig['delivery']?['fallbackModel'] as String?)
                         : jsonConfig['beneficiaryRegistration']
                             ?['fallbackModel'] as String?;

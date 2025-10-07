@@ -45,6 +45,7 @@ import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
+import '../data/registration_configs/add_member.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../utils/debound.dart';
@@ -405,6 +406,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                 RegistrationDeliverySingleton().setTemplateConfigs(templates);
                 RegistrationDeliverySingleton()
                     .setRegistrationConfig(registrationConfig);
+                final extraConfig = addMember;
+
+                RegistrationDeliverySingleton().setExtraConfigs([extraConfig]);
               }
             }
             RegistrationDeliverySingleton()

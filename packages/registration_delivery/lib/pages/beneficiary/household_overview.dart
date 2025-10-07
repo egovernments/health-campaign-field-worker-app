@@ -26,6 +26,7 @@ import 'package:registration_delivery/data/transformer_config.dart';
 import 'package:survey_form/survey_form.dart';
 
 import '/widgets/status_filter/status_filter.dart';
+import '../../blocs/unique_id/unique_id.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/registration_delivery_enums.dart';
 import '../../models/entities/status.dart';
@@ -1203,7 +1204,45 @@ class _HouseholdOverviewPageState
   }
 
   addIndividual(BuildContext context, HouseholdModel household) async {
-    // TODO: Need to add logic for adding members
+    final pageName = context
+        .read<FormsBloc>()
+        .state
+        .cachedSchemas["ADD_MEMBER"]
+        ?.pages
+        .entries
+        .first
+        .key;
+
+    if (pageName == null) {
+      Toast.showToast(
+        context,
+        message: localizations.translate('NO_FORM_FOUND_FOR_REGISTRATION'),
+        type: ToastType.error,
+      );
+    } else {
+      final uniqueIdState = context.read<UniqueIdBloc>().state;
+      String? currentUniqueId;
+
+      uniqueIdState.maybeWhen(
+        orElse: () {},
+        idCount: (availableIdCount, totalCount, uniqueId) {
+          currentUniqueId = uniqueId?.id;
+        },
+      );
+
+      context.router.push(FormsRenderRoute(
+        currentSchemaKey: "ADD_MEMBER",
+        pageName: pageName,
+        defaultValues: {
+          'administrativeArea': localizations
+              .translate(RegistrationDeliverySingleton().boundary?.code ?? ''),
+          'availableIDs': {
+            'DEFAULT': IdGen.instance.identifier,
+            'UNIQUE_BENEFICIARY_ID': currentUniqueId,
+          },
+        },
+      ));
+    }
   }
 
   bool isOutsideProjectDateRange() {
