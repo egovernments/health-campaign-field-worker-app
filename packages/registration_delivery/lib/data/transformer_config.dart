@@ -302,7 +302,8 @@ final jsonConfig = {
         "mappings": {
           "id": "members.id",
           "householdId": "members.householdId",
-          "householdClientReferenceId": "__context:HouseholdClientReferenceId",
+          "householdClientReferenceId":
+              "__context:householdModel.clientReferenceId",
           "individualId": "members.individualId",
           "individualClientReferenceId":
               "__ref:IndividualModel.clientReferenceId",
