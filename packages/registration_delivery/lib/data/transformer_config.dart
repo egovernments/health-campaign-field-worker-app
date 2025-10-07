@@ -76,6 +76,7 @@ final jsonConfig = {
           "name": {
             "individualClientReferenceId":
                 "__ref:IndividualModel.clientReferenceId",
+            "familyName": "beneficiaryDetails.familyNameOfIndividual",
             "givenName": "beneficiaryDetails.nameOfIndividual",
             "clientAuditDetails": "__generate:clientAudit",
             "auditDetails": "__generate:audit",
@@ -212,6 +213,7 @@ final jsonConfig = {
             "individualClientReferenceId":
                 "__ref:IndividualModel.clientReferenceId",
             "givenName": "beneficiaryDetails.nameOfIndividual",
+            "familyName": "beneficiaryDetails.familyNameOfIndividual",
             "clientAuditDetails": "__generate:clientAudit",
             "auditDetails": "__generate:audit",
           },

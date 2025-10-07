@@ -530,7 +530,7 @@ class FormEntityMapper {
     fieldsMap.forEach((customKey, path) {
       final value = getValueFromMapping(path, formValues, path, context);
       if (value != null && value.toString().trim().isNotEmpty) {
-        fieldsList.add({'key': customKey, 'value': value.toString()});
+        fieldsList.add({'key': customKey, 'value': value});
       }
     });
 
@@ -596,6 +596,10 @@ class FormEntityMapper {
 
     if (instruction.startsWith('__value:')) {
       final valueStr = instruction.replaceFirst('__value:', '').trim();
+
+      if (valueStr == 'DATETIME.NOW') {
+        return DateTime.now().millisecondsSinceEpoch;
+      }
 
       // Try to convert to bool, int, double, or null
       if (valueStr == 'true') return true;
