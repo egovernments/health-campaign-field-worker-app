@@ -198,11 +198,9 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         final rowTableData = [
           DigitTableData(
             [
-              e.name?.givenName ?? '--',
-              (e.name?.familyName?.trim().isNotEmpty ?? false)
-                  ? e.name?.familyName
-                  : null,
-            ].whereNotNull().join(' '),
+              e.name?.givenName?.trim(),
+              e.name?.familyName?.trim(),
+            ].where((name) => name != null && name.isNotEmpty).join(' '),
             cellKey: 'beneficiary',
           ),
           DigitTableData(
@@ -434,7 +432,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                                   localizations
                                       .translate(i18.common.coreCommonNA),
                               householdMember.headOfHousehold?.name?.familyName,
-                            ].whereNotNull().join(''),
+                            ].whereNotNull().join(' '),
                     ),
                   ),
                 ],

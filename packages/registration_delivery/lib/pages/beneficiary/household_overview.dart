@@ -624,6 +624,18 @@ class _HouseholdOverviewPageState
                                           );
                                         }
 
+                                        final headName = state.householdMembers
+                                            .firstOrNull?.headOfHousehold?.name;
+                                        final fullName = [
+                                          headName?.givenName?.trim(),
+                                          headName?.familyName?.trim(),
+                                        ].whereNotNull().join(' ');
+
+                                        final displayName = fullName.isNotEmpty
+                                            ? fullName
+                                            : localizations.translate(
+                                                i18.common.coreCommonNA);
+
                                         return overviewTemplate
                                                     ?.properties?[
                                                         registration_keys
@@ -652,17 +664,9 @@ class _HouseholdOverviewPageState
                                                                         .toString()))) ??
                                                         {
                                                           localizations.translate(i18
-                                                              .householdOverView
-                                                              .householdOverViewHouseholdHeadNameLabel): state
-                                                                  .householdMembers
-                                                                  .firstOrNull
-                                                                  ?.headOfHousehold
-                                                                  ?.name
-                                                                  ?.givenName ??
-                                                              localizations
-                                                                  .translate(i18
-                                                                      .common
-                                                                      .coreCommonNA),
+                                                                  .householdOverView
+                                                                  .householdOverViewHouseholdHeadNameLabel):
+                                                              displayName,
                                                           localizations
                                                               .translate(
                                                             i18.householdLocation
@@ -1119,7 +1123,14 @@ class _HouseholdOverviewPageState
                                                             sideEffectData,
                                                           )
                                                     : false,
-                                            name: e.name?.givenName ?? ' - - ',
+                                            name: [
+                                              e.name?.givenName?.trim(),
+                                              e.name?.familyName?.trim(),
+                                            ]
+                                                .where((name) =>
+                                                    name != null &&
+                                                    name.isNotEmpty)
+                                                .join(' '),
                                             years: (e.dateOfBirth == null
                                                 ? null
                                                 : DigitDateUtils.calculateAge(

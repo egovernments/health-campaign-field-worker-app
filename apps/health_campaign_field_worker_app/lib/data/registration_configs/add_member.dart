@@ -194,17 +194,9 @@ final addMember = '''{
         }
       },
       "navigateTo": {
-        "name": "beneficiary-details",
-        "type": "template",
-        "data": [
-          {
-            "key": "householdId",
-            "value": "{{formData.household.clientReferenceId}}"
-          }
-        ]
+        "name": "household-overview",
+        "type": "template"
       }
     }
-  },
-  "templates": {}
-}
-''';
+  }
+}''';
