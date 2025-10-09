@@ -207,16 +207,17 @@ class RegistrationWrapperBloc
                 (m) => m.individualClientReferenceId == i.clientReferenceId))
             .toList();
 
-        final householdBeneficiaries = event.beneficiaryType == 'individual'
-            ? allBeneficiaries
-                .where((b) => householdIndividuals.any((i) =>
-                    i.clientReferenceId == b.beneficiaryClientReferenceId))
-                .toList()
-            : allBeneficiaries
-                .where((b) =>
-                    b.beneficiaryClientReferenceId ==
-                    household.clientReferenceId)
-                .toList();
+        final householdBeneficiaries =
+            event.beneficiaryType == BeneficiaryType.individual.toValue()
+                ? allBeneficiaries
+                    .where((b) => householdIndividuals.any((i) =>
+                        i.clientReferenceId == b.beneficiaryClientReferenceId))
+                    .toList()
+                : allBeneficiaries
+                    .where((b) =>
+                        b.beneficiaryClientReferenceId ==
+                        household.clientReferenceId)
+                    .toList();
 
         final beneficiaryIds =
             householdBeneficiaries.map((b) => b.clientReferenceId).toSet();
