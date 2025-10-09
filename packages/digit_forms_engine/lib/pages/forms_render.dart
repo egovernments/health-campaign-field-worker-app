@@ -6,8 +6,10 @@ import 'package:digit_forms_engine/widgets/back_header/back_navigation_help_head
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -339,20 +341,76 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                   isView: widget.isView,
                                 ));
                               } else {
-                                // Submit & close
-                                if (widget.isView == false) {
-                                  context
-                                      .read<FormsBloc>()
-                                      .add(FormsSubmitEvent(
-                                        isEdit: widget.isEdit,
-                                        schemaKey: widget.currentSchemaKey,
-                                        isView: widget.isView,
-                                      ));
+                                if (schemaObject.showAlertPopUp != null) {
+                                  showCustomPopup(
+                                    context: context,
+                                    builder: (BuildContext ctx) => Popup(
+                                        title: localizations.translate(
+                                            schemaObject.showAlertPopUp!.title),
+                                        description: localizations.translate(
+                                            schemaObject.showAlertPopUp!
+                                                    .description ??
+                                                ""),
+                                        actions: [
+                                          DigitButton(
+                                              label: localizations.translate(
+                                                  schemaObject.showAlertPopUp!
+                                                      .primaryActionLabel),
+                                              onPressed: () {
+                                                // Submit & close
+                                                if (widget.isView == false) {
+                                                  context
+                                                      .read<FormsBloc>()
+                                                      .add(FormsSubmitEvent(
+                                                        isEdit: widget.isEdit,
+                                                        schemaKey: widget
+                                                            .currentSchemaKey,
+                                                        isView: widget.isView,
+                                                      ));
+                                                }
+                                                // Pop all form pages (FormsRenderRoute)
+                                                Navigator.of(
+                                                  ctx,
+                                                  rootNavigator: true,
+                                                ).pop();
+                                                context.router
+                                                    .popUntil((route) {
+                                                  return route.settings.name !=
+                                                      FormsRenderRoute.name;
+                                                });
+                                              },
+                                              type: DigitButtonType.primary,
+                                              size: DigitButtonSize.large),
+                                          DigitButton(
+                                              label: localizations.translate(
+                                                  schemaObject.showAlertPopUp!
+                                                      .secondaryActionLabel),
+                                              onPressed: () {
+                                                Navigator.of(
+                                                  ctx,
+                                                  rootNavigator: true,
+                                                ).pop();
+                                              },
+                                              type: DigitButtonType.secondary,
+                                              size: DigitButtonSize.large)
+                                        ]),
+                                  );
+                                } else {
+                                  // Submit & close
+                                  if (widget.isView == false) {
+                                    context
+                                        .read<FormsBloc>()
+                                        .add(FormsSubmitEvent(
+                                          isEdit: widget.isEdit,
+                                          schemaKey: widget.currentSchemaKey,
+                                          isView: widget.isView,
+                                        ));
+                                  }
+                                  context.router.popUntil((route) {
+                                    return route.settings.name !=
+                                        FormsRenderRoute.name;
+                                  });
                                 }
-                                context.router.popUntil((route) {
-                                  return route.settings.name !=
-                                      FormsRenderRoute.name;
-                                });
                               }
                             }
                             // ------- END DEFAULT FLOW -------
@@ -475,14 +533,65 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
             mainAxisSize: MainAxisSize.max,
             label: localizations.translate('CORE_COMMON_SUBMIT'),
             onPressed: () {
-              if (isView == false) {
-                context.read<FormsBloc>().add(FormsSubmitEvent(
-                    schemaKey: widget.currentSchemaKey, isEdit: widget.isEdit));
+              if (schemaObject.showAlertPopUp != null) {
+                showCustomPopup(
+                  context: context,
+                  builder: (BuildContext ctx) => Popup(
+                      title: localizations
+                          .translate(schemaObject.showAlertPopUp!.title),
+                      description: localizations.translate(
+                          schemaObject.showAlertPopUp!.description ?? ""),
+                      actions: [
+                        DigitButton(
+                            label: localizations.translate(schemaObject
+                                .showAlertPopUp!.primaryActionLabel),
+                            onPressed: () {
+                              // Submit & close
+                              if (widget.isView == false) {
+                                context.read<FormsBloc>().add(FormsSubmitEvent(
+                                      isEdit: widget.isEdit,
+                                      schemaKey: widget.currentSchemaKey,
+                                      isView: widget.isView,
+                                    ));
+                              }
+                              // Pop all form pages (FormsRenderRoute)
+                              Navigator.of(
+                                ctx,
+                                rootNavigator: true,
+                              ).pop();
+                              context.router.popUntil((route) {
+                                return route.settings.name !=
+                                    FormsRenderRoute.name;
+                              });
+                            },
+                            type: DigitButtonType.primary,
+                            size: DigitButtonSize.large),
+                        DigitButton(
+                            label: localizations.translate(schemaObject
+                                .showAlertPopUp!.secondaryActionLabel),
+                            onPressed: () {
+                              Navigator.of(
+                                ctx,
+                                rootNavigator: true,
+                              ).pop();
+                            },
+                            type: DigitButtonType.secondary,
+                            size: DigitButtonSize.large)
+                      ]),
+                );
+              } else {
+                // Submit & close
+                if (widget.isView == false) {
+                  context.read<FormsBloc>().add(FormsSubmitEvent(
+                        isEdit: widget.isEdit,
+                        schemaKey: widget.currentSchemaKey,
+                        isView: widget.isView,
+                      ));
+                }
+                context.router.popUntil((route) {
+                  return route.settings.name != FormsRenderRoute.name;
+                });
               }
-              // Pop all form pages (FormsRenderRoute)
-              context.router.popUntil((route) {
-                return route.settings.name != FormsRenderRoute.name;
-              });
             },
             type: DigitButtonType.primary,
             size: DigitButtonSize.large,

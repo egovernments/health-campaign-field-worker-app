@@ -1,13 +1,17 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_data_model/models/templates/template_config.dart';
+import 'package:digit_forms_engine/blocs/forms/forms.dart';
+import 'package:digit_forms_engine/router/forms_router.gm.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
@@ -296,7 +300,9 @@ class MemberCard extends StatelessWidget {
                             ? const Offstage()
                             : !isNotEligible
                                 ? Offstage(
-                                    offstage: beneficiaryType != BeneficiaryType.individual && primaryButtonProperties?.hidden !=
+                                    offstage: beneficiaryType !=
+                                            BeneficiaryType.individual &&
+                                        primaryButtonProperties?.hidden !=
                                             null &&
                                         primaryButtonProperties?.hidden == true,
                                     child: DigitButton(
@@ -326,7 +332,41 @@ class MemberCard extends StatelessWidget {
                                                   .householdOverViewActionText,
                                             ),
                                       onPressed: () {
-                                        //// TODO: need to write for logic for eligibility checklist and other flows
+                                        context.read<FormsBloc>().add(
+                                            const FormsEvent.clearForm(
+                                                schemaKey:
+                                                    'ELIGIBILITYCHECKLIST'));
+                                        final pageName = context
+                                            .read<FormsBloc>()
+                                            .state
+                                            .cachedSchemas[
+                                                'ELIGIBILITYCHECKLIST']
+                                            ?.pages
+                                            .entries
+                                            .first
+                                            .key;
+
+                                        if (pageName == null) {
+                                          Toast.showToast(
+                                            context,
+                                            message: localizations.translate(
+                                                'NO_FORM_FOUND_FOR_ELIGIBILITYCHECKLIST'),
+                                            type: ToastType.error,
+                                          );
+                                        } else {
+                                          context.router.push(FormsRenderRoute(
+                                              currentSchemaKey:
+                                                  'ELIGIBILITYCHECKLIST',
+                                              pageName: pageName,
+                                              defaultValues: {
+                                                'administrativeArea':
+                                                    localizations.translate(
+                                                        RegistrationDeliverySingleton()
+                                                                .boundary
+                                                                ?.code ??
+                                                            ''),
+                                              }));
+                                        }
                                       },
                                     ),
                                   )

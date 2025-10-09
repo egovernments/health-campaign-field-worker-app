@@ -369,7 +369,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             if (isTriggerLocalisation) {
               final moduleName =
-                  'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
+                  'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}, hcm-eligibilitychecklistflow-${context.selectedProject.referenceID}';
               triggerLocalization(module: moduleName);
               isTriggerLocalisation = false;
             }
@@ -383,32 +383,50 @@ class _HomePageState extends LocalizedState<HomePage> {
 
               final registrationSchemaEntry =
                   allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
+              final deliverySchemaEntry =
+                  allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
+              final checklistSchemaEntry =
+                  allSchemas['ELIGIBILITYCHECKLIST'] as Map<String, dynamic>?;
 
               final registrationSchemaData = registrationSchemaEntry?['data'];
+              final deliverySchemaData = deliverySchemaEntry?['data'];
+              final checklistSchemaData = checklistSchemaEntry?['data'];
 
-              if (registrationSchemaData != null) {
+              if (registrationSchemaData != null ||
+                  deliverySchemaData != null ||
+                  checklistSchemaData != null) {
                 // Extract templates from both schemas
                 final regTemplatesRaw = registrationSchemaData?['templates'];
+                final delTemplatesRaw = deliverySchemaData?['templates'];
 
                 final Map<String, dynamic> regTemplateMap =
                     regTemplatesRaw is Map<String, dynamic>
                         ? regTemplatesRaw
                         : {};
 
+                final Map<String, dynamic> delTemplateMap =
+                    delTemplatesRaw is Map<String, dynamic>
+                        ? delTemplatesRaw
+                        : {};
+
                 final templates = {
-                  for (final entry in {...regTemplateMap}.entries)
+                  for (final entry
+                      in {...regTemplateMap, ...delTemplateMap}.entries)
                     entry.key: TemplateConfig.fromJson(
                         entry.value as Map<String, dynamic>)
                 };
 
                 final registrationConfig = json.encode(registrationSchemaData);
+                final deliveryConfig = json.encode(deliverySchemaData);
+                final checklistConfig = json.encode(checklistSchemaData);
 
                 RegistrationDeliverySingleton().setTemplateConfigs(templates);
                 RegistrationDeliverySingleton()
                     .setRegistrationConfig(registrationConfig);
-                final extraConfig = addMember;
-
-                RegistrationDeliverySingleton().setExtraConfigs([extraConfig]);
+                RegistrationDeliverySingleton()
+                    .setDeliveryConfig(deliveryConfig);
+                RegistrationDeliverySingleton()
+                    .setExtraConfigs([addMember, checklistConfig]);
               }
             }
             RegistrationDeliverySingleton()
