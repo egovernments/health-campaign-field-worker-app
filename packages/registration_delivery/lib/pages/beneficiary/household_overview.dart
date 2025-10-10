@@ -1080,34 +1080,32 @@ class _HouseholdOverviewPageState
                                                     ]),
                                               );
                                             },
-                                            isNotEligible:
-                                                RegistrationDeliverySingleton()
-                                                            .projectType
-                                                            ?.cycles !=
-                                                        null
-                                                    ? !checkEligibilityForAgeAndSideEffect(
-                                                              DigitDOBAgeConvertor(
-                                                                years:
-                                                                    ageInYears,
-                                                                months:
-                                                                    ageInMonths,
-                                                              ),
-                                                              RegistrationDeliverySingleton()
-                                                                  .projectType,
-                                                              (taskData ?? [])
-                                                                      .isNotEmpty
-                                                                  ? taskData
-                                                                      ?.lastOrNull
-                                                                  : null,
-                                                              sideEffectData,
-                                                            ) ||
-                                                            (taskData ?? [])
-                                                                .isNotEmpty
-                                                        ? taskData?.lastOrNull
-                                                                ?.status ==
-                                                            Status.ineligible
-                                                                .toValue()
-                                                                .toString()
+                                            isNotEligible: RegistrationDeliverySingleton()
+                                                        .projectType
+                                                        ?.cycles !=
+                                                    null
+                                                ? (!checkEligibilityForAgeAndSideEffect(
+                                                      DigitDOBAgeConvertor(
+                                                        years: ageInYears,
+                                                        months: ageInMonths,
+                                                      ),
+                                                      RegistrationDeliverySingleton()
+                                                          .projectType,
+                                                      (taskData ?? [])
+                                                              .isNotEmpty
+                                                          ? taskData?.lastOrNull
+                                                          : null,
+                                                      sideEffectData,
+                                                    )) ||
+                                                    ((taskData ?? []).isNotEmpty
+                                                        ? (taskData ?? [])
+                                                                .isNotEmpty &&
+                                                            taskData?.last
+                                                                    .status ==
+                                                                Status
+                                                                    .ineligible
+                                                                    .toValue()
+                                                                    .toString()
                                                         : !checkEligibilityForAgeAndSideEffect(
                                                             DigitDOBAgeConvertor(
                                                               years: ageInYears,
@@ -1122,8 +1120,8 @@ class _HouseholdOverviewPageState
                                                                     ?.lastOrNull
                                                                 : null,
                                                             sideEffectData,
-                                                          )
-                                                    : false,
+                                                          ))
+                                                : false,
                                             name: [
                                               e.name?.givenName?.trim(),
                                               e.name?.familyName?.trim(),
