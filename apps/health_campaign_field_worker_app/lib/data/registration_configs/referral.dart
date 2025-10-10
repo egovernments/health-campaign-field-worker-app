@@ -1,25 +1,25 @@
 final referralConfig = '''{
-  "name": "ADD_MEMBER",
+  "name": "BENEFICIARY_REFERRED",
   "version": 1,
   "pages": {
     "referralDetails": {
-      "label": "Referral Details",
-      "order": 4,
+      "label": "BENEFICIARY_REFERRAL_DETAILS_LABEL",
+      "order": 1,
       "type": "object",
       "description": "",
-      "actionLabel": "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_1",
+      "actionLabel": "BENEFICIARY_REFERRAL_DETAILS_SUBMIT_LABEL",
       "properties": {
         "dateOfReferral": {
           "type": "string",
-          "label": "Date of referral",
+          "label": "BENEFICIARY_REFERRAL_DETAILS_dateOfReferral_LABEL",
           "order": 1,
           "value": "",
           "format": "date",
           "hidden": false,
-          "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_tooltip",
-          "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_helpText",
+          "tooltip": "",
+          "helpText": "",
           "infoText": "",
-          "readOnly": false,
+          "readOnly": true,
           "fieldName": "dateOfReferral",
           "deleteFlag": false,
           "innerLabel": "",
@@ -46,13 +46,13 @@ final referralConfig = '''{
         },
         "administrativeUnit": {
           "type": "string",
-          "label": "Administrative unit",
+          "label": "BENEFICIARY_REFERRAL_DETAILS_administrativeUnit_LABEL",
           "order": 2,
           "value": "",
           "format": "locality",
           "hidden": false,
-          "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_tooltip",
-          "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_helpText",
+          "tooltip": "",
+          "helpText": "",
           "infoText": "",
           "readOnly": false,
           "fieldName": "administrativeUnit",
@@ -81,7 +81,7 @@ final referralConfig = '''{
         },
          "referredBy": {
           "type": "string",
-          "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers",
+          "label": "BENEFICIARY_REFERRAL_DETAILS_referredBy_LABEL",
           "order": 3,
           "value": "",
           "format": "text",
@@ -92,13 +92,9 @@ final referralConfig = '''{
           "readOnly": true,
           "fieldName": "referredBy",
           "deleteFlag": false,
-          "enums": [
-            { "code": "DEFAULT", "name": "DEFAULT" },
-            { "code": "UNIQUE_BENEFICIARY_ID", "name": "UNIQUE_BENEFICIARY_ID" },
-            { "code": "OTHER", "name": "OTHER" }
-          ],
+          "enums": [],
           "innerLabel": "",
-          "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR",
+          "schemaCode": "",
           "systemDate": false,
           "validations": [
             {
@@ -112,13 +108,13 @@ final referralConfig = '''{
         },
         "evaluationFacilityKey": {
           "type": "dynamic",
-          "label": "Referred to",
+          "label": "BENEFICIARY_REFERRAL_DETAILS_evaluationFacilityKey_LABEL",
           "order": 4,
           "value": "",
           "format": "custom",
           "hidden": false,
-          "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_tooltip",
-          "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_helpText",
+          "tooltip": "",
+          "helpText": "",
           "infoText": "",
           "readOnly": false,
           "fieldName": "evaluationFacilityKey",
@@ -131,7 +127,7 @@ final referralConfig = '''{
         },
         "reasonForReferral": {
           "type": "string",
-          "label": "Reason for Referral",
+          "label": "BENEFICIARY_REFERRAL_DETAILS_reasonForReferral_LABEL",
           "order": 5,
           "value": "",
           "format": "radio",
@@ -152,13 +148,13 @@ final referralConfig = '''{
         },
         "comments": {
           "type": "string",
-          "label": "Referral Comments",
+          "label": "BENEFICIARY_REFERRAL_DETAILS_comments_LABEL",
           "order": 6,
           "value": "",
           "format": "textArea",
           "hidden": false,
-          "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_tooltip",
-          "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_helpText",
+          "tooltip": "",
+          "helpText": "",
           "infoText": "",
           "readOnly": false,
           "fieldName": "comments",
@@ -176,5 +172,4 @@ final referralConfig = '''{
       }
     }
   }
-}
-''';
+}''';

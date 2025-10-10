@@ -16,6 +16,7 @@ import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import '../../blocs/app_localization.dart';
+import '../../blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/side_effect.dart';
 import '../../models/entities/status.dart';
@@ -332,6 +333,16 @@ class MemberCard extends StatelessWidget {
                                                   .householdOverViewActionText,
                                             ),
                                       onPressed: () {
+                                        context
+                                            .read<RegistrationWrapperBloc>()
+                                            .add(
+                                              RegistrationWrapperEvent
+                                                  .updateSelectedIndividual(
+                                                individualClientReferenceId:
+                                                    individual
+                                                        .clientReferenceId,
+                                              ),
+                                            );
                                         context.read<FormsBloc>().add(
                                             const FormsEvent.clearForm(
                                                 schemaKey:

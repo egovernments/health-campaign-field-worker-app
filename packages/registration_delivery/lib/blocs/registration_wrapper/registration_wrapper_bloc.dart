@@ -28,6 +28,8 @@ class RegistrationWrapperBloc
     on<Update>(_handleUpdate);
     on<Delete>(_handleDelete);
     on<CreateAndUpdate>(_handleCreateAndUpdate);
+    on<UpdateSelectedIndividual>(_handleUpdateSelectedIndividual);
+    on<UpdateFormData>(_handleUpdateFormData);
   }
 
   FutureOr<void> _handleCreate(
@@ -506,6 +508,67 @@ class RegistrationWrapperBloc
         .toList();
   }
 
+  FutureOr<void> _handleUpdateSelectedIndividual(
+    UpdateSelectedIndividual event,
+    RegistrationWrapperEmitter emit,
+  ) async {
+    try {
+      // Find the household wrapper containing the individual
+      final householdWrapper = state.householdMembers.firstOrNull;
+
+      if (householdWrapper == null) {
+        emit(state.copyWith(error: 'No household data available'));
+        return;
+      }
+
+      // Find the individual by client reference ID
+      final selectedIndividual = householdWrapper.individuals?.firstWhereOrNull(
+        (individual) => individual.clientReferenceId == event.individualClientReferenceId,
+      );
+
+      if (selectedIndividual == null) {
+        emit(state.copyWith(error: 'Individual not found'));
+        return;
+      }
+
+      // Find the related member
+      final relatedMember = householdWrapper.members?.firstWhereOrNull(
+        (member) => member.individualClientReferenceId == event.individualClientReferenceId,
+      );
+
+      // Find the related project beneficiary
+      final relatedProjectBeneficiary = householdWrapper.projectBeneficiaries?.firstWhereOrNull(
+        (beneficiary) => beneficiary.beneficiaryClientReferenceId == event.individualClientReferenceId,
+      );
+
+      // Find the related tasks
+      final relatedTasks = householdWrapper.tasks?.where(
+        (task) => task.projectBeneficiaryClientReferenceId == relatedProjectBeneficiary?.clientReferenceId,
+      ).toList();
+
+      // Create the selected individual wrapper
+      final selectedIndividualWrapper = SelectedIndividualWrapper(
+        individual: selectedIndividual,
+        member: relatedMember,
+        projectBeneficiary: relatedProjectBeneficiary,
+        tasks: relatedTasks ?? [],
+      );
+
+      emit(state.copyWith(
+        selectedIndividual: selectedIndividualWrapper,
+      ));
+    } catch (e) {
+      emit(state.copyWith(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> _handleUpdateFormData(
+    UpdateFormData event,
+    RegistrationWrapperEmitter emit,
+  ) async {
+    emit(state.copyWith(formData: event.formData));
+  }
+
   FutureOr<void> _handleClear(
     RegistrationWrapperClear event,
     RegistrationWrapperEmitter emit,
@@ -621,6 +684,14 @@ class RegistrationWrapperEvent with _$RegistrationWrapperEvent {
     required List<EntityModel> entitiesToUpdate,
   }) = CreateAndUpdate;
 
+  const factory RegistrationWrapperEvent.updateSelectedIndividual({
+    required String individualClientReferenceId,
+  }) = UpdateSelectedIndividual;
+
+  const factory RegistrationWrapperEvent.updateFormData({
+    required Map<String, dynamic> formData,
+  }) = UpdateFormData;
+
   const factory RegistrationWrapperEvent.clear() = RegistrationWrapperClear;
 }
 
@@ -629,8 +700,9 @@ class RegistrationWrapperState with _$RegistrationWrapperState {
   const factory RegistrationWrapperState({
     @Default(false) bool loading,
     @Default([]) List<HouseholdWrapper> householdMembers,
-    IndividualModel? selectedIndividual,
+    SelectedIndividualWrapper? selectedIndividual,
     DeliveryWrapper? deliveryWrapper,
+    @Default({}) Map<String, dynamic> formData,
     int? offset,
     int? limit,
     String? error,
@@ -668,6 +740,16 @@ class DeliveryWrapper with _$DeliveryWrapper {
     List<TaskModel>? futureTask,
     TaskModel? oldTask,
   }) = _DeliveryWrapper;
+}
+
+@freezed
+class SelectedIndividualWrapper with _$SelectedIndividualWrapper {
+  const factory SelectedIndividualWrapper({
+    required IndividualModel individual,
+    HouseholdMemberModel? member,
+    ProjectBeneficiaryModel? projectBeneficiary,
+    @Default([]) List<TaskModel> tasks,
+  }) = _SelectedIndividualWrapper;
 }
 
 enum RegistrationWrapperActionType {

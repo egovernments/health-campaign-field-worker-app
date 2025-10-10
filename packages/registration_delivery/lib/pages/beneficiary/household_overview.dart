@@ -334,25 +334,26 @@ class _HouseholdOverviewPageState
                                                           );
                                                         }
                                                       } else {
-                                                        navigateToChecklist(
-                                                            ctx,
-                                                            RegistrationDeliverySingleton()
-                                                                        .beneficiaryType ==
-                                                                    BeneficiaryType
-                                                                        .individual
-                                                                ? state
-                                                                    .selectedIndividual!
-                                                                    .clientReferenceId
-                                                                : state
-                                                                    .householdMembers
-                                                                    .first
-                                                                    .household!
-                                                                    .clientReferenceId,
-                                                            state
-                                                                .householdMembers
-                                                                .first
-                                                                .household
-                                                                ?.address);
+                                                        //// FIXME: NO CHECKLIST FLOW, NEED TO REFACTOR THE CODE
+                                                        // navigateToChecklist(
+                                                        //     ctx,
+                                                        //     RegistrationDeliverySingleton()
+                                                        //                 .beneficiaryType ==
+                                                        //             BeneficiaryType
+                                                        //                 .individual
+                                                        //         ? state
+                                                        //             .selectedIndividual!
+                                                        //             .clientReferenceId
+                                                        //         : state
+                                                        //             .householdMembers
+                                                        //             .first
+                                                        //             .household!
+                                                        //             .clientReferenceId,
+                                                        //     state
+                                                        //         .householdMembers
+                                                        //         .first
+                                                        //         .household
+                                                        //         ?.address);
                                                       }
                                                     });
                                                 callReloadEvent(

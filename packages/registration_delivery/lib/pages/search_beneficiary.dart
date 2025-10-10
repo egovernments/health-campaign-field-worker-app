@@ -358,6 +358,109 @@ class _SearchBeneficiaryPageState
                       .push(BeneficiaryErrorRoute(enableViewHousehold: false));
                 }
               } else {
+                final currentSchema =
+                    context.read<FormsBloc>().state.cachedSchemas[
+                        context.read<FormsBloc>().state.activeSchemaKey];
+
+                final pages = currentSchema?.pages.entries.toList()
+                  ?..sort((a, b) =>
+                      (a.value.order ?? 0).compareTo(b.value.order ?? 0));
+
+                final lastPage =
+                    pages?.isNotEmpty == true ? pages!.last.value : null;
+
+                final nextAction = lastPage?.navigateTo;
+
+                if (formState.activeSchemaKey == 'ELIGIBILITYCHECKLIST') {
+                  final navigateToName = nextAction?.name.toLowerCase();
+                  final navigateToType = nextAction?.type.toLowerCase();
+
+                  if (navigateToName == 'beneficiary-referred' &&
+                      navigateToType == 'form') {
+                    // Navigate to beneficiary-referred form
+                    final pageName = context
+                        .read<FormsBloc>()
+                        .state
+                        .cachedSchemas['BENEFICIARY_REFERRED']
+                        ?.pages
+                        .entries
+                        .first
+                        .key;
+
+                    if (pageName != null) {
+                      context.router.push(FormsRenderRoute(
+                        currentSchemaKey: "BENEFICIARY_REFERRED",
+                        pageName: pageName,
+                        defaultValues: {
+                          'administrativeArea': localizations.translate(
+                              RegistrationDeliverySingleton().boundary?.code ??
+                                  '')
+                        },
+                      ));
+                    }
+                  } else if (navigateToName == 'household-overview' &&
+                      navigateToType == 'template') {
+                    final modelsConfig = (jsonConfig['ineligible']?['models']
+                        as Map<String, dynamic>);
+
+                    final fallBackModel =
+                        jsonConfig['ineligible']?['fallbackModel'] as String?;
+
+                    final householdMember =
+                        blocWrapper.state.householdMembers.firstOrNull;
+                    final household = householdMember?.household?.toMap();
+                    final projectBeneficiary = householdMember
+                        ?.projectBeneficiaries?.firstOrNull
+                        ?.toMap();
+
+                    final formEntityMapper =
+                        FormEntityMapper(config: jsonConfig);
+                    final entities = formEntityMapper.mapFormToEntities(
+                      formValues: formData,
+                      modelsConfig: modelsConfig,
+                      context: {
+                        "projectId":
+                            RegistrationDeliverySingleton().selectedProject?.id,
+                        "user": RegistrationDeliverySingleton().loggedInUser,
+                        "tenantId": RegistrationDeliverySingleton()
+                            .selectedProject
+                            ?.tenantId,
+                        "selectedBoundaryCode":
+                            RegistrationDeliverySingleton().boundary?.code,
+                        // converting in json format to match nested object value as passing model will cause issue
+                        'userUUID':
+                            RegistrationDeliverySingleton().loggedInUser?.uuid,
+                        'householdType': RegistrationDeliverySingleton()
+                            .householdType
+                            ?.toValue(),
+                        "beneficiaryType": RegistrationDeliverySingleton()
+                            .beneficiaryType
+                            ?.toValue(),
+                        if (household != null) 'householdModel': household,
+                        if (projectBeneficiary != null)
+                          "projectBeneficiaryModel": projectBeneficiary,
+                      },
+                      fallbackFormDataString: fallBackModel,
+                    );
+
+                    blocWrapper.add(
+                      RegistrationWrapperEvent.create(entities: entities),
+                    );
+                  } else if (navigateToName == 'beneficiary-details') {
+                    context.read<RegistrationWrapperBloc>().add(
+                          RegistrationWrapperEvent.updateFormData(
+                            formData: {
+                              'ELIGIBILITYCHECKLIST': formData,
+                            },
+                          ),
+                        );
+                    // Save form data in beneficiary delivery details and navigate to template
+                    final nextPath = routerMap[nextAction?.name];
+                    if (nextPath != null) {
+                      context.router.push(nextPath);
+                    }
+                  }
+                }
                 final modelsConfig = formState.activeSchemaKey == "ADD_MEMBER"
                     ? (jsonConfig['individualRegistration']?['models']
                         as Map<String, dynamic>)

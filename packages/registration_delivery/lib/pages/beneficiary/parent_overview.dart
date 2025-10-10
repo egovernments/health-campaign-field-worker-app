@@ -99,8 +99,10 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                                   .where((element) =>
                                                       element
                                                           .individualClientReferenceId ==
-                                                      state.selectedIndividual
-                                                          ?.clientReferenceId)
+                                                      state
+                                                          .selectedIndividual
+                                                          ?.individual
+                                                          .clientReferenceId)
                                                   .firstOrNull;
                                               // Check if any other member has this member as parent
                                               final hasChild = state
@@ -370,7 +372,7 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                           state.householdMembers.first
                                               .household!,
                                           false,
-                                          state.selectedIndividual!),
+                                          state.selectedIndividual!.individual),
                                       label: localizations.translate(
                                         i18.memberCard.addChildLabel,
                                       ),

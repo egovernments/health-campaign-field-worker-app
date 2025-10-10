@@ -33,6 +33,9 @@ mixin _$RegistrationWrapperEvent {
     required TResult Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)
         createAndUpdate,
+    required TResult Function(String individualClientReferenceId)
+        updateSelectedIndividual,
+    required TResult Function(Map<String, dynamic> formData) updateFormData,
     required TResult Function() clear,
   }) =>
       throw _privateConstructorUsedError;
@@ -53,6 +56,9 @@ mixin _$RegistrationWrapperEvent {
     TResult? Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)?
         createAndUpdate,
+    TResult? Function(String individualClientReferenceId)?
+        updateSelectedIndividual,
+    TResult? Function(Map<String, dynamic> formData)? updateFormData,
     TResult? Function()? clear,
   }) =>
       throw _privateConstructorUsedError;
@@ -73,6 +79,9 @@ mixin _$RegistrationWrapperEvent {
     TResult Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)?
         createAndUpdate,
+    TResult Function(String individualClientReferenceId)?
+        updateSelectedIndividual,
+    TResult Function(Map<String, dynamic> formData)? updateFormData,
     TResult Function()? clear,
     required TResult orElse(),
   }) =>
@@ -86,6 +95,9 @@ mixin _$RegistrationWrapperEvent {
     required TResult Function(Update value) update,
     required TResult Function(Delete value) delete,
     required TResult Function(CreateAndUpdate value) createAndUpdate,
+    required TResult Function(UpdateSelectedIndividual value)
+        updateSelectedIndividual,
+    required TResult Function(UpdateFormData value) updateFormData,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) =>
       throw _privateConstructorUsedError;
@@ -97,6 +109,8 @@ mixin _$RegistrationWrapperEvent {
     TResult? Function(Update value)? update,
     TResult? Function(Delete value)? delete,
     TResult? Function(CreateAndUpdate value)? createAndUpdate,
+    TResult? Function(UpdateSelectedIndividual value)? updateSelectedIndividual,
+    TResult? Function(UpdateFormData value)? updateFormData,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) =>
       throw _privateConstructorUsedError;
@@ -108,6 +122,8 @@ mixin _$RegistrationWrapperEvent {
     TResult Function(Update value)? update,
     TResult Function(Delete value)? delete,
     TResult Function(CreateAndUpdate value)? createAndUpdate,
+    TResult Function(UpdateSelectedIndividual value)? updateSelectedIndividual,
+    TResult Function(UpdateFormData value)? updateFormData,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) =>
@@ -239,6 +255,9 @@ class _$RegistrationWrapperLoadFromGlobalImpl
     required TResult Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)
         createAndUpdate,
+    required TResult Function(String individualClientReferenceId)
+        updateSelectedIndividual,
+    required TResult Function(Map<String, dynamic> formData) updateFormData,
     required TResult Function() clear,
   }) {
     return loadFromGlobal(searchParams, beneficiaryType);
@@ -262,6 +281,9 @@ class _$RegistrationWrapperLoadFromGlobalImpl
     TResult? Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)?
         createAndUpdate,
+    TResult? Function(String individualClientReferenceId)?
+        updateSelectedIndividual,
+    TResult? Function(Map<String, dynamic> formData)? updateFormData,
     TResult? Function()? clear,
   }) {
     return loadFromGlobal?.call(searchParams, beneficiaryType);
@@ -285,6 +307,9 @@ class _$RegistrationWrapperLoadFromGlobalImpl
     TResult Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)?
         createAndUpdate,
+    TResult Function(String individualClientReferenceId)?
+        updateSelectedIndividual,
+    TResult Function(Map<String, dynamic> formData)? updateFormData,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -304,6 +329,9 @@ class _$RegistrationWrapperLoadFromGlobalImpl
     required TResult Function(Update value) update,
     required TResult Function(Delete value) delete,
     required TResult Function(CreateAndUpdate value) createAndUpdate,
+    required TResult Function(UpdateSelectedIndividual value)
+        updateSelectedIndividual,
+    required TResult Function(UpdateFormData value) updateFormData,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) {
     return loadFromGlobal(this);
@@ -318,6 +346,8 @@ class _$RegistrationWrapperLoadFromGlobalImpl
     TResult? Function(Update value)? update,
     TResult? Function(Delete value)? delete,
     TResult? Function(CreateAndUpdate value)? createAndUpdate,
+    TResult? Function(UpdateSelectedIndividual value)? updateSelectedIndividual,
+    TResult? Function(UpdateFormData value)? updateFormData,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) {
     return loadFromGlobal?.call(this);
@@ -332,6 +362,8 @@ class _$RegistrationWrapperLoadFromGlobalImpl
     TResult Function(Update value)? update,
     TResult Function(Delete value)? delete,
     TResult Function(CreateAndUpdate value)? createAndUpdate,
+    TResult Function(UpdateSelectedIndividual value)? updateSelectedIndividual,
+    TResult Function(UpdateFormData value)? updateFormData,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) {
@@ -485,6 +517,9 @@ class _$FetchDeliveryDetailsImpl implements FetchDeliveryDetails {
     required TResult Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)
         createAndUpdate,
+    required TResult Function(String individualClientReferenceId)
+        updateSelectedIndividual,
+    required TResult Function(Map<String, dynamic> formData) updateFormData,
     required TResult Function() clear,
   }) {
     return fetchDeliveryDetails(
@@ -509,6 +544,9 @@ class _$FetchDeliveryDetailsImpl implements FetchDeliveryDetails {
     TResult? Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)?
         createAndUpdate,
+    TResult? Function(String individualClientReferenceId)?
+        updateSelectedIndividual,
+    TResult? Function(Map<String, dynamic> formData)? updateFormData,
     TResult? Function()? clear,
   }) {
     return fetchDeliveryDetails?.call(
@@ -533,6 +571,9 @@ class _$FetchDeliveryDetailsImpl implements FetchDeliveryDetails {
     TResult Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)?
         createAndUpdate,
+    TResult Function(String individualClientReferenceId)?
+        updateSelectedIndividual,
+    TResult Function(Map<String, dynamic> formData)? updateFormData,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -553,6 +594,9 @@ class _$FetchDeliveryDetailsImpl implements FetchDeliveryDetails {
     required TResult Function(Update value) update,
     required TResult Function(Delete value) delete,
     required TResult Function(CreateAndUpdate value) createAndUpdate,
+    required TResult Function(UpdateSelectedIndividual value)
+        updateSelectedIndividual,
+    required TResult Function(UpdateFormData value) updateFormData,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) {
     return fetchDeliveryDetails(this);
@@ -567,6 +611,8 @@ class _$FetchDeliveryDetailsImpl implements FetchDeliveryDetails {
     TResult? Function(Update value)? update,
     TResult? Function(Delete value)? delete,
     TResult? Function(CreateAndUpdate value)? createAndUpdate,
+    TResult? Function(UpdateSelectedIndividual value)? updateSelectedIndividual,
+    TResult? Function(UpdateFormData value)? updateFormData,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) {
     return fetchDeliveryDetails?.call(this);
@@ -581,6 +627,8 @@ class _$FetchDeliveryDetailsImpl implements FetchDeliveryDetails {
     TResult Function(Update value)? update,
     TResult Function(Delete value)? delete,
     TResult Function(CreateAndUpdate value)? createAndUpdate,
+    TResult Function(UpdateSelectedIndividual value)? updateSelectedIndividual,
+    TResult Function(UpdateFormData value)? updateFormData,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) {
@@ -693,6 +741,9 @@ class _$CreateImpl implements Create {
     required TResult Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)
         createAndUpdate,
+    required TResult Function(String individualClientReferenceId)
+        updateSelectedIndividual,
+    required TResult Function(Map<String, dynamic> formData) updateFormData,
     required TResult Function() clear,
   }) {
     return create(entities);
@@ -716,6 +767,9 @@ class _$CreateImpl implements Create {
     TResult? Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)?
         createAndUpdate,
+    TResult? Function(String individualClientReferenceId)?
+        updateSelectedIndividual,
+    TResult? Function(Map<String, dynamic> formData)? updateFormData,
     TResult? Function()? clear,
   }) {
     return create?.call(entities);
@@ -739,6 +793,9 @@ class _$CreateImpl implements Create {
     TResult Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)?
         createAndUpdate,
+    TResult Function(String individualClientReferenceId)?
+        updateSelectedIndividual,
+    TResult Function(Map<String, dynamic> formData)? updateFormData,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -758,6 +815,9 @@ class _$CreateImpl implements Create {
     required TResult Function(Update value) update,
     required TResult Function(Delete value) delete,
     required TResult Function(CreateAndUpdate value) createAndUpdate,
+    required TResult Function(UpdateSelectedIndividual value)
+        updateSelectedIndividual,
+    required TResult Function(UpdateFormData value) updateFormData,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) {
     return create(this);
@@ -772,6 +832,8 @@ class _$CreateImpl implements Create {
     TResult? Function(Update value)? update,
     TResult? Function(Delete value)? delete,
     TResult? Function(CreateAndUpdate value)? createAndUpdate,
+    TResult? Function(UpdateSelectedIndividual value)? updateSelectedIndividual,
+    TResult? Function(UpdateFormData value)? updateFormData,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) {
     return create?.call(this);
@@ -786,6 +848,8 @@ class _$CreateImpl implements Create {
     TResult Function(Update value)? update,
     TResult Function(Delete value)? delete,
     TResult Function(CreateAndUpdate value)? createAndUpdate,
+    TResult Function(UpdateSelectedIndividual value)? updateSelectedIndividual,
+    TResult Function(UpdateFormData value)? updateFormData,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) {
@@ -892,6 +956,9 @@ class _$UpdateImpl implements Update {
     required TResult Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)
         createAndUpdate,
+    required TResult Function(String individualClientReferenceId)
+        updateSelectedIndividual,
+    required TResult Function(Map<String, dynamic> formData) updateFormData,
     required TResult Function() clear,
   }) {
     return update(entities);
@@ -915,6 +982,9 @@ class _$UpdateImpl implements Update {
     TResult? Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)?
         createAndUpdate,
+    TResult? Function(String individualClientReferenceId)?
+        updateSelectedIndividual,
+    TResult? Function(Map<String, dynamic> formData)? updateFormData,
     TResult? Function()? clear,
   }) {
     return update?.call(entities);
@@ -938,6 +1008,9 @@ class _$UpdateImpl implements Update {
     TResult Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)?
         createAndUpdate,
+    TResult Function(String individualClientReferenceId)?
+        updateSelectedIndividual,
+    TResult Function(Map<String, dynamic> formData)? updateFormData,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -957,6 +1030,9 @@ class _$UpdateImpl implements Update {
     required TResult Function(Update value) update,
     required TResult Function(Delete value) delete,
     required TResult Function(CreateAndUpdate value) createAndUpdate,
+    required TResult Function(UpdateSelectedIndividual value)
+        updateSelectedIndividual,
+    required TResult Function(UpdateFormData value) updateFormData,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) {
     return update(this);
@@ -971,6 +1047,8 @@ class _$UpdateImpl implements Update {
     TResult? Function(Update value)? update,
     TResult? Function(Delete value)? delete,
     TResult? Function(CreateAndUpdate value)? createAndUpdate,
+    TResult? Function(UpdateSelectedIndividual value)? updateSelectedIndividual,
+    TResult? Function(UpdateFormData value)? updateFormData,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) {
     return update?.call(this);
@@ -985,6 +1063,8 @@ class _$UpdateImpl implements Update {
     TResult Function(Update value)? update,
     TResult Function(Delete value)? delete,
     TResult Function(CreateAndUpdate value)? createAndUpdate,
+    TResult Function(UpdateSelectedIndividual value)? updateSelectedIndividual,
+    TResult Function(UpdateFormData value)? updateFormData,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) {
@@ -1091,6 +1171,9 @@ class _$DeleteImpl implements Delete {
     required TResult Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)
         createAndUpdate,
+    required TResult Function(String individualClientReferenceId)
+        updateSelectedIndividual,
+    required TResult Function(Map<String, dynamic> formData) updateFormData,
     required TResult Function() clear,
   }) {
     return delete(entities);
@@ -1114,6 +1197,9 @@ class _$DeleteImpl implements Delete {
     TResult? Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)?
         createAndUpdate,
+    TResult? Function(String individualClientReferenceId)?
+        updateSelectedIndividual,
+    TResult? Function(Map<String, dynamic> formData)? updateFormData,
     TResult? Function()? clear,
   }) {
     return delete?.call(entities);
@@ -1137,6 +1223,9 @@ class _$DeleteImpl implements Delete {
     TResult Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)?
         createAndUpdate,
+    TResult Function(String individualClientReferenceId)?
+        updateSelectedIndividual,
+    TResult Function(Map<String, dynamic> formData)? updateFormData,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -1156,6 +1245,9 @@ class _$DeleteImpl implements Delete {
     required TResult Function(Update value) update,
     required TResult Function(Delete value) delete,
     required TResult Function(CreateAndUpdate value) createAndUpdate,
+    required TResult Function(UpdateSelectedIndividual value)
+        updateSelectedIndividual,
+    required TResult Function(UpdateFormData value) updateFormData,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) {
     return delete(this);
@@ -1170,6 +1262,8 @@ class _$DeleteImpl implements Delete {
     TResult? Function(Update value)? update,
     TResult? Function(Delete value)? delete,
     TResult? Function(CreateAndUpdate value)? createAndUpdate,
+    TResult? Function(UpdateSelectedIndividual value)? updateSelectedIndividual,
+    TResult? Function(UpdateFormData value)? updateFormData,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) {
     return delete?.call(this);
@@ -1184,6 +1278,8 @@ class _$DeleteImpl implements Delete {
     TResult Function(Update value)? update,
     TResult Function(Delete value)? delete,
     TResult Function(CreateAndUpdate value)? createAndUpdate,
+    TResult Function(UpdateSelectedIndividual value)? updateSelectedIndividual,
+    TResult Function(UpdateFormData value)? updateFormData,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) {
@@ -1315,6 +1411,9 @@ class _$CreateAndUpdateImpl implements CreateAndUpdate {
     required TResult Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)
         createAndUpdate,
+    required TResult Function(String individualClientReferenceId)
+        updateSelectedIndividual,
+    required TResult Function(Map<String, dynamic> formData) updateFormData,
     required TResult Function() clear,
   }) {
     return createAndUpdate(entitiesToCreate, entitiesToUpdate);
@@ -1338,6 +1437,9 @@ class _$CreateAndUpdateImpl implements CreateAndUpdate {
     TResult? Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)?
         createAndUpdate,
+    TResult? Function(String individualClientReferenceId)?
+        updateSelectedIndividual,
+    TResult? Function(Map<String, dynamic> formData)? updateFormData,
     TResult? Function()? clear,
   }) {
     return createAndUpdate?.call(entitiesToCreate, entitiesToUpdate);
@@ -1361,6 +1463,9 @@ class _$CreateAndUpdateImpl implements CreateAndUpdate {
     TResult Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)?
         createAndUpdate,
+    TResult Function(String individualClientReferenceId)?
+        updateSelectedIndividual,
+    TResult Function(Map<String, dynamic> formData)? updateFormData,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -1380,6 +1485,9 @@ class _$CreateAndUpdateImpl implements CreateAndUpdate {
     required TResult Function(Update value) update,
     required TResult Function(Delete value) delete,
     required TResult Function(CreateAndUpdate value) createAndUpdate,
+    required TResult Function(UpdateSelectedIndividual value)
+        updateSelectedIndividual,
+    required TResult Function(UpdateFormData value) updateFormData,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) {
     return createAndUpdate(this);
@@ -1394,6 +1502,8 @@ class _$CreateAndUpdateImpl implements CreateAndUpdate {
     TResult? Function(Update value)? update,
     TResult? Function(Delete value)? delete,
     TResult? Function(CreateAndUpdate value)? createAndUpdate,
+    TResult? Function(UpdateSelectedIndividual value)? updateSelectedIndividual,
+    TResult? Function(UpdateFormData value)? updateFormData,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) {
     return createAndUpdate?.call(this);
@@ -1408,6 +1518,8 @@ class _$CreateAndUpdateImpl implements CreateAndUpdate {
     TResult Function(Update value)? update,
     TResult Function(Delete value)? delete,
     TResult Function(CreateAndUpdate value)? createAndUpdate,
+    TResult Function(UpdateSelectedIndividual value)? updateSelectedIndividual,
+    TResult Function(UpdateFormData value)? updateFormData,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) {
@@ -1428,6 +1540,439 @@ abstract class CreateAndUpdate implements RegistrationWrapperEvent {
   List<EntityModel> get entitiesToUpdate;
   @JsonKey(ignore: true)
   _$$CreateAndUpdateImplCopyWith<_$CreateAndUpdateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$UpdateSelectedIndividualImplCopyWith<$Res> {
+  factory _$$UpdateSelectedIndividualImplCopyWith(
+          _$UpdateSelectedIndividualImpl value,
+          $Res Function(_$UpdateSelectedIndividualImpl) then) =
+      __$$UpdateSelectedIndividualImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String individualClientReferenceId});
+}
+
+/// @nodoc
+class __$$UpdateSelectedIndividualImplCopyWithImpl<$Res>
+    extends _$RegistrationWrapperEventCopyWithImpl<$Res,
+        _$UpdateSelectedIndividualImpl>
+    implements _$$UpdateSelectedIndividualImplCopyWith<$Res> {
+  __$$UpdateSelectedIndividualImplCopyWithImpl(
+      _$UpdateSelectedIndividualImpl _value,
+      $Res Function(_$UpdateSelectedIndividualImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? individualClientReferenceId = null,
+  }) {
+    return _then(_$UpdateSelectedIndividualImpl(
+      individualClientReferenceId: null == individualClientReferenceId
+          ? _value.individualClientReferenceId
+          : individualClientReferenceId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$UpdateSelectedIndividualImpl implements UpdateSelectedIndividual {
+  const _$UpdateSelectedIndividualImpl(
+      {required this.individualClientReferenceId});
+
+  @override
+  final String individualClientReferenceId;
+
+  @override
+  String toString() {
+    return 'RegistrationWrapperEvent.updateSelectedIndividual(individualClientReferenceId: $individualClientReferenceId)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UpdateSelectedIndividualImpl &&
+            (identical(other.individualClientReferenceId,
+                    individualClientReferenceId) ||
+                other.individualClientReferenceId ==
+                    individualClientReferenceId));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, individualClientReferenceId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UpdateSelectedIndividualImplCopyWith<_$UpdateSelectedIndividualImpl>
+      get copyWith => __$$UpdateSelectedIndividualImplCopyWithImpl<
+          _$UpdateSelectedIndividualImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)
+        loadFromGlobal,
+    required TResult Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)
+        fetchDeliveryDetails,
+    required TResult Function(List<EntityModel> entities) create,
+    required TResult Function(List<EntityModel> entities) update,
+    required TResult Function(List<EntityModel> entities) delete,
+    required TResult Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)
+        createAndUpdate,
+    required TResult Function(String individualClientReferenceId)
+        updateSelectedIndividual,
+    required TResult Function(Map<String, dynamic> formData) updateFormData,
+    required TResult Function() clear,
+  }) {
+    return updateSelectedIndividual(individualClientReferenceId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)?
+        loadFromGlobal,
+    TResult? Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)?
+        fetchDeliveryDetails,
+    TResult? Function(List<EntityModel> entities)? create,
+    TResult? Function(List<EntityModel> entities)? update,
+    TResult? Function(List<EntityModel> entities)? delete,
+    TResult? Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)?
+        createAndUpdate,
+    TResult? Function(String individualClientReferenceId)?
+        updateSelectedIndividual,
+    TResult? Function(Map<String, dynamic> formData)? updateFormData,
+    TResult? Function()? clear,
+  }) {
+    return updateSelectedIndividual?.call(individualClientReferenceId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)?
+        loadFromGlobal,
+    TResult Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)?
+        fetchDeliveryDetails,
+    TResult Function(List<EntityModel> entities)? create,
+    TResult Function(List<EntityModel> entities)? update,
+    TResult Function(List<EntityModel> entities)? delete,
+    TResult Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)?
+        createAndUpdate,
+    TResult Function(String individualClientReferenceId)?
+        updateSelectedIndividual,
+    TResult Function(Map<String, dynamic> formData)? updateFormData,
+    TResult Function()? clear,
+    required TResult orElse(),
+  }) {
+    if (updateSelectedIndividual != null) {
+      return updateSelectedIndividual(individualClientReferenceId);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(RegistrationWrapperLoadFromGlobal value)
+        loadFromGlobal,
+    required TResult Function(FetchDeliveryDetails value) fetchDeliveryDetails,
+    required TResult Function(Create value) create,
+    required TResult Function(Update value) update,
+    required TResult Function(Delete value) delete,
+    required TResult Function(CreateAndUpdate value) createAndUpdate,
+    required TResult Function(UpdateSelectedIndividual value)
+        updateSelectedIndividual,
+    required TResult Function(UpdateFormData value) updateFormData,
+    required TResult Function(RegistrationWrapperClear value) clear,
+  }) {
+    return updateSelectedIndividual(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult? Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult? Function(Create value)? create,
+    TResult? Function(Update value)? update,
+    TResult? Function(Delete value)? delete,
+    TResult? Function(CreateAndUpdate value)? createAndUpdate,
+    TResult? Function(UpdateSelectedIndividual value)? updateSelectedIndividual,
+    TResult? Function(UpdateFormData value)? updateFormData,
+    TResult? Function(RegistrationWrapperClear value)? clear,
+  }) {
+    return updateSelectedIndividual?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult Function(Create value)? create,
+    TResult Function(Update value)? update,
+    TResult Function(Delete value)? delete,
+    TResult Function(CreateAndUpdate value)? createAndUpdate,
+    TResult Function(UpdateSelectedIndividual value)? updateSelectedIndividual,
+    TResult Function(UpdateFormData value)? updateFormData,
+    TResult Function(RegistrationWrapperClear value)? clear,
+    required TResult orElse(),
+  }) {
+    if (updateSelectedIndividual != null) {
+      return updateSelectedIndividual(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class UpdateSelectedIndividual implements RegistrationWrapperEvent {
+  const factory UpdateSelectedIndividual(
+          {required final String individualClientReferenceId}) =
+      _$UpdateSelectedIndividualImpl;
+
+  String get individualClientReferenceId;
+  @JsonKey(ignore: true)
+  _$$UpdateSelectedIndividualImplCopyWith<_$UpdateSelectedIndividualImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$UpdateFormDataImplCopyWith<$Res> {
+  factory _$$UpdateFormDataImplCopyWith(_$UpdateFormDataImpl value,
+          $Res Function(_$UpdateFormDataImpl) then) =
+      __$$UpdateFormDataImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({Map<String, dynamic> formData});
+}
+
+/// @nodoc
+class __$$UpdateFormDataImplCopyWithImpl<$Res>
+    extends _$RegistrationWrapperEventCopyWithImpl<$Res, _$UpdateFormDataImpl>
+    implements _$$UpdateFormDataImplCopyWith<$Res> {
+  __$$UpdateFormDataImplCopyWithImpl(
+      _$UpdateFormDataImpl _value, $Res Function(_$UpdateFormDataImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? formData = null,
+  }) {
+    return _then(_$UpdateFormDataImpl(
+      formData: null == formData
+          ? _value._formData
+          : formData // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$UpdateFormDataImpl implements UpdateFormData {
+  const _$UpdateFormDataImpl({required final Map<String, dynamic> formData})
+      : _formData = formData;
+
+  final Map<String, dynamic> _formData;
+  @override
+  Map<String, dynamic> get formData {
+    if (_formData is EqualUnmodifiableMapView) return _formData;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_formData);
+  }
+
+  @override
+  String toString() {
+    return 'RegistrationWrapperEvent.updateFormData(formData: $formData)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UpdateFormDataImpl &&
+            const DeepCollectionEquality().equals(other._formData, _formData));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_formData));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UpdateFormDataImplCopyWith<_$UpdateFormDataImpl> get copyWith =>
+      __$$UpdateFormDataImplCopyWithImpl<_$UpdateFormDataImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)
+        loadFromGlobal,
+    required TResult Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)
+        fetchDeliveryDetails,
+    required TResult Function(List<EntityModel> entities) create,
+    required TResult Function(List<EntityModel> entities) update,
+    required TResult Function(List<EntityModel> entities) delete,
+    required TResult Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)
+        createAndUpdate,
+    required TResult Function(String individualClientReferenceId)
+        updateSelectedIndividual,
+    required TResult Function(Map<String, dynamic> formData) updateFormData,
+    required TResult Function() clear,
+  }) {
+    return updateFormData(formData);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)?
+        loadFromGlobal,
+    TResult? Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)?
+        fetchDeliveryDetails,
+    TResult? Function(List<EntityModel> entities)? create,
+    TResult? Function(List<EntityModel> entities)? update,
+    TResult? Function(List<EntityModel> entities)? delete,
+    TResult? Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)?
+        createAndUpdate,
+    TResult? Function(String individualClientReferenceId)?
+        updateSelectedIndividual,
+    TResult? Function(Map<String, dynamic> formData)? updateFormData,
+    TResult? Function()? clear,
+  }) {
+    return updateFormData?.call(formData);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)?
+        loadFromGlobal,
+    TResult Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)?
+        fetchDeliveryDetails,
+    TResult Function(List<EntityModel> entities)? create,
+    TResult Function(List<EntityModel> entities)? update,
+    TResult Function(List<EntityModel> entities)? delete,
+    TResult Function(List<EntityModel> entitiesToCreate,
+            List<EntityModel> entitiesToUpdate)?
+        createAndUpdate,
+    TResult Function(String individualClientReferenceId)?
+        updateSelectedIndividual,
+    TResult Function(Map<String, dynamic> formData)? updateFormData,
+    TResult Function()? clear,
+    required TResult orElse(),
+  }) {
+    if (updateFormData != null) {
+      return updateFormData(formData);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(RegistrationWrapperLoadFromGlobal value)
+        loadFromGlobal,
+    required TResult Function(FetchDeliveryDetails value) fetchDeliveryDetails,
+    required TResult Function(Create value) create,
+    required TResult Function(Update value) update,
+    required TResult Function(Delete value) delete,
+    required TResult Function(CreateAndUpdate value) createAndUpdate,
+    required TResult Function(UpdateSelectedIndividual value)
+        updateSelectedIndividual,
+    required TResult Function(UpdateFormData value) updateFormData,
+    required TResult Function(RegistrationWrapperClear value) clear,
+  }) {
+    return updateFormData(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult? Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult? Function(Create value)? create,
+    TResult? Function(Update value)? update,
+    TResult? Function(Delete value)? delete,
+    TResult? Function(CreateAndUpdate value)? createAndUpdate,
+    TResult? Function(UpdateSelectedIndividual value)? updateSelectedIndividual,
+    TResult? Function(UpdateFormData value)? updateFormData,
+    TResult? Function(RegistrationWrapperClear value)? clear,
+  }) {
+    return updateFormData?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult Function(Create value)? create,
+    TResult Function(Update value)? update,
+    TResult Function(Delete value)? delete,
+    TResult Function(CreateAndUpdate value)? createAndUpdate,
+    TResult Function(UpdateSelectedIndividual value)? updateSelectedIndividual,
+    TResult Function(UpdateFormData value)? updateFormData,
+    TResult Function(RegistrationWrapperClear value)? clear,
+    required TResult orElse(),
+  }) {
+    if (updateFormData != null) {
+      return updateFormData(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class UpdateFormData implements RegistrationWrapperEvent {
+  const factory UpdateFormData({required final Map<String, dynamic> formData}) =
+      _$UpdateFormDataImpl;
+
+  Map<String, dynamic> get formData;
+  @JsonKey(ignore: true)
+  _$$UpdateFormDataImplCopyWith<_$UpdateFormDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1488,6 +2033,9 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
     required TResult Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)
         createAndUpdate,
+    required TResult Function(String individualClientReferenceId)
+        updateSelectedIndividual,
+    required TResult Function(Map<String, dynamic> formData) updateFormData,
     required TResult Function() clear,
   }) {
     return clear();
@@ -1511,6 +2059,9 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
     TResult? Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)?
         createAndUpdate,
+    TResult? Function(String individualClientReferenceId)?
+        updateSelectedIndividual,
+    TResult? Function(Map<String, dynamic> formData)? updateFormData,
     TResult? Function()? clear,
   }) {
     return clear?.call();
@@ -1534,6 +2085,9 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
     TResult Function(List<EntityModel> entitiesToCreate,
             List<EntityModel> entitiesToUpdate)?
         createAndUpdate,
+    TResult Function(String individualClientReferenceId)?
+        updateSelectedIndividual,
+    TResult Function(Map<String, dynamic> formData)? updateFormData,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -1553,6 +2107,9 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
     required TResult Function(Update value) update,
     required TResult Function(Delete value) delete,
     required TResult Function(CreateAndUpdate value) createAndUpdate,
+    required TResult Function(UpdateSelectedIndividual value)
+        updateSelectedIndividual,
+    required TResult Function(UpdateFormData value) updateFormData,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) {
     return clear(this);
@@ -1567,6 +2124,8 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
     TResult? Function(Update value)? update,
     TResult? Function(Delete value)? delete,
     TResult? Function(CreateAndUpdate value)? createAndUpdate,
+    TResult? Function(UpdateSelectedIndividual value)? updateSelectedIndividual,
+    TResult? Function(UpdateFormData value)? updateFormData,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) {
     return clear?.call(this);
@@ -1581,6 +2140,8 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
     TResult Function(Update value)? update,
     TResult Function(Delete value)? delete,
     TResult Function(CreateAndUpdate value)? createAndUpdate,
+    TResult Function(UpdateSelectedIndividual value)? updateSelectedIndividual,
+    TResult Function(UpdateFormData value)? updateFormData,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) {
@@ -1600,8 +2161,10 @@ mixin _$RegistrationWrapperState {
   bool get loading => throw _privateConstructorUsedError;
   List<HouseholdWrapper> get householdMembers =>
       throw _privateConstructorUsedError;
-  IndividualModel? get selectedIndividual => throw _privateConstructorUsedError;
+  SelectedIndividualWrapper? get selectedIndividual =>
+      throw _privateConstructorUsedError;
   DeliveryWrapper? get deliveryWrapper => throw _privateConstructorUsedError;
+  Map<String, dynamic> get formData => throw _privateConstructorUsedError;
   int? get offset => throw _privateConstructorUsedError;
   int? get limit => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
@@ -1623,14 +2186,16 @@ abstract class $RegistrationWrapperStateCopyWith<$Res> {
   $Res call(
       {bool loading,
       List<HouseholdWrapper> householdMembers,
-      IndividualModel? selectedIndividual,
+      SelectedIndividualWrapper? selectedIndividual,
       DeliveryWrapper? deliveryWrapper,
+      Map<String, dynamic> formData,
       int? offset,
       int? limit,
       String? error,
       int totalCount,
       RegistrationWrapperActionType lastAction});
 
+  $SelectedIndividualWrapperCopyWith<$Res>? get selectedIndividual;
   $DeliveryWrapperCopyWith<$Res>? get deliveryWrapper;
 }
 
@@ -1652,6 +2217,7 @@ class _$RegistrationWrapperStateCopyWithImpl<$Res,
     Object? householdMembers = null,
     Object? selectedIndividual = freezed,
     Object? deliveryWrapper = freezed,
+    Object? formData = null,
     Object? offset = freezed,
     Object? limit = freezed,
     Object? error = freezed,
@@ -1670,11 +2236,15 @@ class _$RegistrationWrapperStateCopyWithImpl<$Res,
       selectedIndividual: freezed == selectedIndividual
           ? _value.selectedIndividual
           : selectedIndividual // ignore: cast_nullable_to_non_nullable
-              as IndividualModel?,
+              as SelectedIndividualWrapper?,
       deliveryWrapper: freezed == deliveryWrapper
           ? _value.deliveryWrapper
           : deliveryWrapper // ignore: cast_nullable_to_non_nullable
               as DeliveryWrapper?,
+      formData: null == formData
+          ? _value.formData
+          : formData // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
       offset: freezed == offset
           ? _value.offset
           : offset // ignore: cast_nullable_to_non_nullable
@@ -1696,6 +2266,19 @@ class _$RegistrationWrapperStateCopyWithImpl<$Res,
           : lastAction // ignore: cast_nullable_to_non_nullable
               as RegistrationWrapperActionType,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $SelectedIndividualWrapperCopyWith<$Res>? get selectedIndividual {
+    if (_value.selectedIndividual == null) {
+      return null;
+    }
+
+    return $SelectedIndividualWrapperCopyWith<$Res>(_value.selectedIndividual!,
+        (value) {
+      return _then(_value.copyWith(selectedIndividual: value) as $Val);
+    });
   }
 
   @override
@@ -1723,14 +2306,17 @@ abstract class _$$RegistrationWrapperStateImplCopyWith<$Res>
   $Res call(
       {bool loading,
       List<HouseholdWrapper> householdMembers,
-      IndividualModel? selectedIndividual,
+      SelectedIndividualWrapper? selectedIndividual,
       DeliveryWrapper? deliveryWrapper,
+      Map<String, dynamic> formData,
       int? offset,
       int? limit,
       String? error,
       int totalCount,
       RegistrationWrapperActionType lastAction});
 
+  @override
+  $SelectedIndividualWrapperCopyWith<$Res>? get selectedIndividual;
   @override
   $DeliveryWrapperCopyWith<$Res>? get deliveryWrapper;
 }
@@ -1752,6 +2338,7 @@ class __$$RegistrationWrapperStateImplCopyWithImpl<$Res>
     Object? householdMembers = null,
     Object? selectedIndividual = freezed,
     Object? deliveryWrapper = freezed,
+    Object? formData = null,
     Object? offset = freezed,
     Object? limit = freezed,
     Object? error = freezed,
@@ -1770,11 +2357,15 @@ class __$$RegistrationWrapperStateImplCopyWithImpl<$Res>
       selectedIndividual: freezed == selectedIndividual
           ? _value.selectedIndividual
           : selectedIndividual // ignore: cast_nullable_to_non_nullable
-              as IndividualModel?,
+              as SelectedIndividualWrapper?,
       deliveryWrapper: freezed == deliveryWrapper
           ? _value.deliveryWrapper
           : deliveryWrapper // ignore: cast_nullable_to_non_nullable
               as DeliveryWrapper?,
+      formData: null == formData
+          ? _value._formData
+          : formData // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
       offset: freezed == offset
           ? _value.offset
           : offset // ignore: cast_nullable_to_non_nullable
@@ -1807,12 +2398,14 @@ class _$RegistrationWrapperStateImpl implements _RegistrationWrapperState {
       final List<HouseholdWrapper> householdMembers = const [],
       this.selectedIndividual,
       this.deliveryWrapper,
+      final Map<String, dynamic> formData = const {},
       this.offset,
       this.limit,
       this.error,
       this.totalCount = 0,
       this.lastAction = RegistrationWrapperActionType.none})
-      : _householdMembers = householdMembers;
+      : _householdMembers = householdMembers,
+        _formData = formData;
 
   @override
   @JsonKey()
@@ -1828,9 +2421,18 @@ class _$RegistrationWrapperStateImpl implements _RegistrationWrapperState {
   }
 
   @override
-  final IndividualModel? selectedIndividual;
+  final SelectedIndividualWrapper? selectedIndividual;
   @override
   final DeliveryWrapper? deliveryWrapper;
+  final Map<String, dynamic> _formData;
+  @override
+  @JsonKey()
+  Map<String, dynamic> get formData {
+    if (_formData is EqualUnmodifiableMapView) return _formData;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_formData);
+  }
+
   @override
   final int? offset;
   @override
@@ -1846,7 +2448,7 @@ class _$RegistrationWrapperStateImpl implements _RegistrationWrapperState {
 
   @override
   String toString() {
-    return 'RegistrationWrapperState(loading: $loading, householdMembers: $householdMembers, selectedIndividual: $selectedIndividual, deliveryWrapper: $deliveryWrapper, offset: $offset, limit: $limit, error: $error, totalCount: $totalCount, lastAction: $lastAction)';
+    return 'RegistrationWrapperState(loading: $loading, householdMembers: $householdMembers, selectedIndividual: $selectedIndividual, deliveryWrapper: $deliveryWrapper, formData: $formData, offset: $offset, limit: $limit, error: $error, totalCount: $totalCount, lastAction: $lastAction)';
   }
 
   @override
@@ -1861,6 +2463,7 @@ class _$RegistrationWrapperStateImpl implements _RegistrationWrapperState {
                 other.selectedIndividual == selectedIndividual) &&
             (identical(other.deliveryWrapper, deliveryWrapper) ||
                 other.deliveryWrapper == deliveryWrapper) &&
+            const DeepCollectionEquality().equals(other._formData, _formData) &&
             (identical(other.offset, offset) || other.offset == offset) &&
             (identical(other.limit, limit) || other.limit == limit) &&
             (identical(other.error, error) || other.error == error) &&
@@ -1877,6 +2480,7 @@ class _$RegistrationWrapperStateImpl implements _RegistrationWrapperState {
       const DeepCollectionEquality().hash(_householdMembers),
       selectedIndividual,
       deliveryWrapper,
+      const DeepCollectionEquality().hash(_formData),
       offset,
       limit,
       error,
@@ -1895,8 +2499,9 @@ abstract class _RegistrationWrapperState implements RegistrationWrapperState {
   const factory _RegistrationWrapperState(
           {final bool loading,
           final List<HouseholdWrapper> householdMembers,
-          final IndividualModel? selectedIndividual,
+          final SelectedIndividualWrapper? selectedIndividual,
           final DeliveryWrapper? deliveryWrapper,
+          final Map<String, dynamic> formData,
           final int? offset,
           final int? limit,
           final String? error,
@@ -1909,9 +2514,11 @@ abstract class _RegistrationWrapperState implements RegistrationWrapperState {
   @override
   List<HouseholdWrapper> get householdMembers;
   @override
-  IndividualModel? get selectedIndividual;
+  SelectedIndividualWrapper? get selectedIndividual;
   @override
   DeliveryWrapper? get deliveryWrapper;
+  @override
+  Map<String, dynamic> get formData;
   @override
   int? get offset;
   @override
@@ -2619,4 +3226,201 @@ abstract class _DeliveryWrapper implements DeliveryWrapper {
   @JsonKey(ignore: true)
   _$$DeliveryWrapperImplCopyWith<_$DeliveryWrapperImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+mixin _$SelectedIndividualWrapper {
+  IndividualModel get individual => throw _privateConstructorUsedError;
+  HouseholdMemberModel? get member => throw _privateConstructorUsedError;
+  ProjectBeneficiaryModel? get projectBeneficiary =>
+      throw _privateConstructorUsedError;
+  List<TaskModel> get tasks => throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $SelectedIndividualWrapperCopyWith<SelectedIndividualWrapper> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SelectedIndividualWrapperCopyWith<$Res> {
+  factory $SelectedIndividualWrapperCopyWith(SelectedIndividualWrapper value,
+          $Res Function(SelectedIndividualWrapper) then) =
+      _$SelectedIndividualWrapperCopyWithImpl<$Res, SelectedIndividualWrapper>;
+  @useResult
+  $Res call(
+      {IndividualModel individual,
+      HouseholdMemberModel? member,
+      ProjectBeneficiaryModel? projectBeneficiary,
+      List<TaskModel> tasks});
+}
+
+/// @nodoc
+class _$SelectedIndividualWrapperCopyWithImpl<$Res,
+        $Val extends SelectedIndividualWrapper>
+    implements $SelectedIndividualWrapperCopyWith<$Res> {
+  _$SelectedIndividualWrapperCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? individual = null,
+    Object? member = freezed,
+    Object? projectBeneficiary = freezed,
+    Object? tasks = null,
+  }) {
+    return _then(_value.copyWith(
+      individual: null == individual
+          ? _value.individual
+          : individual // ignore: cast_nullable_to_non_nullable
+              as IndividualModel,
+      member: freezed == member
+          ? _value.member
+          : member // ignore: cast_nullable_to_non_nullable
+              as HouseholdMemberModel?,
+      projectBeneficiary: freezed == projectBeneficiary
+          ? _value.projectBeneficiary
+          : projectBeneficiary // ignore: cast_nullable_to_non_nullable
+              as ProjectBeneficiaryModel?,
+      tasks: null == tasks
+          ? _value.tasks
+          : tasks // ignore: cast_nullable_to_non_nullable
+              as List<TaskModel>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$SelectedIndividualWrapperImplCopyWith<$Res>
+    implements $SelectedIndividualWrapperCopyWith<$Res> {
+  factory _$$SelectedIndividualWrapperImplCopyWith(
+          _$SelectedIndividualWrapperImpl value,
+          $Res Function(_$SelectedIndividualWrapperImpl) then) =
+      __$$SelectedIndividualWrapperImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {IndividualModel individual,
+      HouseholdMemberModel? member,
+      ProjectBeneficiaryModel? projectBeneficiary,
+      List<TaskModel> tasks});
+}
+
+/// @nodoc
+class __$$SelectedIndividualWrapperImplCopyWithImpl<$Res>
+    extends _$SelectedIndividualWrapperCopyWithImpl<$Res,
+        _$SelectedIndividualWrapperImpl>
+    implements _$$SelectedIndividualWrapperImplCopyWith<$Res> {
+  __$$SelectedIndividualWrapperImplCopyWithImpl(
+      _$SelectedIndividualWrapperImpl _value,
+      $Res Function(_$SelectedIndividualWrapperImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? individual = null,
+    Object? member = freezed,
+    Object? projectBeneficiary = freezed,
+    Object? tasks = null,
+  }) {
+    return _then(_$SelectedIndividualWrapperImpl(
+      individual: null == individual
+          ? _value.individual
+          : individual // ignore: cast_nullable_to_non_nullable
+              as IndividualModel,
+      member: freezed == member
+          ? _value.member
+          : member // ignore: cast_nullable_to_non_nullable
+              as HouseholdMemberModel?,
+      projectBeneficiary: freezed == projectBeneficiary
+          ? _value.projectBeneficiary
+          : projectBeneficiary // ignore: cast_nullable_to_non_nullable
+              as ProjectBeneficiaryModel?,
+      tasks: null == tasks
+          ? _value._tasks
+          : tasks // ignore: cast_nullable_to_non_nullable
+              as List<TaskModel>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$SelectedIndividualWrapperImpl implements _SelectedIndividualWrapper {
+  const _$SelectedIndividualWrapperImpl(
+      {required this.individual,
+      this.member,
+      this.projectBeneficiary,
+      final List<TaskModel> tasks = const []})
+      : _tasks = tasks;
+
+  @override
+  final IndividualModel individual;
+  @override
+  final HouseholdMemberModel? member;
+  @override
+  final ProjectBeneficiaryModel? projectBeneficiary;
+  final List<TaskModel> _tasks;
+  @override
+  @JsonKey()
+  List<TaskModel> get tasks {
+    if (_tasks is EqualUnmodifiableListView) return _tasks;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_tasks);
+  }
+
+  @override
+  String toString() {
+    return 'SelectedIndividualWrapper(individual: $individual, member: $member, projectBeneficiary: $projectBeneficiary, tasks: $tasks)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SelectedIndividualWrapperImpl &&
+            (identical(other.individual, individual) ||
+                other.individual == individual) &&
+            (identical(other.member, member) || other.member == member) &&
+            (identical(other.projectBeneficiary, projectBeneficiary) ||
+                other.projectBeneficiary == projectBeneficiary) &&
+            const DeepCollectionEquality().equals(other._tasks, _tasks));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, individual, member,
+      projectBeneficiary, const DeepCollectionEquality().hash(_tasks));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SelectedIndividualWrapperImplCopyWith<_$SelectedIndividualWrapperImpl>
+      get copyWith => __$$SelectedIndividualWrapperImplCopyWithImpl<
+          _$SelectedIndividualWrapperImpl>(this, _$identity);
+}
+
+abstract class _SelectedIndividualWrapper implements SelectedIndividualWrapper {
+  const factory _SelectedIndividualWrapper(
+      {required final IndividualModel individual,
+      final HouseholdMemberModel? member,
+      final ProjectBeneficiaryModel? projectBeneficiary,
+      final List<TaskModel> tasks}) = _$SelectedIndividualWrapperImpl;
+
+  @override
+  IndividualModel get individual;
+  @override
+  HouseholdMemberModel? get member;
+  @override
+  ProjectBeneficiaryModel? get projectBeneficiary;
+  @override
+  List<TaskModel> get tasks;
+  @override
+  @JsonKey(ignore: true)
+  _$$SelectedIndividualWrapperImplCopyWith<_$SelectedIndividualWrapperImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

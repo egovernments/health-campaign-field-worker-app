@@ -74,7 +74,8 @@ class BeneficiaryDetailsPageState
                       ?.where(
                         (element) =>
                             element.beneficiaryClientReferenceId ==
-                            state.selectedIndividual?.clientReferenceId,
+                            state.selectedIndividual?.individual
+                                .clientReferenceId,
                       )
                       .toList()
               : null;
@@ -219,7 +220,8 @@ class BeneficiaryDetailsPageState
                                                           fetchProductVariant(
                                                               items,
                                                               state
-                                                                  .selectedIndividual,
+                                                                  .selectedIndividual
+                                                                  ?.individual,
                                                               state
                                                                   .householdMembers
                                                                   .first
@@ -392,7 +394,8 @@ class BeneficiaryDetailsPageState
                                                                       context,
                                                                       variant,
                                                                       state
-                                                                          .selectedIndividual,
+                                                                          .selectedIndividual
+                                                                          ?.individual,
                                                                       state
                                                                           .householdMembers
                                                                           .first
@@ -520,8 +523,8 @@ class BeneficiaryDetailsPageState
                                                 var productVariants =
                                                     fetchProductVariant(
                                                         items,
-                                                        state
-                                                            .selectedIndividual,
+                                                        state.selectedIndividual
+                                                            ?.individual,
                                                         state.householdMembers
                                                             .first.household,
                                                         context: context);
@@ -643,7 +646,10 @@ class BeneficiaryDetailsPageState
                                                     ?.headOfHousehold
                                                     ?.name
                                                     ?.givenName
-                                                : state.selectedIndividual?.name
+                                                : state
+                                                        .selectedIndividual
+                                                        ?.individual
+                                                        .name
                                                         ?.givenName ??
                                                     '--',
                                             localizations.translate(
@@ -659,8 +665,10 @@ class BeneficiaryDetailsPageState
                                                           .firstOrNull
                                                           ?.headOfHousehold
                                                           ?.identifiers
-                                                      : state.selectedIndividual
-                                                          ?.identifiers;
+                                                      : state
+                                                          .selectedIndividual
+                                                          ?.individual
+                                                          .identifiers;
                                               if (identifiers == null ||
                                                   identifiers.isEmpty) {
                                                 return '--';
@@ -684,8 +692,10 @@ class BeneficiaryDetailsPageState
                                                           .firstOrNull
                                                           ?.headOfHousehold
                                                           ?.identifiers
-                                                      : state.selectedIndividual
-                                                          ?.identifiers;
+                                                      : state
+                                                          .selectedIndividual
+                                                          ?.individual
+                                                          .identifiers;
                                               if (identifiers == null ||
                                                   identifiers.isEmpty) {
                                                 return '--';
@@ -707,8 +717,10 @@ class BeneficiaryDetailsPageState
                                                           .firstOrNull
                                                           ?.headOfHousehold
                                                           ?.dateOfBirth
-                                                      : state.selectedIndividual
-                                                          ?.dateOfBirth;
+                                                      : state
+                                                          .selectedIndividual
+                                                          ?.individual
+                                                          .dateOfBirth;
                                               if (dob == null || dob.isEmpty) {
                                                 return '--';
                                               }
@@ -745,7 +757,8 @@ class BeneficiaryDetailsPageState
                                                     .sentenceCase
                                                 : state
                                                         .selectedIndividual
-                                                        ?.gender
+                                                        ?.individual
+                                                        .gender
                                                         ?.name
                                                         .sentenceCase ??
                                                     '--',
@@ -758,8 +771,10 @@ class BeneficiaryDetailsPageState
                                                     .firstOrNull
                                                     ?.headOfHousehold
                                                     ?.mobileNumber
-                                                : state.selectedIndividual
-                                                        ?.mobileNumber ??
+                                                : state
+                                                        .selectedIndividual
+                                                        ?.individual
+                                                        .mobileNumber ??
                                                     '--',
                                             localizations.translate(i18
                                                 .deliverIntervention
@@ -833,7 +848,8 @@ class BeneficiaryDetailsPageState
                                                         taskData:
                                                             taskData ?? [],
                                                         individualModel: state
-                                                            .selectedIndividual,
+                                                            .selectedIndividual
+                                                            ?.individual,
                                                       )
                                                     : const Offstage(),
                                               ],

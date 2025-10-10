@@ -315,7 +315,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
           ?.projectType
           ?.cycles?[0]
           .deliveries?[0],
-      state.selectedIndividual,
+      state.selectedIndividual?.individual,
       state.householdMembers.first.household,
       context: context,
     );
