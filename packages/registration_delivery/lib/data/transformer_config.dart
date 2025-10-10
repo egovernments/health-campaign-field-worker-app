@@ -401,5 +401,33 @@ final jsonConfig = {
         }
       }
     }
+  },
+  "referral": {
+    "fallbackModel": "HFReferralModel",
+    "models": {
+      "ReferralModel": {
+        "mappings": {
+          "id": "referralDetails.id",
+          "tenantId": "__context:tenantId",
+          "projectId": "__context:projectId",
+          "projectBeneficiaryClientReferenceId":
+              "__context:projectBeneficiaryModel.clientReferenceId",
+          "recipientId":
+              "__switch:referralDetails.evaluationFacilityKey:{Community Health Worker:STAFF,FACILITY}",
+          "recipientType":
+              "__switch:referralDetails.evaluationFacilityKey:{Community Health Worker:__context:loggedInUser,referralDetails.evaluationFacilityKey}",
+          "referrerId": "__context:loggedInUser",
+          "nonRecoverableError": "referralDetails.nonRecoverable",
+          "clientReferenceId": "__generate:uuid",
+          "rowVersion": "meta.rowVersion",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {
+            "boundaryCode": "referralDetails.administrativeUnit",
+            "referralComments": "referralDetails.comments",
+          }
+        }
+      }
+    },
   }
 };
