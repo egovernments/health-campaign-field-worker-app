@@ -11,27 +11,31 @@ enum BeneficiaryType {
   household,
   @MappableValue("PRODUCT")
   product,
-  @MappableValue("3-11MONTH")
-  individual1,
-  @MappableValue("12-59MONTH")
-  individual2,
-  @MappableValue("1-11MONTH")
-  individual3,
-  @MappableValue("6-11MONTH")
-  individual4,
-  @MappableValue("SPAQ1")
-  spaq1,
-  @MappableValue("SPAQ2")
-  spaq2,
-  @MappableValue("SPAQ-1")
-  spaq3,
-  @MappableValue("SPAQ-2")
-  spaq4,
-  @MappableValue("AZM")
-  azm,
-  @MappableValue("VAS-RED")
-  vasRed,
-  @MappableValue("VAS-BLUE")
-  vasBlue,
+  @MappableValue("INDIVIDUAL_BCG_0_TO_18")
+  individualBcg0To18,
+  @MappableValue("INDIVIDUAL_OTHER_VACCINE_0_TO_18")
+  individualOtherVaccine0To18,
+  @MappableValue("VACCINE_BCG")
+  vaccineBcg,
+  @MappableValue("VACCINE_VPO")
+  vaccineVpo,
+  @MappableValue("VACCINE_HPB")
+  vaccineHpb,
+  @MappableValue("VACCINE_PENTA")
+  vaccinePenta,
+  @MappableValue("VACCINE_ROTA")
+  vaccineRota,
+  @MappableValue("VACCINE_PNEUMO")
+  vaccinePneumo,
+  @MappableValue("VACCINE_VPI")
+  vaccineVpi,
+  @MappableValue("VACCINE_RR")
+  vaccineRr,
+  @MappableValue("VACCINE_VAA")
+  vaccineVaa,
+  @MappableValue("VACCINE_MEN_A")
+  vaccineMenA,
+  @MappableValue("VACCINE_HPV")
+  vaccineHpv,
   ;
 }
