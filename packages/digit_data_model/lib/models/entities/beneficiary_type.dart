@@ -35,6 +35,8 @@ enum BeneficiaryType {
   vaccineVaa,
   @MappableValue("VACCINE_MEN_A")
   vaccineMenA,
+  @MappableValue("VACCINE_VIT_A")
+  vaccineVitA,
   @MappableValue("VACCINE_HPV")
   vaccineHpv,
   ;

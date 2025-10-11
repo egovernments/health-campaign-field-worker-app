@@ -55,6 +55,8 @@ class BeneficiaryTypeMapper extends EnumMapper<BeneficiaryType> {
         return BeneficiaryType.vaccineVaa;
       case "VACCINE_MEN_A":
         return BeneficiaryType.vaccineMenA;
+      case "VACCINE_VIT_A":
+        return BeneficiaryType.vaccineVitA;
       case "VACCINE_HPV":
         return BeneficiaryType.vaccineHpv;
       default:
@@ -95,6 +97,8 @@ class BeneficiaryTypeMapper extends EnumMapper<BeneficiaryType> {
         return "VACCINE_VAA";
       case BeneficiaryType.vaccineMenA:
         return "VACCINE_MEN_A";
+      case BeneficiaryType.vaccineVitA:
+        return "VACCINE_VIT_A";
       case BeneficiaryType.vaccineHpv:
         return "VACCINE_HPV";
     }
