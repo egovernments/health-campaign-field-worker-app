@@ -297,7 +297,22 @@ class AttendanceIndividualBloc
     int twelvePM =
         DateTime(currentDate.year, currentDate.month, currentDate.day, 11, 58)
             .millisecondsSinceEpoch;
-    attendees = event.attendees.map((e) {
+
+    // Filter attendees based on enrollment and de-enrollment dates for entry and exit times
+    // An attendee should be enrolled at entry time and not de-enrolled before exit time
+    final filteredAttendees = event.attendees.where((att) {
+      // Check if enrolled at entry time (enrollment date should be <= entry time)
+      final enrolledAtEntry = att.enrollmentDate == null ||
+          (att.enrollmentDate ?? event.entryTime) <= event.entryTime;
+
+      // Check if not de-enrolled before exit time (de-enrollment date should be >= exit time or null)
+      final notDeenrolledAtExit = att.denrollmentDate == null ||
+          (att.denrollmentDate ?? event.exitTime) >= event.exitTime;
+
+      return enrolledAtEntry && notDeenrolledAtExit;
+    }).toList();
+
+    attendees = filteredAttendees.map((e) {
       final entryLogList = logResponse
           .where((l) =>
               l.individualId == e.individualId &&

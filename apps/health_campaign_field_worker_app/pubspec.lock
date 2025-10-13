@@ -2063,7 +2063,7 @@ packages:
       path: "../../packages/survey_form"
       relative: true
     source: path
-    version: "1.0.3"
+    version: "1.0.3+1"
   sync_http:
     dependency: transitive
     description:
@@ -2146,11 +2146,10 @@ packages:
   transit_post:
     dependency: "direct main"
     description:
-      name: transit_post
-      sha256: "4d1f8ba6e01c0dd454a340e5b1c9b1f9178b8b8d5a1ea95874bfe2ca62d880ad"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
+      path: "../../packages/transit_post"
+      relative: true
+    source: path
+    version: "1.0.0+1"
   type_plus:
     dependency: transitive
     description:

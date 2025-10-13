@@ -169,25 +169,16 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
         ? list.length ~/ 2 // for registers with 2 sessions
         : list.length; // for registers with single session
 
+    // Fetch all individuals without date filtering
     final individualList = await individualDataRepository?.search(
           IndividualSearchModel(
-            id: register.attendees
-                ?.where((att) => (att.denrollmentDate == null ||
-                    (att.denrollmentDate ??
-                            DateTime.now().millisecondsSinceEpoch) >=
-                        DateTime.now().millisecondsSinceEpoch))
-                .map((a) => a.individualId!)
-                .toList(),
+            id: register.attendees?.map((a) => a.individualId!).toList(),
           ),
         ) ??
         [];
 
-    // Map attendees
-    final attendeeList = register.attendees
-        ?.where((att) => (att.denrollmentDate == null ||
-            (att.denrollmentDate ?? DateTime.now().millisecondsSinceEpoch) >=
-                DateTime.now().millisecondsSinceEpoch))
-        .map((a) {
+    // Map all attendees without date filtering - filtering will be done when logs are fetched
+    final attendeeList = register.attendees?.map((a) {
       var ind = individualList.where((i) => i.id == a.individualId).firstOrNull;
       return a.copyWith(
         name: ind?.name?.givenName,
@@ -276,15 +267,11 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     final List<AttendanceRegisterModel> nonMobileUserRegister = [];
 
     for (var register in registers!) {
-      final allEligibleAttendees = register.attendees
-          ?.where((att) =>
-              att.denrollmentDate == null ||
-              (att.denrollmentDate ?? DateTime.now().millisecondsSinceEpoch) >=
-                  DateTime.now().millisecondsSinceEpoch)
-          .toList();
+      // Get all attendees without date filtering - filtering will be done when logs are fetched
+      final allAttendees = register.attendees?.toList();
 
       final filteredAttendeeIds =
-          allEligibleAttendees?.map((a) => a.individualId!).toList();
+          allAttendees?.map((a) => a.individualId!).toList();
 
       final individualList = await individualDataRepository?.search(
             IndividualSearchModel(id: filteredAttendeeIds),
@@ -302,7 +289,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
                 (ind) => ind.id == AttendanceSingleton().loggedInIndividualId)
             .toList();
 
-        filteredAttendees = allEligibleAttendees
+        filteredAttendees = allAttendees
                 ?.where((att) =>
                     att.individualId ==
                     AttendanceSingleton().loggedInIndividualId)
@@ -315,7 +302,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
                 (ind) => ind.id != AttendanceSingleton().loggedInIndividualId)
             .toList();
 
-        filteredAttendees = allEligibleAttendees
+        filteredAttendees = allAttendees
                 ?.where((att) =>
                     att.individualId !=
                     AttendanceSingleton().loggedInIndividualId)
