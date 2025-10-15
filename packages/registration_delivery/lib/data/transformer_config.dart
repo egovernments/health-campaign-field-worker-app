@@ -375,20 +375,21 @@ final jsonConfig = {
             "clientAuditDetails": "__generate:clientAudit",
             "auditDetails": "__generate:audit"
           },
-          "additionalFields": "TaskAdditionalFields",
+          "additionalFields": {
+            "cycleIndex": "__pad:2,0:__context:currentCycleId",
+            "doseIndex": "__pad:2,0:id"
+          },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
         },
         "listMappings": {
           "TaskResourceModel": {
-            "listSource": "__context:currentDeliveries.doseCriteria",
+            "listSource": "doseCriteria[0].ProductVariants",
             "mappings": {
-              "id": "id",
               "clientReferenceId": "__generate:uuid",
               "taskId": "taskId",
-              "productVariantId":
-                  "DeliveryDetails.resourceCard.resourceDelivered.productId",
-              "quantity": "DeliveryDetails.resourceCard.quantityDistributed",
+              "productVariantId": "productVariantId",
+              "quantity": "quantity",
               "isDelivered": "__value:true",
               "deliveryComment": "DeliveryDetails.deliveryComment",
               "nonRecoverableError": "error.nonRecoverable",
@@ -443,7 +444,6 @@ final jsonConfig = {
               "__context:projectBeneficiaryModel.clientReferenceId",
           "createdBy": "__context:userId",
           "status": "__value:INELIGIBLE",
-          // todo: need to update later for multiround campaign
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           // "resources": "list:TaskResourceModel",

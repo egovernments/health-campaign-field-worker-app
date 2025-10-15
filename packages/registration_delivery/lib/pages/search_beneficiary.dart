@@ -410,9 +410,14 @@ class _SearchBeneficiaryPageState
                     final householdMember =
                         blocWrapper.state.householdMembers.firstOrNull;
                     final household = householdMember?.household?.toMap();
-                    final projectBeneficiary = householdMember
-                        ?.projectBeneficiaries?.firstOrNull
-                        ?.toMap();
+                    final projectBeneficiary =
+                        RegistrationDeliverySingleton().beneficiaryType ==
+                                BeneficiaryType.individual
+                            ? blocWrapper
+                                .state.selectedIndividual?.projectBeneficiary
+                                ?.toMap()
+                            : householdMember?.projectBeneficiaries?.firstOrNull
+                                ?.toMap();
 
                     final currentCycle = RegistrationDeliverySingleton()
                         .selectedProject
@@ -506,8 +511,13 @@ class _SearchBeneficiaryPageState
                 final householdMember =
                     blocWrapper.state.householdMembers.firstOrNull;
                 final household = householdMember?.household?.toMap();
-                final projectBeneficiary =
-                    householdMember?.projectBeneficiaries?.firstOrNull?.toMap();
+                final projectBeneficiary = RegistrationDeliverySingleton()
+                            .beneficiaryType ==
+                        BeneficiaryType.individual
+                    ? blocWrapper.state.selectedIndividual?.projectBeneficiary
+                        ?.toMap()
+                    : householdMember?.projectBeneficiaries?.firstOrNull
+                        ?.toMap();
 
                 final currentCycle = RegistrationDeliverySingleton()
                     .selectedProject
@@ -540,7 +550,7 @@ class _SearchBeneficiaryPageState
                 }
 
                 final entities = formEntityMapper.mapFormToEntities(
-                  formValues: formData,
+                  formValues: {...formData, ...blocWrapper.state.formData},
                   modelsConfig: modelsConfig,
                   context: {
                     "projectId":
@@ -561,6 +571,7 @@ class _SearchBeneficiaryPageState
                         .beneficiaryType
                         ?.toValue(),
                     "currentDeliveries": filteredDeliveries,
+                    "currentCycleId": currentCycle?.id,
                     if (household != null) 'householdModel': household,
                     if (projectBeneficiary != null)
                       "projectBeneficiaryModel": projectBeneficiary,

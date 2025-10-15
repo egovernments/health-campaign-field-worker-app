@@ -27,11 +27,7 @@ class FormEntityMapper {
         if (listSourcePath != null) {
           // Fetch list from context
           final listData = getValueFromMapping(
-            listSourcePath,
-            formValues,
-            modelName,
-            context
-          );
+              listSourcePath, formValues, modelName, context);
 
           if (listData is List && listData.isNotEmpty) {
             // Create one model instance for each item in the list
@@ -48,7 +44,8 @@ class FormEntityMapper {
           } else {
             // If list is empty or null, skip model creation
             if (kDebugMode) {
-              print('Warning: listSource "$listSourcePath" returned empty or null for $modelName');
+              print(
+                  'Warning: listSource "$listSourcePath" returned empty or null for $modelName');
             }
           }
         } else {
@@ -427,28 +424,32 @@ class FormEntityMapper {
       if (targetKey == 'additionalFields' &&
           sourcePath is Map<String, dynamic>) {
         /// Treat as additional fields
-        mapped[targetKey] =
-            _mapAdditionalFields(sourcePath, formValues, modelName, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
+        mapped[targetKey] = _mapAdditionalFields(
+            sourcePath, formValues, modelName, context,
+            listItemIndex: listItemIndex, listSourcePath: listSourcePath);
         continue;
       }
 
       if (sourcePath is Map<String, dynamic>) {
         /// Treat as nested object mapping
-        mapped[targetKey] =
-            _mapNestedObject(sourcePath, formValues, targetKey, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
+        mapped[targetKey] = _mapNestedObject(
+            sourcePath, formValues, targetKey, context,
+            listItemIndex: listItemIndex, listSourcePath: listSourcePath);
         continue;
       }
 
       if (sourcePath is String && sourcePath.startsWith('list:')) {
         /// Treat as list
         mapped[targetKey] = _mapListModel(
-            sourcePath, formValues, modelName, modelConfig, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
+            sourcePath, formValues, modelName, modelConfig, context,
+            listItemIndex: listItemIndex, listSourcePath: listSourcePath);
         continue;
       }
 
       /// Treat as normal mapping
-      final value =
-          getValueFromMapping(sourcePath, formValues, modelName, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
+      final value = getValueFromMapping(
+          sourcePath, formValues, modelName, context,
+          listItemIndex: listItemIndex, listSourcePath: listSourcePath);
       mapped[targetKey] =
           value is DateTime ? value.millisecondsSinceEpoch : value;
     }
@@ -481,12 +482,32 @@ class FormEntityMapper {
     // If listSource is defined, use it to fetch a list and map each item
     final nestedListSourcePath = listConfig['listSource'] as String?;
     if (nestedListSourcePath != null) {
+      if (kDebugMode) {
+        print('🔍 Resolving nestedListSourcePath: "$nestedListSourcePath"');
+        print('   listItemIndex: $listItemIndex');
+        print('   listSourcePath: $listSourcePath');
+        print('   formValues keys: ${formValues.keys}');
+        print('   context keys: ${context.keys}');
+      }
       final listData = getValueFromMapping(
-          nestedListSourcePath, formValues, listModelName, context);
+          nestedListSourcePath, formValues, listModelName, context,
+          listItemIndex: listItemIndex, listSourcePath: listSourcePath);
+      if (kDebugMode) {
+        print('   listData result: ${listData?.runtimeType} = $listData');
+      }
       if (listData is List) {
         final mappings = listConfig['mappings'] as Map<String, dynamic>;
         final items = <Map<String, dynamic>>[];
         for (final item in listData) {
+          // Convert item to Map if it has toMap method (handle Dart objects)
+          final itemMap = item is Map<String, dynamic>
+              ? item
+              : (item.runtimeType.toString().contains('Mappable') &&
+                      item is dynamic &&
+                      item.toMap != null)
+                  ? item.toMap() as Map<String, dynamic>
+                  : <String, dynamic>{};
+
           final newItem = <String, dynamic>{};
           for (final entry in mappings.entries) {
             final targetKey = entry.key;
@@ -497,26 +518,33 @@ class FormEntityMapper {
                 final relativePath = sourcePath
                     .substring(nestedListSourcePath.length + 1); // skip the dot
                 newItem[targetKey] = getValueFromMapping(
-                    relativePath, item, listModelName, context);
+                    relativePath, itemMap, listModelName, context,
+                    listItemIndex: listItemIndex,
+                    listSourcePath: listSourcePath);
               } else {
                 newItem[targetKey] = getValueFromMapping(
-                    sourcePath, item, listModelName, context);
+                    sourcePath, itemMap, listModelName, context,
+                    listItemIndex: listItemIndex,
+                    listSourcePath: listSourcePath);
               }
             }
             if (targetKey == 'additionalFields' &&
                 sourcePath is Map<String, dynamic>) {
               newItem[targetKey] = _mapAdditionalFields(
-                  sourcePath, formValues, listModelName, context);
+                  sourcePath, formValues, listModelName, context,
+                  listItemIndex: listItemIndex, listSourcePath: listSourcePath);
               continue;
             }
             if (sourcePath is Map<String, dynamic>) {
-              newItem[targetKey] =
-                  _mapNestedObject(sourcePath, formValues, targetKey, context);
+              newItem[targetKey] = _mapNestedObject(
+                  sourcePath, formValues, targetKey, context,
+                  listItemIndex: listItemIndex, listSourcePath: listSourcePath);
               continue;
             }
             if (sourcePath is String && sourcePath.startsWith('list:')) {
               newItem[targetKey] = _mapListModel(
-                  sourcePath, formValues, listModelName, listConfig, context);
+                  sourcePath, formValues, listModelName, listConfig, context,
+                  listItemIndex: listItemIndex, listSourcePath: listSourcePath);
               continue;
             }
           }
@@ -567,9 +595,13 @@ class FormEntityMapper {
     final fieldsList = <Map<String, dynamic>>[];
 
     fieldsMap.forEach((customKey, path) {
-      final value = getValueFromMapping(path, formValues, path, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
+      final value = getValueFromMapping(path, formValues, path, context,
+          listItemIndex: listItemIndex, listSourcePath: listSourcePath);
       if (value != null && value.toString().trim().isNotEmpty) {
-        fieldsList.add({'key': customKey, 'value': value});
+        fieldsList.add({
+          'key': customKey,
+          'value': value is DateTime ? value.millisecondsSinceEpoch : value
+        });
       }
     });
 
@@ -598,26 +630,30 @@ class FormEntityMapper {
 
       if (targetKey == 'additionalFields' &&
           sourcePath is Map<String, dynamic>) {
-        result[targetKey] =
-            _mapAdditionalFields(sourcePath, formValues, modelName, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
+        result[targetKey] = _mapAdditionalFields(
+            sourcePath, formValues, modelName, context,
+            listItemIndex: listItemIndex, listSourcePath: listSourcePath);
         continue;
       }
 
       if (sourcePath is String && sourcePath.startsWith('list:')) {
         result[targetKey] = _mapListModel(sourcePath, formValues, modelName,
-            {'listMappings': nestedMappings}, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
+            {'listMappings': nestedMappings}, context,
+            listItemIndex: listItemIndex, listSourcePath: listSourcePath);
         continue;
       }
 
       if (sourcePath is Map<String, dynamic>) {
         // Handle deeply nested object
-        result[targetKey] =
-            _mapNestedObject(sourcePath, formValues, targetKey, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
+        result[targetKey] = _mapNestedObject(
+            sourcePath, formValues, targetKey, context,
+            listItemIndex: listItemIndex, listSourcePath: listSourcePath);
         continue;
       }
 
-      final value =
-          getValueFromMapping(sourcePath, formValues, modelName, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
+      final value = getValueFromMapping(
+          sourcePath, formValues, modelName, context,
+          listItemIndex: listItemIndex, listSourcePath: listSourcePath);
       result[targetKey] =
           value is DateTime ? value.millisecondsSinceEpoch : value;
     }
@@ -657,9 +693,49 @@ class FormEntityMapper {
       return _getValueFromPath(context, fullPath);
     }
 
+    // IMPLICIT LIST ITEM CONTEXT: If we're in a list context (listItemIndex != null)
+    // and the instruction doesn't start with special prefixes (__context:, __generate:, etc.)
+    // try to resolve it relative to current list item first
+    if (listItemIndex != null &&
+        listSourcePath != null &&
+        !instruction.startsWith('__')) {
+      if (kDebugMode) {
+        print('🔎 IMPLICIT LIST CONTEXT for instruction: "$instruction"');
+        print(
+            '   listItemIndex: $listItemIndex, listSourcePath: "$listSourcePath"');
+      }
+      // Check if it's not found in form data first
+      final formValue = _getValueFromPath(data, instruction);
+      if (kDebugMode) {
+        print('   formValue from data: $formValue');
+      }
+      if (formValue == null) {
+        // Try to resolve relative to current list item in context
+        final contextPath = listSourcePath.startsWith('__context:')
+            ? listSourcePath.replaceFirst('__context:', '')
+            : listSourcePath;
+        final fullPath = '$contextPath[$listItemIndex].$instruction';
+        if (kDebugMode) {
+          print('   Trying context path: "$fullPath"');
+        }
+        final value = _getValueFromPath(context, fullPath);
+        if (kDebugMode) {
+          print('   value from context: $value');
+        }
+        if (value != null) {
+          return value;
+        }
+      }
+      // If found in form data or not found anywhere, fall through to normal resolution
+    }
+
     if (instruction == '__generate:uuid' && updateMapping == false) {
       final uuid = IdGen.i.identifier;
-      generatedValues.putIfAbsent(currentModel, () => {})['clientReferenceId'] =
+      // Store with list index suffix if in list context
+      final storageKey = listItemIndex != null
+          ? '${currentModel}_$listItemIndex'
+          : currentModel;
+      generatedValues.putIfAbsent(storageKey, () => {})['clientReferenceId'] =
           uuid;
       return uuid;
     }
@@ -708,8 +784,25 @@ class FormEntityMapper {
       }
       final modelName = parts[0];
       final field = parts[1];
-      final refValue = generatedValues[modelName]?[field];
+
+      // Try to get reference with list index first (for nested list contexts)
+      final storageKey =
+          listItemIndex != null ? '${modelName}_$listItemIndex' : modelName;
+
+      var refValue = generatedValues[storageKey]?[field];
+
+      // Fallback to non-indexed key if not found
+      if (refValue == null && listItemIndex != null) {
+        refValue = generatedValues[modelName]?[field];
+      }
+
       if (refValue == null) {
+        if (kDebugMode) {
+          print('⚠️ Reference not found for $instruction');
+          print('   Tried keys: $storageKey, $modelName');
+          print(
+              '   Available keys in generatedValues: ${generatedValues.keys}');
+        }
         throw Exception('Reference not found for $instruction');
       }
       return refValue;
@@ -732,8 +825,9 @@ class FormEntityMapper {
       final mappingString = switchContent.substring(braceIndex).trim();
 
       // Recursively resolve key — handles __context:, __ref:, etc.
-      final keyValue =
-          getValueFromMapping(keyInstruction, data, currentModel, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
+      final keyValue = getValueFromMapping(
+          keyInstruction, data, currentModel, context,
+          listItemIndex: listItemIndex, listSourcePath: listSourcePath);
       if (keyValue == null) {
         throw Exception(
             'Key value "$keyInstruction" resolved to null in __switch');
@@ -749,7 +843,37 @@ class FormEntityMapper {
       }
 
       return getValueFromMapping(
-          resolvedInstruction, data, currentModel, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
+          resolvedInstruction, data, currentModel, context,
+          listItemIndex: listItemIndex, listSourcePath: listSourcePath);
+    }
+
+    if (instruction.startsWith('__pad:')) {
+      // Format: __pad:minLength,padChar:actualPath
+      // Example: __pad:2,0:__context:currentCycleId
+      final padContent = instruction.replaceFirst('__pad:', '');
+      final parts = padContent.split(':');
+
+      if (parts.length < 2) {
+        throw Exception('Invalid __pad format. Expected: __pad:minLength,padChar:path');
+      }
+
+      final params = parts[0].split(',');
+      final minLength = int.tryParse(params[0]) ?? 2;
+      final padChar = params.length > 1 ? params[1] : '0';
+      final valuePath = parts.sublist(1).join(':'); // Rejoin in case path contains ':'
+
+      // Recursively resolve the actual value
+      final value = getValueFromMapping(valuePath, data, currentModel, context,
+          listItemIndex: listItemIndex, listSourcePath: listSourcePath);
+
+      if (value == null) return null;
+
+      final valueStr = value.toString();
+      if (valueStr.length >= minLength) {
+        return valueStr;
+      } else {
+        return valueStr.padLeft(minLength, padChar);
+      }
     }
 
     if (instruction.startsWith('__context:')) {
@@ -788,6 +912,10 @@ class FormEntityMapper {
   }
 
   dynamic _getValueFromPath(Map<String, dynamic> data, String path) {
+    if (kDebugMode) {
+      print('📍 _getValueFromPath called with path: "$path"');
+      print('   data keys: ${data.keys}');
+    }
     final regex = RegExp(r'([^\[\].]+)(?:\[(\d+)\])?');
 
     dynamic current = data;
@@ -795,31 +923,98 @@ class FormEntityMapper {
       final key = match.group(1);
       final indexStr = match.group(2);
 
+      if (kDebugMode) {
+        print('   Processing key: "$key", indexStr: $indexStr');
+        print('   current type: ${current.runtimeType}');
+      }
+
+      // Convert Dart object to Map if needed before accessing keys
+      if (current is! Map<String, dynamic> && current is! List) {
+        try {
+          // Try to call toMap() if it exists
+          final toMapMethod = (current as dynamic).toMap;
+          if (toMapMethod != null) {
+            if (kDebugMode) {
+              print(
+                  '   Converting ${current.runtimeType} to Map before accessing key');
+            }
+            current = toMapMethod() as Map<String, dynamic>;
+            if (kDebugMode) {
+              print(
+                  '   Converted successfully, new type: ${current.runtimeType}');
+              print('   Keys in converted Map: ${(current as Map).keys}');
+            }
+          }
+        } catch (e) {
+          // Object doesn't have toMap method, continue
+          if (kDebugMode) {
+            print(
+                '   Object ${current.runtimeType} does not have toMap method');
+          }
+        }
+      }
+
       if (current is Map<String, dynamic> &&
           key != null &&
           current.containsKey(key)) {
         current = current[key];
+        if (kDebugMode) {
+          print('   Found in Map, new current type: ${current.runtimeType}');
+        }
       } else if (current is List &&
           current.length == 1 &&
           current.first is Map<String, dynamic> &&
           key != null &&
           (current.first as Map<String, dynamic>).containsKey(key)) {
         current = (current.first as Map<String, dynamic>)[key];
+        if (kDebugMode) {
+          print(
+              '   Found in single-item List, new current type: ${current.runtimeType}');
+        }
       } else {
         if (kDebugMode) {
-          print('Warning: Key "$key" not found while resolving path "$path".');
+          print(
+              '⚠️ Warning: Key "$key" not found while resolving path "$path".');
+          if (current is Map) {
+            print('   Available keys in current Map: ${(current as Map).keys}');
+          }
         }
         return null;
       }
 
-      // Handle [0], [1] if current is a string with comma separation
-      if (indexStr != null && current is String) {
+      // Handle array indexing for both List objects and comma-separated strings
+      if (indexStr != null) {
         final index = int.tryParse(indexStr);
-        final parts = current.split(',');
-        if (index != null && index >= 0 && index < parts.length) {
-          current = parts[index].trim();
-        } else {
+        if (index == null) {
           return null;
+        }
+
+        if (current is List) {
+          // Handle List objects with proper array indexing
+          if (index >= 0 && index < current.length) {
+            current = current[index];
+            // Convert Dart object to Map if it has toMap method
+            if (current is! Map<String, dynamic> &&
+                current.runtimeType.toString().contains('Mappable') &&
+                current is dynamic &&
+                current.toMap != null) {
+              current = current.toMap() as Map<String, dynamic>;
+            }
+          } else {
+            if (kDebugMode) {
+              print(
+                  'Warning: Index $index out of bounds for list of length ${current.length} in path "$path".');
+            }
+            return null;
+          }
+        } else if (current is String) {
+          // Handle comma-separated strings
+          final parts = current.split(',');
+          if (index >= 0 && index < parts.length) {
+            current = parts[index].trim();
+          } else {
+            return null;
+          }
         }
       }
     }

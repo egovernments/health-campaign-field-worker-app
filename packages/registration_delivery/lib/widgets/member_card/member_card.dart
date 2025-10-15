@@ -13,6 +13,7 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import '../../blocs/app_localization.dart';
@@ -333,6 +334,26 @@ class MemberCard extends StatelessWidget {
                                                   .householdOverViewActionText,
                                             ),
                                       onPressed: () {
+                                        if (allDosesDelivered(
+                                          tasks,
+                                          context.selectedCycle,
+                                          sideEffects,
+                                          individual,
+                                        )) {
+                                          context
+                                              .read<RegistrationWrapperBloc>()
+                                              .add(
+                                                RegistrationWrapperEvent
+                                                    .updateSelectedIndividual(
+                                                  individualClientReferenceId:
+                                                      individual
+                                                          .clientReferenceId,
+                                                ),
+                                              );
+                                          context.router
+                                              .push(BeneficiaryDetailsRoute());
+                                          return;
+                                        }
                                         context
                                             .read<RegistrationWrapperBloc>()
                                             .add(

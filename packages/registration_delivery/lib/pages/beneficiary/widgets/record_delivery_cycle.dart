@@ -105,7 +105,7 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                         )
                                         .toList(),
                                     headerList ?? [],
-                                    deliverState?.dose ?? 1 - 1,
+                                    (deliverState?.dose ?? 1) - 1,
                                     true,
                                   )
                                 : const SizedBox.shrink(),
@@ -267,7 +267,8 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                 withColumnDividers: true,
                 showSelectedState: false,
                 showPagination: false,
-                highlightedRows: (selectedIndex != null) ? [selectedIndex] : [],
+                // highlightedRows: (selectedIndex != null) ? [selectedIndex] : [],
+                highlightedRows: [selectedIndex ?? 0],
                 columns: headerList,
                 rows: e.deliveries!.mapIndexed(
                   (index, item) {

@@ -18,6 +18,7 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
   final int totalItems;
   final bool readOnly;
   final int? maxQuantity;
+  final List<ProductVariantModel>? itemList;
 
   const ResourceBeneficiaryCard({
     super.key,
@@ -28,6 +29,7 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
     required this.totalItems,
     this.maxQuantity,
     this.readOnly = false,
+    this.itemList,
   });
 
   @override
@@ -48,7 +50,7 @@ class ResourceBeneficiaryCardState
               return SelectionCard<ProductVariantModel>(
                 width: MediaQuery.of(context).size.width * .8,
                 showParentContainer: true,
-                options: productVariants,
+                options: widget.itemList ?? [],
                 readOnly: widget.readOnly,
                 onSelectionChanged: (selectedOptions) {
                   if (selectedOptions.isNotEmpty) {

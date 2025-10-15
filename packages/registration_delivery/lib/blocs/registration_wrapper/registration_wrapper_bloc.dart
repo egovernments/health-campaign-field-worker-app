@@ -359,20 +359,18 @@ class RegistrationWrapperBloc
               : false)
           .toList();
       int lastCycleIndex = tasks.isNotEmpty
-          ? tasks.last.additionalFields?.fields
+          ? int.tryParse(tasks.last.additionalFields?.fields
                   .where(
                       (h) => h.key == AdditionalFieldsType.cycleIndex.toValue())
                   .firstOrNull
-                  ?.value ??
-              1
+                  ?.value?.toString() ?? '1') ?? 1
           : 1;
       int lastDeliveryIndex = tasks.isNotEmpty
-          ? tasks.last.additionalFields?.fields
+          ? int.tryParse(tasks.last.additionalFields?.fields
                   .where(
                       (h) => h.key == AdditionalFieldsType.doseIndex.toValue())
                   .firstOrNull
-                  ?.value ??
-              1
+                  ?.value?.toString() ?? '0') ?? 0
           : 0;
 
       List<ProjectCycle>? campaignCycles = RegistrationDeliverySingleton()

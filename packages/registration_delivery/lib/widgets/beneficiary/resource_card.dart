@@ -99,6 +99,12 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                     fetched: (productVariants) => productVariants,
                   );
 
+                  final matchedVariants = variant?.where((variant) {
+                    return productVariants?.any((productVariant) =>
+                            productVariant.productVariantId == variant.id) ??
+                        false;
+                  }).toList();
+
                   return ReactiveFormBuilder(
                     form: () => buildForm(context, productVariants, variant),
                     builder: (context, form, child) {
@@ -151,6 +157,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                               final index = i ~/ 2;
                               final controller = _controllers[index];
                               return ResourceBeneficiaryCard(
+                                itemList: matchedVariants,
                                 maxQuantity: _maxQuantities[index],
                                 readOnly: isReadOnlyFromSchema,
                                 form: form,
@@ -298,7 +305,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
           return FormControl<int>(
             value: RegistrationDeliverySingleton().beneficiaryType !=
                     BeneficiaryType.household
-                ? int.tryParse('0')
+                ? variant?.productVariants?.first?.quantity
                 : variant?.productVariants?.first?.quantity,
             validators: [Validators.min(1)],
           );
