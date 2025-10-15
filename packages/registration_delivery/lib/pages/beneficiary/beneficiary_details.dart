@@ -63,9 +63,12 @@ class BeneficiaryDetailsPageState
           final householdMemberWrapper = state.householdMembers;
           // Filtering project beneficiaries based on the selected individual
           final projectBeneficiary = RegistrationDeliverySingleton()
-                      .beneficiaryType !=
+                      .beneficiaryType ==
                   BeneficiaryType.individual
-              ? householdMemberWrapper.firstOrNull?.projectBeneficiaries != null
+              ? state.selectedIndividual?.projectBeneficiary != null
+                  ? [state.selectedIndividual?.projectBeneficiary]
+                  : null
+              : householdMemberWrapper.firstOrNull?.projectBeneficiaries != null
                   ? [
                       householdMemberWrapper
                           .first.projectBeneficiaries?.firstOrNull
@@ -77,18 +80,21 @@ class BeneficiaryDetailsPageState
                             state.selectedIndividual?.individual
                                 .clientReferenceId,
                       )
-                      .toList()
-              : null;
+                      .toList();
 
           // Extracting task data related to the selected project beneficiary
 
-          final taskData = projectBeneficiary != null
-              ? state.householdMembers.firstOrNull?.tasks
-                  ?.where((element) =>
-                      element.projectBeneficiaryClientReferenceId ==
-                      projectBeneficiary.firstOrNull?.clientReferenceId)
-                  .toList()
-              : null;
+          final taskData = RegistrationDeliverySingleton()
+                      .beneficiaryType ==
+                  BeneficiaryType.individual
+              ? state.selectedIndividual?.tasks
+              : projectBeneficiary != null
+                  ? state.householdMembers.firstOrNull?.tasks
+                      ?.where((element) =>
+                          element.projectBeneficiaryClientReferenceId ==
+                          projectBeneficiary.firstOrNull?.clientReferenceId)
+                      .toList()
+                  : null;
           final deliverState = state.deliveryWrapper;
           final pastCycles = deliverState?.pastCycles;
           // Building the table content based on the DeliverInterventionState

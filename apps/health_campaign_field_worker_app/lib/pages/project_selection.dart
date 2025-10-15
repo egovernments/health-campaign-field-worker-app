@@ -242,7 +242,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
     await triggerLocalizationIfUpdated(
       context: context,
       locale: AppSharedPreferences().getSelectedLocale!,
-      moduleKey: 'REGISTRATIONFLOW,DELIVERYFLOW,ELIGIBILITYCHECKLIST',
+      moduleKey:
+          'REGISTRATIONFLOW,DELIVERYFLOW,ELIGIBILITYCHECKLIST,COMPLAINTFLOW,HFREFERALFLOW',
 
       /// TODO: NEED TO MOVE CONSTANT FILE
       projectReferenceId: context.selectedProject.referenceID ?? '',
