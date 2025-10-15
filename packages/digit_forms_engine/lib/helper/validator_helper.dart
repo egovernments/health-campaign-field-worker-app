@@ -4,7 +4,20 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../models/property_schema/property_schema.dart';
 
-List<Validator<T>> buildValidators<T>(PropertySchema schema) {
+// Global registry for page schemas - used by validators to access cross-page values
+final Map<String, Map<String, PropertySchema>> _pagesRegistry = {};
+
+void registerPagesForValidation(
+    String schemaKey, Map<String, PropertySchema> pages) {
+  _pagesRegistry[schemaKey] = pages;
+}
+
+void unregisterPagesForValidation(String schemaKey) {
+  _pagesRegistry.remove(schemaKey);
+}
+
+List<Validator<T>> buildValidators<T>(PropertySchema schema,
+    {String? schemaKey}) {
   final List<Validator<T>> validators = [];
 
   if (schema.validations != null) {
@@ -79,6 +92,15 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
           }
           break;
 
+        case 'notEqualTo':
+          if (rule.value is String && schemaKey != null) {
+            validators.add(Validators.delegate(
+              (control) => _notEqualToValidator(
+                  rule.value as String, control, schemaKey),
+            ) as Validator<T>);
+          }
+          break;
+
         default:
           if (kDebugMode) {
             print('Unknown validation type: ${rule.type}');
@@ -140,5 +162,57 @@ int? getMaxLength(List<ValidationRule>? validations) {
       return parseIntValue(rule.value);
     }
   }
+  return null;
+}
+
+/// Custom validator that checks if a field's value is not equal to another field's value
+/// Supports both current page fields and cross-page references using dot notation (e.g., 'warehouseDetails.facilityFromWhich')
+Map<String, dynamic>? _notEqualToValidator(
+    String otherFieldName, AbstractControl<dynamic> control, String schemaKey) {
+  final form = control.parent;
+  if (form is! FormGroup) return null;
+
+  final currentValue = control.value;
+
+  // Build flat value map from all pages
+  final pages = _pagesRegistry[schemaKey];
+  if (pages == null) return null;
+
+  final flatValues = <String, dynamic>{};
+
+  // Add current form values
+  form.controls.forEach((key, control) {
+    flatValues[key] = control.value;
+  });
+
+  // Add all page values with dot notation
+  pages.forEach((pageKey, pageSchema) {
+    if (pageSchema.properties != null) {
+      pageSchema.properties!.forEach((fieldKey, fieldSchema) {
+        flatValues['$pageKey.$fieldKey'] = fieldSchema.value;
+      });
+    }
+  });
+
+  debugPrint('Flat Values $flatValues');
+  debugPrint('Looking for otherFieldName: $otherFieldName');
+
+  // Look up the other field's value
+  final otherValue = flatValues[otherFieldName];
+  debugPrint('Found otherValue: $otherValue');
+
+  // Allow null or empty values to pass (required validation handles that separately)
+  if (currentValue == null ||
+      currentValue == '' ||
+      otherValue == null ||
+      otherValue == '') {
+    return null;
+  }
+
+  // Check if values are equal
+  if (currentValue == otherValue) {
+    return {'notEqualTo': true};
+  }
+
   return null;
 }

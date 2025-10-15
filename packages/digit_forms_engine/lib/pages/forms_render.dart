@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../widgets/localized.dart';
+import '../helper/validator_helper.dart';
 import '../models/property_schema/property_schema.dart';
 import '../models/schema_object/schema_object.dart';
 import '../utils/utils.dart';
@@ -72,6 +73,9 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               schemaObject.pages.keys.toList().indexOf(widget.pageName);
           final showcaseKeys = <GlobalKey>[];
 
+          // Register pages for cross-page validation
+          registerPagesForValidation(widget.currentSchemaKey, schemaObject.pages);
+
           return Provider<Map<String, dynamic>>.value(
             value: widget.defaultValues ?? {},
             child: ReactiveFormBuilder(
@@ -79,6 +83,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       JsonForms.getFormControls(
                         schema,
                         defaultValues: widget.defaultValues ?? {},
+                        schemaKey: widget.currentSchemaKey,
                       ),
                     ),
                 builder: (context, formGroup, child) {

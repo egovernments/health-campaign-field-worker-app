@@ -1,3 +1,4 @@
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
@@ -31,11 +32,22 @@ class ListViewWidget implements FlowWidget {
 
     return Column(
       children: List.generate(items.length, (index) {
-        final safeItem = (items[index] is Map)
-            ? Map<String, dynamic>.from(
-                (items[index] as Map).map((k, v) => MapEntry(k.toString(), v)),
-              )
-            : <String, dynamic>{};
+        final item = items[index];
+
+        // Handle different item types: Map, EntityModel, or other
+        Map<String, dynamic> safeItem;
+
+        if (item is Map) {
+          safeItem = Map<String, dynamic>.from(
+            item.map((k, v) => MapEntry(k.toString(), v)),
+          );
+        } else if (item is EntityModel) {
+          // Convert EntityModel to Map
+          safeItem = item.toMap();
+        } else {
+          // Fallback: empty map
+          safeItem = <String, dynamic>{};
+        }
 
         final childJson = Map<String, dynamic>.from(json['child'] as Map);
         final processedChild = preprocessConfigWithState(
