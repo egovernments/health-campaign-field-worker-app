@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_crud_bloc/models/global_search_params.dart' as reg_params;
 import 'package:digit_data_converter/src/reverse_transformer_service.dart';
@@ -413,10 +414,24 @@ class _SearchBeneficiaryPageState
                         ?.projectBeneficiaries?.firstOrNull
                         ?.toMap();
 
+                    final currentCycle = RegistrationDeliverySingleton()
+                        .selectedProject
+                        ?.additionalDetails
+                        ?.projectType
+                        ?.cycles
+                        ?.firstWhereOrNull(
+                          (e) =>
+                              (e.startDate!) <
+                                  DateTime.now().millisecondsSinceEpoch &&
+                              (e.endDate!) >
+                                  DateTime.now().millisecondsSinceEpoch,
+                          // Return null when no matching cycle is found
+                        );
+
                     final formEntityMapper =
                         FormEntityMapper(config: jsonConfig);
                     final entities = formEntityMapper.mapFormToEntities(
-                      formValues: formData,
+                      formValues: {...formData, ...blocWrapper.state.formData},
                       modelsConfig: modelsConfig,
                       context: {
                         "projectId":
@@ -436,6 +451,7 @@ class _SearchBeneficiaryPageState
                         "beneficiaryType": RegistrationDeliverySingleton()
                             .beneficiaryType
                             ?.toValue(),
+                        "currentDeliveries": currentCycle,
                         if (household != null) 'householdModel': household,
                         if (projectBeneficiary != null)
                           "projectBeneficiaryModel": projectBeneficiary,
@@ -460,6 +476,13 @@ class _SearchBeneficiaryPageState
                       context.router.push(nextPath);
                     }
                   }
+                  context.read<FormsBloc>().add(
+                        const FormsEvent.clearForm(
+                            schemaKey:
+                                'ELIGIBILITYCHECKLIST'), // or create a FormsResetEvent
+                      );
+                  Navigator.of(context, rootNavigator: true).pop();
+                  return;
                 }
                 final modelsConfig = formState.activeSchemaKey == "ADD_MEMBER"
                     ? (jsonConfig['individualRegistration']?['models']
@@ -486,6 +509,36 @@ class _SearchBeneficiaryPageState
                 final projectBeneficiary =
                     householdMember?.projectBeneficiaries?.firstOrNull?.toMap();
 
+                final currentCycle = RegistrationDeliverySingleton()
+                    .selectedProject
+                    ?.additionalDetails
+                    ?.projectType
+                    ?.cycles
+                    ?.firstWhereOrNull(
+                      (e) =>
+                          (e.startDate!) <
+                              DateTime.now().millisecondsSinceEpoch &&
+                          (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+                      // Return null when no matching cycle is found
+                    );
+
+                // Get individual for formula evaluation
+
+                final filteredDeliveries;
+
+                if (formState.activeSchemaKey == "DELIVERYFLOW") {
+                  final individual =
+                      blocWrapper.state.selectedIndividual?.individual;
+                  // Filter deliveries - keep all deliveries but filter doseCriteria within each
+                  filteredDeliveries = _filterDeliveriesWithValidCriteria(
+                    currentCycle?.deliveries,
+                    individual,
+                    householdMember?.household,
+                  );
+                } else {
+                  filteredDeliveries = [];
+                }
+
                 final entities = formEntityMapper.mapFormToEntities(
                   formValues: formData,
                   modelsConfig: modelsConfig,
@@ -507,6 +560,7 @@ class _SearchBeneficiaryPageState
                     "beneficiaryType": RegistrationDeliverySingleton()
                         .beneficiaryType
                         ?.toValue(),
+                    "currentDeliveries": filteredDeliveries,
                     if (household != null) 'householdModel': household,
                     if (projectBeneficiary != null)
                       "projectBeneficiaryModel": projectBeneficiary,
@@ -1366,6 +1420,33 @@ class _SearchBeneficiaryPageState
         ),
       ),
     );
+  }
+
+  /// Filters doseCriteria for each delivery based on formula evaluation
+  List<ProjectCycleDelivery>? _filterDeliveriesWithValidCriteria(
+    List<ProjectCycleDelivery>? deliveries,
+    IndividualModel? individual,
+    HouseholdModel? household,
+  ) {
+    if (deliveries == null) return null;
+
+    return deliveries.map((delivery) {
+      // Fetch valid product variant for this delivery
+      final result = fetchProductVariant(
+        delivery,
+        individual,
+        household,
+        context: context,
+      );
+
+      // Get the valid doseCriteria from result
+      final validCriteria = result['criteria'] as DeliveryDoseCriteria?;
+
+      // Return delivery with only valid doseCriteria
+      return delivery.copyWith(
+        doseCriteria: validCriteria != null ? [validCriteria] : [],
+      );
+    }).toList();
   }
 
   getFilterIconNLabel() {

@@ -94,6 +94,45 @@ The transformation engine uses a JSON configuration to describe how form fields 
 
 ---
 
+### 🔁 Model-Level List Iteration
+
+Create multiple instances of the main model by iterating over a list from context:
+
+```json
+{
+  "TaskModel": {
+    "listSource": "__context:beneficiariesList",
+    "mappings": {
+      "id": "taskDetails.id",
+      "projectId": "__context:projectId",
+      "projectBeneficiaryId": "__listItem:id",
+      "projectBeneficiaryClientReferenceId": "__listItem:clientReferenceId",
+      "status": "__value:ADMINISTRATION_SUCCESS"
+    }
+  }
+}
+```
+
+**How it works:**
+- `listSource`: Specifies the context path containing a list to iterate over
+- `__listItem:fieldName`: References a field from the current item in the iteration
+- Each item in the list creates a separate model instance
+
+**Example Context:**
+```json
+{
+  "beneficiariesList": [
+    {"id": "ben-1", "clientReferenceId": "ref-1"},
+    {"id": "ben-2", "clientReferenceId": "ref-2"}
+  ],
+  "projectId": "proj-123"
+}
+```
+
+**Result:** Creates 2 TaskModel instances, one for each beneficiary.
+
+---
+
 ### 🔁 Additional Fields Mappings
 
 ```json
@@ -124,6 +163,7 @@ You can use special syntax in the mapping configuration to control transformatio
 | Behavior                  | Description                                      |
 |---------------------------|--------------------------------------------------|
 | `__context:<key>`         | Injects a runtime context value                  |
+| `__listItem:<field>`      | References a field from current list item (requires `listSource`) |
 | `__ref:<Model.field>`     | References a value from another model            |
 | `__switch:<key>:<map>`    | Applies conditional mapping                      |
 | `__generate:uuid`         | Auto-generates a UUID                            |

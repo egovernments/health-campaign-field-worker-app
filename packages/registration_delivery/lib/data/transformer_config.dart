@@ -325,6 +325,7 @@ final jsonConfig = {
     "fallbackModel": "TaskModel",
     "models": {
       "TaskModel": {
+        "listSource": "__context:currentDeliveries",
         "mappings": {
           "id": "taskDetails.id",
           "projectId": "__context:projectId",
@@ -333,7 +334,7 @@ final jsonConfig = {
               "__context:projectBeneficiaryModel.clientReferenceId",
           "createdBy": "__context:userId",
           "status":
-              "__value:ADMINISTRATION_SUCCESS", // todo: need to update later for multiround campaign
+              "__switch:__listItemIndex:{0:__value:ADMINISTERED_SUCCESS,default:__value:DELIVERED}",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "resources": "list:TaskResourceModel",
@@ -380,7 +381,7 @@ final jsonConfig = {
         },
         "listMappings": {
           "TaskResourceModel": {
-            "listSource": "DeliveryDetails.resourceCard",
+            "listSource": "__context:currentDeliveries.doseCriteria",
             "mappings": {
               "id": "id",
               "clientReferenceId": "__generate:uuid",
@@ -413,9 +414,9 @@ final jsonConfig = {
           "projectBeneficiaryClientReferenceId":
               "__context:projectBeneficiaryModel.clientReferenceId",
           "recipientId":
-              "__switch:referralDetails.evaluationFacilityKey:{Community Health Worker:STAFF,FACILITY}",
+              "__switch:referralDetails.evaluationFacilityKey:{Community Health Worker:STAFF,default:FACILITY}",
           "recipientType":
-              "__switch:referralDetails.evaluationFacilityKey:{Community Health Worker:__context:loggedInUser,referralDetails.evaluationFacilityKey}",
+              "__switch:referralDetails.evaluationFacilityKey:{Community Health Worker:__context:loggedInUser,default:referralDetails.evaluationFacilityKey}",
           "referrerId": "__context:loggedInUser",
           "nonRecoverableError": "referralDetails.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
@@ -441,8 +442,8 @@ final jsonConfig = {
           "projectBeneficiaryClientReferenceId":
               "__context:projectBeneficiaryModel.clientReferenceId",
           "createdBy": "__context:userId",
-          "status":
-              "__value:INELIGIBLE", // todo: need to update later for multiround campaign
+          "status": "__value:INELIGIBLE",
+          // todo: need to update later for multiround campaign
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           // "resources": "list:TaskResourceModel",

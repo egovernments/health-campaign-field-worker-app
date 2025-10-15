@@ -734,6 +734,7 @@ mixin _$ShowAlertPopUp {
   String? get description => throw _privateConstructorUsedError; // optional
   String get primaryActionLabel => throw _privateConstructorUsedError;
   String get secondaryActionLabel => throw _privateConstructorUsedError;
+  List<AlertCondition>? get conditions => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -751,7 +752,8 @@ abstract class $ShowAlertPopUpCopyWith<$Res> {
       {String title,
       String? description,
       String primaryActionLabel,
-      String secondaryActionLabel});
+      String secondaryActionLabel,
+      List<AlertCondition>? conditions});
 }
 
 /// @nodoc
@@ -771,6 +773,7 @@ class _$ShowAlertPopUpCopyWithImpl<$Res, $Val extends ShowAlertPopUp>
     Object? description = freezed,
     Object? primaryActionLabel = null,
     Object? secondaryActionLabel = null,
+    Object? conditions = freezed,
   }) {
     return _then(_value.copyWith(
       title: null == title
@@ -789,6 +792,10 @@ class _$ShowAlertPopUpCopyWithImpl<$Res, $Val extends ShowAlertPopUp>
           ? _value.secondaryActionLabel
           : secondaryActionLabel // ignore: cast_nullable_to_non_nullable
               as String,
+      conditions: freezed == conditions
+          ? _value.conditions
+          : conditions // ignore: cast_nullable_to_non_nullable
+              as List<AlertCondition>?,
     ) as $Val);
   }
 }
@@ -805,7 +812,8 @@ abstract class _$$ShowAlertPopUpImplCopyWith<$Res>
       {String title,
       String? description,
       String primaryActionLabel,
-      String secondaryActionLabel});
+      String secondaryActionLabel,
+      List<AlertCondition>? conditions});
 }
 
 /// @nodoc
@@ -823,6 +831,7 @@ class __$$ShowAlertPopUpImplCopyWithImpl<$Res>
     Object? description = freezed,
     Object? primaryActionLabel = null,
     Object? secondaryActionLabel = null,
+    Object? conditions = freezed,
   }) {
     return _then(_$ShowAlertPopUpImpl(
       title: null == title
@@ -841,6 +850,10 @@ class __$$ShowAlertPopUpImplCopyWithImpl<$Res>
           ? _value.secondaryActionLabel
           : secondaryActionLabel // ignore: cast_nullable_to_non_nullable
               as String,
+      conditions: freezed == conditions
+          ? _value._conditions
+          : conditions // ignore: cast_nullable_to_non_nullable
+              as List<AlertCondition>?,
     ));
   }
 }
@@ -852,7 +865,9 @@ class _$ShowAlertPopUpImpl implements _ShowAlertPopUp {
       {required this.title,
       this.description,
       required this.primaryActionLabel,
-      required this.secondaryActionLabel});
+      required this.secondaryActionLabel,
+      final List<AlertCondition>? conditions})
+      : _conditions = conditions;
 
   factory _$ShowAlertPopUpImpl.fromJson(Map<String, dynamic> json) =>
       _$$ShowAlertPopUpImplFromJson(json);
@@ -866,10 +881,19 @@ class _$ShowAlertPopUpImpl implements _ShowAlertPopUp {
   final String primaryActionLabel;
   @override
   final String secondaryActionLabel;
+  final List<AlertCondition>? _conditions;
+  @override
+  List<AlertCondition>? get conditions {
+    final value = _conditions;
+    if (value == null) return null;
+    if (_conditions is EqualUnmodifiableListView) return _conditions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'ShowAlertPopUp(title: $title, description: $description, primaryActionLabel: $primaryActionLabel, secondaryActionLabel: $secondaryActionLabel)';
+    return 'ShowAlertPopUp(title: $title, description: $description, primaryActionLabel: $primaryActionLabel, secondaryActionLabel: $secondaryActionLabel, conditions: $conditions)';
   }
 
   @override
@@ -883,13 +907,20 @@ class _$ShowAlertPopUpImpl implements _ShowAlertPopUp {
             (identical(other.primaryActionLabel, primaryActionLabel) ||
                 other.primaryActionLabel == primaryActionLabel) &&
             (identical(other.secondaryActionLabel, secondaryActionLabel) ||
-                other.secondaryActionLabel == secondaryActionLabel));
+                other.secondaryActionLabel == secondaryActionLabel) &&
+            const DeepCollectionEquality()
+                .equals(other._conditions, _conditions));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, title, description,
-      primaryActionLabel, secondaryActionLabel);
+  int get hashCode => Object.hash(
+      runtimeType,
+      title,
+      description,
+      primaryActionLabel,
+      secondaryActionLabel,
+      const DeepCollectionEquality().hash(_conditions));
 
   @JsonKey(ignore: true)
   @override
@@ -911,7 +942,8 @@ abstract class _ShowAlertPopUp implements ShowAlertPopUp {
       {required final String title,
       final String? description,
       required final String primaryActionLabel,
-      required final String secondaryActionLabel}) = _$ShowAlertPopUpImpl;
+      required final String secondaryActionLabel,
+      final List<AlertCondition>? conditions}) = _$ShowAlertPopUpImpl;
 
   factory _ShowAlertPopUp.fromJson(Map<String, dynamic> json) =
       _$ShowAlertPopUpImpl.fromJson;
@@ -925,8 +957,168 @@ abstract class _ShowAlertPopUp implements ShowAlertPopUp {
   @override
   String get secondaryActionLabel;
   @override
+  List<AlertCondition>? get conditions;
+  @override
   @JsonKey(ignore: true)
   _$$ShowAlertPopUpImplCopyWith<_$ShowAlertPopUpImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+AlertCondition _$AlertConditionFromJson(Map<String, dynamic> json) {
+  return _AlertCondition.fromJson(json);
+}
+
+/// @nodoc
+mixin _$AlertCondition {
+  String get expression =>
+      throw _privateConstructorUsedError; // e.g., condition or "DEFAULT"
+  String get value => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $AlertConditionCopyWith<AlertCondition> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $AlertConditionCopyWith<$Res> {
+  factory $AlertConditionCopyWith(
+          AlertCondition value, $Res Function(AlertCondition) then) =
+      _$AlertConditionCopyWithImpl<$Res, AlertCondition>;
+  @useResult
+  $Res call({String expression, String value});
+}
+
+/// @nodoc
+class _$AlertConditionCopyWithImpl<$Res, $Val extends AlertCondition>
+    implements $AlertConditionCopyWith<$Res> {
+  _$AlertConditionCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? expression = null,
+    Object? value = null,
+  }) {
+    return _then(_value.copyWith(
+      expression: null == expression
+          ? _value.expression
+          : expression // ignore: cast_nullable_to_non_nullable
+              as String,
+      value: null == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$AlertConditionImplCopyWith<$Res>
+    implements $AlertConditionCopyWith<$Res> {
+  factory _$$AlertConditionImplCopyWith(_$AlertConditionImpl value,
+          $Res Function(_$AlertConditionImpl) then) =
+      __$$AlertConditionImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String expression, String value});
+}
+
+/// @nodoc
+class __$$AlertConditionImplCopyWithImpl<$Res>
+    extends _$AlertConditionCopyWithImpl<$Res, _$AlertConditionImpl>
+    implements _$$AlertConditionImplCopyWith<$Res> {
+  __$$AlertConditionImplCopyWithImpl(
+      _$AlertConditionImpl _value, $Res Function(_$AlertConditionImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? expression = null,
+    Object? value = null,
+  }) {
+    return _then(_$AlertConditionImpl(
+      expression: null == expression
+          ? _value.expression
+          : expression // ignore: cast_nullable_to_non_nullable
+              as String,
+      value: null == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$AlertConditionImpl implements _AlertCondition {
+  const _$AlertConditionImpl({required this.expression, required this.value});
+
+  factory _$AlertConditionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AlertConditionImplFromJson(json);
+
+  @override
+  final String expression;
+// e.g., condition or "DEFAULT"
+  @override
+  final String value;
+
+  @override
+  String toString() {
+    return 'AlertCondition(expression: $expression, value: $value)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AlertConditionImpl &&
+            (identical(other.expression, expression) ||
+                other.expression == expression) &&
+            (identical(other.value, value) || other.value == value));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, expression, value);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AlertConditionImplCopyWith<_$AlertConditionImpl> get copyWith =>
+      __$$AlertConditionImplCopyWithImpl<_$AlertConditionImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$AlertConditionImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _AlertCondition implements AlertCondition {
+  const factory _AlertCondition(
+      {required final String expression,
+      required final String value}) = _$AlertConditionImpl;
+
+  factory _AlertCondition.fromJson(Map<String, dynamic> json) =
+      _$AlertConditionImpl.fromJson;
+
+  @override
+  String get expression;
+  @override // e.g., condition or "DEFAULT"
+  String get value;
+  @override
+  @JsonKey(ignore: true)
+  _$$AlertConditionImplCopyWith<_$AlertConditionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

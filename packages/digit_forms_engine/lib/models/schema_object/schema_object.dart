@@ -56,10 +56,22 @@ class ShowAlertPopUp with _$ShowAlertPopUp {
     String? description, // optional
     required String primaryActionLabel,
     required String secondaryActionLabel,
+    List<AlertCondition>? conditions,
   }) = _ShowAlertPopUp;
 
   factory ShowAlertPopUp.fromJson(Map<String, dynamic> json) =>
       _$ShowAlertPopUpFromJson(json);
+}
+
+@freezed
+class AlertCondition with _$AlertCondition {
+  const factory AlertCondition({
+    required String expression, // e.g., condition or "DEFAULT"
+    required String value, // e.g., "To Administer"
+  }) = _AlertCondition;
+
+  factory AlertCondition.fromJson(Map<String, dynamic> json) =>
+      _$AlertConditionFromJson(json);
 }
 
 @freezed

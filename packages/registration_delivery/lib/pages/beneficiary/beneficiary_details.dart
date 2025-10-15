@@ -84,8 +84,7 @@ class BeneficiaryDetailsPageState
 
           // Extracting task data related to the selected project beneficiary
 
-          final taskData = RegistrationDeliverySingleton()
-                      .beneficiaryType ==
+          final taskData = RegistrationDeliverySingleton().beneficiaryType ==
                   BeneficiaryType.individual
               ? state.selectedIndividual?.tasks
               : projectBeneficiary != null
@@ -605,6 +604,12 @@ class BeneficiaryDetailsPageState
                                       (beneficiaryDetailsTemplate
                                                   ?.description ??
                                               '')
+                                          .isNotEmpty &&
+                                      localizations
+                                          .translate((beneficiaryDetailsTemplate
+                                                  ?.description ??
+                                              ''))
+                                          .trim()
                                           .isNotEmpty)
                                     Text(
                                       localizations.translate(
@@ -631,7 +636,8 @@ class BeneficiaryDetailsPageState
                                                           registration_keys
                                                               .beneficiaryDetailsKeys
                                                               .detailsCardKey]
-                                                      ?.enums)
+                                                      ?.enums,
+                                                  selectedIndividual: state.selectedIndividual)
                                               ?.map((k, v) => MapEntry(
                                                   localizations.translate(k),
                                                   localizations.translate(

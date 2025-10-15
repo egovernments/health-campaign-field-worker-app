@@ -86,6 +86,7 @@ final addMember = '''{
           "value": "",
           "format": "idPopulator",
           "hidden": true,
+          "includeInForm":true,
           "tooltip": "",
           "helpText": "",
           "infoText": "",

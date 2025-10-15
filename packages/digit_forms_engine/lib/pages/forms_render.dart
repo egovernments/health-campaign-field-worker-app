@@ -179,6 +179,19 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                   ),
                                 );
 
+                            final mergedPages =
+                                Map<String, PropertySchema>.from(
+                                    schemaObject.pages);
+                            mergedPages[widget.pageName] =
+                                updatedPropertySchema;
+
+                            final contextValue =
+                                buildVisibilityEvaluationContext(
+                              currentPageKey: widget.pageName,
+                              currentForm: formGroup,
+                              pages: mergedPages,
+                            );
+
                             // ------- CONDITIONAL NAVIGATION DECISION -------
                             final currentPage =
                                 schemaObject.pages.entries.elementAt(index);
@@ -188,17 +201,6 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                             if (conditionalNavigateList != null &&
                                 conditionalNavigateList.isNotEmpty) {
                               // Build a merged pages map so evaluator sees freshest values
-                              final mergedPages =
-                                  Map<String, PropertySchema>.from(
-                                      schemaObject.pages);
-                              mergedPages[widget.pageName] =
-                                  updatedPropertySchema;
-
-                              final ctx = buildVisibilityEvaluationContext(
-                                currentPageKey: widget.pageName,
-                                currentForm: formGroup,
-                                pages: mergedPages,
-                              );
 
                               for (final conditionItem
                                   in conditionalNavigateList) {
@@ -207,7 +209,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
                                 final isConditionTrue =
                                     evaluateVisibilityExpression(
-                                        condition, ctx);
+                                        condition, contextValue);
 
                                 if (isConditionTrue) {
                                   final targetPageName = navigateTo.name;
@@ -345,12 +347,20 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                   showCustomPopup(
                                     context: context,
                                     builder: (BuildContext ctx) => Popup(
-                                        title: localizations.translate(
-                                            schemaObject.showAlertPopUp!.title),
-                                        description: localizations.translate(
-                                            schemaObject.showAlertPopUp!
-                                                    .description ??
+                                        title: resolveTemplate(
+                                            localizations.translate(schemaObject
+                                                .showAlertPopUp!.title),
+                                            schemaObject
+                                                .showAlertPopUp?.conditions,
+                                            contextValue)!,
+                                        description: resolveTemplate(
+                                            localizations.translate(schemaObject
+                                                    .showAlertPopUp
+                                                    ?.description ??
                                                 ""),
+                                            schemaObject
+                                                .showAlertPopUp?.conditions,
+                                            contextValue),
                                         actions: [
                                           DigitButton(
                                               label: localizations.translate(
@@ -507,6 +517,36 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         },
       ),
     );
+  }
+
+  String? resolveTemplate(
+    String? template,
+    List<AlertCondition>? conditions,
+    Map<String, dynamic> contextValues,
+  ) {
+    if (conditions == null || conditions.isEmpty) {
+      return template;
+    }
+
+    // Find matching condition
+    for (final condition in conditions) {
+      // simple check: if contextValues contain a truthy match
+      final isConditionTrue =
+          evaluateVisibilityExpression(condition.expression, contextValues);
+
+      if (isConditionTrue) {
+        return template?.replaceAll(
+            '{value}', localizations.translate(condition.value));
+      }
+
+      if (condition.expression == "DEFAULT") {
+        return template?.replaceAll(
+            '{value}', localizations.translate(condition.value));
+      }
+    }
+
+    // fallback: return template unchanged
+    return template;
   }
 
   Widget _buildSummaryPage(

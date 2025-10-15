@@ -693,23 +693,64 @@ class RegistrationDeliverySingleton {
 }
 
 /// Safely converts HouseholdMemberWrapper into structured map
-Map<String, dynamic>? _asMap(dynamic obj) {
+/// If [selectedIndividual] is provided, uses individual-specific tasks, sideEffects, and referrals
+Map<String, dynamic>? _asMap(
+  dynamic obj, {
+  SelectedIndividualWrapper? selectedIndividual,
+}) {
   if (obj == null) return null;
 
   if (obj is Map<String, dynamic>) return obj;
 
   if (obj is HouseholdWrapper) {
+    // Determine which individual, tasks, sideEffects, and referrals to use
+    final individual = selectedIndividual?.individual ?? obj.headOfHousehold;
+
+    // Get the project beneficiary for the selected individual
+    final projectBeneficiary = selectedIndividual?.projectBeneficiary ??
+        obj.projectBeneficiaries?.firstWhereOrNull(
+          (pb) =>
+              pb.beneficiaryClientReferenceId == individual?.clientReferenceId,
+        );
+
+    // Filter tasks, sideEffects, and referrals based on selected individual
+    List<TaskModel>? tasks;
+    List<SideEffectModel>? sideEffects;
+    List<ReferralModel>? referrals;
+
+    if (selectedIndividual != null) {
+      // Use individual-specific data
+      tasks = selectedIndividual.tasks;
+
+      // Filter sideEffects for this individual (based on task references)
+      sideEffects = obj.sideEffects?.where((se) {
+        return tasks?.any(
+                (task) => task.clientReferenceId == se.taskClientReferenceId) ??
+            false;
+      }).toList();
+
+      // Filter referrals for this individual
+      referrals = obj.referrals?.where((ref) {
+        return ref.clientReferenceId == individual?.clientReferenceId;
+      }).toList();
+    } else {
+      // Use default household-level data
+      tasks = obj.tasks;
+      sideEffects = obj.sideEffects;
+      referrals = obj.referrals;
+    }
+
     return {
       'HOUSEHOLD': obj.household?.toJson(),
-      'INDIVIDUAL': obj.headOfHousehold?.toJson(),
-      'TASK': (obj.tasks?.isNotEmpty ?? false)
-          ? obj.tasks!.map((e) => e.toJson()).toList().last
+      'INDIVIDUAL': individual?.toJson(),
+      'TASK': (tasks?.isNotEmpty ?? false)
+          ? tasks!.map((e) => e.toJson()).toList().last
           : null,
-      'SIDE_EFFECT': (obj.sideEffects?.isNotEmpty ?? false)
-          ? obj.sideEffects!.map((e) => e.toJson()).last
+      'SIDE_EFFECT': (sideEffects?.isNotEmpty ?? false)
+          ? sideEffects!.map((e) => e.toJson()).last
           : null,
-      'REFERRAL': (obj.referrals?.isNotEmpty ?? false)
-          ? obj.referrals!.map((e) => e.toJson()).toList().last
+      'REFERRAL': (referrals?.isNotEmpty ?? false)
+          ? referrals!.map((e) => e.toJson()).toList().last
           : null,
     };
   }
@@ -797,11 +838,12 @@ Map<String, dynamic>? _prepareBase(dynamic raw) {
 
 Map<String, dynamic>? buildEnumValueMap(
   HouseholdWrapper? wrapper,
-  List<Map<String, dynamic>>? enums,
-) {
+  List<Map<String, dynamic>>? enums, {
+  SelectedIndividualWrapper? selectedIndividual,
+}) {
   if (wrapper == null || enums == null) return null;
 
-  final rootMap = _asMap(wrapper)!;
+  final rootMap = _asMap(wrapper, selectedIndividual: selectedIndividual)!;
   final result = <String, dynamic>{};
 
   for (final item in enums) {
@@ -941,5 +983,6 @@ final Map<String, PageRouteInfo> routerMap = {
   'household-acknowledgement':
       HouseholdAcknowledgementRoute(enableViewHousehold: true),
   'overview': HouseholdOverviewRoute(),
+  'household-overview': HouseholdOverviewRoute(),
   // Add more routes here
 };

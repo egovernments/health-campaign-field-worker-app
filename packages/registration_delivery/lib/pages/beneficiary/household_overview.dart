@@ -655,7 +655,8 @@ class _HouseholdOverviewPageState
                                                                     ?.properties?[registration_keys
                                                                         .householdOverViewKeys
                                                                         .detailsCardKey]
-                                                                    ?.enums)
+                                                                    ?.enums,
+                                                                selectedIndividual: null)
                                                             ?.map((k, v) => MapEntry(
                                                                 localizations
                                                                     .translate(

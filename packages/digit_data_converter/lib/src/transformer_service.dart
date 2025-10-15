@@ -21,8 +21,41 @@ class FormEntityMapper {
 
     modelsConfig.forEach((modelName, modelConfig) {
       try {
-        final model = _mapModel(modelName, formValues, modelConfig, context);
-        entities.add(model);
+        // Check if model has listSource for bulk creation
+        final listSourcePath = modelConfig['listSource'] as String?;
+
+        if (listSourcePath != null) {
+          // Fetch list from context
+          final listData = getValueFromMapping(
+            listSourcePath,
+            formValues,
+            modelName,
+            context
+          );
+
+          if (listData is List && listData.isNotEmpty) {
+            // Create one model instance for each item in the list
+            for (int index = 0; index < listData.length; index++) {
+              final model = _mapModel(
+                modelName,
+                formValues,
+                modelConfig,
+                context,
+                listItemIndex: index,
+              );
+              entities.add(model);
+            }
+          } else {
+            // If list is empty or null, skip model creation
+            if (kDebugMode) {
+              print('Warning: listSource "$listSourcePath" returned empty or null for $modelName');
+            }
+          }
+        } else {
+          // Normal single model creation
+          final model = _mapModel(modelName, formValues, modelConfig, context);
+          entities.add(model);
+        }
       } catch (e) {
         throw Exception('Error mapping model $modelName: $e');
       }
@@ -380,10 +413,12 @@ class FormEntityMapper {
     String modelName,
     Map<String, dynamic> formValues,
     Map<String, dynamic> modelConfig,
-    Map<String, dynamic> context,
-  ) {
+    Map<String, dynamic> context, {
+    int? listItemIndex,
+  }) {
     final mapped = <String, dynamic>{};
     final mappings = modelConfig['mappings'] as Map<String, dynamic>? ?? {};
+    final listSourcePath = modelConfig['listSource'] as String?;
 
     for (final entry in mappings.entries) {
       final targetKey = entry.key;
@@ -393,27 +428,27 @@ class FormEntityMapper {
           sourcePath is Map<String, dynamic>) {
         /// Treat as additional fields
         mapped[targetKey] =
-            _mapAdditionalFields(sourcePath, formValues, modelName, context);
+            _mapAdditionalFields(sourcePath, formValues, modelName, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
         continue;
       }
 
       if (sourcePath is Map<String, dynamic>) {
         /// Treat as nested object mapping
         mapped[targetKey] =
-            _mapNestedObject(sourcePath, formValues, targetKey, context);
+            _mapNestedObject(sourcePath, formValues, targetKey, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
         continue;
       }
 
       if (sourcePath is String && sourcePath.startsWith('list:')) {
         /// Treat as list
         mapped[targetKey] = _mapListModel(
-            sourcePath, formValues, modelName, modelConfig, context);
+            sourcePath, formValues, modelName, modelConfig, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
         continue;
       }
 
       /// Treat as normal mapping
       final value =
-          getValueFromMapping(sourcePath, formValues, modelName, context);
+          getValueFromMapping(sourcePath, formValues, modelName, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
       mapped[targetKey] =
           value is DateTime ? value.millisecondsSinceEpoch : value;
     }
@@ -431,8 +466,10 @@ class FormEntityMapper {
     Map<String, dynamic> formValues,
     String parentModel,
     Map<String, dynamic> modelConfig,
-    Map<String, dynamic> context,
-  ) {
+    Map<String, dynamic> context, {
+    int? listItemIndex,
+    String? listSourcePath,
+  }) {
     final listModelName = sourcePath.split(':').last;
     final listConfig = modelConfig['listMappings']?[listModelName];
 
@@ -442,10 +479,10 @@ class FormEntityMapper {
     }
 
     // If listSource is defined, use it to fetch a list and map each item
-    final listSourcePath = listConfig['listSource'] as String?;
-    if (listSourcePath != null) {
+    final nestedListSourcePath = listConfig['listSource'] as String?;
+    if (nestedListSourcePath != null) {
       final listData = getValueFromMapping(
-          listSourcePath, formValues, listModelName, context);
+          nestedListSourcePath, formValues, listModelName, context);
       if (listData is List) {
         final mappings = listConfig['mappings'] as Map<String, dynamic>;
         final items = <Map<String, dynamic>>[];
@@ -455,10 +492,10 @@ class FormEntityMapper {
             final targetKey = entry.key;
             final sourcePath = entry.value;
             if (sourcePath is String) {
-              // If the mapping path starts with the listSourcePath + '.', resolve relative to the item
-              if (sourcePath.startsWith(listSourcePath + '.')) {
+              // If the mapping path starts with the nestedListSourcePath + '.', resolve relative to the item
+              if (sourcePath.startsWith(nestedListSourcePath + '.')) {
                 final relativePath = sourcePath
-                    .substring(listSourcePath.length + 1); // skip the dot
+                    .substring(nestedListSourcePath.length + 1); // skip the dot
                 newItem[targetKey] = getValueFromMapping(
                     relativePath, item, listModelName, context);
               } else {
@@ -523,12 +560,14 @@ class FormEntityMapper {
     Map<String, dynamic> fieldsMap,
     Map<String, dynamic> formValues,
     String modelName,
-    Map<String, dynamic> context,
-  ) {
+    Map<String, dynamic> context, {
+    int? listItemIndex,
+    String? listSourcePath,
+  }) {
     final fieldsList = <Map<String, dynamic>>[];
 
     fieldsMap.forEach((customKey, path) {
-      final value = getValueFromMapping(path, formValues, path, context);
+      final value = getValueFromMapping(path, formValues, path, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
       if (value != null && value.toString().trim().isNotEmpty) {
         fieldsList.add({'key': customKey, 'value': value});
       }
@@ -547,8 +586,10 @@ class FormEntityMapper {
     Map<String, dynamic> nestedMappings,
     Map<String, dynamic> formValues,
     String modelName,
-    Map<String, dynamic> context,
-  ) {
+    Map<String, dynamic> context, {
+    int? listItemIndex,
+    String? listSourcePath,
+  }) {
     final result = <String, dynamic>{};
 
     for (final entry in nestedMappings.entries) {
@@ -558,25 +599,25 @@ class FormEntityMapper {
       if (targetKey == 'additionalFields' &&
           sourcePath is Map<String, dynamic>) {
         result[targetKey] =
-            _mapAdditionalFields(sourcePath, formValues, modelName, context);
+            _mapAdditionalFields(sourcePath, formValues, modelName, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
         continue;
       }
 
       if (sourcePath is String && sourcePath.startsWith('list:')) {
         result[targetKey] = _mapListModel(sourcePath, formValues, modelName,
-            {'listMappings': nestedMappings}, context);
+            {'listMappings': nestedMappings}, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
         continue;
       }
 
       if (sourcePath is Map<String, dynamic>) {
         // Handle deeply nested object
         result[targetKey] =
-            _mapNestedObject(sourcePath, formValues, targetKey, context);
+            _mapNestedObject(sourcePath, formValues, targetKey, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
         continue;
       }
 
       final value =
-          getValueFromMapping(sourcePath, formValues, modelName, context);
+          getValueFromMapping(sourcePath, formValues, modelName, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
       result[targetKey] =
           value is DateTime ? value.millisecondsSinceEpoch : value;
     }
@@ -586,7 +627,36 @@ class FormEntityMapper {
 
   dynamic getValueFromMapping(String instruction, Map<String, dynamic> data,
       String currentModel, Map<String, dynamic> context,
-      {updateMapping = false}) {
+      {updateMapping = false, int? listItemIndex, String? listSourcePath}) {
+    // Handle __listItemIndex to get the current list item index
+    if (instruction == '__listItemIndex') {
+      if (listItemIndex == null) {
+        throw Exception(
+            '__listItemIndex can only be used when model has listSource defined');
+      }
+      return listItemIndex;
+    }
+
+    // Handle __listItem: prefix for model-level list iteration
+    if (instruction.startsWith('__listItem:')) {
+      if (listItemIndex == null || listSourcePath == null) {
+        throw Exception(
+            '__listItem: can only be used when model has listSource defined');
+      }
+
+      final fieldPath = instruction.replaceFirst('__listItem:', '');
+
+      // Resolve the listSource path to get the list
+      final contextPath = listSourcePath.startsWith('__context:')
+          ? listSourcePath.replaceFirst('__context:', '')
+          : listSourcePath;
+
+      // Construct path: listSourcePath[index].fieldPath
+      final fullPath = '$contextPath[$listItemIndex].$fieldPath';
+
+      return _getValueFromPath(context, fullPath);
+    }
+
     if (instruction == '__generate:uuid' && updateMapping == false) {
       final uuid = IdGen.i.identifier;
       generatedValues.putIfAbsent(currentModel, () => {})['clientReferenceId'] =
@@ -663,7 +733,7 @@ class FormEntityMapper {
 
       // Recursively resolve key — handles __context:, __ref:, etc.
       final keyValue =
-          getValueFromMapping(keyInstruction, data, currentModel, context);
+          getValueFromMapping(keyInstruction, data, currentModel, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
       if (keyValue == null) {
         throw Exception(
             'Key value "$keyInstruction" resolved to null in __switch');
@@ -679,7 +749,7 @@ class FormEntityMapper {
       }
 
       return getValueFromMapping(
-          resolvedInstruction, data, currentModel, context);
+          resolvedInstruction, data, currentModel, context, listItemIndex: listItemIndex, listSourcePath: listSourcePath);
     }
 
     if (instruction.startsWith('__context:')) {
@@ -692,7 +762,9 @@ class FormEntityMapper {
 
   Map<String, String> _parseSwitchMapping(String raw) {
     final map = <String, String>{};
-    final pattern = RegExp(r'(\w+):([^,{}]+)');
+    // Enhanced pattern to support keys with spaces and special characters
+    // Matches: "key:value" or "key with spaces:value"
+    final pattern = RegExp(r'([^:,{}]+):([^,{}]+)');
     for (final match in pattern.allMatches(raw)) {
       final key = match.group(1)?.trim();
       final value = match.group(2)?.trim();
