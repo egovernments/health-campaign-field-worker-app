@@ -334,7 +334,7 @@ final jsonConfig = {
               "__context:projectBeneficiaryModel.clientReferenceId",
           "createdBy": "__context:userId",
           "status":
-              "__switch:__listItemIndex:{0:__value:ADMINISTERED_SUCCESS,default:__value:DELIVERED}",
+              "__switch:__listItemIndex:{0:__value:ADMINISTRATION_SUCCESS,default:__value:DELIVERED}",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "resources": "list:TaskResourceModel",
