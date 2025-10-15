@@ -1,6 +1,7 @@
 library app_utils;
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart'
@@ -9,6 +10,8 @@ import 'package:attendance_management/attendance_management.dart';
 import 'package:complaints/complaints.dart';
 import 'package:complaints/complaints.init.dart' as complaints_mappers;
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:crypto/crypto.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
 import 'package:digit_data_model/models/entities/user_action.dart';
@@ -19,10 +22,10 @@ import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/inventory_management.init.dart'
     as inventory_mappers;
 import 'package:isar/isar.dart';
@@ -31,7 +34,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
 import 'package:referral_reconciliation/referral_reconciliation.dart';
-import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
 import 'package:survey_form/models/entities/service.dart';
@@ -713,4 +715,46 @@ Future<void> triggerLocalizationIfUpdated({
         locale: AppSharedPreferences().getSelectedLocale!,
         path: Constants.localizationApiPath,
       ));
+}
+
+Future<Set<String>> generateUniqueMaterialNoteNumber({
+  required String loggedInUserId,
+  required bool returnCombinedIds,
+}) async {
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
+  String androidId = androidInfo.serialNumber == 'unknown'
+      ? androidInfo.id.replaceAll('.', '')
+      : androidInfo.serialNumber;
+
+  int timestamp = DateTime.now().millisecondsSinceEpoch;
+
+  String combinedId = '$loggedInUserId$androidId$timestamp';
+
+  // Generate SHA-256 hash
+  List<int> bytes = utf8.encode(combinedId);
+  Digest sha256Hash = sha256.convert(bytes);
+
+  // Convert the hash to a 12-character string and make it uppercase
+  String hashString = sha256Hash.toString();
+  String uniqueId = hashString.substring(0, 12).toUpperCase();
+
+  // Add a hyphen every 4 characters
+  String formattedUniqueId = uniqueId.replaceAllMapped(
+    RegExp(r'.{1,4}'),
+    (match) => '${match.group(0)}-',
+  );
+
+  // Remove the last hyphen
+  formattedUniqueId =
+      formattedUniqueId.substring(0, formattedUniqueId.length - 1);
+
+  if (kDebugMode) {
+    print('uniqueId : $formattedUniqueId');
+  }
+
+  return returnCombinedIds
+      ? {formattedUniqueId, combinedId}
+      : {formattedUniqueId};
 }

@@ -403,12 +403,13 @@ final jsonConfig = {
   },
   "stock": {
     "fallbackModel": "StockModel",
+    "multiEntityField": "stockDetails.productdetail",
     "models": {
       "StockModel": {
         "mappings": {
           "id": "stockDetails.id",
           "clientReferenceId": "__generate:uuid",
-          "facilityId": "stockDetails:facilityToWhich",
+          "facilityId": "warehouseDetails.facilityToWhich",
           "productVariantId": "stockDetails.productdetail.id",
           "referenceId": "__context:projectId",
           "referenceIdType": "__value:PROJECT",
@@ -427,11 +428,11 @@ final jsonConfig = {
           "additionalFields": {
             "batchNumber": "stockProductDetails.batchNumber",
             "expiryDate": "stockProductDetails.expiryDate",
-            "waybill_quantity": "stockProductDetails.quantitySent",
             "comments": "stockProductDetails.comment",
             "transportType": "stockDetails.transportType",
             "vehicle_number": "stockDetails.vehicleNumber",
-            "deliveryTeam": "warehouseDetails.teamCode"
+            "deliveryTeam": "warehouseDetails.teamCode",
+            "mrnNumber": "__context:mrnNumber"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",

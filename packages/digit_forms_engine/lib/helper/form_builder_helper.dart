@@ -9,8 +9,9 @@ FormControl buildFormControl(
   PropertySchema parentSchema, {
   String? defaultLatlng,
   Map<String, dynamic>? defaultValues,
+  String? schemaKey,
 }) {
-  final validators = buildValidators(schema);
+  final validators = buildValidators(schema, schemaKey: schemaKey);
   final format = schema.format;
   final rawValue = schema.value;
 

@@ -40,6 +40,9 @@ Map<String, String Function(Object)> buildValidationMessages(
       case 'pattern':
         messages['pattern'] = (_) => translated;
         break;
+      case 'notEqualTo':
+        messages['notEqualTo'] = (_) => translated;
+        break;
       default:
         break;
     }

@@ -167,6 +167,9 @@ void initializeFunctionRegistry() {
         // Otherwise, parse as formatted date string
         return DigitDateUtils.getFormattedDateToDateTime(value);
       }
+      if (value is DateTime) {
+        return DigitDateUtils.getFormattedDateToDateTime(rawType!);
+      }
       return null;
     }
 

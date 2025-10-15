@@ -8,6 +8,8 @@ import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:complaints/complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:crypto/crypto.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:digit_crud_bloc/digit_crud_bloc.dart';
 import 'package:digit_crud_bloc/repositories/local/search_entity_repository.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -20,6 +22,7 @@ import 'package:digit_dss/utils/utils.dart';
 import 'package:digit_flow_builder/data/digit_crud_service.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
+import 'package:digit_flow_builder/utils/function_registry.dart';
 import 'package:digit_location_tracker/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
@@ -160,6 +163,39 @@ class _HomePageState extends LocalizedState<HomePage> {
         );
       },
     );
+    FunctionRegistry.register('generateUniqueMaterialNoteNumber',
+        (args, stateData) {
+      // Generate a synchronous unique ID without async operations
+      int timestamp = DateTime.now().millisecondsSinceEpoch;
+      String userUuid = context.loggedInUserUuid;
+
+      // Create a combined string with timestamp and user UUID
+      String combinedId = '$userUuid$timestamp';
+
+      // Generate SHA-256 hash
+      List<int> bytes = utf8.encode(combinedId);
+      Digest sha256Hash = sha256.convert(bytes);
+
+      // Convert the hash to a 12-character string and make it uppercase
+      String hashString = sha256Hash.toString();
+      String uniqueId = hashString.substring(0, 12).toUpperCase();
+
+      // Add a hyphen every 4 characters
+      String formattedUniqueId = uniqueId.replaceAllMapped(
+        RegExp(r'.{1,4}'),
+        (match) => '${match.group(0)}-',
+      );
+
+      // Remove the last hyphen
+      formattedUniqueId =
+          formattedUniqueId.substring(0, formattedUniqueId.length - 1);
+
+      if (kDebugMode) {
+        print('uniqueId : $formattedUniqueId');
+      }
+
+      return formattedUniqueId;
+    });
   }
 
   //  Be sure to cancel subscription after you are done
@@ -509,7 +545,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                     delTemplatesRaw is Map<String, dynamic>
                         ? delTemplatesRaw
                         : {};
-
                 final templates = {
                   for (final entry
                       in {...regTemplateMap, ...delTemplateMap}.entries)

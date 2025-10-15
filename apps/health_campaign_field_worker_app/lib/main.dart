@@ -2071,9 +2071,7 @@ final dynamic sampleFlows = {
               "operator": "equals",
               "right": "{{currentRunningCycle}}"
             },
-            "map": "{{deliveries}}",
-            "flatten": true,
-            "reduce": {"operation": "increment", "field": "", "fallback": 0},
+            "map": "{{deliveries.length}}",
             "default": 0
           },
           "nextDoseId": {
@@ -2717,7 +2715,28 @@ final dynamic sampleInventoryFlows = {
           ]
         },
       ],
-      "footer": [],
+      "footer": [
+        {
+          "format": "button",
+          "label": "View Transactions",
+          "properties": {
+            "type": "primary",
+            "size": "large",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "viewTransaction",
+                "data": []
+              }
+            }
+          ]
+        }
+      ],
       "initActions": [
         {
           "actionType": "SEARCH_EVENT",
@@ -2770,7 +2789,11 @@ final dynamic sampleInventoryFlows = {
                 "name": "MANAGESTOCK",
                 "data": [
                   {"key": "stockEntryType", "value": "RECEIPT"},
-                  {"key": "transactionType", "value": "RECEIVED"}
+                  {"key": "transactionType", "value": "RECEIVED"},
+                  {
+                    "key": "mrnNumber",
+                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                  }
                 ]
               }
             }
@@ -2789,7 +2812,11 @@ final dynamic sampleInventoryFlows = {
                 "name": "MANAGESTOCK",
                 "data": [
                   {"key": "stockEntryType", "value": "ISSUED"},
-                  {"key": "transactionType", "value": "DISPATCHED"}
+                  {"key": "transactionType", "value": "DISPATCHED"},
+                  {
+                    "key": "mrnNumber",
+                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                  }
                 ]
               }
             }
@@ -2809,7 +2836,11 @@ final dynamic sampleInventoryFlows = {
                 "name": "MANAGESTOCK",
                 "data": [
                   {"key": "stockEntryType", "value": "RETURNED"},
-                  {"key": "transactionType", "value": "RECEIVED"}
+                  {"key": "transactionType", "value": "RECEIVED"},
+                  {
+                    "key": "mrnNumber",
+                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                  }
                 ]
               }
             }
@@ -2829,7 +2860,11 @@ final dynamic sampleInventoryFlows = {
                 "name": "MANAGESTOCK",
                 "data": [
                   {"key": "stockEntryType", "value": "DAMAGED"},
-                  {"key": "transactionType", "value": "DISPATCHED"}
+                  {"key": "transactionType", "value": "DISPATCHED"},
+                  {
+                    "key": "mrnNumber",
+                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                  }
                 ]
               }
             }
@@ -2845,9 +2880,16 @@ final dynamic sampleInventoryFlows = {
             {
               "actionType": "NAVIGATION",
               "properties": {
-                "type": "TEMPLATE",
-                "name": "viewTransaction",
-                "data": []
+                "type": "FORM",
+                "name": "MANAGESTOCK",
+                "data": [
+                  {"key": "stockEntryType", "value": "LOSS"},
+                  {"key": "transactionType", "value": "DISPATCHED"},
+                  {
+                    "key": "mrnNumber",
+                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                  }
+                ]
               }
             }
           ]
@@ -3044,6 +3086,11 @@ final dynamic sampleInventoryFlows = {
                   "value": true,
                   "message":
                       "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
+                },
+                {
+                  "type": "notEqualTo",
+                  "value": "warehouseDetails.facilityToWhich",
+                  "message": "Facility from and to must be different"
                 }
               ],
               "errorMessage": "",
@@ -3054,8 +3101,7 @@ final dynamic sampleInventoryFlows = {
             {
               "type": "string",
               "visibilityCondition": {
-                "expression":
-                    "warehouseDetails.facilityFromWhich==Delivery Team"
+                "expression": "stockDetails.facilityFromWhich==Delivery Team"
               },
               "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_deliveryTeamCode",
               "order": 4,
@@ -3395,7 +3441,8 @@ final dynamic sampleInventoryFlows = {
               {
                 "key": "transactionType",
                 "value": "{{navigation.transactionType}}"
-              }
+              },
+              {"key": "mrnNumber", "value": "{{navigation.mrnNumber}}"}
             ],
             "onError": [
               {
@@ -3450,8 +3497,13 @@ final dynamic sampleInventoryFlows = {
                 "actionType": "NAVIGATION",
                 "properties": {
                   "type": "TEMPLATE",
-                  "name": "stockRecordListScreen",
-                  "data": []
+                  "name": "viewTransactionDetails",
+                  "data": [
+                    {
+                      "key": "selectedStock",
+                      "value": "{{contextData.clientReferenceId}}"
+                    }
+                  ]
                 }
               }
             ]
@@ -3486,123 +3538,43 @@ final dynamic sampleInventoryFlows = {
         },
       ],
       "footer": [],
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "type": "SEARCH_EVENT",
+            "name": "stock",
+            "data": [
+              {
+                "key": "clientCreatedBy",
+                "value": "{{singleton.loggedInUserUuid}}",
+                "operation": "equals"
+              }
+            ]
+          }
+        }
+      ],
+      "wrapperConfig": {
+        "wrapperName": "ViewStockWrapper",
+        "groupByType": true,
+        "rootEntity": "StockModel",
+        "filters": [],
+        "relations": [
+          {
+            "name": "stock",
+            "entity": "StockModel",
+            "match": {
+              "field": "clientAuditDetails.createdBy",
+              "equalsFrom": "{{singleton.loggedInUserUuid}}"
+            }
+          },
+        ],
+        "searchConfig": {
+          "primary": "stock",
+          "select": ["stock"]
+        }
+      },
       "body": [
-        {
-          "format": "card",
-          "children": [
-            {
-              "format": "row",
-              "properties": {
-                "mainAxisAlignment": "spaceBetween",
-                "mainAxisSize": "max"
-              },
-              "children": [
-                {"format": "tag", "type": "", "label": "MIN-901239"},
-                {"format": "text", "value": "13 Feb 2025"},
-              ]
-            },
-            {
-              "format": "row",
-              "properties": {
-                "mainAxisAlignment": "spaceBetween",
-                "mainAxisSize": "max"
-              },
-              "children": [
-                {
-                  "format": "column",
-                  "properties": {
-                    "mainAxisAlignment": "spaceBetween",
-                    "mainAxisSize": "min"
-                  },
-                  "children": [
-                    {"format": "text", "value": "Issued to"},
-                    {"format": "text", "value": "Ondo State Facility"},
-                  ]
-                },
-                {
-                  "format": "button",
-                  "label": "view QR",
-                  "properties": {
-                    "type": "secondary",
-                    "size": "small",
-                    "mainAxisSize": "min",
-                    "mainAxisAlignment": "center"
-                  },
-                  "onAction": []
-                },
-              ]
-            },
-            {
-              "format": "button",
-              "label": "Select transaction",
-              "properties": {
-                "type": "primary",
-                "size": "large",
-                "mainAxisSize": "max",
-                "mainAxisAlignment": "center"
-              },
-              "onAction": []
-            },
-          ]
-        },
-        {
-          "format": "card",
-          "children": [
-            {
-              "format": "row",
-              "properties": {
-                "mainAxisAlignment": "spaceBetween",
-                "mainAxisSize": "max"
-              },
-              "children": [
-                {"format": "tag", "type": "", "label": "MIN-901239"},
-                {"format": "text", "value": "13 Feb 2025"},
-              ]
-            },
-            {
-              "format": "row",
-              "properties": {
-                "mainAxisAlignment": "spaceBetween",
-                "mainAxisSize": "max"
-              },
-              "children": [
-                {
-                  "format": "column",
-                  "properties": {
-                    "mainAxisAlignment": "spaceBetween",
-                    "mainAxisSize": "min"
-                  },
-                  "children": [
-                    {"format": "text", "value": "Issued to"},
-                    {"format": "text", "value": "Ondo State Facility"},
-                  ]
-                },
-                {
-                  "format": "button",
-                  "label": "view QR",
-                  "properties": {
-                    "type": "secondary",
-                    "size": "small",
-                    "mainAxisSize": "min",
-                    "mainAxisAlignment": "center"
-                  },
-                  "onAction": []
-                },
-              ]
-            },
-            {
-              "format": "button",
-              "label": "Select transaction",
-              "properties": {
-                "type": "primary",
-                "size": "large",
-                "mainAxisSize": "max",
-                "mainAxisAlignment": "center"
-              },
-              "onAction": []
-            },
-          ]
-        },
         {
           "format": "infoCard",
           "hidden": "{{ context.stock.isNotEmpty }}",
@@ -3611,9 +3583,9 @@ final dynamic sampleInventoryFlows = {
         },
         {
           "format": "listView",
-          "hidden": "{{ context.stock.empty }}",
+          "hidden": "{{ context.stock.isEmpty }}",
           "fieldName": "listView",
-          "dataSource": "",
+          "dataSource": "StockModel",
           "child": {
             "format": "card",
             "children": [
@@ -3624,8 +3596,16 @@ final dynamic sampleInventoryFlows = {
                   "mainAxisSize": "max"
                 },
                 "children": [
-                  {"format": "tag", "type": "", "label": "MIN-901239"},
-                  {"format": "text", "value": "13 Feb 2025"},
+                  {
+                    "format": "tag",
+                    "type": "",
+                    "label": "{{item.additionalFields.fields.mrnNumber}}"
+                  },
+                  {
+                    "format": "text",
+                    "value":
+                        "{{fn:formatDate(item.dateOfEntry, dateTime, dd MMMM yyyy)}}"
+                  },
                 ]
               },
               {
@@ -3643,7 +3623,7 @@ final dynamic sampleInventoryFlows = {
                     },
                     "children": [
                       {"format": "text", "value": "Issued to"},
-                      {"format": "text", "value": "Ondo State Facility"},
+                      {"format": "text", "value": "{{item.receiverId}}"},
                     ]
                   },
                   {
@@ -3668,12 +3648,118 @@ final dynamic sampleInventoryFlows = {
                   "mainAxisSize": "max",
                   "mainAxisAlignment": "center"
                 },
-                "onAction": []
+                "onAction": [
+                  {
+                    "actionType": "NAVIGATION",
+                    "properties": {
+                      "type": "TEMPLATE",
+                      "name": "viewTransactionDetails",
+                      "data": [
+                        {
+                          "key": "selectedStock",
+                          "value": "{{item.clientReferenceId}}"
+                        }
+                      ]
+                    }
+                  }
+                ]
               },
             ]
           }
         }
       ]
     },
+    {
+      "screenType": "TEMPLATE",
+      "name": "viewTransactionDetails",
+      "heading": "Stock Receipt Details",
+      "description": "",
+      "header": [
+        {
+          "format": "backLink",
+          "label": "Back",
+          "onAction": [
+            {
+              "actionType": "BACK_NAVIGATION",
+              "properties": {"type": "TEMPLATE", "name": "viewTransaction"}
+            }
+          ]
+        }
+      ],
+      "footer": [],
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "type": "SEARCH_EVENT",
+            "name": "stock",
+            "data": [
+              {
+                "key": "clientReferenceId",
+                "value": "{{navigation.selectedStock}}",
+                "operation": "equals"
+              }
+            ]
+          }
+        }
+      ],
+      "wrapperConfig": {
+        "wrapperName": "ViewStockWrapper",
+        "groupByType": false,
+        "rootEntity": "StockModel",
+        "filters": [],
+        "relations": [
+          {
+            "name": "stock",
+            "entity": "StockModel",
+            "match": {
+              "field": "clientReferenceId",
+              "equalsFrom": "{{clientReferenceId}}"
+            }
+          }
+        ],
+        "searchConfig": {
+          "primary": "stock",
+          "select": ["stock"]
+        }
+      },
+      "body": [
+        {
+          "format": "labelPairList",
+          "data": [
+            {
+              "key": "Resource",
+              "value": "{{stock.additionalFields.fields.sku}}"
+            },
+            {
+              "key": "Received From",
+              "value": "{{contextData.0.StockModel.StockModel.referenceId}}"
+            },
+            {"key": "MRN number", "value": "{{context.0.stock.referenceId}}"},
+            {
+              "key": "Waybill number",
+              "value": "{{context.0.stock.wayBillNumber}}"
+            },
+            {
+              "key": "Batch number",
+              "value": "{{context.0.stock.additionalFields.fields.batchNumber}}"
+            },
+            {
+              "key": "Expiry",
+              "value":
+                  "{{fn:formatDate(context.0.stock.additionalFields.fields.expiryDate, dateTime, dd MMMM yyyy)}}"
+            },
+            {
+              "key": "Quantity of blisters received",
+              "value": "{{context.0.stock.quantity}}"
+            },
+            {
+              "key": "Comments",
+              "value": "{{context.0.stock.additionalFields.fields.comments}}"
+            }
+          ]
+        }
+      ]
+    }
   ]
 };
