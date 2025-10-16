@@ -656,7 +656,8 @@ class _HouseholdOverviewPageState
                                                                         .householdOverViewKeys
                                                                         .detailsCardKey]
                                                                     ?.enums,
-                                                                selectedIndividual: null)
+                                                                selectedIndividual:
+                                                                    null)
                                                             ?.map((k, v) => MapEntry(
                                                                 localizations
                                                                     .translate(
@@ -1020,6 +1021,54 @@ class _HouseholdOverviewPageState
                                                         .householdOverViewKeys
                                                         .individualSecondaryButtonKey],
                                             editMemberAction: () async {
+                                              context
+                                                  .read<
+                                                      RegistrationWrapperBloc>()
+                                                  .add(
+                                                    RegistrationWrapperEvent
+                                                        .updateSelectedIndividual(
+                                                      individualClientReferenceId:
+                                                          e.clientReferenceId,
+                                                    ),
+                                                  );
+                                              Navigator.of(context,
+                                                      rootNavigator: true)
+                                                  .pop();
+                                              final mapper = ReverseFormMapper(
+                                                formConfig: jsonConfig[
+                                                    'individualRegistration']!,
+                                                modelInstances: [e],
+                                              );
+
+                                              final formData =
+                                                  mapper.buildFormData();
+
+                                              final pageName = context
+                                                  .read<FormsBloc>()
+                                                  .state
+                                                  .cachedSchemas['ADD_MEMBER']
+                                                  ?.pages
+                                                  .entries
+                                                  .first
+                                                  .key;
+
+                                              context.router
+                                                  .push(FormsRenderRoute(
+                                                isEdit: true,
+                                                currentSchemaKey: 'ADD_MEMBER',
+                                                pageName: pageName!,
+
+                                                /// as registration is there assuming form won't be null
+                                                defaultValues: {
+                                                  ...formData,
+                                                  'administrativeArea':
+                                                      localizations.translate(
+                                                          RegistrationDeliverySingleton()
+                                                                  .boundary
+                                                                  ?.code ??
+                                                              ''),
+                                                },
+                                              ));
                                               //TODO: need to add logic for edit member
                                             },
                                             setAsHeadAction: () {

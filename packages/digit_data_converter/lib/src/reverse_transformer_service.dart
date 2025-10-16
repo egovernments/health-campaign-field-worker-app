@@ -106,8 +106,10 @@ class ReverseFormMapper {
       if (modelValue == null) continue;
 
       if (formFieldPath is String) {
-        // Skip special constant mappings like __value, __uuid, __context
-        if (formFieldPath.startsWith('__')) continue;
+        // Skip special mappings that are not actual form fields
+        if (formFieldPath.startsWith('__') ||
+            formFieldPath.startsWith('list:') ||
+            formFieldPath.startsWith('collect:')) continue;
 
         _setNestedValue(formData, formFieldPath, modelValue);
       } else if (formFieldPath is Map<String, dynamic>) {
@@ -148,14 +150,31 @@ class ReverseFormMapper {
     Map listMappings,
   ) {
     for (final listModelEntry in listMappings.entries) {
-      final listKey = listModelEntry.key; // e.g., "HouseholdMember"
+      final listKey = listModelEntry.key; // e.g., "IdentifierModel"
       final listModelConfig = listModelEntry.value;
       final mappings = listModelConfig['mappings'] ?? {};
 
-      //// TODO: need to check mapping for list
-      // You may override the key used to extract items from model if defined in config
-      final listFieldName = listModelConfig['field'] ??
-          listKey[0].toLowerCase() + listKey.substring(1);
+      // Find the actual field name in the model instance
+      String? listFieldName = listModelConfig['field'];
+
+      if (listFieldName == null) {
+        // Try to infer the field name by looking for a List field in the model
+        // Convert "IdentifierModel" -> "identifiers" or "AddressModel" -> "address"
+        final baseNameWithModel = listKey.replaceAll('Model', '');
+        final baseName = baseNameWithModel[0].toLowerCase() + baseNameWithModel.substring(1);
+
+        // Try plural form first (identifiers, addresses)
+        final pluralName = baseName + 's';
+        if (modelInstance.containsKey(pluralName) && modelInstance[pluralName] is List) {
+          listFieldName = pluralName;
+        } else if (modelInstance.containsKey(baseName) && modelInstance[baseName] is List) {
+          listFieldName = baseName;
+        } else {
+          // Fallback: use old behavior
+          listFieldName = listKey[0].toLowerCase() + listKey.substring(1);
+        }
+      }
+
       final List<dynamic> listItems = modelInstance[listFieldName] ?? [];
 
       for (int index = 0; index < listItems.length; index++) {

@@ -281,26 +281,39 @@ class _SearchBeneficiaryPageState
                 final projectBeneficiary =
                     householdMember?.projectBeneficiaries?.firstOrNull;
 
-                final individual = householdMember?.individuals?.firstOrNull;
+                final individual =
+                    RegistrationDeliverySingleton().beneficiaryType ==
+                            BeneficiaryType.individual
+                        ? blocWrapper.state.selectedIndividual?.individual
+                        : householdMember?.individuals?.firstOrNull;
 
                 final member = householdMember?.members?.firstOrNull;
 
-                final modelsConfig = formState.activeSchemaKey == 'DELIVERYFLOW'
-                    ? (jsonConfig['delivery']?['models']
-                        as Map<String, dynamic>)
-                    : jsonConfig['beneficiaryRegistration']?['models']
-                        as Map<String, dynamic>;
+                final modelsConfig =
+                    formState.activeSchemaKey == "BENEFICIARY_REFERRED"
+                        ? (jsonConfig['referral']?['models']
+                            as Map<String, dynamic>)
+                        : formState.activeSchemaKey == "ADD_MEMBER"
+                            ? (jsonConfig['individualRegistration']?['models']
+                                as Map<String, dynamic>)
+                            : formState.activeSchemaKey == 'DELIVERYFLOW'
+                                ? (jsonConfig['delivery']?['models']
+                                    as Map<String, dynamic>)
+                                : jsonConfig['beneficiaryRegistration']
+                                    ?['models'] as Map<String, dynamic>;
 
                 try {
                   final entities = formEntityMapper.updateEntitiesFromForm(
                     modelsConfig: modelsConfig,
                     formValues: formData,
-                    existingModels: [
-                      if (household != null) household,
-                      if (individual != null) individual,
-                      if (projectBeneficiary != null) projectBeneficiary,
-                      if (member != null) member
-                    ],
+                    existingModels: formState.activeSchemaKey == "ADD_MEMBER"
+                        ? [if (individual != null) individual]
+                        : [
+                            if (household != null) household,
+                            if (individual != null) individual,
+                            if (projectBeneficiary != null) projectBeneficiary,
+                            if (member != null) member
+                          ],
                     context: {
                       "projectId":
                           RegistrationDeliverySingleton().selectedProject?.id,

@@ -179,9 +179,10 @@ class MemberCard extends StatelessWidget {
                                                 .assignAsHouseholdhead,
                                           ),
                                     isDisabled:
-                                        isHead || setAsHeadAction == null
-                                            ? true
-                                            : false,
+                                        true, //// FIXME: MAKING BY DEFAULT TRUE
+                                    // isHead || setAsHeadAction == null
+                                    //     ? true
+                                    //     : false,
                                     onPressed: setAsHeadAction != null
                                         ? setAsHeadAction!
                                         : () {},
@@ -202,7 +203,9 @@ class MemberCard extends StatelessWidget {
                                     label: localizations.translate(
                                       i18.memberCard.deleteIndividualActionText,
                                     ),
-                                    isDisabled: isHead ? true : false,
+                                    isDisabled:
+                                        true, //// FIXME: MAKING BY DEFAULT TRUE
+                                    // isDisabled: isHead ? true : false,
                                     onPressed: deleteMemberAction,
                                     type: DigitButtonType.secondary,
                                     size: DigitButtonSize.large,
