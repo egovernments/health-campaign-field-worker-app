@@ -155,20 +155,29 @@ jobs:
               "transit_post"
             )
           
-            # Verify all local packages exist
+            # Verify all local packages exist and filter available ones
             PKG_ROOT="$GITHUB_WORKSPACE/packages"
+            AVAILABLE_PACKAGES=()
             for package in "${PACKAGES[@]}"; do
               if [ ! -d "$PKG_ROOT/$package" ]; then
-                echo "❌ Missing package: $PKG_ROOT/$package"
-                exit 1
+                echo "⚠️ Warning: Package not found, skipping: $PKG_ROOT/$package"
+              else
+                AVAILABLE_PACKAGES+=("$package")
               fi
             done
+
+            if [ ${#AVAILABLE_PACKAGES[@]} -eq 0 ]; then
+              echo "❌ Error: No packages found in $PKG_ROOT"
+              exit 1
+            fi
+
+            echo "✅ Found ${#AVAILABLE_PACKAGES[@]} available packages out of ${#PACKAGES[@]} total"
           
             # Check if dependency_overrides section exists
             if grep -q "^dependency_overrides:" pubspec.yaml; then
               echo "Found existing dependency_overrides section, will append to it"
-              # Add each package under existing dependency_overrides
-              for package in "${PACKAGES[@]}"; do
+              # Add each available package under existing dependency_overrides
+              for package in "${AVAILABLE_PACKAGES[@]}"; do
                 # Add package with proper indentation after dependency_overrides:
                 sed -i "/^dependency_overrides:/a\\  ${package}:\\n    path: ../../packages/${package}" pubspec.yaml
                 echo "✅ Added override for $package"
@@ -179,7 +188,7 @@ jobs:
               echo "" >> pubspec.yaml
               echo "# Local package overrides for CI build" >> pubspec.yaml
               echo "dependency_overrides:" >> pubspec.yaml
-              for package in "${PACKAGES[@]}"; do
+              for package in "${AVAILABLE_PACKAGES[@]}"; do
                 echo "  ${package}:" >> pubspec.yaml
                 echo "    path: ../../packages/${package}" >> pubspec.yaml
                 echo "✅ Added override for $package"
@@ -242,9 +251,14 @@ jobs:
           echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| Environment | ${{ inputs.env_name }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Base URL | ${{ inputs.base_url }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| MDMS API Path | ${{ inputs.mdms_api_path }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Tenant ID | ${{ inputs.tenant_id }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Actions API Path | ${{ inputs.actions_api_path }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Hierarchy Type | ${{ inputs.hierarchy_type }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Check Bandwidth API | ${{ inputs.check_bandwidth_api }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Build Type | ${{ inputs.build_type }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Override Deps | ${{ inputs.override_dependencies }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Artifact Name | ${{ inputs.artifact_name }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Override Dependencies | ${{ inputs.override_dependencies }} |" >> $GITHUB_STEP_SUMMARY
           echo "| APK Name | ${{ env.APK_NAME }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "✅ APK has been successfully built and uploaded as an artifact." >> $GITHUB_STEP_SUMMARY
