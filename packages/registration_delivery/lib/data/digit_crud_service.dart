@@ -29,6 +29,8 @@ class DigitCrudService extends CrudService {
           ProjectBeneficiarySearchModel>(context);
     } else if (entity is TaskModel) {
       return context.repository<TaskModel, TaskSearchModel>(context);
+    } else if (entity is ReferralModel) {
+      return context.repository<ReferralModel, ReferralSearchModel>(context);
     } else {
       return context.repository<HouseholdModel, HouseholdSearchModel>(context);
     }
@@ -54,6 +56,28 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
         return HouseholdMemberModelMapper.fromMap(normalizedMap);
       case 'task':
         return TaskModelMapper.fromMap(normalizedMap);
+
+      case 'referral':
+        final reasonsValue = normalizedMap['reasons'];
+
+        if (reasonsValue is String) {
+          // Clean stringified array like "[SICK]" or "[A, B]"
+          final cleaned = reasonsValue.trim();
+
+          if (cleaned.startsWith('[') && cleaned.endsWith(']')) {
+            // Remove brackets and split by comma
+            final content = cleaned.substring(1, cleaned.length - 1);
+            normalizedMap['reasons'] = content
+                .split(',')
+                .map((s) => s.trim())
+                .where((s) => s.isNotEmpty)
+                .toList();
+          } else {
+            // Just wrap plain string into a list
+            normalizedMap['reasons'] = [cleaned];
+          }
+        }
+        return ReferralModelMapper.fromMap(normalizedMap);
 
       default:
         return EntityModelMapper.fromMap(normalizedMap);

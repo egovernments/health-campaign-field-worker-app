@@ -231,7 +231,8 @@ class RegistrationWrapperBloc
             .where((s) => s.clientReferenceId == household.clientReferenceId)
             .toList();
         final referrals = allReferrals
-            .where((r) => r.clientReferenceId == household.clientReferenceId)
+            .where((r) =>
+                beneficiaryIds.contains(r.projectBeneficiaryClientReferenceId))
             .toList();
 
         wrappers.add(HouseholdWrapper(
@@ -298,7 +299,8 @@ class RegistrationWrapperBloc
         'household',
         'householdMember',
         'projectBeneficiary',
-        'task'
+        'task',
+        'referral'
       ],
       pagination: null,
     );
@@ -360,17 +362,23 @@ class RegistrationWrapperBloc
           .toList();
       int lastCycleIndex = tasks.isNotEmpty
           ? int.tryParse(tasks.last.additionalFields?.fields
-                  .where(
-                      (h) => h.key == AdditionalFieldsType.cycleIndex.toValue())
-                  .firstOrNull
-                  ?.value?.toString() ?? '1') ?? 1
+                      .where((h) =>
+                          h.key == AdditionalFieldsType.cycleIndex.toValue())
+                      .firstOrNull
+                      ?.value
+                      ?.toString() ??
+                  '1') ??
+              1
           : 1;
       int lastDeliveryIndex = tasks.isNotEmpty
           ? int.tryParse(tasks.last.additionalFields?.fields
-                  .where(
-                      (h) => h.key == AdditionalFieldsType.doseIndex.toValue())
-                  .firstOrNull
-                  ?.value?.toString() ?? '0') ?? 0
+                      .where((h) =>
+                          h.key == AdditionalFieldsType.doseIndex.toValue())
+                      .firstOrNull
+                      ?.value
+                      ?.toString() ??
+                  '0') ??
+              0
           : 0;
 
       List<ProjectCycle>? campaignCycles = RegistrationDeliverySingleton()
@@ -521,7 +529,8 @@ class RegistrationWrapperBloc
 
       // Find the individual by client reference ID
       final selectedIndividual = householdWrapper.individuals?.firstWhereOrNull(
-        (individual) => individual.clientReferenceId == event.individualClientReferenceId,
+        (individual) =>
+            individual.clientReferenceId == event.individualClientReferenceId,
       );
 
       if (selectedIndividual == null) {
@@ -531,18 +540,27 @@ class RegistrationWrapperBloc
 
       // Find the related member
       final relatedMember = householdWrapper.members?.firstWhereOrNull(
-        (member) => member.individualClientReferenceId == event.individualClientReferenceId,
+        (member) =>
+            member.individualClientReferenceId ==
+            event.individualClientReferenceId,
       );
 
       // Find the related project beneficiary
-      final relatedProjectBeneficiary = householdWrapper.projectBeneficiaries?.firstWhereOrNull(
-        (beneficiary) => beneficiary.beneficiaryClientReferenceId == event.individualClientReferenceId,
+      final relatedProjectBeneficiary =
+          householdWrapper.projectBeneficiaries?.firstWhereOrNull(
+        (beneficiary) =>
+            beneficiary.beneficiaryClientReferenceId ==
+            event.individualClientReferenceId,
       );
 
       // Find the related tasks
-      final relatedTasks = householdWrapper.tasks?.where(
-        (task) => task.projectBeneficiaryClientReferenceId == relatedProjectBeneficiary?.clientReferenceId,
-      ).toList();
+      final relatedTasks = householdWrapper.tasks
+          ?.where(
+            (task) =>
+                task.projectBeneficiaryClientReferenceId ==
+                relatedProjectBeneficiary?.clientReferenceId,
+          )
+          .toList();
 
       // Create the selected individual wrapper
       final selectedIndividualWrapper = SelectedIndividualWrapper(
@@ -552,8 +570,159 @@ class RegistrationWrapperBloc
         tasks: relatedTasks ?? [],
       );
 
+      // Recalculate delivery details for the selected individual
+      DeliveryWrapper? deliveryWrapper;
+      if (RegistrationDeliverySingleton().beneficiaryType ==
+          BeneficiaryType.individual) {
+        final relevantTasks = relatedTasks ?? [];
+
+        final List<TaskModel> futureTasks = relevantTasks
+            .where((element) => element.additionalFields != null
+                ? element.additionalFields!.fields
+                            .firstWhereOrNull(
+                              (a) =>
+                                  a.key ==
+                                  AdditionalFieldsType.deliveryStrategy
+                                      .toValue(),
+                            )
+                            ?.value ==
+                        DeliverStrategyType.indirect.toValue() &&
+                    element.status == Status.delivered.toValue()
+                : false)
+            .toList();
+
+        List<ProjectCycle>? campaignCycles = RegistrationDeliverySingleton()
+            .selectedProject
+            ?.additionalDetails
+            ?.projectType
+            ?.cycles;
+        ProjectCycle? currentCycle = campaignCycles
+            ?.where((c) =>
+                DateTime.now().millisecondsSinceEpoch <= c.endDate &&
+                DateTime.now().millisecondsSinceEpoch >= c.startDate)
+            .firstOrNull;
+
+        final currentRunningCycle = (campaignCycles?.firstWhereOrNull(
+              (e) =>
+                  (e.startDate) < DateTime.now().millisecondsSinceEpoch &&
+                  (e.endDate) > DateTime.now().millisecondsSinceEpoch,
+            ))?.id ??
+            0;
+
+        int lastCycleIndex = relevantTasks.isNotEmpty
+            ? int.tryParse(relevantTasks.last.additionalFields?.fields
+                        .where((h) =>
+                            h.key == AdditionalFieldsType.cycleIndex.toValue())
+                        .firstOrNull
+                        ?.value
+                        ?.toString()
+                        .replaceFirst('0', '') ??
+                    '1') ??
+                1
+            : currentRunningCycle != 0
+                ? currentRunningCycle
+                : 1;
+        int lastDeliveryIndex = relevantTasks.isNotEmpty
+            ? int.tryParse(relevantTasks.last.additionalFields?.fields
+                        .where((h) =>
+                            h.key == AdditionalFieldsType.doseIndex.toValue())
+                        .firstOrNull
+                        ?.value
+                        ?.toString()
+                        .replaceFirst('0', '') ??
+                    '1') ??
+                1
+            : 0;
+
+        DeliveryWrapper deliveryState = DeliveryWrapper(
+          cycle: lastCycleIndex,
+          dose: lastDeliveryIndex,
+        );
+
+        if (currentRunningCycle != 0) {
+          final isSameCycle = lastCycleIndex == currentRunningCycle;
+          final deliveryLength = campaignCycles
+                  ?.firstWhere((c) => c.id == lastCycleIndex)
+                  .deliveries
+                  ?.length ??
+              0;
+
+          final isNotLastDose = lastDeliveryIndex < deliveryLength;
+
+          if (isSameCycle) {
+            final pastCycles = getPastCycles(campaignCycles, lastCycleIndex);
+            if (isNotLastDose) {
+              deliveryState = DeliveryWrapper(
+                cycle: lastCycleIndex,
+                dose: lastDeliveryIndex + 1,
+                pastCycles: pastCycles,
+                hasCycleArrived: true,
+                futureTask: futureTasks,
+              );
+            } else {
+              final pastCycles = getPastCycles(campaignCycles, lastCycleIndex,
+                  includeCurrent: true);
+              deliveryState = DeliveryWrapper(
+                cycle: lastCycleIndex,
+                dose: lastDeliveryIndex,
+                pastCycles: pastCycles,
+                hasCycleArrived: false,
+                futureTask: futureTasks,
+              );
+            }
+          } else {
+            final pastCycles =
+                getPastCycles(campaignCycles, currentRunningCycle);
+            deliveryState = DeliveryWrapper(
+              cycle: currentRunningCycle,
+              dose: 1,
+              pastCycles: pastCycles,
+              hasCycleArrived: true,
+              futureTask: futureTasks,
+            );
+          }
+        } else {
+          final pastCycles = getPastCycles(campaignCycles, currentRunningCycle);
+          deliveryState = DeliveryWrapper(
+            cycle: lastCycleIndex,
+            dose: 1,
+            pastCycles: pastCycles,
+            hasCycleArrived: false,
+            futureTask: futureTasks,
+          );
+        }
+
+        // Determine future deliveries if applicable
+        int currentCycleIndex = deliveryState.cycle;
+        int currentDeliveryIndex = deliveryState.dose;
+        final deliveriesList = currentCycle?.deliveries;
+
+        if (deliveriesList != null) {
+          final futureDeliveries = deliveriesList
+              .skip(currentDeliveryIndex)
+              .takeWhile((d) =>
+                  d.deliveryStrategy == DeliverStrategyType.indirect.toValue())
+              .toList();
+
+          deliveryState = DeliveryWrapper(
+            cycle: currentCycleIndex,
+            dose: currentDeliveryIndex,
+            pastCycles: deliveryState.pastCycles,
+            hasCycleArrived: deliveryState.hasCycleArrived,
+            futureTask: futureTasks,
+            futureDeliveries: futureDeliveries,
+          );
+        }
+
+        deliveryWrapper = deliveryState;
+      } else {
+        // For household campaigns, keep the existing deliveryWrapper
+        deliveryWrapper = state.deliveryWrapper;
+      }
+
       emit(state.copyWith(
         selectedIndividual: selectedIndividualWrapper,
+        deliveryWrapper: deliveryWrapper,
       ));
     } catch (e) {
       emit(state.copyWith(error: e.toString()));
@@ -604,17 +773,17 @@ class RegistrationWrapperBloc
               .any((m) => m.individualClientReferenceId == i.clientReferenceId))
           .toList();
 
-      final householdBeneficiaries =
-          false //TODO:need to keep in state which type of campaign, will pick later
-              ? allBeneficiaries
-                  .where((b) => householdIndividuals.any((i) =>
-                      i.clientReferenceId == b.beneficiaryClientReferenceId))
-                  .toList()
-              : allBeneficiaries
-                  .where((b) =>
-                      b.beneficiaryClientReferenceId ==
-                      household.clientReferenceId)
-                  .toList();
+      final householdBeneficiaries = RegistrationDeliverySingleton()
+                  .beneficiaryType ==
+              BeneficiaryType.individual
+          ? allBeneficiaries
+              .where((b) => householdIndividuals.any(
+                  (i) => i.clientReferenceId == b.beneficiaryClientReferenceId))
+              .toList()
+          : allBeneficiaries
+              .where((b) =>
+                  b.beneficiaryClientReferenceId == household.clientReferenceId)
+              .toList();
 
       final beneficiaryIds =
           householdBeneficiaries.map((b) => b.clientReferenceId).toSet();

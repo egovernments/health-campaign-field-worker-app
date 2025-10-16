@@ -206,6 +206,7 @@ enum PropertySchemaFormat {
   scanner,
   idPopulator,
   mobileNumber,
+  textArea,
   text;
 }
 

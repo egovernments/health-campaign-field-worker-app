@@ -140,6 +140,7 @@ const _$PropertySchemaFormatEnumMap = {
   PropertySchemaFormat.scanner: 'scanner',
   PropertySchemaFormat.idPopulator: 'idPopulator',
   PropertySchemaFormat.mobileNumber: 'mobileNumber',
+  PropertySchemaFormat.textArea: 'textArea',
   PropertySchemaFormat.text: 'text',
 };
 

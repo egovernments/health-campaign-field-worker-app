@@ -511,7 +511,7 @@ class _SearchReferralReconciliationsPageState
     TemplateConfig? template,
   ) {
     final primaryProp = template?.properties?[primaryButton];
-    final secondaryProp = template?.properties?['scanner'];
+    final secondaryProp = template?.properties?[secondaryButton];
 
     final entries = <MapEntry<int, DigitButton>>[];
 

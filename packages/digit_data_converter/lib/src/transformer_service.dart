@@ -446,6 +446,14 @@ class FormEntityMapper {
         continue;
       }
 
+      if (sourcePath is String && sourcePath.startsWith('collect:')) {
+        /// Treat as field collection from list
+        mapped[targetKey] = _collectFieldFromList(
+            sourcePath, formValues, modelName, context,
+            listItemIndex: listItemIndex, listSourcePath: listSourcePath);
+        continue;
+      }
+
       /// Treat as normal mapping
       final value = getValueFromMapping(
           sourcePath, formValues, modelName, context,
@@ -460,6 +468,85 @@ class FormEntityMapper {
     if (factory == null) throw Exception('No model factory for $modelName');
 
     return factory(mapped);
+  }
+
+  /// Collects field values from a list or splits comma-separated strings
+  /// Always returns a List<String>
+  ///
+  /// Examples:
+  /// - "collect:referralDetails.comments" where comments is "Fever" → ["Fever"]
+  /// - "collect:referralDetails.comments" where comments is "Fever, Cough" → ["Fever", "Cough"]
+  /// - "collect:referralDetails.comments" where comments is ["Fever", "Cough"] → ["Fever", "Cough"]
+  /// - "collect:referralDetails.comments" where referralDetails is [{comments: "Fever"}, {comments: "Cough"}] → ["Fever", "Cough"]
+  List<String> _collectFieldFromList(
+    String sourcePath,
+    Map<String, dynamic> formValues,
+    String modelName,
+    Map<String, dynamic> context, {
+    int? listItemIndex,
+    String? listSourcePath,
+  }) {
+    // Remove "collect:" prefix
+    final pathWithoutPrefix = sourcePath.replaceFirst('collect:', '');
+
+    if (kDebugMode) {
+      print('🔍 _collectFieldFromList called with path: "$pathWithoutPrefix"');
+    }
+
+    // Resolve the full path to get the value
+    final resolvedValue = getValueFromMapping(
+      pathWithoutPrefix,
+      formValues,
+      modelName,
+      context,
+      listItemIndex: listItemIndex,
+      listSourcePath: listSourcePath,
+    );
+
+    if (kDebugMode) {
+      print('   Resolved value type: ${resolvedValue.runtimeType}');
+      print('   Resolved value: $resolvedValue');
+    }
+
+    // If null, return empty list
+    if (resolvedValue == null) {
+      return [];
+    }
+
+    final result = <String>[];
+
+    // Case 1: Value is already a List
+    if (resolvedValue is List) {
+      for (final item in resolvedValue) {
+        if (item is String) {
+          // If list contains strings, split each by comma and flatten
+          final parts = item.split(',').map((s) => s.trim()).where((s) => s.isNotEmpty);
+          result.addAll(parts);
+        } else if (item is Map<String, dynamic>) {
+          // If list contains objects, this shouldn't happen in collect context
+          // but just in case, convert to string
+          result.add(item.toString());
+        } else {
+          // For other types, convert to string
+          result.add(item.toString());
+        }
+      }
+    }
+    // Case 2: Value is a String (split by comma)
+    else if (resolvedValue is String) {
+      final parts = resolvedValue.split(',').map((s) => s.trim()).where((s) => s.isNotEmpty);
+      result.addAll(parts);
+    }
+    // Case 3: Other types, convert to string and wrap in list
+    else {
+      result.add(resolvedValue.toString());
+    }
+
+    if (kDebugMode) {
+      print('   Final collected list: $result');
+    }
+
+    return result;
   }
 
   List<Map<String, dynamic>> _mapListModel(
@@ -639,6 +726,13 @@ class FormEntityMapper {
       if (sourcePath is String && sourcePath.startsWith('list:')) {
         result[targetKey] = _mapListModel(sourcePath, formValues, modelName,
             {'listMappings': nestedMappings}, context,
+            listItemIndex: listItemIndex, listSourcePath: listSourcePath);
+        continue;
+      }
+
+      if (sourcePath is String && sourcePath.startsWith('collect:')) {
+        result[targetKey] = _collectFieldFromList(
+            sourcePath, formValues, modelName, context,
             listItemIndex: listItemIndex, listSourcePath: listSourcePath);
         continue;
       }

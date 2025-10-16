@@ -38,6 +38,7 @@ import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/beneficiary/id_count_alert.dart';
 import '../widgets/beneficiary/view_beneficiary_card.dart';
+import '../widgets/evaluation_facility_widget.dart';
 import '../widgets/localized.dart';
 import '../widgets/status_filter/status_filter.dart';
 
@@ -149,8 +150,7 @@ class _SearchBeneficiaryPageState
                 beneficiaryType: RegistrationDeliverySingleton()
                     .beneficiaryType
                     ?.toValue()));
-          }
-          if (taskModel != null) {
+          } else if (taskModel != null) {
             blocWrapper.add(RegistrationWrapperEvent.fetchDeliveryDetails(
                 projectId: RegistrationDeliverySingleton().selectedProject!.id,
                 selectedIndividual: null,
@@ -395,8 +395,14 @@ class _SearchBeneficiaryPageState
                         defaultValues: {
                           'administrativeArea': localizations.translate(
                               RegistrationDeliverySingleton().boundary?.code ??
-                                  '')
+                                  ''),
+                          'referredBy': RegistrationDeliverySingleton()
+                              .loggedInUser
+                              ?.uuid,
                         },
+                        customComponents: const [
+                          {'evaluationFacilityKey': EvaluationKeyDropDown()}
+                        ],
                       ));
                     }
                   } else if (navigateToName == 'household-overview' &&
@@ -489,22 +495,30 @@ class _SearchBeneficiaryPageState
                   Navigator.of(context, rootNavigator: true).pop();
                   return;
                 }
-                final modelsConfig = formState.activeSchemaKey == "ADD_MEMBER"
-                    ? (jsonConfig['individualRegistration']?['models']
-                        as Map<String, dynamic>)
-                    : formState.activeSchemaKey == 'DELIVERYFLOW'
-                        ? (jsonConfig['delivery']?['models']
+                final modelsConfig =
+                    formState.activeSchemaKey == "BENEFICIARY_REFERRED"
+                        ? (jsonConfig['referral']?['models']
                             as Map<String, dynamic>)
-                        : jsonConfig['beneficiaryRegistration']?['models']
-                            as Map<String, dynamic>;
+                        : formState.activeSchemaKey == "ADD_MEMBER"
+                            ? (jsonConfig['individualRegistration']?['models']
+                                as Map<String, dynamic>)
+                            : formState.activeSchemaKey == 'DELIVERYFLOW'
+                                ? (jsonConfig['delivery']?['models']
+                                    as Map<String, dynamic>)
+                                : jsonConfig['beneficiaryRegistration']
+                                    ?['models'] as Map<String, dynamic>;
 
-                final fallBackModel = formState.activeSchemaKey == "ADD_MEMBER"
-                    ? (jsonConfig['individualRegistration']?['fallbackModel']
-                        as String?)
-                    : formState.activeSchemaKey == 'DELIVERYFLOW'
-                        ? (jsonConfig['delivery']?['fallbackModel'] as String?)
-                        : jsonConfig['beneficiaryRegistration']
-                            ?['fallbackModel'] as String?;
+                final fallBackModel =
+                    formState.activeSchemaKey == "BENEFICIARY_REFERRED"
+                        ? (jsonConfig['referral']?['fallbackModel'] as String?)
+                        : formState.activeSchemaKey == "ADD_MEMBER"
+                            ? (jsonConfig['individualRegistration']
+                                ?['fallbackModel'] as String?)
+                            : formState.activeSchemaKey == 'DELIVERYFLOW'
+                                ? (jsonConfig['delivery']?['fallbackModel']
+                                    as String?)
+                                : jsonConfig['beneficiaryRegistration']
+                                    ?['fallbackModel'] as String?;
 
                 final formEntityMapper = FormEntityMapper(config: jsonConfig);
 
@@ -1689,7 +1703,8 @@ class _SearchBeneficiaryPageState
           'household',
           'householdMember',
           'projectBeneficiary',
-          'task'
+          'task',
+          'referral'
         ], // Optional: which fields to return
         pagination: isPagination
             ? reg_params.PaginationParams(

@@ -671,6 +671,7 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'navigateTo': pageMap['navigateTo'] is Map<String, dynamic>
             ? pageMap['navigateTo']
             : null,
+        'conditionalNavigateTo': pageMap['conditionalNavigateTo'],
       };
 
       if (type == 'template') {

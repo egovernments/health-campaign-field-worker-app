@@ -405,7 +405,7 @@ final jsonConfig = {
     }
   },
   "referral": {
-    "fallbackModel": "HFReferralModel",
+    "fallbackModel": "ReferralModel",
     "models": {
       "ReferralModel": {
         "mappings": {
@@ -417,19 +417,20 @@ final jsonConfig = {
           "recipientId":
               "__switch:referralDetails.evaluationFacilityKey:{Community Health Worker:STAFF,default:FACILITY}",
           "recipientType":
-              "__switch:referralDetails.evaluationFacilityKey:{Community Health Worker:__context:loggedInUser,default:referralDetails.evaluationFacilityKey}",
-          "referrerId": "__context:loggedInUser",
+              "__switch:referralDetails.evaluationFacilityKey:{Community Health Worker:__context:userUUID,default:referralDetails.evaluationFacilityKey}",
+          "reasons": "collect:referralDetails.reasonForReferral",
+          "referrerId": "__context:userUUID",
           "nonRecoverableError": "referralDetails.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "rowVersion": "meta.rowVersion",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
-            "boundaryCode": "referralDetails.administrativeUnit",
+            "boundaryCode": "referralDetails.administrativeArea",
             "referralComments": "referralDetails.comments",
           }
         }
-      }
+      },
     },
   },
   "ineligible": {

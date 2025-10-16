@@ -29,22 +29,12 @@ final referralConfig = '''{
               "type": "required",
               "value": true,
               "message": "Required field cannot be empty"
-            },
-            {
-              "type": "minLength",
-              "value": "2",
-              "message": "Size must be 2 to 200 characters"
-            },
-            {
-              "type": "maxLength",
-              "value": "200",
-              "message": "Size must be 2 to 200 characters"
             }
           ],
           "errorMessage": "",
           "isMultiSelect": false
         },
-        "administrativeUnit": {
+        "administrativeArea": {
           "type": "string",
           "label": "BENEFICIARY_REFERRAL_DETAILS_administrativeUnit_LABEL",
           "order": 2,
@@ -55,7 +45,7 @@ final referralConfig = '''{
           "helpText": "",
           "infoText": "",
           "readOnly": false,
-          "fieldName": "administrativeUnit",
+          "fieldName": "administrativeArea",
           "deleteFlag": false,
           "innerLabel": "",
           "systemDate": false,
@@ -121,7 +111,13 @@ final referralConfig = '''{
           "deleteFlag": false,
           "innerLabel": "",
           "systemDate": false,
-          "validations": [],
+          "validations": [
+           {
+              "type": "required",
+              "value": true,
+              "message": "Required field cannot be empty"
+            }
+            ],
           "errorMessage": "",
           "isMultiSelect": false
         },
@@ -142,7 +138,24 @@ final referralConfig = '''{
           "schemaCode": "HCM.REFERRAL_REASONS",
           "systemDate": false,
           "validations": [],
-          "enums": [],
+          "enums": [
+            {
+              "code": "DRUG_SE_CC",
+              "name": "Drug Side Effect from the current cycle"
+            },
+            {
+              "code": "DRUG_SE_PC",
+              "name": "Drug Side Effect from the previous cycle"
+            },
+            {
+              "code": "FEVER",
+              "name": "Fever"
+            },
+            {
+              "code": "SICK",
+              "name": "Sick"
+            }
+          ],
           "errorMessage": "",
           "isMultiSelect": false
         },
@@ -167,7 +180,7 @@ final referralConfig = '''{
         }
       },
       "navigateTo": {
-        "name": "household-overview",
+        "name": "household-acknowledgement",
         "type": "template"
       }
     }

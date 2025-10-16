@@ -77,6 +77,11 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
               localKey: 'beneficiaryClientReferenceId',
               foreignKey: 'clientReferenceId',
             ),
+          const RelationshipMapping(
+              from: 'projectBeneficiary',
+              to: 'referral',
+              localKey: 'clientReferenceId',
+              foreignKey: 'projectBeneficiaryClientReferenceId'),
         ],
         nestedModelMappings: [
           const NestedModelMapping(
@@ -186,6 +191,8 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
           ProjectBeneficiarySearchModel>(context);
     } else if (entity is TaskModel) {
       context.repository<TaskModel, TaskSearchModel>(context);
+    } else if (entity is ReferralModel) {
+      context.repository<ReferralModel, ReferralSearchModel>(context);
     } else {
       return context.repository<HouseholdModel, HouseholdSearchModel>(context);
     }
