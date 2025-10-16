@@ -374,7 +374,7 @@ class MemberCard extends StatelessWidget {
                                             .cachedSchemas[
                                                 'ELIGIBILITYCHECKLIST']
                                             ?.pages
-                                            .entries
+                                            ?.entries
                                             .first
                                             .key;
 

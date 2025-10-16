@@ -414,9 +414,9 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "projectBeneficiaryClientReferenceId":
               "__context:projectBeneficiaryModel.clientReferenceId",
-          "recipientId":
-              "__switch:referralDetails.evaluationFacilityKey:{Community Health Worker:STAFF,default:FACILITY}",
           "recipientType":
+              "__switch:referralDetails.evaluationFacilityKey:{Community Health Worker:STAFF,default:__value:FACILITY}",
+          "recipientId":
               "__switch:referralDetails.evaluationFacilityKey:{Community Health Worker:__context:userUUID,default:referralDetails.evaluationFacilityKey}",
           "reasons": "collect:referralDetails.reasonForReferral",
           "referrerId": "__context:userUUID",

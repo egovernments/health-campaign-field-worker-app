@@ -405,6 +405,12 @@ class _SearchBeneficiaryPageState
                         ],
                       ));
                     }
+                    context.read<FormsBloc>().add(
+                          const FormsEvent.clearForm(
+                              schemaKey:
+                                  'ELIGIBILITYCHECKLIST'), // or create a FormsResetEvent
+                        );
+                    Navigator.of(context, rootNavigator: true).pop();
                   } else if (navigateToName == 'household-overview' &&
                       navigateToType == 'template') {
                     final modelsConfig = (jsonConfig['ineligible']?['models']
@@ -486,13 +492,13 @@ class _SearchBeneficiaryPageState
                     if (nextPath != null) {
                       context.router.push(nextPath);
                     }
+                    context.read<FormsBloc>().add(
+                          const FormsEvent.clearForm(
+                              schemaKey:
+                                  'ELIGIBILITYCHECKLIST'), // or create a FormsResetEvent
+                        );
+                    Navigator.of(context, rootNavigator: true).pop();
                   }
-                  context.read<FormsBloc>().add(
-                        const FormsEvent.clearForm(
-                            schemaKey:
-                                'ELIGIBILITYCHECKLIST'), // or create a FormsResetEvent
-                      );
-                  Navigator.of(context, rootNavigator: true).pop();
                   return;
                 }
                 final modelsConfig =
