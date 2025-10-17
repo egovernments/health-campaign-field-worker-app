@@ -1548,7 +1548,7 @@ class _SearchBeneficiaryPageState
     TemplateConfig? template,
   ) {
     final primaryProp = template?.properties?['PrimaryButton'];
-    final secondaryProp = template?.properties?['SecondaryButton'];
+    final secondaryProp = template?.properties?['qrscanner'] != null ? template?.properties?['qrscanner'] : template?.properties?['SecondaryButton'] ;
 
     final entries = <MapEntry<int, DigitButton>>[];
 
