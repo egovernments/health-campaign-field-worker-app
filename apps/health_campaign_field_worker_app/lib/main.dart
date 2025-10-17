@@ -3230,7 +3230,7 @@ final dynamic sampleInventoryFlows = {
               "validations": [
                 {
                   "type": "required",
-                  "value": true,
+                  "value": false,
                   "message": "Waybill number is required"
                 }
               ],
@@ -3256,7 +3256,7 @@ final dynamic sampleInventoryFlows = {
               "validations": [
                 {
                   "type": "required",
-                  "value": true,
+                  "value": false,
                   "message": "Batch number is required"
                 }
               ],
@@ -3378,7 +3378,7 @@ final dynamic sampleInventoryFlows = {
               "validations": [
                 {
                   "type": "required",
-                  "value": true,
+                  "value": false,
                   "message": "Comment is required when quantities differ"
                 }
               ],
@@ -3474,6 +3474,9 @@ final dynamic sampleInventoryFlows = {
                 "actionType": "SHOW_TOAST",
                 "properties": {"message": "Navigation failed."}
               }
+            ],
+            "data": [
+              {"key": "mrnNumber", "value": "{{navigation.mrnNumber}}"}
             ]
           }
         }
@@ -3488,7 +3491,7 @@ final dynamic sampleInventoryFlows = {
         {
           "format": "panelCard",
           "label": "Material receipt created successfully",
-          "description": "MRN Number {{contextData.mrnNumber}}",
+          "description": "MRN Number {{navigation.mrnNumber}}",
           "properties": {"type": "success"},
           "primaryAction": {
             "label": "View Transaction",
@@ -3501,7 +3504,7 @@ final dynamic sampleInventoryFlows = {
                   "data": [
                     {
                       "key": "selectedStock",
-                      "value": "{{contextData.clientReferenceId}}"
+                      "value": "{{navigation.mrnNumber}}"
                     }
                   ]
                 }
@@ -3526,7 +3529,7 @@ final dynamic sampleInventoryFlows = {
     {
       "screenType": "TEMPLATE",
       "name": "viewTransaction",
-      "heading": "Select the MIN number",
+      "heading": "Select the MRN number",
       "description": "",
       "header": [
         {
@@ -3558,6 +3561,7 @@ final dynamic sampleInventoryFlows = {
         "wrapperName": "ViewStockWrapper",
         "groupByType": true,
         "rootEntity": "StockModel",
+        "groupBy": "additionalFields.fields.mrnNumber",
         "filters": [],
         "relations": [
           {
@@ -3599,13 +3603,13 @@ final dynamic sampleInventoryFlows = {
                   {
                     "format": "tag",
                     "type": "",
-                    "label": "{{item.additionalFields.fields.mrnNumber}}"
+                    "label": "MRN - {{item.groupKey}}"
                   },
                   {
                     "format": "text",
                     "value":
-                        "{{fn:formatDate(item.dateOfEntry, dateTime, dd MMMM yyyy)}}"
-                  },
+                        "{{fn:formatDate(item.items[0].dateOfEntry, dateTime, dd MMMM yyyy)}}"
+                  }
                 ]
               },
               {
@@ -3623,7 +3627,10 @@ final dynamic sampleInventoryFlows = {
                     },
                     "children": [
                       {"format": "text", "value": "Issued to"},
-                      {"format": "text", "value": "{{item.receiverId}}"},
+                      {
+                        "format": "text",
+                        "value": "{{item.items[0].receiverId}}"
+                      }
                     ]
                   },
                   {
@@ -3638,6 +3645,16 @@ final dynamic sampleInventoryFlows = {
                     "onAction": []
                   },
                 ]
+              },
+              {
+                "format": "listView",
+                "fieldName": "groupedItems",
+                "dataSource": "item.items",
+                "child": {
+                  "format": "text",
+                  "value":
+                      "{{item.additionalFields.fields.sku}}: {{item.quantity}}"
+                }
               },
               {
                 "format": "button",
@@ -3656,8 +3673,8 @@ final dynamic sampleInventoryFlows = {
                       "name": "viewTransactionDetails",
                       "data": [
                         {
-                          "key": "selectedStock",
-                          "value": "{{item.clientReferenceId}}"
+                          "key": "selectedMrnNumber",
+                          "value": "{{item.groupKey}}"
                         }
                       ]
                     }
@@ -3695,9 +3712,9 @@ final dynamic sampleInventoryFlows = {
             "name": "stock",
             "data": [
               {
-                "key": "clientReferenceId",
-                "value": "{{navigation.selectedStock}}",
-                "operation": "equals"
+                "key": "additionalFields",
+                "value": "{{navigation.selectedMrnNumber}}",
+                "operation": "contains"
               }
             ]
           }
@@ -3705,17 +3722,13 @@ final dynamic sampleInventoryFlows = {
       ],
       "wrapperConfig": {
         "wrapperName": "ViewStockWrapper",
-        "groupByType": false,
+        "groupByType": true,
         "rootEntity": "StockModel",
         "filters": [],
         "relations": [
           {
             "name": "stock",
             "entity": "StockModel",
-            "match": {
-              "field": "clientReferenceId",
-              "equalsFrom": "{{clientReferenceId}}"
-            }
           }
         ],
         "searchConfig": {
@@ -3725,39 +3738,43 @@ final dynamic sampleInventoryFlows = {
       },
       "body": [
         {
-          "format": "labelPairList",
-          "data": [
-            {
-              "key": "Resource",
-              "value": "{{stock.additionalFields.fields.sku}}"
-            },
-            {
-              "key": "Received From",
-              "value": "{{contextData.0.StockModel.StockModel.referenceId}}"
-            },
-            {"key": "MRN number", "value": "{{context.0.stock.referenceId}}"},
-            {
-              "key": "Waybill number",
-              "value": "{{context.0.stock.wayBillNumber}}"
-            },
-            {
-              "key": "Batch number",
-              "value": "{{context.0.stock.additionalFields.fields.batchNumber}}"
-            },
-            {
-              "key": "Expiry",
-              "value":
-                  "{{fn:formatDate(context.0.stock.additionalFields.fields.expiryDate, dateTime, dd MMMM yyyy)}}"
-            },
-            {
-              "key": "Quantity of blisters received",
-              "value": "{{context.0.stock.quantity}}"
-            },
-            {
-              "key": "Comments",
-              "value": "{{context.0.stock.additionalFields.fields.comments}}"
-            }
-          ]
+          "format": "listView",
+          "fieldName": "stockItems",
+          "dataSource": "StockModel",
+          "child": {
+            "format": "card",
+            "children": [
+              {
+                "format": "labelPairList",
+                "data": [
+                  {
+                    "key": "Resource",
+                    "value": "{{item.additionalFields.fields.sku}}"
+                  },
+                  {"key": "Received From", "value": "{{item.receiverId}}"},
+                  {
+                    "key": "MRN number",
+                    "value": "{{item.additionalFields.fields.mrnNumber}}"
+                  },
+                  {"key": "Waybill number", "value": "{{item.wayBillNumber}}"},
+                  {
+                    "key": "Batch number",
+                    "value": "{{item.additionalFields.fields.batchNumber}}"
+                  },
+                  {
+                    "key": "Expiry",
+                    "value":
+                        "{{fn:formatDate(item.additionalFields.fields.expiryDate, dateTime, dd MMMM yyyy)}}"
+                  },
+                  {"key": "Quantity received", "value": "{{item.quantity}}"},
+                  {
+                    "key": "Comments",
+                    "value": "{{item.additionalFields.fields.comments}}"
+                  }
+                ]
+              }
+            ]
+          }
         }
       ]
     }

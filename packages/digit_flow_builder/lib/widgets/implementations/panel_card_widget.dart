@@ -20,8 +20,10 @@ class PanelCardWidget implements FlowWidget {
     void Function(ActionConfig) onAction,
   ) {
     final crudCtx = CrudItemContext.of(context);
-    final label = json['label'] ?? '';
-    final description = json['description'] ?? '';
+    final label = resolveTemplate(json['label'] ?? '',
+        crudCtx?.item != null ? crudCtx!.item : crudCtx?.stateData?.rawState);
+    final description = resolveTemplate(json['description'] ?? '',
+        crudCtx?.item != null ? crudCtx!.item : crudCtx?.stateData?.rawState);
     Map<String, dynamic>? primaryAction = json['primaryAction'];
     Map<String, dynamic>? secondaryAction = json['secondaryAction'];
 

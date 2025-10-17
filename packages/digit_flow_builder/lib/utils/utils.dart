@@ -290,7 +290,9 @@ dynamic _resolvePath(dynamic root, String path) {
   var parts = path.split('.');
 
   dynamic current = root;
-  for (var part in parts) {
+  for (var i = 0; i < parts.length; i++) {
+    final part = parts[i];
+
     // ✅ If current is JSON string, decode it into Map/List
     if (current is String &&
         (current.trim().startsWith('{') || current.trim().startsWith('['))) {
@@ -322,6 +324,29 @@ dynamic _resolvePath(dynamic root, String path) {
     else if (current is Map<String, dynamic>) {
       if (!current.containsKey(part)) return null;
       current = current[part];
+
+      // Special case: if current is a List<AdditionalField> and there are more parts
+      // convert to a map for easier access
+      if (current is List && i < parts.length - 1) {
+        try {
+          // Check if this is a List<AdditionalField> by checking first element
+          if (current.isNotEmpty &&
+              current.first is Map &&
+              (current.first as Map).containsKey('key') &&
+              (current.first as Map).containsKey('value')) {
+            // Convert List<AdditionalField> to Map<String, dynamic>
+            final fieldsMap = <String, dynamic>{};
+            for (var field in current) {
+              if (field is Map && field['key'] != null) {
+                fieldsMap[field['key'].toString()] = field['value'];
+              }
+            }
+            current = fieldsMap;
+          }
+        } catch (_) {
+          // If conversion fails, continue with normal processing
+        }
+      }
     }
     // List access
     else if (current is List) {
@@ -330,6 +355,26 @@ dynamic _resolvePath(dynamic root, String path) {
         if (idx < 0 || idx >= current.length) return null;
         current = current[idx];
       } else {
+        // Check if this is a List<AdditionalField> and we're looking for a key
+        try {
+          if (current.isNotEmpty &&
+              current.first is Map &&
+              (current.first as Map).containsKey('key') &&
+              (current.first as Map).containsKey('value')) {
+            // Search for the field with matching key
+            for (var field in current) {
+              if (field is Map && field['key'] == part) {
+                current = field['value'];
+                break;
+              }
+            }
+            continue;
+          }
+        } catch (_) {
+          // Fall through to type-based search
+        }
+
+        // Type-based search
         dynamic foundItem;
         for (var item in current) {
           try {
