@@ -438,7 +438,8 @@ class BeneficiaryDetailsPageState
                                                                                 currentSchemaKey: 'DELIVERYFLOW',
                                                                                 pageName: pageName,
                                                                                 defaultValues: {
-                                                                                  'locality': localizations.translate(RegistrationDeliverySingleton().boundary?.code ?? '')
+                                                                                  'locality': localizations.translate(RegistrationDeliverySingleton().boundary?.code ?? ''),
+                                                                                  'beneficiaryID': state.selectedIndividual?.individual.identifiers?.first.identifierId
                                                                                 },
                                                                                 customComponents: const [
                                                                                   {
@@ -637,7 +638,8 @@ class BeneficiaryDetailsPageState
                                                               .beneficiaryDetailsKeys
                                                               .detailsCardKey]
                                                       ?.enums,
-                                                  selectedIndividual: state.selectedIndividual)
+                                                  selectedIndividual:
+                                                      state.selectedIndividual)
                                               ?.map((k, v) => MapEntry(
                                                   localizations.translate(k),
                                                   localizations.translate(

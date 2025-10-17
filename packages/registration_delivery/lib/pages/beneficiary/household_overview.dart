@@ -999,6 +999,13 @@ class _HouseholdOverviewPageState
                                             showAddChildAction: false,
                                             isHead: isHead,
                                             individual: e,
+                                            deliveryButtonLabel:
+                                                overviewTemplate
+                                                    ?.properties?[
+                                                        registration_keys
+                                                            .commonKeys
+                                                            .primaryButtonKey]
+                                                    ?.label,
                                             household: household,
                                             // children: childBeneficiaries,
                                             projectBeneficiaries:

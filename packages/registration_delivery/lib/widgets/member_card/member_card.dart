@@ -50,6 +50,7 @@ class MemberCard extends StatelessWidget {
   final bool isBeneficiaryRefused;
   final bool isBeneficiaryReferred;
   final String? projectBeneficiaryClientReferenceId;
+  final String? deliveryButtonLabel;
 
   const MemberCard({
     super.key,
@@ -77,6 +78,7 @@ class MemberCard extends StatelessWidget {
     this.editMemberActionProperties,
     this.primaryButtonProperties,
     this.secondaryButtonProperties,
+    this.deliveryButtonLabel,
   });
 
   @override
@@ -333,8 +335,9 @@ class MemberCard extends StatelessWidget {
                                                   .viewDeliveryLabel,
                                             )
                                           : localizations.translate(
-                                              i18.householdOverView
-                                                  .householdOverViewActionText,
+                                              deliveryButtonLabel ??
+                                                  i18.householdOverView
+                                                      .householdOverViewActionText,
                                             ),
                                       onPressed: () {
                                         if (allDosesDelivered(
@@ -377,7 +380,7 @@ class MemberCard extends StatelessWidget {
                                             .cachedSchemas[
                                                 'ELIGIBILITYCHECKLIST']
                                             ?.pages
-                                            ?.entries
+                                            .entries
                                             .first
                                             .key;
 
@@ -417,6 +420,19 @@ class MemberCard extends StatelessWidget {
                 const SizedBox(
                   height: spacer2,
                 ),
+                if (isHead)
+                  Tag(
+                    label:
+                        localizations.translate("CORE_COMMON_HEADOFHOUSEHOLD"),
+                    type: TagType.monochrome,
+                    isStroke: true,
+                    customIcon: Icon(
+                      Icons.info,
+                      size: 16,
+                      color: theme.colorTheme.primary.primary2,
+                    ),
+                    isIcon: true,
+                  ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
