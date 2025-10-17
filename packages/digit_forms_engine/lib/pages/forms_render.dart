@@ -111,13 +111,36 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                 : localizations
                                     .translate(schema.actionLabel ?? 'Submit'),
                             onPressed: () {
-                              // 1. Get visible keys only (skip hidden fields)
+                              // 1. Get visible keys only (skip hidden fields and fields with visibility conditions)
                               final currentKeys = schema.properties?.entries
                                       .where((entry) {
-                                        final isVisible =
-                                            !isHidden(entry.value);
+                                        final isStaticHidden = isHidden(entry.value);
                                         final includeInForm =
                                             entry.value.includeInForm == true;
+
+                                        // Check if field is hidden by visibility condition
+                                        final hasDynamicVisibility = entry.value.visibilityCondition != null;
+                                        bool isDynamicallyHidden = false;
+
+                                        if (hasDynamicVisibility) {
+                                          final formState = context.read<FormsBloc>().state;
+                                          final currentPageKey = widget.pageName;
+                                          final currentSchemaKey = widget.currentSchemaKey;
+
+                                          final values = buildVisibilityEvaluationContext(
+                                            currentPageKey: currentPageKey,
+                                            currentForm: formGroup,
+                                            pages: formState.cachedSchemas[currentSchemaKey]!.pages,
+                                            navigationParams: widget.navigationParams,
+                                          );
+
+                                          isDynamicallyHidden = !evaluateVisibilityExpression(
+                                            entry.value.visibilityCondition!.expression,
+                                            values,
+                                          );
+                                        }
+
+                                        final isVisible = !isStaticHidden && !isDynamicallyHidden;
                                         return isVisible || includeInForm;
                                       })
                                       .map((entry) => entry.key)

@@ -19,15 +19,14 @@ class LabelPairListWidget implements FlowWidget {
   ) {
     final crudCtx = CrudItemContext.of(context);
     final List<dynamic> data = json['data'] ?? [];
-
     return LabelValueSummary(
       padding: const EdgeInsets.all(0),
       items: data.map((e) {
         final key = e['key'] ?? '';
         final value = e['value'];
 
-        final valueText = resolveValue(
-            value,
+        final valueText = resolveTemplate(
+            value ?? '',
             crudCtx?.item != null
                 ? crudCtx!.item
                 : crudCtx?.stateData?.rawState);
