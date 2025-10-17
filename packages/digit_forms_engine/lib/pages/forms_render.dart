@@ -694,9 +694,63 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
       String displayValue;
 
       if (rawValue is List) {
-        displayValue = rawValue
-            .map((e) => localizations.translate(e.toString()))
-            .join(', ');
+        // Check if list contains objects (Maps)
+        if (rawValue.isNotEmpty && rawValue.first is Map) {
+          displayValue = rawValue.map((item) {
+            if (item is Map) {
+              // Helper function to extract name and quantity from nested structure
+              String? extractName(dynamic obj) {
+                if (obj is Map) {
+                  // Look for name field in the object or nested objects
+                  if (obj.containsKey('name')) return obj['name']?.toString();
+                  // Check nested objects
+                  for (var value in obj.values) {
+                    if (value is Map && value.containsKey('name')) {
+                      return value['name']?.toString();
+                    }
+                  }
+                }
+                return null;
+              }
+
+              String? extractQuantity(dynamic obj) {
+                if (obj is Map) {
+                  // Look for quantity-related fields
+                  final quantityKeys = ['quantity', 'quantityDistributed', 'quantityDelivered', 'qty'];
+                  for (var key in quantityKeys) {
+                    if (obj.containsKey(key)) return obj[key]?.toString();
+                  }
+                  // Check nested objects
+                  for (var value in obj.values) {
+                    if (value is Map) {
+                      for (var key in quantityKeys) {
+                        if (value.containsKey(key)) return value[key]?.toString();
+                      }
+                    }
+                  }
+                }
+                return null;
+              }
+
+              final name = extractName(item);
+              final quantity = extractQuantity(item);
+
+              if (name != null && quantity != null) {
+                return '${localizations.translate(name)}: $quantity';
+              }
+
+              // Fallback: show all key-value pairs if name/quantity not found
+              return item.entries
+                  .map((e) => '${localizations.translate(e.key.toString())}: ${localizations.translate(e.value.toString())}')
+                  .join(', ');
+            }
+            return localizations.translate(item.toString());
+          }).join(', ');
+        } else {
+          displayValue = rawValue
+              .map((e) => localizations.translate(e.toString()))
+              .join(', ');
+        }
       } else if (rawValue is String && isDotSeparatedKey(rawValue)) {
         displayValue = rawValue
             .split('.')
