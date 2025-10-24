@@ -17,6 +17,7 @@ class CustomSyncRegistry implements SyncUpOperation {
       await remote.bulkUpdate(entities);
     } catch (e) {
       debugPrint('$e');
+      rethrow;
     }
   }
 
@@ -26,6 +27,7 @@ class CustomSyncRegistry implements SyncUpOperation {
       await remote.bulkDelete(entities);
     } catch (e) {
       debugPrint('$e');
+      rethrow;
     }
   }
 
@@ -35,9 +37,9 @@ class CustomSyncRegistry implements SyncUpOperation {
       await remote.singleCreate(entity);
     } catch (e) {
       debugPrint('$e');
+      rethrow;
     }
   }
-
 
   @override
   Future<void> singleUpdate(EntityModel entity, LocalRepository local) async {
@@ -45,6 +47,7 @@ class CustomSyncRegistry implements SyncUpOperation {
       await remote.singleUpdate(entity);
     } catch (e) {
       debugPrint('$e');
+      rethrow;
     }
   }
 
@@ -131,6 +134,7 @@ class CustomSyncRegistry implements SyncUpOperation {
       }
     } catch (e) {
       debugPrint('$e');
+      rethrow;
     }
   }
 
