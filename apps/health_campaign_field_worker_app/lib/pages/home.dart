@@ -8,6 +8,10 @@ import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:complaints/complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:crypto/crypto.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:digit_crud_bloc/digit_crud_bloc.dart';
+import 'package:digit_crud_bloc/repositories/local/search_entity_repository.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_data_model/models/templates/template_config.dart';
@@ -15,8 +19,10 @@ import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
+import 'package:digit_flow_builder/data/digit_crud_service.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
+import 'package:digit_flow_builder/utils/function_registry.dart';
 import 'package:digit_location_tracker/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
@@ -57,6 +63,8 @@ import '../utils/least_level_boundary_singleton.dart';
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
+import '../widgets/inventory/custom_facility_widgets.dart';
+import '../widgets/inventory/custom_product_selection_card.dart';
 import '../widgets/localized.dart';
 import '../widgets/resource_card/custom_resource_card.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
@@ -92,7 +100,6 @@ class _HomePageState extends LocalizedState<HomePage> {
         }
       }
     });
-    NavigationRegistry.setupNavigation(context);
     //// Function to set initial Data required for the packages to run
     setPackagesSingleton(context);
 
@@ -116,6 +123,79 @@ class _HomePageState extends LocalizedState<HomePage> {
         );
       },
     );
+    CustomComponentRegistry().registerBuilder(
+      'facilityToWhich',
+      (context, stateAccessor) {
+        // Access data from any page in the flow
+        final stockData = stateAccessor.getPageData('manageStock');
+
+        // Build your component with access to all this data
+        return FacilityCard(
+          stateData: stockData,
+          formKey: 'facilityToWhich',
+          dependantFormKey: 'teamCode',
+        );
+      },
+    );
+    CustomComponentRegistry().registerBuilder(
+      'facilityFromWhich',
+      (context, stateAccessor) {
+        // Access data from any page in the flow
+        final stockData = stateAccessor.getPageData('manageStock');
+
+        // Build your component with access to all this data
+        return FacilityCard(
+          stateData: stockData,
+          formKey: 'facilityFromWhich',
+          dependantFormKey: 'deliveryTeam',
+        );
+      },
+    );
+    CustomComponentRegistry().registerBuilder(
+      'productdetail',
+      (context, stateAccessor) {
+        // Access data from any page in the flow
+        final stockData = stateAccessor.getPageData('manageStock');
+
+        // Build your component with access to all this data
+        return ProductSelectionCard(
+          stateData: stockData,
+        );
+      },
+    );
+    FunctionRegistry.register('generateUniqueMaterialNoteNumber',
+        (args, stateData) {
+      // Generate a synchronous unique ID without async operations
+      int timestamp = DateTime.now().millisecondsSinceEpoch;
+      String userUuid = context.loggedInUserUuid;
+
+      // Create a combined string with timestamp and user UUID
+      String combinedId = '$userUuid$timestamp';
+
+      // Generate SHA-256 hash
+      List<int> bytes = utf8.encode(combinedId);
+      Digest sha256Hash = sha256.convert(bytes);
+
+      // Convert the hash to a 12-character string and make it uppercase
+      String hashString = sha256Hash.toString();
+      String uniqueId = hashString.substring(0, 12).toUpperCase();
+
+      // Add a hyphen every 4 characters
+      String formattedUniqueId = uniqueId.replaceAllMapped(
+        RegExp(r'.{1,4}'),
+        (match) => '${match.group(0)}-',
+      );
+
+      // Remove the last hyphen
+      formattedUniqueId =
+          formattedUniqueId.substring(0, formattedUniqueId.length - 1);
+
+      if (kDebugMode) {
+        print('uniqueId : $formattedUniqueId');
+      }
+
+      return formattedUniqueId;
+    });
   }
 
   //  Be sure to cancel subscription after you are done
@@ -465,7 +545,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                     delTemplatesRaw is Map<String, dynamic>
                         ? delTemplatesRaw
                         : {};
-
                 final templates = {
                   for (final entry
                       in {...regTemplateMap, ...delTemplateMap}.entries)
@@ -490,7 +569,112 @@ class _HomePageState extends LocalizedState<HomePage> {
                 persistenceConfiguration:
                     PersistenceConfiguration.offlineFirst);
             WidgetRegistry.initialize();
+            CrudBlocSingleton().setData(
+              crudService: DigitCrudService(
+                context: context,
+                relationshipMap: [
+                  const RelationshipMapping(
+                      from: 'name',
+                      to: 'individual',
+                      localKey: 'individualClientReferenceId',
+                      foreignKey: 'clientReferenceId'),
+                  const RelationshipMapping(
+                      from: 'identifier',
+                      to: 'individual',
+                      localKey: 'individualClientReferenceId',
+                      foreignKey: 'clientReferenceId'),
+                  const RelationshipMapping(
+                      from: 'householdMember',
+                      to: 'individual',
+                      localKey: 'individualClientReferenceId',
+                      foreignKey: 'clientReferenceId'),
+                  const RelationshipMapping(
+                      from: 'address',
+                      to: 'household',
+                      localKey: 'relatedClientReferenceId',
+                      foreignKey: 'clientReferenceId'),
+                  const RelationshipMapping(
+                      from: 'householdMember',
+                      to: 'household',
+                      localKey: 'householdClientReferenceId',
+                      foreignKey: 'clientReferenceId'),
+                  const RelationshipMapping(
+                      from: 'projectBeneficiary',
+                      to: 'task',
+                      localKey: 'clientReferenceId',
+                      foreignKey: 'projectBeneficiaryClientReferenceId'),
+                  // Conditional mapping
+                  if (FlowBuilderSingleton().beneficiaryType ==
+                      BeneficiaryType.household)
+                    const RelationshipMapping(
+                      from: 'projectBeneficiary',
+                      to: 'household',
+                      localKey: 'beneficiaryClientReferenceId',
+                      foreignKey: 'clientReferenceId',
+                    )
+                  else
+                    const RelationshipMapping(
+                      from: 'projectBeneficiary',
+                      to: 'individual',
+                      localKey: 'beneficiaryClientReferenceId',
+                      foreignKey: 'clientReferenceId',
+                    ),
+                ],
+                nestedModelMappings: [
+                  const NestedModelMapping(
+                    rootModel: 'individual',
+                    fields: {
+                      'name': NestedFieldMapping(
+                        table: 'name',
+                        localKey: 'clientReferenceId',
+                        foreignKey: 'individualClientReferenceId',
+                        type: NestedMappingType.one,
+                      ),
+                      'address': NestedFieldMapping(
+                        table: 'address',
+                        localKey: 'clientReferenceId',
+                        foreignKey: 'relatedClientReferenceId',
+                        type: NestedMappingType.many,
+                      ),
+                      'identifiers': NestedFieldMapping(
+                        table: 'identifier',
+                        localKey: 'clientReferenceId',
+                        foreignKey: 'individualClientReferenceId',
+                        type: NestedMappingType.many,
+                      ),
+                    },
+                  ),
+                  const NestedModelMapping(
+                    rootModel: 'household',
+                    fields: {
+                      'address': NestedFieldMapping(
+                        table: 'address',
+                        localKey: 'clientReferenceId',
+                        foreignKey: 'relatedClientReferenceId',
+                        type: NestedMappingType.one,
+                      ),
+                    },
+                  ),
+                  const NestedModelMapping(
+                    rootModel: 'task',
+                    fields: {
+                      'resource': NestedFieldMapping(
+                        table: 'resource',
+                        localKey: 'taskclientReferenceId',
+                        foreignKey: 'clientReferenceId',
+                        type: NestedMappingType.many,
+                      ),
+                    },
+                  ),
+                ],
+                searchEntityRepository: context.read<SearchEntityRepository>(),
+              ),
+              dynamicEntityModelListener: EntityModelMapMapper(),
+            );
             try {
+              FlowRegistry.setConfig(
+                  sampleFlows["flows"] as List<Map<String, dynamic>>);
+              NavigationRegistry.setupNavigation(context);
               context.router.push(
                 FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
               );
@@ -545,7 +729,64 @@ class _HomePageState extends LocalizedState<HomePage> {
               triggerLocalization();
               isTriggerLocalisation = false;
             }
-            context.router.push(ManageStocksRoute());
+            try {
+              CrudBlocSingleton().setData(
+                crudService: DigitCrudService(
+                  context: context,
+                  relationshipMap: [
+                    const RelationshipMapping(
+                        from: 'facility',
+                        to: 'projectFacility',
+                        localKey: 'id',
+                        foreignKey: 'facilityId'),
+                    const RelationshipMapping(
+                        from: 'projectResource',
+                        to: 'projectFacility',
+                        localKey: 'projectId',
+                        foreignKey: 'projectId'),
+                    const RelationshipMapping(
+                        from: 'productVariant',
+                        to: 'projectResource',
+                        localKey: 'id',
+                        foreignKey: 'resource'),
+                  ],
+                  nestedModelMappings: [
+                    const NestedModelMapping(
+                      rootModel: 'projectFacility',
+                      fields: {
+                        'facility': NestedFieldMapping(
+                          table: 'facility',
+                          localKey: 'facilityId',
+                          foreignKey: 'id',
+                          type: NestedMappingType.one,
+                        ),
+                        'projectResources': NestedFieldMapping(
+                          table: 'projectResource',
+                          localKey: 'projectId',
+                          foreignKey: 'projectId',
+                          type: NestedMappingType.many,
+                        ),
+                      },
+                    ),
+                  ],
+                  searchEntityRepository:
+                      context.read<SearchEntityRepository>(),
+                ),
+                dynamicEntityModelListener: EntityModelMapMapper(),
+              );
+              WidgetRegistry.initialize();
+              FlowRegistry.setConfig(
+                  sampleInventoryFlows["flows"] as List<Map<String, dynamic>>);
+              NavigationRegistry.setupNavigation(context);
+
+              context.router.push(
+                FlowBuilderHomeRoute(
+                    pageName: sampleInventoryFlows["initialPage"]),
+              );
+            } catch (e) {
+              debugPrint('error $e');
+            }
+            // context.router.push(ManageStocksRoute());
           },
         ),
       ),

@@ -219,11 +219,17 @@ Map<String, dynamic> preprocessConfigWithState(
   int? listIndex,
   Map<String, dynamic>? item,
 }) {
-  Map<String, dynamic> walk(Map<String, dynamic> node) {
+  Map<String, dynamic> walk(Map<String, dynamic> node, {bool skipActions = false}) {
     final result = <String, dynamic>{};
 
     node.forEach((key, value) {
-      if (key == "actionType" && value == "NAVIGATION") {
+      // Skip processing onAction blocks - they should be lazy evaluated on click
+      if (key == "onAction") {
+        result[key] = value; // Keep onAction as-is, don't process
+        return;
+      }
+
+      if (key == "actionType" && value == "NAVIGATION" && !skipActions) {
         final props = node["properties"];
         if (props is Map<String, dynamic> && props["data"] is List) {
           final params = <String, dynamic>{};
@@ -253,10 +259,10 @@ Map<String, dynamic> preprocessConfigWithState(
 
         result[key] = value; // keep actionType as is
       } else if (value is Map<String, dynamic>) {
-        result[key] = walk(value);
+        result[key] = walk(value, skipActions: skipActions);
       } else if (value is List) {
         result[key] = value.map((e) {
-          if (e is Map<String, dynamic>) return walk(e);
+          if (e is Map<String, dynamic>) return walk(e, skipActions: skipActions);
           return e;
         }).toList();
       } else {

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
-import 'package:inventory_management/models/entities/stock.dart';
 
 class StockLocalRepository
     extends LocalRepository<StockModel, StockSearchModel> {
@@ -39,7 +38,7 @@ class StockLocalRepository
                 [
                   if (query.id != null) sql.stock.id.equals(query.id!),
                   if (query.receiverId != null)
-                    sql.stock.receiverId.equals(query.receiverId!),
+                    sql.stock.receiverId.isIn(query.receiverId!),
                   if (query.senderId != null)
                     sql.stock.senderId.equals(query.senderId!),
                   if (query.productVariantId != null)
@@ -113,7 +112,7 @@ class StockLocalRepository
   FutureOr<void> update(
     StockModel entity, {
     bool createOpLog = true,
-        DataOperation dataOperation = DataOperation.update,
+    DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
       final stockCompanion = entity.companion;

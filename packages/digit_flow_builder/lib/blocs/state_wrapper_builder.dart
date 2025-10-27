@@ -16,9 +16,21 @@ class EntityFieldAccessor {
   }
 }
 
-/// Enhanced field accessor that handles entity field access safely
+/// Enhanced field accessor that handles entity field access safely with caching
 class EnhancedEntityFieldAccessor {
+  // Cache for toMap() results - cleared per build cycle
+  static final Map<EntityModel, Map<String, dynamic>> _mapCache = {};
+
+  static Map<String, dynamic> _getCachedMap(EntityModel entity) {
+    return _mapCache.putIfAbsent(entity, () => entity.toMap());
+  }
+
+  static void clearCache() {
+    _mapCache.clear();
+  }
+
   static dynamic getFieldValue(EntityModel entity, String fieldName) {
+    // Fast path for common fields - avoid toMap() call
     switch (fieldName) {
       case 'boundaryCode':
         return entity.boundaryCode;
@@ -28,37 +40,31 @@ class EnhancedEntityFieldAccessor {
         return entity.auditDetails;
       case 'clientAuditDetails':
         return entity.clientAuditDetails;
-      default:
-        try {
-          final map = entity.toMap();
-          if (map.containsKey(fieldName)) {
-            return map[fieldName];
-          }
-
-          final variations = [
-            fieldName,
-            fieldName.toLowerCase(),
-            fieldName.toUpperCase(),
-            _camelCase(fieldName),
-            _snakeCase(fieldName),
-          ];
-
-          for (final variation in variations) {
-            if (map.containsKey(variation)) {
-              return map[variation];
-            }
-          }
-
-          throw Exception(
-            'Field "$fieldName" not found on entity of type ${entity.runtimeType}. '
-            'Available fields: ${map.keys.join(', ')}',
-          );
-        } catch (e) {
-          throw Exception(
-            'Error accessing field "$fieldName" on entity of type ${entity.runtimeType}: $e',
-          );
-        }
     }
+
+    // Get cached map
+    final map = _getCachedMap(entity);
+
+    // Try exact match first
+    if (map.containsKey(fieldName)) {
+      return map[fieldName];
+    }
+
+    // Try camelCase and snake_case only
+    final camelCase = _camelCase(fieldName);
+    if (camelCase != fieldName && map.containsKey(camelCase)) {
+      return map[camelCase];
+    }
+
+    final snakeCase = _snakeCase(fieldName);
+    if (snakeCase != fieldName && map.containsKey(snakeCase)) {
+      return map[snakeCase];
+    }
+
+    throw Exception(
+      'Field "$fieldName" not found on entity of type ${entity.runtimeType}. '
+      'Available fields: ${map.keys.join(', ')}',
+    );
   }
 
   static String _camelCase(String input) {
@@ -82,9 +88,33 @@ class WrapperBuilder {
 
   List<dynamic> build() {
     final List<dynamic> wrappers = [];
+    // Clear entity toMap() cache at start of build
+    EnhancedEntityFieldAccessor.clearCache();
+
     try {
       final entityMap = _groupEntitiesByType();
       final rootEntityType = config['rootEntity'];
+      final groupByType = config['groupByType'] == true;
+      final groupByField = config['groupBy'] as String?;
+
+      if (groupByType) {
+        // Return all entities grouped by type
+        final Map<String, List<dynamic>> groupedEntities = {};
+        for (final type in entityMap.keys) {
+          final entities = entityMap[type]!;
+
+          // If groupBy field is specified, further group entities by that field
+          if (groupByField != null) {
+            groupedEntities[type] =
+                _groupEntitiesByCustomField(entities, groupByField);
+          } else {
+            groupedEntities[type] = entities;
+          }
+        }
+        return groupedEntities.entries.map((e) => {e.key: e.value}).toList();
+      }
+
+      // Fallback: old behavior, return flat list for rootEntity
       final roots = entityMap[rootEntityType] ?? [];
 
       for (final root in roots) {
@@ -98,7 +128,7 @@ class WrapperBuilder {
               _findRelatedEntities(root, relation, wrapperData, entityMap);
           wrapperData[relation['name']] = relatedEntities;
 
-          // Handle nested relations within each related entity
+          // Handle nested relations
           if (relation['relations'] != null) {
             for (int i = 0; i < relatedEntities.length; i++) {
               final entity = relatedEntities[i];
@@ -110,21 +140,16 @@ class WrapperBuilder {
                 nestedData[nestedRelation['name']] = nestedEntities;
               }
 
-              // Add nested relations to the entity
               if (entity is Map) {
                 entity.addAll(nestedData);
               } else {
-                // If entity is not a Map, we need to wrap it
-                relatedEntities[i] = {
-                  'entity': entity,
-                  ...nestedData,
-                };
+                relatedEntities[i] = {'entity': entity, ...nestedData};
               }
             }
           }
         }
 
-        // 2. Apply normal fields (supports String or Map config)
+        // 2. Apply normal fields
         final fields = config['fields'] as Map<String, dynamic>? ?? {};
         for (final entry in fields.entries) {
           final valueConfig = entry.value;
@@ -139,11 +164,11 @@ class WrapperBuilder {
           }
         }
 
-        // 3. Apply computed fields
+        // 3. Computed fields
         final computed = _applyComputed(wrapperData, config);
         wrapperData.addAll(computed);
 
-        // 4. Apply computed list fields
+        // 4. Computed list fields
         final computedList = _applyComputedList(wrapperData, config);
         wrapperData.addAll(computedList);
 
@@ -151,7 +176,11 @@ class WrapperBuilder {
       }
     } catch (e, st) {
       debugPrint('WrapperBuilder.build error: $e\n$st');
+    } finally {
+      // Clear cache after build to free memory
+      EnhancedEntityFieldAccessor.clearCache();
     }
+
     return wrappers;
   }
 
@@ -164,6 +193,41 @@ class WrapperBuilder {
       map.putIfAbsent(typeName, () => []).add(entity);
     }
     return map;
+  }
+
+  /// Groups a list of entities by a custom field path (e.g., "additionalFields.fields.mrnNumber")
+  /// Returns a list of group objects: [{"groupKey": "value1", "items": [entity1, entity2]}, ...]
+  List<Map<String, dynamic>> _groupEntitiesByCustomField(
+    List<dynamic> entities,
+    String fieldPath,
+  ) {
+    // Group entities by field value
+    final Map<String, List<dynamic>> groupedByField = {};
+
+    for (final entity in entities) {
+      try {
+        // Resolve the field value for this entity
+        final fieldValue = _resolveValue(fieldPath, entity, {});
+        final groupKey = fieldValue?.toString() ?? 'null';
+
+        groupedByField.putIfAbsent(groupKey, () => []).add(entity);
+      } catch (e) {
+        debugPrint('Error grouping entity by field $fieldPath: $e');
+        // Put ungroupable entities in a 'null' group
+        groupedByField.putIfAbsent('null', () => []).add(entity);
+      }
+    }
+
+    // Convert to list of group objects with groupKey and items
+    final result = <Map<String, dynamic>>[];
+    for (final entry in groupedByField.entries) {
+      result.add({
+        'groupKey': entry.key,
+        'items': entry.value,
+      });
+    }
+
+    return result;
   }
 
   bool _passesFilters(dynamic root, Map<String, List<dynamic>> entityMap) {
@@ -301,8 +365,6 @@ class WrapperBuilder {
   dynamic _evaluateFieldMap(Map<String, dynamic> fieldConfig, dynamic root,
       Map<String, dynamic> wrapperData) {
     var list = _resolveValue(fieldConfig['from'], root, wrapperData);
-    debugPrint('FieldMap[from]: ${fieldConfig['from']} -> $list');
-    debugPrint('FieldMap config: $fieldConfig');
 
     if (list == null) {
       list = [];
@@ -321,21 +383,15 @@ class WrapperBuilder {
 
       // Handle multiple where conditions (array of conditions)
       if (whereConf is List) {
-        debugPrint('Evaluating multiple where conditions: $whereConf');
         list = list.where((item) {
-          final result = whereConf.every(
+          return whereConf.every(
               (condition) => _evaluateCondition(condition, item, wrapperData));
-          debugPrint('Item $item passed all conditions: $result');
-          return result;
         });
       }
       // Handle single where condition (legacy support)
       else if (whereConf is Map) {
-        debugPrint('Evaluating single where condition: $whereConf');
         list = list.where((item) {
-          final result = _evaluateCondition(whereConf, item, wrapperData);
-          debugPrint('Item $item passed condition: $result');
-          return result;
+          return _evaluateCondition(whereConf, item, wrapperData);
         });
       }
     }
@@ -345,8 +401,6 @@ class WrapperBuilder {
       final sel = fieldConfig['select'];
       list = list.map((item) => _resolveValue(sel, item, wrapperData));
     }
-
-    debugPrint('After where: $list');
 
     list = list.toList();
 
@@ -379,6 +433,17 @@ class WrapperBuilder {
       // Strip template braces
       if (expr.startsWith('{{') && expr.endsWith('}}')) {
         expr = expr.substring(2, expr.length - 2).trim();
+      }
+
+// Handle .length shortcut
+      if (expr.endsWith('.length')) {
+        final listPath = expr.substring(0, expr.length - '.length'.length);
+
+        var list = _resolveValue(listPath, root, wrapperData); // no {{ }}
+        if (list is Iterable) {
+          return list.length;
+        }
+        return 0; // fallback if null or not iterable
       }
 
       // now shortcut
@@ -425,6 +490,7 @@ class WrapperBuilder {
       for (var i = 0; i < parts.length; i++) {
         final part = parts[i];
         final isLast = i == parts.length - 1;
+
         if (current == null) return null;
 
         if (current is Map) {
@@ -437,6 +503,42 @@ class WrapperBuilder {
           if (idx != null && idx >= 0 && idx < current.length) {
             current = current[idx];
           } else {
+            // Check if this is a list of AdditionalField objects (or Maps with key/value)
+            if (current.isNotEmpty) {
+              final firstItem = current.first;
+              final isAdditionalFieldList = firstItem is AdditionalField ||
+                  (firstItem is Map &&
+                      firstItem.containsKey('key') &&
+                      firstItem.containsKey('value'));
+
+              if (isAdditionalFieldList) {
+                // Search for item with matching key
+                for (final item in current) {
+                  String? itemKey;
+                  dynamic itemValue;
+
+                  if (item is AdditionalField) {
+                    itemKey = item.key;
+                    itemValue = item.value;
+                  } else if (item is Map) {
+                    itemKey = item['key']?.toString();
+                    itemValue = item['value'];
+                  }
+
+                  if (itemKey == part) {
+                    current = itemValue;
+                    break;
+                  }
+                }
+                // If we found a match, current is now the value, otherwise it's still the list
+                if (current is! List) {
+                  continue;
+                }
+                // If no match found, return null
+                return null;
+              }
+            }
+
             final List<dynamic> next = [];
             for (final item in current) {
               dynamic val;
@@ -513,8 +615,16 @@ class WrapperBuilder {
         right = rawRight; // literal value
       }
 
-      debugPrint(
-          'Condition evaluation: left=$left ($rawLeft) ${condition['operator']} right=$right ($rawRight)');
+      // helper to coerce values into int if possible
+      int? toInt(dynamic v) {
+        if (v == null) return null;
+        if (v is int) return v;
+        if (v is String) return int.tryParse(v);
+        return null;
+      }
+
+      final lNum = toInt(left);
+      final rNum = toInt(right);
 
       switch (condition['operator']) {
         case 'eq':
@@ -524,17 +634,21 @@ class WrapperBuilder {
         case 'notEquals':
           return left != right;
         case 'lt':
-          if (left is num && right is num) return left < right;
-          return false;
+          return (lNum != null && rNum != null)
+              ? lNum < rNum
+              : left.toString().compareTo(right.toString()) < 0;
         case 'lte':
-          if (left is num && right is num) return left <= right;
-          return false;
+          return (lNum != null && rNum != null)
+              ? lNum <= rNum
+              : left.toString().compareTo(right.toString()) <= 0;
         case 'gt':
-          if (left is num && right is num) return left > right;
-          return false;
+          return (lNum != null && rNum != null)
+              ? lNum > rNum
+              : left.toString().compareTo(right.toString()) > 0;
         case 'gte':
-          if (left is num && right is num) return left >= right;
-          return false;
+          return (lNum != null && rNum != null)
+              ? lNum >= rNum
+              : left.toString().compareTo(right.toString()) >= 0;
         case 'contains':
           return left is String && right is String
               ? left.contains(right)
@@ -556,24 +670,22 @@ Map<String, dynamic> _applyComputed(
   final computed = config['computed'] as Map<String, dynamic>? ?? {};
   final results = <String, dynamic>{};
 
+  // Create combined context once and reuse, updating as we go
+  final context = <String, dynamic>{...wrapperData};
+
   for (final entry in computed.entries) {
     final key = entry.key;
     final conf = entry.value as Map<String, dynamic>;
-    debugPrint('Computed[$key] config=$conf');
 
     if (conf.containsKey('condition')) {
-      results[key] = ConditionEvaluator.evaluate(
-              {...wrapperData, ...results}, conf['condition']) ??
+      results[key] = ConditionEvaluator.evaluate(context, conf['condition']) ??
           conf['fallback'];
     } else if (conf.containsKey('from') &&
         conf.containsKey('evaluateCondition')) {
-      results[key] =
-          _evaluateWithCondition({...wrapperData, ...results}, conf) ??
-              conf['fallback'];
+      results[key] = _evaluateWithCondition(context, conf) ?? conf['fallback'];
     } else if (conf.containsKey('from') && conf.containsKey('reduce')) {
       results[key] =
-          ComputedEvaluator.reduce({...wrapperData, ...results}, conf) ??
-              conf['reduce']['fallback'];
+          ComputedEvaluator.reduce(context, conf) ?? conf['reduce']['fallback'];
     } else if (conf.containsKey('from')) {
       // ✅ Use _evaluateFieldMap if query operators are present
       final hasQueryOps = conf.keys.any((k) => [
@@ -598,7 +710,8 @@ Map<String, dynamic> _applyComputed(
       results[key] = conf['fallback'];
     }
 
-    debugPrint('Computed[$key] => ${results[key]}');
+    // Add to context for subsequent computed fields to reference
+    context[key] = results[key];
   }
 
   return results;
@@ -892,13 +1005,17 @@ Map<String, dynamic> _applyComputedList(
   final computedList = config['computedList'] as Map<String, dynamic>? ?? {};
   final results = <String, dynamic>{};
 
+  // Create combined context once and reuse
+  final context = <String, dynamic>{...wrapperData};
+
   for (final entry in computedList.entries) {
     final key = entry.key;
     final conf = entry.value as Map<String, dynamic>;
-    debugPrint('Computed[$key] config=$conf -> ${results[key]}');
 
-    results[key] =
-        ComputedListEvaluator.evaluate({...wrapperData, ...results}, conf);
+    results[key] = ComputedListEvaluator.evaluate(context, conf);
+
+    // Add to context for subsequent computed lists to reference
+    context[key] = results[key];
   }
 
   return results;

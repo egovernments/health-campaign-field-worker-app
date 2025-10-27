@@ -6,8 +6,6 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 
-import '../../../models/entities/stock.dart';
-
 class StockRemoteRepository
     extends RemoteRepository<StockModel, StockSearchModel> {
   StockRemoteRepository(

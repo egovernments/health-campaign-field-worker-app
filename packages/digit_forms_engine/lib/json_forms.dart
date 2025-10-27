@@ -14,6 +14,7 @@ class JsonForms extends StatelessWidget {
   final Map<String, dynamic>? defaultValues;
   final String pageName;
   final String currentSchemaKey;
+  final Map<String, dynamic>? navigationParams;
 
   const JsonForms({
     super.key,
@@ -22,12 +23,14 @@ class JsonForms extends StatelessWidget {
     this.defaultValues,
     required this.pageName,
     required this.currentSchemaKey,
+    this.navigationParams,
   });
 
   static Map<String, AbstractControl<dynamic>> getFormControls(
     PropertySchema schema, {
     String? defaultLatlng,
     Map<String, dynamic>? defaultValues,
+    String? schemaKey,
   }) {
     assert(schema.properties != null);
 
@@ -40,6 +43,7 @@ class JsonForms extends StatelessWidget {
             schema,
             defaultLatlng: defaultLatlng,
             defaultValues: defaultValues,
+            schemaKey: schemaKey,
           ),
     };
 
@@ -87,5 +91,6 @@ class JsonForms extends StatelessWidget {
         components: childrens,
         pageName: pageName,
         currentSchemaKey: currentSchemaKey,
+        navigationParams: navigationParams,
       );
 }

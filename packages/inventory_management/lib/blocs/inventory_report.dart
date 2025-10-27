@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/utils/app_exception.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -8,8 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:inventory_management/utils/utils.dart';
 
 import '../../utils/typedefs.dart';
-import '../models/entities/stock.dart';
-import '../models/entities/stock_reconciliation.dart';
 import '../models/entities/transaction_reason.dart';
 import '../models/entities/transaction_type.dart';
 
@@ -52,12 +51,12 @@ class InventoryReportBloc
       List<String>? transactionReason;
       List<String>? transactionType;
       String? senderId;
-      String? receiverId;
+      List<String>? receiverId;
 
       if (reportType == InventoryReportType.receipt) {
         transactionType = [TransactionType.received.toValue()];
         transactionReason = [TransactionReason.received.toValue()];
-        receiverId = facilityId;
+        receiverId = [facilityId];
         senderId = null;
       } else if (reportType == InventoryReportType.dispatch) {
         transactionType = [TransactionType.dispatched.toValue()];
@@ -67,7 +66,7 @@ class InventoryReportBloc
       } else if (reportType == InventoryReportType.returned) {
         transactionType = [TransactionType.received.toValue()];
         transactionReason = [TransactionReason.returned.toValue()];
-        receiverId = facilityId;
+        receiverId = [facilityId];
         senderId = null;
       } else if (reportType == InventoryReportType.damage) {
         transactionType = [TransactionType.dispatched.toValue()];
@@ -75,7 +74,7 @@ class InventoryReportBloc
           TransactionReason.damagedInStorage.toValue(),
           TransactionReason.damagedInTransit.toValue(),
         ];
-        receiverId = facilityId;
+        receiverId = [facilityId];
         senderId = null;
       } else if (reportType == InventoryReportType.loss) {
         transactionType = [TransactionType.dispatched.toValue()];
@@ -83,7 +82,7 @@ class InventoryReportBloc
           TransactionReason.lostInStorage.toValue(),
           TransactionReason.lostInTransit.toValue(),
         ];
-        receiverId = facilityId;
+        receiverId = [facilityId];
         senderId = null;
       }
       final data = (receiverId != null
@@ -173,6 +172,7 @@ class InventoryReportEvent with _$InventoryReportEvent {
 @freezed
 class InventoryReportState with _$InventoryReportState {
   const factory InventoryReportState.loading() = InventoryReportLoadingState;
+
   const factory InventoryReportState.empty() = InventoryReportEmptyState;
 
   const factory InventoryReportState.stock({

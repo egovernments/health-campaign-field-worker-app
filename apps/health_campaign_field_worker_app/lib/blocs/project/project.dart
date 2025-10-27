@@ -12,7 +12,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -389,6 +388,91 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       );
     }
   }
+
+  // info: downloads stock data from remote , based on the user role
+  // FutureOr<void> downloadStockDataBasedOnRole(
+  //     List<ProjectFacilityModel> projectFacilities,
+  //     List<FacilityModel> allFacilities,
+  //     String? boundaryType,
+  //     Cycle? currentRunningCycle) async {
+  //   final userObject = await localSecureStore.userRequestModel;
+  //   final userRoles = userObject!.roles.map((e) => e.code);
+  //   final lastChangedSince = currentRunningCycle?.startDate;
+  //
+  //   Map<String, String> facilityIdUsageMap = {};
+  //
+  //   for (var element in allFacilities) {
+  //     facilityIdUsageMap[element.id] = element.usage ?? "";
+  //   }
+  //
+  //   // info : assumption both roles will not be assigned to user
+  //
+  //   if (userRoles.contains(RolesType.healthFacilitySupervisor.toValue())) {
+  //     List<String> receiverIds =
+  //         projectFacilities.map((e) => e.facilityId).toList();
+  //     receiverIds = receiverIds
+  //         .where((e) => facilityIdUsageMap[e] == Constants.healthFacility)
+  //         .toList();
+  //     final stockSearchModel = StockSearchModel(
+  //       receiverId: receiverIds,
+  //       transactionType: [TransactionType.dispatched.toValue()],
+  //     );
+  //     final stockEntriesDownloaded =
+  //         await downloadStockEntries(stockSearchModel, lastChangedSince);
+  //     // info : create entries in the local repository
+  //
+  //     await createStockDownloadedEntries(stockEntriesDownloaded);
+  //   } else if (userRoles.contains(RolesType.warehouseManager.toValue()) &&
+  //       boundaryType == Constants.lgaBoundaryLevel) {
+  //     List<String> receiverIds =
+  //         projectFacilities.map((e) => e.facilityId).toList();
+  //     receiverIds = receiverIds
+  //         .where((e) => facilityIdUsageMap[e] == Constants.lgaFacility)
+  //         .toList();
+  //     final stockSearchModel = StockSearchModel(
+  //       receiverId: receiverIds,
+  //       transactionType: [TransactionType.dispatched.toValue()],
+  //     );
+  //     final stockEntriesDownloaded =
+  //         await downloadStockEntries(stockSearchModel, lastChangedSince);
+  //
+  //     // info : create entries in the local repository
+  //     await createStockDownloadedEntries(stockEntriesDownloaded);
+  //   } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
+  //     final receiverIds = [context.loggedInUserUuid];
+  //     final stockSearchModel = StockSearchModel(
+  //       receiverId: receiverIds,
+  //       transactionType: [TransactionType.dispatched.toValue()],
+  //     );
+  //     final stockEntriesDownloaded =
+  //         await downloadStockEntries(stockSearchModel, lastChangedSince);
+  //
+  //     // info : create entries in the local repository
+  //     await createStockDownloadedEntries(stockEntriesDownloaded);
+  //   }
+  // }
+  //
+  // // info : insert data in db
+  // FutureOr<void> createStockDownloadedEntries(
+  //     List<StockModel> stockEntries) async {
+  //   await (stockLocalRepository as CustomStockLocalRepository)
+  //       .bulkStockCreate(stockEntries);
+  // }
+  //
+  // // info:  downloads the stock data from remote repository
+  //
+  // FutureOr<List<StockModel>> downloadStockEntries(
+  //     StockSearchModel stockSearchModel, int? lastChangedSince) async {
+  //   var offset = 0;
+  //   var initialLimit = Constants.apiCallLimit;
+  //
+  //   final stockEntries = await stockRemoteRepository.search(stockSearchModel,
+  //       limit: initialLimit,
+  //       offSet: offset,
+  //       lastChangedSince: lastChangedSince);
+  //
+  //   return stockEntries;
+  // }
 
   FutureOr<void> _loadProductVariants(List<ProjectModel> projects) async {
     for (final project in projects) {

@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../widgets/localized.dart';
+import '../helper/validator_helper.dart';
 import '../models/property_schema/property_schema.dart';
 import '../models/schema_object/schema_object.dart';
 import '../utils/utils.dart';
@@ -72,6 +73,9 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               schemaObject.pages.keys.toList().indexOf(widget.pageName);
           final showcaseKeys = <GlobalKey>[];
 
+          // Register pages for cross-page validation
+          registerPagesForValidation(widget.currentSchemaKey, schemaObject.pages);
+
           return Provider<Map<String, dynamic>>.value(
             value: widget.defaultValues ?? {},
             child: ReactiveFormBuilder(
@@ -79,6 +83,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       JsonForms.getFormControls(
                         schema,
                         defaultValues: widget.defaultValues ?? {},
+                        schemaKey: widget.currentSchemaKey,
                       ),
                     ),
                 builder: (context, formGroup, child) {
@@ -106,13 +111,36 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                 : localizations
                                     .translate(schema.actionLabel ?? 'Submit'),
                             onPressed: () {
-                              // 1. Get visible keys only (skip hidden fields)
+                              // 1. Get visible keys only (skip hidden fields and fields with visibility conditions)
                               final currentKeys = schema.properties?.entries
                                       .where((entry) {
-                                        final isVisible =
-                                            !isHidden(entry.value);
+                                        final isStaticHidden = isHidden(entry.value);
                                         final includeInForm =
                                             entry.value.includeInForm == true;
+
+                                        // Check if field is hidden by visibility condition
+                                        final hasDynamicVisibility = entry.value.visibilityCondition != null;
+                                        bool isDynamicallyHidden = false;
+
+                                        if (hasDynamicVisibility) {
+                                          final formState = context.read<FormsBloc>().state;
+                                          final currentPageKey = widget.pageName;
+                                          final currentSchemaKey = widget.currentSchemaKey;
+
+                                          final values = buildVisibilityEvaluationContext(
+                                            currentPageKey: currentPageKey,
+                                            currentForm: formGroup,
+                                            pages: formState.cachedSchemas[currentSchemaKey]!.pages,
+                                            navigationParams: widget.navigationParams,
+                                          );
+
+                                          isDynamicallyHidden = !evaluateVisibilityExpression(
+                                            entry.value.visibilityCondition!.expression,
+                                            values,
+                                          );
+                                        }
+
+                                        final isVisible = !isStaticHidden && !isDynamicallyHidden;
                                         return isVisible || includeInForm;
                                       })
                                       .map((entry) => entry.key)
@@ -422,6 +450,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                             pageName: widget.pageName,
                             currentSchemaKey: widget.currentSchemaKey,
                             childrens: widget.customComponents,
+                            navigationParams: widget.navigationParams,
                             defaultValues: const {
                               // 'locality': context.boundary.code,
                             },

@@ -1,12 +1,11 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
-import 'package:digit_data_model/models/entities/facility.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../utils/typedefs.dart';
-import '../models/entities/stock.dart';
 import '../utils/utils.dart';
 
 part 'record_stock.freezed.dart';
@@ -180,7 +179,7 @@ class RecordStockState with _$RecordStockState {
     String? primaryId,
     StockModel? stockModel,
   }) = RecordStockPersistedState;
-  }
+}
 
 class InvalidRecordStockStateException implements Exception {
   final String? message;

@@ -400,5 +400,70 @@ final jsonConfig = {
         }
       }
     }
+  },
+  "stock": {
+    "fallbackModel": "StockModel",
+    "multiEntityField": "stockDetails.productdetail",
+    "models": {
+      "StockModel": {
+        "mappings": {
+          "id": "stockDetails.id",
+          "clientReferenceId": "__generate:uuid",
+          "facilityId": "warehouseDetails.facilityToWhich",
+          "productVariantId": "stockDetails.productdetail.id",
+          "referenceId": "__context:projectId",
+          "referenceIdType": "__value:PROJECT",
+          "quantity": "stockProductDetails.quantitySent",
+          "wayBillNumber": "stockProductDetails.wayBillNumber",
+          "transactionType": "__context:transactionType",
+          "transactionReason": "stockDetails.transactionReason",
+          "transactingPartyId": "stockDetails.transactingPartyId",
+          "senderId": "stockDetails.facilityFromWhich",
+          "senderType": "__value:WAREHOUSE",
+          "receiverId": "warehouseDetails.facilityToWhich",
+          "receiverType": "__value:WAREHOUSE",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "additionalFields": {
+            "batchNumber": "stockProductDetails.batchNumber",
+            "expiryDate": "stockProductDetails.expiryDate",
+            "comments": "stockProductDetails.comment",
+            "transportType": "stockDetails.transportType",
+            "vehicle_number": "stockDetails.vehicleNumber",
+            "deliveryTeam": "warehouseDetails.teamCode",
+            "mrnNumber": "__context:mrnNumber"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "dateOfEntry": "warehouseDetails.dateOfEntry"
+        }
+      },
+    }
+  },
+  "stockReconciliation": {
+    "fallbackModel": "StockReconciliationModel",
+    "models": {
+      "StockReconciliationModel": {
+        "mappings": {
+          "id": "reconciliation.id",
+          "clientReferenceId": "__generate:uuid",
+          "facilityId": "__context:facilityId",
+          "productVariantId": "reconciliation.productVariantId",
+          "referenceId": "reconciliation.referenceId",
+          "referenceIdType": "reconciliation.referenceIdType",
+          "physicalCount": "reconciliation.physicalCount",
+          "calculatedCount": "reconciliation.calculatedCount",
+          "commentsOnReconciliation": "reconciliation.comments",
+          "dateOfReconciliation": "reconciliation.dateOfReconciliation",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "additionalFields": "additionalInfo.fields",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+        }
+      }
+    }
   }
 };

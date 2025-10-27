@@ -28,8 +28,16 @@ class DigitCrudService extends CrudService {
           ProjectBeneficiarySearchModel>(context);
     } else if (entity is TaskModel) {
       return context.repository<TaskModel, TaskSearchModel>(context);
+    } else if (entity is ProjectFacilityModel) {
+      return context.repository<ProjectFacilityModel,
+          ProjectFacilitySearchModel>(context);
+    } else if (entity is ProductVariantModel) {
+      return context
+          .repository<ProductVariantModel, ProductVariantSearchModel>(context);
+    } else if (entity is StockModel) {
+      return context.repository<StockModel, StockSearchModel>(context);
     } else {
-      return context.repository<HouseholdModel, HouseholdSearchModel>(context);
+      return context.repository<EntityModel, EntitySearchModel>(context);
     }
   }
 }
@@ -51,7 +59,22 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
         return HouseholdMemberModelMapper.fromMap(normalizedMap);
       case 'task':
         return TaskModelMapper.fromMap(normalizedMap);
-
+      case 'projectFacility':
+        return ProjectFacilityModelMapper.fromMap(normalizedMap);
+      case 'facility':
+        return FacilityModelMapper.fromMap(normalizedMap);
+      case 'projectResource':
+        return ProjectResourceModelMapper.fromMap(normalizedMap);
+      case 'productVariant':
+        return ProductVariantModelMapper.fromMap(normalizedMap);
+      case 'projectProductVariant':
+        return ProjectProductVariantModelMapper.fromMap(normalizedMap);
+      case 'address':
+        return AddressModelMapper.fromMap(normalizedMap);
+      case 'stock':
+        return StockModelMapper.fromMap(normalizedMap);
+      case 'stockRecon':
+        return StockReconciliationModelMapper.fromMap(normalizedMap);
       default:
         return EntityModelMapper.fromMap(normalizedMap);
     }
@@ -102,16 +125,20 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
 
     // Flattened client audit -> nested clientAuditDetails
     final clientAuditDetails = <String, dynamic>{};
-    if (newMap.containsKey('clientCreatedBy')) {
+    if (newMap.containsKey('clientCreatedBy') &&
+        newMap['clientCreatedBy'] != null) {
       clientAuditDetails['createdBy'] = newMap['clientCreatedBy'];
     }
-    if (newMap.containsKey('clientCreatedTime')) {
+    if (newMap.containsKey('clientCreatedTime') &&
+        newMap['clientCreatedTime'] != null) {
       clientAuditDetails['createdTime'] = newMap['clientCreatedTime'];
     }
-    if (newMap.containsKey('clientModifiedBy')) {
+    if (newMap.containsKey('clientModifiedBy') &&
+        newMap['clientModifiedBy'] != null) {
       clientAuditDetails['lastModifiedBy'] = newMap['clientModifiedBy'];
     }
-    if (newMap.containsKey('clientModifiedTime')) {
+    if (newMap.containsKey('clientModifiedTime') &&
+        newMap['clientModifiedTime'] != null) {
       clientAuditDetails['lastModifiedTime'] = newMap['clientModifiedTime'];
     }
     if (clientAuditDetails.isNotEmpty) {

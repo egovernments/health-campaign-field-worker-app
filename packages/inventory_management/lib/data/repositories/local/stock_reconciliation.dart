@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
-import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 
 class StockReconciliationLocalRepository extends LocalRepository<
     StockReconciliationModel, StockReconciliationSearchModel> {
@@ -91,7 +90,7 @@ class StockReconciliationLocalRepository extends LocalRepository<
   FutureOr<void> update(
     StockReconciliationModel entity, {
     bool createOpLog = true,
-        DataOperation dataOperation = DataOperation.update,
+    DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
       final stockReconciliationCompanion = entity.companion;

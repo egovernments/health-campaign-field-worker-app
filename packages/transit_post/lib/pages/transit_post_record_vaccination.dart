@@ -104,7 +104,7 @@ class TransitPostRecordVaccinationPageState
                                         ? 1
                                         : transitPostState.totalCount! + 1,
                                 scannedResource: DigitScannerUtils()
-                                    .getGs1CodeFormattedString(state)
+                                    .getGs1CodeFormattedStringAtIndex(state, 0)
                                     .toString()));
                         context.router
                             .push(const TransitPostAcknowledgmentRoute());
@@ -224,8 +224,8 @@ class TransitPostRecordVaccinationPageState
                                   ),
                                   items: scannerState.barCodes.isNotEmpty
                                       ? (DigitScannerUtils()
-                                              .getGs1CodeFormattedString(
-                                                  scannerState.barCodes))
+                                              .getGs1CodeFormattedStringAtIndex(
+                                                  scannerState.barCodes, 0))
                                           .entries
                                           .map((entry) {
                                           return LabelValueItem(

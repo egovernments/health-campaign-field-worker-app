@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
-import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
@@ -52,7 +51,9 @@ void main() async {
   await Constants().initialize(info.version);
   _isar = await Constants().isar;
   await initializeService(_dio, _isar);
-  FlowRegistry.setConfig(sampleFlows["flows"] as List<Map<String, dynamic>>);
+  // FlowRegistry.setConfig(sampleFlows["flows"] as List<Map<String, dynamic>>);
+  // FlowRegistry.setConfig(
+  //     sampleInventoryFlows["flows"] as List<Map<String, dynamic>>);
 
   runApp(MainApplication(
     appRouter: AppRouter(),
@@ -2082,7 +2083,7 @@ final dynamic sampleFlows = {
             "select": "{{value}}",
             "takeLast": true,
             "default": 0
-          },
+          }
         },
         "computed": {
           "currentRunningCycle": {
@@ -2104,27 +2105,38 @@ final dynamic sampleFlows = {
             },
             "fallback": false
           },
-          "isLastDoseOfCycle": {
-            "condition": {
-              "left": "{{dose}}",
-              "operator": "lt",
-              "right": "{{deliveryLength}}"
+          "deliveryLength": {
+            "from":
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "where": {
+              "left": "{{id}}",
+              "operator": "equals",
+              "right": "{{currentRunningCycle}}"
             },
-            "fallback": false
+            "map": "{{deliveries.length}}",
+            "default": 0
           },
           "nextDoseId": {
             "condition": {
-              "if": "{{isLastDoseOfCycle}}",
-              "then": 1,
-              "else": {"operation": "increment", "value": "{{dose}}"}
+              "if": {
+                "left": "{{dose}}",
+                "operator": "lt",
+                "right": "{{deliveryLength}}"
+              },
+              "then": {"operation": "increment", "value": "{{dose}}"},
+              "else": 1
             },
             "fallback": "{{dose}}"
           },
           "nextCycleId": {
             "condition": {
-              "if": "{{isLastDoseOfCycle}}",
-              "then": {"operation": "increment", "value": "{{cycle}}"},
-              "else": "{{cycle}}"
+              "if": {
+                "left": "{{dose}}",
+                "operator": "lt",
+                "right": "{{deliveryLength}}"
+              },
+              "then": "{{cycle}}",
+              "else": {"operation": "increment", "value": "{{cycle}}"}
             },
             "fallback": "{{cycle}}"
           }
@@ -2714,6 +2726,1094 @@ final dynamic sampleFlows = {
                   "type": "TEMPLATE",
                   "name": "searchBeneficiary",
                 }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+};
+
+final dynamic sampleInventoryFlows = {
+  "name": "INVENTORY",
+  "initialPage": "manageStock",
+  "project": "CMP-2025-08-04-004846",
+  "version": 1,
+  "disabled": false,
+  "isSelected": true,
+  "flows": [
+    {
+      "screenType": "TEMPLATE",
+      "name": "manageStock",
+      "heading": "Manage Stock",
+      "description": "",
+      "header": [
+        {
+          "format": "backLink",
+          "label": "Back",
+          "onAction": [
+            {"actionType": "BACK_NAVIGATION", "properties": {}}
+          ]
+        },
+      ],
+      "footer": [
+        {
+          "format": "button",
+          "label": "View Transactions",
+          "properties": {
+            "type": "primary",
+            "size": "large",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "viewTransaction",
+                "data": []
+              }
+            }
+          ]
+        }
+      ],
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "type": "SEARCH_EVENT",
+            "name": "projectFacility",
+            "data": [
+              {
+                "key": "projectId",
+                "value": "{{singleton.selectedProject.id}}",
+                "operation": "equals"
+              }
+            ]
+          }
+        }
+      ],
+      "wrapperConfig": {
+        "wrapperName": "InventoryWrapper",
+        "groupByType": true,
+        "rootEntity": "ProjectFacilityModel",
+        "filters": [],
+        "relations": [
+          {
+            "name": "facility",
+            "entity": "FacilityModel",
+            "match": {"field": "id", "equalsFrom": "facilityId"}
+          },
+          {
+            "name": "productVariant",
+            "entity": "ProductVariantModel",
+            "match": {"field": "id", "equalsFrom": "resource"}
+          }
+        ],
+        "searchConfig": {
+          "primary": "projectFacility",
+          "select": ["projectFacility", "productVariant"]
+        }
+      },
+      "body": [
+        {
+          "format": "menu_card",
+          "heading": "Record Stock Receipt",
+          "description": "Create records for stock received at the warehouse",
+          "icon": 'file_upload_outlined',
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "FORM",
+                "name": "MANAGESTOCK",
+                "data": [
+                  {"key": "stockEntryType", "value": "RECEIPT"},
+                  {"key": "transactionType", "value": "RECEIVED"},
+                  {
+                    "key": "mrnNumber",
+                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "format": "menu_card",
+          "heading": "Record Stock Issued",
+          "description": "Create records for stock sent out from the warehouse",
+          "icon": 'file_download_outlined',
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "FORM",
+                "name": "MANAGESTOCK",
+                "data": [
+                  {"key": "stockEntryType", "value": "ISSUED"},
+                  {"key": "transactionType", "value": "DISPATCHED"},
+                  {
+                    "key": "mrnNumber",
+                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "format": "menu_card",
+          "heading": "Stock Returned",
+          "description":
+              "Create records for the stock returned to the warehouse",
+          "icon": 'settings_backup_restore',
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "FORM",
+                "name": "MANAGESTOCK",
+                "data": [
+                  {"key": "stockEntryType", "value": "RETURNED"},
+                  {"key": "transactionType", "value": "RECEIVED"},
+                  {
+                    "key": "mrnNumber",
+                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "format": "menu_card",
+          "heading": "Stock Damaged",
+          "description":
+              "Record the list of resources damaged during campaign operations",
+          "icon": 'store',
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "FORM",
+                "name": "MANAGESTOCK",
+                "data": [
+                  {"key": "stockEntryType", "value": "DAMAGED"},
+                  {"key": "transactionType", "value": "DISPATCHED"},
+                  {
+                    "key": "mrnNumber",
+                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "format": "menu_card",
+          "heading": "Stock Loss",
+          "description":
+              "Record the list of resources lost during campaign operations",
+          "icon": 'store',
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "FORM",
+                "name": "MANAGESTOCK",
+                "data": [
+                  {"key": "stockEntryType", "value": "LOSS"},
+                  {"key": "transactionType", "value": "DISPATCHED"},
+                  {
+                    "key": "mrnNumber",
+                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenType": "FORM",
+      "name": "MANAGESTOCK",
+      "project": "CMP-2025-08-04-004846",
+      "version": 1,
+      "disabled": false,
+      "isSelected": true,
+      "pages": [
+        {
+          "page": "warehouseDetails",
+          "label": "APPONE_MANAGESTOCK_WAREHOUSE_SCREEN_HEADING",
+          "order": 1,
+          "type": "object",
+          "description": "APPONE_MANAGESTOCK_WAREHOUSE_SCREEN_DESCRIPTION",
+          "actionLabel": "APPONE_MANAGESTOCK_WAREHOUSE_ACTION_BUTTON_LABEL_1",
+          "properties": [
+            {
+              "type": "integer",
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_dateOfReceipt",
+              "order": 1,
+              "value": "",
+              "format": "date",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Enter the date on which the stock was received",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "dateOfEntry",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": true,
+              "includeInForm": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_MANAGESTOCK_WAREHOUSE_label_dateOfReceipt_mandatory_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_administrativeArea",
+              "order": 2,
+              "value": "",
+              "format": "locality",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Select the administrative area of the warehouse",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "administrativeArea",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "includeInForm": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_MANAGESTOCK_WAREHOUSE_label_administrativeArea_mandatory_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "dynamic",
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich",
+              "order": 3,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "tooltip": "",
+              "helpText":
+                  "Select the facility to which the stock is being sent",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "facilityToWhich",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "includeInForm": true,
+              "enums": [],
+            },
+            {
+              "type": "string",
+              "visibilityCondition": {
+                "expression": "warehouseDetails.facilityToWhich==Delivery Team"
+              },
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_teamCode",
+              "order": 4,
+              "value": "",
+              "format": "scanner",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Scan Team Code",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "teamCode",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [],
+            },
+          ],
+          "navigateTo": {"name": "stockDetails", "type": "form"}
+        },
+        {
+          "page": "stockDetails",
+          "label": "APPONE_INVENTORY_STOCKDETAILS_SCREEN_HEADING",
+          "order": 2,
+          "type": "object",
+          "format": null,
+          "description": "APPONE_INVENTORY_STOCKDETAILS_SCREEN_DESCRIPTION",
+          "actionLabel": "APPONE_INVENTORY_STOCKDETAILS_ACTION_BUTTON_LABEL",
+          "properties": [
+            {
+              "type": "dynamic",
+              "label": "APPONE_INVENTORY_PRODUCTDETAILS_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Select multiple products which are being recorded",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "productdetail",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Product selection is required"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": true,
+              "enums": []
+            },
+            {
+              "type": "dynamic",
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityFromWhich",
+              "order": 2,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "tooltip": "",
+              "helpText":
+                  "Select the facility from which the stock is being received",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "facilityFromWhich",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
+                },
+                {
+                  "type": "notEqualTo",
+                  "value": "warehouseDetails.facilityToWhich",
+                  "message": "Facility from and to must be different"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "includeInForm": true,
+              "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR"
+            },
+            {
+              "type": "string",
+              "visibilityCondition": {
+                "expression": "stockDetails.facilityFromWhich==Delivery Team"
+              },
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_deliveryTeamCode",
+              "order": 4,
+              "value": "",
+              "format": "scanner",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Scan Team Code",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "deliveryTeam",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityFromWhich_mandatory_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [],
+            },
+            {
+              "type": "string",
+              "label": "APPONE_INVENTORY_TRANSPORT_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Select the type of transport used",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "transportType",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Transport type is required"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "BUS", "name": "Bus"},
+                {"code": "TRUCK", "name": "Truck"}
+              ]
+            },
+            {
+              "type": "string",
+              "label": "APPONE_INVENTORY_VEHICLE_NUMBER_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Enter the vehicle number",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "vehicleNumber",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Vehicle number is required"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            },
+          ],
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "navigateTo": {"name": "stockProductDetails", "type": "form"}
+        },
+        {
+          "page": "stockProductDetails",
+          "label": "APPONE_INVENTORY_PRODUCTDETAILS_SCREEN_HEADING",
+          "order": 3,
+          "type": "object",
+          "format": null,
+          "description": "APPONE_INVENTORY_PRODUCTDETAILS_SCREEN_DESCRIPTION",
+          "actionLabel":
+              "APPONE_INVENTORY_PRODUCTDETAILS_ACTION_BUTTON_LABEL_1",
+          "properties": [
+            {
+              "type": "string",
+              "label": "APPONE_INVENTORY_WAYBILL_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Enter the waybill number",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "wayBillNumber",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": false,
+                  "message": "Waybill number is required"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            },
+            {
+              "type": "string",
+              "label": "APPONE_INVENTORY_BATCH_NUMBER_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Enter the batch number",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "batchNumber",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": false,
+                  "message": "Batch number is required"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            },
+            {
+              "type": "string",
+              "label": "APPONE_INVENTORY_EXPIRY_DATE_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "date",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Select the expiry date",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "expiryDate",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Expiry date is required"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            },
+            {
+              "type": "string",
+              "label": "APPONE_INVENTORY_QUANTITY_SENT_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Enter the quantity sent by the warehouse",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "quantitySent",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Quantity sent is required"
+                },
+                {
+                  "type": "regex",
+                  "value": r"^[0-9]+$",
+                  "message": "Please enter a valid number"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            },
+            {
+              "type": "string",
+              "label": "APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Enter the actual quantity received",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "quantityReceived",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "visibilityCondition": {
+                "expression":
+                    "stockDetails.facilityFromWhich!=National Warehouse"
+              },
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Quantity received is required"
+                },
+                {
+                  "type": "regex",
+                  "value": r"^[0-9]+$",
+                  "message": "Please enter a valid number"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            },
+            {
+              "type": "string",
+              "label": "APPONE_INVENTORY_COMMENT_LABEL",
+              "order": 7,
+              "value": "",
+              "format": "textArea",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Add comments if quantities differ",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "comment",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "visibilityCondition": {
+                "expression":
+                    "stockProductDetails.quantitySent!=stockProductDetails.quantityReceived"
+              },
+              "validations": [
+                {
+                  "type": "required",
+                  "value": false,
+                  "message": "Comment is required when quantities differ"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            },
+            {
+              "type": "string",
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_scanResource",
+              "order": 8,
+              "value": "",
+              "format": "scanner",
+              "validations": [
+                {"type": "isGS1", "value": true, "message": ""}
+              ],
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Scan Resource",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "scanResource",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [],
+            },
+          ],
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "navigateTo": {"name": "stock-acknowledgement", "type": "template"}
+        },
+      ],
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "configName": "stock",
+            "data": [
+              {
+                "key": "stockEntryType",
+                "value": "{{navigation.stockEntryType}}"
+              },
+              {
+                "key": "transactionType",
+                "value": "{{navigation.transactionType}}"
+              },
+              {"key": "mrnNumber", "value": "{{navigation.mrnNumber}}"}
+            ],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to fetch config."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "STOCK",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to create stock."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "type": "TEMPLATE",
+            "name": "stockSuccess",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Navigation failed."}
+              }
+            ],
+            "data": [
+              {"key": "mrnNumber", "value": "{{navigation.mrnNumber}}"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "screenType": "TEMPLATE",
+      "name": "stockSuccess",
+      "heading": "",
+      "description": "",
+      "body": [
+        {
+          "format": "panelCard",
+          "label": "Material receipt created successfully",
+          "description": "MRN Number {{navigation.mrnNumber}}",
+          "properties": {"type": "success"},
+          "primaryAction": {
+            "label": "View Transaction",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "type": "TEMPLATE",
+                  "name": "viewTransactionDetails",
+                  "data": [
+                    {
+                      "key": "selectedStock",
+                      "value": "{{navigation.mrnNumber}}"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "secondaryAction": {
+            "label": "Create New Transaction",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "type": "TEMPLATE",
+                  "name": "manageStock",
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "screenType": "TEMPLATE",
+      "name": "viewTransaction",
+      "heading": "Select the MRN number",
+      "description": "",
+      "header": [
+        {
+          "format": "backLink",
+          "label": "Back",
+          "onAction": [
+            {"actionType": "BACK_NAVIGATION", "properties": {}}
+          ]
+        },
+      ],
+      "footer": [],
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "type": "SEARCH_EVENT",
+            "name": "stock",
+            "data": [
+              {
+                "key": "clientCreatedBy",
+                "value": "{{singleton.loggedInUserUuid}}",
+                "operation": "equals"
+              }
+            ]
+          }
+        }
+      ],
+      "wrapperConfig": {
+        "wrapperName": "ViewStockWrapper",
+        "groupByType": true,
+        "rootEntity": "StockModel",
+        "groupBy": "additionalFields.fields.mrnNumber",
+        "filters": [],
+        "relations": [
+          {
+            "name": "stock",
+            "entity": "StockModel",
+            "match": {
+              "field": "clientAuditDetails.createdBy",
+              "equalsFrom": "{{singleton.loggedInUserUuid}}"
+            }
+          },
+        ],
+        "searchConfig": {
+          "primary": "stock",
+          "select": ["stock"]
+        }
+      },
+      "body": [
+        {
+          "format": "infoCard",
+          "hidden": "{{ context.stock.isNotEmpty }}",
+          "label": "No transactions found",
+          "description": "Record new transaction to see the transaction details"
+        },
+        {
+          "format": "listView",
+          "hidden": "{{ context.stock.isEmpty }}",
+          "fieldName": "listView",
+          "dataSource": "StockModel",
+          "child": {
+            "format": "card",
+            "children": [
+              {
+                "format": "row",
+                "properties": {
+                  "mainAxisAlignment": "spaceBetween",
+                  "mainAxisSize": "max"
+                },
+                "children": [
+                  {
+                    "format": "tag",
+                    "type": "",
+                    "label": "MRN - {{item.groupKey}}"
+                  },
+                  {
+                    "format": "text",
+                    "value":
+                        "{{fn:formatDate(item.items[0].dateOfEntry, dateTime, dd MMMM yyyy)}}"
+                  }
+                ]
+              },
+              {
+                "format": "row",
+                "properties": {
+                  "mainAxisAlignment": "spaceBetween",
+                  "mainAxisSize": "max"
+                },
+                "children": [
+                  {
+                    "format": "column",
+                    "properties": {
+                      "mainAxisAlignment": "spaceBetween",
+                      "mainAxisSize": "min"
+                    },
+                    "children": [
+                      {"format": "text", "value": "Issued to"},
+                      {
+                        "format": "text",
+                        "value": "{{item.items[0].receiverId}}"
+                      }
+                    ]
+                  },
+                  {
+                    "format": "button",
+                    "label": "view QR",
+                    "properties": {
+                      "type": "secondary",
+                      "size": "small",
+                      "mainAxisSize": "min",
+                      "mainAxisAlignment": "center"
+                    },
+                    "onAction": []
+                  },
+                ]
+              },
+              {
+                "format": "listView",
+                "fieldName": "groupedItems",
+                "dataSource": "item.items",
+                "child": {
+                  "format": "text",
+                  "value":
+                      "{{item.additionalFields.fields.sku}}: {{item.quantity}}"
+                }
+              },
+              {
+                "format": "button",
+                "label": "Select transaction",
+                "properties": {
+                  "type": "primary",
+                  "size": "large",
+                  "mainAxisSize": "max",
+                  "mainAxisAlignment": "center"
+                },
+                "onAction": [
+                  {
+                    "actionType": "NAVIGATION",
+                    "properties": {
+                      "type": "TEMPLATE",
+                      "name": "viewTransactionDetails",
+                      "data": [
+                        {
+                          "key": "selectedMrnNumber",
+                          "value": "{{item.groupKey}}"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "screenType": "TEMPLATE",
+      "name": "viewTransactionDetails",
+      "heading": "Stock Receipt Details",
+      "description": "",
+      "header": [
+        {
+          "format": "backLink",
+          "label": "Back",
+          "onAction": [
+            {
+              "actionType": "BACK_NAVIGATION",
+              "properties": {"type": "TEMPLATE", "name": "viewTransaction"}
+            }
+          ]
+        }
+      ],
+      "footer": [],
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "type": "SEARCH_EVENT",
+            "name": "stock",
+            "data": [
+              {
+                "key": "additionalFields",
+                "value": "{{navigation.selectedMrnNumber}}",
+                "operation": "contains"
+              }
+            ]
+          }
+        }
+      ],
+      "wrapperConfig": {
+        "wrapperName": "ViewStockWrapper",
+        "groupByType": true,
+        "rootEntity": "StockModel",
+        "filters": [],
+        "relations": [
+          {
+            "name": "stock",
+            "entity": "StockModel",
+          }
+        ],
+        "searchConfig": {
+          "primary": "stock",
+          "select": ["stock"]
+        }
+      },
+      "body": [
+        {
+          "format": "listView",
+          "fieldName": "stockItems",
+          "dataSource": "StockModel",
+          "child": {
+            "format": "card",
+            "children": [
+              {
+                "format": "labelPairList",
+                "data": [
+                  {
+                    "key": "Resource",
+                    "value": "{{item.additionalFields.fields.sku}}"
+                  },
+                  {"key": "Received From", "value": "{{item.receiverId}}"},
+                  {
+                    "key": "MRN number",
+                    "value": "{{item.additionalFields.fields.mrnNumber}}"
+                  },
+                  {"key": "Waybill number", "value": "{{item.wayBillNumber}}"},
+                  {
+                    "key": "Batch number",
+                    "value": "{{item.additionalFields.fields.batchNumber}}"
+                  },
+                  {
+                    "key": "Expiry",
+                    "value":
+                        "{{fn:formatDate(item.additionalFields.fields.expiryDate, dateTime, dd MMMM yyyy)}}"
+                  },
+                  {"key": "Quantity received", "value": "{{item.quantity}}"},
+                  {
+                    "key": "Comments",
+                    "value": "{{item.additionalFields.fields.comments}}"
+                  }
+                ]
               }
             ]
           }
