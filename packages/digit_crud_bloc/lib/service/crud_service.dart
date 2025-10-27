@@ -65,6 +65,7 @@ class CrudService {
       select: query.select,
       primaryTable: query.primaryModel,
       pagination: query.pagination,
+      orderBy: query.orderBy,
     );
   }
 

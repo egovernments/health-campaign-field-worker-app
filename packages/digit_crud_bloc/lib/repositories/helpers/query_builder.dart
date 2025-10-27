@@ -5,7 +5,7 @@ import 'dart:math' as math;
 
 import 'package:digit_crud_bloc/models/global_search_params.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:drift/drift.dart';
+import 'package:drift/drift.dart' hide OrderBy;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -105,6 +105,7 @@ class QueryBuilder {
     PaginationParams? pagination,
     bool isPrimaryTable = false,
     void Function(int count)? onCountFetched,
+    SearchOrderBy? orderBy,
   }) async {
     final dynamicTable = sql.allTables.firstWhere(
       (t) => t.actualTableName == camelToSnake(table),
@@ -283,6 +284,24 @@ class QueryBuilder {
       dataQuery.where(buildAnd(whereClauses));
     }
     dataQuery.addColumns(dynamicTable.$columns);
+
+    // Apply ordering if provided
+    if (orderBy != null && isPrimaryTable) {
+      final SearchOrderBy searchOrder = orderBy;
+      final orderColumn = camelToSnake(searchOrder.field);
+      final col = dynamicTable.$columns.firstWhere(
+        (c) => c.$name == orderColumn,
+        orElse: () =>
+            throw Exception('Order column $orderColumn not found in $table'),
+      );
+
+      final orderingMode = searchOrder.order.toUpperCase() == 'ASC'
+          ? OrderingMode.asc
+          : OrderingMode.desc;
+
+      dataQuery.orderBy([OrderingTerm(expression: col, mode: orderingMode)]);
+    }
+
     if (pagination != null && isPrimaryTable) {
       dataQuery.limit(pagination.limit, offset: pagination.offset);
     }

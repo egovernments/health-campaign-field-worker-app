@@ -25,6 +25,12 @@ class LabelPairListWidget implements FlowWidget {
         final key = e['key'] ?? '';
         final value = e['value'];
 
+        final keyText = resolveTemplate(
+            key,
+            crudCtx?.item != null
+                ? crudCtx!.item
+                : crudCtx?.stateData?.rawState);
+
         final valueText = resolveTemplate(
             value ?? '',
             crudCtx?.item != null
@@ -33,9 +39,9 @@ class LabelPairListWidget implements FlowWidget {
 
         return LabelValueItem(
           maxLines: 5,
-          label: key,
+          label: keyText,
           value: valueText,
-          labelFlex: 9,
+          labelFlex: 7,
         );
       }).toList(),
     );

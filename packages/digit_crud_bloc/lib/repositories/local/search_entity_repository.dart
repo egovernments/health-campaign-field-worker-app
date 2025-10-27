@@ -31,6 +31,7 @@ class SearchEntityRepository extends LocalRepository {
     required List<String> select,
     String? primaryTable,
     PaginationParams? pagination,
+    SearchOrderBy? orderBy,
   }) async {
     return _buildAndExecuteSearchQuery(
       filters: filters,
@@ -39,6 +40,7 @@ class SearchEntityRepository extends LocalRepository {
       primaryTable: primaryTable,
       pagination: pagination,
       nestedModelMapping: nestedModelMapping,
+      orderBy: orderBy,
     );
   }
 
@@ -49,6 +51,7 @@ class SearchEntityRepository extends LocalRepository {
     required List<String> select,
     String? primaryTable,
     required PaginationParams? pagination,
+    SearchOrderBy? orderBy,
   }) async {
     final rootTable = filters.first.root;
     final queriedModels = <String>{};
@@ -68,6 +71,7 @@ class SearchEntityRepository extends LocalRepository {
         onCountFetched: (count) {
           totalCount = count;
         },
+        orderBy: orderBy,
       );
 
       final hydratedRoot = await HydrationHelper.hydrateRawRows(
@@ -93,6 +97,7 @@ class SearchEntityRepository extends LocalRepository {
         onCountFetched: (count) {
           totalCount = count;
         },
+        orderBy: orderBy,
       );
 
       final hydratedRoot = await HydrationHelper.hydrateRawRows(
@@ -139,6 +144,7 @@ class SearchEntityRepository extends LocalRepository {
           onCountFetched: (count) {
             totalCount = count;
           },
+          orderBy: orderBy,
         );
       }
 
@@ -200,6 +206,7 @@ class SearchEntityRepository extends LocalRepository {
           onCountFetched: (count) {
             totalCount = count;
           },
+          orderBy: orderBy,
         );
       }
 

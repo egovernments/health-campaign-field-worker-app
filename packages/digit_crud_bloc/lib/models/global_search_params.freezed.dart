@@ -32,6 +32,9 @@ mixin _$GlobalSearchParameters {
   /// If set, pagination and count are applied only for this model.
   String? get primaryModel => throw _privateConstructorUsedError;
 
+  /// Ordering configuration for the search results
+  SearchOrderBy? get orderBy => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $GlobalSearchParametersCopyWith<GlobalSearchParameters> get copyWith =>
@@ -50,9 +53,11 @@ abstract class $GlobalSearchParametersCopyWith<$Res> {
       PaginationParams? pagination,
       List<RelationshipMapping> relationshipMappings,
       List<NestedModelMapping> nestedMappings,
-      String? primaryModel});
+      String? primaryModel,
+      SearchOrderBy? orderBy});
 
   $PaginationParamsCopyWith<$Res>? get pagination;
+  $SearchOrderByCopyWith<$Res>? get orderBy;
 }
 
 /// @nodoc
@@ -75,6 +80,7 @@ class _$GlobalSearchParametersCopyWithImpl<$Res,
     Object? relationshipMappings = null,
     Object? nestedMappings = null,
     Object? primaryModel = freezed,
+    Object? orderBy = freezed,
   }) {
     return _then(_value.copyWith(
       filters: null == filters
@@ -101,6 +107,10 @@ class _$GlobalSearchParametersCopyWithImpl<$Res,
           ? _value.primaryModel
           : primaryModel // ignore: cast_nullable_to_non_nullable
               as String?,
+      orderBy: freezed == orderBy
+          ? _value.orderBy
+          : orderBy // ignore: cast_nullable_to_non_nullable
+              as SearchOrderBy?,
     ) as $Val);
   }
 
@@ -113,6 +123,18 @@ class _$GlobalSearchParametersCopyWithImpl<$Res,
 
     return $PaginationParamsCopyWith<$Res>(_value.pagination!, (value) {
       return _then(_value.copyWith(pagination: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $SearchOrderByCopyWith<$Res>? get orderBy {
+    if (_value.orderBy == null) {
+      return null;
+    }
+
+    return $SearchOrderByCopyWith<$Res>(_value.orderBy!, (value) {
+      return _then(_value.copyWith(orderBy: value) as $Val);
     });
   }
 }
@@ -132,10 +154,13 @@ abstract class _$$GlobalSearchParametersImplCopyWith<$Res>
       PaginationParams? pagination,
       List<RelationshipMapping> relationshipMappings,
       List<NestedModelMapping> nestedMappings,
-      String? primaryModel});
+      String? primaryModel,
+      SearchOrderBy? orderBy});
 
   @override
   $PaginationParamsCopyWith<$Res>? get pagination;
+  @override
+  $SearchOrderByCopyWith<$Res>? get orderBy;
 }
 
 /// @nodoc
@@ -157,6 +182,7 @@ class __$$GlobalSearchParametersImplCopyWithImpl<$Res>
     Object? relationshipMappings = null,
     Object? nestedMappings = null,
     Object? primaryModel = freezed,
+    Object? orderBy = freezed,
   }) {
     return _then(_$GlobalSearchParametersImpl(
       filters: null == filters
@@ -183,6 +209,10 @@ class __$$GlobalSearchParametersImplCopyWithImpl<$Res>
           ? _value.primaryModel
           : primaryModel // ignore: cast_nullable_to_non_nullable
               as String?,
+      orderBy: freezed == orderBy
+          ? _value.orderBy
+          : orderBy // ignore: cast_nullable_to_non_nullable
+              as SearchOrderBy?,
     ));
   }
 }
@@ -196,7 +226,8 @@ class _$GlobalSearchParametersImpl implements _GlobalSearchParameters {
       this.pagination,
       final List<RelationshipMapping> relationshipMappings = const [],
       final List<NestedModelMapping> nestedMappings = const [],
-      this.primaryModel})
+      this.primaryModel,
+      this.orderBy})
       : _filters = filters,
         _select = select,
         _relationshipMappings = relationshipMappings,
@@ -246,9 +277,13 @@ class _$GlobalSearchParametersImpl implements _GlobalSearchParameters {
   @override
   final String? primaryModel;
 
+  /// Ordering configuration for the search results
+  @override
+  final SearchOrderBy? orderBy;
+
   @override
   String toString() {
-    return 'GlobalSearchParameters(filters: $filters, select: $select, pagination: $pagination, relationshipMappings: $relationshipMappings, nestedMappings: $nestedMappings, primaryModel: $primaryModel)';
+    return 'GlobalSearchParameters(filters: $filters, select: $select, pagination: $pagination, relationshipMappings: $relationshipMappings, nestedMappings: $nestedMappings, primaryModel: $primaryModel, orderBy: $orderBy)';
   }
 
   @override
@@ -265,7 +300,8 @@ class _$GlobalSearchParametersImpl implements _GlobalSearchParameters {
             const DeepCollectionEquality()
                 .equals(other._nestedMappings, _nestedMappings) &&
             (identical(other.primaryModel, primaryModel) ||
-                other.primaryModel == primaryModel));
+                other.primaryModel == primaryModel) &&
+            (identical(other.orderBy, orderBy) || other.orderBy == orderBy));
   }
 
   @JsonKey(ignore: true)
@@ -277,7 +313,8 @@ class _$GlobalSearchParametersImpl implements _GlobalSearchParameters {
       pagination,
       const DeepCollectionEquality().hash(_relationshipMappings),
       const DeepCollectionEquality().hash(_nestedMappings),
-      primaryModel);
+      primaryModel,
+      orderBy);
 
   @JsonKey(ignore: true)
   @override
@@ -301,7 +338,8 @@ abstract class _GlobalSearchParameters implements GlobalSearchParameters {
       final PaginationParams? pagination,
       final List<RelationshipMapping> relationshipMappings,
       final List<NestedModelMapping> nestedMappings,
-      final String? primaryModel}) = _$GlobalSearchParametersImpl;
+      final String? primaryModel,
+      final SearchOrderBy? orderBy}) = _$GlobalSearchParametersImpl;
 
   factory _GlobalSearchParameters.fromJson(Map<String, dynamic> json) =
       _$GlobalSearchParametersImpl.fromJson;
@@ -320,6 +358,10 @@ abstract class _GlobalSearchParameters implements GlobalSearchParameters {
 
   /// If set, pagination and count are applied only for this model.
   String? get primaryModel;
+  @override
+
+  /// Ordering configuration for the search results
+  SearchOrderBy? get orderBy;
   @override
   @JsonKey(ignore: true)
   _$$GlobalSearchParametersImplCopyWith<_$GlobalSearchParametersImpl>
@@ -1436,5 +1478,159 @@ abstract class _NestedModelMapping implements NestedModelMapping {
   @override
   @JsonKey(ignore: true)
   _$$NestedModelMappingImplCopyWith<_$NestedModelMappingImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+SearchOrderBy _$SearchOrderByFromJson(Map<String, dynamic> json) {
+  return _SearchOrderBy.fromJson(json);
+}
+
+/// @nodoc
+mixin _$SearchOrderBy {
+  String get field => throw _privateConstructorUsedError;
+  String get order => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $SearchOrderByCopyWith<SearchOrderBy> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SearchOrderByCopyWith<$Res> {
+  factory $SearchOrderByCopyWith(
+          SearchOrderBy value, $Res Function(SearchOrderBy) then) =
+      _$SearchOrderByCopyWithImpl<$Res, SearchOrderBy>;
+  @useResult
+  $Res call({String field, String order});
+}
+
+/// @nodoc
+class _$SearchOrderByCopyWithImpl<$Res, $Val extends SearchOrderBy>
+    implements $SearchOrderByCopyWith<$Res> {
+  _$SearchOrderByCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field = null,
+    Object? order = null,
+  }) {
+    return _then(_value.copyWith(
+      field: null == field
+          ? _value.field
+          : field // ignore: cast_nullable_to_non_nullable
+              as String,
+      order: null == order
+          ? _value.order
+          : order // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$SearchOrderByImplCopyWith<$Res>
+    implements $SearchOrderByCopyWith<$Res> {
+  factory _$$SearchOrderByImplCopyWith(
+          _$SearchOrderByImpl value, $Res Function(_$SearchOrderByImpl) then) =
+      __$$SearchOrderByImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String field, String order});
+}
+
+/// @nodoc
+class __$$SearchOrderByImplCopyWithImpl<$Res>
+    extends _$SearchOrderByCopyWithImpl<$Res, _$SearchOrderByImpl>
+    implements _$$SearchOrderByImplCopyWith<$Res> {
+  __$$SearchOrderByImplCopyWithImpl(
+      _$SearchOrderByImpl _value, $Res Function(_$SearchOrderByImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field = null,
+    Object? order = null,
+  }) {
+    return _then(_$SearchOrderByImpl(
+      field: null == field
+          ? _value.field
+          : field // ignore: cast_nullable_to_non_nullable
+              as String,
+      order: null == order
+          ? _value.order
+          : order // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$SearchOrderByImpl implements _SearchOrderBy {
+  const _$SearchOrderByImpl({required this.field, this.order = 'DESC'});
+
+  factory _$SearchOrderByImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SearchOrderByImplFromJson(json);
+
+  @override
+  final String field;
+  @override
+  @JsonKey()
+  final String order;
+
+  @override
+  String toString() {
+    return 'SearchOrderBy(field: $field, order: $order)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SearchOrderByImpl &&
+            (identical(other.field, field) || other.field == field) &&
+            (identical(other.order, order) || other.order == order));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, field, order);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SearchOrderByImplCopyWith<_$SearchOrderByImpl> get copyWith =>
+      __$$SearchOrderByImplCopyWithImpl<_$SearchOrderByImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$SearchOrderByImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _SearchOrderBy implements SearchOrderBy {
+  const factory _SearchOrderBy(
+      {required final String field, final String order}) = _$SearchOrderByImpl;
+
+  factory _SearchOrderBy.fromJson(Map<String, dynamic> json) =
+      _$SearchOrderByImpl.fromJson;
+
+  @override
+  String get field;
+  @override
+  String get order;
+  @override
+  @JsonKey(ignore: true)
+  _$$SearchOrderByImplCopyWith<_$SearchOrderByImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

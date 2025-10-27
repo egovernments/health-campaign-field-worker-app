@@ -16,6 +16,9 @@ class GlobalSearchParameters with _$GlobalSearchParameters {
 
     /// If set, pagination and count are applied only for this model.
     String? primaryModel,
+
+    /// Ordering configuration for the search results
+    SearchOrderBy? orderBy,
   }) = _GlobalSearchParameters;
 
   factory GlobalSearchParameters.fromJson(Map<String, dynamic> json) =>
@@ -99,4 +102,15 @@ class NestedModelMapping with _$NestedModelMapping {
 
   factory NestedModelMapping.fromJson(Map<String, dynamic> json) =>
       _$NestedModelMappingFromJson(json);
+}
+
+@freezed
+class SearchOrderBy with _$SearchOrderBy {
+  const factory SearchOrderBy({
+    required String field,
+    @Default('DESC') String order, // 'ASC' or 'DESC'
+  }) = _SearchOrderBy;
+
+  factory SearchOrderBy.fromJson(Map<String, dynamic> json) =>
+      _$SearchOrderByFromJson(json);
 }

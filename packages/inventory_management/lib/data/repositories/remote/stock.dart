@@ -22,6 +22,7 @@ class StockRemoteRepository
     StockSearchModel query, {
     int? offSet,
     int? limit,
+    int? lastChangedSince,
   }) async {
     int defaultBatchSize = limit ?? 100; // Default batch size for fetching data
     int currentOffset = offSet ?? 0;
@@ -46,6 +47,8 @@ class StockRemoteRepository
               queryParameters: {
                 'offset': currentOffset,
                 'limit': defaultBatchSize,
+                if (lastChangedSince != null)
+                  'lastChangedSince': lastChangedSince,
                 'tenantId': DigitDataModelSingleton().tenantId,
                 if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
               },

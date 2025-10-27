@@ -38,7 +38,7 @@ void main() async {
   Bloc.observer = AppBlocObserver();
   await AppSharedPreferences().init();
   if (AppSharedPreferences().isFirstLaunch) {
-    AppLogger.instance.info('App Launched First Time', title: 'm  ain');
+    AppLogger.instance.info('App Launched First Time', title: 'main');
     await AppSharedPreferences().appLaunchedFirstTime();
     await LocalSecureStore.instance.deleteAll();
   }
@@ -51,10 +51,6 @@ void main() async {
   await Constants().initialize(info.version);
   _isar = await Constants().isar;
   await initializeService(_dio, _isar);
-  // FlowRegistry.setConfig(sampleFlows["flows"] as List<Map<String, dynamic>>);
-  // FlowRegistry.setConfig(
-  //     sampleInventoryFlows["flows"] as List<Map<String, dynamic>>);
-
   runApp(MainApplication(
     appRouter: AppRouter(),
     isar: _isar,
@@ -2922,7 +2918,7 @@ final dynamic sampleInventoryFlows = {
               "tooltip": "",
               "helpText": "Enter the date on which the stock was received",
               "infoText": "",
-              "readOnly": false,
+              "readOnly": true,
               "fieldName": "dateOfEntry",
               "deleteFlag": false,
               "innerLabel": "",
@@ -3575,7 +3571,8 @@ final dynamic sampleInventoryFlows = {
         ],
         "searchConfig": {
           "primary": "stock",
-          "select": ["stock"]
+          "select": ["stock"],
+          "orderBy": {"field": "clientCreatedTime", "order": "DESC"}
         }
       },
       "body": [
@@ -3672,10 +3669,7 @@ final dynamic sampleInventoryFlows = {
                       "type": "TEMPLATE",
                       "name": "viewTransactionDetails",
                       "data": [
-                        {
-                          "key": "selectedMrnNumber",
-                          "value": "{{item.groupKey}}"
-                        }
+                        {"key": "selectedStock", "value": "{{item.groupKey}}"}
                       ]
                     }
                   }
@@ -3713,7 +3707,7 @@ final dynamic sampleInventoryFlows = {
             "data": [
               {
                 "key": "additionalFields",
-                "value": "{{navigation.selectedMrnNumber}}",
+                "value": "{{navigation.selectedStock}}",
                 "operation": "contains"
               }
             ]
@@ -3733,7 +3727,7 @@ final dynamic sampleInventoryFlows = {
         ],
         "searchConfig": {
           "primary": "stock",
-          "select": ["stock"]
+          "select": ["stock"],
         }
       },
       "body": [
@@ -3766,7 +3760,11 @@ final dynamic sampleInventoryFlows = {
                     "value":
                         "{{fn:formatDate(item.additionalFields.fields.expiryDate, dateTime, dd MMMM yyyy)}}"
                   },
-                  {"key": "Quantity received", "value": "{{item.quantity}}"},
+                  {
+                    "key":
+                        "{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+                    "value": "{{item.quantity}}"
+                  },
                   {
                     "key": "Comments",
                     "value": "{{item.additionalFields.fields.comments}}"

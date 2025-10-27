@@ -9,7 +9,6 @@ import 'package:complaints/complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:digit_crud_bloc/digit_crud_bloc.dart';
 import 'package:digit_crud_bloc/repositories/local/search_entity_repository.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -195,6 +194,20 @@ class _HomePageState extends LocalizedState<HomePage> {
       }
 
       return formattedUniqueId;
+    });
+
+    FunctionRegistry.register('getQuantityLabel', (args, stateData) {
+      if (args.isEmpty) return 'Quantity received';
+
+      final sku = args.first?.toString() ?? '';
+
+      // Check if the resource is SPAQ-250 mg
+      if (sku.trim().toString() == 'SPAQ - 250 mg' ||
+          sku.trim().toString() == 'SPAQ - 500 mg') {
+        return 'Tablets received';
+      }
+
+      return 'Quantity received';
     });
   }
 

@@ -203,18 +203,21 @@ class WrapperBuilder {
   ) {
     // Group entities by field value
     final Map<String, List<dynamic>> groupedByField = {};
+    int nullCounter = 0;
 
     for (final entity in entities) {
       try {
         // Resolve the field value for this entity
         final fieldValue = _resolveValue(fieldPath, entity, {});
-        final groupKey = fieldValue?.toString() ?? 'null';
+
+        // Create unique keys for null values instead of grouping them together
+        final groupKey = fieldValue?.toString() ?? 'null_${nullCounter++}';
 
         groupedByField.putIfAbsent(groupKey, () => []).add(entity);
       } catch (e) {
         debugPrint('Error grouping entity by field $fieldPath: $e');
-        // Put ungroupable entities in a 'null' group
-        groupedByField.putIfAbsent('null', () => []).add(entity);
+        // Put ungroupable entities in unique 'null' groups
+        groupedByField.putIfAbsent('null_${nullCounter++}', () => []).add(entity);
       }
     }
 

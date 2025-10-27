@@ -19,11 +19,35 @@ class PanelCardWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
+    final currentKey = getScreenKeyFromArgs(context) ?? '';
+    final navigationData =
+        FlowCrudStateRegistry().getNavigationParams(currentKey);
+
     final crudCtx = CrudItemContext.of(context);
-    final label = resolveTemplate(json['label'] ?? '',
-        crudCtx?.item != null ? crudCtx!.item : crudCtx?.stateData?.rawState);
-    final description = resolveTemplate(json['description'] ?? '',
-        crudCtx?.item != null ? crudCtx!.item : crudCtx?.stateData?.rawState);
+
+    // Merge navigation data with crud context data for template resolution
+    final contextData =
+        crudCtx?.item != null ? crudCtx!.item : crudCtx?.stateData?.rawState;
+    final Map<String, dynamic> mergedData = {};
+
+    if (contextData != null) {
+      if (contextData is List) {
+        if (contextData.isNotEmpty &&
+            contextData.first is Map<String, dynamic>) {
+          mergedData.addAll(contextData.first as Map<String, dynamic>);
+        }
+      } else if (contextData is Map<String, dynamic>) {
+        mergedData.addAll(contextData);
+      }
+    }
+
+    if (navigationData is Map<String, dynamic>) {
+      mergedData["navigation"] = navigationData;
+    }
+
+    final label = resolveTemplate(json['label'] ?? '', mergedData);
+    final description = resolveTemplate(json['description'] ?? '', mergedData);
+
     Map<String, dynamic>? primaryAction = json['primaryAction'];
     Map<String, dynamic>? secondaryAction = json['secondaryAction'];
 
@@ -37,10 +61,6 @@ class PanelCardWidget implements FlowWidget {
                   crudCtx!.stateData!.rawState.isNotEmpty
               ? crudCtx.stateData!.rawState.first
               : null;
-
-      final currentKey = getScreenKeyFromArgs(context) ?? '';
-      final navigationData =
-          FlowCrudStateRegistry().getNavigationParams(currentKey);
 
       for (var actionMap in actionsList) {
         var action = ActionConfig.fromJson(actionMap);
