@@ -1,4 +1,6 @@
+import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
+
 import '../action_config.dart';
 import 'action_executor.dart';
 
@@ -13,9 +15,7 @@ class ToastExecutor extends ActionExecutor {
     Map<String, dynamic> contextData,
   ) async {
     final message = action.properties['message'] ?? 'Unknown error';
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    Toast.showToast(context, message: message, type: ToastType.error);
     return contextData;
   }
 }

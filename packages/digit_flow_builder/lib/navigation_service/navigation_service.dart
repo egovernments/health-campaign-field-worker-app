@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
+import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 import '../blocs/flow_crud_bloc.dart';
@@ -35,6 +36,8 @@ class FlowBuilderNavigationService implements NavigationService {
       context.router.push(route);
     } else {
       debugPrint('⚠️ No route found for key: $key');
+      Toast.showToast(context,
+          message: 'No route found for key: $key', type: ToastType.error);
     }
   }
 }

@@ -9,7 +9,7 @@ abstract class FlowWidget {
   /// The format identifier for this widget type
   String get format;
 
-  /// Builds the widget from JSON configuration
+  /// Builds the widget from JSON configurationtree
   Widget build(
     Map<String, dynamic> json,
     BuildContext context,
