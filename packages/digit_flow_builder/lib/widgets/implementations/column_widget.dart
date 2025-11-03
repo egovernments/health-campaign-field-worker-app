@@ -36,8 +36,7 @@ class ColumnWidget implements FlowWidget {
           listIndex: crudCtx?.listIndex,
           item: crudCtx?.item,
           screenKey: crudCtx?.screenKey,
-          child: LayoutMapper.map(
-              processedChild, stateData, context, onAction,
+          child: LayoutMapper.map(processedChild, stateData, context, onAction,
               listIndex: crudCtx?.listIndex, item: crudCtx?.item),
         );
       }).toList(),

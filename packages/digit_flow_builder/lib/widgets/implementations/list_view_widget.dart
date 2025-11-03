@@ -39,7 +39,8 @@ class ListViewWidget implements FlowWidget {
       }
     }
 
-    if (items == null || (items is List && items.isEmpty)) return const SizedBox.shrink();
+    if (items == null || (items is List && items.isEmpty))
+      return const SizedBox.shrink();
 
     // Generate widgets and filter out empty ones
     final widgets = <Widget>[];
@@ -71,13 +72,8 @@ class ListViewWidget implements FlowWidget {
       );
 
       final mappedChild = LayoutMapper.map(
-        processedChild,
-        stateData,
-        context,
-        onAction,
-        item: safeItem,
-        listIndex: index
-      );
+          processedChild, stateData, context, onAction,
+          item: safeItem, listIndex: index);
 
       // Skip if the mapped child is an empty SizedBox
       if (mappedChild is SizedBox &&

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+
 import '../action_handler/action_config.dart';
+import '../utils/conditional_evaluator.dart';
+import '../widget_registry.dart';
 
 /// Base interface for all flow widgets
 abstract class FlowWidget {
@@ -29,6 +32,24 @@ class FlowWidgetFactory {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
+    // Handle visibility check at factory level before building widget
+    final crudCtx = CrudItemContext.of(context);
+    final evalContext = {
+      'item': crudCtx?.item,
+      'contextData': crudCtx?.stateData?.rawState ?? {},
+    };
+
+    // Check visibility condition
+    final visible = ConditionalEvaluator.evaluate(
+      json['visible'] ?? true,
+      evalContext,
+    );
+
+    if (visible == false) {
+      return const SizedBox.shrink();
+    }
+
+    // Build the widget if visible
     final format = json['format'] as String? ?? '';
     final widget = _widgets[format];
 

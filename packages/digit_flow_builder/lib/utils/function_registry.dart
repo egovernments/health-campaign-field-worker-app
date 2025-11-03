@@ -298,4 +298,24 @@ void initializeFunctionRegistry() {
 
     return checkStatusInternal(tasks, currentCycle);
   });
+
+  /// Registers a function to check if a user has a specific role.
+  ///
+  /// - **Function Name**: `'hasRole'`
+  /// - **Arguments**: A list where the first element is the role code string (e.g., 'WAREHOUSE_MANAGER').
+  /// - **Returns**: `true` if the user has the specified role, otherwise `false`.
+  ///
+  /// This function checks the user's roles from FlowBuilderSingleton.
+  FunctionRegistry.register("hasRole", (args, stateData) {
+    if (args.isEmpty) return false;
+
+    final roleCode = args.first?.toString() ?? '';
+    if (roleCode.isEmpty) return false;
+
+    final userRoles = FlowBuilderSingleton().userRoles;
+    if (userRoles == null || userRoles.isEmpty) return false;
+
+    // Check if any role in the list has the matching code
+    return userRoles.any((role) => role['code'] == roleCode);
+  });
 }

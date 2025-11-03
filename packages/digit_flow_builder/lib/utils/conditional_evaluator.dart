@@ -1,5 +1,8 @@
 import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_formula_parser/digit_formula_parser.dart';
+import 'package:flutter/material.dart';
+
+import '../widget_registry.dart';
 
 /// Universal conditional evaluator for any widget property
 class ConditionalEvaluator {
@@ -12,6 +15,22 @@ class ConditionalEvaluator {
   /// If it's a conditional config, evaluates it; otherwise returns as-is
   /// IMPORTANT: This method is PURE - it never modifies the input value
   static dynamic evaluate(dynamic value, dynamic context) {
+    // Handle string expressions with templates/functions (e.g., "{{fn:hasRole('ADMIN')}} == true")
+    if (value is String && value.contains('{{')) {
+      final resolved = resolveTemplate(value, context);
+      // If the resolved string looks like a boolean expression, evaluate it
+      if (resolved.contains('==') ||
+          resolved.contains('!=') ||
+          resolved.contains('>') ||
+          resolved.contains('<') ||
+          resolved.contains('&&') ||
+          resolved.contains('||')) {
+        return evaluateExpression(resolved, context);
+      }
+      // If it's just a simple value after resolution, return it
+      return resolved;
+    }
+
     if (!isConditional(value)) {
       return value;
     }
@@ -101,6 +120,38 @@ class ConditionalEvaluator {
       '@condition': conditions.map((c) => c.toMap()).toList(),
       if (defaultValue != null) '@default': defaultValue,
     };
+  }
+
+  /// Handles visibility check for widgets
+  /// Returns the widget built by [builder] if visible, otherwise returns SizedBox.shrink()
+  ///
+  /// - [context]: The BuildContext from the widget
+  /// - [json]: The widget's JSON configuration containing the 'visible' property
+  /// - [builder]: A function that builds the widget when visible
+  static Widget buildWithVisibility(
+    BuildContext context,
+    Map<String, dynamic> json,
+    Widget Function() builder,
+  ) {
+    final crudCtx = CrudItemContext.of(context);
+
+    // Create evaluation context
+    final evalContext = {
+      'item': crudCtx?.item,
+      'contextData': crudCtx?.stateData?.rawState ?? {},
+    };
+
+    // Check visibility condition
+    final visible = evaluate(
+      json['visible'] ?? true,
+      evalContext,
+    );
+
+    if (visible == false) {
+      return const SizedBox.shrink();
+    }
+
+    return builder();
   }
 }
 

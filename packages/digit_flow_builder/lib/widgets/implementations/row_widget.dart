@@ -38,8 +38,7 @@ class RowWidget implements FlowWidget {
           listIndex: crudCtx?.listIndex,
           item: crudCtx?.item,
           screenKey: crudCtx?.screenKey,
-          child: LayoutMapper.map(
-              processedChild, stateData, context, onAction,
+          child: LayoutMapper.map(processedChild, stateData, context, onAction,
               item: crudCtx?.item, listIndex: crudCtx?.listIndex),
         );
       }).toList(),

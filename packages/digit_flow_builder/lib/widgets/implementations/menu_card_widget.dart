@@ -2,7 +2,6 @@ import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
-import '../../utils/conditional_evaluator.dart';
 import '../../utils/icon_accessor.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
@@ -20,22 +19,6 @@ class MenuCardWidget implements FlowWidget {
   ) {
     final crudCtx = CrudItemContext.of(context);
     final stateData = crudCtx?.stateData;
-
-    // Create evaluation context
-    final evalContext = {
-      'item': crudCtx?.item,
-      'contextData': crudCtx?.stateData?.rawState ?? {},
-    };
-
-    // Check visibility condition
-    final visible = ConditionalEvaluator.evaluate(
-      json['visible'] ?? true,
-      evalContext,
-    );
-
-    if (visible == false) {
-      return const SizedBox.shrink();
-    }
 
     return MenuCard(
       onTap: () {

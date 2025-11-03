@@ -31,6 +31,7 @@ class FlowBuilderSingleton {
   PersistenceConfiguration? _persistenceConfiguration = PersistenceConfiguration
       .offlineFirst; // Default to offline first persistence configuration
   Map<String, TemplateConfig>? _templateConfigs;
+  List<Map<String, dynamic>>? _userRoles; // User roles from app level (e.g., [{"code": "WAREHOUSE_MANAGER", "name": "Warehouse Manager"}])
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
@@ -49,6 +50,7 @@ class FlowBuilderSingleton {
     required ProjectTypeModel? projectType,
     required ProjectModel selectedProject,
     required UserModel? loggedInUser,
+    List<Map<String, dynamic>>? userRoles,
   }) {
     _loggedInUserUuid = loggedInUserUuid;
     _maxRadius = maxRadius;
@@ -57,6 +59,11 @@ class FlowBuilderSingleton {
     _projectType = projectType;
     _selectedProject = selectedProject;
     _loggedInUser = loggedInUser;
+    _userRoles = userRoles;
+  }
+
+  void setUserRoles(List<Map<String, dynamic>>? userRoles) {
+    _userRoles = userRoles;
   }
 
   void setTenantId(String tenantId) {
@@ -89,6 +96,8 @@ class FlowBuilderSingleton {
   UserModel? get loggedInUser => _loggedInUser;
 
   Map<String, TemplateConfig>? get templateConfigs => _templateConfigs;
+
+  List<Map<String, dynamic>>? get userRoles => _userRoles;
 }
 
 /// TODO: WILL REMOVE THIS FUNCTION ALSO : TEMPORARY
@@ -281,6 +290,7 @@ Map<String, dynamic> singletonToMap() {
     "boundary": s.boundary?.toJson(),
     "persistenceConfiguration": s.persistenceConfiguration?.toString(),
     "loggedInUser": s.loggedInUser?.toJson(),
+    "userRoles": s.userRoles,
     "templateConfigs":
         s.templateConfigs?.map((k, v) => MapEntry(k, v.toJson())),
   };

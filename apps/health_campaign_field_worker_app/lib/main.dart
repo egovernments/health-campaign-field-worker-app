@@ -2845,6 +2845,7 @@ final dynamic sampleInventoryFlows = {
         {
           "format": "menu_card",
           "heading": "Stock Damaged",
+          "visible": "{{fn:hasRole('WAREHOUSE_MANAGER')}} == false",
           "description":
               "Record the list of resources damaged during campaign operations",
           "icon": 'store',
@@ -2869,6 +2870,7 @@ final dynamic sampleInventoryFlows = {
         {
           "format": "menu_card",
           "heading": "Stock Loss",
+          "visible": "{{fn:hasRole('WAREHOUSE_MANAGER')}} == false",
           "description":
               "Record the list of resources lost during campaign operations",
           "icon": 'store',
