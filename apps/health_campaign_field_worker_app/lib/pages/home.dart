@@ -1143,6 +1143,12 @@ void setPackagesSingleton(BuildContext context) {
           selectedBeneficiaryType: context.beneficiaryType,
           projectType: context.selectedProjectType,
           selectedProject: context.selectedProject,
+          userRoles: context.loggedInUserRoles
+              .map((role) => {
+                    'code': role.code,
+                    'name': role.name,
+                  })
+              .toList(),
         );
         ComplaintsSingleton().setInitialData(
           tenantId: envConfig.variables.tenantId,
