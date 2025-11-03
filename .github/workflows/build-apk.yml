@@ -153,6 +153,7 @@ jobs:
               "digit_firebase_services"
               "digit_location_tracker"
               "transit_post"
+              "digit_flow_builder"
             )
           
             # Verify all local packages exist and filter available ones
