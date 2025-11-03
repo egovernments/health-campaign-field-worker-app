@@ -711,7 +711,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                   moduleName: 'HCM-ADMIN-CONSOLE',
                   masterDetails: [
                     MdmsMasterDetailModel(
-                      'FormConfig',
+                      'NewApkConfig',
                       filter:
                           "[?(@.project=='${event.model.referenceID}' && @.isSelected==true)]",
                     ),
@@ -722,10 +722,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ).toJson(),
         );
 
-        final formConfigs = formConfigResult['HCM-ADMIN-CONSOLE']['FormConfig'];
+        final formConfigs =
+            formConfigResult['HCM-ADMIN-CONSOLE']['NewApkConfig'];
 
         for (final config in formConfigs) {
-          await enrichFormSchemaWithEnums(config);
+          await enrichFormSchemasWithEnumsForForms(config);
         }
       } catch (e) {
         emit(
@@ -925,34 +926,16 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     final prefs = await SharedPreferences.getInstance();
     const schemaKey = 'app_config_schemas';
 
-    dynamic transformedSchema;
-
-    try {
-      transformedSchema = transformJson(schemaJson);
-    } catch (e, stackTrace) {
-      debugPrint('Schema transformation failed: $e');
-      debugPrint('$stackTrace');
-      transformedSchema = null;
-    }
-
-    if (transformedSchema == null) return;
-
     // Get the unique name and version from schema
-    final schemaName = transformedSchema['name'];
-    final newVersion = transformedSchema['version'];
+    final schemaName = schemaJson['name'];
 
     // Load existing schemas
     final existingSchemasRaw = prefs.getString(schemaKey);
     final Map<String, dynamic> existingSchemas =
         existingSchemasRaw != null ? json.decode(existingSchemasRaw) : {};
 
-    // Get the existing schema for this name if any
-    final existingEntry = existingSchemas[schemaName] as Map<String, dynamic>?;
-
     final updatedEntry = {
-      'data': transformedSchema,
-      'currentVersion': newVersion,
-      'previousVersion': existingEntry?['currentVersion']
+      'data': schemaJson,
     };
 
     // Update the map
@@ -962,34 +945,48 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     await prefs.setString(schemaKey, json.encode(existingSchemas));
   }
 
-  Future<void> enrichFormSchemaWithEnums(
-      Map<String, dynamic> formConfig) async {
-    final Map<String, Set<String>> moduleToMasters =
-        {}; // To collect module: master mapping
+  Future<void> enrichFormSchemasWithEnumsForForms(
+    dynamic formConfigs,
+  ) async {
+    // Filter only FORM type screens
+    final formTypeConfigs = formConfigs['flows']
+        .where((config) => config['screenType'] == 'FORM')
+        .toList();
 
-    // Step 1 & 2: Traverse the form schema
-    for (final page in formConfig['pages']) {
-      for (final property in page['properties']) {
-        final schemaCode = property['schemaCode'];
-        if (schemaCode != null && schemaCode.toString().isNotEmpty) {
-          final parts = schemaCode.split('.');
-          if (parts.length == 2) {
-            final module = parts[0];
-            final master = parts[1];
+    // Nothing to enrich
+    if (formTypeConfigs.isEmpty) {
+      await storeSchema(formConfigs);
+      return;
+    }
 
-            moduleToMasters.putIfAbsent(module, () => <String>{}).add(master);
+    // Collect all module.master pairs across all form pages
+    final Map<String, Set<String>> moduleToMasters = {};
+
+    for (final formConfig in formTypeConfigs) {
+      final pages = formConfig['pages'] ?? [];
+      for (final page in pages) {
+        final properties = page['properties'] ?? [];
+        for (final property in properties) {
+          final schemaCode = property['schemaCode'];
+          if (schemaCode != null && schemaCode.toString().isNotEmpty) {
+            final parts = schemaCode.split('.');
+            if (parts.length == 2) {
+              final module = parts[0];
+              final master = parts[1];
+              moduleToMasters.putIfAbsent(module, () => <String>{}).add(master);
+            }
           }
         }
       }
     }
 
-    // ✅ If nothing to enrich, return early
+    // ✅ If no schemaCode found, just store as-is
     if (moduleToMasters.isEmpty) {
-      await storeSchema(formConfig); // still store if needed
+      await storeSchema(formConfigs);
       return;
     }
 
-    // Step 3: Prepare MDMS moduleDetails
+    // Prepare module details for MDMS request
     final moduleDetails = moduleToMasters.entries.map((entry) {
       return MdmsModuleDetailModel(
         moduleName: entry.key,
@@ -998,7 +995,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       );
     }).toList();
 
-    // Step 4: Fetch all master data in one MDMS call
+    // Fetch all master data in a single MDMS call
     final mdmsResponse = await mdmsRepository.searchMDMS(
       envConfig.variables.mdmsApiPath,
       MdmsRequestModel(
@@ -1009,32 +1006,36 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       ).toJson(),
     );
 
-    // Step 5: Assign fetched enums back to form fields
-    for (final page in formConfig['pages']) {
-      for (final property in page['properties']) {
-        final schemaCode = property['schemaCode'];
-        if (schemaCode != null && schemaCode.toString().isNotEmpty) {
-          final parts = schemaCode.split('.');
-          if (parts.length == 2) {
-            final module = parts[0];
-            final master = parts[1];
+    // ✅ Now enrich all FORM screens with enums
+    for (final formConfig in formTypeConfigs) {
+      final pages = formConfig['pages'] ?? [];
+      for (final page in pages) {
+        final properties = page['properties'] ?? [];
+        for (final property in properties) {
+          final schemaCode = property['schemaCode'];
+          if (schemaCode != null && schemaCode.toString().isNotEmpty) {
+            final parts = schemaCode.split('.');
+            if (parts.length == 2) {
+              final module = parts[0];
+              final master = parts[1];
+              final enumValues = mdmsResponse[module]?[master];
 
-            final enumValues = mdmsResponse[module]?[master];
-            if (enumValues != null) {
-              property['enums'] = enumValues
-                  .map((e) => {
-                        'code': e['code'],
-                        'name': e['name'] ??
-                            e['code'], // fallback if name is missing
-                      })
-                  .toList();
+              if (enumValues != null) {
+                property['enums'] = enumValues
+                    .map((e) => {
+                          'code': e['code'],
+                          'name': e['name'] ?? e['code'],
+                        })
+                    .toList();
+              }
             }
           }
         }
       }
     }
 
-    await storeSchema(formConfig);
+    // ✅ Finally, store the full formConfigs (including updated FORM ones)
+    await storeSchema(formConfigs);
   }
 
   FutureOr<int> _getBatchSize() async {

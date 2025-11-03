@@ -77,13 +77,13 @@ class LayoutRendererPage extends StatelessWidget {
                 : null,
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 16.0, left: 16, right: 16),
+                padding: const EdgeInsets.all(spacer4),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     DigitTextBlock(
                       padding: EdgeInsets.zero,
-                      heading: config['heading'] ?? "",
+                      heading: config['heading'],
                       headingStyle: Theme.of(context)
                           .digitTextTheme(context)
                           .headingXl
@@ -92,7 +92,7 @@ class LayoutRendererPage extends StatelessWidget {
                                   .colorTheme
                                   .primary
                                   .primary2),
-                      description: config['description'] ?? "",
+                      description: config['description'],
                     ),
                     const SizedBox(height: 16),
                     ...body

@@ -34,12 +34,13 @@ class SearchExecutor extends ActionExecutor {
         ),
       ],
       primaryModel: config?['wrapperConfig']['searchConfig']['primary'],
-      select: config?['wrapperConfig']['searchConfig']['select'],
+      select: (config?['wrapperConfig']?['searchConfig']?['select'] as List?)
+              ?.cast<String>() ??
+          [],
       pagination: null,
       orderBy: config?['wrapperConfig']['searchConfig']['orderBy'] != null
-          ? SearchOrderBy.fromJson(
-              Map<String, dynamic>.from(
-                  config!['wrapperConfig']['searchConfig']['orderBy']))
+          ? SearchOrderBy.fromJson(Map<String, dynamic>.from(
+              config!['wrapperConfig']['searchConfig']['orderBy']))
           : null,
     );
 

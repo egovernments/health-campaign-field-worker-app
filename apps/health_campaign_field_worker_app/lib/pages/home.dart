@@ -737,7 +737,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.store_mall_directory,
           label: i18.home.manageStockLabel,
-          onPressed: () {
+          onPressed: () async {
             if (isTriggerLocalisation) {
               triggerLocalization();
               isTriggerLocalisation = false;
@@ -788,14 +788,36 @@ class _HomePageState extends LocalizedState<HomePage> {
                 dynamicEntityModelListener: EntityModelMapMapper(),
               );
               WidgetRegistry.initialize();
-              FlowRegistry.setConfig(
-                  sampleInventoryFlows["flows"] as List<Map<String, dynamic>>);
-              NavigationRegistry.setupNavigation(context);
+              final prefs = await SharedPreferences.getInstance();
+              final schemaJsonRaw = prefs.getString('app_config_schemas');
 
-              context.router.push(
-                FlowBuilderHomeRoute(
-                    pageName: sampleInventoryFlows["initialPage"]),
-              );
+              if (schemaJsonRaw != null) {
+                final allSchemas =
+                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                final manageStock = allSchemas['INVENTORY'];
+
+                final manageStockData = manageStock?['data'];
+                final flowsData = (manageStockData['flows'] as List<dynamic>?)
+                        ?.map((e) => Map<String, dynamic>.from(e as Map))
+                        .toList() ??
+                    [];
+                FlowRegistry.setConfig(flowsData);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: manageStockData["initialPage"]),
+                );
+              } else {
+                FlowRegistry.setConfig(sampleInventoryFlows["flows"]
+                    as List<Map<String, dynamic>>);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: sampleInventoryFlows["initialPage"]),
+                );
+              }
             } catch (e) {
               debugPrint('error $e');
             }
