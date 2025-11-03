@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
+import 'package:digit_flow_builder/widgets/localized.dart';
+import 'package:digit_flow_builder/widgets/localization_context.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/text_block.dart';
@@ -11,21 +13,33 @@ import 'action_handler/action_handler.dart';
 import 'blocs/flow_crud_bloc.dart';
 import 'widget_registry.dart';
 
-class LayoutRendererPage extends StatelessWidget {
+class LayoutRendererPage extends LocalizedStatefulWidget {
   final Map<String, dynamic> config;
   final List<String>? watchedScreenKeys;
 
   const LayoutRendererPage({
     super.key,
+    super.appLocalizations,
     required this.config,
     this.watchedScreenKeys,
   });
 
   @override
+  State<LayoutRendererPage> createState() => LayoutRendererPageState();
+}
+
+class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
+  @override
+  void initState() {
+    super.initState();
+    // You can handle any locale-specific logic here if needed
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final List<dynamic> body = config['body'] ?? [];
-    final List<dynamic> actions = config['footer'] ?? [];
-    final List<dynamic> headers = config['header'] ?? [];
+    final List<dynamic> body = widget.config['body'] ?? [];
+    final List<dynamic> actions = widget.config['footer'] ?? [];
+    final List<dynamic> headers = widget.config['header'] ?? [];
 
     final screenKey =
         getScreenKeyFromArgs(context) ?? context.router.currentPath;
@@ -35,8 +49,10 @@ class LayoutRendererPage extends StatelessWidget {
       builder: (context, _, __) {
         final stateData = extractCrudStateData(screenKey);
 
-        return Scaffold(
-          body: ScrollableContent(
+        return LocalizationContext(
+          localization: localizations,
+          child: Scaffold(
+            body: ScrollableContent(
             header: headers.isNotEmpty
                 ? Padding(
                     padding: const EdgeInsets.only(top: spacer4, left: spacer4),
@@ -83,7 +99,11 @@ class LayoutRendererPage extends StatelessWidget {
                   children: [
                     DigitTextBlock(
                       padding: EdgeInsets.zero,
-                      heading: config['heading'],
+                      heading: localizations
+                              .translate(widget.config['heading'])
+                              .isNotEmpty
+                          ? localizations.translate(widget.config['heading'])
+                          : null,
                       headingStyle: Theme.of(context)
                           .digitTextTheme(context)
                           .headingXl
@@ -92,7 +112,13 @@ class LayoutRendererPage extends StatelessWidget {
                                   .colorTheme
                                   .primary
                                   .primary2),
-                      description: config['description'],
+                      description: (widget.config['description'] != null &&
+                              localizations
+                                  .translate(widget.config['description'])
+                                  .isNotEmpty)
+                          ? localizations
+                              .translate(widget.config['description'])
+                          : null,
                     ),
                     const SizedBox(height: 16),
                     ...body
@@ -126,13 +152,15 @@ class LayoutRendererPage extends StatelessWidget {
               )
             ],
           ),
+          ),
         );
       },
     );
   }
 
   Future<void> _handleBackNavigation(BuildContext context) async {
-    final backNavigationConfig = config['header'] as Map<String, dynamic>?;
+    final backNavigationConfig =
+        widget.config['header'] as Map<String, dynamic>?;
 
     if (backNavigationConfig != null) {
       // Execute configured back navigation action

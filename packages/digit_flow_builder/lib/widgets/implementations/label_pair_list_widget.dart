@@ -6,6 +6,7 @@ import '../../action_handler/action_config.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
+import '../localization_context.dart';
 
 class LabelPairListWidget implements FlowWidget {
   @override
@@ -19,20 +20,26 @@ class LabelPairListWidget implements FlowWidget {
   ) {
     final crudCtx = CrudItemContext.of(context);
     final List<dynamic> data = json['data'] ?? [];
+    final localization = LocalizationContext.maybeOf(context);
+
     return LabelValueSummary(
       padding: const EdgeInsets.all(0),
       items: data.map((e) {
         final key = e['key'] ?? '';
         final value = e['value'];
 
+        // Localize first, then resolve template
+        final localizedKey = localization?.translate(key) ?? key;
+        final localizedValue = localization?.translate(value ?? '') ?? (value ?? '');
+
         final keyText = resolveTemplate(
-            key,
+            localizedKey,
             crudCtx?.item != null
                 ? crudCtx!.item
                 : crudCtx?.stateData?.rawState);
 
         final valueText = resolveTemplate(
-            value ?? '',
+            localizedValue,
             crudCtx?.item != null
                 ? crudCtx!.item
                 : crudCtx?.stateData?.rawState);

@@ -7,6 +7,7 @@ import '../../action_handler/action_config.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
+import '../localization_context.dart';
 
 class BackLinkWidget implements FlowWidget {
   @override
@@ -26,8 +27,15 @@ class BackLinkWidget implements FlowWidget {
             ? crudCtx.stateData?.rawState.first
             : null;
 
+    final localization = LocalizationContext.maybeOf(context);
+
+    // Localize first, then resolve template
+    final labelText = json['label'] ?? '';
+    final localizedLabel = localization?.translate(labelText) ?? labelText;
+    final label = resolveTemplate(localizedLabel, stateData) ?? localizedLabel;
+
     return DigitBackButton(
-      label: resolveTemplate(json['label'], stateData) ?? '',
+      label: label,
       handleBack: () {
         if (json['onAction'] != null) {
           final actionsList = List<Map<String, dynamic>>.from(json['onAction']);

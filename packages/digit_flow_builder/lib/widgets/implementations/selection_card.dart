@@ -5,6 +5,7 @@ import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
+import '../localization_context.dart';
 
 class SelectionCardWidget implements FlowWidget {
   @override
@@ -18,12 +19,15 @@ class SelectionCardWidget implements FlowWidget {
   ) {
     final data = json['data'] as List<dynamic>? ?? [];
     final fieldName = json['fieldName'] as String?;
+    final localization = LocalizationContext.maybeOf(context);
 
     final options = data.map((item) {
       if (item is Map<String, dynamic>) {
+        final name = item['name'] as String? ?? '';
+        final localizedName = localization?.translate(name) ?? name;
         return SelectionCardOption(
           code: item['code'] as String? ?? '',
-          name: item['name'] as String? ?? '',
+          name: localizedName,
         );
       }
       return SelectionCardOption(code: '', name: '');

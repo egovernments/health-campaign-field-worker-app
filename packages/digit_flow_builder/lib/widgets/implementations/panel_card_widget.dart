@@ -8,6 +8,7 @@ import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
+import '../localization_context.dart';
 
 class PanelCardWidget implements FlowWidget {
   @override
@@ -45,8 +46,16 @@ class PanelCardWidget implements FlowWidget {
       mergedData["navigation"] = navigationData;
     }
 
-    final label = resolveTemplate(json['label'] ?? '', mergedData);
-    final description = resolveTemplate(json['description'] ?? '', mergedData);
+    final localization = LocalizationContext.maybeOf(context);
+
+    // Localize first, then resolve template
+    final labelText = json['label'] ?? '';
+    final localizedLabel = localization?.translate(labelText) ?? labelText;
+    final label = resolveTemplate(localizedLabel, mergedData);
+
+    final descriptionText = json['description'] ?? '';
+    final localizedDescription = localization?.translate(descriptionText) ?? descriptionText;
+    final description = resolveTemplate(localizedDescription, mergedData);
 
     Map<String, dynamic>? primaryAction = json['primaryAction'];
     Map<String, dynamic>? secondaryAction = json['secondaryAction'];
@@ -109,14 +118,14 @@ class PanelCardWidget implements FlowWidget {
           DigitButton(
             type: DigitButtonType.primary,
             size: DigitButtonSize.large,
-            label: primaryAction['label'] ?? '',
+            label: localization?.translate(primaryAction['label'] ?? '') ?? (primaryAction['label'] ?? ''),
             onPressed: () => handleAction(json['primaryAction']),
           ),
         if (secondaryAction != null)
           DigitButton(
             type: DigitButtonType.secondary,
             size: DigitButtonSize.large,
-            label: secondaryAction['label'] ?? '',
+            label: localization?.translate(secondaryAction['label'] ?? '') ?? (secondaryAction['label'] ?? ''),
             onPressed: () => handleAction(json['secondaryAction']),
           ),
       ],

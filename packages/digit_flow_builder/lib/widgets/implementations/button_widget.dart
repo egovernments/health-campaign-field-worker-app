@@ -5,6 +5,7 @@ import '../../action_handler/action_config.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
+import '../localization_context.dart';
 
 class ButtonWidget implements FlowWidget {
   @override
@@ -25,9 +26,15 @@ class ButtonWidget implements FlowWidget {
             : null;
 
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
+    final localization = LocalizationContext.maybeOf(context);
+
+    // Localize first, then resolve template
+    final labelText = json['label'] ?? '';
+    final localizedLabel = localization?.translate(labelText) ?? labelText;
+    final resolvedLabel = resolveTemplate(localizedLabel, stateData) ?? localizedLabel;
 
     return DigitButton(
-      label: resolveTemplate(json['label'], stateData) ?? '',
+      label: resolvedLabel,
       onPressed: () {
         if (json['onAction'] != null) {
           final actionsList = List<Map<String, dynamic>>.from(json['onAction']);

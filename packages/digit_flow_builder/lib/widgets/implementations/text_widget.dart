@@ -5,6 +5,7 @@ import '../../blocs/app_localization.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
+import '../localization_context.dart';
 
 class TextWidget implements FlowWidget {
   @override
@@ -17,16 +18,19 @@ class TextWidget implements FlowWidget {
     void Function(ActionConfig) onAction,
   ) {
     final crudCtx = CrudItemContext.of(context);
+    final localization = LocalizationContext.maybeOf(context);
 
-    final valueText = resolveTemplate(
-            json['value'] ?? '',
+    // Localize first, then resolve template
+    final value = json['value'] ?? '';
+    final localizedValue = localization?.translate(value) ?? value;
+
+    final resolvedValue = resolveTemplate(
+            localizedValue,
             crudCtx?.item != null
                 ? crudCtx!.item
                 : crudCtx?.stateData?.rawState) ??
-        '';
+        localizedValue;
 
-    return Text(FlowBuilderLocalization.of(context).translate(
-      valueText,
-    ));
+    return Text(resolvedValue);
   }
 }

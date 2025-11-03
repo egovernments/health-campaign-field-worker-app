@@ -6,6 +6,7 @@ import '../../action_handler/action_config.dart';
 import '../../utils/conditional_evaluator.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
+import '../localization_context.dart';
 
 class InfoCardWidget implements FlowWidget {
   @override
@@ -37,10 +38,13 @@ class InfoCardWidget implements FlowWidget {
     }
 
     if (items.isNotEmpty) return const SizedBox.shrink();
+
+    final localization = LocalizationContext.maybeOf(context);
+
     return InfoCard(
       type: InfoType.info,
-      title: json['label'] ?? '',
-      description: json['description'] ?? '',
+      title: localization?.translate(json['label'] ?? '') ?? (json['label'] ?? ''),
+      description: localization?.translate(json['description'] ?? '') ?? (json['description'] ?? ''),
     );
   }
 }

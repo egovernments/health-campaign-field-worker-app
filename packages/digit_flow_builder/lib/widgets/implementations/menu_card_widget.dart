@@ -6,6 +6,7 @@ import '../../utils/icon_accessor.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
+import '../localization_context.dart';
 
 class MenuCardWidget implements FlowWidget {
   @override
@@ -59,9 +60,15 @@ class MenuCardWidget implements FlowWidget {
           }
         }
       },
-      heading: json['heading'],
-      description: json['description'],
+      heading: _localizeText(context, json['heading']) ?? "",
+      description: _localizeText(context, json['description']),
       icon: IconMapper.getIconOrDefault(json['icon']),
     );
+  }
+
+  String? _localizeText(BuildContext context, String? text) {
+    if (text == null) return null;
+    final localization = LocalizationContext.maybeOf(context);
+    return localization?.translate(text) ?? text;
   }
 }

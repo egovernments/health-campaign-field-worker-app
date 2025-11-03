@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
 import '../flow_widget_interface.dart';
+import '../localization_context.dart';
 
 class SearchBarWidget implements FlowWidget {
   @override
@@ -15,8 +16,12 @@ class SearchBarWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
+    final localization = LocalizationContext.maybeOf(context);
+    final hintText = json['label'] ?? '';
+    final localizedHint = localization?.translate(hintText) ?? hintText;
+
     return DigitSearchBar(
-      hintText: json['label'] ?? '',
+      hintText: localizedHint,
       onChanged: (value) {
         if (value.isNotEmpty) {
           if (json['onAction'] != null) {
