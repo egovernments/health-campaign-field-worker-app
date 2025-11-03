@@ -739,7 +739,9 @@ class _HomePageState extends LocalizedState<HomePage> {
           label: i18.home.manageStockLabel,
           onPressed: () async {
             if (isTriggerLocalisation) {
-              triggerLocalization();
+              final moduleName =
+                  'hcm-inventory-${context.selectedProject.referenceID}';
+              triggerLocalization(module: moduleName);
               isTriggerLocalisation = false;
             }
             try {
