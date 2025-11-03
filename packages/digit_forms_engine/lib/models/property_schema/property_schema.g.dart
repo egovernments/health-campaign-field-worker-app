@@ -60,6 +60,7 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
       autoFillCondition:
           _autoFillConditionListOrNull(json['autoFillCondition']),
       showAlertPopUp: _showAlertOrNull(json['showAlertPopUp']),
+      multiEntityConfig: _multiEntityConfigOrNull(json['multiEntityConfig']),
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -114,6 +115,7 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('autoFillCondition',
       instance.autoFillCondition?.map((e) => e.toJson()).toList());
   writeNotNull('showAlertPopUp', instance.showAlertPopUp?.toJson());
+  writeNotNull('multiEntityConfig', instance.multiEntityConfig?.toJson());
   return val;
 }
 
@@ -279,4 +281,18 @@ Map<String, dynamic> _$$AlertConditionImplToJson(
     <String, dynamic>{
       'expression': instance.expression,
       'value': instance.value,
+    };
+
+_$MultiEntityConfigImpl _$$MultiEntityConfigImplFromJson(
+        Map<String, dynamic> json) =>
+    _$MultiEntityConfigImpl(
+      sourcePageKey: json['sourcePageKey'] as String,
+      sourceFieldKey: json['sourceFieldKey'] as String,
+    );
+
+Map<String, dynamic> _$$MultiEntityConfigImplToJson(
+        _$MultiEntityConfigImpl instance) =>
+    <String, dynamic>{
+      'sourcePageKey': instance.sourcePageKey,
+      'sourceFieldKey': instance.sourceFieldKey,
     };

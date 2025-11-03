@@ -93,11 +93,14 @@ class TransformerExecutor extends ActionExecutor {
         // Create multiple entities, one for each item in the multi-select field
         for (int i = 0; i < multiEntityValue.length; i++) {
           final item = multiEntityValue[i];
-          final modifiedFormValues =
+          var modifiedFormValues =
               Map<String, dynamic>.from(formValuesToUse ?? {});
 
           // Replace the multi-select array with the single item
           _setNestedValue(modifiedFormValues, multiEntityField, item);
+
+          // Map entity-specific fields (with _item_N suffix) to base field names
+          modifiedFormValues = _mapEntityFieldsToBase(modifiedFormValues, i);
 
           final itemEntities = formEntityMapper.mapFormToEntities(
             formValues: modifiedFormValues,
@@ -159,5 +162,43 @@ class TransformerExecutor extends ActionExecutor {
     }
 
     current[keys.last] = value;
+  }
+
+  /// Maps entity-specific fields (with _item_N suffix) to base field names.
+  ///
+  /// Example: wayBillNumber_item_0 -> wayBillNumber (for entity index 0)
+  Map<String, dynamic> _mapEntityFieldsToBase(
+    Map<String, dynamic> formData,
+    int entityIndex,
+  ) {
+    final result = Map<String, dynamic>.from(formData);
+    final suffix = '_item_$entityIndex';
+
+    // Process each page in the form data
+    for (final pageEntry in formData.entries) {
+      if (pageEntry.value is Map<String, dynamic>) {
+        final pageData =
+            Map<String, dynamic>.from(pageEntry.value as Map<String, dynamic>);
+
+        // Find fields with the current entity index suffix
+        for (final fieldEntry
+            in (pageEntry.value as Map<String, dynamic>).entries) {
+          if (fieldEntry.key.endsWith(suffix)) {
+            // Extract base field name
+            final baseFieldName = fieldEntry.key.substring(
+              0,
+              fieldEntry.key.length - suffix.length,
+            );
+
+            // Map the entity-specific value to the base field name
+            pageData[baseFieldName] = fieldEntry.value;
+          }
+        }
+
+        result[pageEntry.key] = pageData;
+      }
+    }
+
+    return result;
   }
 }

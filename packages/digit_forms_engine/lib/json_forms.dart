@@ -61,7 +61,17 @@ class JsonForms extends StatelessWidget {
         .whereType<MapEntry<String, dynamic>>()
         .toList();
 
-    return Map.fromEntries(values);
+    final result = Map.fromEntries(values);
+
+    // Additionally, collect any form controls with entity suffixes (e.g., fieldName_item_0)
+    // These are created by MultiEntityTabView and need to be preserved for the transformer
+    for (final controlKey in form.controls.keys) {
+      if (controlKey.contains('_item_')) {
+        result[controlKey] = form.control(controlKey).value;
+      }
+    }
+
+    return result;
   }
 
   static MapEntry<String, dynamic>? _getParsedValues(
@@ -78,9 +88,17 @@ class JsonForms extends StatelessWidget {
         Map.fromEntries(results.whereType<MapEntry<String, dynamic>>()),
       );
     } else {
-      final value = form.control(name).value;
-      if (value == null) return null;
-      return MapEntry(name, value);
+      // Check if the control exists before accessing it
+      // This handles cases like MultiEntityTabView where controls may be renamed
+      try {
+        final value = form.control(name).value;
+        if (value == null) return null;
+        return MapEntry(name, value);
+      } catch (e) {
+        // Control doesn't exist (e.g., renamed in MultiEntityTabView)
+        // Return null to exclude from result
+        return null;
+      }
     }
   }
 
