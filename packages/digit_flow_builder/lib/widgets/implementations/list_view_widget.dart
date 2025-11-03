@@ -41,44 +41,64 @@ class ListViewWidget implements FlowWidget {
 
     if (items == null || (items is List && items.isEmpty)) return const SizedBox.shrink();
 
-    return Column(
-      children: List.generate(items.length, (index) {
-        final item = items[index];
+    // Generate widgets and filter out empty ones
+    final widgets = <Widget>[];
 
-        // Handle different item types: Map, EntityModel, or other
-        Map<String, dynamic> safeItem;
+    for (int index = 0; index < items.length; index++) {
+      final item = items[index];
 
-        if (item is Map) {
-          safeItem = Map<String, dynamic>.from(
-            item.map((k, v) => MapEntry(k.toString(), v)),
-          );
-        } else if (item is EntityModel) {
-          // Convert EntityModel to Map
-          safeItem = item.toMap();
-        } else {
-          // Fallback: empty map
-          safeItem = <String, dynamic>{};
-        }
+      // Handle different item types: Map, EntityModel, or other
+      Map<String, dynamic> safeItem;
 
-        final childJson = Map<String, dynamic>.from(json['child'] as Map);
-        final processedChild = preprocessConfigWithState(
-          childJson,
-          stateData!,
-          listIndex: index,
-          item: safeItem,
+      if (item is Map) {
+        safeItem = Map<String, dynamic>.from(
+          item.map((k, v) => MapEntry(k.toString(), v)),
         );
+      } else if (item is EntityModel) {
+        // Convert EntityModel to Map
+        safeItem = item.toMap();
+      } else {
+        // Fallback: empty map
+        safeItem = <String, dynamic>{};
+      }
 
-        return CrudItemContext(
-          stateData: stateData,
-          listIndex: index,
-          item: safeItem,
-          screenKey: crudCtx?.screenKey,
-          child: LayoutMapper.map(processedChild, stateData, context, onAction,
-              item: safeItem, listIndex: index),
-        );
-      }).expand((widget) => [widget, const SizedBox(height: 8)]).toList()
-        ..removeLast(),
-    );
+      final childJson = Map<String, dynamic>.from(json['child'] as Map);
+      final processedChild = preprocessConfigWithState(
+        childJson,
+        stateData!,
+        listIndex: index,
+        item: safeItem,
+      );
+
+      final mappedChild = LayoutMapper.map(
+        processedChild,
+        stateData,
+        context,
+        onAction,
+        item: safeItem,
+        listIndex: index
+      );
+
+      // Skip if the mapped child is an empty SizedBox
+      if (mappedChild is SizedBox &&
+          mappedChild.width == 0.0 &&
+          mappedChild.height == 0.0) {
+        continue;
+      }
+
+      widgets.add(CrudItemContext(
+        stateData: stateData,
+        listIndex: index,
+        item: safeItem,
+        screenKey: crudCtx?.screenKey,
+        child: mappedChild,
+      ));
+    }
+
+    // If all items were filtered out, return empty
+    if (widgets.isEmpty) return const SizedBox.shrink();
+
+    return Column(children: widgets);
   }
 
   /// Resolves nested field paths like "items" from a map

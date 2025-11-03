@@ -61,6 +61,9 @@ class PropertySchema with _$PropertySchema {
     @JsonKey(fromJson: _autoFillConditionListOrNull)
     List<AutoFillCondition>? autoFillCondition,
     @JsonKey(fromJson: _showAlertOrNull) ShowAlertPopUp? showAlertPopUp,
+    // Multi-entity tab configuration
+    @JsonKey(fromJson: _multiEntityConfigOrNull)
+    MultiEntityConfig? multiEntityConfig,
   }) = _PropertySchema;
 
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>
@@ -169,6 +172,17 @@ class AlertCondition with _$AlertCondition {
       _$AlertConditionFromJson(json);
 }
 
+@freezed
+class MultiEntityConfig with _$MultiEntityConfig {
+  const factory MultiEntityConfig({
+    required String sourcePageKey, // Page containing the multi-select field
+    required String sourceFieldKey, // Field name of the multi-select
+  }) = _MultiEntityConfig;
+
+  factory MultiEntityConfig.fromJson(Map<String, dynamic> json) =>
+      _$MultiEntityConfigFromJson(json);
+}
+
 String? _stringOrNull(dynamic value) {
   return value is String ? value : null;
 }
@@ -219,6 +233,13 @@ List<AutoFillCondition>? _autoFillConditionListOrNull(dynamic value) {
 ShowAlertPopUp? _showAlertOrNull(dynamic value) {
   if (value is Map && value.isNotEmpty) {
     return ShowAlertPopUp.fromJson(Map<String, dynamic>.from(value));
+  }
+  return null;
+}
+
+MultiEntityConfig? _multiEntityConfigOrNull(dynamic value) {
+  if (value is Map && value.isNotEmpty) {
+    return MultiEntityConfig.fromJson(Map<String, dynamic>.from(value));
   }
   return null;
 }

@@ -307,10 +307,8 @@ class Constants {
       entityMapper: SyncServiceMapper(),
     );
     SyncServiceSingleton().setRegistries(SyncServiceRegistry());
-    SyncServiceSingleton().registries?.registerSyncRegistries({
-      DataModelType.complaints: (remote) => CustomSyncRegistry(remote),
-      DataModelType.userAction: (remote) => CustomSyncRegistry(remote),
-    });
+    SyncServiceSingleton().registries?.registerSyncRegistries(
+        {DataModelType.complaints: (remote) => CustomSyncRegistry(remote)});
   }
 }
 

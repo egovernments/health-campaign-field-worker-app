@@ -38,7 +38,7 @@ void main() async {
   Bloc.observer = AppBlocObserver();
   await AppSharedPreferences().init();
   if (AppSharedPreferences().isFirstLaunch) {
-    AppLogger.instance.info('App Launched First Time', title: 'm  ain');
+    AppLogger.instance.info('App Launched First Time', title: 'main');
     await AppSharedPreferences().appLaunchedFirstTime();
     await LocalSecureStore.instance.deleteAll();
   }
@@ -51,10 +51,6 @@ void main() async {
   await Constants().initialize(info.version);
   _isar = await Constants().isar;
   await initializeService(_dio, _isar);
-  // FlowRegistry.setConfig(sampleFlows["flows"] as List<Map<String, dynamic>>);
-  // FlowRegistry.setConfig(
-  //     sampleInventoryFlows["flows"] as List<Map<String, dynamic>>);
-
   runApp(MainApplication(
     appRouter: AppRouter(),
     isar: _isar,
@@ -2964,7 +2960,7 @@ final dynamic sampleInventoryFlows = {
               "tooltip": "",
               "helpText": "Enter the date on which the stock was received",
               "infoText": "",
-              "readOnly": false,
+              "readOnly": true,
               "fieldName": "dateOfEntry",
               "deleteFlag": false,
               "innerLabel": "",
@@ -3253,6 +3249,10 @@ final dynamic sampleInventoryFlows = {
           "description": "APPONE_INVENTORY_PRODUCTDETAILS_SCREEN_DESCRIPTION",
           "actionLabel":
               "APPONE_INVENTORY_PRODUCTDETAILS_ACTION_BUTTON_LABEL_1",
+          "multiEntityConfig": {
+            "sourcePageKey": "stockDetails",
+            "sourceFieldKey": "productdetail"
+          },
           "properties": [
             {
               "type": "string",
@@ -3617,7 +3617,8 @@ final dynamic sampleInventoryFlows = {
         ],
         "searchConfig": {
           "primary": "stock",
-          "select": ["stock"]
+          "select": ["stock"],
+          "orderBy": {"field": "clientCreatedTime", "order": "DESC"}
         }
       },
       "body": [
@@ -3714,10 +3715,7 @@ final dynamic sampleInventoryFlows = {
                       "type": "TEMPLATE",
                       "name": "viewTransactionDetails",
                       "data": [
-                        {
-                          "key": "selectedMrnNumber",
-                          "value": "{{item.groupKey}}"
-                        }
+                        {"key": "selectedStock", "value": "{{item.groupKey}}"}
                       ]
                     }
                   }
@@ -3755,7 +3753,7 @@ final dynamic sampleInventoryFlows = {
             "data": [
               {
                 "key": "additionalFields",
-                "value": "{{navigation.selectedMrnNumber}}",
+                "value": "{{navigation.selectedStock}}",
                 "operation": "contains"
               }
             ]
@@ -3775,7 +3773,7 @@ final dynamic sampleInventoryFlows = {
         ],
         "searchConfig": {
           "primary": "stock",
-          "select": ["stock"]
+          "select": ["stock"],
         }
       },
       "body": [
@@ -3808,7 +3806,11 @@ final dynamic sampleInventoryFlows = {
                     "value":
                         "{{fn:formatDate(item.additionalFields.fields.expiryDate, dateTime, dd MMMM yyyy)}}"
                   },
-                  {"key": "Quantity received", "value": "{{item.quantity}}"},
+                  {
+                    "key":
+                        "{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+                    "value": "{{item.quantity}}"
+                  },
                   {
                     "key": "Comments",
                     "value": "{{item.additionalFields.fields.comments}}"
@@ -3822,3 +3824,258 @@ final dynamic sampleInventoryFlows = {
     }
   ]
 };
+
+// final dynamic inventoryReportFlows = [
+//   {
+//     "screenType": "TEMPLATE",
+//     "name": "viewReports",
+//     "heading": "View Reports",
+//     "description": "",
+//     "header": [
+//       {
+//         "format": "backLink",
+//         "label": "Back",
+//         "onAction": [
+//           {"actionType": "BACK_NAVIGATION", "properties": {}}
+//         ]
+//       },
+//     ],
+//     "footer": [],
+//     "initActions": [
+//       {
+//         "actionType": "SEARCH_EVENT",
+//         "properties": {
+//           "type": "SEARCH_EVENT",
+//           "name": "projectFacility",
+//           "data": [
+//             {
+//               "key": "projectId",
+//               "value": "{{singleton.selectedProject.id}}",
+//               "operation": "equals"
+//             }
+//           ]
+//         }
+//       }
+//     ],
+//     "wrapperConfig": {
+//       "wrapperName": "InventoryWrapper",
+//       "groupByType": true,
+//       "rootEntity": "ProjectFacilityModel",
+//       "filters": [],
+//       "relations": [
+//         {
+//           "name": "facility",
+//           "entity": "FacilityModel",
+//           "match": {"field": "id", "equalsFrom": "facilityId"}
+//         },
+//         {
+//           "name": "productVariant",
+//           "entity": "ProductVariantModel",
+//           "match": {"field": "id", "equalsFrom": "resource"}
+//         }
+//       ],
+//       "searchConfig": {
+//         "primary": "projectFacility",
+//         "select": ["projectFacility", "productVariant"]
+//       }
+//     },
+//     "body": [
+//       {
+//         "format": "menu_card",
+//         "heading": "Stock Received",
+//         "description": "View stock received reports",
+//         "icon": 'assessment',
+//         "onAction": [
+//           {
+//             "actionType": "NAVIGATION",
+//             "properties": {
+//               "type": "TEMPLATE",
+//               "name": "reportDetails",
+//               "data": [
+//                 {"key": "reportType", "value": "receipt"}
+//               ]
+//             }
+//           }
+//         ]
+//       },
+//       {
+//         "format": "menu_card",
+//         "heading": "Stock Issued",
+//         "description": "View stock issued reports",
+//         "icon": 'assessment',
+//         "onAction": [
+//           {
+//             "actionType": "NAVIGATION",
+//             "properties": {
+//               "type": "TEMPLATE",
+//               "name": "reportDetails",
+//               "data": [
+//                 {"key": "reportType", "value": "dispatch"}
+//               ]
+//             }
+//           }
+//         ]
+//       },
+//       {
+//         "format": "menu_card",
+//         "heading": "Stock Returned",
+//         "description": "View stock returned reports",
+//         "icon": 'assessment',
+//         "onAction": [
+//           {
+//             "actionType": "NAVIGATION",
+//             "properties": {
+//               "type": "TEMPLATE",
+//               "name": "reportDetails",
+//               "data": [
+//                 {"key": "reportType", "value": "returned"}
+//               ]
+//             }
+//           }
+//         ]
+//       },
+//       {
+//         "format": "menu_card",
+//         "heading": "Stock Damaged",
+//         "description": "View stock damaged reports",
+//         "icon": 'assessment',
+//         "onAction": [
+//           {
+//             "actionType": "NAVIGATION",
+//             "properties": {
+//               "type": "TEMPLATE",
+//               "name": "reportDetails",
+//               "data": [
+//                 {"key": "reportType", "value": "damage"}
+//               ]
+//             }
+//           }
+//         ]
+//       },
+//       {
+//         "format": "menu_card",
+//         "heading": "Stock Loss",
+//         "description": "View stock loss reports",
+//         "icon": 'assessment',
+//         "onAction": [
+//           {
+//             "actionType": "NAVIGATION",
+//             "properties": {
+//               "type": "TEMPLATE",
+//               "name": "reportDetails",
+//               "data": [
+//                 {"key": "reportType", "value": "loss"}
+//               ]
+//             }
+//           }
+//         ]
+//       },
+//       {
+//         "format": "menu_card",
+//         "heading": "Stock Reconciliation",
+//         "description": "View stock reconciliation reports",
+//         "icon": 'assessment',
+//         "onAction": [
+//           {
+//             "actionType": "NAVIGATION",
+//             "properties": {
+//               "type": "TEMPLATE",
+//               "name": "reportDetails",
+//               "data": [
+//                 {"key": "reportType", "value": "reconciliation"}
+//               ]
+//             }
+//           }
+//         ]
+//       }
+//     ]
+//   },
+//   {
+//     "screenType": "TEMPLATE",
+//     "name": "reportDetails",
+//     "heading": "{{navigation.reportType}} Report",
+//     "description": "",
+//     "header": [
+//       {
+//         "format": "backLink",
+//         "label": "Back",
+//         "onAction": [
+//           {"actionType": "BACK_NAVIGATION", "properties": {}}
+//         ]
+//       },
+//     ],
+//     "footer": [],
+//     "initActions": [],
+//     "wrapperConfig": {
+//       "wrapperName": "ViewStockWrapper",
+//       "groupByType": true,
+//       "rootEntity": "StockModel",
+//       "filters": [],
+//       "relations": [
+//         {
+//           "name": "stock",
+//           "entity": "StockModel",
+//           "match": {
+//             "field": "clientAuditDetails.createdBy",
+//             "equalsFrom": "{{singleton.loggedInUserUuid}}"
+//           }
+//         },
+//       ],
+//       "searchConfig": {
+//         "primary": "stock",
+//         "select": ["stock"],
+//         "orderBy": {"field": "clientCreatedTime", "order": "DESC"}
+//       }
+//     },
+//     "body": [
+//       {
+//         "format": "card",
+//         "children": [
+//           {
+//             "format": "dropdown",
+//             "label": "Select Warehouse",
+//             "required": true,
+//             "key": "selectedFacility",
+//             "options": "{{facility}}",
+//             "displayKey": "name",
+//             "valueKey": "id"
+//           },
+//           {
+//             "format": "dropdown",
+//             "label": "Select Product",
+//             "required": true,
+//             "key": "selectedProduct",
+//             "options": "{{productVariant}}",
+//             "displayKey": "sku",
+//             "valueKey": "id"
+//           }
+//         ]
+//       },
+//       {
+//         "format": "data_grid",
+//         "heading": "Report Data",
+//         "searchConfig": {
+//           "entity": "StockModel",
+//           "filters": [
+//             {"field": "facilityId", "equals": "{{selectedFacility}}"},
+//             {"field": "productVariantId", "equals": "{{selectedProduct}}"}
+//           ]
+//         },
+//         "columns": [
+//           {"key": "date", "label": "Date", "format": "date", "width": 100},
+//           {"key": "wayBillNumber", "label": "Waybill Number", "width": 150},
+//           {
+//             "key": "quantity",
+//             "label": "{{fn:getQuantityLabel(navigation.reportType)}}",
+//             "width": 150
+//           },
+//           {
+//             "key": "transactingParty",
+//             "label": "{{fn:getTransactingPartyLabel(navigation.reportType)}}",
+//             "width": 200
+//           }
+//         ]
+//       }
+//     ]
+//   }
+// ];

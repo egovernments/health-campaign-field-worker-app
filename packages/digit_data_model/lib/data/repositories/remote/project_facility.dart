@@ -20,6 +20,7 @@ class ProjectFacilityRemoteRepository
     ProjectFacilitySearchModel query, {
     int? offSet,
     int? limit,
+    int? lastChangedSince,
   }) async {
     int defaultBatchSize = limit ?? 100;
     int currentOffset = offSet ?? 0;

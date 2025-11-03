@@ -36,6 +36,11 @@ class SearchExecutor extends ActionExecutor {
       primaryModel: config?['wrapperConfig']['searchConfig']['primary'],
       select: config?['wrapperConfig']['searchConfig']['select'],
       pagination: null,
+      orderBy: config?['wrapperConfig']['searchConfig']['orderBy'] != null
+          ? SearchOrderBy.fromJson(
+              Map<String, dynamic>.from(
+                  config!['wrapperConfig']['searchConfig']['orderBy']))
+          : null,
     );
 
     context.read<CrudBloc>().add(CrudEventSearch(searchParams));

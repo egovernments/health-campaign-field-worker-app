@@ -226,7 +226,17 @@ Map<String, dynamic> getFormValues(
       .whereType<MapEntry<String, dynamic>>()
       .toList();
 
-  return Map.fromEntries(values);
+  final result = Map.fromEntries(values);
+
+  // Additionally, collect any form controls with entity suffixes (e.g., fieldName_item_0)
+  // These are created by MultiEntityTabView and need to be preserved for the transformer
+  for (final controlKey in form.controls.keys) {
+    if (controlKey.contains('_item_')) {
+      result[controlKey] = form.control(controlKey).value;
+    }
+  }
+
+  return result;
 }
 
 MapEntry<String, dynamic>? getParsedValues(
@@ -243,10 +253,18 @@ MapEntry<String, dynamic>? getParsedValues(
       Map.fromEntries(results.whereType<MapEntry<String, dynamic>>()),
     );
   } else {
-    final value = form.control(name).value;
-    if (value == null) {
+    // Check if the control exists before accessing it
+    // This handles cases like MultiEntityTabView where controls may be renamed
+    try {
+      final value = form.control(name).value;
+      if (value == null) {
+        return MapEntry(name, "");
+      }
+      return MapEntry(name, value);
+    } catch (e) {
+      // Control doesn't exist (e.g., renamed in MultiEntityTabView)
+      // Return empty string as default
       return MapEntry(name, "");
     }
-    return MapEntry(name, value);
   }
 }

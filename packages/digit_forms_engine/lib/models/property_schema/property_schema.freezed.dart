@@ -69,7 +69,11 @@ mixin _$PropertySchema {
   List<AutoFillCondition>? get autoFillCondition =>
       throw _privateConstructorUsedError;
   @JsonKey(fromJson: _showAlertOrNull)
-  ShowAlertPopUp? get showAlertPopUp => throw _privateConstructorUsedError;
+  ShowAlertPopUp? get showAlertPopUp =>
+      throw _privateConstructorUsedError; // Multi-entity tab configuration
+  @JsonKey(fromJson: _multiEntityConfigOrNull)
+  MultiEntityConfig? get multiEntityConfig =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -125,12 +129,15 @@ abstract class $PropertySchemaCopyWith<$Res> {
       List<ConditionalNavigateTo>? conditionalNavigateTo,
       @JsonKey(fromJson: _autoFillConditionListOrNull)
       List<AutoFillCondition>? autoFillCondition,
-      @JsonKey(fromJson: _showAlertOrNull) ShowAlertPopUp? showAlertPopUp});
+      @JsonKey(fromJson: _showAlertOrNull) ShowAlertPopUp? showAlertPopUp,
+      @JsonKey(fromJson: _multiEntityConfigOrNull)
+      MultiEntityConfig? multiEntityConfig});
 
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
   $NavigateToConfigCopyWith<$Res>? get navigateTo;
   $VisibilityConditionCopyWith<$Res>? get visibilityCondition;
   $ShowAlertPopUpCopyWith<$Res>? get showAlertPopUp;
+  $MultiEntityConfigCopyWith<$Res>? get multiEntityConfig;
 }
 
 /// @nodoc
@@ -183,6 +190,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? conditionalNavigateTo = freezed,
     Object? autoFillCondition = freezed,
     Object? showAlertPopUp = freezed,
+    Object? multiEntityConfig = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -333,6 +341,10 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.showAlertPopUp
           : showAlertPopUp // ignore: cast_nullable_to_non_nullable
               as ShowAlertPopUp?,
+      multiEntityConfig: freezed == multiEntityConfig
+          ? _value.multiEntityConfig
+          : multiEntityConfig // ignore: cast_nullable_to_non_nullable
+              as MultiEntityConfig?,
     ) as $Val);
   }
 
@@ -382,6 +394,18 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
 
     return $ShowAlertPopUpCopyWith<$Res>(_value.showAlertPopUp!, (value) {
       return _then(_value.copyWith(showAlertPopUp: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $MultiEntityConfigCopyWith<$Res>? get multiEntityConfig {
+    if (_value.multiEntityConfig == null) {
+      return null;
+    }
+
+    return $MultiEntityConfigCopyWith<$Res>(_value.multiEntityConfig!, (value) {
+      return _then(_value.copyWith(multiEntityConfig: value) as $Val);
     });
   }
 }
@@ -436,7 +460,9 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       List<ConditionalNavigateTo>? conditionalNavigateTo,
       @JsonKey(fromJson: _autoFillConditionListOrNull)
       List<AutoFillCondition>? autoFillCondition,
-      @JsonKey(fromJson: _showAlertOrNull) ShowAlertPopUp? showAlertPopUp});
+      @JsonKey(fromJson: _showAlertOrNull) ShowAlertPopUp? showAlertPopUp,
+      @JsonKey(fromJson: _multiEntityConfigOrNull)
+      MultiEntityConfig? multiEntityConfig});
 
   @override
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
@@ -446,6 +472,8 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
   $VisibilityConditionCopyWith<$Res>? get visibilityCondition;
   @override
   $ShowAlertPopUpCopyWith<$Res>? get showAlertPopUp;
+  @override
+  $MultiEntityConfigCopyWith<$Res>? get multiEntityConfig;
 }
 
 /// @nodoc
@@ -496,6 +524,7 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? conditionalNavigateTo = freezed,
     Object? autoFillCondition = freezed,
     Object? showAlertPopUp = freezed,
+    Object? multiEntityConfig = freezed,
   }) {
     return _then(_$PropertySchemaImpl(
       type: null == type
@@ -646,6 +675,10 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.showAlertPopUp
           : showAlertPopUp // ignore: cast_nullable_to_non_nullable
               as ShowAlertPopUp?,
+      multiEntityConfig: freezed == multiEntityConfig
+          ? _value.multiEntityConfig
+          : multiEntityConfig // ignore: cast_nullable_to_non_nullable
+              as MultiEntityConfig?,
     ));
   }
 }
@@ -695,7 +728,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
       final List<ConditionalNavigateTo>? conditionalNavigateTo,
       @JsonKey(fromJson: _autoFillConditionListOrNull)
       final List<AutoFillCondition>? autoFillCondition,
-      @JsonKey(fromJson: _showAlertOrNull) this.showAlertPopUp})
+      @JsonKey(fromJson: _showAlertOrNull) this.showAlertPopUp,
+      @JsonKey(fromJson: _multiEntityConfigOrNull) this.multiEntityConfig})
       : _properties = properties,
         _enums = enums,
         _conditions = conditions,
@@ -841,10 +875,14 @@ class _$PropertySchemaImpl implements _PropertySchema {
   @override
   @JsonKey(fromJson: _showAlertOrNull)
   final ShowAlertPopUp? showAlertPopUp;
+// Multi-entity tab configuration
+  @override
+  @JsonKey(fromJson: _multiEntityConfigOrNull)
+  final MultiEntityConfig? multiEntityConfig;
 
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp, multiEntityConfig: $multiEntityConfig)';
   }
 
   @override
@@ -916,7 +954,9 @@ class _$PropertySchemaImpl implements _PropertySchema {
             const DeepCollectionEquality()
                 .equals(other._autoFillCondition, _autoFillCondition) &&
             (identical(other.showAlertPopUp, showAlertPopUp) ||
-                other.showAlertPopUp == showAlertPopUp));
+                other.showAlertPopUp == showAlertPopUp) &&
+            (identical(other.multiEntityConfig, multiEntityConfig) ||
+                other.multiEntityConfig == multiEntityConfig));
   }
 
   @JsonKey(ignore: true)
@@ -959,7 +999,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
         visibilityCondition,
         const DeepCollectionEquality().hash(_conditionalNavigateTo),
         const DeepCollectionEquality().hash(_autoFillCondition),
-        showAlertPopUp
+        showAlertPopUp,
+        multiEntityConfig
       ]);
 
   @JsonKey(ignore: true)
@@ -1021,8 +1062,9 @@ abstract class _PropertySchema implements PropertySchema {
       final List<ConditionalNavigateTo>? conditionalNavigateTo,
       @JsonKey(fromJson: _autoFillConditionListOrNull)
       final List<AutoFillCondition>? autoFillCondition,
-      @JsonKey(fromJson: _showAlertOrNull)
-      final ShowAlertPopUp? showAlertPopUp}) = _$PropertySchemaImpl;
+      @JsonKey(fromJson: _showAlertOrNull) final ShowAlertPopUp? showAlertPopUp,
+      @JsonKey(fromJson: _multiEntityConfigOrNull)
+      final MultiEntityConfig? multiEntityConfig}) = _$PropertySchemaImpl;
 
   factory _PropertySchema.fromJson(Map<String, dynamic> json) =
       _$PropertySchemaImpl.fromJson;
@@ -1110,6 +1152,9 @@ abstract class _PropertySchema implements PropertySchema {
   @override
   @JsonKey(fromJson: _showAlertOrNull)
   ShowAlertPopUp? get showAlertPopUp;
+  @override // Multi-entity tab configuration
+  @JsonKey(fromJson: _multiEntityConfigOrNull)
+  MultiEntityConfig? get multiEntityConfig;
   @override
   @JsonKey(ignore: true)
   _$$PropertySchemaImplCopyWith<_$PropertySchemaImpl> get copyWith =>
@@ -2661,5 +2706,165 @@ abstract class _AlertCondition implements AlertCondition {
   @override
   @JsonKey(ignore: true)
   _$$AlertConditionImplCopyWith<_$AlertConditionImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+MultiEntityConfig _$MultiEntityConfigFromJson(Map<String, dynamic> json) {
+  return _MultiEntityConfig.fromJson(json);
+}
+
+/// @nodoc
+mixin _$MultiEntityConfig {
+  String get sourcePageKey =>
+      throw _privateConstructorUsedError; // Page containing the multi-select field
+  String get sourceFieldKey => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $MultiEntityConfigCopyWith<MultiEntityConfig> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $MultiEntityConfigCopyWith<$Res> {
+  factory $MultiEntityConfigCopyWith(
+          MultiEntityConfig value, $Res Function(MultiEntityConfig) then) =
+      _$MultiEntityConfigCopyWithImpl<$Res, MultiEntityConfig>;
+  @useResult
+  $Res call({String sourcePageKey, String sourceFieldKey});
+}
+
+/// @nodoc
+class _$MultiEntityConfigCopyWithImpl<$Res, $Val extends MultiEntityConfig>
+    implements $MultiEntityConfigCopyWith<$Res> {
+  _$MultiEntityConfigCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? sourcePageKey = null,
+    Object? sourceFieldKey = null,
+  }) {
+    return _then(_value.copyWith(
+      sourcePageKey: null == sourcePageKey
+          ? _value.sourcePageKey
+          : sourcePageKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      sourceFieldKey: null == sourceFieldKey
+          ? _value.sourceFieldKey
+          : sourceFieldKey // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$MultiEntityConfigImplCopyWith<$Res>
+    implements $MultiEntityConfigCopyWith<$Res> {
+  factory _$$MultiEntityConfigImplCopyWith(_$MultiEntityConfigImpl value,
+          $Res Function(_$MultiEntityConfigImpl) then) =
+      __$$MultiEntityConfigImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String sourcePageKey, String sourceFieldKey});
+}
+
+/// @nodoc
+class __$$MultiEntityConfigImplCopyWithImpl<$Res>
+    extends _$MultiEntityConfigCopyWithImpl<$Res, _$MultiEntityConfigImpl>
+    implements _$$MultiEntityConfigImplCopyWith<$Res> {
+  __$$MultiEntityConfigImplCopyWithImpl(_$MultiEntityConfigImpl _value,
+      $Res Function(_$MultiEntityConfigImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? sourcePageKey = null,
+    Object? sourceFieldKey = null,
+  }) {
+    return _then(_$MultiEntityConfigImpl(
+      sourcePageKey: null == sourcePageKey
+          ? _value.sourcePageKey
+          : sourcePageKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      sourceFieldKey: null == sourceFieldKey
+          ? _value.sourceFieldKey
+          : sourceFieldKey // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$MultiEntityConfigImpl implements _MultiEntityConfig {
+  const _$MultiEntityConfigImpl(
+      {required this.sourcePageKey, required this.sourceFieldKey});
+
+  factory _$MultiEntityConfigImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MultiEntityConfigImplFromJson(json);
+
+  @override
+  final String sourcePageKey;
+// Page containing the multi-select field
+  @override
+  final String sourceFieldKey;
+
+  @override
+  String toString() {
+    return 'MultiEntityConfig(sourcePageKey: $sourcePageKey, sourceFieldKey: $sourceFieldKey)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$MultiEntityConfigImpl &&
+            (identical(other.sourcePageKey, sourcePageKey) ||
+                other.sourcePageKey == sourcePageKey) &&
+            (identical(other.sourceFieldKey, sourceFieldKey) ||
+                other.sourceFieldKey == sourceFieldKey));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, sourcePageKey, sourceFieldKey);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$MultiEntityConfigImplCopyWith<_$MultiEntityConfigImpl> get copyWith =>
+      __$$MultiEntityConfigImplCopyWithImpl<_$MultiEntityConfigImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$MultiEntityConfigImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _MultiEntityConfig implements MultiEntityConfig {
+  const factory _MultiEntityConfig(
+      {required final String sourcePageKey,
+      required final String sourceFieldKey}) = _$MultiEntityConfigImpl;
+
+  factory _MultiEntityConfig.fromJson(Map<String, dynamic> json) =
+      _$MultiEntityConfigImpl.fromJson;
+
+  @override
+  String get sourcePageKey;
+  @override // Page containing the multi-select field
+  String get sourceFieldKey;
+  @override
+  @JsonKey(ignore: true)
+  _$$MultiEntityConfigImplCopyWith<_$MultiEntityConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
