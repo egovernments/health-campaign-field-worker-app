@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
-import '../../blocs/app_localization.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
@@ -9,7 +8,8 @@ import '../localization_context.dart';
 
 class TextWidget implements FlowWidget {
   @override
-  String get format => 'text';
+  String get format =>
+      'textTemplate'; // add support to take multiple format types
 
   @override
   Widget build(
