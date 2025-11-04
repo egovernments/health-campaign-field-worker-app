@@ -35,7 +35,7 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
     final textTheme = theme.digitTextTheme(context);
 
     final pages =
-        context.read<FormsBloc>().state.cachedSchemas['MANAGESTOCK']?.pages;
+        context.read<FormsBloc>().state.cachedSchemas['RECORDSTOCK']?.pages;
     final wrapperList =
         widget.stateData.stateWrapper as List<Map<String, List<dynamic>>>;
 
@@ -133,7 +133,7 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
                   // Push update into FormsBloc with dot-separated ids (or list if you prefer)
                   context.read<FormsBloc>().add(
                         FormsEvent.updateField(
-                          schemaKey: 'MANAGESTOCK',
+                          schemaKey: 'RECORDSTOCK',
                           context: context,
                           key: _productVariantKey,
                           value: selectedModels

@@ -65,7 +65,7 @@ class _FacilityCardState extends LocalizedState<FacilityCard> {
     final showDeliveryTeamOption = isDistributor && !isWareHouseMgr;
 
     final pages =
-        context.read<FormsBloc>().state.cachedSchemas['MANAGESTOCK']?.pages;
+        context.read<FormsBloc>().state.cachedSchemas['RECORDSTOCK']?.pages;
     final wrapperData = widget.stateData?.stateWrapper;
     if (wrapperData == null) {
       return const SizedBox.shrink();
@@ -178,7 +178,7 @@ class _FacilityCardState extends LocalizedState<FacilityCard> {
                   if (deliveryTeamSelected) {
                     context.read<FormsBloc>().add(
                           FormsEvent.updateField(
-                            schemaKey: 'MANAGESTOCK',
+                            schemaKey: 'RECORDSTOCK',
                             context: context,
                             key: widget.formKey,
                             value: value.code,
@@ -191,7 +191,7 @@ class _FacilityCardState extends LocalizedState<FacilityCard> {
 
                     context.read<FormsBloc>().add(
                           FormsEvent.updateField(
-                              schemaKey: 'MANAGESTOCK',
+                              schemaKey: 'RECORDSTOCK',
                               context: context,
                               key: widget.formKey,
                               value: selectedModel.facilityId),
