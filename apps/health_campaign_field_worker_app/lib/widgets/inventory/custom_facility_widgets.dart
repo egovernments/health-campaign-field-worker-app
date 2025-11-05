@@ -1,6 +1,7 @@
 import 'package:digit_data_model/models/entities/project_facility.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:digit_forms_engine/models/property_schema/property_schema.dart';
+import 'package:digit_forms_engine/widgets/base_reactive_field_wrapper.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
@@ -13,25 +14,86 @@ import '../localized.dart';
 class FacilityCard extends LocalizedStatefulWidget {
   final String formKey;
   final String dependantFormKey;
-  final String? label;
-  final bool readOnly;
   final dynamic stateData;
+  final String schemaName;
 
-  const FacilityCard({
-    super.key,
-    super.appLocalizations,
-    required this.formKey,
-    required this.dependantFormKey,
-    this.label,
-    this.readOnly = false,
-    this.stateData,
-  });
+  const FacilityCard(
+      {super.key,
+      super.appLocalizations,
+      required this.formKey,
+      required this.dependantFormKey,
+      required this.stateData,
+      required this.schemaName});
 
   @override
   State<FacilityCard> createState() => _FacilityCardState();
 }
 
 class _FacilityCardState extends LocalizedState<FacilityCard> {
+  @override
+  Widget build(BuildContext context) {
+    // Get schema from FormsBloc
+    final pages =
+        context.read<FormsBloc>().state.cachedSchemas[widget.schemaName]?.pages;
+
+    if (pages == null) {
+      return const SizedBox.shrink();
+    }
+
+    // Find the field schema
+    PropertySchema? fieldSchema;
+    void findSchema(Map<String, PropertySchema> node) {
+      for (final entry in node.entries) {
+        if (entry.key == widget.formKey) {
+          fieldSchema = entry.value;
+          return;
+        }
+        if (entry.value.properties != null &&
+            entry.value.properties!.isNotEmpty) {
+          findSchema(entry.value.properties!);
+        }
+      }
+    }
+
+    findSchema(pages);
+
+    if (fieldSchema == null) {
+      return const SizedBox.shrink();
+    }
+
+    return _FacilityCardContent(
+      formKey: widget.formKey,
+      dependantFormKey: widget.dependantFormKey,
+      fieldSchema: fieldSchema!,
+      stateData: widget.stateData,
+      pageSchema: widget.schemaName,
+      localizations: localizations,
+    );
+  }
+}
+
+class _FacilityCardContent extends StatefulWidget {
+  final String formKey;
+  final String dependantFormKey;
+  final PropertySchema fieldSchema;
+  final String pageSchema;
+  final dynamic stateData;
+  final dynamic localizations;
+
+  const _FacilityCardContent({
+    required this.formKey,
+    required this.dependantFormKey,
+    required this.fieldSchema,
+    required this.pageSchema,
+    required this.stateData,
+    required this.localizations,
+  });
+
+  @override
+  State<_FacilityCardContent> createState() => __FacilityCardContentState();
+}
+
+class __FacilityCardContentState extends State<_FacilityCardContent> {
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
   TextEditingController teamCodeController = TextEditingController();
@@ -47,11 +109,6 @@ class _FacilityCardState extends LocalizedState<FacilityCard> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
   void dispose() {
     teamCodeController.dispose();
     super.dispose();
@@ -64,8 +121,6 @@ class _FacilityCardState extends LocalizedState<FacilityCard> {
     final isWareHouseMgr = InventorySingleton().isWareHouseMgr;
     final showDeliveryTeamOption = isDistributor && !isWareHouseMgr;
 
-    final pages =
-        context.read<FormsBloc>().state.cachedSchemas['MANAGESTOCK']?.pages;
     final wrapperData = widget.stateData?.stateWrapper;
     if (wrapperData == null) {
       return const SizedBox.shrink();
@@ -75,49 +130,31 @@ class _FacilityCardState extends LocalizedState<FacilityCard> {
     final projectFacilities = wrapperList.firstWhere(
         (m) => m.containsKey('ProjectFacilityModel'))['ProjectFacilityModel'];
 
-    String? labelFromSchema;
-    List<DropdownItem> enums = [];
+    final labelFromSchema =
+        widget.fieldSchema.label ?? widget.fieldSchema.innerLabel;
 
-    void walk(Map<String, PropertySchema> node) {
-      for (final entry in node.entries) {
-        final key = entry.key;
-        final schema = entry.value;
+    // Build facility list with Delivery Team option if applicable
+    final facilities = <DropdownItem>[];
 
-        if (key == widget.formKey) {
-          labelFromSchema = schema.label ?? schema.innerLabel;
-
-          // Build facility list with Delivery Team option if applicable
-          final facilities = <DropdownItem>[];
-
-          // Add Delivery Team option for distributors who are not warehouse managers
-          if (showDeliveryTeamOption) {
-            facilities.add(const DropdownItem(
-              code: 'Delivery Team',
-              name: 'Delivery Team',
-            ));
-          }
-
-          // Add actual facilities
-          facilities.addAll(projectFacilities?.map((e) {
-                final model = e as ProjectFacilityModel;
-                return DropdownItem(
-                  code: model.facilityId,
-                  name: localizations.translate('FAC_${model.facilityId}'),
-                );
-              }).toList() ??
-              []);
-
-          enums = facilities;
-          return;
-        }
-
-        if (schema.properties != null && schema.properties!.isNotEmpty) {
-          walk(schema.properties!);
-        }
-      }
+    // Add Delivery Team option for distributors who are not warehouse managers
+    if (showDeliveryTeamOption) {
+      facilities.add(const DropdownItem(
+        code: 'Delivery Team',
+        name: 'Delivery Team',
+      ));
     }
 
-    walk(pages!);
+    // Add actual facilities
+    facilities.addAll(projectFacilities?.map((e) {
+          final model = e as ProjectFacilityModel;
+          return DropdownItem(
+            code: model.facilityId,
+            name: widget.localizations.translate('FAC_${model.facilityId}'),
+          );
+        }).toList() ??
+        []);
+
+    final enums = facilities;
 
     return BlocBuilder<DigitScannerBloc, DigitScannerState>(
       builder: (context, scannerState) {
@@ -126,23 +163,20 @@ class _FacilityCardState extends LocalizedState<FacilityCard> {
           teamCodeController.text = scannerState.qrCodes.first;
         }
 
-        return ReactiveWrapperField(
+        // Use BaseReactiveFieldWrapper to automatically handle all validation messages
+        return BaseReactiveFieldWrapper(
           formControlName: widget.formKey,
-          validationMessages: {
-            'required': (_) => localizations.translate(
-                  "APPONE_MANAGESTOCK_WAREHOUSE_label_${widget.formKey}_mandatory_message",
-                ),
-          },
-          showErrors: (control) => control.invalid && control.touched,
+          schema: widget
+              .fieldSchema, // Pass the schema - it handles all validations!
           builder: (field) {
             return LabeledField(
-              label: localizations.translate(
+              label: widget.localizations.translate(
                 labelFromSchema ?? "Select Facility",
               ),
               isRequired: true,
               child: DigitDropdown(
                 errorMessage: field.errorText,
-                emptyItemText: localizations.translate(
+                emptyItemText: widget.localizations.translate(
                   'NOT_FOUND',
                 ),
                 items: enums,
@@ -151,7 +185,7 @@ class _FacilityCardState extends LocalizedState<FacilityCard> {
                         code: selectedFacilityId!,
                         name: selectedFacilityId == 'Delivery Team'
                             ? 'Delivery Team'
-                            : localizations
+                            : widget.localizations
                                 .translate('FAC_$selectedFacilityId'),
                       )
                     : const DropdownItem(name: '', code: ''),
@@ -178,7 +212,7 @@ class _FacilityCardState extends LocalizedState<FacilityCard> {
                   if (deliveryTeamSelected) {
                     context.read<FormsBloc>().add(
                           FormsEvent.updateField(
-                            schemaKey: 'MANAGESTOCK',
+                            schemaKey: widget.pageSchema,
                             context: context,
                             key: widget.formKey,
                             value: value.code,
@@ -191,7 +225,7 @@ class _FacilityCardState extends LocalizedState<FacilityCard> {
 
                     context.read<FormsBloc>().add(
                           FormsEvent.updateField(
-                              schemaKey: 'MANAGESTOCK',
+                              schemaKey: widget.pageSchema,
                               context: context,
                               key: widget.formKey,
                               value: selectedModel.facilityId),

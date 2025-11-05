@@ -42,7 +42,16 @@ String? translateIfPresent(String? key, FormLocalization localizations) {
   if (key == null || key == "" || key.trim().isEmpty) return null;
 
   final value = localizations.translate(key);
-  if (value == "" || value.trim().isEmpty) return null;
+  // If translation returns empty or just whitespace, check if it's the same as the key
+  // If they're the same, the key wasn't found in localization, so return the key as-is
+  // Otherwise, if it's empty, return null
+  if (value == "" || value.trim().isEmpty) {
+    // Translation returned empty - check if the key itself is a valid message
+    if (key.trim().isNotEmpty && key.trim() != value.trim()) {
+      return key.trim();
+    }
+    return null;
+  }
   return value.trim();
 }
 
