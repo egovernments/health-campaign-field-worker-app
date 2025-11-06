@@ -1,9 +1,11 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:digit_flow_builder/widgets/localization_context.dart';
 import 'package:digit_flow_builder/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:digit_ui_components/widgets/atoms/text_block.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
@@ -46,114 +48,123 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
 
     return ValueListenableBuilder(
       valueListenable: FlowCrudStateRegistry().listen(screenKey),
-      builder: (context, _, __) {
+      builder: (context, flowState, __) {
         final stateData = extractCrudStateData(screenKey);
+        final isLoading = flowState?.base is CrudStateLoading;
 
         return LocalizationContext(
           localization: localizations,
-          child: Scaffold(
-            body: ScrollableContent(
-              header: headers.isNotEmpty
-                  ? Padding(
-                      padding:
-                          const EdgeInsets.only(top: spacer4, left: spacer4),
-                      child: Row(
-                        children: headers
-                            .map((e) => LayoutMapper.map(
-                                  preprocessConfigWithState(e, stateData),
-                                  stateData,
-                                  context,
-                                  screenKey: screenKey,
-                                  (action) {
-                                    ActionHandler.execute(action, context, {
-                                      'wrappers': const [],
-                                    });
-                                  },
-                                ))
-                            .toList(),
-                      ),
-                    )
-                  : null,
-              enableFixedDigitButton: actions.isNotEmpty ? true : false,
-              footer: actions.isNotEmpty
-                  ? DigitCard(
-                      children: actions
-                          .map((e) => LayoutMapper.map(
-                                preprocessConfigWithState(e, stateData),
-                                stateData,
-                                context,
-                                screenKey: screenKey,
-                                (action) {
-                                  ActionHandler.execute(action, context, {
-                                    'wrappers': const [],
-                                  });
-                                },
-                              ))
-                          .toList(),
-                    )
-                  : null,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(spacer4),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      DigitTextBlock(
-                        padding: EdgeInsets.zero,
-                        heading: (widget.config['heading'] != null &&
-                                localizations
+          child: Stack(
+            children: [
+              Scaffold(
+                body: ScrollableContent(
+                  header: headers.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                              top: spacer4, left: spacer4),
+                          child: Row(
+                            children: headers
+                                .map((e) => LayoutMapper.map(
+                                      preprocessConfigWithState(e, stateData),
+                                      stateData,
+                                      context,
+                                      screenKey: screenKey,
+                                      (action) {
+                                        ActionHandler.execute(action, context, {
+                                          'wrappers': const [],
+                                        });
+                                      },
+                                    ))
+                                .toList(),
+                          ),
+                        )
+                      : null,
+                  enableFixedDigitButton: actions.isNotEmpty ? true : false,
+                  footer: actions.isNotEmpty
+                      ? DigitCard(
+                          children: actions
+                              .map((e) => LayoutMapper.map(
+                                    preprocessConfigWithState(e, stateData),
+                                    stateData,
+                                    context,
+                                    screenKey: screenKey,
+                                    (action) {
+                                      ActionHandler.execute(action, context, {
+                                        'wrappers': const [],
+                                      });
+                                    },
+                                  ))
+                              .toList(),
+                        )
+                      : null,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(spacer4),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          DigitTextBlock(
+                            padding: EdgeInsets.zero,
+                            heading: (widget.config['heading'] != null &&
+                                    localizations
+                                        .translate(widget.config['heading'])
+                                        .isNotEmpty)
+                                ? localizations
                                     .translate(widget.config['heading'])
-                                    .isNotEmpty)
-                            ? localizations.translate(widget.config['heading'])
-                            : null,
-                        headingStyle: Theme.of(context)
-                            .digitTextTheme(context)
-                            .headingXl
-                            .copyWith(
-                                color: Theme.of(context)
-                                    .colorTheme
-                                    .primary
-                                    .primary2),
-                        description: (widget.config['description'] != null &&
-                                localizations
+                                : null,
+                            headingStyle: Theme.of(context)
+                                .digitTextTheme(context)
+                                .headingXl
+                                .copyWith(
+                                    color: Theme.of(context)
+                                        .colorTheme
+                                        .primary
+                                        .primary2),
+                            description: (widget.config['description'] !=
+                                        null &&
+                                    localizations
+                                        .translate(widget.config['description'])
+                                        .isNotEmpty)
+                                ? localizations
                                     .translate(widget.config['description'])
-                                    .isNotEmpty)
-                            ? localizations
-                                .translate(widget.config['description'])
-                            : null,
-                      ),
-                      const SizedBox(height: 16),
-                      ...body
-                          .map((e) {
-                            final processed =
-                                preprocessConfigWithState(e, stateData);
+                                : null,
+                          ),
+                          const SizedBox(height: 16),
+                          ...body
+                              .map((e) {
+                                final processed =
+                                    preprocessConfigWithState(e, stateData);
 
-                            return CrudItemContext(
-                              stateData: stateData,
-                              screenKey: screenKey,
-                              child: LayoutMapper.map(
-                                processed,
-                                stateData,
-                                context,
-                                (action) {
-                                  ActionHandler.execute(action, context, {
-                                    'wrappers': const [],
-                                  });
-                                },
-                              ),
-                            );
-                          })
-                          .expand((widget) => [
-                                widget,
-                                const SizedBox(height: 16),
-                              ])
-                          .toList()
-                        ..removeLast(),
-                    ],
-                  ),
-                )
-              ],
-            ),
+                                return CrudItemContext(
+                                  stateData: stateData,
+                                  screenKey: screenKey,
+                                  child: LayoutMapper.map(
+                                    processed,
+                                    stateData,
+                                    context,
+                                    (action) {
+                                      ActionHandler.execute(action, context, {
+                                        'wrappers': const [],
+                                      });
+                                    },
+                                  ),
+                                );
+                              })
+                              .expand((widget) => [
+                                    widget,
+                                    const SizedBox(height: 16),
+                                  ])
+                              .toList()
+                            ..removeLast(),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              // Loading overlay when search/CRUD operation is in progress
+              if (isLoading) DigitLoaders.inlineLoader(),
+            ],
           ),
         );
       },

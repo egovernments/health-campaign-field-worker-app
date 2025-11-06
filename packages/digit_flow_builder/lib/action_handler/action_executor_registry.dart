@@ -7,6 +7,7 @@ import 'executors/crud_executor.dart';
 import 'executors/search_executor.dart';
 import 'executors/transformer_executor.dart';
 import 'executors/toast_executor.dart';
+import 'executors/clear_state_executor.dart';
 
 /// Registry for managing action executors
 class ActionExecutorRegistry {
@@ -29,6 +30,7 @@ class ActionExecutorRegistry {
     register('SEARCH_EVENT', SearchExecutor());
     register('FETCH_TRANSFORMER_CONFIG', TransformerExecutor());
     register('SHOW_TOAST', ToastExecutor());
+    register('CLEAR_STATE', ClearStateExecutor());
   }
 
   /// Register a custom executor

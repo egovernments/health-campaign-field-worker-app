@@ -4,6 +4,7 @@ import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
+import '../../utils/interpolation.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 
@@ -19,6 +20,11 @@ class ActionPopupWidget implements FlowWidget {
   ) {
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
     final popupConfig = props['popupConfig'] as Map<String, dynamic>?;
+
+    // Capture screenKey and stateData in build method, not in callback
+    final crudContext = CrudItemContext.of(context);
+    final screenKey = crudContext?.screenKey ?? getScreenKeyFromArgs(context);
+    final stateData = screenKey != null ? extractCrudStateData(screenKey) : null;
 
     return DigitButton(
       mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
@@ -37,13 +43,15 @@ class ActionPopupWidget implements FlowWidget {
 
         // Show popup if popupConfig is provided
         if (popupConfig != null) {
-          await _showActionPopup(context, popupConfig, onAction);
+          await _showActionPopup(context, popupConfig, onAction, screenKey, stateData);
         }
       },
       type: _parseButtonType(props['type']),
       size: _parseButtonSize(props['size']),
-      suffixIcon: json['suffixIcon'] != null ? _parseIcon(json['suffixIcon']) : null,
-      prefixIcon: json['prefixIcon'] != null ? _parseIcon(json['prefixIcon']) : null,
+      suffixIcon:
+          json['suffixIcon'] != null ? _parseIcon(json['suffixIcon']) : null,
+      prefixIcon:
+          json['prefixIcon'] != null ? _parseIcon(json['prefixIcon']) : null,
     );
   }
 
@@ -52,12 +60,15 @@ class ActionPopupWidget implements FlowWidget {
     BuildContext context,
     Map<String, dynamic> popupConfig,
     void Function(ActionConfig) onAction,
+    String? screenKey,
+    CrudStateData? stateData,
   ) {
     final title = popupConfig['title'] as String? ?? 'Popup';
     final description = popupConfig['description'] as String?;
     final titleIconName = popupConfig['titleIcon'] as String?;
     final showCloseButton = popupConfig['showCloseButton'] as bool? ?? true;
-    final barrierDismissible = popupConfig['barrierDismissible'] as bool? ?? true;
+    final barrierDismissible =
+        popupConfig['barrierDismissible'] as bool? ?? true;
     final bodyWidgets = popupConfig['body'] as List<dynamic>? ?? [];
     final footerActions = popupConfig['footerActions'] as List<dynamic>? ?? [];
 
@@ -78,14 +89,20 @@ class ActionPopupWidget implements FlowWidget {
                 Navigator.of(ctx, rootNavigator: true).pop();
               }
             : null,
+        actionSpacing: spacer2,
         additionalWidgets: [
           // Build body widgets from config
+          // Wrap in CrudItemContext so widgets inside popup can access screenKey
           ...bodyWidgets.map((widgetJson) {
             if (widgetJson is Map<String, dynamic>) {
-              return FlowWidgetFactory.build(
-                widgetJson,
-                ctx,
-                onAction,
+              return CrudItemContext(
+                stateData: stateData,
+                screenKey: screenKey,
+                child: FlowWidgetFactory.build(
+                  widgetJson,
+                  ctx,
+                  onAction,
+                ),
               );
             }
             return const SizedBox.shrink();
@@ -96,20 +113,20 @@ class ActionPopupWidget implements FlowWidget {
             : footerActions
                 .where((actionJson) => actionJson is Map<String, dynamic>)
                 .map((actionJson) {
-                  return FlowWidgetFactory.build(
-                    actionJson as Map<String, dynamic>,
-                    ctx,
-                    (ActionConfig action) {
-                      // Handle CLOSE_POPUP action
-                      if (action.actionType == 'CLOSE_POPUP') {
-                        Navigator.of(ctx, rootNavigator: true).pop();
-                      }
-                      // Forward other actions
-                      onAction(action);
-                    },
-                  ) as DigitButton;
-                })
-                .toList(),
+                return FlowWidgetFactory.build(
+                  actionJson as Map<String, dynamic>,
+                  ctx,
+                  (ActionConfig action) {
+                    // Handle CLOSE_POPUP action
+                    if (action.actionType == 'CLOSE_POPUP') {
+                      Navigator.of(ctx, rootNavigator: true).pop();
+                    }
+                    // Forward other actions
+                    onAction(action);
+                  },
+                ) as DigitButton;
+              }).toList(),
+        inlineActions: true,
       ),
     );
   }

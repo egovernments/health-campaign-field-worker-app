@@ -33,50 +33,48 @@ class SelectionCardWidget implements FlowWidget {
       return SelectionCardOption(code: '', name: '');
     }).toList();
 
-    // Get screen key from context
-    final crudContext = CrudItemContext.of(context);
-    final screenKey = crudContext?.screenKey;
+    // Use Builder to access the correct context where CrudItemContext is available
+    return Builder(
+      builder: (builderContext) {
+        // Get screen key from the builder context (after CrudItemContext wrapper)
+        final crudContext = CrudItemContext.of(builderContext);
+        final screenKey = crudContext?.screenKey;
 
-    return SelectionCard(
-      options: options,
-      onSelectionChanged: (selectedOptions) {
-        // Update widgetData in flow state if fieldName is provided
-        if (fieldName != null && screenKey != null) {
-          final currentFlowState = FlowCrudStateRegistry().get(screenKey);
-          final currentWidgetData = Map<String, dynamic>.from(currentFlowState?.widgetData ?? {});
+        return SelectionCard(
+          showParentContainer: true,
+          // equalWidthOptions: true,
+          options: options,
+          width: MediaQuery.of(builderContext).size.width * 0.6,
+          onSelectionChanged: (selectedOptions) {
+            // Update widgetData in flow state if fieldName is provided
+            if (fieldName != null && screenKey != null) {
+              final currentFlowState = FlowCrudStateRegistry().get(screenKey);
+              final currentWidgetData =
+                  Map<String, dynamic>.from(currentFlowState?.widgetData ?? {});
 
-          // Store selected options as list of codes
-          final selectedCodes = selectedOptions.map((opt) => opt.code).toList();
-          currentWidgetData[fieldName] = selectedCodes;
+              // Store selected options as list of codes
+              final selectedCodes =
+                  selectedOptions.map((opt) => opt.code).toList();
+              currentWidgetData[fieldName] = selectedCodes;
 
-          // Update the flow state with new widgetData
-          if (currentFlowState != null) {
-            final updatedState = currentFlowState.copyWith(
-              widgetData: currentWidgetData,
-            );
-            FlowCrudStateRegistry().update(screenKey, updatedState);
-          } else {
-            // Create new state if doesn't exist
-            final newState = FlowCrudState(
-              widgetData: currentWidgetData,
-            );
-            FlowCrudStateRegistry().update(screenKey, newState);
-          }
-        }
-
-        // Trigger configured actions if any
-        if (json['onAction'] != null) {
-          final actionsList = json['onAction'] is List
-              ? List<Map<String, dynamic>>.from(json['onAction'])
-              : [Map<String, dynamic>.from(json['onAction'])];
-
-          for (var raw in actionsList) {
-            final action = ActionConfig.fromJson(raw);
-            onAction(action);
-          }
-        }
+              // Update the flow state with new widgetData
+              if (currentFlowState != null) {
+                final updatedState = currentFlowState.copyWith(
+                  widgetData: currentWidgetData,
+                );
+                FlowCrudStateRegistry().update(screenKey, updatedState);
+              } else {
+                // Create new state if doesn't exist
+                final newState = FlowCrudState(
+                  widgetData: currentWidgetData,
+                );
+                FlowCrudStateRegistry().update(screenKey, newState);
+              }
+            }
+          },
+          valueMapper: (option) => option.name,
+        );
       },
-      valueMapper: (option) => option.name,
     );
   }
 }

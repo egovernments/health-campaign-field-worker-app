@@ -178,8 +178,8 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
 }
 
 /// Existing method kept as-is for UI string binding
-dynamic resolveValue(dynamic value, dynamic contextData) {
-  final resolved = resolveValueRaw(value, contextData);
+dynamic resolveValue(dynamic value, dynamic contextData, {Map<String, dynamic>? widgetData}) {
+  final resolved = resolveValueRaw(value, contextData, widgetData: widgetData);
   return resolved;
 }
 
@@ -211,7 +211,7 @@ String resolveTemplate(String template, dynamic contextData) {
 }
 
 /// New method: returns actual type (int, double, bool, list, map, entity, etc.)
-dynamic resolveValueRaw(dynamic value, dynamic contextData) {
+dynamic resolveValueRaw(dynamic value, dynamic contextData, {Map<String, dynamic>? widgetData}) {
   if (value is String) {
     final interpolationRegex = RegExp(r'^\{\{(.+?)\}\}$');
     final match = interpolationRegex.firstMatch(value.trim());
@@ -223,6 +223,12 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData) {
       }
       if (path.startsWith('item.')) {
         path = path.substring('item.'.length);
+      }
+
+      // Handle widgetData access (for filter selections, etc.)
+      if (path.startsWith('widgetData.')) {
+        path = path.substring('widgetData.'.length);
+        return widgetData != null ? _resolvePath(widgetData, path) : null;
       }
 
       // Handle singleton access
@@ -249,9 +255,10 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData) {
                       trimmed.startsWith('context') ||
                       trimmed.startsWith('item') ||
                       trimmed.startsWith('singleton') ||
-                      trimmed.startsWith('navigation')) {
+                      trimmed.startsWith('navigation') ||
+                      trimmed.startsWith('widgetData')) {
                     final placeholder = '{{ $trimmed }}';
-                    return resolveValueRaw(placeholder, contextData);
+                    return resolveValueRaw(placeholder, contextData, widgetData: widgetData);
                   }
 
                   // Raw literal

@@ -91,7 +91,7 @@ CrudStateData extractCrudStateData(String screenKey) {
   return CrudStateData(modelMap, state ?? []);
 }
 
-/// String interpolation helper for {{context.*}}, {{item.*}}, and {{navigation.*}}
+/// String interpolation helper for {{context.*}}, {{item.*}}, {{navigation.*}}, and {{widgetData.*}}
 String interpolateWithCrudStates({
   required String template,
   required CrudStateData stateData,
@@ -99,6 +99,7 @@ String interpolateWithCrudStates({
   Map<String, dynamic>? item,
   Map<String, dynamic>? navigationParams,
   Map<String, dynamic>? rowItem, // row-level override (for table rows)
+  Map<String, dynamic>? widgetData, // widget state data (e.g., filter selections)
 }) {
   // TODO: update row and interpolation to consider row index to render table content
 
@@ -133,6 +134,7 @@ String interpolateWithCrudStates({
               item: item,
               navigationParams: navigationParams,
               rowItem: rowItem,
+              widgetData: widgetData,
             );
           }).toList();
 
@@ -142,7 +144,7 @@ String interpolateWithCrudStates({
 
   // --- Normal placeholder resolution ---
   final regex = RegExp(
-    r'\{\{\s*(context|item|navigation)\.([A-Za-z_][\w]*)'
+    r'\{\{\s*(context|item|navigation|widgetData)\.([A-Za-z_][\w]*)'
     r'(?:\.([\w.]+))?\s*\}\}',
   );
 
@@ -193,6 +195,12 @@ String interpolateWithCrudStates({
     // 4) Navigation params
     if (source == 'navigation' && navigationParams != null) {
       final resolved = traverse(navigationParams[modelNameOrKey], fieldPath);
+      return resolved?.toString() ?? '';
+    }
+
+    // 5) Widget data (filter selections, form state, etc.)
+    if (source == 'widgetData' && widgetData != null) {
+      final resolved = traverse(widgetData[modelNameOrKey], fieldPath);
       return resolved?.toString() ?? '';
     }
 
