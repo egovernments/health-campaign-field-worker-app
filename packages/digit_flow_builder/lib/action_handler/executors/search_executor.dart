@@ -3,6 +3,7 @@ import 'package:digit_crud_bloc/models/global_search_params.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/flow_crud_bloc.dart';
 import '../../flow_builder.dart';
 import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
@@ -20,10 +21,25 @@ class SearchExecutor extends ActionExecutor {
   ) async {
     final data = action.properties;
     final contexts = contextData['entities'];
-    final rawValue = data['data'][0]['value'];
-    final resolvedValue = resolveValue(rawValue, contexts);
+    final screenKey = getScreenKeyFromArgs(context);
 
-    final config = FlowRegistry.getByName(getScreenKeyFromArgs(context) ?? '');
+    // Get widgetData from FlowCrudStateRegistry (for filter values)
+    final widgetData = screenKey != null
+        ? FlowCrudStateRegistry().get(screenKey)?.widgetData ?? {}
+        : <String, dynamic>{};
+
+    debugPrint('🔍 SearchExecutor: screenKey=$screenKey');
+    debugPrint('🔍 SearchExecutor: widgetData=$widgetData');
+
+    final rawValue = data['data'][0]['value'];
+    debugPrint('🔍 SearchExecutor: rawValue=$rawValue');
+
+    final resolvedValue =
+        resolveValue(rawValue, contexts, widgetData: widgetData);
+
+    debugPrint('🔍 SearchExecutor: resolvedValue=$resolvedValue');
+
+    final config = FlowRegistry.getByName(screenKey ?? '');
     final searchParams = GlobalSearchParameters(
       filters: [
         SearchFilter(
