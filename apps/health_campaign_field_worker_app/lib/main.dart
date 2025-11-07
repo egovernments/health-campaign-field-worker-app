@@ -2871,120 +2871,235 @@ final dynamic sampleComplaintFlows = {
       },
       "body": [
         {
-          "format": "switch",
-          "label": "Proximity Search",
-          "fieldName": "proximitySearch",
-          "onAction": [
-            {
-              "actionType": "EVENT",
-              "properties": {
-                "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT",
-                "name": "ENTITY // ADDRESS",
-                "data": [
-                  {
-                    "key": "lat & long   //// NOT SURE ABOUT THIS SEARCH",
-                    "value": "field.value",
-                    "operation": "within"
-                  }
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "format": "searchBar",
-          "label": "Enter the name of individual",
-          "fieldName": "searchBar",
-          "onAction": [
-            {
-              "actionType": "SEARCH_EVENT",
-              "properties": {
-                "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT",
-                "name": "name",
-                "data": [
-                  {
-                    "key": "givenName",
-                    "value": "field.value",
-                    "operation": "contains"
-                  }
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "format": "actionPopup",
-          "label": "Filter search",
+          "format": "row",
           "properties": {
-            "type": "tertiary",
-            "size": "medium",
-            "mainAxisSize": "min",
-            "mainAxisAlignment": "start",
-            "popupConfig": {
-              "type": "default",
-              "title": "Filter Options",
-              "titleIcon": "filter",
-              "showCloseButton": true,
-              "barrierDismissible": true,
-              "body": [
-                {
-                  "format": "selectionCard",
-                  "fieldName": "selectedStatus",
-                  "data": [
+            "mainAxisAlignment": "spaceBetween",
+            "mainAxisSize": "max"
+          },
+          "children": [
+            {
+              "format": "search",
+              "label": "Filter search",
+              "properties": {
+                "type": "tertiary",
+                "size": "medium",
+                "mainAxisSize": "min",
+                "mainAxisAlignment": "start",
+                "popupConfig": {
+                  "type": "default",
+                  "title": "Filter Options",
+                  "titleIcon": "filter",
+                  "showCloseButton": true,
+                  "barrierDismissible": true,
+                  "body": [
                     {
-                      "code": "ADMINISTRATION_SUCCESS",
-                      "name": "Administration Success"
-                    },
-                    {
-                      "code": "ADMINISTRATION_FAILED",
-                      "name": "Administration Failed"
-                    },
+                      "format": "selectionCard",
+                      "fieldName": "selectedStatus",
+                      "data": [
+                        {
+                          "code": "ADMINISTRATION_SUCCESS",
+                          "name": "Administration Success"
+                        },
+                        {
+                          "code": "ADMINISTRATION_FAILED",
+                          "name": "Administration Failed"
+                        },
+                      ],
+                    }
                   ],
-                }
-              ],
-              "footerActions": [
-                {
-                  "format": "button",
-                  "label": "Clear",
-                  "properties": {
-                    "type": "secondary",
-                    "size": "large",
-                    "mainAxisSize": "max"
-                  },
-                  "onAction": [
-                    {"actionType": "CLEAR_STATE", "properties": {}},
-                    {"actionType": "CLOSE_POPUP", "properties": {}}
-                  ]
-                },
-                {
-                  "format": "button",
-                  "label": "Filter",
-                  "properties": {
-                    "type": "primary",
-                    "size": "large",
-                    "mainAxisSize": "max"
-                  },
-                  "onAction": [
-                    {"actionType": "CLOSE_POPUP", "properties": {}},
+                  "footerActions": [
                     {
-                      "actionType": "SEARCH_EVENT",
+                      "format": "button",
+                      "label": "Clear",
                       "properties": {
-                        "name": "IndividualModel",
-                        "data": [
-                          {
-                            "key": "status",
-                            "value": "{{ widgetData.selectedStatus }}",
-                            "operation": "in"
+                        "type": "secondary",
+                        "size": "large",
+                        "mainAxisSize": "max"
+                      },
+                      "onAction": [
+                        {"actionType": "CLEAR_STATE", "properties": {}},
+                        {"actionType": "CLOSE_POPUP", "properties": {}}
+                      ]
+                    },
+                    {
+                      "format": "button",
+                      "label": "Filter",
+                      "properties": {
+                        "type": "primary",
+                        "size": "large",
+                        "mainAxisSize": "max"
+                      },
+                      "onAction": [
+                        {"actionType": "CLOSE_POPUP", "properties": {}},
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "name": "IndividualModel",
+                            "data": [
+                              {
+                                "key": "status",
+                                "value": "{{ widgetData.selectedStatus }}",
+                                "operation": "in"
+                              }
+                            ]
                           }
-                        ]
-                      }
+                        }
+                      ]
                     }
                   ]
                 }
-              ]
+              },
+              "suffixIcon": "filter"
+            },
+            {
+              "format": "actionPopup",
+              "label": "Filter",
+              "properties": {
+                "type": "tertiary",
+                "size": "medium",
+                "mainAxisSize": "min",
+                "mainAxisAlignment": "start",
+                "popupConfig": {
+                  "type": "default",
+                  "title": "Filter Options",
+                  "titleIcon": "filter",
+                  "showCloseButton": true,
+                  "barrierDismissible": true,
+                  "body": [
+                    {
+                      "format": "selectionCard",
+                      "fieldName": "selectedStatus",
+                      "data": [
+                        {
+                          "code": "ADMINISTRATION_SUCCESS",
+                          "name": "Administration Success"
+                        },
+                        {
+                          "code": "ADMINISTRATION_FAILED",
+                          "name": "Administration Failed"
+                        },
+                      ],
+                    }
+                  ],
+                  "footerActions": [
+                    {
+                      "format": "button",
+                      "label": "Clear",
+                      "properties": {
+                        "type": "secondary",
+                        "size": "large",
+                        "mainAxisSize": "max"
+                      },
+                      "onAction": [
+                        {"actionType": "CLEAR_STATE", "properties": {}},
+                        {"actionType": "CLOSE_POPUP", "properties": {}}
+                      ]
+                    },
+                    {
+                      "format": "button",
+                      "label": "Filter",
+                      "properties": {
+                        "type": "primary",
+                        "size": "large",
+                        "mainAxisSize": "max"
+                      },
+                      "onAction": [
+                        {"actionType": "CLOSE_POPUP", "properties": {}},
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "name": "IndividualModel",
+                            "data": [
+                              {
+                                "key": "status",
+                                "value": "{{ widgetData.selectedStatus }}",
+                                "operation": "in"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              "suffixIcon": "filter"
+            },
+            {
+              "format": "actionPopup",
+              "label": "sort",
+              "properties": {
+                "type": "tertiary",
+                "size": "medium",
+                "mainAxisSize": "min",
+                "mainAxisAlignment": "start",
+                "popupConfig": {
+                  "type": "default",
+                  "title": "Filter Options",
+                  "titleIcon": "filter",
+                  "showCloseButton": true,
+                  "barrierDismissible": true,
+                  "body": [
+                    {
+                      "format": "selectionCard",
+                      "fieldName": "selectedStatus",
+                      "data": [
+                        {
+                          "code": "ADMINISTRATION_SUCCESS",
+                          "name": "Administration Success"
+                        },
+                        {
+                          "code": "ADMINISTRATION_FAILED",
+                          "name": "Administration Failed"
+                        },
+                      ],
+                    }
+                  ],
+                  "footerActions": [
+                    {
+                      "format": "button",
+                      "label": "Clear",
+                      "properties": {
+                        "type": "secondary",
+                        "size": "large",
+                        "mainAxisSize": "max"
+                      },
+                      "onAction": [
+                        {"actionType": "CLEAR_STATE", "properties": {}},
+                        {"actionType": "CLOSE_POPUP", "properties": {}}
+                      ]
+                    },
+                    {
+                      "format": "button",
+                      "label": "Filter",
+                      "properties": {
+                        "type": "primary",
+                        "size": "large",
+                        "mainAxisSize": "max"
+                      },
+                      "onAction": [
+                        {"actionType": "CLOSE_POPUP", "properties": {}},
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "name": "IndividualModel",
+                            "data": [
+                              {
+                                "key": "status",
+                                "value": "{{ widgetData.selectedStatus }}",
+                                "operation": "in"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              "suffixIcon": "filter"
             }
-          },
-          "suffixIcon": "filter"
+          ]
         },
         {
           "format": "infoCard",
