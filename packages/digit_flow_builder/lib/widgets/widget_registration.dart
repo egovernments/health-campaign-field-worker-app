@@ -4,6 +4,7 @@ import 'flow_widget_interface.dart';
 import 'implementations/button_widget.dart';
 import 'implementations/card_widget.dart';
 import 'implementations/column_widget.dart';
+import 'implementations/dropdown_widget.dart';
 import 'implementations/filter_widget.dart';
 import 'implementations/icon_widget.dart';
 import 'implementations/info_card_widget.dart';
@@ -36,6 +37,7 @@ class WidgetRegistration {
     FlowWidgetFactory.register(SearchBarWidget());
     FlowWidgetFactory.register(ColumnWidget());
     FlowWidgetFactory.register(RowWidget());
+    FlowWidgetFactory.register(DropdownWidget());
     FlowWidgetFactory.register(FilterWidget());
     FlowWidgetFactory.register(InfoCardWidget());
     FlowWidgetFactory.register(SwitchWidget());
