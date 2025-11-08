@@ -1,3 +1,7 @@
+## 0.0.10-dev
+
+- Fixed issue related to multiple submit button
+
 ## 0.0.8-dev
 
 - Added dependency field logic

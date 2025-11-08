@@ -46,6 +46,8 @@ class FormsRenderPage extends LocalizedStatefulWidget {
 }
 
 class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
+  bool _isSubmitting = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,12 +99,26 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                   children: [
                     ReactiveFormConsumer(
                       builder: (context, formGroup, child) => DigitButton(
+                        isDisabled: _isSubmitting,
                         label: (index) < schemaObject.pages.length - 1
                             ? localizations
                                 .translate(schema.actionLabel ?? 'Next')
                             : localizations
                                 .translate(schema.actionLabel ?? 'Submit'),
-                        onPressed: () {
+                        onPressed: () async {
+                          // Prevent multiple simultaneous submissions
+                          if (_isSubmitting) return;
+
+                          // Set flag synchronously FIRST to block rapid taps
+                          _isSubmitting = true;
+
+                          // Then update UI
+                          setState(() {});
+
+                          // Add small delay to allow custom component to update schema data
+                          await Future.delayed(
+                              const Duration(milliseconds: 200));
+
                           // 1. Get visible keys only (skip hidden fields)
                           final currentKeys = schema.properties?.entries
                                   .where((entry) {
@@ -127,13 +143,22 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                             return control.errors.isNotEmpty;
                           });
 
-                          if (hasErrors) return;
+                          if (hasErrors) {
+                            _isSubmitting = false;
+                            setState(() {});
+                            return;
+                          }
 
                           // 3. Check validity of just the visible controls
                           final isCurrentPageValid = currentKeys
                               .every((key) => formGroup.control(key).valid);
 
-                          if (!isCurrentPageValid) return;
+                          if (!isCurrentPageValid) {
+                            _isSubmitting = false;
+                            setState(() {});
+                            return;
+                          }
+                          ;
 
                           // 4. Proceed with value extraction and state update
                           final values = JsonForms.getFormValues(
@@ -176,7 +201,10 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                               );
 
                           if ((index) < schemaObject.pages.length - 1) {
-                            context.router.push(FormsRenderRoute(
+                            // Path 1: Navigate to next page
+                            // Set synchronously to prevent race condition
+                            context.router
+                                .push(FormsRenderRoute(
                               isEdit: widget.isEdit,
                               customComponents: widget.customComponents,
                               currentSchemaKey: widget.currentSchemaKey,
@@ -184,18 +212,27 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                   .elementAt(index + 1)
                                   .key,
                               defaultValues: widget.defaultValues,
-                            ));
+                            ))
+                                .then((_) {
+                              if (mounted)
+                                setState(() => _isSubmitting = false);
+                            });
                           } else {
                             if (schemaObject.summaryDetails != null &&
                                 schemaObject.summaryDetails!.show) {
-                              context.router.push(FormsRenderRoute(
+                              context.router
+                                  .push(FormsRenderRoute(
                                 customComponents: widget.customComponents,
                                 currentSchemaKey: widget.currentSchemaKey,
                                 pageName: '',
                                 isEdit: widget.isEdit,
                                 isSummary: true,
                                 defaultValues: widget.defaultValues,
-                              ));
+                              ))
+                                  .then((_) {
+                                if (mounted)
+                                  setState(() => _isSubmitting = false);
+                              });
                             } else {
                               if (schemaObject.showAlertPopUp != null) {
                                 showCustomPopup(
@@ -212,7 +249,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                             label: localizations.translate(
                                                 schemaObject.showAlertPopUp!
                                                     .primaryActionLabel),
-                                            onPressed: () {
+                                            onPressed: () async {
                                               context.read<FormsBloc>().add(
                                                   FormsSubmitEvent(
                                                       isEdit: widget.isEdit,
@@ -245,6 +282,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                       ]),
                                 );
                               } else {
+                                // Path 4: Submit directly without popup
                                 context.read<FormsBloc>().add(FormsSubmitEvent(
                                     isEdit: widget.isEdit,
                                     schemaKey: widget.currentSchemaKey));
@@ -364,8 +402,21 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           children: [
             DigitButton(
               mainAxisSize: MainAxisSize.max,
+              isDisabled: _isSubmitting,
               label: localizations.translate('CORE_COMMON_SUBMIT'),
-              onPressed: () {
+              onPressed: () async {
+                // Prevent multiple simultaneous submissions
+                if (_isSubmitting) return;
+
+                // Set flag synchronously FIRST to block rapid taps
+                _isSubmitting = true;
+
+                // Then update UI
+                setState(() {});
+
+                // Add small delay to allow custom components to update
+                await Future.delayed(const Duration(milliseconds: 100));
+
                 if (schemaObject.showAlertPopUp != null) {
                   showCustomPopup(
                     context: context,
@@ -378,7 +429,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                           DigitButton(
                               label: localizations.translate(schemaObject
                                   .showAlertPopUp!.primaryActionLabel),
-                              onPressed: () {
+                              onPressed: () async {
                                 context.read<FormsBloc>().add(FormsSubmitEvent(
                                     isEdit: widget.isEdit,
                                     schemaKey: widget.currentSchemaKey));
@@ -408,6 +459,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                         ]),
                   );
                 } else {
+                  // Direct submit without popup
                   context.read<FormsBloc>().add(FormsSubmitEvent(
                       isEdit: widget.isEdit,
                       schemaKey: widget.currentSchemaKey));
