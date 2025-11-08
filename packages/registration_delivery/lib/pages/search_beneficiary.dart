@@ -108,6 +108,21 @@ class _SearchBeneficiaryPageState
     final textTheme = theme.digitTextTheme(context);
 
     return BlocListener<RegistrationWrapperBloc, RegistrationWrapperState>(
+      listenWhen: (previous, current) {
+        // Only trigger when lastAction ACTUALLY CHANGES to one of the action types
+        // OR when error state changes from null to non-null
+        // This prevents multiple triggers for the same state
+        final actionChanged = previous.lastAction != current.lastAction &&
+            (current.lastAction == RegistrationWrapperActionType.created ||
+                current.lastAction == RegistrationWrapperActionType.updated ||
+                current.lastAction ==
+                    RegistrationWrapperActionType.createAndUpdate);
+
+        final errorOccurred =
+            previous.error != current.error && current.error != null;
+
+        return actionChanged || errorOccurred;
+      },
       listener: (context, createState) {
         if (createState.lastAction == RegistrationWrapperActionType.created ||
             createState.lastAction == RegistrationWrapperActionType.updated ||
@@ -159,6 +174,11 @@ class _SearchBeneficiaryPageState
                 const FormsEvent.clearForm(
                     schemaKey:
                         'REGISTRATIONFLOW'), // or create a FormsResetEvent
+              );
+
+          context.read<FormsBloc>().add(
+                const FormsEvent.clearForm(
+                    schemaKey: 'DELIVERYFLOW'), // or create a FormsResetEvent
               );
 
           final pages = currentSchema?.pages.entries.toList()
@@ -254,6 +274,12 @@ class _SearchBeneficiaryPageState
         }
       },
       child: BlocListener<FormsBloc, FormsState>(
+        listenWhen: (previous, current) {
+          // Only trigger when state actually changes to FormsSubmittedState
+          // Prevents multiple triggers for the same submission
+          return previous.runtimeType != current.runtimeType &&
+              current is FormsSubmittedState;
+        },
         listener: (context, formState) {
           if (formState is FormsSubmittedState) {
             DigitLoaders.overlayLoader(context: context);

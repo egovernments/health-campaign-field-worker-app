@@ -1,3 +1,8 @@
+## 1.1.1-dev.6-console
+
+* Fixed form state not getting updated issue
+* Upgraded to latest digit_forms_engine
+
 ## 1.1.1-dev.5-console
 
 * Upgraded to latest digit_formula_parser
