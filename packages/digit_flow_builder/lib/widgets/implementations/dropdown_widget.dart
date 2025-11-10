@@ -41,8 +41,54 @@ class DropdownWidget implements FlowWidget {
       return const SizedBox.shrink();
     }
 
-    // Resolve source data using fullStateData to access search results
-    final sourceData = _resolveSource(json, fullStateData);
+    // Resolve source data
+    dynamic sourceData;
+    if (json['source'] != null) {
+      if (json['source'] is String) {
+        final sourceKey = json['source'] as String;
+
+        // Strip {{ }} if present
+        String cleanKey = sourceKey;
+        if (sourceKey.startsWith('{{') && sourceKey.endsWith('}}')) {
+          cleanKey = sourceKey.substring(2, sourceKey.length - 2).trim();
+        }
+
+        // Case 1: Singleton path
+        if (cleanKey.startsWith("singleton")) {
+          sourceData = resolveValueRaw("{{ $cleanKey }}", null);
+        }
+        // Case 2: If the current item already has this source
+        else if (crudCtx?.item != null && (crudCtx!.item?[cleanKey] != null)) {
+          sourceData = resolveValueRaw(cleanKey, crudCtx.item);
+        }
+        // Case 3: Try modelMap first (for grouped entities like ProjectFacilityModel)
+        else if (crudCtx?.stateData?.modelMap != null &&
+            crudCtx!.stateData!.modelMap.containsKey(cleanKey)) {
+          sourceData = crudCtx.stateData!.modelMap[cleanKey];
+        }
+        // Case 4: Try rawState as map (wrapper output with groupByType)
+        else if (crudCtx?.stateData?.rawState != null) {
+          // rawState is a list of maps when groupByType is true
+          // Try to find the key in the maps
+          final rawState = crudCtx!.stateData!.rawState;
+          if (rawState is List && rawState.isNotEmpty) {
+            for (var item in rawState) {
+              if (item is Map && item.containsKey(cleanKey)) {
+                sourceData = item[cleanKey];
+                break;
+              }
+            }
+          }
+          // Fallback: try resolveValueRaw
+          sourceData ??= resolveValueRaw(cleanKey, rawState);
+        }
+      }
+      // Case 5: Direct array
+      else if (json['source'] is List) {
+        sourceData = json['source'];
+      }
+    }
+
     final displayKey = json['displayKey'] as String? ?? 'name';
     final valueKey = json['valueKey'] as String? ?? 'id';
 
@@ -74,10 +120,20 @@ class DropdownWidget implements FlowWidget {
           // Update state
           if (key != null) {
             // Find the full object from sourceData
-            final selectedObject = sourceData?.firstWhere(
-              (item) => _getValue(item, valueKey) == value.code,
-              orElse: () => null,
-            );
+            Map<String, dynamic>? selectedObject;
+            if (sourceData is List) {
+              try {
+                selectedObject = sourceData.firstWhere(
+                  (item) => _getValue(item, valueKey) == value.code,
+                  orElse: () => <String, dynamic>{},
+                );
+                if (selectedObject?.isEmpty ?? true) {
+                  selectedObject = null;
+                }
+              } catch (e) {
+                selectedObject = null;
+              }
+            }
 
             // Trigger onChange actions if defined
             if (json['onChange'] != null) {
@@ -110,33 +166,6 @@ class DropdownWidget implements FlowWidget {
         },
       ),
     );
-  }
-
-  /// Resolves the source data from various possible configurations
-  dynamic _resolveSource(Map<String, dynamic> json, dynamic stateData) {
-    // Check for direct source array
-    if (json['source'] != null) {
-      final source = json['source'];
-      if (source is String) {
-        // Resolve from state
-        return resolveValue(source, stateData);
-      } else if (source is List) {
-        // Direct array
-        return source;
-      }
-    }
-
-    // Check for options array (legacy support)
-    if (json['options'] != null) {
-      final options = json['options'];
-      if (options is String) {
-        return resolveValue(options, stateData);
-      } else if (options is List) {
-        return options;
-      }
-    }
-
-    return null;
   }
 
   /// Builds dropdown items from source data
