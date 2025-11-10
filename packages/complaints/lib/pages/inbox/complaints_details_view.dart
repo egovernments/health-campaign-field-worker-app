@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/models/entities/pgr_complaints.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
@@ -11,7 +12,6 @@ import '/blocs/localization/app_localization.dart';
 import '/utils/i18_key_constants.dart' as i18;
 import '/utils/utils.dart';
 import '/widgets/header/back_navigation_help_header.dart';
-import '../../models/pgr_complaints.dart';
 
 @RoutePage()
 class ComplaintsDetailsViewPage extends StatelessWidget {

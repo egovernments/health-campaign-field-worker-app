@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:complaints/models/pgr_address.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/pgr_address.dart';
 import 'package:digit_data_model/models/entities/pgr_application_status.dart';
 import 'package:drift/drift.dart';
 

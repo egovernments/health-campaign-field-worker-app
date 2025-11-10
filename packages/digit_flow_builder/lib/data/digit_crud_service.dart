@@ -36,6 +36,9 @@ class DigitCrudService extends CrudService {
           .repository<ProductVariantModel, ProductVariantSearchModel>(context);
     } else if (entity is StockModel) {
       return context.repository<StockModel, StockSearchModel>(context);
+    } else if (entity is PgrServiceModel) {
+      return context
+          .repository<PgrServiceModel, PgrServiceSearchModel>(context);
     } else {
       return context.repository<EntityModel, EntitySearchModel>(context);
     }
@@ -75,6 +78,8 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
         return StockModelMapper.fromMap(normalizedMap);
       case 'stockRecon':
         return StockReconciliationModelMapper.fromMap(normalizedMap);
+      case 'pgrService':
+        return PgrServiceModelMapper.fromMap(normalizedMap);
       default:
         return EntityModelMapper.fromMap(normalizedMap);
     }

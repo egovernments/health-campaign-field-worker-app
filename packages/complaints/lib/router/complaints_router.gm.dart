@@ -10,13 +10,13 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i6;
 import 'package:complaints/blocs/localization/app_localization.dart' as _i8;
-import 'package:complaints/models/pgr_complaints.dart' as _i9;
 import 'package:complaints/pages/complaints_acknowledgement.dart' as _i1;
 import 'package:complaints/pages/inbox/complaints_details_view.dart' as _i2;
 import 'package:complaints/pages/inbox/complaints_inbox.dart' as _i4;
 import 'package:complaints/pages/inbox/complaints_inbox_dialog.dart' as _i3;
 import 'package:complaints/pages/inbox/complaints_inbox_wrapper.dart' as _i5;
 import 'package:complaints/utils/constants.dart' as _i10;
+import 'package:digit_data_model/models/entities/pgr_complaints.dart' as _i9;
 import 'package:flutter/foundation.dart' as _i11;
 import 'package:flutter/material.dart' as _i7;
 

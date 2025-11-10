@@ -6,7 +6,6 @@ import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:closed_household/closed_household.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:complaints/complaints.dart';
-import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart';
 import 'package:digit_crud_bloc/digit_crud_bloc.dart';
@@ -458,45 +457,80 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             if (isTriggerLocalisation) {
               final moduleName =
-                  'hcm-complaintflow-${context.selectedProject.referenceID}';
+                  'hcm-complaint-${context.selectedProject.referenceID}';
               triggerLocalization(module: moduleName);
               isTriggerLocalisation = false;
             }
+            try {
+              CrudBlocSingleton().setData(
+                crudService: DigitCrudService(
+                  context: context,
+                  relationshipMap: [
+                    const RelationshipMapping(
+                        from: 'pgrComplainant',
+                        to: 'pgrService',
+                        localKey: 'complaintClientReferenceId',
+                        foreignKey: 'clientReferenceId'),
+                  ],
+                  nestedModelMappings: [
+                    const NestedModelMapping(
+                      rootModel: 'pgrService',
+                      fields: {
+                        'user': NestedFieldMapping(
+                          table: 'pgrComplainant',
+                          localKey: 'clientReferenceId',
+                          foreignKey: 'complaintClientReferenceId',
+                          type: NestedMappingType.one,
+                        ),
+                        'address': NestedFieldMapping(
+                          table: 'address',
+                          localKey: 'clientReferenceId',
+                          foreignKey: 'relatedClientReferenceId',
+                          type: NestedMappingType.one,
+                        )
+                      },
+                    ),
+                  ],
+                  searchEntityRepository:
+                      context.read<SearchEntityRepository>(),
+                ),
+                dynamicEntityModelListener: EntityModelMapMapper(),
+              );
+              WidgetRegistry.initialize();
+              final prefs = await SharedPreferences.getInstance();
+              final schemaJsonRaw = prefs.getString('app_config_schemas');
 
-            final prefs = await SharedPreferences.getInstance();
-            final schemaJsonRaw = prefs.getString('app_config_schemas');
+              // if (schemaJsonRaw != null) {
+              //   final allSchemas =
+              //   json.decode(schemaJsonRaw) as Map<String, dynamic>;
+              //   final manageStock = allSchemas['COMPLAINT'];
+              //
+              //   final manageStockData = manageStock?['data'];
+              //   final flowsData = (manageStockData['flows'] as List<dynamic>?)
+              //       ?.map((e) => Map<String, dynamic>.from(e as Map))
+              //       .toList() ??
+              //       [];
+              //   FlowRegistry.setConfig(flowsData);
+              //   NavigationRegistry.setupNavigation(context);
+              //
+              //   context.router.push(
+              //     FlowBuilderHomeRoute(
+              //         pageName: manageStockData["initialPage"]),
+              //   );
+              // } else {
+              FlowRegistry.setConfig(
+                  sampleComplaintFlows["flows"] as List<Map<String, dynamic>>);
+              NavigationRegistry.setupNavigation(context);
 
-            if (schemaJsonRaw != null) {
-              final allSchemas =
-                  json.decode(schemaJsonRaw) as Map<String, dynamic>;
-
-              final complaintSchemaEntry =
-                  allSchemas['COMPLAINTFLOW'] as Map<String, dynamic>?;
-
-              final complaintSchemaData = complaintSchemaEntry?['data'];
-
-              if (complaintSchemaData != null) {
-                // Extract templates from both schemas
-                final regTemplatesRaw = complaintSchemaData?['templates'];
-
-                final Map<String, dynamic> complaintTemplateMap =
-                    regTemplatesRaw is Map<String, dynamic>
-                        ? regTemplatesRaw
-                        : {};
-
-                final templates = {
-                  for (final entry in complaintTemplateMap.entries)
-                    entry.key: TemplateConfig.fromJson(
-                        entry.value as Map<String, dynamic>)
-                };
-
-                final complaintConfig = json.encode(complaintSchemaData);
-
-                ComplaintsSingleton().setTemplateConfigs(templates);
-                ComplaintsSingleton().setComplaintConfig(complaintConfig);
-              }
+              context.router.push(
+                FlowBuilderHomeRoute(
+                    pageName: sampleComplaintFlows["initialPage"]),
+              );
+              // }
+            } catch (e) {
+              debugPrint('error $e');
             }
-            context.router.push(const ComplaintsInboxWrapperRoute());
+            // context.router.push(ManageStocksRoute());
           },
         ),
       ),

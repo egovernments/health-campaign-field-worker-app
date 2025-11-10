@@ -3,6 +3,7 @@ import 'package:complaints/blocs/complaint_wrapper/complaint_wrapper_bloc.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:complaints/utils/constants.dart';
 import 'package:digit_data_converter/src/transformer_service.dart';
+import 'package:digit_data_model/models/entities/pgr_complaints.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:digit_forms_engine/router/forms_router.gm.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -23,7 +24,6 @@ import '/widgets/header/back_navigation_help_header.dart';
 import '/widgets/localized.dart';
 import '/widgets/no_result_card/no_result_card.dart';
 import '../../data/transformer_config.dart';
-import '../../models/pgr_complaints.dart';
 
 @RoutePage()
 class ComplaintsInboxPage extends LocalizedStatefulWidget {

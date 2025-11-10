@@ -1,7 +1,6 @@
 // GENERATED using mason_cli (adapted)
 import 'dart:async';
 
-import 'package:complaints/models/pgr_address.dart';
 import 'package:digit_crud_bloc/digit_crud_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/pgr_application_status.dart';
@@ -11,7 +10,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '/models/complaints.dart';
 import '/utils/i18_key_constants.dart' as i18;
 import '/utils/utils.dart';
-import '../../models/pgr_complaints.dart';
 
 part 'complaint_wrapper_bloc.freezed.dart';
 

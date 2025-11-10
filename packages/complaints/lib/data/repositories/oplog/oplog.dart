@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:digit_data_model/data_model.dart';
 import 'package:isar/isar.dart';
 
-import '../../../models/pgr_complaints.dart';
-
 class PgrServiceOpLogManager extends OpLogManager<PgrServiceModel> {
   PgrServiceOpLogManager(super.isar);
 

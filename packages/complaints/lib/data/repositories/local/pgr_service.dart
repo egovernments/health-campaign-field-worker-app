@@ -3,9 +3,6 @@ import 'dart:async';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 
-import '../../../models/pgr_address.dart';
-import '../../../models/pgr_complaints.dart';
-
 // This will create , update and search data from local Repository
 class PgrServiceLocalRepository
     extends LocalRepository<PgrServiceModel, PgrServiceSearchModel> {
@@ -54,7 +51,7 @@ class PgrServiceLocalRepository
   FutureOr<void> update(
     PgrServiceModel entity, {
     bool createOpLog = true,
-        DataOperation dataOperation = DataOperation.update,
+    DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
       final clientReferenceId = entity.clientReferenceId;
@@ -193,7 +190,6 @@ class PgrServiceLocalRepository
               name: address.localityBoundaryName ?? "",
               code: address.localityBoundaryCode ?? "",
             ),
-
             geoLocation: GeoLocation(
               latitude: address.latitude,
               longitude: address.longitude,
