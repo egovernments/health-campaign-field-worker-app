@@ -118,6 +118,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         // Build your component with access to all this data
         return ResourceCard(
           stateData: beneficiaryDetails,
+          pageSchema: 'DELIVERY',
         );
       },
     );
@@ -130,6 +131,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         // Build your component with access to all this data
         return FacilityCard(
           stateData: stockData,
+          schemaName: 'MANAGESTOCK',
           formKey: 'facilityToWhich',
           dependantFormKey: 'teamCode',
         );
@@ -144,6 +146,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         // Build your component with access to all this data
         return FacilityCard(
           stateData: stockData,
+          schemaName: 'MANAGESTOCK',
           formKey: 'facilityFromWhich',
           dependantFormKey: 'deliveryTeam',
         );
@@ -158,6 +161,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         // Build your component with access to all this data
         return ProductSelectionCard(
           stateData: stockData,
+          pageSchema: 'MANAGESTOCK',
         );
       },
     );

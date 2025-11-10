@@ -15,33 +15,39 @@ Map<String, String Function(Object)> buildValidationMessages(
   for (final rule in validations) {
     if (rule.message == null) continue;
 
-    // first translate the message
+    // first translate the message, or use the message as-is if translation returns null
     final translated = translateIfPresent(rule.message, localize) ??
+        rule.message ??
         localize.translate("FIELD_VALIDATION_ERROR");
+
+    // Ensure translated is not empty - if it is, use the rule type as fallback
+    final finalMessage = (translated.trim().isNotEmpty)
+        ? translated
+        : rule.type;
 
     switch (rule.type) {
       case 'required':
-        messages['required'] = (_) => translated;
+        messages['required'] = (_) => finalMessage;
         break;
       case 'minLength':
-        messages['minLength'] = (_) => translated;
+        messages['minLength'] = (_) => finalMessage;
         break;
       case 'maxLength':
-        messages['maxLength'] = (_) => translated;
+        messages['maxLength'] = (_) => finalMessage;
         break;
       case 'min':
       case 'minValue':
-        messages['min'] = (_) => translated;
+        messages['min'] = (_) => finalMessage;
         break;
       case 'max':
       case 'maxValue':
-        messages['max'] = (_) => translated;
+        messages['max'] = (_) => finalMessage;
         break;
       case 'pattern':
-        messages['pattern'] = (_) => translated;
+        messages['pattern'] = (_) => finalMessage;
         break;
       case 'notEqualTo':
-        messages['notEqualTo'] = (_) => translated;
+        messages['notEqualTo'] = (_) => finalMessage;
         break;
       default:
         break;

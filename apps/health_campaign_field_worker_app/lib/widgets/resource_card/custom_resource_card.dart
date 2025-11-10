@@ -17,14 +17,15 @@ class ResourceCard extends LocalizedStatefulWidget {
   final String? label;
   final bool readOnly;
   final dynamic stateData;
+  final String pageSchema;
 
-  const ResourceCard({
-    super.key,
-    super.appLocalizations,
-    this.label,
-    this.readOnly = false,
-    this.stateData,
-  });
+  const ResourceCard(
+      {super.key,
+      super.appLocalizations,
+      this.label,
+      this.readOnly = false,
+      this.stateData,
+      required this.pageSchema});
 
   @override
   State<ResourceCard> createState() => _ResourceCardState();
@@ -47,7 +48,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
     final textTheme = theme.digitTextTheme(context);
 
     final pages =
-        context.read<FormsBloc>().state.cachedSchemas['DELIVERY']?.pages;
+        context.read<FormsBloc>().state.cachedSchemas[widget.pageSchema]?.pages;
 
     bool isReadOnlyFromSchema = false;
     String? labelFromSchema;
@@ -200,7 +201,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
 
     context.read<FormsBloc>().add(
           FormsEvent.updateField(
-            schemaKey: 'DELIVERY',
+            schemaKey: widget.pageSchema,
             context: context,
             key: 'resourceCard',
             value: updatedCards,
