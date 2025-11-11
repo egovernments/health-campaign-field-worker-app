@@ -2766,7 +2766,7 @@ final dynamic sampleComplaintFlows = {
       "footer": [
         {
           "format": "button",
-          "label": "Create Complaints",
+          "label": "File Complaints",
           "properties": {
             "type": "primary",
             "size": "large",
@@ -2786,87 +2786,22 @@ final dynamic sampleComplaintFlows = {
         }
       ],
       "wrapperConfig": {
-        "wrapperName": "HouseholdWrapper",
-        "rootEntity": "HouseholdModel",
+        "wrapperName": "ComplaintWrapper",
+        "rootEntity": "PgrServiceModel",
         "filters": [],
         "relations": [
           {
-            "name": "members",
-            "entity": "HouseholdMemberModel",
+            "name": "complainant",
+            "entity": "PgrComplainantModel",
             "match": {
-              "field": "householdClientReferenceId",
-              "equalsFrom": "clientReferenceId"
-            }
-          },
-          {
-            "name": "headOfHousehold",
-            "entity": "HouseholdMemberModel",
-            "match": {
-              "field": "householdClientReferenceId",
-              "equalsFrom": "clientReferenceId"
-            },
-            "filters": [
-              {"field": "isHeadOfHousehold", "equals": true}
-            ]
-          },
-          {
-            "name": "headIndividual",
-            "entity": "IndividualModel",
-            "match": {
-              "field": "clientReferenceId",
-              "equalsFrom": "headOfHousehold.individualClientReferenceId"
-            }
-          },
-          {
-            "name": "individuals",
-            "entity": "IndividualModel",
-            "match": {
-              "field": "clientReferenceId",
-              "inFrom": "members.individualClientReferenceId"
-            }
-          },
-          {
-            "name": "projectBeneficiaries",
-            "entity": "ProjectBeneficiaryModel",
-            "match": {
-              "field": "beneficiaryClientReferenceId",
-              "equalsFrom": "individuals.clientReferenceId"
-            }
-          },
-          {
-            "name": "tasks",
-            "entity": "TaskModel",
-            "match": {
-              "field": "projectBeneficiaryClientReferenceId",
-              "inFrom": "projectBeneficiaries.clientReferenceId"
-            }
-          },
-          {
-            "name": "sideEffects",
-            "entity": "SideEffectModel",
-            "match": {
-              "field": "clientReferenceId",
-              "equalsFrom": "clientReferenceId"
-            }
-          },
-          {
-            "name": "referrals",
-            "entity": "ReferralModel",
-            "match": {
-              "field": "clientReferenceId",
+              "field": "complaintClientReferenceId",
               "equalsFrom": "clientReferenceId"
             }
           }
         ],
         "searchConfig": {
-          "primary": "household",
-          "select": [
-            "household",
-            "individual",
-            "householdMember",
-            "projectBeneficiary",
-            "task"
-          ]
+          "primary": "pgrService",
+          "select": ["pgrService"]
         }
       },
       "body": [
@@ -2878,8 +2813,8 @@ final dynamic sampleComplaintFlows = {
           },
           "children": [
             {
-              "format": "search",
-              "label": "Filter search",
+              "format": "actionPopup",
+              "label": "search",
               "properties": {
                 "type": "tertiary",
                 "size": "medium",
@@ -2949,7 +2884,7 @@ final dynamic sampleComplaintFlows = {
                   ]
                 }
               },
-              "suffixIcon": "filter"
+              "suffixIcon": "search"
             },
             {
               "format": "actionPopup",
@@ -3097,79 +3032,36 @@ final dynamic sampleComplaintFlows = {
                   ]
                 }
               },
-              "suffixIcon": "filter"
+              "suffixIcon": "sort"
             }
           ]
         },
         {
-          "format": "infoCard",
-          "hidden": "{{ context.household.notEmpty }}",
-          "label": "No households found",
-          "description":
-              "Use the search above to find households or register a new one"
-        },
-        {
           "format": "listView",
-          "hidden": "{{ context.household.empty }}",
+          "hidden": "{{ context.ComplaintWrapper.empty }}",
           "fieldName": "listView",
-          "data": "members",
+          "data": "ComplaintWrapper",
           "child": {
             "format": "card",
             "children": [
               {
-                "format": "row",
-                "properties": {
-                  "mainAxisAlignment": "spaceBetween",
-                  "mainAxisSize": "max"
-                },
-                "children": [
+                "format": "labelPairList",
+                "data": [
                   {
-                    "format": "text",
-                    "value": "{{ headIndividual.0.name.givenName }}"
+                    "key": "Complaint Number",
+                    "value": "{{item.additionalFields.fields.sku}}"
                   },
+                  {"key": "Complaint type", "value": "{{item.receiverId}}"},
                   {
-                    "format": "button",
-                    "label": "Open",
-                    "properties": {"type": "secondary", "size": "medium"},
-                    "onAction": [
-                      {
-                        "actionType": "NAVIGATION",
-                        "properties": {
-                          "type": "TEMPLATE",
-                          "name": "householdOverview",
-                          "data": [
-                            {
-                              "key": "HouseholdClientReferenceId",
-                              "value": "{{ HouseholdModel.clientReferenceId }}"
-                            }
-                          ]
-                        }
-                      }
-                    ]
+                    "key": "Complaint date",
+                    "value": "{{item.additionalFields.fields.mrnNumber}}"
+                  },
+                  {"key": "Area", "value": "{{item.wayBillNumber}}"},
+                  {
+                    "key": "Status",
+                    "value": "{{item.additionalFields.fields.batchNumber}}"
                   }
                 ]
-              },
-              {
-                "format": "text",
-                "value": "{{ headOfHousehold.0.isHeadOfHousehold }}"
-              },
-              {
-                "format": "table",
-                "data": {
-                  "source": "individuals",
-                  "columns": [
-                    {
-                      "header": "Beneficiary",
-                      "cellValue": "{{item.name.givenName}}"
-                    },
-                    {
-                      "header": "Age",
-                      "cellValue": "{{fn:formatDate(item.dateOfBirth, age)}}"
-                    },
-                    {"header": "Gender", "cellValue": "{{item.gender}}"}
-                  ],
-                  "rows": "{{contextData.0.individuals}}"
-                }
               }
             ]
           }
@@ -3185,34 +3077,35 @@ final dynamic sampleComplaintFlows = {
       "isSelected": true,
       "pages": [
         {
-          "page": "beneficiaryLocation",
+          "page": "complaintType",
           "type": "object",
-          "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_HEADING",
-          "order": 2,
-          "navigateTo": {"name": "householdDetails", "type": "form"},
+          "label": "APPONE_COMPLAINTTYPE_SCREEN_HEADING",
+          "order": 1,
           "properties": [
             {
               "type": "string",
-              "label":
-                  "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea",
+              "label": "APPONE_COMPLAINTTYPE_complaintType_label",
               "order": 1,
               "value": "",
-              "format": "locality",
+              "format": "radio",
               "hidden": false,
-              "tooltip": "",
-              "helpText":
-                  "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea_helpText",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "administrativeArea",
+              "fieldName": "complaintType",
               "deleteFlag": false,
               "innerLabel": "",
+              "enums": [
+                {"code": "SyncNotWorking", "name": "Sync Not Working"},
+                {"code": "NotEnoughStock", "name": "Not Enough Stock"},
+                {"code": "Other", "name": "Other"}
+              ],
+              "schemaCode": "RAINMAKER-PGR.ServiceDefs",
               "systemDate": false,
               "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Required field cannot be empty"
+                  "message": "APPONE_COMPLAINTTYPE_complaintType_required_error"
                 }
               ],
               "errorMessage": "",
@@ -3220,41 +3113,54 @@ final dynamic sampleComplaintFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_latlong",
+              "label": "APPONE_COMPLAINTTYPE_otherReason_label",
               "order": 2,
               "value": "",
-              "format": "latLng",
+              "format": "text",
               "hidden": false,
-              "tooltip": "",
-              "helpText":
-                  "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_latlong_helpText",
+              "tooltip": "APPONE_COMPLAINTTYPE_otherReason_tooltip_label",
+              "helpText": "APPONE_COMPLAINTTYPE_otherReason_helpText_label",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "latLng",
+              "fieldName": "otherReason",
               "deleteFlag": false,
               "innerLabel": "",
+              "schemaCode": "",
               "systemDate": false,
               "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Required field cannot be empty"
+                  "message":
+                      "APPONE_COMPLAINTTYPE_complaintOther_required_error"
                 }
               ],
               "errorMessage": "",
-              "isMultiSelect": false
-            },
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": "complaintType.complaintType==Other"
+              }
+            }
+          ],
+          "actionLabel": "APPONE_COMPLAINTTYPE_ACTION_BUTTON_LABEL",
+          "description": "APPONE_COMPLAINTTYPE_DESCRIPTION"
+        },
+        {
+          "page": "locationDetails",
+          "type": "object",
+          "label": "APPONE_LOCATIONDETAILS_SCREEN_HEADING",
+          "order": 3,
+          "properties": [
             {
               "type": "string",
-              "label":
-                  "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1",
-              "order": 3,
+              "label": "APPONE_LOCATIONDETAILS_SCREEN_addressLine1_label",
+              "order": 1,
               "value": "",
               "format": "text",
-              "hidden": true,
+              "hidden": false,
               "tooltip": "",
               "helpText":
-                  "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1_helpText",
+                  "APPONE_LOCATIONDETAILS_SCREEN_addressLine1_helpText_label",
               "infoText": "",
               "readOnly": false,
               "fieldName": "addressLine1",
@@ -3267,15 +3173,14 @@ final dynamic sampleComplaintFlows = {
             },
             {
               "type": "string",
-              "label":
-                  "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2",
-              "order": 4,
+              "label": "APPONE_LOCATIONDETAILS_SCREEN_addressLine2_label",
+              "order": 2,
               "value": "",
               "format": "text",
-              "hidden": true,
+              "hidden": false,
               "tooltip": "",
               "helpText":
-                  "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2_helpText",
+                  "APPONE_LOCATIONDETAILS_SCREEN_addressLine2_helpText_label",
               "infoText": "",
               "readOnly": false,
               "fieldName": "addressLine2",
@@ -3288,15 +3193,14 @@ final dynamic sampleComplaintFlows = {
             },
             {
               "type": "string",
-              "label":
-                  "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_landmark",
-              "order": 5,
+              "label": "APPONE_LOCATIONDETAILS_SCREEN_landmark_label",
+              "order": 3,
               "value": "",
               "format": "text",
-              "hidden": true,
+              "hidden": false,
               "tooltip": "",
               "helpText":
-                  "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_landmark_helpText",
+                  "APPONE_LOCATIONDETAILS_SCREEN_landmark_helpText_label",
               "infoText": "",
               "readOnly": false,
               "fieldName": "landmark",
@@ -3309,14 +3213,14 @@ final dynamic sampleComplaintFlows = {
             },
             {
               "type": "integer",
-              "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode",
-              "order": 6,
+              "label": "APPONE_LOCATIONDETAILS_SCREEN_postalCode_label",
+              "order": 4,
               "value": "",
               "format": "text",
-              "hidden": true,
+              "hidden": false,
               "tooltip": "",
               "helpText":
-                  "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode_helpText",
+                  "APPONE_LOCATIONDETAILS_SCREEN_postalCode_helpText_label",
               "infoText": "",
               "readOnly": false,
               "fieldName": "pincode",
@@ -3334,10 +3238,8 @@ final dynamic sampleComplaintFlows = {
                 {"code": "CORRESPONDENCE", "name": "CORRESPONDENCE"},
                 {"code": "OTHER", "name": "OTHER"}
               ],
-              "label":
-                  "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_typeOfAddress",
-              "order": 7,
-              "value": "PERMANENT",
+              "label": "APPONE_LOCATIONDETAILS_SCREEN_typeOfAddress_label",
+              "order": 5,
               "format": "dropdown",
               "hidden": true,
               "tooltip": "",
@@ -3355,188 +3257,96 @@ final dynamic sampleComplaintFlows = {
               "includeInSummary": false
             }
           ],
-          "actionLabel":
-              "APPONE_REGISTRATION_BENEFICIARY_LOCATION_ACTION_BUTTON_LABEL_1",
-          "description":
-              "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_DESCRIPTION"
+          "actionLabel": "APPONE_LOCATIONDETAILS_SCREEN_ACTION_BUTTON_LABEL",
+          "description": "APPONE_LOCATIONDETAILS_SCREEN_SCREEN_DESCRIPTION"
         },
         {
-          "page": "householdDetails",
+          "page": "complaintDetails",
           "type": "object",
-          "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_HEADING",
-          "order": 3,
-          "navigateTo": {"name": "beneficiaryDetails", "type": "form"},
-          "properties": [
-            {
-              "type": "integer",
-              "label":
-                  "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration",
-              "order": 1,
-              "value": "",
-              "format": "date",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": true,
-              "fieldName": "dateOfRegistration",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": true,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "Required field cannot be empty"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "integer",
-              "label":
-                  "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_childrenCount",
-              "order": 2,
-              "value": "0",
-              "format": "numeric",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "childrenCount",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "integer",
-              "label":
-                  "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_pregnantWomenCount",
-              "order": 3,
-              "value": "0",
-              "format": "numeric",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "pregnantWomenCount",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "integer",
-              "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount",
-              "order": 4,
-              "value": "1",
-              "format": "numeric",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "memberCount",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [
-                {"type": "required", "value": true, "message": ""},
-                {
-                  "type": "min",
-                  "value": "1",
-                  "message": "Total household members cannot be less than 1"
-                },
-                {
-                  "type": "max",
-                  "value": "10",
-                  "message": "Total household members cannot be more than 10"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false
-            }
-          ],
-          "actionLabel":
-              "APPONE_REGISTRATION_HOUSEHOLDDETAILS_ACTION_BUTTON_LABEL_1",
-          "description":
-              "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_DESCRIPTION"
-        },
-        {
-          "page": "beneficiaryDetails",
-          "type": "object",
-          "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
+          "label": "APPONE_COMPLAINTDETAILS_SCREEN_HEADING",
           "order": 4,
           "navigateTo": {
-            "name": "beneficiary-details",
-            "type": "template",
-            "data": [
-              {
-                "key": "householdId",
-                "value": "{{formData.household.clientReferenceId}}"
-              }
-            ]
+            "name": "ComplaintsAcknowledgement",
+            "type": "template"
           },
           "properties": [
             {
               "type": "string",
               "label":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual",
+                  "APPONE_COMPLAINTDETAILS_SCREEN_administrativeArea_label",
               "order": 1,
+              "value": "",
+              "format": "locality",
+              "hidden": false,
+              "tooltip": "",
+              "helpText":
+                  "APPONE_COMPLAINTDETAILS_SCREEN_administrativeArea_helpText_label",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "administrativeArea",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_COMPLAINTDETAILS_administrativeArea_required_error"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "enums": [
+                {
+                  "code": "COMPLAINTS_RAISED_FOR_MYSELF",
+                  "name": "COMPLAINTFLOW_RAISED_FOR_MYSELF"
+                },
+                {
+                  "code": "COMPLAINTS_RAISED_FOR_ANOTHER_USER",
+                  "name": "COMPLAINTFLOW_RAISED_FOR_ANOTHER_USER"
+                }
+              ],
+              "label":
+                  "APPONE_COMPLAINTDETAILS_SCREEN_complaintRaisedFor_label",
+              "order": 2,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "complaintRaisedFor",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_COMPLAINTDETAILS_complaintRaisedFor_required_error"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "APPONE_COMPLAINTDETAILS_SCREEN_name_label",
+              "order": 3,
               "value": "",
               "format": "text",
               "hidden": false,
-              "tooltip":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_tooltip",
-              "helpText":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_helpText",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "nameOfIndividual",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "Required field cannot be empty"
-                },
-                {
-                  "type": "minLength",
-                  "value": "2",
-                  "message": "Size must be 2 to 200 characters"
-                },
-                {
-                  "type": "maxLength",
-                  "value": "200",
-                  "message": "Size must be 2 to 200 characters"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "boolean",
-              "label":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily",
-              "order": 2,
-              "value": "",
-              "format": "checkbox",
-              "hidden": false,
               "tooltip": "",
-              "helpText": "",
+              "helpText": "APPONE_COMPLAINTDETAILS_SCREEN_name_helpText_label",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "isHeadOfFamily",
+              "fieldName": "name",
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
@@ -3544,228 +3354,142 @@ final dynamic sampleComplaintFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Required field cannot be empty"
+                  "message": "APPONE_COMPLAINTDETAILS_name_required_error"
                 }
               ],
               "errorMessage": "",
-              "isMultiSelect": false
+              "isMultiSelect": false,
+              "autoFillCondition": [
+                {
+                  "value": "{{loggedInUserName}}",
+                  "expression":
+                      "complaintDetails.complaintRaisedFor==COMPLAINTS_RAISED_FOR_MYSELF"
+                }
+              ]
             },
             {
               "type": "string",
-              "label":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers",
-              "order": 3,
-              "value": "",
-              "format": "idPopulator",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "identifiers",
-              "deleteFlag": false,
-              "enums": [
-                {"code": "DEFAULT", "name": "DEFAULT"},
-                {
-                  "code": "UNIQUE_BENEFICIARY_ID",
-                  "name": "UNIQUE_BENEFICIARY_ID"
-                },
-                {"code": "OTHER", "name": "OTHER"}
-              ],
-              "innerLabel": "",
-              "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "Required field cannot be empty"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "string",
-              "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker",
+              "label": "APPONE_COMPLAINTDETAILS_SCREEN_contactNumber_label",
               "order": 4,
               "value": "",
-              "format": "dob",
-              "hidden": false,
-              "tooltip":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_tooltip",
-              "helpText":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_helpText",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "dobPicker",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "string",
-              "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender",
-              "order": 5,
-              "value": "",
-              "format": "select",
+              "format": "mobileNumber",
               "hidden": false,
               "tooltip": "",
-              "helpText": "",
+              "helpText":
+                  "APPONE_COMPLAINTDETAILS_SCREEN_contactNumber_helpText_label",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "gender",
+              "fieldName": "contactNumber",
               "deleteFlag": false,
               "innerLabel": "",
-              "schemaCode": "common-masters.GenderType",
+              "prefixText": "+91",
               "systemDate": false,
-              "validations": [],
-              "enums": [
-                {"code": "MALE", "name": "MALE"},
-                {"code": "FEMALE", "name": "FEMALE"},
-                {"code": "OTHER", "name": "OTHER"}
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_COMPLAINTDETAILS_contactNumber_required_error"
+                }
               ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "autoFillCondition": [
+                {
+                  "value": "{{loggedInUserMobileNumber}}",
+                  "expression":
+                      "complaintDetails.complaintRaisedFor==COMPLAINTS_RAISED_FOR_MYSELF"
+                }
+              ]
+            },
+            {
+              "type": "string",
+              "label": "APPONE_COMPLAINTDETAILS_SCREEN_supervisorName_label",
+              "order": 5,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText":
+                  "APPONE_COMPLAINTDETAILS_SCREEN_supervisorName_helpText_label",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "supervisorName",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
               "errorMessage": "",
               "isMultiSelect": false
             },
             {
               "type": "string",
-              "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone",
+              "label":
+                  "APPONE_COMPLAINTDETAILS_SCREEN_supervisorContactNumber_label",
               "order": 6,
               "value": "",
               "format": "mobileNumber",
               "hidden": false,
-              "tooltip":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_tooltip",
+              "tooltip": "",
               "helpText":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_helpText",
+                  "APPONE_COMPLAINTDETAILS_SCREEN_supervisorContactNumber_helpText_label",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "phone",
+              "fieldName": "supervisorContactNumber",
               "deleteFlag": false,
               "innerLabel": "",
+              "prefixText": "+91",
               "systemDate": false,
-              "validations": [],
               "errorMessage": "",
               "isMultiSelect": false
             },
             {
               "type": "string",
-              "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_scanner",
+              "label":
+                  "APPONE_COMPLAINTDETAILS_SCREEN_complaintDescription_label",
               "order": 7,
               "value": "",
-              "format": "scanner",
+              "format": "textArea",
               "hidden": false,
               "tooltip": "",
-              "helpText": "",
+              "helpText":
+                  "APPONE_COMPLAINTDETAILS_SCREEN_complaintDescription_helpText_label",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "scanner",
+              "fieldName": "complaintDescription",
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
-              "validations": [],
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_COMPLAINTDETAILS_complaintDescription_required_error"
+                }
+              ],
               "errorMessage": "",
               "isMultiSelect": false
             }
           ],
-          "actionLabel":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_1",
-          "description":
-              "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION"
+          "actionLabel": "APPONE_COMPLAINTDETAILS_ACTION_BUTTON_LABEL",
+          "description": "APPONE_COMPLAINTDETAILS_SCREEN_DESCRIPTION"
         }
       ],
       "wrapperConfig": {
-        "wrapperName": "HouseholdWrapper",
-        "rootEntity": "HouseholdMemberModel",
-        "filters": [
-          {"field": "isHeadOfHousehold", "equals": true}
-        ],
-        "relations": [
-          {
-            "name": "household",
-            "entity": "HouseholdModel",
-            "match": {
-              "field": "clientReferenceId",
-              "equalsFrom": "householdClientReferenceId"
-            }
-          },
-          {
-            "name": "members",
-            "entity": "HouseholdMemberModel",
-            "match": {
-              "field": "householdClientReferenceId",
-              "equalsFrom": "household.clientReferenceId"
-            }
-          },
-          {
-            "name": "headOfHousehold",
-            "entity": "IndividualModel",
-            "match": {
-              "field": "clientReferenceId",
-              "equalsFrom": "HouseholdMemberModel.individualClientReferenceId"
-            }
-          },
-          {
-            "name": "individuals",
-            "entity": "IndividualModel",
-            "match": {
-              "field": "clientReferenceId",
-              "inFrom": "members.individualClientReferenceId"
-            }
-          },
-          {
-            "name": "projectBeneficiaries",
-            "entity": "ProjectBeneficiaryModel",
-            "match": {
-              "field": "beneficiaryClientReferenceId",
-              "equalsFrom": "household.clientReferenceId"
-            }
-          },
-          {
-            "name": "tasks",
-            "entity": "TaskModel",
-            "match": {
-              "field": "projectBeneficiaryClientReferenceId",
-              "inFrom": "projectBeneficiaries.clientReferenceId"
-            }
-          },
-          {
-            "name": "sideEffects",
-            "entity": "SideEffectModel",
-            "match": {
-              "field": "clientReferenceId",
-              "equalsFrom": "household.clientReferenceId"
-            }
-          },
-          {
-            "name": "referrals",
-            "entity": "ReferralModel",
-            "match": {
-              "field": "clientReferenceId",
-              "equalsFrom": "household.clientReferenceId"
-            }
-          }
-        ],
+        "wrapperName": "ComplaintWrapper",
+        "rootEntity": "PgrServiceModel",
+        "filters": [],
+        "relations": [],
         "searchConfig": {
-          "primary": "household",
-          "select": [
-            "individual",
-            "household",
-            "householdMember",
-            "projectBeneficiary",
-            "task"
-          ]
+          "primary": "pgrService",
+          "select": ["pgrService"]
         }
       },
       "onAction": [
         {
           "actionType": "FETCH_TRANSFORMER_CONFIG",
           "properties": {
-            "configName": "beneficiaryRegistration",
+            "configName": "complaintRegistration",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
@@ -3777,7 +3501,7 @@ final dynamic sampleComplaintFlows = {
         {
           "actionType": "CREATE_EVENT",
           "properties": {
-            "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
+            "entity": "",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
@@ -3790,7 +3514,7 @@ final dynamic sampleComplaintFlows = {
           "actionType": "NAVIGATION",
           "properties": {
             "type": "TEMPLATE",
-            "name": "householdOverview",
+            "name": "complaintAcknowledgement",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
@@ -3799,9 +3523,9 @@ final dynamic sampleComplaintFlows = {
             ],
             "data": [
               {
-                "key": "HouseholdClientReferenceId",
+                "key": "complaintClientReferenceId",
                 "value":
-                    "{{contextData.entities.HouseholdModel.clientReferenceId}}"
+                    "{{contextData.entities.PgrServiceModel.clientReferenceId}}"
               }
             ]
           }
@@ -3831,27 +3555,8 @@ final dynamic sampleComplaintFlows = {
           "label": "Complaint creation Successful",
           "description": "Sync the record to generate complaintID",
           "properties": {"type": "success"},
-          "primaryAction": {
-            "label": "View Complaint Details",
-            "onAction": [
-              {
-                "actionType": "NAVIGATION",
-                "properties": {
-                  "type": "TEMPLATE",
-                  "name": "householdOverview",
-                  "data": [
-                    {
-                      "key": "HouseholdClientReferenceId",
-                      "value":
-                          "{{contextData.navigation.HouseholdClientReferenceId}}"
-                    }
-                  ]
-                }
-              }
-            ]
-          },
           "secondaryAction": {
-            "label": "Go back",
+            "label": "Back To Complaints",
             "onAction": [
               {
                 "actionType": "NAVIGATION",
@@ -3864,7 +3569,84 @@ final dynamic sampleComplaintFlows = {
           }
         }
       ]
-    }
+    },
+    {
+      "screenType": "TEMPLATE",
+      "name": "complaintView",
+      "heading": " Complaint Details",
+      "description": "",
+      "header": [
+        {
+          "format": "backLink",
+          "label": "Back",
+          "onAction": [
+            {"actionType": "BACK_NAVIGATION", "properties": {}}
+          ]
+        },
+      ],
+      "footer": [
+        {
+          "format": "button",
+          "label": "Close",
+          "properties": {
+            "type": "primary",
+            "size": "large",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {"type": "Template", "name": "complaintInbox"}
+            }
+          ]
+        }
+      ],
+      "wrapperConfig": {
+        "wrapperName": "ComplaintWrapper",
+        "rootEntity": "PgrServiceModel",
+        "filters": [],
+        "relations": [],
+        "searchConfig": {
+          "primary": "pgrService",
+          "select": ["pgrService"]
+        }
+      },
+      "body": [
+        {
+          "format": "card",
+          "children": [
+            {
+              "format": "labelPairList",
+              "data": [
+                {
+                  "key": "Complaint Number",
+                  "value": "{{item.additionalFields.fields.sku}}"
+                },
+                {"key": "Complaint type", "value": "{{item.receiverId}}"},
+                {
+                  "key": "Complaint date",
+                  "value": "{{item.additionalFields.fields.mrnNumber}}"
+                },
+                {"key": "Area", "value": "{{item.wayBillNumber}}"},
+                {
+                  "key": "Complainant's contact number",
+                  "value": "{{item.additionalFields.fields.batchNumber}}"
+                },
+                {
+                  "key": "Status",
+                  "value": "{{item.additionalFields.fields.batchNumber}}"
+                },
+                {
+                  "key": "Complaint description",
+                  "value": "{{item.additionalFields.fields.batchNumber}}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
   ]
 };
 

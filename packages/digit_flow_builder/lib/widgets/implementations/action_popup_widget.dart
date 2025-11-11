@@ -24,7 +24,8 @@ class ActionPopupWidget implements FlowWidget {
     // Capture screenKey and stateData in build method, not in callback
     final crudContext = CrudItemContext.of(context);
     final screenKey = crudContext?.screenKey ?? getScreenKeyFromArgs(context);
-    final stateData = screenKey != null ? extractCrudStateData(screenKey) : null;
+    final stateData =
+        screenKey != null ? extractCrudStateData(screenKey) : null;
 
     return DigitButton(
       mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
@@ -43,7 +44,8 @@ class ActionPopupWidget implements FlowWidget {
 
         // Show popup if popupConfig is provided
         if (popupConfig != null) {
-          await _showActionPopup(context, popupConfig, onAction, screenKey, stateData);
+          await _showActionPopup(
+              context, popupConfig, onAction, screenKey, stateData);
         }
       },
       type: _parseButtonType(props['type']),
@@ -199,6 +201,10 @@ class ActionPopupWidget implements FlowWidget {
         return Icons.add;
       case 'close':
         return Icons.close;
+      case 'search':
+        return Icons.search;
+      case 'sort':
+        return Icons.sort;
       default:
         return null;
     }
