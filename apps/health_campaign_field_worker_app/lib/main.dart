@@ -3059,7 +3059,8 @@ final dynamic sampleComplaintFlows = {
                 "data": [
                   {
                     "key": "Complaint Number",
-                    "value": "{{item.PgrServiceModel.serviceRequestId}}"
+                    "value": "{{item.PgrServiceModel.serviceRequestId}}",
+                    "defaultValue": "Sync data to generate complaint number"
                   },
                   {
                     "key": "Complaint type",

@@ -22,36 +22,66 @@ class LabelPairListWidget implements FlowWidget {
     final List<dynamic> data = json['data'] ?? [];
     final localization = LocalizationContext.maybeOf(context);
 
-    return LabelValueSummary(
-      padding: const EdgeInsets.all(0),
-      items: data.map((e) {
-        final key = e['key'] ?? '';
-        final value = e['value'];
+    // Filter out null items if hideIfNull is true
+    final filteredItems = <LabelValueItem>[];
 
-        // Localize first, then resolve template
-        final localizedKey = localization?.translate(key) ?? key;
-        final localizedValue =
-            localization?.translate(value ?? '') ?? (value ?? '');
+    for (var e in data) {
+      final key = e['key'] ?? '';
+      final value = e['value'];
+      final defaultValue = e['defaultValue'];
+      final hideIfNull = e['hideIfNull'] == true;
 
-        final keyText = resolveTemplate(
-            localizedKey,
+      // Localize first, then resolve template
+      final localizedKey = localization?.translate(key) ?? key;
+      final localizedValue =
+          localization?.translate(value ?? '') ?? (value ?? '');
+
+      final keyText = resolveTemplate(
+          localizedKey,
+          crudCtx?.item != null
+              ? crudCtx!.item
+              : crudCtx?.stateData?.rawState);
+
+      var valueText = resolveTemplate(
+          localizedValue,
+          crudCtx?.item != null
+              ? crudCtx!.item
+              : crudCtx?.stateData?.rawState);
+
+      // Check if value is null or empty
+      final isValueEmpty =
+          valueText == null || valueText.isEmpty || valueText == 'null';
+
+      // If hideIfNull is true and value is empty, skip this item
+      if (hideIfNull && isValueEmpty) {
+        continue;
+      }
+
+      // If value is empty and defaultValue is provided, use defaultValue
+      if (isValueEmpty && defaultValue != null) {
+        final localizedDefaultValue =
+            localization?.translate(defaultValue) ?? defaultValue;
+        valueText = resolveTemplate(
+            localizedDefaultValue,
             crudCtx?.item != null
                 ? crudCtx!.item
                 : crudCtx?.stateData?.rawState);
+      }
 
-        final valueText = resolveTemplate(
-            localizedValue,
-            crudCtx?.item != null
-                ? crudCtx!.item
-                : crudCtx?.stateData?.rawState);
-
-        return LabelValueItem(
+      // Add the item to the list
+      filteredItems.add(
+        LabelValueItem(
           maxLines: 5,
           label: localization?.translate(keyText) ?? keyText,
-          value: localization?.translate(valueText) ?? valueText,
+          value: localization?.translate(valueText ?? '') ?? (valueText ?? ''),
           labelFlex: 7,
-        );
-      }).toList(),
+        ),
+      );
+    }
+
+    return LabelValueSummary(
+      padding: const EdgeInsets.all(0),
+      items: filteredItems,
     );
   }
 }
