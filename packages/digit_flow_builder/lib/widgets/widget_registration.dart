@@ -13,12 +13,14 @@ import 'implementations/label_pair_list_widget.dart';
 import 'implementations/list_view_widget.dart';
 import 'implementations/menu_card_widget.dart';
 import 'implementations/panel_card_widget.dart';
+import 'implementations/radio.dart';
 import 'implementations/row_widget.dart';
 import 'implementations/search_bar_widget.dart';
 import 'implementations/selection_card.dart';
 import 'implementations/switch_widget.dart';
 import 'implementations/table_widget.dart';
 import 'implementations/tag_widget.dart';
+import 'implementations/text_input_widget.dart';
 import 'implementations/text_widget.dart';
 
 /// Registers all available flow widgets
@@ -33,6 +35,7 @@ class WidgetRegistration {
     FlowWidgetFactory.register(ActionPopupWidget());
     FlowWidgetFactory.register(ButtonWidget());
     FlowWidgetFactory.register(TextWidget());
+    FlowWidgetFactory.register(TextInputWidget());
     FlowWidgetFactory.register(IconWidget());
     FlowWidgetFactory.register(CardWidget());
     FlowWidgetFactory.register(MenuCardWidget());
@@ -42,6 +45,7 @@ class WidgetRegistration {
     FlowWidgetFactory.register(ColumnWidget());
     FlowWidgetFactory.register(RowWidget());
     FlowWidgetFactory.register(DropdownWidget());
+    FlowWidgetFactory.register(RadioWidget());
     FlowWidgetFactory.register(FilterWidget());
     FlowWidgetFactory.register(InfoCardWidget());
     FlowWidgetFactory.register(SwitchWidget());
