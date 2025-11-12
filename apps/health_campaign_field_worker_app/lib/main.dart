@@ -2754,6 +2754,22 @@ final dynamic sampleComplaintFlows = {
       "name": "complaintInbox",
       "heading": " Complaint Inbox",
       "description": "",
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "type": "SEARCH_EVENT",
+            "name": "pgrService",
+            "data": [
+              {
+                "key": "tenantId",
+                "value": "{{singleton.selectedProject.tenantId}}",
+                "operation": "equals"
+              }
+            ]
+          }
+        }
+      ],
       "header": [
         {
           "format": "backLink",
@@ -2789,16 +2805,7 @@ final dynamic sampleComplaintFlows = {
         "wrapperName": "ComplaintWrapper",
         "rootEntity": "PgrServiceModel",
         "filters": [],
-        "relations": [
-          {
-            "name": "complainant",
-            "entity": "PgrComplainantModel",
-            "match": {
-              "field": "complaintClientReferenceId",
-              "equalsFrom": "clientReferenceId"
-            }
-          }
-        ],
+        "relations": [],
         "searchConfig": {
           "primary": "pgrService",
           "select": ["pgrService"]
@@ -3041,6 +3048,9 @@ final dynamic sampleComplaintFlows = {
           "hidden": "{{ context.ComplaintWrapper.empty }}",
           "fieldName": "listView",
           "data": "ComplaintWrapper",
+          "properties": {
+            "spacing": "spacer4",
+          },
           "child": {
             "format": "card",
             "children": [
@@ -3049,17 +3059,24 @@ final dynamic sampleComplaintFlows = {
                 "data": [
                   {
                     "key": "Complaint Number",
-                    "value": "{{item.additionalFields.fields.sku}}"
+                    "value": "{{item.PgrServiceModel.serviceRequestId}}"
                   },
-                  {"key": "Complaint type", "value": "{{item.receiverId}}"},
+                  {
+                    "key": "Complaint type",
+                    "value": "{{item.PgrServiceModel.serviceCode}}"
+                  },
                   {
                     "key": "Complaint date",
-                    "value": "{{item.additionalFields.fields.mrnNumber}}"
+                    "value":
+                        "{{fn:formatDate(item.PgrServiceModel.auditDetails.createdTime, dateTime, dd MMM yyyy)}}"
                   },
-                  {"key": "Area", "value": "{{item.wayBillNumber}}"},
+                  {
+                    "key": "Area",
+                    "value": "{{item.PgrServiceModel.address.locality.code}}"
+                  },
                   {
                     "key": "Status",
-                    "value": "{{item.additionalFields.fields.batchNumber}}"
+                    "value": "{{item.PgrServiceModel.applicationStatus}}"
                   }
                 ]
               }

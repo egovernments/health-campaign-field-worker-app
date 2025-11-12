@@ -30,7 +30,8 @@ class LabelPairListWidget implements FlowWidget {
 
         // Localize first, then resolve template
         final localizedKey = localization?.translate(key) ?? key;
-        final localizedValue = localization?.translate(value ?? '') ?? (value ?? '');
+        final localizedValue =
+            localization?.translate(value ?? '') ?? (value ?? '');
 
         final keyText = resolveTemplate(
             localizedKey,
@@ -46,8 +47,8 @@ class LabelPairListWidget implements FlowWidget {
 
         return LabelValueItem(
           maxLines: 5,
-          label: keyText,
-          value: valueText,
+          label: localization?.translate(keyText) ?? keyText,
+          value: localization?.translate(valueText) ?? valueText,
           labelFlex: 7,
         );
       }).toList(),
