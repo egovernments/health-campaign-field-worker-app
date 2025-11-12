@@ -4,10 +4,12 @@ import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
+import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'app.dart';
@@ -57,6 +59,14 @@ void main() async {
     client: _dio,
     sql: _sql,
   ));
+  try {
+    final isNotTrust = await JailbreakRootDetection.instance.isNotTrust;
+    final isRealDevice = await JailbreakRootDetection.instance.isRealDevice;
+  } catch (error) {
+    if (kDebugMode) {
+      print(error);
+    }
+  }
 }
 
 class AppLifecycleObserver extends WidgetsBindingObserver {
@@ -4701,16 +4711,36 @@ final dynamic sampleInventoryFlows = {
                     ]
                   },
                   {
-                    "format": "button",
-                    "label": "view QR",
+                    "format": "actionPopup",
+                    "label": "View QR",
                     "properties": {
-                      "type": "secondary",
-                      "size": "small",
+                      "type": "tertiary",
+                      "size": "medium",
                       "mainAxisSize": "min",
-                      "mainAxisAlignment": "center"
+                      "mainAxisAlignment": "start",
+                      "popupConfig": {
+                        "type": "default",
+                        "title": "QR Code",
+                        "titleIcon": "qr",
+                        "showCloseButton": true,
+                        "barrierDismissible": true,
+                        "body": [
+                          {
+                            "format": "qr_code",
+                            "data":
+                                "{{item.items[0].additionalFields.fields.mrnNumber}}",
+                            "size": "medium",
+                            "errorCorrectionLevel": "M",
+                            "dataModuleColor": "black",
+                            "backgroundColor": "white",
+                            "padding": 16
+                          }
+                        ],
+                        "footerActions": []
+                      }
                     },
-                    "onAction": []
-                  },
+                    "suffixIcon": "qr"
+                  }
                 ]
               },
               {
@@ -4849,257 +4879,432 @@ final dynamic sampleInventoryFlows = {
   ]
 };
 
-// final dynamic inventoryReportFlows = [
-//   {
-//     "screenType": "TEMPLATE",
-//     "name": "viewReports",
-//     "heading": "View Reports",
-//     "description": "",
-//     "header": [
-//       {
-//         "format": "backLink",
-//         "label": "Back",
-//         "onAction": [
-//           {"actionType": "BACK_NAVIGATION", "properties": {}}
-//         ]
-//       },
-//     ],
-//     "footer": [],
-//     "initActions": [
-//       {
-//         "actionType": "SEARCH_EVENT",
-//         "properties": {
-//           "type": "SEARCH_EVENT",
-//           "name": "projectFacility",
-//           "data": [
-//             {
-//               "key": "projectId",
-//               "value": "{{singleton.selectedProject.id}}",
-//               "operation": "equals"
-//             }
-//           ]
-//         }
-//       }
-//     ],
-//     "wrapperConfig": {
-//       "wrapperName": "InventoryWrapper",
-//       "groupByType": true,
-//       "rootEntity": "ProjectFacilityModel",
-//       "filters": [],
-//       "relations": [
-//         {
-//           "name": "facility",
-//           "entity": "FacilityModel",
-//           "match": {"field": "id", "equalsFrom": "facilityId"}
-//         },
-//         {
-//           "name": "productVariant",
-//           "entity": "ProductVariantModel",
-//           "match": {"field": "id", "equalsFrom": "resource"}
-//         }
-//       ],
-//       "searchConfig": {
-//         "primary": "projectFacility",
-//         "select": ["projectFacility", "productVariant"]
-//       }
-//     },
-//     "body": [
-//       {
-//         "format": "menu_card",
-//         "heading": "Stock Received",
-//         "description": "View stock received reports",
-//         "icon": 'assessment',
-//         "onAction": [
-//           {
-//             "actionType": "NAVIGATION",
-//             "properties": {
-//               "type": "TEMPLATE",
-//               "name": "reportDetails",
-//               "data": [
-//                 {"key": "reportType", "value": "receipt"}
-//               ]
-//             }
-//           }
-//         ]
-//       },
-//       {
-//         "format": "menu_card",
-//         "heading": "Stock Issued",
-//         "description": "View stock issued reports",
-//         "icon": 'assessment',
-//         "onAction": [
-//           {
-//             "actionType": "NAVIGATION",
-//             "properties": {
-//               "type": "TEMPLATE",
-//               "name": "reportDetails",
-//               "data": [
-//                 {"key": "reportType", "value": "dispatch"}
-//               ]
-//             }
-//           }
-//         ]
-//       },
-//       {
-//         "format": "menu_card",
-//         "heading": "Stock Returned",
-//         "description": "View stock returned reports",
-//         "icon": 'assessment',
-//         "onAction": [
-//           {
-//             "actionType": "NAVIGATION",
-//             "properties": {
-//               "type": "TEMPLATE",
-//               "name": "reportDetails",
-//               "data": [
-//                 {"key": "reportType", "value": "returned"}
-//               ]
-//             }
-//           }
-//         ]
-//       },
-//       {
-//         "format": "menu_card",
-//         "heading": "Stock Damaged",
-//         "description": "View stock damaged reports",
-//         "icon": 'assessment',
-//         "onAction": [
-//           {
-//             "actionType": "NAVIGATION",
-//             "properties": {
-//               "type": "TEMPLATE",
-//               "name": "reportDetails",
-//               "data": [
-//                 {"key": "reportType", "value": "damage"}
-//               ]
-//             }
-//           }
-//         ]
-//       },
-//       {
-//         "format": "menu_card",
-//         "heading": "Stock Loss",
-//         "description": "View stock loss reports",
-//         "icon": 'assessment',
-//         "onAction": [
-//           {
-//             "actionType": "NAVIGATION",
-//             "properties": {
-//               "type": "TEMPLATE",
-//               "name": "reportDetails",
-//               "data": [
-//                 {"key": "reportType", "value": "loss"}
-//               ]
-//             }
-//           }
-//         ]
-//       },
-//       {
-//         "format": "menu_card",
-//         "heading": "Stock Reconciliation",
-//         "description": "View stock reconciliation reports",
-//         "icon": 'assessment',
-//         "onAction": [
-//           {
-//             "actionType": "NAVIGATION",
-//             "properties": {
-//               "type": "TEMPLATE",
-//               "name": "reportDetails",
-//               "data": [
-//                 {"key": "reportType", "value": "reconciliation"}
-//               ]
-//             }
-//           }
-//         ]
-//       }
-//     ]
-//   },
-//   {
-//     "screenType": "TEMPLATE",
-//     "name": "reportDetails",
-//     "heading": "{{navigation.reportType}} Report",
-//     "description": "",
-//     "header": [
-//       {
-//         "format": "backLink",
-//         "label": "Back",
-//         "onAction": [
-//           {"actionType": "BACK_NAVIGATION", "properties": {}}
-//         ]
-//       },
-//     ],
-//     "footer": [],
-//     "initActions": [],
-//     "wrapperConfig": {
-//       "wrapperName": "ViewStockWrapper",
-//       "groupByType": true,
-//       "rootEntity": "StockModel",
-//       "filters": [],
-//       "relations": [
-//         {
-//           "name": "stock",
-//           "entity": "StockModel",
-//           "match": {
-//             "field": "clientAuditDetails.createdBy",
-//             "equalsFrom": "{{singleton.loggedInUserUuid}}"
-//           }
-//         },
-//       ],
-//       "searchConfig": {
-//         "primary": "stock",
-//         "select": ["stock"],
-//         "orderBy": {"field": "clientCreatedTime", "order": "DESC"}
-//       }
-//     },
-//     "body": [
-//       {
-//         "format": "card",
-//         "children": [
-//           {
-//             "format": "dropdown",
-//             "label": "Select Warehouse",
-//             "required": true,
-//             "key": "selectedFacility",
-//             "options": "{{facility}}",
-//             "displayKey": "name",
-//             "valueKey": "id"
-//           },
-//           {
-//             "format": "dropdown",
-//             "label": "Select Product",
-//             "required": true,
-//             "key": "selectedProduct",
-//             "options": "{{productVariant}}",
-//             "displayKey": "sku",
-//             "valueKey": "id"
-//           }
-//         ]
-//       },
-//       {
-//         "format": "data_grid",
-//         "heading": "Report Data",
-//         "searchConfig": {
-//           "entity": "StockModel",
-//           "filters": [
-//             {"field": "facilityId", "equals": "{{selectedFacility}}"},
-//             {"field": "productVariantId", "equals": "{{selectedProduct}}"}
-//           ]
-//         },
-//         "columns": [
-//           {"key": "date", "label": "Date", "format": "date", "width": 100},
-//           {"key": "wayBillNumber", "label": "Waybill Number", "width": 150},
-//           {
-//             "key": "quantity",
-//             "label": "{{fn:getQuantityLabel(navigation.reportType)}}",
-//             "width": 150
-//           },
-//           {
-//             "key": "transactingParty",
-//             "label": "{{fn:getTransactingPartyLabel(navigation.reportType)}}",
-//             "width": 200
-//           }
-//         ]
-//       }
-//     ]
-//   }
-// ];
+final dynamic inventoryReportFlows = {
+  "name": "INVENTORY",
+  "initialPage": "viewReports",
+  "project": "CMP-2025-08-04-004846",
+  "version": 1,
+  "disabled": false,
+  "isSelected": true,
+  "flows": [
+    {
+      "screenType": "TEMPLATE",
+      "name": "viewReports",
+      "heading": "View Reports",
+      "description": "",
+      "header": [
+        {
+          "format": "backLink",
+          "label": "Back",
+          "onAction": [
+            {"actionType": "BACK_NAVIGATION", "properties": {}}
+          ]
+        },
+      ],
+      "footer": [],
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "type": "SEARCH_EVENT",
+            "name": "projectFacility",
+            "data": [
+              {
+                "key": "projectId",
+                "value": "{{singleton.selectedProject.id}}",
+                "operation": "equals"
+              }
+            ]
+          }
+        }
+      ],
+      "wrapperConfig": {
+        "wrapperName": "InventoryWrapper",
+        "groupByType": true,
+        "rootEntity": "ProjectFacilityModel",
+        "filters": [],
+        "relations": [
+          {
+            "name": "facility",
+            "entity": "FacilityModel",
+            "match": {"field": "id", "equalsFrom": "facilityId"}
+          },
+          {
+            "name": "productVariant",
+            "entity": "ProductVariantModel",
+            "match": {"field": "id", "equalsFrom": "resource"}
+          }
+        ],
+        "searchConfig": {
+          "primary": "projectFacility",
+          "select": ["projectFacility", "facility", "productVariant"]
+        }
+      },
+      "body": [
+        {
+          "format": "menu_card",
+          "heading": "Stock Received",
+          "description": "View stock received reports",
+          "icon": 'assessment',
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "reportDetails",
+                "data": [
+                  {"key": "reportType", "value": "receipt"},
+                  {"key": "facilities", "value": "{{FacilityModel}}"},
+                  {"key": "productVariants", "value": "{{ProductVariantModel}}"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "format": "menu_card",
+          "heading": "Stock Issued",
+          "description": "View stock issued reports",
+          "icon": 'assessment',
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "reportDetails",
+                "data": [
+                  {"key": "reportType", "value": "dispatch"},
+                  {"key": "facilities", "value": "{{FacilityModel}}"},
+                  {"key": "productVariants", "value": "{{ProductVariantModel}}"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "format": "menu_card",
+          "heading": "Stock Returned",
+          "description": "View stock returned reports",
+          "icon": 'assessment',
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "reportDetails",
+                "data": [
+                  {"key": "reportType", "value": "returned"},
+                  {"key": "facilities", "value": "{{FacilityModel}}"},
+                  {"key": "productVariants", "value": "{{ProductVariantModel}}"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "format": "menu_card",
+          "heading": "Stock Damaged",
+          "description": "View stock damaged reports",
+          "icon": 'assessment',
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "reportDetails",
+                "data": [
+                  {"key": "reportType", "value": "damage"},
+                  {"key": "facilities", "value": "{{FacilityModel}}"},
+                  {"key": "productVariants", "value": "{{ProductVariantModel}}"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "format": "menu_card",
+          "heading": "Stock Loss",
+          "description": "View stock loss reports",
+          "icon": 'assessment',
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "reportDetails",
+                "data": [
+                  {"key": "reportType", "value": "loss"},
+                  {"key": "facilities", "value": "{{FacilityModel}}"},
+                  {"key": "productVariants", "value": "{{ProductVariantModel}}"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "format": "menu_card",
+          "heading": "Stock Reconciliation",
+          "description": "View stock reconciliation reports",
+          "icon": 'assessment',
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "reportDetails",
+                "data": [
+                  {"key": "reportType", "value": "reconciliation"},
+                  {"key": "facilities", "value": "{{FacilityModel}}"},
+                  {"key": "productVariants", "value": "{{ProductVariantModel}}"}
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenType": "TEMPLATE",
+      "name": "reportDetails",
+      "heading": "{{fn:getReportTitle(navigation.reportType)}}",
+      "description": "",
+      "initActions": [],
+      "wrapperConfig": {
+        "wrapperName": "StockReportWrapper",
+        "groupByType": true,
+        "rootEntity": "Stock",
+        "filters": [],
+        "relations": [],
+        "searchConfig": {
+          "primary": "stock",
+          "select": ["stock"]
+        }
+      },
+      "header": [
+        {
+          "format": "backLink",
+          "label": "Back",
+          "onAction": [
+            {"actionType": "BACK_NAVIGATION", "properties": {}}
+          ]
+        }
+      ],
+      "footer": [
+        {
+          "format": "button",
+          "label": "Back to Home",
+          "properties": {
+            "type": "secondary",
+            "size": "large",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "onAction": [
+            {"actionType": "BACK_NAVIGATION", "properties": {}}
+          ]
+        }
+      ],
+      "body": [
+        {
+          "format": "card",
+          "children": [
+            {
+              "format": "dropdown",
+              "label": "Select Warehouse",
+              "required": true,
+              "key": "selectedFacility",
+              "source": "{{navigation.facilities}}",
+              "displayKey": "id",
+              "valueKey": "id",
+              "visible": "{{fn:hasRole('WAREHOUSE_MANAGER')}}",
+              "onChange": [
+                {
+                  "actionType": "SEARCH_EVENT",
+                  "properties": {
+                    "type": "SEARCH_EVENT",
+                    "name": "stock",
+                    "data": [
+                      {
+                        "key": "tenantId",
+                        "value": "{{singleton.selectedProject.tenantId}}",
+                        "operation": "equals"
+                      },
+                      {
+                        "key": "productVariantId",
+                        "value": "{{selectedProduct}}",
+                        "operation": "equals"
+                      },
+                      {
+                        "key": "transactionType",
+                        "value":
+                            "{{fn:getTransactionType(navigation.reportType)}}",
+                        "operation": "in"
+                      },
+                      {
+                        "key": "transactionReason",
+                        "value":
+                            "{{fn:getTransactionReason(navigation.reportType)}}",
+                        "operation": "in"
+                      },
+                      {
+                        "key": "{{fn:getSenderOrReceiver(navigation.reportType)}}",
+                        "value": "{{selectedFacility}}",
+                        "operation": "equals"
+                      },
+                    ],
+                  }
+                }
+              ]
+            },
+            {
+              "format": "dropdown",
+              "label": "Select Product",
+              "required": true,
+              "key": "selectedProduct",
+              "source": "{{navigation.productVariants}}",
+              "displayKey": "sku",
+              "valueKey": "id",
+              "onChange": [
+                {
+                  "actionType": "SEARCH_EVENT",
+                  "properties": {
+                    "type": "SEARCH_EVENT",
+                    "name": "stock",
+                    "data": [
+                      {
+                        "key": "tenantId",
+                        "value": "{{singleton.selectedProject.tenantId}}",
+                        "operation": "equals"
+                      },
+                      {
+                        "key": "productVariantId",
+                        "value": "{{selectedProduct}}",
+                        "operation": "equals"
+                      },
+                      {
+                        "key": "transactionType",
+                        "value":
+                            "{{fn:getTransactionType(navigation.reportType)}}",
+                        "operation": "in"
+                      },
+                      {
+                        "key": "transactionReason",
+                        "value":
+                            "{{fn:getTransactionReason(navigation.reportType)}}",
+                        "operation": "in"
+                      },
+                      {
+                        "key":
+                            "{{fn:getSenderOrReceiver(navigation.reportType)}}",
+                        "value": "{{selectedFacility}}",
+                        "operation": "equals"
+                      },
+                    ],
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "format": "infoCard",
+          "message":
+              "Please select both warehouse and product to view the report",
+          "type": "info",
+          "visible":
+              "{{selectedFacility}} == null || {{selectedProduct}} == null"
+        },
+        {
+          "format": "infoCard",
+          "message": "No records found for the selected filters",
+          "type": "info",
+          "visible":
+              "{{stock.length}} == 0 && {{selectedFacility}} != null && {{selectedProduct}} != null && {{navigation.reportType}} != 'reconciliation'"
+        },
+        {
+          "format": "table",
+          "visible":
+              "{{stock.length}} > 0 && {{navigation.reportType}} != 'reconciliation'",
+          "data": {
+            "source": "stock",
+            "columns": [
+              {
+                "header": "Date",
+                "cellValue":
+                    "{{fn:formatDate(item.auditDetails.createdTime, 'date', 'dd MMM yyyy')}}"
+              },
+              {
+                "header": "MRN",
+                "cellValue":
+                    "{{fn:getAdditionalFieldValue(item.additionalFields, 'mrnNumber')}}"
+              },
+              {
+                "header": "Waybill Number",
+                "cellValue": "{{item.wayBillNumber}}"
+              },
+              {
+                "header": "{{selectedProduct-object.sku}}",
+                "cellValue": "{{item.quantity}}"
+              }
+            ],
+            "rows": "{{stock}}"
+          }
+        },
+        {
+          "format": "infoCard",
+          "message": "No reconciliation records found for the selected filters",
+          "type": "info",
+          "visible":
+              "{{stockReconciliation.length}} == 0 && {{selectedFacility}} != null && {{selectedProduct}} != null && {{navigation.reportType}} == 'reconciliation'"
+        },
+        {
+          "format": "table",
+          "visible":
+              "{{stockReconciliation.length}} > 0 && {{navigation.reportType}} == 'reconciliation'",
+          "data": {
+            "source": "stockReconciliation",
+            "columns": [
+              {
+                "header": "Date",
+                "cellValue":
+                    "{{fn:formatDate(item.dateOfReconciliation, 'date', 'dd MMM yyyy')}}"
+              },
+              {
+                "header": "Received",
+                "cellValue":
+                    "{{fn:getAdditionalFieldValue(item.additionalFields, 'received')}}"
+              },
+              {
+                "header": "Issued",
+                "cellValue":
+                    "{{fn:getAdditionalFieldValue(item.additionalFields, 'issued')}}"
+              },
+              {
+                "header": "Returned",
+                "cellValue":
+                    "{{fn:getAdditionalFieldValue(item.additionalFields, 'returned')}}"
+              },
+              {
+                "header": "Damaged",
+                "cellValue":
+                    "{{fn:getAdditionalFieldValue(item.additionalFields, 'damaged')}}"
+              },
+              {
+                "header": "Lost",
+                "cellValue":
+                    "{{fn:getAdditionalFieldValue(item.additionalFields, 'lost')}}"
+              },
+              {
+                "header": "Stock in Hand",
+                "cellValue":
+                    "{{fn:getAdditionalFieldValue(item.additionalFields, 'inHand')}}"
+              },
+              {"header": "Manual Count", "cellValue": "{{item.physicalCount}}"}
+            ],
+            "rows": "{{stockReconciliation}}"
+          }
+        }
+      ]
+    }
+  ]
+};

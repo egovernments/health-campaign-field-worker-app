@@ -7,6 +7,7 @@ import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:flutter/material.dart';
 
+import '../blocs/flow_crud_bloc.dart';
 import 'function_registry.dart';
 
 class FlowBuilderSingleton {
@@ -31,7 +32,8 @@ class FlowBuilderSingleton {
   PersistenceConfiguration? _persistenceConfiguration = PersistenceConfiguration
       .offlineFirst; // Default to offline first persistence configuration
   Map<String, TemplateConfig>? _templateConfigs;
-  List<Map<String, dynamic>>? _userRoles; // User roles from app level (e.g., [{"code": "WAREHOUSE_MANAGER", "name": "Warehouse Manager"}])
+  List<Map<String, dynamic>>?
+      _userRoles; // User roles from app level (e.g., [{"code": "WAREHOUSE_MANAGER", "name": "Warehouse Manager"}])
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
@@ -178,13 +180,16 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
 }
 
 /// Existing method kept as-is for UI string binding
-dynamic resolveValue(dynamic value, dynamic contextData, {Map<String, dynamic>? widgetData}) {
-  final resolved = resolveValueRaw(value, contextData, widgetData: widgetData);
+dynamic resolveValue(dynamic value, dynamic contextData,
+    {Map<String, dynamic>? widgetData, String? screenKey}) {
+  final resolved = resolveValueRaw(value, contextData,
+      widgetData: widgetData, screenKey: screenKey);
   return resolved;
 }
 
 /// New method: resolves strings with multiple placeholders
-String resolveTemplate(String template, dynamic contextData) {
+String resolveTemplate(String template, dynamic contextData,
+    {String? screenKey}) {
   if (!template.contains('{{')) {
     return template;
   }
@@ -200,7 +205,8 @@ String resolveTemplate(String template, dynamic contextData) {
     final placeholder = match.group(1)!.trim();
 
     // Use existing resolveValueRaw to resolve the individual placeholder
-    final resolvedValue = resolveValueRaw('{{$placeholder}}', contextData);
+    final resolvedValue =
+        resolveValueRaw('{{$placeholder}}', contextData, screenKey: screenKey);
 
     // Replace the placeholder in the result string
     result =
@@ -211,7 +217,8 @@ String resolveTemplate(String template, dynamic contextData) {
 }
 
 /// New method: returns actual type (int, double, bool, list, map, entity, etc.)
-dynamic resolveValueRaw(dynamic value, dynamic contextData, {Map<String, dynamic>? widgetData}) {
+dynamic resolveValueRaw(dynamic value, dynamic contextData,
+    {Map<String, dynamic>? widgetData, String? screenKey}) {
   if (value is String) {
     final interpolationRegex = RegExp(r'^\{\{(.+?)\}\}$');
     final match = interpolationRegex.firstMatch(value.trim());
@@ -237,6 +244,19 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData, {Map<String, dynamic
         return _resolvePath(singletonToMap(), path);
       }
 
+      // Handle navigation access
+      if (path.startsWith('navigation.')) {
+        path = path.substring('navigation.'.length);
+        if (screenKey != null) {
+          final navigationParams =
+              FlowCrudStateRegistry().getNavigationParams(screenKey);
+          if (navigationParams != null) {
+            return _resolvePath(navigationParams, path);
+          }
+        }
+        return null;
+      }
+
       // Handle functions like {{ fn:max(tasks.0.dose, 2) }}
       if (path.startsWith('fn')) {
         final fnRegex = RegExp(r'fn:(\w+)\((.*?)\)');
@@ -258,7 +278,8 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData, {Map<String, dynamic
                       trimmed.startsWith('navigation') ||
                       trimmed.startsWith('widgetData')) {
                     final placeholder = '{{ $trimmed }}';
-                    return resolveValueRaw(placeholder, contextData, widgetData: widgetData);
+                    return resolveValueRaw(placeholder, contextData,
+                        widgetData: widgetData, screenKey: screenKey);
                   }
 
                   // Raw literal

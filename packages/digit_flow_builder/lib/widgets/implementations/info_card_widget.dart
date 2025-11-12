@@ -19,11 +19,13 @@ class InfoCardWidget implements FlowWidget {
   ) {
     final crudCtx = CrudItemContext.of(context);
     final items = crudCtx?.stateData?.rawState ?? [];
+    final modelMap = crudCtx?.stateData?.modelMap ?? {};
 
-    // Create evaluation context
+    // Create evaluation context that includes modelMap for named entity access
     final evalContext = {
       'item': crudCtx?.item,
       'contextData': crudCtx?.stateData?.rawState ?? {},
+      ...modelMap, // Include modelMap so {{stock}}, {{productVariant}} etc. can be resolved
     };
 
     // Check visibility condition

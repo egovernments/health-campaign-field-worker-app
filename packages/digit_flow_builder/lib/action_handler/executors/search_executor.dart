@@ -28,35 +28,103 @@ class SearchExecutor extends ActionExecutor {
         ? FlowCrudStateRegistry().get(screenKey)?.widgetData ?? {}
         : <String, dynamic>{};
 
-    debugPrint('🔍 SearchExecutor: screenKey=$screenKey');
-    debugPrint('🔍 SearchExecutor: widgetData=$widgetData');
+    // Get formData from FlowCrudStateRegistry (for dropdown values)
+    final formData = screenKey != null
+        ? FlowCrudStateRegistry().get(screenKey)?.formData ?? {}
+        : <String, dynamic>{};
 
-    final rawValue = data['data'][0]['value'];
-    debugPrint('🔍 SearchExecutor: rawValue=$rawValue');
+    // Build context data that includes both entities and form values
+    final resolveContext = {
+      if (contexts != null) ...contexts,
+      ...formData,
+    };
 
-    final resolvedValue =
-        resolveValue(rawValue, contexts, widgetData: widgetData);
+    // Process all filters from the data array
+    final filtersList = data['data'] as List<dynamic>;
+    final filters = <SearchFilter>[];
 
-    debugPrint('🔍 SearchExecutor: resolvedValue=$resolvedValue');
+    for (var filterData in filtersList) {
+      final rawKey = filterData['key'];
+      final rawValue = filterData['value'];
+      final operation = filterData['operation'];
+
+      // Resolve the key (for dynamic keys like {{fn:getSenderOrReceiver(...)}})
+      final resolvedKey = resolveValue(rawKey, resolveContext,
+          widgetData: widgetData, screenKey: screenKey);
+
+      // Resolve the value
+      var resolvedValue = resolveValueRaw(rawValue, resolveContext,
+          widgetData: widgetData, screenKey: screenKey);
+
+      // If resolveValueRaw didn't work, try resolveValue as fallback
+      if (resolvedValue == null ||
+          (resolvedValue is String && resolvedValue == rawValue)) {
+        resolvedValue = resolveValue(rawValue, resolveContext,
+            widgetData: widgetData, screenKey: screenKey);
+      }
+
+      // Special case: if still unresolved and it's a template
+      // try direct lookup in formData (for dropdown selections)
+      if ((resolvedValue == null ||
+           (resolvedValue is String && resolvedValue.startsWith('{{'))) &&
+          rawValue is String) {
+        // Match simple keys: {{key}} or dotted paths: {{key.path.to.value}}
+        final templateMatch = RegExp(r'^\{\{([A-Za-z0-9_\-\.]+)\}\}$').firstMatch(rawValue);
+        if (templateMatch != null) {
+          final path = templateMatch.group(1)!;
+          final parts = path.split('.');
+
+          // Try to resolve from formData
+          dynamic value = formData;
+          bool found = true;
+          for (final part in parts) {
+            if (value is Map && value.containsKey(part)) {
+              value = value[part];
+            } else {
+              found = false;
+              break;
+            }
+          }
+
+          if (found && value != formData) {
+            resolvedValue = value;
+          }
+        }
+      }
+
+      // Skip filters with null or unresolved values (still in template form)
+      if (resolvedValue == null ||
+          (resolvedValue is String && resolvedValue.startsWith('{{'))) {
+        continue;
+      }
+
+      filters.add(SearchFilter(
+        root: data['name'],
+        field: resolvedKey.toString(),
+        operator: operation,
+        value: resolvedValue,
+      ));
+    }
 
     final config = FlowRegistry.getByName(screenKey ?? '');
+
+    // Get orderBy from action properties or fall back to config
+    SearchOrderBy? orderBy;
+    if (data['orderBy'] != null) {
+      orderBy = SearchOrderBy.fromJson(
+          Map<String, dynamic>.from(data['orderBy']));
+    } else if (config?['wrapperConfig']['searchConfig']['orderBy'] != null) {
+      orderBy = SearchOrderBy.fromJson(
+          Map<String, dynamic>.from(
+              config!['wrapperConfig']['searchConfig']['orderBy']));
+    }
+
     final searchParams = GlobalSearchParameters(
-      filters: [
-        SearchFilter(
-          root: data['name'],
-          field: data['data'][0]['key'],
-          operator: data['data'][0]['operation'],
-          value: data['value'] ?? resolvedValue,
-        ),
-      ],
+      filters: filters,
       primaryModel: config?['wrapperConfig']['searchConfig']['primary'],
       select: config?['wrapperConfig']['searchConfig']['select'],
       pagination: null,
-      orderBy: config?['wrapperConfig']['searchConfig']['orderBy'] != null
-          ? SearchOrderBy.fromJson(
-              Map<String, dynamic>.from(
-                  config!['wrapperConfig']['searchConfig']['orderBy']))
-          : null,
+      orderBy: orderBy,
     );
 
     context.read<CrudBloc>().add(CrudEventSearch(searchParams));

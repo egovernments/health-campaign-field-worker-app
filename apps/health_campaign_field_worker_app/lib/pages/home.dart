@@ -213,6 +213,122 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       return 'Quantity received';
     });
+
+    // Inventory Report Functions
+    FunctionRegistry.register('getReportTitle', (args, stateData) {
+      if (args.isEmpty) return '';
+      final reportType = args.first?.toString() ?? '';
+
+      const titles = {
+        'receipt': 'INVENTORY_REPORT_DETAILS_RECEIPT_REPORT_TITLE',
+        'dispatch': 'INVENTORY_REPORT_DETAILS_DISPATCH_REPORT_TITLE',
+        'returned': 'INVENTORY_REPORT_DETAILS_RETURNED_REPORT_TITLE',
+        'damage': 'INVENTORY_REPORT_DETAILS_DAMAGE_REPORT_TITLE',
+        'loss': 'INVENTORY_REPORT_DETAILS_LOSS_REPORT_TITLE',
+        'reconciliation': 'INVENTORY_REPORT_DETAILS_RECONCILIATION_REPORT_TITLE'
+      };
+      return titles[reportType] ?? '';
+    });
+
+    FunctionRegistry.register('getTransactingPartyLabel', (args, stateData) {
+      if (args.isEmpty) return '';
+      final reportType = args.first?.toString() ?? '';
+
+      const labels = {
+        'receipt': 'INVENTORY_REPORT_DETAILS_RECEIPT_TRANSACTING_PARTY_LABEL',
+        'dispatch': 'INVENTORY_REPORT_DETAILS_DISPATCH_TRANSACTING_PARTY_LABEL',
+        'returned': 'INVENTORY_REPORT_DETAILS_RETURNED_TRANSACTING_PARTY_LABEL',
+        'damage': 'INVENTORY_REPORT_DETAILS_DAMAGED_TRANSACTING_PARTY_LABEL',
+        'loss': 'INVENTORY_REPORT_DETAILS_LOSS_TRANSACTING_PARTY_LABEL'
+      };
+      return labels[reportType] ?? '';
+    });
+
+    FunctionRegistry.register('getTransactingParty', (args, stateData) {
+      if (args.length < 2) return '';
+      final reportType = args[0]?.toString() ?? '';
+      final item = args[1];
+
+      if (item == null) return '';
+
+      // For dispatch, show receiver; for others, show sender
+      if (reportType == 'dispatch') {
+        return item['receiverId']?.toString() ??
+            item['receiverType']?.toString() ??
+            '';
+      }
+      return item['senderId']?.toString() ??
+          item['senderType']?.toString() ??
+          '';
+    });
+
+    FunctionRegistry.register('getTransactionType', (args, stateData) {
+      if (args.isEmpty) return [];
+      final reportType = args.first?.toString() ?? '';
+
+      const types = {
+        'receipt': ['RECEIVED'],
+        'dispatch': ['DISPATCHED'],
+        'returned': ['RECEIVED'],
+        'damage': ['DISPATCHED'],
+        'loss': ['DISPATCHED']
+      };
+      return types[reportType] ?? [];
+    });
+
+    FunctionRegistry.register('getTransactionReason', (args, stateData) {
+      if (args.isEmpty) return [];
+      final reportType = args.first?.toString() ?? '';
+
+      const reasons = {
+        'receipt': ['RECEIVED'],
+        'dispatch': [],
+        'returned': ['RETURNED'],
+        'damage': ['DAMAGED_IN_STORAGE', 'DAMAGED_IN_TRANSIT'],
+        'loss': ['LOST_IN_STORAGE', 'LOST_IN_TRANSIT']
+      };
+      return reasons[reportType] ?? [];
+    });
+
+    FunctionRegistry.register('getSenderOrReceiver', (args, stateData) {
+      if (args.isEmpty) return 'receiverId';
+      final reportType = args.first?.toString() ?? '';
+      return reportType == 'dispatch' ? 'senderId' : 'receiverId';
+    });
+
+    FunctionRegistry.register('getAdditionalFieldValue', (args, stateData) {
+      if (args.length < 2) return '0';
+      final additionalFields = args[0];
+      final key = args[1]?.toString() ?? '';
+
+      if (additionalFields == null) return '0';
+
+      // Handle both Map and object with fields property
+      List<dynamic>? fields;
+      if (additionalFields is Map) {
+        fields = additionalFields['fields'] as List<dynamic>?;
+      } else {
+        try {
+          fields = (additionalFields as dynamic).fields as List<dynamic>?;
+        } catch (_) {
+          return '0';
+        }
+      }
+
+      if (fields == null) return '0';
+
+      // Find the field with matching key
+      for (var field in fields) {
+        if (field is Map && field['key'] == key) {
+          final value = field['value'];
+          if (value == null) return '0';
+          final parsed = double.tryParse(value.toString()) ?? 0.0;
+          return parsed.toStringAsFixed(0);
+        }
+      }
+
+      return '0';
+    });
   }
 
   //  Be sure to cancel subscription after you are done
@@ -893,7 +1009,64 @@ class _HomePageState extends LocalizedState<HomePage> {
               triggerLocalization();
               isTriggerLocalisation = false;
             }
-            context.router.push(InventoryReportSelectionRoute());
+            try {
+              CrudBlocSingleton().setData(
+                crudService: DigitCrudService(
+                  context: context,
+                  relationshipMap: [
+                    const RelationshipMapping(
+                        from: 'facility',
+                        to: 'projectFacility',
+                        localKey: 'id',
+                        foreignKey: 'facilityId'),
+                    const RelationshipMapping(
+                        from: 'projectResource',
+                        to: 'projectFacility',
+                        localKey: 'projectId',
+                        foreignKey: 'projectId'),
+                    const RelationshipMapping(
+                        from: 'productVariant',
+                        to: 'projectResource',
+                        localKey: 'id',
+                        foreignKey: 'resource'),
+                  ],
+                  nestedModelMappings: [
+                    const NestedModelMapping(
+                      rootModel: 'projectFacility',
+                      fields: {
+                        'facility': NestedFieldMapping(
+                          table: 'facility',
+                          localKey: 'facilityId',
+                          foreignKey: 'id',
+                          type: NestedMappingType.one,
+                        ),
+                        'projectResources': NestedFieldMapping(
+                          table: 'projectResource',
+                          localKey: 'projectId',
+                          foreignKey: 'projectId',
+                          type: NestedMappingType.many,
+                        ),
+                      },
+                    ),
+                  ],
+                  searchEntityRepository:
+                      context.read<SearchEntityRepository>(),
+                ),
+                dynamicEntityModelListener: EntityModelMapMapper(),
+              );
+              WidgetRegistry.initialize();
+              FlowRegistry.setConfig(
+                  inventoryReportFlows["flows"] as List<Map<String, dynamic>>);
+              NavigationRegistry.setupNavigation(context);
+
+              context.router.push(
+                FlowBuilderHomeRoute(
+                    pageName: inventoryReportFlows["initialPage"]),
+              );
+            } catch (e) {
+              debugPrint('error $e');
+            }
+            // context.router.push(InventoryReportSelectionRoute());
           },
         ),
       ),

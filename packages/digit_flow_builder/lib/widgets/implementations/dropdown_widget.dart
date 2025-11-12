@@ -2,6 +2,8 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
+import '../../blocs/flow_crud_bloc.dart';
+import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
@@ -18,9 +20,13 @@ class DropdownWidget implements FlowWidget {
   ) {
     final crudCtx = CrudItemContext.of(context);
 
-    // For resolving source data (like {{projectFacility}}), we need the full rawState
-    final fullStateData = crudCtx?.stateData?.rawState;
+    // Get screen key for navigation params resolution
+    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
 
+    // Get form data from registry to check for stored values
+    final currentState =
+        screenKey != null ? FlowCrudStateRegistry().get(screenKey) : null;
+    final formData = currentState?.formData ?? {};
     // For resolving item-specific fields (like labels), we use the current item or first item
     final itemStateData = (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
         ? crudCtx.item
@@ -29,13 +35,17 @@ class DropdownWidget implements FlowWidget {
             ? crudCtx.stateData?.rawState.first
             : null;
 
-    final label = resolveTemplate(json['label'], itemStateData) ?? '';
+    final label =
+        resolveTemplate(json['label'], itemStateData, screenKey: screenKey) ??
+            '';
     final key = json['key'] as String?;
     final isRequired = json['required'] == true;
     final visible = json['visible'] == null ||
         (json['visible'] is bool && json['visible'] == true) ||
         (json['visible'] is String &&
-            resolveValue(json['visible'], itemStateData) == true);
+            resolveValue(json['visible'], itemStateData,
+                    screenKey: screenKey) ==
+                true);
 
     if (!visible) {
       return const SizedBox.shrink();
@@ -55,18 +65,55 @@ class DropdownWidget implements FlowWidget {
 
         // Case 1: Singleton path
         if (cleanKey.startsWith("singleton")) {
-          sourceData = resolveValueRaw("{{ $cleanKey }}", null);
+          sourceData =
+              resolveValueRaw("{{ $cleanKey }}", null, screenKey: screenKey);
         }
-        // Case 2: If the current item already has this source
+        // Case 2: Navigation path (NEW - now handled by resolveValueRaw)
+        else if (cleanKey.startsWith("navigation.")) {
+          // First check if we've cached this navigation data in formData
+          final cacheKey = '_cached_$cleanKey';
+          if (formData.containsKey(cacheKey)) {
+            sourceData = formData[cacheKey];
+          } else {
+            // Resolve from navigation params
+            sourceData =
+                resolveValueRaw("{{ $cleanKey }}", null, screenKey: screenKey);
+
+            // Cache the navigation data in formData to survive state updates
+            // IMPORTANT: Defer this until after the build phase completes to avoid setState during build
+            if (sourceData != null && screenKey != null) {
+              final dataToCache = sourceData;
+              final screenKeyToCache = screenKey;
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                final currentStateForCache =
+                    FlowCrudStateRegistry().get(screenKeyToCache);
+                final existingFormDataForCache =
+                    currentStateForCache?.formData ?? {};
+                final updatedFormDataForCache = {
+                  ...existingFormDataForCache,
+                  cacheKey: dataToCache,
+                };
+                final updatedStateForCache =
+                    (currentStateForCache ?? const FlowCrudState()).copyWith(
+                  formData: updatedFormDataForCache,
+                );
+                FlowCrudStateRegistry()
+                    .update(screenKeyToCache, updatedStateForCache);
+              });
+            }
+          }
+        }
+        // Case 3: If the current item already has this source
         else if (crudCtx?.item != null && (crudCtx!.item?[cleanKey] != null)) {
-          sourceData = resolveValueRaw(cleanKey, crudCtx.item);
+          sourceData =
+              resolveValueRaw(cleanKey, crudCtx.item, screenKey: screenKey);
         }
-        // Case 3: Try modelMap first (for grouped entities like ProjectFacilityModel)
+        // Case 4: Try modelMap first (for grouped entities like ProjectFacilityModel)
         else if (crudCtx?.stateData?.modelMap != null &&
             crudCtx!.stateData!.modelMap.containsKey(cleanKey)) {
           sourceData = crudCtx.stateData!.modelMap[cleanKey];
         }
-        // Case 4: Try rawState as map (wrapper output with groupByType)
+        // Case 5: Try rawState as map (wrapper output with groupByType)
         else if (crudCtx?.stateData?.rawState != null) {
           // rawState is a list of maps when groupByType is true
           // Try to find the key in the maps
@@ -80,10 +127,11 @@ class DropdownWidget implements FlowWidget {
             }
           }
           // Fallback: try resolveValueRaw
-          sourceData ??= resolveValueRaw(cleanKey, rawState);
+          sourceData ??=
+              resolveValueRaw(cleanKey, rawState, screenKey: screenKey);
         }
       }
-      // Case 5: Direct array
+      // Case 6: Direct array
       else if (json['source'] is List) {
         sourceData = json['source'];
       }
@@ -93,8 +141,16 @@ class DropdownWidget implements FlowWidget {
     final valueKey = json['valueKey'] as String? ?? 'id';
 
     // Get current selected value from state
-    final currentValue =
-        key != null ? resolveValue('{{$key}}', itemStateData) : null;
+    // First try itemStateData, then fall back to formData
+    dynamic currentValue;
+    if (key != null) {
+      currentValue =
+          resolveValue('{{$key}}', itemStateData, screenKey: screenKey);
+      // If not found in itemStateData, check formData directly
+      if (currentValue == '{{$key}}' || currentValue == null) {
+        currentValue = formData[key];
+      }
+    }
 
     // Build dropdown items
     final items = _buildDropdownItems(sourceData, displayKey, valueKey);
@@ -106,7 +162,9 @@ class DropdownWidget implements FlowWidget {
         (item) => item.code == currentValue.toString(),
         orElse: () => const DropdownItem(name: '', code: ''),
       );
-      if (selectedItem.code.isEmpty) selectedItem = null;
+      if (selectedItem.code.isEmpty) {
+        selectedItem = null;
+      }
     }
 
     return LabeledField(
@@ -133,6 +191,28 @@ class DropdownWidget implements FlowWidget {
               } catch (e) {
                 selectedObject = null;
               }
+            }
+
+            // IMPORTANT: Store the selected value in the form state before triggering onChange
+            if (screenKey != null) {
+              final currentState = FlowCrudStateRegistry().get(screenKey);
+              final existingFormData = currentState?.formData ?? {};
+
+              // Update form data with the selected value
+              final updatedFormData = {
+                ...existingFormData,
+                key: value.code,
+                // Store the selected value ID
+                if (selectedObject != null) '$key-object': selectedObject,
+                // Store the full object
+              };
+
+              // Update the registry
+              final updatedState =
+                  (currentState ?? const FlowCrudState()).copyWith(
+                formData: updatedFormData,
+              );
+              FlowCrudStateRegistry().update(screenKey, updatedState);
             }
 
             // Trigger onChange actions if defined
@@ -179,10 +259,12 @@ class DropdownWidget implements FlowWidget {
     if (sourceData == null) return items;
 
     if (sourceData is List) {
-      for (var item in sourceData) {
+      for (var i = 0; i < sourceData.length; i++) {
+        final item = sourceData[i];
         if (item is Map<String, dynamic>) {
           final name = _getValue(item, displayKey)?.toString() ?? '';
           final code = _getValue(item, valueKey)?.toString() ?? '';
+
           if (name.isNotEmpty && code.isNotEmpty) {
             items.add(DropdownItem(name: name, code: code));
           }
@@ -205,9 +287,24 @@ class DropdownWidget implements FlowWidget {
     dynamic current = map;
 
     for (var part in parts) {
+      if (current == null) {
+        return null;
+      }
+
       if (current is Map<String, dynamic>) {
+        // Check if the key exists before accessing
+        if (!current.containsKey(part)) {
+          return null;
+        }
+        current = current[part];
+      } else if (current is Map) {
+        // Handle non-typed Map (Map<dynamic, dynamic>)
+        if (!current.containsKey(part)) {
+          return null;
+        }
         current = current[part];
       } else {
+        // Current is not a map, can't traverse further
         return null;
       }
     }

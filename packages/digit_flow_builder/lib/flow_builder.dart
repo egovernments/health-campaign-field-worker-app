@@ -10,6 +10,7 @@ export 'screen_builder.dart';
 export 'utils/context_utility.dart';
 export 'utils/utils.dart' hide resolveValue, flattenFormData;
 export 'widget_registry.dart';
+export 'widgets/localization_context.dart';
 
 class FlowRegistry {
   static final Map<String, Map<String, dynamic>> _flowMap = {};

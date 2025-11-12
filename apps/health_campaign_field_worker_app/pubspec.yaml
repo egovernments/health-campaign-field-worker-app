@@ -84,6 +84,7 @@ dependencies:
   digit_forms_engine: ^0.0.2-dev
   digit_flow_builder:
     path: ../../packages/digit_flow_builder
+  jailbreak_root_detection: ^1.1.6
 
 dev_dependencies:
   flutter_test:

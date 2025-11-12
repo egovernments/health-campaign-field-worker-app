@@ -1,8 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../../blocs/flow_crud_bloc.dart';
 import '../../blocs/state_wrapper_builder.dart';
 import '../../flow_builder.dart';
+import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
 import 'action_executor.dart';
 
@@ -16,6 +18,12 @@ class NavigationExecutor extends ActionExecutor {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
+    // Get current screen's state data for resolving navigation values
+    final screenKey =
+        getScreenKeyFromArgs(context) ?? context.router.currentPath;
+    final currentState = FlowCrudStateRegistry().get(screenKey);
+    final stateFormData = currentState?.formData;
+
     // First resolve navigation data if provided
     final navData = action.properties['data'] as List<dynamic>?;
     Map<String, dynamic> navigationProperties =
@@ -26,8 +34,12 @@ class NavigationExecutor extends ActionExecutor {
         final key = entry['key'];
         final rawValue = entry['value'];
 
-        // resolve template value using contextData/entities
-        final resolvedValue = resolveValue(rawValue, contextData);
+        // Try to resolve from state form data first, fallback to contextData
+        dynamic resolvedValue = resolveValue(rawValue, stateFormData);
+        if (resolvedValue == rawValue) {
+          // If not resolved from state, try contextData
+          resolvedValue = resolveValue(rawValue, contextData);
+        }
 
         return {
           "key": key,

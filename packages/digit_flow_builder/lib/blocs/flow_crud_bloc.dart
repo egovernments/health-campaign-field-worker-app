@@ -31,9 +31,13 @@ class FlowCrudBloc extends CrudBloc {
       wrapper = WrapperBuilder(entities, flowConfig['wrapperConfig']).build();
     }
 
+    // Preserve existing formData and widgetData when creating new state
+    final existingState = FlowCrudStateRegistry().get(screenKey);
     final flowState = FlowCrudState(
       base: crudState,
       stateWrapper: wrapper,
+      formData: existingState?.formData,
+      widgetData: existingState?.widgetData,
     );
 
     onUpdate?.call(screenKey, flowState);
@@ -112,22 +116,26 @@ class FlowCrudState {
   final CrudState? base;
   final List<dynamic>? stateWrapper;
   final Map<String, dynamic>? formData;
+  final Map<String, dynamic>? widgetData;
 
   const FlowCrudState({
     this.base,
     this.stateWrapper,
     this.formData,
+    this.widgetData,
   });
 
   FlowCrudState copyWith({
     CrudState? base,
     List<dynamic>? stateWrapper,
     Map<String, dynamic>? formData,
+    Map<String, dynamic>? widgetData,
   }) {
     return FlowCrudState(
       base: base ?? this.base,
       stateWrapper: stateWrapper ?? this.stateWrapper,
       formData: formData ?? this.formData,
+      widgetData: widgetData ?? this.widgetData,
     );
   }
 }
