@@ -731,8 +731,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey,
       i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
-      i18.home.distributionLabel:
-          homeShowcaseData.distributionPoint.showcaseKey,
+      // i18.home.distributionLabel:
+      //     homeShowcaseData.distributionPoint.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -753,7 +753,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryIdLabel,
       i18.home.dataShare,
       i18.home.db,
-      i18.home.distributionLabel
+      // i18.home.distributionLabel
     ];
 
     final List<String> filteredLabels = homeItemsLabel

@@ -20,7 +20,7 @@ final jsonConfig = {
             "doorNo": "address.doorNo",
             "latitude": "beneficiaryLocation.latLng[0]",
             "longitude": "beneficiaryLocation.latLng[1]",
-            "locationAccuracy": "address.locationAccuracy",
+            "locationAccuracy": "beneficiaryLocation.latLng[2]",
             "addressLine1": "beneficiaryLocation.addressLine1",
             "addressLine2": "addressLine2",
             "landmark": "address.landmark",
@@ -115,7 +115,7 @@ final jsonConfig = {
               "doorNo": "address.doorNo",
               "latitude": "beneficiaryLocation.latLng[0]",
               "longitude": "beneficiaryLocation.latLng[1]",
-              "locationAccuracy": "address.locationAccuracy",
+              "locationAccuracy": "beneficiaryLocation.latLng[2]",
               "addressLine1": "beneficiaryLocation.addressLine1",
               "addressLine2": "addressLine2",
               "landmark": "address.landmark",
@@ -196,8 +196,8 @@ final jsonConfig = {
           "projectBeneficiaryClientReferenceId":
               "__context:projectBeneficiaryModel.clientReferenceId",
           "createdBy": "__context:userId",
-          "status":
-              "__value:ADMINISTRATION_SUCCESS", // todo: need to update later for multiround campaign
+          "status": "__value:ADMINISTRATION_SUCCESS",
+          // todo: need to update later for multiround campaign
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "resources": "list:TaskResourceModel",
@@ -212,9 +212,9 @@ final jsonConfig = {
             "id": "address.id",
             "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
             "doorNo": "address.doorNo",
-            "latitude": "__context:householdModel.address.latitude",
-            "longitude": "__context:householdModel.address.longitude",
-            "locationAccuracy": "address.locationAccuracy",
+            "latitude": "DeliveryDetails.latLng[0]",
+            "longitude": "DeliveryDetails.latLng[1]",
+            "locationAccuracy": "DeliveryDetails.latLng[2]",
             "addressLine1": "address.addressLine1",
             "addressLine2": "address.addressLine2",
             "landmark": "address.landmark",
