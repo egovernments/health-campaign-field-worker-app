@@ -385,63 +385,22 @@ class _HomePageState extends LocalizedState<HomePage> {
 
               final registrationSchemaData = registrationSchemaEntry?['data'];
 
-              if (registrationSchemaData != null) {
-                // Extract templates from both schemas
-                final regTemplatesRaw = registrationSchemaData?['templates'];
-
-                final Map<String, dynamic> regTemplateMap =
-                    regTemplatesRaw is Map<String, dynamic>
-                        ? regTemplatesRaw
-                        : {};
-
-                final templates = {
-                  for (final entry in {...regTemplateMap}.entries)
-                    entry.key: TemplateConfig.fromJson(
-                        entry.value as Map<String, dynamic>)
-                };
-
-                final registrationConfig = json.encode(registrationSchemaData);
-
-                RegistrationDeliverySingleton().setTemplateConfigs(templates);
-                RegistrationDeliverySingleton()
-                    .setRegistrationConfig(registrationConfig);
-              }
-            }
-            RegistrationDeliverySingleton()
-                .setHouseholdType(HouseholdType.family);
-
-            await context.router.push(const RegistrationDeliveryWrapperRoute());
-          },
-        ),
-      ),
-
-      i18.home.distributionLabel: homeShowcaseData.distributionPoint.buildWith(
-        child: HomeItemCard(
-          icon: Icons.person,
-          label: i18.home.distributionLabel,
-          onPressed: () async {
-            if (isTriggerLocalisation) {
-              final moduleName =
-                  'hcm-deliveryflow-${context.selectedProject.referenceID}';
-              triggerLocalization(module: moduleName);
-              isTriggerLocalisation = false;
-            }
-
-            final prefs = await SharedPreferences.getInstance();
-            final schemaJsonRaw = prefs.getString('app_config_schemas');
-
-            if (schemaJsonRaw != null) {
-              final allSchemas =
-                  json.decode(schemaJsonRaw) as Map<String, dynamic>;
-
               final deliverySchemaEntry =
                   allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
 
               final deliverySchemaData = deliverySchemaEntry?['data'];
 
-              if (deliverySchemaData != null) {
+              if (registrationSchemaData != null ||
+                  deliverySchemaData != null) {
                 // Extract templates from both schemas
+                final regTemplatesRaw = registrationSchemaData?['templates'];
+
                 final delTemplatesRaw = deliverySchemaData?['templates'];
+
+                final Map<String, dynamic> regTemplateMap =
+                    regTemplatesRaw is Map<String, dynamic>
+                        ? regTemplatesRaw
+                        : {};
 
                 final Map<String, dynamic> delTemplateMap =
                     delTemplatesRaw is Map<String, dynamic>
@@ -454,9 +413,12 @@ class _HomePageState extends LocalizedState<HomePage> {
                         entry.value as Map<String, dynamic>)
                 };
 
+                final registrationConfig = json.encode(registrationSchemaData);
                 final deliveryConfig = json.encode(deliverySchemaData);
 
                 RegistrationDeliverySingleton().setTemplateConfigs(templates);
+                RegistrationDeliverySingleton()
+                    .setRegistrationConfig(registrationConfig);
                 RegistrationDeliverySingleton()
                     .setDeliveryConfig(deliveryConfig);
               }
@@ -468,6 +430,60 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+
+      // i18.home.distributionLabel: homeShowcaseData.distributionPoint.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.person,
+      //     label: i18.home.distributionLabel,
+      //     onPressed: () async {
+      //       if (isTriggerLocalisation) {
+      //         final moduleName =
+      //             'hcm-deliveryflow-${context.selectedProject.referenceID}';
+      //         triggerLocalization(module: moduleName);
+      //         isTriggerLocalisation = false;
+      //       }
+      //
+      //       final prefs = await SharedPreferences.getInstance();
+      //       final schemaJsonRaw = prefs.getString('app_config_schemas');
+      //
+      //       if (schemaJsonRaw != null) {
+      //         final allSchemas =
+      //             json.decode(schemaJsonRaw) as Map<String, dynamic>;
+      //
+      //         final deliverySchemaEntry =
+      //             allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
+      //
+      //         final deliverySchemaData = deliverySchemaEntry?['data'];
+      //
+      //         if (deliverySchemaData != null) {
+      //           // Extract templates from both schemas
+      //           final delTemplatesRaw = deliverySchemaData?['templates'];
+      //
+      //           final Map<String, dynamic> delTemplateMap =
+      //               delTemplatesRaw is Map<String, dynamic>
+      //                   ? delTemplatesRaw
+      //                   : {};
+      //
+      //           final templates = {
+      //             for (final entry in {...delTemplateMap}.entries)
+      //               entry.key: TemplateConfig.fromJson(
+      //                   entry.value as Map<String, dynamic>)
+      //           };
+      //
+      //           final deliveryConfig = json.encode(deliverySchemaData);
+      //
+      //           RegistrationDeliverySingleton().setTemplateConfigs(templates);
+      //           RegistrationDeliverySingleton()
+      //               .setDeliveryConfig(deliveryConfig);
+      //         }
+      //       }
+      //       RegistrationDeliverySingleton()
+      //           .setHouseholdType(HouseholdType.family);
+      //
+      //       await context.router.push(const RegistrationDeliveryWrapperRoute());
+      //     },
+      //   ),
+      // ),
 
       i18.home.clfLabel: homeShowcaseData.clf.buildWith(
         child: HomeItemCard(

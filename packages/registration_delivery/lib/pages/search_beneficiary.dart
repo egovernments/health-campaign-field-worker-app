@@ -63,6 +63,7 @@ class _SearchBeneficiaryPageState
   List<String> selectedFilters = [];
   bool _isProgressDialogVisible = false;
   final ProgressDialog _progressDialog = ProgressDialog();
+  bool _shouldUpdateFromScanner = false;
 
   late final RegistrationWrapperBloc blocWrapper; // Declare BlocWrapper
 
@@ -1074,12 +1075,18 @@ class _SearchBeneficiaryPageState
                         builder: (context, blocState) {
                       final items = blocState.householdMembers;
                       return BlocListener<DigitScannerBloc, DigitScannerState>(
+                        listenWhen: (previous, current) {
+                          // Only listen when SearchBeneficiaryPage is the active route
+                          return ModalRoute.of(context)?.isCurrent ?? false;
+                        },
                         listener: (context, scannerState) {
-                          if (scannerState.qrCodes.isNotEmpty &&
+                          if (_shouldUpdateFromScanner &&
+                              scannerState.qrCodes.isNotEmpty &&
                               selectedTag != scannerState.qrCodes.lastOrNull) {
                             setState(() {
                               selectedTag =
                                   scannerState.qrCodes.lastOrNull ?? "";
+                              _shouldUpdateFromScanner = false;
                             });
                             triggerGlobalSearchEvent();
                           }
@@ -1201,6 +1208,9 @@ class _SearchBeneficiaryPageState
                                           blocWrapper.add(
                                               const RegistrationWrapperEvent
                                                   .clear());
+                                          context.read<DigitScannerBloc>().add(
+                                              const DigitScannerEvent
+                                                  .handleScanner());
                                           blocWrapper.add(RegistrationWrapperEvent
                                               .fetchDeliveryDetails(
                                                   projectId:
@@ -1388,6 +1398,7 @@ class _SearchBeneficiaryPageState
                   },
                 ));
                 searchController.clear();
+                selectedTag = "";
                 FocusManager.instance.primaryFocus?.unfocus();
               }
             } else {
@@ -1417,7 +1428,11 @@ class _SearchBeneficiaryPageState
           onPressed: () {
             blocWrapper.add(const RegistrationWrapperEvent.clear());
             selectedFilters = [];
+            selectedTag = "";
             searchController.clear();
+            setState(() {
+              _shouldUpdateFromScanner = true;
+            });
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => const DigitScannerPage(
