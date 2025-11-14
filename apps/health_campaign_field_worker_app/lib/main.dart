@@ -2752,8 +2752,8 @@ final dynamic sampleComplaintFlows = {
     {
       "screenType": "TEMPLATE",
       "name": "complaintInbox",
-      "heading": " Complaint Inbox",
-      "description": "",
+      "heading": "COMPLAINT_INBOX_HEADING",
+      "description": "COMPLAINT_INBOX_DESCRIPTION",
       "initActions": [
         {
           "actionType": "SEARCH_EVENT",
@@ -2773,16 +2773,19 @@ final dynamic sampleComplaintFlows = {
       "header": [
         {
           "format": "backLink",
-          "label": "Back",
+          "type": "template",
+          "label": "COMPLAINT_INBOX_BACK",
           "onAction": [
             {"actionType": "BACK_NAVIGATION", "properties": {}}
           ]
-        },
+        }
       ],
       "footer": [
         {
           "format": "button",
-          "label": "File Complaints",
+          "type": "template",
+          "fieldName": "fileComplaint",
+          "label": "COMPLAINT_INBOX_PRIMARY_ACTION",
           "properties": {
             "type": "primary",
             "size": "large",
@@ -3045,39 +3048,73 @@ final dynamic sampleComplaintFlows = {
         },
         {
           "format": "listView",
-          "hidden": "{{ context.ComplaintWrapper.empty }}",
+          "type": "template",
           "fieldName": "listView",
+          "hidden": false,
           "data": "ComplaintWrapper",
           "properties": {
             "spacing": "spacer4",
           },
+          "visibilityCondition": "{{ context.ComplaintWrapper.empty }}",
           "child": {
             "format": "card",
+            "type": "template",
+            "fieldName": "complaintCard",
             "children": [
               {
                 "format": "labelPairList",
+                "type": "template",
+                "fieldName": "labelPairComplaint",
                 "data": [
                   {
-                    "key": "Complaint Number",
+                    "key": "COMPLAINT_INBOX_COMPLAINT_NUMBER",
                     "value": "{{item.PgrServiceModel.serviceRequestId}}",
                     "defaultValue": "Sync data to generate complaint number"
                   },
                   {
-                    "key": "Complaint type",
+                    "key": "COMPLAINT_INBOX_COMPLAINT_TYPE",
                     "value": "{{item.PgrServiceModel.serviceCode}}"
                   },
                   {
-                    "key": "Complaint date",
+                    "key": "COMPLAINT_INBOX_COMPLAINT_DATE",
                     "value":
                         "{{fn:formatDate(item.PgrServiceModel.auditDetails.createdTime, dateTime, dd MMM yyyy)}}"
                   },
                   {
-                    "key": "Area",
+                    "key": "COMPLAINT_INBOX_COMPLAINT_AREA",
                     "value": "{{item.PgrServiceModel.address.locality.code}}"
                   },
                   {
-                    "key": "Status",
+                    "key": "COMPLAINT_INBOX_COMPLAINT_STATUS",
                     "value": "{{item.PgrServiceModel.applicationStatus}}"
+                  }
+                ]
+              },
+              {
+                "format": "button",
+                "type": "template",
+                "fieldName": "viewDetails",
+                "label": "COMPLAINT_DETAILS_VIEW_ACTION_LABEL",
+                "properties": {
+                  "type": "secondary",
+                  "size": "large",
+                  "mainAxisSize": "max",
+                  "mainAxisAlignment": "center"
+                },
+                "onAction": [
+                  {
+                    "actionType": "NAVIGATION",
+                    "properties": {
+                      "type": "TEMPLATE",
+                      "name": "complaintView",
+                      "data": [
+                        {
+                          "key": "clientReferenceId",
+                          "value":
+                              "{{ item.PgrServiceModel.clientReferenceId }}"
+                        }
+                      ]
+                    }
                   }
                 ]
               }
@@ -3097,12 +3134,14 @@ final dynamic sampleComplaintFlows = {
         {
           "page": "complaintType",
           "type": "object",
-          "label": "APPONE_COMPLAINTTYPE_SCREEN_HEADING",
+          "label": "COMPLAINT_TYPE_HEADING",
           "order": 1,
+          "actionLabel": "COMPLAINT_TYPE_DESCRIPTION",
+          "description": "APPONE_COMPLAINTTYPE_DESCRIPTION",
           "properties": [
             {
               "type": "string",
-              "label": "APPONE_COMPLAINTTYPE_complaintType_label",
+              "label": "COMPLAINT_TYPE_complaintType_LABEL",
               "order": 1,
               "value": "",
               "format": "radio",
@@ -3123,7 +3162,7 @@ final dynamic sampleComplaintFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "APPONE_COMPLAINTTYPE_complaintType_required_error"
+                  "message": "COMPLAINT_TYPE_complaintType_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3131,13 +3170,13 @@ final dynamic sampleComplaintFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_COMPLAINTTYPE_otherReason_label",
+              "label": "COMPLAINT_TYPE_otherReason_LABEL",
               "order": 2,
               "value": "",
               "format": "text",
               "hidden": false,
-              "tooltip": "APPONE_COMPLAINTTYPE_otherReason_tooltip_label",
-              "helpText": "APPONE_COMPLAINTTYPE_otherReason_helpText_label",
+              "tooltip": "",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "otherReason",
@@ -3149,8 +3188,7 @@ final dynamic sampleComplaintFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                      "APPONE_COMPLAINTTYPE_complaintOther_required_error"
+                  "message": "COMPLAINT_TYPE_otherReason_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3159,26 +3197,25 @@ final dynamic sampleComplaintFlows = {
                 "expression": "complaintType.complaintType==Other"
               }
             }
-          ],
-          "actionLabel": "APPONE_COMPLAINTTYPE_ACTION_BUTTON_LABEL",
-          "description": "APPONE_COMPLAINTTYPE_DESCRIPTION"
+          ]
         },
         {
           "page": "locationDetails",
           "type": "object",
-          "label": "APPONE_LOCATIONDETAILS_SCREEN_HEADING",
+          "label": "LOCATION_DETAILS_HEADING",
           "order": 3,
+          "actionLabel": "LOCATION_DETAILS_ACTION_LABEL",
+          "description": "LOCATION_DETAILS_DESCRIPTION",
           "properties": [
             {
               "type": "string",
-              "label": "APPONE_LOCATIONDETAILS_SCREEN_addressLine1_label",
+              "label": "LOCATION_DETAILS_addressLine1_LABEL",
               "order": 1,
               "value": "",
               "format": "text",
               "hidden": false,
               "tooltip": "",
-              "helpText":
-                  "APPONE_LOCATIONDETAILS_SCREEN_addressLine1_helpText_label",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "addressLine1",
@@ -3191,14 +3228,13 @@ final dynamic sampleComplaintFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_LOCATIONDETAILS_SCREEN_addressLine2_label",
+              "label": "LOCATION_DETAILS_addressLine2_LABEL",
               "order": 2,
               "value": "",
               "format": "text",
               "hidden": false,
               "tooltip": "",
-              "helpText":
-                  "APPONE_LOCATIONDETAILS_SCREEN_addressLine2_helpText_label",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "addressLine2",
@@ -3211,14 +3247,13 @@ final dynamic sampleComplaintFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_LOCATIONDETAILS_SCREEN_landmark_label",
+              "label": "LOCATION_DETAILS_landmark_LABEL",
               "order": 3,
               "value": "",
               "format": "text",
               "hidden": false,
               "tooltip": "",
-              "helpText":
-                  "APPONE_LOCATIONDETAILS_SCREEN_landmark_helpText_label",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "landmark",
@@ -3231,14 +3266,13 @@ final dynamic sampleComplaintFlows = {
             },
             {
               "type": "integer",
-              "label": "APPONE_LOCATIONDETAILS_SCREEN_postalCode_label",
+              "label": "LOCATION_DETAILS_pincode_LABEL",
               "order": 4,
               "value": "",
               "format": "text",
               "hidden": false,
               "tooltip": "",
-              "helpText":
-                  "APPONE_LOCATIONDETAILS_SCREEN_postalCode_helpText_label",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "pincode",
@@ -3256,7 +3290,7 @@ final dynamic sampleComplaintFlows = {
                 {"code": "CORRESPONDENCE", "name": "CORRESPONDENCE"},
                 {"code": "OTHER", "name": "OTHER"}
               ],
-              "label": "APPONE_LOCATIONDETAILS_SCREEN_typeOfAddress_label",
+              "label": "LOCATION_DETAILS_typeOfAddress_LABEL",
               "order": 5,
               "format": "dropdown",
               "hidden": true,
@@ -3274,14 +3308,12 @@ final dynamic sampleComplaintFlows = {
               "isMultiSelect": false,
               "includeInSummary": false
             }
-          ],
-          "actionLabel": "APPONE_LOCATIONDETAILS_SCREEN_ACTION_BUTTON_LABEL",
-          "description": "APPONE_LOCATIONDETAILS_SCREEN_SCREEN_DESCRIPTION"
+          ]
         },
         {
           "page": "complaintDetails",
           "type": "object",
-          "label": "APPONE_COMPLAINTDETAILS_SCREEN_HEADING",
+          "label": "COMPLAINT_DETAILS_HEADING",
           "order": 4,
           "navigateTo": {
             "name": "ComplaintsAcknowledgement",
@@ -3290,15 +3322,13 @@ final dynamic sampleComplaintFlows = {
           "properties": [
             {
               "type": "string",
-              "label":
-                  "APPONE_COMPLAINTDETAILS_SCREEN_administrativeArea_label",
+              "label": "COMPLAINT_DETAILS_administrativeArea_LABEL",
               "order": 1,
               "value": "",
               "format": "locality",
               "hidden": false,
               "tooltip": "",
-              "helpText":
-                  "APPONE_COMPLAINTDETAILS_SCREEN_administrativeArea_helpText_label",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "administrativeArea",
@@ -3310,7 +3340,7 @@ final dynamic sampleComplaintFlows = {
                   "type": "required",
                   "value": true,
                   "message":
-                      "APPONE_COMPLAINTDETAILS_administrativeArea_required_error"
+                      "COMPLAINT_DETAILS_administrativeArea_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3328,8 +3358,7 @@ final dynamic sampleComplaintFlows = {
                   "name": "COMPLAINTFLOW_RAISED_FOR_ANOTHER_USER"
                 }
               ],
-              "label":
-                  "APPONE_COMPLAINTDETAILS_SCREEN_complaintRaisedFor_label",
+              "label": "COMPLAINT_DETAILS_complaintRaisedFor_LABEL",
               "order": 2,
               "value": "",
               "format": "radio",
@@ -3347,7 +3376,7 @@ final dynamic sampleComplaintFlows = {
                   "type": "required",
                   "value": true,
                   "message":
-                      "APPONE_COMPLAINTDETAILS_complaintRaisedFor_required_error"
+                      "COMPLAINT_DETAILS_complaintRaisedFor_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3355,13 +3384,13 @@ final dynamic sampleComplaintFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_COMPLAINTDETAILS_SCREEN_name_label",
+              "label": "COMPLAINT_DETAILS_name_LABEL",
               "order": 3,
               "value": "",
               "format": "text",
               "hidden": false,
               "tooltip": "",
-              "helpText": "APPONE_COMPLAINTDETAILS_SCREEN_name_helpText_label",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "name",
@@ -3372,7 +3401,7 @@ final dynamic sampleComplaintFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "APPONE_COMPLAINTDETAILS_name_required_error"
+                  "message": "COMPLAINT_DETAILS_name_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3387,14 +3416,13 @@ final dynamic sampleComplaintFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_COMPLAINTDETAILS_SCREEN_contactNumber_label",
+              "label": "COMPLAINT_DETAILS_contactNumber_LABEL",
               "order": 4,
               "value": "",
               "format": "mobileNumber",
               "hidden": false,
               "tooltip": "",
-              "helpText":
-                  "APPONE_COMPLAINTDETAILS_SCREEN_contactNumber_helpText_label",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "contactNumber",
@@ -3406,8 +3434,7 @@ final dynamic sampleComplaintFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                      "APPONE_COMPLAINTDETAILS_contactNumber_required_error"
+                  "message": "COMPLAINT_DETAILS_contactNumber_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3422,14 +3449,13 @@ final dynamic sampleComplaintFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_COMPLAINTDETAILS_SCREEN_supervisorName_label",
+              "label": "COMPLAINT_DETAILS_supervisorName_LABEL",
               "order": 5,
               "value": "",
               "format": "text",
               "hidden": false,
               "tooltip": "",
-              "helpText":
-                  "APPONE_COMPLAINTDETAILS_SCREEN_supervisorName_helpText_label",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "supervisorName",
@@ -3441,15 +3467,13 @@ final dynamic sampleComplaintFlows = {
             },
             {
               "type": "string",
-              "label":
-                  "APPONE_COMPLAINTDETAILS_SCREEN_supervisorContactNumber_label",
+              "label": "COMPLAINT_DETAILS_supervisorContactNumber_LABEL",
               "order": 6,
               "value": "",
               "format": "mobileNumber",
               "hidden": false,
               "tooltip": "",
-              "helpText":
-                  "APPONE_COMPLAINTDETAILS_SCREEN_supervisorContactNumber_helpText_label",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "supervisorContactNumber",
@@ -3462,15 +3486,13 @@ final dynamic sampleComplaintFlows = {
             },
             {
               "type": "string",
-              "label":
-                  "APPONE_COMPLAINTDETAILS_SCREEN_complaintDescription_label",
+              "label": "COMPLAINT_DETAILS_complaintDescription_LABEL",
               "order": 7,
               "value": "",
               "format": "textArea",
               "hidden": false,
               "tooltip": "",
-              "helpText":
-                  "APPONE_COMPLAINTDETAILS_SCREEN_complaintDescription_helpText_label",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "complaintDescription",
@@ -3482,15 +3504,15 @@ final dynamic sampleComplaintFlows = {
                   "type": "required",
                   "value": true,
                   "message":
-                      "APPONE_COMPLAINTDETAILS_complaintDescription_required_error"
+                      "COMPLAINT_DETAILS_complaintDescription_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false
             }
           ],
-          "actionLabel": "APPONE_COMPLAINTDETAILS_ACTION_BUTTON_LABEL",
-          "description": "APPONE_COMPLAINTDETAILS_SCREEN_DESCRIPTION"
+          "actionLabel": "COMPLAINT_DETAILS_ACTION_LABEL",
+          "description": "COMPLAINT_DETAILS_DESCRIPTION"
         }
       ],
       "wrapperConfig": {
@@ -3565,23 +3587,27 @@ final dynamic sampleComplaintFlows = {
               "properties": {"type": "TEMPLATE", "name": "complaintInbox"}
             }
           ]
-        },
+        }
       ],
       "body": [
         {
           "format": "panelCard",
-          "label": "Complaint creation Successful",
-          "description": "Sync the record to generate complaintID",
+          "type": "template",
+          "fieldName": "complaintSuccess",
+          "label": "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_LABEL",
+          "description":
+              "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_DESCRIPTION",
           "properties": {"type": "success"},
           "secondaryAction": {
-            "label": "Back To Complaints",
+            "type": "template",
+            "format": "button",
+            "fieldName": "backToComplaints",
+            "label":
+                "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_ACTION_LABEL",
             "onAction": [
               {
                 "actionType": "NAVIGATION",
-                "properties": {
-                  "type": "TEMPLATE",
-                  "name": "complaintInbox",
-                }
+                "properties": {"type": "TEMPLATE", "name": "complaintInbox"}
               }
             ]
           }
@@ -3591,7 +3617,7 @@ final dynamic sampleComplaintFlows = {
     {
       "screenType": "TEMPLATE",
       "name": "complaintView",
-      "heading": " Complaint Details",
+      "heading": "COMPLAINT_VIEW_HEADING",
       "description": "",
       "header": [
         {
@@ -3600,12 +3626,14 @@ final dynamic sampleComplaintFlows = {
           "onAction": [
             {"actionType": "BACK_NAVIGATION", "properties": {}}
           ]
-        },
+        }
       ],
       "footer": [
         {
           "format": "button",
-          "label": "Close",
+          "type": "template",
+          "fieldName": "close",
+          "label": "COMPLAINT_VIEW_ACTION_LABEL",
           "properties": {
             "type": "primary",
             "size": "large",
@@ -3615,9 +3643,25 @@ final dynamic sampleComplaintFlows = {
           "onAction": [
             {
               "actionType": "NAVIGATION",
-              "properties": {"type": "Template", "name": "complaintInbox"}
+              "properties": {"type": "TEMPLATE", "name": "complaintInbox"}
             }
           ]
+        }
+      ],
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "type": "SEARCH_EVENT",
+            "name": "pgrService",
+            "data": [
+              {
+                "key": "clientReferenceId",
+                "value": "{{navigation.clientReferenceId}}",
+                "operation": "equals"
+              }
+            ]
+          }
         }
       ],
       "wrapperConfig": {
@@ -3633,38 +3677,56 @@ final dynamic sampleComplaintFlows = {
       "body": [
         {
           "format": "card",
+          "type": "template",
+          "fieldName": "listOfComplaints",
           "children": [
             {
               "format": "labelPairList",
+              "type": "template",
+              "fieldName": "complaintsLabelPair",
               "data": [
                 {
-                  "key": "Complaint Number",
-                  "value": "{{item.additionalFields.fields.sku}}"
-                },
-                {"key": "Complaint type", "value": "{{item.receiverId}}"},
-                {
-                  "key": "Complaint date",
-                  "value": "{{item.additionalFields.fields.mrnNumber}}"
-                },
-                {"key": "Area", "value": "{{item.wayBillNumber}}"},
-                {
-                  "key": "Complainant's contact number",
-                  "value": "{{item.additionalFields.fields.batchNumber}}"
+                  "key": "COMPLAINT_VIEW_COMPLAINTS_NUMBER",
+                  "value": "{{0.PgrServiceModel.serviceRequestId}}",
+                  "defaultValue": "Sync data to generate complaint number"
                 },
                 {
-                  "key": "Status",
-                  "value": "{{item.additionalFields.fields.batchNumber}}"
+                  "key": "COMPLAINT_VIEW_COMPLAINTS_TYPE",
+                  "value": "{{0.PgrServiceModel.serviceCode}}",
+                  "defaultValue": "NA"
                 },
                 {
-                  "key": "Complaint description",
-                  "value": "{{item.additionalFields.fields.batchNumber}}"
+                  "key": "COMPLAINT_VIEW_COMPLAINTS_DATE",
+                  "value":
+                      "{{fn:formatDate(0.PgrServiceModel.auditDetails.createdTime, dateTime, dd MMM yyyy)}}",
+                  "defaultValue": "NA"
+                },
+                {
+                  "key": "COMPLAINT_VIEW_COMPLAINTS_AREA",
+                  "value": "{{0.PgrServiceModel.address.locality.code}}",
+                  "defaultValue": "NA"
+                },
+                {
+                  "key": "COMPLAINT_VIEW_COMPLAINANT_CONTACT",
+                  "value": "{{0.PgrServiceModel.user.mobileNumber}}",
+                  "defaultValue": "NA"
+                },
+                {
+                  "key": "COMPLAINT_VIEW_COMPLAINT_STATUS",
+                  "value": "{{0.PgrServiceModel.applicationStatus}}",
+                  "defaultValue": "NA"
+                },
+                {
+                  "key": "COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
+                  "value": "{{0.PgrServiceModel.description}}",
+                  "defaultValue": "NA"
                 }
               ]
             }
           ]
         }
       ]
-    },
+    }
   ]
 };
 
@@ -4763,258 +4825,3 @@ final dynamic sampleInventoryFlows = {
     }
   ]
 };
-
-// final dynamic inventoryReportFlows = [
-//   {
-//     "screenType": "TEMPLATE",
-//     "name": "viewReports",
-//     "heading": "View Reports",
-//     "description": "",
-//     "header": [
-//       {
-//         "format": "backLink",
-//         "label": "Back",
-//         "onAction": [
-//           {"actionType": "BACK_NAVIGATION", "properties": {}}
-//         ]
-//       },
-//     ],
-//     "footer": [],
-//     "initActions": [
-//       {
-//         "actionType": "SEARCH_EVENT",
-//         "properties": {
-//           "type": "SEARCH_EVENT",
-//           "name": "projectFacility",
-//           "data": [
-//             {
-//               "key": "projectId",
-//               "value": "{{singleton.selectedProject.id}}",
-//               "operation": "equals"
-//             }
-//           ]
-//         }
-//       }
-//     ],
-//     "wrapperConfig": {
-//       "wrapperName": "InventoryWrapper",
-//       "groupByType": true,
-//       "rootEntity": "ProjectFacilityModel",
-//       "filters": [],
-//       "relations": [
-//         {
-//           "name": "facility",
-//           "entity": "FacilityModel",
-//           "match": {"field": "id", "equalsFrom": "facilityId"}
-//         },
-//         {
-//           "name": "productVariant",
-//           "entity": "ProductVariantModel",
-//           "match": {"field": "id", "equalsFrom": "resource"}
-//         }
-//       ],
-//       "searchConfig": {
-//         "primary": "projectFacility",
-//         "select": ["projectFacility", "productVariant"]
-//       }
-//     },
-//     "body": [
-//       {
-//         "format": "menu_card",
-//         "heading": "Stock Received",
-//         "description": "View stock received reports",
-//         "icon": 'assessment',
-//         "onAction": [
-//           {
-//             "actionType": "NAVIGATION",
-//             "properties": {
-//               "type": "TEMPLATE",
-//               "name": "reportDetails",
-//               "data": [
-//                 {"key": "reportType", "value": "receipt"}
-//               ]
-//             }
-//           }
-//         ]
-//       },
-//       {
-//         "format": "menu_card",
-//         "heading": "Stock Issued",
-//         "description": "View stock issued reports",
-//         "icon": 'assessment',
-//         "onAction": [
-//           {
-//             "actionType": "NAVIGATION",
-//             "properties": {
-//               "type": "TEMPLATE",
-//               "name": "reportDetails",
-//               "data": [
-//                 {"key": "reportType", "value": "dispatch"}
-//               ]
-//             }
-//           }
-//         ]
-//       },
-//       {
-//         "format": "menu_card",
-//         "heading": "Stock Returned",
-//         "description": "View stock returned reports",
-//         "icon": 'assessment',
-//         "onAction": [
-//           {
-//             "actionType": "NAVIGATION",
-//             "properties": {
-//               "type": "TEMPLATE",
-//               "name": "reportDetails",
-//               "data": [
-//                 {"key": "reportType", "value": "returned"}
-//               ]
-//             }
-//           }
-//         ]
-//       },
-//       {
-//         "format": "menu_card",
-//         "heading": "Stock Damaged",
-//         "description": "View stock damaged reports",
-//         "icon": 'assessment',
-//         "onAction": [
-//           {
-//             "actionType": "NAVIGATION",
-//             "properties": {
-//               "type": "TEMPLATE",
-//               "name": "reportDetails",
-//               "data": [
-//                 {"key": "reportType", "value": "damage"}
-//               ]
-//             }
-//           }
-//         ]
-//       },
-//       {
-//         "format": "menu_card",
-//         "heading": "Stock Loss",
-//         "description": "View stock loss reports",
-//         "icon": 'assessment',
-//         "onAction": [
-//           {
-//             "actionType": "NAVIGATION",
-//             "properties": {
-//               "type": "TEMPLATE",
-//               "name": "reportDetails",
-//               "data": [
-//                 {"key": "reportType", "value": "loss"}
-//               ]
-//             }
-//           }
-//         ]
-//       },
-//       {
-//         "format": "menu_card",
-//         "heading": "Stock Reconciliation",
-//         "description": "View stock reconciliation reports",
-//         "icon": 'assessment',
-//         "onAction": [
-//           {
-//             "actionType": "NAVIGATION",
-//             "properties": {
-//               "type": "TEMPLATE",
-//               "name": "reportDetails",
-//               "data": [
-//                 {"key": "reportType", "value": "reconciliation"}
-//               ]
-//             }
-//           }
-//         ]
-//       }
-//     ]
-//   },
-//   {
-//     "screenType": "TEMPLATE",
-//     "name": "reportDetails",
-//     "heading": "{{navigation.reportType}} Report",
-//     "description": "",
-//     "header": [
-//       {
-//         "format": "backLink",
-//         "label": "Back",
-//         "onAction": [
-//           {"actionType": "BACK_NAVIGATION", "properties": {}}
-//         ]
-//       },
-//     ],
-//     "footer": [],
-//     "initActions": [],
-//     "wrapperConfig": {
-//       "wrapperName": "ViewStockWrapper",
-//       "groupByType": true,
-//       "rootEntity": "StockModel",
-//       "filters": [],
-//       "relations": [
-//         {
-//           "name": "stock",
-//           "entity": "StockModel",
-//           "match": {
-//             "field": "clientAuditDetails.createdBy",
-//             "equalsFrom": "{{singleton.loggedInUserUuid}}"
-//           }
-//         },
-//       ],
-//       "searchConfig": {
-//         "primary": "stock",
-//         "select": ["stock"],
-//         "orderBy": {"field": "clientCreatedTime", "order": "DESC"}
-//       }
-//     },
-//     "body": [
-//       {
-//         "format": "card",
-//         "children": [
-//           {
-//             "format": "dropdown",
-//             "label": "Select Warehouse",
-//             "required": true,
-//             "key": "selectedFacility",
-//             "options": "{{facility}}",
-//             "displayKey": "name",
-//             "valueKey": "id"
-//           },
-//           {
-//             "format": "dropdown",
-//             "label": "Select Product",
-//             "required": true,
-//             "key": "selectedProduct",
-//             "options": "{{productVariant}}",
-//             "displayKey": "sku",
-//             "valueKey": "id"
-//           }
-//         ]
-//       },
-//       {
-//         "format": "data_grid",
-//         "heading": "Report Data",
-//         "searchConfig": {
-//           "entity": "StockModel",
-//           "filters": [
-//             {"field": "facilityId", "equals": "{{selectedFacility}}"},
-//             {"field": "productVariantId", "equals": "{{selectedProduct}}"}
-//           ]
-//         },
-//         "columns": [
-//           {"key": "date", "label": "Date", "format": "date", "width": 100},
-//           {"key": "wayBillNumber", "label": "Waybill Number", "width": 150},
-//           {
-//             "key": "quantity",
-//             "label": "{{fn:getQuantityLabel(navigation.reportType)}}",
-//             "width": 150
-//           },
-//           {
-//             "key": "transactingParty",
-//             "label": "{{fn:getTransactingPartyLabel(navigation.reportType)}}",
-//             "width": 200
-//           }
-//         ]
-//       }
-//     ]
-//   }
-// ];
