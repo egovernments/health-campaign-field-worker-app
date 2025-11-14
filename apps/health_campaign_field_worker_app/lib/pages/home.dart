@@ -12,7 +12,6 @@ import 'package:digit_crud_bloc/digit_crud_bloc.dart';
 import 'package:digit_crud_bloc/repositories/local/search_entity_repository.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
-import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
@@ -504,33 +503,33 @@ class _HomePageState extends LocalizedState<HomePage> {
               final prefs = await SharedPreferences.getInstance();
               final schemaJsonRaw = prefs.getString('app_config_schemas');
 
-              // if (schemaJsonRaw != null) {
-              //   final allSchemas =
-              //   json.decode(schemaJsonRaw) as Map<String, dynamic>;
-              //   final manageStock = allSchemas['COMPLAINT'];
-              //
-              //   final manageStockData = manageStock?['data'];
-              //   final flowsData = (manageStockData['flows'] as List<dynamic>?)
-              //       ?.map((e) => Map<String, dynamic>.from(e as Map))
-              //       .toList() ??
-              //       [];
-              //   FlowRegistry.setConfig(flowsData);
-              //   NavigationRegistry.setupNavigation(context);
-              //
-              //   context.router.push(
-              //     FlowBuilderHomeRoute(
-              //         pageName: manageStockData["initialPage"]),
-              //   );
-              // } else {
-              FlowRegistry.setConfig(
-                  sampleComplaintFlows["flows"] as List<Map<String, dynamic>>);
-              NavigationRegistry.setupNavigation(context);
+              if (schemaJsonRaw != null) {
+                final allSchemas =
+                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                final manageStock = allSchemas['COMPLAINT'];
 
-              context.router.push(
-                FlowBuilderHomeRoute(
-                    pageName: sampleComplaintFlows["initialPage"]),
-              );
-              // }
+                final manageStockData = manageStock?['data'];
+                final flowsData = (manageStockData['flows'] as List<dynamic>?)
+                        ?.map((e) => Map<String, dynamic>.from(e as Map))
+                        .toList() ??
+                    [];
+                FlowRegistry.setConfig(flowsData);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: manageStockData["initialPage"]),
+                );
+              } else {
+                FlowRegistry.setConfig(sampleComplaintFlows["flows"]
+                    as List<Map<String, dynamic>>);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: sampleComplaintFlows["initialPage"]),
+                );
+              }
             } catch (e) {
               debugPrint('error $e');
             }
@@ -561,7 +560,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             if (isTriggerLocalisation) {
               final moduleName =
-                  'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
+                  'hcm-registration-${context.selectedProject.referenceID}';
               triggerLocalization(module: moduleName);
               isTriggerLocalisation = false;
             }
@@ -569,50 +568,6 @@ class _HomePageState extends LocalizedState<HomePage> {
             final prefs = await SharedPreferences.getInstance();
             final schemaJsonRaw = prefs.getString('app_config_schemas');
 
-            if (schemaJsonRaw != null) {
-              final allSchemas =
-                  json.decode(schemaJsonRaw) as Map<String, dynamic>;
-
-              final registrationSchemaEntry =
-                  allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
-              final deliverySchemaEntry =
-                  allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
-
-              final registrationSchemaData = registrationSchemaEntry?['data'];
-              final deliverySchemaData = deliverySchemaEntry?['data'];
-
-              if (registrationSchemaData != null ||
-                  deliverySchemaData != null) {
-                // Extract templates from both schemas
-                final regTemplatesRaw = registrationSchemaData?['templates'];
-                final delTemplatesRaw = deliverySchemaData?['templates'];
-
-                final Map<String, dynamic> regTemplateMap =
-                    regTemplatesRaw is Map<String, dynamic>
-                        ? regTemplatesRaw
-                        : {};
-
-                final Map<String, dynamic> delTemplateMap =
-                    delTemplatesRaw is Map<String, dynamic>
-                        ? delTemplatesRaw
-                        : {};
-                final templates = {
-                  for (final entry
-                      in {...regTemplateMap, ...delTemplateMap}.entries)
-                    entry.key: TemplateConfig.fromJson(
-                        entry.value as Map<String, dynamic>)
-                };
-
-                final registrationConfig = json.encode(registrationSchemaData);
-                final deliveryConfig = json.encode(deliverySchemaData);
-
-                RegistrationDeliverySingleton().setTemplateConfigs(templates);
-                RegistrationDeliverySingleton()
-                    .setRegistrationConfig(registrationConfig);
-                RegistrationDeliverySingleton()
-                    .setDeliveryConfig(deliveryConfig);
-              }
-            }
             RegistrationDeliverySingleton()
                 .setHouseholdType(HouseholdType.family);
 
@@ -723,17 +678,34 @@ class _HomePageState extends LocalizedState<HomePage> {
               dynamicEntityModelListener: EntityModelMapMapper(),
             );
             try {
-              FlowRegistry.setConfig(
-                  sampleFlows["flows"] as List<Map<String, dynamic>>);
-              NavigationRegistry.setupNavigation(context);
-              context.router.push(
-                FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
-              );
+              if (schemaJsonRaw != null) {
+                final allSchemas =
+                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                final manageStock = allSchemas['REGISTRATION'];
+
+                final manageStockData = manageStock?['data'];
+                final flowsData = (manageStockData['flows'] as List<dynamic>?)
+                        ?.map((e) => Map<String, dynamic>.from(e as Map))
+                        .toList() ??
+                    [];
+                FlowRegistry.setConfig(flowsData);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: manageStockData["initialPage"]),
+                );
+              } else {
+                FlowRegistry.setConfig(
+                    sampleFlows["flows"] as List<Map<String, dynamic>>);
+                NavigationRegistry.setupNavigation(context);
+                context.router.push(
+                  FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
+                );
+              }
             } catch (e) {
               debugPrint('error $e');
             }
-
-            // await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
       ),
