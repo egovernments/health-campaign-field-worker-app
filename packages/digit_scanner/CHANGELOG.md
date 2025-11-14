@@ -1,3 +1,6 @@
+## 0.0.1-console
+* Added dynamic validations
+
 ## 1.0.6+2
 
 * Updated component of input with DigitInput
