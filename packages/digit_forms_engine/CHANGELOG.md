@@ -1,3 +1,8 @@
+## 0.0.11-dev
+
+- Updated scanner to support multiple scanning
+- added validation for scanning
+
 ## 0.0.10-dev
 
 - Fixed issue related to multiple submit button

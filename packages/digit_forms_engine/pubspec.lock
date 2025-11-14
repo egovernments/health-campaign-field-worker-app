@@ -372,17 +372,19 @@ packages:
   digit_formula_parser:
     dependency: "direct main"
     description:
-      path: "../digit_formula_parser"
-      relative: true
-    source: path
+      name: digit_formula_parser
+      sha256: d8b49e8855ebb1fc81ea9a7ff85b1779c0238c5648ca8ac6d927b1ba1742f072
+      url: "https://pub.dev"
+    source: hosted
     version: "1.1.0"
   digit_scanner:
     dependency: "direct main"
     description:
-      path: "../digit_scanner"
-      relative: true
-    source: path
-    version: "1.0.6+2"
+      name: digit_scanner
+      sha256: b393d647b8336a297cd261a4406dce41e4c45831920a5b11a1156c4a3d69882c
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1-console"
   digit_ui_components:
     dependency: "direct main"
     description:
@@ -684,7 +686,7 @@ packages:
     source: hosted
     version: "2.3.2"
   gs1_barcode_parser:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: gs1_barcode_parser
       sha256: ff171bc40038de3f7178fbc32eaf9eebc3d35a3c4c00bb0281fe4a976d853a42
@@ -1489,5 +1491,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.0 <4.0.0"
+  dart: ">=3.4.1 <3.9.0"
   flutter: ">=3.22.0"

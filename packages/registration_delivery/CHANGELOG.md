@@ -1,3 +1,9 @@
+## 1.1.1-dev.7-console
+
+* Upgraded to latest scanner package
+* Upgraded to latest digit_forms_engine
+* Fixed issue related to tag search
+
 ## 1.1.1-dev.6-console
 
 * Fixed form state not getting updated issue
