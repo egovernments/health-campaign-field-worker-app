@@ -1,6 +1,7 @@
 library json_schema_builder;
 
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_forms_engine/blocs/app_localization.dart';
 import 'package:digit_forms_engine/helper/form_builder_helper.dart';
 import 'package:digit_forms_engine/helper/validator_helper.dart';
@@ -21,6 +22,7 @@ import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 

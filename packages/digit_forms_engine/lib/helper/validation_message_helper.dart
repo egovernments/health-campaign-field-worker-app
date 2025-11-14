@@ -40,6 +40,12 @@ Map<String, String Function(Object)> buildValidationMessages(
       case 'pattern':
         messages['pattern'] = (_) => translated;
         break;
+      case 'scanLimit':
+        messages['scanLimit'] = (_) => translated;
+        break;
+      case 'isGS1':
+        messages['isGS1'] = (_) => translated;
+        break;
       default:
         break;
     }
