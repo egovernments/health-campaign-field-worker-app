@@ -1,3 +1,7 @@
+## 1.1.1-dev.8-console
+
+* Upgraded to latest digit_forms_engine package
+
 ## 1.1.1-dev.7-console
 
 * Upgraded to latest scanner package
