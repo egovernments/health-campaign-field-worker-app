@@ -1,6 +1,8 @@
 ## 1.1.1-dev.8-console
 
 * Upgraded to latest digit_forms_engine package
+    *
+    Commit - https://github.com/egovernments/health-campaign-field-worker-app/commit/c57fffd822b0e9e2cc71ce53284d281381cf2484
 
 ## 1.1.1-dev.7-console
 
