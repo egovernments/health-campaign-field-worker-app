@@ -1,17 +1,22 @@
 import 'package:digit_forms_engine/helper/form_builder_helper.dart';
+import 'package:digit_forms_engine/utils/utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../models/property_schema/property_schema.dart';
 
-List<Validator<T>> buildValidators<T>(PropertySchema schema) {
+List<Validator<T>> buildValidators<T>(
+  PropertySchema schema, {
+  Map<String, dynamic>? validationContext,
+}) {
   final List<Validator<T>> validators = [];
 
   if (schema.validations != null) {
     for (final rule in schema.validations!) {
       switch (rule.type) {
         case 'minLength':
-          final parsedValue = parseIntValue(rule.value);
+          final parsedValue =
+              _resolveValidationValue(rule.value, validationContext);
 
           if (schema.type != PropertySchemaType.integer) {
             if (parsedValue != null) {
@@ -26,7 +31,8 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
           break;
 
         case 'maxLength':
-          final parsedValue = parseIntValue(rule.value);
+          final parsedValue =
+              _resolveValidationValue(rule.value, validationContext);
           if (parsedValue != null &&
               schema.type != PropertySchemaType.integer) {
             validators.add(Validators.composeOR([
@@ -39,7 +45,8 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
 
         case 'min':
         case 'minValue':
-          final parsedValue = parseIntValue(rule.value);
+          final parsedValue =
+              _resolveValidationValue(rule.value, validationContext);
           if (parsedValue != null) {
             validators.add(Validators.composeOR([
               Validators.min(parsedValue) as Validator<T>,
@@ -50,7 +57,8 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
 
         case 'max':
         case 'maxValue':
-          final parsedValue = parseIntValue(rule.value);
+          final parsedValue =
+              _resolveValidationValue(rule.value, validationContext);
           if (parsedValue != null) {
             validators.add(Validators.composeOR([
               Validators.max(parsedValue) as Validator<T>,
@@ -91,6 +99,27 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
   }
 
   return validators;
+}
+
+/// Resolve template variables in validation values
+/// Supports {{fieldName}} syntax to reference other field values
+int? _resolveValidationValue(dynamic value, Map<String, dynamic>? context) {
+  if (value == null) return null;
+
+  // If it's already a number, return it
+  if (value is int) return value;
+
+  // If it's a string with template variables
+  if (value is String && value.contains('{{') && context != null) {
+    final resolved = resolveTemplateVariables(
+      value,
+      formValues: context,
+    );
+    return parseIntValue(resolved);
+  }
+
+  // Fallback to parsing
+  return parseIntValue(value);
 }
 
 /// Checks if the validations contain a rule of type 'required'.

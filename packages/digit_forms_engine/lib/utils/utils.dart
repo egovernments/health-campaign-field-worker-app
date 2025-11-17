@@ -307,6 +307,9 @@ String resolveTemplateVariables(
 }
 
 /// Helper method to get nested value from a map using dot notation
+/// Supports both Map and List access:
+/// - Map: {{object.field}}
+/// - List: {{list.first}}, {{list.last}}, {{list.0}}
 dynamic _getNestedValue(Map<String, dynamic> map, List<String> keys) {
   // First try direct key lookup (for keys stored with dots like "beneficiaryDetails.nameOfIndividual")
   final fullKey = keys.join('.');
@@ -320,6 +323,23 @@ dynamic _getNestedValue(Map<String, dynamic> map, List<String> keys) {
   for (final key in keys) {
     if (current is Map<String, dynamic>) {
       current = current[key];
+    } else if (current is List) {
+      // Handle list access
+      if (key == 'first') {
+        current = current.isNotEmpty ? current.first : null;
+      } else if (key == 'last') {
+        current = current.isNotEmpty ? current.last : null;
+      } else if (key == 'length') {
+        current = current.length;
+      } else {
+        // Try parsing as index (e.g., "0", "1", "2")
+        final index = int.tryParse(key);
+        if (index != null && index >= 0 && index < current.length) {
+          current = current[index];
+        } else {
+          return null;
+        }
+      }
     } else {
       return null;
     }

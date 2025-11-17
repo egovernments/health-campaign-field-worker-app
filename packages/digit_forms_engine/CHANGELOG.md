@@ -1,3 +1,7 @@
+## 0.0.12-dev
+
+- Added dynamic validator resolver context
+
 ## 0.0.11-dev
 
 - Updated scanner to support multiple scanning

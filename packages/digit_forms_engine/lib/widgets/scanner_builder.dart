@@ -46,15 +46,19 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
   @override
   Widget build(BuildContext context) {
     final loc = FormLocalization.of(context);
-    final validationMessages = buildValidationMessages(validations, loc);
+
+    // Resolve template variables in validations before using them
+    final resolvedValidations = _resolveValidations(validations, form);
+
+    final validationMessages = buildValidationMessages(resolvedValidations, loc);
     T? _val<T>(String type) =>
-        validations?.firstWhereOrNull((v) => v.type == type)?.value as T?;
+        resolvedValidations?.firstWhereOrNull((v) => v.type == type)?.value as T?;
 
     // ----- Read config from validations -----
     // isGS1: supports bool / "true"/"false" / num(0/1)
     final bool isGS1 = () {
       final dynamic raw =
-          validations?.firstWhereOrNull((v) => v.type == 'isGS1')?.value;
+          resolvedValidations?.firstWhereOrNull((v) => v.type == 'isGS1')?.value;
       if (raw is bool) return raw;
       if (raw is num) return raw != 0;
       if (raw is String) return raw.toLowerCase() == 'true';
@@ -64,7 +68,7 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
     // scanLimit: supports int / num / String
     final int scanLimit = () {
       final dynamic raw =
-          validations?.firstWhereOrNull((v) => v.type == 'scanLimit')?.value;
+          resolvedValidations?.firstWhereOrNull((v) => v.type == 'scanLimit')?.value;
       if (raw is int) return raw;
       if (raw is num) return raw.toInt();
       final parsed = int.tryParse(raw?.toString() ?? '');
@@ -74,7 +78,7 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
     // (Optional) pattern as plain string (no r'' needed)
     final String? patternString = () {
       final dynamic raw =
-          validations?.firstWhereOrNull((v) => v.type == 'pattern')?.value;
+          resolvedValidations?.firstWhereOrNull((v) => v.type == 'pattern')?.value;
       final s = raw?.toString().trim();
       return (s == null || s.isEmpty) ? null : s;
     }();
@@ -147,7 +151,7 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                         _ScanTarget.instance.set(formControlName);
                         context.router
                             .push(DigitScannerRoute(
-                          validations: validations,
+                          validations: _resolveValidations(validations, form),
                         ))
                             .whenComplete(() {
                           _ScanTarget.instance.clear();
@@ -168,7 +172,7 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                   _ScanTarget.instance.set(formControlName);
 
                   context.router.push(DigitScannerRoute(
-                    validations: validations,
+                    validations: _resolveValidations(validations, form),
                   ));
                 },
                 type: DigitButtonType.secondary,
@@ -178,4 +182,57 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
       }),
     );
   }
+}
+
+/// Helper function to resolve template variables in validations
+/// Converts {{resourceCard.first.quantityDistributed}} to actual values
+List<ValidationRule>? _resolveValidations(
+  List<ValidationRule>? validations,
+  FormGroup form,
+) {
+  if (validations == null || validations.isEmpty) return validations;
+
+  // Build context from current form values
+  final context = _buildFormContext(form);
+
+  return validations.map((rule) {
+    final value = rule.value;
+
+    // Only resolve if value is a string with template variables
+    if (value is String && value.contains('{{')) {
+      final resolvedValue = resolveTemplateVariables(
+        value,
+        formValues: context,
+      );
+
+      // Return new ValidationRule with resolved value
+      return ValidationRule(
+        type: rule.type,
+        value: resolvedValue,
+        message: rule.message,
+      );
+    }
+
+    // Return original rule if no resolution needed
+    return rule;
+  }).toList();
+}
+
+/// Build context map from FormGroup values
+Map<String, dynamic> _buildFormContext(FormGroup form) {
+  final context = <String, dynamic>{};
+
+  form.controls.forEach((key, control) {
+    if (control is FormGroup) {
+      // Nested form group - flatten with dot notation
+      final nestedContext = _buildFormContext(control);
+      nestedContext.forEach((nestedKey, nestedValue) {
+        context['$key.$nestedKey'] = nestedValue;
+      });
+    } else {
+      context[key] = control.value;
+    }
+  });
+
+  return context;
 }

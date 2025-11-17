@@ -1,5 +1,6 @@
 library json_forms;
 
+import 'package:digit_forms_engine/helper/validation_context_manager.dart';
 import 'package:digit_forms_engine/utils/utils.dart';
 import 'package:digit_forms_engine/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +45,35 @@ class JsonForms extends StatelessWidget {
     };
 
     return controls;
+  }
+
+  /// Set up cross-field validation for a FormGroup
+  /// This should be called after the FormGroup is created
+  /// to enable template variable support in validation rules
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final formGroup = fb.group(JsonForms.getFormControls(schema));
+  /// JsonForms.setupValidationContext(formGroup, schema);
+  /// ```
+  static ValidationContextManager setupValidationContext(
+    FormGroup formGroup,
+    PropertySchema schema,
+  ) {
+    assert(schema.properties != null);
+
+    // Extract only the schemas for fields that are in the form
+    final fieldSchemas = <String, PropertySchema>{};
+    for (final entry in schema.properties!.entries) {
+      if (!isHidden(entry.value) || entry.value.includeInForm == true) {
+        fieldSchemas[entry.key] = entry.value;
+      }
+    }
+
+    return ValidationContextManager(
+      formGroup: formGroup,
+      schemas: fieldSchemas,
+    );
   }
 
   static Map<String, dynamic> getFormValues(

@@ -75,12 +75,19 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           return Provider<Map<String, dynamic>>.value(
             value: widget.defaultValues ?? {},
             child: ReactiveFormBuilder(
-              form: () => fb.group(
-                JsonForms.getFormControls(
-                  schema,
-                  defaultValues: widget.defaultValues ?? {},
-                ),
-              ),
+              form: () {
+                final formGroup = fb.group(
+                  JsonForms.getFormControls(
+                    schema,
+                    defaultValues: widget.defaultValues ?? {},
+                  ),
+                );
+
+                // Set up cross-field validation context
+                JsonForms.setupValidationContext(formGroup, schema);
+
+                return formGroup;
+              },
               builder: (context, formGroup, child) => ScrollableContent(
                 enableFixedDigitButton: true,
                 header: const Column(
