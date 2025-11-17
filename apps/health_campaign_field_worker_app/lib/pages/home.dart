@@ -389,9 +389,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                   allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
 
               final deliverySchemaData = deliverySchemaEntry?['data'];
-              deliverySchemaData['pages']['DeliveryDetails']['properties']
-                      ['scanner']['validations'][0]['value'] =
-                  "{{resourceCard.first.quantityDistributed}}";
 
               if (registrationSchemaData != null ||
                   deliverySchemaData != null) {
