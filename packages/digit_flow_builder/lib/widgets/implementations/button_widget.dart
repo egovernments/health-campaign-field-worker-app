@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../utils/utils.dart';
+import '../../utils/widget_parsers.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 import '../localization_context.dart';
@@ -31,7 +32,8 @@ class ButtonWidget implements FlowWidget {
     // Localize first, then resolve template
     final labelText = json['label'] ?? '';
     final localizedLabel = localization?.translate(labelText) ?? labelText;
-    final resolvedLabel = resolveTemplate(localizedLabel, stateData) ?? localizedLabel;
+    final resolvedLabel =
+        resolveTemplate(localizedLabel, stateData) ?? localizedLabel;
 
     return DigitButton(
       label: resolvedLabel,
@@ -73,75 +75,16 @@ class ButtonWidget implements FlowWidget {
           }
         }
       },
-      type: _parseButtonType(props['type']),
-      size: _parseButtonSize(props['size']),
-      mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
-      mainAxisAlignment: _parseMainAxisAlignment(props['mainAxisAlignment']),
-      suffixIcon:
-          json['suffixIcon'] != null ? _parseIcon(json['suffixIcon']) : null,
+      type: WidgetParsers.parseButtonType(props['type']),
+      size: WidgetParsers.parseButtonSize(props['size']),
+      mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
+      mainAxisAlignment: WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),
+      suffixIcon: json['suffixIcon'] != null
+          ? DigitIconMapping.getIcon(json['suffixIcon'])
+          : null,
+      prefixIcon: json['prefixIcon'] != null
+          ? DigitIconMapping.getIcon(json['prefixIcon'])
+          : null,
     );
-  }
-
-  DigitButtonType _parseButtonType(String? type) {
-    switch (type) {
-      case 'primary':
-        return DigitButtonType.primary;
-      case 'secondary':
-        return DigitButtonType.secondary;
-      case 'tertiary':
-        return DigitButtonType.tertiary;
-      default:
-        return DigitButtonType.primary;
-    }
-  }
-
-  DigitButtonSize _parseButtonSize(String? size) {
-    switch (size) {
-      case 'small':
-        return DigitButtonSize.small;
-      case 'medium':
-        return DigitButtonSize.medium;
-      case 'large':
-        return DigitButtonSize.large;
-      default:
-        return DigitButtonSize.large;
-    }
-  }
-
-  MainAxisSize _parseMainAxisSize(String? size) {
-    switch (size) {
-      case 'max':
-        return MainAxisSize.max;
-      case 'min':
-        return MainAxisSize.min;
-      default:
-        return MainAxisSize.min;
-    }
-  }
-
-  MainAxisAlignment _parseMainAxisAlignment(String? alignment) {
-    switch (alignment) {
-      case 'start':
-        return MainAxisAlignment.start;
-      case 'center':
-        return MainAxisAlignment.center;
-      case 'end':
-        return MainAxisAlignment.end;
-      case 'spaceBetween':
-        return MainAxisAlignment.spaceBetween;
-      default:
-        return MainAxisAlignment.start;
-    }
-  }
-
-  IconData? _parseIcon(String? iconName) {
-    switch (iconName) {
-      case 'filter':
-        return Icons.filter_alt_sharp;
-      case 'edit':
-        return Icons.edit;
-      default:
-        return null;
-    }
   }
 }

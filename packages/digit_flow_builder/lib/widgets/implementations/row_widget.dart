@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../action_handler/action_config.dart';
 import '../../layout_renderer.dart';
 import '../../utils/interpolation.dart';
+import '../../utils/widget_parsers.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 
@@ -21,8 +22,8 @@ class RowWidget implements FlowWidget {
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
 
     return Row(
-      mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
-      mainAxisAlignment: _parseMainAxisAlignment(props['mainAxisAlignment']),
+      mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
+      mainAxisAlignment: WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),
       children: (json['children'] as List).map<Widget>((childJson) {
         final processedChild = stateData != null
             ? preprocessConfigWithState(
@@ -43,31 +44,5 @@ class RowWidget implements FlowWidget {
         );
       }).toList(),
     );
-  }
-
-  MainAxisSize _parseMainAxisSize(String? size) {
-    switch (size) {
-      case 'max':
-        return MainAxisSize.max;
-      case 'min':
-        return MainAxisSize.min;
-      default:
-        return MainAxisSize.min;
-    }
-  }
-
-  MainAxisAlignment _parseMainAxisAlignment(String? alignment) {
-    switch (alignment) {
-      case 'start':
-        return MainAxisAlignment.start;
-      case 'center':
-        return MainAxisAlignment.center;
-      case 'end':
-        return MainAxisAlignment.end;
-      case 'spaceBetween':
-        return MainAxisAlignment.spaceBetween;
-      default:
-        return MainAxisAlignment.start;
-    }
   }
 }

@@ -1,7 +1,7 @@
+import 'package:digit_ui_components/constants/constant.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
-import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 
 class IconWidget implements FlowWidget {
@@ -14,10 +14,8 @@ class IconWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final crudCtx = CrudItemContext.of(context);
+    final iconData = json['value'];
 
-    final valueText = json['value'];
-
-    return Icon(valueText as IconData);
+    return Icon(DigitIconMapping.getIcon(iconData));
   }
 }

@@ -7,6 +7,7 @@ import '../../layout_renderer.dart';
 import '../../utils/conditional_evaluator.dart';
 import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
+import '../../utils/widget_parsers.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 
@@ -41,7 +42,7 @@ class CardWidget implements FlowWidget {
 
     return DigitCard(
       width: MediaQuery.of(context).size.width,
-      cardType: _parseCardType(json['type']?.toString() ?? 'primary'),
+      cardType: WidgetParsers.parseCardType(json['type']?.toString() ?? 'primary'),
       onPressed: () {
         if (json['onAction'] != null) {
           final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
@@ -100,16 +101,5 @@ class CardWidget implements FlowWidget {
         );
       }).toList(),
     );
-  }
-
-  CardType _parseCardType(String? raw) {
-    switch ((raw ?? '').toLowerCase()) {
-      case 'primary':
-        return CardType.primary;
-      case 'secondary':
-        return CardType.secondary;
-      default:
-        return CardType.primary;
-    }
   }
 }

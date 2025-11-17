@@ -28,33 +28,35 @@ class ActionPopupWidget implements FlowWidget {
         screenKey != null ? extractCrudStateData(screenKey) : null;
 
     return DigitButton(
-      mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
-      mainAxisAlignment: _parseMainAxisAlignment(props['mainAxisAlignment']),
-      label: json['label'] ?? '',
-      onPressed: () async {
-        // Trigger configured actions if any
-        if (json['onAction'] != null && json['onAction'] is List) {
-          final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
+        mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
+        mainAxisAlignment: _parseMainAxisAlignment(props['mainAxisAlignment']),
+        label: json['label'] ?? '',
+        onPressed: () async {
+          // Trigger configured actions if any
+          if (json['onAction'] != null && json['onAction'] is List) {
+            final actionsList =
+                List<Map<String, dynamic>>.from(json['onAction']);
 
-          for (var raw in actionsList) {
-            final action = ActionConfig.fromJson(raw);
-            onAction(action);
+            for (var raw in actionsList) {
+              final action = ActionConfig.fromJson(raw);
+              onAction(action);
+            }
           }
-        }
 
-        // Show popup if popupConfig is provided
-        if (popupConfig != null) {
-          await _showActionPopup(
-              context, popupConfig, onAction, screenKey, stateData);
-        }
-      },
-      type: _parseButtonType(props['type']),
-      size: _parseButtonSize(props['size']),
-      suffixIcon:
-          json['suffixIcon'] != null ? _parseIcon(json['suffixIcon']) : null,
-      prefixIcon:
-          json['prefixIcon'] != null ? _parseIcon(json['prefixIcon']) : null,
-    );
+          // Show popup if popupConfig is provided
+          if (popupConfig != null) {
+            await _showActionPopup(
+                context, popupConfig, onAction, screenKey, stateData);
+          }
+        },
+        type: _parseButtonType(props['type']),
+        size: _parseButtonSize(props['size']),
+        suffixIcon: json['suffixIcon'] != null
+            ? DigitIconMapping.getIcon(json['suffixIcon'])
+            : null,
+        prefixIcon: json['prefixIcon'] != null
+            ? DigitIconMapping.getIcon(json['prefixIcon'])
+            : null);
   }
 
   /// Show the action popup based on configuration
@@ -82,7 +84,7 @@ class ActionPopupWidget implements FlowWidget {
         description: description,
         titleIcon: titleIconName != null
             ? Icon(
-                _parseIcon(titleIconName),
+                DigitIconMapping.getIcon(titleIconName),
                 color: DigitTheme.instance.colorScheme.primary,
               )
             : null,
@@ -182,31 +184,6 @@ class ActionPopupWidget implements FlowWidget {
         return MainAxisAlignment.spaceBetween;
       default:
         return MainAxisAlignment.start;
-    }
-  }
-
-  IconData? _parseIcon(String? iconName) {
-    switch (iconName) {
-      case 'filter':
-        return Icons.filter_alt_sharp;
-      case 'edit':
-        return Icons.edit;
-      case 'warning':
-        return Icons.warning;
-      case 'info':
-        return Icons.info;
-      case 'delete':
-        return Icons.delete;
-      case 'add':
-        return Icons.add;
-      case 'close':
-        return Icons.close;
-      case 'search':
-        return Icons.search;
-      case 'sort':
-        return Icons.sort;
-      default:
-        return null;
     }
   }
 }

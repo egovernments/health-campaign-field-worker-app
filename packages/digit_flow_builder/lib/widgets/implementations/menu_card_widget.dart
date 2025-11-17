@@ -1,8 +1,8 @@
+import 'package:digit_ui_components/constants/icon_mapping.dart';
 import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
-import '../../utils/icon_accessor.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
@@ -62,7 +62,7 @@ class MenuCardWidget implements FlowWidget {
       },
       heading: _localizeText(context, json['heading']) ?? "",
       description: _localizeText(context, json['description']),
-      icon: IconMapper.getIconOrDefault(json['icon']),
+      icon: DigitIconMapping.getIcon(json['icon']),
     );
   }
 
