@@ -4,12 +4,10 @@ import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
-import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'app.dart';
@@ -59,14 +57,6 @@ void main() async {
     client: _dio,
     sql: _sql,
   ));
-  try {
-    final isNotTrust = await JailbreakRootDetection.instance.isNotTrust;
-    final isRealDevice = await JailbreakRootDetection.instance.isRealDevice;
-  } catch (error) {
-    if (kDebugMode) {
-      print(error);
-    }
-  }
 }
 
 class AppLifecycleObserver extends WidgetsBindingObserver {
@@ -4292,7 +4282,7 @@ final dynamic sampleInventoryFlows = {
               "type": "string",
               "label": "APPONE_INVENTORY_WAYBILL_LABEL",
               "order": 1,
-              "value": "",
+              "value": null,
               "format": "text",
               "hidden": false,
               "tooltip": "",
@@ -4310,6 +4300,13 @@ final dynamic sampleInventoryFlows = {
                   "message": "Waybill number is required"
                 }
               ],
+              "autoFillCondition": [
+                {
+                  "expression":
+                      "stockProductDetails.scanResource_\$tabIndex != null",
+                  "value": "{{scanResource_\$tabIndex[0]}}"
+                }
+              ],
               "errorMessage": "",
               "isMultiSelect": false,
               "enums": null
@@ -4318,7 +4315,7 @@ final dynamic sampleInventoryFlows = {
               "type": "string",
               "label": "APPONE_INVENTORY_BATCH_NUMBER_LABEL",
               "order": 2,
-              "value": "",
+              "value": null,
               "format": "text",
               "hidden": false,
               "tooltip": "",
@@ -4336,6 +4333,13 @@ final dynamic sampleInventoryFlows = {
                   "message": "Batch number is required"
                 }
               ],
+              "autoFillCondition": [
+                {
+                  "expression":
+                      "stockProductDetails.scanResource_\$tabIndex != null",
+                  "value": "{{scanResource_\$tabIndex[2]}}"
+                }
+              ],
               "errorMessage": "",
               "isMultiSelect": false,
               "enums": null
@@ -4344,7 +4348,7 @@ final dynamic sampleInventoryFlows = {
               "type": "string",
               "label": "APPONE_INVENTORY_EXPIRY_DATE_LABEL",
               "order": 3,
-              "value": "",
+              "value": null,
               "format": "date",
               "hidden": false,
               "tooltip": "",
@@ -4360,6 +4364,13 @@ final dynamic sampleInventoryFlows = {
                   "type": "required",
                   "value": true,
                   "message": "Expiry date is required"
+                }
+              ],
+              "autoFillCondition": [
+                {
+                  "expression":
+                      "stockProductDetails.scanResource_\$tabIndex != null",
+                  "value": "{{scanResource_\$tabIndex[3]}}"
                 }
               ],
               "errorMessage": "",
@@ -4435,7 +4446,7 @@ final dynamic sampleInventoryFlows = {
             {
               "type": "string",
               "label": "APPONE_INVENTORY_COMMENT_LABEL",
-              "order": 7,
+              "order": 6,
               "value": "",
               "format": "textArea",
               "hidden": false,
@@ -4465,7 +4476,7 @@ final dynamic sampleInventoryFlows = {
             {
               "type": "string",
               "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_scanResource",
-              "order": 8,
+              "order": 7,
               "value": "",
               "format": "scanner",
               "validations": [
@@ -4482,6 +4493,7 @@ final dynamic sampleInventoryFlows = {
               "systemDate": false,
               "errorMessage": "",
               "isMultiSelect": false,
+              "includeInSummary": false,
               "enums": [],
             },
           ],
@@ -5147,7 +5159,8 @@ final dynamic inventoryReportFlows = {
                         "operation": "in"
                       },
                       {
-                        "key": "{{fn:getSenderOrReceiver(navigation.reportType)}}",
+                        "key":
+                            "{{fn:getSenderOrReceiver(navigation.reportType)}}",
                         "value": "{{selectedFacility}}",
                         "operation": "equals"
                       },

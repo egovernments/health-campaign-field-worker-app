@@ -3,6 +3,7 @@ part of 'json_schema_builder.dart';
 class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
   final DateTime? start;
   final DateTime? end;
+  final bool summaryData;
 
   const JsonSchemaScannerBuilder({
     required super.formControlName,
@@ -14,6 +15,7 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
     this.start,
     this.end,
     super.validations,
+    this.summaryData = false,
   });
 
   @override
@@ -30,12 +32,21 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
           form.control(formControlName).value = state.qrCodes.first;
         }
         if (state.barCodes.isNotEmpty) {
-          form.control(formControlName).value = DigitScannerUtils()
-              .getGs1CodeFormattedStringAtIndex(state.barCodes, 0)
-              .toString();
+          final gs1Data = DigitScannerUtils()
+              .getGs1CodeFormattedStringAtIndex(state.barCodes, 0);
+
+          // Convert GS1 map to comma-separated string in order: GTIN, SERIAL, BATCH, EXPIRY
+          final gtin = gs1Data['01']?.toString() ?? '';
+          final serial = gs1Data['21']?.toString() ?? '';
+          final batch = gs1Data['10']?.toString() ?? '';
+          final expiry = gs1Data['11'] is DateTime
+              ? DateFormat('dd MMM yyyy').format(gs1Data['11'])
+              : gs1Data['11']?.toString() ?? '';
+
+          form.control(formControlName).value = '$gtin,$serial,$batch,$expiry';
         }
       }, builder: (context, state) {
-        return state.qrCodes.isNotEmpty
+        return state.qrCodes.isNotEmpty && summaryData
             ? Container(
                 padding: EdgeInsets.zero,
                 width: MediaQuery.of(context).size.width,
@@ -92,7 +103,7 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                   ],
                 ),
               )
-            : state.barCodes.isNotEmpty
+            : state.barCodes.isNotEmpty && summaryData
                 ? Container(
                     padding: EdgeInsets.zero,
                     width: MediaQuery.of(context).size.width,
