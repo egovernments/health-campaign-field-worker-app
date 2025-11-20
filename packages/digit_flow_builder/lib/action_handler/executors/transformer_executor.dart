@@ -181,6 +181,7 @@ class TransformerExecutor extends ActionExecutor {
             Map<String, dynamic>.from(pageEntry.value as Map<String, dynamic>);
 
         // Find fields with the current entity index suffix
+        final keysToRemove = <String>[];
         for (final fieldEntry
             in (pageEntry.value as Map<String, dynamic>).entries) {
           if (fieldEntry.key.endsWith(suffix)) {
@@ -192,7 +193,15 @@ class TransformerExecutor extends ActionExecutor {
 
             // Map the entity-specific value to the base field name
             pageData[baseFieldName] = fieldEntry.value;
+
+            // Mark the suffixed field for removal to prevent it from appearing in additionalFields
+            keysToRemove.add(fieldEntry.key);
           }
+        }
+
+        // Remove all suffixed fields
+        for (final key in keysToRemove) {
+          pageData.remove(key);
         }
 
         result[pageEntry.key] = pageData;

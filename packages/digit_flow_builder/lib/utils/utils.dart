@@ -7,7 +7,6 @@ import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:flutter/material.dart';
 
-import '../blocs/flow_crud_bloc.dart';
 import 'function_registry.dart';
 
 class FlowBuilderSingleton {
@@ -209,8 +208,9 @@ String resolveTemplate(String template, dynamic contextData,
         resolveValueRaw('{{$placeholder}}', contextData, screenKey: screenKey);
 
     // Replace the placeholder in the result string
-    result =
-        result.replaceAll(fullPlaceholder, resolvedValue?.toString() ?? '');
+    // For null values, use the string "null" so expressions like "x != null" work
+    final valueStr = resolvedValue == null ? 'null' : resolvedValue.toString();
+    result = result.replaceAll(fullPlaceholder, valueStr);
   }
 
   return result;
@@ -244,19 +244,6 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
         return _resolvePath(singletonToMap(), path);
       }
 
-      // Handle navigation access
-      if (path.startsWith('navigation.')) {
-        path = path.substring('navigation.'.length);
-        if (screenKey != null) {
-          final navigationParams =
-              FlowCrudStateRegistry().getNavigationParams(screenKey);
-          if (navigationParams != null) {
-            return _resolvePath(navigationParams, path);
-          }
-        }
-        return null;
-      }
-
       // Handle functions like {{ fn:max(tasks.0.dose, 2) }}
       if (path.startsWith('fn')) {
         final fnRegex = RegExp(r'fn:(\w+)\((.*?)\)');
@@ -270,22 +257,26 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
               : argsExpr.split(',').map((rawArg) {
                   final trimmed = rawArg.trim();
 
-                  // Nested placeholders
-                  if (trimmed.contains('.') ||
-                      trimmed.startsWith('context') ||
-                      trimmed.startsWith('item') ||
-                      trimmed.startsWith('singleton') ||
-                      trimmed.startsWith('navigation') ||
-                      trimmed.startsWith('widgetData')) {
-                    final placeholder = '{{ $trimmed }}';
-                    return resolveValueRaw(placeholder, contextData,
-                        widgetData: widgetData, screenKey: screenKey);
+                  // Check if it's a quoted literal (string)
+                  if (trimmed.startsWith("'") || trimmed.startsWith('"')) {
+                    // Raw literal string
+                    final unquoted =
+                        trimmed.replaceAll(RegExp(r"""^['"]|['"]$"""), '');
+                    return unquoted;
                   }
 
-                  // Raw literal
-                  final unquoted =
-                      trimmed.replaceAll(RegExp(r"""^['"]|['"]$"""), '');
-                  return unquoted;
+                  // Check if it's a number
+                  final numValue = num.tryParse(trimmed);
+                  if (numValue != null) {
+                    return numValue;
+                  }
+
+                  // Otherwise, treat as a variable/path to resolve
+                  // This includes: simple variables (selectedFacility),
+                  // dotted paths (item.field), and prefixed paths (navigation.x)
+                  final placeholder = '{{ $trimmed }}';
+                  return resolveValueRaw(placeholder, contextData,
+                      widgetData: widgetData, screenKey: screenKey);
                 }).toList();
 
           return FunctionRegistry.call(
@@ -389,6 +380,12 @@ dynamic _resolvePath(dynamic root, String path) {
     }
     // List access
     else if (current is List) {
+      // Handle .length property access
+      if (part == 'length') {
+        current = current.length;
+        continue;
+      }
+
       final idx = int.tryParse(part);
       if (idx != null) {
         if (idx < 0 || idx >= current.length) return null;

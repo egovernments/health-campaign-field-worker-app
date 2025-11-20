@@ -55,13 +55,15 @@ class NavigationExecutor extends ActionExecutor {
     final entities = contextData['entities'];
     final config = FlowRegistry.getByName(action.properties['name']);
     if (entities != null) {
-      final wrapper =
-          WrapperBuilder(entities, config?['wrapperConfig']).build();
-      final flowState = const FlowCrudState().copyWith(
-        stateWrapper: wrapper,
-      );
+      if (config?['wrapperConfig'] != null) {
+        final wrapper =
+            WrapperBuilder(entities, config?['wrapperConfig']).build();
+        final flowState = const FlowCrudState().copyWith(
+          stateWrapper: wrapper,
+        );
 
-      FlowCrudStateRegistry().update(config?["name"], flowState);
+        FlowCrudStateRegistry().update(config?["name"], flowState);
+      }
     }
 
     // Determine which form data to use

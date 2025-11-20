@@ -36,6 +36,9 @@ class DigitCrudService extends CrudService {
           .repository<ProductVariantModel, ProductVariantSearchModel>(context);
     } else if (entity is StockModel) {
       return context.repository<StockModel, StockSearchModel>(context);
+    } else if (entity is StockReconciliationModel) {
+      return context.repository<StockReconciliationModel,
+          StockReconciliationSearchModel>(context);
     } else {
       return context.repository<EntityModel, EntitySearchModel>(context);
     }

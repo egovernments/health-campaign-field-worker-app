@@ -75,9 +75,17 @@ class DropdownWidget implements FlowWidget {
           if (formData.containsKey(cacheKey)) {
             sourceData = formData[cacheKey];
           } else {
+            // Get navigation params from FlowCrudStateRegistry
+            final navigationParams = screenKey != null
+                ? FlowCrudStateRegistry().getNavigationParams(screenKey)
+                : null;
+            final contextData = {
+              'navigation': navigationParams ?? {},
+            };
+
             // Resolve from navigation params
             sourceData =
-                resolveValueRaw("{{ $cleanKey }}", null, screenKey: screenKey);
+                resolveValueRaw("{{ $cleanKey }}", contextData, screenKey: screenKey);
 
             // Cache the navigation data in formData to survive state updates
             // IMPORTANT: Defer this until after the build phase completes to avoid setState during build
@@ -172,6 +180,7 @@ class DropdownWidget implements FlowWidget {
       isRequired: isRequired,
       child: DigitDropdown(
         selectedOption: selectedItem,
+        sentenceCaseEnabled: true,
         items: items,
         emptyItemText: 'NO_OPTIONS_AVAILABLE',
         onSelect: (value) {

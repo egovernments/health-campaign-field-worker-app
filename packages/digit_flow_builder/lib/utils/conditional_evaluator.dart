@@ -14,10 +14,11 @@ class ConditionalEvaluator {
   /// Evaluates a value that might be conditional
   /// If it's a conditional config, evaluates it; otherwise returns as-is
   /// IMPORTANT: This method is PURE - it never modifies the input value
-  static dynamic evaluate(dynamic value, dynamic context) {
+  static dynamic evaluate(dynamic value, dynamic context, {String? screenKey}) {
     // Handle string expressions with templates/functions (e.g., "{{fn:hasRole('ADMIN')}} == true")
     if (value is String && value.contains('{{')) {
-      final resolved = resolveTemplate(value, context);
+      final resolved = resolveTemplate(value, context, screenKey: screenKey);
+
       // If the resolved string looks like a boolean expression, evaluate it
       if (resolved.contains('==') ||
           resolved.contains('!=') ||
@@ -27,6 +28,11 @@ class ConditionalEvaluator {
           resolved.contains('||')) {
         return evaluateExpression(resolved, context);
       }
+
+      // Handle simple boolean string values
+      if (resolved == 'true') return true;
+      if (resolved == 'false') return false;
+
       // If it's just a simple value after resolution, return it
       return resolved;
     }
@@ -49,13 +55,13 @@ class ConditionalEvaluator {
 
         if (whenExpr != null && evaluateExpression(whenExpr, context ?? {})) {
           // Recursively evaluate if the value itself is conditional
-          return evaluate(conditionValue, context);
+          return evaluate(conditionValue, context, screenKey: screenKey);
         }
       }
     }
 
     // Return default value (also evaluate if it's conditional)
-    return evaluate(defaultValue, context);
+    return evaluate(defaultValue, context, screenKey: screenKey);
   }
 
   /// Evaluates a boolean expression using FormulaParser
@@ -64,6 +70,9 @@ class ConditionalEvaluator {
       // First resolve any template variables in the expression
       final resolved = resolveTemplate(expression, context) ?? expression;
 
+      print('🔍 ConditionalEvaluator: Evaluating expression: "$expression"');
+      print('🔍 ConditionalEvaluator: Resolved to: "$resolved"');
+
       // Use FormulaParser to evaluate the resolved expression
       final parser = FormulaParser(
         resolved.toString(),
@@ -71,9 +80,14 @@ class ConditionalEvaluator {
       );
 
       final result = parser.parse;
-      return result["isSuccess"] == true && result["value"] == true;
+      print('🔍 ConditionalEvaluator: Parser result: $result');
+
+      final boolResult = result["isSuccess"] == true && result["value"] == true;
+      print('🔍 ConditionalEvaluator: Final boolean result: $boolResult');
+
+      return boolResult;
     } catch (e) {
-      print('Error evaluating expression "$expression": $e');
+      print('❌ Error evaluating expression "$expression": $e');
       return false;
     }
   }
@@ -136,18 +150,30 @@ class ConditionalEvaluator {
     final crudCtx = CrudItemContext.of(context);
     final modelMap = crudCtx?.stateData?.modelMap ?? {};
 
-    // Create evaluation context that includes modelMap for named entity access
+    // Create evaluation context that includes:
+    // 1. formData at top level for direct access (selectedFacility, selectedProduct, etc.)
+    // 2. modelMap for entity access (stock, productVariant, etc.)
+    // 3. item and contextData for compatibility
     final evalContext = {
       'item': crudCtx?.item,
       'contextData': crudCtx?.stateData?.rawState ?? {},
-      ...modelMap, // Include modelMap so {{stock}}, {{productVariant}} etc. can be resolved
+      ...modelMap,
+      // Include modelMap so {{stock}}, {{productVariant}} etc. can be resolved
     };
+
+    final screenKey = crudCtx?.screenKey;
+
+    print('🔍 buildWithVisibility: evalContext keys = ${evalContext.keys}');
+    print('🔍 buildWithVisibility: visible condition = ${json['visible']}');
 
     // Check visibility condition
     final visible = evaluate(
       json['visible'] ?? true,
       evalContext,
+      screenKey: screenKey,
     );
+
+    print('🔍 buildWithVisibility: visible result = $visible');
 
     if (visible == false) {
       return const SizedBox.shrink();

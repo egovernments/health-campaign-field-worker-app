@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
+import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_flow_builder/widgets/localization_context.dart';
 import 'package:digit_flow_builder/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -105,13 +106,8 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                         children: [
                           DigitTextBlock(
                             padding: EdgeInsets.zero,
-                            heading: (widget.config['heading'] != null &&
-                                    localizations
-                                        .translate(widget.config['heading'])
-                                        .isNotEmpty)
-                                ? localizations
-                                    .translate(widget.config['heading'])
-                                : null,
+                            heading: _resolveHeading(
+                                widget.config['heading'], screenKey),
                             headingStyle: Theme.of(context)
                                 .digitTextTheme(context)
                                 .headingXl
@@ -120,14 +116,8 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                                         .colorTheme
                                         .primary
                                         .primary2),
-                            description: (widget.config['description'] !=
-                                        null &&
-                                    localizations
-                                        .translate(widget.config['description'])
-                                        .isNotEmpty)
-                                ? localizations
-                                    .translate(widget.config['description'])
-                                : null,
+                            description: _resolveDescription(
+                                widget.config['description'], screenKey),
                           ),
                           const SizedBox(height: 16),
                           ...body
@@ -169,6 +159,47 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
         );
       },
     );
+  }
+
+  String? _resolveHeading(dynamic heading, String screenKey) {
+    if (heading == null) return null;
+
+    // Resolve templates like {{navigation.reportType}}
+    final headingStr = heading.toString();
+
+    // Get navigation params from FlowCrudStateRegistry
+    final navigationParams = FlowCrudStateRegistry().getNavigationParams(screenKey);
+    final contextData = {
+      'navigation': navigationParams ?? {},
+    };
+
+    final resolved = resolveTemplate(headingStr, contextData, screenKey: screenKey);
+
+    // Then translate
+    final translated = localizations.translate(resolved);
+
+    return translated.isNotEmpty ? translated : null;
+  }
+
+  String? _resolveDescription(dynamic description, String screenKey) {
+    if (description == null) return null;
+
+    // Resolve templates
+    final descriptionStr = description.toString();
+
+    // Get navigation params from FlowCrudStateRegistry
+    final navigationParams = FlowCrudStateRegistry().getNavigationParams(screenKey);
+    final contextData = {
+      'navigation': navigationParams ?? {},
+    };
+
+    final resolved =
+        resolveTemplate(descriptionStr, contextData, screenKey: screenKey);
+
+    // Then translate
+    final translated = localizations.translate(resolved);
+
+    return translated.isNotEmpty ? translated : null;
   }
 
   Future<void> _handleBackNavigation(BuildContext context) async {

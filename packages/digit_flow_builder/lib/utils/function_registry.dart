@@ -318,4 +318,158 @@ void initializeFunctionRegistry() {
     // Check if any role in the list has the matching code
     return userRoles.any((role) => role['code'] == roleCode);
   });
+
+  /// Registers a function to get the length of a list/array.
+  ///
+  /// - **Function Name**: `'length'`
+  /// - **Arguments**: A list where the first element is a list or array, or a string key to look up in stateData.
+  /// - **Returns**: The length of the list as an integer, or 0 if not a list.
+  ///
+  /// This function handles getting the length of arrays in templates since
+  /// the template resolver doesn't support property access like `.length`.
+  FunctionRegistry.register("length", (args, stateData) {
+    // If args has a valid List, use it
+    if (args != null && args.isNotEmpty && args.first != null) {
+      final value = args.first;
+
+      // If value is already a List, return its length
+      if (value is List) {
+        return value.length;
+      }
+
+      // If value is a string key, try to look it up in stateData.modelMap
+      if (value is String && value.isNotEmpty) {
+        // Try exact match first
+        if (stateData.modelMap.containsKey(value)) {
+          final modelList = stateData.modelMap[value];
+          if (modelList is List) {
+            return modelList?.length;
+          }
+        }
+
+        // Try case-insensitive match (e.g., "stock" -> "StockModel")
+        final lowerKey = value.toLowerCase();
+        for (final key in stateData.modelMap.keys) {
+          if (key.toLowerCase() == lowerKey ||
+              key.toLowerCase() == '${lowerKey}model' ||
+              key.toLowerCase().startsWith(lowerKey)) {
+            final modelList = stateData.modelMap[key];
+            if (modelList is List) {
+              return modelList?.length;
+            }
+          }
+        }
+      }
+    }
+
+    // Return 0 if nothing found (no data loaded yet)
+    return 0;
+  });
+
+  /// Registers a function to check if a value is null or empty.
+  ///
+  /// - **Function Name**: `'isEmpty'`
+  /// - **Arguments**: A list where the first element is the value to check.
+  /// - **Returns**: `true` if the value is null, empty string, or empty list, otherwise `false`.
+  ///
+  /// This function helps with null/empty checks since template resolution
+  /// converts null values to empty strings.
+  FunctionRegistry.register("isEmpty", (args, stateData) {
+    print('🔍 isEmpty called with args: $args');
+    print('🔍 isEmpty stateData.formData: ${stateData.rawState}');
+
+    // Handle null args
+    if (args == null || args.isEmpty) {
+      print('🔍 isEmpty result: true (args null/empty)');
+      return true;
+    }
+
+    final value = args.first;
+    print('🔍 isEmpty checking value: $value (type: ${value.runtimeType})');
+
+    // Check for null
+    if (value == null) {
+      print('🔍 isEmpty result: true (value is null)');
+      return true;
+    }
+
+    // Check for empty string (missing values resolve to "")
+    if (value is String && value.isEmpty) {
+      print('🔍 isEmpty result: true (value is empty string)');
+      return true;
+    }
+
+    // Check for empty list
+    if (value is List && value.isEmpty) {
+      print('🔍 isEmpty result: true (value is empty list)');
+      return true;
+    }
+
+    print('🔍 isEmpty result: false (value is not empty)');
+    return false;
+  });
+
+  /// Registers a function to check if a value is not null or empty.
+  ///
+  /// - **Function Name**: `'isNotEmpty'`
+  /// - **Arguments**: A list where the first element is the value to check.
+  /// - **Returns**: `true` if the value is not null and not empty, otherwise `false`.
+  FunctionRegistry.register("isNotEmpty", (args, stateData) {
+    print('🔍 isNotEmpty called with args: $args');
+
+    // Handle null args
+    if (args == null || args.isEmpty) {
+      print('🔍 isNotEmpty result: false (args null/empty)');
+      return false;
+    }
+
+    final value = args.first;
+    print('🔍 isNotEmpty checking value: $value (type: ${value.runtimeType})');
+
+    if (value == null) {
+      print('🔍 isNotEmpty result: false (value is null)');
+      return false;
+    }
+    if (value is String && value.isEmpty) {
+      print('🔍 isNotEmpty result: false (value is empty string)');
+      return false;
+    }
+    if (value is List && value.isEmpty) {
+      print('🔍 isNotEmpty result: false (value is empty list)');
+      return false;
+    }
+
+    print('🔍 isNotEmpty result: true (value is not empty)');
+    return true;
+  });
+
+  /// Registers a function to get a value from an additional fields list.
+  ///
+  /// - **Function Name**: `'getAdditionalFieldValue'`
+  /// - **Arguments**:
+  ///   - First argument: List of additional fields (List<Map> with 'key' and 'value' properties)
+  ///   - Second argument: The key name to search for
+  /// - **Returns**: The value of the matching field, or empty string if not found.
+  ///
+  /// This function searches through a list of additional fields (typically in format
+  /// [{"key": "fieldName", "value": "fieldValue"}]) and returns the value for the specified key.
+  FunctionRegistry.register("getAdditionalFieldValue", (args, stateData) {
+    // Handle null args
+    if (args == null || args.length < 2) return '';
+
+    final additionalFields = args[0];
+    final searchKey = args[1]?.toString() ?? '';
+
+    if (searchKey.isEmpty) return '';
+
+    // Handle List of Maps (additionalFields format)
+    if (additionalFields is List) {
+      for (final field in additionalFields) {
+        if (field is Map && field['key'] == searchKey) {
+          return field['value']?.toString() ?? '';
+        }
+      }
+    }
+    return '';
+  });
 }

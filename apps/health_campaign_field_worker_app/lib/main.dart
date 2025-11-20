@@ -4282,7 +4282,7 @@ final dynamic sampleInventoryFlows = {
               "type": "string",
               "label": "APPONE_INVENTORY_WAYBILL_LABEL",
               "order": 1,
-              "value": null,
+              "value": "",
               "format": "text",
               "hidden": false,
               "tooltip": "",
@@ -4300,13 +4300,6 @@ final dynamic sampleInventoryFlows = {
                   "message": "Waybill number is required"
                 }
               ],
-              "autoFillCondition": [
-                {
-                  "expression":
-                      "stockProductDetails.scanResource_\$tabIndex != null",
-                  "value": "{{scanResource_\$tabIndex[0]}}"
-                }
-              ],
               "errorMessage": "",
               "isMultiSelect": false,
               "enums": null
@@ -4315,7 +4308,7 @@ final dynamic sampleInventoryFlows = {
               "type": "string",
               "label": "APPONE_INVENTORY_BATCH_NUMBER_LABEL",
               "order": 2,
-              "value": null,
+              "value": "",
               "format": "text",
               "hidden": false,
               "tooltip": "",
@@ -4333,13 +4326,6 @@ final dynamic sampleInventoryFlows = {
                   "message": "Batch number is required"
                 }
               ],
-              "autoFillCondition": [
-                {
-                  "expression":
-                      "stockProductDetails.scanResource_\$tabIndex != null",
-                  "value": "{{scanResource_\$tabIndex[2]}}"
-                }
-              ],
               "errorMessage": "",
               "isMultiSelect": false,
               "enums": null
@@ -4348,7 +4334,7 @@ final dynamic sampleInventoryFlows = {
               "type": "string",
               "label": "APPONE_INVENTORY_EXPIRY_DATE_LABEL",
               "order": 3,
-              "value": null,
+              "value": "",
               "format": "date",
               "hidden": false,
               "tooltip": "",
@@ -4364,13 +4350,6 @@ final dynamic sampleInventoryFlows = {
                   "type": "required",
                   "value": true,
                   "message": "Expiry date is required"
-                }
-              ],
-              "autoFillCondition": [
-                {
-                  "expression":
-                      "stockProductDetails.scanResource_\$tabIndex != null",
-                  "value": "{{scanResource_\$tabIndex[3]}}"
                 }
               ],
               "errorMessage": "",
@@ -4424,7 +4403,7 @@ final dynamic sampleInventoryFlows = {
               "innerLabel": "",
               "visibilityCondition": {
                 "expression":
-                    "stockDetails.facilityFromWhich!=National Warehouse"
+                    "{{navigation.transactionType}} == 'RECEIVED' && stockDetails.facilityFromWhich != 'National Warehouse'"
               },
               "systemDate": false,
               "validations": [
@@ -4446,7 +4425,7 @@ final dynamic sampleInventoryFlows = {
             {
               "type": "string",
               "label": "APPONE_INVENTORY_COMMENT_LABEL",
-              "order": 6,
+              "order": 7,
               "value": "",
               "format": "textArea",
               "hidden": false,
@@ -4476,7 +4455,7 @@ final dynamic sampleInventoryFlows = {
             {
               "type": "string",
               "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_scanResource",
-              "order": 7,
+              "order": 8,
               "value": "",
               "format": "scanner",
               "validations": [
@@ -4493,7 +4472,6 @@ final dynamic sampleInventoryFlows = {
               "systemDate": false,
               "errorMessage": "",
               "isMultiSelect": false,
-              "includeInSummary": false,
               "enums": [],
             },
           ],
@@ -5078,7 +5056,7 @@ final dynamic inventoryReportFlows = {
     {
       "screenType": "TEMPLATE",
       "name": "reportDetails",
-      "heading": "{{fn:getReportTitle(navigation.reportType)}}",
+      "heading": "{{navigation.reportType}}",
       "description": "",
       "initActions": [],
       "wrapperConfig": {
@@ -5153,12 +5131,6 @@ final dynamic inventoryReportFlows = {
                         "operation": "in"
                       },
                       {
-                        "key": "transactionReason",
-                        "value":
-                            "{{fn:getTransactionReason(navigation.reportType)}}",
-                        "operation": "in"
-                      },
-                      {
                         "key":
                             "{{fn:getSenderOrReceiver(navigation.reportType)}}",
                         "value": "{{selectedFacility}}",
@@ -5201,12 +5173,6 @@ final dynamic inventoryReportFlows = {
                         "operation": "in"
                       },
                       {
-                        "key": "transactionReason",
-                        "value":
-                            "{{fn:getTransactionReason(navigation.reportType)}}",
-                        "operation": "in"
-                      },
-                      {
                         "key":
                             "{{fn:getSenderOrReceiver(navigation.reportType)}}",
                         "value": "{{selectedFacility}}",
@@ -5236,85 +5202,259 @@ final dynamic inventoryReportFlows = {
         },
         {
           "format": "table",
-          "visible":
-              "{{stock.length}} > 0 && {{navigation.reportType}} != 'reconciliation'",
           "data": {
-            "source": "stock",
+            "source": "StockModel",
             "columns": [
               {
                 "header": "Date",
                 "cellValue":
-                    "{{fn:formatDate(item.auditDetails.createdTime, 'date', 'dd MMM yyyy')}}"
+                    "{{fn:formatDate(item.dateOfEntry, 'date', 'dd MMM yyyy')}}"
               },
               {
                 "header": "MRN",
                 "cellValue":
-                    "{{fn:getAdditionalFieldValue(item.additionalFields, 'mrnNumber')}}"
+                    "{{fn:getAdditionalFieldValue(item.additionalFields.fields, 'mrnNumber')}}"
               },
               {
                 "header": "Waybill Number",
                 "cellValue": "{{item.wayBillNumber}}"
               },
-              {
-                "header": "{{selectedProduct-object.sku}}",
-                "cellValue": "{{item.quantity}}"
-              }
+              {"header": "Quantity", "cellValue": "{{item.quantity}}"}
             ],
-            "rows": "{{stock}}"
+            "rows": "{{contextData.0.StockModel}}"
+          }
+        }
+      ]
+    }
+  ]
+};
+
+final dynamic stockReconciliationFlows = {
+  "name": "STOCK_RECONCILIATION",
+  "initialPage": "stockReconciliationDetails",
+  "project": "CMP-2025-08-04-004846",
+  "version": 1,
+  "disabled": false,
+  "isSelected": true,
+  "flows": [
+    {
+      "screenType": "FORM",
+      "name": "stockReconciliationDetails",
+      "project": "CMP-2025-08-04-004846",
+      "version": 1,
+      "disabled": false,
+      "isSelected": true,
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "type": "SEARCH_EVENT",
+            "name": "projectFacility",
+            "data": [
+              {
+                "key": "projectId",
+                "value": "{{singleton.selectedProject.id}}",
+                "operation": "equals"
+              }
+            ]
+          }
+        }
+      ],
+      "wrapperConfig": {
+        "wrapperName": "InventoryWrapper",
+        "groupByType": true,
+        "rootEntity": "ProjectFacilityModel",
+        "filters": [],
+        "relations": [
+          {
+            "name": "facility",
+            "entity": "FacilityModel",
+            "match": {"field": "id", "equalsFrom": "facilityId"}
+          },
+          {
+            "name": "productVariant",
+            "entity": "ProductVariantModel",
+            "match": {"field": "id", "equalsFrom": "resource"}
+          }
+        ],
+        "searchConfig": {
+          "primary": "projectFacility",
+          "select": ["projectFacility", "facility", "productVariant", "stock"]
+        }
+      },
+      "pages": [
+        {
+          "page": "stockRecon",
+          "label": "Stock Reconciliation",
+          "order": 1,
+          "type": "object",
+          "description": "Perform stock reconciliation for your facility",
+          "actionLabel": "Submit",
+          "properties": [
+            {
+              "type": "dynamic",
+              "label": "Facility and Product Selection",
+              "order": 1,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Select facility and product to reconcile stock",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "stockReconciliationCard",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "includeInForm": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Please select facility and product"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": []
+            },
+            {
+              "type": "integer",
+              "label": "Manual Count",
+              "order": 2,
+              "value": "",
+              "format": "number",
+              "hidden": false,
+              "tooltip": "",
+              "helpText":
+                  "Enter the physical count of stock after manual verification",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "manualCount",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "includeInForm": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Manual count is required"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "Manual count must be 0 or greater"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "Comments",
+              "order": 3,
+              "value": "",
+              "format": "textArea",
+              "hidden": false,
+              "tooltip": "",
+              "helpText":
+                  "Add any comments or observations about the reconciliation",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "comments",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "includeInForm": true,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": []
+            }
+          ],
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+        }
+      ],
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "configName": "stockReconciliation",
+            "data": [],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to fetch config."}
+              }
+            ]
           }
         },
         {
-          "format": "infoCard",
-          "message": "No reconciliation records found for the selected filters",
-          "type": "info",
-          "visible":
-              "{{stockReconciliation.length}} == 0 && {{selectedFacility}} != null && {{selectedProduct}} != null && {{navigation.reportType}} == 'reconciliation'"
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "STOCK_RECONCILIATION",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to create stock."}
+              }
+            ]
+          }
         },
         {
-          "format": "table",
-          "visible":
-              "{{stockReconciliation.length}} > 0 && {{navigation.reportType}} == 'reconciliation'",
-          "data": {
-            "source": "stockReconciliation",
-            "columns": [
+          "actionType": "NAVIGATION",
+          "properties": {
+            "type": "TEMPLATE",
+            "name": "stockReconciliationSuccess",
+            "onError": [
               {
-                "header": "Date",
-                "cellValue":
-                    "{{fn:formatDate(item.dateOfReconciliation, 'date', 'dd MMM yyyy')}}"
-              },
-              {
-                "header": "Received",
-                "cellValue":
-                    "{{fn:getAdditionalFieldValue(item.additionalFields, 'received')}}"
-              },
-              {
-                "header": "Issued",
-                "cellValue":
-                    "{{fn:getAdditionalFieldValue(item.additionalFields, 'issued')}}"
-              },
-              {
-                "header": "Returned",
-                "cellValue":
-                    "{{fn:getAdditionalFieldValue(item.additionalFields, 'returned')}}"
-              },
-              {
-                "header": "Damaged",
-                "cellValue":
-                    "{{fn:getAdditionalFieldValue(item.additionalFields, 'damaged')}}"
-              },
-              {
-                "header": "Lost",
-                "cellValue":
-                    "{{fn:getAdditionalFieldValue(item.additionalFields, 'lost')}}"
-              },
-              {
-                "header": "Stock in Hand",
-                "cellValue":
-                    "{{fn:getAdditionalFieldValue(item.additionalFields, 'inHand')}}"
-              },
-              {"header": "Manual Count", "cellValue": "{{item.physicalCount}}"}
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Navigation failed."}
+              }
             ],
-            "rows": "{{stockReconciliation}}"
+            "data": []
+          }
+        }
+      ]
+    },
+    {
+      "screenType": "TEMPLATE",
+      "name": "stockReconciliationSuccess",
+      "heading": "Success",
+      "description": "",
+      "header": [],
+      "footer": [],
+      "initActions": [],
+      "body": [
+        {
+          "format": "panelCard",
+          "label": "Stock reconciliation submitted successfully",
+          "description": "Your stock reconciliation has been recorded",
+          "properties": {"type": "success"},
+          "primaryAction": {
+            "label": "Back to Home",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {"type": "HOME"}
+              }
+            ]
           }
         }
       ]

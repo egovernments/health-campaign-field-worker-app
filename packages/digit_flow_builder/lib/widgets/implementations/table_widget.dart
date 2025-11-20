@@ -24,14 +24,40 @@ class TableWidget implements FlowWidget {
   ) {
     final crudCtx = CrudItemContext.of(context);
     final stateData = crudCtx?.stateData;
+    final modelMap = crudCtx?.stateData?.modelMap ?? {};
 
-    final data = Map<String, dynamic>.from(json['data'] ?? {});
-
-    // Get formData and screenKey to resolve formData values
+    // Get screenKey and navigation params for visibility evaluation
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
+    final navigationParams = screenKey != null
+        ? FlowCrudStateRegistry().getNavigationParams(screenKey) ?? {}
+        : <String, dynamic>{};
     final formData = screenKey != null
         ? FlowCrudStateRegistry().get(screenKey)?.formData ?? {}
         : <String, dynamic>{};
+
+    // Create evaluation context that includes modelMap for named entity access
+    final evalContext = {
+      'item': crudCtx?.item,
+      'contextData': crudCtx?.stateData?.rawState ?? {},
+      'navigation': navigationParams,
+      ...modelMap,
+      // Include modelMap so {{stock}}, {{productVariant}} etc. can be resolved
+      ...formData,
+      // Include formData for {{selectedProduct}}, {{selectedFacility}} etc.
+    };
+
+    // Check visibility condition
+    final visible = ConditionalEvaluator.evaluate(
+      json['visible'] ?? true,
+      evalContext,
+      screenKey: screenKey,
+    );
+
+    if (visible == false) {
+      return const SizedBox.shrink();
+    }
+
+    final data = Map<String, dynamic>.from(json['data'] ?? {});
 
     // Store raw column configuration for later evaluation
     final rawColumns = (data['columns'] as List<dynamic>?) ?? [];
@@ -51,21 +77,22 @@ class TableWidget implements FlowWidget {
       );
     }).toList();
 
-    // Step 1: Resolve data source
+    // Step 1: Resolve data source from either 'rows' or 'source' (both should point to same data)
     List<dynamic> sourceList = [];
 
-    if (data['rows'] != null) {
-      final rowsKey = data['rows'].toString();
+    // Prefer 'rows' if specified, fallback to 'source'
+    final dataSourceKey = data['rows'] ?? data['source'];
+
+    if (dataSourceKey != null) {
+      final rowsKey = dataSourceKey.toString();
 
       // Strip {{ }} if present
       String cleanKey = rowsKey;
-      if (rowsKey.startsWith('{{') && rowsKey.endsWith('}}')) {
-        cleanKey = rowsKey.substring(2, rowsKey.length - 2).trim();
-      }
 
       // Case 1: Singleton path
       if (cleanKey.startsWith("singleton")) {
-        final resolved = resolveValueRaw("{{ $cleanKey }}", null);
+        final resolved =
+            resolveValueRaw("{{ $cleanKey }}", null, screenKey: screenKey);
         if (resolved is List) {
           sourceList = resolved;
         } else if (resolved != null) {
@@ -74,7 +101,8 @@ class TableWidget implements FlowWidget {
       }
       // Case 2: If the current item already has this source (table inside listView)
       else if (crudCtx?.item != null && (crudCtx!.item?[cleanKey] != null)) {
-        final localSource = resolveValueRaw(cleanKey, crudCtx.item);
+        final localSource =
+            resolveValueRaw(cleanKey, crudCtx.item, screenKey: screenKey);
         if (localSource is List) {
           sourceList = localSource;
         } else if (localSource != null) {
@@ -85,15 +113,14 @@ class TableWidget implements FlowWidget {
       else if (stateData?.modelMap != null &&
           stateData!.modelMap.containsKey(cleanKey)) {
         final localSource = stateData.modelMap[cleanKey];
-        if (localSource != null && localSource is List) {
-          sourceList = List<dynamic>.from(localSource);
-        } else if (localSource != null) {
-          sourceList = [localSource];
+        if (localSource is List) {
+          sourceList = List<dynamic>.from(localSource as List);
         }
       }
       // Case 4: Fallback to resolving from rawState
       else if (stateData != null) {
-        final localSource = resolveValueRaw(cleanKey, stateData.rawState);
+        final localSource =
+            resolveValueRaw(rowsKey, stateData.rawState, screenKey: screenKey);
         if (localSource is List) {
           sourceList = localSource;
         } else if (localSource != null) {
@@ -105,7 +132,6 @@ class TableWidget implements FlowWidget {
     if (sourceList.isEmpty) return const SizedBox.shrink();
 
     final rows = sourceList.asMap().entries.map((entry) {
-      final rowIndex = entry.key;
       final rowItem = entry.value;
 
       return DigitTableRow(
@@ -113,22 +139,17 @@ class TableWidget implements FlowWidget {
           final colIndex = entry.key;
           final colConfig = entry.value;
 
-          // Create evaluation context for this row with full context
-          final evalContext = <String, dynamic>{
-            'currentItem': rowItem,
-            ...((crudCtx?.stateData?.rawState.first as Map<String, dynamic>?) ??
-                {}),
-          };
-
           // Get the raw cellValue configuration
           final rawCellValue = colConfig['cellValue'];
 
-          // Evaluate cell value (handles both conditional and regular values)
-          final cellValue =
-              ConditionalEvaluator.evaluate(rawCellValue, evalContext);
+          // For cell value resolution, we need to pass rowItem as the contextData
+          // The resolveTemplate/resolveValueRaw handles {{item.field}} by stripping "item." prefix
+          final cellValue = ConditionalEvaluator.evaluate(rawCellValue, rowItem,
+              screenKey: screenKey);
 
-          // Resolve templates in the evaluated value
-          final finalText = resolveTemplate(cellValue, rowItem).toString();
+          // cellValue should already be resolved by ConditionalEvaluator
+          // Just convert to string
+          final finalText = cellValue?.toString() ?? '';
 
           return DigitTableData(
             finalText,
