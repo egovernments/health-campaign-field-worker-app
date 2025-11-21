@@ -880,7 +880,9 @@ class _HomePageState extends LocalizedState<HomePage> {
           label: i18.home.closedHouseHoldLabel,
           onPressed: () {
             if (isTriggerLocalisation) {
-              triggerLocalization();
+              final moduleName =
+                  'hcm-registration-${context.selectedProject.referenceID}';
+              triggerLocalization(module: moduleName);
               isTriggerLocalisation = false;
             }
             context.router.push(const ClosedHouseholdWrapperRoute());
@@ -987,9 +989,11 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.menu_book,
           label: i18.home.stockReconciliationLabel,
-          onPressed: () {
+          onPressed: () async {
             if (isTriggerLocalisation) {
-              triggerLocalization();
+              final moduleName =
+                  'hcm-stockreconciliation-${context.selectedProject.referenceID}';
+              triggerLocalization(module: moduleName);
               isTriggerLocalisation = false;
             }
             try {
@@ -1043,14 +1047,36 @@ class _HomePageState extends LocalizedState<HomePage> {
                 dynamicEntityModelListener: EntityModelMapMapper(),
               );
               WidgetRegistry.initialize();
-              FlowRegistry.setConfig(stockReconciliationFlows["flows"]
-                  as List<Map<String, dynamic>>);
-              NavigationRegistry.setupNavigation(context);
+              final prefs = await SharedPreferences.getInstance();
+              final schemaJsonRaw = prefs.getString('app_config_schemas');
 
-              context.router.push(
-                FlowBuilderHomeRoute(
-                    pageName: stockReconciliationFlows["initialPage"]),
-              );
+              if (schemaJsonRaw != null) {
+                final allSchemas =
+                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                final manageStock = allSchemas['STOCKRECONCILIATION'];
+
+                final manageStockData = manageStock?['data'];
+                final flowsData = (manageStockData['flows'] as List<dynamic>?)
+                        ?.map((e) => Map<String, dynamic>.from(e as Map))
+                        .toList() ??
+                    [];
+                FlowRegistry.setConfig(flowsData);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: manageStockData["initialPage"]),
+                );
+              } else {
+                FlowRegistry.setConfig(sampleInventoryFlows["flows"]
+                    as List<Map<String, dynamic>>);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: sampleInventoryFlows["initialPage"]),
+                );
+              }
             } catch (e) {
               debugPrint('error $e');
             }
@@ -1125,9 +1151,11 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.announcement,
           label: i18.home.viewReportsLabel,
-          onPressed: () {
+          onPressed: () async {
             if (isTriggerLocalisation) {
-              triggerLocalization();
+              final moduleName =
+                  'hcm-stockreports-${context.selectedProject.referenceID}';
+              triggerLocalization(module: moduleName);
               isTriggerLocalisation = false;
             }
             try {
@@ -1176,14 +1204,36 @@ class _HomePageState extends LocalizedState<HomePage> {
                 dynamicEntityModelListener: EntityModelMapMapper(),
               );
               WidgetRegistry.initialize();
-              FlowRegistry.setConfig(
-                  inventoryReportFlows["flows"] as List<Map<String, dynamic>>);
-              NavigationRegistry.setupNavigation(context);
+              final prefs = await SharedPreferences.getInstance();
+              final schemaJsonRaw = prefs.getString('app_config_schemas');
 
-              context.router.push(
-                FlowBuilderHomeRoute(
-                    pageName: inventoryReportFlows["initialPage"]),
-              );
+              if (schemaJsonRaw != null) {
+                final allSchemas =
+                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                final manageStock = allSchemas['STOCKREPORTS'];
+
+                final manageStockData = manageStock?['data'];
+                final flowsData = (manageStockData['flows'] as List<dynamic>?)
+                        ?.map((e) => Map<String, dynamic>.from(e as Map))
+                        .toList() ??
+                    [];
+                FlowRegistry.setConfig(flowsData);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: manageStockData["initialPage"]),
+                );
+              } else {
+                FlowRegistry.setConfig(sampleInventoryFlows["flows"]
+                    as List<Map<String, dynamic>>);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: sampleInventoryFlows["initialPage"]),
+                );
+              }
             } catch (e) {
               debugPrint('error $e');
             }
