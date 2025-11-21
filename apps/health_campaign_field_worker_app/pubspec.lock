@@ -618,10 +618,10 @@ packages:
     description:
       path: "flutter/digit-ui-components/digit_components"
       ref: beneficiary-idgen
-      resolved-ref: f2ea300a7ca6c61920fcba4ebc0c7a74cdadca47
+      resolved-ref: eb099bd77750bed5c6f89004631bcdf739a8c058
       url: "https://github.com/egovernments/DIGIT-UI-LIBRARIES"
     source: git
-    version: "0.2.2+9"
+    version: "0.2.3+2"
   dio:
     dependency: "direct main"
     description:
