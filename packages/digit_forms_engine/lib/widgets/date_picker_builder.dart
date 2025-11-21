@@ -50,13 +50,31 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
           readOnly: readOnly,
           errorMessage: field.errorText,
           innerLabel: innerLabel,
-          initialValue: form.control(formControlName).value != null
-              ? formatDateLocalized(
-                  context,
-                  form.control(formControlName).value as DateTime,
-                  Constants().dateMonthYearFormat,
-                )
-              : null,
+          initialValue: () {
+            final rawValue = form.control(formControlName).value;
+
+            if (rawValue == null) return null;
+
+            DateTime? parsed;
+
+            if (rawValue is DateTime) {
+              parsed = rawValue;
+            } else if (rawValue is String && rawValue.trim().isNotEmpty) {
+              try {
+                parsed = DateFormat("dd MMM yyyy").parseStrict(rawValue);
+              } catch (_) {
+                parsed = null;
+              }
+            }
+
+            return parsed != null
+                ? formatDateLocalized(
+                    context,
+                    parsed,
+                    Constants().dateMonthYearFormat,
+                  )
+                : null;
+          }(),
         ),
       ),
     );

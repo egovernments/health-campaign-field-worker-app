@@ -60,7 +60,9 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     bool matched = false;
 
     for (final condition in autoFillConditions) {
-      final result = evaluateVisibilityExpression(condition.expression, values);
+      // Resolve dynamic variables in expression before evaluation
+      final resolvedExpression = _resolveDynamicVariables(condition.expression);
+      final result = evaluateVisibilityExpression(resolvedExpression, values);
       if (result) {
         matched = true;
 
@@ -68,11 +70,29 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         final defaultValues = context.read<Map<String, dynamic>>();
 
         final key = _stripCurlyBraces(condition.value);
-        final filledValue = defaultValues[key];
 
-        form.control(widget.formControlName).value = filledValue;
+        // Resolve value from both form controls and defaultValues
+        // Supports array index notation: "scannedData_$tabIndex[0]"
+        // nested paths: "stockProductDetails.scannedData_0"
+        // and defaultValues: "selectedProduct"
+        final filledValue = _resolveAutoFillValue(key, form, defaultValues);
 
-        _autoReadOnly = true;
+        if (filledValue != null && filledValue != "") {
+          dynamic valueToSet = filledValue;
+
+          // If filledValue is a string like "20 Jun 2025", convert to DateTime
+          if (filledValue is String) {
+            try {
+              valueToSet = DateFormat("dd MMM yyyy").parseStrict(filledValue);
+            } catch (_) {
+              // Not a date string → keep as string
+              valueToSet = filledValue;
+            }
+          }
+
+          form.control(widget.formControlName).value = valueToSet;
+          _autoReadOnly = true;
+        }
 
         /// make field as non editable
 
@@ -93,6 +113,129 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     return match != null
         ? match.group(1)!
         : value; // Return inside if matched, else original
+  }
+
+  /// Resolve dynamic variables in the path (e.g., $tabIndex, $entityIndex)
+  String _resolveDynamicVariables(String path) {
+    String resolvedPath = path;
+
+    // Get current entity index from navigationParams if available
+    final currentEntityIndex = widget.navigationParams?['currentEntityIndex'];
+
+    // Replace $tabIndex or $entityIndex with actual index
+    // Uses '_item_N' suffix to match form control naming convention
+    // Example: scanResource_$tabIndex -> scanResource_item_0
+    if (currentEntityIndex != null) {
+      resolvedPath = resolvedPath
+          .replaceAll(r'_$tabIndex', '_item_$currentEntityIndex')
+          .replaceAll(r'_$entityIndex', '_item_$currentEntityIndex')
+          .replaceAll(r'_$index', '_item_$currentEntityIndex');
+    }
+
+    return resolvedPath;
+  }
+
+  /// Unified autoFill value resolver supporting both form controls and defaultValues
+  /// Supports:
+  /// - Array index: "scannedData_0[1]" to access index 1 of comma-separated string
+  /// - Nested paths from form: "stockProductDetails.scannedData_0"
+  /// - Nested paths from defaultValues: "formData.selectedProduct"
+  /// - Dynamic variables: "scannedData_$tabIndex[0]"
+  /// - Simple keys from defaultValues: "selectedProduct"
+  dynamic _resolveAutoFillValue(
+    String path,
+    FormGroup form,
+    Map<String, dynamic> defaultValues,
+  ) {
+    // First resolve dynamic variables
+    final resolvedPath = _resolveDynamicVariables(path);
+
+    // Regex to match something like:  abc[0]  or  stockProductDetails_0[2]
+    final arrayIndexPattern = RegExp(r'^(.*)\[(\d+)\]$');
+    final match = arrayIndexPattern.firstMatch(resolvedPath);
+
+    if (match != null) {
+      final key = match.group(1)!; // before [ ]
+      final index = int.parse(match.group(2)!); // inside [ ]
+
+      // 1️⃣ Get the raw value from form (NO dot resolution)
+      dynamic raw;
+      if (form.contains(key)) {
+        raw = form.control(key).value;
+      } else {
+        raw = defaultValues[key];
+      }
+
+      // 2️⃣ If the raw value is a list → return list[index]
+      if (raw is List) {
+        if (index < raw.length) return raw[index];
+        return null;
+      }
+
+      // 3️⃣ If raw is a string (comma-separated) → split and return index
+      if (raw is String) {
+        final parts = raw.split(',');
+        if (index < parts.length) return parts[index].trim();
+        return null;
+      }
+
+      return null;
+    }
+
+    // If no [index], return directly (NO dot resolution)
+    if (form.contains(resolvedPath)) {
+      return form.control(resolvedPath).value;
+    }
+
+    return defaultValues[resolvedPath];
+  }
+
+  /// Resolve a nested path from form controls (e.g., "stockProductDetails.scannedData_0")
+  dynamic _resolveNestedPathFromForm(String path, FormGroup form) {
+    final parts = path.split('.');
+    dynamic current = form;
+
+    for (final part in parts) {
+      if (current is FormGroup && current.contains(part)) {
+        current = current.control(part);
+      } else {
+        return null;
+      }
+    }
+
+    // Return the value of the final control
+    return current is AbstractControl ? current.value : null;
+  }
+
+  /// Resolve a nested path from a map (e.g., "scannedData.01 (GTIN)")
+  /// Supports dynamic variables like scannedData_$tabIndex.fieldName
+  dynamic _resolveNestedPath(String path, Map<String, dynamic> data) {
+    // First resolve any dynamic variables in the path
+    final resolvedPath = _resolveDynamicVariables(path);
+
+    // Handle dotted paths by splitting on dots
+    final parts = resolvedPath.split('.');
+    dynamic current = data;
+
+    for (final part in parts) {
+      if (current is Map<String, dynamic>) {
+        current = current[part];
+        if (current == null) return null;
+      } else if (current is Map) {
+        // Handle Map (non-String keys) - convert to Map<String, dynamic>
+        current = current[part];
+        if (current == null) return null;
+      } else {
+        return null;
+      }
+    }
+
+    // Convert DateTime to string format if needed
+    if (current is DateTime) {
+      return DateFormat('yyyy-MM-dd').format(current);
+    }
+
+    return current;
   }
 
   /// Conditionally hide based on display behavior
@@ -224,6 +367,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           formControlName: widget.formControlName,
           label: translateIfPresent(widget.schema.label, localizations),
           validations: widget.schema.validations,
+          summaryData: widget.schema.includeInSummary ?? false,
         );
 
       case PropertySchemaFormat.date:

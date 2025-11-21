@@ -3,6 +3,8 @@ import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
+import '../../blocs/flow_crud_bloc.dart';
+import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
@@ -21,6 +23,12 @@ class MenuCardWidget implements FlowWidget {
     final crudCtx = CrudItemContext.of(context);
     final stateData = crudCtx?.stateData;
 
+    // Get form data from registry for resolving form field values
+    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
+    final formData = screenKey != null
+        ? FlowCrudStateRegistry().get(screenKey)?.formData
+        : null;
+
     return MenuCard(
       onTap: () {
         if (json['onAction'] != null) {
@@ -32,11 +40,20 @@ class MenuCardWidget implements FlowWidget {
             // Resolve navigation data if present
             final navData = action.properties['data'] as List<dynamic>?;
 
-            if (navData != null && stateData != null) {
+            if (navData != null) {
               final resolvedData = navData.map((entry) {
                 final key = entry['key'] as String;
                 final rawValue = entry['value'];
-                final resolvedValue = resolveValue(rawValue, stateData);
+
+                // Try to resolve from modelMap first, then fallback to formData
+                dynamic resolvedValue = stateData != null
+                    ? resolveValue(rawValue, stateData.modelMap)
+                    : rawValue;
+
+                if (resolvedValue == rawValue && formData != null) {
+                  // If not resolved from modelMap, try formData
+                  resolvedValue = resolveValue(rawValue, formData);
+                }
 
                 return {
                   "key": key,

@@ -3,7 +3,9 @@ import 'package:digit_ui_components/widgets/atoms/digit_info_card.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
+import '../../blocs/flow_crud_bloc.dart';
 import '../../utils/conditional_evaluator.dart';
+import '../../utils/interpolation.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 import '../localization_context.dart';
@@ -20,22 +22,48 @@ class InfoCardWidget implements FlowWidget {
   ) {
     final crudCtx = CrudItemContext.of(context);
     final items = crudCtx?.stateData?.rawState ?? [];
+    final modelMap = crudCtx?.stateData?.modelMap ?? {};
 
-    // Create evaluation context
+    // Get screenKey and navigation params for visibility evaluation
+    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
+    final navigationParams = screenKey != null
+        ? FlowCrudStateRegistry().getNavigationParams(screenKey) ?? {}
+        : <String, dynamic>{};
+    final formData = screenKey != null
+        ? FlowCrudStateRegistry().get(screenKey)?.formData ?? {}
+        : <String, dynamic>{};
+
+    // Create evaluation context that includes modelMap for named entity access
     final evalContext = {
       'item': crudCtx?.item,
       'contextData': crudCtx?.stateData?.rawState ?? {},
+      'navigation': navigationParams,
+      ...modelMap,
+      // Include modelMap so {{stock}}, {{productVariant}} etc. can be resolved
+      ...formData,
+      // Include formData for {{selectedProduct}}, {{selectedFacility}} etc.
     };
 
     // Check visibility condition
     final visible = ConditionalEvaluator.evaluate(
       json['visible'] ?? true,
       evalContext,
+      screenKey: screenKey,
     );
 
-    if (visible == false) {
+    if (visible == false || items.isNotEmpty) {
       return const SizedBox.shrink();
     }
+
+    // Determine info type from config (default to info)
+    final typeString = json['type']?.toString().toLowerCase() ?? 'info';
+    final infoType = typeString == 'error'
+        ? InfoType.error
+        : typeString == 'warning'
+            ? InfoType.warning
+            : typeString == 'success'
+                ? InfoType.success
+                : InfoType.info;
 
     if (items.isNotEmpty) return const SizedBox.shrink();
 
@@ -43,8 +71,10 @@ class InfoCardWidget implements FlowWidget {
 
     return InfoCard(
       type: InfoType.info,
-      title: localization?.translate(json['label'] ?? '') ?? (json['label'] ?? ''),
-      description: localization?.translate(json['description'] ?? '') ?? (json['description'] ?? ''),
+      title:
+          localization?.translate(json['label'] ?? '') ?? (json['label'] ?? ''),
+      description: localization?.translate(json['description'] ?? '') ??
+          (json['description'] ?? ''),
     );
   }
 }

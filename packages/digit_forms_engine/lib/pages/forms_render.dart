@@ -196,7 +196,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                               );
 
                               // Update existing properties and add entity-specific fields
-                              final updatedProperties = Map<String, PropertySchema>.from(
+                              final updatedProperties =
+                                  Map<String, PropertySchema>.from(
                                 schema.properties?.map(
                                       (key, prop) => values.containsKey(key)
                                           ? MapEntry(
@@ -212,12 +213,14 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
                               // Add entity-specific fields (e.g., fieldName_item_0) that aren't in the schema
                               for (final entry in values.entries) {
-                                if (entry.key.contains('_item_') && !updatedProperties.containsKey(entry.key)) {
+                                if (entry.key.contains('_item_') &&
+                                    !updatedProperties.containsKey(entry.key)) {
                                   // Create a minimal property schema for the entity-specific field
                                   updatedProperties[entry.key] = PropertySchema(
                                     type: PropertySchemaType.string,
                                     value: entry.value,
-                                    hidden: true, // Hide from UI rendering
+                                    hidden: true,
+                                    // Hide from UI rendering
                                     includeInForm: true, // Include in form data
                                   );
                                 }
@@ -619,7 +622,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                             JsonForms.getFormValues(formGroup, schema);
 
                         // Update existing properties and add entity-specific fields
-                        final updatedProperties = Map<String, PropertySchema>.from(
+                        final updatedProperties =
+                            Map<String, PropertySchema>.from(
                           schema.properties?.map(
                                 (key, prop) => values.containsKey(key)
                                     ? MapEntry(
@@ -635,7 +639,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
                         // Add entity-specific fields (e.g., fieldName_item_0) that aren't in the schema
                         for (final entry in values.entries) {
-                          if (entry.key.contains('_item_') && !updatedProperties.containsKey(entry.key)) {
+                          if (entry.key.contains('_item_') &&
+                              !updatedProperties.containsKey(entry.key)) {
                             // Create a minimal property schema for the entity-specific field
                             updatedProperties[entry.key] = PropertySchema(
                               type: PropertySchemaType.string,
@@ -739,14 +744,16 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                         ],
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.6,
-                          child: MultiEntityTabView(
-                            schema: schema,
-                            pageName: widget.pageName,
-                            currentSchemaKey: widget.currentSchemaKey,
-                            entities: entities,
-                            customComponents: widget.customComponents,
-                            navigationParams: widget.navigationParams,
-                          ),
+                          child: entities.length == 1
+                              ? _buildSingleEntityForm(schema, entities[0])
+                              : MultiEntityTabView(
+                                  schema: schema,
+                                  pageName: widget.pageName,
+                                  currentSchemaKey: widget.currentSchemaKey,
+                                  entities: entities,
+                                  customComponents: widget.customComponents,
+                                  navigationParams: widget.navigationParams,
+                                ),
                         ),
                       ],
                     ),
@@ -758,6 +765,57 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         ),
       ),
     );
+  }
+
+  /// Builds a form for a single entity without tabs.
+  Widget _buildSingleEntityForm(PropertySchema schema, dynamic entity) {
+    // Create a schema with renamed fields for the single entity (index 0)
+    final entitySchema = _createSchemaForEntity(schema, 0);
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(spacer2),
+      child: JsonForms(
+        propertySchema: entitySchema,
+        pageName: widget.pageName,
+        currentSchemaKey: widget.currentSchemaKey,
+        childrens: widget.customComponents,
+        navigationParams: {
+          ...?widget.navigationParams,
+          'currentEntityIndex': 0,
+          'currentEntity': entity,
+        },
+        defaultValues: widget.defaultValues ?? {},
+      ),
+    );
+  }
+
+  /// Creates a modified schema where field names include the entity index suffix.
+  PropertySchema _createSchemaForEntity(
+      PropertySchema schema, int entityIndex) {
+    final originalProperties = schema.properties ?? {};
+    final modifiedProperties = <String, PropertySchema>{};
+
+    for (final entry in originalProperties.entries) {
+      final fieldName = entry.key;
+      final fieldSchema = entry.value;
+
+      // Skip readonly/hidden fields from renaming
+      final shouldRename = fieldSchema.readOnly != true &&
+          fieldSchema.hidden != true &&
+          !fieldName.startsWith('_') &&
+          fieldName != 'id';
+
+      if (shouldRename) {
+        // Rename field for this entity
+        final newFieldName = '${fieldName}_item_$entityIndex';
+        modifiedProperties[newFieldName] = fieldSchema;
+      } else {
+        // Keep as-is
+        modifiedProperties[fieldName] = fieldSchema;
+      }
+    }
+
+    return schema.copyWith(properties: modifiedProperties);
   }
 
   /// Parses entities from various value formats.

@@ -5181,7 +5181,7 @@ final dynamic sampleInventoryFlows = {
               "innerLabel": "",
               "visibilityCondition": {
                 "expression":
-                    "stockDetails.facilityFromWhich!=National Warehouse"
+                    "{{navigation.transactionType}} == 'RECEIVED' && stockDetails.facilityFromWhich != 'National Warehouse'"
               },
               "systemDate": false,
               "validations": [
@@ -5479,16 +5479,36 @@ final dynamic sampleInventoryFlows = {
                     ]
                   },
                   {
-                    "format": "button",
-                    "label": "view QR",
+                    "format": "actionPopup",
+                    "label": "View QR",
                     "properties": {
-                      "type": "secondary",
-                      "size": "small",
+                      "type": "tertiary",
+                      "size": "medium",
                       "mainAxisSize": "min",
-                      "mainAxisAlignment": "center"
+                      "mainAxisAlignment": "start",
+                      "popupConfig": {
+                        "type": "default",
+                        "title": "QR Code",
+                        "titleIcon": "qr",
+                        "showCloseButton": true,
+                        "barrierDismissible": true,
+                        "body": [
+                          {
+                            "format": "qr_code",
+                            "data":
+                                "{{item.items[0].additionalFields.fields.mrnNumber}}",
+                            "size": "medium",
+                            "errorCorrectionLevel": "M",
+                            "dataModuleColor": "black",
+                            "backgroundColor": "white",
+                            "padding": 16
+                          }
+                        ],
+                        "footerActions": []
+                      }
                     },
-                    "onAction": []
-                  },
+                    "suffixIcon": "qr"
+                  }
                 ]
               },
               {
@@ -5618,6 +5638,599 @@ final dynamic sampleInventoryFlows = {
                     "value": "{{item.additionalFields.fields.comments}}"
                   }
                 ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+};
+
+final dynamic inventoryReportFlows = {
+  "name": "INVENTORY",
+  "initialPage": "viewReports",
+  "project": "CMP-2025-08-04-004846",
+  "version": 1,
+  "disabled": false,
+  "isSelected": true,
+  "flows": [
+    {
+      "screenType": "TEMPLATE",
+      "name": "viewReports",
+      "heading": "View Reports",
+      "description": "",
+      "header": [
+        {
+          "format": "backLink",
+          "label": "Back",
+          "onAction": [
+            {"actionType": "BACK_NAVIGATION", "properties": {}}
+          ]
+        },
+      ],
+      "footer": [],
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "type": "SEARCH_EVENT",
+            "name": "projectFacility",
+            "data": [
+              {
+                "key": "projectId",
+                "value": "{{singleton.selectedProject.id}}",
+                "operation": "equals"
+              }
+            ]
+          }
+        }
+      ],
+      "wrapperConfig": {
+        "wrapperName": "InventoryWrapper",
+        "groupByType": true,
+        "rootEntity": "ProjectFacilityModel",
+        "filters": [],
+        "relations": [
+          {
+            "name": "facility",
+            "entity": "FacilityModel",
+            "match": {"field": "id", "equalsFrom": "facilityId"}
+          },
+          {
+            "name": "productVariant",
+            "entity": "ProductVariantModel",
+            "match": {"field": "id", "equalsFrom": "resource"}
+          }
+        ],
+        "searchConfig": {
+          "primary": "projectFacility",
+          "select": ["projectFacility", "facility", "productVariant"]
+        }
+      },
+      "body": [
+        {
+          "format": "menu_card",
+          "heading": "Stock Received",
+          "description": "View stock received reports",
+          "icon": 'assessment',
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "reportDetails",
+                "data": [
+                  {"key": "reportType", "value": "receipt"},
+                  {"key": "facilities", "value": "{{FacilityModel}}"},
+                  {"key": "productVariants", "value": "{{ProductVariantModel}}"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "format": "menu_card",
+          "heading": "Stock Issued",
+          "description": "View stock issued reports",
+          "icon": 'assessment',
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "reportDetails",
+                "data": [
+                  {"key": "reportType", "value": "dispatch"},
+                  {"key": "facilities", "value": "{{FacilityModel}}"},
+                  {"key": "productVariants", "value": "{{ProductVariantModel}}"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "format": "menu_card",
+          "heading": "Stock Returned",
+          "description": "View stock returned reports",
+          "icon": 'assessment',
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "reportDetails",
+                "data": [
+                  {"key": "reportType", "value": "returned"},
+                  {"key": "facilities", "value": "{{FacilityModel}}"},
+                  {"key": "productVariants", "value": "{{ProductVariantModel}}"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "format": "menu_card",
+          "heading": "Stock Damaged",
+          "description": "View stock damaged reports",
+          "icon": 'assessment',
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "reportDetails",
+                "data": [
+                  {"key": "reportType", "value": "damage"},
+                  {"key": "facilities", "value": "{{FacilityModel}}"},
+                  {"key": "productVariants", "value": "{{ProductVariantModel}}"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "format": "menu_card",
+          "heading": "Stock Loss",
+          "description": "View stock loss reports",
+          "icon": 'assessment',
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "reportDetails",
+                "data": [
+                  {"key": "reportType", "value": "loss"},
+                  {"key": "facilities", "value": "{{FacilityModel}}"},
+                  {"key": "productVariants", "value": "{{ProductVariantModel}}"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "format": "menu_card",
+          "heading": "Stock Reconciliation",
+          "description": "View stock reconciliation reports",
+          "icon": 'assessment',
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "reportDetails",
+                "data": [
+                  {"key": "reportType", "value": "reconciliation"},
+                  {"key": "facilities", "value": "{{FacilityModel}}"},
+                  {"key": "productVariants", "value": "{{ProductVariantModel}}"}
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenType": "TEMPLATE",
+      "name": "reportDetails",
+      "heading": "{{navigation.reportType}}",
+      "description": "",
+      "initActions": [],
+      "wrapperConfig": {
+        "wrapperName": "StockReportWrapper",
+        "groupByType": true,
+        "rootEntity": "Stock",
+        "filters": [],
+        "relations": [],
+        "searchConfig": {
+          "primary": "stock",
+          "select": ["stock"]
+        }
+      },
+      "header": [
+        {
+          "format": "backLink",
+          "label": "Back",
+          "onAction": [
+            {"actionType": "BACK_NAVIGATION", "properties": {}}
+          ]
+        }
+      ],
+      "footer": [
+        {
+          "format": "button",
+          "label": "Back to Home",
+          "properties": {
+            "type": "secondary",
+            "size": "large",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "onAction": [
+            {"actionType": "BACK_NAVIGATION", "properties": {}}
+          ]
+        }
+      ],
+      "body": [
+        {
+          "format": "card",
+          "children": [
+            {
+              "format": "dropdown",
+              "label": "Select Warehouse",
+              "required": true,
+              "key": "selectedFacility",
+              "source": "{{navigation.facilities}}",
+              "displayKey": "id",
+              "valueKey": "id",
+              "visible": "{{fn:hasRole('WAREHOUSE_MANAGER')}}",
+              "onChange": [
+                {
+                  "actionType": "SEARCH_EVENT",
+                  "properties": {
+                    "type": "SEARCH_EVENT",
+                    "name": "stock",
+                    "data": [
+                      {
+                        "key": "tenantId",
+                        "value": "{{singleton.selectedProject.tenantId}}",
+                        "operation": "equals"
+                      },
+                      {
+                        "key": "productVariantId",
+                        "value": "{{selectedProduct}}",
+                        "operation": "equals"
+                      },
+                      {
+                        "key": "transactionType",
+                        "value":
+                            "{{fn:getTransactionType(navigation.reportType)}}",
+                        "operation": "in"
+                      },
+                      {
+                        "key":
+                            "{{fn:getSenderOrReceiver(navigation.reportType)}}",
+                        "value": "{{selectedFacility}}",
+                        "operation": "equals"
+                      },
+                    ],
+                  }
+                }
+              ]
+            },
+            {
+              "format": "dropdown",
+              "label": "Select Product",
+              "required": true,
+              "key": "selectedProduct",
+              "source": "{{navigation.productVariants}}",
+              "displayKey": "sku",
+              "valueKey": "id",
+              "onChange": [
+                {
+                  "actionType": "SEARCH_EVENT",
+                  "properties": {
+                    "type": "SEARCH_EVENT",
+                    "name": "stock",
+                    "data": [
+                      {
+                        "key": "tenantId",
+                        "value": "{{singleton.selectedProject.tenantId}}",
+                        "operation": "equals"
+                      },
+                      {
+                        "key": "productVariantId",
+                        "value": "{{selectedProduct}}",
+                        "operation": "equals"
+                      },
+                      {
+                        "key": "transactionType",
+                        "value":
+                            "{{fn:getTransactionType(navigation.reportType)}}",
+                        "operation": "in"
+                      },
+                      {
+                        "key":
+                            "{{fn:getSenderOrReceiver(navigation.reportType)}}",
+                        "value": "{{selectedFacility}}",
+                        "operation": "equals"
+                      },
+                    ],
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "format": "infoCard",
+          "message":
+              "Please select both warehouse and product to view the report",
+          "type": "info",
+          "visible":
+              "{{selectedFacility}} == null || {{selectedProduct}} == null"
+        },
+        {
+          "format": "infoCard",
+          "message": "No records found for the selected filters",
+          "type": "info",
+          "visible":
+              "{{stock.length}} == 0 && {{selectedFacility}} != null && {{selectedProduct}} != null && {{navigation.reportType}} != 'reconciliation'"
+        },
+        {
+          "format": "table",
+          "data": {
+            "source": "StockModel",
+            "columns": [
+              {
+                "header": "Date",
+                "cellValue":
+                    "{{fn:formatDate(item.dateOfEntry, 'date', 'dd MMM yyyy')}}"
+              },
+              {
+                "header": "MRN",
+                "cellValue":
+                    "{{fn:getAdditionalFieldValue(item.additionalFields.fields, 'mrnNumber')}}"
+              },
+              {
+                "header": "Waybill Number",
+                "cellValue": "{{item.wayBillNumber}}"
+              },
+              {"header": "Quantity", "cellValue": "{{item.quantity}}"}
+            ],
+            "rows": "{{contextData.0.StockModel}}"
+          }
+        }
+      ]
+    }
+  ]
+};
+
+final dynamic stockReconciliationFlows = {
+  "name": "STOCK_RECONCILIATION",
+  "initialPage": "stockReconciliationDetails",
+  "project": "CMP-2025-08-04-004846",
+  "version": 1,
+  "disabled": false,
+  "isSelected": true,
+  "flows": [
+    {
+      "screenType": "FORM",
+      "name": "stockReconciliationDetails",
+      "project": "CMP-2025-08-04-004846",
+      "version": 1,
+      "disabled": false,
+      "isSelected": true,
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "type": "SEARCH_EVENT",
+            "name": "projectFacility",
+            "data": [
+              {
+                "key": "projectId",
+                "value": "{{singleton.selectedProject.id}}",
+                "operation": "equals"
+              }
+            ]
+          }
+        }
+      ],
+      "wrapperConfig": {
+        "wrapperName": "InventoryWrapper",
+        "groupByType": true,
+        "rootEntity": "ProjectFacilityModel",
+        "filters": [],
+        "relations": [
+          {
+            "name": "facility",
+            "entity": "FacilityModel",
+            "match": {"field": "id", "equalsFrom": "facilityId"}
+          },
+          {
+            "name": "productVariant",
+            "entity": "ProductVariantModel",
+            "match": {"field": "id", "equalsFrom": "resource"}
+          }
+        ],
+        "searchConfig": {
+          "primary": "projectFacility",
+          "select": ["projectFacility", "facility", "productVariant", "stock"]
+        }
+      },
+      "pages": [
+        {
+          "page": "stockRecon",
+          "label": "Stock Reconciliation",
+          "order": 1,
+          "type": "object",
+          "description": "Perform stock reconciliation for your facility",
+          "actionLabel": "Submit",
+          "properties": [
+            {
+              "type": "dynamic",
+              "label": "Facility and Product Selection",
+              "order": 1,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Select facility and product to reconcile stock",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "stockReconciliationCard",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "includeInForm": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Please select facility and product"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": []
+            },
+            {
+              "type": "integer",
+              "label": "Manual Count",
+              "order": 2,
+              "value": "",
+              "format": "number",
+              "hidden": false,
+              "tooltip": "",
+              "helpText":
+                  "Enter the physical count of stock after manual verification",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "manualCount",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "includeInForm": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Manual count is required"
+                },
+                {
+                  "type": "min",
+                  "value": 0,
+                  "message": "Manual count must be 0 or greater"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "Comments",
+              "order": 3,
+              "value": "",
+              "format": "textArea",
+              "hidden": false,
+              "tooltip": "",
+              "helpText":
+                  "Add any comments or observations about the reconciliation",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "comments",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "includeInForm": true,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": []
+            }
+          ],
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+        }
+      ],
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "configName": "stockReconciliation",
+            "data": [],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to fetch config."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "STOCK_RECONCILIATION",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to create stock."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "type": "TEMPLATE",
+            "name": "stockReconciliationSuccess",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Navigation failed."}
+              }
+            ],
+            "data": []
+          }
+        }
+      ]
+    },
+    {
+      "screenType": "TEMPLATE",
+      "name": "stockReconciliationSuccess",
+      "heading": "Success",
+      "description": "",
+      "header": [],
+      "footer": [],
+      "initActions": [],
+      "body": [
+        {
+          "format": "panelCard",
+          "label": "Stock reconciliation submitted successfully",
+          "description": "Your stock reconciliation has been recorded",
+          "properties": {"type": "success"},
+          "primaryAction": {
+            "label": "Back to Home",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {"type": "HOME"}
               }
             ]
           }

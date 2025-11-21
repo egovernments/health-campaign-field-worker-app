@@ -1,7 +1,7 @@
+import 'package:digit_flow_builder/widgets/implementations/action_popup_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/back_link.dart';
 
 import 'flow_widget_interface.dart';
-import 'implementations/action_popup_widget.dart';
 import 'implementations/button_widget.dart';
 import 'implementations/card_widget.dart';
 import 'implementations/column_widget.dart';
@@ -13,6 +13,7 @@ import 'implementations/label_pair_list_widget.dart';
 import 'implementations/list_view_widget.dart';
 import 'implementations/menu_card_widget.dart';
 import 'implementations/panel_card_widget.dart';
+import 'implementations/qr_code_widget.dart';
 import 'implementations/radio.dart';
 import 'implementations/row_widget.dart';
 import 'implementations/search_bar_widget.dart';
@@ -54,6 +55,8 @@ class WidgetRegistration {
     FlowWidgetFactory.register(ListViewWidget());
     FlowWidgetFactory.register(LabelPairListWidget());
     FlowWidgetFactory.register(BackLinkWidget());
+    FlowWidgetFactory.register(QrCodeWidget());
+    FlowWidgetFactory.register(ActionPopupWidget());
 
     _initialized = true;
   }

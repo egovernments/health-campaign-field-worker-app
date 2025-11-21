@@ -34,9 +34,13 @@ class FlowWidgetFactory {
   ) {
     // Handle visibility check at factory level before building widget
     final crudCtx = CrudItemContext.of(context);
+    final modelMap = crudCtx?.stateData?.modelMap ?? {};
+
+    // Create evaluation context that includes modelMap for named entity access
     final evalContext = {
       'item': crudCtx?.item,
       'contextData': crudCtx?.stateData?.rawState ?? {},
+      ...modelMap, // Include modelMap so {{stock}}, {{productVariant}} etc. can be resolved
     };
 
     // Check visibility condition

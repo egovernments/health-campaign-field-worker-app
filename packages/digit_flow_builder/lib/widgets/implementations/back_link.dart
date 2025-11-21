@@ -4,6 +4,8 @@ import 'package:digit_ui_components/widgets/atoms/digit_back_button.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
+import '../../blocs/flow_crud_bloc.dart';
+import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
@@ -29,6 +31,12 @@ class BackLinkWidget implements FlowWidget {
 
     final localization = LocalizationContext.maybeOf(context);
 
+    // Get form data from registry for resolving form field values
+    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
+    final formData = screenKey != null
+        ? FlowCrudStateRegistry().get(screenKey)?.formData
+        : null;
+
     // Localize first, then resolve template
     final labelText = json['label'] ?? '';
     final localizedLabel = localization?.translate(labelText) ?? labelText;
@@ -46,11 +54,20 @@ class BackLinkWidget implements FlowWidget {
             // Resolve navigation data if present
             final navData = action.properties['data'] as List<dynamic>?;
 
-            if (navData != null && stateData != null) {
+            if (navData != null) {
               final resolvedData = navData.map((entry) {
                 final key = entry['key'] as String;
                 final rawValue = entry['value'];
-                final resolvedValue = resolveValue(rawValue, stateData);
+
+                // Try to resolve from stateData first, then fallback to formData
+                dynamic resolvedValue = stateData != null
+                    ? resolveValue(rawValue, stateData)
+                    : rawValue;
+
+                if (resolvedValue == rawValue && formData != null) {
+                  // If not resolved from stateData, try formData
+                  resolvedValue = resolveValue(rawValue, formData);
+                }
 
                 return {
                   "key": key,

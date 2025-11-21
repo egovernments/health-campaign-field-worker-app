@@ -416,7 +416,8 @@ final jsonConfig = {
           "quantity": "stockProductDetails.quantitySent",
           "wayBillNumber": "stockProductDetails.wayBillNumber",
           "transactionType": "__context:transactionType",
-          "transactionReason": "stockDetails.transactionReason",
+          "transactionReason":
+              "__switch:__context:stockEntryType:{RECEIPT:__value:RECEIVED,RETURNED:__value:RETURNED,ISSUED:__value:null,DAMAGED:stockDetails.transactionReason,LOSS:stockDetails.transactionReason}",
           "transactingPartyId": "stockDetails.transactingPartyId",
           "senderId": "stockDetails.facilityFromWhich",
           "senderType": "__value:WAREHOUSE",
@@ -428,6 +429,7 @@ final jsonConfig = {
           "additionalFields": {
             "batchNumber": "stockProductDetails.batchNumber",
             "expiryDate": "stockProductDetails.expiryDate",
+            "quantityReceived": "stockProductDetails.quantityReceived",
             "comments": "stockProductDetails.comment",
             "transportType": "stockDetails.transportType",
             "vehicle_number": "stockDetails.vehicleNumber",
@@ -446,20 +448,35 @@ final jsonConfig = {
     "models": {
       "StockReconciliationModel": {
         "mappings": {
-          "id": "reconciliation.id",
+          "id": "stockRecon.id",
           "clientReferenceId": "__generate:uuid",
-          "facilityId": "__context:facilityId",
-          "productVariantId": "reconciliation.productVariantId",
-          "referenceId": "reconciliation.referenceId",
-          "referenceIdType": "reconciliation.referenceIdType",
-          "physicalCount": "reconciliation.physicalCount",
-          "calculatedCount": "reconciliation.calculatedCount",
-          "commentsOnReconciliation": "reconciliation.comments",
-          "dateOfReconciliation": "reconciliation.dateOfReconciliation",
+          "facilityId": "stockRecon.stockReconciliationCard.facilityId",
+          "productVariantId":
+              "stockRecon.stockReconciliationCard.productVariantId",
+          "referenceId": "__context:projectId",
+          "referenceIdType": "__value:PROJECT",
+          "physicalCount": "stockRecon.manualCount",
+          "calculatedCount":
+              "stockRecon.stockReconciliationCard.stockMetrics.stockInHand",
+          "commentsOnReconciliation": "stockRecon.comments",
+          "dateOfReconciliation": "__value:DATETIME.NOW",
           "nonRecoverableError": "errors.nonRecoverable",
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
-          "additionalFields": "additionalInfo.fields",
+          "additionalFields": {
+            "stockReceived":
+                "stockRecon.stockReconciliationCard.stockMetrics.stockReceived",
+            "stockIssued":
+                "stockRecon.stockReconciliationCard.stockMetrics.stockIssued",
+            "stockReturned":
+                "stockRecon.stockReconciliationCard.stockMetrics.stockReturned",
+            "stockLost":
+                "stockRecon.stockReconciliationCard.stockMetrics.stockLost",
+            "stockDamaged":
+                "stockRecon.stockReconciliationCard.stockMetrics.stockDamaged",
+            "stockInHand":
+                "stockRecon.stockReconciliationCard.stockMetrics.stockInHand"
+          },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
         }

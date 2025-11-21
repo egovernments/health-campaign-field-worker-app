@@ -21,11 +21,13 @@ class ActionPopupWidget implements FlowWidget {
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
     final popupConfig = props['popupConfig'] as Map<String, dynamic>?;
 
-    // Capture screenKey and stateData in build method, not in callback
+    // Capture context data in build method, not in callback
     final crudContext = CrudItemContext.of(context);
     final screenKey = crudContext?.screenKey ?? getScreenKeyFromArgs(context);
     final stateData =
         screenKey != null ? extractCrudStateData(screenKey) : null;
+    final item = crudContext?.item;
+    final listIndex = crudContext?.listIndex;
 
     return DigitButton(
         mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
@@ -45,8 +47,8 @@ class ActionPopupWidget implements FlowWidget {
 
           // Show popup if popupConfig is provided
           if (popupConfig != null) {
-            await _showActionPopup(
-                context, popupConfig, onAction, screenKey, stateData);
+            await _showActionPopup(context, popupConfig, onAction, screenKey,
+                stateData, item, listIndex);
           }
         },
         type: _parseButtonType(props['type']),
@@ -66,6 +68,8 @@ class ActionPopupWidget implements FlowWidget {
     void Function(ActionConfig) onAction,
     String? screenKey,
     CrudStateData? stateData,
+    Map<String, dynamic>? item,
+    int? listIndex,
   ) {
     final title = popupConfig['title'] as String? ?? 'Popup';
     final description = popupConfig['description'] as String?;
@@ -96,16 +100,20 @@ class ActionPopupWidget implements FlowWidget {
         actionSpacing: spacer2,
         additionalWidgets: [
           // Build body widgets from config
-          // Wrap in CrudItemContext so widgets inside popup can access screenKey
+          // Wrap in CrudItemContext so widgets inside popup can access context data
           ...bodyWidgets.map((widgetJson) {
             if (widgetJson is Map<String, dynamic>) {
               return CrudItemContext(
                 stateData: stateData,
                 screenKey: screenKey,
-                child: FlowWidgetFactory.build(
-                  widgetJson,
-                  ctx,
-                  onAction,
+                item: item,
+                listIndex: listIndex,
+                child: Builder(
+                  builder: (innerCtx) => FlowWidgetFactory.build(
+                    widgetJson,
+                    innerCtx,
+                    onAction,
+                  ),
                 ),
               );
             }

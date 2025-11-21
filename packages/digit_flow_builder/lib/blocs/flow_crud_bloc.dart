@@ -31,9 +31,13 @@ class FlowCrudBloc extends CrudBloc {
       wrapper = WrapperBuilder(entities, flowConfig['wrapperConfig']).build();
     }
 
+    // Preserve existing formData and widgetData when creating new state
+    final existingState = FlowCrudStateRegistry().get(screenKey);
     final flowState = FlowCrudState(
       base: crudState,
       stateWrapper: wrapper,
+      formData: existingState?.formData,
+      widgetData: existingState?.widgetData,
     );
 
     onUpdate?.call(screenKey, flowState);

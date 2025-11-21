@@ -1,7 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
+import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_flow_builder/widgets/localization_context.dart';
+import 'package:digit_flow_builder/widgets/localization_context.dart';
+import 'package:digit_flow_builder/widgets/localized.dart';
 import 'package:digit_flow_builder/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -169,6 +172,50 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
         );
       },
     );
+  }
+
+  String? _resolveHeading(dynamic heading, String screenKey) {
+    if (heading == null) return null;
+
+    // Resolve templates like {{navigation.reportType}}
+    final headingStr = heading.toString();
+
+    // Get navigation params from FlowCrudStateRegistry
+    final navigationParams =
+        FlowCrudStateRegistry().getNavigationParams(screenKey);
+    final contextData = {
+      'navigation': navigationParams ?? {},
+    };
+
+    final resolved =
+        resolveTemplate(headingStr, contextData, screenKey: screenKey);
+
+    // Then translate
+    final translated = localizations.translate(resolved);
+
+    return translated.isNotEmpty ? translated : null;
+  }
+
+  String? _resolveDescription(dynamic description, String screenKey) {
+    if (description == null) return null;
+
+    // Resolve templates
+    final descriptionStr = description.toString();
+
+    // Get navigation params from FlowCrudStateRegistry
+    final navigationParams =
+        FlowCrudStateRegistry().getNavigationParams(screenKey);
+    final contextData = {
+      'navigation': navigationParams ?? {},
+    };
+
+    final resolved =
+        resolveTemplate(descriptionStr, contextData, screenKey: screenKey);
+
+    // Then translate
+    final translated = localizations.translate(resolved);
+
+    return translated.isNotEmpty ? translated : null;
   }
 
   Future<void> _handleBackNavigation(BuildContext context) async {

@@ -1,5 +1,6 @@
-import 'math_functions.dart';
 import 'package:petitparser/petitparser.dart';
+
+import 'math_functions.dart';
 import 'parser_core.dart';
 
 /// A class that parses and evaluates mathematical expressions.
@@ -21,14 +22,22 @@ class FormulaParser {
         _isReservedWordsUsed = true;
         _reservedWordsUsed.add(key);
       } else {
-        // Handle empty string values by wrapping them in quotes
-        String replacementValue;
+        // ⭐ FIX: ALWAYS wrap string values in quotes
+        String safeValue;
+
         if (value == null || value.toString().isEmpty) {
-          replacementValue = '""';
+          safeValue = '""';
+        } else if (value is num || value == "null") {
+          safeValue = value.toString(); // keep raw numbers
         } else {
-          replacementValue = value.toString();
+          final clean = value.toString().replaceAll('"', '');
+          safeValue = '"$clean"'; // wrap strings in quotes
         }
-        tempExp = tempExp.replaceAll(key, replacementValue);
+
+        tempExp = tempExp.replaceAll(
+          RegExp(r'\b' + RegExp.escape(key) + r'\b'),
+          safeValue,
+        );
       }
     });
 
