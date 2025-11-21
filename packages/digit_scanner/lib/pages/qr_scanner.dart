@@ -169,7 +169,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
 
     return Scaffold(
       body: BlocConsumer<DigitScannerBloc, DigitScannerState>(
-        listenWhen: (p, c) => p.errorSeq != c.errorSeq,
+        listenWhen: (p, c) => p.errorSeq != c.errorSeq && p.error != c.error,
         listener: (context, state) {
           final msg = state.error?.trim();
           if (msg != null && msg.isNotEmpty) {

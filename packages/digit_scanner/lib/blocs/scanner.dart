@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:digit_scanner/utils/extensions/extensions.dart';
+import 'package:digit_scanner/utils/i18_key_constants.dart' as i18;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
@@ -16,6 +17,7 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
   }
 
   String _kBar(GS1Barcode b) => b.toString().trim();
+
   String _kQR(String s) => s.trim();
 
   // Pull message by key from merged (state + event) map with fallback
@@ -32,7 +34,7 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
     return (v == null || v.trim().isEmpty) ? fallback : v;
   }
 
-  void _emitError(
+  Future<void> _emitError(
     DigitScannerEmitter emit, {
     required List<GS1Barcode> bar,
     required List<String> qr,
@@ -41,7 +43,19 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
     required String? regex,
     required String message,
     Map<String, String>? messages,
-  }) {
+  }) async {
+    // Only emit error if it's different from the current error
+    // This prevents showing the same error multiple times
+    if (state.error == message) {
+      return;
+    }
+
+    // Add delay before emitting error to prevent immediate error display
+    await Future.delayed(const Duration(seconds: 2));
+
+    // Check if emitter is still active before emitting
+    if (emit.isDone) return;
+
     emit(state.copyWith(
       barCodes: bar,
       qrCodes: qr,
@@ -126,7 +140,7 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
         }
 
         if (currBar.length + candidates.length > maxQty) {
-          _emitError(
+          await _emitError(
             emit,
             bar: currBar,
             qr: const [],
@@ -136,7 +150,7 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
             messages: effectiveMessages,
             message: _pickMsg(
               key: 'scanLimit',
-              fallback: 'Max Count reached',
+              fallback: i18.scanner.scanLimitReached,
               eventMsgs: event.messages,
             ),
           );
@@ -152,7 +166,7 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
         for (final b in candidates) {
           final s = b.displayValue();
           if (s == null || s.isEmpty) {
-            _emitError(
+            await _emitError(
               emit,
               bar: state.barCodes,
               qr: const [],
@@ -162,14 +176,14 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
               messages: effectiveMessages,
               message: _pickMsg(
                 key: 'invalidGS1',
-                fallback: 'Invalid GS1: no usable value',
+                fallback: i18.scanner.invalidGS1Code,
                 eventMsgs: event.messages,
               ),
             );
             return;
           }
           if (pattern != null && !pattern.hasMatch(s)) {
-            _emitError(
+            await _emitError(
               emit,
               bar: state.barCodes,
               qr: const [],
@@ -179,14 +193,14 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
               messages: effectiveMessages,
               message: _pickMsg(
                 key: 'pattern',
-                fallback: 'Regex failed',
+                fallback: i18.scanner.patternMismatch,
                 eventMsgs: event.messages,
               ),
             );
             return;
           }
           if (exist.contains(s) || !seenNew.add(s)) {
-            _emitError(
+            await _emitError(
               emit,
               bar: state.barCodes,
               qr: const [],
@@ -196,7 +210,7 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
               messages: effectiveMessages,
               message: _pickMsg(
                 key: 'duplicate',
-                fallback: 'You are scanning Duplicate value',
+                fallback: i18.scanner.duplicateCode,
                 eventMsgs: event.messages,
               ),
             );
@@ -230,7 +244,7 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
       }
 
       if (currQR.length + candidates.length > maxQty) {
-        _emitError(
+        await _emitError(
           emit,
           bar: const [],
           qr: currQR,
@@ -240,7 +254,7 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
           messages: effectiveMessages,
           message: _pickMsg(
             key: 'scanLimit',
-            fallback: 'Max Count reached',
+            fallback: i18.scanner.scanLimitReached,
             eventMsgs: event.messages,
           ),
         );
@@ -251,7 +265,7 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
       final seenNew = <String>{};
       for (final q in candidates) {
         if (pattern != null && !pattern.hasMatch(q)) {
-          _emitError(
+          await _emitError(
             emit,
             bar: const [],
             qr: currQR,
@@ -261,14 +275,14 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
             messages: effectiveMessages,
             message: _pickMsg(
               key: 'pattern',
-              fallback: 'Regex failed',
+              fallback: i18.scanner.patternMismatch,
               eventMsgs: event.messages,
             ),
           );
           return;
         }
         if (exist.contains(q) || !seenNew.add(q)) {
-          _emitError(
+          await _emitError(
             emit,
             bar: const [],
             qr: currQR,
@@ -278,7 +292,7 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
             messages: effectiveMessages,
             message: _pickMsg(
               key: 'duplicate',
-              fallback: 'You are scanning Duplicate value',
+              fallback: i18.scanner.duplicateCode,
               eventMsgs: event.messages,
             ),
           );
@@ -297,7 +311,7 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
         messages: effectiveMessages,
       ));
     } catch (e) {
-      _emitError(
+      await _emitError(
         emit,
         bar: state.barCodes,
         qr: state.qrCodes,
@@ -307,7 +321,7 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
         messages: state.messages,
         message: _pickMsg(
           key: 'scannerFailed',
-          fallback: 'Scanner failed: ${e.toString()}',
+          fallback: i18.scanner.scannerFailed,
         ),
       );
     }

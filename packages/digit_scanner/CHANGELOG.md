@@ -1,4 +1,14 @@
+## 0.0.2-console
+
+* Improved error handling to show validation errors only once
+* Fixed continuous error display issue when scanning reaches quantity limit
+* Moved i18n constants for scanner error messages (scan limit, duplicate, pattern mismatch, invalid
+  GS1)
+* Optimized scanner to stop processing after reaching maximum quantity
+* Enhanced bloc state management to prevent duplicate error emissions
+
 ## 0.0.1-console
+
 * Added dynamic validations
 
 ## 1.0.6+2

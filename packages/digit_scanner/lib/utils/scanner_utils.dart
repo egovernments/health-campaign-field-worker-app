@@ -293,9 +293,6 @@ class DigitScannerUtils {
       );
     }
 
-    // Wait for 2 seconds before proceeding
-    await Future.delayed(const Duration(seconds: 2));
-
     // Update the state to allow processing again and indicate not busy
     setStateCallback();
   }

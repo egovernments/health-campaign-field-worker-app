@@ -174,4 +174,10 @@ class Scanner {
   String get batchNoRequired => 'BARCODE_BATCH_NO_REQUIRED';
   String get serialNoRequired => 'BARCODE_SERIAL_NO_REQUIRED';
   String get expiryDateRequired => 'BARCODE_EXPIRY_DATE_REQUIRED';
+
+  String get scanLimitReached => 'SCANNER_SCAN_LIMIT_REACHED';
+  String get invalidGS1Code => 'SCANNER_INVALID_GS1_CODE';
+  String get patternMismatch => 'SCANNER_PATTERN_MISMATCH';
+  String get duplicateCode => 'SCANNER_DUPLICATE_CODE';
+  String get scannerFailed => 'SCANNER_FAILED';
 }
