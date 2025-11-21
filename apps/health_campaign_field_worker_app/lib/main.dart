@@ -5648,9 +5648,10 @@ final dynamic sampleInventoryFlows = {
 };
 
 final dynamic inventoryReportFlows = {
-  "name": "INVENTORY",
+  "name": "STOCKREPORTS",
   "initialPage": "viewReports",
-  "project": "CMP-2025-08-04-004846",
+  "order": 5,
+  "project": "LLIN-mz",
   "version": 1,
   "disabled": false,
   "isSelected": true,
@@ -5658,16 +5659,17 @@ final dynamic inventoryReportFlows = {
     {
       "screenType": "TEMPLATE",
       "name": "viewReports",
-      "heading": "View Reports",
-      "description": "",
+      "heading": "STOCKREPORTS_VIEW_REPORTS_HEADING",
+      "description": "STOCKREPORTS_VIEW_REPORTS_DESCRIPTION",
       "header": [
         {
+          "type": "template",
           "format": "backLink",
-          "label": "Back",
+          "label": "STOCKREPORTS_VIEW_REPORTS_BACK_BUTTON_LABEL",
           "onAction": [
             {"actionType": "BACK_NAVIGATION", "properties": {}}
           ]
-        },
+        }
       ],
       "footer": [],
       "initActions": [
@@ -5710,10 +5712,11 @@ final dynamic inventoryReportFlows = {
       },
       "body": [
         {
+          "type": "template",
           "format": "menu_card",
-          "heading": "Stock Received",
-          "description": "View stock received reports",
-          "icon": 'assessment',
+          "heading": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECIEVE_HEADING",
+          "description": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECIEVE_DESCRIPTION",
+          "icon": "Assessment",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -5730,10 +5733,11 @@ final dynamic inventoryReportFlows = {
           ]
         },
         {
+          "type": "template",
           "format": "menu_card",
-          "heading": "Stock Issued",
-          "description": "View stock issued reports",
-          "icon": 'assessment',
+          "heading": "STOCKREPORTS_VIEW_REPORTS_STOCK_ISSUED_HEADING",
+          "description": "STOCKREPORTS_VIEW_REPORTS_STOCK_ISSUED_DESCRIPTION",
+          "icon": "Assessment",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -5750,10 +5754,11 @@ final dynamic inventoryReportFlows = {
           ]
         },
         {
+          "type": "template",
           "format": "menu_card",
-          "heading": "Stock Returned",
-          "description": "View stock returned reports",
-          "icon": 'assessment',
+          "heading": "STOCKREPORTS_VIEW_REPORTS_STOCK_RETURNED_HEADING",
+          "description": "STOCKREPORTS_VIEW_REPORTS_STOCK_RETURNED_DESCRIPTION",
+          "icon": "Assessment",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -5770,10 +5775,11 @@ final dynamic inventoryReportFlows = {
           ]
         },
         {
+          "type": "template",
           "format": "menu_card",
-          "heading": "Stock Damaged",
-          "description": "View stock damaged reports",
-          "icon": 'assessment',
+          "heading": "STOCKREPORTS_VIEW_REPORTS_STOCK_DAMAGED_HEADING",
+          "description": "STOCKREPORTS_VIEW_REPORTS_STOCK_DAMAGED_DESCRIPTION",
+          "icon": "Assessment",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -5790,10 +5796,11 @@ final dynamic inventoryReportFlows = {
           ]
         },
         {
+          "type": "template",
           "format": "menu_card",
-          "heading": "Stock Loss",
-          "description": "View stock loss reports",
-          "icon": 'assessment',
+          "heading": "STOCKREPORTS_VIEW_REPORTS_STOCK_LOSS_HEADING",
+          "description": "STOCKREPORTS_VIEW_REPORTS_STOCK_LOSS_DESCRIPTION",
+          "icon": "Assessment",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -5810,10 +5817,11 @@ final dynamic inventoryReportFlows = {
           ]
         },
         {
+          "type": "template",
           "format": "menu_card",
-          "heading": "Stock Reconciliation",
-          "description": "View stock reconciliation reports",
-          "icon": 'assessment',
+          "heading": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECON_HEADING",
+          "description": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECON_DESCRIPTION",
+          "icon": "Assessment",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -5834,8 +5842,8 @@ final dynamic inventoryReportFlows = {
     {
       "screenType": "TEMPLATE",
       "name": "reportDetails",
-      "heading": "{{navigation.reportType}}",
-      "description": "",
+      "heading": "STOCKREPORTS_REPORT_DETAILS_HEADING",
+      "description": "STOCKREPORTS_REPORT_DETAILS_DESCRIPTION",
       "initActions": [],
       "wrapperConfig": {
         "wrapperName": "StockReportWrapper",
@@ -5850,8 +5858,9 @@ final dynamic inventoryReportFlows = {
       },
       "header": [
         {
+          "type": "template",
           "format": "backLink",
-          "label": "Back",
+          "label": "STOCKREPORTS_REPORT_DETAILS_BACK_BUTTON_LABEL",
           "onAction": [
             {"actionType": "BACK_NAVIGATION", "properties": {}}
           ]
@@ -5859,8 +5868,9 @@ final dynamic inventoryReportFlows = {
       ],
       "footer": [
         {
+          "type": "template",
           "format": "button",
-          "label": "Back to Home",
+          "label": "STOCKREPORTS_REPORT_DETAILS_SECONDARY_ACTION_LABEL",
           "properties": {
             "type": "secondary",
             "size": "large",
@@ -5874,11 +5884,13 @@ final dynamic inventoryReportFlows = {
       ],
       "body": [
         {
+          "type": "template",
           "format": "card",
           "children": [
             {
+              "type": "template",
               "format": "dropdown",
-              "label": "Select Warehouse",
+              "label": "STOCKREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
               "required": true,
               "key": "selectedFacility",
               "source": "{{navigation.facilities}}",
@@ -5913,15 +5925,16 @@ final dynamic inventoryReportFlows = {
                             "{{fn:getSenderOrReceiver(navigation.reportType)}}",
                         "value": "{{selectedFacility}}",
                         "operation": "equals"
-                      },
-                    ],
+                      }
+                    ]
                   }
                 }
               ]
             },
             {
+              "type": "template",
               "format": "dropdown",
-              "label": "Select Product",
+              "label": "STOCKREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
               "required": true,
               "key": "selectedProduct",
               "source": "{{navigation.productVariants}}",
@@ -5955,8 +5968,8 @@ final dynamic inventoryReportFlows = {
                             "{{fn:getSenderOrReceiver(navigation.reportType)}}",
                         "value": "{{selectedFacility}}",
                         "operation": "equals"
-                      },
-                    ],
+                      }
+                    ]
                   }
                 }
               ]
@@ -5964,37 +5977,39 @@ final dynamic inventoryReportFlows = {
           ]
         },
         {
+          "type": "template",
           "format": "infoCard",
-          "message":
-              "Please select both warehouse and product to view the report",
-          "type": "info",
+          "message": "STOCKREPORTS_REPORT_DETAILS_INFO_CARD_LABEL",
+          "properties": {"type": "info"},
           "visible":
               "{{selectedFacility}} == null || {{selectedProduct}} == null"
         },
         {
+          "type": "template",
           "format": "infoCard",
-          "message": "No records found for the selected filters",
-          "type": "info",
+          "message": "STOCKREPORTS_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
+          "properties": {"type": "info"},
           "visible":
               "{{stock.length}} == 0 && {{selectedFacility}} != null && {{selectedProduct}} != null && {{navigation.reportType}} != 'reconciliation'"
         },
         {
+          "type": "template",
           "format": "table",
           "data": {
             "source": "StockModel",
             "columns": [
               {
-                "header": "Date",
+                "header": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_1_LABEL",
                 "cellValue":
                     "{{fn:formatDate(item.dateOfEntry, 'date', 'dd MMM yyyy')}}"
               },
               {
-                "header": "MRN",
+                "header": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_2_LABEL",
                 "cellValue":
                     "{{fn:getAdditionalFieldValue(item.additionalFields.fields, 'mrnNumber')}}"
               },
               {
-                "header": "Waybill Number",
+                "header": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_3_LABEL",
                 "cellValue": "{{item.wayBillNumber}}"
               },
               {"header": "Quantity", "cellValue": "{{item.quantity}}"}
@@ -6008,9 +6023,10 @@ final dynamic inventoryReportFlows = {
 };
 
 final dynamic stockReconciliationFlows = {
-  "name": "STOCK_RECONCILIATION",
+  "name": "STOCKRECONCILIATION",
   "initialPage": "stockReconciliationDetails",
-  "project": "CMP-2025-08-04-004846",
+  "order": 6,
+  "project": "LLIN-mz",
   "version": 1,
   "disabled": false,
   "isSelected": true,
@@ -6018,7 +6034,7 @@ final dynamic stockReconciliationFlows = {
     {
       "screenType": "FORM",
       "name": "stockReconciliationDetails",
-      "project": "CMP-2025-08-04-004846",
+      "project": "LLIN-mz",
       "version": 1,
       "disabled": false,
       "isSelected": true,
@@ -6063,21 +6079,23 @@ final dynamic stockReconciliationFlows = {
       "pages": [
         {
           "page": "stockRecon",
-          "label": "Stock Reconciliation",
+          "label": "STOCKRECONCILIATION_STOCKRECONCILIATION_HEADING",
           "order": 1,
           "type": "object",
-          "description": "Perform stock reconciliation for your facility",
-          "actionLabel": "Submit",
+          "description": "STOCKRECONCILIATION_STOCKRECONCILIATION_DESCRIPTION",
+          "actionLabel": "STOCKRECONCILIATION_STOCKRECONCILIATION_ACTION_LABEL",
           "properties": [
             {
               "type": "dynamic",
-              "label": "Facility and Product Selection",
+              "label":
+                  "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_LABEL",
               "order": 1,
               "value": "",
               "format": "custom",
               "hidden": false,
               "tooltip": "",
-              "helpText": "Select facility and product to reconcile stock",
+              "helpText":
+                  "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_HELP_TEXT",
               "infoText": "",
               "readOnly": false,
               "fieldName": "stockReconciliationCard",
@@ -6089,7 +6107,8 @@ final dynamic stockReconciliationFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Please select facility and product"
+                  "message":
+                      "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -6098,14 +6117,15 @@ final dynamic stockReconciliationFlows = {
             },
             {
               "type": "integer",
-              "label": "Manual Count",
+              "label":
+                  "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_LABEL",
               "order": 2,
               "value": "",
               "format": "number",
               "hidden": false,
               "tooltip": "",
               "helpText":
-                  "Enter the physical count of stock after manual verification",
+                  "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_HELP_TEXT",
               "infoText": "",
               "readOnly": false,
               "fieldName": "manualCount",
@@ -6117,12 +6137,14 @@ final dynamic stockReconciliationFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "Manual count is required"
+                  "message":
+                      "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_REQUIRED_ERROR"
                 },
                 {
                   "type": "min",
                   "value": 0,
-                  "message": "Manual count must be 0 or greater"
+                  "message":
+                      "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_MIN_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -6130,14 +6152,14 @@ final dynamic stockReconciliationFlows = {
             },
             {
               "type": "string",
-              "label": "Comments",
+              "label": "STOCKRECONCILIATION_STOCKRECONCILIATION_comments_LABEL",
               "order": 3,
               "value": "",
               "format": "textArea",
               "hidden": false,
               "tooltip": "",
               "helpText":
-                  "Add any comments or observations about the reconciliation",
+                  "STOCKRECONCILIATION_STOCKRECONCILIATION_comments_HELP_TEXT",
               "infoText": "",
               "readOnly": false,
               "fieldName": "comments",
@@ -6166,7 +6188,7 @@ final dynamic stockReconciliationFlows = {
           "isMultiSelect": null,
           "includeInForm": null,
           "includeInSummary": null,
-          "autoEnable": null,
+          "autoEnable": null
         }
       ],
       "onAction": [
@@ -6214,19 +6236,22 @@ final dynamic stockReconciliationFlows = {
     {
       "screenType": "TEMPLATE",
       "name": "stockReconciliationSuccess",
-      "heading": "Success",
+      "heading": "",
       "description": "",
       "header": [],
       "footer": [],
       "initActions": [],
       "body": [
         {
+          "type": "template",
           "format": "panelCard",
-          "label": "Stock reconciliation submitted successfully",
-          "description": "Your stock reconciliation has been recorded",
+          "label": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_HEADING",
+          "description":
+              "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_DESCRIPTION",
           "properties": {"type": "success"},
           "primaryAction": {
-            "label": "Back to Home",
+            "label":
+                "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_PRIMARY_ACTION_LABEL",
             "onAction": [
               {
                 "actionType": "NAVIGATION",
