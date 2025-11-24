@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:closed_household/closed_household.dart';
-import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:complaints/complaints.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart';
@@ -605,7 +604,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             if (isTriggerLocalisation) {
               final moduleName =
-                  'hcm-complaint-${context.selectedProject.referenceID}';
+                  'hcm-complaints-${context.selectedProject.referenceID}';
               triggerLocalization(module: moduleName);
               isTriggerLocalisation = false;
             }
@@ -651,10 +650,10 @@ class _HomePageState extends LocalizedState<HomePage> {
               if (schemaJsonRaw != null) {
                 final allSchemas =
                     json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                final manageStock = allSchemas['COMPLAINT'];
+                final complaint = allSchemas['COMPLAINTS'];
 
-                final manageStockData = manageStock?['data'];
-                final flowsData = (manageStockData['flows'] as List<dynamic>?)
+                final complaintsData = complaint?['data'];
+                final flowsData = (complaintsData['flows'] as List<dynamic>?)
                         ?.map((e) => Map<String, dynamic>.from(e as Map))
                         .toList() ??
                     [];
@@ -662,8 +661,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 NavigationRegistry.setupNavigation(context);
 
                 context.router.push(
-                  FlowBuilderHomeRoute(
-                      pageName: manageStockData["initialPage"]),
+                  FlowBuilderHomeRoute(pageName: complaintsData["initialPage"]),
                 );
               } else {
                 FlowRegistry.setConfig(sampleComplaintFlows["flows"]
@@ -878,14 +876,60 @@ class _HomePageState extends LocalizedState<HomePage> {
           customIconSize: 40,
           customIcon: Constants.closedHouseholdSvg,
           label: i18.home.closedHouseHoldLabel,
-          onPressed: () {
+          onPressed: () async {
             if (isTriggerLocalisation) {
               final moduleName =
-                  'hcm-registration-${context.selectedProject.referenceID}';
+                  'hcm-closehousehold-${context.selectedProject.referenceID}';
               triggerLocalization(module: moduleName);
               isTriggerLocalisation = false;
             }
-            context.router.push(const ClosedHouseholdWrapperRoute());
+            try {
+              CrudBlocSingleton().setData(
+                crudService: DigitCrudService(
+                  context: context,
+                  relationshipMap: [],
+                  nestedModelMappings: [],
+                  searchEntityRepository:
+                      context.read<SearchEntityRepository>(),
+                ),
+                dynamicEntityModelListener: EntityModelMapMapper(),
+              );
+              WidgetRegistry.initialize();
+              final prefs = await SharedPreferences.getInstance();
+              final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+              if (schemaJsonRaw != null) {
+                final allSchemas =
+                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                final closeHousehold = allSchemas['CLOSEHOUSEHOLD'];
+
+                final closeHouseholdData = closeHousehold?['data'];
+                final flowsData =
+                    (closeHouseholdData['flows'] as List<dynamic>?)
+                            ?.map((e) => Map<String, dynamic>.from(e as Map))
+                            .toList() ??
+                        [];
+                FlowRegistry.setConfig(flowsData);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: closeHouseholdData["initialPage"]),
+                );
+              } else {
+                FlowRegistry.setConfig(sampleCloseHouseholdFlows["flows"]
+                    as List<Map<String, dynamic>>);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: sampleComplaintFlows["initialPage"]),
+                );
+              }
+            } catch (e) {
+              debugPrint('error $e');
+            }
+            //   context.router.push(const ClosedHouseholdWrapperRoute());
           },
         ),
       ),

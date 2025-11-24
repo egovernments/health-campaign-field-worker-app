@@ -537,5 +537,186 @@ final jsonConfig = {
         }
       }
     }
-  }
+  },
+  "closeHouseholdRegistration": {
+    "fallbackModel": "HouseholdModel",
+    // fallback model to map form values which are not mapped to any field
+    "models": {
+      "HouseholdModel": {
+        "mappings": {
+          "id": "housing.id",
+          "memberCount": "__value: 1",
+          "latitude": "closeHouseholdDetails.latLng[0]",
+          "longitude": "closeHouseholdDetails.latLng[1]",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "clientReferenceId": "__generate:uuid",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "address": {
+            "id": "address.id",
+            "relatedClientReferenceId":
+                "__ref:HouseholdModel.clientReferenceId",
+            "doorNo": "address.doorNo",
+            "latitude": "closeHouseholdDetails.latLng[0]",
+            "longitude": "closeHouseholdDetails.latLng[1]",
+            "locationAccuracy": "closeHouseholdDetails.latLng[2]",
+            "addressLine1": "beneficiaryLocation.addressLine1",
+            "addressLine2": "addressLine2",
+            "landmark": "address.landmark",
+            "city": "address.city",
+            "pincode": "address.pincode",
+            "buildingName": "address.buildingName",
+            "street": "address.street",
+            "type": "__value:PERMANENT",
+            "boundaryType": "address.boundaryType",
+            "locality": {
+              "code": "__context:selectedBoundaryCode",
+              "name": "__context:boundary.name",
+              "nonRecoverableError": "address.nonRecoverable",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion",
+            },
+            "boundary": "address.boundary",
+            "nonRecoverableError": "address.nonRecoverable",
+            "tenantId": "__context:tenantId",
+            "rowVersion": "meta.rowVersion",
+            "clientAuditDetails": "__generate:clientAudit",
+            "auditDetails": "__generate:audit",
+          },
+          "householdType": "__context:householdType",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "additionalFields": {}
+        }
+      },
+      "IndividualModel": {
+        "mappings": {
+          "id": "personalDetails.id",
+          "individualId": "personalDetails.individualId",
+          "userId": "personalDetails.userId",
+          "userUuid": "personalDetails.uuid",
+          "dateOfBirth": "",
+          "mobileNumber": "",
+          "altContactNumber": "contactInfo.altContact",
+          "email": "contactInfo.email",
+          "fatherName": "family.fatherName",
+          "husbandName": "family.husbandName",
+          "photo": "personalDetails.photo",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "clientReferenceId": "__generate:uuid",
+
+          /// Note: Generate uuid
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "name": {
+            "individualClientReferenceId":
+                "__ref:IndividualModel.clientReferenceId",
+            "givenName": "closeHouseholdDetails.headName",
+            "clientAuditDetails": "__generate:clientAudit",
+            "auditDetails": "__generate:audit",
+          },
+          "bloodGroup": "health.bloodGroup",
+          "gender": "beneficiaryDetails.gender",
+          "address": "list:AddressModel",
+          "identifiers": "list:IdentifierModel",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "boundaryCode": "__context:boundary.code",
+        },
+        "listMappings": {
+          "IdentifierModel": {
+            "mappings": {
+              "id": "id",
+              "identifierType": "beneficiaryDetails.identifiers[0]",
+              "identifierId": "beneficiaryDetails.identifiers[1]",
+              "boundaryCode": "__context:selectedBoundaryCode",
+              "nonRecoverableError": "error.nonRecoverable",
+              "individualClientReferenceId":
+                  "__ref:IndividualModel.clientReferenceId",
+              "clientReferenceId": "__generate:uuid",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion",
+              "clientAuditDetails": "__generate:clientAudit",
+              "auditDetails": "__generate:audit",
+            }
+          },
+          "AddressModel": {
+            "mappings": {
+              "id": "address.id",
+              "boundaryCode": "__context:selectedBoundaryCode",
+              "relatedClientReferenceId":
+                  "__ref:IndividualModel.clientReferenceId",
+              "doorNo": "address.doorNo",
+              "latitude": "beneficiaryLocation.latLng[0]",
+              "longitude": "beneficiaryLocation.latLng[1]",
+              "locationAccuracy": "address.locationAccuracy",
+              "addressLine1": "beneficiaryLocation.addressLine1",
+              "addressLine2": "addressLine2",
+              "landmark": "address.landmark",
+              "city": "address.city",
+              "type": "__value:PERMANENT",
+              "pincode": "address.pincode",
+              "buildingName": "address.buildingName",
+              "street": "address.street",
+              "boundaryType": "address.boundaryType",
+              "locality": {
+                "code": "__context:selectedBoundaryCode",
+                "name": "__context:boundary.name",
+                "nonRecoverableError": "address.nonRecoverable",
+                "tenantId": "__context:tenantId",
+                "rowVersion": "meta.rowVersion",
+              },
+              "boundary": "address.boundary",
+              "nonRecoverableError": "address.nonRecoverable",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion",
+              "clientAuditDetails": "__generate:clientAudit",
+              "auditDetails": "__generate:audit",
+            }
+          }
+        }
+      },
+      "ProjectBeneficiaryModel": {
+        "mappings": {
+          "id": "beneficiaryDetails.id",
+          "projectId": "__context:projectId",
+          "tenantId": "__context:tenantId",
+          "beneficiaryId": "beneficiaryDetails.beneficiaryId",
+          "tag": "beneficiaryDetails.tag",
+          "beneficiaryClientReferenceId":
+              "__switch:__context:beneficiaryType:{INDIVIDUAL:__ref:IndividualModel.clientReferenceId,HOUSEHOLD:__ref:HouseholdModel.clientReferenceId}",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "clientReferenceId": "__generate:uuid",
+
+          /// Note: Generate uuid
+          "rowVersion": "meta.rowVersion",
+          "dateOfRegistration": "householdDetails.dateOfRegistration",
+          "additionalFields": "additionalInfo.fields",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+        }
+      },
+      "HouseholdMemberModel": {
+        "mappings": {
+          "id": "members.id",
+          "householdId": "members.householdId",
+          "householdClientReferenceId":
+              "__ref:HouseholdModel.clientReferenceId",
+          "individualId": "members.individualId",
+          "individualClientReferenceId":
+              "__ref:IndividualModel.clientReferenceId",
+          "isHeadOfHousehold": "beneficiaryDetails.isHeadOfFamily",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "clientReferenceId": "__generate:uuid",
+
+          /// Note: Generate uuid
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "additionalFields": "additionalInfo.fields",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+        }
+      },
+    }
+  },
 };

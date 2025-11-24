@@ -79,7 +79,7 @@ class AppLifecycleObserver extends WidgetsBindingObserver {
 }
 
 final dynamic sampleFlows = {
-  "name": "REGISTRATION-DELIVERY",
+  "name": "REGISTRATION",
   "initialPage": "searchBeneficiary",
   "project": "CMP-2025-08-04-004846",
   "version": 1,
@@ -2742,7 +2742,7 @@ final dynamic sampleFlows = {
   ]
 };
 final dynamic sampleReferralFlows = {
-  "name": "REFERRAL",
+  "name": "HFREFERRAL",
   "initialPage": "referralInbox",
   "project": "CMP-2025-08-04-004846",
   "version": 1,
@@ -2920,54 +2920,24 @@ final dynamic sampleReferralFlows = {
       "isSelected": true,
       "pages": [
         {
-          "page": "complaintType",
+          "page": "facilityDetails",
           "type": "object",
-          "label": "COMPLAINT_TYPE_HEADING",
-          "order": 1,
-          "actionLabel": "COMPLAINT_TYPE_DESCRIPTION",
-          "description": "APPONE_COMPLAINTTYPE_DESCRIPTION",
+          "label": "APPONE_HFREFERALFLOW_FACILITYSCREEN_HEADING",
+          "order": 2,
+          "navigateTo": {"name": "referralDetails", "type": "form"},
           "properties": [
             {
               "type": "string",
-              "label": "COMPLAINT_TYPE_complaintType_LABEL",
+              "label": "APPONE_HFREFERALFLOW_Adminstative_area_label",
               "order": 1,
               "value": "",
-              "format": "radio",
-              "hidden": false,
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "complaintType",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "enums": [
-                {"code": "SyncNotWorking", "name": "Sync Not Working"},
-                {"code": "NotEnoughStock", "name": "Not Enough Stock"},
-                {"code": "Other", "name": "Other"}
-              ],
-              "schemaCode": "RAINMAKER-PGR.ServiceDefs",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "COMPLAINT_TYPE_complaintType_REQUIRED_ERROR"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "string",
-              "label": "COMPLAINT_TYPE_otherReason_LABEL",
-              "order": 2,
-              "value": "",
-              "format": "text",
+              "format": "locality",
               "hidden": false,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "otherReason",
+              "fieldName": "administrativeUnitKey",
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": "",
@@ -2976,29 +2946,71 @@ final dynamic sampleReferralFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "COMPLAINT_TYPE_otherReason_REQUIRED_ERROR"
+                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
                 }
               ],
               "errorMessage": "",
-              "isMultiSelect": false,
-              "visibilityCondition": {
-                "expression": "complaintType.complaintType==Other"
-              }
-            }
-          ]
-        },
-        {
-          "page": "locationDetails",
-          "type": "object",
-          "label": "LOCATION_DETAILS_HEADING",
-          "order": 3,
-          "actionLabel": "LOCATION_DETAILS_ACTION_LABEL",
-          "description": "LOCATION_DETAILS_DESCRIPTION",
-          "properties": [
+              "isMultiSelect": false
+            },
+            {
+              "type": "integer",
+              "label": "APPONE_HFREFERALFLOW_dateOfEvaluation_label",
+              "order": 2,
+              "value": "",
+              "format": "date",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "dateOfEvaluation",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "",
+              "systemDate": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_HFREFERALFLOW_facilityDetails_DATE_OF_EVALUATION"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "dynamic",
+              "enums": [],
+              "label": "APPONE_HFREFERALFLOW_EVALUATION_FACILITY_KEY_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "evaluationFacilityKey",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": false,
+                  "message":
+                      "APPONE_HFREFERALFLOW_evaluationFacilityKey_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
             {
               "type": "string",
-              "label": "LOCATION_DETAILS_addressLine1_LABEL",
-              "order": 1,
+              "label": "APPONE_HFREFERALFLOW_hfCoordinatorKey_label",
+              "order": 4,
               "value": "",
               "format": "text",
               "hidden": false,
@@ -3006,9 +3018,10 @@ final dynamic sampleReferralFlows = {
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "addressLine1",
+              "fieldName": "hfCoordinatorKey",
               "deleteFlag": false,
               "innerLabel": "",
+              "schemaCode": "",
               "systemDate": false,
               "validations": [],
               "errorMessage": "",
@@ -3016,7 +3029,66 @@ final dynamic sampleReferralFlows = {
             },
             {
               "type": "string",
-              "label": "LOCATION_DETAILS_addressLine2_LABEL",
+              "label": "APPONE_HFREFERALFLOW_referredByKey_label",
+              "order": 5,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "referredByKey",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "",
+              "systemDate": false,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false
+            }
+          ],
+          "actionLabel": "APPONE_HFREFERALFLOW_FACILITY_ACTION_BUTTON_LABEL",
+          "description": "APPONE_HFREFERALFLOW_FACILITYSCREEN_DESCRIPTION"
+        },
+        {
+          "page": "referralDetails",
+          "type": "object",
+          "label": "APPONE_REFERRALDETAILS_SCREEN_HEADING",
+          "order": 3,
+          "navigateTo": {
+            "name": "ReferralReconAcknowledgement",
+            "type": "template"
+          },
+          "properties": [
+            {
+              "type": "dynamic",
+              "label": "APPONE_REFERRALDETAILS_SCREEN_cycle_label",
+              "order": 1,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "APPONE_REFERRALDETAILS_SCREEN_cycle_helpText_label",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "referralCycle",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": false,
+                  "message": "APPONE_REFERRALDETAILS_SCREEN_cycle_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "APPONE_REFERRALDETAILS_SCREEN_nameOfChild_label",
               "order": 2,
               "value": "",
               "format": "text",
@@ -3025,7 +3097,33 @@ final dynamic sampleReferralFlows = {
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "addressLine2",
+              "fieldName": "nameOfChild",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_REFERRALDETAILS_SCREEN_nameOfChild_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "APPONE_REFERRALDETAILS_SCREEN_beneficiaryId_label",
+              "order": 3,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "beneficiaryId",
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
@@ -3035,8 +3133,8 @@ final dynamic sampleReferralFlows = {
             },
             {
               "type": "string",
-              "label": "LOCATION_DETAILS_landmark_LABEL",
-              "order": 3,
+              "label": "APPONE_REFERRALDETAILS_SCREEN_referralCode_label",
+              "order": 4,
               "value": "",
               "format": "text",
               "hidden": false,
@@ -3044,7 +3142,7 @@ final dynamic sampleReferralFlows = {
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "landmark",
+              "fieldName": "referralCode",
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
@@ -3054,8 +3152,8 @@ final dynamic sampleReferralFlows = {
             },
             {
               "type": "integer",
-              "label": "LOCATION_DETAILS_pincode_LABEL",
-              "order": 4,
+              "label": "APPONE_REFERRALDETAILS_SCREEN_ageInMonths_label",
+              "order": 5,
               "value": "",
               "format": "text",
               "hidden": false,
@@ -3063,63 +3161,7 @@ final dynamic sampleReferralFlows = {
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "pincode",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "string",
-              "enums": [
-                {"code": "PERMANENT", "name": "PERMANENT"},
-                {"code": "CORRESPONDENCE", "name": "CORRESPONDENCE"},
-                {"code": "OTHER", "name": "OTHER"}
-              ],
-              "label": "LOCATION_DETAILS_typeOfAddress_LABEL",
-              "order": 5,
-              "format": "dropdown",
-              "hidden": true,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "typeOfAddress",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "includeInSummary": false
-            }
-          ]
-        },
-        {
-          "page": "complaintDetails",
-          "type": "object",
-          "label": "COMPLAINT_DETAILS_HEADING",
-          "order": 4,
-          "navigateTo": {
-            "name": "ComplaintsAcknowledgement",
-            "type": "template"
-          },
-          "properties": [
-            {
-              "type": "string",
-              "label": "COMPLAINT_DETAILS_administrativeArea_LABEL",
-              "order": 1,
-              "value": "",
-              "format": "locality",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "administrativeArea",
+              "fieldName": "ageInMonths",
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
@@ -3128,7 +3170,7 @@ final dynamic sampleReferralFlows = {
                   "type": "required",
                   "value": true,
                   "message":
-                      "COMPLAINT_DETAILS_administrativeArea_REQUIRED_ERROR"
+                      "APPONE_REFERRALDETAILS_SCREEN_ageInMonths_REQUIRED"
                 }
               ],
               "errorMessage": "",
@@ -3137,16 +3179,139 @@ final dynamic sampleReferralFlows = {
             {
               "type": "string",
               "enums": [
+                {"code": "OTHER", "name": "OTHER"},
+                {"code": "FEMALE", "name": "FEMALE"},
+                {"code": "MALE", "name": "MALE"}
+              ],
+              "label": "APPONE_REFERRALDETAILS_SCREEN_gender_label",
+              "order": 6,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "gender",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "common-masters.GenderType",
+              "systemDate": false,
+              "validations": [
                 {
-                  "code": "COMPLAINTS_RAISED_FOR_MYSELF",
-                  "name": "COMPLAINTFLOW_RAISED_FOR_MYSELF"
-                },
-                {
-                  "code": "COMPLAINTS_RAISED_FOR_ANOTHER_USER",
-                  "name": "COMPLAINTFLOW_RAISED_FOR_ANOTHER_USER"
+                  "type": "required",
+                  "value": true,
+                  "message": "APPONE_REFERRALDETAILS_SCREEN_gender_REQUIRED"
                 }
               ],
-              "label": "COMPLAINT_DETAILS_complaintRaisedFor_LABEL",
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "APPONE_REFERRALDETAILS_SCREEN_referralReason_label",
+              "order": 7,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "referralReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "HCM.REFERRAL_REASONS",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_REFERRALDETAILS_SCREEN_referralReason_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            }
+          ],
+          "actionLabel": "APPONE_REFERRALDETAILS_SCREEN_ACTION_BUTTON_LABEL",
+          "description": "APPONE_REFERRALDETAILS_SCREEN_SCREEN_DESCRIPTION",
+          "conditionalNavigateTo": [
+            {
+              "condition": "referralDetails.referralReason==DRUG_SE_CC",
+              "navigateTo": {
+                "name": "sideEffectFromCurrentCycle",
+                "type": "form"
+              }
+            },
+            {
+              "condition": "referralDetails.referralReason==DRUG_SE_PC",
+              "navigateTo": {
+                "name": "sideEffectFromPreviousCycle",
+                "type": "form"
+              }
+            },
+            {
+              "condition": "referralDetails.referralReason==FEVER",
+              "navigateTo": {"name": "sideEffectFever", "type": "form"}
+            },
+            {
+              "condition": "referralDetails.referralReason==SICK",
+              "navigateTo": {"name": "sideEffectSick", "type": "form"}
+            }
+          ]
+        },
+        {
+          "page": "sideEffectFromCurrentCycle",
+          "type": "object",
+          "label":
+              "APPONE_HFREFERALFLOW_SIDE_EFFECT_CURRENT_CYCLE_SCREEN_HEADER",
+          "order": 4.1,
+          "navigateTo": {
+            "name": "ReferralReconAcknowledgement",
+            "type": "template"
+          },
+          "properties": [
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "SIDE_EFFECTQ1_YES"},
+                {"code": "NO", "name": "SIDE_EFFECTQ1_NO"}
+              ],
+              "label":
+                  "APPONE_HFREFERALFLOW_SIDE_EFFECT_CURRENT_CYCLE_CHILD_EVALUATED",
+              "order": 1,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "sideEffectQ1",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "SIDE_EFFECTQ2_YES"},
+                {"code": "NO", "name": "SIDE_EFFECTQ2_NO"}
+              ],
+              "label":
+                  "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_PHARMACOVIGILANCE_HEAD",
               "order": 2,
               "value": "",
               "format": "radio",
@@ -3155,16 +3320,16 @@ final dynamic sampleReferralFlows = {
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "complaintRaisedFor",
+              "fieldName": "sideEffectQ2",
               "deleteFlag": false,
               "innerLabel": "",
+              "schemaCode": "",
               "systemDate": false,
               "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                      "COMPLAINT_DETAILS_complaintRaisedFor_REQUIRED_ERROR"
+                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
                 }
               ],
               "errorMessage": "",
@@ -3172,135 +3337,524 @@ final dynamic sampleReferralFlows = {
             },
             {
               "type": "string",
-              "label": "COMPLAINT_DETAILS_name_LABEL",
+              "enums": [
+                {"code": "YES", "name": "SIDE_EFFECTQ3_YES"},
+                {"code": "NO", "name": "SIDE_EFFECTQ3_NO"}
+              ],
+              "label":
+                  "APPONE_HFREFERALFLOW_SIDE_EFFECT_CURRENT_CYCLE_CHILD_ADMINT_TRANSFER",
               "order": 3,
               "value": "",
-              "format": "text",
+              "format": "radio",
               "hidden": false,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "name",
+              "fieldName": "sideEffectQ3",
               "deleteFlag": false,
               "innerLabel": "",
+              "schemaCode": "",
               "systemDate": false,
               "validations": [
                 {
                   "type": "required",
                   "value": true,
-                  "message": "COMPLAINT_DETAILS_name_REQUIRED_ERROR"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "autoFillCondition": [
-                {
-                  "value": "{{loggedInUserName}}",
-                  "expression":
-                      "complaintDetails.complaintRaisedFor==COMPLAINTS_RAISED_FOR_MYSELF"
-                }
-              ]
-            },
-            {
-              "type": "string",
-              "label": "COMPLAINT_DETAILS_contactNumber_LABEL",
-              "order": 4,
-              "value": "",
-              "format": "mobileNumber",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "contactNumber",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "prefixText": "+91",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "COMPLAINT_DETAILS_contactNumber_REQUIRED_ERROR"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "autoFillCondition": [
-                {
-                  "value": "{{loggedInUserMobileNumber}}",
-                  "expression":
-                      "complaintDetails.complaintRaisedFor==COMPLAINTS_RAISED_FOR_MYSELF"
-                }
-              ]
-            },
-            {
-              "type": "string",
-              "label": "COMPLAINT_DETAILS_supervisorName_LABEL",
-              "order": 5,
-              "value": "",
-              "format": "text",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "supervisorName",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "string",
-              "label": "COMPLAINT_DETAILS_supervisorContactNumber_LABEL",
-              "order": 6,
-              "value": "",
-              "format": "mobileNumber",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "supervisorContactNumber",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "prefixText": "+91",
-              "systemDate": false,
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "string",
-              "label": "COMPLAINT_DETAILS_complaintDescription_LABEL",
-              "order": 7,
-              "value": "",
-              "format": "textArea",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "complaintDescription",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message":
-                      "COMPLAINT_DETAILS_complaintDescription_REQUIRED_ERROR"
+                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false
             }
           ],
-          "actionLabel": "COMPLAINT_DETAILS_ACTION_LABEL",
-          "description": "COMPLAINT_DETAILS_DESCRIPTION"
+          "actionLabel":
+              "APPONE_HFREFERALFLOW_sideEffectFromCurrentCycleACTION_BUTTON_LABEL",
+          "description": "APPONE_HFREFERALFLOW_CC_CYCLE_DESCRIPTION"
+        },
+        {
+          "page": "sideEffectFromPreviousCycle",
+          "type": "object",
+          "label":
+              "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_SCREEN_HEADER",
+          "order": 4.2,
+          "navigateTo": {
+            "name": "ReferralReconAcknowledgement",
+            "type": "template"
+          },
+          "properties": [
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "SIDE_EFFECT_PREQ1_YES"},
+                {"code": "NO", "name": "SIDE_EFFECT_PREQ1_NO"}
+              ],
+              "label":
+                  "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_SCREEN_QUESTION_1_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "sideEffectPQ1",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "SIDE_EFFECT_PREQ2_YES"},
+                {"code": "NO", "name": "SIDE_EFFECT_PREQ2_NO"}
+              ],
+              "label":
+                  "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_SCREEN_QUESTION_2_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "sideEffectPQ2",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "SIDE_EFFECT_PREQ2_YES"},
+                {"code": "NO", "name": "SIDE_EFFECT_PREQ2_NO"}
+              ],
+              "label":
+                  "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_SCREEN_QUESTION_3_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "sideEffectPQ3",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            }
+          ],
+          "actionLabel":
+              "APPONE_HFREFERALFLOW_sideEffectFromPreviousCycleACTION_BUTTON_LABEL",
+          "description": "APPONE_HFREFERALFLOW_PRE_CYCLE_DESCRIPTION"
+        },
+        {
+          "page": "sideEffectFever",
+          "type": "object",
+          "label": "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_HEADING",
+          "order": 4.3,
+          "navigateTo": {
+            "name": "ReferralReconAcknowledgement",
+            "type": "template"
+          },
+          "properties": [
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "FEVERQ1_YES"},
+                {"code": "NO", "name": "FEVERQ1_NO"}
+              ],
+              "label": "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "feverQ1",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "POSITIVE", "name": "FEVERQ2_POSITIVE"},
+                {"code": "NEGATIVE", "name": "FEVERQ2_NEGATIVE"}
+              ],
+              "label":
+                  "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_MALARIA_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "feverQ2",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": "sideEffectFever.feverQ1==YES"
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "FEVERQ3_YES"},
+                {"code": "NO", "name": "FEVERQ2_NO"}
+              ],
+              "label":
+                  "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_NEGATIVE_MALARIA_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "feverQ3",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": "sideEffectFever.feverQ2==NEGATIVE"
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "FEVERQ4_YES"},
+                {"code": "NO", "name": "FEVERQ4_NO"}
+              ],
+              "label":
+                  "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_POSITIVE_MALARIA_HOSPITAL_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "feverQ4",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": "sideEffectFever.feverQ2==POSITIVE"
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "FEVERQ5_YES"},
+                {"code": "NO", "name": "FEVERQ5_NO"}
+              ],
+              "label":
+                  "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_POSITIVE_ANTI_MALARIA__LABEL",
+              "order": 5,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "feverQ5",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": "sideEffectFever.feverQ2==POSITIVE"
+              }
+            },
+            {
+              "type": "string",
+              "label":
+                  "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_POSITIVE_ANTI_MALARIA__LABEL_YES",
+              "order": 6,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "feverQ6",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": "sideEffectFever.feverQ5==YES"
+              }
+            }
+          ],
+          "actionLabel": "APPONE_HFREFERALFLOW_Fever_ACTION_BUTTON_LABEL",
+          "description": "APPONE_HFREFERALFLOW_FEVER_DESCRIPTION"
+        },
+        {
+          "page": "sideEffectSick",
+          "type": "object",
+          "label": "APPONE_HFREFERALFLOW_SIDE_EFFECT_SICK_SCREEN_HEADING",
+          "order": 4.4,
+          "navigateTo": {
+            "name": "ReferralReconAcknowledgement",
+            "type": "template"
+          },
+          "properties": [
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "SICKQ1_YES"},
+                {"code": "NO", "name": "SICKQ1_NO"}
+              ],
+              "label":
+                  "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREV_CYCLE_SCREEN_ADVERSE_REACTION",
+              "order": 1,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "sickQ1",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "APPONE_HFREFERALFLOW_SIDE_EFFECT_COMMENT_FOR_DIAGNOSIS",
+              "order": 2,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "sickQ4",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": "sideEffectSick.sickQ1==YES"
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "SICKQ2_YES"},
+                {"code": "NO", "name": "SICKQ2_NO"}
+              ],
+              "label": "APPONE_HFREFERALFLOW_SIDE_EFFECT_sickQ2_label",
+              "order": 3,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "sickQ2",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "APPONE_HFREFERALFLOW_SIDE_EFFECT_NAME_DOSE_DRUG",
+              "order": 4,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "sickQ5",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "visibilityCondition": {
+                "expression": "sideEffectSick.sickQ2==YES"
+              }
+            },
+            {
+              "type": "string",
+              "enums": [
+                {"code": "YES", "name": "SICKQ3_YES"},
+                {"code": "NO", "name": "SICKQ3_NO"}
+              ],
+              "label":
+                  "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_CHILD_ADMINT_TRANSFER",
+              "order": 5,
+              "value": "",
+              "format": "radio",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "sickQ3",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            }
+          ],
+          "actionLabel": "APPONE_HFREFERALFLOW_SickACTION_BUTTON_LABEL",
+          "description": "APPONE_HFREFERALFLOW_SICK_DESCRIPTION"
         }
       ],
       "wrapperConfig": {
@@ -3518,381 +4072,41 @@ final dynamic sampleReferralFlows = {
   ]
 };
 final dynamic sampleCloseHouseholdFlows = {
-  "name": "REFERRAL",
-  "initialPage": "referralInbox",
-  "project": "CMP-2025-08-04-004846",
+  "name": "CLOSEDHOUSEHOLD",
+  "initialPage": "closeHousehold",
+  "order": 7,
+  "project": "LLIN-mz",
   "version": 1,
   "disabled": false,
   "isSelected": true,
   "flows": [
     {
-      "screenType": "TEMPLATE",
-      "name": "referralInbox",
-      "heading": "COMPLAINT_INBOX_HEADING",
-      "description": "COMPLAINT_INBOX_DESCRIPTION",
-      "initActions": [
-        {
-          "actionType": "SEARCH_EVENT",
-          "properties": {
-            "type": "SEARCH_EVENT",
-            "name": "pgrService",
-            "data": [
-              {
-                "key": "tenantId",
-                "value": "{{singleton.selectedProject.tenantId}}",
-                "operation": "equals"
-              }
-            ]
-          }
-        }
-      ],
-      "header": [
-        {
-          "format": "backLink",
-          "type": "template",
-          "label": "COMPLAINT_INBOX_BACK",
-          "onAction": [
-            {"actionType": "BACK_NAVIGATION", "properties": {}}
-          ]
-        }
-      ],
-      "footer": [
-        {
-          "format": "button",
-          "type": "template",
-          "fieldName": "fileComplaint",
-          "label": "COMPLAINT_INBOX_PRIMARY_ACTION",
-          "properties": {
-            "type": "primary",
-            "size": "large",
-            "mainAxisSize": "max",
-            "mainAxisAlignment": "center"
-          },
-          "onAction": [
-            {
-              "actionType": "NAVIGATION",
-              "properties": {
-                "type": "FORM",
-                "name": "COMPLAINT_CREATE",
-                "data": []
-              }
-            }
-          ]
-        }
-      ],
-      "wrapperConfig": {
-        "wrapperName": "ComplaintWrapper",
-        "rootEntity": "PgrServiceModel",
-        "filters": [],
-        "relations": [],
-        "searchConfig": {
-          "primary": "pgrService",
-          "select": ["pgrService"]
-        }
-      },
-      "body": [
-        {
-          "format": "searchBar",
-          "label": "Enter the name of individual",
-          "fieldName": "searchBar",
-          "onAction": [
-            {
-              "actionType": "SEARCH_EVENT",
-              "properties": {
-                "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT",
-                "name": "name",
-                "data": [
-                  {
-                    "key": "givenName",
-                    "value": "field.value",
-                    "operation": "contains"
-                  }
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "format": "infoCard",
-          "hidden": "{{ context.household.notEmpty }}",
-          "label": "No households found",
-          "description":
-              "Use the search above to find households or register a new one"
-        },
-        {
-          "format": "listView",
-          "hidden": "{{ context.household.empty }}",
-          "fieldName": "listView",
-          "data": "members",
-          "child": {
-            "format": "card",
-            "children": [
-              {
-                "format": "row",
-                "properties": {
-                  "mainAxisAlignment": "spaceBetween",
-                  "mainAxisSize": "max"
-                },
-                "children": [
-                  {
-                    "format": "text",
-                    "value": "{{ headIndividual.0.name.givenName }}"
-                  },
-                  {
-                    "format": "button",
-                    "label": "Open",
-                    "properties": {"type": "secondary", "size": "medium"},
-                    "onAction": [
-                      {
-                        "actionType": "NAVIGATION",
-                        "properties": {
-                          "type": "TEMPLATE",
-                          "name": "householdOverview",
-                          "data": [
-                            {
-                              "key": "HouseholdClientReferenceId",
-                              "value": "{{ HouseholdModel.clientReferenceId }}"
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "format": "text",
-                "value": "{{ headOfHousehold.0.isHeadOfHousehold }}"
-              },
-              {
-                "format": "table",
-                "data": {
-                  "source": "individuals",
-                  "columns": [
-                    {
-                      "header": "Beneficiary",
-                      "cellValue": "{{item.name.givenName}}"
-                    },
-                    {
-                      "header": "Age",
-                      "cellValue": "{{fn:formatDate(item.dateOfBirth, age)}}"
-                    },
-                    {"header": "Gender", "cellValue": "{{item.gender}}"}
-                  ],
-                  "rows": "{{contextData.0.individuals}}"
-                }
-              }
-            ]
-          }
-        }
-      ]
-    },
-    {
       "screenType": "FORM",
-      "name": "COMPLAINT_CREATE",
-      "project": "CMP-2025-08-04-004846",
+      "name": "CLOSEHOUSEHOLD",
+      "project": "LLIN-mz",
       "version": 1,
       "disabled": false,
       "isSelected": true,
       "pages": [
         {
-          "page": "complaintType",
-          "type": "object",
-          "label": "COMPLAINT_TYPE_HEADING",
+          "page": "closeHouseholdDetails",
+          "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_HEADING",
           "order": 1,
-          "actionLabel": "COMPLAINT_TYPE_DESCRIPTION",
-          "description": "APPONE_COMPLAINTTYPE_DESCRIPTION",
-          "properties": [
-            {
-              "type": "string",
-              "label": "COMPLAINT_TYPE_complaintType_LABEL",
-              "order": 1,
-              "value": "",
-              "format": "radio",
-              "hidden": false,
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "complaintType",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "enums": [
-                {"code": "SyncNotWorking", "name": "Sync Not Working"},
-                {"code": "NotEnoughStock", "name": "Not Enough Stock"},
-                {"code": "Other", "name": "Other"}
-              ],
-              "schemaCode": "RAINMAKER-PGR.ServiceDefs",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "COMPLAINT_TYPE_complaintType_REQUIRED_ERROR"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "string",
-              "label": "COMPLAINT_TYPE_otherReason_LABEL",
-              "order": 2,
-              "value": "",
-              "format": "text",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "otherReason",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": "",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "COMPLAINT_TYPE_otherReason_REQUIRED_ERROR"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "visibilityCondition": {
-                "expression": "complaintType.complaintType==Other"
-              }
-            }
-          ]
-        },
-        {
-          "page": "locationDetails",
           "type": "object",
-          "label": "LOCATION_DETAILS_HEADING",
-          "order": 3,
-          "actionLabel": "LOCATION_DETAILS_ACTION_LABEL",
-          "description": "LOCATION_DETAILS_DESCRIPTION",
+          "description": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
+          "actionLabel": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_ACTION_LABEL",
           "properties": [
             {
               "type": "string",
-              "label": "LOCATION_DETAILS_addressLine1_LABEL",
-              "order": 1,
-              "value": "",
-              "format": "text",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "addressLine1",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "string",
-              "label": "LOCATION_DETAILS_addressLine2_LABEL",
-              "order": 2,
-              "value": "",
-              "format": "text",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "addressLine2",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "string",
-              "label": "LOCATION_DETAILS_landmark_LABEL",
-              "order": 3,
-              "value": "",
-              "format": "text",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "landmark",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "integer",
-              "label": "LOCATION_DETAILS_pincode_LABEL",
-              "order": 4,
-              "value": "",
-              "format": "text",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "pincode",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "string",
-              "enums": [
-                {"code": "PERMANENT", "name": "PERMANENT"},
-                {"code": "CORRESPONDENCE", "name": "CORRESPONDENCE"},
-                {"code": "OTHER", "name": "OTHER"}
-              ],
-              "label": "LOCATION_DETAILS_typeOfAddress_LABEL",
-              "order": 5,
-              "format": "dropdown",
-              "hidden": true,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "typeOfAddress",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "includeInSummary": false
-            }
-          ]
-        },
-        {
-          "page": "complaintDetails",
-          "type": "object",
-          "label": "COMPLAINT_DETAILS_HEADING",
-          "order": 4,
-          "navigateTo": {
-            "name": "ComplaintsAcknowledgement",
-            "type": "template"
-          },
-          "properties": [
-            {
-              "type": "string",
-              "label": "COMPLAINT_DETAILS_administrativeArea_LABEL",
+              "label":
+                  "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_LABEL",
               "order": 1,
               "value": "",
               "format": "locality",
               "hidden": false,
               "tooltip": "",
-              "helpText": "",
+              "helpText":
+                  "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_HELP_TEXT",
               "infoText": "",
               "readOnly": false,
               "fieldName": "administrativeArea",
@@ -3904,7 +4118,7 @@ final dynamic sampleCloseHouseholdFlows = {
                   "type": "required",
                   "value": true,
                   "message":
-                      "COMPLAINT_DETAILS_administrativeArea_REQUIRED_ERROR"
+                      "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3912,26 +4126,16 @@ final dynamic sampleCloseHouseholdFlows = {
             },
             {
               "type": "string",
-              "enums": [
-                {
-                  "code": "COMPLAINTS_RAISED_FOR_MYSELF",
-                  "name": "COMPLAINTFLOW_RAISED_FOR_MYSELF"
-                },
-                {
-                  "code": "COMPLAINTS_RAISED_FOR_ANOTHER_USER",
-                  "name": "COMPLAINTFLOW_RAISED_FOR_ANOTHER_USER"
-                }
-              ],
-              "label": "COMPLAINT_DETAILS_complaintRaisedFor_LABEL",
+              "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_LABEL",
               "order": 2,
               "value": "",
-              "format": "radio",
+              "format": "latLng",
               "hidden": false,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "complaintRaisedFor",
+              "fieldName": "latLng",
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
@@ -3940,7 +4144,7 @@ final dynamic sampleCloseHouseholdFlows = {
                   "type": "required",
                   "value": true,
                   "message":
-                      "COMPLAINT_DETAILS_complaintRaisedFor_REQUIRED_ERROR"
+                      "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3948,7 +4152,7 @@ final dynamic sampleCloseHouseholdFlows = {
             },
             {
               "type": "string",
-              "label": "COMPLAINT_DETAILS_name_LABEL",
+              "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_LABEL",
               "order": 3,
               "value": "",
               "format": "text",
@@ -3957,143 +4161,68 @@ final dynamic sampleCloseHouseholdFlows = {
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "name",
+              "fieldName": "headName",
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
+              "includeInForm": true,
               "validations": [
                 {
-                  "type": "required",
-                  "value": true,
-                  "message": "COMPLAINT_DETAILS_name_REQUIRED_ERROR"
+                  "type": "min",
+                  "value": 3,
+                  "message":
+                      "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_MIN_LENGTH_ERROR"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "autoFillCondition": [
-                {
-                  "value": "{{loggedInUserName}}",
-                  "expression":
-                      "complaintDetails.complaintRaisedFor==COMPLAINTS_RAISED_FOR_MYSELF"
-                }
-              ]
+              "enums": []
             },
             {
               "type": "string",
-              "label": "COMPLAINT_DETAILS_contactNumber_LABEL",
+              "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_scanner_LABEL",
               "order": 4,
               "value": "",
-              "format": "mobileNumber",
+              "format": "scanner",
               "hidden": false,
               "tooltip": "",
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "contactNumber",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "prefixText": "+91",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "COMPLAINT_DETAILS_contactNumber_REQUIRED_ERROR"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false,
-              "autoFillCondition": [
-                {
-                  "value": "{{loggedInUserMobileNumber}}",
-                  "expression":
-                      "complaintDetails.complaintRaisedFor==COMPLAINTS_RAISED_FOR_MYSELF"
-                }
-              ]
-            },
-            {
-              "type": "string",
-              "label": "COMPLAINT_DETAILS_supervisorName_LABEL",
-              "order": 5,
-              "value": "",
-              "format": "text",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "supervisorName",
+              "fieldName": "scanner",
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "string",
-              "label": "COMPLAINT_DETAILS_supervisorContactNumber_LABEL",
-              "order": 6,
-              "value": "",
-              "format": "mobileNumber",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "supervisorContactNumber",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "prefixText": "+91",
-              "systemDate": false,
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "string",
-              "label": "COMPLAINT_DETAILS_complaintDescription_LABEL",
-              "order": 7,
-              "value": "",
-              "format": "textArea",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "complaintDescription",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message":
-                      "COMPLAINT_DETAILS_complaintDescription_REQUIRED_ERROR"
-                }
-              ],
+              "validations": [],
               "errorMessage": "",
               "isMultiSelect": false
             }
           ],
-          "actionLabel": "COMPLAINT_DETAILS_ACTION_LABEL",
-          "description": "COMPLAINT_DETAILS_DESCRIPTION"
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null
         }
       ],
-      "wrapperConfig": {
-        "wrapperName": "ComplaintWrapper",
-        "rootEntity": "PgrServiceModel",
-        "filters": [],
-        "relations": [],
-        "searchConfig": {
-          "primary": "pgrService",
-          "select": ["pgrService"]
-        }
-      },
+      "summary": true,
       "onAction": [
         {
           "actionType": "FETCH_TRANSFORMER_CONFIG",
           "properties": {
-            "configName": "complaintRegistration",
+            "configName": "closeHouseholdRegistration",
+            "data": [],
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
@@ -4105,11 +4234,11 @@ final dynamic sampleCloseHouseholdFlows = {
         {
           "actionType": "CREATE_EVENT",
           "properties": {
-            "entity": "",
+            "entity": "HOUSEHOLD, INDIVIDUAL, MEMBER, PROJECTBENEFICIARY",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to create household."}
+                "properties": {"message": "Failed to create stock."}
               }
             ]
           }
@@ -4118,183 +4247,50 @@ final dynamic sampleCloseHouseholdFlows = {
           "actionType": "NAVIGATION",
           "properties": {
             "type": "TEMPLATE",
-            "name": "complaintAcknowledgement",
+            "name": "closeHouseholdSuccess",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
                 "properties": {"message": "Navigation failed."}
               }
             ],
-            "data": [
-              {
-                "key": "complaintClientReferenceId",
-                "value":
-                    "{{contextData.entities.PgrServiceModel.clientReferenceId}}"
-              }
-            ]
+            "data": []
           }
         }
       ]
     },
     {
       "screenType": "TEMPLATE",
-      "name": "complaintAcknowledgement",
+      "name": "closeHouseholdSuccess",
       "heading": "",
       "description": "",
-      "header": [
-        {
-          "format": "backLink",
-          "label": "Back",
-          "onAction": [
-            {
-              "actionType": "BACK_NAVIGATION",
-              "properties": {"type": "TEMPLATE", "name": "complaintInbox"}
-            }
-          ]
-        }
-      ],
+      "header": [],
+      "footer": [],
+      "initActions": [],
       "body": [
         {
-          "format": "panelCard",
           "type": "template",
-          "fieldName": "complaintSuccess",
-          "label": "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_LABEL",
-          "description":
-              "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_DESCRIPTION",
+          "format": "panelCard",
+          "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING",
+          "description": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION",
           "properties": {"type": "success"},
-          "secondaryAction": {
-            "type": "template",
-            "format": "button",
-            "fieldName": "backToComplaints",
+          "primaryAction": {
             "label":
-                "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_ACTION_LABEL",
+                "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL",
             "onAction": [
               {
                 "actionType": "NAVIGATION",
-                "properties": {"type": "TEMPLATE", "name": "complaintInbox"}
+                "properties": {"type": "HOME"}
               }
             ]
           }
-        }
-      ]
-    },
-    {
-      "screenType": "TEMPLATE",
-      "name": "complaintView",
-      "heading": "COMPLAINT_VIEW_HEADING",
-      "description": "",
-      "header": [
-        {
-          "format": "backLink",
-          "label": "Back",
-          "onAction": [
-            {"actionType": "BACK_NAVIGATION", "properties": {}}
-          ]
-        }
-      ],
-      "footer": [
-        {
-          "format": "button",
-          "type": "template",
-          "fieldName": "close",
-          "label": "COMPLAINT_VIEW_ACTION_LABEL",
-          "properties": {
-            "type": "primary",
-            "size": "large",
-            "mainAxisSize": "max",
-            "mainAxisAlignment": "center"
-          },
-          "onAction": [
-            {
-              "actionType": "NAVIGATION",
-              "properties": {"type": "TEMPLATE", "name": "complaintInbox"}
-            }
-          ]
-        }
-      ],
-      "initActions": [
-        {
-          "actionType": "SEARCH_EVENT",
-          "properties": {
-            "type": "SEARCH_EVENT",
-            "name": "pgrService",
-            "data": [
-              {
-                "key": "clientReferenceId",
-                "value": "{{navigation.clientReferenceId}}",
-                "operation": "equals"
-              }
-            ]
-          }
-        }
-      ],
-      "wrapperConfig": {
-        "wrapperName": "ComplaintWrapper",
-        "rootEntity": "PgrServiceModel",
-        "filters": [],
-        "relations": [],
-        "searchConfig": {
-          "primary": "pgrService",
-          "select": ["pgrService"]
-        }
-      },
-      "body": [
-        {
-          "format": "card",
-          "type": "template",
-          "fieldName": "listOfComplaints",
-          "children": [
-            {
-              "format": "labelPairList",
-              "type": "template",
-              "fieldName": "complaintsLabelPair",
-              "data": [
-                {
-                  "key": "COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-                  "value": "{{0.PgrServiceModel.serviceRequestId}}",
-                  "defaultValue": "Sync data to generate complaint number"
-                },
-                {
-                  "key": "COMPLAINT_VIEW_COMPLAINTS_TYPE",
-                  "value": "{{0.PgrServiceModel.serviceCode}}",
-                  "defaultValue": "NA"
-                },
-                {
-                  "key": "COMPLAINT_VIEW_COMPLAINTS_DATE",
-                  "value":
-                      "{{fn:formatDate(0.PgrServiceModel.auditDetails.createdTime, dateTime, dd MMM yyyy)}}",
-                  "defaultValue": "NA"
-                },
-                {
-                  "key": "COMPLAINT_VIEW_COMPLAINTS_AREA",
-                  "value": "{{0.PgrServiceModel.address.locality.code}}",
-                  "defaultValue": "NA"
-                },
-                {
-                  "key": "COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-                  "value": "{{0.PgrServiceModel.user.mobileNumber}}",
-                  "defaultValue": "NA"
-                },
-                {
-                  "key": "COMPLAINT_VIEW_COMPLAINT_STATUS",
-                  "value": "{{0.PgrServiceModel.applicationStatus}}",
-                  "defaultValue": "NA"
-                },
-                {
-                  "key": "COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
-                  "value": "{{0.PgrServiceModel.description}}",
-                  "defaultValue": "NA"
-                }
-              ]
-            }
-          ]
         }
       ]
     }
   ]
 };
 final dynamic sampleComplaintFlows = {
-  "name": "COMPLAINT",
+  "name": "COMPLAINTS",
   "initialPage": "complaintInbox",
   "project": "CMP-2025-08-04-004846",
   "version": 1,
