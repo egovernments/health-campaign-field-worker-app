@@ -7,9 +7,9 @@ import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 
-class QrCodeWidget implements FlowWidget {
+class QrViewWidget implements FlowWidget {
   @override
-  String get format => 'qr_code';
+  String get format => 'qr_view';
 
   @override
   Widget build(
