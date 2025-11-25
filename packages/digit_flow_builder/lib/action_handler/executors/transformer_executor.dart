@@ -74,11 +74,7 @@ class TransformerExecutor extends ActionExecutor {
       'userUUID': FlowBuilderSingleton().loggedInUser?.uuid,
       'householdType': HouseholdType.family.toValue(),
       ...extraContext,
-
-      /// TODO: NEED TO REMOVE THIS
-      "beneficiaryType": BeneficiaryType.individual.toValue(),
-      //// FIXME: HARDCODING TO INDIVIDUAL FOR TESTING SMC FLOW
-      // FlowBuilderSingleton().beneficiaryType?.toValue(),
+      "beneficiaryType": FlowBuilderSingleton().beneficiaryType
     };
 
     List<EntityModel> entities = [];

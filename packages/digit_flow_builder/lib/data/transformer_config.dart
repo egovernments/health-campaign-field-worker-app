@@ -586,7 +586,6 @@ final jsonConfig = {
           "householdType": "__context:householdType",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
-          "additionalFields": {}
         }
       },
       "IndividualModel": {
@@ -595,8 +594,6 @@ final jsonConfig = {
           "individualId": "personalDetails.individualId",
           "userId": "personalDetails.userId",
           "userUuid": "personalDetails.uuid",
-          "dateOfBirth": "",
-          "mobileNumber": "",
           "altContactNumber": "contactInfo.altContact",
           "email": "contactInfo.email",
           "fatherName": "family.fatherName",
@@ -728,7 +725,6 @@ final jsonConfig = {
           "status": "__value:CLOSED_HOUSEHOLD",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
-          "resources": "",
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
           "plannedStartDate": "taskDetails.plannedStartDate",
@@ -766,7 +762,7 @@ final jsonConfig = {
             "clientAuditDetails": "__generate:clientAudit",
             "auditDetails": "__generate:audit"
           },
-          "additionalFields": "",
+          "additionalFields": "additionalInfo.fields",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
         }

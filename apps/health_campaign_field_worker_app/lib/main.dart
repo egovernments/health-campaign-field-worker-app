@@ -4073,7 +4073,7 @@ final dynamic sampleReferralFlows = {
 };
 final dynamic sampleCloseHouseholdFlows = {
   "name": "CLOSEDHOUSEHOLD",
-  "initialPage": "closeHousehold",
+  "initialPage": "CLOSEHOUSEHOLD",
   "order": 7,
   "project": "LLIN-mz",
   "version": 1,
