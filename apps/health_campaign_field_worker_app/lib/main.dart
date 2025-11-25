@@ -124,25 +124,34 @@ final dynamic sampleFlows = {
           ]
         },
         {
-          "format": "button",
-          "label": "scan beneficiary",
+          "format": "qrScanner",
+          "label": "Scan Beneficiary",
+          "key": "selectedTag",
+          "scanType": "qr",
+          "updateFormData": true,
           "properties": {
             "type": "secondary",
             "size": "large",
             "mainAxisSize": "max",
             "mainAxisAlignment": "center"
           },
-          "onAction": [
+          "prefixIcon": "qr_code_scanner",
+          "onChange": [
             {
-              "actionType": "EVENT",
+              "action": "SEARCH_EVENT",
+              "actionType": "SEARCH_EVENT",
               "properties": {
-                "type": "SEARCH_EVENT",
-                "name": "ENTITY // PROJECTBENEFICIARY",
+                "name": "projectBeneficiary",
                 "data": [
                   {
                     "key": "tag",
-                    "value": "field.value",
-                    "operation": "contains"
+                    "value": "{{selectedTag}}",
+                    "operation": "EQUAL"
+                  },
+                  {
+                    "key": "projectId",
+                    "value": "{{singleton.selectedProject.id}}",
+                    "operation": "EQUAL"
                   }
                 ]
               }

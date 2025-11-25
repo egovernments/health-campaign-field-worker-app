@@ -13,7 +13,8 @@ import 'implementations/label_pair_list_widget.dart';
 import 'implementations/list_view_widget.dart';
 import 'implementations/menu_card_widget.dart';
 import 'implementations/panel_card_widget.dart';
-import 'implementations/qr_code_widget.dart';
+import 'implementations/qr_scanner_widget.dart';
+import 'implementations/qr_view_widget.dart';
 import 'implementations/radio.dart';
 import 'implementations/row_widget.dart';
 import 'implementations/search_bar_widget.dart';
@@ -55,7 +56,8 @@ class WidgetRegistration {
     FlowWidgetFactory.register(ListViewWidget());
     FlowWidgetFactory.register(LabelPairListWidget());
     FlowWidgetFactory.register(BackLinkWidget());
-    FlowWidgetFactory.register(QrCodeWidget());
+    FlowWidgetFactory.register(QrViewWidget());
+    FlowWidgetFactory.register(QRScannerWidget());
     FlowWidgetFactory.register(ActionPopupWidget());
 
     _initialized = true;
