@@ -36,7 +36,7 @@ class NavigationExecutor extends ActionExecutor {
 
         // Try to resolve from state form data first, fallback to contextData
         dynamic resolvedValue = resolveValue(rawValue, stateFormData);
-        if (resolvedValue == rawValue) {
+        if (resolvedValue == rawValue || resolvedValue == null) {
           // If not resolved from state, try contextData
           resolvedValue = resolveValue(rawValue, contextData);
         }

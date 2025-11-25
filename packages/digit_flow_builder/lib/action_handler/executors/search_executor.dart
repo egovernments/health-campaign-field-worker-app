@@ -122,7 +122,9 @@ class SearchExecutor extends ActionExecutor {
     final searchParams = GlobalSearchParameters(
       filters: filters,
       primaryModel: config?['wrapperConfig']['searchConfig']['primary'],
-      select: config?['wrapperConfig']['searchConfig']['select'],
+      select: (config?['wrapperConfig']?['searchConfig']?['select'] as List?)
+              ?.cast<String>() ??
+          [],
       pagination: null,
       orderBy: orderBy,
     );
