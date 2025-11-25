@@ -90,7 +90,11 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
             }
           }
 
-          form.control(widget.formControlName).value = valueToSet;
+          // Only set value if it's different from current to prevent rebuild loops
+          final currentValue = form.control(widget.formControlName).value;
+          if (currentValue != valueToSet) {
+            form.control(widget.formControlName).value = valueToSet;
+          }
           _autoReadOnly = true;
         }
 
@@ -102,7 +106,11 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
 
     if (!matched && _autoReadOnly) {
       // Condition not met — reset to default
-      form.control(widget.formControlName).value = widget.schema.value;
+      // Only set value if it's different from current to prevent rebuild loops
+      final currentValue = form.control(widget.formControlName).value;
+      if (currentValue != widget.schema.value) {
+        form.control(widget.formControlName).value = widget.schema.value;
+      }
       _autoReadOnly = widget.schema.readOnly ?? false; // ← back to editable
     }
   }

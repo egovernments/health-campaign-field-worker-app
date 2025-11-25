@@ -4371,8 +4371,9 @@ final dynamic sampleComplaintFlows = {
           },
           "children": [
             {
+              "type": "template",
               "format": "actionPopup",
-              "label": "search",
+              "label": "COMPLAINT_INBOX_SEARCH_LABEL",
               "properties": {
                 "suffixIcon": "Search",
                 "type": "tertiary",
@@ -4381,26 +4382,29 @@ final dynamic sampleComplaintFlows = {
                 "mainAxisAlignment": "start",
                 "popupConfig": {
                   "type": "default",
-                  "title": "Filter Options",
+                  "title": "COMPLAINT_INBOX_SEARCH_LABEL",
                   "titleIcon": "Search",
                   "showCloseButton": true,
                   "barrierDismissible": true,
                   "body": [
                     {
+                      "type": "template",
                       "format": "textInput",
-                      "label": "Complaint Number",
+                      "label": "COMPLAINT_INBOX_SEARCH_COMPLAINT_NUMBER_LABEL",
                       "fieldName": "complaintNumber",
                     },
                     {
+                      "type": "template",
                       "format": "textInput",
-                      "label": "Mobile Number",
+                      "label": "COMPLAINT_INBOX_SEARCH_MOBILE_NUMBER_LABEL",
                       "fieldName": "mobileNumber",
                     }
                   ],
                   "footerActions": [
                     {
+                      "type": "template",
                       "format": "button",
-                      "label": "Clear",
+                      "label": "COMPLAINT_INBOX_SEARCH_SECONDARY_ACTION_LABEL",
                       "properties": {
                         "type": "secondary",
                         "size": "large",
@@ -4412,8 +4416,9 @@ final dynamic sampleComplaintFlows = {
                       ]
                     },
                     {
+                      "type": "template",
                       "format": "button",
-                      "label": "Search",
+                      "label": "COMPLAINT_INBOX_SEARCH_PRIMARY_ACTION_LABEL",
                       "properties": {
                         "type": "primary",
                         "size": "large",
@@ -4446,8 +4451,9 @@ final dynamic sampleComplaintFlows = {
               },
             },
             {
+              "type": "template",
               "format": "actionPopup",
-              "label": "Filter",
+              "label": "COMPLAINT_INBOX_FILTER_LABEL",
               "properties": {
                 "type": "tertiary",
                 "size": "medium",
@@ -4455,36 +4461,40 @@ final dynamic sampleComplaintFlows = {
                 "mainAxisAlignment": "start",
                 "popupConfig": {
                   "type": "default",
-                  "title": "Filter Options",
+                  "title": "COMPLAINT_INBOX_FILTER_LABEL",
                   "titleIcon": "filter",
                   "showCloseButton": true,
                   "barrierDismissible": true,
                   "body": [
                     {
+                      "type": "template",
                       "format": "radioList",
                       "fieldName": "assignTo",
                       "data": [
-                        {"code": "ASSIGN_TO_ME", "name": "Assign to me"},
-                        {"code": "ASSIGN_TO_ALL", "name": "Assign to all"},
+                        {"code": "ASSIGN_TO_ME", "name": "ASSIGN_TO_ME"},
+                        {"code": "ASSIGN_TO_ALL", "name": "ASSIGN_TO_ALL"},
                       ],
                     },
                     {
+                      "type": "template",
                       "format": "dropdown",
-                      "label": "Complaint Type",
+                      "label": "COMPLAINT_INBOX_FILTER_COMPLAINT_TYPE_LABEL",
                       "fieldName": "complaintType",
                       "enums": "{{fn:getUniqueComplaintTypes()}}",
                     },
                     {
+                      "type": "template",
                       "format": "dropdown",
-                      "label": "Locality",
+                      "label": "COMPLAINT_INBOX_FILTER_LOCALITY_TYPE_LABEL",
                       "fieldName": "locality",
                       "enums": "{{fn:getUniqueLocalities()}}",
                     }
                   ],
                   "footerActions": [
                     {
+                      "type": "template",
                       "format": "button",
-                      "label": "Clear",
+                      "label": "COMPLAINT_INBOX_FILTER_SECONDARY_ACTION_LABEL",
                       "properties": {
                         "type": "secondary",
                         "size": "large",
@@ -4496,8 +4506,9 @@ final dynamic sampleComplaintFlows = {
                       ]
                     },
                     {
+                      "type": "template",
                       "format": "button",
-                      "label": "Filter",
+                      "label": "COMPLAINT_INBOX_FILTER_PRIMARY_ACTION_LABEL",
                       "properties": {
                         "type": "primary",
                         "size": "large",
@@ -4544,8 +4555,9 @@ final dynamic sampleComplaintFlows = {
               "suffixIcon": "FilterAlt"
             },
             {
+              "type": "template",
               "format": "actionPopup",
-              "label": "sort",
+              "label": "COMPLAINT_INBOX_SORT_LABEL",
               "properties": {
                 "type": "tertiary",
                 "size": "medium",
@@ -4553,30 +4565,32 @@ final dynamic sampleComplaintFlows = {
                 "mainAxisAlignment": "start",
                 "popupConfig": {
                   "type": "default",
-                  "title": "sort",
-                  "titleIcon": "filter",
+                  "title": "COMPLAINT_INBOX_SORT_POPUP_LABEL",
+                  "titleIcon": "Sort",
                   "showCloseButton": true,
                   "barrierDismissible": true,
                   "body": [
                     {
+                      "type": "template",
                       "format": "radioList",
                       "fieldName": "sotyBy",
                       "data": [
                         {
                           "code": "LATEST_FIRST",
-                          "name": "Complaint date (latest first)"
+                          "name": "COMPLAINT_INBOX_SORT_LATEST_FIRST"
                         },
                         {
                           "code": "LATEST_LAST",
-                          "name": "Complaint date (latest last)"
+                          "name": "COMPLAINT_INBOX_SORT_LATEST_LAST"
                         },
                       ],
                     },
                   ],
                   "footerActions": [
                     {
+                      "type": "template",
                       "format": "button",
-                      "label": "Clear",
+                      "label": "COMPLAINT_INBOX_SORT_SECONDARY_ACTION_LABEL",
                       "properties": {
                         "type": "secondary",
                         "size": "large",
@@ -4588,8 +4602,9 @@ final dynamic sampleComplaintFlows = {
                       ]
                     },
                     {
+                      "type": "template",
                       "format": "button",
-                      "label": "Filter",
+                      "label": "COMPLAINT_INBOX_SORT_PRIMARY_ACTION_LABEL",
                       "properties": {
                         "type": "primary",
                         "size": "large",

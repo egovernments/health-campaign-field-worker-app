@@ -191,7 +191,10 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
           defaultValues: {
             'administrativeArea': localizations
                 .translate(FlowBuilderSingleton().boundary?.code ?? ''),
-            'availableIDs': {'DEFAULT': IdGen.instance.identifier}
+            'availableIDs': {'DEFAULT': IdGen.instance.identifier},
+            'loggedInUserName': FlowBuilderSingleton().loggedInUser?.name,
+            'loggedInUserMobileNumber':
+                FlowBuilderSingleton().loggedInUser?.mobileNumber,
           },
         );
       }
