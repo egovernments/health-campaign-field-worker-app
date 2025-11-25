@@ -627,8 +627,8 @@ final jsonConfig = {
           "IdentifierModel": {
             "mappings": {
               "id": "id",
-              "identifierType": "beneficiaryDetails.identifiers[0]",
-              "identifierId": "beneficiaryDetails.identifiers[1]",
+              "identifierType": "__value:DEFAULT",
+              "identifierId": "__generate:uuid",
               "boundaryCode": "__context:selectedBoundaryCode",
               "nonRecoverableError": "error.nonRecoverable",
               "individualClientReferenceId":
@@ -647,9 +647,9 @@ final jsonConfig = {
               "relatedClientReferenceId":
                   "__ref:IndividualModel.clientReferenceId",
               "doorNo": "address.doorNo",
-              "latitude": "beneficiaryLocation.latLng[0]",
-              "longitude": "beneficiaryLocation.latLng[1]",
-              "locationAccuracy": "address.locationAccuracy",
+              "latitude": "closeHouseholdDetails.latLng[0]",
+              "longitude": "closeHouseholdDetails.latLng[1]",
+              "locationAccuracy": "closeHouseholdDetails.latLng[2]",
               "addressLine1": "beneficiaryLocation.addressLine1",
               "addressLine2": "addressLine2",
               "landmark": "address.landmark",
@@ -682,7 +682,7 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "tenantId": "__context:tenantId",
           "beneficiaryId": "beneficiaryDetails.beneficiaryId",
-          "tag": "beneficiaryDetails.tag",
+          "tag": "closeHouseholdDetails.scanner",
           "beneficiaryClientReferenceId":
               "__switch:__context:beneficiaryType:{INDIVIDUAL:__ref:IndividualModel.clientReferenceId,HOUSEHOLD:__ref:HouseholdModel.clientReferenceId}",
           "nonRecoverableError": "errors.nonRecoverable",
@@ -690,7 +690,7 @@ final jsonConfig = {
 
           /// Note: Generate uuid
           "rowVersion": "meta.rowVersion",
-          "dateOfRegistration": "householdDetails.dateOfRegistration",
+          "dateOfRegistration": "__value:DATETIME.NOW",
           "additionalFields": "additionalInfo.fields",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
@@ -705,7 +705,7 @@ final jsonConfig = {
           "individualId": "members.individualId",
           "individualClientReferenceId":
               "__ref:IndividualModel.clientReferenceId",
-          "isHeadOfHousehold": "beneficiaryDetails.isHeadOfFamily",
+          "isHeadOfHousehold": "__value: true",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
 
@@ -717,6 +717,60 @@ final jsonConfig = {
           "auditDetails": "__generate:audit",
         }
       },
+      "TaskModel": {
+        "mappings": {
+          "id": "taskDetails.id",
+          "projectId": "__context:projectId",
+          "projectBeneficiaryId": "taskDetails.projectBeneficiaryId",
+          "projectBeneficiaryClientReferenceId":
+              "__ref:ProjectBeneficiaryModel.clientReferenceId",
+          "createdBy": "__context:userId",
+          "status": "__value:CLOSED_HOUSEHOLD",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "clientReferenceId": "__generate:uuid",
+          "resources": "",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "plannedStartDate": "taskDetails.plannedStartDate",
+          "plannedEndDate": "taskDetails.plannedEndDate",
+          "actualStartDate": "taskDetails.actualStartDate",
+          "actualEndDate": "taskDetails.actualEndDate",
+          "createdDate": "__generate:timestamp",
+          "address": {
+            "id": "address.id",
+            "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
+            "doorNo": "address.doorNo",
+            "latitude": "closeHouseholdDetails.latLng[0]",
+            "longitude": "closeHouseholdDetails.latLng[1]",
+            "locationAccuracy": "closeHouseholdDetails.latLng[2]",
+            "addressLine1": "address.addressLine1",
+            "addressLine2": "address.addressLine2",
+            "landmark": "address.landmark",
+            "city": "address.city",
+            "type": "__value:PERMANENT",
+            "pincode": "address.pincode",
+            "buildingName": "address.buildingName",
+            "street": "address.street",
+            "boundaryType": "address.boundaryType",
+            "boundary": "address.boundary",
+            "locality": {
+              "code": "__context:selectedBoundaryCode",
+              "name": "__context:boundary.name",
+              "nonRecoverableError": "address.nonRecoverable",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion"
+            },
+            "nonRecoverableError": "address.nonRecoverable",
+            "tenantId": "__context:tenantId",
+            "rowVersion": "meta.rowVersion",
+            "clientAuditDetails": "__generate:clientAudit",
+            "auditDetails": "__generate:audit"
+          },
+          "additionalFields": "",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit"
+        }
+      }
     }
   },
 };
