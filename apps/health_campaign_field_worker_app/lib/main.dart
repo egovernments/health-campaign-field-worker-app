@@ -146,12 +146,12 @@ final dynamic sampleFlows = {
                   {
                     "key": "tag",
                     "value": "{{selectedTag}}",
-                    "operation": "EQUAL"
+                    "operation": "equals"
                   },
                   {
                     "key": "projectId",
                     "value": "{{singleton.selectedProject.id}}",
-                    "operation": "EQUAL"
+                    "operation": "equals"
                   }
                 ]
               }
