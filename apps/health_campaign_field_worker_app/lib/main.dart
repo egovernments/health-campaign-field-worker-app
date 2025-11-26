@@ -3072,7 +3072,7 @@ final dynamic sampleReferralFlows = {
                       "HFREFERRAL_REFERRAL_DETAILS_referralCycle_REQUIRED_ERROR"
                 }
               ],
-              "enums": "{{project.cycle}}",
+              // "enums": "{{project.cycle}}",
               "errorMessage": "",
               "isMultiSelect": false
             },
