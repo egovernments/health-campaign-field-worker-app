@@ -5414,7 +5414,7 @@ final dynamic sampleInventoryFlows = {
           "format": "menu_card",
           "heading": "Record Stock Receipt",
           "description": "Create records for stock received at the warehouse",
-          "icon": 'file_upload_outlined',
+          "icon": 'FileUpload',
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -5437,7 +5437,7 @@ final dynamic sampleInventoryFlows = {
           "format": "menu_card",
           "heading": "Record Stock Issued",
           "description": "Create records for stock sent out from the warehouse",
-          "icon": 'file_download_outlined',
+          "icon": 'FileDownload',
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -5461,7 +5461,7 @@ final dynamic sampleInventoryFlows = {
           "heading": "Stock Returned",
           "description":
               "Create records for the stock returned to the warehouse",
-          "icon": 'settings_backup_restore',
+          "icon": 'Restore',
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -5486,7 +5486,7 @@ final dynamic sampleInventoryFlows = {
           "visible": "{{fn:hasRole('WAREHOUSE_MANAGER')}} == false",
           "description":
               "Record the list of resources damaged during campaign operations",
-          "icon": 'store',
+          "icon": 'Store',
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -5511,7 +5511,7 @@ final dynamic sampleInventoryFlows = {
           "visible": "{{fn:hasRole('WAREHOUSE_MANAGER')}} == false",
           "description":
               "Record the list of resources lost during campaign operations",
-          "icon": 'store',
+          "icon": 'Store',
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -6132,6 +6132,18 @@ final dynamic sampleInventoryFlows = {
           "format": "panelCard",
           "label": "Material receipt created successfully",
           "description": "MRN Number {{navigation.mrnNumber}}",
+          "additionalWidgets": [
+            {
+              "format": "qr_view",
+              "data": "{{navigation.mrnNumber}}",
+              "size": "medium",
+              "errorCorrectionLevel": "M",
+              "dataModuleColor": "black",
+              "backgroundColor": "white",
+              "padding": 16,
+              "visible": "{{fn:hasRole('DISTRIBUTOR')}}",
+            }
+          ],
           "properties": {"type": "success"},
           "primaryAction": {
             "label": "View Transaction",
