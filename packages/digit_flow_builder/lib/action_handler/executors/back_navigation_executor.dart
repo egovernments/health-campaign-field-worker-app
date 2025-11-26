@@ -25,6 +25,20 @@ class BackNavigationExecutor extends ActionExecutor {
       return contextData;
     }
 
+    // Special handling for HOME - navigate to the main HomePage
+    if (targetPageName == 'HOME') {
+      try {
+        router.popUntil((route) {
+          // Check if the route is HomeRoute (the main app HomePage)
+          return route.settings.name == 'HomeRoute';
+        });
+      } catch (e) {
+        // If error occurs, do single pop
+        _performSinglePop(context);
+      }
+      return contextData;
+    }
+
     // First check if target page exists in the stack
     bool targetExists = false;
     final routeStack = router.stack;

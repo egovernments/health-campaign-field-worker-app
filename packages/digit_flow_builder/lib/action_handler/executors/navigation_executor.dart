@@ -18,6 +18,16 @@ class NavigationExecutor extends ActionExecutor {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
+    final targetPageName = action.properties['name'] as String?;
+    final targetType = action.properties['type'] as String?;
+
+    // Special handling for HOME - navigate to the main HomePage
+    // Check both 'name' and 'type' properties for HOME
+    if (targetPageName == 'HOME' || targetType == 'HOME') {
+      NavigationRegistry.navigateTo({'name': 'HOME'});
+      return contextData;
+    }
+
     // Get current screen's state data for resolving navigation values
     final screenKey =
         getScreenKeyFromArgs(context) ?? context.router.currentPath;

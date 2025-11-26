@@ -31,7 +31,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:recase/recase.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
-import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -1184,10 +1183,80 @@ class _HomePageState extends LocalizedState<HomePage> {
           label: i18.home.beneficiaryReferralLabel,
           onPressed: () async {
             if (isTriggerLocalisation) {
-              triggerLocalization();
+              final moduleName =
+                  'hcm-hfreferral-${context.selectedProject.referenceID}';
+              triggerLocalization(module: moduleName);
               isTriggerLocalisation = false;
             }
-            context.router.push(SearchReferralReconciliationsRoute());
+            try {
+              CrudBlocSingleton().setData(
+                crudService: DigitCrudService(
+                  context: context,
+                  relationshipMap: [
+                    const RelationshipMapping(
+                        from: 'pgrComplainant',
+                        to: 'pgrService',
+                        localKey: 'complaintClientReferenceId',
+                        foreignKey: 'clientReferenceId'),
+                  ],
+                  nestedModelMappings: [
+                    const NestedModelMapping(
+                      rootModel: 'pgrService',
+                      fields: {
+                        'user': NestedFieldMapping(
+                          table: 'pgrComplainant',
+                          localKey: 'clientReferenceId',
+                          foreignKey: 'complaintClientReferenceId',
+                          type: NestedMappingType.one,
+                        ),
+                        'address': NestedFieldMapping(
+                          table: 'address',
+                          localKey: 'clientReferenceId',
+                          foreignKey: 'relatedClientReferenceId',
+                          type: NestedMappingType.one,
+                        )
+                      },
+                    ),
+                  ],
+                  searchEntityRepository:
+                      context.read<SearchEntityRepository>(),
+                ),
+                dynamicEntityModelListener: EntityModelMapMapper(),
+              );
+              WidgetRegistry.initialize();
+              final prefs = await SharedPreferences.getInstance();
+              final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+              if (schemaJsonRaw != null) {
+                final allSchemas =
+                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                final complaint = allSchemas['HFREFERRAL'];
+
+                final complaintsData = complaint?['data'];
+                final flowsData = (complaintsData['flows'] as List<dynamic>?)
+                        ?.map((e) => Map<String, dynamic>.from(e as Map))
+                        .toList() ??
+                    [];
+                FlowRegistry.setConfig(flowsData);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(pageName: complaintsData["initialPage"]),
+                );
+              } else {
+                FlowRegistry.setConfig(sampleComplaintFlows["flows"]
+                    as List<Map<String, dynamic>>);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: sampleComplaintFlows["initialPage"]),
+                );
+              }
+            } catch (e) {
+              debugPrint('error $e');
+            }
+            // context.router.push(SearchReferralReconciliationsRoute());
           },
         ),
       ),

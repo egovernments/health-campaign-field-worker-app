@@ -2753,7 +2753,8 @@ final dynamic sampleFlows = {
 final dynamic sampleReferralFlows = {
   "name": "HFREFERRAL",
   "initialPage": "referralInbox",
-  "project": "CMP-2025-08-04-004846",
+  "order": 9,
+  "project": "LLIN-mz",
   "version": 1,
   "disabled": false,
   "isSelected": true,
@@ -2761,29 +2762,14 @@ final dynamic sampleReferralFlows = {
     {
       "screenType": "TEMPLATE",
       "name": "referralInbox",
-      "heading": "COMPLAINT_INBOX_HEADING",
-      "description": "COMPLAINT_INBOX_DESCRIPTION",
-      "initActions": [
-        {
-          "actionType": "SEARCH_EVENT",
-          "properties": {
-            "type": "SEARCH_EVENT",
-            "name": "pgrService",
-            "data": [
-              {
-                "key": "tenantId",
-                "value": "{{singleton.selectedProject.tenantId}}",
-                "operation": "equals"
-              }
-            ]
-          }
-        }
-      ],
+      "heading": "REFERRAL_INBOX_HEADING",
+      "description": "REFERRAL_INBOX_DESCRIPTION",
+      "initActions": [],
       "header": [
         {
           "format": "backLink",
           "type": "template",
-          "label": "COMPLAINT_INBOX_BACK",
+          "label": "REFERRAL_INBOX_BACK_BUTTON_LABEL",
           "onAction": [
             {"actionType": "BACK_NAVIGATION", "properties": {}}
           ]
@@ -2793,8 +2779,8 @@ final dynamic sampleReferralFlows = {
         {
           "format": "button",
           "type": "template",
-          "fieldName": "fileComplaint",
-          "label": "COMPLAINT_INBOX_PRIMARY_ACTION",
+          "fieldName": "createReferral",
+          "label": "REFERRAL_INBOX_PRIMARY_ACTION_LABEL",
           "properties": {
             "type": "primary",
             "size": "large",
@@ -2806,6 +2792,28 @@ final dynamic sampleReferralFlows = {
               "actionType": "NAVIGATION",
               "properties": {
                 "type": "FORM",
+                "name": "REFERRAL_CREATE",
+                "data": []
+              }
+            }
+          ]
+        },
+        {
+          "format": "qrScanner",
+          "type": "template",
+          "fieldName": "scanQr",
+          "label": "REFERRAL_INBOX_SECONDARY_ACTION_LABEL",
+          "properties": {
+            "type": "secondary",
+            "size": "large",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "onAction": [
+            {
+              "actionType": "SEARCH_EVENT",
+              "properties": {
+                "type": "FORM",
                 "name": "COMPLAINT_CREATE",
                 "data": []
               }
@@ -2814,19 +2822,20 @@ final dynamic sampleReferralFlows = {
         }
       ],
       "wrapperConfig": {
-        "wrapperName": "ComplaintWrapper",
-        "rootEntity": "PgrServiceModel",
+        "wrapperName": "hFReferral",
+        "rootEntity": "HFReferralModel",
         "filters": [],
         "relations": [],
         "searchConfig": {
-          "primary": "pgrService",
-          "select": ["pgrService"]
+          "primary": "hFReferral",
+          "select": ["hFReferral"]
         }
       },
       "body": [
         {
           "format": "searchBar",
-          "label": "Enter the name of individual",
+          "type": "template",
+          "label": "REFERRAL_INBOX_SEARCHBAR_LABEL",
           "fieldName": "searchBar",
           "onAction": [
             {
@@ -2846,21 +2855,23 @@ final dynamic sampleReferralFlows = {
           ]
         },
         {
+          "type": "template",
           "format": "infoCard",
-          "hidden": "{{ context.household.notEmpty }}",
-          "label": "No households found",
-          "description":
-              "Use the search above to find households or register a new one"
+          "hidden": "{{ context.hFReferral.notEmpty }}",
+          "label": "REFERRAL_INBOX_INFO_CARD_HEADING",
+          "description": "REFERRAL_INBOX_INFO_CARD_DESCRIPTION"
         },
         {
+          "type": "template",
           "format": "listView",
-          "hidden": "{{ context.household.empty }}",
+          "hidden": "{{ context.hFReferral.empty }}",
           "fieldName": "listView",
-          "data": "members",
+          "data": "hFReferral",
           "child": {
             "format": "card",
             "children": [
               {
+                "type": "template",
                 "format": "row",
                 "properties": {
                   "mainAxisAlignment": "spaceBetween",
@@ -2868,10 +2879,12 @@ final dynamic sampleReferralFlows = {
                 },
                 "children": [
                   {
+                    "type": "template",
                     "format": "text",
                     "value": "{{ headIndividual.0.name.givenName }}"
                   },
                   {
+                    "type": "template",
                     "format": "button",
                     "label": "Open",
                     "properties": {"type": "secondary", "size": "medium"},
@@ -2895,25 +2908,8 @@ final dynamic sampleReferralFlows = {
               },
               {
                 "format": "text",
-                "value": "{{ headOfHousehold.0.isHeadOfHousehold }}"
-              },
-              {
-                "format": "table",
-                "data": {
-                  "source": "individuals",
-                  "columns": [
-                    {
-                      "header": "Beneficiary",
-                      "cellValue": "{{item.name.givenName}}"
-                    },
-                    {
-                      "header": "Age",
-                      "cellValue": "{{fn:formatDate(item.dateOfBirth, age)}}"
-                    },
-                    {"header": "Gender", "cellValue": "{{item.gender}}"}
-                  ],
-                  "rows": "{{contextData.0.individuals}}"
-                }
+                "value":
+                    "Date of evaluation: {{ headOfHousehold.0.isHeadOfHousehold }}"
               }
             ]
           }
@@ -2922,8 +2918,8 @@ final dynamic sampleReferralFlows = {
     },
     {
       "screenType": "FORM",
-      "name": "COMPLAINT_CREATE",
-      "project": "CMP-2025-08-04-004846",
+      "name": "REFERRAL_CREATE",
+      "project": "LLIN-mz",
       "version": 1,
       "disabled": false,
       "isSelected": true,
@@ -2931,13 +2927,15 @@ final dynamic sampleReferralFlows = {
         {
           "page": "facilityDetails",
           "type": "object",
-          "label": "APPONE_HFREFERALFLOW_FACILITYSCREEN_HEADING",
+          "label": "HFREFERRAL_FACILITY_DETAILS_HEADING",
+          "actionLabel": "HFREFERRAL_FACILITY_DETAILS_ACTION_LABEL",
+          "description": "HFREFERRAL_FACILITY_DETAILS_DESCRIPTION",
           "order": 2,
           "navigateTo": {"name": "referralDetails", "type": "form"},
           "properties": [
             {
               "type": "string",
-              "label": "APPONE_HFREFERALFLOW_Adminstative_area_label",
+              "label": "HFREFERRAL_FACILITY_DETAILS_administrativeArea_LABEL",
               "order": 1,
               "value": "",
               "format": "locality",
@@ -2946,7 +2944,7 @@ final dynamic sampleReferralFlows = {
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "administrativeUnitKey",
+              "fieldName": "administrativeArea",
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": "",
@@ -2955,7 +2953,8 @@ final dynamic sampleReferralFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                  "message":
+                      "HFREFERRAL_FACILITY_DETAILS_administrativeArea_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -2963,7 +2962,7 @@ final dynamic sampleReferralFlows = {
             },
             {
               "type": "integer",
-              "label": "APPONE_HFREFERALFLOW_dateOfEvaluation_label",
+              "label": "HFREFERRAL_FACILITY_DETAILS_dateOfEvaluation_LABEL",
               "order": 2,
               "value": "",
               "format": "date",
@@ -2982,7 +2981,7 @@ final dynamic sampleReferralFlows = {
                   "type": "required",
                   "value": true,
                   "message":
-                      "APPONE_HFREFERALFLOW_facilityDetails_DATE_OF_EVALUATION"
+                      "HFREFERRAL_FACILITY_DETAILS_dateOfEvaluation_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -2991,7 +2990,7 @@ final dynamic sampleReferralFlows = {
             {
               "type": "dynamic",
               "enums": [],
-              "label": "APPONE_HFREFERALFLOW_EVALUATION_FACILITY_KEY_LABEL",
+              "label": "HFREFERRAL_FACILITY_DETAILS_evaluationFacility_LABEL",
               "order": 3,
               "value": "",
               "format": "custom",
@@ -3000,7 +2999,7 @@ final dynamic sampleReferralFlows = {
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "evaluationFacilityKey",
+              "fieldName": "evaluationFacility",
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": "",
@@ -3010,7 +3009,7 @@ final dynamic sampleReferralFlows = {
                   "type": "required",
                   "value": false,
                   "message":
-                      "APPONE_HFREFERALFLOW_evaluationFacilityKey_REQUIRED"
+                      "HFREFERRAL_FACILITY_DETAILS_evaluationFacility_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3018,7 +3017,7 @@ final dynamic sampleReferralFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_HFREFERALFLOW_hfCoordinatorKey_label",
+              "label": "HFREFERRAL_FACILITY_DETAILS_hfCoordinator_LABEL",
               "order": 4,
               "value": "",
               "format": "text",
@@ -3027,27 +3026,7 @@ final dynamic sampleReferralFlows = {
               "helpText": "",
               "infoText": "",
               "readOnly": false,
-              "fieldName": "hfCoordinatorKey",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
-            {
-              "type": "string",
-              "label": "APPONE_HFREFERALFLOW_referredByKey_label",
-              "order": 5,
-              "value": "",
-              "format": "text",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "referredByKey",
+              "fieldName": "hfCoordinator",
               "deleteFlag": false,
               "innerLabel": "",
               "schemaCode": "",
@@ -3056,14 +3035,14 @@ final dynamic sampleReferralFlows = {
               "errorMessage": "",
               "isMultiSelect": false
             }
-          ],
-          "actionLabel": "APPONE_HFREFERALFLOW_FACILITY_ACTION_BUTTON_LABEL",
-          "description": "APPONE_HFREFERALFLOW_FACILITYSCREEN_DESCRIPTION"
+          ]
         },
         {
           "page": "referralDetails",
           "type": "object",
-          "label": "APPONE_REFERRALDETAILS_SCREEN_HEADING",
+          "label": "HFREFERRAL_REFERRAL_DETAILS_HEADING",
+          "actionLabel": "HFREFERRAL_REFERRAL_DETAILS_ACTION_LABEL",
+          "description": "HFREFERRAL_REFERRAL_DETAILS_DESCRIPTION",
           "order": 3,
           "navigateTo": {
             "name": "ReferralReconAcknowledgement",
@@ -3071,14 +3050,14 @@ final dynamic sampleReferralFlows = {
           },
           "properties": [
             {
-              "type": "dynamic",
-              "label": "APPONE_REFERRALDETAILS_SCREEN_cycle_label",
+              "type": "string",
+              "label": "HFREFERRAL_REFERRAL_DETAILS_referralCycle_LABEL",
               "order": 1,
               "value": "",
               "format": "custom",
               "hidden": false,
               "tooltip": "",
-              "helpText": "APPONE_REFERRALDETAILS_SCREEN_cycle_helpText_label",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "referralCycle",
@@ -3089,15 +3068,17 @@ final dynamic sampleReferralFlows = {
                 {
                   "type": "required",
                   "value": false,
-                  "message": "APPONE_REFERRALDETAILS_SCREEN_cycle_REQUIRED"
+                  "message":
+                      "HFREFERRAL_REFERRAL_DETAILS_referralCycle_REQUIRED_ERROR"
                 }
               ],
+              "enums": "{{project.cycle}}",
               "errorMessage": "",
               "isMultiSelect": false
             },
             {
               "type": "string",
-              "label": "APPONE_REFERRALDETAILS_SCREEN_nameOfChild_label",
+              "label": "HFREFERRAL_REFERRAL_DETAILS_nameOfChild_LABEL",
               "order": 2,
               "value": "",
               "format": "text",
@@ -3115,7 +3096,7 @@ final dynamic sampleReferralFlows = {
                   "type": "required",
                   "value": true,
                   "message":
-                      "APPONE_REFERRALDETAILS_SCREEN_nameOfChild_REQUIRED"
+                      "HFREFERRAL_REFERRAL_DETAILS_nameOfChild_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3123,7 +3104,7 @@ final dynamic sampleReferralFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_REFERRALDETAILS_SCREEN_beneficiaryId_label",
+              "label": "HFREFERRAL_REFERRAL_DETAILS_beneficiaryId_LABEL",
               "order": 3,
               "value": "",
               "format": "text",
@@ -3142,7 +3123,7 @@ final dynamic sampleReferralFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_REFERRALDETAILS_SCREEN_referralCode_label",
+              "label": "HFREFERRAL_REFERRAL_DETAILS_referralCode_LABEL",
               "order": 4,
               "value": "",
               "format": "text",
@@ -3161,7 +3142,7 @@ final dynamic sampleReferralFlows = {
             },
             {
               "type": "integer",
-              "label": "APPONE_REFERRALDETAILS_SCREEN_ageInMonths_label",
+              "label": "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_LABEL",
               "order": 5,
               "value": "",
               "format": "text",
@@ -3179,7 +3160,7 @@ final dynamic sampleReferralFlows = {
                   "type": "required",
                   "value": true,
                   "message":
-                      "APPONE_REFERRALDETAILS_SCREEN_ageInMonths_REQUIRED"
+                      "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3192,7 +3173,7 @@ final dynamic sampleReferralFlows = {
                 {"code": "FEMALE", "name": "FEMALE"},
                 {"code": "MALE", "name": "MALE"}
               ],
-              "label": "APPONE_REFERRALDETAILS_SCREEN_gender_label",
+              "label": "HFREFERRAL_REFERRAL_DETAILS_gender_LABEL",
               "order": 6,
               "value": "",
               "format": "dropdown",
@@ -3210,7 +3191,7 @@ final dynamic sampleReferralFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "APPONE_REFERRALDETAILS_SCREEN_gender_REQUIRED"
+                  "message": "HFREFERRAL_REFERRAL_DETAILS_gender_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3218,7 +3199,7 @@ final dynamic sampleReferralFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_REFERRALDETAILS_SCREEN_referralReason_label",
+              "label": "HFREFERRAL_REFERRAL_DETAILS_referralReason_LABEL",
               "order": 7,
               "value": "",
               "format": "radio",
@@ -3237,15 +3218,13 @@ final dynamic sampleReferralFlows = {
                   "type": "required",
                   "value": true,
                   "message":
-                      "APPONE_REFERRALDETAILS_SCREEN_referralReason_REQUIRED"
+                      "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false
             }
           ],
-          "actionLabel": "APPONE_REFERRALDETAILS_SCREEN_ACTION_BUTTON_LABEL",
-          "description": "APPONE_REFERRALDETAILS_SCREEN_SCREEN_DESCRIPTION",
           "conditionalNavigateTo": [
             {
               "condition": "referralDetails.referralReason==DRUG_SE_CC",
@@ -3274,8 +3253,9 @@ final dynamic sampleReferralFlows = {
         {
           "page": "sideEffectFromCurrentCycle",
           "type": "object",
-          "label":
-              "APPONE_HFREFERALFLOW_SIDE_EFFECT_CURRENT_CYCLE_SCREEN_HEADER",
+          "label": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_HEADING",
+          "actionLabel": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_ACTION_LABEL",
+          "description": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_DESCRIPTION",
           "order": 4.1,
           "navigateTo": {
             "name": "ReferralReconAcknowledgement",
@@ -3289,7 +3269,7 @@ final dynamic sampleReferralFlows = {
                 {"code": "NO", "name": "SIDE_EFFECTQ1_NO"}
               ],
               "label":
-                  "APPONE_HFREFERALFLOW_SIDE_EFFECT_CURRENT_CYCLE_CHILD_EVALUATED",
+                  "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ1_LABEL",
               "order": 1,
               "value": "",
               "format": "radio",
@@ -3307,7 +3287,8 @@ final dynamic sampleReferralFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                  "message":
+                      "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ1_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3320,7 +3301,7 @@ final dynamic sampleReferralFlows = {
                 {"code": "NO", "name": "SIDE_EFFECTQ2_NO"}
               ],
               "label":
-                  "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_PHARMACOVIGILANCE_HEAD",
+                  "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ2_LABEL",
               "order": 2,
               "value": "",
               "format": "radio",
@@ -3338,7 +3319,8 @@ final dynamic sampleReferralFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                  "message":
+                      "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ2_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3351,7 +3333,7 @@ final dynamic sampleReferralFlows = {
                 {"code": "NO", "name": "SIDE_EFFECTQ3_NO"}
               ],
               "label":
-                  "APPONE_HFREFERALFLOW_SIDE_EFFECT_CURRENT_CYCLE_CHILD_ADMINT_TRANSFER",
+                  "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ3_LABEL",
               "order": 3,
               "value": "",
               "format": "radio",
@@ -3369,22 +3351,21 @@ final dynamic sampleReferralFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                  "message":
+                      "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ3_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false
             }
-          ],
-          "actionLabel":
-              "APPONE_HFREFERALFLOW_sideEffectFromCurrentCycleACTION_BUTTON_LABEL",
-          "description": "APPONE_HFREFERALFLOW_CC_CYCLE_DESCRIPTION"
+          ]
         },
         {
           "page": "sideEffectFromPreviousCycle",
           "type": "object",
-          "label":
-              "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_SCREEN_HEADER",
+          "label": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_HEADING",
+          "actionLabel": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_ACTION_LABEL",
+          "description": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_DESCRIPTION",
           "order": 4.2,
           "navigateTo": {
             "name": "ReferralReconAcknowledgement",
@@ -3398,7 +3379,7 @@ final dynamic sampleReferralFlows = {
                 {"code": "NO", "name": "SIDE_EFFECT_PREQ1_NO"}
               ],
               "label":
-                  "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_SCREEN_QUESTION_1_LABEL",
+                  "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ1_LABEL",
               "order": 1,
               "value": "",
               "format": "radio",
@@ -3416,7 +3397,8 @@ final dynamic sampleReferralFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                  "message":
+                      "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ1_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3429,7 +3411,7 @@ final dynamic sampleReferralFlows = {
                 {"code": "NO", "name": "SIDE_EFFECT_PREQ2_NO"}
               ],
               "label":
-                  "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_SCREEN_QUESTION_2_LABEL",
+                  "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ2_LABEL",
               "order": 2,
               "value": "",
               "format": "radio",
@@ -3447,7 +3429,8 @@ final dynamic sampleReferralFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                  "message":
+                      "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ2_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3456,11 +3439,11 @@ final dynamic sampleReferralFlows = {
             {
               "type": "string",
               "enums": [
-                {"code": "YES", "name": "SIDE_EFFECT_PREQ2_YES"},
-                {"code": "NO", "name": "SIDE_EFFECT_PREQ2_NO"}
+                {"code": "YES", "name": "SIDE_EFFECT_PREQ3_YES"},
+                {"code": "NO", "name": "SIDE_EFFECT_PREQ3_NO"}
               ],
               "label":
-                  "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_SCREEN_QUESTION_3_LABEL",
+                  "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ3_LABEL",
               "order": 3,
               "value": "",
               "format": "radio",
@@ -3478,21 +3461,21 @@ final dynamic sampleReferralFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                  "message":
+                      "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ3_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false
             }
-          ],
-          "actionLabel":
-              "APPONE_HFREFERALFLOW_sideEffectFromPreviousCycleACTION_BUTTON_LABEL",
-          "description": "APPONE_HFREFERALFLOW_PRE_CYCLE_DESCRIPTION"
+          ]
         },
         {
           "page": "sideEffectFever",
           "type": "object",
-          "label": "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_HEADING",
+          "label": "HFREFERRAL_SIDEEFFECTFROMFEVER_HEADING",
+          "actionLabel": "HFREFERRAL_SIDEEFFECTFROMFEVER_ACTION_LABEL",
+          "description": "HFREFERRAL_SIDEEFFECTFROMFEVER_DESCRIPTION",
           "order": 4.3,
           "navigateTo": {
             "name": "ReferralReconAcknowledgement",
@@ -3505,7 +3488,7 @@ final dynamic sampleReferralFlows = {
                 {"code": "YES", "name": "FEVERQ1_YES"},
                 {"code": "NO", "name": "FEVERQ1_NO"}
               ],
-              "label": "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_LABEL",
+              "label": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ1_LABEL",
               "order": 1,
               "value": "",
               "format": "radio",
@@ -3524,7 +3507,7 @@ final dynamic sampleReferralFlows = {
                   "type": "required",
                   "value": true,
                   "message":
-                      "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_REQUIRED"
+                      "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ1_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3536,8 +3519,7 @@ final dynamic sampleReferralFlows = {
                 {"code": "POSITIVE", "name": "FEVERQ2_POSITIVE"},
                 {"code": "NEGATIVE", "name": "FEVERQ2_NEGATIVE"}
               ],
-              "label":
-                  "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_MALARIA_LABEL",
+              "label": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ2_LABEL",
               "order": 2,
               "value": "",
               "format": "radio",
@@ -3556,7 +3538,7 @@ final dynamic sampleReferralFlows = {
                   "type": "required",
                   "value": true,
                   "message":
-                      "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_REQUIRED"
+                      "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ2_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3571,8 +3553,7 @@ final dynamic sampleReferralFlows = {
                 {"code": "YES", "name": "FEVERQ3_YES"},
                 {"code": "NO", "name": "FEVERQ2_NO"}
               ],
-              "label":
-                  "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_NEGATIVE_MALARIA_LABEL",
+              "label": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ3_LABEL",
               "order": 3,
               "value": "",
               "format": "radio",
@@ -3590,7 +3571,8 @@ final dynamic sampleReferralFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                  "message":
+                      "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ3_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3605,8 +3587,7 @@ final dynamic sampleReferralFlows = {
                 {"code": "YES", "name": "FEVERQ4_YES"},
                 {"code": "NO", "name": "FEVERQ4_NO"}
               ],
-              "label":
-                  "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_POSITIVE_MALARIA_HOSPITAL_LABEL",
+              "label": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ4_LABEL",
               "order": 4,
               "value": "",
               "format": "radio",
@@ -3624,7 +3605,8 @@ final dynamic sampleReferralFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                  "message":
+                      "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ4_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3639,8 +3621,7 @@ final dynamic sampleReferralFlows = {
                 {"code": "YES", "name": "FEVERQ5_YES"},
                 {"code": "NO", "name": "FEVERQ5_NO"}
               ],
-              "label":
-                  "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_POSITIVE_ANTI_MALARIA__LABEL",
+              "label": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ5_LABEL",
               "order": 5,
               "value": "",
               "format": "radio",
@@ -3658,7 +3639,8 @@ final dynamic sampleReferralFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                  "message":
+                      "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ5_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3669,8 +3651,7 @@ final dynamic sampleReferralFlows = {
             },
             {
               "type": "string",
-              "label":
-                  "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_POSITIVE_ANTI_MALARIA__LABEL_YES",
+              "label": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ6_LABEL",
               "order": 6,
               "value": "",
               "format": "text",
@@ -3688,7 +3669,8 @@ final dynamic sampleReferralFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                  "message":
+                      "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ6_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3697,14 +3679,14 @@ final dynamic sampleReferralFlows = {
                 "expression": "sideEffectFever.feverQ5==YES"
               }
             }
-          ],
-          "actionLabel": "APPONE_HFREFERALFLOW_Fever_ACTION_BUTTON_LABEL",
-          "description": "APPONE_HFREFERALFLOW_FEVER_DESCRIPTION"
+          ]
         },
         {
           "page": "sideEffectSick",
           "type": "object",
-          "label": "APPONE_HFREFERALFLOW_SIDE_EFFECT_SICK_SCREEN_HEADING",
+          "label": "HFREFERRAL_SIDEEFFECTFROMSICK_HEADING",
+          "actionLabel": "HFREFERRAL_SIDEEFFECTFROMSICK_ACTION_LABEL",
+          "description": "HFREFERRAL_SIDEEFFECTFROMSICK_DESCRIPTION",
           "order": 4.4,
           "navigateTo": {
             "name": "ReferralReconAcknowledgement",
@@ -3717,8 +3699,7 @@ final dynamic sampleReferralFlows = {
                 {"code": "YES", "name": "SICKQ1_YES"},
                 {"code": "NO", "name": "SICKQ1_NO"}
               ],
-              "label":
-                  "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREV_CYCLE_SCREEN_ADVERSE_REACTION",
+              "label": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ1_LABEL",
               "order": 1,
               "value": "",
               "format": "radio",
@@ -3736,7 +3717,8 @@ final dynamic sampleReferralFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                  "message":
+                      "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ1_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3744,7 +3726,7 @@ final dynamic sampleReferralFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_HFREFERALFLOW_SIDE_EFFECT_COMMENT_FOR_DIAGNOSIS",
+              "label": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ4_LABEL",
               "order": 2,
               "value": "",
               "format": "text",
@@ -3762,7 +3744,8 @@ final dynamic sampleReferralFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                  "message":
+                      "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ4_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3777,7 +3760,7 @@ final dynamic sampleReferralFlows = {
                 {"code": "YES", "name": "SICKQ2_YES"},
                 {"code": "NO", "name": "SICKQ2_NO"}
               ],
-              "label": "APPONE_HFREFERALFLOW_SIDE_EFFECT_sickQ2_label",
+              "label": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ2_LABEL",
               "order": 3,
               "value": "",
               "format": "radio",
@@ -3795,7 +3778,8 @@ final dynamic sampleReferralFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                  "message":
+                      "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ2_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3803,7 +3787,7 @@ final dynamic sampleReferralFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_HFREFERALFLOW_SIDE_EFFECT_NAME_DOSE_DRUG",
+              "label": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ5_LABEL",
               "order": 4,
               "value": "",
               "format": "text",
@@ -3821,7 +3805,8 @@ final dynamic sampleReferralFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                  "message":
+                      "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ5_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -3836,8 +3821,7 @@ final dynamic sampleReferralFlows = {
                 {"code": "YES", "name": "SICKQ3_YES"},
                 {"code": "NO", "name": "SICKQ3_NO"}
               ],
-              "label":
-                  "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_CHILD_ADMINT_TRANSFER",
+              "label": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ3_LABEL",
               "order": 5,
               "value": "",
               "format": "radio",
@@ -3855,32 +3839,22 @@ final dynamic sampleReferralFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED"
+                  "message":
+                      "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ3_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
               "isMultiSelect": false
             }
-          ],
-          "actionLabel": "APPONE_HFREFERALFLOW_SickACTION_BUTTON_LABEL",
-          "description": "APPONE_HFREFERALFLOW_SICK_DESCRIPTION"
+          ]
         }
       ],
-      "wrapperConfig": {
-        "wrapperName": "ComplaintWrapper",
-        "rootEntity": "PgrServiceModel",
-        "filters": [],
-        "relations": [],
-        "searchConfig": {
-          "primary": "pgrService",
-          "select": ["pgrService"]
-        }
-      },
+      "wrapperConfig": {},
       "onAction": [
         {
           "actionType": "FETCH_TRANSFORMER_CONFIG",
           "properties": {
-            "configName": "complaintRegistration",
+            "configName": "referralCreation",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
@@ -3905,56 +3879,37 @@ final dynamic sampleReferralFlows = {
           "actionType": "NAVIGATION",
           "properties": {
             "type": "TEMPLATE",
-            "name": "complaintAcknowledgement",
+            "name": "referralAcknowledgement",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
                 "properties": {"message": "Navigation failed."}
               }
             ],
-            "data": [
-              {
-                "key": "complaintClientReferenceId",
-                "value":
-                    "{{contextData.entities.PgrServiceModel.clientReferenceId}}"
-              }
-            ]
+            "data": []
           }
         }
       ]
     },
     {
       "screenType": "TEMPLATE",
-      "name": "complaintAcknowledgement",
+      "name": "referralAcknowledgement",
       "heading": "",
       "description": "",
-      "header": [
-        {
-          "format": "backLink",
-          "label": "Back",
-          "onAction": [
-            {
-              "actionType": "BACK_NAVIGATION",
-              "properties": {"type": "TEMPLATE", "name": "complaintInbox"}
-            }
-          ]
-        }
-      ],
+      "header": [],
       "body": [
         {
           "format": "panelCard",
           "type": "template",
-          "fieldName": "complaintSuccess",
-          "label": "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_LABEL",
-          "description":
-              "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_DESCRIPTION",
+          "fieldName": "referralSuccess",
+          "label": "REFERRAL_ACKNOWLEDGEMENT_PANEL_CARD_LABEL",
+          "description": "REFERRAL_ACKNOWLEDGEMENT_PANEL_CARD_DESCRIPTION",
           "properties": {"type": "success"},
           "secondaryAction": {
             "type": "template",
             "format": "button",
-            "fieldName": "backToComplaints",
-            "label":
-                "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_ACTION_LABEL",
+            "fieldName": "back",
+            "label": "REFERRAL_ACKNOWLEDGEMENT_PANEL_CARD_ACTION_LABEL",
             "onAction": [
               {
                 "actionType": "NAVIGATION",
@@ -3967,13 +3922,15 @@ final dynamic sampleReferralFlows = {
     },
     {
       "screenType": "TEMPLATE",
-      "name": "complaintView",
-      "heading": "COMPLAINT_VIEW_HEADING",
-      "description": "",
+      "name": "referralOverview",
+      "heading": "REFERRAL_OVERVIEW_HEADING",
+      "description": "REFERRAL_OVERVIEW_DESCRIPTION",
+      "initActions": [],
       "header": [
         {
           "format": "backLink",
-          "label": "Back",
+          "type": "template",
+          "label": "REFERRAL_INBOX_OVERVIEW_BACK_BUTTON_LABEL",
           "onAction": [
             {"actionType": "BACK_NAVIGATION", "properties": {}}
           ]
@@ -3983,8 +3940,8 @@ final dynamic sampleReferralFlows = {
         {
           "format": "button",
           "type": "template",
-          "fieldName": "close",
-          "label": "COMPLAINT_VIEW_ACTION_LABEL",
+          "fieldName": "createReferral",
+          "label": "REFERRAL_INBOX_PRIMARY_ACTION_LABEL",
           "properties": {
             "type": "primary",
             "size": "large",
@@ -3994,87 +3951,129 @@ final dynamic sampleReferralFlows = {
           "onAction": [
             {
               "actionType": "NAVIGATION",
-              "properties": {"type": "TEMPLATE", "name": "complaintInbox"}
+              "properties": {
+                "type": "FORM",
+                "name": "REFERRAL_CREATE",
+                "data": []
+              }
+            }
+          ]
+        },
+        {
+          "format": "qrScanner",
+          "type": "template",
+          "fieldName": "scanQr",
+          "label": "REFERRAL_INBOX_SECONDARY_ACTION_LABEL",
+          "properties": {
+            "type": "secondary",
+            "size": "large",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "onAction": [
+            {
+              "actionType": "SEARCH_EVENT",
+              "properties": {
+                "type": "FORM",
+                "name": "COMPLAINT_CREATE",
+                "data": []
+              }
             }
           ]
         }
       ],
-      "initActions": [
-        {
-          "actionType": "SEARCH_EVENT",
-          "properties": {
-            "type": "SEARCH_EVENT",
-            "name": "pgrService",
-            "data": [
-              {
-                "key": "clientReferenceId",
-                "value": "{{navigation.clientReferenceId}}",
-                "operation": "equals"
-              }
-            ]
-          }
-        }
-      ],
       "wrapperConfig": {
-        "wrapperName": "ComplaintWrapper",
-        "rootEntity": "PgrServiceModel",
+        "wrapperName": "hFReferral",
+        "rootEntity": "HFReferralModel",
         "filters": [],
         "relations": [],
         "searchConfig": {
-          "primary": "pgrService",
-          "select": ["pgrService"]
+          "primary": "hFReferral",
+          "select": ["hFReferral"]
         }
       },
       "body": [
         {
-          "format": "card",
+          "format": "searchBar",
           "type": "template",
-          "fieldName": "listOfComplaints",
-          "children": [
+          "label": "REFERRAL_INBOX_SEARCHBAR_LABEL",
+          "fieldName": "searchBar",
+          "onAction": [
             {
-              "format": "labelPairList",
-              "type": "template",
-              "fieldName": "complaintsLabelPair",
-              "data": [
-                {
-                  "key": "COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-                  "value": "{{0.PgrServiceModel.serviceRequestId}}",
-                  "defaultValue": "Sync data to generate complaint number"
-                },
-                {
-                  "key": "COMPLAINT_VIEW_COMPLAINTS_TYPE",
-                  "value": "{{0.PgrServiceModel.serviceCode}}",
-                  "defaultValue": "NA"
-                },
-                {
-                  "key": "COMPLAINT_VIEW_COMPLAINTS_DATE",
-                  "value":
-                      "{{fn:formatDate(0.PgrServiceModel.auditDetails.createdTime, dateTime, dd MMM yyyy)}}",
-                  "defaultValue": "NA"
-                },
-                {
-                  "key": "COMPLAINT_VIEW_COMPLAINTS_AREA",
-                  "value": "{{0.PgrServiceModel.address.locality.code}}",
-                  "defaultValue": "NA"
-                },
-                {
-                  "key": "COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-                  "value": "{{0.PgrServiceModel.user.mobileNumber}}",
-                  "defaultValue": "NA"
-                },
-                {
-                  "key": "COMPLAINT_VIEW_COMPLAINT_STATUS",
-                  "value": "{{0.PgrServiceModel.applicationStatus}}",
-                  "defaultValue": "NA"
-                },
-                {
-                  "key": "COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
-                  "value": "{{0.PgrServiceModel.description}}",
-                  "defaultValue": "NA"
-                }
-              ]
+              "actionType": "SEARCH_EVENT",
+              "properties": {
+                "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT",
+                "name": "name",
+                "data": [
+                  {
+                    "key": "givenName",
+                    "value": "field.value",
+                    "operation": "contains"
+                  }
+                ]
+              }
             }
           ]
+        },
+        {
+          "type": "template",
+          "format": "infoCard",
+          "hidden": "{{ context.hFReferral.notEmpty }}",
+          "label": "REFERRAL_INBOX_INFO_CARD_HEADING",
+          "description": "REFERRAL_INBOX_INFO_CARD_DESCRIPTION"
+        },
+        {
+          "type": "template",
+          "format": "listView",
+          "hidden": "{{ context.hFReferral.empty }}",
+          "fieldName": "listView",
+          "data": "hFReferral",
+          "child": {
+            "format": "card",
+            "children": [
+              {
+                "type": "template",
+                "format": "row",
+                "properties": {
+                  "mainAxisAlignment": "spaceBetween",
+                  "mainAxisSize": "max"
+                },
+                "children": [
+                  {
+                    "type": "template",
+                    "format": "text",
+                    "value": "{{ headIndividual.0.name.givenName }}"
+                  },
+                  {
+                    "type": "template",
+                    "format": "button",
+                    "label": "Open",
+                    "properties": {"type": "secondary", "size": "medium"},
+                    "onAction": [
+                      {
+                        "actionType": "NAVIGATION",
+                        "properties": {
+                          "type": "TEMPLATE",
+                          "name": "householdOverview",
+                          "data": [
+                            {
+                              "key": "HouseholdClientReferenceId",
+                              "value": "{{ HouseholdModel.clientReferenceId }}"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "format": "text",
+                "value":
+                    "Date of evaluation: {{ headOfHousehold.0.isHeadOfHousehold }}"
+              }
+            ]
+          }
         }
       ]
     }

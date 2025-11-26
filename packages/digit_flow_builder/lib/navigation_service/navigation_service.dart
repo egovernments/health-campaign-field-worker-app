@@ -12,6 +12,8 @@ abstract class NavigationService {
     required String name,
     Map<String, dynamic>? data,
   });
+
+  void navigateToHome();
 }
 
 class FlowBuilderNavigationService implements NavigationService {
@@ -23,7 +25,6 @@ class FlowBuilderNavigationService implements NavigationService {
 
   @override
   void navigateTo({
-    // TODO: add pop all or replace all routes to clear the stack
     required String type,
     required String name,
     Map<String, dynamic>? data,
@@ -40,6 +41,22 @@ class FlowBuilderNavigationService implements NavigationService {
           message: 'No route found for key: $key', type: ToastType.error);
     }
   }
+
+  @override
+  void navigateToHome() {
+    try {
+      context.router.popUntil((route) {
+        // Check if the route is HomeRoute (the main app HomePage)
+        return route.settings.name == 'HomeRoute';
+      });
+    } catch (e) {
+      debugPrint('⚠️ Error navigating to HOME: $e');
+      // Fallback: try to pop if possible
+      if (context.router.canPop()) {
+        context.router.pop();
+      }
+    }
+  }
 }
 
 class NavigationRegistry {
@@ -53,6 +70,12 @@ class NavigationRegistry {
     final type = properties['type'] as String? ?? '';
     final name = properties['name'] as String? ?? '';
     final dataList = properties['data'] as List<dynamic>? ?? [];
+
+    // Special handling for HOME navigation
+    if (name == 'HOME') {
+      _service.navigateToHome();
+      return;
+    }
 
     final data = <String, dynamic>{};
     for (final entry in dataList) {
