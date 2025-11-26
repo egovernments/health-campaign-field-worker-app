@@ -42,7 +42,7 @@ class QrViewWidget implements FlowWidget {
 
     // Get size (can be a number or responsive)
     final sizeValue = json['size'];
-    double? qrSize;
+    double qrSize;
     if (sizeValue is num) {
       qrSize = sizeValue.toDouble();
     } else if (sizeValue is String) {
@@ -65,6 +65,11 @@ class QrViewWidget implements FlowWidget {
       qrSize = MediaQuery.of(context).size.width / 1.5;
     }
 
+    // Ensure size is positive and reasonable
+    if (qrSize <= 0 || qrSize.isNaN || qrSize.isInfinite) {
+      qrSize = 200.0; // Fallback to fixed size
+    }
+
     // Get version (defaults to auto)
     final version = json['version'] as int? ?? QrVersions.auto;
 
@@ -85,28 +90,41 @@ class QrViewWidget implements FlowWidget {
     // Check if we should show in a dialog/modal
     final showInDialog = json['showInDialog'] as bool? ?? false;
 
-    final qrWidget = Center(
-      child: QrImageView(
-        data: qrData,
-        version: version,
-        size: qrSize,
-        dataModuleStyle: QrDataModuleStyle(
-          dataModuleShape: QrDataModuleShape.square,
-          color: dataModuleColor,
+    try {
+      // Wrap in a constrained container to prevent layout issues in scrollable contexts
+      final qrWidget = ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: qrSize,
+          maxHeight: qrSize,
         ),
-        eyeStyle: QrEyeStyle(
-          eyeShape: QrEyeShape.square,
-          color: dataModuleColor,
+        child: AspectRatio(
+          aspectRatio: 1.0,
+          child: QrImageView(
+            data: qrData,
+            version: version,
+            size: qrSize,
+            dataModuleStyle: QrDataModuleStyle(
+              dataModuleShape: QrDataModuleShape.square,
+              color: dataModuleColor,
+            ),
+            eyeStyle: QrEyeStyle(
+              eyeShape: QrEyeShape.square,
+              color: dataModuleColor,
+            ),
+            backgroundColor: backgroundColor,
+            errorCorrectionLevel: errorCorrectionLevel,
+            padding: EdgeInsets.all(padding.toDouble()),
+          ),
         ),
-        backgroundColor: backgroundColor,
-        errorCorrectionLevel: errorCorrectionLevel,
-        padding: EdgeInsets.all(padding.toDouble()),
-      ),
-    );
+      );
 
-    // If showInDialog is true, we would typically trigger this via an action
-    // For now, just return the QR code widget
-    return qrWidget;
+      // If showInDialog is true, we would typically trigger this via an action
+      // For now, just return the QR code widget
+      return qrWidget;
+    } catch (e) {
+      debugPrint('Error creating QR code: $e');
+      return const SizedBox.shrink();
+    }
   }
 
   /// Parse color from string (hex or named colors)

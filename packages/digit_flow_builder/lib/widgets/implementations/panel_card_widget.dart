@@ -54,7 +54,8 @@ class PanelCardWidget implements FlowWidget {
     final label = resolveTemplate(localizedLabel, mergedData);
 
     final descriptionText = json['description'] ?? '';
-    final localizedDescription = localization?.translate(descriptionText) ?? descriptionText;
+    final localizedDescription =
+        localization?.translate(descriptionText) ?? descriptionText;
     final description = resolveTemplate(localizedDescription, mergedData);
 
     Map<String, dynamic>? primaryAction = json['primaryAction'];
@@ -109,23 +110,57 @@ class PanelCardWidget implements FlowWidget {
       }
     }
 
+    // Build additional widgets if provided
+    final additionalWidgetsConfig = json['additionalWidgets'] as List<dynamic>?;
+    List<Widget>? additionalWidgets;
+
+    if (additionalWidgetsConfig != null && additionalWidgetsConfig.isNotEmpty) {
+      final widgets = <Widget>[];
+      try {
+        for (var widgetJson in additionalWidgetsConfig) {
+          if (widgetJson is Map<String, dynamic>) {
+            // Render the widget using WidgetRegistry
+            // Each widget handles its own visibility property
+            final widget = WidgetRegistry.build(
+              widgetJson,
+              context,
+              onAction,
+            );
+            widgets.add(widget);
+          }
+        }
+        // Only assign if we actually have widgets
+        if (widgets.isNotEmpty) {
+          additionalWidgets = widgets;
+        }
+      } catch (e, stackTrace) {
+        debugPrint('Error building additionalWidgets: $e');
+        debugPrint('StackTrace: $stackTrace');
+        // Return null to avoid breaking the panel card
+        additionalWidgets = null;
+      }
+    }
+
     return PanelCard(
       title: label,
       type: PanelType.success,
       description: description,
+      additionWidgets: additionalWidgets,
       actions: [
         if (primaryAction != null)
           DigitButton(
             type: DigitButtonType.primary,
             size: DigitButtonSize.large,
-            label: localization?.translate(primaryAction['label'] ?? '') ?? (primaryAction['label'] ?? ''),
+            label: localization?.translate(primaryAction['label'] ?? '') ??
+                (primaryAction['label'] ?? ''),
             onPressed: () => handleAction(json['primaryAction']),
           ),
         if (secondaryAction != null)
           DigitButton(
             type: DigitButtonType.secondary,
             size: DigitButtonSize.large,
-            label: localization?.translate(secondaryAction['label'] ?? '') ?? (secondaryAction['label'] ?? ''),
+            label: localization?.translate(secondaryAction['label'] ?? '') ??
+                (secondaryAction['label'] ?? ''),
             onPressed: () => handleAction(json['secondaryAction']),
           ),
       ],
