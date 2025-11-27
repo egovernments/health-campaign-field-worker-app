@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../flow_widget_interface.dart';
+import '../localization_context.dart';
 
 class SwitchWidget implements FlowWidget {
   @override
@@ -14,8 +15,10 @@ class SwitchWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
+    final localization = LocalizationContext.maybeOf(context);
+
     return DigitSwitch(
-      label: json['label'] ?? '',
+      label: localization?.translate(json['label'] ?? ''),
       value: false,
       mainAxisAlignment: MainAxisAlignment.start,
       onChanged: (value) {
