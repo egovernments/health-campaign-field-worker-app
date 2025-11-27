@@ -32,10 +32,12 @@ class PropertySchema with _$PropertySchema {
     PropertySchemaFormat? format,
     @JsonKey(fromJson: _stringOrNull) final String? startDate,
     @JsonKey(fromJson: _stringOrNull) final String? endDate,
-    int? minValue,
-    int? maxValue,
-    int? minLength,
-    int? maxLength,
+    @JsonKey(fromJson: _intOrNull) int? minValue,
+    @JsonKey(fromJson: _intOrNull) int? maxValue,
+    @JsonKey(fromJson: _intOrNull) int? minLength,
+    @JsonKey(fromJson: _intOrNull) int? maxLength,
+    @JsonKey(fromJson: _intOrNull) int? min,
+    @JsonKey(fromJson: _intOrNull) int? max,
     String? helpText,
     String? tooltip,
     String? prefixText,
@@ -118,11 +120,21 @@ class NavigateToConfig with _$NavigateToConfig {
 @freezed
 class VisibilityCondition with _$VisibilityCondition {
   const factory VisibilityCondition({
-    required String expression,
+    required List<VisibilityExpression> expression,
   }) = _VisibilityCondition;
 
   factory VisibilityCondition.fromJson(Map<String, dynamic> json) =>
       _$VisibilityConditionFromJson(json);
+}
+
+@freezed
+class VisibilityExpression with _$VisibilityExpression {
+  const factory VisibilityExpression({
+    required String condition,
+  }) = _VisibilityExpression;
+
+  factory VisibilityExpression.fromJson(Map<String, dynamic> json) =>
+      _$VisibilityExpressionFromJson(json);
 }
 
 @freezed
@@ -185,6 +197,14 @@ class MultiEntityConfig with _$MultiEntityConfig {
 
 String? _stringOrNull(dynamic value) {
   return value is String ? value : null;
+}
+
+int? _intOrNull(dynamic value) {
+  if (value == null) return null;
+  if (value is int) return value;
+  if (value is num) return value.toInt();
+  if (value is String) return int.tryParse(value);
+  return null;
 }
 
 NavigateToConfig? _navigateToConfigOrNull(dynamic value) {

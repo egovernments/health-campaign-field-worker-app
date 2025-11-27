@@ -278,7 +278,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                   );
 
                                   final isConditionTrue =
-                                      evaluateVisibilityExpression(
+                                      evaluateSingleCondition(
                                           condition, values);
 
                                   if (isConditionTrue) {
@@ -536,7 +536,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     for (final condition in conditions) {
       // simple check: if contextValues contain a truthy match
       final isConditionTrue =
-          evaluateVisibilityExpression(condition.expression, contextValues);
+          evaluateSingleCondition(condition.expression, contextValues);
 
       if (isConditionTrue) {
         return template?.replaceAll("{value}", condition.value);

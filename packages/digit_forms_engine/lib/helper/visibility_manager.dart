@@ -32,11 +32,14 @@ class VisibilityManager {
       final key = entry.key;
       final schema = entry.value;
 
-      final expression =
-          schema.conditions?['visibilityCondition']?['expression'];
-      if (expression is! String) continue;
+      final visibilityCondition = schema.visibilityCondition;
+      if (visibilityCondition == null ||
+          visibilityCondition.expression.isEmpty) {
+        continue;
+      }
 
-      final isVisible = evaluateVisibilityExpression(expression, flatValues);
+      final isVisible = evaluateVisibilityExpression(
+          visibilityCondition.expression, flatValues);
 
       toggleControlVisibility(key, isVisible, schema);
     }

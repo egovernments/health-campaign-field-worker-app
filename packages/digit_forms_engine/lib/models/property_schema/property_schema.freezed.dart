@@ -37,10 +37,18 @@ mixin _$PropertySchema {
   String? get startDate => throw _privateConstructorUsedError;
   @JsonKey(fromJson: _stringOrNull)
   String? get endDate => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _intOrNull)
   int? get minValue => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _intOrNull)
   int? get maxValue => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _intOrNull)
   int? get minLength => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _intOrNull)
   int? get maxLength => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _intOrNull)
+  int? get min => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _intOrNull)
+  int? get max => throw _privateConstructorUsedError;
   String? get helpText => throw _privateConstructorUsedError;
   String? get tooltip => throw _privateConstructorUsedError;
   String? get prefixText => throw _privateConstructorUsedError;
@@ -102,10 +110,12 @@ abstract class $PropertySchemaCopyWith<$Res> {
       PropertySchemaFormat? format,
       @JsonKey(fromJson: _stringOrNull) String? startDate,
       @JsonKey(fromJson: _stringOrNull) String? endDate,
-      int? minValue,
-      int? maxValue,
-      int? minLength,
-      int? maxLength,
+      @JsonKey(fromJson: _intOrNull) int? minValue,
+      @JsonKey(fromJson: _intOrNull) int? maxValue,
+      @JsonKey(fromJson: _intOrNull) int? minLength,
+      @JsonKey(fromJson: _intOrNull) int? maxLength,
+      @JsonKey(fromJson: _intOrNull) int? min,
+      @JsonKey(fromJson: _intOrNull) int? max,
       String? helpText,
       String? tooltip,
       String? prefixText,
@@ -169,6 +179,8 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? maxValue = freezed,
     Object? minLength = freezed,
     Object? maxLength = freezed,
+    Object? min = freezed,
+    Object? max = freezed,
     Object? helpText = freezed,
     Object? tooltip = freezed,
     Object? prefixText = freezed,
@@ -256,6 +268,14 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
       maxLength: freezed == maxLength
           ? _value.maxLength
           : maxLength // ignore: cast_nullable_to_non_nullable
+              as int?,
+      min: freezed == min
+          ? _value.min
+          : min // ignore: cast_nullable_to_non_nullable
+              as int?,
+      max: freezed == max
+          ? _value.max
+          : max // ignore: cast_nullable_to_non_nullable
               as int?,
       helpText: freezed == helpText
           ? _value.helpText
@@ -433,10 +453,12 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       PropertySchemaFormat? format,
       @JsonKey(fromJson: _stringOrNull) String? startDate,
       @JsonKey(fromJson: _stringOrNull) String? endDate,
-      int? minValue,
-      int? maxValue,
-      int? minLength,
-      int? maxLength,
+      @JsonKey(fromJson: _intOrNull) int? minValue,
+      @JsonKey(fromJson: _intOrNull) int? maxValue,
+      @JsonKey(fromJson: _intOrNull) int? minLength,
+      @JsonKey(fromJson: _intOrNull) int? maxLength,
+      @JsonKey(fromJson: _intOrNull) int? min,
+      @JsonKey(fromJson: _intOrNull) int? max,
       String? helpText,
       String? tooltip,
       String? prefixText,
@@ -503,6 +525,8 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? maxValue = freezed,
     Object? minLength = freezed,
     Object? maxLength = freezed,
+    Object? min = freezed,
+    Object? max = freezed,
     Object? helpText = freezed,
     Object? tooltip = freezed,
     Object? prefixText = freezed,
@@ -590,6 +614,14 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
       maxLength: freezed == maxLength
           ? _value.maxLength
           : maxLength // ignore: cast_nullable_to_non_nullable
+              as int?,
+      min: freezed == min
+          ? _value.min
+          : min // ignore: cast_nullable_to_non_nullable
+              as int?,
+      max: freezed == max
+          ? _value.max
+          : max // ignore: cast_nullable_to_non_nullable
               as int?,
       helpText: freezed == helpText
           ? _value.helpText
@@ -702,10 +734,12 @@ class _$PropertySchemaImpl implements _PropertySchema {
       this.format,
       @JsonKey(fromJson: _stringOrNull) this.startDate,
       @JsonKey(fromJson: _stringOrNull) this.endDate,
-      this.minValue,
-      this.maxValue,
-      this.minLength,
-      this.maxLength,
+      @JsonKey(fromJson: _intOrNull) this.minValue,
+      @JsonKey(fromJson: _intOrNull) this.maxValue,
+      @JsonKey(fromJson: _intOrNull) this.minLength,
+      @JsonKey(fromJson: _intOrNull) this.maxLength,
+      @JsonKey(fromJson: _intOrNull) this.min,
+      @JsonKey(fromJson: _intOrNull) this.max,
       this.helpText,
       this.tooltip,
       this.prefixText,
@@ -785,13 +819,23 @@ class _$PropertySchemaImpl implements _PropertySchema {
   @JsonKey(fromJson: _stringOrNull)
   final String? endDate;
   @override
+  @JsonKey(fromJson: _intOrNull)
   final int? minValue;
   @override
+  @JsonKey(fromJson: _intOrNull)
   final int? maxValue;
   @override
+  @JsonKey(fromJson: _intOrNull)
   final int? minLength;
   @override
+  @JsonKey(fromJson: _intOrNull)
   final int? maxLength;
+  @override
+  @JsonKey(fromJson: _intOrNull)
+  final int? min;
+  @override
+  @JsonKey(fromJson: _intOrNull)
+  final int? max;
   @override
   final String? helpText;
   @override
@@ -882,7 +926,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
 
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp, multiEntityConfig: $multiEntityConfig)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, min: $min, max: $max, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp, multiEntityConfig: $multiEntityConfig)';
   }
 
   @override
@@ -917,6 +961,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
                 other.minLength == minLength) &&
             (identical(other.maxLength, maxLength) ||
                 other.maxLength == maxLength) &&
+            (identical(other.min, min) || other.min == min) &&
+            (identical(other.max, max) || other.max == max) &&
             (identical(other.helpText, helpText) ||
                 other.helpText == helpText) &&
             (identical(other.tooltip, tooltip) || other.tooltip == tooltip) &&
@@ -979,6 +1025,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
         maxValue,
         minLength,
         maxLength,
+        min,
+        max,
         helpText,
         tooltip,
         prefixText,
@@ -1034,10 +1082,12 @@ abstract class _PropertySchema implements PropertySchema {
       final PropertySchemaFormat? format,
       @JsonKey(fromJson: _stringOrNull) final String? startDate,
       @JsonKey(fromJson: _stringOrNull) final String? endDate,
-      final int? minValue,
-      final int? maxValue,
-      final int? minLength,
-      final int? maxLength,
+      @JsonKey(fromJson: _intOrNull) final int? minValue,
+      @JsonKey(fromJson: _intOrNull) final int? maxValue,
+      @JsonKey(fromJson: _intOrNull) final int? minLength,
+      @JsonKey(fromJson: _intOrNull) final int? maxLength,
+      @JsonKey(fromJson: _intOrNull) final int? min,
+      @JsonKey(fromJson: _intOrNull) final int? max,
       final String? helpText,
       final String? tooltip,
       final String? prefixText,
@@ -1098,13 +1148,23 @@ abstract class _PropertySchema implements PropertySchema {
   @JsonKey(fromJson: _stringOrNull)
   String? get endDate;
   @override
+  @JsonKey(fromJson: _intOrNull)
   int? get minValue;
   @override
+  @JsonKey(fromJson: _intOrNull)
   int? get maxValue;
   @override
+  @JsonKey(fromJson: _intOrNull)
   int? get minLength;
   @override
+  @JsonKey(fromJson: _intOrNull)
   int? get maxLength;
+  @override
+  @JsonKey(fromJson: _intOrNull)
+  int? get min;
+  @override
+  @JsonKey(fromJson: _intOrNull)
+  int? get max;
   @override
   String? get helpText;
   @override
@@ -1844,7 +1904,8 @@ VisibilityCondition _$VisibilityConditionFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$VisibilityCondition {
-  String get expression => throw _privateConstructorUsedError;
+  List<VisibilityExpression> get expression =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -1858,7 +1919,7 @@ abstract class $VisibilityConditionCopyWith<$Res> {
           VisibilityCondition value, $Res Function(VisibilityCondition) then) =
       _$VisibilityConditionCopyWithImpl<$Res, VisibilityCondition>;
   @useResult
-  $Res call({String expression});
+  $Res call({List<VisibilityExpression> expression});
 }
 
 /// @nodoc
@@ -1880,7 +1941,7 @@ class _$VisibilityConditionCopyWithImpl<$Res, $Val extends VisibilityCondition>
       expression: null == expression
           ? _value.expression
           : expression // ignore: cast_nullable_to_non_nullable
-              as String,
+              as List<VisibilityExpression>,
     ) as $Val);
   }
 }
@@ -1893,7 +1954,7 @@ abstract class _$$VisibilityConditionImplCopyWith<$Res>
       __$$VisibilityConditionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String expression});
+  $Res call({List<VisibilityExpression> expression});
 }
 
 /// @nodoc
@@ -1911,9 +1972,9 @@ class __$$VisibilityConditionImplCopyWithImpl<$Res>
   }) {
     return _then(_$VisibilityConditionImpl(
       expression: null == expression
-          ? _value.expression
+          ? _value._expression
           : expression // ignore: cast_nullable_to_non_nullable
-              as String,
+              as List<VisibilityExpression>,
     ));
   }
 }
@@ -1921,13 +1982,20 @@ class __$$VisibilityConditionImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$VisibilityConditionImpl implements _VisibilityCondition {
-  const _$VisibilityConditionImpl({required this.expression});
+  const _$VisibilityConditionImpl(
+      {required final List<VisibilityExpression> expression})
+      : _expression = expression;
 
   factory _$VisibilityConditionImpl.fromJson(Map<String, dynamic> json) =>
       _$$VisibilityConditionImplFromJson(json);
 
+  final List<VisibilityExpression> _expression;
   @override
-  final String expression;
+  List<VisibilityExpression> get expression {
+    if (_expression is EqualUnmodifiableListView) return _expression;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_expression);
+  }
 
   @override
   String toString() {
@@ -1939,13 +2007,14 @@ class _$VisibilityConditionImpl implements _VisibilityCondition {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$VisibilityConditionImpl &&
-            (identical(other.expression, expression) ||
-                other.expression == expression));
+            const DeepCollectionEquality()
+                .equals(other._expression, _expression));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, expression);
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_expression));
 
   @JsonKey(ignore: true)
   @override
@@ -1963,18 +2032,160 @@ class _$VisibilityConditionImpl implements _VisibilityCondition {
 }
 
 abstract class _VisibilityCondition implements VisibilityCondition {
-  const factory _VisibilityCondition({required final String expression}) =
+  const factory _VisibilityCondition(
+          {required final List<VisibilityExpression> expression}) =
       _$VisibilityConditionImpl;
 
   factory _VisibilityCondition.fromJson(Map<String, dynamic> json) =
       _$VisibilityConditionImpl.fromJson;
 
   @override
-  String get expression;
+  List<VisibilityExpression> get expression;
   @override
   @JsonKey(ignore: true)
   _$$VisibilityConditionImplCopyWith<_$VisibilityConditionImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+VisibilityExpression _$VisibilityExpressionFromJson(Map<String, dynamic> json) {
+  return _VisibilityExpression.fromJson(json);
+}
+
+/// @nodoc
+mixin _$VisibilityExpression {
+  String get condition => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $VisibilityExpressionCopyWith<VisibilityExpression> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $VisibilityExpressionCopyWith<$Res> {
+  factory $VisibilityExpressionCopyWith(VisibilityExpression value,
+          $Res Function(VisibilityExpression) then) =
+      _$VisibilityExpressionCopyWithImpl<$Res, VisibilityExpression>;
+  @useResult
+  $Res call({String condition});
+}
+
+/// @nodoc
+class _$VisibilityExpressionCopyWithImpl<$Res,
+        $Val extends VisibilityExpression>
+    implements $VisibilityExpressionCopyWith<$Res> {
+  _$VisibilityExpressionCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? condition = null,
+  }) {
+    return _then(_value.copyWith(
+      condition: null == condition
+          ? _value.condition
+          : condition // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$VisibilityExpressionImplCopyWith<$Res>
+    implements $VisibilityExpressionCopyWith<$Res> {
+  factory _$$VisibilityExpressionImplCopyWith(_$VisibilityExpressionImpl value,
+          $Res Function(_$VisibilityExpressionImpl) then) =
+      __$$VisibilityExpressionImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String condition});
+}
+
+/// @nodoc
+class __$$VisibilityExpressionImplCopyWithImpl<$Res>
+    extends _$VisibilityExpressionCopyWithImpl<$Res, _$VisibilityExpressionImpl>
+    implements _$$VisibilityExpressionImplCopyWith<$Res> {
+  __$$VisibilityExpressionImplCopyWithImpl(_$VisibilityExpressionImpl _value,
+      $Res Function(_$VisibilityExpressionImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? condition = null,
+  }) {
+    return _then(_$VisibilityExpressionImpl(
+      condition: null == condition
+          ? _value.condition
+          : condition // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$VisibilityExpressionImpl implements _VisibilityExpression {
+  const _$VisibilityExpressionImpl({required this.condition});
+
+  factory _$VisibilityExpressionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$VisibilityExpressionImplFromJson(json);
+
+  @override
+  final String condition;
+
+  @override
+  String toString() {
+    return 'VisibilityExpression(condition: $condition)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$VisibilityExpressionImpl &&
+            (identical(other.condition, condition) ||
+                other.condition == condition));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, condition);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$VisibilityExpressionImplCopyWith<_$VisibilityExpressionImpl>
+      get copyWith =>
+          __$$VisibilityExpressionImplCopyWithImpl<_$VisibilityExpressionImpl>(
+              this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$VisibilityExpressionImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _VisibilityExpression implements VisibilityExpression {
+  const factory _VisibilityExpression({required final String condition}) =
+      _$VisibilityExpressionImpl;
+
+  factory _VisibilityExpression.fromJson(Map<String, dynamic> json) =
+      _$VisibilityExpressionImpl.fromJson;
+
+  @override
+  String get condition;
+  @override
+  @JsonKey(ignore: true)
+  _$$VisibilityExpressionImplCopyWith<_$VisibilityExpressionImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 ConditionalNavigateTo _$ConditionalNavigateToFromJson(

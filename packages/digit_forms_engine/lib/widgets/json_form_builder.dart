@@ -62,7 +62,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     for (final condition in autoFillConditions) {
       // Resolve dynamic variables in expression before evaluation
       final resolvedExpression = _resolveDynamicVariables(condition.expression);
-      final result = evaluateVisibilityExpression(resolvedExpression, values);
+      final result = evaluateSingleCondition(resolvedExpression, values);
       if (result) {
         matched = true;
 

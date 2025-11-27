@@ -167,14 +167,28 @@ String formatDateLocalized(
 }
 
 bool evaluateVisibilityExpression(
-    String expression, Map<String, dynamic> values) {
+    List<VisibilityExpression> expressions, Map<String, dynamic> values) {
+  // Any condition must be true (OR logic)
+  for (final expr in expressions) {
+    final value = FormulaParser(
+      expr.condition,
+      values.isEmpty ? {'dummy': {}} : values,
+    );
+    final result = value.parse;
+    if (result["value"] == true) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool evaluateSingleCondition(String condition, Map<String, dynamic> values) {
   final value = FormulaParser(
-    expression,
+    condition,
     values.isEmpty ? {'dummy': {}} : values,
   );
-
-  final error = value.parse;
-  return error["value"] == true;
+  final result = value.parse;
+  return result["value"] == true;
 }
 
 Map<String, dynamic> buildVisibilityEvaluationContext({

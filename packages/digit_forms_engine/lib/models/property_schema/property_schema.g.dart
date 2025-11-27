@@ -27,10 +27,12 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
           unknownValue: PropertySchemaFormat.text),
       startDate: _stringOrNull(json['startDate']),
       endDate: _stringOrNull(json['endDate']),
-      minValue: (json['minValue'] as num?)?.toInt(),
-      maxValue: (json['maxValue'] as num?)?.toInt(),
-      minLength: (json['minLength'] as num?)?.toInt(),
-      maxLength: (json['maxLength'] as num?)?.toInt(),
+      minValue: _intOrNull(json['minValue']),
+      maxValue: _intOrNull(json['maxValue']),
+      minLength: _intOrNull(json['minLength']),
+      maxLength: _intOrNull(json['maxLength']),
+      min: _intOrNull(json['min']),
+      max: _intOrNull(json['max']),
       helpText: json['helpText'] as String?,
       tooltip: json['tooltip'] as String?,
       prefixText: json['prefixText'] as String?,
@@ -91,6 +93,8 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('maxValue', instance.maxValue);
   writeNotNull('minLength', instance.minLength);
   writeNotNull('maxLength', instance.maxLength);
+  writeNotNull('min', instance.min);
+  writeNotNull('max', instance.max);
   writeNotNull('helpText', instance.helpText);
   writeNotNull('tooltip', instance.tooltip);
   writeNotNull('prefixText', instance.prefixText);
@@ -211,13 +215,27 @@ Map<String, dynamic> _$$NavigateToConfigImplToJson(
 _$VisibilityConditionImpl _$$VisibilityConditionImplFromJson(
         Map<String, dynamic> json) =>
     _$VisibilityConditionImpl(
-      expression: json['expression'] as String,
+      expression: (json['expression'] as List<dynamic>)
+          .map((e) => VisibilityExpression.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$VisibilityConditionImplToJson(
         _$VisibilityConditionImpl instance) =>
     <String, dynamic>{
       'expression': instance.expression,
+    };
+
+_$VisibilityExpressionImpl _$$VisibilityExpressionImplFromJson(
+        Map<String, dynamic> json) =>
+    _$VisibilityExpressionImpl(
+      condition: json['condition'] as String,
+    );
+
+Map<String, dynamic> _$$VisibilityExpressionImplToJson(
+        _$VisibilityExpressionImpl instance) =>
+    <String, dynamic>{
+      'condition': instance.condition,
     };
 
 _$ConditionalNavigateToImpl _$$ConditionalNavigateToImplFromJson(
