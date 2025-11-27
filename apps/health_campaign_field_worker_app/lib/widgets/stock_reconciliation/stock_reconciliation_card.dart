@@ -54,8 +54,6 @@ class _StockReconciliationCardState
   };
 
   bool _listenersAdded = false;
-  int _lastStockCount =
-      0; // Track stock count to avoid recalculating unnecessarily
 
   // Cache facilities and product variants to prevent them from being cleared
   List<FacilityModel> _cachedFacilities = [];
@@ -89,16 +87,11 @@ class _StockReconciliationCardState
             ? productVariants
             : _cachedProductVariants;
 
-        // Recalculate stock metrics only when stock data changes
+        // Recalculate stock metrics whenever flow state changes and both selections are made
         if (_selectedFacility != null && _selectedProduct != null) {
-          final stockList = _getStockList(flowState);
-          // Only recalculate if stock count changed (new data arrived)
-          if (stockList.length != _lastStockCount) {
-            _lastStockCount = stockList.length;
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              _calculateStockMetrics(flowState);
-            });
-          }
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _calculateStockMetrics(flowState);
+          });
         }
 
         return ReactiveFormBuilder(

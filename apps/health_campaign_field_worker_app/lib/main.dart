@@ -383,7 +383,7 @@ final dynamic sampleFlows = {
                 },
                 "children": [
                   {
-                    "format": "text",
+                    "format": "textTemplate",
                     "value": "{{ headIndividual.0.name.givenName }}"
                   },
                   {
@@ -409,7 +409,7 @@ final dynamic sampleFlows = {
                 ]
               },
               {
-                "format": "text",
+                "format": "textTemplate",
                 "value": "{{ headOfHousehold.0.isHeadOfHousehold }}"
               },
               {
@@ -1261,7 +1261,7 @@ final dynamic sampleFlows = {
                     },
                     "children": [
                       {
-                        "format": "text",
+                        "format": "textTemplate",
                         "value": "{{ individual.0.name.givenName }}"
                       },
                       {
@@ -1289,7 +1289,7 @@ final dynamic sampleFlows = {
                     ]
                   },
                   {
-                    "format": "text",
+                    "format": "textTemplate",
                     "value":
                         "{{individual.0.gender }} | {{fn:formatDate(individual.0.dateOfBirth, age)}}"
                   },
@@ -2756,7 +2756,6 @@ final dynamic sampleReferralFlows = {
   "order": 9,
   "project": "LLIN-mz",
   "version": 1,
-  "active": true,
   "disabled": false,
   "isSelected": true,
   "flows": [
@@ -2772,10 +2771,7 @@ final dynamic sampleReferralFlows = {
           "type": "template",
           "label": "REFERRAL_INBOX_BACK_BUTTON_LABEL",
           "onAction": [
-            {
-              "actionType": "BACK_NAVIGATION",
-              "properties": {"type": "HOME", "name": "HOME"}
-            }
+            {"actionType": "BACK_NAVIGATION", "properties": {}}
           ]
         }
       ],
@@ -2817,15 +2813,9 @@ final dynamic sampleReferralFlows = {
             {
               "actionType": "SEARCH_EVENT",
               "properties": {
-                "type": "SEARCH_EVENT",
-                "name": "hFReferral",
-                "data": [
-                  {
-                    "key": "beneficiaryId",
-                    "value": "field.value",
-                    "operation": "contains"
-                  }
-                ]
+                "type": "FORM",
+                "name": "COMPLAINT_CREATE",
+                "data": []
               }
             }
           ]
@@ -2852,10 +2842,10 @@ final dynamic sampleReferralFlows = {
               "actionType": "SEARCH_EVENT",
               "properties": {
                 "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT",
-                "name": "hFReferral",
+                "name": "name",
                 "data": [
                   {
-                    "key": "name",
+                    "key": "givenName",
                     "value": "field.value",
                     "operation": "contains"
                   }
@@ -2891,7 +2881,7 @@ final dynamic sampleReferralFlows = {
                   {
                     "type": "template",
                     "format": "textTemplate",
-                    "value": "{{ HFReferralModel.name }}"
+                    "value": "{{ headIndividual.0.name.givenName }}"
                   },
                   {
                     "type": "template",
@@ -2903,11 +2893,11 @@ final dynamic sampleReferralFlows = {
                         "actionType": "NAVIGATION",
                         "properties": {
                           "type": "TEMPLATE",
-                          "name": "referralOverview",
+                          "name": "householdOverview",
                           "data": [
                             {
-                              "key": "clientReferenceId",
-                              "value": "{{ HFReferralModel.clientReferenceId }}"
+                              "key": "HouseholdClientReferenceId",
+                              "value": "{{ HouseholdModel.clientReferenceId }}"
                             }
                           ]
                         }
@@ -2919,7 +2909,7 @@ final dynamic sampleReferralFlows = {
               {
                 "format": "textTemplate",
                 "value":
-                    "HF_REFERRAL_INBOX_DATE_OF_EVALUATION {{ fn:formatDate(HFReferralModel.additionalFields.fields.dateOfEvaluation) }}"
+                    "Date of evaluation: {{ headOfHousehold.0.isHeadOfHousehold }}"
               }
             ]
           }
@@ -3212,12 +3202,6 @@ final dynamic sampleReferralFlows = {
               "label": "HFREFERRAL_REFERRAL_DETAILS_referralReason_LABEL",
               "order": 7,
               "value": "",
-              "enums": [
-                {"code": "DRUG_SE_CC", "name": "DRUG_SE_CC"},
-                {"code": "DRUG_SE_PC", "name": "DRUG_SE_PC"},
-                {"code": "FEVER", "name": "FEVER"},
-                {"code": "SICK", "name": "SICK"}
-              ],
               "format": "radio",
               "hidden": false,
               "tooltip": "",
@@ -3929,7 +3913,7 @@ final dynamic sampleReferralFlows = {
             "onAction": [
               {
                 "actionType": "NAVIGATION",
-                "properties": {"type": "TEMPLATE", "name": "referralInbox"}
+                "properties": {"type": "TEMPLATE", "name": "complaintInbox"}
               }
             ]
           }
@@ -3941,20 +3925,61 @@ final dynamic sampleReferralFlows = {
       "name": "referralOverview",
       "heading": "REFERRAL_OVERVIEW_HEADING",
       "description": "REFERRAL_OVERVIEW_DESCRIPTION",
-      "initActions": [
+      "initActions": [],
+      "header": [
         {
-          "actionType": "SEARCH_EVENT",
+          "format": "backLink",
+          "type": "template",
+          "label": "REFERRAL_INBOX_OVERVIEW_BACK_BUTTON_LABEL",
+          "onAction": [
+            {"actionType": "BACK_NAVIGATION", "properties": {}}
+          ]
+        }
+      ],
+      "footer": [
+        {
+          "format": "button",
+          "type": "template",
+          "fieldName": "createReferral",
+          "label": "REFERRAL_INBOX_PRIMARY_ACTION_LABEL",
           "properties": {
-            "type": "SEARCH_EVENT",
-            "name": "hFReferral",
-            "data": [
-              {
-                "key": "clientReferenceId",
-                "value": "{{navigation.clientReferenceId}}",
-                "operation": "equals"
+            "type": "primary",
+            "size": "large",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "FORM",
+                "name": "REFERRAL_CREATE",
+                "data": []
               }
-            ]
-          }
+            }
+          ]
+        },
+        {
+          "format": "qrScanner",
+          "type": "template",
+          "fieldName": "scanQr",
+          "label": "REFERRAL_INBOX_SECONDARY_ACTION_LABEL",
+          "properties": {
+            "type": "secondary",
+            "size": "large",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "onAction": [
+            {
+              "actionType": "SEARCH_EVENT",
+              "properties": {
+                "type": "FORM",
+                "name": "COMPLAINT_CREATE",
+                "data": []
+              }
+            }
+          ]
         }
       ],
       "wrapperConfig": {
@@ -3967,70 +3992,88 @@ final dynamic sampleReferralFlows = {
           "select": ["hFReferral"]
         }
       },
-      "header": [
-        {
-          "format": "backLink",
-          "type": "template",
-          "label": "REFERRAL_OVERVIEW_BACK_BUTTON_LABEL",
-          "onAction": [
-            {
-              "actionType": "BACK_NAVIGATION",
-              "properties": {
-                "type": "TEMPLATE",
-                "name": "referralInbox",
-              }
-            }
-          ]
-        }
-      ],
-      "footer": [
-        {
-          "format": "button",
-          "type": "template",
-          "fieldName": "backButton",
-          "label": "REFERRAL_OVERVIEW_PRIMARY_ACTION_LABEL",
-          "properties": {
-            "type": "primary",
-            "size": "large",
-            "mainAxisSize": "max",
-            "mainAxisAlignment": "center"
-          },
-          "onAction": [
-            {
-              "actionType": "BACK_NAVIGATION",
-              "properties": {
-                "type": "TEMPLATE",
-                "name": "referralInbox",
-                "data": []
-              }
-            }
-          ]
-        }
-      ],
       "body": [
         {
-          "format": "card",
-          "type": "primary",
-          "children": [
+          "format": "searchBar",
+          "type": "template",
+          "label": "REFERRAL_INBOX_SEARCHBAR_LABEL",
+          "fieldName": "searchBar",
+          "onAction": [
             {
-              "format": "labelPairList",
-              "data": [
-                {
-                  "key": "REFERRAL_INBOX_NAME",
-                  "value": "{{0.HFReferralModel.name}}"
-                },
-                {
-                  "key": "REFERRAL_INBOX_REFERRAL_SYMPTOM",
-                  "value": "{{0.HFReferralModel.symptom}}"
-                },
-                {
-                  "iterate": "{{0.HFReferralModel.additionalFields.fields}}",
-                  "excludeKeys": ["name"],
-                  "hideIfNull": true
-                }
-              ]
+              "actionType": "SEARCH_EVENT",
+              "properties": {
+                "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT",
+                "name": "name",
+                "data": [
+                  {
+                    "key": "givenName",
+                    "value": "field.value",
+                    "operation": "contains"
+                  }
+                ]
+              }
             }
           ]
+        },
+        {
+          "type": "template",
+          "format": "infoCard",
+          "hidden": "{{ context.hFReferral.notEmpty }}",
+          "label": "REFERRAL_INBOX_INFO_CARD_HEADING",
+          "description": "REFERRAL_INBOX_INFO_CARD_DESCRIPTION"
+        },
+        {
+          "type": "template",
+          "format": "listView",
+          "hidden": "{{ context.hFReferral.empty }}",
+          "fieldName": "listView",
+          "data": "hFReferral",
+          "child": {
+            "format": "card",
+            "children": [
+              {
+                "type": "template",
+                "format": "row",
+                "properties": {
+                  "mainAxisAlignment": "spaceBetween",
+                  "mainAxisSize": "max"
+                },
+                "children": [
+                  {
+                    "type": "template",
+                    "format": "textTemplate",
+                    "value": "{{ headIndividual.0.name.givenName }}"
+                  },
+                  {
+                    "type": "template",
+                    "format": "button",
+                    "label": "Open",
+                    "properties": {"type": "secondary", "size": "medium"},
+                    "onAction": [
+                      {
+                        "actionType": "NAVIGATION",
+                        "properties": {
+                          "type": "TEMPLATE",
+                          "name": "householdOverview",
+                          "data": [
+                            {
+                              "key": "HouseholdClientReferenceId",
+                              "value": "{{ HouseholdModel.clientReferenceId }}"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "format": "textTemplate",
+                "value":
+                    "Date of evaluation: {{ headOfHousehold.0.isHeadOfHousehold }}"
+              }
+            ]
+          }
         }
       ]
     }
@@ -5294,12 +5337,12 @@ final dynamic sampleInventoryFlows = {
     {
       "screenType": "TEMPLATE",
       "name": "manageStock",
-      "heading": "Manage Stock",
-      "description": "",
+      "heading": "INVENTORY_MANAGE_STOCK_HEADING",
+      "description": "INVENTORY_MANAGE_STOCK_DESCRIPTION",
       "header": [
         {
           "format": "backLink",
-          "label": "Back",
+          "label": "CORE_COMMON_BACK",
           "onAction": [
             {"actionType": "BACK_NAVIGATION", "properties": {}}
           ]
@@ -5308,7 +5351,7 @@ final dynamic sampleInventoryFlows = {
       "footer": [
         {
           "format": "button",
-          "label": "View Transactions",
+          "label": "INVENTORY_VIEW_TRANSACTIONS_LABEL",
           "properties": {
             "type": "primary",
             "size": "large",
@@ -5368,8 +5411,8 @@ final dynamic sampleInventoryFlows = {
       "body": [
         {
           "format": "menu_card",
-          "heading": "Record Stock Receipt",
-          "description": "Create records for stock received at the warehouse",
+          "heading": "INVENTORY_RECORD_STOCK_RECEIPT_HEADING",
+          "description": "INVENTORY_RECORD_STOCK_RECEIPT_DESCRIPTION",
           "icon": 'FileUpload',
           "onAction": [
             {
@@ -5391,8 +5434,8 @@ final dynamic sampleInventoryFlows = {
         },
         {
           "format": "menu_card",
-          "heading": "Record Stock Issued",
-          "description": "Create records for stock sent out from the warehouse",
+          "heading": "INVENTORY_RECORD_STOCK_ISSUED_HEADING",
+          "description": "INVENTORY_RECORD_STOCK_ISSUED_DESCRIPTION",
           "icon": 'FileDownload',
           "onAction": [
             {
@@ -5414,9 +5457,8 @@ final dynamic sampleInventoryFlows = {
         },
         {
           "format": "menu_card",
-          "heading": "Stock Returned",
-          "description":
-              "Create records for the stock returned to the warehouse",
+          "heading": "INVENTORY_STOCK_RETURNED_HEADING",
+          "description": "INVENTORY_STOCK_RETURNED_DESCRIPTION",
           "icon": 'Restore',
           "onAction": [
             {
@@ -5438,10 +5480,9 @@ final dynamic sampleInventoryFlows = {
         },
         {
           "format": "menu_card",
-          "heading": "Stock Damaged",
+          "heading": "INVENTORY_STOCK_DAMAGED_HEADING",
           "visible": "{{fn:hasRole('WAREHOUSE_MANAGER')}} == false",
-          "description":
-              "Record the list of resources damaged during campaign operations",
+          "description": "INVENTORY_STOCK_DAMAGED_DESCRIPTION",
           "icon": 'Store',
           "onAction": [
             {
@@ -5463,10 +5504,9 @@ final dynamic sampleInventoryFlows = {
         },
         {
           "format": "menu_card",
-          "heading": "Stock Loss",
+          "heading": "INVENTORY_STOCK_LOSS_HEADING",
           "visible": "{{fn:hasRole('WAREHOUSE_MANAGER')}} == false",
-          "description":
-              "Record the list of resources lost during campaign operations",
+          "description": "INVENTORY_STOCK_LOSS_DESCRIPTION",
           "icon": 'Store',
           "onAction": [
             {
@@ -6086,8 +6126,9 @@ final dynamic sampleInventoryFlows = {
       "body": [
         {
           "format": "panelCard",
-          "label": "Material receipt created successfully",
-          "description": "MRN Number {{navigation.mrnNumber}}",
+          "label": "INVENTORY_STOCK_SUCCESS_LABEL",
+          "description":
+              "INVENTORY_STOCK_SUCCESS_MRN_DESCRIPTION {{navigation.mrnNumber}}",
           "additionalWidgets": [
             {
               "format": "qr_view",
@@ -6102,7 +6143,7 @@ final dynamic sampleInventoryFlows = {
           ],
           "properties": {"type": "success"},
           "primaryAction": {
-            "label": "View Transaction",
+            "label": "INVENTORY_VIEW_TRANSACTION_LABEL",
             "onAction": [
               {
                 "actionType": "NAVIGATION",
@@ -6120,7 +6161,7 @@ final dynamic sampleInventoryFlows = {
             ]
           },
           "secondaryAction": {
-            "label": "Create New Transaction",
+            "label": "INVENTORY_CREATE_NEW_TRANSACTION_LABEL",
             "onAction": [
               {
                 "actionType": "NAVIGATION",
@@ -6137,12 +6178,12 @@ final dynamic sampleInventoryFlows = {
     {
       "screenType": "TEMPLATE",
       "name": "viewTransaction",
-      "heading": "Select the MRN number",
-      "description": "",
+      "heading": "INVENTORY_VIEW_TRANSACTION_HEADING",
+      "description": "INVENTORY_VIEW_TRANSACTION_DESCRIPTION",
       "header": [
         {
           "format": "backLink",
-          "label": "Back",
+          "label": "CORE_COMMON_BACK",
           "onAction": [
             {"actionType": "BACK_NAVIGATION", "properties": {}}
           ]
@@ -6191,8 +6232,8 @@ final dynamic sampleInventoryFlows = {
         {
           "format": "infoCard",
           "hidden": "{{ context.stock.isNotEmpty }}",
-          "label": "No transactions found",
-          "description": "Record new transaction to see the transaction details"
+          "label": "INVENTORY_NO_TRANSACTIONS_LABEL",
+          "description": "INVENTORY_NO_TRANSACTIONS_DESCRIPTION"
         },
         {
           "format": "listView",
@@ -6212,10 +6253,10 @@ final dynamic sampleInventoryFlows = {
                   {
                     "format": "tag",
                     "type": "",
-                    "label": "MRN - {{item.groupKey}}"
+                    "label": "INVENTORY_MRN_TAG_LABEL {{item.groupKey}}"
                   },
                   {
-                    "format": "text",
+                    "format": "textTemplate",
                     "value":
                         "{{fn:formatDate(item.items[0].dateOfEntry, dateTime, dd MMMM yyyy)}}"
                   }
@@ -6235,16 +6276,19 @@ final dynamic sampleInventoryFlows = {
                       "mainAxisSize": "min"
                     },
                     "children": [
-                      {"format": "text", "value": "Issued to"},
                       {
-                        "format": "text",
+                        "format": "textTemplate",
+                        "value": "INVENTORY_ISSUED_TO_LABEL"
+                      },
+                      {
+                        "format": "textTemplate",
                         "value": "{{item.items[0].receiverId}}"
                       }
                     ]
                   },
                   {
                     "format": "actionPopup",
-                    "label": "View QR",
+                    "label": "INVENTORY_VIEW_QR_LABEL",
                     "properties": {
                       "type": "tertiary",
                       "size": "medium",
@@ -6252,13 +6296,13 @@ final dynamic sampleInventoryFlows = {
                       "mainAxisAlignment": "start",
                       "popupConfig": {
                         "type": "default",
-                        "title": "QR Code",
+                        "title": "INVENTORY_QR_CODE_TITLE",
                         "titleIcon": "qr",
                         "showCloseButton": true,
                         "barrierDismissible": true,
                         "body": [
                           {
-                            "format": "qr_code",
+                            "format": "qr_view",
                             "data":
                                 "{{item.items[0].additionalFields.fields.mrnNumber}}",
                             "size": "medium",
@@ -6280,14 +6324,14 @@ final dynamic sampleInventoryFlows = {
                 "fieldName": "groupedItems",
                 "dataSource": "item.items",
                 "child": {
-                  "format": "text",
+                  "format": "textTemplate",
                   "value":
                       "{{item.additionalFields.fields.sku}}: {{item.quantity}}"
                 }
               },
               {
                 "format": "button",
-                "label": "Select transaction",
+                "label": "INVENTORY_SELECT_TRANSACTION_LABEL",
                 "properties": {
                   "type": "primary",
                   "size": "large",
@@ -6315,12 +6359,12 @@ final dynamic sampleInventoryFlows = {
     {
       "screenType": "TEMPLATE",
       "name": "viewTransactionDetails",
-      "heading": "Stock Receipt Details",
+      "heading": "INVENTORY_STOCK_RECEIPT_DETAILS_HEADING",
       "description": "",
       "header": [
         {
           "format": "backLink",
-          "label": "Back",
+          "label": "CORE_COMMON_BACK",
           "onAction": [
             {
               "actionType": "BACK_NAVIGATION",
@@ -6347,7 +6391,7 @@ final dynamic sampleInventoryFlows = {
         }
       ],
       "wrapperConfig": {
-        "wrapperName": "ViewStockWrapper",
+        "wrapperName": "ViewStockDetailsWrapper",
         "groupByType": true,
         "rootEntity": "StockModel",
         "filters": [],
@@ -6374,21 +6418,27 @@ final dynamic sampleInventoryFlows = {
                 "format": "labelPairList",
                 "data": [
                   {
-                    "key": "Resource",
+                    "key": "INVENTORY_RESOURCE_LABEL",
                     "value": "{{item.additionalFields.fields.sku}}"
                   },
-                  {"key": "Received From", "value": "{{item.receiverId}}"},
                   {
-                    "key": "MRN number",
+                    "key": "INVENTORY_RECEIVED_FROM_LABEL",
+                    "value": "{{item.receiverId}}"
+                  },
+                  {
+                    "key": "INVENTORY_MRN_NUMBER_LABEL",
                     "value": "{{item.additionalFields.fields.mrnNumber}}"
                   },
-                  {"key": "Waybill number", "value": "{{item.wayBillNumber}}"},
                   {
-                    "key": "Batch number",
+                    "key": "INVENTORY_WAYBILL_NUMBER_LABEL",
+                    "value": "{{item.wayBillNumber}}"
+                  },
+                  {
+                    "key": "INVENTORY_BATCH_NUMBER_LABEL",
                     "value": "{{item.additionalFields.fields.batchNumber}}"
                   },
                   {
-                    "key": "Expiry",
+                    "key": "INVENTORY_EXPIRY_LABEL",
                     "value":
                         "{{fn:formatDate(item.additionalFields.fields.expiryDate, dateTime, dd MMMM yyyy)}}"
                   },
@@ -6398,7 +6448,7 @@ final dynamic sampleInventoryFlows = {
                     "value": "{{item.quantity}}"
                   },
                   {
-                    "key": "Comments",
+                    "key": "INVENTORY_COMMENTS_LABEL",
                     "value": "{{item.additionalFields.fields.comments}}"
                   }
                 ]
@@ -6952,7 +7002,7 @@ final dynamic stockReconciliationFlows = {
           "isMultiSelect": null,
           "includeInForm": null,
           "includeInSummary": null,
-          "autoEnable": null
+          "autoEnable": null,
         }
       ],
       "onAction": [
