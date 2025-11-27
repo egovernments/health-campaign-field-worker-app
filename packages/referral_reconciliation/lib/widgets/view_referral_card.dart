@@ -1,8 +1,8 @@
+import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_ui_components/enum/app_enums.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
-import 'package:referral_reconciliation/models/entities/hf_referral.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../models/entities/referral_recon_enums.dart';

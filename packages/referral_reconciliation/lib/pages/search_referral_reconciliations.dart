@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:digit_ui_components/enum/app_enums.dart';
@@ -15,7 +16,6 @@ import 'package:referral_reconciliation/utils/extensions/extensions.dart';
 import 'package:survey_form/survey_form.dart';
 
 import '../blocs/search_referral_reconciliations.dart';
-import '../models/entities/hf_referral.dart';
 import '../router/referral_reconciliation_router.gm.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
@@ -175,7 +175,9 @@ class _SearchReferralReconciliationsPageState
                                                 ServiceSearchEvent(
                                                   serviceSearchModel:
                                                       ServiceSearchModel(
-                                                    referenceIds: [i.clientReferenceId],
+                                                    referenceIds: [
+                                                      i.clientReferenceId
+                                                    ],
                                                   ),
                                                 ),
                                               );

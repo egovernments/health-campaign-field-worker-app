@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -17,7 +18,6 @@ import 'package:survey_form/survey_form.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/referral_recon_record.dart';
 import '../../blocs/referral_recon_service_definition.dart';
-import '../../models/entities/hf_referral.dart';
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';

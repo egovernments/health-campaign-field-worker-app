@@ -55,6 +55,8 @@ import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/least_level_boundary_singleton.dart';
 import '../utils/utils.dart';
+import '../widgets/h_f_referral/evaluation_facility.dart';
+import '../widgets/h_f_referral/project_cycles.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/inventory/custom_facility_widgets.dart';
@@ -117,6 +119,22 @@ class _HomePageState extends LocalizedState<HomePage> {
           stateData: beneficiaryDetails,
           pageSchema: 'DELIVERY',
         );
+      },
+    );
+
+    CustomComponentRegistry().registerBuilder(
+      'evaluationFacility',
+      (context, stateAccessor) {
+        // Build your component with access to all this data
+        return const EvaluationKeyDropDown();
+      },
+    );
+
+    CustomComponentRegistry().registerBuilder(
+      'referralCycle',
+      (context, stateAccessor) {
+        // Build your component with access to all this data
+        return const CycleDropDown();
       },
     );
     CustomComponentRegistry().registerBuilder(
@@ -1192,32 +1210,8 @@ class _HomePageState extends LocalizedState<HomePage> {
               CrudBlocSingleton().setData(
                 crudService: DigitCrudService(
                   context: context,
-                  relationshipMap: [
-                    const RelationshipMapping(
-                        from: 'pgrComplainant',
-                        to: 'pgrService',
-                        localKey: 'complaintClientReferenceId',
-                        foreignKey: 'clientReferenceId'),
-                  ],
-                  nestedModelMappings: [
-                    const NestedModelMapping(
-                      rootModel: 'pgrService',
-                      fields: {
-                        'user': NestedFieldMapping(
-                          table: 'pgrComplainant',
-                          localKey: 'clientReferenceId',
-                          foreignKey: 'complaintClientReferenceId',
-                          type: NestedMappingType.one,
-                        ),
-                        'address': NestedFieldMapping(
-                          table: 'address',
-                          localKey: 'clientReferenceId',
-                          foreignKey: 'relatedClientReferenceId',
-                          type: NestedMappingType.one,
-                        )
-                      },
-                    ),
-                  ],
+                  relationshipMap: [],
+                  nestedModelMappings: [],
                   searchEntityRepository:
                       context.read<SearchEntityRepository>(),
                 ),

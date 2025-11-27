@@ -1,6 +1,5 @@
 import 'package:digit_data_model/data/repositories/oplog/oplog.dart';
-
-import '../../../models/entities/hf_referral.dart';
+import 'package:digit_data_model/models/entities/hf_referral.dart';
 
 class HFReferralOpLogManager extends OpLogManager<HFReferralModel> {
   HFReferralOpLogManager(super.isar);

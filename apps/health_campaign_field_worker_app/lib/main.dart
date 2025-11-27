@@ -2756,6 +2756,7 @@ final dynamic sampleReferralFlows = {
   "order": 9,
   "project": "LLIN-mz",
   "version": 1,
+  "active": true,
   "disabled": false,
   "isSelected": true,
   "flows": [
@@ -2771,7 +2772,10 @@ final dynamic sampleReferralFlows = {
           "type": "template",
           "label": "REFERRAL_INBOX_BACK_BUTTON_LABEL",
           "onAction": [
-            {"actionType": "BACK_NAVIGATION", "properties": {}}
+            {
+              "actionType": "BACK_NAVIGATION",
+              "properties": {"type": "HOME", "name": "HOME"}
+            }
           ]
         }
       ],
@@ -2813,9 +2817,15 @@ final dynamic sampleReferralFlows = {
             {
               "actionType": "SEARCH_EVENT",
               "properties": {
-                "type": "FORM",
-                "name": "COMPLAINT_CREATE",
-                "data": []
+                "type": "SEARCH_EVENT",
+                "name": "hFReferral",
+                "data": [
+                  {
+                    "key": "beneficiaryId",
+                    "value": "field.value",
+                    "operation": "contains"
+                  }
+                ]
               }
             }
           ]
@@ -2842,10 +2852,10 @@ final dynamic sampleReferralFlows = {
               "actionType": "SEARCH_EVENT",
               "properties": {
                 "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT",
-                "name": "name",
+                "name": "hFReferral",
                 "data": [
                   {
-                    "key": "givenName",
+                    "key": "name",
                     "value": "field.value",
                     "operation": "contains"
                   }
@@ -2880,8 +2890,8 @@ final dynamic sampleReferralFlows = {
                 "children": [
                   {
                     "type": "template",
-                    "format": "text",
-                    "value": "{{ headIndividual.0.name.givenName }}"
+                    "format": "textTemplate",
+                    "value": "{{ HFReferralModel.name }}"
                   },
                   {
                     "type": "template",
@@ -2893,11 +2903,11 @@ final dynamic sampleReferralFlows = {
                         "actionType": "NAVIGATION",
                         "properties": {
                           "type": "TEMPLATE",
-                          "name": "householdOverview",
+                          "name": "referralOverview",
                           "data": [
                             {
-                              "key": "HouseholdClientReferenceId",
-                              "value": "{{ HouseholdModel.clientReferenceId }}"
+                              "key": "clientReferenceId",
+                              "value": "{{ HFReferralModel.clientReferenceId }}"
                             }
                           ]
                         }
@@ -2907,9 +2917,9 @@ final dynamic sampleReferralFlows = {
                 ]
               },
               {
-                "format": "text",
+                "format": "textTemplate",
                 "value":
-                    "Date of evaluation: {{ headOfHousehold.0.isHeadOfHousehold }}"
+                    "HF_REFERRAL_INBOX_DATE_OF_EVALUATION {{ fn:formatDate(HFReferralModel.additionalFields.fields.dateOfEvaluation) }}"
               }
             ]
           }
@@ -3202,6 +3212,12 @@ final dynamic sampleReferralFlows = {
               "label": "HFREFERRAL_REFERRAL_DETAILS_referralReason_LABEL",
               "order": 7,
               "value": "",
+              "enums": [
+                {"code": "DRUG_SE_CC", "name": "DRUG_SE_CC"},
+                {"code": "DRUG_SE_PC", "name": "DRUG_SE_PC"},
+                {"code": "FEVER", "name": "FEVER"},
+                {"code": "SICK", "name": "SICK"}
+              ],
               "format": "radio",
               "hidden": false,
               "tooltip": "",
@@ -3913,7 +3929,7 @@ final dynamic sampleReferralFlows = {
             "onAction": [
               {
                 "actionType": "NAVIGATION",
-                "properties": {"type": "TEMPLATE", "name": "complaintInbox"}
+                "properties": {"type": "TEMPLATE", "name": "referralInbox"}
               }
             ]
           }
@@ -3925,61 +3941,20 @@ final dynamic sampleReferralFlows = {
       "name": "referralOverview",
       "heading": "REFERRAL_OVERVIEW_HEADING",
       "description": "REFERRAL_OVERVIEW_DESCRIPTION",
-      "initActions": [],
-      "header": [
+      "initActions": [
         {
-          "format": "backLink",
-          "type": "template",
-          "label": "REFERRAL_INBOX_OVERVIEW_BACK_BUTTON_LABEL",
-          "onAction": [
-            {"actionType": "BACK_NAVIGATION", "properties": {}}
-          ]
-        }
-      ],
-      "footer": [
-        {
-          "format": "button",
-          "type": "template",
-          "fieldName": "createReferral",
-          "label": "REFERRAL_INBOX_PRIMARY_ACTION_LABEL",
+          "actionType": "SEARCH_EVENT",
           "properties": {
-            "type": "primary",
-            "size": "large",
-            "mainAxisSize": "max",
-            "mainAxisAlignment": "center"
-          },
-          "onAction": [
-            {
-              "actionType": "NAVIGATION",
-              "properties": {
-                "type": "FORM",
-                "name": "REFERRAL_CREATE",
-                "data": []
+            "type": "SEARCH_EVENT",
+            "name": "hFReferral",
+            "data": [
+              {
+                "key": "clientReferenceId",
+                "value": "{{navigation.clientReferenceId}}",
+                "operation": "equals"
               }
-            }
-          ]
-        },
-        {
-          "format": "qrScanner",
-          "type": "template",
-          "fieldName": "scanQr",
-          "label": "REFERRAL_INBOX_SECONDARY_ACTION_LABEL",
-          "properties": {
-            "type": "secondary",
-            "size": "large",
-            "mainAxisSize": "max",
-            "mainAxisAlignment": "center"
-          },
-          "onAction": [
-            {
-              "actionType": "SEARCH_EVENT",
-              "properties": {
-                "type": "FORM",
-                "name": "COMPLAINT_CREATE",
-                "data": []
-              }
-            }
-          ]
+            ]
+          }
         }
       ],
       "wrapperConfig": {
@@ -3992,88 +3967,70 @@ final dynamic sampleReferralFlows = {
           "select": ["hFReferral"]
         }
       },
-      "body": [
+      "header": [
         {
-          "format": "searchBar",
+          "format": "backLink",
           "type": "template",
-          "label": "REFERRAL_INBOX_SEARCHBAR_LABEL",
-          "fieldName": "searchBar",
+          "label": "REFERRAL_OVERVIEW_BACK_BUTTON_LABEL",
           "onAction": [
             {
-              "actionType": "SEARCH_EVENT",
+              "actionType": "BACK_NAVIGATION",
               "properties": {
-                "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT",
-                "name": "name",
-                "data": [
-                  {
-                    "key": "givenName",
-                    "value": "field.value",
-                    "operation": "contains"
-                  }
-                ]
+                "type": "TEMPLATE",
+                "name": "referralInbox",
               }
             }
           ]
-        },
+        }
+      ],
+      "footer": [
         {
+          "format": "button",
           "type": "template",
-          "format": "infoCard",
-          "hidden": "{{ context.hFReferral.notEmpty }}",
-          "label": "REFERRAL_INBOX_INFO_CARD_HEADING",
-          "description": "REFERRAL_INBOX_INFO_CARD_DESCRIPTION"
-        },
-        {
-          "type": "template",
-          "format": "listView",
-          "hidden": "{{ context.hFReferral.empty }}",
-          "fieldName": "listView",
-          "data": "hFReferral",
-          "child": {
-            "format": "card",
-            "children": [
-              {
-                "type": "template",
-                "format": "row",
-                "properties": {
-                  "mainAxisAlignment": "spaceBetween",
-                  "mainAxisSize": "max"
-                },
-                "children": [
-                  {
-                    "type": "template",
-                    "format": "text",
-                    "value": "{{ headIndividual.0.name.givenName }}"
-                  },
-                  {
-                    "type": "template",
-                    "format": "button",
-                    "label": "Open",
-                    "properties": {"type": "secondary", "size": "medium"},
-                    "onAction": [
-                      {
-                        "actionType": "NAVIGATION",
-                        "properties": {
-                          "type": "TEMPLATE",
-                          "name": "householdOverview",
-                          "data": [
-                            {
-                              "key": "HouseholdClientReferenceId",
-                              "value": "{{ HouseholdModel.clientReferenceId }}"
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "format": "text",
-                "value":
-                    "Date of evaluation: {{ headOfHousehold.0.isHeadOfHousehold }}"
+          "fieldName": "backButton",
+          "label": "REFERRAL_OVERVIEW_PRIMARY_ACTION_LABEL",
+          "properties": {
+            "type": "primary",
+            "size": "large",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "onAction": [
+            {
+              "actionType": "BACK_NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "referralInbox",
+                "data": []
               }
-            ]
-          }
+            }
+          ]
+        }
+      ],
+      "body": [
+        {
+          "format": "card",
+          "type": "primary",
+          "children": [
+            {
+              "format": "labelPairList",
+              "data": [
+                {
+                  "key": "REFERRAL_INBOX_NAME",
+                  "value": "{{0.HFReferralModel.name}}"
+                },
+                {
+                  "key": "REFERRAL_INBOX_REFERRAL_SYMPTOM",
+                  "value": "{{0.HFReferralModel.symptom}}"
+                },
+                {
+                  "iterate": "{{0.HFReferralModel.additionalFields.fields}}",
+                  "excludeKeys": ["name"],
+                  "hideIfNull": true
+                }
+              ]
+            }
+          ]
         }
       ]
     }

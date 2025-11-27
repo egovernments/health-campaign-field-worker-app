@@ -21,32 +21,38 @@ class LabelPairListWidget implements FlowWidget {
     final crudCtx = CrudItemContext.of(context);
     final List<dynamic> data = json['data'] ?? [];
     final localization = LocalizationContext.maybeOf(context);
+    final contextData =
+        crudCtx?.item != null ? crudCtx!.item : crudCtx?.stateData?.rawState;
 
     // Filter out null items if hideIfNull is true
     final filteredItems = <LabelValueItem>[];
 
     for (var e in data) {
+      // Check if this is an iterate directive
+      if (e['iterate'] != null) {
+        final iterateItems =
+            _processIterateDirective(e, contextData, localization);
+        filteredItems.addAll(iterateItems);
+        continue;
+      }
+
       final key = e['key'] ?? '';
       final value = e['value'];
       final defaultValue = e['defaultValue'];
       final hideIfNull = e['hideIfNull'] == true;
 
-      // Localize first, then resolve template
-      final localizedKey = localization?.translate(key) ?? key;
-      final localizedValue =
-          localization?.translate(value ?? '') ?? (value ?? '');
-
+      // Resolve template with localization support
       final keyText = resolveTemplate(
-          localizedKey,
-          crudCtx?.item != null
-              ? crudCtx!.item
-              : crudCtx?.stateData?.rawState);
+        key,
+        contextData,
+        localization: localization,
+      );
 
       var valueText = resolveTemplate(
-          localizedValue,
-          crudCtx?.item != null
-              ? crudCtx!.item
-              : crudCtx?.stateData?.rawState);
+        value ?? '',
+        contextData,
+        localization: localization,
+      );
 
       // Check if value is null or empty
       final isValueEmpty =
@@ -59,21 +65,19 @@ class LabelPairListWidget implements FlowWidget {
 
       // If value is empty and defaultValue is provided, use defaultValue
       if (isValueEmpty && defaultValue != null) {
-        final localizedDefaultValue =
-            localization?.translate(defaultValue) ?? defaultValue;
         valueText = resolveTemplate(
-            localizedDefaultValue,
-            crudCtx?.item != null
-                ? crudCtx!.item
-                : crudCtx?.stateData?.rawState);
+          defaultValue,
+          contextData,
+          localization: localization,
+        );
       }
 
       // Add the item to the list
       filteredItems.add(
         LabelValueItem(
           maxLines: 5,
-          label: localization?.translate(keyText) ?? keyText,
-          value: localization?.translate(valueText ?? '') ?? (valueText ?? ''),
+          label: keyText,
+          value: valueText ?? '',
           labelFlex: 7,
         ),
       );
@@ -83,5 +87,63 @@ class LabelPairListWidget implements FlowWidget {
       padding: const EdgeInsets.all(0),
       items: filteredItems,
     );
+  }
+
+  /// Process an iterate directive to dynamically generate label-value pairs
+  List<LabelValueItem> _processIterateDirective(
+    Map<String, dynamic> config,
+    dynamic contextData,
+    dynamic localization,
+  ) {
+    final items = <LabelValueItem>[];
+
+    final iteratePath = config['iterate'] as String;
+    final keyField = config['keyField'] ?? 'key';
+    final valueField = config['valueField'] ?? 'value';
+    final excludeKeys = (config['excludeKeys'] as List<dynamic>?)
+            ?.map((e) => e.toString())
+            .toSet() ??
+        {};
+    final hideIfNull = config['hideIfNull'] == true;
+
+    // Resolve the iterate path to get the list
+    final resolvedList = resolveValue(iteratePath, contextData);
+
+    if (resolvedList == null || resolvedList is! List) {
+      return items;
+    }
+
+    for (var field in resolvedList) {
+      if (field is! Map) continue;
+
+      final fieldKey = field[keyField]?.toString();
+      final fieldValue = field[valueField];
+
+      if (fieldKey == null) continue;
+
+      // Check excludeKeys
+      if (excludeKeys.contains(fieldKey)) continue;
+
+      final valueStr = fieldValue?.toString() ?? '';
+      final isValueEmpty = valueStr.isEmpty || valueStr == 'null';
+
+      if (hideIfNull && isValueEmpty) {
+        continue;
+      }
+
+      final localizedKey = localization?.translate(fieldKey) ?? fieldKey;
+      final localizedValue = localization?.translate(valueStr) ?? valueStr;
+
+      items.add(
+        LabelValueItem(
+          maxLines: 5,
+          label: localizedKey,
+          value: localizedValue,
+          labelFlex: 7,
+        ),
+      );
+    }
+
+    return items;
   }
 }

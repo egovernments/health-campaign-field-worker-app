@@ -156,6 +156,8 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'navigateTo': pageMap['navigateTo'] is Map<String, dynamic>
             ? pageMap['navigateTo']
             : null,
+        'visibilityCondition': pageMap['visibilityCondition'],
+        'conditionalNavigateTo': pageMap['conditionalNavigateTo'],
         'showAlertPopUp': pageMap['showAlertPopUp'],
         'multiEntityConfig': pageMap['multiEntityConfig']
       };
@@ -187,9 +189,20 @@ dynamic resolveValue(dynamic value, dynamic contextData,
 }
 
 /// New method: resolves strings with multiple placeholders
-String resolveTemplate(String template, dynamic contextData,
-    {String? screenKey}) {
+/// Also supports localization keys mixed with templates, e.g.:
+/// "HF_REFERRAL_INBOX_DATE {{ fn:formatDate(Model.date) }}"
+/// Where "HF_REFERRAL_INBOX_DATE" is a localization key
+String resolveTemplate(
+  String template,
+  dynamic contextData, {
+  String? screenKey,
+  dynamic localization,
+}) {
   if (!template.contains('{{')) {
+    // No template placeholders, try to translate as localization key
+    if (localization != null) {
+      return _translateWithLocalization(template, localization);
+    }
     return template;
   }
 
@@ -199,6 +212,39 @@ String resolveTemplate(String template, dynamic contextData,
 
   String result = template;
 
+  // First, translate the non-placeholder parts if localization is provided
+  if (localization != null) {
+    // Split template by placeholders and translate each part
+    int lastEnd = 0;
+    final buffer = StringBuffer();
+
+    for (final match in matches) {
+      // Get text before this placeholder and translate it
+      final textBefore = template.substring(lastEnd, match.start);
+      if (textBefore.trim().isNotEmpty) {
+        buffer.write(_translateWithLocalization(textBefore, localization));
+      } else {
+        buffer.write(textBefore);
+      }
+      // Keep the placeholder as-is for now
+      buffer.write(match.group(0));
+      lastEnd = match.end;
+    }
+
+    // Translate any remaining text after the last placeholder
+    if (lastEnd < template.length) {
+      final textAfter = template.substring(lastEnd);
+      if (textAfter.trim().isNotEmpty) {
+        buffer.write(_translateWithLocalization(textAfter, localization));
+      } else {
+        buffer.write(textAfter);
+      }
+    }
+
+    result = buffer.toString();
+  }
+
+  // Now resolve all placeholders
   for (final match in matches) {
     final fullPlaceholder = match.group(0)!;
     final placeholder = match.group(1)!.trim();
@@ -214,6 +260,25 @@ String resolveTemplate(String template, dynamic contextData,
   }
 
   return result;
+}
+
+/// Helper to translate using localization (supports FlowBuilderLocalization)
+String _translateWithLocalization(String text, dynamic localization) {
+  final trimmed = text.trim();
+  if (trimmed.isEmpty) return text;
+
+  try {
+    final translated = localization.translate(trimmed);
+    // Preserve original whitespace
+    if (text.startsWith(' ') || text.endsWith(' ')) {
+      final leadingSpace = text.startsWith(' ') ? ' ' : '';
+      final trailingSpace = text.endsWith(' ') ? ' ' : '';
+      return '$leadingSpace$translated$trailingSpace';
+    }
+    return translated;
+  } catch (_) {
+    return text;
+  }
 }
 
 /// New method: returns actual type (int, double, bool, list, map, entity, etc.)

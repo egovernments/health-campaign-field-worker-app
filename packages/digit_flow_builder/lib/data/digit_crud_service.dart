@@ -1,5 +1,6 @@
 import 'package:digit_crud_bloc/digit_crud_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_flow_builder/utils/context_utility.dart';
 import 'package:flutter/material.dart';
 
@@ -42,6 +43,9 @@ class DigitCrudService extends CrudService {
     } else if (entity is StockReconciliationModel) {
       return context.repository<StockReconciliationModel,
           StockReconciliationSearchModel>(context);
+    } else if (entity is HFReferralModel) {
+      return context
+          .repository<HFReferralModel, HFReferralSearchModel>(context);
     } else {
       return context.repository<EntityModel, EntitySearchModel>(context);
     }
@@ -83,6 +87,8 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
         return StockReconciliationModelMapper.fromMap(normalizedMap);
       case 'pgrService':
         return PgrServiceModelMapper.fromMap(normalizedMap);
+      case 'hFReferral':
+        return HFReferralModelMapper.fromMap(normalizedMap);
       default:
         return EntityModelMapper.fromMap(normalizedMap);
     }
