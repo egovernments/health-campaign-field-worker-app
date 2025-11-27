@@ -1221,32 +1221,32 @@ class _HomePageState extends LocalizedState<HomePage> {
               final prefs = await SharedPreferences.getInstance();
               final schemaJsonRaw = prefs.getString('app_config_schemas');
 
-              // if (schemaJsonRaw != null) {
-              //   final allSchemas =
-              //       json.decode(schemaJsonRaw) as Map<String, dynamic>;
-              //   final complaint = allSchemas['HFREFERRAL'];
-              //
-              //   final complaintsData = complaint?['data'];
-              //   final flowsData = (complaintsData['flows'] as List<dynamic>?)
-              //           ?.map((e) => Map<String, dynamic>.from(e as Map))
-              //           .toList() ??
-              //       [];
-              //   FlowRegistry.setConfig(flowsData);
-              //   NavigationRegistry.setupNavigation(context);
-              //
-              //   context.router.push(
-              //     FlowBuilderHomeRoute(pageName: complaintsData["initialPage"]),
-              //   );
-              // } else {
-              FlowRegistry.setConfig(
-                  sampleReferralFlows["flows"] as List<Map<String, dynamic>>);
-              NavigationRegistry.setupNavigation(context);
+              if (schemaJsonRaw != null) {
+                final allSchemas =
+                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                final referral = allSchemas['HFREFERRAL'];
 
-              context.router.push(
-                FlowBuilderHomeRoute(
-                    pageName: sampleReferralFlows["initialPage"]),
-              );
-              // }
+                final referralData = referral?['data'];
+                final flowsData = (referralData['flows'] as List<dynamic>?)
+                        ?.map((e) => Map<String, dynamic>.from(e as Map))
+                        .toList() ??
+                    [];
+                FlowRegistry.setConfig(flowsData);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(pageName: referralData["initialPage"]),
+                );
+              } else {
+                FlowRegistry.setConfig(
+                    sampleReferralFlows["flows"] as List<Map<String, dynamic>>);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: sampleReferralFlows["initialPage"]),
+                );
+              }
             } catch (e) {
               debugPrint('error $e');
             }

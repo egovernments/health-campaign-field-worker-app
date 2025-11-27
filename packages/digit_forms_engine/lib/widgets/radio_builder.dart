@@ -40,9 +40,10 @@ class JsonSchemaRadioBuilder extends JsonSchemaBuilder<bool> {
             errorMessage: field.errorText,
             radioDigitButtons: enums
                 .map(
-                  (e) => RadioButtonModel(code: e.code, name: e.name
-                      // name: loc.translate(e.name),
-                      ),
+                  (e) => RadioButtonModel(
+                    code: e.code,
+                    name: loc.translate(e.name),
+                  ),
                 )
                 .toList(),
             onChanged: (value) {
