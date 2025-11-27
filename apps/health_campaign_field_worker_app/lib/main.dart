@@ -2585,7 +2585,7 @@ final dynamic sampleReferralFlows = {
     {
       "screenType": "FORM",
       "name": "REFERRAL_CREATE",
-      "project": "LLIN-mz",
+      "project": "",
       "version": 1,
       "disabled": false,
       "isSelected": true,
@@ -2738,7 +2738,6 @@ final dynamic sampleReferralFlows = {
                       "HFREFERRAL_REFERRAL_DETAILS_referralCycle_REQUIRED_ERROR"
                 }
               ],
-              // "enums": "{{project.cycle}}",
               "errorMessage": "",
               "isMultiSelect": false
             },
@@ -3210,7 +3209,9 @@ final dynamic sampleReferralFlows = {
               "errorMessage": "",
               "isMultiSelect": false,
               "visibilityCondition": {
-                "expression": "sideEffectFever.feverQ1==YES"
+                "expression": [
+                  {"condition": "sideEffectFever.feverQ1==YES"}
+                ]
               }
             },
             {
@@ -3244,7 +3245,9 @@ final dynamic sampleReferralFlows = {
               "errorMessage": "",
               "isMultiSelect": false,
               "visibilityCondition": {
-                "expression": "sideEffectFever.feverQ2==NEGATIVE"
+                "expression": [
+                  {"condition": "sideEffectFever.feverQ2==NEGATIVE"}
+                ]
               }
             },
             {
@@ -3278,7 +3281,9 @@ final dynamic sampleReferralFlows = {
               "errorMessage": "",
               "isMultiSelect": false,
               "visibilityCondition": {
-                "expression": "sideEffectFever.feverQ2==POSITIVE"
+                "expression": [
+                  {"condition": "sideEffectFever.feverQ2==POSITIVE"}
+                ]
               }
             },
             {
@@ -3312,7 +3317,9 @@ final dynamic sampleReferralFlows = {
               "errorMessage": "",
               "isMultiSelect": false,
               "visibilityCondition": {
-                "expression": "sideEffectFever.feverQ2==POSITIVE"
+                "expression": [
+                  {"condition": "sideEffectFever.feverQ2==POSITIVE"}
+                ]
               }
             },
             {
@@ -3342,7 +3349,9 @@ final dynamic sampleReferralFlows = {
               "errorMessage": "",
               "isMultiSelect": false,
               "visibilityCondition": {
-                "expression": "sideEffectFever.feverQ5==YES"
+                "expression": [
+                  {"condition": "sideEffectFever.feverQ5==YES"}
+                ]
               }
             }
           ]
@@ -3417,7 +3426,9 @@ final dynamic sampleReferralFlows = {
               "errorMessage": "",
               "isMultiSelect": false,
               "visibilityCondition": {
-                "expression": "sideEffectSick.sickQ1==YES"
+                "expression": [
+                  {"condition": "sideEffectSick.sickQ1==YES"}
+                ]
               }
             },
             {
@@ -3478,7 +3489,9 @@ final dynamic sampleReferralFlows = {
               "errorMessage": "",
               "isMultiSelect": false,
               "visibilityCondition": {
-                "expression": "sideEffectSick.sickQ2==YES"
+                "expression": [
+                  {"condition": "sideEffectSick.sickQ2==YES"}
+                ]
               }
             },
             {
