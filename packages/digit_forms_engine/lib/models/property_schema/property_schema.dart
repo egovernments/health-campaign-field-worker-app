@@ -218,12 +218,32 @@ NavigateToConfig? _navigateToConfigOrNull(dynamic value) {
 }
 
 VisibilityCondition? _visibilityConditionOrNull(dynamic value) {
-  if (value is Map && value.isEmpty) {
+  if (value is Map && value.isEmpty) return null;
+
+  if (value is Map<String, dynamic>) {
+    final expr = value['expression'];
+
+    // CASE 1 → expression: { ... }
+    if (expr is Map<String, dynamic>) {
+      return VisibilityCondition(
+        expression: [VisibilityExpression.fromJson(expr)],
+      );
+    }
+
+    // CASE 2 → expression: [ {...}, {...} ]
+    if (expr is List) {
+      return VisibilityCondition(
+        expression: expr
+            .whereType<Map<String, dynamic>>()
+            .map((e) => VisibilityExpression.fromJson(e))
+            .toList(),
+      );
+    }
+
+    // FALLBACK
     return null;
   }
-  if (value is Map<String, dynamic>) {
-    return VisibilityCondition.fromJson(value);
-  }
+
   return null;
 }
 
