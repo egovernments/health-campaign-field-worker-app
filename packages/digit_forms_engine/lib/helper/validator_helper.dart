@@ -23,6 +23,7 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema,
   if (schema.validations != null) {
     for (final rule in schema.validations!) {
       switch (rule.type) {
+        case 'min':
         case 'minLength':
           final parsedValue = parseIntValue(rule.value);
 
@@ -48,7 +49,7 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema,
           }
           break;
 
-        case 'min':
+
         case 'minValue':
           final parsedValue = parseIntValue(rule.value);
           if (parsedValue != null) {
