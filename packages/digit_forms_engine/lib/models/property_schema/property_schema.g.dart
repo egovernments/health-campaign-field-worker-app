@@ -215,9 +215,14 @@ Map<String, dynamic> _$$NavigateToConfigImplToJson(
 _$VisibilityConditionImpl _$$VisibilityConditionImplFromJson(
         Map<String, dynamic> json) =>
     _$VisibilityConditionImpl(
-      expression: (json['expression'] as List<dynamic>)
-          .map((e) => VisibilityExpression.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      expression: (json['expression'] is List)
+          ? (json['expression'] as List)
+              .map((e) => VisibilityExpression.fromJson(e))
+              .toList()
+          : [
+              VisibilityExpression.fromJson(
+                  json['expression'] as Map<String, dynamic>)
+            ],
     );
 
 Map<String, dynamic> _$$VisibilityConditionImplToJson(
