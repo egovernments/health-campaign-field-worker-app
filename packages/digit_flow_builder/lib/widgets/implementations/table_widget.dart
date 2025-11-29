@@ -131,8 +131,27 @@ class TableWidget implements FlowWidget {
 
     if (sourceList.isEmpty) return const SizedBox.shrink();
 
+    // Prepare contextData from rawState for conditions that need global state access
+    final rawState = crudCtx?.stateData?.rawState;
+    final contextDataMap = (rawState is List && rawState.isNotEmpty)
+        ? (rawState.first is Map
+            ? Map<String, dynamic>.from(rawState.first as Map)
+            : <String, dynamic>{})
+        : <String, dynamic>{};
+
     final rows = sourceList.asMap().entries.map((entry) {
       final rowItem = entry.value;
+
+      // Build evaluation context for cell values
+      // - For simple templates like {{item.id}}, rowItem is used directly
+      // - For conditions needing global state like {{contextData.dose}}, we provide contextDataMap
+      final cellEvalContext = {
+        'currentItem': rowItem,
+        'item': rowItem,
+        'contextData': contextDataMap,
+        ...modelMap,
+        ...formData,
+      };
 
       return DigitTableRow(
         tableRow: rawColumns.asMap().entries.map((entry) {
@@ -142,9 +161,13 @@ class TableWidget implements FlowWidget {
           // Get the raw cellValue configuration
           final rawCellValue = colConfig['cellValue'];
 
-          // For cell value resolution, we need to pass rowItem as the contextData
-          // The resolveTemplate/resolveValueRaw handles {{item.field}} by stripping "item." prefix
-          final cellValue = ConditionalEvaluator.evaluate(rawCellValue, rowItem,
+          // Use enhanced context for conditional cellValues, simple rowItem for plain templates
+          final isConditional =
+              rawCellValue is Map && rawCellValue.containsKey('@condition');
+          final evalContext = isConditional ? cellEvalContext : rowItem;
+
+          final cellValue = ConditionalEvaluator.evaluate(
+              rawCellValue, evalContext,
               screenKey: screenKey);
 
           // cellValue should already be resolved by ConditionalEvaluator

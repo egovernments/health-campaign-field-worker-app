@@ -141,7 +141,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       'facilityToWhich',
       (context, stateAccessor) {
         // Access data from any page in the flow
-        final stockData = stateAccessor.getPageData('manageStock');
+        final stockData = stateAccessor.getPageData('MANAGESTOCK');
 
         // Build your component with access to all this data
         return FacilityCard(
@@ -838,31 +838,30 @@ class _HomePageState extends LocalizedState<HomePage> {
               dynamicEntityModelListener: EntityModelMapMapper(),
             );
             try {
-              if (schemaJsonRaw != null) {
-                final allSchemas =
-                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                final manageStock = allSchemas['REGISTRATION'];
-
-                final manageStockData = manageStock?['data'];
-                final flowsData = (manageStockData['flows'] as List<dynamic>?)
-                        ?.map((e) => Map<String, dynamic>.from(e as Map))
-                        .toList() ??
-                    [];
-                FlowRegistry.setConfig(flowsData);
-                NavigationRegistry.setupNavigation(context);
-
-                context.router.push(
-                  FlowBuilderHomeRoute(
-                      pageName: manageStockData["initialPage"]),
-                );
-              } else {
-                FlowRegistry.setConfig(
-                    sampleFlows["flows"] as List<Map<String, dynamic>>);
-                NavigationRegistry.setupNavigation(context);
-                context.router.push(
-                  FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
-                );
-              }
+              // if (schemaJsonRaw != null) {
+              //   final allSchemas =
+              //       json.decode(schemaJsonRaw) as Map<String, dynamic>;
+              //   final manageStock = allSchemas['REGISTRATION'];
+              //
+              //   final manageStockData = manageStock?['data'];
+              //   final flowsData = (manageStockData['flows'] as List<dynamic>?)
+              //           ?.map((e) => Map<String, dynamic>.from(e as Map))
+              //           .toList() ??
+              //       [];
+              //   FlowRegistry.setConfig(flowsData);
+              //   NavigationRegistry.setupNavigation(context);
+              //
+              //   context.router.push(
+              //     FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
+              //   );
+              // } else {
+              FlowRegistry.setConfig(
+                  sampleFlows["flows"] as List<Map<String, dynamic>>);
+              NavigationRegistry.setupNavigation(context);
+              context.router.push(
+                FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
+              );
+              // }
             } catch (e) {
               debugPrint('error $e');
             }
@@ -1011,33 +1010,33 @@ class _HomePageState extends LocalizedState<HomePage> {
               final prefs = await SharedPreferences.getInstance();
               final schemaJsonRaw = prefs.getString('app_config_schemas');
 
-              if (schemaJsonRaw != null) {
-                final allSchemas =
-                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                final manageStock = allSchemas['INVENTORY'];
+              // if (schemaJsonRaw != null) {
+              //   final allSchemas =
+              //       json.decode(schemaJsonRaw) as Map<String, dynamic>;
+              //   final manageStock = allSchemas['INVENTORY'];
+              //
+              //   final manageStockData = manageStock?['data'];
+              //   final flowsData = (manageStockData['flows'] as List<dynamic>?)
+              //           ?.map((e) => Map<String, dynamic>.from(e as Map))
+              //           .toList() ??
+              //       [];
+              //   FlowRegistry.setConfig(flowsData);
+              //   NavigationRegistry.setupNavigation(context);
+              //
+              //   context.router.push(
+              //     FlowBuilderHomeRoute(
+              //         pageName: manageStockData["initialPage"]),
+              //   );
+              // } else {
+              FlowRegistry.setConfig(
+                  sampleInventoryFlows["flows"] as List<Map<String, dynamic>>);
+              NavigationRegistry.setupNavigation(context);
 
-                final manageStockData = manageStock?['data'];
-                final flowsData = (manageStockData['flows'] as List<dynamic>?)
-                        ?.map((e) => Map<String, dynamic>.from(e as Map))
-                        .toList() ??
-                    [];
-                FlowRegistry.setConfig(flowsData);
-                NavigationRegistry.setupNavigation(context);
-
-                context.router.push(
-                  FlowBuilderHomeRoute(
-                      pageName: manageStockData["initialPage"]),
-                );
-              } else {
-                FlowRegistry.setConfig(sampleInventoryFlows["flows"]
-                    as List<Map<String, dynamic>>);
-                NavigationRegistry.setupNavigation(context);
-
-                context.router.push(
-                  FlowBuilderHomeRoute(
-                      pageName: sampleInventoryFlows["initialPage"]),
-                );
-              }
+              context.router.push(
+                FlowBuilderHomeRoute(
+                    pageName: sampleInventoryFlows["initialPage"]),
+              );
+              // }
             } catch (e) {
               debugPrint('error $e');
             }
@@ -1111,33 +1110,33 @@ class _HomePageState extends LocalizedState<HomePage> {
               final prefs = await SharedPreferences.getInstance();
               final schemaJsonRaw = prefs.getString('app_config_schemas');
 
-              if (schemaJsonRaw != null) {
-                final allSchemas =
-                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                final manageStock = allSchemas['STOCKRECONCILIATION'];
+              // if (schemaJsonRaw != null) {
+              //   final allSchemas =
+              //       json.decode(schemaJsonRaw) as Map<String, dynamic>;
+              //   final manageStock = allSchemas['STOCKRECONCILIATION'];
+              //
+              //   final manageStockData = manageStock?['data'];
+              //   final flowsData = (manageStockData['flows'] as List<dynamic>?)
+              //           ?.map((e) => Map<String, dynamic>.from(e as Map))
+              //           .toList() ??
+              //       [];
+              //   FlowRegistry.setConfig(flowsData);
+              //   NavigationRegistry.setupNavigation(context);
+              //
+              //   context.router.push(
+              //     FlowBuilderHomeRoute(
+              //         pageName: manageStockData["initialPage"]),
+              //   );
+              // } else {
+              FlowRegistry.setConfig(stockReconciliationFlows["flows"]
+                  as List<Map<String, dynamic>>);
+              NavigationRegistry.setupNavigation(context);
 
-                final manageStockData = manageStock?['data'];
-                final flowsData = (manageStockData['flows'] as List<dynamic>?)
-                        ?.map((e) => Map<String, dynamic>.from(e as Map))
-                        .toList() ??
-                    [];
-                FlowRegistry.setConfig(flowsData);
-                NavigationRegistry.setupNavigation(context);
-
-                context.router.push(
-                  FlowBuilderHomeRoute(
-                      pageName: manageStockData["initialPage"]),
-                );
-              } else {
-                FlowRegistry.setConfig(sampleInventoryFlows["flows"]
-                    as List<Map<String, dynamic>>);
-                NavigationRegistry.setupNavigation(context);
-
-                context.router.push(
-                  FlowBuilderHomeRoute(
-                      pageName: sampleInventoryFlows["initialPage"]),
-                );
-              }
+              context.router.push(
+                FlowBuilderHomeRoute(
+                    pageName: stockReconciliationFlows["initialPage"]),
+              );
+              // }
             } catch (e) {
               debugPrint('error $e');
             }
@@ -1313,34 +1312,34 @@ class _HomePageState extends LocalizedState<HomePage> {
               WidgetRegistry.initialize();
               final prefs = await SharedPreferences.getInstance();
               final schemaJsonRaw = prefs.getString('app_config_schemas');
+              //
+              // if (schemaJsonRaw != null) {
+              //   final allSchemas =
+              //       json.decode(schemaJsonRaw) as Map<String, dynamic>;
+              //   final manageStock = allSchemas['STOCKREPORTS'];
+              //
+              //   final manageStockData = manageStock?['data'];
+              //   final flowsData = (manageStockData['flows'] as List<dynamic>?)
+              //           ?.map((e) => Map<String, dynamic>.from(e as Map))
+              //           .toList() ??
+              //       [];
+              //   FlowRegistry.setConfig(flowsData);
+              //   NavigationRegistry.setupNavigation(context);
+              //
+              //   context.router.push(
+              //     FlowBuilderHomeRoute(
+              //         pageName: manageStockData["initialPage"]),
+              //   );
+              // } else {
+              FlowRegistry.setConfig(
+                  inventoryReportFlows["flows"] as List<Map<String, dynamic>>);
+              NavigationRegistry.setupNavigation(context);
 
-              if (schemaJsonRaw != null) {
-                final allSchemas =
-                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                final manageStock = allSchemas['STOCKREPORTS'];
-
-                final manageStockData = manageStock?['data'];
-                final flowsData = (manageStockData['flows'] as List<dynamic>?)
-                        ?.map((e) => Map<String, dynamic>.from(e as Map))
-                        .toList() ??
-                    [];
-                FlowRegistry.setConfig(flowsData);
-                NavigationRegistry.setupNavigation(context);
-
-                context.router.push(
-                  FlowBuilderHomeRoute(
-                      pageName: manageStockData["initialPage"]),
-                );
-              } else {
-                FlowRegistry.setConfig(sampleInventoryFlows["flows"]
-                    as List<Map<String, dynamic>>);
-                NavigationRegistry.setupNavigation(context);
-
-                context.router.push(
-                  FlowBuilderHomeRoute(
-                      pageName: sampleInventoryFlows["initialPage"]),
-                );
-              }
+              context.router.push(
+                FlowBuilderHomeRoute(
+                    pageName: inventoryReportFlows["initialPage"]),
+              );
+              // }
             } catch (e) {
               debugPrint('error $e');
             }

@@ -1,4 +1,3 @@
-import 'package:digit_ui_components/enum/app_enums.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 
@@ -49,7 +48,8 @@ class CardWidget implements FlowWidget {
 
     return DigitCard(
       width: MediaQuery.of(context).size.width,
-      cardType: WidgetParsers.parseCardType(json['type']?.toString() ?? 'primary'),
+      cardType:
+          WidgetParsers.parseCardType(json['type']?.toString() ?? 'primary'),
       onPressed: () {
         if (json['onAction'] != null) {
           final actionsList = List<Map<String, dynamic>>.from(json['onAction']);

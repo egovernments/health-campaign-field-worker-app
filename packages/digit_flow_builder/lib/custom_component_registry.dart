@@ -29,14 +29,30 @@ class PageStateAccessor {
     return getCurrentWrapperState();
   }
 
-  /// Access any other page’s form data by name
+  /// Access any other page's form data by name
+  /// Tries both direct name and with screen type prefixes (TEMPLATE::, FORM::)
   FlowCrudState? getPageData(String pageName) {
-    return FlowCrudStateRegistry().get(pageName);
+    // First try direct lookup
+    var state = FlowCrudStateRegistry().get(pageName);
+    if (state != null) return state;
+
+    // Try with TEMPLATE:: prefix
+    state = FlowCrudStateRegistry().get('TEMPLATE::$pageName');
+    if (state != null) return state;
+
+    // Try with FORM:: prefix (uppercase name)
+    state = FlowCrudStateRegistry().get('FORM::${pageName.toUpperCase()}');
+    if (state != null) return state;
+
+    // Try with FORM:: prefix (original case)
+    state = FlowCrudStateRegistry().get('FORM::$pageName');
+    return state;
   }
 
-  /// Access any other page’s wrapper state by name
+  /// Access any other page's wrapper state by name
+  /// Tries both direct name and with screen type prefixes (TEMPLATE::, FORM::)
   FlowCrudState? getWrapperState(String pageName) {
-    return FlowCrudStateRegistry().get(pageName);
+    return getPageData(pageName);
   }
 }
 

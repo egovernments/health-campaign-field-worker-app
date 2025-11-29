@@ -5,6 +5,7 @@ import 'dart:async';
 
 import 'package:digit_crud_bloc/repositories/local/search_entity_repository.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:flutter/material.dart';
 
 import '../models/global_search_params.dart';
 
@@ -55,18 +56,23 @@ class CrudService {
   Future<(Map<String, List<EntityModel>>, int)> searchEntities({
     required GlobalSearchParameters query,
   }) async {
-    if (searchEntityRepository == null) {
-      return (<String, List<EntityModel>>{}, 0);
+    try {
+      if (searchEntityRepository == null) {
+        return (<String, List<EntityModel>>{}, 0);
+      }
+      return searchEntityRepository!.searchEntities(
+        filters: query.filters,
+        relationshipGraph: _relationshipGraph,
+        nestedModelMapping: _nestedMappingLookup,
+        select: query.select,
+        primaryTable: query.primaryModel,
+        pagination: query.pagination,
+        orderBy: query.orderBy,
+      );
+    } catch (e) {
+      debugPrint('error $e');
+      rethrow;
     }
-    return searchEntityRepository!.searchEntities(
-      filters: query.filters,
-      relationshipGraph: _relationshipGraph,
-      nestedModelMapping: _nestedMappingLookup,
-      select: query.select,
-      primaryTable: query.primaryModel,
-      pagination: query.pagination,
-      orderBy: query.orderBy,
-    );
   }
 
   /// Creates new entities in the data store.

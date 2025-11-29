@@ -16,8 +16,13 @@ class ConditionalEvaluator {
   /// IMPORTANT: This method is PURE - it never modifies the input value
   static dynamic evaluate(dynamic value, dynamic context, {String? screenKey}) {
     // Handle string expressions with templates/functions (e.g., "{{fn:hasRole('ADMIN')}} == true")
-    if (value is String && value.contains('{{')) {
-      final resolved = resolveTemplate(value, context, screenKey: screenKey);
+    if (value is String) {
+      String resolved = value;
+
+      // If it contains templates, resolve them first
+      if (value.contains('{{')) {
+        resolved = resolveTemplate(value, context, screenKey: screenKey);
+      }
 
       // If the resolved string looks like a boolean expression, evaluate it
       if (resolved.contains('==') ||
@@ -70,9 +75,6 @@ class ConditionalEvaluator {
       // First resolve any template variables in the expression
       final resolved = resolveTemplate(expression, context) ?? expression;
 
-      print('🔍 ConditionalEvaluator: Evaluating expression: "$expression"');
-      print('🔍 ConditionalEvaluator: Resolved to: "$resolved"');
-
       // Use FormulaParser to evaluate the resolved expression
       final parser = FormulaParser(
         resolved.toString(),
@@ -80,10 +82,8 @@ class ConditionalEvaluator {
       );
 
       final result = parser.parse;
-      print('🔍 ConditionalEvaluator: Parser result: $result');
 
       final boolResult = result["isSuccess"] == true && result["value"] == true;
-      print('🔍 ConditionalEvaluator: Final boolean result: $boolResult');
 
       return boolResult;
     } catch (e) {

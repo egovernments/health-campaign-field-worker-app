@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
+import '../../utils/conditional_evaluator.dart';
 import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
 import '../../utils/widget_parsers.dart';
@@ -34,6 +35,20 @@ class ButtonWidget implements FlowWidget {
         ? FlowCrudStateRegistry().get(screenKey)?.formData
         : null;
 
+    // Create evaluation context
+    final evalContext = {
+      'item': crudCtx?.item,
+      'contextData': crudCtx?.stateData?.rawState ?? {},
+    };
+    // Check visibility condition
+    final visible = ConditionalEvaluator.evaluate(
+      json['visible'] ?? true,
+      evalContext,
+    );
+
+    if (visible == false) {
+      return const SizedBox.shrink();
+    }
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
     final localization = LocalizationContext.maybeOf(context);
 
@@ -95,7 +110,8 @@ class ButtonWidget implements FlowWidget {
       type: WidgetParsers.parseButtonType(props['type']),
       size: WidgetParsers.parseButtonSize(props['size']),
       mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
-      mainAxisAlignment: WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),
+      mainAxisAlignment:
+          WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),
       suffixIcon: json['suffixIcon'] != null
           ? DigitIconMapping.getIcon(json['suffixIcon'])
           : null,

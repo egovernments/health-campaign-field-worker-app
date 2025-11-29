@@ -1,12 +1,17 @@
+import 'dart:async';
+
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_crud_bloc/models/global_search_params.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/flow_crud_bloc.dart';
+import '../../blocs/state_wrapper_builder.dart';
 import '../../flow_builder.dart';
 import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
+import '../../widget_registry.dart';
 import 'action_executor.dart';
 
 class SearchExecutor extends ActionExecutor {
@@ -21,7 +26,11 @@ class SearchExecutor extends ActionExecutor {
   ) async {
     final data = action.properties;
     final contexts = contextData['entities'];
-    final screenKey = getScreenKeyFromArgs(context);
+
+    // Get screen key - try CrudItemContext first (has correct format),
+    // then fall back to route args
+    final crudCtx = CrudItemContext.of(context);
+    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
 
     // Get widgetData from FlowCrudStateRegistry (for filter values)
     final widgetData = screenKey != null
@@ -129,7 +138,74 @@ class SearchExecutor extends ActionExecutor {
       orderBy: orderBy,
     );
 
-    context.read<CrudBloc>().add(CrudEventSearch(searchParams));
-    return contextData;
+    // Check if we should wait for results (for chained actions like REVERSE_TRANSFORM)
+    final awaitResults = action.properties['awaitResults'] as bool? ?? false;
+
+    final crudBloc = context.read<CrudBloc>();
+
+    if (awaitResults) {
+      // Wait for search results before returning
+      final completer = Completer<Map<String, dynamic>>();
+
+      late StreamSubscription<CrudState> subscription;
+      subscription = crudBloc.stream.listen((state) {
+        if (state is CrudStateLoaded) {
+          subscription.cancel();
+
+          // Extract entities from results
+          final results = state.results;
+          List<EntityModel> entities = [];
+
+          for (final entityList in results.values) {
+            entities.addAll(entityList);
+          }
+
+          debugPrint('SEARCH_EVENT: Found ${entities.length} entities');
+
+          // Update FlowCrudStateRegistry with search results
+          if (screenKey != null) {
+            final currentState = FlowCrudStateRegistry().get(screenKey);
+
+            // Build wrapper if config exists
+            List<dynamic>? wrapper;
+            if (config?['wrapperConfig'] != null && entities.isNotEmpty) {
+              wrapper = WrapperBuilder(entities, config?['wrapperConfig']).build();
+            }
+
+            final updatedState =
+                (currentState ?? const FlowCrudState()).copyWith(
+              base: state,
+              stateWrapper: wrapper ?? entities,
+            );
+            FlowCrudStateRegistry().update(screenKey, updatedState);
+          }
+
+          // Return context with entities
+          completer.complete({
+            ...contextData,
+            'entities': entities,
+            'searchResults': results,
+          });
+        } else if (state is CrudStateError) {
+          subscription.cancel();
+          debugPrint('SEARCH_EVENT: Error - ${state.message}');
+          completer.complete({
+            ...contextData,
+            'errorType': 'searchError',
+            'errorMessage': state.message,
+          });
+        }
+      });
+
+      // Dispatch the search event
+      crudBloc.add(CrudEventSearch(searchParams));
+
+      // Wait for results - bloc will always emit loaded or error state
+      return completer.future;
+    } else {
+      // Fire and forget - original behavior
+      crudBloc.add(CrudEventSearch(searchParams));
+      return contextData;
+    }
   }
 }

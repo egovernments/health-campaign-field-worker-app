@@ -33,15 +33,20 @@ class SearchEntityRepository extends LocalRepository {
     PaginationParams? pagination,
     SearchOrderBy? orderBy,
   }) async {
-    return _buildAndExecuteSearchQuery(
-      filters: filters,
-      relationshipGraph: relationshipGraph,
-      select: select,
-      primaryTable: primaryTable,
-      pagination: pagination,
-      nestedModelMapping: nestedModelMapping,
-      orderBy: orderBy,
-    );
+    try {
+      return _buildAndExecuteSearchQuery(
+        filters: filters,
+        relationshipGraph: relationshipGraph,
+        select: select,
+        primaryTable: primaryTable,
+        pagination: pagination,
+        nestedModelMapping: nestedModelMapping,
+        orderBy: orderBy,
+      );
+    } catch (e) {
+      debugPrint('error $e');
+      rethrow;
+    }
   }
 
   Future<(Map<String, List<EntityModel>>, int)> _buildAndExecuteSearchQuery({

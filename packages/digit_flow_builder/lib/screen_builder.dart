@@ -172,51 +172,85 @@ class _FormScreenWrapper extends LocalizedStatefulWidget {
 class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<FormsBloc, FormsState>(builder: (context, state) {
-      if (state.initialSchemas[widget.schemaKey] != null) {
-        final schemaObject = state.cachedSchemas[widget.schemaKey]!;
+    // Use the correct screen key format for FORM screens
+    final screenKey = 'FORM::${widget.schemaKey}';
 
-        // Derive pageName as first page key if none specified externally
-        final pageName = schemaObject.pages.entries.first.key;
-        return FormsRenderPage(
-          pageName: pageName,
-          navigationParams: widget.navigationParams,
-          currentSchemaKey: widget.schemaKey,
-          // Pass custom components from registry with enhanced state access
-          customComponents: _buildCustomComponents(
-            context,
-          ),
-          // defaultValues: widget.defaultValues,
-          /// TODO: adding default dummy data for create
-          defaultValues: {
-            'administrativeArea': localizations
-                .translate(FlowBuilderSingleton().boundary?.code ?? ''),
-            'availableIDs': {'DEFAULT': IdGen.instance.identifier},
-            'loggedInUserName': FlowBuilderSingleton().loggedInUser?.name,
-            'loggedInUserMobileNumber':
-                FlowBuilderSingleton().loggedInUser?.mobileNumber,
-          },
-        );
-      }
-      return const Center(child: CircularProgressIndicator());
-    });
+    // Listen to FlowCrudStateRegistry for formData changes (from REVERSE_TRANSFORM action)
+    return ValueListenableBuilder(
+      valueListenable: FlowCrudStateRegistry().listen(screenKey),
+      builder: (context, _, __) {
+        final flowState = FlowCrudStateRegistry().get(screenKey);
+
+        return BlocBuilder<FormsBloc, FormsState>(builder: (context, state) {
+          if (state.initialSchemas[widget.schemaKey] != null) {
+            final schemaObject = state.cachedSchemas[widget.schemaKey]!;
+
+            // Derive pageName as first page key if none specified externally
+            final pageName = schemaObject.pages.entries.first.key;
+
+            // Determine isEdit from navigation params (set by NAVIGATION action)
+            final isEdit = widget.navigationParams?['isEdit'] == true ||
+                widget.navigationParams?['isEdit'] == 'true';
+
+            // Get formData from FlowCrudStateRegistry (set by REVERSE_TRANSFORM action)
+            final registryFormData = flowState?.formData ?? {};
+
+            return FormsRenderPage(
+              pageName: pageName,
+              navigationParams: widget.navigationParams,
+              currentSchemaKey: widget.schemaKey,
+              isEdit: isEdit,
+              // Pass custom components from registry with enhanced state access
+              customComponents: _buildCustomComponents(
+                context,
+                flowState,
+              ),
+              // defaultValues priority (lowest to highest):
+              // 1. navigationParams - basic navigation data
+              // 2. widget.defaultValues - config-defined defaults
+              // 3. registryFormData - data from REVERSE_TRANSFORM action (highest priority for prefill)
+              // 4. System values like administrativeArea, availableIDs
+              defaultValues: {
+                ...?widget.navigationParams,
+                ...?widget.defaultValues,
+                ...registryFormData,
+                // System values always present
+                'administrativeArea': localizations
+                    .translate(FlowBuilderSingleton().boundary?.code ?? ''),
+                'availableIDs': {'DEFAULT': IdGen.instance.identifier},
+                'loggedInUserName': FlowBuilderSingleton().loggedInUser?.name,
+                'loggedInUserMobileNumber':
+                    FlowBuilderSingleton().loggedInUser?.mobileNumber,
+              },
+            );
+          }
+          return const Center(child: CircularProgressIndicator());
+        });
+      },
+    );
   }
 
   /// Build custom components with enhanced state access
-  List<Map<String, Widget>>? _buildCustomComponents(BuildContext context) {
+  List<Map<String, Widget>>? _buildCustomComponents(
+    BuildContext context,
+    FlowCrudState? flowState,
+  ) {
     if (CustomComponentRegistry().isEmpty) return null;
 
     final Map<String, Widget> components = {};
     final registry = CustomComponentRegistry();
 
+    // Use the correct screen key format for FORM screens
+    final screenKey = 'FORM::${widget.schemaKey}';
+
     // For each component, create a PageStateAccessor for this page
     for (final componentKey in registry.getRegisteredKeys()) {
-      final stateAccessor = PageStateAccessor(widget.schemaKey);
+      final stateAccessor = PageStateAccessor(screenKey);
 
       final component = registry.buildComponent(
         componentKey,
         context,
-        widget.schemaKey, // page name passed here
+        screenKey, // Use full screen key format
       );
 
       if (component != null) {

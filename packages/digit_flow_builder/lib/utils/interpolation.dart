@@ -99,7 +99,8 @@ String interpolateWithCrudStates({
   Map<String, dynamic>? item,
   Map<String, dynamic>? navigationParams,
   Map<String, dynamic>? rowItem, // row-level override (for table rows)
-  Map<String, dynamic>? widgetData, // widget state data (e.g., filter selections)
+  Map<String, dynamic>?
+      widgetData, // widget state data (e.g., filter selections)
 }) {
   // TODO: update row and interpolation to consider row index to render table content
 
@@ -227,7 +228,8 @@ Map<String, dynamic> preprocessConfigWithState(
   int? listIndex,
   Map<String, dynamic>? item,
 }) {
-  Map<String, dynamic> walk(Map<String, dynamic> node, {bool skipActions = false}) {
+  Map<String, dynamic> walk(Map<String, dynamic> node,
+      {bool skipActions = false}) {
     final result = <String, dynamic>{};
 
     node.forEach((key, value) {
@@ -266,11 +268,28 @@ Map<String, dynamic> preprocessConfigWithState(
         }
 
         result[key] = value; // keep actionType as is
+      } else if (key == "visible" && value is String && value.contains('{{')) {
+        // Preprocess visible property with listIndex for correct resolution
+        // Only preprocess if listIndex is provided, otherwise keep original
+        // to be processed later when listIndex is available
+        if (listIndex != null) {
+          final resolved = interpolateWithCrudStates(
+            template: value,
+            stateData: stateData,
+            listIndex: listIndex,
+            item: item,
+          );
+          result[key] = resolved;
+        } else {
+          // Keep original - will be processed later with correct listIndex
+          result[key] = value;
+        }
       } else if (value is Map<String, dynamic>) {
         result[key] = walk(value, skipActions: skipActions);
       } else if (value is List) {
         result[key] = value.map((e) {
-          if (e is Map<String, dynamic>) return walk(e, skipActions: skipActions);
+          if (e is Map<String, dynamic>)
+            return walk(e, skipActions: skipActions);
           return e;
         }).toList();
       } else {

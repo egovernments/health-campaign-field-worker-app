@@ -290,10 +290,39 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
     if (match != null) {
       var path = match.group(1)!.trim();
 
+      // Check if contextData is a structured evaluation context (has nested keys)
+      final isStructuredContext = contextData is Map &&
+          (contextData.containsKey('contextData') ||
+              contextData.containsKey('currentItem'));
+
+      // Handle currentItem. prefix (for table row conditions)
+      if (path.startsWith('currentItem.')) {
+        if (isStructuredContext && contextData.containsKey('currentItem')) {
+          final innerPath = path.substring('currentItem.'.length);
+          return _resolvePath(contextData['currentItem'], innerPath);
+        }
+        // Fallback: strip prefix and resolve from root
+        path = path.substring('currentItem.'.length);
+      }
+
+      // Handle contextData. prefix
       if (path.startsWith('contextData.')) {
+        if (isStructuredContext && contextData.containsKey('contextData')) {
+          // Resolve from nested contextData map
+          final innerPath = path.substring('contextData.'.length);
+          return _resolvePath(contextData['contextData'], innerPath);
+        }
+        // Legacy behavior: strip prefix and resolve from root
         path = path.substring('contextData.'.length);
       }
+
+      // Handle item. prefix
       if (path.startsWith('item.')) {
+        if (isStructuredContext && contextData.containsKey('item')) {
+          final innerPath = path.substring('item.'.length);
+          return _resolvePath(contextData['item'], innerPath);
+        }
+        // Legacy behavior: strip prefix and resolve from root
         path = path.substring('item.'.length);
       }
 

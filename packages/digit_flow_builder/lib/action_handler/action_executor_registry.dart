@@ -8,6 +8,8 @@ import 'executors/search_executor.dart';
 import 'executors/transformer_executor.dart';
 import 'executors/toast_executor.dart';
 import 'executors/clear_state_executor.dart';
+import 'executors/open_scanner_executor.dart';
+import 'executors/reverse_transformer_executor.dart';
 
 /// Registry for managing action executors
 class ActionExecutorRegistry {
@@ -31,6 +33,8 @@ class ActionExecutorRegistry {
     register('FETCH_TRANSFORMER_CONFIG', TransformerExecutor());
     register('SHOW_TOAST', ToastExecutor());
     register('CLEAR_STATE', ClearStateExecutor());
+    register('OPEN_SCANNER', OpenScannerExecutor());
+    register('REVERSE_TRANSFORM', ReverseTransformerExecutor());
   }
 
   /// Register a custom executor
