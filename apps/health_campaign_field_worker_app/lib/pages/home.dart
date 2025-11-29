@@ -141,12 +141,12 @@ class _HomePageState extends LocalizedState<HomePage> {
       'facilityToWhich',
       (context, stateAccessor) {
         // Access data from any page in the flow
-        final stockData = stateAccessor.getPageData('MANAGESTOCK');
+        final stockData = stateAccessor.getPageData('manageStock');
 
         // Build your component with access to all this data
         return FacilityCard(
           stateData: stockData,
-          schemaName: 'MANAGESTOCK',
+          schemaName: 'RECORDSTOCK',
           formKey: 'facilityToWhich',
           dependantFormKey: 'teamCode',
         );
@@ -161,7 +161,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         // Build your component with access to all this data
         return FacilityCard(
           stateData: stockData,
-          schemaName: 'MANAGESTOCK',
+          schemaName: 'RECORDSTOCK',
           formKey: 'facilityFromWhich',
           dependantFormKey: 'deliveryTeam',
         );
@@ -176,7 +176,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         // Build your component with access to all this data
         return ProductSelectionCard(
           stateData: stockData,
-          pageSchema: 'MANAGESTOCK',
+          pageSchema: 'RECORDSTOCK',
         );
       },
     );
