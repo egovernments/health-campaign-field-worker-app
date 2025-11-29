@@ -363,8 +363,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                                   contextValue)!),
                                           description: localizations.translate(
                                               _resolveTemplate(
-                                                      schema.showAlertPopUp
-                                                          ?.description,
+                                                     translateIfPresent ( schema.showAlertPopUp
+                                                          ?.description, localizations),
                                                       schema.showAlertPopUp
                                                           ?.conditions,
                                                       contextValue) ??
