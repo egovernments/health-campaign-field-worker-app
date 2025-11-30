@@ -139,8 +139,7 @@ String interpolateWithCrudStates({
             );
           }).toList();
 
-    return FunctionRegistry.call(fnName, resolvedArgs, stateData)?.toString() ??
-        '';
+    return FunctionRegistry.call(fnName, resolvedArgs, stateData)?.toString() ?? '';
   });
 
   // --- Normal placeholder resolution ---
@@ -149,7 +148,7 @@ String interpolateWithCrudStates({
     r'(?:\.([\w.]+))?\s*\}\}',
   );
 
-  return template.replaceAllMapped(regex, (match) {
+  template = template.replaceAllMapped(regex, (match) {
     final source = match.group(1);
     final modelNameOrKey = match.group(2);
     final fieldPath = match.group(3);
@@ -207,6 +206,41 @@ String interpolateWithCrudStates({
 
     return '';
   });
+
+  // --- Fallback: Handle modelName.index.field patterns like individual.0.dateOfBirth ---
+  final modelPathRegex = RegExp(r'\{\{\s*([a-zA-Z_]\w*)\.(\d+)(?:\.([a-zA-Z_][\w.]*))?\s*\}\}');
+  template = template.replaceAllMapped(modelPathRegex, (match) {
+    final modelName = match.group(1)!;
+    final indexStr = match.group(2)!;
+    final fieldPath = match.group(3);
+
+    // Special handling for contextData - use rawState directly
+    if (modelName == 'contextData') {
+      final idx = int.tryParse(indexStr) ?? 0;
+      if (idx < 0 || idx >= stateData.rawState.length) return '';
+
+      final contextItem = stateData.rawState[idx];
+      if (fieldPath == null) return contextItem?.toString() ?? '';
+
+      final resolved = traverse(contextItem, fieldPath);
+      return resolved?.toString() ?? '';
+    }
+
+    final models = stateData.modelMap[modelName];
+    if (models == null || models is! List) return match.group(0)!;
+
+    // Use listIndex if available, otherwise use the index from the template
+    final idx = listIndex ?? int.tryParse(indexStr) ?? 0;
+    if (idx < 0 || idx >= models.length) return '';
+
+    final model = models[idx];
+    if (fieldPath == null) return model?.toString() ?? '';
+
+    final resolved = traverse(model, fieldPath);
+    return resolved?.toString() ?? '';
+  });
+
+  return template;
 }
 
 String getEntityKey(dynamic entity) {
@@ -268,8 +302,8 @@ Map<String, dynamic> preprocessConfigWithState(
         }
 
         result[key] = value; // keep actionType as is
-      } else if (key == "visible" && value is String && value.contains('{{')) {
-        // Preprocess visible property with listIndex for correct resolution
+      } else if ((key == "visible" || key == "disabled") && value is String && value.contains('{{')) {
+        // Preprocess visible/disabled property with listIndex for correct resolution
         // Only preprocess if listIndex is provided, otherwise keep original
         // to be processed later when listIndex is available
         if (listIndex != null) {

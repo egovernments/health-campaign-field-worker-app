@@ -22,6 +22,7 @@ class ButtonWidget implements FlowWidget {
     void Function(ActionConfig) onAction,
   ) {
     final crudCtx = CrudItemContext.of(context);
+    final crudStateData = crudCtx?.stateData;
     final stateData = (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
         ? crudCtx.item
         : crudCtx?.stateData?.rawState != null &&
@@ -39,27 +40,54 @@ class ButtonWidget implements FlowWidget {
     final evalContext = {
       'item': crudCtx?.item,
       'contextData': crudCtx?.stateData?.rawState ?? {},
+      ...crudStateData?.modelMap ?? {},
     };
-    // Check visibility condition
-    final visible = ConditionalEvaluator.evaluate(
-      json['visible'] ?? true,
-      evalContext,
-    );
 
-    if (visible == false) {
-      return const SizedBox.shrink();
+    // Check visibility condition
+    if (json['visible'] != null) {
+      final visible = ConditionalEvaluator.evaluate(
+        json['visible'],
+        evalContext,
+        stateData: crudStateData,
+      );
+      if (visible == false) {
+        return const SizedBox.shrink();
+      }
     }
+
+    // Check disabled condition
+    bool isDisabled = false;
+    if (json['disabled'] != null) {
+      final disabledResult = ConditionalEvaluator.evaluate(
+        json['disabled'],
+        evalContext,
+        stateData: crudStateData,
+      );
+      isDisabled = disabledResult == true;
+    }
+
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
     final localization = LocalizationContext.maybeOf(context);
 
     // Localize first, then resolve template
     final labelText = json['label'] ?? '';
     final localizedLabel = localization?.translate(labelText) ?? labelText;
-    final resolvedLabel =
-        resolveTemplate(localizedLabel, stateData) ?? localizedLabel;
+
+    // Use interpolateWithCrudStates for proper contextData resolution
+    String resolvedLabel = localizedLabel;
+    if (crudStateData != null && localizedLabel.contains('{{')) {
+      resolvedLabel = interpolateWithCrudStates(
+        template: localizedLabel,
+        stateData: crudStateData,
+        item: crudCtx?.item,
+      );
+    } else if (stateData != null) {
+      resolvedLabel = resolveTemplate(localizedLabel, stateData) ?? localizedLabel;
+    }
 
     return DigitButton(
       label: resolvedLabel,
+      isDisabled: isDisabled,
       onPressed: () {
         if (json['onAction'] != null) {
           final actionsList = List<Map<String, dynamic>>.from(json['onAction']);

@@ -66,6 +66,7 @@ import '../widgets/resource_card/custom_resource_card.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
 import '../widgets/stock_reconciliation/stock_reconciliation_card.dart';
+import '../widgets/task_functions.dart';
 
 @RoutePage()
 class HomePage extends LocalizedStatefulWidget {
@@ -226,7 +227,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       return formattedUniqueId;
     });
-
+    registerTaskFunctions();
     FunctionRegistry.register('getQuantityLabel', (args, stateData) {
       if (args.isEmpty) return 'Quantity received';
 
@@ -838,30 +839,30 @@ class _HomePageState extends LocalizedState<HomePage> {
               dynamicEntityModelListener: EntityModelMapMapper(),
             );
             try {
-              if (schemaJsonRaw != null) {
-                final allSchemas =
-                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                final manageStock = allSchemas['REGISTRATION'];
-
-                final manageStockData = manageStock?['data'];
-                final flowsData = (manageStockData['flows'] as List<dynamic>?)
-                        ?.map((e) => Map<String, dynamic>.from(e as Map))
-                        .toList() ??
-                    [];
-                FlowRegistry.setConfig(flowsData);
-                NavigationRegistry.setupNavigation(context);
-
-                context.router.push(
-                  FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
-                );
-              } else {
-                FlowRegistry.setConfig(
-                    sampleFlows["flows"] as List<Map<String, dynamic>>);
-                NavigationRegistry.setupNavigation(context);
-                context.router.push(
-                  FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
-                );
-              }
+              // if (schemaJsonRaw != null) {
+              //   final allSchemas =
+              //       json.decode(schemaJsonRaw) as Map<String, dynamic>;
+              //   final manageStock = allSchemas['REGISTRATION'];
+              //
+              //   final manageStockData = manageStock?['data'];
+              //   final flowsData = (manageStockData['flows'] as List<dynamic>?)
+              //           ?.map((e) => Map<String, dynamic>.from(e as Map))
+              //           .toList() ??
+              //       [];
+              //   FlowRegistry.setConfig(flowsData);
+              //   NavigationRegistry.setupNavigation(context);
+              //
+              //   context.router.push(
+              //     FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
+              //   );
+              // } else {
+              FlowRegistry.setConfig(
+                  sampleFlows["flows"] as List<Map<String, dynamic>>);
+              NavigationRegistry.setupNavigation(context);
+              context.router.push(
+                FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
+              );
+              // }
             } catch (e) {
               debugPrint('error $e');
             }

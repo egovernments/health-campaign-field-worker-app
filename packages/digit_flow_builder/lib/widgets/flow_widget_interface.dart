@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../action_handler/action_config.dart';
 import '../utils/conditional_evaluator.dart';
+import '../utils/interpolation.dart';
 import '../widget_registry.dart';
 
 /// Base interface for all flow widgets
@@ -35,6 +36,7 @@ class FlowWidgetFactory {
     // Handle visibility check at factory level before building widget
     final crudCtx = CrudItemContext.of(context);
     final modelMap = crudCtx?.stateData?.modelMap ?? {};
+    final stateData = crudCtx?.stateData;
 
     // Create evaluation context that includes modelMap for named entity access
     final evalContext = {
@@ -47,6 +49,7 @@ class FlowWidgetFactory {
     final visible = ConditionalEvaluator.evaluate(
       json['visible'] ?? true,
       evalContext,
+      stateData: stateData,
     );
 
     if (visible == false) {

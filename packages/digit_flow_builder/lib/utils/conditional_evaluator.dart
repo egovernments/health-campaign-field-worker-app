@@ -3,6 +3,7 @@ import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:flutter/material.dart';
 
 import '../widget_registry.dart';
+import 'interpolation.dart';
 
 /// Universal conditional evaluator for any widget property
 class ConditionalEvaluator {
@@ -14,14 +15,16 @@ class ConditionalEvaluator {
   /// Evaluates a value that might be conditional
   /// If it's a conditional config, evaluates it; otherwise returns as-is
   /// IMPORTANT: This method is PURE - it never modifies the input value
-  static dynamic evaluate(dynamic value, dynamic context, {String? screenKey}) {
+  static dynamic evaluate(dynamic value, dynamic context,
+      {String? screenKey, CrudStateData? stateData}) {
     // Handle string expressions with templates/functions (e.g., "{{fn:hasRole('ADMIN')}} == true")
     if (value is String) {
       String resolved = value;
 
       // If it contains templates, resolve them first
       if (value.contains('{{')) {
-        resolved = resolveTemplate(value, context, screenKey: screenKey);
+        resolved = resolveTemplate(value, context,
+            screenKey: screenKey, stateData: stateData);
       }
 
       // If the resolved string looks like a boolean expression, evaluate it
@@ -31,7 +34,7 @@ class ConditionalEvaluator {
           resolved.contains('<') ||
           resolved.contains('&&') ||
           resolved.contains('||')) {
-        return evaluateExpression(resolved, context);
+        return evaluateExpression(resolved, context, stateData: stateData);
       }
 
       // Handle simple boolean string values
@@ -58,22 +61,28 @@ class ConditionalEvaluator {
         final whenExpr = condition['when'] as String?;
         final conditionValue = condition['value'];
 
-        if (whenExpr != null && evaluateExpression(whenExpr, context ?? {})) {
+        if (whenExpr != null &&
+            evaluateExpression(whenExpr, context ?? {}, stateData: stateData)) {
           // Recursively evaluate if the value itself is conditional
-          return evaluate(conditionValue, context, screenKey: screenKey);
+          return evaluate(conditionValue, context,
+              screenKey: screenKey, stateData: stateData);
         }
       }
     }
 
     // Return default value (also evaluate if it's conditional)
-    return evaluate(defaultValue, context, screenKey: screenKey);
+    return evaluate(defaultValue, context,
+        screenKey: screenKey, stateData: stateData);
   }
 
   /// Evaluates a boolean expression using FormulaParser
-  static bool evaluateExpression(String expression, dynamic context) {
+  static bool evaluateExpression(String expression, dynamic context,
+      {CrudStateData? stateData}) {
     try {
       // First resolve any template variables in the expression
-      final resolved = resolveTemplate(expression, context) ?? expression;
+      final resolved =
+          resolveTemplate(expression, context, stateData: stateData) ??
+              expression;
 
       // Use FormulaParser to evaluate the resolved expression
       final parser = FormulaParser(
@@ -171,6 +180,7 @@ class ConditionalEvaluator {
       json['visible'] ?? true,
       evalContext,
       screenKey: screenKey,
+      stateData: crudCtx?.stateData,
     );
 
     print('🔍 buildWithVisibility: visible result = $visible');

@@ -117,7 +117,7 @@ final dynamic sampleFlows = {
                 "type": "FORM",
                 "name": "HOUSEHOLD",
                 "data": [
-                  {"key": "nameOfIndividual", "value": "searchBar.value"}
+                  {"key": "nameOfIndividual", "value": "{{searchBar.value}}"}
                 ]
               }
             }
@@ -1308,6 +1308,8 @@ final dynamic sampleFlows = {
                   },
                   {
                     "format": "button",
+                    "visible":
+                        "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}} == true",
                     "properties": {
                       "type": "primary",
                       "size": "medium",
@@ -2120,25 +2122,26 @@ final dynamic sampleFlows = {
               "operator": "equals",
               "right": "{{currentRunningCycle}}"
             },
-            "map": "{{deliveries.length}}",
+            "select": "{{deliveries.length}}",
+            "takeFirst": true,
             "default": 0
           },
           "nextDoseId": {
             "condition": {
               "if": {
-                "left": "{{dose}}",
+                "left": {"operation": "increment", "value": "{{dose}}"},
                 "operator": "lt",
                 "right": "{{deliveryLength}}"
               },
               "then": {"operation": "increment", "value": "{{dose}}"},
-              "else": "{{deliveryLength}}"
+              "else": 0
             },
             "fallback": 0
           },
           "nextCycleId": {
             "condition": {
               "if": {
-                "left": "{{dose}}",
+                "left": {"operation": "increment", "value": "{{dose}}"},
                 "operator": "lt",
                 "right": "{{deliveryLength}}"
               },
@@ -2292,24 +2295,28 @@ final dynamic sampleFlows = {
                       "@condition": [
                         {
                           "when":
-                              "{{currentItem.id}} < {{contextData.nextDoseId}}",
+                              "{{currentItem.id}} <= {{contextData.0.dose}}",
                           "value": "Administered"
                         },
                         {
                           "when":
-                              "{{currentItem.id}} == {{contextData.nextDoseId}}",
+                              "{{currentItem.id}} == {{contextData.0.nextDoseId}}",
                           "value": "To be administered"
                         },
                         {
                           "when":
-                              "{{currentItem.id}} > {{contextData.nextDoseId}}",
-                          "value": "InComplete"
+                              "{{currentItem.id}} > {{contextData.0.nextDoseId}}",
+                          "value": "Pending"
                         }
                       ],
                       "@default": "Unknown"
                     }
                   },
-                  {"header": "Completed On", "cellValue": ""}
+                  {
+                    "header": "Completed On",
+                    "cellValue":
+                        "{{fn:getTaskCompletionDate(currentItem.id, contextData.0.cycle)}}"
+                  }
                 ],
                 "rows": "{{contextData.0.targetCycle.0.deliveries}}"
               }
@@ -2320,7 +2327,9 @@ final dynamic sampleFlows = {
       "footer": [
         {
           "format": "button",
-          "label": "Record Cycle {{nextCycleId}} Dose {{dose}}",
+          "label":
+              "Record Cycle {{contextData.0.nextCycleId}} Dose {{contextData.0.nextDoseId}}",
+          "visible": "{{fn:canRecordDelivery(contextData.0.nextCycleId)}}",
           "properties": {
             "type": "primary",
             "size": "large",
@@ -2343,8 +2352,11 @@ final dynamic sampleFlows = {
                     "key": "HouseholdClientReferenceId",
                     "value": "{{household.HouseholdModel.clientReferenceId}}"
                   },
-                  {"key": "cycleIndex", "value": "{{nextCycleId}}"},
-                  {"key": "doseIndex", "value": "{{nextDoseId}}"}
+                  {
+                    "key": "cycleIndex",
+                    "value": "{{contextData.0.nextCycleId}}"
+                  },
+                  {"key": "doseIndex", "value": "{{contextData.0.nextDoseId}}"}
                 ]
               }
             }

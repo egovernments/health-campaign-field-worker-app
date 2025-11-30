@@ -197,6 +197,7 @@ String resolveTemplate(
   dynamic contextData, {
   String? screenKey,
   dynamic localization,
+  CrudStateData? stateData,
 }) {
   if (!template.contains('{{')) {
     // No template placeholders, try to translate as localization key
@@ -250,8 +251,8 @@ String resolveTemplate(
     final placeholder = match.group(1)!.trim();
 
     // Use existing resolveValueRaw to resolve the individual placeholder
-    final resolvedValue =
-        resolveValueRaw('{{$placeholder}}', contextData, screenKey: screenKey);
+    final resolvedValue = resolveValueRaw('{{$placeholder}}', contextData,
+        screenKey: screenKey, stateData: stateData);
 
     // Replace the placeholder in the result string
     // For null values, use the string "null" so expressions like "x != null" work
@@ -283,7 +284,9 @@ String _translateWithLocalization(String text, dynamic localization) {
 
 /// New method: returns actual type (int, double, bool, list, map, entity, etc.)
 dynamic resolveValueRaw(dynamic value, dynamic contextData,
-    {Map<String, dynamic>? widgetData, String? screenKey}) {
+    {Map<String, dynamic>? widgetData,
+    String? screenKey,
+    CrudStateData? stateData}) {
   if (value is String) {
     final interpolationRegex = RegExp(r'^\{\{(.+?)\}\}$');
     final match = interpolationRegex.firstMatch(value.trim());
@@ -370,13 +373,15 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
                   // dotted paths (item.field), and prefixed paths (navigation.x)
                   final placeholder = '{{ $trimmed }}';
                   return resolveValueRaw(placeholder, contextData,
-                      widgetData: widgetData, screenKey: screenKey);
+                      widgetData: widgetData,
+                      screenKey: screenKey,
+                      stateData: stateData);
                 }).toList();
 
           return FunctionRegistry.call(
             fnName,
             resolvedArgs,
-            CrudStateData({}, []),
+            stateData ?? CrudStateData({}, []),
           );
         }
       }

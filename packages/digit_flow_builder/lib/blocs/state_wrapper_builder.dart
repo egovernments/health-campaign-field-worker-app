@@ -702,12 +702,12 @@ Map<String, dynamic> _applyComputed(
       if (hasQueryOps) {
         results[key] = WrapperBuilder([], {})._evaluateFieldMap(
           Map<String, dynamic>.from(conf),
-          wrapperData[config['rootEntity']], // root entity
-          wrapperData,
+          context[config['rootEntity']] ?? wrapperData[config['rootEntity']], // root entity
+          context, // Use context instead of wrapperData to access previously computed values
         );
       } else {
         results[key] =
-            resolveValueRaw(conf['from'], wrapperData) ?? conf['fallback'];
+            resolveValueRaw(conf['from'], context) ?? conf['fallback'];
       }
     } else {
       results[key] = conf['fallback'];
@@ -1029,7 +1029,14 @@ class ConditionEvaluator {
       Map<String, dynamic> context, Map<String, dynamic> conf) {
     // Handle conditional operations (if-then-else)
     if (conf.containsKey('if') && conf.containsKey('then')) {
-      final conditionResult = resolve(context, conf['if']);
+      final ifCondition = conf['if'];
+      // If 'if' is a comparison object, evaluate it recursively
+      dynamic conditionResult;
+      if (ifCondition is Map<String, dynamic> && ifCondition.containsKey('operator')) {
+        conditionResult = evaluate(context, ifCondition);
+      } else {
+        conditionResult = resolve(context, ifCondition);
+      }
       final isTruthy = _isTruthy(conditionResult);
 
       if (isTruthy) {
@@ -1041,8 +1048,9 @@ class ConditionEvaluator {
     }
 
     // Handle comparison operations
-    final left = resolve(context, conf['left']);
-    final right = resolve(context, conf['right']);
+    // Use _processOperation to handle increment/decrement operations in left/right
+    final left = _processOperation(context, conf['left']);
+    final right = _processOperation(context, conf['right']);
 
     switch (conf['operator']) {
       case 'equals':

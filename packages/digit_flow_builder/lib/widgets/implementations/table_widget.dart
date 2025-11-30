@@ -132,7 +132,10 @@ class TableWidget implements FlowWidget {
     if (sourceList.isEmpty) return const SizedBox.shrink();
 
     // Prepare contextData from rawState for conditions that need global state access
-    final rawState = crudCtx?.stateData?.rawState;
+    final rawState = crudCtx?.stateData?.rawState ?? [];
+    // Keep as list for {{contextData.0.field}} access pattern
+    final contextDataList = rawState is List ? rawState : [rawState];
+    // Also provide first item as map for backward compatibility
     final contextDataMap = (rawState is List && rawState.isNotEmpty)
         ? (rawState.first is Map
             ? Map<String, dynamic>.from(rawState.first as Map)
@@ -144,13 +147,16 @@ class TableWidget implements FlowWidget {
 
       // Build evaluation context for cell values
       // - For simple templates like {{item.id}}, rowItem is used directly
-      // - For conditions needing global state like {{contextData.dose}}, we provide contextDataMap
+      // - For conditions needing global state like {{contextData.0.dose}}, we provide contextDataList
       final cellEvalContext = {
         'currentItem': rowItem,
         'item': rowItem,
-        'contextData': contextDataMap,
+        'contextData': contextDataList,
         ...modelMap,
         ...formData,
+        // Also spread contextDataMap for direct access like {{contextData.dose}}
+        // when used without index (backward compatibility)
+        ...contextDataMap,
       };
 
       return DigitTableRow(
@@ -161,14 +167,21 @@ class TableWidget implements FlowWidget {
           // Get the raw cellValue configuration
           final rawCellValue = colConfig['cellValue'];
 
-          // Use enhanced context for conditional cellValues, simple rowItem for plain templates
-          final isConditional =
-              rawCellValue is Map && rawCellValue.containsKey('@condition');
-          final evalContext = isConditional ? cellEvalContext : rowItem;
+          // Use enhanced context for:
+          // 1. Conditional cellValues (@condition)
+          // 2. Function calls (fn:)
+          // 3. References to currentItem or contextData
+          final needsEnhancedContext = rawCellValue is Map && rawCellValue.containsKey('@condition') ||
+              (rawCellValue is String &&
+                (rawCellValue.contains('{{fn:') ||
+                 rawCellValue.contains('{{currentItem') ||
+                 rawCellValue.contains('{{contextData')));
+          final evalContext = needsEnhancedContext ? cellEvalContext : rowItem;
 
           final cellValue = ConditionalEvaluator.evaluate(
               rawCellValue, evalContext,
-              screenKey: screenKey);
+              screenKey: screenKey,
+              stateData: stateData);
 
           // cellValue should already be resolved by ConditionalEvaluator
           // Just convert to string

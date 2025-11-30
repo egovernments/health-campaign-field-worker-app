@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/project_type.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 import 'interpolation.dart';
@@ -471,5 +472,65 @@ void initializeFunctionRegistry() {
       }
     }
     return '';
+  });
+
+  /// Registers a function to check if delivery can be recorded.
+  ///
+  /// - **Function Name**: `'canRecordDelivery'`
+  /// - **Arguments**:
+  ///   - First argument: nextCycleId - the next cycle to record
+  ///   - Second argument: nextDoseId - the next dose to record
+  /// - **Returns**: `true` if delivery can be recorded, `false` if all cycles/doses are completed.
+  ///
+  /// This function checks if the next cycle is within the valid range of cycles
+  /// and if delivery recording is allowed based on the current project configuration.
+  FunctionRegistry.register("canRecordDelivery", (args, stateData) {
+    final projectType = FlowBuilderSingleton().projectType;
+    if (projectType == null || projectType.cycles == null) {
+      return true; // Default to true if no project config
+    }
+
+    final cycles = projectType.cycles!;
+    final totalCycles = cycles.length;
+    if (totalCycles == 0) {
+      return true;
+    }
+
+    // Get nextCycleId from args
+    final nextCycleIdArg = args.isNotEmpty ? args[0] : null;
+    final nextCycleId = nextCycleIdArg is int
+        ? nextCycleIdArg
+        : int.tryParse(nextCycleIdArg?.toString() ?? '');
+
+    if (nextCycleId == null) {
+      return true; // Default to true if can't parse
+    }
+
+    // Check if nextCycleId exceeds total cycles (all cycles completed)
+    if (nextCycleId > totalCycles) {
+      return false;
+    }
+
+    // Check if the next cycle has started (date validation)
+    // Cycle IDs are 1-indexed, so subtract 1 to get array index
+    final cycleIndex = nextCycleId - 1;
+    if (cycleIndex >= 0 && cycleIndex < cycles.length) {
+      final nextCycle = cycles[cycleIndex];
+      final now = DateTime.now().millisecondsSinceEpoch;
+      final cycleStartDate = nextCycle.startDate ?? 0;
+      final cycleEndDate = nextCycle.endDate ?? 0;
+
+      // Check if current time is within the cycle's date range
+      if (now < cycleStartDate) {
+        // Cycle hasn't started yet
+        return false;
+      }
+      if (now > cycleEndDate) {
+        // Cycle has ended
+        return false;
+      }
+    }
+
+    return true;
   });
 }
