@@ -12,19 +12,21 @@ import 'package:referral_reconciliation/utils/utils.dart';
 import 'package:referral_reconciliation/widgets/localized.dart';
 
 class EvaluationKeyDropDown extends LocalizedStatefulWidget {
+  final String schemaName;
   const EvaluationKeyDropDown({
     super.key,
     super.appLocalizations,
+    required this.schemaName,
   });
 
   @override
-  State<EvaluationKeyDropDown> createState() => _EvaluationKeyDropDownState();
+  _EvaluationKeyDropDownState createState() => _EvaluationKeyDropDownState();
 }
 
 class _EvaluationKeyDropDownState
     extends LocalizedState<EvaluationKeyDropDown> {
   static const _evaluationKey = 'evaluationFacility';
-  static const _schemaKey = 'REFERRAL_CREATE';
+ // Fixed the unnamed constructor issue
 
   @override
   void initState() {
@@ -55,7 +57,7 @@ class _EvaluationKeyDropDownState
     String? labelFromSchema;
 
     final pages =
-        context.read<FormsBloc>().state.cachedSchemas[_schemaKey]?.pages;
+        context.read<FormsBloc>().state.cachedSchemas[widget.schemaName]?.pages;
 
     void walk(Map<String, PropertySchema> node, List<String> pathSoFar) {
       for (final entry in node.entries) {
@@ -108,7 +110,7 @@ class _EvaluationKeyDropDownState
               context.read<FormsBloc>().add(
                     FormsEvent.updateField(
                       context: context,
-                      schemaKey: _schemaKey,
+                      schemaKey: widget.schemaName,
                       key: _evaluationKey,
                       value: val.code,
                     ),
