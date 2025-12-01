@@ -10,7 +10,7 @@ import '../flow_widget_interface.dart';
 
 class DropdownWidget implements FlowWidget {
   @override
-  String get format => 'dropdown';
+  String get format => 'dropdownTemplate';
 
   @override
   Widget build(
@@ -84,8 +84,8 @@ class DropdownWidget implements FlowWidget {
             };
 
             // Resolve from navigation params
-            sourceData =
-                resolveValueRaw("{{ $cleanKey }}", contextData, screenKey: screenKey);
+            sourceData = resolveValueRaw("{{ $cleanKey }}", contextData,
+                screenKey: screenKey);
 
             // Cache the navigation data in formData to survive state updates
             // IMPORTANT: Defer this until after the build phase completes to avoid setState during build
