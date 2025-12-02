@@ -127,7 +127,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       'evaluationFacility',
       (context, stateAccessor) {
         // Build your component with access to all this data
-        return const EvaluationKeyDropDown();
+        return const EvaluationKeyDropDown(
+          schemaName: "REFER_BENEFICIARY",
+        );
       },
     );
 
