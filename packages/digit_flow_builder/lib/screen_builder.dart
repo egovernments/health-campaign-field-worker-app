@@ -93,8 +93,13 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
       builder: (context, crudState) {
         return BlocListener<FormsBloc, FormsState>(
           listener: (context, state) async {
+            debugPrint('SCREEN_BUILDER: FormsBloc state changed: ${state.runtimeType}');
+            if (state is FormsSubmittedState) {
+              debugPrint('SCREEN_BUILDER: FormsSubmittedState - activeSchemaKey=${state.activeSchemaKey}, config name=${widget.config['name']}');
+            }
             if (state is FormsSubmittedState &&
                 widget.config['name'] == state.activeSchemaKey) {
+              debugPrint('SCREEN_BUILDER: Matched! Executing onAction...');
               // final config = FlowRegistry.getByName(state.schema[]);///////
               final onSubmit = widget.config['onAction'] as List<dynamic>?;
 
@@ -102,6 +107,9 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
                 'formData': state.formData,
                 'navigation': widget.navigationParams ?? {},
               };
+
+              debugPrint('SCREEN_BUILDER: onSubmit actions count: ${onSubmit?.length ?? 0}');
+              debugPrint('SCREEN_BUILDER: navigation params: ${widget.navigationParams}');
 
               if (onSubmit != null) {
                 context.read<FormsBloc>().add(

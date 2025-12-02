@@ -125,7 +125,7 @@ class ReverseTransformerExecutor extends ActionExecutor {
         FlowCrudStateRegistry().update(currentScreenKey, updatedState);
       }
 
-      // Return updated context with form data
+      // Return updated context with form data and existing models for update
       return {
         ...contextData,
         'formData': {
@@ -133,6 +133,8 @@ class ReverseTransformerExecutor extends ActionExecutor {
           ...formData,
         },
         'reverseTransformResult': formData,
+        // Pass existing models for updateEntitiesFromForm in edit mode
+        'existingModels': modelInstances,
       };
     } catch (e, stackTrace) {
       debugPrint('REVERSE_TRANSFORM: Error: $e');

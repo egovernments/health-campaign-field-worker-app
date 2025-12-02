@@ -22,13 +22,15 @@ class FormulaParser {
         _isReservedWordsUsed = true;
         _reservedWordsUsed.add(key);
       } else {
-        // ⭐ FIX: ALWAYS wrap string values in quotes
+        // ⭐ FIX: Handle different value types appropriately
         String safeValue;
 
         if (value == null || value.toString().isEmpty) {
           safeValue = '""';
         } else if (value is num || value == "null") {
           safeValue = value.toString(); // keep raw numbers
+        } else if (value is bool) {
+          safeValue = value.toString().toUpperCase(); // TRUE or FALSE (unquoted)
         } else {
           final clean = value.toString().replaceAll('"', '');
           safeValue = '"$clean"'; // wrap strings in quotes

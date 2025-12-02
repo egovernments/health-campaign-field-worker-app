@@ -1266,12 +1266,24 @@ final dynamic sampleFlows = {
                         },
                         "onAction": [
                           {
+                            "actionType": "REVERSE_TRANSFORM",
+                            "properties": {
+                              "configName": "individualRegistration",
+                              "entityTypes": ["IndividualModel"]
+                            }
+                          },
+                          {
                             "actionType": "NAVIGATION",
                             "properties": {
-                              "type": "TEMPLATE",
-                              "name": "editBeneficiary",
+                              "type": "FORM",
+                              "name": "ADD_MEMBER",
                               "data": [
-                                {"key": "id", "value": "{{item.id}}"}
+                                {
+                                  "key": "HouseholdClientReferenceId",
+                                  "value":
+                                      "{{ context.household.clientReferenceId }}"
+                                },
+                                {"key": "isEdit", "value": "true"}
                               ]
                             }
                           }
@@ -1661,16 +1673,22 @@ final dynamic sampleFlows = {
           }
         },
         {
-          "actionType": "CREATE_EVENT",
-          "properties": {
-            "entity": "INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to create household."}
-              }
-            ]
-          }
+          "condition": {"expression": "isEdit == true"},
+          "actions": [
+            {
+              "actionType": "UPDATE_EVENT",
+              "properties": {"entity": "INDIVIDUAL"}
+            }
+          ]
+        },
+        {
+          "condition": {"expression": "DEFAULT"},
+          "actions": [
+            {
+              "actionType": "CREATE_EVENT",
+              "properties": {"entity": "INDIVIDUAL, PROJECTBENEFICIARY, MEMBER"}
+            }
+          ]
         },
         {
           "actionType": "NAVIGATION",
@@ -1686,7 +1704,7 @@ final dynamic sampleFlows = {
             "data": [
               {
                 "key": "HouseholdClientReferenceId",
-                "value": "{{contextData.navigation.HouseholdClientReferenceId}}"
+                "value": "{{navigation.HouseholdClientReferenceId}}"
               }
             ]
           }
@@ -5419,54 +5437,11 @@ final dynamic sampleInventoryFlows = {
           "description": "INVENTORY_RECORD_STOCK_RECEIPT_DESCRIPTION",
           "icon": 'FileUpload',
           "onAction": [
-            // {
-            //   "actionType": "OPEN_SCANNER",
-            //   "properties": {
-            //     "scanType": "qr",
-            //     "fieldName": "scannedMrn",
-            //     "singleValue": true,
-            //     "quantity": 1,
-            //     "isGS1code": false,
-            //     "onSuccess": [
-            //       {
-            //         "actionType": "SEARCH_EVENT",
-            //         "properties": {
-            //           "type": "SEARCH_EVENT",
-            //           "name": "stock",
-            //           "data": [
-            //             {
-            //               "key": "additionalFields",
-            //               "value": "259C-F0D7-1769",
-            //               "operation": "contains"
-            //             }
-            //           ]
-            //         }
-            //       },
-            //       {
-            //         "actionType": "NAVIGATION",
-            //         "properties": {
-            //           "type": "FORM",
-            //           "name": "MANAGESTOCK",
-            //           "data": [
-            //             {"key": "stockEntryType", "value": "RECEIPT"},
-            //             {"key": "transactionType", "value": "RECEIVED"},
-            //             {
-            //               "key": "mrnNumber",
-            //               "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
-            //             },
-            //             {"key": "scannedMrn", "value": "{{scannedMrn}}"},
-            //             {"key": "prefillFromScan", "value": "true"}
-            //           ]
-            //         }
-            //       }
-            //     ]
-            //   }
-            // },
             {
               "actionType": "NAVIGATION",
               "properties": {
                 "type": "FORM",
-                "name": "MANAGESTOCK",
+                "name": "RECORDSTOCK",
                 "data": [
                   {"key": "stockEntryType", "value": "RECEIPT"},
                   {"key": "transactionType", "value": "RECEIVED"},
@@ -5489,7 +5464,7 @@ final dynamic sampleInventoryFlows = {
               "actionType": "NAVIGATION",
               "properties": {
                 "type": "FORM",
-                "name": "MANAGESTOCK",
+                "name": "RECORDSTOCK",
                 "data": [
                   {"key": "stockEntryType", "value": "ISSUED"},
                   {"key": "transactionType", "value": "DISPATCHED"},
@@ -5512,7 +5487,7 @@ final dynamic sampleInventoryFlows = {
               "actionType": "NAVIGATION",
               "properties": {
                 "type": "FORM",
-                "name": "MANAGESTOCK",
+                "name": "RECORDSTOCK",
                 "data": [
                   {"key": "stockEntryType", "value": "RETURNED"},
                   {"key": "transactionType", "value": "RECEIVED"},
@@ -5536,7 +5511,7 @@ final dynamic sampleInventoryFlows = {
               "actionType": "NAVIGATION",
               "properties": {
                 "type": "FORM",
-                "name": "MANAGESTOCK",
+                "name": "RECORDSTOCK",
                 "data": [
                   {"key": "stockEntryType", "value": "DAMAGED"},
                   {"key": "transactionType", "value": "DISPATCHED"},
@@ -5560,7 +5535,7 @@ final dynamic sampleInventoryFlows = {
               "actionType": "NAVIGATION",
               "properties": {
                 "type": "FORM",
-                "name": "MANAGESTOCK",
+                "name": "RECORDSTOCK",
                 "data": [
                   {"key": "stockEntryType", "value": "LOSS"},
                   {"key": "transactionType", "value": "DISPATCHED"},
@@ -5577,7 +5552,7 @@ final dynamic sampleInventoryFlows = {
     },
     {
       "screenType": "FORM",
-      "name": "MANAGESTOCK",
+      "name": "RECORDSTOCK",
       "project": "CMP-2025-08-04-004846",
       "version": 1,
       "disabled": false,
@@ -6027,10 +6002,9 @@ final dynamic sampleInventoryFlows = {
               "innerLabel": "",
               "visibilityCondition": {
                 "expression": [
-                  {"condition": "{{navigation.transactionType}} == 'RECEIVED'"},
                   {
                     "condition":
-                        "stockDetails.facilityFromWhich != 'National Warehouse'"
+                        "{{navigation.transactionType}} == 'RECEIVED' && stockDetails.facilityFromWhich != 'National Warehouse'"
                   }
                 ]
               },
@@ -6252,6 +6226,56 @@ final dynamic sampleInventoryFlows = {
           ]
         }
       ],
+      "initActions": [
+        {
+          "actionType": "OPEN_SCANNER",
+          "properties": {
+            "scanType": "qr",
+            "fieldName": "scannedMrn",
+            "singleValue": true,
+            "quantity": 1,
+            "isGS1code": false,
+            "onSuccess": [
+              {
+                "actionType": "SEARCH_EVENT",
+                "properties": {
+                  "type": "SEARCH_EVENT",
+                  "name": "stock",
+                  "awaitResults": true,
+                  "data": [
+                    {
+                      "key": "additionalFields",
+                      "value": "577E-52D8-B4F8",
+                      "operation": "contains"
+                    }
+                  ]
+                }
+              },
+              {
+                "actionType": "REVERSE_TRANSFORM",
+                "properties": {
+                  "configName": "stock",
+                  "entityTypes": ["StockModel"]
+                }
+              },
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "type": "FORM",
+                  "name": "RECORDSTOCK",
+                  "data": [
+                    {"key": "stockEntryType", "value": "RECEIPT"},
+                    {"key": "transactionType", "value": "RECEIVED"},
+                    {"key": "scannedMrn", "value": "577E-52D8-B4F8"},
+                    {"key": "isEdit", "value": "true"},
+                    {"key": "forceCreate", "value": "true"}
+                  ]
+                }
+              }
+            ]
+          }
+        },
+      ],
       "wrapperConfig": {
         "wrapperName": "ScanStockWrapper",
         "groupByType": true,
@@ -6295,7 +6319,7 @@ final dynamic sampleInventoryFlows = {
               "actionType": "NAVIGATION",
               "properties": {
                 "type": "FORM",
-                "name": "MANAGESTOCK",
+                "name": "RECORDSTOCK",
                 "data": [
                   {"key": "stockEntryType", "value": "RECEIPT"},
                   {"key": "transactionType", "value": "RECEIVED"},
