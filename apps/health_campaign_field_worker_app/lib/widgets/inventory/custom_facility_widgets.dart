@@ -254,6 +254,7 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
                       labelFromSchema,
                     )
                   : widget.localizations.translate("SELECT_FACILITY"),
+              capitalizedFirstLetter: false,
               isRequired: true,
               child: DigitDropdown(
                 errorMessage: field.errorText,
