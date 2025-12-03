@@ -124,24 +124,29 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
       // Try to get facility value - check both nested and flat structure
       final facilityValue = formData['warehouseDetails.${widget.formKey}'] ??
           formData[widget.formKey] ??
-          (formData['warehouseDetails'] as Map<String, dynamic>?)?[widget.formKey] ??
+          (formData['warehouseDetails']
+              as Map<String, dynamic>?)?[widget.formKey] ??
           (formData['stockDetails'] as Map<String, dynamic>?)?[widget.formKey];
 
-      debugPrint('FacilityCard: Looking for ${widget.formKey}, found: $facilityValue');
+      debugPrint(
+          'FacilityCard: Looking for ${widget.formKey}, found: $facilityValue');
 
       if (facilityValue != null && facilityValue.toString().isNotEmpty) {
         selectedFacilityId = facilityValue.toString();
         deliveryTeamSelected = selectedFacilityId == 'Delivery Team';
         _initialized = true;
-        _formControlUpdated = false; // Need to update form control when available
-        debugPrint('FacilityCard: Initialized ${widget.formKey} with prefilled value: $selectedFacilityId');
+        _formControlUpdated =
+            false; // Need to update form control when available
+        debugPrint(
+            'FacilityCard: Initialized ${widget.formKey} with prefilled value: $selectedFacilityId');
       }
     }
   }
 
   /// Updates the form control with the prefilled value
   /// This must be called after the form is built and the control is accessible
-  void _updateFormControlIfNeeded(ReactiveFormFieldState<dynamic, dynamic> field) {
+  void _updateFormControlIfNeeded(
+      ReactiveFormFieldState<dynamic, dynamic> field) {
     if (_initialized && !_formControlUpdated && selectedFacilityId != null) {
       // Schedule the update for after the current build
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -160,7 +165,8 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
               ),
             );
 
-        debugPrint('FacilityCard: Updated form control ${widget.formKey} with value: $selectedFacilityId');
+        debugPrint(
+            'FacilityCard: Updated form control ${widget.formKey} with value: $selectedFacilityId');
       });
       _formControlUpdated = true;
     }
@@ -199,6 +205,9 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
 
     final labelFromSchema =
         widget.fieldSchema.label ?? widget.fieldSchema.innerLabel;
+
+    print('Label from Schema');
+    print(labelFromSchema);
 
     // Build facility list with Delivery Team option if applicable
     final facilities = <DropdownItem>[];
@@ -240,9 +249,11 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
             _updateFormControlIfNeeded(field);
 
             return LabeledField(
-              label: widget.localizations.translate(
-                labelFromSchema ?? "Select Facility",
-              ),
+              label: labelFromSchema != null
+                  ? widget.localizations.translate(
+                      labelFromSchema,
+                    )
+                  : widget.localizations.translate("SELECT_FACILITY"),
               isRequired: true,
               child: DigitDropdown(
                 errorMessage: field.errorText,
