@@ -157,11 +157,25 @@ class TransformerExecutor extends ActionExecutor {
         existingModels != null &&
         existingModels.isNotEmpty) {
       debugPrint('TRANSFORMER: Edit mode - using updateEntitiesFromForm');
+      debugPrint('TRANSFORMER: existingModels count before dedup: ${existingModels.length}');
+
+      // Deduplicate existingModels by type first (keep first occurrence)
+      final seenExistingTypes = <String>{};
+      final dedupedExistingModels = existingModels.where((model) {
+        final type = model.runtimeType.toString();
+        if (seenExistingTypes.contains(type)) {
+          debugPrint('TRANSFORMER: Removing duplicate existingModel $type');
+          return false;
+        }
+        seenExistingTypes.add(type);
+        return true;
+      }).toList();
+      debugPrint('TRANSFORMER: existingModels count after dedup: ${dedupedExistingModels.length}');
 
       // Filter modelsConfig to only include models that exist in existingModels
       // This prevents trying to create missing models that reference non-existent entities
       final existingModelTypes =
-          existingModels.map((m) => m.runtimeType.toString()).toSet();
+          dedupedExistingModels.map((m) => m.runtimeType.toString()).toSet();
       debugPrint('TRANSFORMER: existingModelTypes=$existingModelTypes');
 
       final filteredConfig = Map<String, dynamic>.from(transformerConfig)
@@ -169,27 +183,13 @@ class TransformerExecutor extends ActionExecutor {
       debugPrint('TRANSFORMER: filteredConfig keys=${filteredConfig.keys}');
 
       entities = formEntityMapper.updateEntitiesFromForm(
-        existingModels: existingModels,
+        existingModels: dedupedExistingModels,
         formValues: formValuesToUse ?? {},
         modelsConfig: filteredConfig,
         context: contextMap,
       );
 
       debugPrint('TRANSFORMER: updateEntitiesFromForm returned ${entities.length} entities');
-
-      // Deduplicate entities by type (keep first occurrence)
-      final seenTypes = <String>{};
-      entities = entities.where((entity) {
-        final type = entity.runtimeType.toString();
-        if (seenTypes.contains(type)) {
-          debugPrint('TRANSFORMER: Removing duplicate $type');
-          return false;
-        }
-        seenTypes.add(type);
-        return true;
-      }).toList();
-
-      debugPrint('TRANSFORMER: After dedup: ${entities.length} entities');
 
       // Update clientAuditDetails for all updated entities to reflect modification time
       final userUuid = FlowBuilderSingleton().loggedInUser?.uuid;
@@ -220,6 +220,10 @@ class TransformerExecutor extends ActionExecutor {
       }).toList();
 
       debugPrint('TRANSFORMER: Updated ${entities.length} entities with audit details');
+      for (final entity in entities) {
+        final map = entity.toMap();
+        debugPrint('TRANSFORMER: Entity ${entity.runtimeType} - rowVersion: ${map['rowVersion']}, auditDetails: ${map['auditDetails'] != null}, clientAuditDetails: ${map['clientAuditDetails']}');
+      }
     } else if (multiEntityField != null) {
       // Check if multiEntityField is configured
       // Manually traverse the nested path to get the multi-select array

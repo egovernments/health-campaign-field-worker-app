@@ -615,6 +615,12 @@ final dynamic sampleFlows = {
           "type": "object",
           "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_HEADING",
           "order": 3,
+          "conditionalNavigateTo": [
+            {
+              "condition": "isEdit == true",
+              "navigateTo": {"type": "submit", "name": ""}
+            }
+          ],
           "navigateTo": {"name": "beneficiaryDetails", "type": "form"},
           "properties": [
             {
@@ -1202,12 +1208,23 @@ final dynamic sampleFlows = {
                   },
                   "onAction": [
                     {
+                      "actionType": "REVERSE_TRANSFORM",
+                      "properties": {
+                        "configName": "beneficiaryRegistration",
+                        "entityTypes": ["HouseholdModel"]
+                      }
+                    },
+                    {
                       "actionType": "NAVIGATION",
                       "properties": {
                         "type": "FORM",
                         "name": "HOUSEHOLD",
                         "data": [
-                          {"key": "id", "value": "{{item.id}}"}
+                          {
+                            "key": "HouseholdClientReferenceId",
+                            "value": "{{ context.household.clientReferenceId }}"
+                          },
+                          {"key": "isEdit", "value": "true"}
                         ]
                       }
                     }
