@@ -11,6 +11,7 @@ import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
+import '../localization_context.dart';
 
 class TableWidget implements FlowWidget {
   @override
@@ -25,6 +26,7 @@ class TableWidget implements FlowWidget {
     final crudCtx = CrudItemContext.of(context);
     final stateData = crudCtx?.stateData;
     final modelMap = crudCtx?.stateData?.modelMap ?? {};
+    final localization = LocalizationContext.maybeOf(context);
 
     // Get screenKey and navigation params for visibility evaluation
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
@@ -72,7 +74,7 @@ class TableWidget implements FlowWidget {
           resolveTemplate(headerTemplate, formData, screenKey: screenKey);
 
       return DigitTableColumn(
-        header: resolvedHeader,
+        header: localization?.translate(resolvedHeader) ?? resolvedHeader,
         cellValue: cellValue is String ? cellValue : jsonEncode(cellValue),
       );
     }).toList();
@@ -171,17 +173,17 @@ class TableWidget implements FlowWidget {
           // 1. Conditional cellValues (@condition)
           // 2. Function calls (fn:)
           // 3. References to currentItem or contextData
-          final needsEnhancedContext = rawCellValue is Map && rawCellValue.containsKey('@condition') ||
-              (rawCellValue is String &&
-                (rawCellValue.contains('{{fn:') ||
-                 rawCellValue.contains('{{currentItem') ||
-                 rawCellValue.contains('{{contextData')));
+          final needsEnhancedContext =
+              rawCellValue is Map && rawCellValue.containsKey('@condition') ||
+                  (rawCellValue is String &&
+                      (rawCellValue.contains('{{fn:') ||
+                          rawCellValue.contains('{{currentItem') ||
+                          rawCellValue.contains('{{contextData')));
           final evalContext = needsEnhancedContext ? cellEvalContext : rowItem;
 
           final cellValue = ConditionalEvaluator.evaluate(
               rawCellValue, evalContext,
-              screenKey: screenKey,
-              stateData: stateData);
+              screenKey: screenKey, stateData: stateData);
 
           // cellValue should already be resolved by ConditionalEvaluator
           // Just convert to string
