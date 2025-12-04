@@ -803,4 +803,32 @@ final jsonConfig = {
       }
     },
   },
+  "referralBeneficaryCreate": {
+    "fallbackModel": "ReferralModel",
+    "models": {
+      "ReferralModel": {
+        "mappings": {
+          "nonRecoverableError": "referral.nonRecoverable",
+          "clientReferenceId": "__generate:uuid",
+          "rowVersion": "meta.rowVersion",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "projectId": "__context:projectId",
+          "projectBeneficiaryClientReferenceId":
+              "__context:ProjectBeneficiaryClientReferenceId",
+          "recipientType":
+              "__switch:referBeneficiary.evaluationFacility:{Community Health Worker:STAFF,default:__value:FACILITY}",
+          "recipientId":
+              "__switch:referBeneficiary.evaluationFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.evaluationFacility}",
+          "referrerId": "__context:userUUID",
+          "reasons": "collect:referBeneficiary.referralReason",
+          "tenantId": "__context:tenantId",
+          "additionalFields": {
+            "boundaryCode": "facilityDetails.administrativeUnit",
+            "referralComments": "referBeneficiary.referralComments"
+          }
+        }
+      }
+    }
+  }
 };

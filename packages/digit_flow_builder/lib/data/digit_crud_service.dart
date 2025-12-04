@@ -46,6 +46,9 @@ class DigitCrudService extends CrudService {
     } else if (entity is HFReferralModel) {
       return context
           .repository<HFReferralModel, HFReferralSearchModel>(context);
+        } else if (entity is ReferralModel) {
+      return context
+          .repository<ReferralModel, ReferralSearchModel>(context);
     } else {
       return context.repository<EntityModel, EntitySearchModel>(context);
     }
@@ -89,6 +92,8 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
         return PgrServiceModelMapper.fromMap(normalizedMap);
       case 'hFReferral':
         return HFReferralModelMapper.fromMap(normalizedMap);
+      case 'referral':
+        return ReferralModelMapper.fromMap(normalizedMap);
       default:
         return EntityModelMapper.fromMap(normalizedMap);
     }

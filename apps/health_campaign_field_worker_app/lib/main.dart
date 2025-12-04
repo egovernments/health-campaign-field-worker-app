@@ -78,6 +78,9 @@ class AppLifecycleObserver extends WidgetsBindingObserver {
   }
 }
 
+
+
+
 final dynamic sampleFlows = {
   "name": "REGISTRATION-DELIVERY",
   "initialPage": "searchBeneficiary",
@@ -100,56 +103,7 @@ final dynamic sampleFlows = {
           ]
         },
       ],
-      "footer": [
-        {
-          "format": "button",
-          "label": "register beneficiary",
-          "properties": {
-            "type": "primary",
-            "size": "large",
-            "mainAxisSize": "max",
-            "mainAxisAlignment": "center"
-          },
-          "onAction": [
-            {
-              "actionType": "NAVIGATION",
-              "properties": {
-                "type": "FORM",
-                "name": "HOUSEHOLD",
-                "data": [
-                  {"key": "nameOfIndividual", "value": "{{searchBar.value}}"}
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "format": "button",
-          "label": "scan beneficiary",
-          "properties": {
-            "type": "secondary",
-            "size": "large",
-            "mainAxisSize": "max",
-            "mainAxisAlignment": "center"
-          },
-          "onAction": [
-            {
-              "actionType": "EVENT",
-              "properties": {
-                "type": "SEARCH_EVENT",
-                "name": "ENTITY // PROJECTBENEFICIARY",
-                "data": [
-                  {
-                    "key": "tag",
-                    "value": "field.value",
-                    "operation": "contains"
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      ],
+  
       "wrapperConfig": {
         "wrapperName": "HouseholdWrapper",
         "rootEntity": "HouseholdModel",
@@ -424,7 +378,54 @@ final dynamic sampleFlows = {
             ]
           }
         }
-      ]
+      ],
+          "footer": [
+        {
+          "format": "button",
+          "label": "register beneficiary",
+          "properties": {
+            "type": "primary",
+            "size": "large",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "FORM",
+                "name": "HOUSEHOLD"
+              }
+            }
+          ]
+        },
+        {
+          "format": "button",
+          "label": "scan beneficiary",
+          "properties": {
+            "type": "secondary",
+            "size": "large",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "onAction": [
+            {
+              "actionType": "EVENT",
+              "properties": {
+                "type": "SEARCH_EVENT",
+                "name": "ENTITY // PROJECTBENEFICIARY",
+                "data": [
+                  {
+                    "key": "tag",
+                    "value": "field.value",
+                    "operation": "contains"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
     },
     {
       "screenType": "FORM",
@@ -1872,6 +1873,26 @@ final dynamic sampleFlows = {
             }
           ]
         },
+         {
+          "condition": {
+            "expression":
+                "eligibilityChecklist.ec1==YES && eligibilityChecklist.ec3==YES && eligibilityChecklist.ec4==YES"
+          },
+          "actions": [  {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "FORM",
+                "name": "REFER_BENEFICIARY",
+             
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "Navigation failed."}
+                  }
+                ]
+              }
+            }]
+         },
         {
           "condition": {
             "expression":
@@ -1922,6 +1943,8 @@ final dynamic sampleFlows = {
             }
           ]
         },
+
+        
         {
           "condition": {"expression": "DEFAULT"},
           "actions": [
@@ -1975,6 +1998,176 @@ final dynamic sampleFlows = {
         }
       ]
     },
+     {
+      "screenType": "FORM",
+      "name": "REFER_BENEFICIARY",
+      "project": "CMP-2025-08-04-004846",
+      "version": 1,
+      "disabled": false,
+      "isSelected": true,
+      "pages": [
+        {
+          "page": "referBeneficiary",
+          "type": "object",
+          "label": "REFER_BENEFICIARY_SCREEN_HEADING",
+          "order": 1,
+          "navigateTo": {"name": "acknowledgement", "type": "screen"},
+          "properties": [
+            {
+              "type": "string",
+              "label": "REFER_BENEFICIARY_LABEL_ADMINISTRATIVE_UNIT",
+              "order": 2,
+              "value": "",
+              "format": "locality",
+              "hidden": false,
+              "readOnly": true,
+              "required": true,
+              "fieldName": "administrativeArea",
+              "mandatory": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "REFER_BENEFICIARY_ADMINISTRATIVE_UNIT_REQUIRED"
+                }
+              ],
+              "errorMessage": ""
+            },
+                        {
+              "type": "dynamic",
+              "label": "REFER_BENEFICIARY_LABEL_REFERRED_TO",
+              "order": 4,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "evaluationFacility",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+                            "errorMessage": "",
+              "includeInForm": true,
+              "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR",
+              "isMultiSelect": false
+            },
+                    {
+              "type": "string",
+              "label": "REFER_BENEFICIARY_LABEL_REFERRED_BY",
+              "order": 3,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "readOnly": true,
+              "required": true,
+              "fieldName": "referredBy",
+              "mandatory": true,
+               "autoFillCondition": [
+                {
+                  "value": "{{loggedInUserUuid}}",
+                  "expression":
+                      "true==true"
+                },],
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "REFER_BENEFICIARY_REFERRED_BY_REQUIRED"
+                }
+              ],
+              "errorMessage": ""
+            },
+ 
+   {
+              "type": "string",
+              "label": "HFREFERRAL_REFERRAL_DETAILS_referralReason_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "radio",
+              "required" : false,
+              "hidden": false,
+              "enums": [
+  {"code": "DRUG_SE_CC", "name": "DRUG_SE_CC"},
+  {"code": "DRUG_SE_PC", "name": "DRUG_SE_PC"},
+  {"code": "FEVER", "name": "FEVER"},
+  {"code": "SICK", "name": "SICK"}
+],
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "referralReason",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "HCM.REFERRAL_REASONS",
+              "systemDate": false,
+              "validations": [
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "REFER_BENEFICIARY_LABEL_REASON_FOR_REFERRAL",
+              "order": 6,
+              "value": "",
+              "format": "textArea",
+              "hidden": false,
+              "readOnly": false,
+              "required": false,
+              "fieldName": "referralComments",
+              "validations": [],
+              "errorMessage": ""
+            }
+          ],
+          "actionLabel": "REFER_BENEFICIARY_SUBMIT_BUTTON",
+          "description": "REFER_BENEFICIARY_SCREEN_DESCRIPTION"
+        }
+      ],
+    
+          "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "configName": "referralBeneficaryCreate",
+            "data": [],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to fetch config."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "REFERRAL",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to create stock."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "type": "TEMPLATE",
+            "name": "deliverySuccess",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Navigation failed."}
+              }
+            ],
+            "data": []
+          }
+        }
+      ]},
     {
       "initActions": [
         {
@@ -2658,7 +2851,7 @@ final dynamic sampleFlows = {
         {
           "actionType": "FETCH_TRANSFORMER_CONFIG",
           "properties": {
-            "configName": "delivery",
+            "configName": "referralBeneficaryCreate",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
@@ -2670,7 +2863,7 @@ final dynamic sampleFlows = {
         {
           "actionType": "CREATE_EVENT",
           "properties": {
-            "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
+            "entity": "REFERRAL",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
@@ -7159,7 +7352,7 @@ final dynamic stockReconciliationFlows = {
         {
           "actionType": "CREATE_EVENT",
           "properties": {
-            "entity": "STOCK_RECONCILIATION",
+            "entity": "REFERRAL",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",

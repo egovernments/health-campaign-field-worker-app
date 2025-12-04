@@ -219,6 +219,7 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
                     .translate(FlowBuilderSingleton().boundary?.code ?? ''),
                 'availableIDs': {'DEFAULT': IdGen.instance.identifier},
                 'loggedInUserName': FlowBuilderSingleton().loggedInUser?.name,
+                'loggedInUserUuid': FlowBuilderSingleton().loggedInUser?.uuid,
                 'loggedInUserMobileNumber':
                     FlowBuilderSingleton().loggedInUser?.mobileNumber,
               },
