@@ -78,9 +78,6 @@ class AppLifecycleObserver extends WidgetsBindingObserver {
   }
 }
 
-
-
-
 final dynamic sampleFlows = {
   "name": "REGISTRATION-DELIVERY",
   "initialPage": "searchBeneficiary",
@@ -103,7 +100,6 @@ final dynamic sampleFlows = {
           ]
         },
       ],
-  
       "wrapperConfig": {
         "wrapperName": "HouseholdWrapper",
         "rootEntity": "HouseholdModel",
@@ -368,7 +364,7 @@ final dynamic sampleFlows = {
                     },
                     {
                       "header": "Age",
-                      "cellValue": "{{fn:formatDate(item.dateOfBirth, age)}}"
+                      "cellValue": "{{fn:formatDate(item.dateOfBirth, 'age')}}"
                     },
                     {"header": "Gender", "cellValue": "{{item.gender}}"}
                   ],
@@ -379,7 +375,7 @@ final dynamic sampleFlows = {
           }
         }
       ],
-          "footer": [
+      "footer": [
         {
           "format": "button",
           "label": "register beneficiary",
@@ -392,10 +388,7 @@ final dynamic sampleFlows = {
           "onAction": [
             {
               "actionType": "NAVIGATION",
-              "properties": {
-                "type": "FORM",
-                "name": "HOUSEHOLD"
-              }
+              "properties": {"type": "FORM", "name": "HOUSEHOLD"}
             }
           ]
         },
@@ -1908,17 +1901,17 @@ final dynamic sampleFlows = {
             }
           ]
         },
-         {
+        {
           "condition": {
             "expression":
                 "eligibilityChecklist.ec1==YES && eligibilityChecklist.ec3==YES && eligibilityChecklist.ec4==YES"
           },
-          "actions": [  {
+          "actions": [
+            {
               "actionType": "NAVIGATION",
               "properties": {
                 "type": "FORM",
                 "name": "REFER_BENEFICIARY",
-             
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
@@ -1926,8 +1919,9 @@ final dynamic sampleFlows = {
                   }
                 ]
               }
-            }]
-         },
+            }
+          ]
+        },
         {
           "condition": {
             "expression":
@@ -1978,8 +1972,6 @@ final dynamic sampleFlows = {
             }
           ]
         },
-
-        
         {
           "condition": {"expression": "DEFAULT"},
           "actions": [
@@ -2033,7 +2025,7 @@ final dynamic sampleFlows = {
         }
       ]
     },
-     {
+    {
       "screenType": "FORM",
       "name": "REFER_BENEFICIARY",
       "project": "CMP-2025-08-04-004846",
@@ -2068,7 +2060,7 @@ final dynamic sampleFlows = {
               ],
               "errorMessage": ""
             },
-                        {
+            {
               "type": "dynamic",
               "label": "REFER_BENEFICIARY_LABEL_REFERRED_TO",
               "order": 4,
@@ -2083,12 +2075,12 @@ final dynamic sampleFlows = {
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
-                            "errorMessage": "",
+              "errorMessage": "",
               "includeInForm": true,
               "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR",
               "isMultiSelect": false
             },
-                    {
+            {
               "type": "string",
               "label": "REFER_BENEFICIARY_LABEL_REFERRED_BY",
               "order": 3,
@@ -2099,12 +2091,9 @@ final dynamic sampleFlows = {
               "required": true,
               "fieldName": "referredBy",
               "mandatory": true,
-               "autoFillCondition": [
-                {
-                  "value": "{{loggedInUserUuid}}",
-                  "expression":
-                      "true==true"
-                },],
+              "autoFillCondition": [
+                {"value": "{{loggedInUserUuid}}", "expression": "true==true"},
+              ],
               "validations": [
                 {
                   "type": "required",
@@ -2114,21 +2103,20 @@ final dynamic sampleFlows = {
               ],
               "errorMessage": ""
             },
- 
-   {
+            {
               "type": "string",
               "label": "HFREFERRAL_REFERRAL_DETAILS_referralReason_LABEL",
               "order": 5,
               "value": "",
               "format": "radio",
-              "required" : false,
+              "required": false,
               "hidden": false,
               "enums": [
-  {"code": "DRUG_SE_CC", "name": "DRUG_SE_CC"},
-  {"code": "DRUG_SE_PC", "name": "DRUG_SE_PC"},
-  {"code": "FEVER", "name": "FEVER"},
-  {"code": "SICK", "name": "SICK"}
-],
+                {"code": "DRUG_SE_CC", "name": "DRUG_SE_CC"},
+                {"code": "DRUG_SE_PC", "name": "DRUG_SE_PC"},
+                {"code": "FEVER", "name": "FEVER"},
+                {"code": "SICK", "name": "SICK"}
+              ],
               "tooltip": "",
               "helpText": "",
               "infoText": "",
@@ -2138,8 +2126,7 @@ final dynamic sampleFlows = {
               "innerLabel": "",
               "schemaCode": "HCM.REFERRAL_REASONS",
               "systemDate": false,
-              "validations": [
-              ],
+              "validations": [],
               "errorMessage": "",
               "isMultiSelect": false
             },
@@ -2161,8 +2148,7 @@ final dynamic sampleFlows = {
           "description": "REFER_BENEFICIARY_SCREEN_DESCRIPTION"
         }
       ],
-    
-          "onAction": [
+      "onAction": [
         {
           "actionType": "FETCH_TRANSFORMER_CONFIG",
           "properties": {
@@ -2202,7 +2188,8 @@ final dynamic sampleFlows = {
             "data": []
           }
         }
-      ]},
+      ]
+    },
     {
       "initActions": [
         {

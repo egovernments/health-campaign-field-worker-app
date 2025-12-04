@@ -48,8 +48,8 @@ class CardWidget implements FlowWidget {
 
     return DigitCard(
       width: MediaQuery.of(context).size.width,
-      cardType:
-          WidgetParsers.parseCardType(json['type']?.toString() ?? 'primary'),
+      cardType: WidgetParsers.parseCardType(
+          json['properties']?['type']?.toString() ?? 'primary'),
       onPressed: () {
         if (json['onAction'] != null) {
           final actionsList = List<Map<String, dynamic>>.from(json['onAction']);

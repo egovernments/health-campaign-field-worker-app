@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/project_type.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
-import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 import 'interpolation.dart';
@@ -184,12 +183,12 @@ void initializeFunctionRegistry() {
       case 'date':
         final date = parseDate(rawValue);
         if (date == null) return '--';
-        return DateFormat(format ?? "dd/MM/yyyy").format(date);
+        return DateFormat(format ?? "dd MMM yyyy").format(date);
 
       case 'datetime':
         final date = parseDate(rawValue);
         if (date == null) return '--';
-        return DateFormat(format ?? "dd/MM/yyyy HH:mm").format(date);
+        return DateFormat(format ?? "dd MMM yyyy HH:mm").format(date);
 
       default:
         return rawValue.toString();

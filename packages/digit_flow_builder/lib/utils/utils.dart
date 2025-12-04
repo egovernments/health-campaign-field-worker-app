@@ -288,6 +288,9 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
     String? screenKey,
     CrudStateData? stateData}) {
   if (value is String) {
+    if (!value.startsWith('{{') || !value.endsWith('}}')) {
+      return value; // <-- direct return
+    }
     final interpolationRegex = RegExp(r'^\{\{(.+?)\}\}$');
     final match = interpolationRegex.firstMatch(value.trim());
     if (match != null) {

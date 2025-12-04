@@ -841,30 +841,32 @@ class _HomePageState extends LocalizedState<HomePage> {
               dynamicEntityModelListener: EntityModelMapMapper(),
             );
             try {
-              // if (schemaJsonRaw != null) {
-              //   final allSchemas =
-              //       json.decode(schemaJsonRaw) as Map<String, dynamic>;
-              //   final manageStock = allSchemas['REGISTRATION'];
-              //
-              //   final manageStockData = manageStock?['data'];
-              //   final flowsData = (manageStockData['flows'] as List<dynamic>?)
-              //           ?.map((e) => Map<String, dynamic>.from(e as Map))
-              //           .toList() ??
-              //       [];
-              //   FlowRegistry.setConfig(flowsData);
-              //   NavigationRegistry.setupNavigation(context);
-              //
-              //   context.router.push(
-              //     FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
-              //   );
-              // } else {
-              FlowRegistry.setConfig(
-                  sampleFlows["flows"] as List<Map<String, dynamic>>);
-              NavigationRegistry.setupNavigation(context);
-              context.router.push(
-                FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
-              );
-              // }
+              if (schemaJsonRaw != null) {
+                final allSchemas =
+                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                final data = allSchemas['REGISTRATION'];
+
+                final registrationDeliveryData = data?['data'];
+                final flowsData =
+                    (registrationDeliveryData['flows'] as List<dynamic>?)
+                            ?.map((e) => Map<String, dynamic>.from(e as Map))
+                            .toList() ??
+                        [];
+                FlowRegistry.setConfig(flowsData);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: registrationDeliveryData["initialPage"]),
+                );
+              } else {
+                FlowRegistry.setConfig(
+                    sampleFlows["flows"] as List<Map<String, dynamic>>);
+                NavigationRegistry.setupNavigation(context);
+                context.router.push(
+                  FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
+                );
+              }
             } catch (e) {
               debugPrint('error $e');
             }
