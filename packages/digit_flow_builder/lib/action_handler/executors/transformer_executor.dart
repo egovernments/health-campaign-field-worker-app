@@ -1,4 +1,5 @@
 import 'package:digit_data_converter/src/transformer_service.dart';
+import 'package:digit_data_converter/utils/utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +23,20 @@ class TransformerExecutor extends ActionExecutor {
   ) async {
     final configName = action.properties['configName'];
     final formDataConfig = action.properties['formDataConfig'];
-    final transformerConfig =
-        jsonConfig[configName]?['models'] as Map<String, dynamic>;
+
+    debugPrint('TRANSFORMER: Starting with configName=$configName');
+
+    final configData = jsonConfig[configName];
+    if (configData == null) {
+      debugPrint('TRANSFORMER: Config not found for $configName');
+      return contextData;
+    }
+
+    final transformerConfig = configData['models'] as Map<String, dynamic>?;
+    if (transformerConfig == null) {
+      debugPrint('TRANSFORMER: Models config not found for $configName');
+      return contextData;
+    }
 
     final formEntityMapper = FormEntityMapper(config: jsonConfig);
 
@@ -65,6 +78,64 @@ class TransformerExecutor extends ActionExecutor {
 
     FlowCrudStateRegistry().update(config?["name"], flowState);
 
+    // Check if this is edit mode
+    final navigationParams = contextData['navigation'] as Map<String, dynamic>?;
+    final isEdit = navigationParams?['isEdit'] == true ||
+        navigationParams?['isEdit'] == 'true';
+
+    // Check if we should force create new entities even in edit mode
+    // This is useful for inventory where edit prefills form but submits as new entities
+    final forceCreate = action.properties['forceCreate'] == true ||
+        navigationParams?['forceCreate'] == true ||
+        navigationParams?['forceCreate'] == 'true';
+
+    // Get existing models - try multiple sources:
+    // 1. From contextData (passed through action chain from REVERSE_TRANSFORM)
+    // 2. From navigation params in registry (stored by NAVIGATION executor)
+    List<EntityModel>? existingModels;
+
+    // First try contextData (from REVERSE_TRANSFORM in same action chain)
+    if (contextData['existingModels'] != null) {
+      final contextModels = contextData['existingModels'];
+      if (contextModels is List) {
+        existingModels = contextModels.whereType<EntityModel>().toList();
+        debugPrint(
+            'TRANSFORMER: Found existingModels in contextData: ${existingModels.length}');
+      }
+    }
+
+    // If not in contextData, try registry navigation params
+    if (existingModels == null || existingModels.isEmpty) {
+      final screenKey = getScreenKeyFromArgs(context);
+      debugPrint('TRANSFORMER: screenKey from args: $screenKey');
+
+      // Try multiple key formats - the navigation executor stores with FORM:: prefix
+      final keysToTry = <String?>[
+        screenKey,
+        if (screenKey != null) 'FORM::$screenKey',
+        if (screenKey != null) 'TEMPLATE::$screenKey',
+      ];
+
+      for (final key in keysToTry) {
+        if (key == null) continue;
+        final storedNavParams = FlowCrudStateRegistry().getNavigationParams(key);
+        debugPrint('TRANSFORMER: trying key=$key, storedNavParams=$storedNavParams');
+        if (storedNavParams != null &&
+            storedNavParams['existingModels'] != null) {
+          existingModels =
+              storedNavParams['existingModels'] as List<EntityModel>?;
+          if (existingModels != null && existingModels.isNotEmpty) {
+            debugPrint(
+                'TRANSFORMER: Found existingModels with key=$key: ${existingModels.length}');
+            break;
+          }
+        }
+      }
+    }
+
+    debugPrint(
+        'TRANSFORMER: isEdit=$isEdit, forceCreate=$forceCreate, existingModels=${existingModels?.length ?? 0}');
+
     final contextMap = {
       "projectId": FlowBuilderSingleton().selectedProject?.id,
       "user": FlowBuilderSingleton().loggedInUser,
@@ -79,8 +150,82 @@ class TransformerExecutor extends ActionExecutor {
 
     List<EntityModel> entities = [];
 
-    // Check if multiEntityField is configured
-    if (multiEntityField != null) {
+    // Use updateEntitiesFromForm for edit mode with existing models
+    // Skip if forceCreate is true (e.g., inventory flow where edit prefills but creates new)
+    if (isEdit &&
+        !forceCreate &&
+        existingModels != null &&
+        existingModels.isNotEmpty) {
+      debugPrint('TRANSFORMER: Edit mode - using updateEntitiesFromForm');
+      debugPrint('TRANSFORMER: existingModels count before dedup: ${existingModels.length}');
+
+      // Deduplicate existingModels by type first (keep first occurrence)
+      final seenExistingTypes = <String>{};
+      final dedupedExistingModels = existingModels.where((model) {
+        final type = model.runtimeType.toString();
+        if (seenExistingTypes.contains(type)) {
+          debugPrint('TRANSFORMER: Removing duplicate existingModel $type');
+          return false;
+        }
+        seenExistingTypes.add(type);
+        return true;
+      }).toList();
+      debugPrint('TRANSFORMER: existingModels count after dedup: ${dedupedExistingModels.length}');
+
+      // Filter modelsConfig to only include models that exist in existingModels
+      // This prevents trying to create missing models that reference non-existent entities
+      final existingModelTypes =
+          dedupedExistingModels.map((m) => m.runtimeType.toString()).toSet();
+      debugPrint('TRANSFORMER: existingModelTypes=$existingModelTypes');
+
+      final filteredConfig = Map<String, dynamic>.from(transformerConfig)
+        ..removeWhere((key, value) => !existingModelTypes.contains(key));
+      debugPrint('TRANSFORMER: filteredConfig keys=${filteredConfig.keys}');
+
+      entities = formEntityMapper.updateEntitiesFromForm(
+        existingModels: dedupedExistingModels,
+        formValues: formValuesToUse ?? {},
+        modelsConfig: filteredConfig,
+        context: contextMap,
+      );
+
+      debugPrint('TRANSFORMER: updateEntitiesFromForm returned ${entities.length} entities');
+
+      // Update clientAuditDetails for all updated entities to reflect modification time
+      final userUuid = FlowBuilderSingleton().loggedInUser?.uuid;
+      final now = DateTime.now().millisecondsSinceEpoch;
+      entities = entities.map((entity) {
+        final map = entity.toMap();
+        // Update clientAuditDetails with lastModifiedBy and lastModifiedTime
+        final existingClientAudit =
+            map['clientAuditDetails'] as Map<String, dynamic>? ?? {};
+        map['clientAuditDetails'] = {
+          ...existingClientAudit,
+          'lastModifiedBy': userUuid,
+          'lastModifiedTime': now,
+        };
+        // Also increment rowVersion for proper sync
+        final currentRowVersion = map['rowVersion'] as int? ?? 1;
+        map['rowVersion'] = currentRowVersion + 1;
+
+        // Recreate entity with updated audit details
+        final modelType = entity.runtimeType.toString();
+        final factory = DataConverterSingleton()
+            .dynamicEntityModelListener
+            ?.modelFactoryRegistry[modelType];
+        if (factory != null) {
+          return factory(map);
+        }
+        return entity;
+      }).toList();
+
+      debugPrint('TRANSFORMER: Updated ${entities.length} entities with audit details');
+      for (final entity in entities) {
+        final map = entity.toMap();
+        debugPrint('TRANSFORMER: Entity ${entity.runtimeType} - rowVersion: ${map['rowVersion']}, auditDetails: ${map['auditDetails'] != null}, clientAuditDetails: ${map['clientAuditDetails']}');
+      }
+    } else if (multiEntityField != null) {
+      // Check if multiEntityField is configured
       // Manually traverse the nested path to get the multi-select array
       final multiEntityValue =
           _getNestedValue(formValuesToUse ?? {}, multiEntityField);

@@ -7,6 +7,7 @@ import '../blocs/flow_crud_bloc.dart';
 /// Helper class to access state from any page in the flow by passing page name
 class PageStateAccessor {
   final String currentPageName;
+
   PageStateAccessor(this.currentPageName);
 
   /// Get form data of this page
@@ -34,15 +35,21 @@ class PageStateAccessor {
   FlowCrudState? getPageData(String pageName) {
     // First try direct lookup
     var state = FlowCrudStateRegistry().get(pageName);
-    if (state != null) return state;
+    if (state != null) {
+      return state;
+    }
 
     // Try with TEMPLATE:: prefix
     state = FlowCrudStateRegistry().get('TEMPLATE::$pageName');
-    if (state != null) return state;
+    if (state != null) {
+      return state;
+    }
 
     // Try with FORM:: prefix (uppercase name)
     state = FlowCrudStateRegistry().get('FORM::${pageName.toUpperCase()}');
-    if (state != null) return state;
+    if (state != null) {
+      return state;
+    }
 
     // Try with FORM:: prefix (original case)
     state = FlowCrudStateRegistry().get('FORM::$pageName');

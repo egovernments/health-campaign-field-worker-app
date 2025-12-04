@@ -29,6 +29,7 @@ class ActionExecutorRegistry {
     register('NAVIGATION', NavigationExecutor());
     register('BACK_NAVIGATION', BackNavigationExecutor());
     register('CREATE_EVENT', CrudExecutor());
+    register('UPDATE_EVENT', UpdateExecutor());
     register('SEARCH_EVENT', SearchExecutor());
     register('FETCH_TRANSFORMER_CONFIG', TransformerExecutor());
     register('SHOW_TOAST', ToastExecutor());

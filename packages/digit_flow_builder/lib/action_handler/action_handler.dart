@@ -27,15 +27,20 @@ class ActionHandler {
 
     final flatData = flattenFormData(data);
 
+    debugPrint('CONDITION_EVAL_FLAT: flatData=$flatData');
+
     try {
       final parser = FormulaParser(
         expression,
         flatData.isEmpty ? {'dummy': {}} : flatData,
       );
 
+      debugPrint('CONDITION_EVAL_FLAT: parsedExpression=${parser.parsedExpression}');
       final result = parser.parse;
+      debugPrint('CONDITION_EVAL_FLAT: result=$result');
       return result["isSuccess"] && result["value"] == true;
     } catch (e) {
+      debugPrint('CONDITION_EVAL_FLAT: error=$e');
       // If parsing fails, return false
       return false;
     }
@@ -47,24 +52,61 @@ class ActionHandler {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
-    for (final actionJson in actions) {
-      if (actionJson['condition'] != null) {
-        // Conditional action block
-        final condition = actionJson['condition'] as Map<String, dynamic>;
-        final formData = contextData['formData'] as Map<String, dynamic>? ?? {};
+    int i = 0;
+    while (i < actions.length) {
+      final actionJson = actions[i];
 
-        if (evaluateCondition(condition, formData)) {
-          final subActions = actionJson['actions'] as List? ?? [];
-          for (final subActionJson in subActions) {
-            final action = ActionConfig.fromJson(subActionJson);
-            contextData = await execute(action, context, contextData);
-          }
-          break; // Execute only the first matching condition
+      if (actionJson['condition'] != null) {
+        // Conditional action block - collect all consecutive conditional actions
+        final conditionalGroup = <Map<String, dynamic>>[];
+        while (i < actions.length && actions[i]['condition'] != null) {
+          conditionalGroup.add(actions[i] as Map<String, dynamic>);
+          i++;
         }
+
+        // Evaluate conditions and execute the first matching one
+        final formData = contextData['formData'] as Map<String, dynamic>? ?? {};
+        final navigation = contextData['navigation'] as Map<String, dynamic>? ?? {};
+
+        // Merge formData and navigation for condition evaluation
+        // Also convert string "true"/"false" to boolean for proper evaluation
+        final evaluationData = <String, dynamic>{};
+
+        void addWithTypeConversion(Map<String, dynamic> source) {
+          source.forEach((key, value) {
+            if (value == 'true') {
+              evaluationData[key] = true;
+            } else if (value == 'false') {
+              evaluationData[key] = false;
+            } else {
+              evaluationData[key] = value;
+            }
+          });
+        }
+
+        addWithTypeConversion(formData);
+        addWithTypeConversion(navigation);
+
+        for (final condActionJson in conditionalGroup) {
+          final condition = condActionJson['condition'] as Map<String, dynamic>;
+          debugPrint('CONDITION_EVAL: expression=${condition['expression']}, data=$evaluationData');
+
+          if (evaluateCondition(condition, evaluationData)) {
+            debugPrint('CONDITION_EVAL: Condition matched!');
+            final subActions = condActionJson['actions'] as List? ?? [];
+            for (final subActionJson in subActions) {
+              final action = ActionConfig.fromJson(subActionJson);
+              contextData = await execute(action, context, contextData);
+            }
+            break; // Execute only the first matching condition in this group
+          }
+        }
+        // Continue to next action after conditional group (don't break out of main loop)
       } else {
-        // Legacy direct action
+        // Direct action (non-conditional)
         final action = ActionConfig.fromJson(actionJson);
         contextData = await execute(action, context, contextData);
+        i++;
       }
     }
     return contextData;

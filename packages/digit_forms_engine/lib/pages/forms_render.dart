@@ -273,13 +273,19 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                     currentForm: formGroup,
                                     pages: formState
                                         .cachedSchemas[currentSchemaKey]!.pages,
-
-                                    /// TODO: fix hardcode not null condition
+                                    navigationParams: widget.navigationParams,
                                   );
 
-                                  final isConditionTrue =
-                                      evaluateSingleCondition(
-                                          condition, values);
+                                  // Evaluate condition - use direct isEdit check for isEdit conditions
+                                  // since FormulaParser doesn't handle dot notation well
+                                  bool isConditionTrue;
+                                  if (condition == 'isEdit == true' || condition == 'navigation.isEdit == true') {
+                                    isConditionTrue = widget.isEdit == true;
+                                  } else if (condition == 'isEdit == false' || condition == 'navigation.isEdit == false') {
+                                    isConditionTrue = widget.isEdit == false;
+                                  } else {
+                                    isConditionTrue = evaluateSingleCondition(condition, values);
+                                  }
 
                                   if (isConditionTrue) {
                                     final targetPageName =
@@ -287,6 +293,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                     final targetPageType =
                                         navigateTo.type as String?;
 
+                                    // Handle form navigation
                                     if (targetPageName != null &&
                                         targetPageType == 'form') {
                                       context.router.push(FormsRenderRoute(
@@ -300,6 +307,21 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                         navigationParams:
                                             widget.navigationParams,
                                       ));
+                                      return; // Skip default logic
+                                    }
+
+                                    // Handle direct form submission (skip remaining pages)
+                                    if (targetPageType == 'submit') {
+                                      context.read<FormsBloc>().add(
+                                          FormsSubmitEvent(
+                                              isEdit: widget.isEdit,
+                                              schemaKey:
+                                                  widget.currentSchemaKey));
+                                      // Pop all form pages
+                                      context.router.popUntil((route) {
+                                        return route.settings.name !=
+                                            FormsRenderRoute.name;
+                                      });
                                       return; // Skip default logic
                                     }
                                   }

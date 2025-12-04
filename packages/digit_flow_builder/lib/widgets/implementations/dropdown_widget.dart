@@ -7,6 +7,7 @@ import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
+import '../localization_context.dart';
 
 class DropdownWidget implements FlowWidget {
   @override
@@ -18,6 +19,7 @@ class DropdownWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
+    final localization = LocalizationContext.maybeOf(context);
     final crudCtx = CrudItemContext.of(context);
 
     // Get screen key for navigation params resolution
@@ -35,9 +37,9 @@ class DropdownWidget implements FlowWidget {
             ? crudCtx.stateData?.rawState.first
             : null;
 
-    final label =
-        resolveTemplate(json['label'], itemStateData, screenKey: screenKey) ??
-            '';
+    final label = resolveTemplate(json['label'], itemStateData,
+            screenKey: screenKey, localization: localization) ??
+        '';
     final key = json['key'] as String?;
     final isRequired = json['required'] == true;
     final visible = json['visible'] == null ||

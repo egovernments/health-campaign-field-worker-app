@@ -97,6 +97,8 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
   TextEditingController teamCodeController = TextEditingController();
+  bool _initialized = false;
+  bool _formControlUpdated = false;
 
   @override
   void initState() {
@@ -106,6 +108,77 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
           barCode: [],
           qrCode: [],
         ));
+
+    // Initialize from prefilled formData if available
+    _initializeFromFormData();
+  }
+
+  void _initializeFromFormData() {
+    if (_initialized) return;
+
+    // Get prefilled value from stateData.formData
+    final formData = widget.stateData?.formData as Map<String, dynamic>?;
+    debugPrint('FacilityCard: formData for ${widget.formKey} = $formData');
+
+    if (formData != null) {
+      // Try to get facility value - check both nested and flat structure
+      final facilityValue = formData['warehouseDetails.${widget.formKey}'] ??
+          formData[widget.formKey] ??
+          (formData['warehouseDetails']
+              as Map<String, dynamic>?)?[widget.formKey] ??
+          (formData['stockDetails'] as Map<String, dynamic>?)?[widget.formKey];
+
+      debugPrint(
+          'FacilityCard: Looking for ${widget.formKey}, found: $facilityValue');
+
+      if (facilityValue != null && facilityValue.toString().isNotEmpty) {
+        selectedFacilityId = facilityValue.toString();
+        deliveryTeamSelected = selectedFacilityId == 'Delivery Team';
+        _initialized = true;
+        _formControlUpdated =
+            false; // Need to update form control when available
+        debugPrint(
+            'FacilityCard: Initialized ${widget.formKey} with prefilled value: $selectedFacilityId');
+      }
+    }
+  }
+
+  /// Updates the form control with the prefilled value
+  /// This must be called after the form is built and the control is accessible
+  void _updateFormControlIfNeeded(
+      ReactiveFormFieldState<dynamic, dynamic> field) {
+    if (_initialized && !_formControlUpdated && selectedFacilityId != null) {
+      // Schedule the update for after the current build
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+
+        // Update the form control value
+        field.control.value = selectedFacilityId;
+
+        // Also update FormsBloc to sync state
+        context.read<FormsBloc>().add(
+              FormsEvent.updateField(
+                schemaKey: widget.pageSchema,
+                context: context,
+                key: widget.formKey,
+                value: selectedFacilityId,
+              ),
+            );
+
+        debugPrint(
+            'FacilityCard: Updated form control ${widget.formKey} with value: $selectedFacilityId');
+      });
+      _formControlUpdated = true;
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant _FacilityCardContent oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Re-initialize if stateData changed and we haven't initialized yet
+    if (!_initialized && widget.stateData != oldWidget.stateData) {
+      _initializeFromFormData();
+    }
   }
 
   @override
@@ -132,6 +205,9 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
 
     final labelFromSchema =
         widget.fieldSchema.label ?? widget.fieldSchema.innerLabel;
+
+    print('Label from Schema');
+    print(labelFromSchema);
 
     // Build facility list with Delivery Team option if applicable
     final facilities = <DropdownItem>[];
@@ -169,10 +245,16 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
           schema: widget
               .fieldSchema, // Pass the schema - it handles all validations!
           builder: (field) {
+            // Update form control with prefilled value if needed
+            _updateFormControlIfNeeded(field);
+
             return LabeledField(
-              label: widget.localizations.translate(
-                labelFromSchema ?? "Select Facility",
-              ),
+              label: labelFromSchema != null
+                  ? widget.localizations.translate(
+                      labelFromSchema,
+                    )
+                  : widget.localizations.translate("SELECT_FACILITY"),
+              capitalizedFirstLetter: false,
               isRequired: true,
               child: DigitDropdown(
                 errorMessage: field.errorText,

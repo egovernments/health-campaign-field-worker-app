@@ -2,6 +2,7 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
+import '../../action_handler/action_handler.dart';
 import '../../blocs/flow_crud_bloc.dart';
 import '../../utils/conditional_evaluator.dart';
 import '../../utils/interpolation.dart';
@@ -88,11 +89,12 @@ class ButtonWidget implements FlowWidget {
     return DigitButton(
       label: resolvedLabel,
       isDisabled: isDisabled,
-      onPressed: () {
+      onPressed: () async {
         if (json['onAction'] != null) {
           final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
 
-          for (var actionJson in actionsList) {
+          // Pre-resolve navigation data for all actions
+          final resolvedActionsList = actionsList.map((actionJson) {
             var action = ActionConfig.fromJson(actionJson);
 
             // Resolve navigation data if present
@@ -119,20 +121,35 @@ class ButtonWidget implements FlowWidget {
                 };
               }).toList();
 
-              action = ActionConfig(
-                action: action.action,
-                actionType: action.actionType,
-                properties: {
+              return {
+                ...actionJson,
+                'properties': {
                   ...action.properties,
                   'data': resolvedData,
                 },
-                condition: action.condition,
-                actions: action.actions,
-              );
+              };
             }
 
-            onAction(action);
-          }
+            return actionJson;
+          }).toList();
+
+          // Build initial context data from current state
+          final initialContextData = <String, dynamic>{
+            'wrappers': const [],
+            if (stateData != null) ...{
+              'item': crudCtx?.item,
+              'contextData': stateData,
+            },
+            if (formData != null) 'formData': formData,
+          };
+
+          // Use ActionHandler.executeActions to chain actions with shared contextData
+          // This ensures that REVERSE_TRANSFORM's formData flows to NAVIGATION
+          await ActionHandler.executeActions(
+            resolvedActionsList,
+            context,
+            initialContextData,
+          );
         }
       },
       type: WidgetParsers.parseButtonType(props['type']),

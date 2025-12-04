@@ -148,18 +148,41 @@ class ReverseFormMapper {
     Map listMappings,
   ) {
     for (final listModelEntry in listMappings.entries) {
-      final listKey = listModelEntry.key; // e.g., "HouseholdMember"
+      final listKey = listModelEntry.key; // e.g., "IdentifierModel"
       final listModelConfig = listModelEntry.value;
       final mappings = listModelConfig['mappings'] ?? {};
 
-      //// TODO: need to check mapping for list
-      // You may override the key used to extract items from model if defined in config
-      final listFieldName = listModelConfig['field'] ??
-          listKey[0].toLowerCase() + listKey.substring(1);
-      final List<dynamic> listItems = modelInstance[listFieldName] ?? [];
+      // Try multiple field name variations to find the list items
+      // 1. Explicit 'field' config
+      // 2. camelCase model name (e.g., "identifierModel")
+      // 3. Plural lowercase without "Model" suffix (e.g., "identifiers")
+      // 4. Singular lowercase without "Model" suffix (e.g., "identifier")
+      final possibleFieldNames = <String>[
+        if (listModelConfig['field'] != null) listModelConfig['field'],
+        listKey[0].toLowerCase() + listKey.substring(1), // identifierModel
+        if (listKey.endsWith('Model'))
+          '${listKey.substring(0, listKey.length - 5).toLowerCase()}s', // identifiers
+        if (listKey.endsWith('Model'))
+          listKey.substring(0, listKey.length - 5).toLowerCase(), // identifier
+      ];
+
+      List<dynamic> listItems = [];
+      for (final fieldName in possibleFieldNames) {
+        final items = modelInstance[fieldName];
+        if (items != null && items is List && items.isNotEmpty) {
+          listItems = items;
+          break;
+        }
+      }
 
       for (int index = 0; index < listItems.length; index++) {
-        final item = listItems[index];
+        var item = listItems[index];
+
+        // Handle EntityModel instances - convert to map
+        if (item is EntityModel) {
+          item = item.toMap();
+        }
+
         if (item is! Map<String, dynamic>) continue;
 
         for (final entry in mappings.entries) {
