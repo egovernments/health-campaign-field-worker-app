@@ -1,4 +1,5 @@
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
 import 'package:flutter/material.dart';
 
 /// Centralized utility class for parsing widget configuration strings into Flutter enums.
@@ -32,6 +33,17 @@ class WidgetParsers {
         return DigitButtonType.tertiary;
       default:
         return DigitButtonType.primary;
+    }
+  }
+
+  static TagType parseTagType(String? type) {
+    switch (type) {
+      case 'success':
+        return TagType.success;
+      case 'error':
+        return TagType.error;
+      default:
+        return TagType.monochrome;
     }
   }
 

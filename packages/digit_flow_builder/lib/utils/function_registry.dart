@@ -277,6 +277,14 @@ void initializeFunctionRegistry() {
     }
   });
 
+  FunctionRegistry.register("isDelivered", (args, stateData) {
+    // Extract all inputs from args
+    final task = args.isNotEmpty ? args[0] : null;
+
+    if (task != null && task is Map<String, dynamic>) return true;
+    return false;
+  });
+
   /// Registers a function to check the status of tasks.
   ///
   /// - **Function Name**: `'checkStatus'`

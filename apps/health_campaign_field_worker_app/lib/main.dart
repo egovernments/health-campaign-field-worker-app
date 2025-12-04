@@ -1308,10 +1308,30 @@ final dynamic sampleFlows = {
                         "{{individual.0.gender }} | {{fn:formatDate(individual.0.dateOfBirth, age)}}"
                   },
                   {
+                    "type": "template",
                     "format": "tag",
-                    "type": "",
-                    "label":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}}"
+                    "fieldName": "statusTag",
+                    "visible":
+                        "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}}==false",
+                    "label": "NOT_ELIGIBLE",
+                    "properties": {"tagType": "error"}
+                  },
+                  {
+                    "type": "template",
+                    "format": "tag",
+                    "fieldName": "statusTag",
+                    "visible": "{{fn:isDelivered(task)}}==true",
+                    "label": "ADMINISTERED_SUCCESS",
+                    "properties": {"tagType": "success"}
+                  },
+                  {
+                    "type": "template",
+                    "format": "tag",
+                    "fieldName": "statusTag",
+                    "visible":
+                        "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}}==true && {{fn:isDelivered(task)}}==false",
+                    "label": "NOT_VISITED",
+                    "properties": {"tagType": "info"}
                   },
                   {
                     "format": "row",
@@ -2544,7 +2564,9 @@ final dynamic sampleFlows = {
           "format": "button",
           "label":
               "Record Cycle {{contextData.0.nextCycleId}} Dose {{contextData.0.nextDoseId}}",
-          "visible": "{{fn:canRecordDelivery(contextData.0.nextCycleId)}}",
+          "visible":
+              "{{fn:canRecordDelivery(contextData.0.nextCycleId)}}==true",
+          "disabled": "{{eligibleProductVariants}} == null",
           "properties": {
             "type": "primary",
             "size": "large",
