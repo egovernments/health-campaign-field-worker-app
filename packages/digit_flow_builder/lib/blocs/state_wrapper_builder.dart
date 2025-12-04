@@ -217,7 +217,9 @@ class WrapperBuilder {
       } catch (e) {
         debugPrint('Error grouping entity by field $fieldPath: $e');
         // Put ungroupable entities in unique 'null' groups
-        groupedByField.putIfAbsent('null_${nullCounter++}', () => []).add(entity);
+        groupedByField
+            .putIfAbsent('null_${nullCounter++}', () => [])
+            .add(entity);
       }
     }
 
@@ -676,7 +678,15 @@ Map<String, dynamic> _applyComputed(
   // Create combined context once and reuse, updating as we go
   final context = <String, dynamic>{...wrapperData};
 
-  for (final entry in computed.entries) {
+  // 🔥 Sort computed entries by `order`
+  final sortedEntries = computed.entries.toList()
+    ..sort((a, b) {
+      final ao = (a.value as Map<String, dynamic>)['order'] ?? 999999;
+      final bo = (b.value as Map<String, dynamic>)['order'] ?? 999999;
+      return ao.compareTo(bo);
+    });
+
+  for (final entry in sortedEntries) {
     final key = entry.key;
     final conf = entry.value as Map<String, dynamic>;
 
@@ -702,7 +712,8 @@ Map<String, dynamic> _applyComputed(
       if (hasQueryOps) {
         results[key] = WrapperBuilder([], {})._evaluateFieldMap(
           Map<String, dynamic>.from(conf),
-          context[config['rootEntity']] ?? wrapperData[config['rootEntity']], // root entity
+          context[config['rootEntity']] ??
+              wrapperData[config['rootEntity']], // root entity
           context, // Use context instead of wrapperData to access previously computed values
         );
       } else {
@@ -1011,7 +1022,15 @@ Map<String, dynamic> _applyComputedList(
   // Create combined context once and reuse
   final context = <String, dynamic>{...wrapperData};
 
-  for (final entry in computedList.entries) {
+  // 🔥 Sort computed entries by `order`
+  final sortedEntries = computedList.entries.toList()
+    ..sort((a, b) {
+      final ao = (a.value as Map<String, dynamic>)['order'] ?? 999999;
+      final bo = (b.value as Map<String, dynamic>)['order'] ?? 999999;
+      return ao.compareTo(bo);
+    });
+
+  for (final entry in sortedEntries) {
     final key = entry.key;
     final conf = entry.value as Map<String, dynamic>;
 
@@ -1032,7 +1051,8 @@ class ConditionEvaluator {
       final ifCondition = conf['if'];
       // If 'if' is a comparison object, evaluate it recursively
       dynamic conditionResult;
-      if (ifCondition is Map<String, dynamic> && ifCondition.containsKey('operator')) {
+      if (ifCondition is Map<String, dynamic> &&
+          ifCondition.containsKey('operator')) {
         conditionResult = evaluate(context, ifCondition);
       } else {
         conditionResult = resolve(context, ifCondition);
