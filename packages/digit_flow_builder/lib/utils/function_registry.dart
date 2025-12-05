@@ -226,6 +226,8 @@ void initializeFunctionRegistry() {
 
 // --- Tasks & SideEffects come from stateData ---
     final tasks = (stateData.modelMap['tasks'] as List?) ?? [];
+    final referral = (stateData.modelMap['referral'] as List?) ?? [];
+    if (referral.isNotEmpty) return false;
     final sideEffects = (stateData.modelMap['sideEffects'] as List?) ?? [];
 
 // --- Current active cycle ---

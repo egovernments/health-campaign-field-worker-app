@@ -46,9 +46,8 @@ class DigitCrudService extends CrudService {
     } else if (entity is HFReferralModel) {
       return context
           .repository<HFReferralModel, HFReferralSearchModel>(context);
-        } else if (entity is ReferralModel) {
-      return context
-          .repository<ReferralModel, ReferralSearchModel>(context);
+    } else if (entity is ReferralModel) {
+      return context.repository<ReferralModel, ReferralSearchModel>(context);
     } else {
       return context.repository<EntityModel, EntitySearchModel>(context);
     }
@@ -119,6 +118,28 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
                 ? normalizeKnownFlatFieldsRecursively(item)
                 : item)
             .toList();
+      } else if (value is String) {
+        // ---------- NEW FIX HERE ----------
+        // Convert stringified list → actual List<String>
+        final trimmed = value.trim();
+        if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+          try {
+            // Safely decode JSON-like string
+            final decoded = trimmed
+                .substring(1, trimmed.length - 1)
+                .split(',')
+                .map((e) => e.trim().replaceAll('"', '').replaceAll("'", ""))
+                .where((e) => e.isNotEmpty)
+                .toList();
+
+            newMap[key] = decoded;
+            return;
+          } catch (_) {
+            // fallback keep original string
+          }
+        }
+        // ---------- END FIX ----------
+        newMap[key] = value;
       } else {
         newMap[key] = value;
       }
