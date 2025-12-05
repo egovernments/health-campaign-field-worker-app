@@ -281,9 +281,9 @@ void initializeFunctionRegistry() {
 
   FunctionRegistry.register("isDelivered", (args, stateData) {
     // Extract all inputs from args
-    final task = args.isNotEmpty ? args[0] : null;
+    final tasks = (stateData.modelMap['task'] as List?) ?? [];
+    if (tasks.isNotEmpty) return true;
 
-    if (task != null && task is Map<String, dynamic>) return true;
     return false;
   });
 
