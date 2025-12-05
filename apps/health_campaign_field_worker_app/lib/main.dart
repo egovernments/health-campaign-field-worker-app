@@ -1137,6 +1137,14 @@ final dynamic sampleFlows = {
             },
             "relations": [
               {
+                "name": "member",
+                "entity": "HouseholdMemberModel",
+                "match": {
+                  "field": "clientReferenceId",
+                  "equalsFrom": "clientReferenceId"
+                }
+              },
+              {
                 "name": "individual",
                 "entity": "IndividualModel",
                 "match": {
@@ -1178,7 +1186,8 @@ final dynamic sampleFlows = {
             "individual",
             "householdMember",
             "projectBeneficiary",
-            "task"
+            "task",
+            "referral"
           ]
         }
       },
@@ -1351,8 +1360,8 @@ final dynamic sampleFlows = {
                   },
                   {
                     "format": "button",
-                    "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}} == true",
+                    // "visible":
+                    //     "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}} == true",
                     "properties": {
                       "type": "primary",
                       "size": "medium",
@@ -1371,7 +1380,17 @@ final dynamic sampleFlows = {
                             {
                               "key": "selectedIndividualClientReferenceId",
                               "value": "{{individual.0.clientReferenceId}}"
-                            }
+                            },
+                            {
+                              "key": "HouseholdClientReferenceId",
+                              "value":
+                                  "{{member.0.householdClientReferenceId}}",
+                            },
+                            {
+                              "key": "ProjectBeneficiaryClientReferenceId",
+                              "value":
+                                  "{{projectBeneficiary.0.clientReferenceId}}",
+                            },
                           ]
                         }
                       }
@@ -1909,7 +1928,17 @@ final dynamic sampleFlows = {
                     "key": "selectedIndividualClientReferenceId",
                     "value":
                         "{{contextData.navigation.selectedIndividualClientReferenceId}}"
-                  }
+                  },
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value":
+                        "{{ contextData.navigation.HouseholdClientReferenceId }}"
+                  },
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value":
+                        "{{contextData.navigation.ProjectBeneficiaryClientReferenceId}}",
+                  },
                 ],
                 "onError": [
                   {
@@ -1932,6 +1961,23 @@ final dynamic sampleFlows = {
               "properties": {
                 "type": "FORM",
                 "name": "REFER_BENEFICIARY",
+                "data": [
+                  {
+                    "key": "selectedIndividualClientReferenceId",
+                    "value":
+                        "{{contextData.navigation.selectedIndividualClientReferenceId}}"
+                  },
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value":
+                        "{{ contextData.navigation.HouseholdClientReferenceId }}"
+                  },
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value":
+                        "{{contextData.navigation.ProjectBeneficiaryClientReferenceId}}",
+                  },
+                ],
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
@@ -2173,7 +2219,23 @@ final dynamic sampleFlows = {
           "actionType": "FETCH_TRANSFORMER_CONFIG",
           "properties": {
             "configName": "referralBeneficaryCreate",
-            "data": [],
+            "data": [
+              {
+                "key": "selectedIndividualClientReferenceId",
+                "value":
+                    "{{contextData.navigation.selectedIndividualClientReferenceId}}"
+              },
+              {
+                "key": "HouseholdClientReferenceId",
+                "value":
+                    "{{ contextData.navigation.HouseholdClientReferenceId }}"
+              },
+              {
+                "key": "ProjectBeneficiaryClientReferenceId",
+                "value":
+                    "{{contextData.navigation.ProjectBeneficiaryClientReferenceId}}",
+              },
+            ],
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
@@ -2186,6 +2248,18 @@ final dynamic sampleFlows = {
           "actionType": "CREATE_EVENT",
           "properties": {
             "entity": "REFERRAL",
+            "data": [
+              {
+                "key": "selectedIndividualClientReferenceId",
+                "value":
+                    "{{contextData.navigation.selectedIndividualClientReferenceId}}"
+              },
+              {
+                "key": "HouseholdClientReferenceId",
+                "value":
+                    "{{ contextData.navigation.HouseholdClientReferenceId }}"
+              },
+            ],
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
@@ -2198,17 +2272,116 @@ final dynamic sampleFlows = {
           "actionType": "NAVIGATION",
           "properties": {
             "type": "TEMPLATE",
-            "name": "deliverySuccess",
+            "name": "referralSuccess",
+            "data": [
+              {
+                "key": "selectedIndividualClientReferenceId",
+                "value":
+                    "{{contextData.navigation.selectedIndividualClientReferenceId}}"
+              },
+              {
+                "key": "HouseholdClientReferenceId",
+                "value":
+                    "{{ contextData.navigation.HouseholdClientReferenceId }}"
+              },
+            ],
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
                 "properties": {"message": "Navigation failed."}
               }
-            ],
-            "data": []
+            ]
           }
         }
       ]
+    },
+    {
+      "body": [
+        {
+          "type": "template",
+          "label": "REFERRAL_SUCCESSFUL_PANEL_CARD_HEADING",
+          "format": "panelCard",
+          "heading": "REFERRAL_SUCCESSFUL_PANEL_CARD_HEADING",
+          "fieldName": "successCard",
+          "mandatory": true,
+          "properties": {"type": "success"},
+          "description": "REFERRAL_SUCCESSFUL_PANEL_CARD_DESC",
+          "primaryAction": {
+            "type": "template",
+            "label": "REFERRAL_VIEW_HOUSEHOLD_DETAILS",
+            "format": "button",
+            "hidden": false,
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [
+                    {
+                      "key": "selectedIndividualClientReferenceId",
+                      "value":
+                          "{{contextData.navigation.selectedIndividualClientReferenceId}}"
+                    },
+                    {
+                      "key": "HouseholdClientReferenceId",
+                      "value":
+                          "{{ contextData.navigation.HouseholdClientReferenceId }}"
+                    }
+                  ],
+                  "name": "householdOverview",
+                  "type": "TEMPLATE"
+                }
+              }
+            ],
+            "fieldName": "viewHouseholdButton",
+            "mandatory": true,
+            "properties": {"type": "primary"}
+          },
+          "secondaryAction": {
+            "type": "template",
+            "label": "GO_BACK",
+            "format": "button",
+            "hidden": false,
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {"name": "searchBeneficiary", "type": "TEMPLATE"}
+              }
+            ],
+            "fieldName": "goBack",
+            "mandatory": true,
+            "properties": {"type": "secondary"}
+          }
+        }
+      ],
+      "name": "referralSuccess",
+      "order": 7,
+      "header": [
+        {
+          "type": "template",
+          "label": "REFERRAL_BACK",
+          "format": "backLink",
+          "onAction": [
+            {
+              "actionType": "BACK_NAVIGATION",
+              "properties": {
+                "data": [
+                  {
+                    "key": "HouseholdClientReferenceId",
+                    "value": "{{navigation.clientReferenceId}}"
+                  }
+                ],
+                "name": "householdOverview",
+                "type": "TEMPLATE"
+              }
+            }
+          ],
+          "fieldName": "referralBack",
+          "mandatory": true
+        }
+      ],
+      "heading": "",
+      "screenType": "TEMPLATE",
+      "description": ""
     },
     {
       "initActions": [
@@ -2773,158 +2946,6 @@ final dynamic sampleFlows = {
               {
                 "key": "HouseholdClientReferenceId",
                 "value": "{{contextData.navigation.HouseholdClientReferenceId}}"
-              }
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "screenType": "FORM",
-      "name": "REFERRAL",
-      "project": "CMP-2025-08-04-004846",
-      "version": 1,
-      "disabled": false,
-      "isSelected": true,
-      "pages": [
-        {
-          "page": "DeliveryDetails",
-          "type": "object",
-          "label": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_HEADING",
-          "order": 1,
-          "navigateTo": {
-            "name": "household-acknowledgement",
-            "type": "template"
-          },
-          "properties": [
-            {
-              "type": "integer",
-              "label":
-                  "APPONE_REGISTRATION_DELIVERYDETAILS_label_dateOfDelivery",
-              "order": 1,
-              "value": "",
-              "format": "date",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": true,
-              "fieldName": "dateOfRegistration",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": true,
-              "validations": [],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "includeInSummary": true
-            },
-            {
-              "type": "dynamic",
-              "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_resource",
-              "order": 2,
-              "value": "",
-              "format": "custom",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "resourceCard",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "includeInSummary": true
-            },
-            {
-              "type": "string",
-              "label":
-                  "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_deliveryComments",
-              "order": 3,
-              "value": "",
-              "format": "dropdown",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "deliveryComment",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "includeInSummary": true
-            },
-            {
-              "type": "string",
-              "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_scanner",
-              "order": 4,
-              "value": "",
-              "format": "scanner",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "scanner",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false,
-              "includeInSummary": true
-            }
-          ],
-          "actionLabel":
-              "APPONE_REGISTRATION_DELIVERYDETAILS_ACTION_BUTTON_LABEL_1",
-          "description":
-              "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION"
-        }
-      ],
-      "onAction": [
-        {
-          "actionType": "FETCH_TRANSFORMER_CONFIG",
-          "properties": {
-            "configName": "referralBeneficaryCreate",
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to fetch config."}
-              }
-            ]
-          }
-        },
-        {
-          "actionType": "CREATE_EVENT",
-          "properties": {
-            "entity": "REFERRAL",
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to create household."}
-              }
-            ]
-          }
-        },
-        {
-          "actionType": "NAVIGATION",
-          "properties": {
-            "type": "TEMPLATE",
-            "name": "deliverySuccess",
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Navigation failed."}
               }
             ]
           }
