@@ -1074,17 +1074,25 @@ class ConditionEvaluator {
 
     switch (conf['operator']) {
       case 'equals':
-        return left == right;
+        return left.toString() == right.toString();
       case 'notEquals':
-        return left != right;
+        return left.toString() != right;
       case 'lt':
-        return (left is num && right is num) ? left < right : false;
+        final leftInt = int.tryParse(left.toString()) ?? 0;
+        final rightInt = int.tryParse(right.toString()) ?? 0;
+        return leftInt < rightInt;
       case 'lte':
-        return (left is num && right is num) ? left <= right : false;
+        final leftInt = int.tryParse(left.toString()) ?? 0;
+        final rightInt = int.tryParse(right.toString()) ?? 0;
+        return leftInt <= rightInt;
       case 'gt':
-        return (left is num && right is num) ? left > right : false;
+        final leftInt = int.tryParse(left.toString()) ?? 0;
+        final rightInt = int.tryParse(right.toString()) ?? 0;
+        return leftInt > rightInt;
       case 'gte':
-        return (left is num && right is num) ? left >= right : false;
+        final leftInt = int.tryParse(left.toString()) ?? 0;
+        final rightInt = int.tryParse(right.toString()) ?? 0;
+        return  leftInt >= rightInt;
       default:
         return null;
     }
