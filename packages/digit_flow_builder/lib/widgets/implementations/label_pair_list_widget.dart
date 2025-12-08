@@ -77,7 +77,7 @@ class LabelPairListWidget implements FlowWidget {
         LabelValueItem(
           maxLines: 5,
           label: keyText,
-          value: valueText ?? '',
+          value: localization?.translate(valueText) ?? '',
           labelFlex: 7,
         ),
       );

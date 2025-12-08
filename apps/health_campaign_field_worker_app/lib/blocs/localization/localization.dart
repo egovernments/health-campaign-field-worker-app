@@ -96,6 +96,7 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
     } catch (error) {
       rethrow;
     } finally {
+      LocalizationParams().setModule(event.module, false);
       final List codes = event.locale.split('_');
       await _loadLocale(codes);
       emit(state.copyWith(loading: false, retryModule: null));
