@@ -11,7 +11,6 @@ import '../../blocs/state_wrapper_builder.dart';
 import '../../flow_builder.dart';
 import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
-import '../../widget_registry.dart';
 import 'action_executor.dart';
 
 class SearchExecutor extends ActionExecutor {
@@ -169,7 +168,8 @@ class SearchExecutor extends ActionExecutor {
             // Build wrapper if config exists
             List<dynamic>? wrapper;
             if (config?['wrapperConfig'] != null && entities.isNotEmpty) {
-              wrapper = WrapperBuilder(entities, config?['wrapperConfig']).build();
+              wrapper =
+                  WrapperBuilder(entities, config?['wrapperConfig']).build();
             }
 
             final updatedState =

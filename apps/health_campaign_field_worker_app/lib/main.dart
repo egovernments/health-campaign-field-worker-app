@@ -324,7 +324,7 @@ final dynamic sampleFlows = {
                 },
                 "children": [
                   {
-                    "format": "text",
+                    "format": "textTemplate",
                     "value": "{{ headIndividual.0.name.givenName }}"
                   },
                   {
@@ -350,7 +350,7 @@ final dynamic sampleFlows = {
                 ]
               },
               {
-                "format": "text",
+                "format": "textTemplate",
                 "value": "{{ headOfHousehold.0.isHeadOfHousehold }}"
               },
               {
@@ -1301,7 +1301,7 @@ final dynamic sampleFlows = {
                                 {
                                   "key": "HouseholdClientReferenceId",
                                   "value":
-                                      "{{ context.household.clientReferenceId }}"
+                                      "{{member.0.householdClientReferenceId}}"
                                 },
                                 {"key": "isEdit", "value": "true"}
                               ]
@@ -1717,7 +1717,7 @@ final dynamic sampleFlows = {
             "data": [
               {
                 "key": "HouseholdClientReferenceId",
-                "value": "{{contextData.navigation.HouseholdClientReferenceId}}"
+                "value": "{{navigation.HouseholdClientReferenceId}}"
               }
             ]
           }
@@ -7104,7 +7104,7 @@ final dynamic inventoryReportFlows = {
           "children": [
             {
               "type": "template",
-              "format": "dropdown",
+              "format": "dropdownTemplate",
               "label": "STOCKREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
               "required": true,
               "key": "selectedFacility",
@@ -7148,7 +7148,7 @@ final dynamic inventoryReportFlows = {
             },
             {
               "type": "template",
-              "format": "dropdown",
+              "format": "dropdownTemplate",
               "label": "STOCKREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
               "required": true,
               "key": "selectedProduct",
