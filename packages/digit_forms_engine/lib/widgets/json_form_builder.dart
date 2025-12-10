@@ -298,6 +298,17 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     }
   }
 
+  int? _safeTimestamp(String type) {
+    final v = widget.schema.validations
+        ?.firstWhereOrNull((item) => item.type == type)
+        ?.value;
+
+    if (v == null) return null;
+    if (v is! int) return null; // avoid type mismatch
+
+    return v;
+  }
+
   /// Handle `string` type formats
   Widget _buildStringType(FormGroup form) {
     final format = widget.schema.format;
@@ -365,11 +376,12 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           form: form,
           formControlName: widget.formControlName,
           validations: widget.schema.validations,
-          initialDate: parseDateValue(DigitDateUtils.getDateFromTimestamp(
-              widget.schema.validations
-                  ?.firstWhereOrNull((item) => item.type == "startDate")
-                  ?.value,
-              dateFormat: "dd/MM/YYYY")),
+          initialDate: _safeTimestamp("startDate") != null
+              ? parseDateValue(DigitDateUtils.getDateFromTimestamp(
+                  _safeTimestamp("startDate")!,
+                  dateFormat: "dd MMM YYYY",
+                ))
+              : null,
         );
 
       case PropertySchemaFormat.scanner:
@@ -392,16 +404,20 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label: translateIfPresent(widget.schema.label, localizations),
           form: form,
           formControlName: widget.formControlName,
-          start: parseDateValue(DigitDateUtils.getDateFromTimestamp(
-              widget.schema.validations
-                  ?.firstWhereOrNull((item) => item.type == "startDate")
-                  ?.value,
-              dateFormat: "dd/MM/YYYY")),
-          end: parseDateValue(DigitDateUtils.getDateFromTimestamp(
-              widget.schema.validations
-                  ?.firstWhereOrNull((item) => item.type == "endDate")
-                  ?.value,
-              dateFormat: "dd/MM/YYYY")),
+          start: _safeTimestamp("startDate") != null
+              ? parseDateValue(DigitDateUtils.getDateFromTimestamp(
+                  _safeTimestamp("startDate")!,
+                  dateFormat: "dd MMM YYYY",
+                ))
+              : null,
+          end: _safeTimestamp("endDate") != null
+              ? parseDateValue(
+                  DigitDateUtils.getDateFromTimestamp(
+                    _safeTimestamp("endDate")!,
+                    dateFormat: "dd MMM YYYY",
+                  ),
+                )
+              : null,
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
         );

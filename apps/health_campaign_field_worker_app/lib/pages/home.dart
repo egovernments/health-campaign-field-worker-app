@@ -622,12 +622,12 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.announcement,
           label: i18.home.fileComplaint,
           onPressed: () async {
-            if (isTriggerLocalisation) {
-              final moduleName =
-                  'hcm-complaints-${context.selectedProject.referenceID}';
-              triggerLocalization(module: moduleName);
-              isTriggerLocalisation = false;
-            }
+            // if (isTriggerLocalisation) {
+            final moduleName =
+                'hcm-complaints-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+            // }
             try {
               CrudBlocSingleton().setData(
                 crudService: DigitCrudService(
@@ -721,12 +721,12 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
-            if (isTriggerLocalisation) {
-              final moduleName =
-                  'hcm-registration-${context.selectedProject.referenceID}';
-              triggerLocalization(module: moduleName);
-              isTriggerLocalisation = false;
-            }
+            // if (isTriggerLocalisation) {
+            final moduleName =
+                'hcm-registration-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+            // }
 
             final prefs = await SharedPreferences.getInstance();
             final schemaJsonRaw = prefs.getString('app_config_schemas');
@@ -903,12 +903,12 @@ class _HomePageState extends LocalizedState<HomePage> {
           customIcon: Constants.closedHouseholdSvg,
           label: i18.home.closedHouseHoldLabel,
           onPressed: () async {
-            if (isTriggerLocalisation) {
-              final moduleName =
-                  'hcm-closehousehold-${context.selectedProject.referenceID}';
-              triggerLocalization(module: moduleName);
-              isTriggerLocalisation = false;
-            }
+            // if (isTriggerLocalisation) {
+            final moduleName =
+                'hcm-closehousehold-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+            // }
             try {
               CrudBlocSingleton().setData(
                 crudService: DigitCrudService(
@@ -965,12 +965,12 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.store_mall_directory,
           label: i18.home.manageStockLabel,
           onPressed: () async {
-            if (isTriggerLocalisation) {
-              final moduleName =
-                  'hcm-inventory-${context.selectedProject.referenceID}';
-              triggerLocalization(module: moduleName);
-              isTriggerLocalisation = false;
-            }
+            // if (isTriggerLocalisation) {
+            final moduleName =
+                'hcm-inventory-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+            // }
             try {
               CrudBlocSingleton().setData(
                 crudService: DigitCrudService(
@@ -1060,12 +1060,12 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.menu_book,
           label: i18.home.stockReconciliationLabel,
           onPressed: () async {
-            if (isTriggerLocalisation) {
-              final moduleName =
-                  'hcm-stockreconciliation-${context.selectedProject.referenceID}';
-              triggerLocalization(module: moduleName);
-              isTriggerLocalisation = false;
-            }
+            // if (isTriggerLocalisation) {
+            final moduleName =
+                'hcm-stockreconciliation-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+            // }
             try {
               CrudBlocSingleton().setData(
                 crudService: DigitCrudService(
@@ -1163,10 +1163,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           customIconSize: spacer8,
           label: i18.home.mySurveyForm,
           onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
+            // if (isTriggerLocalisation) {
+            triggerLocalization();
+            isTriggerLocalisation = false;
+            // }
             context.router.push(SurveyFormWrapperRoute());
           },
         ),
@@ -1209,12 +1209,12 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.supervised_user_circle_rounded,
           label: i18.home.beneficiaryReferralLabel,
           onPressed: () async {
-            if (isTriggerLocalisation) {
-              final moduleName =
-                  'hcm-hfreferral-${context.selectedProject.referenceID}';
-              triggerLocalization(module: moduleName);
-              isTriggerLocalisation = false;
-            }
+            // if (isTriggerLocalisation) {
+            final moduleName =
+                'hcm-hfreferral-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+            // }
             try {
               CrudBlocSingleton().setData(
                 crudService: DigitCrudService(
@@ -1268,12 +1268,12 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.announcement,
           label: i18.home.viewReportsLabel,
           onPressed: () async {
-            if (isTriggerLocalisation) {
-              final moduleName =
-                  'hcm-stockreports-${context.selectedProject.referenceID}';
-              triggerLocalization(module: moduleName);
-              isTriggerLocalisation = false;
-            }
+            // if (isTriggerLocalisation) {
+            final moduleName =
+                'hcm-stockreports-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+            // }
             try {
               CrudBlocSingleton().setData(
                 crudService: DigitCrudService(
@@ -1363,11 +1363,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
           onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            ;
+            // if (isTriggerLocalisation) {
+            triggerLocalization();
+            isTriggerLocalisation = false;
+            // };
             context.router.push(const ManageAttendanceRoute());
           },
         ),
@@ -1392,10 +1391,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.send,
           label: i18.home.dataShare,
           onPressed: () async {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
+            // if (isTriggerLocalisation) {
+            triggerLocalization();
+            isTriggerLocalisation = false;
+            // }
             context.router.push(const DataShareHomeRoute());
           },
         ),
@@ -1405,11 +1404,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.bar_chart_sharp,
           label: i18.home.dashboard,
           onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            ;
+            // if (isTriggerLocalisation) {
+            triggerLocalization();
+            isTriggerLocalisation = false;
+            // };
             context.router.push(const UserDashboardRoute());
           },
         ),
@@ -1418,10 +1416,10 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           label: i18.home.beneficiaryIdLabel,
           onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
+            // if (isTriggerLocalisation) {
+            triggerLocalization();
+            isTriggerLocalisation = false;
+            // }
             context.router.push(BeneficiaryIdDownSyncRoute());
           },
           icon: Icons.account_box,
@@ -1542,17 +1540,15 @@ class _HomePageState extends LocalizedState<HomePage> {
               context
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
-                /// FIXME: FOR NOW FETCHING EVERY MODULE AS HOME CARD WERE NOT THERE IN THE "COMMON".. WILL CHECK
-                module: module != null && module.isNotEmpty
-                    ? "$module,${localizationModulesList?.interfaces
-                        .where((e) => e.type == Modules.localizationModule)
-                        .map((e) => e.name.toString())
-                        .join(',') ?? ""}"
-                    : localizationModulesList?.interfaces
-                    .where((e) => e.type == Modules.localizationModule)
-                    .map((e) => e.name.toString())
-                    .join(',') ??
-                    "",
+                    /// FIXME: FOR NOW FETCHING EVERY MODULE AS HOME CARD WERE NOT THERE IN THE "COMMON".. WILL CHECK
+                    module: module != null && module.isNotEmpty
+                        ? "$module,${localizationModulesList?.interfaces.where((e) => e.type == Modules.localizationModule).map((e) => e.name.toString()).join(',') ?? ""}"
+                        : localizationModulesList?.interfaces
+                                .where(
+                                    (e) => e.type == Modules.localizationModule)
+                                .map((e) => e.name.toString())
+                                .join(',') ??
+                            "",
                     tenantId: envConfig.variables.tenantId,
                     locale: selectedLocale!,
                     path: Constants.localizationApiPath,
