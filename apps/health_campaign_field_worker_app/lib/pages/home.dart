@@ -846,32 +846,32 @@ class _HomePageState extends LocalizedState<HomePage> {
               dynamicEntityModelListener: EntityModelMapMapper(),
             );
             try {
-              if (schemaJsonRaw != null) {
-                final allSchemas =
-                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                final data = allSchemas['REGISTRATION'];
-
-                final registrationDeliveryData = data?['data'];
-                final flowsData =
-                    (registrationDeliveryData['flows'] as List<dynamic>?)
-                            ?.map((e) => Map<String, dynamic>.from(e as Map))
-                            .toList() ??
-                        [];
-                FlowRegistry.setConfig(flowsData);
-                NavigationRegistry.setupNavigation(context);
-
-                context.router.push(
-                  FlowBuilderHomeRoute(
-                      pageName: registrationDeliveryData["initialPage"]),
-                );
-              } else {
+              // if (schemaJsonRaw != null) {
+              //   final allSchemas =
+              //       json.decode(schemaJsonRaw) as Map<String, dynamic>;
+              //   final data = allSchemas['REGISTRATION'];
+              //
+              //   final registrationDeliveryData = data?['data'];
+              //   final flowsData =
+              //       (registrationDeliveryData['flows'] as List<dynamic>?)
+              //               ?.map((e) => Map<String, dynamic>.from(e as Map))
+              //               .toList() ??
+              //           [];
+              //   FlowRegistry.setConfig(flowsData);
+              //   NavigationRegistry.setupNavigation(context);
+              //
+              //   context.router.push(
+              //     FlowBuilderHomeRoute(
+              //         pageName: registrationDeliveryData["initialPage"]),
+              //   );
+              // } else {
                 FlowRegistry.setConfig(
                     sampleFlows["flows"] as List<Map<String, dynamic>>);
                 NavigationRegistry.setupNavigation(context);
                 context.router.push(
                   FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
                 );
-              }
+              // }
             } catch (e) {
               debugPrint('error $e');
             }
@@ -1542,8 +1542,17 @@ class _HomePageState extends LocalizedState<HomePage> {
               context
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
-                    module: module ??
-                        "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                /// FIXME: FOR NOW FETCHING EVERY MODULE AS HOME CARD WERE NOT THERE IN THE "COMMON".. WILL CHECK
+                module: module != null && module.isNotEmpty
+                    ? "$module,${localizationModulesList?.interfaces
+                        .where((e) => e.type == Modules.localizationModule)
+                        .map((e) => e.name.toString())
+                        .join(',') ?? ""}"
+                    : localizationModulesList?.interfaces
+                    .where((e) => e.type == Modules.localizationModule)
+                    .map((e) => e.name.toString())
+                    .join(',') ??
+                    "",
                     tenantId: envConfig.variables.tenantId,
                     locale: selectedLocale!,
                     path: Constants.localizationApiPath,

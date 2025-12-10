@@ -186,23 +186,30 @@ final dynamic sampleFlows = {
       },
       "body": [
         {
-          "format": "switch",
+          "format": "proximitySearch",
           "label": "Proximity Search",
           "fieldName": "proximitySearch",
           "onAction": [
             {
-              "actionType": "EVENT",
+              "actionType": "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
               "properties": {
-                "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT",
-                "name": "ENTITY // ADDRESS",
+                "type": "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
+                "name": "address",
                 "data": [
                   {
-                    "key": "lat & long   //// NOT SURE ABOUT THIS SEARCH",
-                    "value": "field.value",
+                    "key": "",
+                    "value": 5,
                     "operation": "within"
                   }
                 ]
               }
+            }
+          ],
+          "validation":[
+            {
+              "key": "proximityRadius",
+              "value": 5,
+              "errorMessage":""
             }
           ]
         },

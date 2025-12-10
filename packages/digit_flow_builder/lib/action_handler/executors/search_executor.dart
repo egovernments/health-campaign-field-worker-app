@@ -108,11 +108,29 @@ class SearchExecutor extends ActionExecutor {
         continue;
       }
 
+      // extract coordinates if present
+      LatLng? latLng;
+      if (filterData['lat'] != null && filterData['long'] != null) {
+        final latRaw = filterData['lat'];
+        final longRaw = filterData['long'];
+
+        final parsedLat = double.tryParse(latRaw.toString());
+        final parsedLong = double.tryParse(longRaw.toString());
+
+        if (parsedLat != null && parsedLong != null) {
+          latLng = LatLng(
+            latitude: parsedLat,
+            longitude: parsedLong,
+          );
+        }
+      }
+
       filters.add(SearchFilter(
         root: data['name'],
         field: resolvedKey.toString(),
         operator: operation,
         value: resolvedValue,
+        coordinates: latLng,
       ));
     }
 
