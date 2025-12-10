@@ -441,7 +441,7 @@ dynamic _resolvePath(dynamic root, String path) {
       final key = listMatch.group(1)!;
       final index = int.parse(listMatch.group(2)!);
 
-      if (current is Map<String, dynamic> && current.containsKey(key)) {
+      if (current is Map && current.containsKey(key)) {
         final listVal = current[key];
         if (listVal is List && index < listVal.length) {
           current = listVal[index];
@@ -452,8 +452,8 @@ dynamic _resolvePath(dynamic root, String path) {
         return null;
       }
     }
-    // Normal map lookup
-    else if (current is Map<String, dynamic>) {
+    // Normal map lookup - handle both Map<String, dynamic> and Map<dynamic, dynamic>
+    else if (current is Map) {
       if (!current.containsKey(part)) return null;
       current = current[part];
 
