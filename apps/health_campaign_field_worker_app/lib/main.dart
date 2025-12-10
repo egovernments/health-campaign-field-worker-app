@@ -196,21 +196,13 @@ final dynamic sampleFlows = {
                 "type": "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
                 "name": "address",
                 "data": [
-                  {
-                    "key": "",
-                    "value": 5,
-                    "operation": "within"
-                  }
+                  {"key": "", "value": 5, "operation": "within"}
                 ]
               }
             }
           ],
-          "validation":[
-            {
-              "key": "proximityRadius",
-              "value": 5,
-              "errorMessage":""
-            }
+          "validation": [
+            {"key": "proximityRadius", "value": 5, "errorMessage": ""}
           ]
         },
         {
@@ -2588,7 +2580,7 @@ final dynamic sampleFlows = {
           },
           "futureDeliveries": {
             "from":
-                "singleton.selectedProject.additionalDetails.projectType.cycles",
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
             "map": "{{item.deliveries}}",
             "skip": {"from": "{{dose}}"},
             "takeWhile": {
@@ -2621,7 +2613,7 @@ final dynamic sampleFlows = {
           },
           "pastCycles": {
             "from":
-                "singleton.selectedProject.additionalDetails.projectType.cycles",
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
             "where": {
               "left": "{{item.id}}",
               "operator": "lt",
