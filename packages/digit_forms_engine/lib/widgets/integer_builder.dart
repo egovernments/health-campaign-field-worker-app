@@ -32,6 +32,7 @@ class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
       builder: (field) => LabeledField(
         infoText: translateIfPresent(tooltipText, loc),
         label: label,
+        capitalizedFirstLetter: false,
         isRequired: isRequired ?? false,
         child: DigitNumericFormInput(
           helpText: helpText,

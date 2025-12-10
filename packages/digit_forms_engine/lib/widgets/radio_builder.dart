@@ -30,6 +30,7 @@ class JsonSchemaRadioBuilder extends JsonSchemaBuilder<bool> {
         return LabeledField(
           charCondition: true,
           isRequired: hasRequiredValidation(validations),
+          capitalizedFirstLetter: false,
           label: label,
           infoText: tooltipText,
           child: RadioList(

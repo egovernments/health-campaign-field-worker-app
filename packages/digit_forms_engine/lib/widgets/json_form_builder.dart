@@ -365,7 +365,11 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           form: form,
           formControlName: widget.formControlName,
           validations: widget.schema.validations,
-          initialDate: parseDateValue(widget.schema.startDate),
+          initialDate: parseDateValue(DigitDateUtils.getDateFromTimestamp(
+              widget.schema.validations
+                  ?.firstWhereOrNull((item) => item.type == "startDate")
+                  ?.value,
+              dateFormat: "dd/MM/YYYY")),
         );
 
       case PropertySchemaFormat.scanner:
@@ -388,8 +392,16 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label: translateIfPresent(widget.schema.label, localizations),
           form: form,
           formControlName: widget.formControlName,
-          start: parseDateValue(widget.schema.startDate),
-          end: parseDateValue(widget.schema.endDate),
+          start: parseDateValue(DigitDateUtils.getDateFromTimestamp(
+              widget.schema.validations
+                  ?.firstWhereOrNull((item) => item.type == "startDate")
+                  ?.value,
+              dateFormat: "dd/MM/YYYY")),
+          end: parseDateValue(DigitDateUtils.getDateFromTimestamp(
+              widget.schema.validations
+                  ?.firstWhereOrNull((item) => item.type == "endDate")
+                  ?.value,
+              dateFormat: "dd/MM/YYYY")),
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
         );
@@ -531,8 +543,16 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label: translateIfPresent(widget.schema.label, localizations),
           form: form,
           formControlName: widget.formControlName,
-          start: parseDateValue(widget.schema.startDate),
-          end: parseDateValue(widget.schema.endDate),
+          start: parseDateValue(DigitDateUtils.getDateFromTimestamp(
+              widget.schema.validations
+                  ?.firstWhereOrNull((item) => item.type == "startDate")
+                  ?.value,
+              dateFormat: "dd/MM/YYYY")),
+          end: parseDateValue(DigitDateUtils.getDateFromTimestamp(
+              widget.schema.validations
+                  ?.firstWhereOrNull((item) => item.type == "endDate")
+                  ?.value,
+              dateFormat: "dd/MM/YYYY")),
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),

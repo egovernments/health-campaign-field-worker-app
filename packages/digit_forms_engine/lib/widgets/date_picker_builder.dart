@@ -31,6 +31,7 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
       builder: (field) => LabeledField(
         infoText: translateIfPresent(tooltipText, loc),
         label: label,
+        capitalizedFirstLetter: false,
         isRequired: isRequired ?? false,
         child: DigitDateFormInput(
           firstDate: parseDateValue(start),

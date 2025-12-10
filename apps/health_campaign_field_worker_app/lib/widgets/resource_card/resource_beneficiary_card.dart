@@ -79,6 +79,7 @@ class ResourceBeneficiaryCardState
           label: localizations.translate(
             'Quantity Distributed',
           ),
+          capitalizedFirstLetter: false,
           child: DigitNumericFormInput(
             minValue: 1,
             step: 1,
