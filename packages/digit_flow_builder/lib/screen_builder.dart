@@ -88,44 +88,42 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
   Widget build(BuildContext context) {
     final screenType = widget.config['screenType'];
     final screenKey = '$screenType::${widget.config['name']}';
-    return ScreenKeyListener(
-      screenKey: screenKey,
-      builder: (context, crudState) {
-        return BlocListener<FormsBloc, FormsState>(
-          listener: (context, state) async {
-            if (state is FormsSubmittedState &&
-                widget.config['name'] == state.activeSchemaKey) {
-              debugPrint('SCREEN_BUILDER: Matched! Executing onAction...');
-              // final config = FlowRegistry.getByName(state.schema[]);///////
-              final onSubmit = widget.config['onAction'] as List<dynamic>?;
+    return BlocListener<FormsBloc, FormsState>(
+      listener: (context, state) async {
+        if (state is FormsSubmittedState &&
+            widget.config['name'] == state.activeSchemaKey) {
+          debugPrint('SCREEN_BUILDER: Matched! Executing onAction...');
+          // final config = FlowRegistry.getByName(state.schema[]);///////
+          final onSubmit = widget.config['onAction'] as List<dynamic>?;
 
-              Map<String, dynamic> contextData = {
-                'formData': state.formData,
-                'navigation': widget.navigationParams ?? {},
-              };
+          Map<String, dynamic> contextData = {
+            'formData': state.formData,
+            'navigation': widget.navigationParams ?? {},
+          };
 
-              if (onSubmit != null) {
-                context.read<FormsBloc>().add(
-                      FormsEvent.clearForm(
-                          schemaKey: widget.config['name'] ?? ''),
-                    );
-                contextData = await ActionHandler.executeActions(
-                  onSubmit,
-                  context,
-                  contextData,
+          if (onSubmit != null) {
+            context.read<FormsBloc>().add(
+                  FormsEvent.clearForm(schemaKey: widget.config['name'] ?? ''),
                 );
-              }
-            }
-          },
-          child: _buildScreen(
-            context,
-            screenType,
-            widget.config,
-            crudState,
-            screenKey,
-          ),
-        );
+            contextData = await ActionHandler.executeActions(
+              onSubmit,
+              context,
+              contextData,
+            );
+          }
+        }
       },
+      child: ScreenKeyListener(
+          screenKey: screenKey,
+          builder: (context, crudState) {
+            return _buildScreen(
+              context,
+              screenType,
+              widget.config,
+              crudState,
+              screenKey,
+            );
+          }),
     );
   }
 

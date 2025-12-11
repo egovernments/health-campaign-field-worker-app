@@ -595,10 +595,9 @@ packages:
   digit_location_tracker:
     dependency: "direct main"
     description:
-      name: digit_location_tracker
-      sha256: a93bda5b07db112210e08c7a76f0627957d931d5106c8a7db8876503cc2fd06f
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_location_tracker"
+      relative: true
+    source: path
     version: "1.0.0"
   digit_scanner:
     dependency: "direct main"
@@ -617,11 +616,12 @@ packages:
   digit_ui_components:
     dependency: "direct main"
     description:
-      name: digit_ui_components
-      sha256: "4dfb5a046e0f2b491063492664aaa63a47a45476de387cf85922f112c1af954a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.3+2"
+      path: "flutter/digit-ui-components/digit_components"
+      ref: beneficiary-idgen
+      resolved-ref: a123262fe4d85e4c81fd3f361905b0340d24e7de
+      url: "https://github.com/egovernments/DIGIT-UI-LIBRARIES"
+    source: git
+    version: "0.2.3+4"
   dio:
     dependency: "direct main"
     description:
@@ -2458,5 +2458,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.3 <4.0.0"
+  dart: ">=3.4.0 <4.0.0"
   flutter: ">=3.22.0"

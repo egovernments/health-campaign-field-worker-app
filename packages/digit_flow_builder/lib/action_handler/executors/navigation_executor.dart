@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/flow_crud_bloc.dart';
 import '../../blocs/state_wrapper_builder.dart';
@@ -19,6 +21,9 @@ class NavigationExecutor extends ActionExecutor {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
+    context
+        .read<DigitScannerBloc>()
+        .add(const DigitScannerEvent.handleScanner());
     final targetPageName = action.properties['name'] as String?;
     final targetType = action.properties['type'] as String?;
 
@@ -107,8 +112,9 @@ class NavigationExecutor extends ActionExecutor {
             debugPrint(
                 'NAVIGATION: No existing wrapper found, building new wrapper');
             // Fall back to building new wrapper
-            final wrapper =
-                WrapperBuilder(entities as List<EntityModel>, config!['wrapperConfig']).build();
+            final wrapper = WrapperBuilder(
+                    entities as List<EntityModel>, config!['wrapperConfig'])
+                .build();
             final flowState = const FlowCrudState().copyWith(
               stateWrapper: wrapper,
             );
@@ -116,7 +122,8 @@ class NavigationExecutor extends ActionExecutor {
           } else {
             // Update entities within the existing wrapper structure
             // The wrapper items are Map<String, dynamic> with entity types as keys
-            final updatedEntities = (entities as List).whereType<EntityModel>().toList();
+            final updatedEntities =
+                (entities as List).whereType<EntityModel>().toList();
             debugPrint(
                 'NAVIGATION: Updating ${updatedEntities.length} entities in existing wrapper');
 
