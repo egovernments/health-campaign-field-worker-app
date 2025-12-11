@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../action_handler/action_config.dart';
 import '../utils/conditional_evaluator.dart';
-import '../utils/interpolation.dart';
 import '../widget_registry.dart';
 
 /// Base interface for all flow widgets
@@ -46,11 +45,13 @@ class FlowWidgetFactory {
     };
 
     // Check visibility condition
-    final visible = ConditionalEvaluator.evaluate(
-      json['visible'] ?? true,
-      evalContext,
-      stateData: stateData,
-    );
+    final visible = json['hidden'] == true
+        ? false
+        : ConditionalEvaluator.evaluate(
+            json['visible'] ?? true,
+            evalContext,
+            stateData: stateData,
+          );
 
     if (visible == false) {
       return const SizedBox.shrink();
