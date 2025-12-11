@@ -79,7 +79,9 @@ class TransformerExecutor extends ActionExecutor {
     FlowCrudStateRegistry().update(config?["name"], flowState);
 
     // Check if this is edit mode
-    final navigationParams = contextData['navigation'] as Map<String, dynamic>?;
+    final navigationParams = contextData['navigation'] is Map
+        ? Map<String, dynamic>.from(contextData['navigation'] as Map)
+        : null;
     final isEdit = navigationParams?['isEdit'] == true ||
         navigationParams?['isEdit'] == 'true';
 

@@ -1,14 +1,6 @@
-import 'package:digit_ui_components/digit_components.dart';
-import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
-import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
-import 'package:digit_ui_components/widgets/atoms/switch.dart';
-import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
-import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
 
 import 'action_handler/action_config.dart';
-import 'blocs/app_localization.dart';
-import 'blocs/flow_crud_bloc.dart';
 import 'utils/function_registry.dart';
 import 'utils/interpolation.dart';
 import 'widgets/flow_widget_interface.dart';
@@ -77,7 +69,6 @@ class WidgetRegistry {
     // Unknown widget format
     return Text('Unknown widget format: $format');
   }
-
 }
 
 // Legacy function for backward compatibility
