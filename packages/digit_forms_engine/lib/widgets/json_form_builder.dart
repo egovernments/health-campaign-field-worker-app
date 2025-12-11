@@ -559,16 +559,18 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label: translateIfPresent(widget.schema.label, localizations),
           form: form,
           formControlName: widget.formControlName,
-          start: parseDateValue(DigitDateUtils.getDateFromTimestamp(
-              widget.schema.validations
-                  ?.firstWhereOrNull((item) => item.type == "startDate")
-                  ?.value,
-              dateFormat: "dd/MM/YYYY")),
-          end: parseDateValue(DigitDateUtils.getDateFromTimestamp(
-              widget.schema.validations
-                  ?.firstWhereOrNull((item) => item.type == "endDate")
-                  ?.value,
-              dateFormat: "dd/MM/YYYY")),
+          start: _safeTimestamp("startDate") != null
+              ? parseDateValue(DigitDateUtils.getDateFromTimestamp(
+                  _safeTimestamp("startDate")!,
+                  dateFormat: "dd MMM YYYY",
+                ))
+              : null,
+          end: _safeTimestamp("endDate") != null
+              ? parseDateValue(DigitDateUtils.getDateFromTimestamp(
+                  _safeTimestamp("endDate")!,
+                  dateFormat: "dd MMM YYYY",
+                ))
+              : null,
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
