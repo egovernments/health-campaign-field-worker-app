@@ -65,7 +65,7 @@ class TableWidget implements FlowWidget {
     final rawColumns = (data['columns'] as List<dynamic>?) ?? [];
 
     // Create column headers with resolved templates
-    final columns = rawColumns.map((col) {
+    final columns = rawColumns.where((col) => col['hidden'] != true).map((col) {
       final cellValue = col['cellValue'];
       final headerTemplate = col['header']?.toString() ?? '';
 
