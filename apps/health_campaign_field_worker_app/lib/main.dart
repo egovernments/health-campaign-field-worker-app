@@ -311,6 +311,7 @@ final dynamic sampleFlows = {
           "format": "listView",
           "hidden": "{{ context.household.empty }}",
           "fieldName": "listView",
+          "properties": {"spacing": "spacer4"},
           "data": "members",
           "child": {
             "format": "card",
@@ -1328,7 +1329,7 @@ final dynamic sampleFlows = {
                     "type": "template",
                     "format": "tag",
                     "fieldName": "statusTag",
-                    "visible": "{{fn:isDelivered(task)}}==true",
+                    "visible": "{{fn:isDelivered(task.0.status)}}==true",
                     "label": "ADMINISTERED_SUCCESS",
                     "properties": {"tagType": "success"}
                   },
@@ -1337,7 +1338,7 @@ final dynamic sampleFlows = {
                     "format": "tag",
                     "fieldName": "statusTag",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}}==true && {{fn:isDelivered(task)}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}}==true && {{fn:isDelivered(task.0.status)}}==false",
                     "label": "NOT_VISITED",
                     "properties": {"tagType": "info"}
                   },

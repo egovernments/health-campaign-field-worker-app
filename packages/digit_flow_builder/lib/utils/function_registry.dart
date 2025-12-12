@@ -280,9 +280,21 @@ void initializeFunctionRegistry() {
   });
 
   FunctionRegistry.register("isDelivered", (args, stateData) {
-    // Extract all inputs from args
-    final tasks = (stateData.modelMap['task'] as List?) ?? [];
-    if (tasks.isNotEmpty) return true;
+    // No arguments passed
+    if (args.isEmpty) return false;
+
+    final value = args.first;
+
+    // Must be a string
+    if (value is! String) return false;
+
+    // Normalize (uppercase + trim)
+    final status = value.trim().toUpperCase();
+
+    // Match valid delivered statuses
+    if (status == "ADMINISTRATION_SUCCESS" || status == "DELIVERED") {
+      return true;
+    }
 
     return false;
   });

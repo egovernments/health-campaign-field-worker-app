@@ -9,9 +9,6 @@ import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'action_handler/action_handler.dart';
-import 'action_handler/action_config.dart';
-import 'blocs/flow_crud_bloc.dart';
 import 'data/digit_data_converter.dart';
 import 'flow_builder.dart';
 
@@ -28,24 +25,23 @@ class FlowBuilderHomePage extends LocalizedStatefulWidget {
 }
 
 class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
+  bool _formSchemaLoaded = false;
+
   @override
   void initState() {
-    final config = FlowRegistry.getByName(widget.pageName);
-    if (config?['screenType'] == 'FORM') {
-      final normalized = transformJson(config!);
-      final schemaJsonString = jsonEncode(normalized);
-      context
-          .read<FormsBloc>()
-          .add(FormsEvent.load(schemas: [schemaJsonString]));
-    }
-    final params = FlowCrudStateRegistry().getNavigationParams(widget.pageName);
-    debugPrint("➡️ Navigation params: $params");
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    // Load form schema only once when dependencies are available
+    if (!_formSchemaLoaded) {
+      _loadFormSchemaIfNeeded();
+    }
+  }
+
+  void _loadFormSchemaIfNeeded() {
     final config = FlowRegistry.getByName(widget.pageName);
     if (config?['screenType'] == 'FORM') {
       final normalized = transformJson(config!);
@@ -53,9 +49,8 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
       context
           .read<FormsBloc>()
           .add(FormsEvent.load(schemas: [schemaJsonString]));
+      _formSchemaLoaded = true;
     }
-    final params = FlowCrudStateRegistry().getNavigationParams(widget.pageName);
-    debugPrint("➡️ Navigation params: $params");
   }
 
   @override
@@ -64,18 +59,9 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     final config = FlowRegistry.getByName(widget.pageName);
-    if (config?['screenType'] == 'FORM') {
-      /// TODO: NEED TO REMOVE TRANSFORMATION FROM HERE::: AS THIS WILL HAPPEN FROM MAIN APP
-      final normalized = transformJson(config!);
-      final schemaJsonString = jsonEncode(normalized);
-      context
-          .read<FormsBloc>()
-          .add(FormsEvent.load(schemas: [schemaJsonString]));
-    }
     if (config == null) return const Center(child: Text('Page not found'));
 
     DataConverterSingleton()

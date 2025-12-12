@@ -5,7 +5,6 @@ import 'package:digit_forms_engine/pages/forms_render.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'blocs/flow_crud_bloc.dart';
 import 'flow_builder.dart';
 
 class ScreenKeyListener extends StatelessWidget {
@@ -62,13 +61,26 @@ dynamic resolveTemplates(dynamic input, Map<String, dynamic> nav) {
 }
 
 class _ScreenBuilderState extends State<ScreenBuilder> {
+  late final String _instanceId;
+  late final String _schemaKey;
+  bool _isRegistered = false;
+
   @override
   void initState() {
     super.initState();
+    _schemaKey = widget.config['name'] ?? '';
+    _instanceId =
+        '${_schemaKey}_${hashCode}_${DateTime.now().millisecondsSinceEpoch}';
 
     if (mounted) {
       final initActions = widget.config['initActions'] as List? ?? [];
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        // Initialize FormSubmissionRegistry if not already done
+        _initializeFormSubmissionRegistry();
+
+        // Register form submission handler
+        _registerFormHandler();
+
         final resolvedActions =
             resolveTemplates(initActions, widget.navigationParams ?? {});
 
@@ -84,46 +96,72 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
     }
   }
 
+  void _initializeFormSubmissionRegistry() {
+    // Initialize the registry with FormsBloc (only happens once due to singleton)
+    final formsBloc = context.read<FormsBloc>();
+    FormSubmissionRegistry().initialize(formsBloc);
+  }
+
+  void _registerFormHandler() {
+    if (widget.config['screenType'] == 'FORM' && _schemaKey.isNotEmpty) {
+      _isRegistered = FormSubmissionRegistry().register(
+        schemaKey: _schemaKey,
+        instanceId: _instanceId,
+        handler: _handleFormSubmission,
+      );
+    }
+  }
+
+  Future<void> _handleFormSubmission(Map<String, dynamic> formData) async {
+    if (!mounted) return;
+
+    final onSubmit = widget.config['onAction'] as List<dynamic>?;
+
+    Map<String, dynamic> contextData = {
+      'formData': formData,
+      'navigation': widget.navigationParams ?? {},
+    };
+
+    if (onSubmit != null) {
+      // Clear form state via registry
+      FormSubmissionRegistry().clearForm(_schemaKey);
+
+      contextData = await ActionHandler.executeActions(
+        onSubmit,
+        context,
+        contextData,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    if (_isRegistered) {
+      FormSubmissionRegistry().unregister(
+        schemaKey: _schemaKey,
+        instanceId: _instanceId,
+      );
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenType = widget.config['screenType'];
     final screenKey = '$screenType::${widget.config['name']}';
-    return BlocListener<FormsBloc, FormsState>(
-      listener: (context, state) async {
-        if (state is FormsSubmittedState &&
-            widget.config['name'] == state.activeSchemaKey) {
-          debugPrint('SCREEN_BUILDER: Matched! Executing onAction...');
-          // final config = FlowRegistry.getByName(state.schema[]);///////
-          final onSubmit = widget.config['onAction'] as List<dynamic>?;
 
-          Map<String, dynamic> contextData = {
-            'formData': state.formData,
-            'navigation': widget.navigationParams ?? {},
-          };
-
-          if (onSubmit != null) {
-            context.read<FormsBloc>().add(
-                  FormsEvent.clearForm(schemaKey: widget.config['name'] ?? ''),
-                );
-            contextData = await ActionHandler.executeActions(
-              onSubmit,
-              context,
-              contextData,
-            );
-          }
-        }
+    // No longer using BlocListener here - form submissions are handled centrally
+    return ScreenKeyListener(
+      screenKey: screenKey,
+      builder: (context, crudState) {
+        return _buildScreen(
+          context,
+          screenType,
+          widget.config,
+          crudState,
+          screenKey,
+        );
       },
-      child: ScreenKeyListener(
-          screenKey: screenKey,
-          builder: (context, crudState) {
-            return _buildScreen(
-              context,
-              screenType,
-              widget.config,
-              crudState,
-              screenKey,
-            );
-          }),
     );
   }
 
