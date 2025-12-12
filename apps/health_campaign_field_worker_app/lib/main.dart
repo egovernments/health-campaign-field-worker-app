@@ -40,6 +40,8 @@ void main() async {
 
   await envConfig.initialize();
   WidgetsBinding.instance.addObserver(AppLifecycleObserver());
+  await DioClient()
+      .enableSSLPinning(); // Enable SSL pinning (comment out to disable)
   _dio = DioClient().dio;
 
   DigitUi.instance.initThemeComponents();

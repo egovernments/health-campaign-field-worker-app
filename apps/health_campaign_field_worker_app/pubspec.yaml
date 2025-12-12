@@ -77,6 +77,7 @@ dependencies:
       ref: master
   percent_indicator: ^4.2.4
   lottie: ^3.1.0
+  jailbreak_root_detection: ^1.1.6
 
 dev_dependencies:
   flutter_test:
@@ -114,6 +115,7 @@ flutter:
     - assets/images/
     - assets/audio/add.wav
     - assets/audio/buzzer.wav
+    - assets/certificates/
 
   fonts:
     - family: Roboto
