@@ -111,7 +111,7 @@ void onStart(ServiceInstance service) async {
     final info = await PackageInfo.fromPlatform();
     await Constants().initialize(info.version);
   }
-
+  await DioClient().enableSSLPinning();
   _dio = DioClient().dio;
   final _isar = await isarFuture;
 
