@@ -20,10 +20,30 @@ class SearchBarWidget implements FlowWidget {
     final hintText = json['label'] ?? '';
     final localizedHint = localization?.translate(hintText) ?? hintText;
 
+    // Get validation rules
+    final validations = json['validation'] as List<dynamic>? ?? [];
+    int minSearchChars = 1; // Default: trigger on any input
+
+    // Parse validation rules
+    for (final validation in validations) {
+      if (validation is Map<String, dynamic>) {
+        final key = validation['key'];
+        if (key == 'minSearchChars') {
+          final value = validation['value'];
+          if (value is int) {
+            minSearchChars = value;
+          } else if (value is String) {
+            minSearchChars = int.tryParse(value) ?? 1;
+          }
+        }
+      }
+    }
+
     return DigitSearchBar(
       hintText: localizedHint,
       onChanged: (value) {
-        if (value.isNotEmpty) {
+        // Only trigger onAction if value meets minimum character requirement
+        if (value.length >= minSearchChars) {
           if (json['onAction'] != null) {
             final actionsList =
                 List<Map<String, dynamic>>.from(json['onAction']);
@@ -42,7 +62,7 @@ class SearchBarWidget implements FlowWidget {
               onAction(action);
             }
           }
-        } else {
+        } else if (value.isEmpty) {
           FlowCrudStateRegistry().clearAll();
         }
       },
