@@ -67,6 +67,7 @@ class TagWidget implements FlowWidget {
         localizedValue;
 
     return Tag(
+      isStroke: true,
       label: valueText,
       type: WidgetParsers.parseTagType(json['properties']?['type']),
     );
