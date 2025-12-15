@@ -172,9 +172,6 @@ class ConditionalEvaluator {
 
     final screenKey = crudCtx?.screenKey;
 
-    print('🔍 buildWithVisibility: evalContext keys = ${evalContext.keys}');
-    print('🔍 buildWithVisibility: visible condition = ${json['visible']}');
-
     // Check visibility condition
     final visible = evaluate(
       json['visible'] ?? true,
@@ -182,8 +179,6 @@ class ConditionalEvaluator {
       screenKey: screenKey,
       stateData: crudCtx?.stateData,
     );
-
-    print('🔍 buildWithVisibility: visible result = $visible');
 
     if (visible == false) {
       return const SizedBox.shrink();
