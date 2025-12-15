@@ -131,7 +131,7 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
   void _triggerActions(bool value) {
     final json = widget.json;
     final onActionList = json['onAction'] ?? [];
-    final validations = json['validation'] ?? [];
+    final validations = json['validations'] ?? [];
 
     // Validation lookup
     final radiusValidation = validations.firstWhere(

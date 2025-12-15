@@ -211,7 +211,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
 
   void addController(FormGroup form) {
     (form.control(_resourceDeliveredKey) as FormArray).add(
-      FormControl<ProductVariantModel>(),
+      FormControl<DeliveryProductVariant>(),
     );
     (form.control(_quantityDistributedKey) as FormArray).add(
       FormControl<int>(value: 0, validators: [Validators.min(1)]),
