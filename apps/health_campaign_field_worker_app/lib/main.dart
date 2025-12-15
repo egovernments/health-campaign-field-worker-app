@@ -2417,227 +2417,266 @@ final dynamic sampleFlows = {
       "heading": "Beneficiary Details",
       "description": "Details of beneficiary",
       "wrapperConfig": {
-        "wrapperName": "DeliveryWrapper",
-        "rootEntity": "IndividualModel",
-        "filters": [],
-        "relations": [
-          {
-            "name": "members",
-            "entity": "HouseholdMemberModel",
-            "match": {
-              "field": "individualClientReferenceId",
-              "equalsFrom": "IndividualModel.clientReferenceId"
-            }
-          },
-          {
-            "name": "household",
-            "entity": "HouseholdModel",
-            "match": {
-              "field": "clientReferenceId",
-              "equalsFrom": "members.householdClientReferenceId"
-            }
-          },
-          {
-            "name": "individuals",
-            "entity": "IndividualModel",
-            "match": {
-              "field": "clientReferenceId",
-              "inFrom": "members.individualClientReferenceId"
-            }
-          },
-          {
-            "name": "projectBeneficiaries",
-            "entity": "ProjectBeneficiaryModel",
-            "match": {
-              "field": "beneficiaryClientReferenceId",
-              "equalsFrom": "individuals.clientReferenceId"
-            }
-          },
-          {
-            "name": "tasks",
-            "entity": "TaskModel",
-            "match": {
-              "field": "projectBeneficiaryClientReferenceId",
-              "inFrom": "projectBeneficiaries.clientReferenceId"
-            }
-          },
-          {
-            "name": "sideEffects",
-            "entity": "SideEffectModel",
-            "match": {
-              "field": "clientReferenceId",
-              "equalsFrom": "projectBeneficiaries.clientReferenceId"
-            }
-          },
-          {
-            "name": "referrals",
-            "entity": "ReferralModel",
-            "match": {
-              "field": "clientReferenceId",
-              "equalsFrom": "projectBeneficiaries.clientReferenceId"
-            }
-          }
-        ],
         "fields": {
-          "cycle": {
-            "from": "{{tasks.additionalFields.fields}}",
-            "where": {
-              "left": "{{key}}",
-              "operator": "eq",
-              "right": "cycleIndex"
-            },
-            "select": "{{value}}",
-            "takeLast": true,
-            "default": 1
-          },
           "dose": {
             "from": "{{tasks.additionalFields.fields}}",
             "where": {
               "left": "{{key}}",
-              "operator": "eq",
-              "right": "doseIndex"
+              "right": "doseIndex",
+              "operator": "eq"
             },
             "select": "{{value}}",
-            "takeLast": true,
-            "default": 0
+            "default": 0,
+            "takeLast": true
+          },
+          "cycle": {
+            "from": "{{tasks.additionalFields.fields}}",
+            "where": {
+              "left": "{{key}}",
+              "right": "cycleIndex",
+              "operator": "eq"
+            },
+            "select": "{{value}}",
+            "default": 1,
+            "takeLast": true
           }
         },
+        "filters": [
+          {
+            "field": "clientReferenceId",
+            "equalsFrom": "{{navigation.selectedIndividualClientReferenceId}}"
+          }
+        ],
         "computed": {
-          "currentRunningCycle": {
-            "from":
-                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
-            "where": [
-              {"left": "{{startDate}}", "operator": "lt", "right": "{{now}}"},
-              {"left": "{{endDate}}", "operator": "gt", "right": "{{now}}"}
-            ],
-            "select": "{{id}}",
-            "takeFirst": true,
-            "default": -1
-          },
-          "hasCycleArrived": {
-            "condition": {
-              "left": "{{cycle}}",
-              "operator": "equals",
-              "right": "{{currentRunningCycle}}"
-            },
-            "fallback": false
-          },
-          "deliveryLength": {
-            "from":
-                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
-            "where": {
-              "left": "{{id}}",
-              "operator": "equals",
-              "right": "{{currentRunningCycle}}"
-            },
-            "select": "{{deliveries.length}}",
-            "takeFirst": true,
-            "default": 0
-          },
           "nextDoseId": {
+            "order": 4,
+            "fallback": 0,
             "condition": {
               "if": {
-                "left": {"operation": "increment", "value": "{{dose}}"},
-                "operator": "lt",
-                "right": "{{deliveryLength}}"
+                "left": {
+                  "value": "{{dose}}",
+                  "operation": "increment"
+                },
+                "right": "{{deliveryLength}}",
+                "operator": "lte"
               },
-              "then": {"operation": "increment", "value": "{{dose}}"},
-              "else": 0
-            },
-            "fallback": 0
+              "else": 0,
+              "then": {
+                "value": "{{dose}}",
+                "operation": "increment"
+              }
+            }
           },
           "nextCycleId": {
+            "order": 5,
+            "fallback": "{{cycle}}",
             "condition": {
               "if": {
-                "left": {"operation": "increment", "value": "{{dose}}"},
-                "operator": "lt",
-                "right": "{{deliveryLength}}"
+                "left": {
+                  "value": "{{dose}}",
+                  "operation": "increment"
+                },
+                "right": "{{deliveryLength}}",
+                "operator": "lte"
               },
-              "then": "{{cycle}}",
-              "else": {"operation": "increment", "value": "{{cycle}}"}
+              "else": {
+                "value": "{{cycle}}",
+                "operation": "increment"
+              },
+              "then": "{{cycle}}"
+            }
+          },
+          "deliveryLength": {
+            "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "order": 3,
+            "where": {
+              "left": "{{id}}",
+              "right": "{{currentRunningCycle}}",
+              "operator": "equals"
             },
-            "fallback": "{{cycle}}"
+            "select": "{{deliveries.length}}",
+            "default": 0,
+            "takeFirst": true
+          },
+          "hasCycleArrived": {
+            "order": 2,
+            "fallback": false,
+            "condition": {
+              "left": "{{cycle}}",
+              "right": "{{currentRunningCycle}}",
+              "operator": "equals"
+            }
+          },
+          "currentRunningCycle": {
+            "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "order": 1,
+            "where": [
+              {
+                "left": "{{startDate}}",
+                "right": "{{now}}",
+                "operator": "lt"
+              },
+              {
+                "left": "{{endDate}}",
+                "right": "{{now}}",
+                "operator": "gt"
+              }
+            ],
+            "select": "{{id}}",
+            "default": -1,
+            "takeFirst": true
           }
         },
+        "relations": [
+          {
+            "name": "members",
+            "match": {
+              "field": "individualClientReferenceId",
+              "equalsFrom": "IndividualModel.clientReferenceId"
+            },
+            "entity": "HouseholdMemberModel"
+          },
+          {
+            "name": "household",
+            "match": {
+              "field": "clientReferenceId",
+              "equalsFrom": "members.householdClientReferenceId"
+            },
+            "entity": "HouseholdModel"
+          },
+          {
+            "name": "individuals",
+            "match": {
+              "field": "clientReferenceId",
+              "inFrom": "members.individualClientReferenceId"
+            },
+            "entity": "IndividualModel"
+          },
+          {
+            "name": "projectBeneficiaries",
+            "match": {
+              "field": "beneficiaryClientReferenceId",
+              "equalsFrom": "individuals.clientReferenceId"
+            },
+            "entity": "ProjectBeneficiaryModel"
+          },
+          {
+            "name": "tasks",
+            "match": {
+              "field": "projectBeneficiaryClientReferenceId",
+              "inFrom": "projectBeneficiaries.clientReferenceId"
+            },
+            "entity": "TaskModel"
+          },
+          {
+            "name": "sideEffects",
+            "match": {
+              "field": "clientReferenceId",
+              "equalsFrom": "projectBeneficiaries.clientReferenceId"
+            },
+            "entity": "SideEffectModel"
+          },
+          {
+            "name": "referrals",
+            "match": {
+              "field": "clientReferenceId",
+              "equalsFrom": "projectBeneficiaries.clientReferenceId"
+            },
+            "entity": "ReferralModel"
+          }
+        ],
+        "rootEntity": "IndividualModel",
+        "wrapperName": "DeliveryWrapper",
         "computedList": {
-          "targetCycle": {
-            "from":
-                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
-            "where": {
-              "left": "{{id}}",
-              "operator": "equals",
-              "right": "{{currentRunningCycle}}"
-            },
-            "takeLast": true,
-            "fallback": null
-          },
-          "futureTasks": {
-            "from": "{{tasks}}",
-            "where": {
-              "left": "{{item.additionalFields.deliveryStrategy}}",
-              "operator": "equals",
-              "right": "INDIRECT"
-            }
-          },
-          "futureDeliveries": {
-            "from":
-                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
-            "map": "{{item.deliveries}}",
-            "skip": {"from": "{{dose}}"},
-            "takeWhile": {
-              "left": "{{item.deliveryStrategy}}",
-              "operator": "equals",
-              "right": "INDIRECT"
-            }
-          },
-          "currentDelivery": {
-            "from": "{{targetCycle.0.deliveries}}",
-            "where": {
-              "left": "{{id}}",
-              "operator": "equals",
-              "right": "{{nextDoseId}}"
-            },
-            "takeLast": true,
-            "fallback": null
-          },
-          "eligibleProductVariants": {
-            "from": "{{currentDelivery.0.doseCriteria}}",
-            "evaluateCondition": {
-              "condition": "{{item.condition}}",
-              "context": ["{{individuals.0}}", "{{household.0}}"],
-              "transformations": {
-                "age": {"type": "ageInMonths", "source": "dateOfBirth"}
-              }
-            },
-            "takeLast": false,
-            "fallback": []
-          },
           "pastCycles": {
-            "from":
-                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "order": 6,
             "where": {
               "left": "{{item.id}}",
-              "operator": "lt",
-              "right": "{{cycle}}"
+              "right": "{{cycle}}",
+              "operator": "lt"
             },
             "includeCurrentIf": {
               "condition": {
                 "left": "{{dose}}",
-                "operator": "eq",
-                "right": "{{deliveryLength}}"
+                "right": "{{deliveryLength}}",
+                "operator": "eq"
+              }
+            }
+          },
+          "futureTasks": {
+            "from": "{{tasks}}",
+            "order": 2,
+            "where": {
+              "left": "{{item.additionalFields.deliveryStrategy}}",
+              "right": "INDIRECT",
+              "operator": "equals"
+            }
+          },
+          "targetCycle": {
+            "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "order": 1,
+            "where": {
+              "left": "{{id}}",
+              "right": "{{currentRunningCycle}}",
+              "operator": "equals"
+            },
+            "fallback": null,
+            "takeLast": true
+          },
+          "currentDelivery": {
+            "from": "{{targetCycle.0.deliveries}}",
+            "order": 4,
+            "where": {
+              "left": "{{id}}",
+              "right": "{{nextDoseId}}",
+              "operator": "equals"
+            },
+            "fallback": null,
+            "takeLast": true
+          },
+          "futureDeliveries": {
+            "map": "{{item.deliveries}}",
+            "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "skip": {
+              "from": "{{dose}}"
+            },
+            "order": 3,
+            "takeWhile": {
+              "left": "{{item.deliveryStrategy}}",
+              "right": "INDIRECT",
+              "operator": "equals"
+            }
+          },
+          "eligibleProductVariants": {
+            "from": "{{currentDelivery.0.doseCriteria}}",
+            "order": 5,
+            "fallback": [],
+            "takeLast": false,
+            "evaluateCondition": {
+              "context": [
+                "{{individuals.0}}",
+                "{{household.0}}"
+              ],
+              "condition": "{{item.condition}}",
+              "transformations": {
+                "age": {
+                  "type": "ageInMonths",
+                  "source": "dateOfBirth"
+                }
               }
             }
           }
         },
         "searchConfig": {
-          "primary": "individual",
           "select": [
             "individual",
             "household",
             "householdMember",
             "projectBeneficiary",
             "task"
-          ]
+          ],
+          "primary": "individual"
         }
       },
       "body": [
