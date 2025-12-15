@@ -83,8 +83,15 @@ class NavigationRegistry {
     }
 
     // Update navigation params for the target page before navigating
+    // Store with both key formats for robust retrieval
     if (data.isNotEmpty && name.isNotEmpty) {
+      // Store with plain name (e.g., "ADD_MEMBER")
       FlowCrudStateRegistry().updateNavigationParams(name, data);
+      // Also store with full screen key (e.g., "FORM::ADD_MEMBER") if type is provided
+      if (type.isNotEmpty) {
+        final fullKey = '$type::$name';
+        FlowCrudStateRegistry().updateNavigationParams(fullKey, data);
+      }
     }
 
     _service.navigateTo(type: type, name: name, data: data);
