@@ -393,14 +393,9 @@ final dynamic sampleFlows = {
           ]
         },
         {
-          "format": "button",
-          "label": "scan beneficiary",
-          "properties": {
-            "type": "secondary",
-            "size": "large",
-            "mainAxisSize": "max",
-            "mainAxisAlignment": "center"
-          },
+          "type": "template",
+          "label": "SCAN_BENEFICIARY",
+          "format": "qrScanner",
           "onAction": [
             {
               "actionType": "OPEN_SCANNER",
@@ -408,8 +403,8 @@ final dynamic sampleFlows = {
                 "scanType": "qr",
                 "fieldName": "beneficiaryTag",
                 "singleValue": true,
-                "quantity": 1,
-                "isGS1code": false,
+                "scanLimit": 1,
+                "isGS1": false,
                 "onSuccess": [
                   {
                     "actionType": "SEARCH_EVENT",
@@ -428,6 +423,26 @@ final dynamic sampleFlows = {
                   }
                 ]
               }
+            }
+          ],
+          "fieldName": "qrScanner",
+          "showLabel": false,
+          "properties": {
+            "icon": "QrCodeScanner",
+            "size": "large",
+            "type": "secondary",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "validations": [
+            {
+              "type": "scanLimit",
+              "value": 1,
+              "message": "SCANLIMIT_ERROR_MESSAGE"
+            },
+            {
+              "type": "isGS1",
+              "value": false
             }
           ]
         }
