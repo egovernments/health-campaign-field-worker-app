@@ -41,10 +41,25 @@ class SearchExecutor extends ActionExecutor {
         ? FlowCrudStateRegistry().get(screenKey)?.formData ?? {}
         : <String, dynamic>{};
 
-    // Build context data that includes both entities and form values
+    // Get navigation params from contextData or registry
+    final navigationFromContext =
+        contextData['navigation'] as Map<String, dynamic>? ?? {};
+    final navigationFromRegistry = screenKey != null
+        ? FlowCrudStateRegistry().getNavigationParams(screenKey) ??
+            FlowCrudStateRegistry()
+                .getNavigationParams(screenKey.split('::').last) ??
+            {}
+        : <String, dynamic>{};
+    final mergedNavigation = {
+      ...navigationFromRegistry,
+      ...navigationFromContext,
+    };
+
+    // Build context data that includes entities, form values, and navigation params
     final resolveContext = {
       if (contexts != null) ...contexts,
       ...formData,
+      'navigation': mergedNavigation,
     };
 
     // Process all filters from the data array

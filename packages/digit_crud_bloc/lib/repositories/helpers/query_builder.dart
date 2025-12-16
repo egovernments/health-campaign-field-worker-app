@@ -10,6 +10,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class QueryBuilder {
+  /// Normalizes a value to a List for 'in' and 'notIn' operators.
+  /// Handles cases where a single string is passed instead of a list.
+  /// Also trims string values.
+  static List<dynamic> _normalizeToList(dynamic value) {
+    if (value is List) {
+      // Trim string values in the list
+      return value.map((v) => v is String ? v.trim() : v).toList();
+    } else if (value is String) {
+      // Split by comma if it contains commas, otherwise wrap as single-item list
+      final trimmed = value.trim();
+      if (trimmed.contains(',')) {
+        return trimmed.split(',').map((v) => v.trim()).where((v) => v.isNotEmpty).toList();
+      }
+      return [trimmed];
+    }
+    return [value];
+  }
+
   static String camelToSnake(String input) {
     return input.replaceAllMapped(
       RegExp(r'[A-Z]'),
@@ -58,10 +76,10 @@ class QueryBuilder {
         case 'isNull':
           return '$column IS NULL';
         case 'in':
-          final values = filter.value as List;
+          final values = _normalizeToList(filter.value);
           return '$column IN (${List.filled(values.length, '?').join(', ')})';
         case 'notIn':
-          final values = filter.value as List;
+          final values = _normalizeToList(filter.value);
           return '$column NOT IN (${List.filled(values.length, '?').join(', ')})';
         case 'within':
           return '1 = 1';
@@ -83,7 +101,7 @@ class QueryBuilder {
           break;
         case 'in':
         case 'notIn':
-          final list = filter.value as List;
+          final list = _normalizeToList(filter.value);
           args.addAll(list.map((v) => Variable.withString(v.toString())));
           break;
         case 'isNotNull':
@@ -181,19 +199,19 @@ class QueryBuilder {
           whereClauses.add(col.isNull());
           break;
         case 'in':
-          final list = (filter.value as List);
+          final list = _normalizeToList(filter.value);
           if (col is GeneratedColumn<int>) {
-            whereClauses.add(col.isIn(list.cast<int>()));
+            whereClauses.add(col.isIn(list.map((v) => v is int ? v : int.tryParse(v.toString()) ?? 0).toList()));
           } else if (col is GeneratedColumn<String>) {
-            whereClauses.add(col.isIn(list.cast<String>()));
+            whereClauses.add(col.isIn(list.map((v) => v.toString()).toList()));
           }
           break;
         case 'notIn':
-          final list = (filter.value as List);
+          final list = _normalizeToList(filter.value);
           if (col is GeneratedColumn<int>) {
-            whereClauses.add(col.isNotIn(list.cast<int>()));
+            whereClauses.add(col.isNotIn(list.map((v) => v is int ? v : int.tryParse(v.toString()) ?? 0).toList()));
           } else if (col is GeneratedColumn<String>) {
-            whereClauses.add(col.isNotIn(list.cast<String>()));
+            whereClauses.add(col.isNotIn(list.map((v) => v.toString()).toList()));
           }
           break;
         default:
