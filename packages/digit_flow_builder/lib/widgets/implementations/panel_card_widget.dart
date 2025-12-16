@@ -48,15 +48,21 @@ class PanelCardWidget implements FlowWidget {
 
     final localization = LocalizationContext.maybeOf(context);
 
-    // Localize first, then resolve template
+    // Use resolveTemplate with localization parameter to handle mixed
+    // localization keys and template placeholders correctly
     final labelText = json['label'] ?? '';
-    final localizedLabel = localization?.translate(labelText) ?? labelText;
-    final label = resolveTemplate(localizedLabel, mergedData);
+    final label = resolveTemplate(
+      labelText,
+      mergedData,
+      localization: localization,
+    );
 
     final descriptionText = json['description'] ?? '';
-    final localizedDescription =
-        localization?.translate(descriptionText) ?? descriptionText;
-    final description = resolveTemplate(localizedDescription, mergedData);
+    final description = resolveTemplate(
+      descriptionText,
+      mergedData,
+      localization: localization,
+    );
 
     Map<String, dynamic>? primaryAction = json['primaryAction'];
     Map<String, dynamic>? secondaryAction = json['secondaryAction'];

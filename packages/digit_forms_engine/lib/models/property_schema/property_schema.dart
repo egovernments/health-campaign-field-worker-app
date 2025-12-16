@@ -66,6 +66,8 @@ class PropertySchema with _$PropertySchema {
     // Multi-entity tab configuration
     @JsonKey(fromJson: _multiEntityConfigOrNull)
     MultiEntityConfig? multiEntityConfig,
+    // Screenshot protection for this page
+    bool? preventScreenCapture,
   }) = _PropertySchema;
 
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>

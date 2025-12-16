@@ -159,7 +159,8 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'visibilityCondition': pageMap['visibilityCondition'],
         'conditionalNavigateTo': pageMap['conditionalNavigateTo'],
         'showAlertPopUp': pageMap['showAlertPopUp'],
-        'multiEntityConfig': pageMap['multiEntityConfig']
+        'multiEntityConfig': pageMap['multiEntityConfig'],
+        'preventScreenCapture': pageMap['preventScreenCapture'],
       };
 
       if (type == 'template') {

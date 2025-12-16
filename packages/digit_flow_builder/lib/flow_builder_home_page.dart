@@ -6,6 +6,7 @@ import 'package:digit_crud_bloc/utils/utils.dart';
 import 'package:digit_data_converter/utils/utils.dart';
 import 'package:digit_flow_builder/widgets/localized.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
+import 'package:digit_forms_engine/utils/screen_protection_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,10 +27,22 @@ class FlowBuilderHomePage extends LocalizedStatefulWidget {
 
 class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
   bool _formSchemaLoaded = false;
+  bool _isForm = false;
+  bool _preventScreenCapture = false;
 
   @override
   void initState() {
     super.initState();
+    final config = FlowRegistry.getByName(widget.pageName);
+    _isForm = config?['screenType'] == 'FORM';
+    _preventScreenCapture = config?['preventScreenCapture'] == true;
+
+    // For TEMPLATE screens, register with ScreenProtectionManager
+    // FORM screens are handled by FormsRenderPage
+    if (!_isForm) {
+      ScreenProtectionManager()
+          .registerPage(widget.pageName, _preventScreenCapture);
+    }
   }
 
   @override
@@ -55,6 +68,10 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
 
   @override
   void dispose() {
+    // For TEMPLATE screens, unregister from ScreenProtectionManager
+    if (!_isForm) {
+      ScreenProtectionManager().unregisterPage(widget.pageName);
+    }
     FlowCrudStateRegistry().dispose(widget.pageName);
     super.dispose();
   }

@@ -90,6 +90,7 @@ final dynamic sampleFlows = {
       "screenType": "TEMPLATE",
       "name": "searchBeneficiary",
       "heading": "Search Beneficiary",
+      "preventScreenCapture": true,
       "description": "search beneficiary description",
       "header": [
         {
@@ -440,10 +441,7 @@ final dynamic sampleFlows = {
               "value": 1,
               "message": "SCANLIMIT_ERROR_MESSAGE"
             },
-            {
-              "type": "isGS1",
-              "value": false
-            }
+            {"type": "isGS1", "value": false}
           ]
         }
       ],
@@ -634,6 +632,7 @@ final dynamic sampleFlows = {
         },
         {
           "page": "householdDetails",
+          "preventScreenCapture": true,
           "type": "object",
           "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_HEADING",
           "order": 3,
@@ -2481,18 +2480,12 @@ final dynamic sampleFlows = {
             "fallback": 0,
             "condition": {
               "if": {
-                "left": {
-                  "value": "{{dose}}",
-                  "operation": "increment"
-                },
+                "left": {"value": "{{dose}}", "operation": "increment"},
                 "right": "{{deliveryLength}}",
                 "operator": "lte"
               },
               "else": 0,
-              "then": {
-                "value": "{{dose}}",
-                "operation": "increment"
-              }
+              "then": {"value": "{{dose}}", "operation": "increment"}
             }
           },
           "nextCycleId": {
@@ -2500,22 +2493,17 @@ final dynamic sampleFlows = {
             "fallback": "{{cycle}}",
             "condition": {
               "if": {
-                "left": {
-                  "value": "{{dose}}",
-                  "operation": "increment"
-                },
+                "left": {"value": "{{dose}}", "operation": "increment"},
                 "right": "{{deliveryLength}}",
                 "operator": "lte"
               },
-              "else": {
-                "value": "{{cycle}}",
-                "operation": "increment"
-              },
+              "else": {"value": "{{cycle}}", "operation": "increment"},
               "then": "{{cycle}}"
             }
           },
           "deliveryLength": {
-            "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "from":
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
             "order": 3,
             "where": {
               "left": "{{id}}",
@@ -2536,19 +2524,12 @@ final dynamic sampleFlows = {
             }
           },
           "currentRunningCycle": {
-            "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "from":
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
             "order": 1,
             "where": [
-              {
-                "left": "{{startDate}}",
-                "right": "{{now}}",
-                "operator": "lt"
-              },
-              {
-                "left": "{{endDate}}",
-                "right": "{{now}}",
-                "operator": "gt"
-              }
+              {"left": "{{startDate}}", "right": "{{now}}", "operator": "lt"},
+              {"left": "{{endDate}}", "right": "{{now}}", "operator": "gt"}
             ],
             "select": "{{id}}",
             "default": -1,
@@ -2617,7 +2598,8 @@ final dynamic sampleFlows = {
         "wrapperName": "DeliveryWrapper",
         "computedList": {
           "pastCycles": {
-            "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "from":
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
             "order": 6,
             "where": {
               "left": "{{item.id}}",
@@ -2642,7 +2624,8 @@ final dynamic sampleFlows = {
             }
           },
           "targetCycle": {
-            "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "from":
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
             "order": 1,
             "where": {
               "left": "{{id}}",
@@ -2665,10 +2648,9 @@ final dynamic sampleFlows = {
           },
           "futureDeliveries": {
             "map": "{{item.deliveries}}",
-            "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
-            "skip": {
-              "from": "{{dose}}"
-            },
+            "from":
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "skip": {"from": "{{dose}}"},
             "order": 3,
             "takeWhile": {
               "left": "{{item.deliveryStrategy}}",
@@ -2682,16 +2664,10 @@ final dynamic sampleFlows = {
             "fallback": [],
             "takeLast": false,
             "evaluateCondition": {
-              "context": [
-                "{{individuals.0}}",
-                "{{household.0}}"
-              ],
+              "context": ["{{individuals.0}}", "{{household.0}}"],
               "condition": "{{item.condition}}",
               "transformations": {
-                "age": {
-                  "type": "ageInMonths",
-                  "source": "dateOfBirth"
-                }
+                "age": {"type": "ageInMonths", "source": "dateOfBirth"}
               }
             }
           }
@@ -5958,24 +5934,19 @@ final dynamic sampleInventoryFlows = {
             },
             {
               "type": "string",
-              "visibilityCondition": {
-                "expression": [
-                  {
-                    "condition":
-                        "warehouseDetails.facilityToWhich==Delivery Team"
-                  }
-                ]
-              },
-              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_teamCode",
+              "enums": [],
+              "label": "APP_CONFIG_INVENTORY_warehouseDetails_teamCode_LABEL",
               "order": 4,
               "value": "",
               "format": "scanner",
-              "hidden": false,
+              "hidden": true,
+              "isMdms": false,
               "tooltip": "",
-              "helpText": "Scan Team Code",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "teamCode",
+              "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
@@ -5989,7 +5960,7 @@ final dynamic sampleInventoryFlows = {
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "enums": [],
+              "dropDownOptions": []
             },
           ],
           "navigateTo": {"name": "stockDetails", "type": "form"}
@@ -6552,7 +6523,7 @@ final dynamic sampleInventoryFlows = {
                   "data": [
                     {
                       "key": "additionalFields",
-                      "value": "577E-52D8-B4F8",
+                      "value": "{{scannedMrn}}",
                       "operation": "contains"
                     }
                   ]
@@ -6726,7 +6697,7 @@ final dynamic sampleInventoryFlows = {
                   {
                     "format": "textTemplate",
                     "value":
-                        "{{fn:formatDate(item.items[0].dateOfEntry, dateTime, dd MMMM yyyy)}}"
+                        "{{fn:formatDate(item.items[0].dateOfEntry, 'date', dd MMM yyyy)}}"
                   }
                 ]
               },
@@ -6908,7 +6879,7 @@ final dynamic sampleInventoryFlows = {
                   {
                     "key": "INVENTORY_EXPIRY_LABEL",
                     "value":
-                        "{{fn:formatDate(item.additionalFields.fields.expiryDate, dateTime, dd MMMM yyyy)}}"
+                        "{{fn:formatDate(item.additionalFields.fields.expiryDate, 'date', dd MMM yyyy)}}"
                   },
                   {
                     "key":

@@ -21,6 +21,7 @@ dependencies:
   collection: ^1.18.0
   intl: ^0.19.0
   qr_flutter: ^4.1.0
+  screen_protector: ^1.4.2
 
 dev_dependencies:
   flutter_test:

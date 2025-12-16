@@ -21,6 +21,7 @@ import '../helper/form_builder_helper.dart';
 import '../helper/validator_helper.dart';
 import '../models/property_schema/property_schema.dart';
 import '../models/schema_object/schema_object.dart';
+import '../utils/screen_protection_manager.dart';
 import '../utils/utils.dart';
 import '../widgets/multi_entity_tab_view.dart';
 
@@ -51,6 +52,35 @@ class FormsRenderPage extends LocalizedStatefulWidget {
 }
 
 class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
+  bool _hasInitializedProtection = false;
+
+  /// Unique identifier for this form page instance in the protection manager
+  String get _protectionPageId =>
+      'form_${widget.currentSchemaKey}_${widget.pageName}';
+
+  @override
+  void initState() {
+    super.initState();
+    // Register with protection manager with initial false state
+    // Will be updated once we know the actual preventScreenCapture value from schema
+    ScreenProtectionManager().registerPage(_protectionPageId, false);
+  }
+
+  @override
+  void dispose() {
+    // Unregister from protection manager
+    ScreenProtectionManager().unregisterPage(_protectionPageId);
+    super.dispose();
+  }
+
+  /// Update screen protection based on the current page's preventScreenCapture flag
+  void _updateScreenProtection(bool? preventScreenCapture) {
+    // Update the protection manager with the actual protection requirement
+    ScreenProtectionManager()
+        .updatePageProtection(_protectionPageId, preventScreenCapture == true);
+    _hasInitializedProtection = true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,6 +96,13 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           }
 
           final schema = schemaObject.pages[widget.pageName];
+
+          // Update screen protection based on current page's preventScreenCapture flag (only once)
+          if (!_hasInitializedProtection) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _updateScreenProtection(schema?.preventScreenCapture);
+            });
+          }
 
           if (schema == null) {
             return const Center(child: Text('Form not found'));
@@ -279,12 +316,17 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                   // Evaluate condition - use direct isEdit check for isEdit conditions
                                   // since FormulaParser doesn't handle dot notation well
                                   bool isConditionTrue;
-                                  if (condition == 'isEdit == true' || condition == 'navigation.isEdit == true') {
+                                  if (condition == 'isEdit == true' ||
+                                      condition ==
+                                          'navigation.isEdit == true') {
                                     isConditionTrue = widget.isEdit == true;
-                                  } else if (condition == 'isEdit == false' || condition == 'navigation.isEdit == false') {
+                                  } else if (condition == 'isEdit == false' ||
+                                      condition ==
+                                          'navigation.isEdit == false') {
                                     isConditionTrue = widget.isEdit == false;
                                   } else {
-                                    isConditionTrue = evaluateSingleCondition(condition, values);
+                                    isConditionTrue = evaluateSingleCondition(
+                                        condition, values);
                                   }
 
                                   if (isConditionTrue) {
@@ -385,8 +427,10 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                                   contextValue)!),
                                           description: localizations.translate(
                                               _resolveTemplate(
-                                                     translateIfPresent ( schema.showAlertPopUp
-                                                          ?.description, localizations),
+                                                      translateIfPresent(
+                                                          schema.showAlertPopUp
+                                                              ?.description,
+                                                          localizations),
                                                       schema.showAlertPopUp
                                                           ?.conditions,
                                                       contextValue) ??

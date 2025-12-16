@@ -25,6 +25,7 @@ dependencies:
   digit_scanner: ^1.0.6+2
   provider: ^6.1.5
   digit_formula_parser: ^1.0.0
+  screen_protector: ^1.4.2
 
 dev_dependencies:
   flutter_test:

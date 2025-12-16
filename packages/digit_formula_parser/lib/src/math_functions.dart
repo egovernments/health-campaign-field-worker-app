@@ -10,17 +10,73 @@
 /// dynamic result = mathFunction('add', [2, 3]);
 /// print(result); // Output: 5
 /// ```
+library;
 
 import 'dart:math' as math;
 
 // List of available math functions
 final List<String> availableFunctions = [
   ...comparisonFunctions.keys,
+  ...listCheckFunctions.keys,
   ...functionsWithOneBoolArg.keys,
   ...functionsWithOneNumberArg.keys,
   ...functionsWithTwoNumberArg.keys,
   ...functionsWithOneListArg.keys
 ];
+
+/// Functions for checking if a value exists in a list/collection
+/// These are useful for multi-select fields where the value is a List
+final Map<String, bool Function(dynamic, dynamic)> listCheckFunctions = {
+  /// Checks if a list contains a specific value
+  /// Usage: contains(stockDetails.productDetail, 'PVAR-xxx')
+  /// Works with both List objects and string representations like "[A, B, C]"
+  'contains': (dynamic list, dynamic value) {
+    if (list == null || value == null) return false;
+
+    final searchValue =
+        value.toString().toUpperCase().replaceAll('"', '').replaceAll("'", '');
+
+    // If list is actually a List, check if it contains the value
+    if (list is List) {
+      return list.any((item) => item.toString().toUpperCase() == searchValue);
+    }
+
+    // If list is a string representation of a list like "[A, B, C]"
+    if (list is String) {
+      // Remove brackets and quotes
+      var cleanList = list.replaceAll(RegExp(r'''[\[\]"']'''), '').trim();
+      // Split by comma and check
+      var items =
+          cleanList.split(',').map((e) => e.trim().toUpperCase()).toList();
+      return items.contains(searchValue);
+    }
+
+    return false;
+  },
+
+  /// Checks if a list does NOT contain a specific value
+  /// Usage: notcontains(stockDetails.productDetail, 'PVAR-xxx')
+  'notcontains': (dynamic list, dynamic value) {
+    if (list == null) return true;
+    if (value == null) return true;
+
+    final searchValue =
+        value.toString().toUpperCase().replaceAll('"', '').replaceAll("'", '');
+
+    if (list is List) {
+      return !list.any((item) => item.toString().toUpperCase() == searchValue);
+    }
+
+    if (list is String) {
+      var cleanList = list.replaceAll(RegExp(r'''[\[\]"']'''), '').trim();
+      var items =
+          cleanList.split(',').map((e) => e.trim().toUpperCase()).toList();
+      return !items.contains(searchValue);
+    }
+
+    return true;
+  },
+};
 
 // Add this helper function to convert dynamic values to num
 List<num> _convertToNumbers(List<dynamic> args) {
@@ -35,7 +91,8 @@ List<num> _convertToNumbers(List<dynamic> args) {
 
 // Helper function to check if all arguments are numeric
 bool _areAllNumeric(List<dynamic> args) {
-  return args.every((arg) => arg is num || (arg is String && double.tryParse(arg) != null));
+  return args.every(
+      (arg) => arg is num || (arg is String && double.tryParse(arg) != null));
 }
 
 // Update function maps with explicit types
@@ -168,6 +225,11 @@ final Map<String, num Function(List<num>)> functionsWithOneListArg = {
 /// Common mathematical functions.
 dynamic mathFunction(String name, List<dynamic> arguments) {
   final String fnName = name.toLowerCase();
+
+  // Handle list check functions (contains, notContains)
+  if (listCheckFunctions.containsKey(fnName) && arguments.length == 2) {
+    return listCheckFunctions[fnName]!(arguments[0], arguments[1]);
+  }
 
   // Handle comparison functions that can work with strings and numbers
   if (comparisonFunctions.containsKey(fnName) && arguments.length == 2) {
