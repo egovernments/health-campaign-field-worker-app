@@ -107,7 +107,7 @@ FormControl buildFormControl(
         );
       } else if (format == PropertySchemaFormat.locality) {
         return FormControl<String>(
-          value: getDefaultValue(name) ?? rawValue?.toString(),
+          value: getDefaultValue('administrativeArea') ?? rawValue?.toString(),
           validators: validators,
         );
       } else if (format == PropertySchemaFormat.numeric) {
