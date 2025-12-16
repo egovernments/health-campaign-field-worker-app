@@ -351,11 +351,13 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
         if (fnMatch != null) {
           final fnName = fnMatch.group(1)!;
           final argsExpr = fnMatch.group(2) ?? '';
+          print('🟢 FUNCTION CALL: $fnName with argsExpr: "$argsExpr"');
 
           final resolvedArgs = argsExpr.trim().isEmpty
               ? <dynamic>[]
               : argsExpr.split(',').map((rawArg) {
                   final trimmed = rawArg.trim();
+                  print('🟢 Resolving arg: "$trimmed"');
 
                   // Check if it's a quoted literal (string)
                   if (trimmed.startsWith("'") || trimmed.startsWith('"')) {
@@ -375,12 +377,15 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
                   // This includes: simple variables (selectedFacility),
                   // dotted paths (item.field), and prefixed paths (navigation.x)
                   final placeholder = '{{ $trimmed }}';
-                  return resolveValueRaw(placeholder, contextData,
+                  final resolved = resolveValueRaw(placeholder, contextData,
                       widgetData: widgetData,
                       screenKey: screenKey,
                       stateData: stateData);
+                  print('🟢 Arg "$trimmed" resolved to: ${resolved.runtimeType} = $resolved');
+                  return resolved;
                 }).toList();
 
+          print('🟢 All resolved args: $resolvedArgs (types: ${resolvedArgs.map((e) => e.runtimeType).toList()})');
           return FunctionRegistry.call(
             fnName,
             resolvedArgs,
@@ -454,7 +459,9 @@ dynamic _resolvePath(dynamic root, String path) {
     }
     // Normal map lookup - handle both Map<String, dynamic> and Map<dynamic, dynamic>
     else if (current is Map) {
-      if (!current.containsKey(part)) return null;
+      if (!current.containsKey(part)) {
+        return null;
+      }
       current = current[part];
 
       // Special case: if current is a List<AdditionalField> and there are more parts

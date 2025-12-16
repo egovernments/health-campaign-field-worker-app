@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../blocs/flow_crud_bloc.dart';
 import '../router/flow_builder_routes.gm.dart';
 import 'function_registry.dart';
+import 'utils.dart';
 
 /// Recursively walks a dynamic structure (Map, List, String, etc.)
 /// and applies [transform] to every String value.
@@ -127,16 +128,42 @@ String interpolateWithCrudStates({
         ? <dynamic>[]
         : argsExpr.split(',').map((rawArg) {
             final trimmed = rawArg.trim();
+
+            // Check if it's a quoted literal (string)
+            if (trimmed.startsWith("'") || trimmed.startsWith('"')) {
+              return trimmed.replaceAll(RegExp(r"""^['"]|['"]$"""), '');
+            }
+
+            // Check if it's a number
+            final numValue = num.tryParse(trimmed);
+            if (numValue != null) {
+              return numValue;
+            }
+
+            // Try to resolve from item first (for member-level data like "task")
+            if (item != null && item.containsKey(trimmed)) {
+              return item[trimmed];
+            }
+
+            // Try to resolve from rowItem
+            if (rowItem != null && rowItem.containsKey(trimmed)) {
+              return rowItem[trimmed];
+            }
+
+            // Try to resolve from stateData.modelMap
+            if (stateData.modelMap.containsKey(trimmed)) {
+              return stateData.modelMap[trimmed];
+            }
+
+            // Fallback: use resolveValueRaw for complex paths
             final placeholder = '{{ $trimmed }}';
-            return interpolateWithCrudStates(
-              template: placeholder,
-              stateData: stateData,
-              listIndex: listIndex,
-              item: item,
-              navigationParams: navigationParams,
-              rowItem: rowItem,
-              widgetData: widgetData,
-            );
+            final contextData = {
+              'item': item,
+              'contextData': stateData.rawState,
+              ...stateData.modelMap,
+              if (item != null) ...item,
+            };
+            return resolveValueRaw(placeholder, contextData, stateData: stateData);
           }).toList();
 
     return FunctionRegistry.call(fnName, resolvedArgs, stateData)?.toString() ?? '';
