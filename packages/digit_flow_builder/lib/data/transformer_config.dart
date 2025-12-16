@@ -147,7 +147,7 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "tenantId": "__context:tenantId",
           "beneficiaryId": "beneficiaryDetails.beneficiaryId",
-          "tag": "beneficiaryDetails.tag",
+          "tag": "beneficiaryDetails.scanner",
           "beneficiaryClientReferenceId":
               "__switch:__context:beneficiaryType:{INDIVIDUAL:__ref:IndividualModel.clientReferenceId,HOUSEHOLD:__ref:HouseholdModel.clientReferenceId}",
           "nonRecoverableError": "errors.nonRecoverable",
@@ -281,7 +281,7 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "tenantId": "__context:tenantId",
           "beneficiaryId": "beneficiaryDetails.beneficiaryId",
-          "tag": "beneficiaryDetails.tag",
+          "tag": "beneficiaryDetails.scanner",
           "beneficiaryClientReferenceId":
               "__switch:__context:beneficiaryType:{INDIVIDUAL:__ref:IndividualModel.clientReferenceId,HOUSEHOLD:__ref:HouseholdModel.clientReferenceId}",
           "nonRecoverableError": "errors.nonRecoverable",

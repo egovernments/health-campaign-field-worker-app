@@ -26,16 +26,15 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
   Widget build(BuildContext context) {
     const idKey = 'idNumber';
     const idTypeKey = 'idType';
+    const idAutoFilledKey = 'idAutoFilled';
 
     final loc = FormLocalization.of(context);
     final validationMessages = buildValidationMessages(validations, loc);
 
-    // Access defaultValues via Provider
     final defaultValues = context.read<Map<String, dynamic>>();
-
     final identifiers = defaultValues['availableIDs'];
 
-    // Register additional controls if not already present
+    /// Register controls
     if (!form.contains(idKey)) {
       form.addAll({
         idKey: FormControl<String>(validators: [Validators.required]),
@@ -50,34 +49,31 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
       });
     }
 
-    // Extract initial combined value and populate idType and idNumber
+    if (!form.contains(idAutoFilledKey)) {
+      form.addAll({
+        idAutoFilledKey: FormControl<bool>(value: false),
+      });
+    }
+
+    /// Populate from combined value (edit case)
     final combinedValue = form.control(formControlName).value;
     if (combinedValue != null && combinedValue is String) {
       final parts = combinedValue.split(' ');
       if (parts.length >= 2) {
         final type = parts[0];
-        final number =
-            parts.sublist(1).join(' '); // In case idNumber contains spaces
+        final number = parts.sublist(1).join(' ');
 
         if (form.control(idTypeKey).value == null) {
           form.control(idTypeKey).value = type;
         }
         if (form.control(idKey).value == null && type != 'DEFAULT') {
           form.control(idKey).value = number;
+          form.control(idAutoFilledKey).value = true;
         }
       }
     }
 
-    final mainControl = form.control(formControlName);
-    final isMainInvalid = mainControl.invalid && mainControl.touched;
-
-    // Determine missing subfields
-    final isIdTypeMissing = (form.control(idTypeKey).value == null ||
-        form.control(idTypeKey).value.toString().trim().isEmpty);
-    final isIdNumberMissing = (form.control(idKey).value == null ||
-        form.control(idKey).value.toString().trim().isEmpty);
-
-    // Helper to update the combined identifier string
+    /// Helper to update combined value
     void updateCombinedIdentifier() {
       final idType = form.control(idTypeKey).value;
       final idNumber = form.control(idKey).value;
@@ -91,8 +87,15 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
       }
     }
 
+    final isIdTypeMissing =
+    (form.control(idTypeKey).value?.toString().trim().isEmpty ?? true);
+
+    final isIdNumberMissing =
+    (form.control(idKey).value?.toString().trim().isEmpty ?? true);
+
     return Column(
       children: [
+        /// ID TYPE DROPDOWN
         ReactiveWrapperField(
           formControlName: formControlName,
           validationMessages: validationMessages,
@@ -107,56 +110,67 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
               errorMessage: isIdTypeMissing ? field.errorText : null,
               selectedOption: form.control(idTypeKey).value != null
                   ? DropdownItem(
-                      code: form.control(idTypeKey).value!,
-                      name: loc.translate(
-                        (enums ?? [])
-                            .firstWhere(
-                              (e) => e.code == form.control(idTypeKey).value,
-                              orElse: () => Option(
-                                  code: form.control(idTypeKey).value,
-                                  name: form.control(idTypeKey).value!),
-                            )
-                            .name,
-                      ),
-                    )
+                code: form.control(idTypeKey).value!,
+                name: loc.translate(
+                  (enums ?? [])
+                      .firstWhere(
+                        (e) =>
+                    e.code ==
+                        form.control(idTypeKey).value,
+                    orElse: () => Option(
+                      code: form.control(idTypeKey).value,
+                      name: form.control(idTypeKey).value!,
+                    ),
+                  )
+                      .name,
+                ),
+              )
                   : null,
               items: (enums ?? [])
-                  .map((e) =>
-                      DropdownItem(code: e.code, name: loc.translate(e.name)))
+                  .map(
+                    (e) => DropdownItem(
+                  code: e.code,
+                  name: loc.translate(e.name),
+                ),
+              )
                   .toList(),
               onSelect: (value) {
                 form.control(formControlName).markAsTouched();
+
                 final defaultIdentifier = identifiers?[value.code];
 
-                if (defaultIdentifier != null && defaultIdentifier is String) {
-                  final type = value.code;
-                  final number = defaultIdentifier;
-
-                  form.control(idTypeKey).value = type;
-                  form.control(idKey).value = number;
-                  form.control(formControlName).value = '$type, $number';
-                } else {
-                  form.control(idKey).value = null;
+                if (defaultIdentifier != null &&
+                    defaultIdentifier is String) {
                   form.control(idTypeKey).value = value.code;
+                  form.control(idKey).value = defaultIdentifier;
+                  form.control(idAutoFilledKey).value = true;
+
+                  form.control(formControlName).value =
+                  '${value.code}, $defaultIdentifier';
+                } else {
+                  form.control(idTypeKey).value = value.code;
+                  form.control(idKey).value = null;
+                  form.control(idAutoFilledKey).value = false;
                   form.control(formControlName).value = null;
                 }
               },
               onChange: (value) {
-                form.control(formControlName).markAsTouched();
                 if (value.isEmpty) {
                   form.control(idTypeKey).value = null;
                   form.control(idKey).value = null;
+                  form.control(idAutoFilledKey).value = false;
                   form.control(formControlName).value = null;
                 }
               },
             ),
           ),
         ),
+
         if (form.control(idTypeKey).value != null &&
             form.control(idTypeKey).value != 'DEFAULT')
-          const SizedBox(
-            height: spacer4,
-          ),
+          const SizedBox(height: spacer4),
+
+        /// ID NUMBER FIELD
         if (form.control(idTypeKey).value != null &&
             form.control(idTypeKey).value != 'DEFAULT')
           ReactiveFormConsumer(
@@ -171,13 +185,16 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
                   isRequired: true,
                   child: DigitTextFormInput(
                     initialValue: form.control(idKey).value,
-                    readOnly: form.control(idKey).value != null,
+                    readOnly:
+                    form.control(idAutoFilledKey).value == true,
                     onChange: (value) {
                       form.control(formControlName).markAsTouched();
+                      form.control(idAutoFilledKey).value = false;
                       form.control(idKey).value = value;
-                      updateCombinedIdentifier(); // Keep sync
+                      updateCombinedIdentifier();
                     },
-                    errorMessage: isIdNumberMissing ? field.errorText : null,
+                    errorMessage:
+                    isIdNumberMissing ? field.errorText : null,
                   ),
                 ),
               );

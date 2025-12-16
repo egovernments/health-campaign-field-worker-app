@@ -403,15 +403,28 @@ final dynamic sampleFlows = {
           },
           "onAction": [
             {
-              "actionType": "EVENT",
+              "actionType": "OPEN_SCANNER",
               "properties": {
-                "type": "SEARCH_EVENT",
-                "name": "ENTITY // PROJECTBENEFICIARY",
-                "data": [
+                "scanType": "qr",
+                "fieldName": "beneficiaryTag",
+                "singleValue": true,
+                "quantity": 1,
+                "isGS1code": false,
+                "onSuccess": [
                   {
-                    "key": "tag",
-                    "value": "field.value",
-                    "operation": "contains"
+                    "actionType": "SEARCH_EVENT",
+                    "properties": {
+                      "type": "SEARCH_EVENT",
+                      "name": "projectBeneficiary",
+                      "awaitResults": true,
+                      "data": [
+                        {
+                          "key": "tag",
+                          "value": "{{beneficiaryTag}}",
+                          "operation": "equals"
+                        }
+                      ]
+                    }
                   }
                 ]
               }
