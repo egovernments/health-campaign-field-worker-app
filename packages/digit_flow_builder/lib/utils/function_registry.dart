@@ -122,6 +122,43 @@ bool checkStatusInternal(
   return true;
 }
 
+/// Checks if a side effect was recorded for the last task within the current cycle.
+///
+/// - `selectedCycle`: The current active project cycle.
+/// - `lastTask`: The last task as a Map<String, dynamic>.
+/// - `sideEffects`: List of side effects as List<Map<String, dynamic>>.
+///
+/// Returns `true` if a side effect was recorded for the last task within the cycle's date range.
+bool _recordedSideEffectInternal(
+  ProjectCycle? selectedCycle,
+  Map<String, dynamic>? lastTask,
+  List<Map<String, dynamic>>? sideEffects,
+) {
+  if (selectedCycle != null &&
+      selectedCycle.startDate != null &&
+      selectedCycle.endDate != null) {
+    if (lastTask != null && (sideEffects ?? []).isNotEmpty) {
+      final lastSideEffect = sideEffects!.last;
+      final taskClientRefId = lastTask['clientReferenceId']?.toString();
+      final sideEffectTaskClientRefId =
+          lastSideEffect['taskClientReferenceId']?.toString();
+
+      // Get the task's created time if the side effect references this task
+      int? lastTaskCreatedTime;
+      if (taskClientRefId == sideEffectTaskClientRefId) {
+        lastTaskCreatedTime =
+            lastTask['clientAuditDetails']?['createdTime'] as int?;
+      }
+
+      return lastTaskCreatedTime != null &&
+          lastTaskCreatedTime >= (selectedCycle.startDate ?? 0) &&
+          lastTaskCreatedTime <= (selectedCycle.endDate ?? 0);
+    }
+  }
+
+  return false;
+}
+
 /// Initializes the [FunctionRegistry] with application-specific functions.
 ///
 /// This function should be called at application startup to populate the
@@ -299,6 +336,132 @@ void initializeFunctionRegistry() {
     return false;
   });
 
+  /// Registers a function to check if all doses have been delivered for a member.
+  ///
+  /// - **Function Name**: `'checkAllDoseDelivered'`
+  /// - **Arguments**: A list where the first element is the tasks list for the member.
+  /// - **Returns**: `true` if all doses have been delivered for the current cycle, `false` otherwise.
+  ///
+  /// This function checks:
+  /// 1. If no valid cycle exists or cycle has no deliveries -> returns true (nothing to deliver)
+  /// 2. If tasks exist:
+  ///    - Checks if last dose was delivered for the current cycle
+  ///    - Handles side effects if present
+  /// 3. If no tasks exist -> returns false (doses pending)
+  FunctionRegistry.register("checkAllDoseDelivered", (args, stateData) {
+    // Get tasks from args (passed as first argument from the wrapper config)
+    List<Map<String, dynamic>>? tasks;
+    if (args.isNotEmpty && args.first != null) {
+      if (args.first is List) {
+        final rawList = args.first as List;
+        // Convert each item to Map<String, dynamic> - handles both Map and Model objects
+        tasks = rawList.map((item) {
+          if (item is Map<String, dynamic>) {
+            return item;
+          } else if (item is Map) {
+            return Map<String, dynamic>.from(item);
+          } else {
+            // Try to convert model objects (e.g., TaskModel) to Map
+            try {
+              return (item as dynamic).toMap() as Map<String, dynamic>;
+            } catch (_) {
+              try {
+                return (item as dynamic).toJson() as Map<String, dynamic>;
+              } catch (_) {
+                return <String, dynamic>{};
+              }
+            }
+          }
+        }).toList();
+      }
+    }
+
+    // Get current active cycle from FlowBuilderSingleton
+    final projectType = FlowBuilderSingleton().projectType;
+    final selectedCycle = projectType?.cycles?.firstWhereOrNull(
+      (e) =>
+          (e.startDate ?? 0) < DateTime.now().millisecondsSinceEpoch &&
+          (e.endDate ?? 0) > DateTime.now().millisecondsSinceEpoch,
+    );
+
+    // Get sideEffects from stateData - convert model objects to Map if needed
+    final rawSideEffects = stateData.modelMap['sideEffects'] as List?;
+    final sideEffects = rawSideEffects?.map((item) {
+      if (item is Map<String, dynamic>) return item;
+      if (item is Map) return Map<String, dynamic>.from(item);
+      try {
+        return (item as dynamic).toMap() as Map<String, dynamic>;
+      } catch (_) {
+        try {
+          return (item as dynamic).toJson() as Map<String, dynamic>;
+        } catch (_) {
+          return <String, dynamic>{};
+        }
+      }
+    }).toList() ?? [];
+
+    // If no valid cycle or cycle has no deliveries, return true (nothing to deliver)
+    if (selectedCycle == null ||
+        selectedCycle.id == 0 ||
+        (selectedCycle.deliveries ?? []).isEmpty) {
+      return true;
+    }
+
+    // Check if tasks exist
+    if ((tasks ?? []).isNotEmpty) {
+      final lastTask = tasks!.last;
+
+      // Extract cycleIndex from additionalFields
+      final additionalFields = lastTask['additionalFields'];
+      final fields = additionalFields?['fields'] as List?;
+
+      int? lastCycle;
+      int? lastDose;
+
+      if (fields != null) {
+        for (final field in fields) {
+          if (field is Map) {
+            if (field['key'] == 'cycleIndex') {
+              lastCycle = int.tryParse(field['value']?.toString() ?? '');
+            }
+            if (field['key'] == 'doseIndex') {
+              lastDose = int.tryParse(field['value']?.toString() ?? '');
+            }
+          }
+        }
+      }
+
+      final lastTaskStatus = lastTask['status']?.toString().toUpperCase();
+      final isDelivered =
+          lastTaskStatus == 'DELIVERED';
+
+      // If last dose equals total deliveries in cycle AND cycle matches AND status is NOT delivered
+      // -> return true (last dose attempted but not delivered)
+      if (lastDose != null &&
+          lastDose == selectedCycle.deliveries?.length &&
+          lastCycle != null &&
+          lastCycle == selectedCycle.id &&
+          lastTaskStatus == 'ADMINISTRATION_SUCCESS') {
+        return true;
+      }
+
+      // If cycle matches AND status IS delivered -> return false (dose delivered, may have more)
+      if (selectedCycle.id == lastCycle && isDelivered) {
+        return false;
+      }
+
+      // Check side effects if present
+      if (sideEffects.isNotEmpty) {
+        return _recordedSideEffectInternal(selectedCycle, lastTask, sideEffects);
+      }
+
+      return false;
+    }
+
+    // No tasks exist -> return false (doses pending)
+    return false;
+  });
+
   /// Registers a function to check the status of tasks.
   ///
   /// - **Function Name**: `'checkStatus'`
@@ -397,37 +560,28 @@ void initializeFunctionRegistry() {
   /// This function helps with null/empty checks since template resolution
   /// converts null values to empty strings.
   FunctionRegistry.register("isEmpty", (args, stateData) {
-    print('🔍 isEmpty called with args: $args');
-    print('🔍 isEmpty stateData.formData: ${stateData.rawState}');
-
     // Handle null args
     if (args == null || args.isEmpty) {
-      print('🔍 isEmpty result: true (args null/empty)');
       return true;
     }
 
     final value = args.first;
-    print('🔍 isEmpty checking value: $value (type: ${value.runtimeType})');
 
     // Check for null
     if (value == null) {
-      print('🔍 isEmpty result: true (value is null)');
       return true;
     }
 
     // Check for empty string (missing values resolve to "")
     if (value is String && value.isEmpty) {
-      print('🔍 isEmpty result: true (value is empty string)');
       return true;
     }
 
     // Check for empty list
     if (value is List && value.isEmpty) {
-      print('🔍 isEmpty result: true (value is empty list)');
       return true;
     }
 
-    print('🔍 isEmpty result: false (value is not empty)');
     return false;
   });
 
@@ -437,31 +591,23 @@ void initializeFunctionRegistry() {
   /// - **Arguments**: A list where the first element is the value to check.
   /// - **Returns**: `true` if the value is not null and not empty, otherwise `false`.
   FunctionRegistry.register("isNotEmpty", (args, stateData) {
-    print('🔍 isNotEmpty called with args: $args');
-
     // Handle null args
     if (args == null || args.isEmpty) {
-      print('🔍 isNotEmpty result: false (args null/empty)');
       return false;
     }
 
     final value = args.first;
-    print('🔍 isNotEmpty checking value: $value (type: ${value.runtimeType})');
 
     if (value == null) {
-      print('🔍 isNotEmpty result: false (value is null)');
       return false;
     }
     if (value is String && value.isEmpty) {
-      print('🔍 isNotEmpty result: false (value is empty string)');
       return false;
     }
     if (value is List && value.isEmpty) {
-      print('🔍 isNotEmpty result: false (value is empty list)');
       return false;
     }
 
-    print('🔍 isNotEmpty result: true (value is not empty)');
     return true;
   });
 

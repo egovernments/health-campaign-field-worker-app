@@ -1422,6 +1422,44 @@ final dynamic sampleFlows = {
                         }
                       }
                     ]
+                  },
+                  {
+                    "format": "button",
+                    "visible":
+                        "{{fn:checkAllDoseDelivered(task)}} == true",
+                    "properties": {
+                      "type": "primary",
+                      "size": "medium",
+                      "mainAxisSize": "max",
+                      "mainAxisAlignment": "center"
+                    },
+                    "label": "View Details",
+                    "icon": "add",
+                    "onAction": [
+                      {
+                        "actionType": "NAVIGATION",
+                        "properties": {
+                          "type": "TEMPLATE",
+                          "name": "beneficiaryDetails",
+                          "data": [
+                            {
+                              "key": "selectedIndividualClientReferenceId",
+                              "value": "{{individual.0.clientReferenceId}}"
+                            },
+                            {
+                              "key": "HouseholdClientReferenceId",
+                              "value":
+                              "{{member.0.householdClientReferenceId}}",
+                            },
+                            {
+                              "key": "ProjectBeneficiaryClientReferenceId",
+                              "value":
+                              "{{projectBeneficiary.0.clientReferenceId}}",
+                            },
+                          ]
+                        }
+                      }
+                    ]
                   }
                 ]
               }
@@ -2709,7 +2747,7 @@ final dynamic sampleFlows = {
                 {
                   "key": "Age",
                   "value":
-                      "{{fn:formatDate(contextData.0.individuals.IndividualModel.dateOfBirth, age)}}"
+                      "{{fn:formatDate(contextData.0.individuals.IndividualModel.dateOfBirth, 'age')}}"
                 },
                 {
                   "key": "Gender",
@@ -2724,7 +2762,7 @@ final dynamic sampleFlows = {
                 {
                   "key": "Date of Registration",
                   "value":
-                      "{{fn:formatDate(contextData.0.projectBeneficiaries.ProjectBeneficiaryModel.dateOfRegistration, date, dd MMMM yyyy)}}"
+                      "{{fn:formatDate(contextData.0.projectBeneficiaries.ProjectBeneficiaryModel.dateOfRegistration, 'date', dd MMM yyyy)}}"
                 }
               ]
             }
