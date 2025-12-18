@@ -281,7 +281,10 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
 
                   // Clear team code when switching facilities
                   if (!deliveryTeamSelected) {
-                    form.control(widget.dependantFormKey).value = '';
+                    // Check if the dependant form control exists before accessing it
+                    if (form.contains(widget.dependantFormKey)) {
+                      form.control(widget.dependantFormKey).value = '';
+                    }
                     teamCodeController.clear();
                     context.read<DigitScannerBloc>().add(
                         const DigitScannerEvent.handleScanner(
