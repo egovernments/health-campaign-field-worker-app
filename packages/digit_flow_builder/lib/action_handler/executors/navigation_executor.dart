@@ -40,10 +40,22 @@ class NavigationExecutor extends ActionExecutor {
     final currentState = FlowCrudStateRegistry().get(screenKey);
     final stateFormData = currentState?.formData;
 
+    // Get navigation mode and popUntilPageName from action properties
+    final navigationMode = action.properties['navigationMode'] as String?;
+    final popUntilPageName = action.properties['popUntilPageName'] as String?;
+
     // First resolve navigation data if provided
     final navData = action.properties['data'] as List<dynamic>?;
     Map<String, dynamic> navigationProperties =
         Map<String, dynamic>.from(action.properties);
+
+    // Add navigation mode properties
+    if (navigationMode != null) {
+      navigationProperties['navigationMode'] = navigationMode;
+    }
+    if (popUntilPageName != null) {
+      navigationProperties['popUntilPageName'] = popUntilPageName;
+    }
 
     if (navData != null) {
       final resolvedData = navData.map((entry) {

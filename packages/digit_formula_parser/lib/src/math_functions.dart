@@ -30,6 +30,7 @@ final Map<String, bool Function(dynamic, dynamic)> listCheckFunctions = {
   /// Checks if a list contains a specific value
   /// Usage: contains(stockDetails.productDetail, 'PVAR-xxx')
   /// Works with both List objects and string representations like "[A, B, C]"
+  /// Also works with lists of objects like "[{ID:xxx,SKU:yyy},{ID:zzz,SKU:www}]"
   'contains': (dynamic list, dynamic value) {
     if (list == null || value == null) return false;
 
@@ -38,17 +39,40 @@ final Map<String, bool Function(dynamic, dynamic)> listCheckFunctions = {
 
     // If list is actually a List, check if it contains the value
     if (list is List) {
-      return list.any((item) => item.toString().toUpperCase() == searchValue);
+      // Check if any item equals the search value OR if any item (when converted to string) contains it
+      return list.any((item) {
+        final itemStr = item.toString().toUpperCase();
+        // Exact match
+        if (itemStr == searchValue) return true;
+        // For Map/object items, check if the search value exists within
+        if (item is Map) {
+          return item.values.any((v) =>
+              v.toString().toUpperCase() == searchValue ||
+              v.toString().toUpperCase().contains(searchValue));
+        }
+        // Substring match for complex items
+        return itemStr.contains(searchValue);
+      });
     }
 
-    // If list is a string representation of a list like "[A, B, C]"
+    // If list is a string representation of a list
     if (list is String) {
-      // Remove brackets and quotes
+      final upperList = list.toUpperCase();
+
+      // Check if it looks like a list of objects (contains curly braces)
+      if (list.contains('{') && list.contains('}')) {
+        // For lists of objects, do a substring search
+        return upperList.contains(searchValue);
+      }
+
+      // For simple lists like "[A, B, C]", do exact item matching
       var cleanList = list.replaceAll(RegExp(r'''[\[\]"']'''), '').trim();
-      // Split by comma and check
       var items =
           cleanList.split(',').map((e) => e.trim().toUpperCase()).toList();
-      return items.contains(searchValue);
+      // Check exact match first
+      if (items.contains(searchValue)) return true;
+      // Fallback to substring match
+      return upperList.contains(searchValue);
     }
 
     return false;
@@ -56,6 +80,7 @@ final Map<String, bool Function(dynamic, dynamic)> listCheckFunctions = {
 
   /// Checks if a list does NOT contain a specific value
   /// Usage: notcontains(stockDetails.productDetail, 'PVAR-xxx')
+  /// Also works with lists of objects like "[{ID:xxx,SKU:yyy},{ID:zzz,SKU:www}]"
   'notcontains': (dynamic list, dynamic value) {
     if (list == null) return true;
     if (value == null) return true;
@@ -63,15 +88,41 @@ final Map<String, bool Function(dynamic, dynamic)> listCheckFunctions = {
     final searchValue =
         value.toString().toUpperCase().replaceAll('"', '').replaceAll("'", '');
 
+    // If list is actually a List, check that no item contains the value
     if (list is List) {
-      return !list.any((item) => item.toString().toUpperCase() == searchValue);
+      return !list.any((item) {
+        final itemStr = item.toString().toUpperCase();
+        // Exact match
+        if (itemStr == searchValue) return true;
+        // For Map/object items, check if the search value exists within
+        if (item is Map) {
+          return item.values.any((v) =>
+              v.toString().toUpperCase() == searchValue ||
+              v.toString().toUpperCase().contains(searchValue));
+        }
+        // Substring match for complex items
+        return itemStr.contains(searchValue);
+      });
     }
 
+    // If list is a string representation of a list
     if (list is String) {
+      final upperList = list.toUpperCase();
+
+      // Check if it looks like a list of objects (contains curly braces)
+      if (list.contains('{') && list.contains('}')) {
+        // For lists of objects, do a substring search
+        return !upperList.contains(searchValue);
+      }
+
+      // For simple lists like "[A, B, C]", do exact item matching
       var cleanList = list.replaceAll(RegExp(r'''[\[\]"']'''), '').trim();
       var items =
           cleanList.split(',').map((e) => e.trim().toUpperCase()).toList();
-      return !items.contains(searchValue);
+      // Check exact match first
+      if (items.contains(searchValue)) return false;
+      // Fallback to substring match
+      return !upperList.contains(searchValue);
     }
 
     return true;

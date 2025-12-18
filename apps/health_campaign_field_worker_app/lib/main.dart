@@ -1425,8 +1425,7 @@ final dynamic sampleFlows = {
                   },
                   {
                     "format": "button",
-                    "visible":
-                        "{{fn:checkAllDoseDelivered(task)}} == true",
+                    "visible": "{{fn:checkAllDoseDelivered(task)}} == true",
                     "properties": {
                       "type": "primary",
                       "size": "medium",
@@ -1449,12 +1448,12 @@ final dynamic sampleFlows = {
                             {
                               "key": "HouseholdClientReferenceId",
                               "value":
-                              "{{member.0.householdClientReferenceId}}",
+                                  "{{member.0.householdClientReferenceId}}",
                             },
                             {
                               "key": "ProjectBeneficiaryClientReferenceId",
                               "value":
-                              "{{projectBeneficiary.0.clientReferenceId}}",
+                                  "{{projectBeneficiary.0.clientReferenceId}}",
                             },
                           ]
                         }
@@ -5707,6 +5706,8 @@ final dynamic sampleInventoryFlows = {
               "properties": {
                 "type": "TEMPLATE",
                 "name": "viewTransaction",
+                "navigationMode": "popUntilAndPush",
+                "popUntilPageName": "viewTransaction",
                 "data": []
               }
             }
@@ -6260,6 +6261,14 @@ final dynamic sampleInventoryFlows = {
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "contains(stockDetails.productdetail, 'PVAR-2024-11-20-000437')"
+                  }
+                ]
+              },
               "validations": [
                 {
                   "type": "required",
@@ -6458,6 +6467,8 @@ final dynamic sampleInventoryFlows = {
           "properties": {
             "type": "TEMPLATE",
             "name": "stockSuccess",
+            "navigationMode": "popUntilAndPush",
+            "popUntilPageName": "manageStock",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
@@ -6521,6 +6532,8 @@ final dynamic sampleInventoryFlows = {
                 "properties": {
                   "type": "TEMPLATE",
                   "name": "manageStock",
+                  "navigationMode": "popUntilAndPush",
+                  "popUntilPageName": "manageStock",
                 }
               }
             ]
@@ -6821,6 +6834,8 @@ final dynamic sampleInventoryFlows = {
                     "properties": {
                       "type": "TEMPLATE",
                       "name": "viewTransactionDetails",
+                      "navigationMode": "popUntilAndPush",
+                      "popUntilPageName": "manageStock",
                       "data": [
                         {"key": "selectedStock", "value": "{{item.groupKey}}"}
                       ]

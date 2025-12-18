@@ -41,11 +41,22 @@ final parser = () {
       .trim()
       .map(double.parse);
 
-  final stringLiteral =
+  // Double-quoted strings: "..."
+  final doubleQuoteString =
       (char('"') & (char('\\') & any() | char('"').neg()).star() & char('"'))
           .flatten()
           .trim()
           .map((v) => v.substring(1, v.length - 1));
+
+  // Single-quoted strings: '...'
+  final singleQuoteString =
+      (char("'") & (char('\\') & any() | char("'").neg()).star() & char("'"))
+          .flatten()
+          .trim()
+          .map((v) => v.substring(1, v.length - 1));
+
+  // Combined string literal (supports both single and double quotes)
+  final stringLiteral = doubleQuoteString | singleQuoteString;
 
   final identifier =
       (letter() & (letter() | digit() | char('_')).star()).flatten().trim();

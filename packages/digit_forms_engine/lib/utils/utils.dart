@@ -170,11 +170,11 @@ bool evaluateVisibilityExpression(
     List<VisibilityExpression> expressions, Map<String, dynamic> values) {
   // Any condition must be true (OR logic)
   for (final expr in expressions) {
-    final value = FormulaParser(
+    final parser = FormulaParser(
       expr.condition,
       values.isEmpty ? {'dummy': {}} : values,
     );
-    final result = value.parse;
+    final result = parser.parse;
     if (result["value"] == true) {
       return true;
     }
