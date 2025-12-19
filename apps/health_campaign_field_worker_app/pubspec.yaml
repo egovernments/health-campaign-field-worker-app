@@ -78,7 +78,7 @@ dependencies:
       url: https://github.com/naveenr-egov/flutter_nearby_connections
       ref: master
   percent_indicator: ^4.2.4
-  screen_protector: ^1.4.2
+  screen_protector: 1.4.1
   lottie: ^3.1.0
   digit_crud_bloc: ^0.0.2-dev
   digit_data_converter: ^0.0.2-dev
