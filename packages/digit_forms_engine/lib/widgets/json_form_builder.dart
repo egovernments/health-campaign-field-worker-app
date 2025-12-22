@@ -369,6 +369,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           innerLabel:
               translateIfPresent(widget.schema.innerLabel, localizations),
+          prefixText: translateIfPresent(widget.schema.prefixText, localizations),
         );
 
       case PropertySchemaFormat.dob:
