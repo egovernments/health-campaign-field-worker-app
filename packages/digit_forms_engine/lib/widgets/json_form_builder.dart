@@ -83,7 +83,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           // If filledValue is a string like "20 Jun 2025", convert to DateTime
           if (filledValue is String) {
             try {
-              valueToSet = DateFormat("dd MMM yyyy").parseStrict(filledValue);
+              final currentLocale = Localizations.localeOf(context).toString();
+              valueToSet = DateFormat("dd MMM yyyy", currentLocale).parseStrict(filledValue);
             } catch (_) {
               // Not a date string → keep as string
               valueToSet = filledValue;
@@ -379,10 +380,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           formControlName: widget.formControlName,
           validations: widget.schema.validations,
           initialDate: _safeTimestamp("startDate") != null
-              ? parseDateValue(DigitDateUtils.getDateFromTimestamp(
-                  _safeTimestamp("startDate")!,
-                  dateFormat: "dd MMM YYYY",
-                ))
+              ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("startDate")!)
               : null,
         );
 
@@ -407,18 +405,10 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           form: form,
           formControlName: widget.formControlName,
           start: _safeTimestamp("startDate") != null
-              ? parseDateValue(DigitDateUtils.getDateFromTimestamp(
-                  _safeTimestamp("startDate")!,
-                  dateFormat: "dd MMM YYYY",
-                ))
+              ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("startDate")!)
               : null,
           end: _safeTimestamp("endDate") != null
-              ? parseDateValue(
-                  DigitDateUtils.getDateFromTimestamp(
-                    _safeTimestamp("endDate")!,
-                    dateFormat: "dd MMM YYYY",
-                  ),
-                )
+              ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("endDate")!)
               : null,
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
@@ -562,16 +552,10 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           form: form,
           formControlName: widget.formControlName,
           start: _safeTimestamp("startDate") != null
-              ? parseDateValue(DigitDateUtils.getDateFromTimestamp(
-                  _safeTimestamp("startDate")!,
-                  dateFormat: "dd MMM YYYY",
-                ))
+              ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("startDate")!)
               : null,
           end: _safeTimestamp("endDate") != null
-              ? parseDateValue(DigitDateUtils.getDateFromTimestamp(
-                  _safeTimestamp("endDate")!,
-                  dateFormat: "dd MMM YYYY",
-                ))
+              ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("endDate")!)
               : null,
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),

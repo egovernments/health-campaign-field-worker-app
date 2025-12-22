@@ -196,6 +196,20 @@ String formatDateLocalized(
   return DateFormat(pattern, locale).format(date);
 }
 
+DateTime? parseDateLocalized(
+    BuildContext context, String value, String pattern) {
+  final locale = Localizations.localeOf(context).toString();
+  try {
+    return DateFormat(pattern, locale).parseStrict(value);
+  } catch (_) {
+    return null;
+  }
+}
+
+String getLocale(BuildContext context) {
+  return Localizations.localeOf(context).toString();
+}
+
 bool evaluateVisibilityExpression(
     List<VisibilityExpression> expressions, Map<String, dynamic> values) {
   // Any condition must be true (OR logic)

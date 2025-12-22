@@ -80,6 +80,10 @@ final jsonConfig = {
             "clientAuditDetails": "__generate:clientAudit",
             "auditDetails": "__generate:audit",
           },
+          "additionalFields": {
+            "weight": "beneficiaryDetails.weight",
+            "height": "beneficiaryDetails.height"
+          },
           "bloodGroup": "health.bloodGroup",
           "gender": "beneficiaryDetails.gender",
           "address": "list:AddressModel",
@@ -213,6 +217,10 @@ final jsonConfig = {
             "givenName": "beneficiaryDetails.nameOfIndividual",
             "clientAuditDetails": "__generate:clientAudit",
             "auditDetails": "__generate:audit",
+          },
+          "additionalFields": {
+            "weight": "beneficiaryDetails.weight",
+            "height": "beneficiaryDetails.height"
           },
           "bloodGroup": "health.bloodGroup",
           "gender": "beneficiaryDetails.gender",

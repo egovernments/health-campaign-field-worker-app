@@ -1018,7 +1018,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
   List<LabelValueItem> _renderSummaryLabelValueItems(PropertySchema schema) {
     final properties = schema.properties ?? {};
-    final dateFormatter = DateFormat('dd MMM yyyy');
+    final currentLocale = Localizations.localeOf(context).toString();
+    final dateFormatter = DateFormat('dd MMM yyyy', currentLocale);
 
     return properties.entries
         .where((entry) =>

@@ -1255,7 +1255,7 @@ class ComputedListEvaluator {
   static int calculateAgeInMonths(String dob) {
     final dateOfBirth = parseDate(dob);
     final age = DigitDateUtils.calculateAge(dateOfBirth);
-    return age.months;
+    return age.years*12 + age.months;
   }
 
   /// Builds the context map by extracting only required keys and applying transformations
@@ -1291,9 +1291,20 @@ class ComputedListEvaluator {
       }
 
       // Merge additionalFields if exists
-      if (contextAsMap.containsKey('additionalFields') &&
-          contextAsMap['additionalFields'] is Map<String, dynamic>) {
-        contextAsMap.addAll(contextAsMap['additionalFields']);
+      if (contextAsMap['additionalFields'] is Map<String, dynamic>) {
+        final additional = contextAsMap['additionalFields'] as Map<String, dynamic>;
+
+        if (additional['fields'] is List) {
+          final fieldsList = additional['fields'] as List;
+
+          for (final field in fieldsList) {
+            if (field is Map<String, dynamic> &&
+                field.containsKey('key') &&
+                field.containsKey('value')) {
+              contextAsMap[field['key']] = field['value'];
+            }
+          }
+        }
       }
 
       for (final key in requiredKeys) {
