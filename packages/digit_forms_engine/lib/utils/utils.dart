@@ -20,6 +20,36 @@ class Constants {
   static const String checklistViewDateFormat = 'dd/MM/yyyy hh:mm a';
 }
 
+int? minFromValidations(List<ValidationRule>? validations) {
+  if (validations == null) return null;
+
+  final rule = validations.firstWhere(
+        (v) => v.type == 'min',
+    orElse: () => const ValidationRule(type: ''),
+  );
+
+  if (rule.value == null) return null;
+
+  return rule.value is int
+      ? rule.value as int
+      : int.tryParse(rule.value.toString());
+}
+
+int? maxFromValidations(List<ValidationRule>? validations) {
+  if (validations == null) return null;
+
+  final rule = validations.firstWhere(
+        (v) => v.type == 'max',
+    orElse: () => const ValidationRule(type: ''),
+  );
+
+  if (rule.value == null) return null;
+
+  return rule.value is int
+      ? rule.value as int
+      : int.tryParse(rule.value.toString());
+}
+
 /// `IdGen` is a singleton class that generates unique identifiers.
 /// It uses the `Uuid` package to generate version 1 UUIDs.
 class IdGen {
