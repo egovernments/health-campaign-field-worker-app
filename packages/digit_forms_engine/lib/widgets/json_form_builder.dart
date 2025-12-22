@@ -353,6 +353,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           isMultiselect: widget.schema.isMultiSelect ?? false,
+          readOnly: widget.schema.readOnly ?? false,
         );
 
       case PropertySchemaFormat.mobileNumber:
