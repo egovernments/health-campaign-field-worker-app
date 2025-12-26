@@ -312,7 +312,7 @@ void initializeFunctionRegistry() {
         return totalAgeMonths >= projectType.validMinAge! &&
             totalAgeMonths <= projectType.validMaxAge!;
       }
-      return false;
+      return true;
     }
   });
 
