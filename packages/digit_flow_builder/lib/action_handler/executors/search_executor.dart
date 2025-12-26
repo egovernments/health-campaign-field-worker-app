@@ -27,9 +27,12 @@ class SearchExecutor extends ActionExecutor {
     final contexts = contextData['entities'];
 
     // Get screen key - try CrudItemContext first (has correct format),
-    // then fall back to route args
+    // then fall back to route args, then check action properties for _parentScreenKey
+    // (injected by popup actions to preserve parent page context)
     final crudCtx = CrudItemContext.of(context);
-    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
+    final screenKey = crudCtx?.screenKey ??
+        getScreenKeyFromArgs(context) ??
+        data['_parentScreenKey'] as String?;
 
     // Get widgetData from FlowCrudStateRegistry (for filter values)
     final widgetData = screenKey != null
@@ -55,10 +58,13 @@ class SearchExecutor extends ActionExecutor {
       ...navigationFromContext,
     };
 
-    // Build context data that includes entities, form values, and navigation params
+    // Build context data that includes entities, form values, widgetData, and navigation params
+    // widgetData is included at root level so templates like {{selectedStatus}} resolve directly
     final resolveContext = {
       if (contexts != null) ...contexts,
       ...formData,
+      ...widgetData, // Include widgetData at root for direct access
+      'widgetData': widgetData, // Also include with prefix for explicit access
       'navigation': mergedNavigation,
     };
 
@@ -87,7 +93,7 @@ class SearchExecutor extends ActionExecutor {
       }
 
       // Special case: if still unresolved and it's a template
-      // try direct lookup in formData (for dropdown selections)
+      // try direct lookup in formData or widgetData
       if ((resolvedValue == null ||
               (resolvedValue is String && resolvedValue.startsWith('{{'))) &&
           rawValue is String) {
@@ -98,21 +104,24 @@ class SearchExecutor extends ActionExecutor {
           final path = templateMatch.group(1)!;
           final parts = path.split('.');
 
-          // Try to resolve from formData
-          dynamic value = formData;
-          bool found = true;
-          for (final part in parts) {
-            if (value is Map && value.containsKey(part)) {
-              value = value[part];
-            } else {
-              found = false;
-              break;
+          // Helper to resolve path from a map
+          dynamic resolvePath(Map<String, dynamic> source) {
+            dynamic value = source;
+            for (final part in parts) {
+              if (value is Map && value.containsKey(part)) {
+                value = value[part];
+              } else {
+                return null;
+              }
             }
+            return value != source ? value : null;
           }
 
-          if (found && value != formData) {
-            resolvedValue = value;
-          }
+          // Try to resolve from formData first
+          resolvedValue = resolvePath(formData);
+
+          // If not found in formData, try widgetData (for filter selections)
+          resolvedValue ??= resolvePath(widgetData);
         }
       }
 
@@ -139,8 +148,11 @@ class SearchExecutor extends ActionExecutor {
         }
       }
 
+      // Use per-filter root if specified, fallback to data['name'] for backward compatibility
+      final filterRoot = filterData['root'] as String? ?? data['name'] as String?;
+
       filters.add(SearchFilter(
-        root: data['name'],
+        root: filterRoot ?? '',
         field: resolvedKey.toString(),
         operator: operation,
         value: resolvedValue,
@@ -160,6 +172,12 @@ class SearchExecutor extends ActionExecutor {
           config!['wrapperConfig']['searchConfig']['orderBy']));
     }
 
+    // Get filterLogic from action properties (defaults to 'and')
+    final filterLogicStr = data['filterLogic'] as String? ?? 'and';
+    final filterLogic = filterLogicStr.toLowerCase() == 'or'
+        ? MultiTableFilterLogic.or
+        : MultiTableFilterLogic.and;
+
     final searchParams = GlobalSearchParameters(
       filters: filters,
       primaryModel: config?['wrapperConfig']['searchConfig']['primary'],
@@ -168,6 +186,7 @@ class SearchExecutor extends ActionExecutor {
           [],
       pagination: null,
       orderBy: orderBy,
+      filterLogic: filterLogic,
     );
 
     // Check if we should wait for results (for chained actions like REVERSE_TRANSFORM)

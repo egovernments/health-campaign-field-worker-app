@@ -245,7 +245,7 @@ final dynamic sampleFlows = {
                 {
                   "format": "selectionCard",
                   "fieldName": "selectedStatus",
-                  "data": [
+                  "enums": [
                     {
                       "code": "ADMINISTRATION_SUCCESS",
                       "name": "Administration Success"
@@ -254,6 +254,18 @@ final dynamic sampleFlows = {
                       "code": "ADMINISTRATION_FAILED",
                       "name": "Administration Failed"
                     },
+                    {
+                      "code": "CLOSED_HOUSEHOLD",
+                      "name": "Closed Household"
+                    },
+                    {
+                      "code": "NOT_REGISTERED",
+                      "name": "Not Registered"
+                    },
+                    {
+                      "code": "NOT_ADMINISTERED",
+                      "name": "Not Administered"
+                    }
                   ],
                 }
               ],
@@ -282,16 +294,70 @@ final dynamic sampleFlows = {
                   "onAction": [
                     {"actionType": "CLOSE_POPUP", "properties": {}},
                     {
-                      "actionType": "SEARCH_EVENT",
-                      "properties": {
-                        "name": "task",
-                        "data": [
-                          {
-                            "key": "status",
-                            "value": "{{ widgetData.selectedStatus }}",
-                            "operation": "in"
+                      "actions": [
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "name": "task",
+                            "data": [
+                              {
+                                "key": "status",
+                                "value": "{{selectedStatus}}",
+                                "operation": "in"
+                              }
+                            ]
                           }
-                        ]
+                        }
+                      ],
+                      "condition": {
+                        "expression": "selectedStatus == ADMINISTRATION_SUCCESS || selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == ADMINISTRATION_FAILED"
+                      }
+                    },
+                    {
+                      "actions": [
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "name": "projectBeneficiary",
+                            "data": [
+                              {
+                                "key": "projectId",
+                                "value": "{{singleton.selectedProject.id}}",
+                                "operation": "notEqual"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "condition": {
+                        "expression": "selectedStatus == NOT_REGISTERED"
+                      }
+                    },
+                    {
+                      "actions": [
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "filterLogic": "and",
+                            "data": [
+                              {
+                                "root": "projectBeneficiary",
+                                "key": "projectId",
+                                "value": "{{singleton.selectedProject.id}}",
+                                "operation": "equals"
+                              },
+                              {
+                                "root": "task",
+                                "key": "status",
+                                "value": ["ADMINISTRATION_SUCCESS", "ADMINISTRATION_FAILED", "CLOSED_HOUSEHOLD"],
+                                "operation": "notIn"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "condition": {
+                        "expression": "selectedStatus == NOT_ADMINISTERED"
                       }
                     }
                   ]

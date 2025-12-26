@@ -1,3 +1,4 @@
+import 'package:digit_flow_builder/action_handler/executors/close_popup_executor.dart';
 import 'package:flutter/material.dart';
 import 'action_config.dart';
 import 'executors/action_executor.dart';
@@ -36,6 +37,7 @@ class ActionExecutorRegistry {
     register('CLEAR_STATE', ClearStateExecutor());
     register('OPEN_SCANNER', OpenScannerExecutor());
     register('REVERSE_TRANSFORM', ReverseTransformerExecutor());
+    register('CLOSE_POPUP', ClosePopupExecutor());
   }
 
   /// Register a custom executor

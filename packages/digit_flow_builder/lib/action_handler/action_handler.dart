@@ -1,6 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:flutter/material.dart';
 
+import '../blocs/flow_crud_bloc.dart';
+import '../utils/interpolation.dart';
 import 'action_config.dart';
 import 'action_executor_registry.dart';
 
@@ -68,7 +71,30 @@ class ActionHandler {
         final formData = contextData['formData'] as Map<String, dynamic>? ?? {};
         final navigation = contextData['navigation'] as Map<String, dynamic>? ?? {};
 
-        // Merge formData and navigation for condition evaluation
+        // Get screen key - try context first, then check action properties for _parentScreenKey
+        // (injected by popup actions to preserve parent page context)
+        String? screenKey = getScreenKeyFromArgs(context) ?? context.router.currentPath;
+
+        // Check if any action in the group has _parentScreenKey (from popup context)
+        for (final condActionJson in conditionalGroup) {
+          final subActions = condActionJson['actions'] as List? ?? [];
+          for (final subAction in subActions) {
+            if (subAction is Map<String, dynamic>) {
+              final parentKey = subAction['properties']?['_parentScreenKey'] as String?;
+              if (parentKey != null) {
+                screenKey = parentKey;
+                break;
+              }
+            }
+          }
+        }
+
+        final currentState = FlowCrudStateRegistry().get(screenKey ?? '');
+
+        // Get widgetData from the current state (contains filter selections, etc.)
+        final widgetData = currentState?.widgetData ?? {};
+
+        // Merge formData, navigation, and widgetData for condition evaluation
         // Also convert string "true"/"false" to boolean for proper evaluation
         final evaluationData = <String, dynamic>{};
 
@@ -86,6 +112,29 @@ class ActionHandler {
 
         addWithTypeConversion(formData);
         addWithTypeConversion(navigation);
+
+        // Add widgetData - flatten list values to check membership
+        // For selection cards, convert list of selected codes to individual keys
+        widgetData.forEach((key, value) {
+          if (value is List) {
+            // For lists (like selected options), add each item as a separate key
+            // and also add the list itself for "in" operations
+            evaluationData[key] = value;
+            for (var item in value) {
+              // Allow checking "selectedStatus == ADMINISTRATION_SUCCESS"
+              // by adding the value as a key that equals itself
+              if (item is String) {
+                evaluationData[item] = item;
+              }
+            }
+          } else if (value == 'true') {
+            evaluationData[key] = true;
+          } else if (value == 'false') {
+            evaluationData[key] = false;
+          } else {
+            evaluationData[key] = value;
+          }
+        });
 
         for (final condActionJson in conditionalGroup) {
           final condition = condActionJson['condition'] as Map<String, dynamic>;

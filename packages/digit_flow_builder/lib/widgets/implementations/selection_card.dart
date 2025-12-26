@@ -17,7 +17,7 @@ class SelectionCardWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final data = json['data'] as List<dynamic>? ?? [];
+    final data = json['enums'] as List<dynamic>? ?? [];
     final fieldName = json['fieldName'] as String?;
     final localization = LocalizationContext.maybeOf(context);
 

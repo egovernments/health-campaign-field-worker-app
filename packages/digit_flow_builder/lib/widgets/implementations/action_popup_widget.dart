@@ -118,23 +118,35 @@ class ActionPopupWidget implements FlowWidget {
               );
             }
             return const SizedBox.shrink();
-          }).toList(),
+          }),
         ],
         actions: footerActions.isEmpty
             ? null
             : footerActions
-                .where((actionJson) => actionJson is Map<String, dynamic>)
+                .whereType<Map<String, dynamic>>()
                 .map((actionJson) {
                 return FlowWidgetFactory.build(
-                  actionJson as Map<String, dynamic>,
+                  actionJson,
                   ctx,
                   (ActionConfig action) {
-                    // Handle CLOSE_POPUP action
+                    // Handle CLOSE_POPUP action - close the popup dialog
                     if (action.actionType == 'CLOSE_POPUP') {
                       Navigator.of(ctx, rootNavigator: true).pop();
                     }
-                    // Forward other actions
-                    onAction(action);
+                    // Forward other actions with screenKey and popup context injected
+                    // so action executors can access parent page context and close popup
+                    final enrichedAction = ActionConfig(
+                      action: action.action,
+                      actionType: action.actionType,
+                      properties: {
+                        ...action.properties,
+                        if (screenKey != null) '_parentScreenKey': screenKey,
+                        '_popupContext': true, // Flag to indicate action is from popup
+                      },
+                      condition: action.condition,
+                      actions: action.actions,
+                    );
+                    onAction(enrichedAction);
                   },
                 ) as DigitButton;
               }).toList(),
