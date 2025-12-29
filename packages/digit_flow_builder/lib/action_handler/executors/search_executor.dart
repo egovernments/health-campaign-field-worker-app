@@ -27,12 +27,10 @@ class SearchExecutor extends ActionExecutor {
     final contexts = contextData['entities'];
 
     // Get screen key - try CrudItemContext first (has correct format),
-    // then fall back to route args, then check action properties for _parentScreenKey
-    // (injected by popup actions to preserve parent page context)
+    // then fall back to route args and parentScreenKey (from popup context)
     final crudCtx = CrudItemContext.of(context);
     final screenKey = crudCtx?.screenKey ??
-        getScreenKeyFromArgs(context) ??
-        data['_parentScreenKey'] as String?;
+        getEffectiveScreenKey(context, contextData);
 
     // Get widgetData from FlowCrudStateRegistry (for filter values)
     final widgetData = screenKey != null

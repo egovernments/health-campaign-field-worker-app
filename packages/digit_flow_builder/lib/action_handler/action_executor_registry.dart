@@ -68,8 +68,16 @@ class ActionExecutorRegistry {
       return contextData;
     }
 
+    // Centralized handling: if action has parentScreenKey (from popup context),
+    // inject it into contextData so all executors can access it
+    final enrichedContextData = Map<String, dynamic>.from(contextData);
+    final parentScreenKey = action.properties['parentScreenKey'] as String?;
+    if (parentScreenKey != null) {
+      enrichedContextData['parentScreenKey'] = parentScreenKey;
+    }
+
     try {
-      return await executor.execute(action, context, contextData);
+      return await executor.execute(action, context, enrichedContextData);
     } catch (e, stackTrace) {
       debugPrint('❌ Error executing action ${action.actionType}: $e');
       debugPrint('Stack trace: $stackTrace');

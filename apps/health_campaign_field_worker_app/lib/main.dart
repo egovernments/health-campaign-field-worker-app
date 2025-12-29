@@ -134,6 +134,22 @@ final dynamic sampleFlows = {
             }
           },
           {
+            "name": "headProjectBeneficiary",
+            "entity": "ProjectBeneficiaryModel",
+            "match": {
+              "field": "beneficiaryClientReferenceId",
+              "equalsFrom": "headOfHousehold.individualClientReferenceId"
+            }
+          },
+          {
+            "name": "headTasks",
+            "entity": "TaskModel",
+            "match": {
+              "field": "projectBeneficiaryClientReferenceId",
+              "equalsFrom": "headProjectBeneficiary.clientReferenceId"
+            }
+          },
+          {
             "name": "individuals",
             "entity": "IndividualModel",
             "match": {
@@ -254,18 +270,9 @@ final dynamic sampleFlows = {
                       "code": "ADMINISTRATION_FAILED",
                       "name": "Administration Failed"
                     },
-                    {
-                      "code": "CLOSED_HOUSEHOLD",
-                      "name": "Closed Household"
-                    },
-                    {
-                      "code": "NOT_REGISTERED",
-                      "name": "Not Registered"
-                    },
-                    {
-                      "code": "NOT_ADMINISTERED",
-                      "name": "Not Administered"
-                    }
+                    {"code": "CLOSED_HOUSEHOLD", "name": "Closed Household"},
+                    {"code": "NOT_REGISTERED", "name": "Not Registered"},
+                    {"code": "NOT_ADMINISTERED", "name": "Not Administered"}
                   ],
                 }
               ],
@@ -292,7 +299,12 @@ final dynamic sampleFlows = {
                     "mainAxisSize": "max"
                   },
                   "onAction": [
-                    {"actionType": "CLOSE_POPUP", "properties": {}},
+                    {
+                      "actionType": "CLOSE_POPUP",
+                      "properties": {
+                        "parentScreenKey": "searchBeneficiary"
+                      }
+                    },
                     {
                       "actions": [
                         {
@@ -310,7 +322,8 @@ final dynamic sampleFlows = {
                         }
                       ],
                       "condition": {
-                        "expression": "selectedStatus == ADMINISTRATION_SUCCESS || selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == ADMINISTRATION_FAILED"
+                        "expression":
+                            "selectedStatus == ADMINISTRATION_SUCCESS || selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == ADMINISTRATION_FAILED"
                       }
                     },
                     {
@@ -349,7 +362,11 @@ final dynamic sampleFlows = {
                               {
                                 "root": "task",
                                 "key": "status",
-                                "value": ["ADMINISTRATION_SUCCESS", "ADMINISTRATION_FAILED", "CLOSED_HOUSEHOLD"],
+                                "value": [
+                                  "ADMINISTRATION_SUCCESS",
+                                  "ADMINISTRATION_FAILED",
+                                  "CLOSED_HOUSEHOLD"
+                                ],
                                 "operation": "notIn"
                               }
                             ]
@@ -400,16 +417,44 @@ final dynamic sampleFlows = {
                     "properties": {"type": "secondary", "size": "medium"},
                     "onAction": [
                       {
-                        "actionType": "NAVIGATION",
-                        "properties": {
-                          "type": "TEMPLATE",
-                          "name": "householdOverview",
-                          "data": [
-                            {
-                              "key": "HouseholdClientReferenceId",
-                              "value": "{{ HouseholdModel.clientReferenceId }}"
+                        "actions": [
+                          {
+                            "actionType": "NAVIGATION",
+                            "properties": {
+                              "type": "FORM",
+                              "name": "HOUSEHOLD",
+                              "data": [
+                                {
+                                  "key": "HouseholdClientReferenceId",
+                                  "value": "{{ context.household.clientReferenceId }}"
+                                },
+                                {"key": "isEdit", "value": "true"}
+                              ]
                             }
-                          ]
+                          }
+                        ],
+                        "condition": {
+                          "expression": "context.headProjectBeneficiary.0!=null && "
+                        }
+                      },
+                      {
+                        "actions": [
+                          {
+                            "actionType": "NAVIGATION",
+                            "properties": {
+                              "type": "TEMPLATE",
+                              "name": "householdOverview",
+                              "data": [
+                                {
+                                  "key": "HouseholdClientReferenceId",
+                                  "value": "{{ HouseholdModel.clientReferenceId }}"
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        "condition": {
+                          "expression": ".ec1==YES && eligibilityChecklist.ec3==YES && eligibilityChecklist.ec4==YES"
                         }
                       }
                     ]
@@ -4781,215 +4826,236 @@ final dynamic sampleComplaintFlows = {
       "body": [
         {
           "format": "row",
-          "properties": {
-            "mainAxisAlignment": "spaceBetween",
-            "mainAxisSize": "max"
-          },
           "children": [
             {
               "type": "template",
+              "label": "Search",
               "format": "actionPopup",
-              "label": "COMPLAINT_INBOX_SEARCH_LABEL",
+              "fieldName": "searchComplaints",
               "properties": {
-                "suffixIcon": "Search",
-                "type": "tertiary",
+                "icon": "Search",
                 "size": "medium",
-                "mainAxisSize": "min",
-                "mainAxisAlignment": "start",
+                "type": "tertiary",
+                "suffixIcon": "Search",
                 "popupConfig": {
+                  "body": [
+                    {
+                      "type": "template",
+                      "label": "COMPLAINT_INBOX_SEARCH_COMPLAINT_NUMBER_LABEL",
+                      "format": "textInput",
+                      "fieldName": "complaintNumber"
+                    },
+                    {
+                      "type": "template",
+                      "label": "COMPLAINT_INBOX_SEARCH_MOBILE_NUMBER_LABEL",
+                      "format": "textInput",
+                      "fieldName": "mobileNumber"
+                    }
+                  ],
                   "type": "default",
                   "title": "COMPLAINT_INBOX_SEARCH_LABEL",
                   "titleIcon": "Search",
-                  "showCloseButton": true,
-                  "barrierDismissible": true,
-                  "body": [
-                    {
-                      "type": "template",
-                      "format": "textInput",
-                      "label": "COMPLAINT_INBOX_SEARCH_COMPLAINT_NUMBER_LABEL",
-                      "fieldName": "complaintNumber",
-                    },
-                    {
-                      "type": "template",
-                      "format": "textInput",
-                      "label": "COMPLAINT_INBOX_SEARCH_MOBILE_NUMBER_LABEL",
-                      "fieldName": "mobileNumber",
-                    }
-                  ],
                   "footerActions": [
                     {
                       "type": "template",
-                      "format": "button",
                       "label": "COMPLAINT_INBOX_SEARCH_SECONDARY_ACTION_LABEL",
-                      "properties": {
-                        "type": "secondary",
-                        "size": "large",
-                        "mainAxisSize": "max"
-                      },
+                      "format": "button",
                       "onAction": [
-                        {"actionType": "CLEAR_STATE", "properties": {}},
-                        {"actionType": "CLOSE_POPUP", "properties": {}}
-                      ]
+                        {
+                          "actionType": "CLEAR_STATE",
+                          "properties": {}
+                        },
+                        {
+                          "actionType": "CLOSE_POPUP",
+                          "properties": {}
+                        }
+                      ],
+                      "fieldName": "cancel",
+                      "properties": {
+                        "size": "large",
+                        "type": "secondary",
+                        "mainAxisSize": "max"
+                      }
                     },
                     {
                       "type": "template",
-                      "format": "button",
                       "label": "COMPLAINT_INBOX_SEARCH_PRIMARY_ACTION_LABEL",
-                      "properties": {
-                        "type": "primary",
-                        "size": "large",
-                        "mainAxisSize": "max"
-                      },
+                      "format": "button",
                       "onAction": [
-                        {"actionType": "CLOSE_POPUP", "properties": {}},
+                        {
+                          "actionType": "CLOSE_POPUP",
+                          "properties": {
+                            "parentScreenKey": "complaintInbox"
+                          }
+                        },
                         {
                           "actionType": "SEARCH_EVENT",
                           "properties": {
-                            "name": "PgrServiceModel",
                             "data": [
                               {
+                                "root": "pgrService",
                                 "key": "serviceRequestId",
-                                "value": "{{ widgetData.complaintNumber }}",
-                                "operation": "in"
+                                "value": "{{complaintNumber}}",
+                                "operation": "contains"
                               },
                               {
-                                "key": "serviceRequestId",
-                                "value": "{{ widgetData.mobileNumber }}",
-                                "operation": "in"
+                                "root": "pgrComplainant",
+                                "key": "mobileNumber",
+                                "value": "{{mobileNumber}}",
+                                "operation": "contains"
                               }
-                            ]
+                            ],
+                            "name": "PgrService"
                           }
                         }
-                      ]
-                    }
-                  ]
-                }
-              },
-            },
-            {
-              "type": "template",
-              "format": "actionPopup",
-              "label": "COMPLAINT_INBOX_FILTER_LABEL",
-              "properties": {
-                "type": "tertiary",
-                "size": "medium",
-                "mainAxisSize": "min",
-                "mainAxisAlignment": "start",
-                "popupConfig": {
-                  "type": "default",
-                  "title": "COMPLAINT_INBOX_FILTER_LABEL",
-                  "titleIcon": "filter",
-                  "showCloseButton": true,
-                  "barrierDismissible": true,
-                  "body": [
-                    {
-                      "type": "template",
-                      "format": "radioList",
-                      "fieldName": "assignTo",
-                      "data": [
-                        {"code": "ASSIGN_TO_ME", "name": "ASSIGN_TO_ME"},
-                        {"code": "ASSIGN_TO_ALL", "name": "ASSIGN_TO_ALL"},
                       ],
-                    },
-                    {
-                      "type": "template",
-                      "format": "dropdown",
-                      "label": "COMPLAINT_INBOX_FILTER_COMPLAINT_TYPE_LABEL",
-                      "fieldName": "complaintType",
-                      "enums": "{{fn:getUniqueComplaintTypes()}}",
-                    },
-                    {
-                      "type": "template",
-                      "format": "dropdown",
-                      "label": "COMPLAINT_INBOX_FILTER_LOCALITY_TYPE_LABEL",
-                      "fieldName": "locality",
-                      "enums": "{{fn:getUniqueLocalities()}}",
+                      "fieldName": "search",
+                      "properties": {
+                        "size": "large",
+                        "type": "primary",
+                        "mainAxisSize": "max"
+                      }
                     }
                   ],
+                  "showCloseButton": true,
+                  "barrierDismissible": true
+                },
+                "mainAxisSize": "min",
+                "mainAxisAlignment": "start"
+              }
+            },
+            {
+              "icon": "FilterAlt",
+              "type": "template",
+              "label": "filter",
+              "format": "actionPopup",
+              "fieldName": "complaintsFilter",
+              "properties": {
+                "icon": "FilterAlt",
+                "size": "medium",
+                "type": "tertiary",
+                "popupConfig": {
+                  "body": [
+                    {
+                      "data": [
+                        {
+                          "code": "ASSIGN_TO_ME",
+                          "name": "ASSIGN_TO_ME"
+                        },
+                        {
+                          "code": "ASSIGN_TO_ALL",
+                          "name": "ASSIGN_TO_ALL"
+                        }
+                      ],
+                      "type": "template",
+                      "format": "radioList",
+                      "fieldName": "assignTo"
+                    },
+                    {
+                      "type": "template",
+                      "enums": "{{fn:getUniqueComplaintTypes()}}",
+                      "label": "COMPLAINT_INBOX_FILTER_COMPLAINT_TYPE_LABEL",
+                      "format": "dropdownTemplate",
+                      "fieldName": "complaintType"
+                    },
+                    {
+                      "type": "template",
+                      "enums": "{{fn:getUniqueLocalities()}}",
+                      "label": "COMPLAINT_INBOX_FILTER_LOCALITY_TYPE_LABEL",
+                      "format": "dropdownTemplate",
+                      "fieldName": "locality"
+                    }
+                  ],
+                  "type": "default",
+                  "title": "COMPLAINT_INBOX_FILTER_LABEL",
+                  "titleIcon": "FilterAlt",
                   "footerActions": [
                     {
                       "type": "template",
-                      "format": "button",
                       "label": "COMPLAINT_INBOX_FILTER_SECONDARY_ACTION_LABEL",
-                      "properties": {
-                        "type": "secondary",
-                        "size": "large",
-                        "mainAxisSize": "max"
-                      },
+                      "format": "button",
                       "onAction": [
-                        {"actionType": "CLEAR_STATE", "properties": {}},
-                        {"actionType": "CLOSE_POPUP", "properties": {}}
-                      ]
+                        {
+                          "actionType": "CLEAR_STATE",
+                          "properties": {}
+                        },
+                        {
+                          "actionType": "CLOSE_POPUP",
+                          "properties": {}
+                        }
+                      ],
+                      "fieldName": "cancel",
+                      "properties": {
+                        "size": "large",
+                        "type": "secondary",
+                        "mainAxisSize": "max"
+                      }
                     },
                     {
                       "type": "template",
-                      "format": "button",
                       "label": "COMPLAINT_INBOX_FILTER_PRIMARY_ACTION_LABEL",
-                      "properties": {
-                        "type": "primary",
-                        "size": "large",
-                        "mainAxisSize": "max"
-                      },
+                      "format": "button",
                       "onAction": [
-                        {"actionType": "CLOSE_POPUP", "properties": {}},
+                        {
+                          "actionType": "CLOSE_POPUP",
+                          "properties": {}
+                        },
                         {
                           "actionType": "SEARCH_EVENT",
                           "properties": {
-                            "defaultRoot": "pgrService",
                             "data": [
                               {
-                                "root": "pgrComplainant",
                                 "key": "name",
+                                "root": "pgrComplainant",
                                 "value": "{{singleton.loggedInUserName}}",
-                                "operation": "equals",
-                                "applyIf":
-                                    "{{ widgetData.assignTo == 'ASSIGN_TO_ME' }}"
+                                "applyIf": "{{ widgetData.assignTo == 'ASSIGN_TO_ME' }}",
+                                "operation": "equals"
                               },
                               {
                                 "key": "serviceCode",
                                 "value": "{{ widgetData.complaintType }}",
-                                "operation": "equals",
-                                "applyIf":
-                                    "{{ widgetData.complaintType.isNotEmpty }}"
+                                "applyIf": "{{ widgetData.complaintType.isNotEmpty }}",
+                                "operation": "equals"
                               },
                               {
-                                "root": "address",
                                 "key": "locality.code",
+                                "root": "address",
                                 "value": "{{ widgetData.locality }}",
-                                "operation": "equals",
-                                "applyIf":
-                                    "{{ widgetData.locality.isNotEmpty }}"
+                                "applyIf": "{{ widgetData.locality.isNotEmpty }}",
+                                "operation": "equals"
                               }
-                            ]
+                            ],
+                            "defaultRoot": "pgrService"
                           }
                         }
-                      ]
+                      ],
+                      "fieldName": "filter",
+                      "properties": {
+                        "size": "large",
+                        "type": "primary",
+                        "mainAxisSize": "max"
+                      }
                     }
-                  ]
-                }
-              },
-              "suffixIcon": "FilterAlt"
+                  ],
+                  "showCloseButton": true,
+                  "barrierDismissible": true
+                },
+                "mainAxisSize": "min",
+                "mainAxisAlignment": "start"
+              }
             },
             {
               "type": "template",
+              "label": "sort",
               "format": "actionPopup",
-              "label": "COMPLAINT_INBOX_SORT_LABEL",
+              "fieldName": "sortComplaints",
               "properties": {
-                "type": "tertiary",
+                "icon": "SortSvg",
                 "size": "medium",
-                "mainAxisSize": "min",
-                "mainAxisAlignment": "start",
+                "type": "tertiary",
                 "popupConfig": {
-                  "type": "default",
-                  "title": "COMPLAINT_INBOX_SORT_POPUP_LABEL",
-                  "titleIcon": "Sort",
-                  "showCloseButton": true,
-                  "barrierDismissible": true,
                   "body": [
                     {
-                      "type": "template",
-                      "format": "radioList",
-                      "fieldName": "sotyBy",
                       "data": [
                         {
                           "code": "LATEST_FIRST",
@@ -4998,57 +5064,82 @@ final dynamic sampleComplaintFlows = {
                         {
                           "code": "LATEST_LAST",
                           "name": "COMPLAINT_INBOX_SORT_LATEST_LAST"
-                        },
+                        }
                       ],
-                    },
+                      "type": "template",
+                      "format": "radioList",
+                      "fieldName": "sotyBy"
+                    }
                   ],
+                  "type": "default",
+                  "title": "COMPLAINT_INBOX_SORT_POPUP_LABEL",
+                  "titleIcon": "SortSvg",
                   "footerActions": [
                     {
                       "type": "template",
-                      "format": "button",
                       "label": "COMPLAINT_INBOX_SORT_SECONDARY_ACTION_LABEL",
-                      "properties": {
-                        "type": "secondary",
-                        "size": "large",
-                        "mainAxisSize": "max"
-                      },
+                      "format": "button",
                       "onAction": [
-                        {"actionType": "CLEAR_STATE", "properties": {}},
-                        {"actionType": "CLOSE_POPUP", "properties": {}}
-                      ]
+                        {
+                          "actionType": "CLEAR_STATE",
+                          "properties": {}
+                        },
+                        {
+                          "actionType": "CLOSE_POPUP",
+                          "properties": {}
+                        }
+                      ],
+                      "fieldName": "cancel",
+                      "properties": {
+                        "size": "large",
+                        "type": "secondary",
+                        "mainAxisSize": "max"
+                      }
                     },
                     {
                       "type": "template",
-                      "format": "button",
                       "label": "COMPLAINT_INBOX_SORT_PRIMARY_ACTION_LABEL",
-                      "properties": {
-                        "type": "primary",
-                        "size": "large",
-                        "mainAxisSize": "max"
-                      },
+                      "format": "button",
                       "onAction": [
-                        {"actionType": "CLOSE_POPUP", "properties": {}},
+                        {
+                          "actionType": "CLOSE_POPUP",
+                          "properties": {}
+                        },
                         {
                           "actionType": "SEARCH_EVENT",
                           "properties": {
-                            "name": "IndividualModel",
                             "data": [
                               {
                                 "key": "status",
                                 "value": "{{ widgetData.selectedStatus }}",
                                 "operation": "in"
                               }
-                            ]
+                            ],
+                            "name": "IndividualModel"
                           }
                         }
-                      ]
+                      ],
+                      "fieldName": "sort",
+                      "properties": {
+                        "size": "large",
+                        "type": "primary",
+                        "mainAxisSize": "max"
+                      }
                     }
-                  ]
-                }
+                  ],
+                  "showCloseButton": true,
+                  "barrierDismissible": true
+                },
+                "mainAxisSize": "min",
+                "mainAxisAlignment": "start"
               },
               "suffixIcon": "SortSvg"
             }
-          ]
+          ],
+          "properties": {
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "spaceBetween"
+          }
         },
         {
           "format": "listView",
@@ -5082,7 +5173,7 @@ final dynamic sampleComplaintFlows = {
                   {
                     "key": "COMPLAINT_INBOX_COMPLAINT_DATE",
                     "value":
-                        "{{fn:formatDate(item.PgrServiceModel.auditDetails.createdTime, dateTime, dd MMM yyyy)}}"
+                        "{{fn:formatDate(item.PgrServiceModel.auditDetails.createdTime, 'date', dd MMM yyyy)}}"
                   },
                   {
                     "key": "COMPLAINT_INBOX_COMPLAINT_AREA",

@@ -17,7 +17,8 @@ class ClearStateExecutor extends ActionExecutor {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
-    final screenKey = getScreenKeyFromArgs(context);
+    // Use getEffectiveScreenKey to handle popup context
+    final screenKey = getEffectiveScreenKey(context, contextData);
 
     if (screenKey != null) {
       // Clear the entire state for this screen

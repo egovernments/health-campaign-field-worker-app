@@ -5,9 +5,7 @@ import 'action_executor.dart';
 
 /// Executor for CLOSE_POPUP action
 /// Closes the current popup/dialog by popping the navigator
-/// Note: When used from ActionPopupWidget, the popup is already closed
-/// by the inline handler before this executor runs. This executor
-/// handles cases where CLOSE_POPUP is called from other contexts.
+/// Also passes any properties from the action to contextData for subsequent actions
 class ClosePopupExecutor extends ActionExecutor {
   @override
   bool canHandle(String actionType) => actionType == 'CLOSE_POPUP';
@@ -18,14 +16,20 @@ class ClosePopupExecutor extends ActionExecutor {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
-    // Check if this is from a popup context (already handled inline)
-    final isFromPopup = action.properties['_popupContext'] == true;
-
-    // If not from popup context and navigator can pop, pop it
-    if (!isFromPopup && Navigator.of(context, rootNavigator: true).canPop()) {
+    // Close the popup if navigator can pop
+    if (Navigator.of(context, rootNavigator: true).canPop()) {
       Navigator.of(context, rootNavigator: true).pop();
     }
 
-    return contextData;
+    // Pass any properties from action to contextData for subsequent actions
+    // This allows CLOSE_POPUP to inject values like parentScreenKey
+    final updatedContextData = Map<String, dynamic>.from(contextData);
+    action.properties.forEach((key, value) {
+      if (value != null) {
+        updatedContextData[key] = value;
+      }
+    });
+
+    return updatedContextData;
   }
 }

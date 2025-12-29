@@ -83,75 +83,58 @@ class ActionPopupWidget implements FlowWidget {
     return showCustomPopup(
       context: context,
       barrierDismissible: barrierDismissible,
-      builder: (ctx) => Popup(
-        title: title,
-        description: description,
-        titleIcon: titleIconName != null
-            ? Icon(
-                DigitIconMapping.getIcon(titleIconName),
-                color: DigitTheme.instance.colorScheme.primary,
-              )
-            : null,
-        onCrossTap: showCloseButton
-            ? () {
-                Navigator.of(ctx, rootNavigator: true).pop();
-              }
-            : null,
-        actionSpacing: spacer2,
-        additionalWidgets: [
-          // Build body widgets from config
-          // Wrap in CrudItemContext so widgets inside popup can access context data
-          ...bodyWidgets.map((widgetJson) {
-            if (widgetJson is Map<String, dynamic>) {
-              return CrudItemContext(
-                stateData: stateData,
-                screenKey: screenKey,
-                item: item,
-                listIndex: listIndex,
-                child: Builder(
-                  builder: (innerCtx) => FlowWidgetFactory.build(
-                    widgetJson,
-                    innerCtx,
-                    onAction,
+      builder: (ctx) {
+        return Popup(
+          title: title,
+          description: description,
+          titleIcon: titleIconName != null
+              ? Icon(
+                  DigitIconMapping.getIcon(titleIconName),
+                  color: DigitTheme.instance.colorScheme.primary,
+                )
+              : null,
+          onCrossTap: showCloseButton
+              ? () {
+                  Navigator.of(ctx, rootNavigator: true).pop();
+                }
+              : null,
+          actionSpacing: spacer2,
+          additionalWidgets: [
+            // Build body widgets from config
+            // Wrap in CrudItemContext so widgets inside popup can access context data
+            ...bodyWidgets.map((widgetJson) {
+              if (widgetJson is Map<String, dynamic>) {
+                return CrudItemContext(
+                  stateData: stateData,
+                  screenKey: screenKey,
+                  item: item,
+                  listIndex: listIndex,
+                  child: Builder(
+                    builder: (innerCtx) => FlowWidgetFactory.build(
+                      widgetJson,
+                      innerCtx,
+                      onAction,
+                    ),
                   ),
-                ),
-              );
-            }
-            return const SizedBox.shrink();
-          }),
-        ],
-        actions: footerActions.isEmpty
-            ? null
-            : footerActions
-                .whereType<Map<String, dynamic>>()
-                .map((actionJson) {
-                return FlowWidgetFactory.build(
-                  actionJson,
-                  ctx,
-                  (ActionConfig action) {
-                    // Handle CLOSE_POPUP action - close the popup dialog
-                    if (action.actionType == 'CLOSE_POPUP') {
-                      Navigator.of(ctx, rootNavigator: true).pop();
-                    }
-                    // Forward other actions with screenKey and popup context injected
-                    // so action executors can access parent page context and close popup
-                    final enrichedAction = ActionConfig(
-                      action: action.action,
-                      actionType: action.actionType,
-                      properties: {
-                        ...action.properties,
-                        if (screenKey != null) '_parentScreenKey': screenKey,
-                        '_popupContext': true, // Flag to indicate action is from popup
-                      },
-                      condition: action.condition,
-                      actions: action.actions,
-                    );
-                    onAction(enrichedAction);
-                  },
-                ) as DigitButton;
-              }).toList(),
-        inlineActions: true,
-      ),
+                );
+              }
+              return const SizedBox.shrink();
+            }),
+          ],
+          actions: footerActions.isEmpty
+              ? null
+              : footerActions
+                  .whereType<Map<String, dynamic>>()
+                  .map((actionJson) {
+                  return FlowWidgetFactory.build(
+                    actionJson,
+                    context,
+                    onAction,
+                  ) as DigitButton;
+                }).toList(),
+          inlineActions: true,
+        );
+      },
     );
   }
 

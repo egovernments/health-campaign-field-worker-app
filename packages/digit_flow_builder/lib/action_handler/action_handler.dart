@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:flutter/material.dart';
 
@@ -71,23 +70,9 @@ class ActionHandler {
         final formData = contextData['formData'] as Map<String, dynamic>? ?? {};
         final navigation = contextData['navigation'] as Map<String, dynamic>? ?? {};
 
-        // Get screen key - try context first, then check action properties for _parentScreenKey
-        // (injected by popup actions to preserve parent page context)
-        String? screenKey = getScreenKeyFromArgs(context) ?? context.router.currentPath;
-
-        // Check if any action in the group has _parentScreenKey (from popup context)
-        for (final condActionJson in conditionalGroup) {
-          final subActions = condActionJson['actions'] as List? ?? [];
-          for (final subAction in subActions) {
-            if (subAction is Map<String, dynamic>) {
-              final parentKey = subAction['properties']?['_parentScreenKey'] as String?;
-              if (parentKey != null) {
-                screenKey = parentKey;
-                break;
-              }
-            }
-          }
-        }
+        // Get screen key - try route args first, then contextData['parentScreenKey']
+        // (set by CLOSE_POPUP action when used from popup)
+        final screenKey = getEffectiveScreenKey(context, contextData);
 
         final currentState = FlowCrudStateRegistry().get(screenKey ?? '');
 
@@ -115,16 +100,29 @@ class ActionHandler {
 
         // Add widgetData - flatten list values to check membership
         // For selection cards, convert list of selected codes to individual keys
+        debugPrint('CONDITION_EVAL: widgetData before processing=$widgetData');
         widgetData.forEach((key, value) {
           if (value is List) {
-            // For lists (like selected options), add each item as a separate key
-            // and also add the list itself for "in" operations
-            evaluationData[key] = value;
-            for (var item in value) {
-              // Allow checking "selectedStatus == ADMINISTRATION_SUCCESS"
-              // by adding the value as a key that equals itself
-              if (item is String) {
-                evaluationData[item] = item;
+            // If single element list, store as string for simpler equality checks
+            // e.g., selectedStatus == CLOSED_HOUSEHOLD works when selectedStatus is "CLOSED_HOUSEHOLD"
+            if (value.length == 1) {
+              var singleValue = value.first;
+              // Strip quotes if the value is a quoted string (e.g., "\"VALUE\"" -> "VALUE")
+              if (singleValue is String &&
+                  singleValue.length >= 2 &&
+                  singleValue.startsWith('"') &&
+                  singleValue.endsWith('"')) {
+                singleValue = singleValue.substring(1, singleValue.length - 1);
+              }
+              evaluationData[key] = singleValue;
+              // Don't add value as key - let parser treat literals in expression as-is
+            } else {
+              // For multi-select, keep as list for "in" operations
+              evaluationData[key] = value;
+              for (var item in value) {
+                if (item is String) {
+                  evaluationData[item] = item;
+                }
               }
             }
           } else if (value == 'true') {
