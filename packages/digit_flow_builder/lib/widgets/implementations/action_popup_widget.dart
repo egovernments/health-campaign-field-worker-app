@@ -7,6 +7,7 @@ import '../../action_handler/action_config.dart';
 import '../../utils/interpolation.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
+import '../localization_context.dart';
 
 class ActionPopupWidget implements FlowWidget {
   @override
@@ -18,6 +19,7 @@ class ActionPopupWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
+    final localization = LocalizationContext.maybeOf(context);
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
     final popupConfig = props['popupConfig'] as Map<String, dynamic>?;
 
@@ -32,7 +34,7 @@ class ActionPopupWidget implements FlowWidget {
     return DigitButton(
         mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
         mainAxisAlignment: _parseMainAxisAlignment(props['mainAxisAlignment']),
-        label: json['label'] ?? '',
+        label: localization?.translate( json['label']) ?? json['label'] ?? '',
         onPressed: () async {
           // Trigger configured actions if any
           if (json['onAction'] != null && json['onAction'] is List) {
@@ -71,6 +73,7 @@ class ActionPopupWidget implements FlowWidget {
     Map<String, dynamic>? item,
     int? listIndex,
   ) {
+    final localization = LocalizationContext.maybeOf(context);
     final title = popupConfig['title'] as String? ?? 'Popup';
     final description = popupConfig['description'] as String?;
     final titleIconName = popupConfig['titleIcon'] as String?;
@@ -85,8 +88,8 @@ class ActionPopupWidget implements FlowWidget {
       barrierDismissible: barrierDismissible,
       builder: (ctx) {
         return Popup(
-          title: title,
-          description: description,
+          title: localization?.translate(title) ?? title,
+          description: localization?.translate(description ??"") ?? description,
           titleIcon: titleIconName != null
               ? Icon(
                   DigitIconMapping.getIcon(titleIconName),

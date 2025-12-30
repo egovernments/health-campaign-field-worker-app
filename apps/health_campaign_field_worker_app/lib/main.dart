@@ -4905,7 +4905,7 @@ final dynamic sampleComplaintFlows = {
                                 "operation": "contains"
                               }
                             ],
-                            "name": "PgrService"
+                            "name": "pgrService"
                           }
                         }
                       ],
@@ -4953,16 +4953,18 @@ final dynamic sampleComplaintFlows = {
                     },
                     {
                       "type": "template",
-                      "enums": "{{fn:getUniqueComplaintTypes()}}",
+                      "enums": "{{fn:getUniqueComplaintTypes(contextData)}}",
                       "label": "COMPLAINT_INBOX_FILTER_COMPLAINT_TYPE_LABEL",
                       "format": "dropdownTemplate",
+                      "valueKey": "code",
                       "fieldName": "complaintType"
                     },
                     {
                       "type": "template",
-                      "enums": "{{fn:getUniqueLocalities()}}",
+                      "enums": "{{fn:getUniqueLocalities(contextData)}}",
                       "label": "COMPLAINT_INBOX_FILTER_LOCALITY_TYPE_LABEL",
                       "format": "dropdownTemplate",
+                      "valueKey": "code",
                       "fieldName": "locality"
                     }
                   ],
@@ -5007,25 +5009,25 @@ final dynamic sampleComplaintFlows = {
                               {
                                 "key": "name",
                                 "root": "pgrComplainant",
-                                "value": "{{singleton.loggedInUserName}}",
-                                "applyIf": "{{ widgetData.assignTo == 'ASSIGN_TO_ME' }}",
+                                "value": "{{singleton.loggedInUser.name}}",
+                                "applyIf": "{{ assignTo }} == ASSIGN_TO_ME",
                                 "operation": "equals"
                               },
                               {
                                 "key": "serviceCode",
-                                "value": "{{ widgetData.complaintType }}",
-                                "applyIf": "{{ widgetData.complaintType.isNotEmpty }}",
+                                "value": "{{complaintType }}",
+                                "applyIf": "{{complaintType }} !=null && {{complaintType }} !=null",
                                 "operation": "equals"
                               },
                               {
-                                "key": "locality.code",
+                                "key": "localityBoundaryCode",
                                 "root": "address",
-                                "value": "{{ widgetData.locality }}",
-                                "applyIf": "{{ widgetData.locality.isNotEmpty }}",
+                                "value": "{{ locality }}",
+                                "applyIf": "{{locality }} !=null && {{locality }} !=null",
                                 "operation": "equals"
                               }
                             ],
-                            "defaultRoot": "pgrService"
+                            "name": "pgrService"
                           }
                         }
                       ],
@@ -5068,7 +5070,7 @@ final dynamic sampleComplaintFlows = {
                       ],
                       "type": "template",
                       "format": "radioList",
-                      "fieldName": "sotyBy"
+                      "fieldName": "sortBy"
                     }
                   ],
                   "type": "default",
@@ -5110,12 +5112,16 @@ final dynamic sampleComplaintFlows = {
                           "properties": {
                             "data": [
                               {
-                                "key": "status",
-                                "value": "{{ widgetData.selectedStatus }}",
-                                "operation": "in"
+                                "key": "tenantId",
+                                "value": "{{singleton.selectedProject.tenantId}}",
+                                "operation": "equals"
                               }
                             ],
-                            "name": "IndividualModel"
+                            "orderBy": {
+                              "field": "auditCreatedTime",
+                              "order": "{{ sortBy }} == LATEST_FIRST ? desc : asc"
+                            },
+                            "name": "pgrService"
                           }
                         }
                       ],

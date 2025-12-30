@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_crud_bloc/models/global_search_params.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,6 +12,7 @@ import '../../blocs/state_wrapper_builder.dart';
 import '../../flow_builder.dart';
 import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
+import '../action_handler.dart';
 import 'action_executor.dart';
 
 class SearchExecutor extends ActionExecutor {
@@ -71,6 +73,46 @@ class SearchExecutor extends ActionExecutor {
     final filters = <SearchFilter>[];
 
     for (var filterData in filtersList) {
+      // Check applyIf condition first
+      final applyIf = filterData['applyIf'];
+      if (applyIf != null) {
+        // Resolve all {{template}} placeholders in the expression
+        String expression = resolveTemplate(
+          applyIf.toString(),
+          resolveContext,
+          screenKey: screenKey,
+        );
+
+        debugPrint('SEARCH_EVENT: Evaluating applyIf resolved="$expression"');
+
+        // Build context for formula parser
+        final parserContext = <String, dynamic>{
+          ...formData,
+          ...widgetData,
+          'widgetData': widgetData,
+          'singleton': singletonToMap(),
+        };
+
+        try {
+          final parser = FormulaParser(
+            expression,
+            parserContext.isEmpty ? {'_dummy': ''} : parserContext,
+          );
+          final result = parser.parse;
+          final conditionMet = result["isSuccess"] == true && result["value"] == true;
+
+          debugPrint('SEARCH_EVENT: applyIf result=$result, conditionMet=$conditionMet');
+
+          if (!conditionMet) {
+            debugPrint('SEARCH_EVENT: Skipping filter ${filterData['key']} - applyIf condition not met');
+            continue;
+          }
+        } catch (e) {
+          debugPrint('SEARCH_EVENT: Error evaluating applyIf for ${filterData['key']}: $e');
+          continue;
+        }
+      }
+
       final rawKey = filterData['key'];
       final rawValue = filterData['value'];
       final operation = filterData['operation'];
@@ -158,16 +200,84 @@ class SearchExecutor extends ActionExecutor {
       ));
     }
 
+    // Early return if no filters are applicable
+    if (filters.isEmpty) {
+      debugPrint('SEARCH_EVENT: No filters to apply - all filters were skipped or empty. Returning early.');
+      return contextData;
+    }
+
     final config = FlowRegistry.getByName(screenKey ?? '');
 
     // Get orderBy from action properties or fall back to config
     SearchOrderBy? orderBy;
+    Map<String, dynamic>? orderByData;
+
     if (data['orderBy'] != null) {
-      orderBy =
-          SearchOrderBy.fromJson(Map<String, dynamic>.from(data['orderBy']));
-    } else if (config?['wrapperConfig']['searchConfig']['orderBy'] != null) {
-      orderBy = SearchOrderBy.fromJson(Map<String, dynamic>.from(
-          config!['wrapperConfig']['searchConfig']['orderBy']));
+      orderByData = Map<String, dynamic>.from(data['orderBy']);
+    } else if (config?['wrapperConfig']?['searchConfig']?['orderBy'] != null) {
+      orderByData = Map<String, dynamic>.from(
+          config!['wrapperConfig']['searchConfig']['orderBy']);
+    }
+
+    if (orderByData != null) {
+      // Resolve templates in orderBy fields
+      final resolvedOrderBy = <String, dynamic>{};
+
+      for (final entry in orderByData.entries) {
+        final value = entry.value?.toString() ?? '';
+
+        // First resolve any {{ }} templates in the value
+        String resolvedValue = value;
+        if (value.contains('{{')) {
+          resolvedValue = resolveTemplate(
+            value,
+            resolveContext,
+            screenKey: screenKey,
+          );
+        }
+
+        // Now check for ternary expression: condition ? valueIfTrue : valueIfFalse
+        final ternaryMatch = RegExp(
+          r'(.+?)\s*\?\s*(\w+)\s*:\s*(\w+)'
+        ).firstMatch(resolvedValue);
+
+        if (ternaryMatch != null) {
+          // Evaluate ternary expression
+          final condition = ternaryMatch.group(1)!.trim();
+          final valueIfTrue = ternaryMatch.group(2)!;
+          final valueIfFalse = ternaryMatch.group(3)!;
+
+          debugPrint('SEARCH_EVENT: Ternary condition="$condition", ifTrue=$valueIfTrue, ifFalse=$valueIfFalse');
+
+          // Evaluate condition with formula parser
+          try {
+            final parserContext = <String, dynamic>{
+              ...formData,
+              ...widgetData,
+            };
+
+            final parser = FormulaParser(
+              condition,
+              parserContext.isEmpty ? {'_dummy': ''} : parserContext,
+            );
+            final result = parser.parse;
+            final conditionMet = result["isSuccess"] == true && result["value"] == true;
+
+            resolvedOrderBy[entry.key] = conditionMet ? valueIfTrue : valueIfFalse;
+            debugPrint('SEARCH_EVENT: Ternary result=$result, resolved to: ${resolvedOrderBy[entry.key]}');
+          } catch (e) {
+            // Fallback to valueIfFalse on error
+            resolvedOrderBy[entry.key] = valueIfFalse;
+            debugPrint('SEARCH_EVENT: Ternary evaluation failed: $e, using default: $valueIfFalse');
+          }
+        } else {
+          // No ternary, use resolved value directly
+          resolvedOrderBy[entry.key] = resolvedValue;
+        }
+      }
+
+      orderBy = SearchOrderBy.fromJson(resolvedOrderBy);
+      debugPrint('SEARCH_EVENT: OrderBy resolved - field: ${orderBy.field}, order: ${orderBy.order}');
     }
 
     // Get filterLogic from action properties (defaults to 'and')
