@@ -26,6 +26,11 @@ class RadioWidget implements FlowWidget {
     // Get screen key for state storage
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
 
+    // Get widgetData from registry to check for stored values
+    final currentState =
+        screenKey != null ? FlowCrudStateRegistry().get(screenKey) : null;
+    final widgetData = currentState?.widgetData ?? {};
+
     // For resolving item-specific fields, we use the current item or first item
     final itemStateData = (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
         ? crudCtx.item
@@ -49,8 +54,21 @@ class RadioWidget implements FlowWidget {
     }
 
     // Get current selected value from state
-    final currentValue =
-        key != null ? resolveValue('{{$key}}', itemStateData) : null;
+    // Priority: widgetData (persisted selection) > itemStateData (entity data)
+    dynamic currentValue;
+    if (key != null) {
+      // First check widgetData for persisted selection
+      if (widgetData.containsKey(key)) {
+        currentValue = widgetData[key];
+      } else {
+        // Fall back to itemStateData
+        currentValue = resolveValue('{{$key}}', itemStateData);
+        // If unresolved template, treat as null
+        if (currentValue == '{{$key}}') {
+          currentValue = null;
+        }
+      }
+    }
 
     final options = data.map((item) {
       if (item is Map<String, dynamic>) {

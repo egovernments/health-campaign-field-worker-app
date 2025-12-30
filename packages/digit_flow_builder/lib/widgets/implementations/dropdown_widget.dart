@@ -25,10 +25,11 @@ class DropdownWidget implements FlowWidget {
     // Get screen key for navigation params resolution
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
 
-    // Get form data from registry to check for stored values
+    // Get form data and widget data from registry to check for stored values
     final currentState =
         screenKey != null ? FlowCrudStateRegistry().get(screenKey) : null;
     final formData = currentState?.formData ?? {};
+    final widgetData = currentState?.widgetData ?? {};
     // For resolving item-specific fields (like labels), we use the current item or first item
     final itemStateData = (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
         ? crudCtx.item
@@ -169,14 +170,20 @@ class DropdownWidget implements FlowWidget {
     final valueKey = json['valueKey'] as String? ?? 'id';
 
     // Get current selected value from state
-    // First try itemStateData, then fall back to formData
+    // Priority: widgetData (persisted selection) > itemStateData (entity data) > formData
     dynamic currentValue;
     if (key != null) {
-      currentValue =
-          resolveValue('{{$key}}', itemStateData, screenKey: screenKey);
-      // If not found in itemStateData, check formData directly
-      if (currentValue == '{{$key}}' || currentValue == null) {
-        currentValue = formData[key];
+      // First check widgetData for persisted selection
+      if (widgetData.containsKey(key)) {
+        currentValue = widgetData[key];
+      } else {
+        // Then try itemStateData
+        currentValue =
+            resolveValue('{{$key}}', itemStateData, screenKey: screenKey);
+        // If not found in itemStateData, check formData directly
+        if (currentValue == '{{$key}}' || currentValue == null) {
+          currentValue = formData[key];
+        }
       }
     }
 
