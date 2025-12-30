@@ -7,12 +7,11 @@ import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/flow_crud_bloc.dart';
+import '../../blocs/search_state_manager.dart';
 import '../../blocs/state_wrapper_builder.dart';
 import '../../flow_builder.dart';
 import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
-import '../action_handler.dart';
 import 'action_executor.dart';
 
 class SearchExecutor extends ActionExecutor {
@@ -27,12 +26,31 @@ class SearchExecutor extends ActionExecutor {
   ) async {
     final data = action.properties;
     final contexts = contextData['entities'];
+    final searchName = data['name'] as String? ?? 'default';
 
     // Get screen key - try CrudItemContext first (has correct format),
     // then fall back to route args and parentScreenKey (from popup context)
     final crudCtx = CrudItemContext.of(context);
     final screenKey = crudCtx?.screenKey ??
         getEffectiveScreenKey(context, contextData);
+
+    // Register search callback (SearchStateManager handles deduplication)
+    // This allows ClearStateExecutor to trigger search with accumulated filters
+    if (screenKey != null) {
+      final crudBloc = context.read<CrudBloc>();
+      final config = FlowRegistry.getByName(screenKey.split('::').last);
+
+      SearchStateManager().registerSearchCallback(
+        screenKey,
+        searchName,
+        () => _executeSearchWithAccumulatedFilters(
+          crudBloc,
+          screenKey,
+          searchName,
+          config,
+        ),
+      );
+    }
 
     // Get widgetData from FlowCrudStateRegistry (for filter values)
     final widgetData = screenKey != null
@@ -68,9 +86,9 @@ class SearchExecutor extends ActionExecutor {
       'navigation': mergedNavigation,
     };
 
-    // Process all filters from the data array
-    final filtersList = data['data'] as List<dynamic>;
-    final filters = <SearchFilter>[];
+    // Process all filters from the data array and resolve their values
+    final filtersList = data['data'] as List<dynamic>? ?? [];
+    final resolvedFilters = <Map<String, dynamic>>[];
 
     for (var filterData in filtersList) {
       // Check applyIf condition first
@@ -171,31 +189,56 @@ class SearchExecutor extends ActionExecutor {
         continue;
       }
 
-      // extract coordinates if present
-      LatLng? latLng;
-      if (filterData['lat'] != null && filterData['long'] != null) {
-        final latRaw = filterData['lat'];
-        final longRaw = filterData['long'];
-
-        final parsedLat = double.tryParse(latRaw.toString());
-        final parsedLong = double.tryParse(longRaw.toString());
-
-        if (parsedLat != null && parsedLong != null) {
-          latLng = LatLng(
-            latitude: parsedLat,
-            longitude: parsedLong,
-          );
-        }
-      }
-
       // Use per-filter root if specified, fallback to data['name'] for backward compatibility
       final filterRoot = filterData['root'] as String? ?? data['name'] as String?;
 
+      // Store resolved filter as map for accumulation
+      resolvedFilters.add({
+        'key': resolvedKey.toString(),
+        'value': resolvedValue,
+        'operation': operation,
+        'root': filterRoot ?? '',
+        if (filterData['lat'] != null) 'lat': filterData['lat'],
+        if (filterData['long'] != null) 'long': filterData['long'],
+      });
+    }
+
+    // Update SearchStateManager with resolved filters (will merge with existing)
+    if (screenKey != null && resolvedFilters.isNotEmpty) {
+      SearchStateManager().updateFilters(
+        screenKey,
+        searchName,
+        resolvedFilters,
+        triggerSearch: false, // We'll execute search directly below
+      );
+    }
+
+    // Get ALL accumulated filters from SearchStateManager
+    final accumulatedFilters = screenKey != null
+        ? SearchStateManager().getFilters(screenKey, searchName)
+        : resolvedFilters;
+
+    // Convert accumulated filters to SearchFilter objects
+    final filters = <SearchFilter>[];
+    for (final filterMap in accumulatedFilters) {
+      if (filterMap is! Map) continue;
+
+      // Extract coordinates if present
+      LatLng? latLng;
+      if (filterMap['lat'] != null && filterMap['long'] != null) {
+        final parsedLat = double.tryParse(filterMap['lat'].toString());
+        final parsedLong = double.tryParse(filterMap['long'].toString());
+
+        if (parsedLat != null && parsedLong != null) {
+          latLng = LatLng(latitude: parsedLat, longitude: parsedLong);
+        }
+      }
+
       filters.add(SearchFilter(
-        root: filterRoot ?? '',
-        field: resolvedKey.toString(),
-        operator: operation,
-        value: resolvedValue,
+        root: filterMap['root']?.toString() ?? '',
+        field: filterMap['key']?.toString() ?? '',
+        operator: filterMap['operation']?.toString() ?? 'equals',
+        value: filterMap['value'],
         coordinates: latLng,
       ));
     }
@@ -206,9 +249,11 @@ class SearchExecutor extends ActionExecutor {
       return contextData;
     }
 
+    debugPrint('SEARCH_EVENT: Executing with ${filters.length} accumulated filters for $searchName');
+
     final config = FlowRegistry.getByName(screenKey ?? '');
 
-    // Get orderBy from action properties or fall back to config
+    // Get orderBy from action properties or fall back to config or accumulated state
     SearchOrderBy? orderBy;
     Map<String, dynamic>? orderByData;
 
@@ -276,8 +321,25 @@ class SearchExecutor extends ActionExecutor {
         }
       }
 
+      // Store resolved orderBy in SearchStateManager
+      if (screenKey != null) {
+        SearchStateManager().updateOrderBy(
+          screenKey,
+          searchName,
+          resolvedOrderBy,
+          triggerSearch: false,
+        );
+      }
+
       orderBy = SearchOrderBy.fromJson(resolvedOrderBy);
       debugPrint('SEARCH_EVENT: OrderBy resolved - field: ${orderBy.field}, order: ${orderBy.order}');
+    } else if (screenKey != null) {
+      // Check for accumulated orderBy from previous search events
+      final accumulatedOrderBy = SearchStateManager().getOrderBy(screenKey, searchName);
+      if (accumulatedOrderBy != null) {
+        orderBy = SearchOrderBy.fromJson(accumulatedOrderBy);
+        debugPrint('SEARCH_EVENT: Using accumulated orderBy - field: ${orderBy.field}, order: ${orderBy.order}');
+      }
     }
 
     // Get filterLogic from action properties (defaults to 'and')
@@ -367,5 +429,72 @@ class SearchExecutor extends ActionExecutor {
       crudBloc.add(CrudEventSearch(searchParams));
       return contextData;
     }
+  }
+
+  /// Execute search with accumulated filters from SearchStateManager
+  /// This is called via the registered callback when triggered by ClearStateExecutor
+  static void _executeSearchWithAccumulatedFilters(
+    CrudBloc crudBloc,
+    String screenKey,
+    String searchName,
+    Map<String, dynamic>? config,
+  ) {
+    final accumulatedFilters =
+        SearchStateManager().getFilters(screenKey, searchName);
+    final accumulatedOrderBy =
+        SearchStateManager().getOrderBy(screenKey, searchName);
+
+    if (accumulatedFilters.isEmpty) {
+      debugPrint(
+          'SearchCallback: No accumulated filters for $searchName, skipping');
+      return;
+    }
+
+    // Convert to SearchFilter objects
+    final filters = <SearchFilter>[];
+    for (final filterMap in accumulatedFilters) {
+      if (filterMap is! Map) continue;
+
+      LatLng? latLng;
+      if (filterMap['lat'] != null && filterMap['long'] != null) {
+        final parsedLat = double.tryParse(filterMap['lat'].toString());
+        final parsedLong = double.tryParse(filterMap['long'].toString());
+        if (parsedLat != null && parsedLong != null) {
+          latLng = LatLng(latitude: parsedLat, longitude: parsedLong);
+        }
+      }
+
+      filters.add(SearchFilter(
+        root: filterMap['root']?.toString() ?? '',
+        field: filterMap['key']?.toString() ?? '',
+        operator: filterMap['operation']?.toString() ?? 'equals',
+        value: filterMap['value'],
+        coordinates: latLng,
+      ));
+    }
+
+    // Build orderBy
+    SearchOrderBy? orderBy;
+    if (accumulatedOrderBy != null) {
+      orderBy = SearchOrderBy.fromJson(accumulatedOrderBy);
+    }
+
+    // Build search params
+    final searchParams = GlobalSearchParameters(
+      filters: filters,
+      primaryModel: config?['wrapperConfig']?['searchConfig']?['primary'],
+      select: (config?['wrapperConfig']?['searchConfig']?['select'] as List?)
+              ?.cast<String>() ??
+          [],
+      pagination: null,
+      orderBy: orderBy,
+      filterLogic: MultiTableFilterLogic.and,
+    );
+
+    debugPrint(
+        'SearchCallback: Executing search with ${filters.length} accumulated filters for $searchName');
+
+    // Execute search
+    crudBloc.add(CrudEventSearch(searchParams));
   }
 }

@@ -4863,7 +4863,12 @@ final dynamic sampleComplaintFlows = {
                       "onAction": [
                         {
                           "actionType": "CLEAR_STATE",
-                          "properties": {}
+                          "properties": {
+                            "name": "pgrService",
+                            "filterKeys": ["serviceRequestId", "mobileNumber"],
+                            "widgetKeys": ["complaintNumber", "mobileNumber"],
+                            "triggerSearch": true
+                          }
                         },
                         {
                           "actionType": "CLOSE_POPUP",
@@ -4979,7 +4984,12 @@ final dynamic sampleComplaintFlows = {
                       "onAction": [
                         {
                           "actionType": "CLEAR_STATE",
-                          "properties": {}
+                          "properties": {
+                            "name": "pgrService",
+                            "filterKeys": ["name", "serviceCode","localityBoundaryCode"],
+                            "widgetKeys": ["assignTo", "complaintType", "locality"],
+                            "triggerSearch": true
+                          }
                         },
                         {
                           "actionType": "CLOSE_POPUP",
@@ -5084,7 +5094,11 @@ final dynamic sampleComplaintFlows = {
                       "onAction": [
                         {
                           "actionType": "CLEAR_STATE",
-                          "properties": {}
+                          "properties": {
+                            "name": "pgrService",
+                            "widgetKeys": ["sortBy"],
+                            "triggerSearch": true
+                          }
                         },
                         {
                           "actionType": "CLOSE_POPUP",
@@ -5684,7 +5698,7 @@ final dynamic sampleComplaintFlows = {
           "label": "Back",
           "onAction": [
             {
-              "actionType": "BACK_NAVIGATION",
+              "actionType": "NAVIGATION",
               "properties": {"type": "TEMPLATE", "name": "complaintInbox"}
             }
           ]
