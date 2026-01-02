@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 
 import '../../blocs/flow_crud_bloc.dart';
+import '../../blocs/search_state_manager.dart';
 import '../../utils/interpolation.dart';
 import '../action_config.dart';
 import 'action_executor.dart';
 
 /// Executor for CLEAR_STATE action
-/// Clears both the CRUD state (search results) and widgetData (filter selections)
+/// Clears specific filters, widgetData keys, or entire state
+///
+/// Properties:
+/// - filterKeys: List<String> - Filter keys to remove from SearchStateManager
+/// - widgetKeys: List<String> - Widget keys to remove from widgetData
+/// - name: String - Search name (defaults to 'default')
+/// - clearOrderBy: bool - If true, also clears orderBy
+/// - triggerSearch: bool - If true, triggers search after clearing (via SearchStateManager callback)
+/// - clearAll: bool - If true, clears entire state (original behavior)
 class ClearStateExecutor extends ActionExecutor {
   @override
   bool canHandle(String actionType) => actionType == 'CLEAR_STATE';
@@ -17,13 +26,102 @@ class ClearStateExecutor extends ActionExecutor {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
-    final screenKey = getScreenKeyFromArgs(context);
+    // Use getEffectiveScreenKey to handle popup context
+    final screenKey = getEffectiveScreenKey(context, contextData);
 
-    if (screenKey != null) {
-      // Clear the entire state for this screen
+    if (screenKey == null) {
+      debugPrint('⚠️ CLEAR_STATE: No screenKey found, skipping');
+      return contextData;
+    }
+
+    final properties = action.properties;
+    final searchName = properties['name'] as String? ?? 'default';
+    final clearAll = properties['clearAll'] as bool? ?? false;
+    final triggerSearch = properties['triggerSearch'] as bool? ?? false;
+    final clearOrderBy = properties['clearOrderBy'] as bool? ?? false;
+
+    // Get filter keys to remove
+    final filterKeys = <String>[];
+    if (properties['filterKeys'] != null) {
+      final keys = properties['filterKeys'];
+      if (keys is List) {
+        filterKeys.addAll(keys.map((k) => k.toString()));
+      }
+    }
+
+    // Get widget keys to remove from widgetData
+    final widgetKeys = <String>[];
+    if (properties['widgetKeys'] != null) {
+      final keys = properties['widgetKeys'];
+      if (keys is List) {
+        widgetKeys.addAll(keys.map((k) => k.toString()));
+      }
+    }
+
+    // If clearAll is true or no specific keys provided, clear everything
+    if (clearAll || (filterKeys.isEmpty && widgetKeys.isEmpty && !clearOrderBy)) {
+      // Clear entire state for this screen (original behavior)
       FlowCrudStateRegistry().clear(screenKey);
+      SearchStateManager().clear(screenKey, searchName);
 
-      debugPrint('✅ CLEAR_STATE: Cleared state for screen: $screenKey');
+      debugPrint('✅ CLEAR_STATE: Cleared all state for screen: $screenKey');
+    } else {
+      // Selective clearing
+
+      // 1. Remove specific filters from SearchStateManager
+      if (filterKeys.isNotEmpty) {
+        SearchStateManager().removeFiltersByKeys(
+          screenKey,
+          searchName,
+          filterKeys,
+          triggerSearch: false, // We'll trigger manually if needed
+        );
+        debugPrint('✅ CLEAR_STATE: Removed filters: $filterKeys');
+      }
+
+      // 2. Clear orderBy if requested
+      if (clearOrderBy) {
+        SearchStateManager().updateOrderBy(
+          screenKey,
+          searchName,
+          null,
+          triggerSearch: false,
+        );
+        debugPrint('✅ CLEAR_STATE: Cleared orderBy');
+      }
+
+      // 3. Remove specific keys from widgetData
+      if (widgetKeys.isNotEmpty) {
+        final currentState = FlowCrudStateRegistry().get(screenKey);
+        if (currentState != null) {
+          final updatedWidgetData =
+              Map<String, dynamic>.from(currentState.widgetData ?? {});
+
+          for (final key in widgetKeys) {
+            updatedWidgetData.remove(key);
+          }
+
+          final updatedState = currentState.copyWith(
+            widgetData: updatedWidgetData,
+          );
+          FlowCrudStateRegistry().update(screenKey, updatedState);
+
+          debugPrint('✅ CLEAR_STATE: Removed widgetData keys: $widgetKeys');
+        }
+      }
+    }
+
+    // Trigger search if requested (uses SearchStateManager callback)
+    if (triggerSearch) {
+      // This will call the registered callback to re-execute search
+      // with remaining accumulated filters
+      SearchStateManager().updateFilters(
+        screenKey,
+        searchName,
+        [], // Empty list just to trigger the callback
+        triggerSearch: true,
+      );
+      debugPrint('✅ CLEAR_STATE: Triggered search refresh');
     }
 
     return contextData;

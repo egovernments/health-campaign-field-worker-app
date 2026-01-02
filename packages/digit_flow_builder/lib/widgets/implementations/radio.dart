@@ -3,6 +3,8 @@ import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
+import '../../blocs/flow_crud_bloc.dart';
+import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
@@ -21,6 +23,14 @@ class RadioWidget implements FlowWidget {
     final crudCtx = CrudItemContext.of(context);
     final stateData = crudCtx?.stateData;
 
+    // Get screen key for state storage
+    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
+
+    // Get widgetData from registry to check for stored values
+    final currentState =
+        screenKey != null ? FlowCrudStateRegistry().get(screenKey) : null;
+    final widgetData = currentState?.widgetData ?? {};
+
     // For resolving item-specific fields, we use the current item or first item
     final itemStateData = (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
         ? crudCtx.item
@@ -30,7 +40,7 @@ class RadioWidget implements FlowWidget {
             : null;
 
     final data = json['data'] as List<dynamic>? ?? [];
-    final key = json['key'] as String?;
+    final key = (json['key'] ?? json['fieldName']) as String?;
     final localization = LocalizationContext.maybeOf(context);
 
     // Check visibility condition
@@ -44,8 +54,21 @@ class RadioWidget implements FlowWidget {
     }
 
     // Get current selected value from state
-    final currentValue =
-        key != null ? resolveValue('{{$key}}', itemStateData) : null;
+    // Priority: widgetData (persisted selection) > itemStateData (entity data)
+    dynamic currentValue;
+    if (key != null) {
+      // First check widgetData for persisted selection
+      if (widgetData.containsKey(key)) {
+        currentValue = widgetData[key];
+      } else {
+        // Fall back to itemStateData
+        currentValue = resolveValue('{{$key}}', itemStateData);
+        // If unresolved template, treat as null
+        if (currentValue == '{{$key}}') {
+          currentValue = null;
+        }
+      }
+    }
 
     final options = data.map((item) {
       if (item is Map<String, dynamic>) {
@@ -63,7 +86,7 @@ class RadioWidget implements FlowWidget {
     final radioButtons = options.map((option) {
       return RadioButtonModel(
         code: option.code,
-        name: option.name,
+        name: localization?.translate(option.name) ?? option.name,
       );
     }).toList();
 
@@ -74,9 +97,28 @@ class RadioWidget implements FlowWidget {
         if (key != null && selectedValue != null) {
           // Find the selected option
           final selectedOption = options.firstWhere(
-            (option) => option.code == selectedValue,
+            (option) => option.code == selectedValue.code,
             orElse: () => SelectionCardOption(code: '', name: ''),
           );
+
+          // Store selected value in widgetData only (for filters)
+          if (screenKey != null) {
+            final currentState = FlowCrudStateRegistry().get(screenKey);
+            final existingWidgetData = currentState?.widgetData ?? {};
+
+            // Update widget data with the selected value
+            final updatedWidgetData = {
+              ...existingWidgetData,
+              key: selectedOption.code,
+            };
+
+            // Update the registry with widgetData only
+            final updatedState =
+                (currentState ?? const FlowCrudState()).copyWith(
+              widgetData: updatedWidgetData,
+            );
+            FlowCrudStateRegistry().update(screenKey, updatedState);
+          }
 
           // Trigger onChange actions if defined
           if (json['onChange'] != null) {

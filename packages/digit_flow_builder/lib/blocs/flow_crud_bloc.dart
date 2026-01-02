@@ -1,4 +1,5 @@
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
+import 'package:digit_flow_builder/blocs/search_state_manager.dart';
 import 'package:digit_flow_builder/blocs/state_wrapper_builder.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,7 +47,17 @@ class FlowCrudBloc extends CrudBloc {
 
   @override
   Future<void> close() {
+    // Build full screenKey with screenType for SearchStateManager
+    final screenType = flowConfig['screenType'] ?? 'TEMPLATE';
+    final fullScreenKey = '$screenType::$screenKey';
+
+    // Dispose FlowCrudStateRegistry
     FlowCrudStateRegistry().dispose(screenKey);
+
+    // Dispose SearchStateManager (clears accumulated filters, callbacks, etc.)
+    SearchStateManager().dispose(fullScreenKey);
+
+    debugPrint('FlowCrudBloc: Disposed state for $fullScreenKey');
     return super.close();
   }
 }

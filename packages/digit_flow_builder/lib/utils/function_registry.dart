@@ -651,6 +651,163 @@ void initializeFunctionRegistry() {
   ///
   /// This function checks if the next cycle is within the valid range of cycles
   /// and if delivery recording is allowed based on the current project configuration.
+  /// Registers a function to get unique complaint types from ComplaintWrapper.
+  ///
+  /// - **Function Name**: `'getUniqueComplaintTypes'`
+  /// - **Arguments**: A list where the first element is the ComplaintWrapper list.
+  /// - **Returns**: A list of unique complaint types as [{name: "...", code: "..."}].
+  FunctionRegistry.register("getUniqueComplaintTypes", (args, stateData) {
+    if (args.isEmpty || args.first == null) return <Map<String, dynamic>>[];
+
+    final wrapperList = args.first;
+    if (wrapperList is! List) return <Map<String, dynamic>>[];
+
+    final uniqueTypes = <String>{};
+
+    for (final item in wrapperList) {
+      // Convert item to Map if it's a model object
+      Map<String, dynamic>? itemMap;
+      if (item is Map<String, dynamic>) {
+        itemMap = item;
+      } else if (item is Map) {
+        itemMap = Map<String, dynamic>.from(item);
+      } else {
+        // Try to convert model object to Map
+        try {
+          itemMap = (item as dynamic).toMap() as Map<String, dynamic>;
+        } catch (_) {
+          try {
+            itemMap = (item as dynamic).toJson() as Map<String, dynamic>;
+          } catch (_) {
+            continue; // Skip this item if conversion fails
+          }
+        }
+      }
+
+      if (itemMap != null) {
+        // Access PgrServiceModel and convert to Map if needed
+        dynamic pgrService = itemMap['PgrServiceModel'];
+        if (pgrService != null && pgrService is! Map) {
+          try {
+            pgrService = (pgrService as dynamic).toMap() as Map<String, dynamic>;
+          } catch (_) {
+            try {
+              pgrService = (pgrService as dynamic).toJson() as Map<String, dynamic>;
+            } catch (_) {
+              pgrService = null;
+            }
+          }
+        }
+        if (pgrService is Map && pgrService['serviceCode'] != null) {
+          final serviceCode = pgrService['serviceCode'].toString();
+          if (serviceCode.isNotEmpty) {
+            uniqueTypes.add(serviceCode);
+          }
+        }
+      }
+    }
+
+    // Return as dropdown format [{name: code, code: code}]
+    return uniqueTypes
+        .map((code) => {'name': code, 'code': code})
+        .toList();
+  });
+
+  /// Registers a function to get unique localities from ComplaintWrapper.
+  ///
+  /// - **Function Name**: `'getUniqueLocalities'`
+  /// - **Arguments**: A list where the first element is the ComplaintWrapper list.
+  /// - **Returns**: A list of unique localities as [{name: "...", code: "..."}].
+  FunctionRegistry.register("getUniqueLocalities", (args, stateData) {
+    if (args.isEmpty || args.first == null) return <Map<String, dynamic>>[];
+
+    final wrapperList = args.first;
+    if (wrapperList is! List) return <Map<String, dynamic>>[];
+
+    final uniqueLocalities = <String>{};
+
+    for (final item in wrapperList) {
+      // Convert item to Map if it's a model object
+      Map<String, dynamic>? itemMap;
+      if (item is Map<String, dynamic>) {
+        itemMap = item;
+      } else if (item is Map) {
+        itemMap = Map<String, dynamic>.from(item);
+      } else {
+        // Try to convert model object to Map
+        try {
+          itemMap = (item as dynamic).toMap() as Map<String, dynamic>;
+        } catch (_) {
+          try {
+            itemMap = (item as dynamic).toJson() as Map<String, dynamic>;
+          } catch (_) {
+            continue; // Skip this item if conversion fails
+          }
+        }
+      }
+
+      if (itemMap != null) {
+        // Access PgrServiceModel and convert to Map if needed
+        dynamic pgrService = itemMap['PgrServiceModel'];
+        if (pgrService != null && pgrService is! Map) {
+          try {
+            pgrService = (pgrService as dynamic).toMap() as Map<String, dynamic>;
+          } catch (_) {
+            try {
+              pgrService = (pgrService as dynamic).toJson() as Map<String, dynamic>;
+            } catch (_) {
+              pgrService = null;
+            }
+          }
+        }
+
+        if (pgrService is Map) {
+          // Access address from PgrServiceModel
+          dynamic address = pgrService['address'];
+          if (address != null && address is! Map) {
+            try {
+              address = (address as dynamic).toMap() as Map<String, dynamic>;
+            } catch (_) {
+              try {
+                address = (address as dynamic).toJson() as Map<String, dynamic>;
+              } catch (_) {
+                address = null;
+              }
+            }
+          }
+
+          if (address is Map) {
+            // Access locality from address
+            dynamic locality = address['locality'];
+            if (locality != null && locality is! Map) {
+              try {
+                locality = (locality as dynamic).toMap() as Map<String, dynamic>;
+              } catch (_) {
+                try {
+                  locality = (locality as dynamic).toJson() as Map<String, dynamic>;
+                } catch (_) {
+                  locality = null;
+                }
+              }
+            }
+
+            if (locality is Map && locality['code'] != null) {
+              final code = locality['code'].toString();
+              if (code.isNotEmpty) {
+                uniqueLocalities.add(code);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Return as dropdown format [{name: code, code: code}]
+    return uniqueLocalities
+        .map((code) => {'name': code, 'code': code})
+        .toList();
+  });
+
   FunctionRegistry.register("canRecordDelivery", (args, stateData) {
     final projectType = FlowBuilderSingleton().projectType;
     if (projectType == null || projectType.cycles == null) {

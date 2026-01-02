@@ -1,4 +1,5 @@
 import 'package:digit_data_model/utils/utils.dart';
+import 'package:digit_flow_builder/blocs/search_state_manager.dart';
 import 'package:digit_flow_builder/widgets/localized.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:digit_forms_engine/pages/forms_render.dart';
@@ -71,6 +72,12 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
     _schemaKey = widget.config['name'] ?? '';
     _instanceId =
         '${_schemaKey}_${hashCode}_${DateTime.now().millisecondsSinceEpoch}';
+
+    // Clear SearchStateManager for this screen on init
+    // This ensures fresh state when same page is pushed again
+    final screenType = widget.config['screenType'] ?? 'TEMPLATE';
+    final fullScreenKey = '$screenType::$_schemaKey';
+    SearchStateManager().clear(fullScreenKey);
 
     if (mounted) {
       final initActions = widget.config['initActions'] as List? ?? [];

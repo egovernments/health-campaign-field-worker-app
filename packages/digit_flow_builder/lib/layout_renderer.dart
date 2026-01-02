@@ -110,7 +110,7 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                             padding: EdgeInsets.zero,
                             heading: (widget.config['heading'] != null &&
                                     localizations
-                                        .translate(widget.config['heading'])
+                                        .translate(widget.config['heading']).trim()
                                         .isNotEmpty)
                                 ? localizations
                                     .translate(widget.config['heading'])
@@ -126,7 +126,7 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                             description: (widget.config['description'] !=
                                         null &&
                                     localizations
-                                        .translate(widget.config['description'])
+                                        .translate(widget.config['description']).trim()
                                         .isNotEmpty)
                                 ? localizations
                                     .translate(widget.config['description'])
