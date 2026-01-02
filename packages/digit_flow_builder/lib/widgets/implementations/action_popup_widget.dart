@@ -7,6 +7,7 @@ import '../../action_handler/action_config.dart';
 import '../../utils/interpolation.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
+import '../localization_context.dart';
 
 class ActionPopupWidget implements FlowWidget {
   @override
@@ -18,6 +19,7 @@ class ActionPopupWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
+    final localization = LocalizationContext.maybeOf(context);
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
     final popupConfig = props['popupConfig'] as Map<String, dynamic>?;
 
@@ -32,7 +34,7 @@ class ActionPopupWidget implements FlowWidget {
     return DigitButton(
         mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
         mainAxisAlignment: _parseMainAxisAlignment(props['mainAxisAlignment']),
-        label: json['label'] ?? '',
+        label: localization?.translate( json['label']) ?? json['label'] ?? '',
         onPressed: () async {
           // Trigger configured actions if any
           if (json['onAction'] != null && json['onAction'] is List) {
@@ -71,6 +73,7 @@ class ActionPopupWidget implements FlowWidget {
     Map<String, dynamic>? item,
     int? listIndex,
   ) {
+    final localization = LocalizationContext.maybeOf(context);
     final title = popupConfig['title'] as String? ?? 'Popup';
     final description = popupConfig['description'] as String?;
     final titleIconName = popupConfig['titleIcon'] as String?;
@@ -83,63 +86,58 @@ class ActionPopupWidget implements FlowWidget {
     return showCustomPopup(
       context: context,
       barrierDismissible: barrierDismissible,
-      builder: (ctx) => Popup(
-        title: title,
-        description: description,
-        titleIcon: titleIconName != null
-            ? Icon(
-                DigitIconMapping.getIcon(titleIconName),
-                color: DigitTheme.instance.colorScheme.primary,
-              )
-            : null,
-        onCrossTap: showCloseButton
-            ? () {
-                Navigator.of(ctx, rootNavigator: true).pop();
-              }
-            : null,
-        actionSpacing: spacer2,
-        additionalWidgets: [
-          // Build body widgets from config
-          // Wrap in CrudItemContext so widgets inside popup can access context data
-          ...bodyWidgets.map((widgetJson) {
-            if (widgetJson is Map<String, dynamic>) {
-              return CrudItemContext(
-                stateData: stateData,
-                screenKey: screenKey,
-                item: item,
-                listIndex: listIndex,
-                child: Builder(
-                  builder: (innerCtx) => FlowWidgetFactory.build(
-                    widgetJson,
-                    innerCtx,
-                    onAction,
+      builder: (ctx) {
+        return Popup(
+          title: localization?.translate(title) ?? title,
+          description: localization?.translate(description ??"") ?? description,
+          titleIcon: titleIconName != null
+              ? Icon(
+                  DigitIconMapping.getIcon(titleIconName),
+                  color: DigitTheme.instance.colorScheme.primary,
+                )
+              : null,
+          onCrossTap: showCloseButton
+              ? () {
+                  Navigator.of(ctx, rootNavigator: true).pop();
+                }
+              : null,
+          actionSpacing: spacer2,
+          additionalWidgets: [
+            // Build body widgets from config
+            // Wrap in CrudItemContext so widgets inside popup can access context data
+            ...bodyWidgets.map((widgetJson) {
+              if (widgetJson is Map<String, dynamic>) {
+                return CrudItemContext(
+                  stateData: stateData,
+                  screenKey: screenKey,
+                  item: item,
+                  listIndex: listIndex,
+                  child: Builder(
+                    builder: (innerCtx) => FlowWidgetFactory.build(
+                      widgetJson,
+                      innerCtx,
+                      onAction,
+                    ),
                   ),
-                ),
-              );
-            }
-            return const SizedBox.shrink();
-          }).toList(),
-        ],
-        actions: footerActions.isEmpty
-            ? null
-            : footerActions
-                .where((actionJson) => actionJson is Map<String, dynamic>)
-                .map((actionJson) {
-                return FlowWidgetFactory.build(
-                  actionJson as Map<String, dynamic>,
-                  ctx,
-                  (ActionConfig action) {
-                    // Handle CLOSE_POPUP action
-                    if (action.actionType == 'CLOSE_POPUP') {
-                      Navigator.of(ctx, rootNavigator: true).pop();
-                    }
-                    // Forward other actions
-                    onAction(action);
-                  },
-                ) as DigitButton;
-              }).toList(),
-        inlineActions: true,
-      ),
+                );
+              }
+              return const SizedBox.shrink();
+            }),
+          ],
+          actions: footerActions.isEmpty
+              ? null
+              : footerActions
+                  .whereType<Map<String, dynamic>>()
+                  .map((actionJson) {
+                  return FlowWidgetFactory.build(
+                    actionJson,
+                    context,
+                    onAction,
+                  ) as DigitButton;
+                }).toList(),
+          inlineActions: true,
+        );
+      },
     );
   }
 

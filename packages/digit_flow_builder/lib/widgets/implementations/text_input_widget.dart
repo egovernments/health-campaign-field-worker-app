@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../action_handler/action_config.dart';
+import '../../blocs/flow_crud_bloc.dart';
+import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
@@ -22,6 +24,15 @@ class TextInputWidget implements FlowWidget {
     final stateData = crudCtx?.stateData;
     final localization = LocalizationContext.maybeOf(context);
 
+    // Get screen key for storing form data
+    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
+
+    // Get form data and widget data from registry to check for stored values
+    final currentState =
+        screenKey != null ? FlowCrudStateRegistry().get(screenKey) : null;
+    final formData = currentState?.formData ?? {};
+    final widgetData = currentState?.widgetData ?? {};
+
     // For resolving item-specific fields, we use the current item or first item
     final itemStateData = (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
         ? crudCtx.item
@@ -30,7 +41,7 @@ class TextInputWidget implements FlowWidget {
             ? crudCtx.stateData?.rawState.first
             : null;
 
-    final key = json['key'] as String?;
+    final key = (json['key'] ?? json['fieldName']) as String?;
     final label = resolveTemplate(json['label'], itemStateData) ?? '';
     final localizedLabel = localization?.translate(label) ?? label;
 
@@ -55,8 +66,21 @@ class TextInputWidget implements FlowWidget {
     }
 
     // Get current value from state
-    final currentValue =
-        key != null ? resolveValue('{{$key}}', itemStateData) : null;
+    // Priority: widgetData (persisted input) > itemStateData (entity data) > formData
+    dynamic currentValue;
+    if (key != null) {
+      // First check widgetData for persisted input value
+      if (widgetData.containsKey(key)) {
+        currentValue = widgetData[key];
+      } else {
+        // Then try itemStateData
+        currentValue = resolveValue('{{$key}}', itemStateData);
+        // If not found in itemStateData, check formData directly
+        if (currentValue == '{{$key}}' || currentValue == null) {
+          currentValue = formData[key];
+        }
+      }
+    }
 
     // Create TextEditingController with initial value
     final controller = TextEditingController(
@@ -92,46 +116,80 @@ class TextInputWidget implements FlowWidget {
         keyboardType = TextInputType.text;
     }
 
-    return LabeledField(
-      label: localizedLabel,
-      isRequired: isRequired,
-      child: DigitTextFormInput(
-        controller: controller,
-        readOnly: isReadOnly,
-        keyboardType: keyboardType,
-        inputFormatters: inputFormatters,
-        maxLength: maxLength,
-        onChange: (value) {
-          if (key != null) {
-            // Trigger onChange actions if defined
-            if (json['onChange'] != null) {
-              final actionsList =
-                  List<Map<String, dynamic>>.from(json['onChange']);
+    // Use Builder to access the correct context where CrudItemContext is available
+    // This ensures screenKey is captured after the widget tree is built (important for popups)
+    return Builder(
+      builder: (builderContext) {
+        // Get screen key from the builder context (after CrudItemContext wrapper)
+        // Fall back to route args for non-popup usage
+        final crudContextForCallback = CrudItemContext.of(builderContext);
+        final screenKeyForCallback =
+            crudContextForCallback?.screenKey ?? getScreenKeyFromArgs(builderContext);
 
-              for (var actionJson in actionsList) {
-                var action = ActionConfig.fromJson(actionJson);
+        return LabeledField(
+          label: localizedLabel,
+          isRequired: isRequired,
+          child: DigitTextFormInput(
+            controller: controller,
+            readOnly: isReadOnly,
+            keyboardType: keyboardType,
+            inputFormatters: inputFormatters,
+            maxLength: maxLength,
+            onChange: (value) {
+              if (key != null && screenKeyForCallback != null) {
+                // Store the value in widgetData (same as SelectionCardWidget)
+                final currentState =
+                    FlowCrudStateRegistry().get(screenKeyForCallback);
+                final currentWidgetData =
+                    Map<String, dynamic>.from(currentState?.widgetData ?? {});
 
-                // Add input value to action context
-                final enhancedProperties = {
-                  ...action.properties,
-                  key: value,
-                  '${key}Value': value,
-                };
+                // Update widget data with the input value
+                currentWidgetData[key] = value;
 
-                action = ActionConfig(
-                  action: action.action,
-                  actionType: action.actionType,
-                  properties: enhancedProperties,
-                  condition: action.condition,
-                  actions: action.actions,
-                );
-
-                onAction(action);
+                // Update the registry
+                if (currentState != null) {
+                  final updatedState = currentState.copyWith(
+                    widgetData: currentWidgetData,
+                  );
+                  FlowCrudStateRegistry().update(screenKeyForCallback, updatedState);
+                } else {
+                  final newState = FlowCrudState(
+                    widgetData: currentWidgetData,
+                  );
+                  FlowCrudStateRegistry().update(screenKeyForCallback, newState);
+                }
               }
-            }
-          }
-        },
-      ),
+
+              // Trigger onChange actions if defined (even if screenKey is null)
+              if (key != null && json['onChange'] != null) {
+                final actionsList =
+                    List<Map<String, dynamic>>.from(json['onChange']);
+
+                for (var actionJson in actionsList) {
+                  var action = ActionConfig.fromJson(actionJson);
+
+                  // Add input value to action context
+                  final enhancedProperties = {
+                    ...action.properties,
+                    key: value,
+                    '${key}Value': value,
+                  };
+
+                  action = ActionConfig(
+                    action: action.action,
+                    actionType: action.actionType,
+                    properties: enhancedProperties,
+                    condition: action.condition,
+                    actions: action.actions,
+                  );
+
+                  onAction(action);
+                }
+              }
+            },
+          ),
+        );
+      },
     );
   }
 }

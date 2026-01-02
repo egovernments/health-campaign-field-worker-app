@@ -55,6 +55,25 @@ String? getScreenKeyFromArgs(BuildContext context) {
   return null;
 }
 
+/// Gets the effective screen key from multiple sources in priority order:
+/// 1. Route arguments (from getScreenKeyFromArgs)
+/// 2. contextData['parentScreenKey'] (injected by popup actions)
+///
+/// This is a utility for action executors to get the correct screen key,
+/// especially when actions are triggered from popups where the context
+/// doesn't have access to the parent page's route arguments.
+String? getEffectiveScreenKey(
+  BuildContext context,
+  Map<String, dynamic> contextData,
+) {
+  // First try to get from route arguments
+  final fromArgs = getScreenKeyFromArgs(context);
+  if (fromArgs != null) return fromArgs;
+
+  // Fall back to parentScreenKey (injected by popup actions through action_executor_registry)
+  return contextData['parentScreenKey'] as String?;
+}
+
 /// Extracts model maps + raw state from the FlowCrudStateRegistry
 CrudStateData extractCrudStateData(String screenKey) {
   final crudState = FlowCrudStateRegistry().get(screenKey);

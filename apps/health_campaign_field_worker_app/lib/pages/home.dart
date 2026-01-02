@@ -638,6 +638,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                         to: 'pgrService',
                         localKey: 'complaintClientReferenceId',
                         foreignKey: 'clientReferenceId'),
+                    const RelationshipMapping(
+                        from: 'address',
+                        to: 'pgrService',
+                        localKey: 'relatedClientReferenceId',
+                        foreignKey: 'clientReferenceId'),
                   ],
                   nestedModelMappings: [
                     const NestedModelMapping(

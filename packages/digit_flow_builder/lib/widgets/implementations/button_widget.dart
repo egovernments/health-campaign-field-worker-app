@@ -31,11 +31,13 @@ class ButtonWidget implements FlowWidget {
             ? crudCtx.stateData?.rawState.first
             : null;
 
-    // Get form data from registry for resolving form field values
+    // Get form data and widget data from registry for resolving field values
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
-    final formData = screenKey != null
-        ? FlowCrudStateRegistry().get(screenKey)?.formData
+    final currentState = screenKey != null
+        ? FlowCrudStateRegistry().get(screenKey)
         : null;
+    final formData = currentState?.formData;
+    final widgetData = currentState?.widgetData;
 
     // Create evaluation context
     final evalContext = {
@@ -102,22 +104,26 @@ class ButtonWidget implements FlowWidget {
 
             if (navData != null) {
               final resolvedData = navData.map((entry) {
-                final key = entry['key'] as String;
                 final rawValue = entry['value'];
 
-                // Try to resolve from stateData first, then fallback to formData
+                // Try to resolve from stateData first, then widgetData, then formData
                 dynamic resolvedValue = stateData != null
                     ? resolveValue(rawValue, stateData)
                     : rawValue;
 
+                if (resolvedValue == rawValue && widgetData != null) {
+                  // If not resolved from stateData, try widgetData
+                  resolvedValue = resolveValue(rawValue, widgetData);
+                }
+
                 if (resolvedValue == rawValue && formData != null) {
-                  // If not resolved from stateData, try formData
+                  // If not resolved from widgetData, try formData
                   resolvedValue = resolveValue(rawValue, formData);
                 }
 
                 return {
-                  "key": key,
-                  "value": resolvedValue,
+                  ...Map<String, dynamic>.from(entry), // Keep all original fields (operation, root, etc.)
+                  "value": resolvedValue ?? rawValue,
                 };
               }).toList();
 
