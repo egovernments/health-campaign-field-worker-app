@@ -101,6 +101,19 @@ final dynamic sampleFlows = {
           ]
         },
       ],
+      "scrollListener": {
+        "triggerMode": "end",
+        "debounceMs": 300,
+        "showLoadingIndicator": true,
+        "onScroll": [
+          {
+            "actionType": "REFRESH_SEARCH",
+            "properties": {
+              "pagination": {"limit": 5, "append": true}
+            }
+          }
+        ]
+      },
       "wrapperConfig": {
         "wrapperName": "HouseholdWrapper",
         "rootEntity": "HouseholdModel",
@@ -198,28 +211,42 @@ final dynamic sampleFlows = {
             "householdMember",
             "projectBeneficiary",
             "task"
-          ]
+          ],
+          "pagination": {
+            "limit": 5
+          }
+
         }
       },
       "body": [
         {
+          "type": "template",
+          "label": "PROXIMITY_SEARCH_REGISTRATION",
           "format": "proximitySearch",
-          "label": "Proximity Search",
-          "fieldName": "proximitySearch",
           "onAction": [
             {
               "actionType": "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
               "properties": {
-                "type": "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
-                "name": "address",
                 "data": [
-                  {"key": "", "value": 5, "operation": "within"}
-                ]
+                  {
+                    "key": "",
+                    "value": 5,
+                    "operation": "within"
+                  }
+                ],
+                "name": "address",
+                "type": "field.value==true ? SEARCH_EVENT : CLEAR_STATE"
               }
             }
           ],
-          "validation": [
-            {"key": "proximityRadius", "value": 5, "errorMessage": ""}
+          "fieldName": "proximitySearch",
+          "mandatory": true,
+          "validations": [
+            {
+              "key": "proximityRadius",
+              "value": 5,
+              "errorMessage": "PROXIMITY_RADIUS_ERROR_MESSAGE"
+            }
           ]
         },
         {
@@ -301,9 +328,7 @@ final dynamic sampleFlows = {
                   "onAction": [
                     {
                       "actionType": "CLOSE_POPUP",
-                      "properties": {
-                        "parentScreenKey": "searchBeneficiary"
-                      }
+                      "properties": {"parentScreenKey": "searchBeneficiary"}
                     },
                     {
                       "actions": [
@@ -426,7 +451,8 @@ final dynamic sampleFlows = {
                               "data": [
                                 {
                                   "key": "HouseholdClientReferenceId",
-                                  "value": "{{ context.household.clientReferenceId }}"
+                                  "value":
+                                      "{{ context.household.clientReferenceId }}"
                                 },
                                 {"key": "isEdit", "value": "true"}
                               ]
@@ -434,7 +460,8 @@ final dynamic sampleFlows = {
                           }
                         ],
                         "condition": {
-                          "expression": "context.headProjectBeneficiary.0!=null && "
+                          "expression":
+                              "context.headProjectBeneficiary.0!=null && "
                         }
                       },
                       {
@@ -447,14 +474,16 @@ final dynamic sampleFlows = {
                               "data": [
                                 {
                                   "key": "HouseholdClientReferenceId",
-                                  "value": "{{ HouseholdModel.clientReferenceId }}"
+                                  "value":
+                                      "{{ HouseholdModel.clientReferenceId }}"
                                 }
                               ]
                             }
                           }
                         ],
                         "condition": {
-                          "expression": ".ec1==YES && eligibilityChecklist.ec3==YES && eligibilityChecklist.ec4==YES"
+                          "expression":
+                              ".ec1==YES && eligibilityChecklist.ec3==YES && eligibilityChecklist.ec4==YES"
                         }
                       }
                     ]
@@ -1163,16 +1192,30 @@ final dynamic sampleFlows = {
           }
         },
         {
-          "actionType": "CREATE_EVENT",
-          "properties": {
-            "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to create household."}
+          "condition": {"expression": "isEdit == true"},
+          "actions": [
+            {
+              "actionType": "UPDATE_EVENT",
+              "properties": {"entity": "HOUSEHOLD"}
+            }
+          ]
+        },
+        {
+          "condition": {"expression": "DEFAULT"},
+          "actions": [
+            {
+              "actionType": "CREATE_EVENT",
+              "properties": {
+                "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "Failed to create household."}
+                  }
+                ]
               }
-            ]
-          }
+            }
+          ]
         },
         {
           "actionType": "NAVIGATION",
@@ -4870,10 +4913,7 @@ final dynamic sampleComplaintFlows = {
                             "triggerSearch": true
                           }
                         },
-                        {
-                          "actionType": "CLOSE_POPUP",
-                          "properties": {}
-                        }
+                        {"actionType": "CLOSE_POPUP", "properties": {}}
                       ],
                       "fieldName": "cancel",
                       "properties": {
@@ -4889,9 +4929,7 @@ final dynamic sampleComplaintFlows = {
                       "onAction": [
                         {
                           "actionType": "CLOSE_POPUP",
-                          "properties": {
-                            "parentScreenKey": "complaintInbox"
-                          }
+                          "properties": {"parentScreenKey": "complaintInbox"}
                         },
                         {
                           "actionType": "SEARCH_EVENT",
@@ -4943,14 +4981,8 @@ final dynamic sampleComplaintFlows = {
                   "body": [
                     {
                       "data": [
-                        {
-                          "code": "ASSIGN_TO_ME",
-                          "name": "ASSIGN_TO_ME"
-                        },
-                        {
-                          "code": "ASSIGN_TO_ALL",
-                          "name": "ASSIGN_TO_ALL"
-                        }
+                        {"code": "ASSIGN_TO_ME", "name": "ASSIGN_TO_ME"},
+                        {"code": "ASSIGN_TO_ALL", "name": "ASSIGN_TO_ALL"}
                       ],
                       "type": "template",
                       "format": "radioList",
@@ -4986,15 +5018,20 @@ final dynamic sampleComplaintFlows = {
                           "actionType": "CLEAR_STATE",
                           "properties": {
                             "name": "pgrService",
-                            "filterKeys": ["name", "serviceCode","localityBoundaryCode"],
-                            "widgetKeys": ["assignTo", "complaintType", "locality"],
+                            "filterKeys": [
+                              "name",
+                              "serviceCode",
+                              "localityBoundaryCode"
+                            ],
+                            "widgetKeys": [
+                              "assignTo",
+                              "complaintType",
+                              "locality"
+                            ],
                             "triggerSearch": true
                           }
                         },
-                        {
-                          "actionType": "CLOSE_POPUP",
-                          "properties": {}
-                        }
+                        {"actionType": "CLOSE_POPUP", "properties": {}}
                       ],
                       "fieldName": "cancel",
                       "properties": {
@@ -5008,10 +5045,7 @@ final dynamic sampleComplaintFlows = {
                       "label": "COMPLAINT_INBOX_FILTER_PRIMARY_ACTION_LABEL",
                       "format": "button",
                       "onAction": [
-                        {
-                          "actionType": "CLOSE_POPUP",
-                          "properties": {}
-                        },
+                        {"actionType": "CLOSE_POPUP", "properties": {}},
                         {
                           "actionType": "SEARCH_EVENT",
                           "properties": {
@@ -5026,14 +5060,16 @@ final dynamic sampleComplaintFlows = {
                               {
                                 "key": "serviceCode",
                                 "value": "{{complaintType }}",
-                                "applyIf": "{{complaintType }} !=null && {{complaintType }} !=null",
+                                "applyIf":
+                                    "{{complaintType }} !=null && {{complaintType }} !=null",
                                 "operation": "equals"
                               },
                               {
                                 "key": "localityBoundaryCode",
                                 "root": "address",
                                 "value": "{{ locality }}",
-                                "applyIf": "{{locality }} !=null && {{locality }} !=null",
+                                "applyIf":
+                                    "{{locality }} !=null && {{locality }} !=null",
                                 "operation": "equals"
                               }
                             ],
@@ -5100,10 +5136,7 @@ final dynamic sampleComplaintFlows = {
                             "triggerSearch": true
                           }
                         },
-                        {
-                          "actionType": "CLOSE_POPUP",
-                          "properties": {}
-                        }
+                        {"actionType": "CLOSE_POPUP", "properties": {}}
                       ],
                       "fieldName": "cancel",
                       "properties": {
@@ -5117,23 +5150,22 @@ final dynamic sampleComplaintFlows = {
                       "label": "COMPLAINT_INBOX_SORT_PRIMARY_ACTION_LABEL",
                       "format": "button",
                       "onAction": [
-                        {
-                          "actionType": "CLOSE_POPUP",
-                          "properties": {}
-                        },
+                        {"actionType": "CLOSE_POPUP", "properties": {}},
                         {
                           "actionType": "SEARCH_EVENT",
                           "properties": {
                             "data": [
                               {
                                 "key": "tenantId",
-                                "value": "{{singleton.selectedProject.tenantId}}",
+                                "value":
+                                    "{{singleton.selectedProject.tenantId}}",
                                 "operation": "equals"
                               }
                             ],
                             "orderBy": {
                               "field": "auditCreatedTime",
-                              "order": "{{ sortBy }} == LATEST_FIRST ? desc : asc"
+                              "order":
+                                  "{{ sortBy }} == LATEST_FIRST ? desc : asc"
                             },
                             "name": "pgrService"
                           }

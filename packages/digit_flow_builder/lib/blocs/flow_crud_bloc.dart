@@ -23,26 +23,53 @@ class FlowCrudBloc extends CrudBloc {
 
     final CrudState crudState = transition.nextState;
     List<dynamic>? wrapper;
+    final existingState = FlowCrudStateRegistry().get(screenKey);
 
     if (crudState is CrudStateLoaded) {
-      final entities = crudState.results.values.expand((list) => list).toList();
-      wrapper = WrapperBuilder(entities, flowConfig['wrapperConfig']).build();
+      // Only consume append mode when we have loaded data
+      // This prevents intermediate states (Loading) from consuming the flag
+      final appendMode = FlowCrudStateRegistry().consumeAppendMode(screenKey);
+      final newEntities = crudState.results.values.expand((list) => list).toList();
+
+      if (appendMode && existingState?.stateWrapper != null && newEntities.isNotEmpty) {
+        // Append mode: add new entities to existing wrapper
+        final existingWrapper = List<dynamic>.from(existingState!.stateWrapper!);
+        final newWrapper = WrapperBuilder(newEntities, flowConfig['wrapperConfig']).build();
+        existingWrapper.addAll(newWrapper);
+        wrapper = existingWrapper;
+        debugPrint('FlowCrudBloc: Appended ${newWrapper.length} items, total=${wrapper.length}');
+      } else if (appendMode && newEntities.isEmpty) {
+        // Append mode but no new entities - preserve existing data
+        wrapper = existingState?.stateWrapper;
+        debugPrint('FlowCrudBloc: No new data, preserving ${wrapper?.length ?? 0} existing items');
+      } else {
+        // Normal mode: replace with new entities
+        wrapper = WrapperBuilder(newEntities, flowConfig['wrapperConfig']).build();
+      }
+      // Preserve existing formData and widgetData when creating new state
+      final flowState = FlowCrudState(
+        base: crudState,
+        stateWrapper: wrapper,
+        formData: existingState?.formData,
+        widgetData: existingState?.widgetData,
+      );
+
+      onUpdate?.call(screenKey, flowState);
+      FlowCrudStateRegistry().update(screenKey, flowState);
     } else if (crudState is CrudStatePersisted) {
       final entities = crudState.entities;
       wrapper = WrapperBuilder(entities, flowConfig['wrapperConfig']).build();
+      // Preserve existing formData and widgetData when creating new state
+      final flowState = FlowCrudState(
+        base: crudState,
+        stateWrapper: wrapper,
+        formData: existingState?.formData,
+        widgetData: existingState?.widgetData,
+      );
+
+      onUpdate?.call(screenKey, flowState);
+      FlowCrudStateRegistry().update(screenKey, flowState);
     }
-
-    // Preserve existing formData and widgetData when creating new state
-    final existingState = FlowCrudStateRegistry().get(screenKey);
-    final flowState = FlowCrudState(
-      base: crudState,
-      stateWrapper: wrapper,
-      formData: existingState?.formData,
-      widgetData: existingState?.widgetData,
-    );
-
-    onUpdate?.call(screenKey, flowState);
-    FlowCrudStateRegistry().update(screenKey, flowState);
   }
 
   @override
@@ -65,6 +92,7 @@ class FlowCrudBloc extends CrudBloc {
 class FlowCrudStateRegistry {
   final Map<String, ValueNotifier<FlowCrudState?>> _map = {};
   final Map<String, Map<String, dynamic>?> _navParams = {};
+  final Map<String, bool> _appendMode = {};
 
   static final FlowCrudStateRegistry _instance =
       FlowCrudStateRegistry._internal();
@@ -72,6 +100,19 @@ class FlowCrudStateRegistry {
   FlowCrudStateRegistry._internal();
 
   factory FlowCrudStateRegistry() => _instance;
+
+  /// Set append mode for next state update (used by REFRESH_SEARCH)
+  void setAppendMode(String key, bool append) {
+    _appendMode[key] = append;
+    debugPrint('FlowCrudStateRegistry: Set appendMode=$append for $key');
+  }
+
+  /// Get and consume append mode (called during state update)
+  bool consumeAppendMode(String key) {
+    final append = _appendMode[key] ?? false;
+    _appendMode.remove(key);
+    return append;
+  }
 
   void update(String key, FlowCrudState state) {
     _map.putIfAbsent(key, () => ValueNotifier<FlowCrudState?>(null)).value =

@@ -133,11 +133,35 @@ class SearchStateManager {
     }
   }
 
-  /// Get all accumulated filters
+  /// Get accumulated filters for a specific searchName
   List<dynamic> getFilters(String screenKey, String searchName) {
     final compositeKey = _compositeKey(screenKey, searchName);
     return List<dynamic>.from(
         _state[compositeKey]?['filters'] as List? ?? []);
+  }
+
+  /// Get ALL accumulated filters across all searchNames for a screen
+  List<dynamic> getAllFilters(String screenKey) {
+    final allFilters = <dynamic>[];
+    for (final entry in _state.entries) {
+      if (entry.key.startsWith('$screenKey::')) {
+        final filters = entry.value['filters'] as List? ?? [];
+        allFilters.addAll(filters);
+      }
+    }
+    debugPrint('SearchStateManager: getAllFilters for $screenKey found ${allFilters.length} filters');
+    return allFilters;
+  }
+
+  /// Check if there are any filters for the screen (across all searchNames)
+  bool hasFiltersForScreen(String screenKey) {
+    for (final entry in _state.entries) {
+      if (entry.key.startsWith('$screenKey::')) {
+        final filters = entry.value['filters'] as List? ?? [];
+        if (filters.isNotEmpty) return true;
+      }
+    }
+    return false;
   }
 
   /// Update orderBy - only one active at a time, last one wins
@@ -176,6 +200,59 @@ class SearchStateManager {
     final compositeKey = _compositeKey(screenKey, searchName);
     final orderBy = _state[compositeKey]?['orderBy'];
     return orderBy is Map<String, dynamic> ? orderBy : null;
+  }
+
+  /// Update pagination state (offset, limit)
+  void updatePagination(
+    String screenKey,
+    String searchName, {
+    int? offset,
+    int? limit,
+  }) {
+    final compositeKey = _compositeKey(screenKey, searchName);
+    _state.putIfAbsent(
+        compositeKey, () => {'filters': <dynamic>[], 'orderBy': null, 'pagination': <String, dynamic>{}});
+
+    final pagination = _state[compositeKey]!['pagination'] as Map<String, dynamic>? ?? {};
+    if (offset != null) pagination['offset'] = offset;
+    if (limit != null) pagination['limit'] = limit;
+    _state[compositeKey]!['pagination'] = pagination;
+
+    debugPrint('SearchStateManager: Updated pagination for $compositeKey: offset=$offset, limit=$limit');
+  }
+
+  /// Get current pagination state
+  Map<String, dynamic>? getPagination(String screenKey, String searchName) {
+    final compositeKey = _compositeKey(screenKey, searchName);
+    final pagination = _state[compositeKey]?['pagination'];
+    return pagination is Map<String, dynamic> ? pagination : null;
+  }
+
+  /// Increment offset by limit (for load more)
+  int incrementOffset(String screenKey, String searchName, {int defaultLimit = 10}) {
+    final compositeKey = _compositeKey(screenKey, searchName);
+    _state.putIfAbsent(
+        compositeKey, () => {'filters': <dynamic>[], 'orderBy': null, 'pagination': <String, dynamic>{}});
+
+    final pagination = _state[compositeKey]!['pagination'] as Map<String, dynamic>? ?? {};
+    final currentOffset = pagination['offset'] as int? ?? 0;
+    final limit = pagination['limit'] as int? ?? defaultLimit;
+    final newOffset = currentOffset + limit;
+
+    pagination['offset'] = newOffset;
+    _state[compositeKey]!['pagination'] = pagination;
+
+    debugPrint('SearchStateManager: Incremented offset for $compositeKey: $currentOffset -> $newOffset');
+    return newOffset;
+  }
+
+  /// Reset pagination (call when filters change)
+  void resetPagination(String screenKey, String searchName) {
+    final compositeKey = _compositeKey(screenKey, searchName);
+    if (_state.containsKey(compositeKey)) {
+      _state[compositeKey]!['pagination'] = <String, dynamic>{'offset': 0};
+      debugPrint('SearchStateManager: Reset pagination for $compositeKey');
+    }
   }
 
   /// Check if there are any filters or orderBy set

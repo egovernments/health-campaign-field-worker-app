@@ -211,11 +211,14 @@ class SearchExecutor extends ActionExecutor {
         resolvedFilters,
         triggerSearch: false, // We'll execute search directly below
       );
+
+      // Reset pagination when filters change (new search starts from offset 0)
+      SearchStateManager().resetPagination(screenKey, searchName);
     }
 
-    // Get ALL accumulated filters from SearchStateManager
+    // Get ALL accumulated filters from SearchStateManager (across all searchNames)
     final accumulatedFilters = screenKey != null
-        ? SearchStateManager().getFilters(screenKey, searchName)
+        ? SearchStateManager().getAllFilters(screenKey)
         : resolvedFilters;
 
     // Convert accumulated filters to SearchFilter objects
@@ -348,13 +351,35 @@ class SearchExecutor extends ActionExecutor {
         ? MultiTableFilterLogic.or
         : MultiTableFilterLogic.and;
 
+    // Get pagination from wrapperConfig.searchConfig.pagination (if configured)
+    PaginationParams? pagination;
+    final paginationConfig = config?['wrapperConfig']?['searchConfig']?['pagination'];
+    if (paginationConfig != null) {
+      final limit = paginationConfig['limit'] as int?;
+      if (limit != null) {
+        // First search always starts at offset 0
+        pagination = PaginationParams(offset: 0, limit: limit);
+
+        // Store pagination state for REFRESH_SEARCH to use
+        if (screenKey != null) {
+          SearchStateManager().updatePagination(
+            screenKey,
+            '_pagination',
+            offset: 0,
+            limit: limit,
+          );
+        }
+        debugPrint('SEARCH_EVENT: Using pagination from config - offset=0, limit=$limit');
+      }
+    }
+
     final searchParams = GlobalSearchParameters(
       filters: filters,
       primaryModel: config?['wrapperConfig']['searchConfig']['primary'],
       select: (config?['wrapperConfig']?['searchConfig']?['select'] as List?)
               ?.cast<String>() ??
           [],
-      pagination: null,
+      pagination: pagination,
       orderBy: orderBy,
       filterLogic: filterLogic,
     );
