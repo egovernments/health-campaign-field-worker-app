@@ -356,20 +356,44 @@ class SearchExecutor extends ActionExecutor {
     final paginationConfig = config?['wrapperConfig']?['searchConfig']?['pagination'];
     if (paginationConfig != null) {
       final limit = paginationConfig['limit'] as int?;
+      // Support both maxItems (new) and windowSize (legacy, converted to maxItems)
+      final maxItems = paginationConfig['maxItems'] as int? ??
+          ((paginationConfig['windowSize'] as int? ?? 3) * (limit ?? 10));
+
       if (limit != null) {
         // First search always starts at offset 0
         pagination = PaginationParams(offset: 0, limit: limit);
 
-        // Store pagination state for REFRESH_SEARCH to use
+        // Initialize pagination window for bidirectional support
         if (screenKey != null) {
+          debugPrint('SEARCH_EVENT: Initializing pagination window with screenKey=$screenKey');
+
+          // Legacy pagination state (for backwards compatibility)
           SearchStateManager().updatePagination(
             screenKey,
             '_pagination',
             offset: 0,
             limit: limit,
           );
+
+          // Initialize bidirectional pagination window
+          SearchStateManager().initPaginationWindow(
+            screenKey,
+            '_pagination',
+            limit: limit,
+            maxItems: maxItems,
+          );
+
+          // Set pagination info in registry so FlowCrudBloc can update window after data loads
+          final registryKey = screenKey.split('::').last;
+          debugPrint('SEARCH_EVENT: Setting paginationInfo with registryKey=$registryKey');
+          FlowCrudStateRegistry().setPaginationInfo(
+            registryKey,
+            limit: limit,
+            maxItems: maxItems,
+          );
         }
-        debugPrint('SEARCH_EVENT: Using pagination from config - offset=0, limit=$limit');
+        debugPrint('SEARCH_EVENT: Using pagination - offset=0, limit=$limit, maxItems=$maxItems');
       }
     }
 

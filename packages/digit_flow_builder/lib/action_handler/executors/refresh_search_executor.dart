@@ -10,18 +10,20 @@ import 'action_executor.dart';
 /// Executor for REFRESH_SEARCH action.
 ///
 /// This action re-triggers the search using ALL accumulated filters
-/// from SearchStateManager for the current screen. It's useful for:
-/// - Infinite scroll / load more functionality
-/// - Refreshing search results without changing filters
+/// from SearchStateManager for the current screen. It supports:
+/// - Infinite scroll / load more functionality (scroll down)
+/// - Bidirectional pagination (scroll up to load previous)
+/// - Window-based data management to prevent memory bloat
 ///
 /// Configuration:
 /// ```json
 /// {
 ///   "actionType": "REFRESH_SEARCH",
 ///   "properties": {
+///     "direction": "down",  // or "up" for bidirectional
 ///     "pagination": {
 ///       "limit": 10,
-///       "append": true
+///       "windowSize": 3  // max pages to keep in memory
 ///     }
 ///   }
 /// }
@@ -37,6 +39,7 @@ class RefreshSearchExecutor extends ActionExecutor {
     Map<String, dynamic> contextData,
   ) async {
     final data = action.properties;
+    final direction = data['direction'] as String? ?? 'down';
     final paginationConfig = data['pagination'] as Map<String, dynamic>?;
 
     // Get screen key
@@ -57,61 +60,80 @@ class RefreshSearchExecutor extends ActionExecutor {
       return contextData;
     }
 
-    // Execute with pagination support (handles both with and without pagination)
-    return _executeWithPagination(
+    // Execute with bidirectional pagination support
+    return _executeWithBidirectionalPagination(
       context,
       contextData,
       screenKey,
+      direction,
       paginationConfig,
     );
   }
 
-  Future<Map<String, dynamic>> _executeWithPagination(
+  Future<Map<String, dynamic>> _executeWithBidirectionalPagination(
     BuildContext context,
     Map<String, dynamic> contextData,
     String screenKey,
+    String direction,
     Map<String, dynamic>? paginationConfig,
   ) async {
     final stateManager = SearchStateManager();
+    const paginationKey = '_pagination';
 
-    // Get config for default pagination and wrapper building
+    // Get config for default pagination settings
     final config = FlowRegistry.getByName(screenKey.split('::').last);
+    final defaultPaginationConfig =
+        config?['wrapperConfig']?['searchConfig']?['pagination'];
+    final defaultLimit = defaultPaginationConfig?['limit'] as int? ?? 10;
+    // Support both maxItems (new) and windowSize (legacy, converted to maxItems)
+    final defaultMaxItems = defaultPaginationConfig?['maxItems'] as int? ??
+        ((defaultPaginationConfig?['windowSize'] as int? ?? 3) * defaultLimit);
 
-    // Get default limit from wrapperConfig.searchConfig.pagination
-    final defaultPaginationConfig = config?['wrapperConfig']?['searchConfig']?['pagination'];
-    final defaultLimit = defaultPaginationConfig?['limit'] as int?;
+    // Determine limit and maxItems from action config or defaults
+    final limit = paginationConfig?['limit'] as int? ?? defaultLimit;
+    final maxItems = paginationConfig?['maxItems'] as int? ??
+        (paginationConfig?['windowSize'] != null
+            ? (paginationConfig!['windowSize'] as int) * limit
+            : defaultMaxItems);
 
-    // Handle pagination - use override from action or default from config
+    // Get or initialize pagination window
+    debugPrint('REFRESH_SEARCH: Looking for pagination window with screenKey=$screenKey');
+    var window = stateManager.getPaginationWindow(screenKey, paginationKey);
+    debugPrint('REFRESH_SEARCH: Found window=$window');
+
+    if (window == null) {
+      // Initialize window if not exists (shouldn't happen normally)
+      debugPrint('REFRESH_SEARCH: Window not found, initializing new one');
+      stateManager.initPaginationWindow(
+        screenKey,
+        paginationKey,
+        limit: limit,
+        maxItems: maxItems,
+      );
+      window = stateManager.getPaginationWindow(screenKey, paginationKey);
+    }
+
+    // Determine offset based on direction
     int? offset;
-    int? limit;
-    bool append = false;
-
-    // Determine limit: action override > wrapperConfig default
-    if (paginationConfig != null) {
-      limit = paginationConfig['limit'] as int? ?? defaultLimit;
-      append = paginationConfig['append'] as bool? ?? true;
-    } else if (defaultLimit != null) {
-      limit = defaultLimit;
-      append = true; // Default to append for scroll
-    }
-
-    if (limit != null) {
-      // Use a default key for pagination tracking
-      const paginationKey = '_pagination';
-      final currentPagination = stateManager.getPagination(screenKey, paginationKey);
-
-      if (currentPagination == null || currentPagination['offset'] == null) {
-        // First REFRESH_SEARCH - continue from where SEARCH_EVENT left off
-        // SEARCH_EVENT already fetched offset=0, so start from limit
-        offset = limit;
-        stateManager.updatePagination(screenKey, paginationKey, offset: offset, limit: limit);
-      } else {
-        // Load more - increment offset
-        offset = stateManager.incrementOffset(screenKey, paginationKey, defaultLimit: limit);
+    if (direction == 'down') {
+      offset = stateManager.prepareLoadDown(screenKey, paginationKey);
+      if (offset == null) {
+        debugPrint('REFRESH_SEARCH: Cannot load down - no more data');
+        return contextData;
       }
-
-      debugPrint('REFRESH_SEARCH: Pagination offset=$offset, limit=$limit, append=$append');
+    } else if (direction == 'up') {
+      offset = stateManager.prepareLoadUp(screenKey, paginationKey);
+      if (offset == null) {
+        debugPrint('REFRESH_SEARCH: Cannot load up - at beginning');
+        return contextData;
+      }
+    } else {
+      debugPrint('REFRESH_SEARCH: Unknown direction: $direction');
+      return contextData;
     }
+
+    debugPrint(
+        'REFRESH_SEARCH: Loading $direction from offset=$offset, limit=$limit');
 
     // Get ALL accumulated filters for the screen (across all searchNames)
     final accumulatedFilters = stateManager.getAllFilters(screenKey);
@@ -144,27 +166,28 @@ class RefreshSearchExecutor extends ActionExecutor {
       return contextData;
     }
 
-    // Build search params with optional pagination
+    // Build search params with pagination
     final searchParams = GlobalSearchParameters(
       filters: filters,
       primaryModel: config?['wrapperConfig']?['searchConfig']?['primary'],
       select: (config?['wrapperConfig']?['searchConfig']?['select'] as List?)
               ?.cast<String>() ??
           [],
-      pagination: (offset != null && limit != null)
-          ? PaginationParams(offset: offset, limit: limit)
-          : null,
+      pagination: PaginationParams(offset: offset, limit: limit),
       filterLogic: MultiTableFilterLogic.and,
     );
 
-    // Set append mode in registry - FlowCrudBloc.onTransition will handle it
-    if (append) {
-      // Use the screen name (without screenType prefix) for the registry key
-      final registryKey = screenKey.split('::').last;
-      FlowCrudStateRegistry().setAppendMode(registryKey, true);
-    }
+    // Set mode in registry - FlowCrudBloc.onTransition will handle it
+    final registryKey = screenKey.split('::').last;
+    FlowCrudStateRegistry().setScrollDirection(registryKey, direction);
+    FlowCrudStateRegistry().setPaginationInfo(
+      registryKey,
+      limit: limit,
+      maxItems: maxItems,
+    );
 
-    debugPrint('REFRESH_SEARCH: Dispatching search with ${filters.length} filters, append=$append');
+    debugPrint(
+        'REFRESH_SEARCH: Dispatching search with ${filters.length} filters, direction=$direction');
 
     // Dispatch search - FlowCrudBloc.onTransition handles state update
     final crudBloc = context.read<CrudBloc>();
