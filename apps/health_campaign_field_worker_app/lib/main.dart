@@ -109,7 +109,7 @@ final dynamic sampleFlows = {
           {
             "actionType": "REFRESH_SEARCH",
             "properties": {
-              "pagination": {"limit": 2, "maxItems": 5}
+              "pagination": {"limit": 5, "maxItems": 15}
             }
           }
         ],
@@ -117,7 +117,7 @@ final dynamic sampleFlows = {
           {
             "actionType": "REFRESH_SEARCH",
             "properties": {
-              "pagination": {"limit": 2, "maxItems": 5}
+              "pagination": {"limit": 5, "maxItems": 15}
             }
           }
         ]
@@ -221,8 +221,8 @@ final dynamic sampleFlows = {
             "task"
           ],
           "pagination": {
-            "limit": 2,
-            "maxItems": 5
+            "limit": 5,
+            "maxItems": 15
           }
         }
       },
