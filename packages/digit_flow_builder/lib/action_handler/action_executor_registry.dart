@@ -6,6 +6,7 @@ import 'executors/navigation_executor.dart';
 import 'executors/back_navigation_executor.dart';
 import 'executors/crud_executor.dart';
 import 'executors/search_executor.dart';
+import 'executors/refresh_search_executor.dart';
 import 'executors/transformer_executor.dart';
 import 'executors/toast_executor.dart';
 import 'executors/clear_state_executor.dart';
@@ -32,6 +33,7 @@ class ActionExecutorRegistry {
     register('CREATE_EVENT', CrudExecutor());
     register('UPDATE_EVENT', UpdateExecutor());
     register('SEARCH_EVENT', SearchExecutor());
+    register('REFRESH_SEARCH', RefreshSearchExecutor());
     register('FETCH_TRANSFORMER_CONFIG', TransformerExecutor());
     register('SHOW_TOAST', ToastExecutor());
     register('CLEAR_STATE', ClearStateExecutor());
