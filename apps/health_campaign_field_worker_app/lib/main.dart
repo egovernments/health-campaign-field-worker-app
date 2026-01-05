@@ -102,14 +102,22 @@ final dynamic sampleFlows = {
         },
       ],
       "scrollListener": {
-        "triggerMode": "end",
-        "debounceMs": 300,
+        "triggerMode": "bidirectional",
+        "debounceMs": 0,
         "showLoadingIndicator": true,
-        "onScroll": [
+        "onScrollDown": [
           {
             "actionType": "REFRESH_SEARCH",
             "properties": {
-              "pagination": {"limit": 5, "append": true}
+              "pagination": {"limit": 2, "maxItems": 5}
+            }
+          }
+        ],
+        "onScrollUp": [
+          {
+            "actionType": "REFRESH_SEARCH",
+            "properties": {
+              "pagination": {"limit": 2, "maxItems": 5}
             }
           }
         ]
@@ -213,9 +221,9 @@ final dynamic sampleFlows = {
             "task"
           ],
           "pagination": {
-            "limit": 5
+            "limit": 2,
+            "maxItems": 5
           }
-
         }
       },
       "body": [

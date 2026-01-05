@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_flow_builder/widgets/localization_context.dart';
@@ -36,15 +35,16 @@ class LayoutRendererPage extends LocalizedStatefulWidget {
 class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
   // Scroll listener state
   Timer? _debounceTimer;
-  bool _isLoadingMore = false;
-  bool _hasTriggeredAtEnd = false;
+  bool _hasTriggeredAtBottom = false;
+  bool _hasTriggeredAtTop = false;
 
   // Scroll listener configuration (parsed from config)
   late final String _triggerMode;
   late final double _threshold;
   late final int _debounceMs;
   late final bool _showLoadingIndicator;
-  late final List<dynamic>? _onScrollActions;
+  late final List<dynamic>? _onScrollDownActions;
+  late final List<dynamic>? _onScrollUpActions;
 
   @override
   void initState() {
@@ -59,8 +59,17 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
     _debounceMs = scrollListenerConfig['debounceMs'] as int? ?? 300;
     _showLoadingIndicator =
         scrollListenerConfig['showLoadingIndicator'] as bool? ?? true;
-    // onScroll actions are now inside scrollListener for better clarity
-    _onScrollActions = scrollListenerConfig['onScroll'] as List<dynamic>?;
+
+    // For bidirectional mode, we have separate actions for up and down
+    // For backwards compatibility, 'onScroll' is treated as 'onScrollDown'
+    if (_triggerMode == 'bidirectional') {
+      _onScrollDownActions = scrollListenerConfig['onScrollDown'] as List<dynamic>? ??
+          scrollListenerConfig['onScroll'] as List<dynamic>?;
+      _onScrollUpActions = scrollListenerConfig['onScrollUp'] as List<dynamic>?;
+    } else {
+      _onScrollDownActions = scrollListenerConfig['onScroll'] as List<dynamic>?;
+      _onScrollUpActions = null;
+    }
   }
 
   @override
@@ -70,18 +79,63 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
   }
 
   /// Handles scroll notifications from the page
-  bool _handleScrollNotification(ScrollNotification notification) {
+  bool _handleScrollNotification(ScrollNotification notification, String screenKey) {
     // Only handle scroll updates, not start/end
     if (notification is! ScrollUpdateNotification) return false;
-
-    // Skip if no scroll actions configured
-    final scrollActions = _onScrollActions;
-    if (scrollActions == null || scrollActions.isEmpty) return false;
 
     final metrics = notification.metrics;
 
     // Skip if not scrollable or already loading
-    if (metrics.maxScrollExtent == 0 || _isLoadingMore) return false;
+    final isLoading = FlowCrudStateRegistry().get(screenKey)?.isLoading ?? false;
+    if (metrics.maxScrollExtent == 0 || isLoading) return false;
+
+    if (_triggerMode == 'bidirectional') {
+      _handleBidirectionalScroll(metrics);
+    } else {
+      _handleUnidirectionalScroll(metrics);
+    }
+
+    return false; // Don't consume the notification
+  }
+
+  void _handleBidirectionalScroll(ScrollMetrics metrics) {
+    const buffer = 50.0; // pixels from edge
+
+    // Check if near bottom
+    final nearBottom = metrics.pixels >= (metrics.maxScrollExtent - buffer);
+    // Check if near top
+    final nearTop = metrics.pixels <= buffer;
+
+    // Debug: Log scroll state periodically
+    debugPrint('ScrollState: pixels=${metrics.pixels.toInt()}, max=${metrics.maxScrollExtent.toInt()}, '
+        'nearTop=$nearTop, nearBottom=$nearBottom, '
+        'triggeredTop=$_hasTriggeredAtTop, triggeredBottom=$_hasTriggeredAtBottom, '
+        'hasUpActions=${_onScrollUpActions != null}');
+
+    // Trigger load down when reaching bottom
+    if (nearBottom && !_hasTriggeredAtBottom && _onScrollDownActions != null) {
+      debugPrint('ScrollListener: Triggering scroll DOWN');
+      _hasTriggeredAtBottom = true;
+      _triggerScrollActions('down');
+    } else if (!nearBottom && metrics.pixels < metrics.maxScrollExtent * 0.8) {
+      // Reset bottom trigger when scrolled away from bottom
+      _hasTriggeredAtBottom = false;
+    }
+
+    // Trigger load up when reaching top
+    if (nearTop && !_hasTriggeredAtTop && _onScrollUpActions != null) {
+      debugPrint('ScrollListener: Triggering scroll UP');
+      _hasTriggeredAtTop = true;
+      _triggerScrollActions('up');
+    } else if (!nearTop && metrics.pixels > metrics.maxScrollExtent * 0.2) {
+      // Reset top trigger when scrolled away from top
+      _hasTriggeredAtTop = false;
+    }
+  }
+
+  void _handleUnidirectionalScroll(ScrollMetrics metrics) {
+    // Skip if no scroll actions configured
+    if (_onScrollDownActions == null || _onScrollDownActions.isEmpty) return;
 
     bool shouldTrigger = false;
 
@@ -96,61 +150,53 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
     }
 
     // Prevent duplicate triggers at the same scroll position
-    if (shouldTrigger && !_hasTriggeredAtEnd) {
-      _hasTriggeredAtEnd = true;
-      _triggerScrollActions();
+    if (shouldTrigger && !_hasTriggeredAtBottom) {
+      _hasTriggeredAtBottom = true;
+      _triggerScrollActions('down');
     } else if (!shouldTrigger && metrics.pixels < metrics.maxScrollExtent * 0.5) {
       // Reset trigger flag when scrolled back up past 50%
-      _hasTriggeredAtEnd = false;
+      _hasTriggeredAtBottom = false;
     }
-
-    return false; // Don't consume the notification
   }
 
-  void _triggerScrollActions() {
+  void _triggerScrollActions(String direction) {
     // Cancel any pending debounce timer
     _debounceTimer?.cancel();
 
     // Debounce the action execution
     _debounceTimer = Timer(Duration(milliseconds: _debounceMs), () {
-      _executeScrollActions();
+      _executeScrollActions(direction);
     });
   }
 
-  void _executeScrollActions() {
-    final scrollActions = _onScrollActions;
+  void _executeScrollActions(String direction) {
+    final scrollActions = direction == 'up' ? _onScrollUpActions : _onScrollDownActions;
     if (scrollActions == null || scrollActions.isEmpty) return;
 
-    setState(() {
-      _isLoadingMore = true;
-    });
-
-    // Execute all configured scroll actions
+    // Execute all configured scroll actions with direction context
+    // Loading state is managed by FlowCrudBloc
     for (final actionJson in scrollActions) {
       if (actionJson is Map<String, dynamic>) {
-        final action = ActionConfig.fromJson(actionJson);
+        // Inject direction into action properties
+        final actionWithDirection = Map<String, dynamic>.from(actionJson);
+        final properties = Map<String, dynamic>.from(
+            actionWithDirection['properties'] as Map<String, dynamic>? ?? {});
+        properties['direction'] = direction;
+        actionWithDirection['properties'] = properties;
+
+        final action = ActionConfig.fromJson(actionWithDirection);
         ActionHandler.execute(action, context, {
           'wrappers': const [],
+          'scrollDirection': direction,
         });
       }
     }
-
-    // Reset loading state after a delay
-    // This will be reset when new data arrives and widget rebuilds
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
-        setState(() {
-          _isLoadingMore = false;
-          _hasTriggeredAtEnd = false; // Allow re-triggering after data loads
-        });
-      }
-    });
   }
 
   /// Resets scroll listener state (call when new data is loaded)
   void resetScrollState() {
-    _hasTriggeredAtEnd = false;
-    _isLoadingMore = false;
+    _hasTriggeredAtBottom = false;
+    _hasTriggeredAtTop = false;
   }
 
   @override
@@ -166,12 +212,16 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
       valueListenable: FlowCrudStateRegistry().listen(screenKey),
       builder: (context, flowState, __) {
         final stateData = extractCrudStateData(screenKey);
-        final isLoading = flowState?.base is CrudStateLoading;
+        final isLoading = flowState?.isLoading ?? false;
+        final currentWrapperLength = flowState?.stateWrapper?.length ?? 0;
+
+        debugPrint('LayoutRenderer: REBUILD - screenKey=$screenKey, '
+            'wrapperLength=$currentWrapperLength, isLoading=$isLoading');
 
         return LocalizationContext(
           localization: localizations,
           child: NotificationListener<ScrollNotification>(
-            onNotification: _handleScrollNotification,
+            onNotification: (notification) => _handleScrollNotification(notification, screenKey),
             child: Stack(
               children: [
                 Scaffold(
@@ -275,7 +325,7 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                               .toList()
                             ..removeLast(),
                           // Scroll loading indicator at bottom of content
-                          if (_showLoadingIndicator && _isLoadingMore)
+                          if (_showLoadingIndicator && isLoading)
                              Padding(
                               padding: const EdgeInsets.symmetric(vertical: 16.0),
                               child: Center(

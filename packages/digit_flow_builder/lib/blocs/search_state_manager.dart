@@ -202,7 +202,190 @@ class SearchStateManager {
     return orderBy is Map<String, dynamic> ? orderBy : null;
   }
 
-  /// Update pagination state (offset, limit)
+  /// Initialize pagination window after first search
+  /// Called by SEARCH_EVENT when pagination is configured
+  void initPaginationWindow(
+    String screenKey,
+    String searchName, {
+    required int limit,
+    int? maxItems,
+    int initialItemCount = 0,
+  }) {
+    final compositeKey = _compositeKey(screenKey, searchName);
+    _state.putIfAbsent(
+        compositeKey, () => {'filters': <dynamic>[], 'orderBy': null, 'paginationWindow': <String, dynamic>{}});
+
+    // Default maxItems to 3 pages worth if not specified
+    final effectiveMaxItems = maxItems ?? (limit * 3);
+
+    _state[compositeKey]!['paginationWindow'] = <String, dynamic>{
+      'startOffset': 0,
+      'endOffset': initialItemCount, // Will be updated when data loads
+      'limit': limit,
+      'maxItems': effectiveMaxItems,
+      'hasMoreUp': false, // Initially at the beginning
+      'hasMoreDown': true, // Assume more data exists
+      'totalInWindow': initialItemCount,
+    };
+
+    debugPrint('SearchStateManager: Initialized pagination window for $compositeKey: limit=$limit, maxItems=$effectiveMaxItems');
+  }
+
+  /// Get current pagination window state
+  PaginationWindow? getPaginationWindow(String screenKey, String searchName) {
+    final compositeKey = _compositeKey(screenKey, searchName);
+    final windowData = _state[compositeKey]?['paginationWindow'];
+    if (windowData is! Map<String, dynamic>) return null;
+
+    final limit = windowData['limit'] as int? ?? 10;
+    // Support both maxItems (new) and windowSize (legacy)
+    final maxItems = windowData['maxItems'] as int? ??
+        ((windowData['windowSize'] as int? ?? 3) * limit);
+
+    return PaginationWindow(
+      startOffset: windowData['startOffset'] as int? ?? 0,
+      endOffset: windowData['endOffset'] as int? ?? 0,
+      limit: limit,
+      maxItems: maxItems,
+      hasMoreUp: windowData['hasMoreUp'] as bool? ?? false,
+      hasMoreDown: windowData['hasMoreDown'] as bool? ?? true,
+      totalInWindow: windowData['totalInWindow'] as int? ?? 0,
+    );
+  }
+
+  /// Check if we can load more data in a direction
+  bool canLoadDown(String screenKey, String searchName) {
+    final window = getPaginationWindow(screenKey, searchName);
+    return window?.hasMoreDown ?? false;
+  }
+
+  bool canLoadUp(String screenKey, String searchName) {
+    final window = getPaginationWindow(screenKey, searchName);
+    return window?.hasMoreUp ?? false;
+  }
+
+  /// Prepare for loading next page (scroll down)
+  /// Returns the offset to fetch, or null if can't load more
+  int? prepareLoadDown(String screenKey, String searchName) {
+    final compositeKey = _compositeKey(screenKey, searchName);
+    final windowData = _state[compositeKey]?['paginationWindow'] as Map<String, dynamic>?;
+    if (windowData == null) return null;
+
+    final endOffset = windowData['endOffset'] as int? ?? 0;
+    final hasMoreDown = windowData['hasMoreDown'] as bool? ?? false;
+
+    if (!hasMoreDown) {
+      debugPrint('SearchStateManager: Cannot load down - no more data');
+      return null;
+    }
+
+    debugPrint('SearchStateManager: Preparing load down from offset $endOffset');
+    return endOffset;
+  }
+
+  /// Prepare for loading previous page (scroll up)
+  /// Returns the offset to fetch, or null if can't load more
+  int? prepareLoadUp(String screenKey, String searchName) {
+    final compositeKey = _compositeKey(screenKey, searchName);
+    final windowData = _state[compositeKey]?['paginationWindow'] as Map<String, dynamic>?;
+    if (windowData == null) return null;
+
+    final startOffset = windowData['startOffset'] as int? ?? 0;
+    final limit = windowData['limit'] as int? ?? 10;
+    final hasMoreUp = windowData['hasMoreUp'] as bool? ?? false;
+
+    if (!hasMoreUp || startOffset <= 0) {
+      debugPrint('SearchStateManager: Cannot load up - at beginning');
+      return null;
+    }
+
+    final newOffset = (startOffset - limit).clamp(0, startOffset);
+    debugPrint('SearchStateManager: Preparing load up from offset $newOffset');
+    return newOffset;
+  }
+
+  /// Update window after data is loaded
+  /// Call this from FlowCrudBloc after data arrives
+  void onDataLoaded(
+    String screenKey,
+    String searchName, {
+    required String direction, // 'down', 'up', or 'initial'
+    required int loadedCount,
+    required int totalInWindow,
+  }) {
+    final compositeKey = _compositeKey(screenKey, searchName);
+    final windowData = _state[compositeKey]?['paginationWindow'] as Map<String, dynamic>?;
+
+    debugPrint('SearchStateManager.onDataLoaded: screenKey=$screenKey, direction=$direction, '
+        'loadedCount=$loadedCount, totalInWindow=$totalInWindow, windowData=${windowData != null}');
+
+    if (windowData == null) return;
+
+    final limit = windowData['limit'] as int? ?? 10;
+    // Support both maxItems (new) and windowSize (legacy)
+    final maxItems = windowData['maxItems'] as int? ??
+        ((windowData['windowSize'] as int? ?? 3) * limit);
+
+    debugPrint('SearchStateManager.onDataLoaded: limit=$limit, maxItems=$maxItems, '
+        'willTrim=${totalInWindow > maxItems} (totalInWindow=$totalInWindow > maxItems=$maxItems)');
+
+    if (direction == 'initial') {
+      // First load
+      windowData['startOffset'] = 0;
+      windowData['endOffset'] = loadedCount;
+      windowData['hasMoreUp'] = false;
+      windowData['hasMoreDown'] = loadedCount >= limit; // Assume more if we got full page
+      windowData['totalInWindow'] = loadedCount;
+    } else if (direction == 'down') {
+      // Loaded next page
+      final oldEndOffset = windowData['endOffset'] as int? ?? 0;
+      windowData['endOffset'] = oldEndOffset + loadedCount;
+      windowData['hasMoreDown'] = loadedCount >= limit;
+      windowData['totalInWindow'] = totalInWindow;
+
+      // Check if we need to trim from start
+      if (totalInWindow > maxItems) {
+        final trimCount = totalInWindow - maxItems;
+        final oldStartOffset = windowData['startOffset'] as int? ?? 0;
+        windowData['startOffset'] = oldStartOffset + trimCount;
+        windowData['hasMoreUp'] = true;
+        windowData['totalInWindow'] = maxItems;
+      }
+    } else if (direction == 'up') {
+      // Loaded previous page
+      final oldStartOffset = windowData['startOffset'] as int? ?? 0;
+      final newStartOffset = (oldStartOffset - loadedCount).clamp(0, oldStartOffset);
+      windowData['startOffset'] = newStartOffset;
+      windowData['hasMoreUp'] = newStartOffset > 0;
+      windowData['totalInWindow'] = totalInWindow;
+
+      // Check if we need to trim from end
+      if (totalInWindow > maxItems) {
+        final trimCount = totalInWindow - maxItems;
+        final oldEndOffset = windowData['endOffset'] as int? ?? 0;
+        windowData['endOffset'] = oldEndOffset - trimCount;
+        windowData['hasMoreDown'] = true;
+        windowData['totalInWindow'] = maxItems;
+      }
+    }
+
+    _state[compositeKey]!['paginationWindow'] = windowData;
+    debugPrint('SearchStateManager: Updated window after $direction load: '
+        'startOffset=${windowData['startOffset']}, endOffset=${windowData['endOffset']}, '
+        'totalInWindow=${windowData['totalInWindow']}, hasMoreUp=${windowData['hasMoreUp']}, hasMoreDown=${windowData['hasMoreDown']}');
+  }
+
+  /// Reset pagination window (call when filters change)
+  void resetPaginationWindow(String screenKey, String searchName) {
+    final compositeKey = _compositeKey(screenKey, searchName);
+    if (_state.containsKey(compositeKey)) {
+      _state[compositeKey]!.remove('paginationWindow');
+      debugPrint('SearchStateManager: Reset pagination window for $compositeKey');
+    }
+  }
+
+  // Legacy methods for backwards compatibility
+  /// Update pagination state (offset, limit) - DEPRECATED: use initPaginationWindow instead
   void updatePagination(
     String screenKey,
     String searchName, {
@@ -221,14 +404,14 @@ class SearchStateManager {
     debugPrint('SearchStateManager: Updated pagination for $compositeKey: offset=$offset, limit=$limit');
   }
 
-  /// Get current pagination state
+  /// Get current pagination state - DEPRECATED: use getPaginationWindow instead
   Map<String, dynamic>? getPagination(String screenKey, String searchName) {
     final compositeKey = _compositeKey(screenKey, searchName);
     final pagination = _state[compositeKey]?['pagination'];
     return pagination is Map<String, dynamic> ? pagination : null;
   }
 
-  /// Increment offset by limit (for load more)
+  /// Increment offset by limit (for load more) - DEPRECATED
   int incrementOffset(String screenKey, String searchName, {int defaultLimit = 10}) {
     final compositeKey = _compositeKey(screenKey, searchName);
     _state.putIfAbsent(
@@ -246,13 +429,15 @@ class SearchStateManager {
     return newOffset;
   }
 
-  /// Reset pagination (call when filters change)
+  /// Reset pagination (call when filters change) - DEPRECATED: use resetPaginationWindow instead
   void resetPagination(String screenKey, String searchName) {
     final compositeKey = _compositeKey(screenKey, searchName);
     if (_state.containsKey(compositeKey)) {
       _state[compositeKey]!['pagination'] = <String, dynamic>{'offset': 0};
       debugPrint('SearchStateManager: Reset pagination for $compositeKey');
     }
+    // Also reset the window if it exists
+    resetPaginationWindow(screenKey, searchName);
   }
 
   /// Check if there are any filters or orderBy set
@@ -316,4 +501,50 @@ class SearchStateManager {
     _state.clear();
     debugPrint('SearchStateManager: Disposed all state');
   }
+}
+
+/// Represents the current pagination window state
+class PaginationWindow {
+  /// Offset of the first item in current window
+  final int startOffset;
+
+  /// Offset after the last item in current window (next fetch position for down)
+  final int endOffset;
+
+  /// Items per page/batch
+  final int limit;
+
+  /// Maximum items to keep in memory
+  final int maxItems;
+
+  /// Whether there's more data above current window
+  final bool hasMoreUp;
+
+  /// Whether there's more data below current window
+  final bool hasMoreDown;
+
+  /// Current total items in window
+  final int totalInWindow;
+
+  const PaginationWindow({
+    required this.startOffset,
+    required this.endOffset,
+    required this.limit,
+    required this.maxItems,
+    required this.hasMoreUp,
+    required this.hasMoreDown,
+    required this.totalInWindow,
+  });
+
+  /// How many items to trim when window exceeds max
+  int trimCountIfNeeded(int newTotal) {
+    if (newTotal > maxItems) {
+      return newTotal - maxItems;
+    }
+    return 0;
+  }
+
+  @override
+  String toString() => 'PaginationWindow(start=$startOffset, end=$endOffset, '
+      'total=$totalInWindow, maxItems=$maxItems, hasUp=$hasMoreUp, hasDown=$hasMoreDown)';
 }
