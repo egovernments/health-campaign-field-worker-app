@@ -90,6 +90,9 @@ class TableWidget implements FlowWidget {
 
       // Strip {{ }} if present
       String cleanKey = rowsKey;
+      if (rowsKey.startsWith('{{') && rowsKey.endsWith('}}')) {
+        cleanKey = rowsKey.substring(2, rowsKey.length - 2).trim();
+      }
 
       // Case 1: Singleton path
       if (cleanKey.startsWith("singleton")) {
@@ -104,7 +107,7 @@ class TableWidget implements FlowWidget {
       // Case 2: If the current item already has this source (table inside listView)
       else if (crudCtx?.item != null && (crudCtx!.item?[cleanKey] != null)) {
         final localSource =
-            resolveValueRaw(cleanKey, crudCtx.item, screenKey: screenKey);
+            resolveValueRaw("{{ $cleanKey }}", crudCtx.item, screenKey: screenKey);
         if (localSource is List) {
           sourceList = localSource;
         } else if (localSource != null) {
