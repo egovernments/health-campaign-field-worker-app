@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:isar/isar.dart';
 import 'app.dart';
+import 'app_security.dart';
 import 'blocs/app_bloc_observer.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/local_store/secure_store/secure_store.dart';
@@ -25,6 +26,8 @@ int i = 0;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  AppSecurity.instance.setSecurityLevel = AppSecurityLevel.high;
 
   await initializeAllMappers();
   final info = await PackageInfo.fromPlatform();

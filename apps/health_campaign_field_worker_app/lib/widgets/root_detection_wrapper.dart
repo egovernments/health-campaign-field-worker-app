@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../app_security.dart';
 import '../blocs/root_detection/root_detection.dart';
 import 'localized.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -25,8 +26,9 @@ class _RootDetectionWrapperState extends LocalizedState<RootDetectionWrapper> {
   Widget build(BuildContext context) {
     return BlocBuilder<RootDetectionBloc, RootDetectionState>(
       builder: (context, state) {
-        if (state.isRooted == null) {
-        } else {
+        if (state.isRooted != null &&
+            AppSecurity.instance.securityLevel.index >=
+                AppSecurityLevel.medium.index) {
           if (context.mounted &&
               state.isRooted == true &&
               isDialogShown == false) {
