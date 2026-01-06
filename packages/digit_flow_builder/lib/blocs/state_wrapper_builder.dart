@@ -1092,7 +1092,7 @@ class ConditionEvaluator {
       case 'gte':
         final leftInt = int.tryParse(left.toString()) ?? 0;
         final rightInt = int.tryParse(right.toString()) ?? 0;
-        return  leftInt >= rightInt;
+        return leftInt >= rightInt;
       default:
         return null;
     }
@@ -1116,7 +1116,7 @@ class ConditionEvaluator {
         if (baseValue is num) {
           return baseValue + 1;
         } else {
-          return int.parse(baseValue) + 1;
+          return int.parse(baseValue ?? '0') + 1;
         }
       }
       // Handle other nested operations
@@ -1255,7 +1255,7 @@ class ComputedListEvaluator {
   static int calculateAgeInMonths(String dob) {
     final dateOfBirth = parseDate(dob);
     final age = DigitDateUtils.calculateAge(dateOfBirth);
-    return age.years*12 + age.months;
+    return age.years * 12 + age.months;
   }
 
   /// Builds the context map by extracting only required keys and applying transformations
@@ -1292,7 +1292,8 @@ class ComputedListEvaluator {
 
       // Merge additionalFields if exists
       if (contextAsMap['additionalFields'] is Map<String, dynamic>) {
-        final additional = contextAsMap['additionalFields'] as Map<String, dynamic>;
+        final additional =
+            contextAsMap['additionalFields'] as Map<String, dynamic>;
 
         if (additional['fields'] is List) {
           final fieldsList = additional['fields'] as List;
@@ -1363,7 +1364,7 @@ class ComputedListEvaluator {
         final parser = FormulaParser(sanitizedCondition, flatContext);
         final result = parser.parse;
 
-        if (result['isSuccess'] && result['value'] == true) {
+        if (result['isSuccess'] && result['value'] != null) {
           results.add(item);
         }
       } catch (e) {
