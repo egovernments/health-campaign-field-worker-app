@@ -505,7 +505,7 @@ final dynamic sampleFlows = {
               {
                 "format": "table",
                 "data": {
-                  "source": "individuals",
+                  "source": "{{individuals}}",
                   "columns": [
                     {
                       "header": "Beneficiary",
@@ -517,7 +517,7 @@ final dynamic sampleFlows = {
                     },
                     {"header": "Gender", "cellValue": "{{item.gender}}"}
                   ],
-                  "rows": "{{contextData.0.individuals}}"
+                  "rows": "{{individuals}}"
                 }
               }
             ]
