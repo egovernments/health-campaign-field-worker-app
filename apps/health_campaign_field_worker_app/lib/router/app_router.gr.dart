@@ -31,11 +31,9 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     AuthenticatedRouteWrapper.name: (routeData) {
-      final args = routeData.argsAs<AuthenticatedRouteWrapperArgs>(
-          orElse: () => const AuthenticatedRouteWrapperArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: AuthenticatedPageWrapper(key: args.key),
+        child: const AuthenticatedPageWrapper(),
       );
     },
     BeneficiariesReportRoute.name: (routeData) {
@@ -263,32 +261,16 @@ class AcknowledgementRouteArgs {
 
 /// generated route for
 /// [AuthenticatedPageWrapper]
-class AuthenticatedRouteWrapper
-    extends PageRouteInfo<AuthenticatedRouteWrapperArgs> {
-  AuthenticatedRouteWrapper({
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
+class AuthenticatedRouteWrapper extends PageRouteInfo<void> {
+  const AuthenticatedRouteWrapper({List<PageRouteInfo>? children})
+      : super(
           AuthenticatedRouteWrapper.name,
-          args: AuthenticatedRouteWrapperArgs(key: key),
           initialChildren: children,
         );
 
   static const String name = 'AuthenticatedRouteWrapper';
 
-  static const PageInfo<AuthenticatedRouteWrapperArgs> page =
-      PageInfo<AuthenticatedRouteWrapperArgs>(name);
-}
-
-class AuthenticatedRouteWrapperArgs {
-  const AuthenticatedRouteWrapperArgs({this.key});
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'AuthenticatedRouteWrapperArgs{key: $key}';
-  }
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
