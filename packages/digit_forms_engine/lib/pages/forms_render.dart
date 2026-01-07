@@ -530,8 +530,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                     translateIfPresent(schema.description,
                                             localizations) !=
                                         null &&
-                                    translateIfPresent(
-                                            schema.description, localizations)!
+                                    localizations.translate(
+                                            schema.description!).trim()
                                         .isNotEmpty) ...[
                                   const SizedBox(
                                     height: spacer1,
