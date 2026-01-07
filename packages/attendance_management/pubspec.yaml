@@ -24,7 +24,6 @@ dependencies:
   location: ^6.0.2
   fluttertoast: ^8.1.2
   overlay_builder: ^1.1.0
-  sqlite3_flutter_libs: ^0.5.10
   path_provider: ^2.0.11
   path: ^1.8.2
   drift_db_viewer: ^2.0.0

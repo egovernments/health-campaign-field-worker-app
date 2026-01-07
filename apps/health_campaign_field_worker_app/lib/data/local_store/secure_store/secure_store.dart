@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -19,6 +20,7 @@ class LocalSecureStore {
   static const isAppInActiveKey = 'isAppInActiveKey';
   static const manualSyncKey = 'manualSyncKey';
   static const selectedProjectTypeKey = 'selectedProjectType';
+  static const dbEncryptionKeyKey = 'dbEncryptionKey';
 
   final storage = const FlutterSecureStorage();
 
@@ -244,5 +246,24 @@ class LocalSecureStore {
       default:
         return false;
     }
+  }
+
+  /// Generates a cryptographically secure random encryption key for the database.
+  /// Returns a 32-character hex string (128-bit key).
+  String _generateEncryptionKey() {
+    final random = Random.secure();
+    final values = List<int>.generate(32, (i) => random.nextInt(256));
+    return values.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join();
+  }
+
+  /// Gets the database encryption key from secure storage.
+  /// If no key exists, generates and stores a new one.
+  Future<String> getOrCreateDbEncryptionKey() async {
+    String? key = await storage.read(key: dbEncryptionKeyKey);
+    if (key == null) {
+      key = _generateEncryptionKey();
+      await storage.write(key: dbEncryptionKeyKey, value: key);
+    }
+    return key;
   }
 }

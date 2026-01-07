@@ -70,20 +70,27 @@ class ButtonWidget implements FlowWidget {
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
     final localization = LocalizationContext.maybeOf(context);
 
-    // Localize first, then resolve template
+    // Resolve template with localization support for mixed content
     final labelText = json['label'] ?? '';
-    final localizedLabel = localization?.translate(labelText) ?? labelText;
-
-    // Use interpolateWithCrudStates for proper contextData resolution
-    String resolvedLabel = localizedLabel;
-    if (crudStateData != null && localizedLabel.contains('{{')) {
+    String resolvedLabel = labelText;
+    if (crudStateData != null && labelText.contains('{{')) {
+      // For complex templates, use interpolateWithCrudStates then localize non-placeholder parts
       resolvedLabel = interpolateWithCrudStates(
-        template: localizedLabel,
+        template: labelText,
         stateData: crudStateData,
         item: crudCtx?.item,
       );
-    } else if (stateData != null) {
-      resolvedLabel = resolveTemplate(localizedLabel, stateData) ?? localizedLabel;
+      // Translate if it's a pure localization key (no templates remaining)
+      if (!resolvedLabel.contains('{{')) {
+        resolvedLabel = localization?.translate(resolvedLabel) ?? resolvedLabel;
+      }
+    } else {
+      resolvedLabel = resolveTemplate(
+            labelText,
+            stateData,
+            localization: localization,
+          ) ??
+          labelText;
     }
 
     return DigitButton(

@@ -43,11 +43,80 @@ import '../widgets/error_screen.dart';
 import 'error_boundary.dart';
 
 @RoutePage()
-class AuthenticatedPageWrapper extends StatelessWidget {
-  AuthenticatedPageWrapper({super.key});
+class AuthenticatedPageWrapper extends StatefulWidget {
+  const AuthenticatedPageWrapper({super.key});
 
+  @override
+  State<AuthenticatedPageWrapper> createState() =>
+      _AuthenticatedPageWrapperState();
+}
+
+class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
   final StreamController<bool> _drawerVisibilityController =
       StreamController.broadcast();
+
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
+  bool _isOfflineDialogShowing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _connectivitySubscription =
+        Connectivity().onConnectivityChanged.listen(_handleConnectivityChange);
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    _drawerVisibilityController.close();
+    super.dispose();
+  }
+
+  void _handleConnectivityChange(List<ConnectivityResult> result) {
+    final isOffline = result.isEmpty || result.first == ConnectivityResult.none;
+
+    if (isOffline && !_isOfflineDialogShowing && mounted) {
+      _showNoInternetDialog();
+    } else if (!isOffline && _isOfflineDialogShowing && mounted) {
+      _dismissNoInternetDialog();
+    }
+  }
+
+  void _showNoInternetDialog() {
+    _isOfflineDialogShowing = true;
+    showCustomPopup(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => Popup(
+        title: AppLocalizations.of(context).translate(
+          i18.common.connectionLabel,
+        ),
+        description: AppLocalizations.of(context).translate(
+          i18.common.connectionContent,
+        ),
+        actions: [
+          DigitButton(
+            label: AppLocalizations.of(context).translate(
+              i18.common.coreCommonOk,
+            ),
+            onPressed: () {
+              Navigator.of(context, rootNavigator: true).pop();
+              _isOfflineDialogShowing = false;
+            },
+            type: DigitButtonType.primary,
+            size: DigitButtonSize.large,
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _dismissNoInternetDialog() {
+    if (_isOfflineDialogShowing) {
+      Navigator.of(context, rootNavigator: true).pop();
+      _isOfflineDialogShowing = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

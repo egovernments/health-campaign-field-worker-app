@@ -615,11 +615,12 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                       Navigator.of(
                         context,
                       ).pop();
-                      if (widget.isGS1code && result.length < widget.quantity) {
+                      if (widget.isGS1code! &&
+                          result.length < widget.quantity!) {
                         DigitScannerUtils().buildDialog(
                           context,
                           localizations,
-                          widget.quantity,
+                          widget.quantity!,
                         );
                       }
                       setState(() {
