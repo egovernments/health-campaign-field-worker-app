@@ -2676,14 +2676,14 @@ final dynamic sampleFlows = {
         "computed": {
           "nextDoseId": {
             "order": 4,
-            "fallback": 0,
+            "fallback": 1,
             "condition": {
               "if": {
                 "left": {"value": "{{dose}}", "operation": "increment"},
                 "right": "{{deliveryLength}}",
                 "operator": "lte"
               },
-              "else": 0,
+              "else": 1,
               "then": {"value": "{{dose}}", "operation": "increment"}
             }
           },
@@ -2936,30 +2936,24 @@ final dynamic sampleFlows = {
             {
               "format": "table",
               "data": {
-                "source": "contextData.targetCycle.deliveries",
+                "source": "{{contextData.0.targetCycle.0.deliveries}}",
                 "columns": [
                   {"header": "Dose", "cellValue": "Dose {{item.id}}"},
                   {
-                    "header": "Status",
+                    "header": "DELIVERY_STATUS",
+                    "hidden": false,
                     "cellValue": {
+                      "@default": "Pending",
                       "@condition": [
                         {
-                          "when":
-                              "{{currentItem.id}} <= {{contextData.0.dose}}",
+                          "when": "{{fn:isDoseCompleted(currentItem.id, contextData.0.currentRunningCycle)}} == true",
                           "value": "Administered"
                         },
                         {
-                          "when":
-                              "{{currentItem.id}} == {{contextData.0.nextDoseId}}",
+                          "when": "{{currentItem.id}} == {{contextData.0.nextDoseId}}",
                           "value": "To be administered"
-                        },
-                        {
-                          "when":
-                              "{{currentItem.id}} > {{contextData.0.nextDoseId}}",
-                          "value": "Pending"
                         }
-                      ],
-                      "@default": "Unknown"
+                      ]
                     }
                   },
                   {
