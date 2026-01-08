@@ -120,7 +120,13 @@ class WrapperBuilder {
       for (final root in roots) {
         if (!_passesFilters(root, entityMap)) continue;
 
-        final wrapperData = <String, dynamic>{rootEntityType: root};
+        // Add 'type' field with wrapperName for proper modelMap indexing
+        // This enables {{ context.<wrapperName>.notEmpty }} expressions to work
+        final wrapperName = config['wrapperName'];
+        final wrapperData = <String, dynamic>{
+          if (wrapperName != null) 'type': wrapperName,
+          rootEntityType: root,
+        };
 
         // 1. Build relations
         for (final relation in config['relations'] ?? []) {

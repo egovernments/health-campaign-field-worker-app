@@ -336,22 +336,16 @@ Map<String, dynamic> preprocessConfigWithState(
         }
 
         result[key] = value; // keep actionType as is
-      } else if ((key == "visible" || key == "disabled") && value is String && value.contains('{{')) {
-        // Preprocess visible/disabled property with listIndex for correct resolution
-        // Only preprocess if listIndex is provided, otherwise keep original
-        // to be processed later when listIndex is available
-        if (listIndex != null) {
-          final resolved = interpolateWithCrudStates(
-            template: value,
-            stateData: stateData,
-            listIndex: listIndex,
-            item: item,
-          );
-          result[key] = resolved;
-        } else {
-          // Keep original - will be processed later with correct listIndex
-          result[key] = value;
-        }
+      } else if ((key == "visible" || key == "disabled" || key == "hidden") && value is String && value.contains('{{')) {
+        // Preprocess visible/disabled/hidden property with stateData for correct resolution
+        // This handles {{ context.<key>.empty }} and {{ context.<key>.notEmpty }} patterns
+        final resolved = interpolateWithCrudStates(
+          template: value,
+          stateData: stateData,
+          listIndex: listIndex,
+          item: item,
+        );
+        result[key] = resolved;
       } else if (value is Map<String, dynamic>) {
         result[key] = walk(value, skipActions: skipActions);
       } else if (value is List) {

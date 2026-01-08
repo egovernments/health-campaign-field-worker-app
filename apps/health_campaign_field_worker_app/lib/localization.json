@@ -96,13 +96,65 @@
     "locale": "",
     "message": "Assign As CLF Head",
     "module": "hcm-beneficiary"
-  }
-
-
+  },
   {
     "code": "FETCH_BOUNDARY_FAILED",
     "locale": "",
     "message": "No boundary data associated with this project.",
     "module": "hcm-home"
+  },
+  {
+    "code": "REFERRAL_INBOX_HEADING",
+    "locale": "",
+    "message": "Referral Inbox",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "REFERRAL_INBOX_DESCRIPTION",
+    "locale": "",
+    "message": "Search for referrals by name or beneficiary ID",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "REFERRAL_INBOX_SEARCHBAR_LABEL",
+    "locale": "",
+    "message": "Search by name...",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "SEARCH_BY_BENEFICIARY_ID",
+    "locale": "",
+    "message": "Search by Beneficiary ID",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "REFERRAL_INBOX_INFO_CARD_HEADING",
+    "locale": "",
+    "message": "No Results Found",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "REFERRAL_INBOX_INFO_CARD_DESCRIPTION",
+    "locale": "",
+    "message": "No referrals match your search criteria. Try a different search term.",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "REFERRAL_INBOX_BACK_BUTTON_LABEL",
+    "locale": "",
+    "message": "Back",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "REFERRAL_INBOX_PRIMARY_ACTION_LABEL",
+    "locale": "",
+    "message": "Create Referral",
+    "module": "hcm-referral"
+  },
+  {
+    "code": "REFERRAL_INBOX_SECONDARY_ACTION_LABEL",
+    "locale": "",
+    "message": "View All",
+    "module": "hcm-referral"
   }
 ]

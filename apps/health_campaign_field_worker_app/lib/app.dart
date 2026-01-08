@@ -3,6 +3,7 @@ import 'package:closed_household/blocs/closed_household.dart';
 import 'package:closed_household/closed_household.dart';
 import 'package:digit_crud_bloc/repositories/local/search_entity_repository.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
@@ -205,89 +206,56 @@ class MainApplicationState extends State<MainApplication>
                         ),
                         BlocProvider(
                           create: (ctx) => ProjectBloc(
-                            bandwidthCheckRepository: BandwidthCheckRepository(
-                              DioClient().dio,
-                              bandwidthPath:
-                                  envConfig.variables.checkBandwidthApiPath,
-                            ),
-                            mdmsRepository: MdmsRepository(widget.client),
-                            dashboardRemoteRepository:
-                                DashboardRemoteRepository(widget.client),
-                            facilityLocalRepository: ctx.read<
-                                LocalRepository<FacilityModel,
-                                    FacilitySearchModel>>(),
-                            facilityRemoteRepository: ctx.read<
-                                RemoteRepository<FacilityModel,
-                                    FacilitySearchModel>>(),
-                            projectFacilityLocalRepository: ctx.read<
-                                LocalRepository<ProjectFacilityModel,
-                                    ProjectFacilitySearchModel>>(),
-                            projectFacilityRemoteRepository: ctx.read<
-                                RemoteRepository<ProjectFacilityModel,
-                                    ProjectFacilitySearchModel>>(),
-                            projectLocalRepository: ctx.read<
-                                LocalRepository<ProjectModel,
-                                    ProjectSearchModel>>(),
-                            projectStaffLocalRepository: ctx.read<
-                                LocalRepository<ProjectStaffModel,
-                                    ProjectStaffSearchModel>>(),
-                            projectStaffRemoteRepository: ctx.read<
-                                RemoteRepository<ProjectStaffModel,
-                                    ProjectStaffSearchModel>>(),
-                            projectRemoteRepository: ctx.read<
-                                RemoteRepository<ProjectModel,
-                                    ProjectSearchModel>>(),
-                            serviceDefinitionRemoteRepository: ctx.read<
-                                RemoteRepository<ServiceDefinitionModel,
-                                    ServiceDefinitionSearchModel>>(),
-                            isar: widget.isar,
-                            serviceDefinitionLocalRepository: ctx.read<
-                                LocalRepository<ServiceDefinitionModel,
-                                    ServiceDefinitionSearchModel>>(),
-                            boundaryRemoteRepository: ctx.read<
-                                RemoteRepository<BoundaryModel,
-                                    BoundarySearchModel>>(),
-                            boundaryLocalRepository: ctx.read<
-                                LocalRepository<BoundaryModel,
-                                    BoundarySearchModel>>(),
-                            productVariantLocalRepository: ctx.read<
-                                LocalRepository<ProductVariantModel,
-                                    ProductVariantSearchModel>>(),
-                            productVariantRemoteRepository: ctx.read<
-                                RemoteRepository<ProductVariantModel,
-                                    ProductVariantSearchModel>>(),
-                            projectResourceLocalRepository: ctx.read<
-                                LocalRepository<ProjectResourceModel,
-                                    ProjectResourceSearchModel>>(),
-                            projectResourceRemoteRepository: ctx.read<
-                                RemoteRepository<ProjectResourceModel,
-                                    ProjectResourceSearchModel>>(),
-                            attendanceLocalRepository: ctx.read<
-                                LocalRepository<AttendanceRegisterModel,
-                                    AttendanceRegisterSearchModel>>(),
-                            attendanceRemoteRepository: ctx.read<
-                                RemoteRepository<AttendanceRegisterModel,
-                                    AttendanceRegisterSearchModel>>(),
-                            individualLocalRepository: ctx.read<
-                                LocalRepository<IndividualModel,
-                                    IndividualSearchModel>>(),
-                            individualRemoteRepository: ctx.read<
-                                RemoteRepository<IndividualModel,
-                                    IndividualSearchModel>>(),
-                            attendanceLogLocalRepository: ctx.read<
-                                LocalRepository<AttendanceLogModel,
-                                    AttendanceLogSearchModel>>(),
-                            attendanceLogRemoteRepository: ctx.read<
-                                RemoteRepository<AttendanceLogModel,
-                                    AttendanceLogSearchModel>>(),
-                            stockLocalRepository: ctx.read<
-                                LocalRepository<StockModel,
-                                    StockSearchModel>>(),
-                            stockRemoteRepository: ctx.read<
-                                RemoteRepository<StockModel,
-                                    StockSearchModel>>(),
-                            context: context,
-                          ),
+                              bandwidthCheckRepository:
+                                  BandwidthCheckRepository(
+                                DioClient().dio,
+                                bandwidthPath:
+                                    envConfig.variables.checkBandwidthApiPath,
+                              ),
+                              mdmsRepository: MdmsRepository(widget.client),
+                              dashboardRemoteRepository:
+                                  DashboardRemoteRepository(widget.client),
+                              facilityLocalRepository: ctx.read<
+                                  LocalRepository<FacilityModel,
+                                      FacilitySearchModel>>(),
+                              facilityRemoteRepository: ctx.read<
+                                  RemoteRepository<FacilityModel,
+                                      FacilitySearchModel>>(),
+                              projectFacilityLocalRepository: ctx.read<
+                                  LocalRepository<ProjectFacilityModel,
+                                      ProjectFacilitySearchModel>>(),
+                              projectFacilityRemoteRepository: ctx.read<
+                                  RemoteRepository<ProjectFacilityModel,
+                                      ProjectFacilitySearchModel>>(),
+                              projectLocalRepository: ctx.read<
+                                  LocalRepository<ProjectModel,
+                                      ProjectSearchModel>>(),
+                              projectStaffLocalRepository: ctx.read<
+                                  LocalRepository<ProjectStaffModel,
+                                      ProjectStaffSearchModel>>(),
+                              projectStaffRemoteRepository: ctx
+                                  .read<RemoteRepository<ProjectStaffModel, ProjectStaffSearchModel>>(),
+                              projectRemoteRepository: ctx.read<RemoteRepository<ProjectModel, ProjectSearchModel>>(),
+                              serviceDefinitionRemoteRepository: ctx.read<RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>>(),
+                              isar: widget.isar,
+                              serviceDefinitionLocalRepository: ctx.read<LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>>(),
+                              boundaryRemoteRepository: ctx.read<RemoteRepository<BoundaryModel, BoundarySearchModel>>(),
+                              boundaryLocalRepository: ctx.read<LocalRepository<BoundaryModel, BoundarySearchModel>>(),
+                              productVariantLocalRepository: ctx.read<LocalRepository<ProductVariantModel, ProductVariantSearchModel>>(),
+                              productVariantRemoteRepository: ctx.read<RemoteRepository<ProductVariantModel, ProductVariantSearchModel>>(),
+                              projectResourceLocalRepository: ctx.read<LocalRepository<ProjectResourceModel, ProjectResourceSearchModel>>(),
+                              projectResourceRemoteRepository: ctx.read<RemoteRepository<ProjectResourceModel, ProjectResourceSearchModel>>(),
+                              attendanceLocalRepository: ctx.read<LocalRepository<AttendanceRegisterModel, AttendanceRegisterSearchModel>>(),
+                              attendanceRemoteRepository: ctx.read<RemoteRepository<AttendanceRegisterModel, AttendanceRegisterSearchModel>>(),
+                              individualLocalRepository: ctx.read<LocalRepository<IndividualModel, IndividualSearchModel>>(),
+                              individualRemoteRepository: ctx.read<RemoteRepository<IndividualModel, IndividualSearchModel>>(),
+                              attendanceLogLocalRepository: ctx.read<LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>>(),
+                              attendanceLogRemoteRepository: ctx.read<RemoteRepository<AttendanceLogModel, AttendanceLogSearchModel>>(),
+                              stockLocalRepository: ctx.read<LocalRepository<StockModel, StockSearchModel>>(),
+                              stockRemoteRepository: ctx.read<RemoteRepository<StockModel, StockSearchModel>>(),
+                              context: context,
+                              hfReferralRemoteRepository: ctx.read<RemoteRepository<HFReferralModel, HFReferralSearchModel>>(),
+                              hfReferralLocalRepository: ctx.read<LocalRepository<HFReferralModel, HFReferralSearchModel>>()),
                         ),
                         BlocProvider(
                             create: (ctx) => DashboardBloc(

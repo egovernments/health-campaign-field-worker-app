@@ -21,7 +21,6 @@ class InfoCardWidget implements FlowWidget {
     void Function(ActionConfig) onAction,
   ) {
     final crudCtx = CrudItemContext.of(context);
-    final items = crudCtx?.stateData?.rawState ?? [];
     final modelMap = crudCtx?.stateData?.modelMap ?? {};
 
     // Get screenKey and navigation params for visibility evaluation
@@ -44,51 +43,35 @@ class InfoCardWidget implements FlowWidget {
       // Include formData for {{selectedProduct}}, {{selectedFacility}} etc.
     };
 
-    // Check visibility condition - support both 'visible' and 'hidden' properties
-    final visibleProp = json['visible'];
-    final hiddenProp = json['hidden'];
+    // Check visibility condition
+    final visible = ConditionalEvaluator.evaluate(
+      json['visible'] ?? true,
+      evalContext,
+      screenKey: screenKey,
+      stateData: crudCtx?.stateData,
+    );
 
-    bool shouldShow = true;
-
-    if (hiddenProp != null) {
-      // If hidden property exists, evaluate it
-      final isHidden = ConditionalEvaluator.evaluate(
-        hiddenProp,
-        evalContext,
-        screenKey: screenKey,
-        stateData: crudCtx?.stateData,
-      );
-      shouldShow = isHidden != true;
-    } else if (visibleProp != null) {
-      // Fall back to visible property
-      final isVisible = ConditionalEvaluator.evaluate(
-        visibleProp,
-        evalContext,
-        screenKey: screenKey,
-        stateData: crudCtx?.stateData,
-      );
-      shouldShow = isVisible == true;
-    }
-
-    // Original behavior: hide if visibility check fails OR if items exist
-    if (!shouldShow || items.isNotEmpty) {
+    if (visible == false) {
       return const SizedBox.shrink();
     }
 
-    // Determine info type from config (use 'infoType' property, default to info)
-    final typeString = json['infoType']?.toString().toLowerCase() ?? 'info';
-    final infoType = typeString == 'error'
-        ? InfoType.error
-        : typeString == 'warning'
-            ? InfoType.warning
-            : typeString == 'success'
-                ? InfoType.success
-                : InfoType.info;
+    // Check hidden condition (if specified)
+    if (json['hidden'] != null) {
+      final hidden = ConditionalEvaluator.evaluate(
+        json['hidden'],
+        evalContext,
+        screenKey: screenKey,
+        stateData: crudCtx?.stateData,
+      );
+      if (hidden == true) {
+        return const SizedBox.shrink();
+      }
+    }
 
     final localization = LocalizationContext.maybeOf(context);
 
     return InfoCard(
-      type: infoType,
+      type: InfoType.info,
       title:
           localization?.translate(json['label'] ?? '') ?? (json['label'] ?? ''),
       description: localization?.translate(json['description'] ?? '') ??

@@ -5,7 +5,9 @@ import 'dart:core';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:digit_data_model/data/local_store/sql_store/tables/package_tables/hf_referral.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:flutter/cupertino.dart';
@@ -111,7 +113,15 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final DashboardRemoteRepository dashboardRemoteRepository;
   BuildContext context;
 
+  /// Stock Repositories
+  final RemoteRepository<HFReferralModel, HFReferralSearchModel>
+      hfReferralRemoteRepository;
+  final LocalRepository<HFReferralModel, HFReferralSearchModel>
+      hfReferralLocalRepository;
+
   ProjectBloc({
+    required this.hfReferralRemoteRepository,
+    required this.hfReferralLocalRepository,
     LocalSecureStore? localSecureStore,
     required this.bandwidthCheckRepository,
     required this.projectStaffRemoteRepository,
@@ -477,10 +487,48 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
   }
 
+  // info: downloads hfreferral data from remote
+  FutureOr<void> downloadHFreferralData(
+      List<ProjectFacilityModel> projectFacilities,
+      List<FacilityModel> allFacilities,
+      String? boundaryType,
+      Cycle? currentRunningCycle) async {
+    try {
+      final userObject = await localSecureStore.userRequestModel;
+      final userRoles = userObject!.roles.map((e) => e.code);
+      final lastChangedSince = currentRunningCycle?.startDate;
+
+      Map<String, String> facilityIdUsageMap = {};
+
+      for (var element in allFacilities) {
+        facilityIdUsageMap[element.id] = element.usage ?? "";
+      }
+
+      // info : assumption both roles will not be assigned to user
+
+      List<String> receiverIds =
+          projectFacilities.map((e) => e.facilityId).toList();
+      final hfReferralSearchModel = HFReferralSearchModel(
+        projectFacilityId: receiverIds,
+      );
+      final hfReferralEntriesDownloaded = await downloadHFReferralEntries(
+          hfReferralSearchModel, lastChangedSince);
+      //  await createHFreferralDownloadedEntries(hfReferralEntriesDownloaded);
+    } catch (e) {
+      debugPrint('error');
+    }
+  }
+
   // info : insert data in db
   FutureOr<void> createStockDownloadedEntries(
       List<StockModel> stockEntries) async {
     await stockLocalRepository.bulkCreate(stockEntries);
+  }
+
+  // info : insert data in db
+  FutureOr<void> createHFreferralDownloadedEntries(
+      List<HFReferralModel> hfReferralEntries) async {
+    await hfReferralLocalRepository.bulkCreate(hfReferralEntries);
   }
 
   // info:  downloads the stock data from remote repository
@@ -501,6 +549,70 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     return stockEntries!;
+  }
+
+// info:  downloads the hfreferral data from remote repository
+
+  // FutureOr<List<HFReferralModel>> downloadHFReferralEntries(
+  //     HFReferralSearchModel hfreferralSearchModel,
+  //     int? lastChangedSince) async {
+  //   var offset = 0;
+  //   var initialLimit = 10;
+  //   List<HFReferralModel>? hfreferralEntries;
+
+  //   try {
+  //     hfreferralEntries = await hfReferralRemoteRepository.search(
+  //         hfreferralSearchModel,
+  //         limit: initialLimit,
+  //         offSet: offset,
+  //         lastChangedSince: lastChangedSince);
+  //   } catch (e) {
+  //     debugPrint('error');
+  //   }
+
+  //   return hfreferralEntries!;
+  // }
+
+  Future<List<HFReferralModel>> downloadHFReferralEntries(
+    HFReferralSearchModel hfreferralSearchModel,
+    int? lastChangedSince,
+  ) async {
+    const int limit = 10;
+    int offset = 0;
+
+    final List<HFReferralModel> allEntries = [];
+
+    while (true) {
+      try {
+        final List<HFReferralModel> response =
+            await hfReferralRemoteRepository.search(
+          hfreferralSearchModel,
+          limit: limit,
+          offSet: offset,
+          lastChangedSince: lastChangedSince,
+        );
+
+        // Add current batch to final list
+        allEntries.addAll(response);
+        // temp added
+        await createHFreferralDownloadedEntries(response);
+
+        // end of it
+        //  Stop if response size < limit (no more data)
+        if (response.length < limit) {
+          break;
+        }
+
+        //  Move offset for next API call
+        offset += limit;
+      } catch (e, stackTrace) {
+        debugPrint('HFReferral API error: $e');
+        debugPrintStack(stackTrace: stackTrace);
+        break; //  Stop further API calls on error
+      }
+    }
+
+    return allEntries;
   }
 
   FutureOr<void> _loadProductVariants(List<ProjectModel> projects) async {
@@ -912,6 +1024,24 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         syncError: ProjectSyncErrorType.projectFacilities,
       ));
     }
+
+    // downsync for hfreferral
+
+    try {
+      final projectFacilities = await projectFacilityLocalRepository
+          .search(ProjectFacilitySearchModel());
+      final facilities =
+          await facilityLocalRepository.search(FacilitySearchModel());
+      await downloadHFreferralData(projectFacilities, facilities,
+          event.model.address?.boundaryType, currentRunningCycle);
+    } catch (_) {
+      emit(state.copyWith(
+        loading: false,
+        syncError: ProjectSyncErrorType.projectFacilities,
+      ));
+    }
+
+    // end of it
 
     emit(state.copyWith(
       selectedProject: event.model,

@@ -245,10 +245,39 @@ String resolveTemplate(
     result = buffer.toString();
   }
 
+  // Handle .empty and .notEmpty pseudo-properties for context.<key> patterns
+  // This enables expressions like {{ context.hFReferral.notEmpty }}
+  if (stateData != null) {
+    final emptyRegex = RegExp(
+      r'\{\{\s*(context)\.([A-Za-z_][\w]*)\.(?:empty|notEmpty)\s*\}\}',
+    );
+    result = result.replaceAllMapped(emptyRegex, (match) {
+      final modelNameOrKey = match.group(2);
+      final fullMatch = match.group(0)!;
+      final isNotEmpty = fullMatch.contains('.notEmpty');
+
+      final models = stateData.modelMap[modelNameOrKey];
+      bool isEmpty;
+      if (models == null) {
+        isEmpty = true;
+      } else if (models is List) {
+        isEmpty = models.isEmpty;
+      } else {
+        isEmpty = false;
+      }
+
+      // Return 'true' or 'false' as string for boolean evaluation
+      return isNotEmpty ? (!isEmpty).toString() : isEmpty.toString();
+    });
+  }
+
   // Now resolve all placeholders
   for (final match in matches) {
     final fullPlaceholder = match.group(0)!;
     final placeholder = match.group(1)!.trim();
+
+    // Skip if already resolved (e.g., .empty/.notEmpty patterns)
+    if (!result.contains(fullPlaceholder)) continue;
 
     // Use existing resolveValueRaw to resolve the individual placeholder
     final resolvedValue = resolveValueRaw('{{$placeholder}}', contextData,

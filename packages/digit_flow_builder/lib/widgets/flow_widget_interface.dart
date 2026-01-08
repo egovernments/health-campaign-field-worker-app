@@ -56,7 +56,19 @@ class FlowWidgetFactory {
       return const SizedBox.shrink();
     }
 
-    // Build the widget if visible
+    // Check hidden condition (inverse of visible)
+    if (json['hidden'] != null) {
+      final hidden = ConditionalEvaluator.evaluate(
+        json['hidden'],
+        evalContext,
+        stateData: stateData,
+      );
+      if (hidden == true) {
+        return const SizedBox.shrink();
+      }
+    }
+
+    // Build the widget if visible and not hidden
     final format = json['format'] as String? ?? '';
     final widget = _widgets[format];
 
