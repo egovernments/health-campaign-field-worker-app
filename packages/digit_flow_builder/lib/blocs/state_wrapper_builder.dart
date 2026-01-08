@@ -7,6 +7,7 @@ import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../utils/utils.dart';
+import 'flow_crud_bloc.dart';
 
 /// Utility for reading field values from any EntityModel using generated toMap()
 class EntityFieldAccessor {
@@ -83,8 +84,9 @@ class EnhancedEntityFieldAccessor {
 class WrapperBuilder {
   final List<EntityModel> entities;
   final Map<String, dynamic> config;
+  final String? screenKey;
 
-  WrapperBuilder(this.entities, this.config);
+  WrapperBuilder(this.entities, this.config, {this.screenKey});
 
   List<dynamic> build() {
     final List<dynamic> wrappers = [];
@@ -313,12 +315,61 @@ class WrapperBuilder {
     }).toList();
 
     final filters = relation['filters'] as List<dynamic>? ?? [];
+
+    // Get widgetData from registry using screenKey
+    final widgetData = screenKey != null
+        ? FlowCrudStateRegistry().get(screenKey!)?.widgetData
+        : null;
+
     related = related.where((entity) {
       return filters.every((filter) {
         final field = filter['field'];
-        final expected = filter['equals'];
         final actual = _resolveValue(field, entity, localContext);
-        return actual == expected;
+
+        // Handle 'equals' filter
+        if (filter.containsKey('equals')) {
+          final expectedRaw = filter['equals'];
+          // Resolve template variables like {{searchBar}} from widgetData
+          dynamic expected;
+          if (expectedRaw is String && expectedRaw.contains('{{')) {
+            // For template variables, look in widgetData
+            final key =
+                expectedRaw.replaceAll('{{', '').replaceAll('}}', '').trim();
+            expected = widgetData?[key];
+          } else {
+            expected = expectedRaw;
+          }
+          // Skip filter if expected value is null or empty (no search term entered)
+          if (expected == null || (expected is String && expected.isEmpty)) {
+            return true;
+          }
+          return actual == expected;
+        }
+
+        // Handle 'contains' filter (useful for search functionality)
+        if (filter.containsKey('contains')) {
+          final containsRaw = filter['contains'];
+          // Resolve template variables like {{searchBar}} from widgetData
+          dynamic containsValue;
+          if (containsRaw is String && containsRaw.contains('{{')) {
+            // For template variables, look in widgetData
+            final key =
+                containsRaw.replaceAll('{{', '').replaceAll('}}', '').trim();
+            containsValue = widgetData?[key];
+          } else {
+            containsValue = containsRaw;
+          }
+          // Skip filter if contains value is null or empty (no search term entered)
+          if (containsValue == null ||
+              (containsValue is String && containsValue.isEmpty)) {
+            return true;
+          }
+          final actualStr = actual?.toString().toLowerCase() ?? '';
+          final containsStr = containsValue.toString().toLowerCase();
+          return actualStr.contains(containsStr);
+        }
+
+        return true;
       });
     }).toList();
 
@@ -1092,7 +1143,7 @@ class ConditionEvaluator {
       case 'gte':
         final leftInt = int.tryParse(left.toString()) ?? 0;
         final rightInt = int.tryParse(right.toString()) ?? 0;
-        return  leftInt >= rightInt;
+        return leftInt >= rightInt;
       default:
         return null;
     }
