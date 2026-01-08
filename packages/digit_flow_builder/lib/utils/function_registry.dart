@@ -808,6 +808,159 @@ void initializeFunctionRegistry() {
         .toList();
   });
 
+  /// Registers a function to check if a specific dose in a specific cycle has been completed.
+  ///
+  /// - **Function Name**: `'isDoseCompleted'`
+  /// - **Arguments**:
+  ///   - First argument: doseIndex (1-based dose ID)
+  ///   - Second argument: cycleIndex (1-based cycle ID)
+  /// - **Returns**: `true` if a task exists with matching doseIndex AND cycleIndex, `false` otherwise.
+  ///
+  /// This function checks the tasks in stateData.modelMap['tasks'] and looks for a task
+  /// where additionalFields.fields contains both the matching doseIndex and cycleIndex.
+  FunctionRegistry.register("isDoseCompleted", (args, stateData) {
+    if (args.isEmpty) return false;
+
+    final doseIndex = int.tryParse(args[0]?.toString() ?? '') ?? -1;
+    if (doseIndex < 0) return false;
+
+    // Get cycleIndex from second argument (required for accurate check)
+    final cycleIndex =
+        args.length > 1 ? int.tryParse(args[1]?.toString() ?? '') ?? -1 : -1;
+    if (cycleIndex < 0) return false;
+
+    // Get tasks from modelMap
+    final tasks = stateData.modelMap['tasks'] as List? ?? [];
+
+    // Find task with matching doseIndex AND cycleIndex in additionalFields
+    for (final task in tasks) {
+      if (task is! Map) continue;
+
+      // Get additionalFields.fields
+      final additionalFields = task['additionalFields'];
+      if (additionalFields == null) continue;
+
+      List? fields;
+      if (additionalFields is Map) {
+        fields = additionalFields['fields'] as List?;
+      } else if (additionalFields is List) {
+        fields = additionalFields;
+      }
+
+      if (fields == null) continue;
+
+      // Find doseIndex and cycleIndex in fields
+      int? taskDoseIndex;
+      int? taskCycleIndex;
+
+      for (final field in fields) {
+        if (field is Map) {
+          if (field['key'] == 'doseIndex') {
+            taskDoseIndex = int.tryParse(field['value']?.toString() ?? '');
+          }
+          if (field['key'] == 'cycleIndex') {
+            taskCycleIndex = int.tryParse(field['value']?.toString() ?? '');
+          }
+        }
+      }
+
+      // Check if BOTH dose AND cycle match
+      if (taskDoseIndex == doseIndex && taskCycleIndex == cycleIndex) {
+        return true;
+      }
+    }
+
+    return false;
+  });
+
+  /// Registers a function to get the completion date for a specific dose in a specific cycle.
+  ///
+  /// - **Function Name**: `'getTaskCompletionDate'`
+  /// - **Arguments**:
+  ///   - First argument: doseIndex (1-based dose ID)
+  ///   - Second argument: cycleIndex (1-based cycle ID)
+  ///   - Third argument (optional): date format (default: 'dd MMM yyyy')
+  /// - **Returns**: Formatted date string if task exists, empty string otherwise.
+  ///
+  /// This function checks the tasks in stateData.modelMap['tasks'] and looks for a task
+  /// where additionalFields.fields contains both the matching doseIndex and cycleIndex,
+  /// then returns the createdTime from clientAuditDetails formatted as a date.
+  FunctionRegistry.register('getTaskCompletionDate', (args, stateData) {
+    if (args.isEmpty) return '';
+
+    final doseIndex = int.tryParse(args[0]?.toString() ?? '') ?? -1;
+    if (doseIndex < 0) return '';
+
+    // Get cycleIndex from second argument (required for accurate check)
+    final cycleIndex =
+        args.length > 1 ? int.tryParse(args[1]?.toString() ?? '') ?? -1 : -1;
+    if (cycleIndex < 0) return '';
+
+    // Get date format from third argument (optional)
+    final dateFormat =
+        args.length > 2 ? args[2]?.toString() ?? 'dd MMM yyyy' : 'dd MMM yyyy';
+
+    // Get tasks from modelMap
+    final tasks = stateData.modelMap['tasks'] as List? ?? [];
+
+    // Find task with matching doseIndex AND cycleIndex in additionalFields
+    for (final task in tasks) {
+      if (task is! Map) continue;
+
+      // Get additionalFields.fields
+      final additionalFields = task['additionalFields'];
+      if (additionalFields == null) continue;
+
+      List? fields;
+      if (additionalFields is Map) {
+        fields = additionalFields['fields'] as List?;
+      } else if (additionalFields is List) {
+        fields = additionalFields;
+      }
+
+      if (fields == null) continue;
+
+      // Find doseIndex and cycleIndex in fields
+      int? taskDoseIndex;
+      int? taskCycleIndex;
+
+      for (final field in fields) {
+        if (field is Map) {
+          if (field['key'] == 'doseIndex') {
+            taskDoseIndex = int.tryParse(field['value']?.toString() ?? '');
+          }
+          if (field['key'] == 'cycleIndex') {
+            taskCycleIndex = int.tryParse(field['value']?.toString() ?? '');
+          }
+        }
+      }
+
+      // Check if BOTH dose AND cycle match
+      if (taskDoseIndex == doseIndex && taskCycleIndex == cycleIndex) {
+        // Found matching task, get createdTime from clientAuditDetails
+        final clientAuditDetails = task['clientAuditDetails'];
+        if (clientAuditDetails is Map) {
+          final createdTime = clientAuditDetails['createdTime'];
+          if (createdTime != null) {
+            try {
+              final timestamp = createdTime is int
+                  ? createdTime
+                  : int.tryParse(createdTime.toString()) ?? 0;
+              if (timestamp > 0) {
+                final date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+                return DateFormat(dateFormat).format(date);
+              }
+            } catch (_) {
+              return '';
+            }
+          }
+        }
+      }
+    }
+
+    return '';
+  });
+
   FunctionRegistry.register("canRecordDelivery", (args, stateData) {
     final projectType = FlowBuilderSingleton().projectType;
     if (projectType == null || projectType.cycles == null) {
