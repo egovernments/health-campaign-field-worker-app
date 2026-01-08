@@ -25,10 +25,18 @@ class FlowCrudBloc extends CrudBloc {
 
     if (crudState is CrudStateLoaded) {
       final entities = crudState.results.values.expand((list) => list).toList();
-      wrapper = WrapperBuilder(entities, flowConfig['wrapperConfig']).build();
+      wrapper = WrapperBuilder(
+        entities,
+        flowConfig['wrapperConfig'],
+        screenKey: screenKey,
+      ).build();
     } else if (crudState is CrudStatePersisted) {
       final entities = crudState.entities;
-      wrapper = WrapperBuilder(entities, flowConfig['wrapperConfig']).build();
+      wrapper = WrapperBuilder(
+        entities,
+        flowConfig['wrapperConfig'],
+        screenKey: screenKey,
+      ).build();
     }
 
     // Preserve existing formData and widgetData when creating new state
