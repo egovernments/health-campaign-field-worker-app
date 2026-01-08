@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:attendance_management/widgets/localized.dart';
@@ -8,6 +9,7 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
 import '../router/app_router.dart';
@@ -81,11 +83,32 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
   }
 
   /// Initialize the screen config from permission_handler_config
-  void _initializeConfig() {
-    final flows = permission_handler_config['flows'] as List<dynamic>?;
-    if (flows != null && flows.isNotEmpty) {
-      screenConfig = flows[0] as Map<String, dynamic>;
-      bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
+  void _initializeConfig() async {
+    final prefs = await SharedPreferences.getInstance();
+    final schemaJsonRaw = prefs.getString('app_config_schemas');
+    try {
+      if (schemaJsonRaw != null) {
+        final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
+        final data = allSchemas['PERMISSIONHANDLER'];
+
+        final registrationDeliveryData = data?['data'];
+        final flowsData = (registrationDeliveryData['flows'] as List<dynamic>?)
+                ?.map((e) => Map<String, dynamic>.from(e as Map))
+                .toList() ??
+            [];
+        if (flowsData.isNotEmpty) {
+          screenConfig = flowsData[0];
+          bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
+        }
+      } else {
+        final flows = permission_handler_config['flows'] as List<dynamic>?;
+        if (flows != null && flows.isNotEmpty) {
+          screenConfig = flows[0] as Map<String, dynamic>;
+          bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
+        }
+      }
+    } catch (e) {
+      debugPrint('config error $e');
     }
   }
 
@@ -252,16 +275,47 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
   }
 
   Future<void> _requestPermission(Permission permission) async {
-    final status = await permission.request();
+    try {
+      final status = await permission.request();
 
-    if (permission == Permission.ignoreBatteryOptimizations &&
-        !status.isGranted) {
-      await openAppSettings();
+      if (mounted) {
+        setState(() {
+          statuses[permission] = status;
+        });
+      }
+
+      // Handle permanently denied - must open app settings
+      if (status.isPermanentlyDenied && mounted) {
+        await openAppSettings();
+        // After returning from settings, refresh the status
+        if (mounted) {
+          final newStatus = await permission.status;
+          setState(() {
+            statuses[permission] = newStatus;
+          });
+        }
+        return;
+      }
+
+      if (permission == Permission.ignoreBatteryOptimizations &&
+          !status.isGranted) {
+        await openAppSettings();
+      }
+    } catch (e) {
+      // Handle PHASE_CLIENT_ALREADY_HIDDEN or other permission request errors
+      // Directly open app settings
+      debugPrint('Permission request error for $permission: $e');
+      if (mounted) {
+        await openAppSettings();
+        // After returning from settings, refresh the status
+        final newStatus = await permission.status;
+        if (mounted) {
+          setState(() {
+            statuses[permission] = newStatus;
+          });
+        }
+      }
     }
-
-    setState(() {
-      statuses[permission] = status;
-    });
   }
 
   /// Request permission by name (from config)
