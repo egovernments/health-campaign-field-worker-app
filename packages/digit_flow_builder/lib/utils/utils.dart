@@ -199,6 +199,7 @@ String resolveTemplate(
   String? screenKey,
   dynamic localization,
   CrudStateData? stateData,
+  Map<String, dynamic>? widgetData,
 }) {
   if (!template.contains('{{')) {
     // No template placeholders, try to translate as localization key
@@ -253,7 +254,7 @@ String resolveTemplate(
 
     // Use existing resolveValueRaw to resolve the individual placeholder
     final resolvedValue = resolveValueRaw('{{$placeholder}}', contextData,
-        screenKey: screenKey, stateData: stateData);
+        screenKey: screenKey, stateData: stateData, widgetData: widgetData);
 
     // Replace the placeholder in the result string
     // For null values, use the string "null" so expressions like "x != null" work

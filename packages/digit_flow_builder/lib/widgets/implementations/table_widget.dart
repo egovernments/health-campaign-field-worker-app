@@ -39,7 +39,7 @@ class TableWidget implements FlowWidget {
 
     // Create evaluation context that includes modelMap for named entity access
     final evalContext = {
-      'item': crudCtx?.item,
+      'currentItem': crudCtx?.item,
       'contextData': crudCtx?.stateData?.rawState ?? {},
       'navigation': navigationParams,
       ...modelMap,
@@ -154,11 +154,9 @@ class TableWidget implements FlowWidget {
       // - For simple templates like {{item.id}}, rowItem is used directly
       // - For conditions needing global state like {{contextData.0.dose}}, we provide contextDataList
       final cellEvalContext = {
-        'currentItem': rowItem,
         'item': rowItem,
         'contextData': contextDataList,
-        ...modelMap,
-        ...formData,
+        ...evalContext,
         // Also spread contextDataMap for direct access like {{contextData.dose}}
         // when used without index (backward compatibility)
         ...contextDataMap,
@@ -182,7 +180,7 @@ class TableWidget implements FlowWidget {
                       (rawCellValue.contains('{{fn:') ||
                           rawCellValue.contains('{{currentItem') ||
                           rawCellValue.contains('{{contextData')));
-          final evalContext = needsEnhancedContext ? cellEvalContext : rowItem;
+          final evalContext = cellEvalContext;
 
           final cellValue = ConditionalEvaluator.evaluate(
               rawCellValue, evalContext,

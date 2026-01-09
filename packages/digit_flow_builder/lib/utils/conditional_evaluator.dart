@@ -2,6 +2,7 @@ import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:flutter/material.dart';
 
+import '../blocs/flow_crud_bloc.dart';
 import '../widget_registry.dart';
 import 'interpolation.dart';
 
@@ -17,6 +18,13 @@ class ConditionalEvaluator {
   /// IMPORTANT: This method is PURE - it never modifies the input value
   static dynamic evaluate(dynamic value, dynamic context,
       {String? screenKey, CrudStateData? stateData}) {
+    // Get widgetData from registry if screenKey is provided
+    Map<String, dynamic>? widgetData;
+    if (screenKey != null) {
+      final currentState = FlowCrudStateRegistry().get(screenKey);
+      widgetData = currentState?.widgetData;
+    }
+
     // Handle string expressions with templates/functions (e.g., "{{fn:hasRole('ADMIN')}} == true")
     if (value is String) {
       String resolved = value;
@@ -24,7 +32,7 @@ class ConditionalEvaluator {
       // If it contains templates, resolve them first
       if (value.contains('{{')) {
         resolved = resolveTemplate(value, context,
-            screenKey: screenKey, stateData: stateData);
+            screenKey: screenKey, stateData: stateData, widgetData: widgetData);
       }
 
       // If the resolved string looks like a boolean expression, evaluate it
