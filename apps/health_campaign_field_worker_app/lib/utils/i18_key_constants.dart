@@ -157,6 +157,8 @@ class Common {
 
   String get grantPermission => 'GRANT_PERMISSION';
 
+  String get permissionDeniedOpenSettings => 'PERMISSION_DENIED_OPEN_SETTINGS';
+
   String get openSettings => 'OPEN_SETTINGS';
 
   String get permissionNotGranted => 'CORE_COMMON_PERMISSION_NOT_GRANTED';

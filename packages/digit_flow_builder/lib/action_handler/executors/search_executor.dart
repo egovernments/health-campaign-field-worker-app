@@ -7,7 +7,6 @@ import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/search_state_manager.dart';
 import '../../blocs/state_wrapper_builder.dart';
 import '../../flow_builder.dart';
 import '../../utils/interpolation.dart';
@@ -31,8 +30,8 @@ class SearchExecutor extends ActionExecutor {
     // Get screen key - try CrudItemContext first (has correct format),
     // then fall back to route args and parentScreenKey (from popup context)
     final crudCtx = CrudItemContext.of(context);
-    final screenKey = crudCtx?.screenKey ??
-        getEffectiveScreenKey(context, contextData);
+    final screenKey =
+        crudCtx?.screenKey ?? getEffectiveScreenKey(context, contextData);
 
     // Register search callback (SearchStateManager handles deduplication)
     // This allows ClearStateExecutor to trigger search with accumulated filters
@@ -117,16 +116,20 @@ class SearchExecutor extends ActionExecutor {
             parserContext.isEmpty ? {'_dummy': ''} : parserContext,
           );
           final result = parser.parse;
-          final conditionMet = result["isSuccess"] == true && result["value"] == true;
+          final conditionMet =
+              result["isSuccess"] == true && result["value"] == true;
 
-          debugPrint('SEARCH_EVENT: applyIf result=$result, conditionMet=$conditionMet');
+          debugPrint(
+              'SEARCH_EVENT: applyIf result=$result, conditionMet=$conditionMet');
 
           if (!conditionMet) {
-            debugPrint('SEARCH_EVENT: Skipping filter ${filterData['key']} - applyIf condition not met');
+            debugPrint(
+                'SEARCH_EVENT: Skipping filter ${filterData['key']} - applyIf condition not met');
             continue;
           }
         } catch (e) {
-          debugPrint('SEARCH_EVENT: Error evaluating applyIf for ${filterData['key']}: $e');
+          debugPrint(
+              'SEARCH_EVENT: Error evaluating applyIf for ${filterData['key']}: $e');
           continue;
         }
       }
@@ -190,7 +193,8 @@ class SearchExecutor extends ActionExecutor {
       }
 
       // Use per-filter root if specified, fallback to data['name'] for backward compatibility
-      final filterRoot = filterData['root'] as String? ?? data['name'] as String?;
+      final filterRoot =
+          filterData['root'] as String? ?? data['name'] as String?;
 
       // Store resolved filter as map for accumulation
       resolvedFilters.add({
@@ -248,11 +252,13 @@ class SearchExecutor extends ActionExecutor {
 
     // Early return if no filters are applicable
     if (filters.isEmpty) {
-      debugPrint('SEARCH_EVENT: No filters to apply - all filters were skipped or empty. Returning early.');
+      debugPrint(
+          'SEARCH_EVENT: No filters to apply - all filters were skipped or empty. Returning early.');
       return contextData;
     }
 
-    debugPrint('SEARCH_EVENT: Executing with ${filters.length} accumulated filters for $searchName');
+    debugPrint(
+        'SEARCH_EVENT: Executing with ${filters.length} accumulated filters for $searchName');
 
     final config = FlowRegistry.getByName(screenKey ?? '');
 
@@ -285,9 +291,8 @@ class SearchExecutor extends ActionExecutor {
         }
 
         // Now check for ternary expression: condition ? valueIfTrue : valueIfFalse
-        final ternaryMatch = RegExp(
-          r'(.+?)\s*\?\s*(\w+)\s*:\s*(\w+)'
-        ).firstMatch(resolvedValue);
+        final ternaryMatch =
+            RegExp(r'(.+?)\s*\?\s*(\w+)\s*:\s*(\w+)').firstMatch(resolvedValue);
 
         if (ternaryMatch != null) {
           // Evaluate ternary expression
@@ -295,7 +300,8 @@ class SearchExecutor extends ActionExecutor {
           final valueIfTrue = ternaryMatch.group(2)!;
           final valueIfFalse = ternaryMatch.group(3)!;
 
-          debugPrint('SEARCH_EVENT: Ternary condition="$condition", ifTrue=$valueIfTrue, ifFalse=$valueIfFalse');
+          debugPrint(
+              'SEARCH_EVENT: Ternary condition="$condition", ifTrue=$valueIfTrue, ifFalse=$valueIfFalse');
 
           // Evaluate condition with formula parser
           try {
@@ -309,14 +315,18 @@ class SearchExecutor extends ActionExecutor {
               parserContext.isEmpty ? {'_dummy': ''} : parserContext,
             );
             final result = parser.parse;
-            final conditionMet = result["isSuccess"] == true && result["value"] == true;
+            final conditionMet =
+                result["isSuccess"] == true && result["value"] == true;
 
-            resolvedOrderBy[entry.key] = conditionMet ? valueIfTrue : valueIfFalse;
-            debugPrint('SEARCH_EVENT: Ternary result=$result, resolved to: ${resolvedOrderBy[entry.key]}');
+            resolvedOrderBy[entry.key] =
+                conditionMet ? valueIfTrue : valueIfFalse;
+            debugPrint(
+                'SEARCH_EVENT: Ternary result=$result, resolved to: ${resolvedOrderBy[entry.key]}');
           } catch (e) {
             // Fallback to valueIfFalse on error
             resolvedOrderBy[entry.key] = valueIfFalse;
-            debugPrint('SEARCH_EVENT: Ternary evaluation failed: $e, using default: $valueIfFalse');
+            debugPrint(
+                'SEARCH_EVENT: Ternary evaluation failed: $e, using default: $valueIfFalse');
           }
         } else {
           // No ternary, use resolved value directly
@@ -335,13 +345,16 @@ class SearchExecutor extends ActionExecutor {
       }
 
       orderBy = SearchOrderBy.fromJson(resolvedOrderBy);
-      debugPrint('SEARCH_EVENT: OrderBy resolved - field: ${orderBy.field}, order: ${orderBy.order}');
+      debugPrint(
+          'SEARCH_EVENT: OrderBy resolved - field: ${orderBy.field}, order: ${orderBy.order}');
     } else if (screenKey != null) {
       // Check for accumulated orderBy from previous search events
-      final accumulatedOrderBy = SearchStateManager().getOrderBy(screenKey, searchName);
+      final accumulatedOrderBy =
+          SearchStateManager().getOrderBy(screenKey, searchName);
       if (accumulatedOrderBy != null) {
         orderBy = SearchOrderBy.fromJson(accumulatedOrderBy);
-        debugPrint('SEARCH_EVENT: Using accumulated orderBy - field: ${orderBy.field}, order: ${orderBy.order}');
+        debugPrint(
+            'SEARCH_EVENT: Using accumulated orderBy - field: ${orderBy.field}, order: ${orderBy.order}');
       }
     }
 
@@ -353,7 +366,8 @@ class SearchExecutor extends ActionExecutor {
 
     // Get pagination from wrapperConfig.searchConfig.pagination (if configured)
     PaginationParams? pagination;
-    final paginationConfig = config?['wrapperConfig']?['searchConfig']?['pagination'];
+    final paginationConfig =
+        config?['wrapperConfig']?['searchConfig']?['pagination'];
     if (paginationConfig != null) {
       final limit = paginationConfig['limit'] as int?;
       // Support both maxItems (new) and windowSize (legacy, converted to maxItems)
@@ -366,7 +380,8 @@ class SearchExecutor extends ActionExecutor {
 
         // Initialize pagination window for bidirectional support
         if (screenKey != null) {
-          debugPrint('SEARCH_EVENT: Initializing pagination window with screenKey=$screenKey');
+          debugPrint(
+              'SEARCH_EVENT: Initializing pagination window with screenKey=$screenKey');
 
           // Legacy pagination state (for backwards compatibility)
           SearchStateManager().updatePagination(
@@ -386,14 +401,16 @@ class SearchExecutor extends ActionExecutor {
 
           // Set pagination info in registry so FlowCrudBloc can update window after data loads
           final registryKey = screenKey.split('::').last;
-          debugPrint('SEARCH_EVENT: Setting paginationInfo with registryKey=$registryKey');
+          debugPrint(
+              'SEARCH_EVENT: Setting paginationInfo with registryKey=$registryKey');
           FlowCrudStateRegistry().setPaginationInfo(
             registryKey,
             limit: limit,
             maxItems: maxItems,
           );
         }
-        debugPrint('SEARCH_EVENT: Using pagination - offset=0, limit=$limit, maxItems=$maxItems');
+        debugPrint(
+            'SEARCH_EVENT: Using pagination - offset=0, limit=$limit, maxItems=$maxItems');
       }
     }
 

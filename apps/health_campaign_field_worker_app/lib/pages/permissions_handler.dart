@@ -54,36 +54,37 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
   void initState() {
     super.initState();
 
-    _initializeConfig();
-
-    // Initialize permissions and check their current status
-    _initializePermissions().then((_) {
-      // Check permissions to update UI status, but don't auto-navigate
-      // User must explicitly click Continue after granting all permissions
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        bool granted = await _checkPermissions();
-        if (!granted) {
-          if (mounted) {
-            Toast.showToast(
-              context,
-              message: localizations.translate(
-                i18.common.coreCommonPermissionsAlert,
-              ),
-              type: ToastType.error,
-            );
+    // Initialize config first, then permissions
+    _initializeConfig().then((_) {
+      // Initialize permissions and check their current status
+      _initializePermissions().then((_) {
+        // Check permissions to update UI status, but don't auto-navigate
+        // User must explicitly click Continue after granting all permissions
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          bool granted = await _checkPermissions();
+          if (!granted) {
+            if (mounted) {
+              Toast.showToast(
+                context,
+                message: localizations.translate(
+                  i18.common.coreCommonPermissionsAlert,
+                ),
+                type: ToastType.error,
+              );
+            }
+            return;
           }
-          return;
-        }
 
-        if (mounted) {
-          context.router.replace(BoundarySelectionRoute());
-        }
+          if (mounted) {
+            context.router.replace(BoundarySelectionRoute());
+          }
+        });
       });
     });
   }
 
   /// Initialize the screen config from permission_handler_config
-  void _initializeConfig() async {
+  Future<void> _initializeConfig() async {
     final prefs = await SharedPreferences.getInstance();
     final schemaJsonRaw = prefs.getString('app_config_schemas');
     try {
@@ -286,6 +287,14 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
 
       // Handle permanently denied - must open app settings
       if (status.isPermanentlyDenied && mounted) {
+        Toast.showToast(
+          context,
+          message: localizations.translate(
+            i18.common.permissionDeniedOpenSettings,
+          ),
+          type: ToastType.info,
+        );
+        await Future.delayed(const Duration(seconds: 1));
         await openAppSettings();
         // After returning from settings, refresh the status
         if (mounted) {
@@ -306,6 +315,14 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
       // Directly open app settings
       debugPrint('Permission request error for $permission: $e');
       if (mounted) {
+        Toast.showToast(
+          context,
+          message: localizations.translate(
+            i18.common.permissionDeniedOpenSettings,
+          ),
+          type: ToastType.info,
+        );
+        await Future.delayed(const Duration(seconds: 1));
         await openAppSettings();
         // After returning from settings, refresh the status
         final newStatus = await permission.status;
