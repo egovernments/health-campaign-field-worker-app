@@ -56,7 +56,8 @@ class FlowCrudBloc extends CrudBloc {
         newEntities,
         flowConfig['wrapperConfig'],
         screenKey: screenKey,
-      ).build();if (scrollDirection != null && existingState?.stateWrapper != null) {
+      ).build();
+      if (scrollDirection != null && existingState?.stateWrapper != null) {
         // Bidirectional pagination mode
         wrapper = _handleBidirectionalPagination(
           existingWrapper: existingState!.stateWrapper!,
