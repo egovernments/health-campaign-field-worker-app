@@ -125,8 +125,10 @@ class NavigationExecutor extends ActionExecutor {
                 'NAVIGATION: No existing wrapper found, building new wrapper');
             // Fall back to building new wrapper
             final wrapper = WrapperBuilder(
-                    entities as List<EntityModel>, config!['wrapperConfig'])
-                .build();
+              entities as List<EntityModel>,
+              config!['wrapperConfig'],
+              screenKey: targetScreenKey,
+            ).build();
             final flowState = const FlowCrudState().copyWith(
               stateWrapper: wrapper,
             );
@@ -163,8 +165,11 @@ class NavigationExecutor extends ActionExecutor {
           }
         } else {
           // For create mode, build wrapper from entities as before
-          final wrapper =
-              WrapperBuilder(entities, config?['wrapperConfig']).build();
+          final wrapper = WrapperBuilder(
+            entities,
+            config?['wrapperConfig'],
+            screenKey: targetScreenKey,
+          ).build();
           final flowState = const FlowCrudState().copyWith(
             stateWrapper: wrapper,
           );

@@ -36,6 +36,7 @@ const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
 const complaintsInboxShowcase = ComplaintsInboxShowcase();
 
 const nonMobileUser = NonMobileUser();
+const databaseError = DatabaseError();
 
 class Common {
   const Common();
@@ -155,6 +156,8 @@ class Common {
   String get allowPermissions => 'CORE_COMMON_ALLOW_PERMISSIONS';
 
   String get grantPermission => 'GRANT_PERMISSION';
+
+  String get permissionDeniedOpenSettings => 'PERMISSION_DENIED_OPEN_SETTINGS';
 
   String get openSettings => 'OPEN_SETTINGS';
 
@@ -1201,4 +1204,14 @@ class NonMobileUser {
   String get showQrCodeBtnLabel => 'NON_MOBILE_USER_QR_BTN_LABEL';
 
   String get showQrCodeLabel => 'NON_MOBILE_USER_QR_LABEL';
+}
+
+class DatabaseError {
+  const DatabaseError();
+
+  String get databaseErrorTitle => 'DATABASE_ERROR_TITLE';
+
+  String get databaseErrorMessage => 'DATABASE_ERROR_MESSAGE';
+
+  String get closeAppButton => 'DATABASE_ERROR_CLOSE_APP';
 }

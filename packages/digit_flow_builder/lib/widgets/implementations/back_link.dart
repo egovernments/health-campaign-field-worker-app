@@ -37,10 +37,14 @@ class BackLinkWidget implements FlowWidget {
         ? FlowCrudStateRegistry().get(screenKey)?.formData
         : null;
 
-    // Localize first, then resolve template
+    // Resolve template with localization support for mixed content
     final labelText = json['label'] ?? '';
-    final localizedLabel = localization?.translate(labelText) ?? labelText;
-    final label = resolveTemplate(localizedLabel, stateData) ?? localizedLabel;
+    final label = resolveTemplate(
+          labelText,
+          stateData,
+          localization: localization,
+        ) ??
+        labelText;
 
     return DigitBackButton(
       label: label,

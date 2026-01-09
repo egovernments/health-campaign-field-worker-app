@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:attendance_management/widgets/localized.dart';
@@ -8,6 +9,7 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
 import '../router/app_router.dart';
@@ -52,23 +54,62 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
   void initState() {
     super.initState();
 
-    _initializeConfig();
+    // Initialize config first, then permissions
+    _initializeConfig().then((_) {
+      // Initialize permissions and check their current status
+      _initializePermissions().then((_) {
+        // Check permissions to update UI status, but don't auto-navigate
+        // User must explicitly click Continue after granting all permissions
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          bool granted = await _checkPermissions();
+          if (!granted) {
+            if (mounted) {
+              Toast.showToast(
+                context,
+                message: localizations.translate(
+                  i18.common.coreCommonPermissionsAlert,
+                ),
+                type: ToastType.error,
+              );
+            }
+            return;
+          }
 
-    // Initialize permissions and after initialization, attempt auto navigation
-    _initializePermissions().then((_) {
-      // Use addPostFrameCallback to ensure safe navigation after build
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _autoNavigateIfAllGranted();
+          if (mounted) {
+            context.router.replace(BoundarySelectionRoute());
+          }
+        });
       });
     });
   }
 
   /// Initialize the screen config from permission_handler_config
-  void _initializeConfig() {
-    final flows = permission_handler_config['flows'] as List<dynamic>?;
-    if (flows != null && flows.isNotEmpty) {
-      screenConfig = flows[0] as Map<String, dynamic>;
-      bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
+  Future<void> _initializeConfig() async {
+    final prefs = await SharedPreferences.getInstance();
+    final schemaJsonRaw = prefs.getString('app_config_schemas');
+    try {
+      if (schemaJsonRaw != null) {
+        final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
+        final data = allSchemas['PERMISSIONHANDLER'];
+
+        final registrationDeliveryData = data?['data'];
+        final flowsData = (registrationDeliveryData['flows'] as List<dynamic>?)
+                ?.map((e) => Map<String, dynamic>.from(e as Map))
+                .toList() ??
+            [];
+        if (flowsData.isNotEmpty) {
+          screenConfig = flowsData[0];
+          bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
+        }
+      } else {
+        final flows = permission_handler_config['flows'] as List<dynamic>?;
+        if (flows != null && flows.isNotEmpty) {
+          screenConfig = flows[0] as Map<String, dynamic>;
+          bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
+        }
+      }
+    } catch (e) {
+      debugPrint('config error $e');
     }
   }
 
@@ -111,9 +152,14 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
   }
 
   /// Recursively parse permissions from config and build requiredPermissions map
-  void _parsePermissionsFromConfig(List<dynamic> items) {
+  /// [parentCard] is the parent card that contains the permission button
+  void _parsePermissionsFromConfig(List<dynamic> items,
+      [Map<String, dynamic>? parentCard]) {
     for (var item in items) {
       if (item is Map<String, dynamic>) {
+        // Track if this is a card - it becomes the parent for children
+        final currentCard = item['format'] == 'card' ? item : parentCard;
+
         // Check if this item has an onAction with REQUEST_PERMISSION
         final onAction = item['onAction'] as List<dynamic>?;
         if (onAction != null) {
@@ -125,8 +171,12 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
               if (permissionName != null) {
                 final permission = permissionMap[permissionName.toLowerCase()];
                 if (permission != null) {
-                  // Find if this permission is required by looking for textTemplate with required: true
-                  final isRequired = _findRequiredInParent(item);
+                  // Find if this permission is required by looking in the parent card
+                  final isRequired = currentCard != null
+                      ? _findRequiredInParent(currentCard)
+                      : false;
+                  debugPrint(
+                      'Parsed permission: $permissionName, hasCard: ${currentCard != null}, isRequired: $isRequired');
                   requiredPermissions[permission] = isRequired;
                 }
               }
@@ -134,10 +184,10 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
           }
         }
 
-        // Recursively check children
+        // Recursively check children, passing the current card context
         final children = item['children'] as List<dynamic>?;
         if (children != null) {
-          _parsePermissionsFromConfig(children);
+          _parsePermissionsFromConfig(children, currentCard);
         }
       }
     }
@@ -147,6 +197,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
   bool _findRequiredInParent(Map<String, dynamic> item) {
     // Check if this item itself has required
     if (item['required'] == true) {
+      debugPrint('Found required: true at item level');
       return true;
     }
 
@@ -156,6 +207,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
       for (var child in children) {
         if (child is Map<String, dynamic>) {
           if (child['format'] == 'textTemplate' && child['required'] == true) {
+            debugPrint('Found required: true in textTemplate');
             return true;
           }
           // Recursively check nested children
@@ -190,24 +242,97 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
       statuses = currentStatuses;
     });
 
-    final allGranted = requiredPermissions.entries.every(
-      (entry) => !entry.value || currentStatuses[entry.key]?.isGranted == true,
-    );
+    // If no permissions defined, don't auto-navigate
+    if (requiredPermissions.isEmpty) {
+      debugPrint('requiredPermissions is empty');
+      return false;
+    }
 
+    // Debug: Print all permissions and their required status
+    for (var entry in requiredPermissions.entries) {
+      final isGranted = currentStatuses[entry.key]?.isGranted == true;
+      debugPrint(
+          'Permission: ${entry.key}, Required: ${entry.value}, Granted: $isGranted');
+    }
+
+    // Check permissions:
+    // - Required (entry.value == true): MUST be granted
+    // - Optional (entry.value == false): Can be skipped
+    final allGranted = requiredPermissions.entries.every((entry) {
+      final isRequired = entry.value;
+      final isGranted = currentStatuses[entry.key]?.isGranted == true;
+
+      // Optional permission - don't block navigation
+      if (!isRequired) {
+        return true;
+      }
+
+      // Required permission - must be granted
+      return isGranted;
+    });
+
+    debugPrint('allGranted: $allGranted');
     return allGranted;
   }
 
   Future<void> _requestPermission(Permission permission) async {
-    final status = await permission.request();
+    try {
+      final status = await permission.request();
 
-    if (permission == Permission.ignoreBatteryOptimizations &&
-        !status.isGranted) {
-      await openAppSettings();
+      if (mounted) {
+        setState(() {
+          statuses[permission] = status;
+        });
+      }
+
+      // Handle permanently denied - must open app settings
+      if (status.isPermanentlyDenied && mounted) {
+        Toast.showToast(
+          context,
+          message: localizations.translate(
+            i18.common.permissionDeniedOpenSettings,
+          ),
+          type: ToastType.info,
+        );
+        await Future.delayed(const Duration(seconds: 1));
+        await openAppSettings();
+        // After returning from settings, refresh the status
+        if (mounted) {
+          final newStatus = await permission.status;
+          setState(() {
+            statuses[permission] = newStatus;
+          });
+        }
+        return;
+      }
+
+      if (permission == Permission.ignoreBatteryOptimizations &&
+          !status.isGranted) {
+        await openAppSettings();
+      }
+    } catch (e) {
+      // Handle PHASE_CLIENT_ALREADY_HIDDEN or other permission request errors
+      // Directly open app settings
+      debugPrint('Permission request error for $permission: $e');
+      if (mounted) {
+        Toast.showToast(
+          context,
+          message: localizations.translate(
+            i18.common.permissionDeniedOpenSettings,
+          ),
+          type: ToastType.info,
+        );
+        await Future.delayed(const Duration(seconds: 1));
+        await openAppSettings();
+        // After returning from settings, refresh the status
+        final newStatus = await permission.status;
+        if (mounted) {
+          setState(() {
+            statuses[permission] = newStatus;
+          });
+        }
+      }
     }
-
-    setState(() {
-      statuses[permission] = status;
-    });
   }
 
   /// Request permission by name (from config)
@@ -292,18 +417,6 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
         }
         break;
     }
-  }
-
-  /// Attempt to auto-navigate if all required permissions are granted.
-  /// This is triggered once after initialization (and can be triggered anywhere else if needed).
-  Future<void> _autoNavigateIfAllGranted() async {
-    final granted = await _checkPermissions();
-    if (!mounted) return;
-
-    if (granted) {
-      context.router.replace(ProjectSelectionRoute());
-    }
-    // If not all granted, remain on this screen so user can grant them.
   }
 
   @override
@@ -391,7 +504,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
             }
 
             if (mounted) {
-              context.router.replace(ProjectSelectionRoute());
+              context.router.replace(BoundarySelectionRoute());
             }
           },
         )

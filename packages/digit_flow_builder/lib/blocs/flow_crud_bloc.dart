@@ -41,15 +41,22 @@ class FlowCrudBloc extends CrudBloc {
     if (crudState is CrudStateLoaded) {
       // Consume scroll direction and pagination info when we have loaded data
       // This prevents intermediate states (Loading) from consuming the flags
-      final scrollDirection = FlowCrudStateRegistry().consumeScrollDirection(screenKey);
-      final paginationInfo = FlowCrudStateRegistry().consumePaginationInfo(screenKey);
+      final scrollDirection =
+          FlowCrudStateRegistry().consumeScrollDirection(screenKey);
+      final paginationInfo =
+          FlowCrudStateRegistry().consumePaginationInfo(screenKey);
 
       // Fallback to legacy append mode for backwards compatibility
-      final legacyAppendMode = FlowCrudStateRegistry().consumeAppendMode(screenKey);
+      final legacyAppendMode =
+          FlowCrudStateRegistry().consumeAppendMode(screenKey);
 
-      final newEntities = crudState.results.values.expand((list) => list).toList();
-      final newWrapper = WrapperBuilder(newEntities, flowConfig['wrapperConfig']).build();
-
+      final newEntities =
+          crudState.results.values.expand((list) => list).toList();
+      final newWrapper = WrapperBuilder(
+        newEntities,
+        flowConfig['wrapperConfig'],
+        screenKey: screenKey,
+      ).build();
       if (scrollDirection != null && existingState?.stateWrapper != null) {
         // Bidirectional pagination mode
         wrapper = _handleBidirectionalPagination(
@@ -58,16 +65,22 @@ class FlowCrudBloc extends CrudBloc {
           direction: scrollDirection,
           paginationInfo: paginationInfo,
         );
-      } else if (legacyAppendMode && existingState?.stateWrapper != null && newEntities.isNotEmpty) {
+      } else if (legacyAppendMode &&
+          existingState?.stateWrapper != null &&
+          newEntities.isNotEmpty) {
         // Legacy append mode: add new entities to existing wrapper
-        final existingWrapper = List<dynamic>.from(existingState!.stateWrapper!);
+        final existingWrapper =
+            List<dynamic>.from(existingState!.stateWrapper!);
         existingWrapper.addAll(newWrapper);
         wrapper = existingWrapper;
-        debugPrint('FlowCrudBloc: Legacy appended ${newWrapper.length} items, total=${wrapper.length}');
-      } else if ((scrollDirection != null || legacyAppendMode) && newEntities.isEmpty) {
+        debugPrint(
+            'FlowCrudBloc: Legacy appended ${newWrapper.length} items, total=${wrapper.length}');
+      } else if ((scrollDirection != null || legacyAppendMode) &&
+          newEntities.isEmpty) {
         // Scroll/append mode but no new entities - preserve existing data
         wrapper = existingState?.stateWrapper;
-        debugPrint('FlowCrudBloc: No new data, preserving ${wrapper?.length ?? 0} existing items');
+        debugPrint(
+            'FlowCrudBloc: No new data, preserving ${wrapper?.length ?? 0} existing items');
 
         // Update SearchStateManager to mark no more data in this direction
         _updateNoMoreData(scrollDirection);
@@ -92,7 +105,11 @@ class FlowCrudBloc extends CrudBloc {
       FlowCrudStateRegistry().update(screenKey, flowState);
     } else if (crudState is CrudStatePersisted) {
       final entities = crudState.entities;
-      wrapper = WrapperBuilder(entities, flowConfig['wrapperConfig']).build();
+      wrapper = WrapperBuilder(
+        entities,
+        flowConfig['wrapperConfig'],
+        screenKey: screenKey,
+      ).build();
       // Preserve existing formData and widgetData when creating new state
       final flowState = FlowCrudState(
         base: crudState,
@@ -135,7 +152,8 @@ class FlowCrudBloc extends CrudBloc {
         debugPrint('FlowCrudBloc: Trimmed $trimCount items from start');
       }
 
-      debugPrint('FlowCrudBloc: Appended ${newWrapper.length} items (down), totalBeforeTrim=$totalBeforeTrim, afterTrim=${result.length}');
+      debugPrint(
+          'FlowCrudBloc: Appended ${newWrapper.length} items (down), totalBeforeTrim=$totalBeforeTrim, afterTrim=${result.length}');
     } else if (direction == 'up') {
       // Prepend new items to the start
       result = List<dynamic>.from(newWrapper);
@@ -149,7 +167,8 @@ class FlowCrudBloc extends CrudBloc {
         debugPrint('FlowCrudBloc: Trimmed $trimCount items from end');
       }
 
-      debugPrint('FlowCrudBloc: Prepended ${newWrapper.length} items (up), totalBeforeTrim=$totalBeforeTrim, afterTrim=${result.length}');
+      debugPrint(
+          'FlowCrudBloc: Prepended ${newWrapper.length} items (up), totalBeforeTrim=$totalBeforeTrim, afterTrim=${result.length}');
     } else {
       // Unknown direction, just use new wrapper
       result = newWrapper;
@@ -157,9 +176,11 @@ class FlowCrudBloc extends CrudBloc {
     }
 
     // Update pagination window state with PRE-TRIM total so offsets are calculated correctly
-    debugPrint('FlowCrudBloc: Calling _updatePaginationWindow - direction=$direction, '
+    debugPrint(
+        'FlowCrudBloc: Calling _updatePaginationWindow - direction=$direction, '
         'loadedCount=${newWrapper.length}, totalBeforeTrim=$totalBeforeTrim');
-    _updatePaginationWindow(direction, newWrapper.length, totalBeforeTrim, paginationInfo);
+    _updatePaginationWindow(
+        direction, newWrapper.length, totalBeforeTrim, paginationInfo);
 
     return result;
   }
@@ -173,7 +194,7 @@ class FlowCrudBloc extends CrudBloc {
   ) {
     // Use screenKey without prefix - matches how SearchExecutor initializes the window
     SearchStateManager().onDataLoaded(
-      screenKey,  // Use screenKey without prefix to match initialization
+      screenKey, // Use screenKey without prefix to match initialization
       '_pagination',
       direction: direction,
       loadedCount: loadedCount,
@@ -182,7 +203,8 @@ class FlowCrudBloc extends CrudBloc {
   }
 
   /// Update pagination window for initial load
-  void _updatePaginationWindowInitial(int loadedCount, Map<String, int>? paginationInfo) {
+  void _updatePaginationWindowInitial(
+      int loadedCount, Map<String, int>? paginationInfo) {
     // Use screenKey without prefix - matches how SearchExecutor initializes the window
     final limit = paginationInfo?['limit'];
 
@@ -191,15 +213,17 @@ class FlowCrudBloc extends CrudBloc {
 
     if (limit != null) {
       SearchStateManager().onDataLoaded(
-        screenKey,  // Use screenKey without prefix to match initialization
+        screenKey, // Use screenKey without prefix to match initialization
         '_pagination',
         direction: 'initial',
         loadedCount: loadedCount,
         totalInWindow: loadedCount,
       );
-      debugPrint('FlowCrudBloc: Updated pagination window - endOffset should now be $loadedCount');
+      debugPrint(
+          'FlowCrudBloc: Updated pagination window - endOffset should now be $loadedCount');
     } else {
-      debugPrint('FlowCrudBloc: Skipped pagination window update - limit is null (paginationInfo=$paginationInfo)');
+      debugPrint(
+          'FlowCrudBloc: Skipped pagination window update - limit is null (paginationInfo=$paginationInfo)');
     }
   }
 
@@ -209,11 +233,12 @@ class FlowCrudBloc extends CrudBloc {
 
     // Use screenKey without prefix - matches how SearchExecutor initializes the window
     SearchStateManager().onDataLoaded(
-      screenKey,  // Use screenKey without prefix to match initialization
+      screenKey, // Use screenKey without prefix to match initialization
       '_pagination',
       direction: direction,
       loadedCount: 0,
-      totalInWindow: FlowCrudStateRegistry().get(screenKey)?.stateWrapper?.length ?? 0,
+      totalInWindow:
+          FlowCrudStateRegistry().get(screenKey)?.stateWrapper?.length ?? 0,
     );
   }
 
@@ -264,7 +289,8 @@ class FlowCrudStateRegistry {
   /// Set scroll direction for next state update (used by REFRESH_SEARCH)
   void setScrollDirection(String key, String direction) {
     _scrollDirection[key] = direction;
-    debugPrint('FlowCrudStateRegistry: Set scrollDirection=$direction for $key');
+    debugPrint(
+        'FlowCrudStateRegistry: Set scrollDirection=$direction for $key');
   }
 
   /// Get and consume scroll direction (called during state update)
@@ -276,9 +302,11 @@ class FlowCrudStateRegistry {
   }
 
   /// Set pagination info for window management
-  void setPaginationInfo(String key, {required int limit, required int maxItems}) {
+  void setPaginationInfo(String key,
+      {required int limit, required int maxItems}) {
     _paginationInfo[key] = {'limit': limit, 'maxItems': maxItems};
-    debugPrint('FlowCrudStateRegistry: Set paginationInfo limit=$limit, maxItems=$maxItems for $key');
+    debugPrint(
+        'FlowCrudStateRegistry: Set paginationInfo limit=$limit, maxItems=$maxItems for $key');
   }
 
   /// Get and consume pagination info

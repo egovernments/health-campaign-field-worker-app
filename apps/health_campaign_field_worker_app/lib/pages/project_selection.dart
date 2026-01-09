@@ -256,7 +256,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
           .firstWhere((element) => element.boundaryList.isNotEmpty);
       if (mounted) {
         context.router.replaceAll([
-          BoundarySelectionRoute(),
+          const PermissionsRoute(),
         ]);
       }
     } catch (e) {
