@@ -1,6 +1,8 @@
 import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:flutter/material.dart';
 
+import '../blocs/flow_crud_bloc.dart';
+import '../utils/interpolation.dart';
 import 'action_config.dart';
 import 'action_executor_registry.dart';
 
@@ -68,7 +70,16 @@ class ActionHandler {
         final formData = contextData['formData'] as Map<String, dynamic>? ?? {};
         final navigation = contextData['navigation'] as Map<String, dynamic>? ?? {};
 
-        // Merge formData and navigation for condition evaluation
+        // Get screen key - try route args first, then contextData['parentScreenKey']
+        // (set by CLOSE_POPUP action when used from popup)
+        final screenKey = getEffectiveScreenKey(context, contextData);
+
+        final currentState = FlowCrudStateRegistry().get(screenKey ?? '');
+
+        // Get widgetData from the current state (contains filter selections, etc.)
+        final widgetData = currentState?.widgetData ?? {};
+
+        // Merge formData, navigation, and widgetData for condition evaluation
         // Also convert string "true"/"false" to boolean for proper evaluation
         final evaluationData = <String, dynamic>{};
 
@@ -86,6 +97,42 @@ class ActionHandler {
 
         addWithTypeConversion(formData);
         addWithTypeConversion(navigation);
+
+        // Add widgetData - flatten list values to check membership
+        // For selection cards, convert list of selected codes to individual keys
+        debugPrint('CONDITION_EVAL: widgetData before processing=$widgetData');
+        widgetData.forEach((key, value) {
+          if (value is List) {
+            // If single element list, store as string for simpler equality checks
+            // e.g., selectedStatus == CLOSED_HOUSEHOLD works when selectedStatus is "CLOSED_HOUSEHOLD"
+            if (value.length == 1) {
+              var singleValue = value.first;
+              // Strip quotes if the value is a quoted string (e.g., "\"VALUE\"" -> "VALUE")
+              if (singleValue is String &&
+                  singleValue.length >= 2 &&
+                  singleValue.startsWith('"') &&
+                  singleValue.endsWith('"')) {
+                singleValue = singleValue.substring(1, singleValue.length - 1);
+              }
+              evaluationData[key] = singleValue;
+              // Don't add value as key - let parser treat literals in expression as-is
+            } else {
+              // For multi-select, keep as list for "in" operations
+              evaluationData[key] = value;
+              for (var item in value) {
+                if (item is String) {
+                  evaluationData[item] = item;
+                }
+              }
+            }
+          } else if (value == 'true') {
+            evaluationData[key] = true;
+          } else if (value == 'false') {
+            evaluationData[key] = false;
+          } else {
+            evaluationData[key] = value;
+          }
+        });
 
         for (final condActionJson in conditionalGroup) {
           final condition = condActionJson['condition'] as Map<String, dynamic>;

@@ -17,7 +17,7 @@ class SelectionCardWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final data = json['data'] as List<dynamic>? ?? [];
+    final data = json['enums'] as List<dynamic>? ?? [];
     final fieldName = json['fieldName'] as String?;
     final localization = LocalizationContext.maybeOf(context);
 
@@ -40,10 +40,32 @@ class SelectionCardWidget implements FlowWidget {
         final crudContext = CrudItemContext.of(builderContext);
         final screenKey = crudContext?.screenKey;
 
+        // Get widgetData from registry to check for stored values
+        final currentState =
+            screenKey != null ? FlowCrudStateRegistry().get(screenKey) : null;
+        final widgetData = currentState?.widgetData ?? {};
+
+        // Get initial selection from widgetData if available
+        List<SelectionCardOption> initialSelection = [];
+        if (fieldName != null && widgetData.containsKey(fieldName)) {
+          final storedCodes = widgetData[fieldName];
+          if (storedCodes is List) {
+            initialSelection = options
+                .where((opt) => storedCodes.contains(opt.code))
+                .toList();
+          } else if (storedCodes is String) {
+            // Handle single value case
+            initialSelection = options
+                .where((opt) => opt.code == storedCodes)
+                .toList();
+          }
+        }
+
         return SelectionCard(
           showParentContainer: true,
           // equalWidthOptions: true,
           options: options,
+          initialSelection: initialSelection,
           width: MediaQuery.of(builderContext).size.width * 0.6,
           onSelectionChanged: (selectedOptions) {
             // Update widgetData in flow state if fieldName is provided

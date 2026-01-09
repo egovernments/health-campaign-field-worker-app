@@ -4,19 +4,19 @@ class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
   final List<Option> enums;
   final bool isMultiselect;
 
-  const JsonSchemaDropdownBuilder({
-    required super.formControlName,
-    required super.form,
-    required this.enums,
-    super.label,
-    super.key,
-    super.value,
-    super.isRequired,
-    super.helpText,
-    super.validations,
-    super.tooltipText,
-    this.isMultiselect = false,
-  });
+  const JsonSchemaDropdownBuilder(
+      {required super.formControlName,
+      required super.form,
+      required this.enums,
+      super.label,
+      super.key,
+      super.value,
+      super.isRequired,
+      super.helpText,
+      super.validations,
+      super.tooltipText,
+      this.isMultiselect = false,
+      super.readOnly});
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +34,14 @@ class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
         isRequired: isRequired ?? false,
         child: isMultiselect
             ? MultiSelectDropDown(
+                readOnly: readOnly,
                 helpText: helpText,
                 errorMessage: field.errorText,
-                initialOptions: field.value != null
+                initialOptions: field.value != null &&
+                        (field.value as String).trim().isNotEmpty
                     ? (field.value as String)
                         .split('.')
+                        .where((val) => val.trim().isNotEmpty) // 🔑 important
                         .map(
                           (val) => DropdownItem(
                             code: val,
@@ -68,6 +71,7 @@ class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
                 },
               )
             : DigitDropdown<String>(
+                readOnly: readOnly,
                 helpText: helpText,
                 errorMessage: field.errorText,
                 selectedOption: field.value != null
