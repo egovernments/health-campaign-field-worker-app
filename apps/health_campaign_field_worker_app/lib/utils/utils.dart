@@ -41,6 +41,7 @@ import 'package:transit_post/data/repositories/local/user_action.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/hf_referral_downsync/hf_referral_downsync.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
@@ -244,6 +245,7 @@ void showDownloadDialog(
   required DigitProgressDialogType dialogType,
   bool isPop = true,
   StreamController<double>? downloadProgressController,
+  bool isHFReferral = false,
 }) {
   if (isPop) {
     Navigator.of(context, rootNavigator: true).pop();
@@ -262,15 +264,27 @@ void showDownloadDialog(
             if (dialogType == DigitProgressDialogType.failed ||
                 dialogType == DigitProgressDialogType.checkFailed) {
               Navigator.of(context, rootNavigator: true).pop();
-              context.read<BeneficiaryDownSyncBloc>().add(
-                    DownSyncGetBatchSizeEvent(
-                      appConfiguration: [model.appConfiguartion!],
-                      projectId: context.projectId,
-                      boundaryCode: model.boundary,
-                      pendingSyncCount: model.pendingSyncCount ?? 0,
-                      boundaryName: model.boundaryName,
-                    ),
-                  );
+              if (isHFReferral) {
+                context.read<HFReferralDownSyncBloc>().add(
+                      HFReferralDownSyncEvent.getBatchSize(
+                        appConfiguration: [model.appConfiguartion!],
+                        projectId: context.projectId,
+                        boundaryCode: model.boundary,
+                        pendingSyncCount: model.pendingSyncCount ?? 0,
+                        boundaryName: model.boundaryName,
+                      ),
+                    );
+              } else {
+                context.read<BeneficiaryDownSyncBloc>().add(
+                      DownSyncGetBatchSizeEvent(
+                        appConfiguration: [model.appConfiguartion!],
+                        projectId: context.projectId,
+                        boundaryCode: model.boundary,
+                        pendingSyncCount: model.pendingSyncCount ?? 0,
+                        boundaryName: model.boundaryName,
+                      ),
+                    );
+              }
             } else {
               Navigator.of(context, rootNavigator: true).pop();
               context.router.replaceAll([HomeRoute()]);
@@ -310,21 +324,39 @@ void showDownloadDialog(
                     context.router.replaceAll([HomeRoute()]);
                   } else {
                     if ((model.totalCount ?? 0) > 0) {
-                      context.read<BeneficiaryDownSyncBloc>().add(
-                            DownSyncBeneficiaryEvent(
-                              projectId: context.projectId,
-                              boundaryCode: model.boundary,
-                              // Batch Size need to be defined based on Internet speed.
-                              batchSize: model.batchSize ?? 1,
-                              initialServerCount: model.totalCount ?? 0,
-                              boundaryName: model.boundaryName,
-                            ),
-                          );
+                      if (isHFReferral) {
+                        context.read<HFReferralDownSyncBloc>().add(
+                              HFReferralDownSyncEvent.downSync(
+                                projectId: context.projectId,
+                                boundaryCode: model.boundary,
+                                batchSize: model.batchSize ?? 1,
+                                initialServerCount: model.totalCount ?? 0,
+                                boundaryName: model.boundaryName,
+                              ),
+                            );
+                      } else {
+                        context.read<BeneficiaryDownSyncBloc>().add(
+                              DownSyncBeneficiaryEvent(
+                                projectId: context.projectId,
+                                boundaryCode: model.boundary,
+                                // Batch Size need to be defined based on Internet speed.
+                                batchSize: model.batchSize ?? 1,
+                                initialServerCount: model.totalCount ?? 0,
+                                boundaryName: model.boundaryName,
+                              ),
+                            );
+                      }
                     } else {
                       Navigator.of(context, rootNavigator: true).pop();
-                      context.read<BeneficiaryDownSyncBloc>().add(
-                            const DownSyncResetStateEvent(),
-                          );
+                      if (isHFReferral) {
+                        context.read<HFReferralDownSyncBloc>().add(
+                              const HFReferralDownSyncEvent.resetState(),
+                            );
+                      } else {
+                        context.read<BeneficiaryDownSyncBloc>().add(
+                              const DownSyncResetStateEvent(),
+                            );
+                      }
                     }
                   }
                 },
@@ -568,6 +600,14 @@ void attemptSyncUp(BuildContext context) async {
 Future<File> getDownSyncFilePath() async {
   final downloadsDirectory = await getDownloadsDirectory();
   final file = File('${downloadsDirectory!.path}/down_sync_data.json');
+
+  return file;
+}
+
+Future<File> getHFReferralDownSyncFilePath() async {
+  final downloadsDirectory = await getDownloadsDirectory();
+  final file =
+      File('${downloadsDirectory!.path}/hf_referral_down_sync_data.json');
 
   return file;
 }

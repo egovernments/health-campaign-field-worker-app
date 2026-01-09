@@ -13,6 +13,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/hf_referral_downsync/hf_referral_downsync.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
@@ -57,6 +58,9 @@ class _BoundarySelectionPageState
     context.read<BeneficiaryDownSyncBloc>().add(
           const DownSyncResetStateEvent(),
         );
+    context.read<HFReferralDownSyncBloc>().add(
+          const HFReferralDownSyncEvent.resetState(),
+        );
     super.initState();
     listenToSyncCount();
   }
@@ -65,6 +69,9 @@ class _BoundarySelectionPageState
   void deactivate() {
     context.read<BeneficiaryDownSyncBloc>().add(
           const DownSyncResetStateEvent(),
+        );
+    context.read<HFReferralDownSyncBloc>().add(
+          const HFReferralDownSyncEvent.resetState(),
         );
     super.deactivate();
   }
@@ -83,6 +90,15 @@ class _BoundarySelectionPageState
     bool isDistributor = context.loggedInUserRoles
         .where(
           (role) => role.code == RolesType.distributor.toValue(),
+        )
+        .toList()
+        .isNotEmpty;
+
+    bool isHFWorkerOrSupervisor = context.loggedInUserRoles
+        .where(
+          (role) =>
+              role.code == RolesType.healthFacilityWorker.toValue() ||
+              role.code == RolesType.healthFacilitySupervisor.toValue(),
         )
         .toList()
         .isNotEmpty;
@@ -140,9 +156,359 @@ class _BoundarySelectionPageState
                       child: ReactiveFormBuilder(
                         form: () => buildForm(state, appConfiguration),
                         builder: (context, form, child) => ScrollableContent(
-                            footer: BlocListener<BeneficiaryDownSyncBloc,
-                                BeneficiaryDownSyncState>(
-                              listener: (context, downSyncState) {
+                            footer: MultiBlocListener(
+                              listeners: [
+                                BlocListener<HFReferralDownSyncBloc,
+                                    HFReferralDownSyncState>(
+                                  listener:
+                                      (context, hfReferralDownSyncState) {
+                                    LocalizationParams()
+                                        .setModule('boundary', true);
+                                    context.read<LocalizationBloc>().add(
+                                        LocalizationEvent
+                                            .onUpdateLocalizationIndex(
+                                                index: appConfiguration
+                                                    .languages!
+                                                    .indexWhere((element) =>
+                                                        element.value ==
+                                                        AppSharedPreferences()
+                                                            .getSelectedLocale),
+                                                code: AppSharedPreferences()
+                                                    .getSelectedLocale!));
+                                    Future.delayed(
+                                        const Duration(milliseconds: 10), () {
+                                      hfReferralDownSyncState.maybeWhen(
+                                        orElse: () => false,
+                                        loading: (isPop) => {
+                                          if (isPop)
+                                            {
+                                              Navigator.of(
+                                                context,
+                                                rootNavigator: true,
+                                              ).popUntil(
+                                                (route) =>
+                                                    route is! PopupRoute,
+                                              ),
+                                            },
+                                          DigitSyncDialog.show(
+                                            context,
+                                            type: DialogType.inProgress,
+                                            label: localizations.translate(
+                                              i18.beneficiaryDetails
+                                                  .dataDownloadInProgress,
+                                            ),
+                                            barrierDismissible: false,
+                                          ),
+                                        },
+                                        getBatchSize: (
+                                          batchSize,
+                                          projectId,
+                                          boundaryCode,
+                                          pendingSyncCount,
+                                          boundaryName,
+                                        ) =>
+                                            context
+                                                .read<HFReferralDownSyncBloc>()
+                                                .add(
+                                                  HFReferralDownSyncEvent
+                                                      .checkForData(
+                                                    projectId:
+                                                        context.projectId,
+                                                    boundaryCode:
+                                                        selectedBoundary!
+                                                            .value!.code
+                                                            .toString(),
+                                                    pendingSyncCount:
+                                                        pendingSyncCount,
+                                                    boundaryName:
+                                                        selectedBoundary
+                                                            .value!.name
+                                                            .toString(),
+                                                    batchSize: batchSize,
+                                                  ),
+                                                ),
+                                        pendingSync: () => showDownloadDialog(
+                                          context,
+                                          model: DownloadBeneficiary(
+                                            title: localizations.translate(
+                                              i18.syncDialog.pendingSyncLabel,
+                                            ),
+                                            projectId: context.projectId,
+                                            appConfiguartion: appConfiguration,
+                                            boundary: selectedBoundary!
+                                                .value!.code
+                                                .toString(),
+                                            content: localizations.translate(
+                                              i18.syncDialog.pendingSyncContent,
+                                            ),
+                                            primaryButtonLabel:
+                                                localizations.translate(
+                                              i18.acknowledgementSuccess
+                                                  .goToHome,
+                                            ),
+                                            boundaryName: selectedBoundary
+                                                .value!.name
+                                                .toString(),
+                                          ),
+                                          dialogType: DigitProgressDialogType
+                                              .pendingSync,
+                                          isPop: true,
+                                          isHFReferral: true,
+                                        ),
+                                        dataFound:
+                                            (initialServerCount, batchSize) {
+                                          clickedStatus.value = false;
+                                          showDownloadDialog(
+                                            context,
+                                            model: DownloadBeneficiary(
+                                              title: localizations.translate(
+                                                initialServerCount > 0
+                                                    ? i18.beneficiaryDetails
+                                                        .dataFound
+                                                    : i18.beneficiaryDetails
+                                                        .noDataFound,
+                                              ),
+                                              appConfiguartion: appConfiguration,
+                                              projectId: context.projectId,
+                                              boundary: selectedBoundary!
+                                                  .value!.code
+                                                  .toString(),
+                                              batchSize: batchSize,
+                                              totalCount: initialServerCount,
+                                              content: localizations.translate(
+                                                initialServerCount > 0
+                                                    ? i18.beneficiaryDetails
+                                                        .dataFoundContent
+                                                    : i18.beneficiaryDetails
+                                                        .noDataFoundContent,
+                                              ),
+                                              primaryButtonLabel:
+                                                  localizations.translate(
+                                                initialServerCount > 0
+                                                    ? i18.common
+                                                        .coreCommonDownload
+                                                    : i18.common
+                                                        .coreCommonGoback,
+                                              ),
+                                              secondaryButtonLabel:
+                                                  localizations.translate(
+                                                initialServerCount > 0
+                                                    ? i18.beneficiaryDetails
+                                                        .proceedWithoutDownloading
+                                                    : i18.acknowledgementSuccess
+                                                        .goToHome,
+                                              ),
+                                              boundaryName: selectedBoundary
+                                                  .value!.name
+                                                  .toString(),
+                                            ),
+                                            dialogType: DigitProgressDialogType
+                                                .dataFound,
+                                            isPop: true,
+                                            isHFReferral: true,
+                                          );
+                                        },
+                                        inProgress: (syncCount, totalCount) {
+                                          downloadProgress.add(
+                                            min(
+                                              (syncCount) / (totalCount),
+                                              1,
+                                            ),
+                                          );
+                                          if (syncCount < 1) {
+                                            showDownloadDialog(
+                                              context,
+                                              model: DownloadBeneficiary(
+                                                title: localizations.translate(
+                                                  i18.beneficiaryDetails
+                                                      .dataDownloadInProgress,
+                                                ),
+                                                projectId: context.projectId,
+                                                boundary: selectedBoundary!
+                                                    .value!.code
+                                                    .toString(),
+                                                appConfiguartion:
+                                                    appConfiguration,
+                                                syncCount: syncCount,
+                                                totalCount: totalCount,
+                                                prefixLabel:
+                                                    syncCount.toString(),
+                                                suffixLabel:
+                                                    totalCount.toString(),
+                                                boundaryName: selectedBoundary
+                                                    .value!.name
+                                                    .toString(),
+                                              ),
+                                              dialogType: DigitProgressDialogType
+                                                  .inProgress,
+                                              isPop: true,
+                                              downloadProgressController:
+                                                  downloadProgress,
+                                              isHFReferral: true,
+                                            );
+                                          }
+                                        },
+                                        success: (result) {
+                                          int? epochTime = result.lastSyncedTime;
+
+                                          String date =
+                                              '${DigitDateUtils.getTimeFromTimestamp(epochTime!)} on ${DigitDateUtils.getDateFromTimestamp(epochTime)}';
+                                          String dataDescription =
+                                              "${localizations.translate(
+                                            i18.beneficiaryDetails
+                                                .downloadreport,
+                                          )}\n\n\n${localizations.translate(
+                                            i18.beneficiaryDetails.boundary,
+                                          )} ${localizations.translate(result.locality!)}\n${localizations.translate(
+                                            i18.beneficiaryDetails.status,
+                                          )} ${localizations.translate(
+                                            i18.beneficiaryDetails
+                                                .downloadcompleted,
+                                          )}\n${localizations.translate(
+                                            i18.beneficiaryDetails.downloadedon,
+                                          )} $date\n${localizations.translate(
+                                            i18.beneficiaryDetails
+                                                .recordsdownload,
+                                          )} ${result.totalCount}/${result.totalCount}";
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).popUntil(
+                                            (route) => route is! PopupRoute,
+                                          );
+                                          context.router.popAndPush(
+                                              (AcknowledgementRoute(
+                                            isDataRecordSuccess: true,
+                                            description: dataDescription,
+                                            label: localizations.translate(i18
+                                                .acknowledgementSuccess
+                                                .dataDownloadedSuccessLabel),
+                                            descriptionTableData: {
+                                              localizations.translate(
+                                                i18.beneficiaryDetails.boundary,
+                                              ): localizations
+                                                  .translate(result.locality!),
+                                              localizations.translate(
+                                                i18.beneficiaryDetails.status,
+                                              ): localizations.translate(
+                                                i18.beneficiaryDetails
+                                                    .downloadcompleted,
+                                              ),
+                                              localizations.translate(
+                                                i18.beneficiaryDetails
+                                                    .downloadtime,
+                                              ): date,
+                                              localizations.translate(
+                                                i18.beneficiaryDetails
+                                                    .totalrecorddownload,
+                                              ): '${result.totalCount}/${result.totalCount}',
+                                            },
+                                          )));
+                                        },
+                                        failed: () => showDownloadDialog(
+                                          context,
+                                          model: DownloadBeneficiary(
+                                            title: localizations.translate(
+                                              i18.common.coreCommonDownloadFailed,
+                                            ),
+                                            appConfiguartion: appConfiguration,
+                                            projectId: context.projectId,
+                                            pendingSyncCount: pendingSyncCount,
+                                            boundary: selectedBoundary!
+                                                .value!.code
+                                                .toString(),
+                                            content: localizations.translate(
+                                              i18.beneficiaryDetails
+                                                  .dataFoundContent,
+                                            ),
+                                            primaryButtonLabel:
+                                                localizations.translate(
+                                              i18.syncDialog.retryButtonLabel,
+                                            ),
+                                            secondaryButtonLabel:
+                                                localizations.translate(
+                                              i18.beneficiaryDetails
+                                                  .proceedWithoutDownloading,
+                                            ),
+                                            boundaryName: selectedBoundary
+                                                .value!.name
+                                                .toString(),
+                                          ),
+                                          dialogType:
+                                              DigitProgressDialogType.failed,
+                                          isPop: true,
+                                          isHFReferral: true,
+                                        ),
+                                        totalCountCheckFailed: () =>
+                                            showDownloadDialog(
+                                          context,
+                                          model: DownloadBeneficiary(
+                                            title: localizations.translate(
+                                              i18.beneficiaryDetails
+                                                  .unableToCheckDataInServer,
+                                            ),
+                                            appConfiguartion: appConfiguration,
+                                            projectId: context.projectId,
+                                            pendingSyncCount: pendingSyncCount,
+                                            boundary: selectedBoundary!
+                                                .value!.code
+                                                .toString(),
+                                            primaryButtonLabel:
+                                                localizations.translate(
+                                              i18.syncDialog.retryButtonLabel,
+                                            ),
+                                            secondaryButtonLabel:
+                                                localizations.translate(
+                                              i18.beneficiaryDetails
+                                                  .proceedWithoutDownloading,
+                                            ),
+                                            boundaryName: selectedBoundary
+                                                .value!.name
+                                                .toString(),
+                                          ),
+                                          dialogType: DigitProgressDialogType
+                                              .checkFailed,
+                                          isPop: true,
+                                          isHFReferral: true,
+                                        ),
+                                        insufficientStorage: () {
+                                          clickedStatus.value = false;
+                                          showDownloadDialog(
+                                            context,
+                                            model: DownloadBeneficiary(
+                                              title: localizations.translate(
+                                                i18.beneficiaryDetails
+                                                    .insufficientStorage,
+                                              ),
+                                              content: localizations.translate(
+                                                  i18.beneficiaryDetails
+                                                      .insufficientStorageContent),
+                                              projectId: context.projectId,
+                                              appConfiguartion: appConfiguration,
+                                              boundary: selectedBoundary!
+                                                  .value!.code
+                                                  .toString(),
+                                              primaryButtonLabel:
+                                                  localizations.translate(
+                                                i18.common.coreCommonOk,
+                                              ),
+                                              boundaryName: selectedBoundary
+                                                  .value!.name
+                                                  .toString(),
+                                            ),
+                                            dialogType: DigitProgressDialogType
+                                                .insufficientStorage,
+                                            isPop: true,
+                                            isHFReferral: true,
+                                          );
+                                        },
+                                      );
+                                    });
+                                  },
+                                ),
+                                BlocListener<BeneficiaryDownSyncBloc,
+                                    BeneficiaryDownSyncState>(
+                                  listener: (context, downSyncState) {
                                 LocalizationParams()
                                     .setModule('boundary', true);
                                 context.read<LocalizationBloc>().add(
@@ -459,7 +825,9 @@ class _BoundarySelectionPageState
                                     },
                                   );
                                 });
-                              },
+                                  },
+                                ),
+                              ],
                               child: DigitCard(
                                   margin: const EdgeInsets.only(top: spacer2),
                                   children: [
@@ -511,6 +879,31 @@ class _BoundarySelectionPageState
                                                             BeneficiaryDownSyncBloc>()
                                                         .add(
                                                           DownSyncGetBatchSizeEvent(
+                                                            appConfiguration: [
+                                                              appConfiguration,
+                                                            ],
+                                                            projectId: context
+                                                                .projectId,
+                                                            boundaryCode:
+                                                                selectedBoundary!
+                                                                    .value!.code
+                                                                    .toString(),
+                                                            pendingSyncCount:
+                                                                pendingSyncCount,
+                                                            boundaryName:
+                                                                selectedBoundary
+                                                                    .value!.name
+                                                                    .toString(),
+                                                          ),
+                                                        );
+                                                  } else if (isOnline &&
+                                                      isHFWorkerOrSupervisor) {
+                                                    context
+                                                        .read<
+                                                            HFReferralDownSyncBloc>()
+                                                        .add(
+                                                          HFReferralDownSyncEvent
+                                                              .getBatchSize(
                                                             appConfiguration: [
                                                               appConfiguration,
                                                             ],

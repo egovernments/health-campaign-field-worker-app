@@ -21,6 +21,7 @@ import 'tables/boundary.dart';
 import 'tables/document.dart';
 import 'tables/downsync.dart';
 import 'tables/downsync_criteria.dart';
+import 'tables/hf_referral_downsync.dart';
 import 'tables/facility.dart';
 import 'tables/identifier.dart';
 import 'tables/individual.dart';
@@ -97,6 +98,7 @@ part 'sql_store.g.dart';
   User,
   Downsync,
   DownsyncCriteria,
+  HFReferralDownsync,
   HFReferral,
   Household,
   HouseholdMember,

@@ -29,11 +29,14 @@ import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/downsync/downsync.dart';
+import '../data/local_store/hf_referral_downsync/hf_referral_downsync.dart';
 import '../data/network_manager.dart';
 import '../data/repositories/oplog.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/downsync.dart';
+import '../data/repositories/remote/hf_referral_downsync.dart';
 import '../models/downsync/downsync.dart';
+import '../models/hf_referral_downsync/hf_referral_downsync.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
@@ -153,6 +156,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => DownsyncLocalRepository(
           sql,
           DownsyncOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<HFReferralDownsyncModel,
+              HFReferralDownsyncSearchModel>>(
+        create: (_) => HFReferralDownsyncLocalRepository(
+          sql,
+          HFReferralDownsyncOpLogManager(isar),
         ),
       ),
       RepositoryProvider<
@@ -430,6 +441,15 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           RepositoryProvider<
               RemoteRepository<DownsyncModel, DownsyncSearchModel>>(
             create: (_) => DownsyncRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.hFReferral)
+          RepositoryProvider<
+              RemoteRepository<HFReferralDownsyncModel,
+                  HFReferralDownsyncSearchModel>>(
+            create: (_) => HFReferralDownsyncRemoteRepository(
               dio,
               actionMap: actions,
             ),

@@ -28,12 +28,15 @@ import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
+import '../blocs/hf_referral_downsync/hf_referral_downsync.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/remote_client.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
 import '../models/downsync/downsync.dart';
 import '../models/entities/roles_type.dart';
+import '../models/hf_referral_downsync/hf_referral_downsync.dart';
+import 'package:digit_data_model/models/entities/hf_referral.dart';
 import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';
 import '../utils/environment_config.dart';
@@ -219,6 +222,24 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           serviceLocalRepository: ctx.read<
                               LocalRepository<ServiceModel,
                                   ServiceSearchModel>>(),
+                        ),
+                      ),
+                      BlocProvider(
+                        create: (ctx) => HFReferralDownSyncBloc(
+                          hfReferralLocalRepository: ctx.read<
+                              LocalRepository<HFReferralModel,
+                                  HFReferralSearchModel>>(),
+                          hfReferralDownSyncRemoteRepository: ctx.read<
+                              RemoteRepository<HFReferralDownsyncModel,
+                                  HFReferralDownsyncSearchModel>>(),
+                          hfReferralDownSyncLocalRepository: ctx.read<
+                              LocalRepository<HFReferralDownsyncModel,
+                                  HFReferralDownsyncSearchModel>>(),
+                          bandwidthCheckRepository: BandwidthCheckRepository(
+                            DioClient().dio,
+                            bandwidthPath:
+                                envConfig.variables.checkBandwidthApiPath,
+                          ),
                         ),
                       ),
                       BlocProvider(
