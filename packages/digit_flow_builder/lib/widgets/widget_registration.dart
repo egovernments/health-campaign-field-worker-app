@@ -1,5 +1,6 @@
 import 'package:digit_flow_builder/widgets/implementations/action_popup_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/back_link.dart';
+import 'package:digit_flow_builder/widgets/implementations/expandable_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/proximitySearch_widget.dart';
 
 import 'flow_widget_interface.dart';
@@ -61,6 +62,7 @@ class WidgetRegistration {
     FlowWidgetFactory.register(QRScannerWidget());
     FlowWidgetFactory.register(ActionPopupWidget());
     FlowWidgetFactory.register(ProximitySearchWidget());
+    FlowWidgetFactory.register(ExpandableWidget());
 
     _initialized = true;
   }
