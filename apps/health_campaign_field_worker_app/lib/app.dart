@@ -3,6 +3,7 @@ import 'package:closed_household/blocs/closed_household.dart';
 import 'package:closed_household/closed_household.dart';
 import 'package:digit_crud_bloc/repositories/local/search_entity_repository.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
@@ -287,6 +288,12 @@ class MainApplicationState extends State<MainApplication>
                                 RemoteRepository<StockModel,
                                     StockSearchModel>>(),
                             context: context,
+                            hfReferralRemoteRepository: ctx.read<
+                                RemoteRepository<HFReferralModel,
+                                    HFReferralSearchModel>>(),
+                            hfReferralLocalRepository: ctx.read<
+                                LocalRepository<HFReferralModel,
+                                    HFReferralSearchModel>>(),
                           ),
                         ),
                         BlocProvider(
