@@ -1204,7 +1204,7 @@ final dynamic sampleFlows = {
           "actions": [
             {
               "actionType": "UPDATE_EVENT",
-              "properties": {"entity": "HOUSEHOLD"}
+              "properties": {"entity": "HouseholdModel"}
             }
           ]
         },
