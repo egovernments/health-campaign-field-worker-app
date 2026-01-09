@@ -28,7 +28,6 @@ dependencies:
   pluto_grid: ^8.0.0
   fluttertoast: ^8.1.2
   overlay_builder: ^1.1.0
-  sqlite3_flutter_libs: ^0.5.10
   path_provider: ^2.0.11
   path: ^1.8.2
   digit_scanner: ^1.0.5+1

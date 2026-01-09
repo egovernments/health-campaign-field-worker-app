@@ -497,7 +497,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           offSet: offset,
           lastChangedSince: lastChangedSince);
     } catch (e) {
-      debugPrint('erro9r');
+      debugPrint('error');
     }
 
     return stockEntries!;
