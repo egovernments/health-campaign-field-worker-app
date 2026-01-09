@@ -55,9 +55,10 @@ class _EvaluationKeyDropDownState
       BuildContext context, List<ProjectFacilityModel> projectFacilities) {
     bool isReadOnlyFromSchema = false;
     String? labelFromSchema;
+    bool isRequiredFromSchema = false;
 
     final pages =
-        context.read<FormsBloc>().state.cachedSchemas[widget.schemaName]?.pages;
+        context.read<FormsBloc>().state.cachedSchemas[widget.schemaName]?.pages ?? context.read<FormsBloc>().state.cachedSchemas["REFERRAL_CREATE"]?.pages;
 
     void walk(Map<String, PropertySchema> node, List<String> pathSoFar) {
       for (final entry in node.entries) {
@@ -68,6 +69,14 @@ class _EvaluationKeyDropDownState
           isReadOnlyFromSchema =
               (schema.readOnly == true) || (schema.displayOnly == true);
           labelFromSchema = schema.label ?? schema.innerLabel;
+          if (schema.validations != null) {
+            for (final validation in schema.validations!) {
+              if (validation.type == "required" && validation.value == true) {
+                isRequiredFromSchema = true;
+                break;
+              }
+            }
+          }
           return;
         }
 
@@ -93,7 +102,7 @@ class _EvaluationKeyDropDownState
         final form = ReactiveForm.of(context) as FormGroup;
 
         return LabeledField(
-          isRequired: true,
+          isRequired: isRequiredFromSchema,
           label: localizations.translate(labelFromSchema ?? ""),
           child: Dropdown(
             readOnly: isReadOnlyFromSchema,

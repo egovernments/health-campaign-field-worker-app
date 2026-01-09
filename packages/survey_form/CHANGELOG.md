@@ -1,3 +1,10 @@
+## 1.0.3+1
+
+* Bug fix:
+    * Added missing serviceClientReferenceId during checklist submit
+    * Modified attribute value condition with multivalue type
+    * Modified additionalDetails for null check in service and attributes
+
 ## 1.0.3
 
 * Updated with latest packages data_model and digit_ui_components

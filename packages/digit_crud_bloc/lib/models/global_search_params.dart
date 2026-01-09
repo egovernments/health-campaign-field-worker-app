@@ -5,6 +5,19 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'global_search_params.freezed.dart';
 part 'global_search_params.g.dart';
 
+/// Defines how filters across multiple tables are combined.
+enum MultiTableFilterLogic {
+  /// All filters must match (intersection). Default behavior.
+  /// Example: Households that have BOTH individuals named 'John' AND tasks completed.
+  @JsonValue('and')
+  and,
+
+  /// Any filter can match (union).
+  /// Example: Households that have EITHER individuals named 'John' OR tasks completed.
+  @JsonValue('or')
+  or,
+}
+
 @freezed
 class GlobalSearchParameters with _$GlobalSearchParameters {
   const factory GlobalSearchParameters({
@@ -16,6 +29,15 @@ class GlobalSearchParameters with _$GlobalSearchParameters {
 
     /// If set, pagination and count are applied only for this model.
     String? primaryModel,
+
+    /// The primary key field name for the primary model.
+    /// Used for multi-table filter resolution.
+    /// Example: 'clientReferenceId' for most entities.
+    String? primaryKeyField,
+
+    /// Defines how filters across multiple tables are combined.
+    /// Defaults to [MultiTableFilterLogic.and] (intersection).
+    @Default(MultiTableFilterLogic.and) MultiTableFilterLogic filterLogic,
 
     /// Ordering configuration for the search results
     SearchOrderBy? orderBy,

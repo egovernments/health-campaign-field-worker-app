@@ -83,7 +83,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           // If filledValue is a string like "20 Jun 2025", convert to DateTime
           if (filledValue is String) {
             try {
-              valueToSet = DateFormat("dd MMM yyyy").parseStrict(filledValue);
+              final currentLocale = Localizations.localeOf(context).toString();
+              valueToSet = DateFormat("dd MMM yyyy", currentLocale).parseStrict(filledValue);
             } catch (_) {
               // Not a date string → keep as string
               valueToSet = filledValue;
@@ -353,6 +354,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           isMultiselect: widget.schema.isMultiSelect ?? false,
+          readOnly: widget.schema.readOnly ?? false,
         );
 
       case PropertySchemaFormat.mobileNumber:
@@ -368,6 +370,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           innerLabel:
               translateIfPresent(widget.schema.innerLabel, localizations),
+          prefixText: translateIfPresent(widget.schema.prefixText, localizations),
         );
 
       case PropertySchemaFormat.dob:
@@ -377,10 +380,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           formControlName: widget.formControlName,
           validations: widget.schema.validations,
           initialDate: _safeTimestamp("startDate") != null
-              ? parseDateValue(DigitDateUtils.getDateFromTimestamp(
-                  _safeTimestamp("startDate")!,
-                  dateFormat: "dd MMM YYYY",
-                ))
+              ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("startDate")!)
               : null,
         );
 
@@ -405,18 +405,10 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           form: form,
           formControlName: widget.formControlName,
           start: _safeTimestamp("startDate") != null
-              ? parseDateValue(DigitDateUtils.getDateFromTimestamp(
-                  _safeTimestamp("startDate")!,
-                  dateFormat: "dd MMM YYYY",
-                ))
+              ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("startDate")!)
               : null,
           end: _safeTimestamp("endDate") != null
-              ? parseDateValue(
-                  DigitDateUtils.getDateFromTimestamp(
-                    _safeTimestamp("endDate")!,
-                    dateFormat: "dd MMM YYYY",
-                  ),
-                )
+              ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("endDate")!)
               : null,
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
@@ -560,16 +552,10 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           form: form,
           formControlName: widget.formControlName,
           start: _safeTimestamp("startDate") != null
-              ? parseDateValue(DigitDateUtils.getDateFromTimestamp(
-                  _safeTimestamp("startDate")!,
-                  dateFormat: "dd MMM YYYY",
-                ))
+              ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("startDate")!)
               : null,
           end: _safeTimestamp("endDate") != null
-              ? parseDateValue(DigitDateUtils.getDateFromTimestamp(
-                  _safeTimestamp("endDate")!,
-                  dateFormat: "dd MMM YYYY",
-                ))
+              ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("endDate")!)
               : null,
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
@@ -583,8 +569,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           formControlName: widget.formControlName,
           label: translateIfPresent(widget.schema.label, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
-          minValue: widget.schema.minValue,
-          maxValue: widget.schema.maxValue,
+          minValue: minFromValidations(widget.schema.validations ?? []),
+          maxValue: maxFromValidations(widget.schema.validations ?? []),
           readOnly: _isReadOnly,
           validations: widget.schema.validations,
           isRequired: hasRequiredValidation(widget.schema.validations),
