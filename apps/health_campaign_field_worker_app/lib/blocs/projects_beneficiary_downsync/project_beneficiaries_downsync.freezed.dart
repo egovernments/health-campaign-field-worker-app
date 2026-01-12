@@ -33,6 +33,19 @@ mixin _$BeneficiaryDownSyncEvent {
         getBatchSize,
     required TResult Function() downSyncReport,
     required TResult Function() resetState,
+    required TResult Function(
+            List<AppConfiguration> appConfiguration,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)
+        hfReferralCheckForData,
+    required TResult Function(String projectId, String boundaryCode,
+            int batchSize, int initialServerCount, String boundaryName)
+        hfReferralDownSync,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -48,6 +61,15 @@ mixin _$BeneficiaryDownSyncEvent {
         getBatchSize,
     TResult? Function()? downSyncReport,
     TResult? Function()? resetState,
+    TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        hfReferralCheckForData,
+    TResult? Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        hfReferralDownSync,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -63,6 +85,15 @@ mixin _$BeneficiaryDownSyncEvent {
         getBatchSize,
     TResult Function()? downSyncReport,
     TResult Function()? resetState,
+    TResult Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        hfReferralCheckForData,
+    TResult Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        hfReferralDownSync,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -73,6 +104,11 @@ mixin _$BeneficiaryDownSyncEvent {
     required TResult Function(DownSyncGetBatchSizeEvent value) getBatchSize,
     required TResult Function(DownSyncReportEvent value) downSyncReport,
     required TResult Function(DownSyncResetStateEvent value) resetState,
+    required TResult Function(HFReferralDownSyncGetBatchSizeEvent value)
+        hfReferralGetBatchSize,
+    required TResult Function(HFReferralDownSyncCheckTotalCountEvent value)
+        hfReferralCheckForData,
+    required TResult Function(HFReferralDownSyncEvent value) hfReferralDownSync,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -82,6 +118,11 @@ mixin _$BeneficiaryDownSyncEvent {
     TResult? Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
     TResult? Function(DownSyncReportEvent value)? downSyncReport,
     TResult? Function(DownSyncResetStateEvent value)? resetState,
+    TResult? Function(HFReferralDownSyncGetBatchSizeEvent value)?
+        hfReferralGetBatchSize,
+    TResult? Function(HFReferralDownSyncCheckTotalCountEvent value)?
+        hfReferralCheckForData,
+    TResult? Function(HFReferralDownSyncEvent value)? hfReferralDownSync,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -91,6 +132,11 @@ mixin _$BeneficiaryDownSyncEvent {
     TResult Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
     TResult Function(DownSyncReportEvent value)? downSyncReport,
     TResult Function(DownSyncResetStateEvent value)? resetState,
+    TResult Function(HFReferralDownSyncGetBatchSizeEvent value)?
+        hfReferralGetBatchSize,
+    TResult Function(HFReferralDownSyncCheckTotalCountEvent value)?
+        hfReferralCheckForData,
+    TResult Function(HFReferralDownSyncEvent value)? hfReferralDownSync,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -260,6 +306,19 @@ class _$DownSyncBeneficiaryEventImpl
         getBatchSize,
     required TResult Function() downSyncReport,
     required TResult Function() resetState,
+    required TResult Function(
+            List<AppConfiguration> appConfiguration,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)
+        hfReferralCheckForData,
+    required TResult Function(String projectId, String boundaryCode,
+            int batchSize, int initialServerCount, String boundaryName)
+        hfReferralDownSync,
   }) {
     return downSync(
         projectId, boundaryCode, batchSize, initialServerCount, boundaryName);
@@ -279,6 +338,15 @@ class _$DownSyncBeneficiaryEventImpl
         getBatchSize,
     TResult? Function()? downSyncReport,
     TResult? Function()? resetState,
+    TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        hfReferralCheckForData,
+    TResult? Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        hfReferralDownSync,
   }) {
     return downSync?.call(
         projectId, boundaryCode, batchSize, initialServerCount, boundaryName);
@@ -298,6 +366,15 @@ class _$DownSyncBeneficiaryEventImpl
         getBatchSize,
     TResult Function()? downSyncReport,
     TResult Function()? resetState,
+    TResult Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        hfReferralCheckForData,
+    TResult Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        hfReferralDownSync,
     required TResult orElse(),
   }) {
     if (downSync != null) {
@@ -315,6 +392,11 @@ class _$DownSyncBeneficiaryEventImpl
     required TResult Function(DownSyncGetBatchSizeEvent value) getBatchSize,
     required TResult Function(DownSyncReportEvent value) downSyncReport,
     required TResult Function(DownSyncResetStateEvent value) resetState,
+    required TResult Function(HFReferralDownSyncGetBatchSizeEvent value)
+        hfReferralGetBatchSize,
+    required TResult Function(HFReferralDownSyncCheckTotalCountEvent value)
+        hfReferralCheckForData,
+    required TResult Function(HFReferralDownSyncEvent value) hfReferralDownSync,
   }) {
     return downSync(this);
   }
@@ -327,6 +409,11 @@ class _$DownSyncBeneficiaryEventImpl
     TResult? Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
     TResult? Function(DownSyncReportEvent value)? downSyncReport,
     TResult? Function(DownSyncResetStateEvent value)? resetState,
+    TResult? Function(HFReferralDownSyncGetBatchSizeEvent value)?
+        hfReferralGetBatchSize,
+    TResult? Function(HFReferralDownSyncCheckTotalCountEvent value)?
+        hfReferralCheckForData,
+    TResult? Function(HFReferralDownSyncEvent value)? hfReferralDownSync,
   }) {
     return downSync?.call(this);
   }
@@ -339,6 +426,11 @@ class _$DownSyncBeneficiaryEventImpl
     TResult Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
     TResult Function(DownSyncReportEvent value)? downSyncReport,
     TResult Function(DownSyncResetStateEvent value)? resetState,
+    TResult Function(HFReferralDownSyncGetBatchSizeEvent value)?
+        hfReferralGetBatchSize,
+    TResult Function(HFReferralDownSyncCheckTotalCountEvent value)?
+        hfReferralCheckForData,
+    TResult Function(HFReferralDownSyncEvent value)? hfReferralDownSync,
     required TResult orElse(),
   }) {
     if (downSync != null) {
@@ -513,6 +605,19 @@ class _$DownSyncCheckTotalCountEventImpl
         getBatchSize,
     required TResult Function() downSyncReport,
     required TResult Function() resetState,
+    required TResult Function(
+            List<AppConfiguration> appConfiguration,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)
+        hfReferralCheckForData,
+    required TResult Function(String projectId, String boundaryCode,
+            int batchSize, int initialServerCount, String boundaryName)
+        hfReferralDownSync,
   }) {
     return checkForData(
         projectId, boundaryCode, pendingSyncCount, batchSize, boundaryName);
@@ -532,6 +637,15 @@ class _$DownSyncCheckTotalCountEventImpl
         getBatchSize,
     TResult? Function()? downSyncReport,
     TResult? Function()? resetState,
+    TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        hfReferralCheckForData,
+    TResult? Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        hfReferralDownSync,
   }) {
     return checkForData?.call(
         projectId, boundaryCode, pendingSyncCount, batchSize, boundaryName);
@@ -551,6 +665,15 @@ class _$DownSyncCheckTotalCountEventImpl
         getBatchSize,
     TResult Function()? downSyncReport,
     TResult Function()? resetState,
+    TResult Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        hfReferralCheckForData,
+    TResult Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        hfReferralDownSync,
     required TResult orElse(),
   }) {
     if (checkForData != null) {
@@ -568,6 +691,11 @@ class _$DownSyncCheckTotalCountEventImpl
     required TResult Function(DownSyncGetBatchSizeEvent value) getBatchSize,
     required TResult Function(DownSyncReportEvent value) downSyncReport,
     required TResult Function(DownSyncResetStateEvent value) resetState,
+    required TResult Function(HFReferralDownSyncGetBatchSizeEvent value)
+        hfReferralGetBatchSize,
+    required TResult Function(HFReferralDownSyncCheckTotalCountEvent value)
+        hfReferralCheckForData,
+    required TResult Function(HFReferralDownSyncEvent value) hfReferralDownSync,
   }) {
     return checkForData(this);
   }
@@ -580,6 +708,11 @@ class _$DownSyncCheckTotalCountEventImpl
     TResult? Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
     TResult? Function(DownSyncReportEvent value)? downSyncReport,
     TResult? Function(DownSyncResetStateEvent value)? resetState,
+    TResult? Function(HFReferralDownSyncGetBatchSizeEvent value)?
+        hfReferralGetBatchSize,
+    TResult? Function(HFReferralDownSyncCheckTotalCountEvent value)?
+        hfReferralCheckForData,
+    TResult? Function(HFReferralDownSyncEvent value)? hfReferralDownSync,
   }) {
     return checkForData?.call(this);
   }
@@ -592,6 +725,11 @@ class _$DownSyncCheckTotalCountEventImpl
     TResult Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
     TResult Function(DownSyncReportEvent value)? downSyncReport,
     TResult Function(DownSyncResetStateEvent value)? resetState,
+    TResult Function(HFReferralDownSyncGetBatchSizeEvent value)?
+        hfReferralGetBatchSize,
+    TResult Function(HFReferralDownSyncCheckTotalCountEvent value)?
+        hfReferralCheckForData,
+    TResult Function(HFReferralDownSyncEvent value)? hfReferralDownSync,
     required TResult orElse(),
   }) {
     if (checkForData != null) {
@@ -780,6 +918,19 @@ class _$DownSyncGetBatchSizeEventImpl
         getBatchSize,
     required TResult Function() downSyncReport,
     required TResult Function() resetState,
+    required TResult Function(
+            List<AppConfiguration> appConfiguration,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)
+        hfReferralCheckForData,
+    required TResult Function(String projectId, String boundaryCode,
+            int batchSize, int initialServerCount, String boundaryName)
+        hfReferralDownSync,
   }) {
     return getBatchSize(appConfiguration, projectId, boundaryCode,
         pendingSyncCount, boundaryName);
@@ -799,6 +950,15 @@ class _$DownSyncGetBatchSizeEventImpl
         getBatchSize,
     TResult? Function()? downSyncReport,
     TResult? Function()? resetState,
+    TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        hfReferralCheckForData,
+    TResult? Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        hfReferralDownSync,
   }) {
     return getBatchSize?.call(appConfiguration, projectId, boundaryCode,
         pendingSyncCount, boundaryName);
@@ -818,6 +978,15 @@ class _$DownSyncGetBatchSizeEventImpl
         getBatchSize,
     TResult Function()? downSyncReport,
     TResult Function()? resetState,
+    TResult Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        hfReferralCheckForData,
+    TResult Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        hfReferralDownSync,
     required TResult orElse(),
   }) {
     if (getBatchSize != null) {
@@ -835,6 +1004,11 @@ class _$DownSyncGetBatchSizeEventImpl
     required TResult Function(DownSyncGetBatchSizeEvent value) getBatchSize,
     required TResult Function(DownSyncReportEvent value) downSyncReport,
     required TResult Function(DownSyncResetStateEvent value) resetState,
+    required TResult Function(HFReferralDownSyncGetBatchSizeEvent value)
+        hfReferralGetBatchSize,
+    required TResult Function(HFReferralDownSyncCheckTotalCountEvent value)
+        hfReferralCheckForData,
+    required TResult Function(HFReferralDownSyncEvent value) hfReferralDownSync,
   }) {
     return getBatchSize(this);
   }
@@ -847,6 +1021,11 @@ class _$DownSyncGetBatchSizeEventImpl
     TResult? Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
     TResult? Function(DownSyncReportEvent value)? downSyncReport,
     TResult? Function(DownSyncResetStateEvent value)? resetState,
+    TResult? Function(HFReferralDownSyncGetBatchSizeEvent value)?
+        hfReferralGetBatchSize,
+    TResult? Function(HFReferralDownSyncCheckTotalCountEvent value)?
+        hfReferralCheckForData,
+    TResult? Function(HFReferralDownSyncEvent value)? hfReferralDownSync,
   }) {
     return getBatchSize?.call(this);
   }
@@ -859,6 +1038,11 @@ class _$DownSyncGetBatchSizeEventImpl
     TResult Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
     TResult Function(DownSyncReportEvent value)? downSyncReport,
     TResult Function(DownSyncResetStateEvent value)? resetState,
+    TResult Function(HFReferralDownSyncGetBatchSizeEvent value)?
+        hfReferralGetBatchSize,
+    TResult Function(HFReferralDownSyncCheckTotalCountEvent value)?
+        hfReferralCheckForData,
+    TResult Function(HFReferralDownSyncEvent value)? hfReferralDownSync,
     required TResult orElse(),
   }) {
     if (getBatchSize != null) {
@@ -950,6 +1134,19 @@ class _$DownSyncReportEventImpl
         getBatchSize,
     required TResult Function() downSyncReport,
     required TResult Function() resetState,
+    required TResult Function(
+            List<AppConfiguration> appConfiguration,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)
+        hfReferralCheckForData,
+    required TResult Function(String projectId, String boundaryCode,
+            int batchSize, int initialServerCount, String boundaryName)
+        hfReferralDownSync,
   }) {
     return downSyncReport();
   }
@@ -968,6 +1165,15 @@ class _$DownSyncReportEventImpl
         getBatchSize,
     TResult? Function()? downSyncReport,
     TResult? Function()? resetState,
+    TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        hfReferralCheckForData,
+    TResult? Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        hfReferralDownSync,
   }) {
     return downSyncReport?.call();
   }
@@ -986,6 +1192,15 @@ class _$DownSyncReportEventImpl
         getBatchSize,
     TResult Function()? downSyncReport,
     TResult Function()? resetState,
+    TResult Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        hfReferralCheckForData,
+    TResult Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        hfReferralDownSync,
     required TResult orElse(),
   }) {
     if (downSyncReport != null) {
@@ -1002,6 +1217,11 @@ class _$DownSyncReportEventImpl
     required TResult Function(DownSyncGetBatchSizeEvent value) getBatchSize,
     required TResult Function(DownSyncReportEvent value) downSyncReport,
     required TResult Function(DownSyncResetStateEvent value) resetState,
+    required TResult Function(HFReferralDownSyncGetBatchSizeEvent value)
+        hfReferralGetBatchSize,
+    required TResult Function(HFReferralDownSyncCheckTotalCountEvent value)
+        hfReferralCheckForData,
+    required TResult Function(HFReferralDownSyncEvent value) hfReferralDownSync,
   }) {
     return downSyncReport(this);
   }
@@ -1014,6 +1234,11 @@ class _$DownSyncReportEventImpl
     TResult? Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
     TResult? Function(DownSyncReportEvent value)? downSyncReport,
     TResult? Function(DownSyncResetStateEvent value)? resetState,
+    TResult? Function(HFReferralDownSyncGetBatchSizeEvent value)?
+        hfReferralGetBatchSize,
+    TResult? Function(HFReferralDownSyncCheckTotalCountEvent value)?
+        hfReferralCheckForData,
+    TResult? Function(HFReferralDownSyncEvent value)? hfReferralDownSync,
   }) {
     return downSyncReport?.call(this);
   }
@@ -1026,6 +1251,11 @@ class _$DownSyncReportEventImpl
     TResult Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
     TResult Function(DownSyncReportEvent value)? downSyncReport,
     TResult Function(DownSyncResetStateEvent value)? resetState,
+    TResult Function(HFReferralDownSyncGetBatchSizeEvent value)?
+        hfReferralGetBatchSize,
+    TResult Function(HFReferralDownSyncCheckTotalCountEvent value)?
+        hfReferralCheckForData,
+    TResult Function(HFReferralDownSyncEvent value)? hfReferralDownSync,
     required TResult orElse(),
   }) {
     if (downSyncReport != null) {
@@ -1105,6 +1335,19 @@ class _$DownSyncResetStateEventImpl
         getBatchSize,
     required TResult Function() downSyncReport,
     required TResult Function() resetState,
+    required TResult Function(
+            List<AppConfiguration> appConfiguration,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)
+        hfReferralCheckForData,
+    required TResult Function(String projectId, String boundaryCode,
+            int batchSize, int initialServerCount, String boundaryName)
+        hfReferralDownSync,
   }) {
     return resetState();
   }
@@ -1123,6 +1366,15 @@ class _$DownSyncResetStateEventImpl
         getBatchSize,
     TResult? Function()? downSyncReport,
     TResult? Function()? resetState,
+    TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        hfReferralCheckForData,
+    TResult? Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        hfReferralDownSync,
   }) {
     return resetState?.call();
   }
@@ -1141,6 +1393,15 @@ class _$DownSyncResetStateEventImpl
         getBatchSize,
     TResult Function()? downSyncReport,
     TResult Function()? resetState,
+    TResult Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        hfReferralCheckForData,
+    TResult Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        hfReferralDownSync,
     required TResult orElse(),
   }) {
     if (resetState != null) {
@@ -1157,6 +1418,11 @@ class _$DownSyncResetStateEventImpl
     required TResult Function(DownSyncGetBatchSizeEvent value) getBatchSize,
     required TResult Function(DownSyncReportEvent value) downSyncReport,
     required TResult Function(DownSyncResetStateEvent value) resetState,
+    required TResult Function(HFReferralDownSyncGetBatchSizeEvent value)
+        hfReferralGetBatchSize,
+    required TResult Function(HFReferralDownSyncCheckTotalCountEvent value)
+        hfReferralCheckForData,
+    required TResult Function(HFReferralDownSyncEvent value) hfReferralDownSync,
   }) {
     return resetState(this);
   }
@@ -1169,6 +1435,11 @@ class _$DownSyncResetStateEventImpl
     TResult? Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
     TResult? Function(DownSyncReportEvent value)? downSyncReport,
     TResult? Function(DownSyncResetStateEvent value)? resetState,
+    TResult? Function(HFReferralDownSyncGetBatchSizeEvent value)?
+        hfReferralGetBatchSize,
+    TResult? Function(HFReferralDownSyncCheckTotalCountEvent value)?
+        hfReferralCheckForData,
+    TResult? Function(HFReferralDownSyncEvent value)? hfReferralDownSync,
   }) {
     return resetState?.call(this);
   }
@@ -1181,6 +1452,11 @@ class _$DownSyncResetStateEventImpl
     TResult Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
     TResult Function(DownSyncReportEvent value)? downSyncReport,
     TResult Function(DownSyncResetStateEvent value)? resetState,
+    TResult Function(HFReferralDownSyncGetBatchSizeEvent value)?
+        hfReferralGetBatchSize,
+    TResult Function(HFReferralDownSyncCheckTotalCountEvent value)?
+        hfReferralCheckForData,
+    TResult Function(HFReferralDownSyncEvent value)? hfReferralDownSync,
     required TResult orElse(),
   }) {
     if (resetState != null) {
@@ -1192,6 +1468,922 @@ class _$DownSyncResetStateEventImpl
 
 abstract class DownSyncResetStateEvent implements BeneficiaryDownSyncEvent {
   const factory DownSyncResetStateEvent() = _$DownSyncResetStateEventImpl;
+}
+
+/// @nodoc
+abstract class _$$HFReferralDownSyncGetBatchSizeEventImplCopyWith<$Res> {
+  factory _$$HFReferralDownSyncGetBatchSizeEventImplCopyWith(
+          _$HFReferralDownSyncGetBatchSizeEventImpl value,
+          $Res Function(_$HFReferralDownSyncGetBatchSizeEventImpl) then) =
+      __$$HFReferralDownSyncGetBatchSizeEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call(
+      {List<AppConfiguration> appConfiguration,
+      String projectId,
+      String boundaryCode,
+      int pendingSyncCount,
+      String boundaryName});
+}
+
+/// @nodoc
+class __$$HFReferralDownSyncGetBatchSizeEventImplCopyWithImpl<$Res>
+    extends _$BeneficiaryDownSyncEventCopyWithImpl<$Res,
+        _$HFReferralDownSyncGetBatchSizeEventImpl>
+    implements _$$HFReferralDownSyncGetBatchSizeEventImplCopyWith<$Res> {
+  __$$HFReferralDownSyncGetBatchSizeEventImplCopyWithImpl(
+      _$HFReferralDownSyncGetBatchSizeEventImpl _value,
+      $Res Function(_$HFReferralDownSyncGetBatchSizeEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? appConfiguration = null,
+    Object? projectId = null,
+    Object? boundaryCode = null,
+    Object? pendingSyncCount = null,
+    Object? boundaryName = null,
+  }) {
+    return _then(_$HFReferralDownSyncGetBatchSizeEventImpl(
+      appConfiguration: null == appConfiguration
+          ? _value._appConfiguration
+          : appConfiguration // ignore: cast_nullable_to_non_nullable
+              as List<AppConfiguration>,
+      projectId: null == projectId
+          ? _value.projectId
+          : projectId // ignore: cast_nullable_to_non_nullable
+              as String,
+      boundaryCode: null == boundaryCode
+          ? _value.boundaryCode
+          : boundaryCode // ignore: cast_nullable_to_non_nullable
+              as String,
+      pendingSyncCount: null == pendingSyncCount
+          ? _value.pendingSyncCount
+          : pendingSyncCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      boundaryName: null == boundaryName
+          ? _value.boundaryName
+          : boundaryName // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$HFReferralDownSyncGetBatchSizeEventImpl
+    with DiagnosticableTreeMixin
+    implements HFReferralDownSyncGetBatchSizeEvent {
+  const _$HFReferralDownSyncGetBatchSizeEventImpl(
+      {required final List<AppConfiguration> appConfiguration,
+      required this.projectId,
+      required this.boundaryCode,
+      required this.pendingSyncCount,
+      required this.boundaryName})
+      : _appConfiguration = appConfiguration;
+
+  final List<AppConfiguration> _appConfiguration;
+  @override
+  List<AppConfiguration> get appConfiguration {
+    if (_appConfiguration is EqualUnmodifiableListView)
+      return _appConfiguration;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_appConfiguration);
+  }
+
+  @override
+  final String projectId;
+  @override
+  final String boundaryCode;
+  @override
+  final int pendingSyncCount;
+  @override
+  final String boundaryName;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'BeneficiaryDownSyncEvent.hfReferralGetBatchSize(appConfiguration: $appConfiguration, projectId: $projectId, boundaryCode: $boundaryCode, pendingSyncCount: $pendingSyncCount, boundaryName: $boundaryName)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty(
+          'type', 'BeneficiaryDownSyncEvent.hfReferralGetBatchSize'))
+      ..add(DiagnosticsProperty('appConfiguration', appConfiguration))
+      ..add(DiagnosticsProperty('projectId', projectId))
+      ..add(DiagnosticsProperty('boundaryCode', boundaryCode))
+      ..add(DiagnosticsProperty('pendingSyncCount', pendingSyncCount))
+      ..add(DiagnosticsProperty('boundaryName', boundaryName));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$HFReferralDownSyncGetBatchSizeEventImpl &&
+            const DeepCollectionEquality()
+                .equals(other._appConfiguration, _appConfiguration) &&
+            (identical(other.projectId, projectId) ||
+                other.projectId == projectId) &&
+            (identical(other.boundaryCode, boundaryCode) ||
+                other.boundaryCode == boundaryCode) &&
+            (identical(other.pendingSyncCount, pendingSyncCount) ||
+                other.pendingSyncCount == pendingSyncCount) &&
+            (identical(other.boundaryName, boundaryName) ||
+                other.boundaryName == boundaryName));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_appConfiguration),
+      projectId,
+      boundaryCode,
+      pendingSyncCount,
+      boundaryName);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$HFReferralDownSyncGetBatchSizeEventImplCopyWith<
+          _$HFReferralDownSyncGetBatchSizeEventImpl>
+      get copyWith => __$$HFReferralDownSyncGetBatchSizeEventImplCopyWithImpl<
+          _$HFReferralDownSyncGetBatchSizeEventImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String projectId, String boundaryCode,
+            int batchSize, int initialServerCount, String boundaryName)
+        downSync,
+    required TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)
+        checkForData,
+    required TResult Function(
+            List<AppConfiguration> appConfiguration,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
+        getBatchSize,
+    required TResult Function() downSyncReport,
+    required TResult Function() resetState,
+    required TResult Function(
+            List<AppConfiguration> appConfiguration,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)
+        hfReferralCheckForData,
+    required TResult Function(String projectId, String boundaryCode,
+            int batchSize, int initialServerCount, String boundaryName)
+        hfReferralDownSync,
+  }) {
+    return hfReferralGetBatchSize(appConfiguration, projectId, boundaryCode,
+        pendingSyncCount, boundaryName);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        downSync,
+    TResult? Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        checkForData,
+    TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        getBatchSize,
+    TResult? Function()? downSyncReport,
+    TResult? Function()? resetState,
+    TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        hfReferralCheckForData,
+    TResult? Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        hfReferralDownSync,
+  }) {
+    return hfReferralGetBatchSize?.call(appConfiguration, projectId,
+        boundaryCode, pendingSyncCount, boundaryName);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        downSync,
+    TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        checkForData,
+    TResult Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        getBatchSize,
+    TResult Function()? downSyncReport,
+    TResult Function()? resetState,
+    TResult Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        hfReferralCheckForData,
+    TResult Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        hfReferralDownSync,
+    required TResult orElse(),
+  }) {
+    if (hfReferralGetBatchSize != null) {
+      return hfReferralGetBatchSize(appConfiguration, projectId, boundaryCode,
+          pendingSyncCount, boundaryName);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(DownSyncBeneficiaryEvent value) downSync,
+    required TResult Function(DownSyncCheckTotalCountEvent value) checkForData,
+    required TResult Function(DownSyncGetBatchSizeEvent value) getBatchSize,
+    required TResult Function(DownSyncReportEvent value) downSyncReport,
+    required TResult Function(DownSyncResetStateEvent value) resetState,
+    required TResult Function(HFReferralDownSyncGetBatchSizeEvent value)
+        hfReferralGetBatchSize,
+    required TResult Function(HFReferralDownSyncCheckTotalCountEvent value)
+        hfReferralCheckForData,
+    required TResult Function(HFReferralDownSyncEvent value) hfReferralDownSync,
+  }) {
+    return hfReferralGetBatchSize(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(DownSyncBeneficiaryEvent value)? downSync,
+    TResult? Function(DownSyncCheckTotalCountEvent value)? checkForData,
+    TResult? Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult? Function(DownSyncReportEvent value)? downSyncReport,
+    TResult? Function(DownSyncResetStateEvent value)? resetState,
+    TResult? Function(HFReferralDownSyncGetBatchSizeEvent value)?
+        hfReferralGetBatchSize,
+    TResult? Function(HFReferralDownSyncCheckTotalCountEvent value)?
+        hfReferralCheckForData,
+    TResult? Function(HFReferralDownSyncEvent value)? hfReferralDownSync,
+  }) {
+    return hfReferralGetBatchSize?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(DownSyncBeneficiaryEvent value)? downSync,
+    TResult Function(DownSyncCheckTotalCountEvent value)? checkForData,
+    TResult Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult Function(DownSyncReportEvent value)? downSyncReport,
+    TResult Function(DownSyncResetStateEvent value)? resetState,
+    TResult Function(HFReferralDownSyncGetBatchSizeEvent value)?
+        hfReferralGetBatchSize,
+    TResult Function(HFReferralDownSyncCheckTotalCountEvent value)?
+        hfReferralCheckForData,
+    TResult Function(HFReferralDownSyncEvent value)? hfReferralDownSync,
+    required TResult orElse(),
+  }) {
+    if (hfReferralGetBatchSize != null) {
+      return hfReferralGetBatchSize(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class HFReferralDownSyncGetBatchSizeEvent
+    implements BeneficiaryDownSyncEvent {
+  const factory HFReferralDownSyncGetBatchSizeEvent(
+          {required final List<AppConfiguration> appConfiguration,
+          required final String projectId,
+          required final String boundaryCode,
+          required final int pendingSyncCount,
+          required final String boundaryName}) =
+      _$HFReferralDownSyncGetBatchSizeEventImpl;
+
+  List<AppConfiguration> get appConfiguration;
+  String get projectId;
+  String get boundaryCode;
+  int get pendingSyncCount;
+  String get boundaryName;
+  @JsonKey(ignore: true)
+  _$$HFReferralDownSyncGetBatchSizeEventImplCopyWith<
+          _$HFReferralDownSyncGetBatchSizeEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$HFReferralDownSyncCheckTotalCountEventImplCopyWith<$Res> {
+  factory _$$HFReferralDownSyncCheckTotalCountEventImplCopyWith(
+          _$HFReferralDownSyncCheckTotalCountEventImpl value,
+          $Res Function(_$HFReferralDownSyncCheckTotalCountEventImpl) then) =
+      __$$HFReferralDownSyncCheckTotalCountEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call(
+      {String projectId,
+      String boundaryCode,
+      int pendingSyncCount,
+      int batchSize,
+      String boundaryName});
+}
+
+/// @nodoc
+class __$$HFReferralDownSyncCheckTotalCountEventImplCopyWithImpl<$Res>
+    extends _$BeneficiaryDownSyncEventCopyWithImpl<$Res,
+        _$HFReferralDownSyncCheckTotalCountEventImpl>
+    implements _$$HFReferralDownSyncCheckTotalCountEventImplCopyWith<$Res> {
+  __$$HFReferralDownSyncCheckTotalCountEventImplCopyWithImpl(
+      _$HFReferralDownSyncCheckTotalCountEventImpl _value,
+      $Res Function(_$HFReferralDownSyncCheckTotalCountEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? projectId = null,
+    Object? boundaryCode = null,
+    Object? pendingSyncCount = null,
+    Object? batchSize = null,
+    Object? boundaryName = null,
+  }) {
+    return _then(_$HFReferralDownSyncCheckTotalCountEventImpl(
+      projectId: null == projectId
+          ? _value.projectId
+          : projectId // ignore: cast_nullable_to_non_nullable
+              as String,
+      boundaryCode: null == boundaryCode
+          ? _value.boundaryCode
+          : boundaryCode // ignore: cast_nullable_to_non_nullable
+              as String,
+      pendingSyncCount: null == pendingSyncCount
+          ? _value.pendingSyncCount
+          : pendingSyncCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      batchSize: null == batchSize
+          ? _value.batchSize
+          : batchSize // ignore: cast_nullable_to_non_nullable
+              as int,
+      boundaryName: null == boundaryName
+          ? _value.boundaryName
+          : boundaryName // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$HFReferralDownSyncCheckTotalCountEventImpl
+    with DiagnosticableTreeMixin
+    implements HFReferralDownSyncCheckTotalCountEvent {
+  const _$HFReferralDownSyncCheckTotalCountEventImpl(
+      {required this.projectId,
+      required this.boundaryCode,
+      required this.pendingSyncCount,
+      required this.batchSize,
+      required this.boundaryName});
+
+  @override
+  final String projectId;
+  @override
+  final String boundaryCode;
+  @override
+  final int pendingSyncCount;
+  @override
+  final int batchSize;
+  @override
+  final String boundaryName;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'BeneficiaryDownSyncEvent.hfReferralCheckForData(projectId: $projectId, boundaryCode: $boundaryCode, pendingSyncCount: $pendingSyncCount, batchSize: $batchSize, boundaryName: $boundaryName)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty(
+          'type', 'BeneficiaryDownSyncEvent.hfReferralCheckForData'))
+      ..add(DiagnosticsProperty('projectId', projectId))
+      ..add(DiagnosticsProperty('boundaryCode', boundaryCode))
+      ..add(DiagnosticsProperty('pendingSyncCount', pendingSyncCount))
+      ..add(DiagnosticsProperty('batchSize', batchSize))
+      ..add(DiagnosticsProperty('boundaryName', boundaryName));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$HFReferralDownSyncCheckTotalCountEventImpl &&
+            (identical(other.projectId, projectId) ||
+                other.projectId == projectId) &&
+            (identical(other.boundaryCode, boundaryCode) ||
+                other.boundaryCode == boundaryCode) &&
+            (identical(other.pendingSyncCount, pendingSyncCount) ||
+                other.pendingSyncCount == pendingSyncCount) &&
+            (identical(other.batchSize, batchSize) ||
+                other.batchSize == batchSize) &&
+            (identical(other.boundaryName, boundaryName) ||
+                other.boundaryName == boundaryName));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, projectId, boundaryCode,
+      pendingSyncCount, batchSize, boundaryName);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$HFReferralDownSyncCheckTotalCountEventImplCopyWith<
+          _$HFReferralDownSyncCheckTotalCountEventImpl>
+      get copyWith =>
+          __$$HFReferralDownSyncCheckTotalCountEventImplCopyWithImpl<
+              _$HFReferralDownSyncCheckTotalCountEventImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String projectId, String boundaryCode,
+            int batchSize, int initialServerCount, String boundaryName)
+        downSync,
+    required TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)
+        checkForData,
+    required TResult Function(
+            List<AppConfiguration> appConfiguration,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
+        getBatchSize,
+    required TResult Function() downSyncReport,
+    required TResult Function() resetState,
+    required TResult Function(
+            List<AppConfiguration> appConfiguration,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)
+        hfReferralCheckForData,
+    required TResult Function(String projectId, String boundaryCode,
+            int batchSize, int initialServerCount, String boundaryName)
+        hfReferralDownSync,
+  }) {
+    return hfReferralCheckForData(
+        projectId, boundaryCode, pendingSyncCount, batchSize, boundaryName);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        downSync,
+    TResult? Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        checkForData,
+    TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        getBatchSize,
+    TResult? Function()? downSyncReport,
+    TResult? Function()? resetState,
+    TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        hfReferralCheckForData,
+    TResult? Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        hfReferralDownSync,
+  }) {
+    return hfReferralCheckForData?.call(
+        projectId, boundaryCode, pendingSyncCount, batchSize, boundaryName);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        downSync,
+    TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        checkForData,
+    TResult Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        getBatchSize,
+    TResult Function()? downSyncReport,
+    TResult Function()? resetState,
+    TResult Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        hfReferralCheckForData,
+    TResult Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        hfReferralDownSync,
+    required TResult orElse(),
+  }) {
+    if (hfReferralCheckForData != null) {
+      return hfReferralCheckForData(
+          projectId, boundaryCode, pendingSyncCount, batchSize, boundaryName);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(DownSyncBeneficiaryEvent value) downSync,
+    required TResult Function(DownSyncCheckTotalCountEvent value) checkForData,
+    required TResult Function(DownSyncGetBatchSizeEvent value) getBatchSize,
+    required TResult Function(DownSyncReportEvent value) downSyncReport,
+    required TResult Function(DownSyncResetStateEvent value) resetState,
+    required TResult Function(HFReferralDownSyncGetBatchSizeEvent value)
+        hfReferralGetBatchSize,
+    required TResult Function(HFReferralDownSyncCheckTotalCountEvent value)
+        hfReferralCheckForData,
+    required TResult Function(HFReferralDownSyncEvent value) hfReferralDownSync,
+  }) {
+    return hfReferralCheckForData(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(DownSyncBeneficiaryEvent value)? downSync,
+    TResult? Function(DownSyncCheckTotalCountEvent value)? checkForData,
+    TResult? Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult? Function(DownSyncReportEvent value)? downSyncReport,
+    TResult? Function(DownSyncResetStateEvent value)? resetState,
+    TResult? Function(HFReferralDownSyncGetBatchSizeEvent value)?
+        hfReferralGetBatchSize,
+    TResult? Function(HFReferralDownSyncCheckTotalCountEvent value)?
+        hfReferralCheckForData,
+    TResult? Function(HFReferralDownSyncEvent value)? hfReferralDownSync,
+  }) {
+    return hfReferralCheckForData?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(DownSyncBeneficiaryEvent value)? downSync,
+    TResult Function(DownSyncCheckTotalCountEvent value)? checkForData,
+    TResult Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult Function(DownSyncReportEvent value)? downSyncReport,
+    TResult Function(DownSyncResetStateEvent value)? resetState,
+    TResult Function(HFReferralDownSyncGetBatchSizeEvent value)?
+        hfReferralGetBatchSize,
+    TResult Function(HFReferralDownSyncCheckTotalCountEvent value)?
+        hfReferralCheckForData,
+    TResult Function(HFReferralDownSyncEvent value)? hfReferralDownSync,
+    required TResult orElse(),
+  }) {
+    if (hfReferralCheckForData != null) {
+      return hfReferralCheckForData(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class HFReferralDownSyncCheckTotalCountEvent
+    implements BeneficiaryDownSyncEvent {
+  const factory HFReferralDownSyncCheckTotalCountEvent(
+          {required final String projectId,
+          required final String boundaryCode,
+          required final int pendingSyncCount,
+          required final int batchSize,
+          required final String boundaryName}) =
+      _$HFReferralDownSyncCheckTotalCountEventImpl;
+
+  String get projectId;
+  String get boundaryCode;
+  int get pendingSyncCount;
+  int get batchSize;
+  String get boundaryName;
+  @JsonKey(ignore: true)
+  _$$HFReferralDownSyncCheckTotalCountEventImplCopyWith<
+          _$HFReferralDownSyncCheckTotalCountEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$HFReferralDownSyncEventImplCopyWith<$Res> {
+  factory _$$HFReferralDownSyncEventImplCopyWith(
+          _$HFReferralDownSyncEventImpl value,
+          $Res Function(_$HFReferralDownSyncEventImpl) then) =
+      __$$HFReferralDownSyncEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call(
+      {String projectId,
+      String boundaryCode,
+      int batchSize,
+      int initialServerCount,
+      String boundaryName});
+}
+
+/// @nodoc
+class __$$HFReferralDownSyncEventImplCopyWithImpl<$Res>
+    extends _$BeneficiaryDownSyncEventCopyWithImpl<$Res,
+        _$HFReferralDownSyncEventImpl>
+    implements _$$HFReferralDownSyncEventImplCopyWith<$Res> {
+  __$$HFReferralDownSyncEventImplCopyWithImpl(
+      _$HFReferralDownSyncEventImpl _value,
+      $Res Function(_$HFReferralDownSyncEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? projectId = null,
+    Object? boundaryCode = null,
+    Object? batchSize = null,
+    Object? initialServerCount = null,
+    Object? boundaryName = null,
+  }) {
+    return _then(_$HFReferralDownSyncEventImpl(
+      projectId: null == projectId
+          ? _value.projectId
+          : projectId // ignore: cast_nullable_to_non_nullable
+              as String,
+      boundaryCode: null == boundaryCode
+          ? _value.boundaryCode
+          : boundaryCode // ignore: cast_nullable_to_non_nullable
+              as String,
+      batchSize: null == batchSize
+          ? _value.batchSize
+          : batchSize // ignore: cast_nullable_to_non_nullable
+              as int,
+      initialServerCount: null == initialServerCount
+          ? _value.initialServerCount
+          : initialServerCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      boundaryName: null == boundaryName
+          ? _value.boundaryName
+          : boundaryName // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$HFReferralDownSyncEventImpl
+    with DiagnosticableTreeMixin
+    implements HFReferralDownSyncEvent {
+  const _$HFReferralDownSyncEventImpl(
+      {required this.projectId,
+      required this.boundaryCode,
+      required this.batchSize,
+      required this.initialServerCount,
+      required this.boundaryName});
+
+  @override
+  final String projectId;
+  @override
+  final String boundaryCode;
+  @override
+  final int batchSize;
+  @override
+  final int initialServerCount;
+  @override
+  final String boundaryName;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'BeneficiaryDownSyncEvent.hfReferralDownSync(projectId: $projectId, boundaryCode: $boundaryCode, batchSize: $batchSize, initialServerCount: $initialServerCount, boundaryName: $boundaryName)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty(
+          'type', 'BeneficiaryDownSyncEvent.hfReferralDownSync'))
+      ..add(DiagnosticsProperty('projectId', projectId))
+      ..add(DiagnosticsProperty('boundaryCode', boundaryCode))
+      ..add(DiagnosticsProperty('batchSize', batchSize))
+      ..add(DiagnosticsProperty('initialServerCount', initialServerCount))
+      ..add(DiagnosticsProperty('boundaryName', boundaryName));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$HFReferralDownSyncEventImpl &&
+            (identical(other.projectId, projectId) ||
+                other.projectId == projectId) &&
+            (identical(other.boundaryCode, boundaryCode) ||
+                other.boundaryCode == boundaryCode) &&
+            (identical(other.batchSize, batchSize) ||
+                other.batchSize == batchSize) &&
+            (identical(other.initialServerCount, initialServerCount) ||
+                other.initialServerCount == initialServerCount) &&
+            (identical(other.boundaryName, boundaryName) ||
+                other.boundaryName == boundaryName));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, projectId, boundaryCode,
+      batchSize, initialServerCount, boundaryName);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$HFReferralDownSyncEventImplCopyWith<_$HFReferralDownSyncEventImpl>
+      get copyWith => __$$HFReferralDownSyncEventImplCopyWithImpl<
+          _$HFReferralDownSyncEventImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String projectId, String boundaryCode,
+            int batchSize, int initialServerCount, String boundaryName)
+        downSync,
+    required TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)
+        checkForData,
+    required TResult Function(
+            List<AppConfiguration> appConfiguration,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
+        getBatchSize,
+    required TResult Function() downSyncReport,
+    required TResult Function() resetState,
+    required TResult Function(
+            List<AppConfiguration> appConfiguration,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)
+        hfReferralCheckForData,
+    required TResult Function(String projectId, String boundaryCode,
+            int batchSize, int initialServerCount, String boundaryName)
+        hfReferralDownSync,
+  }) {
+    return hfReferralDownSync(
+        projectId, boundaryCode, batchSize, initialServerCount, boundaryName);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        downSync,
+    TResult? Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        checkForData,
+    TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        getBatchSize,
+    TResult? Function()? downSyncReport,
+    TResult? Function()? resetState,
+    TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        hfReferralCheckForData,
+    TResult? Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        hfReferralDownSync,
+  }) {
+    return hfReferralDownSync?.call(
+        projectId, boundaryCode, batchSize, initialServerCount, boundaryName);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        downSync,
+    TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        checkForData,
+    TResult Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        getBatchSize,
+    TResult Function()? downSyncReport,
+    TResult Function()? resetState,
+    TResult Function(List<AppConfiguration> appConfiguration, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, int batchSize, String boundaryName)?
+        hfReferralCheckForData,
+    TResult Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount, String boundaryName)?
+        hfReferralDownSync,
+    required TResult orElse(),
+  }) {
+    if (hfReferralDownSync != null) {
+      return hfReferralDownSync(
+          projectId, boundaryCode, batchSize, initialServerCount, boundaryName);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(DownSyncBeneficiaryEvent value) downSync,
+    required TResult Function(DownSyncCheckTotalCountEvent value) checkForData,
+    required TResult Function(DownSyncGetBatchSizeEvent value) getBatchSize,
+    required TResult Function(DownSyncReportEvent value) downSyncReport,
+    required TResult Function(DownSyncResetStateEvent value) resetState,
+    required TResult Function(HFReferralDownSyncGetBatchSizeEvent value)
+        hfReferralGetBatchSize,
+    required TResult Function(HFReferralDownSyncCheckTotalCountEvent value)
+        hfReferralCheckForData,
+    required TResult Function(HFReferralDownSyncEvent value) hfReferralDownSync,
+  }) {
+    return hfReferralDownSync(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(DownSyncBeneficiaryEvent value)? downSync,
+    TResult? Function(DownSyncCheckTotalCountEvent value)? checkForData,
+    TResult? Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult? Function(DownSyncReportEvent value)? downSyncReport,
+    TResult? Function(DownSyncResetStateEvent value)? resetState,
+    TResult? Function(HFReferralDownSyncGetBatchSizeEvent value)?
+        hfReferralGetBatchSize,
+    TResult? Function(HFReferralDownSyncCheckTotalCountEvent value)?
+        hfReferralCheckForData,
+    TResult? Function(HFReferralDownSyncEvent value)? hfReferralDownSync,
+  }) {
+    return hfReferralDownSync?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(DownSyncBeneficiaryEvent value)? downSync,
+    TResult Function(DownSyncCheckTotalCountEvent value)? checkForData,
+    TResult Function(DownSyncGetBatchSizeEvent value)? getBatchSize,
+    TResult Function(DownSyncReportEvent value)? downSyncReport,
+    TResult Function(DownSyncResetStateEvent value)? resetState,
+    TResult Function(HFReferralDownSyncGetBatchSizeEvent value)?
+        hfReferralGetBatchSize,
+    TResult Function(HFReferralDownSyncCheckTotalCountEvent value)?
+        hfReferralCheckForData,
+    TResult Function(HFReferralDownSyncEvent value)? hfReferralDownSync,
+    required TResult orElse(),
+  }) {
+    if (hfReferralDownSync != null) {
+      return hfReferralDownSync(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class HFReferralDownSyncEvent implements BeneficiaryDownSyncEvent {
+  const factory HFReferralDownSyncEvent(
+      {required final String projectId,
+      required final String boundaryCode,
+      required final int batchSize,
+      required final int initialServerCount,
+      required final String boundaryName}) = _$HFReferralDownSyncEventImpl;
+
+  String get projectId;
+  String get boundaryCode;
+  int get batchSize;
+  int get initialServerCount;
+  String get boundaryName;
+  @JsonKey(ignore: true)
+  _$$HFReferralDownSyncEventImplCopyWith<_$HFReferralDownSyncEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1211,6 +2403,15 @@ mixin _$BeneficiaryDownSyncState {
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(int initialServerCount, int batchSize)
+        hfReferralDataFound,
+    required TResult Function() hfReferralNoData,
+    required TResult Function(int syncedCount, int totalCount)
+        hfReferralInProgress,
+    required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1228,6 +2429,14 @@ mixin _$BeneficiaryDownSyncState {
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult? Function()? hfReferralNoData,
+    TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1245,6 +2454,14 @@ mixin _$BeneficiaryDownSyncState {
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult Function()? hfReferralNoData,
+    TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -1263,6 +2480,16 @@ mixin _$BeneficiaryDownSyncState {
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_HFReferralDownSyncGetBatchSizeState value)
+        hfReferralGetBatchSize,
+    required TResult Function(_HFReferralDownSyncDataFoundState value)
+        hfReferralDataFound,
+    required TResult Function(_HFReferralDownSyncNoDataState value)
+        hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncInProgressState value)
+        hfReferralInProgress,
+    required TResult Function(_HFReferralDownSyncSuccessState value)
+        hfReferralSuccess,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1280,6 +2507,14 @@ mixin _$BeneficiaryDownSyncState {
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult? Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1297,6 +2532,14 @@ mixin _$BeneficiaryDownSyncState {
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -1423,6 +2666,15 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(int initialServerCount, int batchSize)
+        hfReferralDataFound,
+    required TResult Function() hfReferralNoData,
+    required TResult Function(int syncedCount, int totalCount)
+        hfReferralInProgress,
+    required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
   }) {
     return inProgress(syncedCount, totalCount);
   }
@@ -1443,6 +2695,14 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult? Function()? hfReferralNoData,
+    TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
     return inProgress?.call(syncedCount, totalCount);
   }
@@ -1463,6 +2723,14 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult Function()? hfReferralNoData,
+    TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (inProgress != null) {
@@ -1487,6 +2755,16 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_HFReferralDownSyncGetBatchSizeState value)
+        hfReferralGetBatchSize,
+    required TResult Function(_HFReferralDownSyncDataFoundState value)
+        hfReferralDataFound,
+    required TResult Function(_HFReferralDownSyncNoDataState value)
+        hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncInProgressState value)
+        hfReferralInProgress,
+    required TResult Function(_HFReferralDownSyncSuccessState value)
+        hfReferralSuccess,
   }) {
     return inProgress(this);
   }
@@ -1507,6 +2785,14 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult? Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
   }) {
     return inProgress?.call(this);
   }
@@ -1527,6 +2813,14 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (inProgress != null) {
@@ -1639,6 +2933,15 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(int initialServerCount, int batchSize)
+        hfReferralDataFound,
+    required TResult Function() hfReferralNoData,
+    required TResult Function(int syncedCount, int totalCount)
+        hfReferralInProgress,
+    required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
   }) {
     return success(downSyncResult);
   }
@@ -1659,6 +2962,14 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult? Function()? hfReferralNoData,
+    TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
     return success?.call(downSyncResult);
   }
@@ -1679,6 +2990,14 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult Function()? hfReferralNoData,
+    TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (success != null) {
@@ -1703,6 +3022,16 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_HFReferralDownSyncGetBatchSizeState value)
+        hfReferralGetBatchSize,
+    required TResult Function(_HFReferralDownSyncDataFoundState value)
+        hfReferralDataFound,
+    required TResult Function(_HFReferralDownSyncNoDataState value)
+        hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncInProgressState value)
+        hfReferralInProgress,
+    required TResult Function(_HFReferralDownSyncSuccessState value)
+        hfReferralSuccess,
   }) {
     return success(this);
   }
@@ -1723,6 +3052,14 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult? Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
   }) {
     return success?.call(this);
   }
@@ -1743,6 +3080,14 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (success != null) {
@@ -1903,6 +3248,15 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(int initialServerCount, int batchSize)
+        hfReferralDataFound,
+    required TResult Function() hfReferralNoData,
+    required TResult Function(int syncedCount, int totalCount)
+        hfReferralInProgress,
+    required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
   }) {
     return getBatchSize(
         batchSize, projectId, boundaryCode, pendingSyncCount, boundaryName);
@@ -1924,6 +3278,14 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult? Function()? hfReferralNoData,
+    TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
     return getBatchSize?.call(
         batchSize, projectId, boundaryCode, pendingSyncCount, boundaryName);
@@ -1945,6 +3307,14 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult Function()? hfReferralNoData,
+    TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (getBatchSize != null) {
@@ -1970,6 +3340,16 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_HFReferralDownSyncGetBatchSizeState value)
+        hfReferralGetBatchSize,
+    required TResult Function(_HFReferralDownSyncDataFoundState value)
+        hfReferralDataFound,
+    required TResult Function(_HFReferralDownSyncNoDataState value)
+        hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncInProgressState value)
+        hfReferralInProgress,
+    required TResult Function(_HFReferralDownSyncSuccessState value)
+        hfReferralSuccess,
   }) {
     return getBatchSize(this);
   }
@@ -1990,6 +3370,14 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult? Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
   }) {
     return getBatchSize?.call(this);
   }
@@ -2010,6 +3398,14 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (getBatchSize != null) {
@@ -2127,6 +3523,15 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(int initialServerCount, int batchSize)
+        hfReferralDataFound,
+    required TResult Function() hfReferralNoData,
+    required TResult Function(int syncedCount, int totalCount)
+        hfReferralInProgress,
+    required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
   }) {
     return loading(isPop);
   }
@@ -2147,6 +3552,14 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult? Function()? hfReferralNoData,
+    TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
     return loading?.call(isPop);
   }
@@ -2167,6 +3580,14 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult Function()? hfReferralNoData,
+    TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -2191,6 +3612,16 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_HFReferralDownSyncGetBatchSizeState value)
+        hfReferralGetBatchSize,
+    required TResult Function(_HFReferralDownSyncDataFoundState value)
+        hfReferralDataFound,
+    required TResult Function(_HFReferralDownSyncNoDataState value)
+        hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncInProgressState value)
+        hfReferralInProgress,
+    required TResult Function(_HFReferralDownSyncSuccessState value)
+        hfReferralSuccess,
   }) {
     return loading(this);
   }
@@ -2211,6 +3642,14 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult? Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
   }) {
     return loading?.call(this);
   }
@@ -2231,6 +3670,14 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -2314,6 +3761,15 @@ class _$DownSyncInsufficientStorageStateImpl
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(int initialServerCount, int batchSize)
+        hfReferralDataFound,
+    required TResult Function() hfReferralNoData,
+    required TResult Function(int syncedCount, int totalCount)
+        hfReferralInProgress,
+    required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
   }) {
     return insufficientStorage();
   }
@@ -2334,6 +3790,14 @@ class _$DownSyncInsufficientStorageStateImpl
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult? Function()? hfReferralNoData,
+    TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
     return insufficientStorage?.call();
   }
@@ -2354,6 +3818,14 @@ class _$DownSyncInsufficientStorageStateImpl
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult Function()? hfReferralNoData,
+    TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (insufficientStorage != null) {
@@ -2378,6 +3850,16 @@ class _$DownSyncInsufficientStorageStateImpl
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_HFReferralDownSyncGetBatchSizeState value)
+        hfReferralGetBatchSize,
+    required TResult Function(_HFReferralDownSyncDataFoundState value)
+        hfReferralDataFound,
+    required TResult Function(_HFReferralDownSyncNoDataState value)
+        hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncInProgressState value)
+        hfReferralInProgress,
+    required TResult Function(_HFReferralDownSyncSuccessState value)
+        hfReferralSuccess,
   }) {
     return insufficientStorage(this);
   }
@@ -2398,6 +3880,14 @@ class _$DownSyncInsufficientStorageStateImpl
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult? Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
   }) {
     return insufficientStorage?.call(this);
   }
@@ -2418,6 +3908,14 @@ class _$DownSyncInsufficientStorageStateImpl
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (insufficientStorage != null) {
@@ -2536,6 +4034,15 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(int initialServerCount, int batchSize)
+        hfReferralDataFound,
+    required TResult Function() hfReferralNoData,
+    required TResult Function(int syncedCount, int totalCount)
+        hfReferralInProgress,
+    required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
   }) {
     return dataFound(initialServerCount, batchSize);
   }
@@ -2556,6 +4063,14 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult? Function()? hfReferralNoData,
+    TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
     return dataFound?.call(initialServerCount, batchSize);
   }
@@ -2576,6 +4091,14 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult Function()? hfReferralNoData,
+    TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (dataFound != null) {
@@ -2600,6 +4123,16 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_HFReferralDownSyncGetBatchSizeState value)
+        hfReferralGetBatchSize,
+    required TResult Function(_HFReferralDownSyncDataFoundState value)
+        hfReferralDataFound,
+    required TResult Function(_HFReferralDownSyncNoDataState value)
+        hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncInProgressState value)
+        hfReferralInProgress,
+    required TResult Function(_HFReferralDownSyncSuccessState value)
+        hfReferralSuccess,
   }) {
     return dataFound(this);
   }
@@ -2620,6 +4153,14 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult? Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
   }) {
     return dataFound?.call(this);
   }
@@ -2640,6 +4181,14 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (dataFound != null) {
@@ -2722,6 +4271,15 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(int initialServerCount, int batchSize)
+        hfReferralDataFound,
+    required TResult Function() hfReferralNoData,
+    required TResult Function(int syncedCount, int totalCount)
+        hfReferralInProgress,
+    required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
   }) {
     return resetState();
   }
@@ -2742,6 +4300,14 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult? Function()? hfReferralNoData,
+    TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
     return resetState?.call();
   }
@@ -2762,6 +4328,14 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult Function()? hfReferralNoData,
+    TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (resetState != null) {
@@ -2786,6 +4360,16 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_HFReferralDownSyncGetBatchSizeState value)
+        hfReferralGetBatchSize,
+    required TResult Function(_HFReferralDownSyncDataFoundState value)
+        hfReferralDataFound,
+    required TResult Function(_HFReferralDownSyncNoDataState value)
+        hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncInProgressState value)
+        hfReferralInProgress,
+    required TResult Function(_HFReferralDownSyncSuccessState value)
+        hfReferralSuccess,
   }) {
     return resetState(this);
   }
@@ -2806,6 +4390,14 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult? Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
   }) {
     return resetState?.call(this);
   }
@@ -2826,6 +4418,14 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (resetState != null) {
@@ -2903,6 +4503,15 @@ class _$DownSynnCountCheckFailedStateImpl extends _DownSynnCountCheckFailedState
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(int initialServerCount, int batchSize)
+        hfReferralDataFound,
+    required TResult Function() hfReferralNoData,
+    required TResult Function(int syncedCount, int totalCount)
+        hfReferralInProgress,
+    required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
   }) {
     return totalCountCheckFailed();
   }
@@ -2923,6 +4532,14 @@ class _$DownSynnCountCheckFailedStateImpl extends _DownSynnCountCheckFailedState
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult? Function()? hfReferralNoData,
+    TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
     return totalCountCheckFailed?.call();
   }
@@ -2943,6 +4560,14 @@ class _$DownSynnCountCheckFailedStateImpl extends _DownSynnCountCheckFailedState
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult Function()? hfReferralNoData,
+    TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (totalCountCheckFailed != null) {
@@ -2967,6 +4592,16 @@ class _$DownSynnCountCheckFailedStateImpl extends _DownSynnCountCheckFailedState
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_HFReferralDownSyncGetBatchSizeState value)
+        hfReferralGetBatchSize,
+    required TResult Function(_HFReferralDownSyncDataFoundState value)
+        hfReferralDataFound,
+    required TResult Function(_HFReferralDownSyncNoDataState value)
+        hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncInProgressState value)
+        hfReferralInProgress,
+    required TResult Function(_HFReferralDownSyncSuccessState value)
+        hfReferralSuccess,
   }) {
     return totalCountCheckFailed(this);
   }
@@ -2987,6 +4622,14 @@ class _$DownSynnCountCheckFailedStateImpl extends _DownSynnCountCheckFailedState
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult? Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
   }) {
     return totalCountCheckFailed?.call(this);
   }
@@ -3007,6 +4650,14 @@ class _$DownSynnCountCheckFailedStateImpl extends _DownSynnCountCheckFailedState
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (totalCountCheckFailed != null) {
@@ -3083,6 +4734,15 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(int initialServerCount, int batchSize)
+        hfReferralDataFound,
+    required TResult Function() hfReferralNoData,
+    required TResult Function(int syncedCount, int totalCount)
+        hfReferralInProgress,
+    required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
   }) {
     return failed();
   }
@@ -3103,6 +4763,14 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult? Function()? hfReferralNoData,
+    TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
     return failed?.call();
   }
@@ -3123,6 +4791,14 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult Function()? hfReferralNoData,
+    TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (failed != null) {
@@ -3147,6 +4823,16 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_HFReferralDownSyncGetBatchSizeState value)
+        hfReferralGetBatchSize,
+    required TResult Function(_HFReferralDownSyncDataFoundState value)
+        hfReferralDataFound,
+    required TResult Function(_HFReferralDownSyncNoDataState value)
+        hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncInProgressState value)
+        hfReferralInProgress,
+    required TResult Function(_HFReferralDownSyncSuccessState value)
+        hfReferralSuccess,
   }) {
     return failed(this);
   }
@@ -3167,6 +4853,14 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult? Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
   }) {
     return failed?.call(this);
   }
@@ -3187,6 +4881,14 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (failed != null) {
@@ -3300,6 +5002,15 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(int initialServerCount, int batchSize)
+        hfReferralDataFound,
+    required TResult Function() hfReferralNoData,
+    required TResult Function(int syncedCount, int totalCount)
+        hfReferralInProgress,
+    required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
   }) {
     return report(downsyncCriteriaList);
   }
@@ -3320,6 +5031,14 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult? Function()? hfReferralNoData,
+    TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
     return report?.call(downsyncCriteriaList);
   }
@@ -3340,6 +5059,14 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult Function()? hfReferralNoData,
+    TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (report != null) {
@@ -3364,6 +5091,16 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_HFReferralDownSyncGetBatchSizeState value)
+        hfReferralGetBatchSize,
+    required TResult Function(_HFReferralDownSyncDataFoundState value)
+        hfReferralDataFound,
+    required TResult Function(_HFReferralDownSyncNoDataState value)
+        hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncInProgressState value)
+        hfReferralInProgress,
+    required TResult Function(_HFReferralDownSyncSuccessState value)
+        hfReferralSuccess,
   }) {
     return report(this);
   }
@@ -3384,6 +5121,14 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult? Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
   }) {
     return report?.call(this);
   }
@@ -3404,6 +5149,14 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (report != null) {
@@ -3488,6 +5241,15 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(int initialServerCount, int batchSize)
+        hfReferralDataFound,
+    required TResult Function() hfReferralNoData,
+    required TResult Function(int syncedCount, int totalCount)
+        hfReferralInProgress,
+    required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
   }) {
     return pendingSync();
   }
@@ -3508,6 +5270,14 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult? Function()? hfReferralNoData,
+    TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
     return pendingSync?.call();
   }
@@ -3528,6 +5298,14 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
     TResult Function()? failed,
     TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult Function()? pendingSync,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult Function()? hfReferralNoData,
+    TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (pendingSync != null) {
@@ -3552,6 +5330,16 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
     required TResult Function(_DownSyncFailureState value) failed,
     required TResult Function(_DownSyncReportState value) report,
     required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_HFReferralDownSyncGetBatchSizeState value)
+        hfReferralGetBatchSize,
+    required TResult Function(_HFReferralDownSyncDataFoundState value)
+        hfReferralDataFound,
+    required TResult Function(_HFReferralDownSyncNoDataState value)
+        hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncInProgressState value)
+        hfReferralInProgress,
+    required TResult Function(_HFReferralDownSyncSuccessState value)
+        hfReferralSuccess,
   }) {
     return pendingSync(this);
   }
@@ -3572,6 +5360,14 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
     TResult? Function(_DownSyncFailureState value)? failed,
     TResult? Function(_DownSyncReportState value)? report,
     TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult? Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
   }) {
     return pendingSync?.call(this);
   }
@@ -3592,6 +5388,14 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
     TResult Function(_DownSyncFailureState value)? failed,
     TResult Function(_DownSyncReportState value)? report,
     TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
     required TResult orElse(),
   }) {
     if (pendingSync != null) {
@@ -3604,4 +5408,1409 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
 abstract class _DownSyncPendingSyncState extends BeneficiaryDownSyncState {
   const factory _DownSyncPendingSyncState() = _$DownSyncPendingSyncStateImpl;
   const _DownSyncPendingSyncState._() : super._();
+}
+
+/// @nodoc
+abstract class _$$HFReferralDownSyncGetBatchSizeStateImplCopyWith<$Res> {
+  factory _$$HFReferralDownSyncGetBatchSizeStateImplCopyWith(
+          _$HFReferralDownSyncGetBatchSizeStateImpl value,
+          $Res Function(_$HFReferralDownSyncGetBatchSizeStateImpl) then) =
+      __$$HFReferralDownSyncGetBatchSizeStateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call(
+      {int batchSize,
+      String projectId,
+      String boundaryCode,
+      int pendingSyncCount,
+      String boundaryName});
+}
+
+/// @nodoc
+class __$$HFReferralDownSyncGetBatchSizeStateImplCopyWithImpl<$Res>
+    extends _$BeneficiaryDownSyncStateCopyWithImpl<$Res,
+        _$HFReferralDownSyncGetBatchSizeStateImpl>
+    implements _$$HFReferralDownSyncGetBatchSizeStateImplCopyWith<$Res> {
+  __$$HFReferralDownSyncGetBatchSizeStateImplCopyWithImpl(
+      _$HFReferralDownSyncGetBatchSizeStateImpl _value,
+      $Res Function(_$HFReferralDownSyncGetBatchSizeStateImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? batchSize = null,
+    Object? projectId = null,
+    Object? boundaryCode = null,
+    Object? pendingSyncCount = null,
+    Object? boundaryName = null,
+  }) {
+    return _then(_$HFReferralDownSyncGetBatchSizeStateImpl(
+      null == batchSize
+          ? _value.batchSize
+          : batchSize // ignore: cast_nullable_to_non_nullable
+              as int,
+      null == projectId
+          ? _value.projectId
+          : projectId // ignore: cast_nullable_to_non_nullable
+              as String,
+      null == boundaryCode
+          ? _value.boundaryCode
+          : boundaryCode // ignore: cast_nullable_to_non_nullable
+              as String,
+      null == pendingSyncCount
+          ? _value.pendingSyncCount
+          : pendingSyncCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      null == boundaryName
+          ? _value.boundaryName
+          : boundaryName // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$HFReferralDownSyncGetBatchSizeStateImpl
+    extends _HFReferralDownSyncGetBatchSizeState with DiagnosticableTreeMixin {
+  const _$HFReferralDownSyncGetBatchSizeStateImpl(
+      this.batchSize,
+      this.projectId,
+      this.boundaryCode,
+      this.pendingSyncCount,
+      this.boundaryName)
+      : super._();
+
+  @override
+  final int batchSize;
+  @override
+  final String projectId;
+  @override
+  final String boundaryCode;
+  @override
+  final int pendingSyncCount;
+  @override
+  final String boundaryName;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'BeneficiaryDownSyncState.hfReferralGetBatchSize(batchSize: $batchSize, projectId: $projectId, boundaryCode: $boundaryCode, pendingSyncCount: $pendingSyncCount, boundaryName: $boundaryName)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty(
+          'type', 'BeneficiaryDownSyncState.hfReferralGetBatchSize'))
+      ..add(DiagnosticsProperty('batchSize', batchSize))
+      ..add(DiagnosticsProperty('projectId', projectId))
+      ..add(DiagnosticsProperty('boundaryCode', boundaryCode))
+      ..add(DiagnosticsProperty('pendingSyncCount', pendingSyncCount))
+      ..add(DiagnosticsProperty('boundaryName', boundaryName));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$HFReferralDownSyncGetBatchSizeStateImpl &&
+            (identical(other.batchSize, batchSize) ||
+                other.batchSize == batchSize) &&
+            (identical(other.projectId, projectId) ||
+                other.projectId == projectId) &&
+            (identical(other.boundaryCode, boundaryCode) ||
+                other.boundaryCode == boundaryCode) &&
+            (identical(other.pendingSyncCount, pendingSyncCount) ||
+                other.pendingSyncCount == pendingSyncCount) &&
+            (identical(other.boundaryName, boundaryName) ||
+                other.boundaryName == boundaryName));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, batchSize, projectId,
+      boundaryCode, pendingSyncCount, boundaryName);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$HFReferralDownSyncGetBatchSizeStateImplCopyWith<
+          _$HFReferralDownSyncGetBatchSizeStateImpl>
+      get copyWith => __$$HFReferralDownSyncGetBatchSizeStateImplCopyWithImpl<
+          _$HFReferralDownSyncGetBatchSizeStateImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int syncedCount, int totalCount) inProgress,
+    required TResult Function(DownsyncModel downSyncResult) success,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        getBatchSize,
+    required TResult Function(bool isPop) loading,
+    required TResult Function() insufficientStorage,
+    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function() resetState,
+    required TResult Function() totalCountCheckFailed,
+    required TResult Function() failed,
+    required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
+    required TResult Function() pendingSync,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(int initialServerCount, int batchSize)
+        hfReferralDataFound,
+    required TResult Function() hfReferralNoData,
+    required TResult Function(int syncedCount, int totalCount)
+        hfReferralInProgress,
+    required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
+  }) {
+    return hfReferralGetBatchSize(
+        batchSize, projectId, boundaryCode, pendingSyncCount, boundaryName);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int syncedCount, int totalCount)? inProgress,
+    TResult? Function(DownsyncModel downSyncResult)? success,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        getBatchSize,
+    TResult? Function(bool isPop)? loading,
+    TResult? Function()? insufficientStorage,
+    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function()? resetState,
+    TResult? Function()? totalCountCheckFailed,
+    TResult? Function()? failed,
+    TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
+    TResult? Function()? pendingSync,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult? Function()? hfReferralNoData,
+    TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
+  }) {
+    return hfReferralGetBatchSize?.call(
+        batchSize, projectId, boundaryCode, pendingSyncCount, boundaryName);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int syncedCount, int totalCount)? inProgress,
+    TResult Function(DownsyncModel downSyncResult)? success,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        getBatchSize,
+    TResult Function(bool isPop)? loading,
+    TResult Function()? insufficientStorage,
+    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function()? resetState,
+    TResult Function()? totalCountCheckFailed,
+    TResult Function()? failed,
+    TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
+    TResult Function()? pendingSync,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult Function()? hfReferralNoData,
+    TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
+    required TResult orElse(),
+  }) {
+    if (hfReferralGetBatchSize != null) {
+      return hfReferralGetBatchSize(
+          batchSize, projectId, boundaryCode, pendingSyncCount, boundaryName);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_DownSyncInProgressState value) inProgress,
+    required TResult Function(_DownSyncSuccessState value) success,
+    required TResult Function(_DownSyncGetBatchSizeState value) getBatchSize,
+    required TResult Function(_DownSyncLoadingState value) loading,
+    required TResult Function(_DownSyncInsufficientStorageState value)
+        insufficientStorage,
+    required TResult Function(_DownSyncDataFoundState value) dataFound,
+    required TResult Function(_DownSyncResetState value) resetState,
+    required TResult Function(_DownSynnCountCheckFailedState value)
+        totalCountCheckFailed,
+    required TResult Function(_DownSyncFailureState value) failed,
+    required TResult Function(_DownSyncReportState value) report,
+    required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_HFReferralDownSyncGetBatchSizeState value)
+        hfReferralGetBatchSize,
+    required TResult Function(_HFReferralDownSyncDataFoundState value)
+        hfReferralDataFound,
+    required TResult Function(_HFReferralDownSyncNoDataState value)
+        hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncInProgressState value)
+        hfReferralInProgress,
+    required TResult Function(_HFReferralDownSyncSuccessState value)
+        hfReferralSuccess,
+  }) {
+    return hfReferralGetBatchSize(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_DownSyncInProgressState value)? inProgress,
+    TResult? Function(_DownSyncSuccessState value)? success,
+    TResult? Function(_DownSyncGetBatchSizeState value)? getBatchSize,
+    TResult? Function(_DownSyncLoadingState value)? loading,
+    TResult? Function(_DownSyncInsufficientStorageState value)?
+        insufficientStorage,
+    TResult? Function(_DownSyncDataFoundState value)? dataFound,
+    TResult? Function(_DownSyncResetState value)? resetState,
+    TResult? Function(_DownSynnCountCheckFailedState value)?
+        totalCountCheckFailed,
+    TResult? Function(_DownSyncFailureState value)? failed,
+    TResult? Function(_DownSyncReportState value)? report,
+    TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult? Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
+  }) {
+    return hfReferralGetBatchSize?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_DownSyncInProgressState value)? inProgress,
+    TResult Function(_DownSyncSuccessState value)? success,
+    TResult Function(_DownSyncGetBatchSizeState value)? getBatchSize,
+    TResult Function(_DownSyncLoadingState value)? loading,
+    TResult Function(_DownSyncInsufficientStorageState value)?
+        insufficientStorage,
+    TResult Function(_DownSyncDataFoundState value)? dataFound,
+    TResult Function(_DownSyncResetState value)? resetState,
+    TResult Function(_DownSynnCountCheckFailedState value)?
+        totalCountCheckFailed,
+    TResult Function(_DownSyncFailureState value)? failed,
+    TResult Function(_DownSyncReportState value)? report,
+    TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
+    required TResult orElse(),
+  }) {
+    if (hfReferralGetBatchSize != null) {
+      return hfReferralGetBatchSize(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _HFReferralDownSyncGetBatchSizeState
+    extends BeneficiaryDownSyncState {
+  const factory _HFReferralDownSyncGetBatchSizeState(
+      final int batchSize,
+      final String projectId,
+      final String boundaryCode,
+      final int pendingSyncCount,
+      final String boundaryName) = _$HFReferralDownSyncGetBatchSizeStateImpl;
+  const _HFReferralDownSyncGetBatchSizeState._() : super._();
+
+  int get batchSize;
+  String get projectId;
+  String get boundaryCode;
+  int get pendingSyncCount;
+  String get boundaryName;
+  @JsonKey(ignore: true)
+  _$$HFReferralDownSyncGetBatchSizeStateImplCopyWith<
+          _$HFReferralDownSyncGetBatchSizeStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$HFReferralDownSyncDataFoundStateImplCopyWith<$Res> {
+  factory _$$HFReferralDownSyncDataFoundStateImplCopyWith(
+          _$HFReferralDownSyncDataFoundStateImpl value,
+          $Res Function(_$HFReferralDownSyncDataFoundStateImpl) then) =
+      __$$HFReferralDownSyncDataFoundStateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int initialServerCount, int batchSize});
+}
+
+/// @nodoc
+class __$$HFReferralDownSyncDataFoundStateImplCopyWithImpl<$Res>
+    extends _$BeneficiaryDownSyncStateCopyWithImpl<$Res,
+        _$HFReferralDownSyncDataFoundStateImpl>
+    implements _$$HFReferralDownSyncDataFoundStateImplCopyWith<$Res> {
+  __$$HFReferralDownSyncDataFoundStateImplCopyWithImpl(
+      _$HFReferralDownSyncDataFoundStateImpl _value,
+      $Res Function(_$HFReferralDownSyncDataFoundStateImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? initialServerCount = null,
+    Object? batchSize = null,
+  }) {
+    return _then(_$HFReferralDownSyncDataFoundStateImpl(
+      null == initialServerCount
+          ? _value.initialServerCount
+          : initialServerCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      null == batchSize
+          ? _value.batchSize
+          : batchSize // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$HFReferralDownSyncDataFoundStateImpl
+    extends _HFReferralDownSyncDataFoundState with DiagnosticableTreeMixin {
+  const _$HFReferralDownSyncDataFoundStateImpl(
+      this.initialServerCount, this.batchSize)
+      : super._();
+
+  @override
+  final int initialServerCount;
+  @override
+  final int batchSize;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'BeneficiaryDownSyncState.hfReferralDataFound(initialServerCount: $initialServerCount, batchSize: $batchSize)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty(
+          'type', 'BeneficiaryDownSyncState.hfReferralDataFound'))
+      ..add(DiagnosticsProperty('initialServerCount', initialServerCount))
+      ..add(DiagnosticsProperty('batchSize', batchSize));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$HFReferralDownSyncDataFoundStateImpl &&
+            (identical(other.initialServerCount, initialServerCount) ||
+                other.initialServerCount == initialServerCount) &&
+            (identical(other.batchSize, batchSize) ||
+                other.batchSize == batchSize));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, initialServerCount, batchSize);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$HFReferralDownSyncDataFoundStateImplCopyWith<
+          _$HFReferralDownSyncDataFoundStateImpl>
+      get copyWith => __$$HFReferralDownSyncDataFoundStateImplCopyWithImpl<
+          _$HFReferralDownSyncDataFoundStateImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int syncedCount, int totalCount) inProgress,
+    required TResult Function(DownsyncModel downSyncResult) success,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        getBatchSize,
+    required TResult Function(bool isPop) loading,
+    required TResult Function() insufficientStorage,
+    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function() resetState,
+    required TResult Function() totalCountCheckFailed,
+    required TResult Function() failed,
+    required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
+    required TResult Function() pendingSync,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(int initialServerCount, int batchSize)
+        hfReferralDataFound,
+    required TResult Function() hfReferralNoData,
+    required TResult Function(int syncedCount, int totalCount)
+        hfReferralInProgress,
+    required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
+  }) {
+    return hfReferralDataFound(initialServerCount, batchSize);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int syncedCount, int totalCount)? inProgress,
+    TResult? Function(DownsyncModel downSyncResult)? success,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        getBatchSize,
+    TResult? Function(bool isPop)? loading,
+    TResult? Function()? insufficientStorage,
+    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function()? resetState,
+    TResult? Function()? totalCountCheckFailed,
+    TResult? Function()? failed,
+    TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
+    TResult? Function()? pendingSync,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult? Function()? hfReferralNoData,
+    TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
+  }) {
+    return hfReferralDataFound?.call(initialServerCount, batchSize);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int syncedCount, int totalCount)? inProgress,
+    TResult Function(DownsyncModel downSyncResult)? success,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        getBatchSize,
+    TResult Function(bool isPop)? loading,
+    TResult Function()? insufficientStorage,
+    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function()? resetState,
+    TResult Function()? totalCountCheckFailed,
+    TResult Function()? failed,
+    TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
+    TResult Function()? pendingSync,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult Function()? hfReferralNoData,
+    TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
+    required TResult orElse(),
+  }) {
+    if (hfReferralDataFound != null) {
+      return hfReferralDataFound(initialServerCount, batchSize);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_DownSyncInProgressState value) inProgress,
+    required TResult Function(_DownSyncSuccessState value) success,
+    required TResult Function(_DownSyncGetBatchSizeState value) getBatchSize,
+    required TResult Function(_DownSyncLoadingState value) loading,
+    required TResult Function(_DownSyncInsufficientStorageState value)
+        insufficientStorage,
+    required TResult Function(_DownSyncDataFoundState value) dataFound,
+    required TResult Function(_DownSyncResetState value) resetState,
+    required TResult Function(_DownSynnCountCheckFailedState value)
+        totalCountCheckFailed,
+    required TResult Function(_DownSyncFailureState value) failed,
+    required TResult Function(_DownSyncReportState value) report,
+    required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_HFReferralDownSyncGetBatchSizeState value)
+        hfReferralGetBatchSize,
+    required TResult Function(_HFReferralDownSyncDataFoundState value)
+        hfReferralDataFound,
+    required TResult Function(_HFReferralDownSyncNoDataState value)
+        hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncInProgressState value)
+        hfReferralInProgress,
+    required TResult Function(_HFReferralDownSyncSuccessState value)
+        hfReferralSuccess,
+  }) {
+    return hfReferralDataFound(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_DownSyncInProgressState value)? inProgress,
+    TResult? Function(_DownSyncSuccessState value)? success,
+    TResult? Function(_DownSyncGetBatchSizeState value)? getBatchSize,
+    TResult? Function(_DownSyncLoadingState value)? loading,
+    TResult? Function(_DownSyncInsufficientStorageState value)?
+        insufficientStorage,
+    TResult? Function(_DownSyncDataFoundState value)? dataFound,
+    TResult? Function(_DownSyncResetState value)? resetState,
+    TResult? Function(_DownSynnCountCheckFailedState value)?
+        totalCountCheckFailed,
+    TResult? Function(_DownSyncFailureState value)? failed,
+    TResult? Function(_DownSyncReportState value)? report,
+    TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult? Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
+  }) {
+    return hfReferralDataFound?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_DownSyncInProgressState value)? inProgress,
+    TResult Function(_DownSyncSuccessState value)? success,
+    TResult Function(_DownSyncGetBatchSizeState value)? getBatchSize,
+    TResult Function(_DownSyncLoadingState value)? loading,
+    TResult Function(_DownSyncInsufficientStorageState value)?
+        insufficientStorage,
+    TResult Function(_DownSyncDataFoundState value)? dataFound,
+    TResult Function(_DownSyncResetState value)? resetState,
+    TResult Function(_DownSynnCountCheckFailedState value)?
+        totalCountCheckFailed,
+    TResult Function(_DownSyncFailureState value)? failed,
+    TResult Function(_DownSyncReportState value)? report,
+    TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
+    required TResult orElse(),
+  }) {
+    if (hfReferralDataFound != null) {
+      return hfReferralDataFound(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _HFReferralDownSyncDataFoundState
+    extends BeneficiaryDownSyncState {
+  const factory _HFReferralDownSyncDataFoundState(
+          final int initialServerCount, final int batchSize) =
+      _$HFReferralDownSyncDataFoundStateImpl;
+  const _HFReferralDownSyncDataFoundState._() : super._();
+
+  int get initialServerCount;
+  int get batchSize;
+  @JsonKey(ignore: true)
+  _$$HFReferralDownSyncDataFoundStateImplCopyWith<
+          _$HFReferralDownSyncDataFoundStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$HFReferralDownSyncNoDataStateImplCopyWith<$Res> {
+  factory _$$HFReferralDownSyncNoDataStateImplCopyWith(
+          _$HFReferralDownSyncNoDataStateImpl value,
+          $Res Function(_$HFReferralDownSyncNoDataStateImpl) then) =
+      __$$HFReferralDownSyncNoDataStateImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$HFReferralDownSyncNoDataStateImplCopyWithImpl<$Res>
+    extends _$BeneficiaryDownSyncStateCopyWithImpl<$Res,
+        _$HFReferralDownSyncNoDataStateImpl>
+    implements _$$HFReferralDownSyncNoDataStateImplCopyWith<$Res> {
+  __$$HFReferralDownSyncNoDataStateImplCopyWithImpl(
+      _$HFReferralDownSyncNoDataStateImpl _value,
+      $Res Function(_$HFReferralDownSyncNoDataStateImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$HFReferralDownSyncNoDataStateImpl extends _HFReferralDownSyncNoDataState
+    with DiagnosticableTreeMixin {
+  const _$HFReferralDownSyncNoDataStateImpl() : super._();
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'BeneficiaryDownSyncState.hfReferralNoData()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty(
+        'type', 'BeneficiaryDownSyncState.hfReferralNoData'));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$HFReferralDownSyncNoDataStateImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int syncedCount, int totalCount) inProgress,
+    required TResult Function(DownsyncModel downSyncResult) success,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        getBatchSize,
+    required TResult Function(bool isPop) loading,
+    required TResult Function() insufficientStorage,
+    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function() resetState,
+    required TResult Function() totalCountCheckFailed,
+    required TResult Function() failed,
+    required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
+    required TResult Function() pendingSync,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(int initialServerCount, int batchSize)
+        hfReferralDataFound,
+    required TResult Function() hfReferralNoData,
+    required TResult Function(int syncedCount, int totalCount)
+        hfReferralInProgress,
+    required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
+  }) {
+    return hfReferralNoData();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int syncedCount, int totalCount)? inProgress,
+    TResult? Function(DownsyncModel downSyncResult)? success,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        getBatchSize,
+    TResult? Function(bool isPop)? loading,
+    TResult? Function()? insufficientStorage,
+    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function()? resetState,
+    TResult? Function()? totalCountCheckFailed,
+    TResult? Function()? failed,
+    TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
+    TResult? Function()? pendingSync,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult? Function()? hfReferralNoData,
+    TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
+  }) {
+    return hfReferralNoData?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int syncedCount, int totalCount)? inProgress,
+    TResult Function(DownsyncModel downSyncResult)? success,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        getBatchSize,
+    TResult Function(bool isPop)? loading,
+    TResult Function()? insufficientStorage,
+    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function()? resetState,
+    TResult Function()? totalCountCheckFailed,
+    TResult Function()? failed,
+    TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
+    TResult Function()? pendingSync,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult Function()? hfReferralNoData,
+    TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
+    required TResult orElse(),
+  }) {
+    if (hfReferralNoData != null) {
+      return hfReferralNoData();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_DownSyncInProgressState value) inProgress,
+    required TResult Function(_DownSyncSuccessState value) success,
+    required TResult Function(_DownSyncGetBatchSizeState value) getBatchSize,
+    required TResult Function(_DownSyncLoadingState value) loading,
+    required TResult Function(_DownSyncInsufficientStorageState value)
+        insufficientStorage,
+    required TResult Function(_DownSyncDataFoundState value) dataFound,
+    required TResult Function(_DownSyncResetState value) resetState,
+    required TResult Function(_DownSynnCountCheckFailedState value)
+        totalCountCheckFailed,
+    required TResult Function(_DownSyncFailureState value) failed,
+    required TResult Function(_DownSyncReportState value) report,
+    required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_HFReferralDownSyncGetBatchSizeState value)
+        hfReferralGetBatchSize,
+    required TResult Function(_HFReferralDownSyncDataFoundState value)
+        hfReferralDataFound,
+    required TResult Function(_HFReferralDownSyncNoDataState value)
+        hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncInProgressState value)
+        hfReferralInProgress,
+    required TResult Function(_HFReferralDownSyncSuccessState value)
+        hfReferralSuccess,
+  }) {
+    return hfReferralNoData(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_DownSyncInProgressState value)? inProgress,
+    TResult? Function(_DownSyncSuccessState value)? success,
+    TResult? Function(_DownSyncGetBatchSizeState value)? getBatchSize,
+    TResult? Function(_DownSyncLoadingState value)? loading,
+    TResult? Function(_DownSyncInsufficientStorageState value)?
+        insufficientStorage,
+    TResult? Function(_DownSyncDataFoundState value)? dataFound,
+    TResult? Function(_DownSyncResetState value)? resetState,
+    TResult? Function(_DownSynnCountCheckFailedState value)?
+        totalCountCheckFailed,
+    TResult? Function(_DownSyncFailureState value)? failed,
+    TResult? Function(_DownSyncReportState value)? report,
+    TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult? Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
+  }) {
+    return hfReferralNoData?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_DownSyncInProgressState value)? inProgress,
+    TResult Function(_DownSyncSuccessState value)? success,
+    TResult Function(_DownSyncGetBatchSizeState value)? getBatchSize,
+    TResult Function(_DownSyncLoadingState value)? loading,
+    TResult Function(_DownSyncInsufficientStorageState value)?
+        insufficientStorage,
+    TResult Function(_DownSyncDataFoundState value)? dataFound,
+    TResult Function(_DownSyncResetState value)? resetState,
+    TResult Function(_DownSynnCountCheckFailedState value)?
+        totalCountCheckFailed,
+    TResult Function(_DownSyncFailureState value)? failed,
+    TResult Function(_DownSyncReportState value)? report,
+    TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
+    required TResult orElse(),
+  }) {
+    if (hfReferralNoData != null) {
+      return hfReferralNoData(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _HFReferralDownSyncNoDataState extends BeneficiaryDownSyncState {
+  const factory _HFReferralDownSyncNoDataState() =
+      _$HFReferralDownSyncNoDataStateImpl;
+  const _HFReferralDownSyncNoDataState._() : super._();
+}
+
+/// @nodoc
+abstract class _$$HFReferralDownSyncInProgressStateImplCopyWith<$Res> {
+  factory _$$HFReferralDownSyncInProgressStateImplCopyWith(
+          _$HFReferralDownSyncInProgressStateImpl value,
+          $Res Function(_$HFReferralDownSyncInProgressStateImpl) then) =
+      __$$HFReferralDownSyncInProgressStateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int syncedCount, int totalCount});
+}
+
+/// @nodoc
+class __$$HFReferralDownSyncInProgressStateImplCopyWithImpl<$Res>
+    extends _$BeneficiaryDownSyncStateCopyWithImpl<$Res,
+        _$HFReferralDownSyncInProgressStateImpl>
+    implements _$$HFReferralDownSyncInProgressStateImplCopyWith<$Res> {
+  __$$HFReferralDownSyncInProgressStateImplCopyWithImpl(
+      _$HFReferralDownSyncInProgressStateImpl _value,
+      $Res Function(_$HFReferralDownSyncInProgressStateImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? syncedCount = null,
+    Object? totalCount = null,
+  }) {
+    return _then(_$HFReferralDownSyncInProgressStateImpl(
+      null == syncedCount
+          ? _value.syncedCount
+          : syncedCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      null == totalCount
+          ? _value.totalCount
+          : totalCount // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$HFReferralDownSyncInProgressStateImpl
+    extends _HFReferralDownSyncInProgressState with DiagnosticableTreeMixin {
+  const _$HFReferralDownSyncInProgressStateImpl(
+      this.syncedCount, this.totalCount)
+      : super._();
+
+  @override
+  final int syncedCount;
+  @override
+  final int totalCount;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'BeneficiaryDownSyncState.hfReferralInProgress(syncedCount: $syncedCount, totalCount: $totalCount)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty(
+          'type', 'BeneficiaryDownSyncState.hfReferralInProgress'))
+      ..add(DiagnosticsProperty('syncedCount', syncedCount))
+      ..add(DiagnosticsProperty('totalCount', totalCount));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$HFReferralDownSyncInProgressStateImpl &&
+            (identical(other.syncedCount, syncedCount) ||
+                other.syncedCount == syncedCount) &&
+            (identical(other.totalCount, totalCount) ||
+                other.totalCount == totalCount));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, syncedCount, totalCount);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$HFReferralDownSyncInProgressStateImplCopyWith<
+          _$HFReferralDownSyncInProgressStateImpl>
+      get copyWith => __$$HFReferralDownSyncInProgressStateImplCopyWithImpl<
+          _$HFReferralDownSyncInProgressStateImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int syncedCount, int totalCount) inProgress,
+    required TResult Function(DownsyncModel downSyncResult) success,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        getBatchSize,
+    required TResult Function(bool isPop) loading,
+    required TResult Function() insufficientStorage,
+    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function() resetState,
+    required TResult Function() totalCountCheckFailed,
+    required TResult Function() failed,
+    required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
+    required TResult Function() pendingSync,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(int initialServerCount, int batchSize)
+        hfReferralDataFound,
+    required TResult Function() hfReferralNoData,
+    required TResult Function(int syncedCount, int totalCount)
+        hfReferralInProgress,
+    required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
+  }) {
+    return hfReferralInProgress(syncedCount, totalCount);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int syncedCount, int totalCount)? inProgress,
+    TResult? Function(DownsyncModel downSyncResult)? success,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        getBatchSize,
+    TResult? Function(bool isPop)? loading,
+    TResult? Function()? insufficientStorage,
+    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function()? resetState,
+    TResult? Function()? totalCountCheckFailed,
+    TResult? Function()? failed,
+    TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
+    TResult? Function()? pendingSync,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult? Function()? hfReferralNoData,
+    TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
+  }) {
+    return hfReferralInProgress?.call(syncedCount, totalCount);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int syncedCount, int totalCount)? inProgress,
+    TResult Function(DownsyncModel downSyncResult)? success,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        getBatchSize,
+    TResult Function(bool isPop)? loading,
+    TResult Function()? insufficientStorage,
+    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function()? resetState,
+    TResult Function()? totalCountCheckFailed,
+    TResult Function()? failed,
+    TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
+    TResult Function()? pendingSync,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult Function()? hfReferralNoData,
+    TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
+    required TResult orElse(),
+  }) {
+    if (hfReferralInProgress != null) {
+      return hfReferralInProgress(syncedCount, totalCount);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_DownSyncInProgressState value) inProgress,
+    required TResult Function(_DownSyncSuccessState value) success,
+    required TResult Function(_DownSyncGetBatchSizeState value) getBatchSize,
+    required TResult Function(_DownSyncLoadingState value) loading,
+    required TResult Function(_DownSyncInsufficientStorageState value)
+        insufficientStorage,
+    required TResult Function(_DownSyncDataFoundState value) dataFound,
+    required TResult Function(_DownSyncResetState value) resetState,
+    required TResult Function(_DownSynnCountCheckFailedState value)
+        totalCountCheckFailed,
+    required TResult Function(_DownSyncFailureState value) failed,
+    required TResult Function(_DownSyncReportState value) report,
+    required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_HFReferralDownSyncGetBatchSizeState value)
+        hfReferralGetBatchSize,
+    required TResult Function(_HFReferralDownSyncDataFoundState value)
+        hfReferralDataFound,
+    required TResult Function(_HFReferralDownSyncNoDataState value)
+        hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncInProgressState value)
+        hfReferralInProgress,
+    required TResult Function(_HFReferralDownSyncSuccessState value)
+        hfReferralSuccess,
+  }) {
+    return hfReferralInProgress(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_DownSyncInProgressState value)? inProgress,
+    TResult? Function(_DownSyncSuccessState value)? success,
+    TResult? Function(_DownSyncGetBatchSizeState value)? getBatchSize,
+    TResult? Function(_DownSyncLoadingState value)? loading,
+    TResult? Function(_DownSyncInsufficientStorageState value)?
+        insufficientStorage,
+    TResult? Function(_DownSyncDataFoundState value)? dataFound,
+    TResult? Function(_DownSyncResetState value)? resetState,
+    TResult? Function(_DownSynnCountCheckFailedState value)?
+        totalCountCheckFailed,
+    TResult? Function(_DownSyncFailureState value)? failed,
+    TResult? Function(_DownSyncReportState value)? report,
+    TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult? Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
+  }) {
+    return hfReferralInProgress?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_DownSyncInProgressState value)? inProgress,
+    TResult Function(_DownSyncSuccessState value)? success,
+    TResult Function(_DownSyncGetBatchSizeState value)? getBatchSize,
+    TResult Function(_DownSyncLoadingState value)? loading,
+    TResult Function(_DownSyncInsufficientStorageState value)?
+        insufficientStorage,
+    TResult Function(_DownSyncDataFoundState value)? dataFound,
+    TResult Function(_DownSyncResetState value)? resetState,
+    TResult Function(_DownSynnCountCheckFailedState value)?
+        totalCountCheckFailed,
+    TResult Function(_DownSyncFailureState value)? failed,
+    TResult Function(_DownSyncReportState value)? report,
+    TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
+    required TResult orElse(),
+  }) {
+    if (hfReferralInProgress != null) {
+      return hfReferralInProgress(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _HFReferralDownSyncInProgressState
+    extends BeneficiaryDownSyncState {
+  const factory _HFReferralDownSyncInProgressState(
+          final int syncedCount, final int totalCount) =
+      _$HFReferralDownSyncInProgressStateImpl;
+  const _HFReferralDownSyncInProgressState._() : super._();
+
+  int get syncedCount;
+  int get totalCount;
+  @JsonKey(ignore: true)
+  _$$HFReferralDownSyncInProgressStateImplCopyWith<
+          _$HFReferralDownSyncInProgressStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$HFReferralDownSyncSuccessStateImplCopyWith<$Res> {
+  factory _$$HFReferralDownSyncSuccessStateImplCopyWith(
+          _$HFReferralDownSyncSuccessStateImpl value,
+          $Res Function(_$HFReferralDownSyncSuccessStateImpl) then) =
+      __$$HFReferralDownSyncSuccessStateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({DownsyncModel downSyncResult});
+}
+
+/// @nodoc
+class __$$HFReferralDownSyncSuccessStateImplCopyWithImpl<$Res>
+    extends _$BeneficiaryDownSyncStateCopyWithImpl<$Res,
+        _$HFReferralDownSyncSuccessStateImpl>
+    implements _$$HFReferralDownSyncSuccessStateImplCopyWith<$Res> {
+  __$$HFReferralDownSyncSuccessStateImplCopyWithImpl(
+      _$HFReferralDownSyncSuccessStateImpl _value,
+      $Res Function(_$HFReferralDownSyncSuccessStateImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? downSyncResult = null,
+  }) {
+    return _then(_$HFReferralDownSyncSuccessStateImpl(
+      null == downSyncResult
+          ? _value.downSyncResult
+          : downSyncResult // ignore: cast_nullable_to_non_nullable
+              as DownsyncModel,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$HFReferralDownSyncSuccessStateImpl
+    extends _HFReferralDownSyncSuccessState with DiagnosticableTreeMixin {
+  const _$HFReferralDownSyncSuccessStateImpl(this.downSyncResult) : super._();
+
+  @override
+  final DownsyncModel downSyncResult;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'BeneficiaryDownSyncState.hfReferralSuccess(downSyncResult: $downSyncResult)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty(
+          'type', 'BeneficiaryDownSyncState.hfReferralSuccess'))
+      ..add(DiagnosticsProperty('downSyncResult', downSyncResult));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$HFReferralDownSyncSuccessStateImpl &&
+            (identical(other.downSyncResult, downSyncResult) ||
+                other.downSyncResult == downSyncResult));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, downSyncResult);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$HFReferralDownSyncSuccessStateImplCopyWith<
+          _$HFReferralDownSyncSuccessStateImpl>
+      get copyWith => __$$HFReferralDownSyncSuccessStateImplCopyWithImpl<
+          _$HFReferralDownSyncSuccessStateImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int syncedCount, int totalCount) inProgress,
+    required TResult Function(DownsyncModel downSyncResult) success,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        getBatchSize,
+    required TResult Function(bool isPop) loading,
+    required TResult Function() insufficientStorage,
+    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function() resetState,
+    required TResult Function() totalCountCheckFailed,
+    required TResult Function() failed,
+    required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
+    required TResult Function() pendingSync,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(int initialServerCount, int batchSize)
+        hfReferralDataFound,
+    required TResult Function() hfReferralNoData,
+    required TResult Function(int syncedCount, int totalCount)
+        hfReferralInProgress,
+    required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
+  }) {
+    return hfReferralSuccess(downSyncResult);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int syncedCount, int totalCount)? inProgress,
+    TResult? Function(DownsyncModel downSyncResult)? success,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        getBatchSize,
+    TResult? Function(bool isPop)? loading,
+    TResult? Function()? insufficientStorage,
+    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function()? resetState,
+    TResult? Function()? totalCountCheckFailed,
+    TResult? Function()? failed,
+    TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
+    TResult? Function()? pendingSync,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult? Function()? hfReferralNoData,
+    TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
+  }) {
+    return hfReferralSuccess?.call(downSyncResult);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int syncedCount, int totalCount)? inProgress,
+    TResult Function(DownsyncModel downSyncResult)? success,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        getBatchSize,
+    TResult Function(bool isPop)? loading,
+    TResult Function()? insufficientStorage,
+    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function()? resetState,
+    TResult Function()? totalCountCheckFailed,
+    TResult Function()? failed,
+    TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
+    TResult Function()? pendingSync,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult Function()? hfReferralNoData,
+    TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
+    required TResult orElse(),
+  }) {
+    if (hfReferralSuccess != null) {
+      return hfReferralSuccess(downSyncResult);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_DownSyncInProgressState value) inProgress,
+    required TResult Function(_DownSyncSuccessState value) success,
+    required TResult Function(_DownSyncGetBatchSizeState value) getBatchSize,
+    required TResult Function(_DownSyncLoadingState value) loading,
+    required TResult Function(_DownSyncInsufficientStorageState value)
+        insufficientStorage,
+    required TResult Function(_DownSyncDataFoundState value) dataFound,
+    required TResult Function(_DownSyncResetState value) resetState,
+    required TResult Function(_DownSynnCountCheckFailedState value)
+        totalCountCheckFailed,
+    required TResult Function(_DownSyncFailureState value) failed,
+    required TResult Function(_DownSyncReportState value) report,
+    required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_HFReferralDownSyncGetBatchSizeState value)
+        hfReferralGetBatchSize,
+    required TResult Function(_HFReferralDownSyncDataFoundState value)
+        hfReferralDataFound,
+    required TResult Function(_HFReferralDownSyncNoDataState value)
+        hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncInProgressState value)
+        hfReferralInProgress,
+    required TResult Function(_HFReferralDownSyncSuccessState value)
+        hfReferralSuccess,
+  }) {
+    return hfReferralSuccess(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_DownSyncInProgressState value)? inProgress,
+    TResult? Function(_DownSyncSuccessState value)? success,
+    TResult? Function(_DownSyncGetBatchSizeState value)? getBatchSize,
+    TResult? Function(_DownSyncLoadingState value)? loading,
+    TResult? Function(_DownSyncInsufficientStorageState value)?
+        insufficientStorage,
+    TResult? Function(_DownSyncDataFoundState value)? dataFound,
+    TResult? Function(_DownSyncResetState value)? resetState,
+    TResult? Function(_DownSynnCountCheckFailedState value)?
+        totalCountCheckFailed,
+    TResult? Function(_DownSyncFailureState value)? failed,
+    TResult? Function(_DownSyncReportState value)? report,
+    TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult? Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
+  }) {
+    return hfReferralSuccess?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_DownSyncInProgressState value)? inProgress,
+    TResult Function(_DownSyncSuccessState value)? success,
+    TResult Function(_DownSyncGetBatchSizeState value)? getBatchSize,
+    TResult Function(_DownSyncLoadingState value)? loading,
+    TResult Function(_DownSyncInsufficientStorageState value)?
+        insufficientStorage,
+    TResult Function(_DownSyncDataFoundState value)? dataFound,
+    TResult Function(_DownSyncResetState value)? resetState,
+    TResult Function(_DownSynnCountCheckFailedState value)?
+        totalCountCheckFailed,
+    TResult Function(_DownSyncFailureState value)? failed,
+    TResult Function(_DownSyncReportState value)? report,
+    TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
+    required TResult orElse(),
+  }) {
+    if (hfReferralSuccess != null) {
+      return hfReferralSuccess(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _HFReferralDownSyncSuccessState
+    extends BeneficiaryDownSyncState {
+  const factory _HFReferralDownSyncSuccessState(
+          final DownsyncModel downSyncResult) =
+      _$HFReferralDownSyncSuccessStateImpl;
+  const _HFReferralDownSyncSuccessState._() : super._();
+
+  DownsyncModel get downSyncResult;
+  @JsonKey(ignore: true)
+  _$$HFReferralDownSyncSuccessStateImplCopyWith<
+          _$HFReferralDownSyncSuccessStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

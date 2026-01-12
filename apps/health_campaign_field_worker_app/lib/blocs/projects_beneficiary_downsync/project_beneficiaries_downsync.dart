@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:disk_space_update/disk_space_update.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,6 +48,12 @@ class BeneficiaryDownSyncBloc
   final LocalRepository<ServiceModel, ServiceSearchModel>
       serviceLocalRepository;
 
+  // HF Referral repositories for HF Worker role downsync
+  final RemoteRepository<HFReferralModel, HFReferralSearchModel>?
+      hfReferralRemoteRepository;
+  final LocalRepository<HFReferralModel, HFReferralSearchModel>?
+      hfReferralLocalRepository;
+
   BeneficiaryDownSyncBloc({
     required this.individualLocalRepository,
     required this.downSyncRemoteRepository,
@@ -59,12 +66,18 @@ class BeneficiaryDownSyncBloc
     required this.sideEffectLocalRepository,
     required this.referralLocalRepository,
     required this.serviceLocalRepository,
+    this.hfReferralRemoteRepository,
+    this.hfReferralLocalRepository,
   }) : super(const BeneficiaryDownSyncState._()) {
     on(_handleDownSyncOfBeneficiaries);
     on(_handleCheckTotalCount);
     on(_handleDownSyncResetState);
     on(_handleDownSyncReport);
     on(_handleCheckBandWidth);
+    // HF Referral downsync handlers
+    on(_handleHFReferralGetBatchSize);
+    on(_handleHFReferralCheckTotalCount);
+    on(_handleDownSyncOfHFReferrals);
   }
 
   FutureOr<void> _handleDownSyncResetState(
@@ -362,6 +375,241 @@ class BeneficiaryDownSyncBloc
     final result = await downSyncLocalRepository.search(DownsyncSearchModel());
     emit(BeneficiaryDownSyncState.report(result));
   }
+
+  // ==================== HF Referral Downsync Handlers ====================
+
+  /// Handler for getting batch size for HF Referral downsync (HF Worker role)
+  FutureOr<void> _handleHFReferralGetBatchSize(
+    HFReferralDownSyncGetBatchSizeEvent event,
+    BeneficiaryDownSyncEmitter emit,
+  ) async {
+    try {
+      emit(const BeneficiaryDownSyncState.resetState());
+      emit(const BeneficiaryDownSyncState.loading(false));
+
+      final double speed = await bandwidthCheckRepository.pingBandwidthCheck(
+        bandWidthCheckModel: null,
+      );
+
+      int configuredBatchSize = getBatchSizeToBandwidth(
+        speed,
+        event.appConfiguration,
+        isDownSync: true,
+      );
+
+      emit(BeneficiaryDownSyncState.hfReferralGetBatchSize(
+        configuredBatchSize,
+        event.projectId,
+        event.boundaryCode,
+        event.pendingSyncCount,
+        event.boundaryName,
+      ));
+    } catch (e) {
+      debugPrint('[HF_REFERRAL_DOWNSYNC] Error getting batch size: $e');
+      emit(const BeneficiaryDownSyncState.resetState());
+      emit(const BeneficiaryDownSyncState.totalCountCheckFailed());
+    }
+  }
+
+  /// Handler for checking total count of HF Referrals on server
+  FutureOr<void> _handleHFReferralCheckTotalCount(
+    HFReferralDownSyncCheckTotalCountEvent event,
+    BeneficiaryDownSyncEmitter emit,
+  ) async {
+    if (event.pendingSyncCount > 0) {
+      emit(const BeneficiaryDownSyncState.loading(true));
+      emit(const BeneficiaryDownSyncState.pendingSync());
+      return;
+    }
+
+    if (hfReferralRemoteRepository == null) {
+      debugPrint('[HF_REFERRAL_DOWNSYNC] Remote repository not available');
+      emit(const BeneficiaryDownSyncState.totalCountCheckFailed());
+      return;
+    }
+
+    try {
+      emit(const BeneficiaryDownSyncState.loading(true));
+      await LocalSecureStore.instance.setManualSyncTrigger(true);
+
+      // Get existing downsync data for HF Referral (using a different locality key to avoid conflict)
+      final existingDownSyncData = await downSyncLocalRepository.search(
+        DownsyncSearchModel(
+          locality: 'hf_referral_${event.boundaryCode}',
+        ),
+      );
+
+      int? lastSyncedTime = existingDownSyncData.isEmpty
+          ? null
+          : existingDownSyncData.first.lastSyncedTime;
+
+      // Search with limit 1 to check if there's any data
+      final initialResults = await hfReferralRemoteRepository!.search(
+        HFReferralSearchModel(
+          projectId: [event.projectId],
+          // projectFacilityId: ["F-2025-12-22-140835"],
+          boundaryCode: event.boundaryCode,
+        ),
+        limit: 1,
+        offSet: 0,
+        lastChangedSince: lastSyncedTime,
+      );
+
+      debugPrint(
+          '[HF_REFERRAL_DOWNSYNC] Initial results count: ${initialResults.length}');
+
+      if (initialResults.isNotEmpty || existingDownSyncData.isNotEmpty) {
+        // Estimate server count - we'll fetch in batches
+        emit(BeneficiaryDownSyncState.hfReferralDataFound(
+          100, // Default initial estimate, will be adjusted during sync
+          event.batchSize,
+        ));
+      } else {
+        await LocalSecureStore.instance.setManualSyncTrigger(false);
+        emit(const BeneficiaryDownSyncState.hfReferralNoData());
+      }
+    } catch (e) {
+      debugPrint('[HF_REFERRAL_DOWNSYNC] Error checking total count: $e');
+      await LocalSecureStore.instance.setManualSyncTrigger(false);
+      emit(const BeneficiaryDownSyncState.resetState());
+      emit(const BeneficiaryDownSyncState.totalCountCheckFailed());
+    }
+  }
+
+  /// Handler for downloading HF Referrals
+  FutureOr<void> _handleDownSyncOfHFReferrals(
+    HFReferralDownSyncEvent event,
+    BeneficiaryDownSyncEmitter emit,
+  ) async {
+    if (hfReferralRemoteRepository == null ||
+        hfReferralLocalRepository == null) {
+      debugPrint('[HF_REFERRAL_DOWNSYNC] Repositories not available');
+      emit(const BeneficiaryDownSyncState.failed());
+      return;
+    }
+
+    emit(const BeneficiaryDownSyncState.loading(true));
+
+    // Check disk space
+    double? diskSpace = await DiskSpace.getFreeDiskSpace;
+    if ((diskSpace ?? 0) * 1000 < (event.initialServerCount * 150 * 2)) {
+      emit(const BeneficiaryDownSyncState.insufficientStorage());
+      return;
+    }
+
+    try {
+      int offset = 0;
+      int totalFetched = 0;
+      final String localityKey = 'hf_referral_${event.boundaryCode}';
+
+      // Check existing sync data
+      final existingDownSyncData = await downSyncLocalRepository.search(
+        DownsyncSearchModel(locality: localityKey),
+      );
+
+      int? lastSyncedTime = existingDownSyncData.isEmpty
+          ? null
+          : existingDownSyncData.first.lastSyncedTime;
+
+      if (existingDownSyncData.isEmpty) {
+        await downSyncLocalRepository.create(DownsyncModel(
+          offset: 0,
+          limit: event.batchSize,
+          lastSyncedTime: lastSyncedTime,
+          totalCount: event.initialServerCount,
+          locality: localityKey,
+          boundaryName: event.boundaryName,
+        ));
+      } else {
+        offset = existingDownSyncData.first.offset ?? 0;
+      }
+
+      while (true) {
+        emit(BeneficiaryDownSyncState.hfReferralInProgress(
+            totalFetched, event.initialServerCount));
+
+        debugPrint(
+            '[HF_REFERRAL_DOWNSYNC] Fetching batch - offset: $offset, limit: ${event.batchSize}');
+
+        // Fetch HF Referrals from server
+        final hfReferrals = await hfReferralRemoteRepository!.search(
+          HFReferralSearchModel(
+            projectId: [event.projectId],
+            boundaryCode: event.boundaryCode,
+            // projectFacilityId: ["F-2025-12-22-140835"],
+          ),
+          limit: event.batchSize,
+          offSet: offset,
+          lastChangedSince: lastSyncedTime,
+        );
+
+        debugPrint(
+            '[HF_REFERRAL_DOWNSYNC] Fetched ${hfReferrals.length} HF Referrals');
+
+        if (hfReferrals.isNotEmpty) {
+          // Convert HF Referrals to Map format for writeToEntityDB
+          final hfReferralResponse = {
+            'HFReferrals': hfReferrals.map((e) => e.toMap()).toList(),
+          };
+
+          // Store in local repository using writeToEntityDB (same pattern as beneficiary downsync)
+          await SyncServiceSingleton().entityMapper?.writeToEntityDB(
+            hfReferralResponse,
+            [hfReferralLocalRepository!],
+          );
+          totalFetched += hfReferrals.length;
+
+          // Update downsync tracking
+          await downSyncLocalRepository.update(DownsyncModel(
+            offset: offset + event.batchSize,
+            limit: event.batchSize,
+            lastSyncedTime: lastSyncedTime,
+            totalCount: totalFetched,
+            locality: localityKey,
+            boundaryName: event.boundaryName,
+          ));
+
+          // Check if we got less than batch size (means we're done)
+          if (hfReferrals.length < event.batchSize) {
+            debugPrint(
+                '[HF_REFERRAL_DOWNSYNC] Completed - fetched all data ($totalFetched records)');
+            break;
+          }
+
+          offset += event.batchSize;
+        } else {
+          debugPrint('[HF_REFERRAL_DOWNSYNC] No more data to fetch');
+          break;
+        }
+      }
+
+      // Update final sync status
+      await downSyncLocalRepository.update(DownsyncModel(
+        offset: 0,
+        limit: 0,
+        totalCount: totalFetched,
+        locality: localityKey,
+        boundaryName: event.boundaryName,
+        lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
+      ));
+
+      await LocalSecureStore.instance.setManualSyncTrigger(false);
+
+      final result = DownsyncModel(
+        offset: totalFetched,
+        lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
+        totalCount: totalFetched,
+        locality: localityKey,
+        boundaryName: event.boundaryName,
+      );
+
+      emit(BeneficiaryDownSyncState.hfReferralSuccess(result));
+    } catch (e) {
+      debugPrint('[HF_REFERRAL_DOWNSYNC] Error during downsync: $e');
+      await LocalSecureStore.instance.setManualSyncTrigger(false);
+      emit(const BeneficiaryDownSyncState.failed());
+    }
+  }
 }
 
 @freezed
@@ -393,6 +641,34 @@ class BeneficiaryDownSyncEvent with _$BeneficiaryDownSyncEvent {
   const factory BeneficiaryDownSyncEvent.downSyncReport() = DownSyncReportEvent;
 
   const factory BeneficiaryDownSyncEvent.resetState() = DownSyncResetStateEvent;
+
+  // ==================== HF Referral Events ====================
+  /// Event to get batch size for HF Referral downsync (HF Worker role)
+  const factory BeneficiaryDownSyncEvent.hfReferralGetBatchSize({
+    required List<AppConfiguration> appConfiguration,
+    required String projectId,
+    required String boundaryCode,
+    required int pendingSyncCount,
+    required String boundaryName,
+  }) = HFReferralDownSyncGetBatchSizeEvent;
+
+  /// Event to check total count of HF Referrals on server
+  const factory BeneficiaryDownSyncEvent.hfReferralCheckForData({
+    required String projectId,
+    required String boundaryCode,
+    required int pendingSyncCount,
+    required int batchSize,
+    required String boundaryName,
+  }) = HFReferralDownSyncCheckTotalCountEvent;
+
+  /// Event to trigger HF Referral downsync
+  const factory BeneficiaryDownSyncEvent.hfReferralDownSync({
+    required String projectId,
+    required String boundaryCode,
+    required int batchSize,
+    required int initialServerCount,
+    required String boundaryName,
+  }) = HFReferralDownSyncEvent;
 }
 
 @freezed
@@ -440,4 +716,35 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
 
   const factory BeneficiaryDownSyncState.pendingSync() =
       _DownSyncPendingSyncState;
+
+  // ==================== HF Referral States ====================
+  /// State when HF Referral batch size is calculated
+  const factory BeneficiaryDownSyncState.hfReferralGetBatchSize(
+    int batchSize,
+    String projectId,
+    String boundaryCode,
+    int pendingSyncCount,
+    String boundaryName,
+  ) = _HFReferralDownSyncGetBatchSizeState;
+
+  /// State when HF Referral data is found on server
+  const factory BeneficiaryDownSyncState.hfReferralDataFound(
+    int initialServerCount,
+    int batchSize,
+  ) = _HFReferralDownSyncDataFoundState;
+
+  /// State when no HF Referral data is found
+  const factory BeneficiaryDownSyncState.hfReferralNoData() =
+      _HFReferralDownSyncNoDataState;
+
+  /// State when HF Referral downsync is in progress
+  const factory BeneficiaryDownSyncState.hfReferralInProgress(
+    int syncedCount,
+    int totalCount,
+  ) = _HFReferralDownSyncInProgressState;
+
+  /// State when HF Referral downsync is successful
+  const factory BeneficiaryDownSyncState.hfReferralSuccess(
+    DownsyncModel downSyncResult,
+  ) = _HFReferralDownSyncSuccessState;
 }

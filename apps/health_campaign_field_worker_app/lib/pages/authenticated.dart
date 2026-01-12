@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:digit_showcase/showcase_widget.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -219,6 +220,13 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           serviceLocalRepository: ctx.read<
                               LocalRepository<ServiceModel,
                                   ServiceSearchModel>>(),
+                          // HF Referral repositories for HF Worker role downsync
+                          hfReferralLocalRepository: ctx.read<
+                              LocalRepository<HFReferralModel,
+                                  HFReferralSearchModel>>(),
+                          hfReferralRemoteRepository: ctx.read<
+                              RemoteRepository<HFReferralModel,
+                                  HFReferralSearchModel>>(),
                         ),
                       ),
                       BlocProvider(
