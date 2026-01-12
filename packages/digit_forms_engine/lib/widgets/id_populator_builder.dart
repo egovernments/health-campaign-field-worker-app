@@ -55,6 +55,26 @@ class JsonSchemaIdPopulatorBuilder extends JsonSchemaBuilder<int> {
       });
     }
 
+    /// Populate from defaultValues using formControlName key (first priority)
+    final defaultValue = defaultValues[formControlName];
+    if (defaultValue != null &&
+        defaultValue is String &&
+        form.control(idTypeKey).value == null &&
+        form.control(idKey).value == null) {
+      final parts = defaultValue.split(',');
+      if (parts.length >= 2) {
+        final type = parts[0].trim();
+        final number = parts.sublist(1).join(',').trim();
+
+        form.control(idTypeKey).value = type;
+        if (type != 'DEFAULT') {
+          form.control(idKey).value = number;
+          form.control(idAutoFilledKey).value = true;
+        }
+        form.control(formControlName).value = defaultValue;
+      }
+    }
+
     /// Populate from combined value (edit case)
     final combinedValue = form.control(formControlName).value;
     if (combinedValue != null && combinedValue is String) {
