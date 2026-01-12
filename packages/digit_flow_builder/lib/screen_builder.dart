@@ -163,6 +163,17 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
         instanceId: _instanceId,
       );
     }
+
+    // Clean up state when page is removed from stack
+    final screenType = widget.config['screenType'] ?? 'TEMPLATE';
+    final fullScreenKey = '$screenType::$_schemaKey';
+
+    // Clear SearchStateManager (filters, orderBy, pagination, callbacks)
+    SearchStateManager().dispose(fullScreenKey);
+
+    // Clear FlowCrudStateRegistry (formData, widgetData, stateWrapper)
+    FlowCrudStateRegistry().dispose(fullScreenKey);
+
     super.dispose();
   }
 
