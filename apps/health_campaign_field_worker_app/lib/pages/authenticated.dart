@@ -227,6 +227,12 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           hfReferralRemoteRepository: ctx.read<
                               RemoteRepository<HFReferralModel,
                                   HFReferralSearchModel>>(),
+                          projectBeneficiaryRemoteRepository: ctx.read<
+                              RemoteRepository<ProjectBeneficiaryModel,
+                                  ProjectBeneficiarySearchModel>>(),
+                          individualRemoteRepository: ctx.read<
+                              RemoteRepository<IndividualModel,
+                                  IndividualSearchModel>>(),
                         ),
                       ),
                       BlocProvider(

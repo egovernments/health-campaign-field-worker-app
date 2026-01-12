@@ -789,6 +789,7 @@ final jsonConfig = {
           "rowVersion": "meta.rowVersion",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
+          "localityCode": "__context:selectedBoundaryCode",
           "additionalFields": {
             "boundaryCode": "facilityDetails.administrativeUnit",
             "referralCycle": "referralDetails.referralCycle",

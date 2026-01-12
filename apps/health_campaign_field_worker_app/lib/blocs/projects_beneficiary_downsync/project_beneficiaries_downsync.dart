@@ -48,11 +48,16 @@ class BeneficiaryDownSyncBloc
   final LocalRepository<ServiceModel, ServiceSearchModel>
       serviceLocalRepository;
 
+  final RemoteRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>
+      projectBeneficiaryRemoteRepository;
+
   // HF Referral repositories for HF Worker role downsync
   final RemoteRepository<HFReferralModel, HFReferralSearchModel>?
       hfReferralRemoteRepository;
   final LocalRepository<HFReferralModel, HFReferralSearchModel>?
       hfReferralLocalRepository;
+  final RemoteRepository<IndividualModel, IndividualSearchModel>
+      individualRemoteRepository;
 
   BeneficiaryDownSyncBloc({
     required this.individualLocalRepository,
@@ -68,6 +73,8 @@ class BeneficiaryDownSyncBloc
     required this.serviceLocalRepository,
     this.hfReferralRemoteRepository,
     this.hfReferralLocalRepository,
+    required this.projectBeneficiaryRemoteRepository,
+    required this.individualRemoteRepository,
   }) : super(const BeneficiaryDownSyncState._()) {
     on(_handleDownSyncOfBeneficiaries);
     on(_handleCheckTotalCount);
@@ -446,9 +453,9 @@ class BeneficiaryDownSyncBloc
       // Search with limit 1 to check if there's any data
       final initialResults = await hfReferralRemoteRepository!.search(
         HFReferralSearchModel(
-          projectId: [event.projectId],
+          //projectId: [event.projectId],
           // projectFacilityId: ["F-2025-12-22-140835"],
-          boundaryCode: event.boundaryCode,
+          localityCode: [event.boundaryCode],
         ),
         limit: 1,
         offSet: 0,
@@ -477,6 +484,7 @@ class BeneficiaryDownSyncBloc
   }
 
   /// Handler for downloading HF Referrals
+  /// Flow: 1. Fetch HF Referrals -> 2. Fetch Project Beneficiaries -> 3. Fetch Individuals
   FutureOr<void> _handleDownSyncOfHFReferrals(
     HFReferralDownSyncEvent event,
     BeneficiaryDownSyncEmitter emit,
@@ -502,6 +510,9 @@ class BeneficiaryDownSyncBloc
       int totalFetched = 0;
       final String localityKey = 'hf_referral_${event.boundaryCode}';
 
+      // Collect all beneficiary IDs from HF Referrals for subsequent API calls
+      List<String> allBeneficiaryIds = [];
+
       // Check existing sync data
       final existingDownSyncData = await downSyncLocalRepository.search(
         DownsyncSearchModel(locality: localityKey),
@@ -524,6 +535,9 @@ class BeneficiaryDownSyncBloc
         offset = existingDownSyncData.first.offset ?? 0;
       }
 
+      // ==================== Step 1: Fetch HF Referrals ====================
+      debugPrint('[HF_REFERRAL_DOWNSYNC] Step 1: Fetching HF Referrals');
+
       while (true) {
         emit(BeneficiaryDownSyncState.hfReferralInProgress(
             totalFetched, event.initialServerCount));
@@ -534,9 +548,7 @@ class BeneficiaryDownSyncBloc
         // Fetch HF Referrals from server
         final hfReferrals = await hfReferralRemoteRepository!.search(
           HFReferralSearchModel(
-            projectId: [event.projectId],
-            boundaryCode: event.boundaryCode,
-            // projectFacilityId: ["F-2025-12-22-140835"],
+            localityCode: [event.boundaryCode],
           ),
           limit: event.batchSize,
           offSet: offset,
@@ -547,12 +559,20 @@ class BeneficiaryDownSyncBloc
             '[HF_REFERRAL_DOWNSYNC] Fetched ${hfReferrals.length} HF Referrals');
 
         if (hfReferrals.isNotEmpty) {
+          // Extract beneficiaryIds from HF Referrals for subsequent API calls
+          for (final hfReferral in hfReferrals) {
+            if (hfReferral.beneficiaryId != null &&
+                hfReferral.beneficiaryId!.isNotEmpty) {
+              allBeneficiaryIds.add(hfReferral.beneficiaryId!);
+            }
+          }
+
           // Convert HF Referrals to Map format for writeToEntityDB
           final hfReferralResponse = {
             'HFReferrals': hfReferrals.map((e) => e.toMap()).toList(),
           };
 
-          // Store in local repository using writeToEntityDB (same pattern as beneficiary downsync)
+          // Store HF Referrals in local repository
           await SyncServiceSingleton().entityMapper?.writeToEntityDB(
             hfReferralResponse,
             [hfReferralLocalRepository!],
@@ -572,14 +592,118 @@ class BeneficiaryDownSyncBloc
           // Check if we got less than batch size (means we're done)
           if (hfReferrals.length < event.batchSize) {
             debugPrint(
-                '[HF_REFERRAL_DOWNSYNC] Completed - fetched all data ($totalFetched records)');
+                '[HF_REFERRAL_DOWNSYNC] Completed HF Referrals - fetched all data ($totalFetched records)');
             break;
           }
 
           offset += event.batchSize;
         } else {
-          debugPrint('[HF_REFERRAL_DOWNSYNC] No more data to fetch');
+          debugPrint(
+              '[HF_REFERRAL_DOWNSYNC] No more HF Referral data to fetch');
           break;
+        }
+      }
+
+      // Remove duplicate beneficiary IDs
+      allBeneficiaryIds = allBeneficiaryIds.toSet().toList();
+      debugPrint(
+          '[HF_REFERRAL_DOWNSYNC] Total unique beneficiaryIds collected: ${allBeneficiaryIds.length}');
+
+      // ==================== Step 2: Fetch Project Beneficiaries ====================
+      List<String> allIndividualClientRefIds = [];
+
+      if (allBeneficiaryIds.isNotEmpty) {
+        debugPrint(
+            '[HF_REFERRAL_DOWNSYNC] Step 2: Fetching Project Beneficiaries');
+
+        // Fetch Project Beneficiaries in batches
+        for (int i = 0; i < allBeneficiaryIds.length; i += event.batchSize) {
+          final batchIds = allBeneficiaryIds.sublist(
+            i,
+            (i + event.batchSize) > allBeneficiaryIds.length
+                ? allBeneficiaryIds.length
+                : i + event.batchSize,
+          );
+
+          debugPrint(
+              '[HF_REFERRAL_DOWNSYNC] Fetching Project Beneficiaries batch ${i ~/ event.batchSize + 1} with ${batchIds.length} IDs');
+
+          final projectBeneficiaries =
+              await projectBeneficiaryRemoteRepository.search(
+            ProjectBeneficiarySearchModel(
+              beneficiaryClientReferenceId: batchIds,
+            ),
+          );
+
+          debugPrint(
+              '[HF_REFERRAL_DOWNSYNC] Fetched ${projectBeneficiaries.length} Project Beneficiaries');
+
+          if (projectBeneficiaries.isNotEmpty) {
+            // Extract beneficiaryClientReferenceIds for Individual search
+            for (final pb in projectBeneficiaries) {
+              if (pb.beneficiaryClientReferenceId != null &&
+                  pb.beneficiaryClientReferenceId!.isNotEmpty) {
+                allIndividualClientRefIds.add(pb.beneficiaryClientReferenceId!);
+              }
+            }
+
+            // Convert to Map format and store in local repository
+            final projectBeneficiaryResponse = {
+              'ProjectBeneficiaries':
+                  projectBeneficiaries.map((e) => e.toMap()).toList(),
+            };
+
+            await SyncServiceSingleton().entityMapper?.writeToEntityDB(
+              projectBeneficiaryResponse,
+              [projectBeneficiaryLocalRepository],
+            );
+          }
+        }
+      }
+
+      // Remove duplicate individual client reference IDs
+      allIndividualClientRefIds = allIndividualClientRefIds.toSet().toList();
+      debugPrint(
+          '[HF_REFERRAL_DOWNSYNC] Total unique individualClientRefIds collected: ${allIndividualClientRefIds.length}');
+
+      // ==================== Step 3: Fetch Individuals ====================
+      if (allIndividualClientRefIds.isNotEmpty) {
+        debugPrint('[HF_REFERRAL_DOWNSYNC] Step 3: Fetching Individuals');
+
+        // Fetch Individuals in batches
+        for (int i = 0;
+            i < allIndividualClientRefIds.length;
+            i += event.batchSize) {
+          final batchIds = allIndividualClientRefIds.sublist(
+            i,
+            (i + event.batchSize) > allIndividualClientRefIds.length
+                ? allIndividualClientRefIds.length
+                : i + event.batchSize,
+          );
+
+          debugPrint(
+              '[HF_REFERRAL_DOWNSYNC] Fetching Individuals batch ${i ~/ event.batchSize + 1} with ${batchIds.length} IDs');
+
+          final individuals = await individualRemoteRepository.search(
+            IndividualSearchModel(
+              clientReferenceId: batchIds,
+            ),
+          );
+
+          debugPrint(
+              '[HF_REFERRAL_DOWNSYNC] Fetched ${individuals.length} Individuals');
+
+          if (individuals.isNotEmpty) {
+            // Convert to Map format and store in local repository
+            final individualResponse = {
+              'Individuals': individuals.map((e) => e.toMap()).toList(),
+            };
+
+            await SyncServiceSingleton().entityMapper?.writeToEntityDB(
+              individualResponse,
+              [individualLocalRepository],
+            );
+          }
         }
       }
 
@@ -602,6 +726,9 @@ class BeneficiaryDownSyncBloc
         locality: localityKey,
         boundaryName: event.boundaryName,
       );
+
+      debugPrint(
+          '[HF_REFERRAL_DOWNSYNC] Downsync completed successfully - HFReferrals: $totalFetched, ProjectBeneficiaries: ${allBeneficiaryIds.length}, Individuals: ${allIndividualClientRefIds.length}');
 
       emit(BeneficiaryDownSyncState.hfReferralSuccess(result));
     } catch (e) {

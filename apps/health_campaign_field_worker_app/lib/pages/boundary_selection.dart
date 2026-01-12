@@ -555,6 +555,8 @@ class _BoundarySelectionPageState
                                                               .getSelectedLocale),
                                                   code: AppSharedPreferences()
                                                       .getSelectedLocale!));
+
+                                      context.router.maybePop();
                                       context.router.replaceAll([HomeRoute()]);
                                     },
                                     hfReferralInProgress:
@@ -695,33 +697,35 @@ class _BoundarySelectionPageState
                                                     await getIsConnected();
 
                                                 if (context.mounted) {
-                                                  if (isOnline &&
-                                                      isDistributor) {
-                                                    // Trigger beneficiary downsync for Distributor role
-                                                    context
-                                                        .read<
-                                                            BeneficiaryDownSyncBloc>()
-                                                        .add(
-                                                          DownSyncGetBatchSizeEvent(
-                                                            appConfiguration: [
-                                                              appConfiguration,
-                                                            ],
-                                                            projectId: context
-                                                                .projectId,
-                                                            boundaryCode:
-                                                                selectedBoundary!
-                                                                    .value!.code
-                                                                    .toString(),
-                                                            pendingSyncCount:
-                                                                pendingSyncCount,
-                                                            boundaryName:
-                                                                selectedBoundary
-                                                                    .value!.name
-                                                                    .toString(),
-                                                          ),
-                                                        );
-                                                  } else if (isOnline &&
-                                                      isHFWorker) {
+                                                  // TODO:: temp
+                                                  // if (isOnline &&
+                                                  //     isDistributor) {
+                                                  //   // Trigger beneficiary downsync for Distributor role
+                                                  //   context
+                                                  //       .read<
+                                                  //           BeneficiaryDownSyncBloc>()
+                                                  //       .add(
+                                                  //         DownSyncGetBatchSizeEvent(
+                                                  //           appConfiguration: [
+                                                  //             appConfiguration,
+                                                  //           ],
+                                                  //           projectId: context
+                                                  //               .projectId,
+                                                  //           boundaryCode:
+                                                  //               selectedBoundary!
+                                                  //                   .value!.code
+                                                  //                   .toString(),
+                                                  //           pendingSyncCount:
+                                                  //               pendingSyncCount,
+                                                  //           boundaryName:
+                                                  //               selectedBoundary
+                                                  //                   .value!.name
+                                                  //                   .toString(),
+                                                  //         ),
+                                                  //       );
+                                                  // } else
+
+                                                  if (isOnline && isHFWorker) {
                                                     // Trigger HF Referral downsync for HF Worker role
                                                     context
                                                         .read<
