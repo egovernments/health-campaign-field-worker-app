@@ -94,10 +94,10 @@ class ReverseFormMapper {
   }
 
   void _applyMappings(
-    Map<String, dynamic> formData,
-    Map<String, dynamic> modelInstance,
-    Map mappings,
-  ) {
+      Map<String, dynamic> formData,
+      Map<String, dynamic> modelInstance,
+      Map mappings,
+      ) {
     for (final entry in mappings.entries) {
       final modelField = entry.key;
       final formFieldPath = entry.value;
@@ -106,8 +106,10 @@ class ReverseFormMapper {
       if (modelValue == null) continue;
 
       if (formFieldPath is String) {
-        // Skip special constant mappings like __value, __uuid, __context
-        if (formFieldPath.startsWith('__')) continue;
+        // Skip special mappings that are not actual form fields
+        if (formFieldPath.startsWith('__') ||
+            formFieldPath.startsWith('list:') ||
+            formFieldPath.startsWith('collect:')) continue;
 
         _setNestedValue(formData, formFieldPath, modelValue);
       } else if (formFieldPath is Map<String, dynamic>) {
@@ -143,46 +145,40 @@ class ReverseFormMapper {
   }
 
   void _applyListMappings(
-    Map<String, dynamic> formData,
-    Map<String, dynamic> modelInstance,
-    Map listMappings,
-  ) {
+      Map<String, dynamic> formData,
+      Map<String, dynamic> modelInstance,
+      Map listMappings,
+      ) {
     for (final listModelEntry in listMappings.entries) {
       final listKey = listModelEntry.key; // e.g., "IdentifierModel"
       final listModelConfig = listModelEntry.value;
       final mappings = listModelConfig['mappings'] ?? {};
 
-      // Try multiple field name variations to find the list items
-      // 1. Explicit 'field' config
-      // 2. camelCase model name (e.g., "identifierModel")
-      // 3. Plural lowercase without "Model" suffix (e.g., "identifiers")
-      // 4. Singular lowercase without "Model" suffix (e.g., "identifier")
-      final possibleFieldNames = <String>[
-        if (listModelConfig['field'] != null) listModelConfig['field'],
-        listKey[0].toLowerCase() + listKey.substring(1), // identifierModel
-        if (listKey.endsWith('Model'))
-          '${listKey.substring(0, listKey.length - 5).toLowerCase()}s', // identifiers
-        if (listKey.endsWith('Model'))
-          listKey.substring(0, listKey.length - 5).toLowerCase(), // identifier
-      ];
+      // Find the actual field name in the model instance
+      String? listFieldName = listModelConfig['field'];
 
-      List<dynamic> listItems = [];
-      for (final fieldName in possibleFieldNames) {
-        final items = modelInstance[fieldName];
-        if (items != null && items is List && items.isNotEmpty) {
-          listItems = items;
-          break;
+      if (listFieldName == null) {
+        // Try to infer the field name by looking for a List field in the model
+        // Convert "IdentifierModel" -> "identifiers" or "AddressModel" -> "address"
+        final baseNameWithModel = listKey.replaceAll('Model', '');
+        final baseName = baseNameWithModel[0].toLowerCase() + baseNameWithModel.substring(1);
+
+        // Try plural form first (identifiers, addresses)
+        final pluralName = baseName + 's';
+        if (modelInstance.containsKey(pluralName) && modelInstance[pluralName] is List) {
+          listFieldName = pluralName;
+        } else if (modelInstance.containsKey(baseName) && modelInstance[baseName] is List) {
+          listFieldName = baseName;
+        } else {
+          // Fallback: use old behavior
+          listFieldName = listKey[0].toLowerCase() + listKey.substring(1);
         }
       }
 
+      final List<dynamic> listItems = modelInstance[listFieldName] ?? [];
+
       for (int index = 0; index < listItems.length; index++) {
-        var item = listItems[index];
-
-        // Handle EntityModel instances - convert to map
-        if (item is EntityModel) {
-          item = item.toMap();
-        }
-
+        final item = listItems[index];
         if (item is! Map<String, dynamic>) continue;
 
         for (final entry in mappings.entries) {
@@ -194,7 +190,7 @@ class ReverseFormMapper {
 
           final formFieldPath = formFieldPathTemplate.replaceAllMapped(
             RegExp(r'\[(\d*)\]\$'),
-            (match) => '[${index}]\$',
+                (match) => '[${index}]\$',
           );
 
           final modelValue = item[modelField];
