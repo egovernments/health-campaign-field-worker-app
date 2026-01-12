@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../../utils/i18_key_constants.dart' as i18;
 import '../localized.dart';
 
 /// GlobalKey to access StockReconciliationCard state for validation
@@ -224,50 +225,58 @@ class _StockReconciliationCardState
                 margin: const EdgeInsets.all(0),
                 children: [
                   Text(
-                    localizations.translate('Stock Metrics'),
+                    localizations
+                        .translate(i18.stockReconciliationMetrics.stockMetrics),
                     style: textTheme.headingS.copyWith(
                       color: theme.colorTheme.text.primary,
                     ),
                   ),
                   const SizedBox(height: spacer2),
                   LabelValueItem(
-                    label: localizations.translate('Date of Reconciliation'),
+                    label: localizations.translate(
+                        i18.stockReconciliationMetrics.dateOfReconciliation),
                     value: DateFormat('dd MMMM yyyy').format(DateTime.now()),
                     labelFlex: 5,
                   ),
                   const DigitDivider(),
                   LabelValueItem(
-                    label: localizations.translate('Stock Received'),
+                    label: localizations.translate(
+                        i18.stockReconciliationMetrics.stockReceived),
                     value: _stockMetrics['stockReceived']!.toStringAsFixed(0),
                     labelFlex: 5,
                   ),
                   const DigitDivider(),
                   LabelValueItem(
-                    label: localizations.translate('Stock Issued'),
+                    label: localizations
+                        .translate(i18.stockReconciliationMetrics.stockIssued),
                     value: _stockMetrics['stockIssued']!.toStringAsFixed(0),
                     labelFlex: 5,
                   ),
                   const DigitDivider(),
                   LabelValueItem(
-                    label: localizations.translate('Stock Returned'),
+                    label: localizations.translate(
+                        i18.stockReconciliationMetrics.stockReturned),
                     value: _stockMetrics['stockReturned']!.toStringAsFixed(0),
                     labelFlex: 5,
                   ),
                   const DigitDivider(),
                   LabelValueItem(
-                    label: localizations.translate('Stock Lost'),
+                    label: localizations
+                        .translate(i18.stockReconciliationMetrics.stockLost),
                     value: _stockMetrics['stockLost']!.toStringAsFixed(0),
                     labelFlex: 5,
                   ),
                   const DigitDivider(),
                   LabelValueItem(
-                    label: localizations.translate('Stock Damaged'),
+                    label: localizations
+                        .translate(i18.stockReconciliationMetrics.stockDamaged),
                     value: _stockMetrics['stockDamaged']!.toStringAsFixed(0),
                     labelFlex: 5,
                   ),
                   const DigitDivider(),
                   LabelValueItem(
-                    label: localizations.translate('Stock on Hand'),
+                    label: localizations
+                        .translate(i18.stockReconciliationMetrics.stockOnHand),
                     value: _stockMetrics['stockInHand']!.toStringAsFixed(0),
                     labelFlex: 5,
                   ),
