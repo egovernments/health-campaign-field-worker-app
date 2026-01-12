@@ -804,12 +804,9 @@ final dynamic sampleFlows = {
           "type": "object",
           "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_HEADING",
           "order": 3,
-          "conditionalNavigateTo": [
-            {
-              "condition": "isEdit == true",
-              "navigateTo": {"type": "submit", "name": ""}
-            }
-          ],
+          "submitCondition": {
+            "expression": [{ "condition": "isEdit == true" }]
+          },
           "navigateTo": {"name": "beneficiaryDetails", "type": "form"},
           "properties": [
             {

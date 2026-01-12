@@ -64,6 +64,7 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
       showAlertPopUp: _showAlertOrNull(json['showAlertPopUp']),
       multiEntityConfig: _multiEntityConfigOrNull(json['multiEntityConfig']),
       preventScreenCapture: json['preventScreenCapture'] as bool?,
+      submitCondition: _visibilityConditionOrNull(json['submitCondition']),
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -122,6 +123,7 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('showAlertPopUp', instance.showAlertPopUp?.toJson());
   writeNotNull('multiEntityConfig', instance.multiEntityConfig?.toJson());
   writeNotNull('preventScreenCapture', instance.preventScreenCapture);
+  writeNotNull('submitCondition', instance.submitCondition?.toJson());
   return val;
 }
 

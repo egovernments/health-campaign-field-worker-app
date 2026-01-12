@@ -287,6 +287,39 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
                               final currentPage =
                                   schemaObject.pages.entries.elementAt(index);
+
+                              // Check submitCondition - if true, submit form directly
+                              final submitCondition = currentPage.value.submitCondition;
+                              if (submitCondition != null) {
+                                final submitEvalContext =
+                                    buildVisibilityEvaluationContext(
+                                  currentPageKey: widget.pageName,
+                                  currentForm: formGroup,
+                                  pages: schemaObject.pages,
+                                  navigationParams: widget.navigationParams,
+                                );
+                                // Add isEdit to context
+                                submitEvalContext['isEdit'] = widget.isEdit;
+
+                                final shouldSubmit = evaluateVisibilityExpression(
+                                  submitCondition.expression,
+                                  submitEvalContext,
+                                );
+
+                                if (shouldSubmit) {
+                                  context.read<FormsBloc>().add(
+                                      FormsSubmitEvent(
+                                          isEdit: widget.isEdit,
+                                          schemaKey: widget.currentSchemaKey));
+                                  // Pop all form pages
+                                  context.router.popUntil((route) {
+                                    return route.settings.name !=
+                                        FormsRenderRoute.name;
+                                  });
+                                  return;
+                                }
+                              }
+
                               final conditionalNavigateList =
                                   currentPage.value.conditionalNavigateTo;
 
