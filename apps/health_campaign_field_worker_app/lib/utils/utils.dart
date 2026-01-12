@@ -262,15 +262,28 @@ void showDownloadDialog(
             if (dialogType == DigitProgressDialogType.failed ||
                 dialogType == DigitProgressDialogType.checkFailed) {
               Navigator.of(context, rootNavigator: true).pop();
-              context.read<BeneficiaryDownSyncBloc>().add(
-                    DownSyncGetBatchSizeEvent(
-                      appConfiguration: [model.appConfiguartion!],
-                      projectId: context.projectId,
-                      boundaryCode: model.boundary,
-                      pendingSyncCount: model.pendingSyncCount ?? 0,
-                      boundaryName: model.boundaryName,
-                    ),
-                  );
+              // Check if it's HF Referral downsync
+              if (model.isHFReferral) {
+                context.read<BeneficiaryDownSyncBloc>().add(
+                      BeneficiaryDownSyncEvent.hfReferralGetBatchSize(
+                        appConfiguration: [model.appConfiguartion!],
+                        projectId: context.projectId,
+                        boundaryCode: model.boundary,
+                        pendingSyncCount: model.pendingSyncCount ?? 0,
+                        boundaryName: model.boundaryName,
+                      ),
+                    );
+              } else {
+                context.read<BeneficiaryDownSyncBloc>().add(
+                      DownSyncGetBatchSizeEvent(
+                        appConfiguration: [model.appConfiguartion!],
+                        projectId: context.projectId,
+                        boundaryCode: model.boundary,
+                        pendingSyncCount: model.pendingSyncCount ?? 0,
+                        boundaryName: model.boundaryName,
+                      ),
+                    );
+              }
             } else {
               Navigator.of(context, rootNavigator: true).pop();
               context.router.replaceAll([HomeRoute()]);
@@ -310,16 +323,29 @@ void showDownloadDialog(
                     context.router.replaceAll([HomeRoute()]);
                   } else {
                     if ((model.totalCount ?? 0) > 0) {
-                      context.read<BeneficiaryDownSyncBloc>().add(
-                            DownSyncBeneficiaryEvent(
-                              projectId: context.projectId,
-                              boundaryCode: model.boundary,
-                              // Batch Size need to be defined based on Internet speed.
-                              batchSize: model.batchSize ?? 1,
-                              initialServerCount: model.totalCount ?? 0,
-                              boundaryName: model.boundaryName,
-                            ),
-                          );
+                      // Check if it's HF Referral downsync
+                      if (model.isHFReferral) {
+                        context.read<BeneficiaryDownSyncBloc>().add(
+                              BeneficiaryDownSyncEvent.hfReferralDownSync(
+                                projectId: context.projectId,
+                                boundaryCode: model.boundary,
+                                batchSize: model.batchSize ?? 1,
+                                initialServerCount: model.totalCount ?? 0,
+                                boundaryName: model.boundaryName,
+                              ),
+                            );
+                      } else {
+                        context.read<BeneficiaryDownSyncBloc>().add(
+                              DownSyncBeneficiaryEvent(
+                                projectId: context.projectId,
+                                boundaryCode: model.boundary,
+                                // Batch Size need to be defined based on Internet speed.
+                                batchSize: model.batchSize ?? 1,
+                                initialServerCount: model.totalCount ?? 0,
+                                boundaryName: model.boundaryName,
+                              ),
+                            );
+                      }
                     } else {
                       Navigator.of(context, rootNavigator: true).pop();
                       context.read<BeneficiaryDownSyncBloc>().add(

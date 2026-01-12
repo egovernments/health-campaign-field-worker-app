@@ -567,16 +567,10 @@ class BeneficiaryDownSyncBloc
             }
           }
 
-          // Convert HF Referrals to Map format for writeToEntityDB
-          final hfReferralResponse = {
-            'HFReferrals': hfReferrals.map((e) => e.toMap()).toList(),
-          };
-
-          // Store HF Referrals in local repository
-          await SyncServiceSingleton().entityMapper?.writeToEntityDB(
-            hfReferralResponse,
-            [hfReferralLocalRepository!],
-          );
+          // Store HF Referrals directly in local repository using bulkCreate
+          await hfReferralLocalRepository!.bulkCreate(hfReferrals);
+          debugPrint(
+              '[HF_REFERRAL_DOWNSYNC] Stored ${hfReferrals.length} HF Referrals in local DB');
           totalFetched += hfReferrals.length;
 
           // Update downsync tracking
@@ -647,16 +641,10 @@ class BeneficiaryDownSyncBloc
               }
             }
 
-            // Convert to Map format and store in local repository
-            final projectBeneficiaryResponse = {
-              'ProjectBeneficiaries':
-                  projectBeneficiaries.map((e) => e.toMap()).toList(),
-            };
-
-            await SyncServiceSingleton().entityMapper?.writeToEntityDB(
-              projectBeneficiaryResponse,
-              [projectBeneficiaryLocalRepository],
-            );
+            // Store Project Beneficiaries directly in local repository using bulkCreate
+            await projectBeneficiaryLocalRepository.bulkCreate(projectBeneficiaries);
+            debugPrint(
+                '[HF_REFERRAL_DOWNSYNC] Stored ${projectBeneficiaries.length} Project Beneficiaries in local DB');
           }
         }
       }
@@ -694,15 +682,10 @@ class BeneficiaryDownSyncBloc
               '[HF_REFERRAL_DOWNSYNC] Fetched ${individuals.length} Individuals');
 
           if (individuals.isNotEmpty) {
-            // Convert to Map format and store in local repository
-            final individualResponse = {
-              'Individuals': individuals.map((e) => e.toMap()).toList(),
-            };
-
-            await SyncServiceSingleton().entityMapper?.writeToEntityDB(
-              individualResponse,
-              [individualLocalRepository],
-            );
+            // Store Individuals directly in local repository using bulkCreate
+            await individualLocalRepository.bulkCreate(individuals);
+            debugPrint(
+                '[HF_REFERRAL_DOWNSYNC] Stored ${individuals.length} Individuals in local DB');
           }
         }
       }

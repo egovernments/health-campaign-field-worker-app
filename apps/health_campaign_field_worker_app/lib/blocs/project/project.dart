@@ -1027,19 +1027,19 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     // downsync for hfreferral
 
-    try {
-      final projectFacilities = await projectFacilityLocalRepository
-          .search(ProjectFacilitySearchModel());
-      final facilities =
-          await facilityLocalRepository.search(FacilitySearchModel());
-      await downloadHFreferralData(projectFacilities, facilities,
-          event.model.address?.boundaryType, currentRunningCycle);
-    } catch (_) {
-      emit(state.copyWith(
-        loading: false,
-        syncError: ProjectSyncErrorType.projectFacilities,
-      ));
-    }
+    // try {
+    //   final projectFacilities = await projectFacilityLocalRepository
+    //       .search(ProjectFacilitySearchModel());
+    //   final facilities =
+    //       await facilityLocalRepository.search(FacilitySearchModel());
+    //   await downloadHFreferralData(projectFacilities, facilities,
+    //       event.model.address?.boundaryType, currentRunningCycle);
+    // } catch (_) {
+    //   emit(state.copyWith(
+    //     loading: false,
+    //     syncError: ProjectSyncErrorType.projectFacilities,
+    //   ));
+    // }
 
     // end of it
 

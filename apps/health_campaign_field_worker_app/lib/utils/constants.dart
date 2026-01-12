@@ -380,6 +380,7 @@ class DownloadBeneficiary {
   String? prefixLabel;
   String? suffixLabel;
   AppConfiguration? appConfiguartion;
+  bool isHFReferral;
 
   DownloadBeneficiary({
     required this.title,
@@ -396,5 +397,6 @@ class DownloadBeneficiary {
     this.secondaryButtonLabel,
     this.prefixLabel,
     this.suffixLabel,
+    this.isHFReferral = false,
   });
 }

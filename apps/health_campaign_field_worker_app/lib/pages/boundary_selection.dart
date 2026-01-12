@@ -534,6 +534,7 @@ class _BoundarySelectionPageState
                                           boundaryName: selectedBoundary
                                               .value!.name
                                               .toString(),
+                                          isHFReferral: true,
                                         ),
                                         dialogType:
                                             DigitProgressDialogType.dataFound,
@@ -587,6 +588,7 @@ class _BoundarySelectionPageState
                                             boundaryName: selectedBoundary
                                                 .value!.name
                                                 .toString(),
+                                            isHFReferral: true,
                                           ),
                                           dialogType: DigitProgressDialogType
                                               .inProgress,
@@ -724,7 +726,6 @@ class _BoundarySelectionPageState
                                                   //         ),
                                                   //       );
                                                   // } else
-
                                                   if (isOnline && isHFWorker) {
                                                     // Trigger HF Referral downsync for HF Worker role
                                                     context

@@ -206,13 +206,14 @@ class HFReferralLocalRepository
     return retryLocalCallOperation(() async {
       final referralCompanions = entities
           .map((e) => e.companion.copyWith(
-                name: e.additionalFields?.fields
+                  name: Value(
+                e.additionalFields?.fields
                     .where((h) =>
                         h.key ==
                         ReferralReconAdditionalFields.nameOfReferral.toValue())
                     .first
                     .value,
-              ))
+              )))
           .toList();
 
       await sql.batch((batch) async {
