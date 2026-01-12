@@ -2409,6 +2409,7 @@ mixin _$BeneficiaryDownSyncState {
     required TResult Function(int initialServerCount, int batchSize)
         hfReferralDataFound,
     required TResult Function() hfReferralNoData,
+    required TResult Function() hfReferralDownloadInProgress,
     required TResult Function(int syncedCount, int totalCount)
         hfReferralInProgress,
     required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
@@ -2435,6 +2436,7 @@ mixin _$BeneficiaryDownSyncState {
     TResult? Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult? Function()? hfReferralNoData,
+    TResult? Function()? hfReferralDownloadInProgress,
     TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) =>
@@ -2460,6 +2462,7 @@ mixin _$BeneficiaryDownSyncState {
     TResult Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult Function()? hfReferralNoData,
+    TResult Function()? hfReferralDownloadInProgress,
     TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
@@ -2486,6 +2489,8 @@ mixin _$BeneficiaryDownSyncState {
         hfReferralDataFound,
     required TResult Function(_HFReferralDownSyncNoDataState value)
         hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncDownloadInProgressState value)
+        hfReferralDownloadInProgress,
     required TResult Function(_HFReferralDownSyncInProgressState value)
         hfReferralInProgress,
     required TResult Function(_HFReferralDownSyncSuccessState value)
@@ -2512,6 +2517,8 @@ mixin _$BeneficiaryDownSyncState {
     TResult? Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult? Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -2537,6 +2544,8 @@ mixin _$BeneficiaryDownSyncState {
     TResult Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -2672,6 +2681,7 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState
     required TResult Function(int initialServerCount, int batchSize)
         hfReferralDataFound,
     required TResult Function() hfReferralNoData,
+    required TResult Function() hfReferralDownloadInProgress,
     required TResult Function(int syncedCount, int totalCount)
         hfReferralInProgress,
     required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
@@ -2701,6 +2711,7 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState
     TResult? Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult? Function()? hfReferralNoData,
+    TResult? Function()? hfReferralDownloadInProgress,
     TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
@@ -2729,6 +2740,7 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState
     TResult Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult Function()? hfReferralNoData,
+    TResult Function()? hfReferralDownloadInProgress,
     TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
@@ -2761,6 +2773,8 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState
         hfReferralDataFound,
     required TResult Function(_HFReferralDownSyncNoDataState value)
         hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncDownloadInProgressState value)
+        hfReferralDownloadInProgress,
     required TResult Function(_HFReferralDownSyncInProgressState value)
         hfReferralInProgress,
     required TResult Function(_HFReferralDownSyncSuccessState value)
@@ -2790,6 +2804,8 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState
     TResult? Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult? Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -2818,6 +2834,8 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState
     TResult Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -2939,6 +2957,7 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState
     required TResult Function(int initialServerCount, int batchSize)
         hfReferralDataFound,
     required TResult Function() hfReferralNoData,
+    required TResult Function() hfReferralDownloadInProgress,
     required TResult Function(int syncedCount, int totalCount)
         hfReferralInProgress,
     required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
@@ -2968,6 +2987,7 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState
     TResult? Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult? Function()? hfReferralNoData,
+    TResult? Function()? hfReferralDownloadInProgress,
     TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
@@ -2996,6 +3016,7 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState
     TResult Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult Function()? hfReferralNoData,
+    TResult Function()? hfReferralDownloadInProgress,
     TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
@@ -3028,6 +3049,8 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState
         hfReferralDataFound,
     required TResult Function(_HFReferralDownSyncNoDataState value)
         hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncDownloadInProgressState value)
+        hfReferralDownloadInProgress,
     required TResult Function(_HFReferralDownSyncInProgressState value)
         hfReferralInProgress,
     required TResult Function(_HFReferralDownSyncSuccessState value)
@@ -3057,6 +3080,8 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState
     TResult? Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult? Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -3085,6 +3110,8 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState
     TResult Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -3254,6 +3281,7 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
     required TResult Function(int initialServerCount, int batchSize)
         hfReferralDataFound,
     required TResult Function() hfReferralNoData,
+    required TResult Function() hfReferralDownloadInProgress,
     required TResult Function(int syncedCount, int totalCount)
         hfReferralInProgress,
     required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
@@ -3284,6 +3312,7 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
     TResult? Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult? Function()? hfReferralNoData,
+    TResult? Function()? hfReferralDownloadInProgress,
     TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
@@ -3313,6 +3342,7 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
     TResult Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult Function()? hfReferralNoData,
+    TResult Function()? hfReferralDownloadInProgress,
     TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
@@ -3346,6 +3376,8 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
         hfReferralDataFound,
     required TResult Function(_HFReferralDownSyncNoDataState value)
         hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncDownloadInProgressState value)
+        hfReferralDownloadInProgress,
     required TResult Function(_HFReferralDownSyncInProgressState value)
         hfReferralInProgress,
     required TResult Function(_HFReferralDownSyncSuccessState value)
@@ -3375,6 +3407,8 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
     TResult? Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult? Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -3403,6 +3437,8 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState
     TResult Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -3529,6 +3565,7 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState
     required TResult Function(int initialServerCount, int batchSize)
         hfReferralDataFound,
     required TResult Function() hfReferralNoData,
+    required TResult Function() hfReferralDownloadInProgress,
     required TResult Function(int syncedCount, int totalCount)
         hfReferralInProgress,
     required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
@@ -3558,6 +3595,7 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState
     TResult? Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult? Function()? hfReferralNoData,
+    TResult? Function()? hfReferralDownloadInProgress,
     TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
@@ -3586,6 +3624,7 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState
     TResult Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult Function()? hfReferralNoData,
+    TResult Function()? hfReferralDownloadInProgress,
     TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
@@ -3618,6 +3657,8 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState
         hfReferralDataFound,
     required TResult Function(_HFReferralDownSyncNoDataState value)
         hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncDownloadInProgressState value)
+        hfReferralDownloadInProgress,
     required TResult Function(_HFReferralDownSyncInProgressState value)
         hfReferralInProgress,
     required TResult Function(_HFReferralDownSyncSuccessState value)
@@ -3647,6 +3688,8 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState
     TResult? Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult? Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -3675,6 +3718,8 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState
     TResult Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -3767,6 +3812,7 @@ class _$DownSyncInsufficientStorageStateImpl
     required TResult Function(int initialServerCount, int batchSize)
         hfReferralDataFound,
     required TResult Function() hfReferralNoData,
+    required TResult Function() hfReferralDownloadInProgress,
     required TResult Function(int syncedCount, int totalCount)
         hfReferralInProgress,
     required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
@@ -3796,6 +3842,7 @@ class _$DownSyncInsufficientStorageStateImpl
     TResult? Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult? Function()? hfReferralNoData,
+    TResult? Function()? hfReferralDownloadInProgress,
     TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
@@ -3824,6 +3871,7 @@ class _$DownSyncInsufficientStorageStateImpl
     TResult Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult Function()? hfReferralNoData,
+    TResult Function()? hfReferralDownloadInProgress,
     TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
@@ -3856,6 +3904,8 @@ class _$DownSyncInsufficientStorageStateImpl
         hfReferralDataFound,
     required TResult Function(_HFReferralDownSyncNoDataState value)
         hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncDownloadInProgressState value)
+        hfReferralDownloadInProgress,
     required TResult Function(_HFReferralDownSyncInProgressState value)
         hfReferralInProgress,
     required TResult Function(_HFReferralDownSyncSuccessState value)
@@ -3885,6 +3935,8 @@ class _$DownSyncInsufficientStorageStateImpl
     TResult? Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult? Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -3913,6 +3965,8 @@ class _$DownSyncInsufficientStorageStateImpl
     TResult Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -4040,6 +4094,7 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
     required TResult Function(int initialServerCount, int batchSize)
         hfReferralDataFound,
     required TResult Function() hfReferralNoData,
+    required TResult Function() hfReferralDownloadInProgress,
     required TResult Function(int syncedCount, int totalCount)
         hfReferralInProgress,
     required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
@@ -4069,6 +4124,7 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
     TResult? Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult? Function()? hfReferralNoData,
+    TResult? Function()? hfReferralDownloadInProgress,
     TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
@@ -4097,6 +4153,7 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
     TResult Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult Function()? hfReferralNoData,
+    TResult Function()? hfReferralDownloadInProgress,
     TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
@@ -4129,6 +4186,8 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
         hfReferralDataFound,
     required TResult Function(_HFReferralDownSyncNoDataState value)
         hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncDownloadInProgressState value)
+        hfReferralDownloadInProgress,
     required TResult Function(_HFReferralDownSyncInProgressState value)
         hfReferralInProgress,
     required TResult Function(_HFReferralDownSyncSuccessState value)
@@ -4158,6 +4217,8 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
     TResult? Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult? Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -4186,6 +4247,8 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState
     TResult Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -4277,6 +4340,7 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState
     required TResult Function(int initialServerCount, int batchSize)
         hfReferralDataFound,
     required TResult Function() hfReferralNoData,
+    required TResult Function() hfReferralDownloadInProgress,
     required TResult Function(int syncedCount, int totalCount)
         hfReferralInProgress,
     required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
@@ -4306,6 +4370,7 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState
     TResult? Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult? Function()? hfReferralNoData,
+    TResult? Function()? hfReferralDownloadInProgress,
     TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
@@ -4334,6 +4399,7 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState
     TResult Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult Function()? hfReferralNoData,
+    TResult Function()? hfReferralDownloadInProgress,
     TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
@@ -4366,6 +4432,8 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState
         hfReferralDataFound,
     required TResult Function(_HFReferralDownSyncNoDataState value)
         hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncDownloadInProgressState value)
+        hfReferralDownloadInProgress,
     required TResult Function(_HFReferralDownSyncInProgressState value)
         hfReferralInProgress,
     required TResult Function(_HFReferralDownSyncSuccessState value)
@@ -4395,6 +4463,8 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState
     TResult? Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult? Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -4423,6 +4493,8 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState
     TResult Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -4509,6 +4581,7 @@ class _$DownSynnCountCheckFailedStateImpl extends _DownSynnCountCheckFailedState
     required TResult Function(int initialServerCount, int batchSize)
         hfReferralDataFound,
     required TResult Function() hfReferralNoData,
+    required TResult Function() hfReferralDownloadInProgress,
     required TResult Function(int syncedCount, int totalCount)
         hfReferralInProgress,
     required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
@@ -4538,6 +4611,7 @@ class _$DownSynnCountCheckFailedStateImpl extends _DownSynnCountCheckFailedState
     TResult? Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult? Function()? hfReferralNoData,
+    TResult? Function()? hfReferralDownloadInProgress,
     TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
@@ -4566,6 +4640,7 @@ class _$DownSynnCountCheckFailedStateImpl extends _DownSynnCountCheckFailedState
     TResult Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult Function()? hfReferralNoData,
+    TResult Function()? hfReferralDownloadInProgress,
     TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
@@ -4598,6 +4673,8 @@ class _$DownSynnCountCheckFailedStateImpl extends _DownSynnCountCheckFailedState
         hfReferralDataFound,
     required TResult Function(_HFReferralDownSyncNoDataState value)
         hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncDownloadInProgressState value)
+        hfReferralDownloadInProgress,
     required TResult Function(_HFReferralDownSyncInProgressState value)
         hfReferralInProgress,
     required TResult Function(_HFReferralDownSyncSuccessState value)
@@ -4627,6 +4704,8 @@ class _$DownSynnCountCheckFailedStateImpl extends _DownSynnCountCheckFailedState
     TResult? Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult? Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -4655,6 +4734,8 @@ class _$DownSynnCountCheckFailedStateImpl extends _DownSynnCountCheckFailedState
     TResult Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -4740,6 +4821,7 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState
     required TResult Function(int initialServerCount, int batchSize)
         hfReferralDataFound,
     required TResult Function() hfReferralNoData,
+    required TResult Function() hfReferralDownloadInProgress,
     required TResult Function(int syncedCount, int totalCount)
         hfReferralInProgress,
     required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
@@ -4769,6 +4851,7 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState
     TResult? Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult? Function()? hfReferralNoData,
+    TResult? Function()? hfReferralDownloadInProgress,
     TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
@@ -4797,6 +4880,7 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState
     TResult Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult Function()? hfReferralNoData,
+    TResult Function()? hfReferralDownloadInProgress,
     TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
@@ -4829,6 +4913,8 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState
         hfReferralDataFound,
     required TResult Function(_HFReferralDownSyncNoDataState value)
         hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncDownloadInProgressState value)
+        hfReferralDownloadInProgress,
     required TResult Function(_HFReferralDownSyncInProgressState value)
         hfReferralInProgress,
     required TResult Function(_HFReferralDownSyncSuccessState value)
@@ -4858,6 +4944,8 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState
     TResult? Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult? Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -4886,6 +4974,8 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState
     TResult Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -5008,6 +5098,7 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState
     required TResult Function(int initialServerCount, int batchSize)
         hfReferralDataFound,
     required TResult Function() hfReferralNoData,
+    required TResult Function() hfReferralDownloadInProgress,
     required TResult Function(int syncedCount, int totalCount)
         hfReferralInProgress,
     required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
@@ -5037,6 +5128,7 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState
     TResult? Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult? Function()? hfReferralNoData,
+    TResult? Function()? hfReferralDownloadInProgress,
     TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
@@ -5065,6 +5157,7 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState
     TResult Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult Function()? hfReferralNoData,
+    TResult Function()? hfReferralDownloadInProgress,
     TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
@@ -5097,6 +5190,8 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState
         hfReferralDataFound,
     required TResult Function(_HFReferralDownSyncNoDataState value)
         hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncDownloadInProgressState value)
+        hfReferralDownloadInProgress,
     required TResult Function(_HFReferralDownSyncInProgressState value)
         hfReferralInProgress,
     required TResult Function(_HFReferralDownSyncSuccessState value)
@@ -5126,6 +5221,8 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState
     TResult? Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult? Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -5154,6 +5251,8 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState
     TResult Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -5247,6 +5346,7 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
     required TResult Function(int initialServerCount, int batchSize)
         hfReferralDataFound,
     required TResult Function() hfReferralNoData,
+    required TResult Function() hfReferralDownloadInProgress,
     required TResult Function(int syncedCount, int totalCount)
         hfReferralInProgress,
     required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
@@ -5276,6 +5376,7 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
     TResult? Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult? Function()? hfReferralNoData,
+    TResult? Function()? hfReferralDownloadInProgress,
     TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
@@ -5304,6 +5405,7 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
     TResult Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult Function()? hfReferralNoData,
+    TResult Function()? hfReferralDownloadInProgress,
     TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
@@ -5336,6 +5438,8 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
         hfReferralDataFound,
     required TResult Function(_HFReferralDownSyncNoDataState value)
         hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncDownloadInProgressState value)
+        hfReferralDownloadInProgress,
     required TResult Function(_HFReferralDownSyncInProgressState value)
         hfReferralInProgress,
     required TResult Function(_HFReferralDownSyncSuccessState value)
@@ -5365,6 +5469,8 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
     TResult? Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult? Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -5393,6 +5499,8 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState
     TResult Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -5561,6 +5669,7 @@ class _$HFReferralDownSyncGetBatchSizeStateImpl
     required TResult Function(int initialServerCount, int batchSize)
         hfReferralDataFound,
     required TResult Function() hfReferralNoData,
+    required TResult Function() hfReferralDownloadInProgress,
     required TResult Function(int syncedCount, int totalCount)
         hfReferralInProgress,
     required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
@@ -5591,6 +5700,7 @@ class _$HFReferralDownSyncGetBatchSizeStateImpl
     TResult? Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult? Function()? hfReferralNoData,
+    TResult? Function()? hfReferralDownloadInProgress,
     TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
@@ -5620,6 +5730,7 @@ class _$HFReferralDownSyncGetBatchSizeStateImpl
     TResult Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult Function()? hfReferralNoData,
+    TResult Function()? hfReferralDownloadInProgress,
     TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
@@ -5653,6 +5764,8 @@ class _$HFReferralDownSyncGetBatchSizeStateImpl
         hfReferralDataFound,
     required TResult Function(_HFReferralDownSyncNoDataState value)
         hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncDownloadInProgressState value)
+        hfReferralDownloadInProgress,
     required TResult Function(_HFReferralDownSyncInProgressState value)
         hfReferralInProgress,
     required TResult Function(_HFReferralDownSyncSuccessState value)
@@ -5682,6 +5795,8 @@ class _$HFReferralDownSyncGetBatchSizeStateImpl
     TResult? Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult? Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -5710,6 +5825,8 @@ class _$HFReferralDownSyncGetBatchSizeStateImpl
     TResult Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -5854,6 +5971,7 @@ class _$HFReferralDownSyncDataFoundStateImpl
     required TResult Function(int initialServerCount, int batchSize)
         hfReferralDataFound,
     required TResult Function() hfReferralNoData,
+    required TResult Function() hfReferralDownloadInProgress,
     required TResult Function(int syncedCount, int totalCount)
         hfReferralInProgress,
     required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
@@ -5883,6 +6001,7 @@ class _$HFReferralDownSyncDataFoundStateImpl
     TResult? Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult? Function()? hfReferralNoData,
+    TResult? Function()? hfReferralDownloadInProgress,
     TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
@@ -5911,6 +6030,7 @@ class _$HFReferralDownSyncDataFoundStateImpl
     TResult Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult Function()? hfReferralNoData,
+    TResult Function()? hfReferralDownloadInProgress,
     TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
@@ -5943,6 +6063,8 @@ class _$HFReferralDownSyncDataFoundStateImpl
         hfReferralDataFound,
     required TResult Function(_HFReferralDownSyncNoDataState value)
         hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncDownloadInProgressState value)
+        hfReferralDownloadInProgress,
     required TResult Function(_HFReferralDownSyncInProgressState value)
         hfReferralInProgress,
     required TResult Function(_HFReferralDownSyncSuccessState value)
@@ -5972,6 +6094,8 @@ class _$HFReferralDownSyncDataFoundStateImpl
     TResult? Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult? Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -6000,6 +6124,8 @@ class _$HFReferralDownSyncDataFoundStateImpl
     TResult Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -6096,6 +6222,7 @@ class _$HFReferralDownSyncNoDataStateImpl extends _HFReferralDownSyncNoDataState
     required TResult Function(int initialServerCount, int batchSize)
         hfReferralDataFound,
     required TResult Function() hfReferralNoData,
+    required TResult Function() hfReferralDownloadInProgress,
     required TResult Function(int syncedCount, int totalCount)
         hfReferralInProgress,
     required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
@@ -6125,6 +6252,7 @@ class _$HFReferralDownSyncNoDataStateImpl extends _HFReferralDownSyncNoDataState
     TResult? Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult? Function()? hfReferralNoData,
+    TResult? Function()? hfReferralDownloadInProgress,
     TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
@@ -6153,6 +6281,7 @@ class _$HFReferralDownSyncNoDataStateImpl extends _HFReferralDownSyncNoDataState
     TResult Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult Function()? hfReferralNoData,
+    TResult Function()? hfReferralDownloadInProgress,
     TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
@@ -6185,6 +6314,8 @@ class _$HFReferralDownSyncNoDataStateImpl extends _HFReferralDownSyncNoDataState
         hfReferralDataFound,
     required TResult Function(_HFReferralDownSyncNoDataState value)
         hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncDownloadInProgressState value)
+        hfReferralDownloadInProgress,
     required TResult Function(_HFReferralDownSyncInProgressState value)
         hfReferralInProgress,
     required TResult Function(_HFReferralDownSyncSuccessState value)
@@ -6214,6 +6345,8 @@ class _$HFReferralDownSyncNoDataStateImpl extends _HFReferralDownSyncNoDataState
     TResult? Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult? Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -6242,6 +6375,8 @@ class _$HFReferralDownSyncNoDataStateImpl extends _HFReferralDownSyncNoDataState
     TResult Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -6258,6 +6393,250 @@ abstract class _HFReferralDownSyncNoDataState extends BeneficiaryDownSyncState {
   const factory _HFReferralDownSyncNoDataState() =
       _$HFReferralDownSyncNoDataStateImpl;
   const _HFReferralDownSyncNoDataState._() : super._();
+}
+
+/// @nodoc
+abstract class _$$HFReferralDownSyncDownloadInProgressStateImplCopyWith<$Res> {
+  factory _$$HFReferralDownSyncDownloadInProgressStateImplCopyWith(
+          _$HFReferralDownSyncDownloadInProgressStateImpl value,
+          $Res Function(_$HFReferralDownSyncDownloadInProgressStateImpl) then) =
+      __$$HFReferralDownSyncDownloadInProgressStateImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$HFReferralDownSyncDownloadInProgressStateImplCopyWithImpl<$Res>
+    extends _$BeneficiaryDownSyncStateCopyWithImpl<$Res,
+        _$HFReferralDownSyncDownloadInProgressStateImpl>
+    implements _$$HFReferralDownSyncDownloadInProgressStateImplCopyWith<$Res> {
+  __$$HFReferralDownSyncDownloadInProgressStateImplCopyWithImpl(
+      _$HFReferralDownSyncDownloadInProgressStateImpl _value,
+      $Res Function(_$HFReferralDownSyncDownloadInProgressStateImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$HFReferralDownSyncDownloadInProgressStateImpl
+    extends _HFReferralDownSyncDownloadInProgressState
+    with DiagnosticableTreeMixin {
+  const _$HFReferralDownSyncDownloadInProgressStateImpl() : super._();
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'BeneficiaryDownSyncState.hfReferralDownloadInProgress()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty(
+        'type', 'BeneficiaryDownSyncState.hfReferralDownloadInProgress'));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$HFReferralDownSyncDownloadInProgressStateImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int syncedCount, int totalCount) inProgress,
+    required TResult Function(DownsyncModel downSyncResult) success,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        getBatchSize,
+    required TResult Function(bool isPop) loading,
+    required TResult Function() insufficientStorage,
+    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function() resetState,
+    required TResult Function() totalCountCheckFailed,
+    required TResult Function() failed,
+    required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
+    required TResult Function() pendingSync,
+    required TResult Function(int batchSize, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)
+        hfReferralGetBatchSize,
+    required TResult Function(int initialServerCount, int batchSize)
+        hfReferralDataFound,
+    required TResult Function() hfReferralNoData,
+    required TResult Function() hfReferralDownloadInProgress,
+    required TResult Function(int syncedCount, int totalCount)
+        hfReferralInProgress,
+    required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
+  }) {
+    return hfReferralDownloadInProgress();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int syncedCount, int totalCount)? inProgress,
+    TResult? Function(DownsyncModel downSyncResult)? success,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        getBatchSize,
+    TResult? Function(bool isPop)? loading,
+    TResult? Function()? insufficientStorage,
+    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function()? resetState,
+    TResult? Function()? totalCountCheckFailed,
+    TResult? Function()? failed,
+    TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
+    TResult? Function()? pendingSync,
+    TResult? Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult? Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult? Function()? hfReferralNoData,
+    TResult? Function()? hfReferralDownloadInProgress,
+    TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
+  }) {
+    return hfReferralDownloadInProgress?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int syncedCount, int totalCount)? inProgress,
+    TResult Function(DownsyncModel downSyncResult)? success,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        getBatchSize,
+    TResult Function(bool isPop)? loading,
+    TResult Function()? insufficientStorage,
+    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function()? resetState,
+    TResult Function()? totalCountCheckFailed,
+    TResult Function()? failed,
+    TResult Function(List<DownsyncModel> downsyncCriteriaList)? report,
+    TResult Function()? pendingSync,
+    TResult Function(int batchSize, String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
+        hfReferralGetBatchSize,
+    TResult Function(int initialServerCount, int batchSize)?
+        hfReferralDataFound,
+    TResult Function()? hfReferralNoData,
+    TResult Function()? hfReferralDownloadInProgress,
+    TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
+    TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
+    required TResult orElse(),
+  }) {
+    if (hfReferralDownloadInProgress != null) {
+      return hfReferralDownloadInProgress();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_DownSyncInProgressState value) inProgress,
+    required TResult Function(_DownSyncSuccessState value) success,
+    required TResult Function(_DownSyncGetBatchSizeState value) getBatchSize,
+    required TResult Function(_DownSyncLoadingState value) loading,
+    required TResult Function(_DownSyncInsufficientStorageState value)
+        insufficientStorage,
+    required TResult Function(_DownSyncDataFoundState value) dataFound,
+    required TResult Function(_DownSyncResetState value) resetState,
+    required TResult Function(_DownSynnCountCheckFailedState value)
+        totalCountCheckFailed,
+    required TResult Function(_DownSyncFailureState value) failed,
+    required TResult Function(_DownSyncReportState value) report,
+    required TResult Function(_DownSyncPendingSyncState value) pendingSync,
+    required TResult Function(_HFReferralDownSyncGetBatchSizeState value)
+        hfReferralGetBatchSize,
+    required TResult Function(_HFReferralDownSyncDataFoundState value)
+        hfReferralDataFound,
+    required TResult Function(_HFReferralDownSyncNoDataState value)
+        hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncDownloadInProgressState value)
+        hfReferralDownloadInProgress,
+    required TResult Function(_HFReferralDownSyncInProgressState value)
+        hfReferralInProgress,
+    required TResult Function(_HFReferralDownSyncSuccessState value)
+        hfReferralSuccess,
+  }) {
+    return hfReferralDownloadInProgress(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_DownSyncInProgressState value)? inProgress,
+    TResult? Function(_DownSyncSuccessState value)? success,
+    TResult? Function(_DownSyncGetBatchSizeState value)? getBatchSize,
+    TResult? Function(_DownSyncLoadingState value)? loading,
+    TResult? Function(_DownSyncInsufficientStorageState value)?
+        insufficientStorage,
+    TResult? Function(_DownSyncDataFoundState value)? dataFound,
+    TResult? Function(_DownSyncResetState value)? resetState,
+    TResult? Function(_DownSynnCountCheckFailedState value)?
+        totalCountCheckFailed,
+    TResult? Function(_DownSyncFailureState value)? failed,
+    TResult? Function(_DownSyncReportState value)? report,
+    TResult? Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult? Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult? Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
+    TResult? Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
+  }) {
+    return hfReferralDownloadInProgress?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_DownSyncInProgressState value)? inProgress,
+    TResult Function(_DownSyncSuccessState value)? success,
+    TResult Function(_DownSyncGetBatchSizeState value)? getBatchSize,
+    TResult Function(_DownSyncLoadingState value)? loading,
+    TResult Function(_DownSyncInsufficientStorageState value)?
+        insufficientStorage,
+    TResult Function(_DownSyncDataFoundState value)? dataFound,
+    TResult Function(_DownSyncResetState value)? resetState,
+    TResult Function(_DownSynnCountCheckFailedState value)?
+        totalCountCheckFailed,
+    TResult Function(_DownSyncFailureState value)? failed,
+    TResult Function(_DownSyncReportState value)? report,
+    TResult Function(_DownSyncPendingSyncState value)? pendingSync,
+    TResult Function(_HFReferralDownSyncGetBatchSizeState value)?
+        hfReferralGetBatchSize,
+    TResult Function(_HFReferralDownSyncDataFoundState value)?
+        hfReferralDataFound,
+    TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
+    TResult Function(_HFReferralDownSyncInProgressState value)?
+        hfReferralInProgress,
+    TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
+    required TResult orElse(),
+  }) {
+    if (hfReferralDownloadInProgress != null) {
+      return hfReferralDownloadInProgress(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _HFReferralDownSyncDownloadInProgressState
+    extends BeneficiaryDownSyncState {
+  const factory _HFReferralDownSyncDownloadInProgressState() =
+      _$HFReferralDownSyncDownloadInProgressStateImpl;
+  const _HFReferralDownSyncDownloadInProgressState._() : super._();
 }
 
 /// @nodoc
@@ -6371,6 +6750,7 @@ class _$HFReferralDownSyncInProgressStateImpl
     required TResult Function(int initialServerCount, int batchSize)
         hfReferralDataFound,
     required TResult Function() hfReferralNoData,
+    required TResult Function() hfReferralDownloadInProgress,
     required TResult Function(int syncedCount, int totalCount)
         hfReferralInProgress,
     required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
@@ -6400,6 +6780,7 @@ class _$HFReferralDownSyncInProgressStateImpl
     TResult? Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult? Function()? hfReferralNoData,
+    TResult? Function()? hfReferralDownloadInProgress,
     TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
@@ -6428,6 +6809,7 @@ class _$HFReferralDownSyncInProgressStateImpl
     TResult Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult Function()? hfReferralNoData,
+    TResult Function()? hfReferralDownloadInProgress,
     TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
@@ -6460,6 +6842,8 @@ class _$HFReferralDownSyncInProgressStateImpl
         hfReferralDataFound,
     required TResult Function(_HFReferralDownSyncNoDataState value)
         hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncDownloadInProgressState value)
+        hfReferralDownloadInProgress,
     required TResult Function(_HFReferralDownSyncInProgressState value)
         hfReferralInProgress,
     required TResult Function(_HFReferralDownSyncSuccessState value)
@@ -6489,6 +6873,8 @@ class _$HFReferralDownSyncInProgressStateImpl
     TResult? Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult? Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -6517,6 +6903,8 @@ class _$HFReferralDownSyncInProgressStateImpl
     TResult Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -6643,6 +7031,7 @@ class _$HFReferralDownSyncSuccessStateImpl
     required TResult Function(int initialServerCount, int batchSize)
         hfReferralDataFound,
     required TResult Function() hfReferralNoData,
+    required TResult Function() hfReferralDownloadInProgress,
     required TResult Function(int syncedCount, int totalCount)
         hfReferralInProgress,
     required TResult Function(DownsyncModel downSyncResult) hfReferralSuccess,
@@ -6672,6 +7061,7 @@ class _$HFReferralDownSyncSuccessStateImpl
     TResult? Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult? Function()? hfReferralNoData,
+    TResult? Function()? hfReferralDownloadInProgress,
     TResult? Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult? Function(DownsyncModel downSyncResult)? hfReferralSuccess,
   }) {
@@ -6700,6 +7090,7 @@ class _$HFReferralDownSyncSuccessStateImpl
     TResult Function(int initialServerCount, int batchSize)?
         hfReferralDataFound,
     TResult Function()? hfReferralNoData,
+    TResult Function()? hfReferralDownloadInProgress,
     TResult Function(int syncedCount, int totalCount)? hfReferralInProgress,
     TResult Function(DownsyncModel downSyncResult)? hfReferralSuccess,
     required TResult orElse(),
@@ -6732,6 +7123,8 @@ class _$HFReferralDownSyncSuccessStateImpl
         hfReferralDataFound,
     required TResult Function(_HFReferralDownSyncNoDataState value)
         hfReferralNoData,
+    required TResult Function(_HFReferralDownSyncDownloadInProgressState value)
+        hfReferralDownloadInProgress,
     required TResult Function(_HFReferralDownSyncInProgressState value)
         hfReferralInProgress,
     required TResult Function(_HFReferralDownSyncSuccessState value)
@@ -6761,6 +7154,8 @@ class _$HFReferralDownSyncSuccessStateImpl
     TResult? Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult? Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult? Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult? Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult? Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,
@@ -6789,6 +7184,8 @@ class _$HFReferralDownSyncSuccessStateImpl
     TResult Function(_HFReferralDownSyncDataFoundState value)?
         hfReferralDataFound,
     TResult Function(_HFReferralDownSyncNoDataState value)? hfReferralNoData,
+    TResult Function(_HFReferralDownSyncDownloadInProgressState value)?
+        hfReferralDownloadInProgress,
     TResult Function(_HFReferralDownSyncInProgressState value)?
         hfReferralInProgress,
     TResult Function(_HFReferralDownSyncSuccessState value)? hfReferralSuccess,

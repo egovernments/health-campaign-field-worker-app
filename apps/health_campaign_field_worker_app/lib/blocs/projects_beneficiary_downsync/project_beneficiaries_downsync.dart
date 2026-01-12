@@ -484,7 +484,8 @@ class BeneficiaryDownSyncBloc
   }
 
   /// Handler for downloading HF Referrals
-  /// Flow: 1. Fetch HF Referrals -> 2. Fetch Project Beneficiaries -> 3. Fetch Individuals
+  /// Flow: For each batch of HF Referrals -> Fetch Project Beneficiaries -> Fetch Individuals
+  /// Downloads all data in a single loop with limit of 10, showing simple "download in progress" UI
   FutureOr<void> _handleDownSyncOfHFReferrals(
     HFReferralDownSyncEvent event,
     BeneficiaryDownSyncEmitter emit,
@@ -496,24 +497,20 @@ class BeneficiaryDownSyncBloc
       return;
     }
 
-    emit(const BeneficiaryDownSyncState.loading(true));
+    // Emit simple download in progress state (no counts)
+    emit(const BeneficiaryDownSyncState.hfReferralDownloadInProgress());
 
-    // Check disk space
-    double? diskSpace = await DiskSpace.getFreeDiskSpace;
-    if ((diskSpace ?? 0) * 1000 < (event.initialServerCount * 150 * 2)) {
-      emit(const BeneficiaryDownSyncState.insufficientStorage());
-      return;
-    }
+    // Fixed limit of 10 for downsync
+    const int downloadLimit = 10;
 
     try {
       int offset = 0;
-      int totalFetched = 0;
+      int totalHFReferralsFetched = 0;
+      int totalProjectBeneficiariesFetched = 0;
+      int totalIndividualsFetched = 0;
       final String localityKey = 'hf_referral_${event.boundaryCode}';
 
-      // Collect all beneficiary IDs from HF Referrals for subsequent API calls
-      List<String> allBeneficiaryIds = [];
-
-      // Check existing sync data
+      // Check existing sync data to resume from last offset
       final existingDownSyncData = await downSyncLocalRepository.search(
         DownsyncSearchModel(locality: localityKey),
       );
@@ -525,9 +522,9 @@ class BeneficiaryDownSyncBloc
       if (existingDownSyncData.isEmpty) {
         await downSyncLocalRepository.create(DownsyncModel(
           offset: 0,
-          limit: event.batchSize,
+          limit: downloadLimit,
           lastSyncedTime: lastSyncedTime,
-          totalCount: event.initialServerCount,
+          totalCount: 0,
           locality: localityKey,
           boundaryName: event.boundaryName,
         ));
@@ -535,22 +532,19 @@ class BeneficiaryDownSyncBloc
         offset = existingDownSyncData.first.offset ?? 0;
       }
 
-      // ==================== Step 1: Fetch HF Referrals ====================
-      debugPrint('[HF_REFERRAL_DOWNSYNC] Step 1: Fetching HF Referrals');
+      // ==================== Single Loop: Fetch HF Referrals -> Project Beneficiaries -> Individuals ====================
+      debugPrint('[HF_REFERRAL_DOWNSYNC] Starting downsync loop');
 
       while (true) {
-        emit(BeneficiaryDownSyncState.hfReferralInProgress(
-            totalFetched, event.initialServerCount));
-
         debugPrint(
-            '[HF_REFERRAL_DOWNSYNC] Fetching batch - offset: $offset, limit: ${event.batchSize}');
+            '[HF_REFERRAL_DOWNSYNC] Fetching HF Referrals batch - offset: $offset, limit: $downloadLimit');
 
-        // Fetch HF Referrals from server
+        // Step 1: Fetch HF Referrals from server
         final hfReferrals = await hfReferralRemoteRepository!.search(
           HFReferralSearchModel(
             localityCode: [event.boundaryCode],
           ),
-          limit: event.batchSize,
+          limit: downloadLimit,
           offSet: offset,
           lastChangedSince: lastSyncedTime,
         );
@@ -558,143 +552,119 @@ class BeneficiaryDownSyncBloc
         debugPrint(
             '[HF_REFERRAL_DOWNSYNC] Fetched ${hfReferrals.length} HF Referrals');
 
-        if (hfReferrals.isNotEmpty) {
-          // Extract beneficiaryIds from HF Referrals for subsequent API calls
-          for (final hfReferral in hfReferrals) {
-            if (hfReferral.beneficiaryId != null &&
-                hfReferral.beneficiaryId!.isNotEmpty) {
-              allBeneficiaryIds.add(hfReferral.beneficiaryId!);
-            }
-          }
-
-          // Store HF Referrals directly in local repository using bulkCreate
-          await hfReferralLocalRepository!.bulkCreate(hfReferrals);
-          debugPrint(
-              '[HF_REFERRAL_DOWNSYNC] Stored ${hfReferrals.length} HF Referrals in local DB');
-          totalFetched += hfReferrals.length;
-
-          // Update downsync tracking
-          await downSyncLocalRepository.update(DownsyncModel(
-            offset: offset + event.batchSize,
-            limit: event.batchSize,
-            lastSyncedTime: lastSyncedTime,
-            totalCount: totalFetched,
-            locality: localityKey,
-            boundaryName: event.boundaryName,
-          ));
-
-          // Check if we got less than batch size (means we're done)
-          if (hfReferrals.length < event.batchSize) {
-            debugPrint(
-                '[HF_REFERRAL_DOWNSYNC] Completed HF Referrals - fetched all data ($totalFetched records)');
-            break;
-          }
-
-          offset += event.batchSize;
-        } else {
+        if (hfReferrals.isEmpty) {
           debugPrint(
               '[HF_REFERRAL_DOWNSYNC] No more HF Referral data to fetch');
           break;
         }
-      }
 
-      // Remove duplicate beneficiary IDs
-      allBeneficiaryIds = allBeneficiaryIds.toSet().toList();
-      debugPrint(
-          '[HF_REFERRAL_DOWNSYNC] Total unique beneficiaryIds collected: ${allBeneficiaryIds.length}');
-
-      // ==================== Step 2: Fetch Project Beneficiaries ====================
-      List<String> allIndividualClientRefIds = [];
-
-      if (allBeneficiaryIds.isNotEmpty) {
+        // Store HF Referrals in local repository
+        await hfReferralLocalRepository!.bulkCreate(hfReferrals);
         debugPrint(
-            '[HF_REFERRAL_DOWNSYNC] Step 2: Fetching Project Beneficiaries');
+            '[HF_REFERRAL_DOWNSYNC] Stored ${hfReferrals.length} HF Referrals in local DB');
+        totalHFReferralsFetched += hfReferrals.length;
 
-        // Fetch Project Beneficiaries in batches
-        for (int i = 0; i < allBeneficiaryIds.length; i += event.batchSize) {
-          final batchIds = allBeneficiaryIds.sublist(
-            i,
-            (i + event.batchSize) > allBeneficiaryIds.length
-                ? allBeneficiaryIds.length
-                : i + event.batchSize,
-          );
+        // Extract beneficiaryIds from this batch of HF Referrals
+        List<String> batchBeneficiaryIds = [];
+        for (final hfReferral in hfReferrals) {
+          if (hfReferral.beneficiaryId != null &&
+              hfReferral.beneficiaryId!.isNotEmpty) {
+            batchBeneficiaryIds.add(hfReferral.beneficiaryId!);
+          }
+        }
 
+        // Remove duplicates within this batch
+        batchBeneficiaryIds = batchBeneficiaryIds.toSet().toList();
+
+        // Step 2: Fetch Project Beneficiaries for this batch
+        if (batchBeneficiaryIds.isNotEmpty) {
           debugPrint(
-              '[HF_REFERRAL_DOWNSYNC] Fetching Project Beneficiaries batch ${i ~/ event.batchSize + 1} with ${batchIds.length} IDs');
+              '[HF_REFERRAL_DOWNSYNC] Fetching Project Beneficiaries for ${batchBeneficiaryIds.length} beneficiary IDs');
 
           final projectBeneficiaries =
               await projectBeneficiaryRemoteRepository.search(
             ProjectBeneficiarySearchModel(
-              beneficiaryClientReferenceId: batchIds,
+              id: batchBeneficiaryIds,
             ),
+            limit: downloadLimit ?? 10,
+            offSet: offset,
+            lastChangedSince: lastSyncedTime,
           );
 
           debugPrint(
               '[HF_REFERRAL_DOWNSYNC] Fetched ${projectBeneficiaries.length} Project Beneficiaries');
 
           if (projectBeneficiaries.isNotEmpty) {
-            // Extract beneficiaryClientReferenceIds for Individual search
+            // Store Project Beneficiaries in local repository
+            await projectBeneficiaryLocalRepository
+                .bulkCreate(projectBeneficiaries);
+            debugPrint(
+                '[HF_REFERRAL_DOWNSYNC] Stored ${projectBeneficiaries.length} Project Beneficiaries in local DB');
+            totalProjectBeneficiariesFetched += projectBeneficiaries.length;
+
+            // Extract individualClientRefIds from Project Beneficiaries
+            List<String> batchIndividualClientRefIds = [];
             for (final pb in projectBeneficiaries) {
               if (pb.beneficiaryClientReferenceId != null &&
                   pb.beneficiaryClientReferenceId!.isNotEmpty) {
-                allIndividualClientRefIds.add(pb.beneficiaryClientReferenceId!);
+                batchIndividualClientRefIds
+                    .add(pb.beneficiaryClientReferenceId!);
               }
             }
 
-            // Store Project Beneficiaries directly in local repository using bulkCreate
-            await projectBeneficiaryLocalRepository.bulkCreate(projectBeneficiaries);
-            debugPrint(
-                '[HF_REFERRAL_DOWNSYNC] Stored ${projectBeneficiaries.length} Project Beneficiaries in local DB');
+            // Remove duplicates within this batch
+            batchIndividualClientRefIds =
+                batchIndividualClientRefIds.toSet().toList();
+
+            // Step 3: Fetch Individuals for this batch
+            if (batchIndividualClientRefIds.isNotEmpty) {
+              debugPrint(
+                  '[HF_REFERRAL_DOWNSYNC] Fetching Individuals for ${batchIndividualClientRefIds.length} client reference IDs');
+
+              final individuals = await individualRemoteRepository.search(
+                IndividualSearchModel(
+                  clientReferenceId: batchIndividualClientRefIds,
+                ),
+              );
+
+              debugPrint(
+                  '[HF_REFERRAL_DOWNSYNC] Fetched ${individuals.length} Individuals');
+
+              if (individuals.isNotEmpty) {
+                // Store Individuals in local repository
+                await individualLocalRepository.bulkCreate(individuals);
+                debugPrint(
+                    '[HF_REFERRAL_DOWNSYNC] Stored ${individuals.length} Individuals in local DB');
+                totalIndividualsFetched += individuals.length;
+              }
+            }
           }
         }
-      }
 
-      // Remove duplicate individual client reference IDs
-      allIndividualClientRefIds = allIndividualClientRefIds.toSet().toList();
-      debugPrint(
-          '[HF_REFERRAL_DOWNSYNC] Total unique individualClientRefIds collected: ${allIndividualClientRefIds.length}');
+        // Update downsync tracking (maintain offset visited)
+        await downSyncLocalRepository.update(DownsyncModel(
+          offset: offset + downloadLimit,
+          limit: downloadLimit,
+          lastSyncedTime: lastSyncedTime,
+          totalCount: totalHFReferralsFetched,
+          locality: localityKey,
+          boundaryName: event.boundaryName,
+        ));
 
-      // ==================== Step 3: Fetch Individuals ====================
-      if (allIndividualClientRefIds.isNotEmpty) {
-        debugPrint('[HF_REFERRAL_DOWNSYNC] Step 3: Fetching Individuals');
-
-        // Fetch Individuals in batches
-        for (int i = 0;
-            i < allIndividualClientRefIds.length;
-            i += event.batchSize) {
-          final batchIds = allIndividualClientRefIds.sublist(
-            i,
-            (i + event.batchSize) > allIndividualClientRefIds.length
-                ? allIndividualClientRefIds.length
-                : i + event.batchSize,
-          );
-
-          debugPrint(
-              '[HF_REFERRAL_DOWNSYNC] Fetching Individuals batch ${i ~/ event.batchSize + 1} with ${batchIds.length} IDs');
-
-          final individuals = await individualRemoteRepository.search(
-            IndividualSearchModel(
-              clientReferenceId: batchIds,
-            ),
-          );
-
-          debugPrint(
-              '[HF_REFERRAL_DOWNSYNC] Fetched ${individuals.length} Individuals');
-
-          if (individuals.isNotEmpty) {
-            // Store Individuals directly in local repository using bulkCreate
-            await individualLocalRepository.bulkCreate(individuals);
-            debugPrint(
-                '[HF_REFERRAL_DOWNSYNC] Stored ${individuals.length} Individuals in local DB');
-          }
+        // Check if we got less than limit (means we're done)
+        if (hfReferrals.length < downloadLimit) {
+          debugPrint('[HF_REFERRAL_DOWNSYNC] Completed - fetched all data');
+          break;
         }
+
+        offset += downloadLimit;
       }
 
-      // Update final sync status
+      // Update final sync status - reset offset to 0 for next sync
       await downSyncLocalRepository.update(DownsyncModel(
         offset: 0,
         limit: 0,
-        totalCount: totalFetched,
+        totalCount: totalHFReferralsFetched,
         locality: localityKey,
         boundaryName: event.boundaryName,
         lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
@@ -703,15 +673,15 @@ class BeneficiaryDownSyncBloc
       await LocalSecureStore.instance.setManualSyncTrigger(false);
 
       final result = DownsyncModel(
-        offset: totalFetched,
+        offset: totalHFReferralsFetched,
         lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
-        totalCount: totalFetched,
+        totalCount: totalHFReferralsFetched,
         locality: localityKey,
         boundaryName: event.boundaryName,
       );
 
       debugPrint(
-          '[HF_REFERRAL_DOWNSYNC] Downsync completed successfully - HFReferrals: $totalFetched, ProjectBeneficiaries: ${allBeneficiaryIds.length}, Individuals: ${allIndividualClientRefIds.length}');
+          '[HF_REFERRAL_DOWNSYNC] Downsync completed successfully - HFReferrals: $totalHFReferralsFetched, ProjectBeneficiaries: $totalProjectBeneficiariesFetched, Individuals: $totalIndividualsFetched');
 
       emit(BeneficiaryDownSyncState.hfReferralSuccess(result));
     } catch (e) {
@@ -847,7 +817,11 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
   const factory BeneficiaryDownSyncState.hfReferralNoData() =
       _HFReferralDownSyncNoDataState;
 
-  /// State when HF Referral downsync is in progress
+  /// State when HF Referral downsync is in progress (simple - no counts)
+  const factory BeneficiaryDownSyncState.hfReferralDownloadInProgress() =
+      _HFReferralDownSyncDownloadInProgressState;
+
+  /// State when HF Referral downsync is in progress with counts (legacy)
   const factory BeneficiaryDownSyncState.hfReferralInProgress(
     int syncedCount,
     int totalCount,
