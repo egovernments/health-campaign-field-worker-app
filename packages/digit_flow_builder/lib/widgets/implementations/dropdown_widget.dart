@@ -176,7 +176,8 @@ class DropdownWidget implements FlowWidget {
       // First check widgetData for persisted selection
       if (widgetData.containsKey(key)) {
         currentValue = widgetData[key];
-      } else {
+      }
+      else {
         // Then try itemStateData
         currentValue =
             resolveValue('{{$key}}', itemStateData, screenKey: screenKey);
@@ -235,15 +236,6 @@ class DropdownWidget implements FlowWidget {
               final existingFormData = currentState?.formData ?? {};
               final existingWidgetData = currentState?.widgetData ?? {};
 
-              // Update form data with the selected value
-              final updatedFormData = {
-                ...existingFormData,
-                key: value.code,
-                // Store the selected value ID
-                if (selectedObject != null) '$key-object': selectedObject,
-                // Store the full object
-              };
-
               // Update widget data with the selected value (for filters)
               final updatedWidgetData = {
                 ...existingWidgetData,
@@ -254,7 +246,6 @@ class DropdownWidget implements FlowWidget {
               // Update the registry with both formData and widgetData
               final updatedState =
                   (currentState ?? const FlowCrudState()).copyWith(
-                formData: updatedFormData,
                 widgetData: updatedWidgetData,
               );
               FlowCrudStateRegistry().update(screenKey, updatedState);
