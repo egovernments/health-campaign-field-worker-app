@@ -168,18 +168,10 @@ class TableWidget implements FlowWidget {
           final colConfig = entry.value;
 
           // Get the raw cellValue configuration
-          final rawCellValue = colConfig['cellValue'];
+          // Resolve static localization keys from cellValue (text without {{}})
+          final rawCellValue = colConfig['cellValue'] is String ? resolveStaticString(colConfig['cellValue'], localization) : colConfig['cellValue'];
 
-          // Use enhanced context for:
-          // 1. Conditional cellValues (@condition)
-          // 2. Function calls (fn:)
-          // 3. References to currentItem or contextData
-          final needsEnhancedContext =
-              rawCellValue is Map && rawCellValue.containsKey('@condition') ||
-                  (rawCellValue is String &&
-                      (rawCellValue.contains('{{fn:') ||
-                          rawCellValue.contains('{{currentItem') ||
-                          rawCellValue.contains('{{contextData')));
+
           final evalContext = cellEvalContext;
 
           final cellValue = ConditionalEvaluator.evaluate(
@@ -191,7 +183,7 @@ class TableWidget implements FlowWidget {
           final finalText = cellValue?.toString() ?? '';
 
           return DigitTableData(
-            finalText,
+            localization?.translate(finalText) ?? finalText,
             cellKey: rawCellValue is Map
                 ? 'conditional_$colIndex'
                 : rawCellValue?.toString() ?? '',
