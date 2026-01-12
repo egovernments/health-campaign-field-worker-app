@@ -27,6 +27,27 @@ const stockDetailsIssuedShowcase = StockDetailsIssuedShowcase();
 const selectSurveyFormShowcase = SelectSurveyFormShowcase();
 const stockDetailsReturnedShowcase = StockDetailsReturnedShowcase();
 const stockReconciliationShowcase = StockReconciliationShowcase();
+const stockReconciliationMetrics = StockReconciliationMetrics();
+
+class StockReconciliationMetrics {
+  const StockReconciliationMetrics();
+
+  String get stockMetrics => 'STOCK_METRICS';
+
+  String get dateOfReconciliation => 'STOCK_RECONCILIATION_DATE';
+
+  String get stockReceived => 'STOCK_RECONCILIATION_STOCK_RECEIVED';
+
+  String get stockIssued => 'STOCK_RECONCILIATION_STOCK_ISSUED';
+
+  String get stockReturned => 'STOCK_RECONCILIATION_STOCK_RETURNED';
+
+  String get stockLost => 'STOCK_RECONCILIATION_STOCK_LOST';
+
+  String get stockDamaged => 'STOCK_RECONCILIATION_STOCK_DAMAGED';
+
+  String get stockOnHand => 'STOCK_RECONCILIATION_STOCK_ON_HAND';
+}
 
 const surveyFormDataShowcase = SurveyFormDataShowcase();
 const surveyFormListShowcase = SurveyFormListShowcase();
@@ -164,6 +185,8 @@ class Common {
   String get permissionNotGranted => 'CORE_COMMON_PERMISSION_NOT_GRANTED';
 
   String get permissionGranted => 'CORE_COMMON_PERMISSION_GRANTED';
+
+  String get lowRamWarning => 'CORE_COMMON_LOW_RAM_WARNING';
 
   String get allowBackgroundActivityDesc =>
       'CORE_COMMON_ALLOW_BACKGROUND_ACTIVITY';
