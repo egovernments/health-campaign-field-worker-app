@@ -355,24 +355,28 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     if (condition == null) return false;
     if (condition is bool) return condition;
     if (condition is String) {
-      final regex = RegExp(r'\{\{\s*context\.(\w+)\s*\}\}');
+      // Handle negation: {{ !context.xxx }} or {{ context.xxx }}
+      final regex = RegExp(r'\{\{\s*(!?)\s*context\.(\w+)\s*\}\}');
       final match = regex.firstMatch(condition);
       if (match != null) {
-        final key = match.group(1);
+        final isNegated = match.group(1) == '!';
+        final key = match.group(2);
         if (key != null) {
+          bool result = false;
           // Handle permission granted checks
           if (key.endsWith('PermissionGranted')) {
             final permissionName =
                 key.replaceAll('PermissionGranted', '').toLowerCase();
-            return _isPermissionGranted(permissionName);
+            result = _isPermissionGranted(permissionName);
           }
           // Handle platform-specific visibility flags
-          if (key == 'showNearbyWifiDevices') {
-            return showNearbyWifiDevices;
+          else if (key == 'showNearbyWifiDevices') {
+            result = showNearbyWifiDevices;
+          } else if (key == 'showBluetoothScan') {
+            result = showBluetoothScan;
           }
-          if (key == 'showBluetoothScan') {
-            return showBluetoothScan;
-          }
+          // Apply negation if present
+          return isNegated ? !result : result;
         }
       }
     }
@@ -687,11 +691,6 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     final label = config['label'] as String? ?? '';
     final properties = config['properties'] as Map<String, dynamic>? ?? {};
     final onAction = config['onAction'] as List<dynamic>?;
-
-    // Check hidden condition for button
-    if (config['hidden'] != null && _evaluateCondition(config['hidden'])) {
-      return const SizedBox.shrink();
-    }
 
     return DigitButton(
       label: localizations.translate(label),

@@ -805,7 +805,9 @@ final dynamic sampleFlows = {
           "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_HEADING",
           "order": 3,
           "submitCondition": {
-            "expression": [{ "condition": "isEdit == true" }]
+            "expression": [
+              {"condition": "isEdit == true"}
+            ]
           },
           "navigateTo": {"name": "beneficiaryDetails", "type": "form"},
           "properties": [
@@ -2963,11 +2965,13 @@ final dynamic sampleFlows = {
                       "@default": "Pending",
                       "@condition": [
                         {
-                          "when": "{{fn:isDoseCompleted(currentItem.id, contextData.0.currentRunningCycle)}} == true",
+                          "when":
+                              "{{fn:isDoseCompleted(currentItem.id, contextData.0.currentRunningCycle)}} == true",
                           "value": "Administered"
                         },
                         {
-                          "when": "{{currentItem.id}} == {{contextData.0.nextDoseId}}",
+                          "when":
+                              "{{currentItem.id}} == {{contextData.0.nextDoseId}}",
                           "value": "To be administered"
                         }
                       ]
@@ -7815,7 +7819,8 @@ final dynamic permission_handler_config = {
                     {
                       "format": "button",
                       "label": "GRANT_PERMISSION",
-                      "hidden": "{{ context.notificationPermissionGranted }}",
+                      "hidden": false,
+                      "visible": "{{ !context.notificationPermissionGranted }}",
                       "properties": {
                         "type": "primary",
                         "size": "small",
@@ -7877,8 +7882,9 @@ final dynamic permission_handler_config = {
                     {
                       "format": "button",
                       "label": "GRANT_PERMISSION",
-                      "hidden":
-                          "{{ context.ignoreBatteryOptimizationsPermissionGranted }}",
+                      "hidden": false,
+                      "visible":
+                          "{{ !context.ignoreBatteryOptimizationsPermissionGranted }}",
                       "properties": {
                         "type": "primary",
                         "size": "small",
@@ -7940,7 +7946,8 @@ final dynamic permission_handler_config = {
                     {
                       "format": "button",
                       "label": "GRANT_PERMISSION",
-                      "hidden": "{{ context.locationPermissionGranted }}",
+                      "hidden": false,
+                      "visible": "{{ !context.locationPermissionGranted }}",
                       "properties": {
                         "type": "primary",
                         "size": "small",
@@ -8001,8 +8008,9 @@ final dynamic permission_handler_config = {
                     {
                       "format": "button",
                       "label": "GRANT_PERMISSION",
-                      "hidden":
-                          "{{ context.nearbyWifiDevicesPermissionGranted }}",
+                      "hidden": false,
+                      "visible":
+                          "{{ !context.nearbyWifiDevicesPermissionGranted }}",
                       "properties": {
                         "type": "primary",
                         "size": "small",
@@ -8062,7 +8070,9 @@ final dynamic permission_handler_config = {
                     {
                       "format": "button",
                       "label": "GRANT_PERMISSION",
-                      "hidden": "{{ context.bluetoothScanPermissionGranted }}",
+                      "hidden": false,
+                      "visible":
+                          "{{ !context.bluetoothScanPermissionGranted }}",
                       "properties": {
                         "type": "primary",
                         "size": "small",
@@ -8120,7 +8130,8 @@ final dynamic permission_handler_config = {
                     {
                       "format": "button",
                       "label": "GRANT_PERMISSION",
-                      "hidden": "{{ context.cameraPermissionGranted }}",
+                      "hidden": false,
+                      "visible": "{{ !context.cameraPermissionGranted }}",
                       "properties": {
                         "type": "primary",
                         "size": "small",
