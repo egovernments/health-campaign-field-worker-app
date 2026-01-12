@@ -161,6 +161,7 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'showAlertPopUp': pageMap['showAlertPopUp'],
         'multiEntityConfig': pageMap['multiEntityConfig'],
         'preventScreenCapture': pageMap['preventScreenCapture'],
+        'submitCondition': pageMap['submitCondition'],
       };
 
       if (type == 'template') {
@@ -594,4 +595,55 @@ Map<String, dynamic> flattenFormData(Map<String, dynamic> data,
   });
 
   return flatMap;
+}
+
+/// Resolves static localization keys from input string.
+/// Static parts (outside of {{}}) are translated using localization.
+/// Dynamic parts (inside {{}}) are preserved as-is.
+String resolveStaticString(
+    dynamic input,
+    dynamic localization,
+    ) {
+  if (input is! String) return input?.toString() ?? '';
+
+  final regex = RegExp(r'{{.*?}}');
+  final buffer = StringBuffer();
+  int lastIndex = 0;
+
+  for (final match in regex.allMatches(input)) {
+    // Static part before {{ }}
+    final staticPart = input.substring(lastIndex, match.start).trim();
+    if (staticPart.isNotEmpty) {
+      final translated = _tryTranslate(staticPart, localization);
+      buffer.write(translated);
+      buffer.write(' ');
+    }
+
+    // Dynamic part → keep as-is
+    buffer.write(input.substring(match.start, match.end));
+    buffer.write(' ');
+
+    lastIndex = match.end;
+  }
+
+  // Remaining static part
+  if (lastIndex < input.length) {
+    final remaining = input.substring(lastIndex).trim();
+    if (remaining.isNotEmpty) {
+      final translated = _tryTranslate(remaining, localization);
+      buffer.write(translated);
+    }
+  }
+
+  return buffer.toString().trim();
+}
+
+/// Helper to safely translate using localization
+String _tryTranslate(String key, dynamic localization) {
+  if (localization == null) return key;
+  try {
+    return localization.translate(key) ?? key;
+  } catch (_) {
+    return key;
+  }
 }

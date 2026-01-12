@@ -104,19 +104,22 @@ class ActionPopupWidget implements FlowWidget {
           actionSpacing: spacer2,
           additionalWidgets: [
             // Build body widgets from config
-            // Wrap in CrudItemContext so widgets inside popup can access context data
+            // Wrap in LocalizationContext and CrudItemContext so widgets inside popup can access context data
             ...bodyWidgets.map((widgetJson) {
               if (widgetJson is Map<String, dynamic>) {
-                return CrudItemContext(
-                  stateData: stateData,
-                  screenKey: screenKey,
-                  item: item,
-                  listIndex: listIndex,
-                  child: Builder(
-                    builder: (innerCtx) => FlowWidgetFactory.build(
-                      widgetJson,
-                      innerCtx,
-                      onAction,
+                return LocalizationContext(
+                  localization: localization!,
+                  child: CrudItemContext(
+                    stateData: stateData,
+                    screenKey: screenKey,
+                    item: item,
+                    listIndex: listIndex,
+                    child: Builder(
+                      builder: (innerCtx) => FlowWidgetFactory.build(
+                        widgetJson,
+                        innerCtx,
+                        onAction,
+                      ),
                     ),
                   ),
                 );
@@ -129,6 +132,7 @@ class ActionPopupWidget implements FlowWidget {
               : footerActions
                   .whereType<Map<String, dynamic>>()
                   .map((actionJson) {
+                  // Footer actions use original context which has LocalizationContext in its tree
                   return FlowWidgetFactory.build(
                     actionJson,
                     context,
