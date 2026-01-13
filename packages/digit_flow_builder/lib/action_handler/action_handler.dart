@@ -1,3 +1,4 @@
+import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,79 @@ import 'action_executor_registry.dart';
 /// - Better testability through isolated executors
 /// - Clear separation of concerns
 class ActionHandler {
+  /// Traverses a nested data structure following a dot-separated path
+  /// e.g., "tasks.0.status" traverses data['tasks'][0]['status']
+  static dynamic _traversePath(dynamic data, String path) {
+    if (path.isEmpty) return data;
+    dynamic value = data;
+    for (final part in path.split('.')) {
+      if (value == null) return null;
+      if (value is Map) {
+        value = value[part];
+      } else if (value is List) {
+        final index = int.tryParse(part);
+        if (index != null && index >= 0 && index < value.length) {
+          value = value[index];
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
+    }
+    return value;
+  }
+
+  /// Extracts variable paths from condition expression that may need resolution
+  /// from stateWrapper. Looks for patterns like "tasks.0.status" (word.number.word)
+  static Set<String> _extractVariablePaths(String expression) {
+    final paths = <String>{};
+    // Match patterns like: word.number.word or word.number or word.word.word
+    // These are likely paths that need resolution from stateWrapper
+    final pathRegex = RegExp(r'\b([a-zA-Z_]\w*(?:\.\d+|\.[a-zA-Z_]\w*)+)\b');
+    for (final match in pathRegex.allMatches(expression)) {
+      paths.add(match.group(1)!);
+    }
+    return paths;
+  }
+
+  /// Resolves variable paths from stateWrapper/item context and adds them to evaluationData
+  static void _resolveStateWrapperPaths(
+    String expression,
+    Map<String, dynamic> evaluationData,
+    List<dynamic>? stateWrapper,
+    Map<String, dynamic>? item,
+  ) {
+    final paths = _extractVariablePaths(expression);
+    if (paths.isEmpty) return;
+
+    debugPrint('CONDITION_EVAL: Found paths to resolve: $paths');
+
+    // Determine the data source - prefer item (current template iteration) over stateWrapper
+    Map<String, dynamic>? dataSource;
+    if (item != null && item.isNotEmpty) {
+      dataSource = item;
+    } else if (stateWrapper != null && stateWrapper.isNotEmpty) {
+      final first = stateWrapper.first;
+      if (first is Map<String, dynamic>) {
+        dataSource = first;
+      }
+    }
+
+    if (dataSource == null) return;
+
+    for (final path in paths) {
+      // Skip if already in evaluationData
+      if (evaluationData.containsKey(path)) continue;
+
+      final resolved = _traversePath(dataSource, path);
+      if (resolved != null) {
+        evaluationData[path] = resolved;
+        debugPrint('CONDITION_EVAL: Resolved $path = $resolved');
+      }
+    }
+  }
+
   static final ActionExecutorRegistry _registry = ActionExecutorRegistry();
 
   /// Get the registry for external configuration
@@ -134,9 +208,22 @@ class ActionHandler {
           }
         });
 
+        // Get stateWrapper and item for resolving paths in condition expressions
+        final stateWrapper = currentState?.stateWrapper;
+        final item = contextData['item'] as Map<String, dynamic>?;
+
         for (final condActionJson in conditionalGroup) {
           final condition = condActionJson['condition'] as Map<String, dynamic>;
-          debugPrint('CONDITION_EVAL: expression=${condition['expression']}, data=$evaluationData');
+          var expression = condition['expression'] as String?;
+
+          // Resolve any variable paths from stateWrapper/item context
+          if (expression != null && expression != 'DEFAULT') {
+            expression = resolveTemplate(expression, stateWrapper);
+          }
+
+          condition['expression'] = expression;
+
+          debugPrint('CONDITION_EVAL: expression=$expression, data=$evaluationData');
 
           if (evaluateCondition(condition, evaluationData)) {
             debugPrint('CONDITION_EVAL: Condition matched!');

@@ -65,19 +65,22 @@ class TableWidget implements FlowWidget {
     final rawColumns = (data['columns'] as List<dynamic>?) ?? [];
 
     // Create column headers with resolved templates
-    final columns = rawColumns.where((col) => col['isActive'] == true).map((col) {
+    final columns = rawColumns
+        .where((col) => col['isActive'] != false)
+        .map((col) {
       final cellValue = col['cellValue'];
       final headerTemplate = col['header']?.toString() ?? '';
 
       // Resolve header template to support {{selectedProduct.sku}} etc.
       final resolvedHeader =
-          resolveTemplate(headerTemplate, formData, screenKey: screenKey);
+      resolveTemplate(headerTemplate, formData, screenKey: screenKey);
 
       return DigitTableColumn(
         header: localization?.translate(resolvedHeader) ?? resolvedHeader,
         cellValue: cellValue is String ? cellValue : jsonEncode(cellValue),
       );
-    }).toList();
+    })
+        .toList();
 
     // Step 1: Resolve data source from either 'rows' or 'source' (both should point to same data)
     List<dynamic> sourceList = [];

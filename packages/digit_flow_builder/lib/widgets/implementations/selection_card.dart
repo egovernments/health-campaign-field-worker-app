@@ -24,7 +24,7 @@ class SelectionCardWidget implements FlowWidget {
     final options = data
         .where((item) =>
     item is Map<String, dynamic> &&
-        (item['isActive'] == true))
+        ((item['isActive'] == true) || (item['isActive'] == null)))
         .map((item) {
       final map = item as Map<String, dynamic>;
       final name = map['name'] as String? ?? '';
