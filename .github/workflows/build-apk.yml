@@ -6,17 +6,17 @@ on:
       base_url:
         description: 'Base URL for the service'
         required: true
-        default: 'https://unified-dev.digit.org/'
+        default: 'https://unified-qa.digit.org/'
         type: string
       mdms_api_path:
         description: 'MDMS API Path'
         required: true
-        default: 'egov-mdms-service/v1/_search'
+        default: 'mdms-v2/v1/_search'
         type: string
       tenant_id:
         description: 'Tenant ID'
         required: true
-        default: 'dev'
+        default: 'mz'
         type: string
       actions_api_path:
         description: 'Actions API Path'
@@ -26,12 +26,12 @@ on:
       hierarchy_type:
         description: 'Hierarchy Type'
         required: true
-        default: 'ADMIN'
+        default: 'CONSOLEHCM'
         type: string
       env_name:
         description: 'Environment Name'
         required: true
-        default: 'DEV'
+        default: 'QA'
         type: choice
         options:
           - DEV
@@ -60,7 +60,7 @@ on:
       override_dependencies:
         description: 'Override local path dependencies (use packages/* from this repo)'
         required: false
-        default: 'false'
+        default: 'true'
         type: choice
         options: [true, false]
 
