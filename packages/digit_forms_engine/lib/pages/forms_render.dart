@@ -826,9 +826,9 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                           Text(
                             localizations.translate(schema.label!),
                             style: Theme.of(context)
-                                .textTheme
-                                .headlineSmall
-                                ?.copyWith(
+                                .digitTextTheme(context)
+                                .headingXl
+                                .copyWith(
                                   color: Theme.of(context).colorScheme.primary,
                                 ),
                           ),

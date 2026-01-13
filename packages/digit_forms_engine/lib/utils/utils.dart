@@ -68,7 +68,7 @@ class IdGen {
   String get identifier => uuid.v1();
 }
 
-String? translateIfPresent(String? key, FormLocalization localizations) {
+String? translateIfPresent(String? key, dynamic localizations) {
   if (key == null || key == "" || key.trim().isEmpty) return null;
 
   final value = localizations.translate(key);
