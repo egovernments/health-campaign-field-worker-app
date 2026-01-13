@@ -21,17 +21,21 @@ class SelectionCardWidget implements FlowWidget {
     final fieldName = json['fieldName'] as String?;
     final localization = LocalizationContext.maybeOf(context);
 
-    final options = data.map((item) {
-      if (item is Map<String, dynamic>) {
-        final name = item['name'] as String? ?? '';
-        final localizedName = localization?.translate(name) ?? name;
-        return SelectionCardOption(
-          code: item['code'] as String? ?? '',
-          name: localizedName,
-        );
-      }
-      return SelectionCardOption(code: '', name: '');
-    }).toList();
+    final options = data
+        .where((item) =>
+    item is Map<String, dynamic> &&
+        (item['isActive'] == true))
+        .map((item) {
+      final map = item as Map<String, dynamic>;
+      final name = map['name'] as String? ?? '';
+      final localizedName = localization?.translate(name) ?? name;
+
+      return SelectionCardOption(
+        code: map['code'] as String? ?? '',
+        name: localizedName,
+      );
+    })
+        .toList();
 
     // Use Builder to access the correct context where CrudItemContext is available
     return Builder(
@@ -66,6 +70,7 @@ class SelectionCardWidget implements FlowWidget {
           // equalWidthOptions: true,
           options: options,
           initialSelection: initialSelection,
+          allowMultipleSelection: false,
           width: MediaQuery.of(builderContext).size.width * 0.6,
           onSelectionChanged: (selectedOptions) {
             // Update widgetData in flow state if fieldName is provided
