@@ -45,14 +45,27 @@ class FlowWidgetFactory {
       ...modelMap, // Include modelMap so {{stock}}, {{productVariant}} etc. can be resolved
     };
 
-    // Check visibility condition
-    final visible = ConditionalEvaluator.evaluate(
-      json['visible'] ?? true,
-      evalContext,
-      stateData: stateData,
-    );
+    // Check visibility condition (support both 'visible' and 'hidden' properties)
+    bool isVisible = true;
 
-    if (visible == false) {
+    if (json.containsKey('visible')) {
+      final visible = ConditionalEvaluator.evaluate(
+        json['visible'],
+        evalContext,
+        stateData: stateData,
+      );
+      isVisible = visible != false;
+    } else if (json.containsKey('hidden')) {
+      final hidden = ConditionalEvaluator.evaluate(
+        json['hidden'],
+        evalContext,
+        stateData: stateData,
+      );
+      // hidden=true means visible=false, hidden=false means visible=true
+      isVisible = hidden != true;
+    }
+
+    if (!isVisible) {
       return const SizedBox.shrink();
     }
 

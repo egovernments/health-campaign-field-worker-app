@@ -176,20 +176,38 @@ String interpolateWithCrudStates({
     if (source == 'context') {
       final models = stateData.modelMap[modelNameOrKey];
 
+      // Handle .empty and .notEmpty suffixes for list existence checks
+      if (fieldPath == 'empty') {
+        // First check if key exists in modelMap
+        if (models != null) {
+          final isEmpty = models.isEmpty;
+          return isEmpty.toString();
+        }
+        // Fallback to rawState (stateWrapper) for wrapper-level empty check
+        // This handles cases where wrapperName is used (e.g., hFReferral)
+        final isEmpty = stateData.rawState.isEmpty;
+        return isEmpty.toString();
+      }
+      if (fieldPath == 'notEmpty') {
+        // First check if key exists in modelMap
+        if (models != null) {
+          final isNotEmpty = models.isNotEmpty;
+          return isNotEmpty.toString();
+        }
+        // Fallback to rawState (stateWrapper) for wrapper-level notEmpty check
+        final isNotEmpty = stateData.rawState.isNotEmpty;
+        return isNotEmpty.toString();
+      }
+
       if (models == null) return '';
 
-      if (models is List) {
-        // ✅ IMPORTANT CHANGE:
-        // If rowItem exists, IGNORE listIndex (use rowItem only)
-        if (rowItem != null) return '';
-        final idx = listIndex ?? 0;
-        if (idx < 0 || idx >= models.length) return '';
-        final resolved = traverse(models[idx], fieldPath);
-        return resolved?.toString() ?? '';
-      } else {
-        final resolved = traverse(models, fieldPath);
-        return resolved?.toString() ?? '';
-      }
+      // models is always a List from modelMap
+      // If rowItem exists, IGNORE listIndex (use rowItem only)
+      if (rowItem != null) return '';
+      final idx = listIndex ?? 0;
+      if (idx < 0 || idx >= models.length) return '';
+      final resolved = traverse(models[idx], fieldPath);
+      return resolved?.toString() ?? '';
     }
 
     // 4) Navigation params
@@ -227,14 +245,14 @@ String interpolateWithCrudStates({
     }
 
     final models = stateData.modelMap[modelName];
-    if (models == null || models is! List) return match.group(0)!;
+    if (models == null) return match.group(0)!;
 
     // Use listIndex if available, otherwise use the index from the template
     final idx = listIndex ?? int.tryParse(indexStr) ?? 0;
     if (idx < 0 || idx >= models.length) return '';
 
     final model = models[idx];
-    if (fieldPath == null) return model?.toString() ?? '';
+    if (fieldPath == null) return model.toString();
 
     final resolved = traverse(model, fieldPath);
     return resolved?.toString() ?? '';
@@ -302,7 +320,7 @@ Map<String, dynamic> preprocessConfigWithState(
         }
 
         result[key] = value; // keep actionType as is
-      } else if ((key == "visible" || key == "disabled") && value is String && value.contains('{{')) {
+      } else if ((key == "visible" || key == "disabled" || key == "hidden") && value is String && value.contains('{{')) {
         // Preprocess visible/disabled property with listIndex for correct resolution
         // Only preprocess if listIndex is provided, otherwise keep original
         // to be processed later when listIndex is available
@@ -322,8 +340,9 @@ Map<String, dynamic> preprocessConfigWithState(
         result[key] = walk(value, skipActions: skipActions);
       } else if (value is List) {
         result[key] = value.map((e) {
-          if (e is Map<String, dynamic>)
+          if (e is Map<String, dynamic>) {
             return walk(e, skipActions: skipActions);
+          }
           return e;
         }).toList();
       } else {

@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
 import '../../utils/interpolation.dart';
-import '../../utils/utils.dart';
 import '../../utils/widget_parsers.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
@@ -58,8 +57,10 @@ class QRScannerWidget implements FlowWidget {
     final updateFormData = json['updateFormData'] as bool? ?? true;
     final storeAsList = json['storeAsList'] as bool? ?? false;
 
-    // Get onChange and onError actions
-    final onChangeActions = json['onChange'] as List<dynamic>?;
+    // Get onChange/onAction and onError actions
+    // Support both 'onChange' and 'onAction' for compatibility with searchBar pattern
+    final onChangeActions = json['onChange'] as List<dynamic>? ??
+        json['onAction'] as List<dynamic>?;
     final onErrorActions = json['onError'] as List<dynamic>?;
 
     // Validation configuration
@@ -202,6 +203,7 @@ class QRScannerWidget implements FlowWidget {
                 onAction,
                 screenKey,
                 updatedFormData,
+                scannedValue: scannedValue,
               );
             }
           } else {
@@ -213,6 +215,7 @@ class QRScannerWidget implements FlowWidget {
                 onAction,
                 screenKey,
                 {...formData, key: scannedValue},
+                scannedValue: scannedValue,
               );
             }
           }
@@ -244,49 +247,53 @@ class QRScannerWidget implements FlowWidget {
     );
   }
 
-  /// Executes a list of actions with context data (following button_widget pattern)
+  /// Deep clones a dynamic value (Map, List, or primitive)
+  dynamic _deepClone(dynamic value) {
+    if (value is Map<String, dynamic>) {
+      return value.map((k, v) => MapEntry(k, _deepClone(v)));
+    } else if (value is Map) {
+      return Map.fromEntries(
+          value.entries.map((e) => MapEntry(e.key, _deepClone(e.value))));
+    } else if (value is List) {
+      return value.map((e) => _deepClone(e)).toList();
+    }
+    return value;
+  }
+
+  /// Executes a list of actions with context data (following searchBar pattern)
   void _executeActions(
     List<dynamic> actions,
     BuildContext context,
     void Function(ActionConfig) onAction,
     String? screenKey,
-    Map<String, dynamic> contextData,
-  ) {
+    Map<String, dynamic> contextData, {
+    String? scannedValue,
+  }) {
     for (var actionJson in actions) {
       if (actionJson is! Map<String, dynamic>) continue;
 
       try {
-        var action = ActionConfig.fromJson(actionJson);
+        // Deep clone the action JSON to avoid modifying the original config
+        // This is critical - shallow copy causes the first scanned value to persist
+        final rawAction = _deepClone(actionJson) as Map<String, dynamic>;
+        rawAction['properties'] ??= {};
 
-        // Resolve data array if present (for SEARCH_EVENT, NAVIGATION, etc.)
-        final dataArray = action.properties['data'] as List<dynamic>?;
-        if (dataArray != null) {
-          final resolvedData = dataArray.map((entry) {
-            final key = entry['key'] as String;
-            final rawValue = entry['value'];
-            final operation = entry['operation'];
-
-            // Resolve value from contextData (scanned value is here)
-            final resolvedValue = resolveValue(rawValue, contextData);
-
-            return {
-              "key": key,
-              "value": resolvedValue,
-              if (operation != null) "operation": operation,
-            };
-          }).toList();
-
-          action = ActionConfig(
-            action: action.action,
-            actionType: action.actionType,
-            properties: {
-              ...action.properties,
-              'data': resolvedData,
-            },
-            condition: action.condition,
-            actions: action.actions,
-          );
+        // Handle data array similar to searchBar pattern
+        // Directly set the scanned value like searchBar does
+        final data = rawAction['properties']['data'];
+        if (data is List && data.isNotEmpty && scannedValue != null) {
+          for (var entry in data) {
+            if (entry is Map<String, dynamic>) {
+              // If value is 'field.value', replace with actual scanned value
+              // This matches how searchBar handles the value
+              if (entry['value'] == 'field.value') {
+                entry['value'] = scannedValue;
+              }
+            }
+          }
         }
+
+        final action = ActionConfig.fromJson(rawAction);
 
         // Call onAction - let the action handler system deal with execution
         onAction(action);
