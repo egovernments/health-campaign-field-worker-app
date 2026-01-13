@@ -172,7 +172,12 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
     SearchStateManager().dispose(fullScreenKey);
 
     // Clear FlowCrudStateRegistry (formData, widgetData, stateWrapper)
+    // Dispose both full screen key AND plain schema key to ensure all navigation params are cleared
+    // Navigation params are stored with both keys (e.g., "FORM::ADD_MEMBER" and "ADD_MEMBER")
     FlowCrudStateRegistry().dispose(fullScreenKey);
+    if (_schemaKey != fullScreenKey) {
+      FlowCrudStateRegistry().dispose(_schemaKey);
+    }
 
     super.dispose();
   }
