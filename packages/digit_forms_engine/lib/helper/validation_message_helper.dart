@@ -6,7 +6,7 @@ import '../models/property_schema/property_schema.dart';
 /// Translates each rule.message via [localize].
 Map<String, String Function(Object)> buildValidationMessages(
   List<ValidationRule>? validations,
-  FormLocalization localize,
+  dynamic localize,
 ) {
   final Map<String, String Function(Object)> messages = {};
 
