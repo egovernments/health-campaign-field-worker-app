@@ -41,6 +41,53 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
   late List<int?> _maxQuantities;
 
   bool _listenersAdded = false;
+  bool _validationTriggered = false;
+
+  // Validation messages from schema
+  String? _requiredValidationMessage;
+  String? _minValidationMessage;
+
+  /// Validates the resource card data and shows toast messages for errors.
+  /// Returns true if valid, false otherwise.
+  bool _validateAndShowToast(FormGroup form, BuildContext context) {
+    final resourceList = (form.control(_resourceDeliveredKey)
+            as FormArray<DeliveryProductVariant?>)
+        .value;
+    final quantityList =
+        (form.control(_quantityDistributedKey) as FormArray<int?>).value;
+
+    // Check if at least one product is selected
+    final hasAnyProductSelected =
+        resourceList?.any((resource) => resource != null) ?? false;
+
+    if (!hasAnyProductSelected) {
+      Toast.showToast(
+        context,
+        message: _requiredValidationMessage ??
+            localizations.translate('CORE_COMMON_REQUIRED'),
+        type: ToastType.error,
+      );
+      return false;
+    }
+
+    // Check if any selected product has quantity <= 0
+    for (var i = 0; i < (resourceList ?? []).length; i++) {
+      final resource = resourceList?[i];
+      final quantity = quantityList?[i];
+
+      if (resource != null && (quantity == null || quantity <= 0)) {
+        Toast.showToast(
+          context,
+          message: _minValidationMessage ??
+              localizations.translate('CORE_COMMON_MIN_ERROR'),
+          type: ToastType.error,
+        );
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +112,22 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
           isReadOnlyFromSchema =
               (schema.readOnly == true) || (schema.displayOnly == true);
           labelFromSchema = schema.label ?? schema.innerLabel;
+
+          // Extract validation messages from schema
+          if (schema.validations != null) {
+            for (final validation in schema.validations!) {
+              if (validation.type == "required" && validation.value == true) {
+                _requiredValidationMessage = validation.message != null
+                    ? localizations.translate(validation.message!)
+                    : null;
+              }
+              if (validation.type == "min") {
+                _minValidationMessage = validation.message != null
+                    ? localizations.translate(validation.message!)
+                    : null;
+              }
+            }
+          }
           return; // stop once found
         }
 
@@ -93,12 +156,38 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
               _updateResourceCards(form); // Initial update
 
               form.control(_resourceDeliveredKey).valueChanges.listen((_) {
+                _validationTriggered = false; // Reset validation on data change
                 _updateResourceCards(form);
               });
 
               form.control(_quantityDistributedKey).valueChanges.listen((_) {
+                _validationTriggered = false; // Reset validation on data change
                 _updateResourceCards(form);
               });
+            }
+
+            // Check if parent form's resourceCard control is touched (validation triggered)
+            try {
+              final parentForm = ReactiveForm.of(context, listen: true);
+              if (parentForm != null && parentForm is FormGroup) {
+                final resourceCardControl =
+                    parentForm.control('resourceCard') as FormControl?;
+                if (resourceCardControl != null &&
+                    resourceCardControl.touched &&
+                    !_validationTriggered) {
+                  _validationTriggered = true;
+                  // Schedule validation after build
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (mounted) {
+                      final isValid = _validateAndShowToast(form, context);
+                      // Update the parent form with validation status
+                      _updateResourceCards(form, isValid: isValid);
+                    }
+                  });
+                }
+              }
+            } catch (e) {
+              // Parent form control not found, skip validation check
             }
 
             return Column(
@@ -175,12 +264,29 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
     );
   }
 
-  void _updateResourceCards(FormGroup form) {
+  void _updateResourceCards(FormGroup form, {bool? isValid}) {
     final resourceList = (form.control(_resourceDeliveredKey)
             as FormArray<DeliveryProductVariant?>)
         .value;
     final quantityList =
         (form.control(_quantityDistributedKey) as FormArray<int?>).value;
+
+    // Calculate validity if not explicitly provided
+    final validity = isValid ?? _calculateValidity(resourceList, quantityList);
+
+    // Only update the parent form when data is valid
+    if (!validity) {
+      // Clear the parent form value when invalid
+      context.read<FormsBloc>().add(
+            FormsEvent.updateField(
+              schemaKey: widget.pageSchema,
+              context: context,
+              key: 'resourceCard',
+              value: null,
+            ),
+          );
+      return;
+    }
 
     final updatedCards = <Map<String, dynamic>>[];
 
@@ -207,6 +313,32 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
             value: updatedCards,
           ),
         );
+  }
+
+  /// Calculates if the resource card data is valid
+  bool _calculateValidity(
+    List<DeliveryProductVariant?>? resourceList,
+    List<int?>? quantityList,
+  ) {
+    // Check if at least one product is selected
+    final hasAnyProductSelected =
+        resourceList?.any((resource) => resource != null) ?? false;
+
+    if (!hasAnyProductSelected) {
+      return false;
+    }
+
+    // Check if any selected product has quantity <= 0
+    for (var i = 0; i < (resourceList ?? []).length; i++) {
+      final resource = resourceList?[i];
+      final quantity = quantityList?[i];
+
+      if (resource != null && (quantity == null || quantity <= 0)) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   void addController(FormGroup form) {
