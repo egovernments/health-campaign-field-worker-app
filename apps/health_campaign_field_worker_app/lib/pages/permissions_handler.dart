@@ -103,7 +103,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
       if (schemaJsonRaw != null) {
         final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
         final data = allSchemas['PERMISSIONHANDLER'];
-        if (data?['disabled']) {
+        if (data?['data']?['disabled']) {
           if (mounted) {
             context.router.replace(BoundarySelectionRoute());
           }
