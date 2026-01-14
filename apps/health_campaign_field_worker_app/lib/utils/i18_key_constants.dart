@@ -174,6 +174,9 @@ class Common {
 
   String get coreCommonPermissionsAlert => 'CORE_COMMON_PERMISSIONS_ALERT';
 
+  String get coreCommonEnablePermissionCheckbox =>
+      'CORE_COMMON_ENABLE_PERMISSION_CHECKBOX';
+
   String get allowPermissions => 'CORE_COMMON_ALLOW_PERMISSIONS';
 
   String get grantPermission => 'GRANT_PERMISSION';

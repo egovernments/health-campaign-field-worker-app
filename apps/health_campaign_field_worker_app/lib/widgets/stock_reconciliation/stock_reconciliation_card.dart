@@ -3,7 +3,9 @@ import 'package:digit_crud_bloc/models/global_search_params.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_forms_engine/forms_engine.dart';
+import 'package:digit_forms_engine/widgets/base_reactive_field_wrapper.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_divider.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
@@ -100,22 +102,35 @@ class _StockReconciliationCardState
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
 
-    // Check if form was submitted - if so, trigger validation
-    final formsState = context.watch<FormsBloc>().state;
-    if (formsState is FormsSubmittedState) {
-      final submittedState = formsState;
-      if ((submittedState.activeSchemaKey == widget.pageSchema ||
-              submittedState.schema.name == widget.pageSchema) &&
-          !_facilityTouched &&
-          !_productTouched) {
-        // Schedule validation for after the build
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) validate();
-        });
+    // Get field schema for validation messages
+    final pages = context
+        .read<FormsBloc>()
+        .state
+        .cachedSchemas[widget.pageSchema]
+        ?.pages;
+    PropertySchema? fieldSchema;
+    if (pages != null) {
+      for (final page in pages.values) {
+        if (page.properties?.containsKey('stockReconciliationCard') == true) {
+          fieldSchema = page.properties!['stockReconciliationCard'];
+          break;
+        }
       }
     }
 
-    return ValueListenableBuilder<FlowCrudState?>(
+    // Use BaseReactiveFieldWrapper to handle validation automatically
+    return BaseReactiveFieldWrapper(
+      formControlName: 'stockReconciliationCard',
+      schema: fieldSchema,
+      builder: (field) {
+        // When form control is touched and invalid, trigger internal validation
+        if (field.control.touched && !_facilityTouched && !_productTouched) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) validate();
+          });
+        }
+
+        return ValueListenableBuilder<FlowCrudState?>(
       valueListenable: FlowCrudStateRegistry().listen(widget.pageSchema),
       builder: (context, flowState, child) {
         // Get facilities and product variants from FlowCrudStateRegistry
@@ -295,21 +310,28 @@ class _StockReconciliationCardState
         );
       },
     );
+      },
+    );
   }
 
   void _updateFormData() {
     // Update the forms engine with the selected values, calculated metrics, and validation status
+    // Set value to null when invalid so that 'required' validation fails
+    final isValidSelection =
+        _selectedFacility != null && _selectedProduct != null;
+
     context.read<FormsBloc>().add(
           FormsEvent.updateField(
             schemaKey: widget.pageSchema,
             context: context,
             key: 'stockReconciliationCard',
-            value: {
-              'facilityId': _selectedFacility?.id,
-              'productVariantId': _selectedProduct?.id,
-              'stockMetrics': _stockMetrics,
-              'isValid': _selectedFacility != null && _selectedProduct != null,
-            },
+            value: isValidSelection
+                ? {
+                    'facilityId': _selectedFacility?.id,
+                    'productVariantId': _selectedProduct?.id,
+                    'stockMetrics': _stockMetrics,
+                  }
+                : null, // Set to null when invalid - triggers 'required' validation
           ),
         );
   }
@@ -432,16 +454,22 @@ class _StockReconciliationCardState
     });
 
     // Update form data with the calculated metrics
+    // Only set value when both facility and product are selected
+    final isValidSelection =
+        _selectedFacility != null && _selectedProduct != null;
+
     context.read<FormsBloc>().add(
           FormsEvent.updateField(
             schemaKey: widget.pageSchema,
             context: context,
             key: 'stockReconciliationCard',
-            value: {
-              'facilityId': _selectedFacility?.id,
-              'productVariantId': _selectedProduct?.id,
-              'stockMetrics': _stockMetrics,
-            },
+            value: isValidSelection
+                ? {
+                    'facilityId': _selectedFacility?.id,
+                    'productVariantId': _selectedProduct?.id,
+                    'stockMetrics': _stockMetrics,
+                  }
+                : null,
           ),
         );
 
