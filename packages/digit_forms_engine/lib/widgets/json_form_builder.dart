@@ -352,7 +352,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           isMultiselect: widget.schema.isMultiSelect ?? false,
-          readOnly: widget.schema.readOnly ?? false,
+          readOnly: _isReadOnly,
         );
 
       case PropertySchemaFormat.mobileNumber:
@@ -361,7 +361,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
           inputType: TextInputType.number,
-          readOnly: widget.schema.readOnly ?? false,
+          readOnly: _isReadOnly,
           validations: widget.schema.validations,
           isRequired: hasRequiredValidation(widget.schema.validations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
@@ -454,7 +454,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           formControlName: widget.formControlName,
           value: widget.schema.value?.toString(),
           validations: widget.schema.validations,
-          readOnly: widget.schema.readOnly ?? false,
+          readOnly: _isReadOnly,
           isRequired: hasRequiredValidation(widget.schema.validations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
@@ -626,7 +626,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
           value: widget.schema.value as String?,
-          readOnly: widget.schema.readOnly ?? false,
+          readOnly: _isReadOnly,
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
