@@ -42,7 +42,6 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
 
     // Get prefilled value from stateData.formData
     final formData = widget.stateData?.formData as Map<String, dynamic>?;
-    debugPrint('ProductSelectionCard: formData = $formData');
 
     if (formData != null) {
       // Try to get product variant value - check various formats
@@ -59,7 +58,9 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
         _prefilledProductIds = _extractProductIdsFromValue(productValue);
 
         // Build dropdown items using the actual ProductVariantModel list to get proper SKU
-        if (_prefilledProductIds != null && _prefilledProductIds!.isNotEmpty && productVariants != null) {
+        if (_prefilledProductIds != null &&
+            _prefilledProductIds!.isNotEmpty &&
+            productVariants != null) {
           _prefilledOptions = _buildDropdownItemsFromProductVariants(
             _prefilledProductIds!,
             productVariants,
@@ -142,7 +143,8 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
 
         // Find the ProductVariantModel instances that match the prefilled IDs
         final selectedModels = productVariants
-            .where((v) => _prefilledProductIds!.contains((v as ProductVariantModel).id))
+            .where((v) =>
+                _prefilledProductIds!.contains((v as ProductVariantModel).id))
             .toList();
 
         if (selectedModels.isNotEmpty) {

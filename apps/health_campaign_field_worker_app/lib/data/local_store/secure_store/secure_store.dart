@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../models/auth/auth_model.dart';
 import '../../../models/role_actions/role_actions_model.dart';
@@ -225,7 +226,15 @@ class LocalSecureStore {
   }
 
   Future<void> deleteAll() async {
+    // Preserve the database encryption key before deleting all
+    final encryptionKey = await storage.read(key: dbEncryptionKeyKey);
+
     await storage.deleteAll();
+
+    // Restore the encryption key if it existed
+    if (encryptionKey != null) {
+      await storage.write(key: dbEncryptionKeyKey, value: encryptionKey);
+    }
   }
 
   /*Sets the bool value of project setup as true once project data is downloaded*/
