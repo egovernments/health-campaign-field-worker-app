@@ -647,7 +647,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       children: entries
           .where((entry) {
             final subSchema = entry.value;
-            return !shouldHideField(subSchema, form);
+            return !_shouldHideField(form);
           })
           .toList()
           .asMap()
