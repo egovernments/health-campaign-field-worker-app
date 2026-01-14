@@ -3,6 +3,7 @@ import 'package:digit_data_model/blocs/product_variant/product_variant.dart';
 import 'package:digit_data_model/models/entities/product_variant.dart';
 import 'package:digit_data_model/models/entities/project_type.dart';
 import 'package:digit_forms_engine/forms_engine.dart';
+import 'package:digit_forms_engine/helper/validation_message_helper.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
@@ -38,55 +39,30 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
 
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
+  static const _resourceCardKey = 'resourceCard';
   late List<int?> _maxQuantities;
 
   bool _listenersAdded = false;
-  bool _validationTriggered = false;
+  bool _toastShown = false;
 
   // Validation messages from schema
   String? _requiredValidationMessage;
   String? _minValidationMessage;
+  dynamic _validationMessages;
 
   /// Validates the resource card data and shows toast messages for errors.
   /// Returns true if valid, false otherwise.
-  bool _validateAndShowToast(FormGroup form, BuildContext context) {
-    final resourceList = (form.control(_resourceDeliveredKey)
-            as FormArray<DeliveryProductVariant?>)
-        .value;
-    final quantityList =
-        (form.control(_quantityDistributedKey) as FormArray<int?>).value;
-
-    // Check if at least one product is selected
-    final hasAnyProductSelected =
-        resourceList?.any((resource) => resource != null) ?? false;
-
-    if (!hasAnyProductSelected) {
+  void _validateAndShowToast(FormGroup form, BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       Toast.showToast(
+        position: ToastPosition.aboveOneButtonFooter,
         context,
-        message: _requiredValidationMessage ??
-            localizations.translate('CORE_COMMON_REQUIRED'),
+        message: _minValidationMessage ??
+            localizations.translate('CORE_COMMON_RESOURCE_SELECTION_ERROR'),
         type: ToastType.error,
       );
-      return false;
-    }
+    });
 
-    // Check if any selected product has quantity <= 0
-    for (var i = 0; i < (resourceList ?? []).length; i++) {
-      final resource = resourceList?[i];
-      final quantity = quantityList?[i];
-
-      if (resource != null && (quantity == null || quantity <= 0)) {
-        Toast.showToast(
-          context,
-          message: _minValidationMessage ??
-              localizations.translate('CORE_COMMON_MIN_ERROR'),
-          type: ToastType.error,
-        );
-        return false;
-      }
-    }
-
-    return true;
   }
 
   @override
@@ -107,7 +83,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
 
         final currentPath = [...pathSoFar, key];
 
-        if (key == 'resourceCard') {
+        if (key == _resourceCardKey) {
           // Found it; pull values
           isReadOnlyFromSchema =
               (schema.readOnly == true) || (schema.displayOnly == true);
@@ -115,6 +91,8 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
 
           // Extract validation messages from schema
           if (schema.validations != null) {
+            _validationMessages =
+                buildValidationMessages(schema.validations, localizations);
             for (final validation in schema.validations!) {
               if (validation.type == "required" && validation.value == true) {
                 _requiredValidationMessage = validation.message != null
@@ -142,121 +120,117 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
 // Kick off the recursive search
     walk(pages!, []);
 
-    return BlocBuilder<ProductVariantBloc, ProductVariantState>(
-      builder: (context, productState) {
-        final productVariants = getProductVariants();
+    return ReactiveWrapperField<dynamic>(
+      formControlName: _resourceCardKey,
+      validationMessages: _validationMessages,
+      showErrors: (control) => control.invalid && control.touched,
+      builder: (field) {
+        return BlocBuilder<ProductVariantBloc, ProductVariantState>(
+          builder: (context, productState) {
+            final productVariants = getProductVariants();
 
-        return ReactiveFormBuilder(
-          form: () => buildForm(context, productVariants),
-          builder: (context, form, child) {
-            // Add listeners just once
-            if (!_listenersAdded) {
-              _listenersAdded = true;
+            return ReactiveFormBuilder(
+              form: () => buildForm(context, productVariants),
+              builder: (context, form, child) {
+                // Add listeners just once
+                if (!_listenersAdded) {
+                  _listenersAdded = true;
 
-              _updateResourceCards(form); // Initial update
+                  _updateResourceCards(form); // Initial update
 
-              form.control(_resourceDeliveredKey).valueChanges.listen((_) {
-                _validationTriggered = false; // Reset validation on data change
-                _updateResourceCards(form);
-              });
+                  form.control(_resourceDeliveredKey).valueChanges.listen((_) {
+                    _toastShown = false; // Reset toast flag on data change
+                    _updateResourceCards(form);
+                  });
 
-              form.control(_quantityDistributedKey).valueChanges.listen((_) {
-                _validationTriggered = false; // Reset validation on data change
-                _updateResourceCards(form);
-              });
-            }
-
-            // Check if parent form's resourceCard control is touched (validation triggered)
-            try {
-              final parentForm = ReactiveForm.of(context, listen: true);
-              if (parentForm != null && parentForm is FormGroup) {
-                final resourceCardControl =
-                    parentForm.control('resourceCard') as FormControl?;
-                if (resourceCardControl != null &&
-                    resourceCardControl.touched &&
-                    !_validationTriggered) {
-                  _validationTriggered = true;
-                  // Schedule validation after build
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (mounted) {
-                      final isValid = _validateAndShowToast(form, context);
-                      // Update the parent form with validation status
-                      _updateResourceCards(form, isValid: isValid);
-                    }
+                  form.control(_quantityDistributedKey).valueChanges.listen((_) {
+                    _toastShown = false; // Reset toast flag on data change
+                    _updateResourceCards(form);
                   });
                 }
-              }
-            } catch (e) {
-              // Parent form control not found, skip validation check
-            }
 
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (labelFromSchema != null &&
-                    localizations.translate(labelFromSchema!).isNotEmpty) ...[
-                  Text(
-                    localizations.translate(labelFromSchema!),
-                    style: textTheme.bodyL.copyWith(
-                      color: theme.colorTheme.text.primary,
+                // Show toast when field is invalid and touched (via ReactiveWrapperField)
+                if (field.control.invalid && field.control.touched && !_toastShown) {
+                  _toastShown = true;
+                    // if (mounted) {
+                      _validateAndShowToast(form, context);
+                    // }
+                }
+
+                // Reset toast flag when field becomes valid
+                if (!field.control.invalid) {
+                  _toastShown = false;
+                }
+
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (labelFromSchema != null &&
+                        localizations.translate(labelFromSchema!).isNotEmpty) ...[
+                      Text(
+                        localizations.translate(labelFromSchema!),
+                        style: textTheme.bodyL.copyWith(
+                          color: theme.colorTheme.text.primary,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: spacer1,
+                      ),
+                    ],
+                    Column(
+                      children: List.generate(_controllers.length * 2 - 1, (i) {
+                        if (i.isOdd) {
+                          return const SizedBox(height: 16); // Middle spacing
+                        }
+                        final index = i ~/ 2;
+                        final controller = _controllers[index];
+                        return ResourceBeneficiaryCard(
+                          maxQuantity: _maxQuantities[index],
+                          readOnly: isReadOnlyFromSchema,
+                          form: form,
+                          cardIndex: index,
+                          totalItems: _controllers.length,
+                          variants: productVariants,
+                          onDelete: (index) {
+                            (form.control(_resourceDeliveredKey) as FormArray)
+                                .removeAt(index);
+                            (form.control(_quantityDistributedKey) as FormArray)
+                                .removeAt(index);
+                            _controllers.removeAt(index);
+                            setState(() {});
+                          },
+                        );
+                      }),
                     ),
-                  ),
-                  const SizedBox(
-                    height: spacer1,
-                  ),
-                ],
-                Column(
-                  children: List.generate(_controllers.length * 2 - 1, (i) {
-                    if (i.isOdd) {
-                      return const SizedBox(height: 16); // Middle spacing
-                    }
-                    final index = i ~/ 2;
-                    final controller = _controllers[index];
-                    return ResourceBeneficiaryCard(
-                      maxQuantity: _maxQuantities[index],
-                      readOnly: isReadOnlyFromSchema,
-                      form: form,
-                      cardIndex: index,
-                      totalItems: _controllers.length,
-                      variants: productVariants,
-                      onDelete: (index) {
-                        (form.control(_resourceDeliveredKey) as FormArray)
-                            .removeAt(index);
-                        (form.control(_quantityDistributedKey) as FormArray)
-                            .removeAt(index);
-                        _controllers.removeAt(index);
-                        setState(() {});
-                      },
-                    );
-                  }),
-                ),
-                const SizedBox(
-                  height: spacer4,
-                ),
-                Center(
-                  child: DigitButton(
-                    label: localizations.translate(
-                      'Add items',
+                    const SizedBox(
+                      height: spacer4,
                     ),
-                    type: DigitButtonType.tertiary,
-                    size: DigitButtonSize.medium,
-                    isDisabled:
-                        ((form.control(_resourceDeliveredKey) as FormArray)
-                                        .value ??
-                                    [])
-                                .length >=
-                            (productVariants ?? []).length,
-                    onPressed: () {
-                      addController(form);
-                      setState(() {
-                        _controllers.add(_controllers.length);
-                      });
-                    },
-                    prefixIcon: Icons.add_circle,
-                  ),
-                ),
-              ],
+                    Center(
+                      child: DigitButton(
+                        label: localizations.translate(
+                          'Add items',
+                        ),
+                        type: DigitButtonType.tertiary,
+                        size: DigitButtonSize.medium,
+                        isDisabled:
+                            ((form.control(_resourceDeliveredKey) as FormArray)
+                                            .value ??
+                                        [])
+                                    .length >=
+                                (productVariants ?? []).length,
+                        onPressed: () {
+                          addController(form);
+                          setState(() {
+                            _controllers.add(_controllers.length);
+                          });
+                        },
+                        prefixIcon: Icons.add_circle,
+                      ),
+                    ),
+                  ],
+                );
+              },
             );
           },
         );
@@ -281,7 +255,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
             FormsEvent.updateField(
               schemaKey: widget.pageSchema,
               context: context,
-              key: 'resourceCard',
+              key: _resourceCardKey,
               value: null,
             ),
           );
@@ -309,7 +283,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
           FormsEvent.updateField(
             schemaKey: widget.pageSchema,
             context: context,
-            key: 'resourceCard',
+            key: _resourceCardKey,
             value: updatedCards,
           ),
         );
@@ -333,8 +307,20 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
       final resource = resourceList?[i];
       final quantity = quantityList?[i];
 
-      if (resource != null && (quantity == null || quantity <= 0)) {
+      if (resource == null || (quantity == null || quantity <= 0)) {
         return false;
+      }
+    }
+
+    // Check for duplicate resource selection
+    final selectedProductIds = resourceList
+        ?.where((r) => r != null)
+        .map((r) => r!.productVariantId)
+        .toList();
+    if (selectedProductIds != null) {
+      final uniqueIds = selectedProductIds.toSet();
+      if (uniqueIds.length != selectedProductIds.length) {
+        return false; // Duplicate resources selected
       }
     }
 
@@ -366,7 +352,10 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
 
     _maxQuantities = List<int?>.generate(
       _controllers.length,
-      (_) => productVariants?.first.quantity,
+          (index) => (productVariants != null &&
+          index < productVariants.length)
+          ? productVariants[index].quantity
+          : null,
     );
 
     return fb.group(<String, Object>{
@@ -389,8 +378,12 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
       ),
       _quantityDistributedKey: FormArray<int>(
         _controllers.map((e) {
+          final index = _controllers.indexOf(e);
           return FormControl<int>(
-            value: int.tryParse('0'),
+            value: (productVariants != null &&
+                index < productVariants.length)
+                ? productVariants[index].quantity
+                : 0,
             validators: [Validators.min(1)],
           );
         }).toList(),
