@@ -59,7 +59,7 @@ mixin _$PropertySchema {
   dynamic get value => throw _privateConstructorUsedError;
   DisplayBehavior? get displayBehavior => throw _privateConstructorUsedError;
   Map<String, dynamic>? get conditions => throw _privateConstructorUsedError;
-  int? get order => throw _privateConstructorUsedError;
+  double? get order => throw _privateConstructorUsedError;
   String? get actionLabel => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   List<ValidationRule>? get validations => throw _privateConstructorUsedError;
@@ -131,7 +131,7 @@ abstract class $PropertySchemaCopyWith<$Res> {
       dynamic value,
       DisplayBehavior? displayBehavior,
       Map<String, dynamic>? conditions,
-      int? order,
+      double? order,
       String? actionLabel,
       String? description,
       List<ValidationRule>? validations,
@@ -331,7 +331,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
       order: freezed == order
           ? _value.order
           : order // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as double?,
       actionLabel: freezed == actionLabel
           ? _value.actionLabel
           : actionLabel // ignore: cast_nullable_to_non_nullable
@@ -500,7 +500,7 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       dynamic value,
       DisplayBehavior? displayBehavior,
       Map<String, dynamic>? conditions,
-      int? order,
+      double? order,
       String? actionLabel,
       String? description,
       List<ValidationRule>? validations,
@@ -704,7 +704,7 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
       order: freezed == order
           ? _value.order
           : order // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as double?,
       actionLabel: freezed == actionLabel
           ? _value.actionLabel
           : actionLabel // ignore: cast_nullable_to_non_nullable
@@ -913,7 +913,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
   }
 
   @override
-  final int? order;
+  final double? order;
   @override
   final String? actionLabel;
   @override
@@ -1159,7 +1159,7 @@ abstract class _PropertySchema implements PropertySchema {
       final dynamic value,
       final DisplayBehavior? displayBehavior,
       final Map<String, dynamic>? conditions,
-      final int? order,
+      final double? order,
       final String? actionLabel,
       final String? description,
       final List<ValidationRule>? validations,
@@ -1250,7 +1250,7 @@ abstract class _PropertySchema implements PropertySchema {
   @override
   Map<String, dynamic>? get conditions;
   @override
-  int? get order;
+  double? get order;
   @override
   String? get actionLabel;
   @override
