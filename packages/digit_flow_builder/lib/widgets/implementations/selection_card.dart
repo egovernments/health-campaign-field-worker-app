@@ -17,21 +17,25 @@ class SelectionCardWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final data = json['data'] as List<dynamic>? ?? [];
+    final data = json['enums'] as List<dynamic>? ?? [];
     final fieldName = json['fieldName'] as String?;
     final localization = LocalizationContext.maybeOf(context);
 
-    final options = data.map((item) {
-      if (item is Map<String, dynamic>) {
-        final name = item['name'] as String? ?? '';
-        final localizedName = localization?.translate(name) ?? name;
-        return SelectionCardOption(
-          code: item['code'] as String? ?? '',
-          name: localizedName,
-        );
-      }
-      return SelectionCardOption(code: '', name: '');
-    }).toList();
+    final options = data
+        .where((item) =>
+    item is Map<String, dynamic> &&
+        ((item['isActive'] == true) || (item['isActive'] == null)))
+        .map((item) {
+      final map = item as Map<String, dynamic>;
+      final name = map['name'] as String? ?? '';
+      final localizedName = localization?.translate(name) ?? name;
+
+      return SelectionCardOption(
+        code: map['code'] as String? ?? '',
+        name: localizedName,
+      );
+    })
+        .toList();
 
     // Use Builder to access the correct context where CrudItemContext is available
     return Builder(
@@ -40,10 +44,33 @@ class SelectionCardWidget implements FlowWidget {
         final crudContext = CrudItemContext.of(builderContext);
         final screenKey = crudContext?.screenKey;
 
+        // Get widgetData from registry to check for stored values
+        final currentState =
+            screenKey != null ? FlowCrudStateRegistry().get(screenKey) : null;
+        final widgetData = currentState?.widgetData ?? {};
+
+        // Get initial selection from widgetData if available
+        List<SelectionCardOption> initialSelection = [];
+        if (fieldName != null && widgetData.containsKey(fieldName)) {
+          final storedCodes = widgetData[fieldName];
+          if (storedCodes is List) {
+            initialSelection = options
+                .where((opt) => storedCodes.contains(opt.code))
+                .toList();
+          } else if (storedCodes is String) {
+            // Handle single value case
+            initialSelection = options
+                .where((opt) => opt.code == storedCodes)
+                .toList();
+          }
+        }
+
         return SelectionCard(
           showParentContainer: true,
           // equalWidthOptions: true,
           options: options,
+          initialSelection: initialSelection,
+          allowMultipleSelection: false,
           width: MediaQuery.of(builderContext).size.width * 0.6,
           onSelectionChanged: (selectedOptions) {
             // Update widgetData in flow state if fieldName is provided

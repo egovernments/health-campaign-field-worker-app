@@ -39,7 +39,7 @@ class TableWidget implements FlowWidget {
 
     // Create evaluation context that includes modelMap for named entity access
     final evalContext = {
-      'item': crudCtx?.item,
+      'currentItem': crudCtx?.item,
       'contextData': crudCtx?.stateData?.rawState ?? {},
       'navigation': navigationParams,
       ...modelMap,
@@ -65,19 +65,22 @@ class TableWidget implements FlowWidget {
     final rawColumns = (data['columns'] as List<dynamic>?) ?? [];
 
     // Create column headers with resolved templates
-    final columns = rawColumns.map((col) {
+    final columns = rawColumns
+        .where((col) => col['isActive'] != false)
+        .map((col) {
       final cellValue = col['cellValue'];
       final headerTemplate = col['header']?.toString() ?? '';
 
       // Resolve header template to support {{selectedProduct.sku}} etc.
       final resolvedHeader =
-          resolveTemplate(headerTemplate, formData, screenKey: screenKey);
+      resolveTemplate(headerTemplate, formData, screenKey: screenKey);
 
       return DigitTableColumn(
         header: localization?.translate(resolvedHeader) ?? resolvedHeader,
         cellValue: cellValue is String ? cellValue : jsonEncode(cellValue),
       );
-    }).toList();
+    })
+        .toList();
 
     // Step 1: Resolve data source from either 'rows' or 'source' (both should point to same data)
     List<dynamic> sourceList = [];
@@ -90,6 +93,9 @@ class TableWidget implements FlowWidget {
 
       // Strip {{ }} if present
       String cleanKey = rowsKey;
+      if (rowsKey.startsWith('{{') && rowsKey.endsWith('}}')) {
+        cleanKey = rowsKey.substring(2, rowsKey.length - 2).trim();
+      }
 
       // Case 1: Singleton path
       if (cleanKey.startsWith("singleton")) {
@@ -104,7 +110,7 @@ class TableWidget implements FlowWidget {
       // Case 2: If the current item already has this source (table inside listView)
       else if (crudCtx?.item != null && (crudCtx!.item?[cleanKey] != null)) {
         final localSource =
-            resolveValueRaw(cleanKey, crudCtx.item, screenKey: screenKey);
+            resolveValueRaw("{{ $cleanKey }}", crudCtx.item, screenKey: screenKey);
         if (localSource is List) {
           sourceList = localSource;
         } else if (localSource != null) {
@@ -151,11 +157,9 @@ class TableWidget implements FlowWidget {
       // - For simple templates like {{item.id}}, rowItem is used directly
       // - For conditions needing global state like {{contextData.0.dose}}, we provide contextDataList
       final cellEvalContext = {
-        'currentItem': rowItem,
         'item': rowItem,
         'contextData': contextDataList,
-        ...modelMap,
-        ...formData,
+        ...evalContext,
         // Also spread contextDataMap for direct access like {{contextData.dose}}
         // when used without index (backward compatibility)
         ...contextDataMap,
@@ -167,19 +171,11 @@ class TableWidget implements FlowWidget {
           final colConfig = entry.value;
 
           // Get the raw cellValue configuration
-          final rawCellValue = colConfig['cellValue'];
+          // Resolve static localization keys from cellValue (text without {{}})
+          final rawCellValue = colConfig['cellValue'] is String ? resolveStaticString(colConfig['cellValue'], localization) : colConfig['cellValue'];
 
-          // Use enhanced context for:
-          // 1. Conditional cellValues (@condition)
-          // 2. Function calls (fn:)
-          // 3. References to currentItem or contextData
-          final needsEnhancedContext =
-              rawCellValue is Map && rawCellValue.containsKey('@condition') ||
-                  (rawCellValue is String &&
-                      (rawCellValue.contains('{{fn:') ||
-                          rawCellValue.contains('{{currentItem') ||
-                          rawCellValue.contains('{{contextData')));
-          final evalContext = needsEnhancedContext ? cellEvalContext : rowItem;
+
+          final evalContext = cellEvalContext;
 
           final cellValue = ConditionalEvaluator.evaluate(
               rawCellValue, evalContext,
@@ -190,7 +186,7 @@ class TableWidget implements FlowWidget {
           final finalText = cellValue?.toString() ?? '';
 
           return DigitTableData(
-            finalText,
+            localization?.translate(finalText) ?? finalText,
             cellKey: rawCellValue is Map
                 ? 'conditional_$colIndex'
                 : rawCellValue?.toString() ?? '',

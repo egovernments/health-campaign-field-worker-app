@@ -159,7 +159,9 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'visibilityCondition': pageMap['visibilityCondition'],
         'conditionalNavigateTo': pageMap['conditionalNavigateTo'],
         'showAlertPopUp': pageMap['showAlertPopUp'],
-        'multiEntityConfig': pageMap['multiEntityConfig']
+        'multiEntityConfig': pageMap['multiEntityConfig'],
+        'preventScreenCapture': pageMap['preventScreenCapture'],
+        'submitCondition': pageMap['submitCondition'],
       };
 
       if (type == 'template') {
@@ -198,6 +200,7 @@ String resolveTemplate(
   String? screenKey,
   dynamic localization,
   CrudStateData? stateData,
+  Map<String, dynamic>? widgetData,
 }) {
   if (!template.contains('{{')) {
     // No template placeholders, try to translate as localization key
@@ -252,7 +255,7 @@ String resolveTemplate(
 
     // Use existing resolveValueRaw to resolve the individual placeholder
     final resolvedValue = resolveValueRaw('{{$placeholder}}', contextData,
-        screenKey: screenKey, stateData: stateData);
+        screenKey: screenKey, stateData: stateData, widgetData: widgetData);
 
     // Replace the placeholder in the result string
     // For null values, use the string "null" so expressions like "x != null" work
@@ -351,11 +354,13 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
         if (fnMatch != null) {
           final fnName = fnMatch.group(1)!;
           final argsExpr = fnMatch.group(2) ?? '';
+          print('🟢 FUNCTION CALL: $fnName with argsExpr: "$argsExpr"');
 
           final resolvedArgs = argsExpr.trim().isEmpty
               ? <dynamic>[]
               : argsExpr.split(',').map((rawArg) {
                   final trimmed = rawArg.trim();
+                  print('🟢 Resolving arg: "$trimmed"');
 
                   // Check if it's a quoted literal (string)
                   if (trimmed.startsWith("'") || trimmed.startsWith('"')) {
@@ -375,12 +380,15 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
                   // This includes: simple variables (selectedFacility),
                   // dotted paths (item.field), and prefixed paths (navigation.x)
                   final placeholder = '{{ $trimmed }}';
-                  return resolveValueRaw(placeholder, contextData,
+                  final resolved = resolveValueRaw(placeholder, contextData,
                       widgetData: widgetData,
                       screenKey: screenKey,
                       stateData: stateData);
+                  print('🟢 Arg "$trimmed" resolved to: ${resolved.runtimeType} = $resolved');
+                  return resolved;
                 }).toList();
 
+          print('🟢 All resolved args: $resolvedArgs (types: ${resolvedArgs.map((e) => e.runtimeType).toList()})');
           return FunctionRegistry.call(
             fnName,
             resolvedArgs,
@@ -441,7 +449,7 @@ dynamic _resolvePath(dynamic root, String path) {
       final key = listMatch.group(1)!;
       final index = int.parse(listMatch.group(2)!);
 
-      if (current is Map<String, dynamic> && current.containsKey(key)) {
+      if (current is Map && current.containsKey(key)) {
         final listVal = current[key];
         if (listVal is List && index < listVal.length) {
           current = listVal[index];
@@ -452,9 +460,11 @@ dynamic _resolvePath(dynamic root, String path) {
         return null;
       }
     }
-    // Normal map lookup
-    else if (current is Map<String, dynamic>) {
-      if (!current.containsKey(part)) return null;
+    // Normal map lookup - handle both Map<String, dynamic> and Map<dynamic, dynamic>
+    else if (current is Map) {
+      if (!current.containsKey(part)) {
+        return null;
+      }
       current = current[part];
 
       // Special case: if current is a List<AdditionalField> and there are more parts
@@ -585,4 +595,55 @@ Map<String, dynamic> flattenFormData(Map<String, dynamic> data,
   });
 
   return flatMap;
+}
+
+/// Resolves static localization keys from input string.
+/// Static parts (outside of {{}}) are translated using localization.
+/// Dynamic parts (inside {{}}) are preserved as-is.
+String resolveStaticString(
+    dynamic input,
+    dynamic localization,
+    ) {
+  if (input is! String) return input?.toString() ?? '';
+
+  final regex = RegExp(r'{{.*?}}');
+  final buffer = StringBuffer();
+  int lastIndex = 0;
+
+  for (final match in regex.allMatches(input)) {
+    // Static part before {{ }}
+    final staticPart = input.substring(lastIndex, match.start).trim();
+    if (staticPart.isNotEmpty) {
+      final translated = _tryTranslate(staticPart, localization);
+      buffer.write(translated);
+      buffer.write(' ');
+    }
+
+    // Dynamic part → keep as-is
+    buffer.write(input.substring(match.start, match.end));
+    buffer.write(' ');
+
+    lastIndex = match.end;
+  }
+
+  // Remaining static part
+  if (lastIndex < input.length) {
+    final remaining = input.substring(lastIndex).trim();
+    if (remaining.isNotEmpty) {
+      final translated = _tryTranslate(remaining, localization);
+      buffer.write(translated);
+    }
+  }
+
+  return buffer.toString().trim();
+}
+
+/// Helper to safely translate using localization
+String _tryTranslate(String key, dynamic localization) {
+  if (localization == null) return key;
+  try {
+    return localization.translate(key) ?? key;
+  } catch (_) {
+    return key;
+  }
 }

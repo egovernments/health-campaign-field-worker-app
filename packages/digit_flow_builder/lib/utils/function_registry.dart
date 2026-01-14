@@ -122,6 +122,43 @@ bool checkStatusInternal(
   return true;
 }
 
+/// Checks if a side effect was recorded for the last task within the current cycle.
+///
+/// - `selectedCycle`: The current active project cycle.
+/// - `lastTask`: The last task as a Map<String, dynamic>.
+/// - `sideEffects`: List of side effects as List<Map<String, dynamic>>.
+///
+/// Returns `true` if a side effect was recorded for the last task within the cycle's date range.
+bool _recordedSideEffectInternal(
+  ProjectCycle? selectedCycle,
+  Map<String, dynamic>? lastTask,
+  List<Map<String, dynamic>>? sideEffects,
+) {
+  if (selectedCycle != null &&
+      selectedCycle.startDate != null &&
+      selectedCycle.endDate != null) {
+    if (lastTask != null && (sideEffects ?? []).isNotEmpty) {
+      final lastSideEffect = sideEffects!.last;
+      final taskClientRefId = lastTask['clientReferenceId']?.toString();
+      final sideEffectTaskClientRefId =
+          lastSideEffect['taskClientReferenceId']?.toString();
+
+      // Get the task's created time if the side effect references this task
+      int? lastTaskCreatedTime;
+      if (taskClientRefId == sideEffectTaskClientRefId) {
+        lastTaskCreatedTime =
+            lastTask['clientAuditDetails']?['createdTime'] as int?;
+      }
+
+      return lastTaskCreatedTime != null &&
+          lastTaskCreatedTime >= (selectedCycle.startDate ?? 0) &&
+          lastTaskCreatedTime <= (selectedCycle.endDate ?? 0);
+    }
+  }
+
+  return false;
+}
+
 /// Initializes the [FunctionRegistry] with application-specific functions.
 ///
 /// This function should be called at application startup to populate the
@@ -275,15 +312,153 @@ void initializeFunctionRegistry() {
         return totalAgeMonths >= projectType.validMinAge! &&
             totalAgeMonths <= projectType.validMaxAge!;
       }
-      return false;
+      return true;
     }
   });
 
   FunctionRegistry.register("isDelivered", (args, stateData) {
-    // Extract all inputs from args
-    final tasks = (stateData.modelMap['task'] as List?) ?? [];
-    if (tasks.isNotEmpty) return true;
+    // No arguments passed
+    if (args.isEmpty) return false;
 
+    final value = args.first;
+
+    // Must be a string
+    if (value is! String) return false;
+
+    // Normalize (uppercase + trim)
+    final status = value.trim().toUpperCase();
+
+    // Match valid delivered statuses
+    if (status == "ADMINISTRATION_SUCCESS" || status == "DELIVERED") {
+      return true;
+    }
+
+    return false;
+  });
+
+  /// Registers a function to check if all doses have been delivered for a member.
+  ///
+  /// - **Function Name**: `'checkAllDoseDelivered'`
+  /// - **Arguments**: A list where the first element is the tasks list for the member.
+  /// - **Returns**: `true` if all doses have been delivered for the current cycle, `false` otherwise.
+  ///
+  /// This function checks:
+  /// 1. If no valid cycle exists or cycle has no deliveries -> returns true (nothing to deliver)
+  /// 2. If tasks exist:
+  ///    - Checks if last dose was delivered for the current cycle
+  ///    - Handles side effects if present
+  /// 3. If no tasks exist -> returns false (doses pending)
+  FunctionRegistry.register("checkAllDoseDelivered", (args, stateData) {
+    // Get tasks from args (passed as first argument from the wrapper config)
+    List<Map<String, dynamic>>? tasks;
+    if (args.isNotEmpty && args.first != null) {
+      if (args.first is List) {
+        final rawList = args.first as List;
+        // Convert each item to Map<String, dynamic> - handles both Map and Model objects
+        tasks = rawList.map((item) {
+          if (item is Map<String, dynamic>) {
+            return item;
+          } else if (item is Map) {
+            return Map<String, dynamic>.from(item);
+          } else {
+            // Try to convert model objects (e.g., TaskModel) to Map
+            try {
+              return (item as dynamic).toMap() as Map<String, dynamic>;
+            } catch (_) {
+              try {
+                return (item as dynamic).toJson() as Map<String, dynamic>;
+              } catch (_) {
+                return <String, dynamic>{};
+              }
+            }
+          }
+        }).toList();
+      }
+    }
+
+    // Get current active cycle from FlowBuilderSingleton
+    final projectType = FlowBuilderSingleton().projectType;
+    final selectedCycle = projectType?.cycles?.firstWhereOrNull(
+      (e) =>
+          (e.startDate ?? 0) < DateTime.now().millisecondsSinceEpoch &&
+          (e.endDate ?? 0) > DateTime.now().millisecondsSinceEpoch,
+    );
+
+    // Get sideEffects from stateData - convert model objects to Map if needed
+    final rawSideEffects = stateData.modelMap['sideEffects'] as List?;
+    final sideEffects = rawSideEffects?.map((item) {
+      if (item is Map<String, dynamic>) return item;
+      if (item is Map) return Map<String, dynamic>.from(item);
+      try {
+        return (item as dynamic).toMap() as Map<String, dynamic>;
+      } catch (_) {
+        try {
+          return (item as dynamic).toJson() as Map<String, dynamic>;
+        } catch (_) {
+          return <String, dynamic>{};
+        }
+      }
+    }).toList() ?? [];
+
+    // If no valid cycle or cycle has no deliveries, return true (nothing to deliver)
+    if (selectedCycle == null ||
+        selectedCycle.id == 0 ||
+        (selectedCycle.deliveries ?? []).isEmpty) {
+      return true;
+    }
+
+    // Check if tasks exist
+    if ((tasks ?? []).isNotEmpty) {
+      final lastTask = tasks!.last;
+
+      // Extract cycleIndex from additionalFields
+      final additionalFields = lastTask['additionalFields'];
+      final fields = additionalFields?['fields'] as List?;
+
+      int? lastCycle;
+      int? lastDose;
+
+      if (fields != null) {
+        for (final field in fields) {
+          if (field is Map) {
+            if (field['key'] == 'cycleIndex') {
+              lastCycle = int.tryParse(field['value']?.toString() ?? '');
+            }
+            if (field['key'] == 'doseIndex') {
+              lastDose = int.tryParse(field['value']?.toString() ?? '');
+            }
+          }
+        }
+      }
+
+      final lastTaskStatus = lastTask['status']?.toString().toUpperCase();
+      final isDelivered =
+          lastTaskStatus == 'DELIVERED';
+
+      // If last dose equals total deliveries in cycle AND cycle matches AND status is NOT delivered
+      // -> return true (last dose attempted but not delivered)
+      if (lastDose != null &&
+          lastDose == selectedCycle.deliveries?.length &&
+          lastCycle != null &&
+          lastCycle == selectedCycle.id &&
+          lastTaskStatus == 'ADMINISTRATION_SUCCESS') {
+        return true;
+      }
+
+      // If cycle matches AND status IS delivered -> return false (dose delivered, may have more)
+      if (selectedCycle.id == lastCycle && isDelivered) {
+        return false;
+      }
+
+      // Check side effects if present
+      if (sideEffects.isNotEmpty) {
+        return _recordedSideEffectInternal(selectedCycle, lastTask, sideEffects);
+      }
+
+      return false;
+    }
+
+    // No tasks exist -> return false (doses pending)
     return false;
   });
 
@@ -385,37 +560,28 @@ void initializeFunctionRegistry() {
   /// This function helps with null/empty checks since template resolution
   /// converts null values to empty strings.
   FunctionRegistry.register("isEmpty", (args, stateData) {
-    print('🔍 isEmpty called with args: $args');
-    print('🔍 isEmpty stateData.formData: ${stateData.rawState}');
-
     // Handle null args
     if (args == null || args.isEmpty) {
-      print('🔍 isEmpty result: true (args null/empty)');
       return true;
     }
 
     final value = args.first;
-    print('🔍 isEmpty checking value: $value (type: ${value.runtimeType})');
 
     // Check for null
     if (value == null) {
-      print('🔍 isEmpty result: true (value is null)');
       return true;
     }
 
     // Check for empty string (missing values resolve to "")
     if (value is String && value.isEmpty) {
-      print('🔍 isEmpty result: true (value is empty string)');
       return true;
     }
 
     // Check for empty list
     if (value is List && value.isEmpty) {
-      print('🔍 isEmpty result: true (value is empty list)');
       return true;
     }
 
-    print('🔍 isEmpty result: false (value is not empty)');
     return false;
   });
 
@@ -425,31 +591,23 @@ void initializeFunctionRegistry() {
   /// - **Arguments**: A list where the first element is the value to check.
   /// - **Returns**: `true` if the value is not null and not empty, otherwise `false`.
   FunctionRegistry.register("isNotEmpty", (args, stateData) {
-    print('🔍 isNotEmpty called with args: $args');
-
     // Handle null args
     if (args == null || args.isEmpty) {
-      print('🔍 isNotEmpty result: false (args null/empty)');
       return false;
     }
 
     final value = args.first;
-    print('🔍 isNotEmpty checking value: $value (type: ${value.runtimeType})');
 
     if (value == null) {
-      print('🔍 isNotEmpty result: false (value is null)');
       return false;
     }
     if (value is String && value.isEmpty) {
-      print('🔍 isNotEmpty result: false (value is empty string)');
       return false;
     }
     if (value is List && value.isEmpty) {
-      print('🔍 isNotEmpty result: false (value is empty list)');
       return false;
     }
 
-    print('🔍 isNotEmpty result: true (value is not empty)');
     return true;
   });
 
@@ -493,6 +651,316 @@ void initializeFunctionRegistry() {
   ///
   /// This function checks if the next cycle is within the valid range of cycles
   /// and if delivery recording is allowed based on the current project configuration.
+  /// Registers a function to get unique complaint types from ComplaintWrapper.
+  ///
+  /// - **Function Name**: `'getUniqueComplaintTypes'`
+  /// - **Arguments**: A list where the first element is the ComplaintWrapper list.
+  /// - **Returns**: A list of unique complaint types as [{name: "...", code: "..."}].
+  FunctionRegistry.register("getUniqueComplaintTypes", (args, stateData) {
+    if (args.isEmpty || args.first == null) return <Map<String, dynamic>>[];
+
+    final wrapperList = args.first;
+    if (wrapperList is! List) return <Map<String, dynamic>>[];
+
+    final uniqueTypes = <String>{};
+
+    for (final item in wrapperList) {
+      // Convert item to Map if it's a model object
+      Map<String, dynamic>? itemMap;
+      if (item is Map<String, dynamic>) {
+        itemMap = item;
+      } else if (item is Map) {
+        itemMap = Map<String, dynamic>.from(item);
+      } else {
+        // Try to convert model object to Map
+        try {
+          itemMap = (item as dynamic).toMap() as Map<String, dynamic>;
+        } catch (_) {
+          try {
+            itemMap = (item as dynamic).toJson() as Map<String, dynamic>;
+          } catch (_) {
+            continue; // Skip this item if conversion fails
+          }
+        }
+      }
+
+      if (itemMap != null) {
+        // Access PgrServiceModel and convert to Map if needed
+        dynamic pgrService = itemMap['PgrServiceModel'];
+        if (pgrService != null && pgrService is! Map) {
+          try {
+            pgrService = (pgrService as dynamic).toMap() as Map<String, dynamic>;
+          } catch (_) {
+            try {
+              pgrService = (pgrService as dynamic).toJson() as Map<String, dynamic>;
+            } catch (_) {
+              pgrService = null;
+            }
+          }
+        }
+        if (pgrService is Map && pgrService['serviceCode'] != null) {
+          final serviceCode = pgrService['serviceCode'].toString();
+          if (serviceCode.isNotEmpty) {
+            uniqueTypes.add(serviceCode);
+          }
+        }
+      }
+    }
+
+    // Return as dropdown format [{name: code, code: code}]
+    return uniqueTypes
+        .map((code) => {'name': code, 'code': code})
+        .toList();
+  });
+
+  /// Registers a function to get unique localities from ComplaintWrapper.
+  ///
+  /// - **Function Name**: `'getUniqueLocalities'`
+  /// - **Arguments**: A list where the first element is the ComplaintWrapper list.
+  /// - **Returns**: A list of unique localities as [{name: "...", code: "..."}].
+  FunctionRegistry.register("getUniqueLocalities", (args, stateData) {
+    if (args.isEmpty || args.first == null) return <Map<String, dynamic>>[];
+
+    final wrapperList = args.first;
+    if (wrapperList is! List) return <Map<String, dynamic>>[];
+
+    final uniqueLocalities = <String>{};
+
+    for (final item in wrapperList) {
+      // Convert item to Map if it's a model object
+      Map<String, dynamic>? itemMap;
+      if (item is Map<String, dynamic>) {
+        itemMap = item;
+      } else if (item is Map) {
+        itemMap = Map<String, dynamic>.from(item);
+      } else {
+        // Try to convert model object to Map
+        try {
+          itemMap = (item as dynamic).toMap() as Map<String, dynamic>;
+        } catch (_) {
+          try {
+            itemMap = (item as dynamic).toJson() as Map<String, dynamic>;
+          } catch (_) {
+            continue; // Skip this item if conversion fails
+          }
+        }
+      }
+
+      if (itemMap != null) {
+        // Access PgrServiceModel and convert to Map if needed
+        dynamic pgrService = itemMap['PgrServiceModel'];
+        if (pgrService != null && pgrService is! Map) {
+          try {
+            pgrService = (pgrService as dynamic).toMap() as Map<String, dynamic>;
+          } catch (_) {
+            try {
+              pgrService = (pgrService as dynamic).toJson() as Map<String, dynamic>;
+            } catch (_) {
+              pgrService = null;
+            }
+          }
+        }
+
+        if (pgrService is Map) {
+          // Access address from PgrServiceModel
+          dynamic address = pgrService['address'];
+          if (address != null && address is! Map) {
+            try {
+              address = (address as dynamic).toMap() as Map<String, dynamic>;
+            } catch (_) {
+              try {
+                address = (address as dynamic).toJson() as Map<String, dynamic>;
+              } catch (_) {
+                address = null;
+              }
+            }
+          }
+
+          if (address is Map) {
+            // Access locality from address
+            dynamic locality = address['locality'];
+            if (locality != null && locality is! Map) {
+              try {
+                locality = (locality as dynamic).toMap() as Map<String, dynamic>;
+              } catch (_) {
+                try {
+                  locality = (locality as dynamic).toJson() as Map<String, dynamic>;
+                } catch (_) {
+                  locality = null;
+                }
+              }
+            }
+
+            if (locality is Map && locality['code'] != null) {
+              final code = locality['code'].toString();
+              if (code.isNotEmpty) {
+                uniqueLocalities.add(code);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Return as dropdown format [{name: code, code: code}]
+    return uniqueLocalities
+        .map((code) => {'name': code, 'code': code})
+        .toList();
+  });
+
+  /// Registers a function to check if a specific dose in a specific cycle has been completed.
+  ///
+  /// - **Function Name**: `'isDoseCompleted'`
+  /// - **Arguments**:
+  ///   - First argument: doseIndex (1-based dose ID)
+  ///   - Second argument: cycleIndex (1-based cycle ID)
+  /// - **Returns**: `true` if a task exists with matching doseIndex AND cycleIndex, `false` otherwise.
+  ///
+  /// This function checks the tasks in stateData.modelMap['tasks'] and looks for a task
+  /// where additionalFields.fields contains both the matching doseIndex and cycleIndex.
+  FunctionRegistry.register("isDoseCompleted", (args, stateData) {
+    if (args.isEmpty) return false;
+
+    final doseIndex = int.tryParse(args[0]?.toString() ?? '') ?? -1;
+    if (doseIndex < 0) return false;
+
+    // Get cycleIndex from second argument (required for accurate check)
+    final cycleIndex =
+        args.length > 1 ? int.tryParse(args[1]?.toString() ?? '') ?? -1 : -1;
+    if (cycleIndex < 0) return false;
+
+    // Get tasks from modelMap
+    final tasks = stateData.modelMap['tasks'] as List? ?? [];
+
+    // Find task with matching doseIndex AND cycleIndex in additionalFields
+    for (final task in tasks) {
+      if (task is! Map) continue;
+
+      // Get additionalFields.fields
+      final additionalFields = task['additionalFields'];
+      if (additionalFields == null) continue;
+
+      List? fields;
+      if (additionalFields is Map) {
+        fields = additionalFields['fields'] as List?;
+      } else if (additionalFields is List) {
+        fields = additionalFields;
+      }
+
+      if (fields == null) continue;
+
+      // Find doseIndex and cycleIndex in fields
+      int? taskDoseIndex;
+      int? taskCycleIndex;
+
+      for (final field in fields) {
+        if (field is Map) {
+          if (field['key'] == 'doseIndex') {
+            taskDoseIndex = int.tryParse(field['value']?.toString() ?? '');
+          }
+          if (field['key'] == 'cycleIndex') {
+            taskCycleIndex = int.tryParse(field['value']?.toString() ?? '');
+          }
+        }
+      }
+
+      // Check if BOTH dose AND cycle match
+      if (taskDoseIndex == doseIndex && taskCycleIndex == cycleIndex) {
+        return true;
+      }
+    }
+
+    return false;
+  });
+
+  /// Registers a function to get the completion date for a specific dose in a specific cycle.
+  ///
+  /// - **Function Name**: `'getTaskCompletionDate'`
+  /// - **Arguments**:
+  ///   - First argument: doseIndex (1-based dose ID)
+  ///   - Second argument: cycleIndex (1-based cycle ID)
+  ///   - Third argument (optional): date format (default: 'dd MMM yyyy')
+  /// - **Returns**: Formatted date string if task exists, empty string otherwise.
+  ///
+  /// This function checks the tasks in stateData.modelMap['tasks'] and looks for a task
+  /// where additionalFields.fields contains both the matching doseIndex and cycleIndex,
+  /// then returns the createdTime from clientAuditDetails formatted as a date.
+  FunctionRegistry.register('getTaskCompletionDate', (args, stateData) {
+    if (args.isEmpty) return '';
+
+    final doseIndex = int.tryParse(args[0]?.toString() ?? '') ?? -1;
+    if (doseIndex < 0) return '';
+
+    // Get cycleIndex from second argument (required for accurate check)
+    final cycleIndex =
+        args.length > 1 ? int.tryParse(args[1]?.toString() ?? '') ?? -1 : -1;
+    if (cycleIndex < 0) return '';
+
+    // Get date format from third argument (optional)
+    final dateFormat =
+        args.length > 2 ? args[2]?.toString() ?? 'dd MMM yyyy' : 'dd MMM yyyy';
+
+    // Get tasks from modelMap
+    final tasks = stateData.modelMap['tasks'] as List? ?? [];
+
+    // Find task with matching doseIndex AND cycleIndex in additionalFields
+    for (final task in tasks) {
+      if (task is! Map) continue;
+
+      // Get additionalFields.fields
+      final additionalFields = task['additionalFields'];
+      if (additionalFields == null) continue;
+
+      List? fields;
+      if (additionalFields is Map) {
+        fields = additionalFields['fields'] as List?;
+      } else if (additionalFields is List) {
+        fields = additionalFields;
+      }
+
+      if (fields == null) continue;
+
+      // Find doseIndex and cycleIndex in fields
+      int? taskDoseIndex;
+      int? taskCycleIndex;
+
+      for (final field in fields) {
+        if (field is Map) {
+          if (field['key'] == 'doseIndex') {
+            taskDoseIndex = int.tryParse(field['value']?.toString() ?? '');
+          }
+          if (field['key'] == 'cycleIndex') {
+            taskCycleIndex = int.tryParse(field['value']?.toString() ?? '');
+          }
+        }
+      }
+
+      // Check if BOTH dose AND cycle match
+      if (taskDoseIndex == doseIndex && taskCycleIndex == cycleIndex) {
+        // Found matching task, get createdTime from clientAuditDetails
+        final clientAuditDetails = task['clientAuditDetails'];
+        if (clientAuditDetails is Map) {
+          final createdTime = clientAuditDetails['createdTime'];
+          if (createdTime != null) {
+            try {
+              final timestamp = createdTime is int
+                  ? createdTime
+                  : int.tryParse(createdTime.toString()) ?? 0;
+              if (timestamp > 0) {
+                final date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+                return DateFormat(dateFormat).format(date);
+              }
+            } catch (_) {
+              return '';
+            }
+          }
+        }
+      }
+    }
+
+    return '';
+  });
+
   FunctionRegistry.register("canRecordDelivery", (args, stateData) {
     final projectType = FlowBuilderSingleton().projectType;
     if (projectType == null || projectType.cycles == null) {

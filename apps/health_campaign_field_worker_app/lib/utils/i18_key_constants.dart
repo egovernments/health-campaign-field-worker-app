@@ -27,6 +27,27 @@ const stockDetailsIssuedShowcase = StockDetailsIssuedShowcase();
 const selectSurveyFormShowcase = SelectSurveyFormShowcase();
 const stockDetailsReturnedShowcase = StockDetailsReturnedShowcase();
 const stockReconciliationShowcase = StockReconciliationShowcase();
+const stockReconciliationMetrics = StockReconciliationMetrics();
+
+class StockReconciliationMetrics {
+  const StockReconciliationMetrics();
+
+  String get stockMetrics => 'STOCK_METRICS';
+
+  String get dateOfReconciliation => 'STOCK_RECONCILIATION_DATE';
+
+  String get stockReceived => 'STOCK_RECONCILIATION_STOCK_RECEIVED';
+
+  String get stockIssued => 'STOCK_RECONCILIATION_STOCK_ISSUED';
+
+  String get stockReturned => 'STOCK_RECONCILIATION_STOCK_RETURNED';
+
+  String get stockLost => 'STOCK_RECONCILIATION_STOCK_LOST';
+
+  String get stockDamaged => 'STOCK_RECONCILIATION_STOCK_DAMAGED';
+
+  String get stockOnHand => 'STOCK_RECONCILIATION_STOCK_ON_HAND';
+}
 
 const surveyFormDataShowcase = SurveyFormDataShowcase();
 const surveyFormListShowcase = SurveyFormListShowcase();
@@ -36,6 +57,7 @@ const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
 const complaintsInboxShowcase = ComplaintsInboxShowcase();
 
 const nonMobileUser = NonMobileUser();
+const databaseError = DatabaseError();
 
 class Common {
   const Common();
@@ -156,11 +178,15 @@ class Common {
 
   String get grantPermission => 'GRANT_PERMISSION';
 
+  String get permissionDeniedOpenSettings => 'PERMISSION_DENIED_OPEN_SETTINGS';
+
   String get openSettings => 'OPEN_SETTINGS';
 
   String get permissionNotGranted => 'CORE_COMMON_PERMISSION_NOT_GRANTED';
 
   String get permissionGranted => 'CORE_COMMON_PERMISSION_GRANTED';
+
+  String get lowRamWarning => 'CORE_COMMON_LOW_RAM_WARNING';
 
   String get allowBackgroundActivityDesc =>
       'CORE_COMMON_ALLOW_BACKGROUND_ACTIVITY';
@@ -1201,4 +1227,14 @@ class NonMobileUser {
   String get showQrCodeBtnLabel => 'NON_MOBILE_USER_QR_BTN_LABEL';
 
   String get showQrCodeLabel => 'NON_MOBILE_USER_QR_LABEL';
+}
+
+class DatabaseError {
+  const DatabaseError();
+
+  String get databaseErrorTitle => 'DATABASE_ERROR_TITLE';
+
+  String get databaseErrorMessage => 'DATABASE_ERROR_MESSAGE';
+
+  String get closeAppButton => 'DATABASE_ERROR_CLOSE_APP';
 }

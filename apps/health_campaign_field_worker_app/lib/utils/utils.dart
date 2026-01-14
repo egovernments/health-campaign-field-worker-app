@@ -47,11 +47,13 @@ import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/app_config/app_config_model.dart';
+import '../blocs/localization/app_localization.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
 import 'environment_config.dart';
 import 'extensions/extensions.dart';
+import 'i18_key_constants.dart' as i18;
 
 export 'app_exception.dart';
 export 'constants.dart';
@@ -517,6 +519,38 @@ initializeAllMappers() async {
 }
 
 void attemptSyncUp(BuildContext context) async {
+  // Check for internet connectivity first
+  final connectivityResult = await Connectivity().checkConnectivity();
+  final isOnline = connectivityResult.firstOrNull == ConnectivityResult.wifi ||
+      connectivityResult.firstOrNull == ConnectivityResult.mobile;
+
+  if (!isOnline) {
+    if (context.mounted) {
+      showCustomPopup(
+        context: context,
+        builder: (ctx) => Popup(
+          title: AppLocalizations.of(context).translate(
+            i18.common.connectionLabel,
+          ),
+          description: AppLocalizations.of(context).translate(
+            i18.common.connectionContent,
+          ),
+          actions: [
+            DigitButton(
+              label: AppLocalizations.of(context).translate(
+                i18.common.coreCommonOk,
+              ),
+              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+              type: DigitButtonType.primary,
+              size: DigitButtonSize.large,
+            ),
+          ],
+        ),
+      );
+    }
+    return;
+  }
+
   await LocalSecureStore.instance.setManualSyncTrigger(true);
 
   if (context.mounted) {

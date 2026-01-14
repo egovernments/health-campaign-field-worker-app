@@ -36,8 +36,10 @@ class FormulaParser {
           safeValue = '"$clean"'; // wrap strings in quotes
         }
 
+        // Use case-insensitive matching to handle case mismatches between
+        // schema fieldNames and expression variable names
         tempExp = tempExp.replaceAll(
-          RegExp(r'\b' + RegExp.escape(key) + r'\b'),
+          RegExp(r'\b' + RegExp.escape(key) + r'\b', caseSensitive: false),
           safeValue,
         );
       }

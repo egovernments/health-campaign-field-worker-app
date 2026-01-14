@@ -63,6 +63,8 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
           _autoFillConditionListOrNull(json['autoFillCondition']),
       showAlertPopUp: _showAlertOrNull(json['showAlertPopUp']),
       multiEntityConfig: _multiEntityConfigOrNull(json['multiEntityConfig']),
+      preventScreenCapture: json['preventScreenCapture'] as bool?,
+      submitCondition: _visibilityConditionOrNull(json['submitCondition']),
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -120,6 +122,8 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
       instance.autoFillCondition?.map((e) => e.toJson()).toList());
   writeNotNull('showAlertPopUp', instance.showAlertPopUp?.toJson());
   writeNotNull('multiEntityConfig', instance.multiEntityConfig?.toJson());
+  writeNotNull('preventScreenCapture', instance.preventScreenCapture);
+  writeNotNull('submitCondition', instance.submitCondition?.toJson());
   return val;
 }
 
@@ -215,14 +219,9 @@ Map<String, dynamic> _$$NavigateToConfigImplToJson(
 _$VisibilityConditionImpl _$$VisibilityConditionImplFromJson(
         Map<String, dynamic> json) =>
     _$VisibilityConditionImpl(
-      expression: (json['expression'] is List)
-          ? (json['expression'] as List)
-              .map((e) => VisibilityExpression.fromJson(e))
-              .toList()
-          : [
-              VisibilityExpression.fromJson(
-                  json['expression'] as Map<String, dynamic>)
-            ],
+      expression: (json['expression'] as List<dynamic>)
+          .map((e) => VisibilityExpression.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$VisibilityConditionImplToJson(

@@ -211,7 +211,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
 
   void addController(FormGroup form) {
     (form.control(_resourceDeliveredKey) as FormArray).add(
-      FormControl<ProductVariantModel>(),
+      FormControl<DeliveryProductVariant>(),
     );
     (form.control(_quantityDistributedKey) as FormArray).add(
       FormControl<int>(value: 0, validators: [Validators.min(1)]),
@@ -272,13 +272,15 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
     final cycles = projectType?.cycles;
     final eligible =
         data?.stateWrapper?.first?['eligibleProductVariants'] as List?;
-
     final productVariants = (eligible != null && eligible.isNotEmpty)
-        ? (eligible.first['ProductVariants'] as List?)
-                ?.map((e) => DeliveryProductVariantMapper.fromMap(
-                    e as Map<String, dynamic>))
-                .toList() ??
-            []
+        ? eligible
+        .whereType<Map<String, dynamic>>() // safety
+        .expand((item) =>
+    (item['ProductVariants'] as List?)
+        ?.whereType<Map<String, dynamic>>()
+        .map((e) => DeliveryProductVariantMapper.fromMap(e)) ??
+        const <DeliveryProductVariant>[])
+        .toList()
         : (data?.stateWrapper?.first?['ProductVariants'] as List?)
                 ?.map((e) => DeliveryProductVariantMapper.fromMap(
                     e as Map<String, dynamic>))

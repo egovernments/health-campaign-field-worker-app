@@ -25,10 +25,11 @@ class DropdownWidget implements FlowWidget {
     // Get screen key for navigation params resolution
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
 
-    // Get form data from registry to check for stored values
+    // Get form data and widget data from registry to check for stored values
     final currentState =
         screenKey != null ? FlowCrudStateRegistry().get(screenKey) : null;
     final formData = currentState?.formData ?? {};
+    final widgetData = currentState?.widgetData ?? {};
     // For resolving item-specific fields (like labels), we use the current item or first item
     final itemStateData = (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
         ? crudCtx.item
@@ -40,7 +41,7 @@ class DropdownWidget implements FlowWidget {
     final label = resolveTemplate(json['label'], itemStateData,
             screenKey: screenKey, localization: localization) ??
         '';
-    final key = json['key'] as String?;
+    final key = (json['key'] ?? json['fieldName']) as String?;
     final isRequired = json['required'] == true;
     final visible = json['visible'] == null ||
         (json['visible'] is bool && json['visible'] == true) ||
@@ -53,11 +54,12 @@ class DropdownWidget implements FlowWidget {
       return const SizedBox.shrink();
     }
 
-    // Resolve source data
+    // Resolve source data (support both 'source' and 'enums' fields)
     dynamic sourceData;
-    if (json['source'] != null) {
-      if (json['source'] is String) {
-        final sourceKey = json['source'] as String;
+    final sourceField = json['source'] ?? json['enums'];
+    if (sourceField != null) {
+      if (sourceField is String) {
+        final sourceKey = sourceField as String;
 
         // Strip {{ }} if present
         String cleanKey = sourceKey;
@@ -65,8 +67,25 @@ class DropdownWidget implements FlowWidget {
           cleanKey = sourceKey.substring(2, sourceKey.length - 2).trim();
         }
 
+        // Case 0: Function call (fn:functionName(...))
+        if (cleanKey.startsWith("fn:")) {
+          // Build context data with stateData.rawState available as 'contextData'
+          final stateData = crudCtx?.stateData;
+          final contextData = {
+            'contextData': stateData?.rawState ?? [],
+            'item': crudCtx?.item,
+            ...?stateData?.modelMap,
+            if (crudCtx?.item != null) ...?crudCtx?.item,
+          };
+          sourceData = resolveValueRaw(
+            "{{ $cleanKey }}",
+            contextData,
+            screenKey: screenKey,
+            stateData: stateData,
+          );
+        }
         // Case 1: Singleton path
-        if (cleanKey.startsWith("singleton")) {
+        else if (cleanKey.startsWith("singleton")) {
           sourceData =
               resolveValueRaw("{{ $cleanKey }}", null, screenKey: screenKey);
         }
@@ -138,12 +157,12 @@ class DropdownWidget implements FlowWidget {
           }
           // Fallback: try resolveValueRaw
           sourceData ??=
-              resolveValueRaw(cleanKey, rawState, screenKey: screenKey);
+              resolveValueRaw("{{ $cleanKey }}", rawState, screenKey: screenKey);
         }
       }
       // Case 6: Direct array
-      else if (json['source'] is List) {
-        sourceData = json['source'];
+      else if (sourceField is List) {
+        sourceData = sourceField;
       }
     }
 
@@ -151,19 +170,26 @@ class DropdownWidget implements FlowWidget {
     final valueKey = json['valueKey'] as String? ?? 'id';
 
     // Get current selected value from state
-    // First try itemStateData, then fall back to formData
+    // Priority: widgetData (persisted selection) > itemStateData (entity data) > formData
     dynamic currentValue;
     if (key != null) {
-      currentValue =
-          resolveValue('{{$key}}', itemStateData, screenKey: screenKey);
-      // If not found in itemStateData, check formData directly
-      if (currentValue == '{{$key}}' || currentValue == null) {
-        currentValue = formData[key];
+      // First check widgetData for persisted selection
+      if (widgetData.containsKey(key)) {
+        currentValue = widgetData[key];
+      }
+      else {
+        // Then try itemStateData
+        currentValue =
+            resolveValue('{{$key}}', itemStateData, screenKey: screenKey);
+        // If not found in itemStateData, check formData directly
+        if (currentValue == '{{$key}}' || currentValue == null) {
+          currentValue = formData[key];
+        }
       }
     }
 
     // Build dropdown items
-    final items = _buildDropdownItems(sourceData, displayKey, valueKey);
+    final items = _buildDropdownItems(sourceData, displayKey, valueKey, context);
 
     // Find selected item
     DropdownItem? selectedItem;
@@ -204,24 +230,23 @@ class DropdownWidget implements FlowWidget {
               }
             }
 
-            // IMPORTANT: Store the selected value in the form state before triggering onChange
+            // IMPORTANT: Store the selected value in the form state and widget data before triggering onChange
             if (screenKey != null) {
               final currentState = FlowCrudStateRegistry().get(screenKey);
               final existingFormData = currentState?.formData ?? {};
+              final existingWidgetData = currentState?.widgetData ?? {};
 
-              // Update form data with the selected value
-              final updatedFormData = {
-                ...existingFormData,
+              // Update widget data with the selected value (for filters)
+              final updatedWidgetData = {
+                ...existingWidgetData,
                 key: value.code,
-                // Store the selected value ID
                 if (selectedObject != null) '$key-object': selectedObject,
-                // Store the full object
               };
 
-              // Update the registry
+              // Update the registry with both formData and widgetData
               final updatedState =
                   (currentState ?? const FlowCrudState()).copyWith(
-                formData: updatedFormData,
+                widgetData: updatedWidgetData,
               );
               FlowCrudStateRegistry().update(screenKey, updatedState);
             }
@@ -264,10 +289,12 @@ class DropdownWidget implements FlowWidget {
     dynamic sourceData,
     String displayKey,
     String valueKey,
+      BuildContext context
   ) {
     final items = <DropdownItem>[];
 
     if (sourceData == null) return items;
+    final localization = LocalizationContext.maybeOf(context);
 
     if (sourceData is List) {
       for (var i = 0; i < sourceData.length; i++) {
@@ -277,7 +304,7 @@ class DropdownWidget implements FlowWidget {
           final code = _getValue(item, valueKey)?.toString() ?? '';
 
           if (name.isNotEmpty && code.isNotEmpty) {
-            items.add(DropdownItem(name: name, code: code));
+            items.add(DropdownItem(name: localization?.translate(name) ?? name, code: code));
           }
         } else {
           // Handle primitive types (strings, etc.)

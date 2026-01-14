@@ -56,17 +56,17 @@ class TagWidget implements FlowWidget {
       }
     }
 
-    // Localize first, then resolve template
+    // Resolve template with localization support for mixed content
     final value = json['label'] ?? '';
-    final localizedValue = localization?.translate(value) ?? value;
     final valueText = resolveTemplate(
-            localizedValue,
-            crudCtx?.item != null
-                ? crudCtx!.item
-                : crudCtx?.stateData?.rawState) ??
-        localizedValue;
+          value,
+          crudCtx?.item != null ? crudCtx!.item : crudCtx?.stateData?.rawState,
+          localization: localization,
+        ) ??
+        value;
 
     return Tag(
+      isStroke: true,
       label: valueText,
       type: WidgetParsers.parseTagType(json['properties']?['type']),
     );

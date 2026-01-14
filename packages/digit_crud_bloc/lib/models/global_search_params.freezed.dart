@@ -32,6 +32,15 @@ mixin _$GlobalSearchParameters {
   /// If set, pagination and count are applied only for this model.
   String? get primaryModel => throw _privateConstructorUsedError;
 
+  /// The primary key field name for the primary model.
+  /// Used for multi-table filter resolution.
+  /// Example: 'clientReferenceId' for most entities.
+  String? get primaryKeyField => throw _privateConstructorUsedError;
+
+  /// Defines how filters across multiple tables are combined.
+  /// Defaults to [MultiTableFilterLogic.and] (intersection).
+  MultiTableFilterLogic get filterLogic => throw _privateConstructorUsedError;
+
   /// Ordering configuration for the search results
   SearchOrderBy? get orderBy => throw _privateConstructorUsedError;
 
@@ -54,6 +63,8 @@ abstract class $GlobalSearchParametersCopyWith<$Res> {
       List<RelationshipMapping> relationshipMappings,
       List<NestedModelMapping> nestedMappings,
       String? primaryModel,
+      String? primaryKeyField,
+      MultiTableFilterLogic filterLogic,
       SearchOrderBy? orderBy});
 
   $PaginationParamsCopyWith<$Res>? get pagination;
@@ -80,6 +91,8 @@ class _$GlobalSearchParametersCopyWithImpl<$Res,
     Object? relationshipMappings = null,
     Object? nestedMappings = null,
     Object? primaryModel = freezed,
+    Object? primaryKeyField = freezed,
+    Object? filterLogic = null,
     Object? orderBy = freezed,
   }) {
     return _then(_value.copyWith(
@@ -107,6 +120,14 @@ class _$GlobalSearchParametersCopyWithImpl<$Res,
           ? _value.primaryModel
           : primaryModel // ignore: cast_nullable_to_non_nullable
               as String?,
+      primaryKeyField: freezed == primaryKeyField
+          ? _value.primaryKeyField
+          : primaryKeyField // ignore: cast_nullable_to_non_nullable
+              as String?,
+      filterLogic: null == filterLogic
+          ? _value.filterLogic
+          : filterLogic // ignore: cast_nullable_to_non_nullable
+              as MultiTableFilterLogic,
       orderBy: freezed == orderBy
           ? _value.orderBy
           : orderBy // ignore: cast_nullable_to_non_nullable
@@ -155,6 +176,8 @@ abstract class _$$GlobalSearchParametersImplCopyWith<$Res>
       List<RelationshipMapping> relationshipMappings,
       List<NestedModelMapping> nestedMappings,
       String? primaryModel,
+      String? primaryKeyField,
+      MultiTableFilterLogic filterLogic,
       SearchOrderBy? orderBy});
 
   @override
@@ -182,6 +205,8 @@ class __$$GlobalSearchParametersImplCopyWithImpl<$Res>
     Object? relationshipMappings = null,
     Object? nestedMappings = null,
     Object? primaryModel = freezed,
+    Object? primaryKeyField = freezed,
+    Object? filterLogic = null,
     Object? orderBy = freezed,
   }) {
     return _then(_$GlobalSearchParametersImpl(
@@ -209,6 +234,14 @@ class __$$GlobalSearchParametersImplCopyWithImpl<$Res>
           ? _value.primaryModel
           : primaryModel // ignore: cast_nullable_to_non_nullable
               as String?,
+      primaryKeyField: freezed == primaryKeyField
+          ? _value.primaryKeyField
+          : primaryKeyField // ignore: cast_nullable_to_non_nullable
+              as String?,
+      filterLogic: null == filterLogic
+          ? _value.filterLogic
+          : filterLogic // ignore: cast_nullable_to_non_nullable
+              as MultiTableFilterLogic,
       orderBy: freezed == orderBy
           ? _value.orderBy
           : orderBy // ignore: cast_nullable_to_non_nullable
@@ -227,6 +260,8 @@ class _$GlobalSearchParametersImpl implements _GlobalSearchParameters {
       final List<RelationshipMapping> relationshipMappings = const [],
       final List<NestedModelMapping> nestedMappings = const [],
       this.primaryModel,
+      this.primaryKeyField,
+      this.filterLogic = MultiTableFilterLogic.and,
       this.orderBy})
       : _filters = filters,
         _select = select,
@@ -277,13 +312,25 @@ class _$GlobalSearchParametersImpl implements _GlobalSearchParameters {
   @override
   final String? primaryModel;
 
+  /// The primary key field name for the primary model.
+  /// Used for multi-table filter resolution.
+  /// Example: 'clientReferenceId' for most entities.
+  @override
+  final String? primaryKeyField;
+
+  /// Defines how filters across multiple tables are combined.
+  /// Defaults to [MultiTableFilterLogic.and] (intersection).
+  @override
+  @JsonKey()
+  final MultiTableFilterLogic filterLogic;
+
   /// Ordering configuration for the search results
   @override
   final SearchOrderBy? orderBy;
 
   @override
   String toString() {
-    return 'GlobalSearchParameters(filters: $filters, select: $select, pagination: $pagination, relationshipMappings: $relationshipMappings, nestedMappings: $nestedMappings, primaryModel: $primaryModel, orderBy: $orderBy)';
+    return 'GlobalSearchParameters(filters: $filters, select: $select, pagination: $pagination, relationshipMappings: $relationshipMappings, nestedMappings: $nestedMappings, primaryModel: $primaryModel, primaryKeyField: $primaryKeyField, filterLogic: $filterLogic, orderBy: $orderBy)';
   }
 
   @override
@@ -301,6 +348,10 @@ class _$GlobalSearchParametersImpl implements _GlobalSearchParameters {
                 .equals(other._nestedMappings, _nestedMappings) &&
             (identical(other.primaryModel, primaryModel) ||
                 other.primaryModel == primaryModel) &&
+            (identical(other.primaryKeyField, primaryKeyField) ||
+                other.primaryKeyField == primaryKeyField) &&
+            (identical(other.filterLogic, filterLogic) ||
+                other.filterLogic == filterLogic) &&
             (identical(other.orderBy, orderBy) || other.orderBy == orderBy));
   }
 
@@ -314,6 +365,8 @@ class _$GlobalSearchParametersImpl implements _GlobalSearchParameters {
       const DeepCollectionEquality().hash(_relationshipMappings),
       const DeepCollectionEquality().hash(_nestedMappings),
       primaryModel,
+      primaryKeyField,
+      filterLogic,
       orderBy);
 
   @JsonKey(ignore: true)
@@ -339,6 +392,8 @@ abstract class _GlobalSearchParameters implements GlobalSearchParameters {
       final List<RelationshipMapping> relationshipMappings,
       final List<NestedModelMapping> nestedMappings,
       final String? primaryModel,
+      final String? primaryKeyField,
+      final MultiTableFilterLogic filterLogic,
       final SearchOrderBy? orderBy}) = _$GlobalSearchParametersImpl;
 
   factory _GlobalSearchParameters.fromJson(Map<String, dynamic> json) =
@@ -358,6 +413,17 @@ abstract class _GlobalSearchParameters implements GlobalSearchParameters {
 
   /// If set, pagination and count are applied only for this model.
   String? get primaryModel;
+  @override
+
+  /// The primary key field name for the primary model.
+  /// Used for multi-table filter resolution.
+  /// Example: 'clientReferenceId' for most entities.
+  String? get primaryKeyField;
+  @override
+
+  /// Defines how filters across multiple tables are combined.
+  /// Defaults to [MultiTableFilterLogic.and] (intersection).
+  MultiTableFilterLogic get filterLogic;
   @override
 
   /// Ordering configuration for the search results

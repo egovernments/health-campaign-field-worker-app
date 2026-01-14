@@ -1,11 +1,11 @@
 import 'package:digit_data_model/utils/utils.dart';
+import 'package:digit_flow_builder/blocs/search_state_manager.dart';
 import 'package:digit_flow_builder/widgets/localized.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:digit_forms_engine/pages/forms_render.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'blocs/flow_crud_bloc.dart';
 import 'flow_builder.dart';
 
 class ScreenKeyListener extends StatelessWidget {
@@ -62,13 +62,32 @@ dynamic resolveTemplates(dynamic input, Map<String, dynamic> nav) {
 }
 
 class _ScreenBuilderState extends State<ScreenBuilder> {
+  late final String _instanceId;
+  late final String _schemaKey;
+  bool _isRegistered = false;
+
   @override
   void initState() {
     super.initState();
+    _schemaKey = widget.config['name'] ?? '';
+    _instanceId =
+        '${_schemaKey}_${hashCode}_${DateTime.now().millisecondsSinceEpoch}';
+
+    // Clear SearchStateManager for this screen on init
+    // This ensures fresh state when same page is pushed again
+    final screenType = widget.config['screenType'] ?? 'TEMPLATE';
+    final fullScreenKey = '$screenType::$_schemaKey';
+    SearchStateManager().clear(fullScreenKey);
 
     if (mounted) {
       final initActions = widget.config['initActions'] as List? ?? [];
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        // Initialize FormSubmissionRegistry if not already done
+        _initializeFormSubmissionRegistry();
+
+        // Register form submission handler
+        _registerFormHandler();
+
         final resolvedActions =
             resolveTemplates(initActions, widget.navigationParams ?? {});
 
@@ -84,53 +103,100 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
     }
   }
 
+  void _initializeFormSubmissionRegistry() {
+    // Initialize the registry with FormsBloc (only happens once due to singleton)
+    final formsBloc = context.read<FormsBloc>();
+    FormSubmissionRegistry().initialize(formsBloc);
+  }
+
+  void _registerFormHandler() {
+    if (widget.config['screenType'] == 'FORM' && _schemaKey.isNotEmpty) {
+      _isRegistered = FormSubmissionRegistry().register(
+        schemaKey: _schemaKey,
+        instanceId: _instanceId,
+        handler: _handleFormSubmission,
+      );
+    }
+  }
+
+  Future<void> _handleFormSubmission(Map<String, dynamic> formData) async {
+    if (!mounted) return;
+
+    final onSubmit = widget.config['onAction'] as List<dynamic>?;
+
+    // Get the latest navigation params from registry (may have been updated by actions)
+    // Try multiple key formats for robust retrieval
+    final screenKey = 'FORM::$_schemaKey';
+    final registryNavParams =
+        FlowCrudStateRegistry().getNavigationParams(screenKey) ??
+            FlowCrudStateRegistry().getNavigationParams(_schemaKey) ??
+            {};
+
+    // Merge widget.navigationParams with registry params (registry takes precedence)
+    final mergedNavParams = {
+      ...?widget.navigationParams,
+      ...registryNavParams,
+    };
+
+    Map<String, dynamic> contextData = {
+      'formData': formData,
+      'navigation': mergedNavParams,
+    };
+
+    if (onSubmit != null) {
+      // Clear form state via registry
+      FormSubmissionRegistry().clearForm(_schemaKey);
+
+      contextData = await ActionHandler.executeActions(
+        onSubmit,
+        context,
+        contextData,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    if (_isRegistered) {
+      FormSubmissionRegistry().unregister(
+        schemaKey: _schemaKey,
+        instanceId: _instanceId,
+      );
+    }
+
+    // Clean up state when page is removed from stack
+    final screenType = widget.config['screenType'] ?? 'TEMPLATE';
+    final fullScreenKey = '$screenType::$_schemaKey';
+
+    // Clear SearchStateManager (filters, orderBy, pagination, callbacks)
+    SearchStateManager().dispose(fullScreenKey);
+
+    // Clear FlowCrudStateRegistry (formData, widgetData, stateWrapper)
+    // Dispose both full screen key AND plain schema key to ensure all navigation params are cleared
+    // Navigation params are stored with both keys (e.g., "FORM::ADD_MEMBER" and "ADD_MEMBER")
+    FlowCrudStateRegistry().dispose(fullScreenKey);
+    if (_schemaKey != fullScreenKey) {
+      FlowCrudStateRegistry().dispose(_schemaKey);
+    }
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenType = widget.config['screenType'];
     final screenKey = '$screenType::${widget.config['name']}';
+
+    // No longer using BlocListener here - form submissions are handled centrally
     return ScreenKeyListener(
       screenKey: screenKey,
       builder: (context, crudState) {
-        return BlocListener<FormsBloc, FormsState>(
-          listener: (context, state) async {
-            debugPrint('SCREEN_BUILDER: FormsBloc state changed: ${state.runtimeType}');
-            if (state is FormsSubmittedState) {
-              debugPrint('SCREEN_BUILDER: FormsSubmittedState - activeSchemaKey=${state.activeSchemaKey}, config name=${widget.config['name']}');
-            }
-            if (state is FormsSubmittedState &&
-                widget.config['name'] == state.activeSchemaKey) {
-              debugPrint('SCREEN_BUILDER: Matched! Executing onAction...');
-              // final config = FlowRegistry.getByName(state.schema[]);///////
-              final onSubmit = widget.config['onAction'] as List<dynamic>?;
-
-              Map<String, dynamic> contextData = {
-                'formData': state.formData,
-                'navigation': widget.navigationParams ?? {},
-              };
-
-              debugPrint('SCREEN_BUILDER: onSubmit actions count: ${onSubmit?.length ?? 0}');
-              debugPrint('SCREEN_BUILDER: navigation params: ${widget.navigationParams}');
-
-              if (onSubmit != null) {
-                context.read<FormsBloc>().add(
-                      FormsEvent.clearForm(
-                          schemaKey: widget.config['name'] ?? ''),
-                    );
-                contextData = await ActionHandler.executeActions(
-                  onSubmit,
-                  context,
-                  contextData,
-                );
-              }
-            }
-          },
-          child: _buildScreen(
-            context,
-            screenType,
-            widget.config,
-            crudState,
-            screenKey,
-          ),
+        return _buildScreen(
+          context,
+          screenType,
+          widget.config,
+          crudState,
+          screenKey,
         );
       },
     );
@@ -189,6 +255,19 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
       builder: (context, _, __) {
         final flowState = FlowCrudStateRegistry().get(screenKey);
 
+        // Get the latest navigation params from registry (may have been updated by actions)
+        // Try multiple key formats for robust retrieval
+        final registryNavParams =
+            FlowCrudStateRegistry().getNavigationParams(screenKey) ??
+                FlowCrudStateRegistry().getNavigationParams(widget.schemaKey) ??
+                {};
+
+        // Merge widget.navigationParams with registry params (registry takes precedence)
+        final mergedNavParams = <String, dynamic>{
+          ...?widget.navigationParams,
+          ...registryNavParams,
+        };
+
         return BlocBuilder<FormsBloc, FormsState>(builder: (context, state) {
           if (state.initialSchemas[widget.schemaKey] != null) {
             final schemaObject = state.cachedSchemas[widget.schemaKey]!;
@@ -196,16 +275,16 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
             // Derive pageName as first page key if none specified externally
             final pageName = schemaObject.pages.entries.first.key;
 
-            // Determine isEdit from navigation params (set by NAVIGATION action)
-            final isEdit = widget.navigationParams?['isEdit'] == true ||
-                widget.navigationParams?['isEdit'] == 'true';
+            // Determine isEdit from merged navigation params (set by NAVIGATION action)
+            final isEdit = mergedNavParams['isEdit'] == true ||
+                mergedNavParams['isEdit'] == 'true';
 
             // Get formData from FlowCrudStateRegistry (set by REVERSE_TRANSFORM action)
             final registryFormData = flowState?.formData ?? {};
 
             return FormsRenderPage(
               pageName: pageName,
-              navigationParams: widget.navigationParams,
+              navigationParams: mergedNavParams,
               currentSchemaKey: widget.schemaKey,
               isEdit: isEdit,
               // Pass custom components from registry with enhanced state access
@@ -214,12 +293,12 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
                 flowState,
               ),
               // defaultValues priority (lowest to highest):
-              // 1. navigationParams - basic navigation data
+              // 1. mergedNavParams - navigation data merged from widget and registry
               // 2. widget.defaultValues - config-defined defaults
               // 3. registryFormData - data from REVERSE_TRANSFORM action (highest priority for prefill)
               // 4. System values like administrativeArea, availableIDs
               defaultValues: {
-                ...?widget.navigationParams,
+                ...mergedNavParams,
                 ...?widget.defaultValues,
                 ...registryFormData,
                 // System values always present

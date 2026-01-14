@@ -20,7 +20,7 @@ final jsonConfig = {
             "doorNo": "address.doorNo",
             "latitude": "beneficiaryLocation.latLng[0]",
             "longitude": "beneficiaryLocation.latLng[1]",
-            "locationAccuracy": "address.locationAccuracy",
+            "locationAccuracy": "beneficiaryLocation.latLng[2]",
             "addressLine1": "beneficiaryLocation.addressLine1",
             "addressLine2": "addressLine2",
             "landmark": "address.landmark",
@@ -77,8 +77,13 @@ final jsonConfig = {
             "individualClientReferenceId":
                 "__ref:IndividualModel.clientReferenceId",
             "givenName": "beneficiaryDetails.nameOfIndividual",
+            "familyName": "beneficiaryDetails.familyname",
             "clientAuditDetails": "__generate:clientAudit",
             "auditDetails": "__generate:audit",
+          },
+          "additionalFields": {
+            "weight": "beneficiaryDetails.weight",
+            "height": "beneficiaryDetails.height"
           },
           "bloodGroup": "health.bloodGroup",
           "gender": "beneficiaryDetails.gender",
@@ -114,7 +119,7 @@ final jsonConfig = {
               "doorNo": "address.doorNo",
               "latitude": "beneficiaryLocation.latLng[0]",
               "longitude": "beneficiaryLocation.latLng[1]",
-              "locationAccuracy": "address.locationAccuracy",
+              "locationAccuracy": "beneficiaryLocation.latLng[2]",
               "addressLine1": "beneficiaryLocation.addressLine1",
               "addressLine2": "addressLine2",
               "landmark": "address.landmark",
@@ -147,7 +152,7 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "tenantId": "__context:tenantId",
           "beneficiaryId": "beneficiaryDetails.beneficiaryId",
-          "tag": "beneficiaryDetails.tag",
+          "tag": "beneficiaryDetails.scanner",
           "beneficiaryClientReferenceId":
               "__switch:__context:beneficiaryType:{INDIVIDUAL:__ref:IndividualModel.clientReferenceId,HOUSEHOLD:__ref:HouseholdModel.clientReferenceId}",
           "nonRecoverableError": "errors.nonRecoverable",
@@ -211,8 +216,13 @@ final jsonConfig = {
             "individualClientReferenceId":
                 "__ref:IndividualModel.clientReferenceId",
             "givenName": "beneficiaryDetails.nameOfIndividual",
+            "familyName": "beneficiaryDetails.familyname",
             "clientAuditDetails": "__generate:clientAudit",
             "auditDetails": "__generate:audit",
+          },
+          "additionalFields": {
+            "weight": "beneficiaryDetails.weight",
+            "height": "beneficiaryDetails.height"
           },
           "bloodGroup": "health.bloodGroup",
           "gender": "beneficiaryDetails.gender",
@@ -248,7 +258,7 @@ final jsonConfig = {
               "doorNo": "address.doorNo",
               "latitude": "beneficiaryLocation.latLng[0]",
               "longitude": "beneficiaryLocation.latLng[1]",
-              "locationAccuracy": "address.locationAccuracy",
+              "locationAccuracy": "beneficiaryLocation.latLng[2]",
               "addressLine1": "beneficiaryLocation.addressLine1",
               "addressLine2": "addressLine2",
               "landmark": "address.landmark",
@@ -281,7 +291,7 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "tenantId": "__context:tenantId",
           "beneficiaryId": "beneficiaryDetails.beneficiaryId",
-          "tag": "beneficiaryDetails.tag",
+          "tag": "beneficiaryDetails.scanner",
           "beneficiaryClientReferenceId":
               "__switch:__context:beneficiaryType:{INDIVIDUAL:__ref:IndividualModel.clientReferenceId,HOUSEHOLD:__ref:HouseholdModel.clientReferenceId}",
           "nonRecoverableError": "errors.nonRecoverable",
@@ -346,7 +356,7 @@ final jsonConfig = {
             "doorNo": "address.doorNo",
             "latitude": "address.latLng[0]",
             "longitude": "address.latLng[1]",
-            "locationAccuracy": "address.locationAccuracy",
+            "locationAccuracy": "address.latLng[1]",
             "addressLine1": "address.addressLine1",
             "addressLine2": "address.addressLine2",
             "landmark": "address.landmark",

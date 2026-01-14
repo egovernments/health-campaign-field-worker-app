@@ -20,8 +20,9 @@ import 'router/app_router.dart';
 import 'utils/background_service.dart';
 import 'utils/environment_config.dart';
 import 'utils/utils.dart';
+import 'widgets/db_error_handler.dart';
 
-final LocalSqlDataStore _sql = LocalSqlDataStore();
+late LocalSqlDataStore _sql;
 late Dio _dio;
 late Isar _isar;
 int i = 0;
@@ -50,6 +51,32 @@ void main() async {
   DigitUi.instance.initThemeComponents();
   await Constants().initialize(info.version);
   _isar = await Constants().isar;
+
+  // Initialize encrypted database
+  final encryptionKey =
+      await LocalSecureStore.instance.getOrCreateDbEncryptionKey();
+
+  // Migrate existing unencrypted database to encrypted (if needed)
+  final migrationResult =
+      await LocalSqlDataStore.migrateToEncrypted(encryptionKey);
+
+  // Handle key mismatch - show error and delete database
+  if (migrationResult == DatabaseMigrationResult.keyMismatch) {
+    runApp(DatabaseErrorApp(
+      onRetry: () async {
+        // Delete the inaccessible database
+        await LocalSqlDataStore.deleteDatabase();
+        // Clear secure storage to reset encryption key
+        await LocalSecureStore.instance.deleteAll();
+        // Restart the app - user needs to manually restart
+      },
+    ));
+    return;
+  }
+
+  // Create the encrypted database instance
+  _sql = LocalSqlDataStore(encryptionKey: encryptionKey);
+
   await initializeService(_dio, _isar);
   runApp(MainApplication(
     appRouter: AppRouter(),
@@ -90,6 +117,7 @@ final dynamic sampleFlows = {
       "screenType": "TEMPLATE",
       "name": "searchBeneficiary",
       "heading": "Search Beneficiary",
+      "preventScreenCapture": true,
       "description": "search beneficiary description",
       "header": [
         {
@@ -100,6 +128,27 @@ final dynamic sampleFlows = {
           ]
         },
       ],
+      "scrollListener": {
+        "triggerMode": "bidirectional",
+        "debounceMs": 0,
+        "showLoadingIndicator": true,
+        "onScrollDown": [
+          {
+            "actionType": "REFRESH_SEARCH",
+            "properties": {
+              "pagination": {"limit": 5, "maxItems": 15}
+            }
+          }
+        ],
+        "onScrollUp": [
+          {
+            "actionType": "REFRESH_SEARCH",
+            "properties": {
+              "pagination": {"limit": 5, "maxItems": 15}
+            }
+          }
+        ]
+      },
       "wrapperConfig": {
         "wrapperName": "HouseholdWrapper",
         "rootEntity": "HouseholdModel",
@@ -130,6 +179,22 @@ final dynamic sampleFlows = {
             "match": {
               "field": "clientReferenceId",
               "equalsFrom": "headOfHousehold.individualClientReferenceId"
+            }
+          },
+          {
+            "name": "headProjectBeneficiary",
+            "entity": "ProjectBeneficiaryModel",
+            "match": {
+              "field": "beneficiaryClientReferenceId",
+              "equalsFrom": "headOfHousehold.individualClientReferenceId"
+            }
+          },
+          {
+            "name": "headTasks",
+            "entity": "TaskModel",
+            "match": {
+              "field": "projectBeneficiaryClientReferenceId",
+              "equalsFrom": "headProjectBeneficiary.clientReferenceId"
             }
           },
           {
@@ -181,28 +246,34 @@ final dynamic sampleFlows = {
             "householdMember",
             "projectBeneficiary",
             "task"
-          ]
+          ],
+          "pagination": {"limit": 5, "maxItems": 15}
         }
       },
       "body": [
         {
-          "format": "switch",
-          "label": "Proximity Search",
-          "fieldName": "proximitySearch",
+          "type": "template",
+          "label": "PROXIMITY_SEARCH_REGISTRATION",
+          "format": "proximitySearch",
           "onAction": [
             {
-              "actionType": "EVENT",
+              "actionType": "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
               "properties": {
-                "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT",
-                "name": "ENTITY // ADDRESS",
                 "data": [
-                  {
-                    "key": "lat & long   //// NOT SURE ABOUT THIS SEARCH",
-                    "value": "field.value",
-                    "operation": "within"
-                  }
-                ]
+                  {"key": "", "value": 5, "operation": "within"}
+                ],
+                "name": "address",
+                "type": "field.value==true ? SEARCH_EVENT : CLEAR_STATE"
               }
+            }
+          ],
+          "fieldName": "proximitySearch",
+          "mandatory": true,
+          "validations": [
+            {
+              "key": "proximityRadius",
+              "value": 5,
+              "errorMessage": "PROXIMITY_RADIUS_ERROR_MESSAGE"
             }
           ]
         },
@@ -245,7 +316,7 @@ final dynamic sampleFlows = {
                 {
                   "format": "selectionCard",
                   "fieldName": "selectedStatus",
-                  "data": [
+                  "enums": [
                     {
                       "code": "ADMINISTRATION_SUCCESS",
                       "name": "Administration Success"
@@ -254,6 +325,9 @@ final dynamic sampleFlows = {
                       "code": "ADMINISTRATION_FAILED",
                       "name": "Administration Failed"
                     },
+                    {"code": "CLOSED_HOUSEHOLD", "name": "Closed Household"},
+                    {"code": "NOT_REGISTERED", "name": "Not Registered"},
+                    {"code": "NOT_ADMINISTERED", "name": "Not Administered"}
                   ],
                 }
               ],
@@ -280,18 +354,80 @@ final dynamic sampleFlows = {
                     "mainAxisSize": "max"
                   },
                   "onAction": [
-                    {"actionType": "CLOSE_POPUP", "properties": {}},
                     {
-                      "actionType": "SEARCH_EVENT",
-                      "properties": {
-                        "name": "task",
-                        "data": [
-                          {
-                            "key": "status",
-                            "value": "{{ widgetData.selectedStatus }}",
-                            "operation": "in"
+                      "actionType": "CLOSE_POPUP",
+                      "properties": {"parentScreenKey": "searchBeneficiary"}
+                    },
+                    {
+                      "actions": [
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "name": "task",
+                            "data": [
+                              {
+                                "key": "status",
+                                "value": "{{selectedStatus}}",
+                                "operation": "in"
+                              }
+                            ]
                           }
-                        ]
+                        }
+                      ],
+                      "condition": {
+                        "expression":
+                            "selectedStatus == ADMINISTRATION_SUCCESS || selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == ADMINISTRATION_FAILED"
+                      }
+                    },
+                    {
+                      "actions": [
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "name": "projectBeneficiary",
+                            "data": [
+                              {
+                                "key": "projectId",
+                                "value": "{{singleton.selectedProject.id}}",
+                                "operation": "notEqual"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "condition": {
+                        "expression": "selectedStatus == NOT_REGISTERED"
+                      }
+                    },
+                    {
+                      "actions": [
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "filterLogic": "and",
+                            "data": [
+                              {
+                                "root": "projectBeneficiary",
+                                "key": "projectId",
+                                "value": "{{singleton.selectedProject.id}}",
+                                "operation": "equals"
+                              },
+                              {
+                                "root": "task",
+                                "key": "status",
+                                "value": [
+                                  "ADMINISTRATION_SUCCESS",
+                                  "ADMINISTRATION_FAILED",
+                                  "CLOSED_HOUSEHOLD"
+                                ],
+                                "operation": "notIn"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "condition": {
+                        "expression": "selectedStatus == NOT_ADMINISTERED"
                       }
                     }
                   ]
@@ -312,6 +448,7 @@ final dynamic sampleFlows = {
           "format": "listView",
           "hidden": "{{ context.household.empty }}",
           "fieldName": "listView",
+          "properties": {"spacing": "spacer4"},
           "data": "members",
           "child": {
             "format": "card",
@@ -324,7 +461,7 @@ final dynamic sampleFlows = {
                 },
                 "children": [
                   {
-                    "format": "text",
+                    "format": "textTemplate",
                     "value": "{{ headIndividual.0.name.givenName }}"
                   },
                   {
@@ -333,16 +470,48 @@ final dynamic sampleFlows = {
                     "properties": {"type": "secondary", "size": "medium"},
                     "onAction": [
                       {
-                        "actionType": "NAVIGATION",
-                        "properties": {
-                          "type": "TEMPLATE",
-                          "name": "householdOverview",
-                          "data": [
-                            {
-                              "key": "HouseholdClientReferenceId",
-                              "value": "{{ HouseholdModel.clientReferenceId }}"
+                        "actions": [
+                          {
+                            "actionType": "NAVIGATION",
+                            "properties": {
+                              "type": "FORM",
+                              "name": "HOUSEHOLD",
+                              "data": [
+                                {
+                                  "key": "HouseholdClientReferenceId",
+                                  "value":
+                                      "{{ context.household.clientReferenceId }}"
+                                },
+                                {"key": "isEdit", "value": "true"}
+                              ]
                             }
-                          ]
+                          }
+                        ],
+                        "condition": {
+                          "expression":
+                              "context.headProjectBeneficiary.0!=null && "
+                        }
+                      },
+                      {
+                        "actions": [
+                          {
+                            "actionType": "NAVIGATION",
+                            "properties": {
+                              "type": "TEMPLATE",
+                              "name": "householdOverview",
+                              "data": [
+                                {
+                                  "key": "HouseholdClientReferenceId",
+                                  "value":
+                                      "{{ HouseholdModel.clientReferenceId }}"
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        "condition": {
+                          "expression":
+                              ".ec1==YES && eligibilityChecklist.ec3==YES && eligibilityChecklist.ec4==YES"
                         }
                       }
                     ]
@@ -350,13 +519,13 @@ final dynamic sampleFlows = {
                 ]
               },
               {
-                "format": "text",
+                "format": "textTemplate",
                 "value": "{{ headOfHousehold.0.isHeadOfHousehold }}"
               },
               {
                 "format": "table",
                 "data": {
-                  "source": "individuals",
+                  "source": "{{individuals}}",
                   "columns": [
                     {
                       "header": "Beneficiary",
@@ -368,7 +537,7 @@ final dynamic sampleFlows = {
                     },
                     {"header": "Gender", "cellValue": "{{item.gender}}"}
                   ],
-                  "rows": "{{contextData.0.individuals}}"
+                  "rows": "{{individuals}}"
                 }
               }
             ]
@@ -393,29 +562,54 @@ final dynamic sampleFlows = {
           ]
         },
         {
-          "format": "button",
-          "label": "scan beneficiary",
-          "properties": {
-            "type": "secondary",
-            "size": "large",
-            "mainAxisSize": "max",
-            "mainAxisAlignment": "center"
-          },
+          "type": "template",
+          "label": "SCAN_BENEFICIARY",
+          "format": "qrScanner",
           "onAction": [
             {
-              "actionType": "EVENT",
+              "actionType": "OPEN_SCANNER",
               "properties": {
-                "type": "SEARCH_EVENT",
-                "name": "ENTITY // PROJECTBENEFICIARY",
-                "data": [
+                "scanType": "qr",
+                "fieldName": "beneficiaryTag",
+                "singleValue": true,
+                "scanLimit": 1,
+                "isGS1": false,
+                "onSuccess": [
                   {
-                    "key": "tag",
-                    "value": "field.value",
-                    "operation": "contains"
+                    "actionType": "SEARCH_EVENT",
+                    "properties": {
+                      "type": "SEARCH_EVENT",
+                      "name": "projectBeneficiary",
+                      "awaitResults": true,
+                      "data": [
+                        {
+                          "key": "tag",
+                          "value": "{{beneficiaryTag}}",
+                          "operation": "equals"
+                        }
+                      ]
+                    }
                   }
                 ]
               }
             }
+          ],
+          "fieldName": "qrScanner",
+          "showLabel": false,
+          "properties": {
+            "icon": "QrCodeScanner",
+            "size": "large",
+            "type": "secondary",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "validations": [
+            {
+              "type": "scanLimit",
+              "value": 1,
+              "message": "SCANLIMIT_ERROR_MESSAGE"
+            },
+            {"type": "isGS1", "value": false}
           ]
         }
       ],
@@ -606,15 +800,15 @@ final dynamic sampleFlows = {
         },
         {
           "page": "householdDetails",
+          "preventScreenCapture": true,
           "type": "object",
           "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_HEADING",
           "order": 3,
-          "conditionalNavigateTo": [
-            {
-              "condition": "isEdit == true",
-              "navigateTo": {"type": "submit", "name": ""}
-            }
-          ],
+          "submitCondition": {
+            "expression": [
+              {"condition": "isEdit == true"}
+            ]
+          },
           "navigateTo": {"name": "beneficiaryDetails", "type": "form"},
           "properties": [
             {
@@ -1025,16 +1219,30 @@ final dynamic sampleFlows = {
           }
         },
         {
-          "actionType": "CREATE_EVENT",
-          "properties": {
-            "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to create household."}
+          "condition": {"expression": "isEdit == true"},
+          "actions": [
+            {
+              "actionType": "UPDATE_EVENT",
+              "properties": {"entity": "HouseholdModel"}
+            }
+          ]
+        },
+        {
+          "condition": {"expression": "DEFAULT"},
+          "actions": [
+            {
+              "actionType": "CREATE_EVENT",
+              "properties": {
+                "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "Failed to create household."}
+                  }
+                ]
               }
-            ]
-          }
+            }
+          ]
         },
         {
           "actionType": "NAVIGATION",
@@ -1301,7 +1509,7 @@ final dynamic sampleFlows = {
                                 {
                                   "key": "HouseholdClientReferenceId",
                                   "value":
-                                      "{{ context.household.clientReferenceId }}"
+                                      "{{member.0.householdClientReferenceId}}"
                                 },
                                 {"key": "isEdit", "value": "true"}
                               ]
@@ -1329,7 +1537,7 @@ final dynamic sampleFlows = {
                     "type": "template",
                     "format": "tag",
                     "fieldName": "statusTag",
-                    "visible": "{{fn:isDelivered(task)}}==true",
+                    "visible": "{{fn:isDelivered(task.0.status)}}==true",
                     "label": "ADMINISTERED_SUCCESS",
                     "properties": {"tagType": "success"}
                   },
@@ -1338,7 +1546,7 @@ final dynamic sampleFlows = {
                     "format": "tag",
                     "fieldName": "statusTag",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}}==true && {{fn:isDelivered(task)}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}}==true && {{fn:isDelivered(task.0.status)}}==false",
                     "label": "NOT_VISITED",
                     "properties": {"tagType": "info"}
                   },
@@ -1376,6 +1584,43 @@ final dynamic sampleFlows = {
                         "properties": {
                           "type": "FORM",
                           "name": "CHECKLIST",
+                          "data": [
+                            {
+                              "key": "selectedIndividualClientReferenceId",
+                              "value": "{{individual.0.clientReferenceId}}"
+                            },
+                            {
+                              "key": "HouseholdClientReferenceId",
+                              "value":
+                                  "{{member.0.householdClientReferenceId}}",
+                            },
+                            {
+                              "key": "ProjectBeneficiaryClientReferenceId",
+                              "value":
+                                  "{{projectBeneficiary.0.clientReferenceId}}",
+                            },
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "format": "button",
+                    "visible": "{{fn:checkAllDoseDelivered(task)}} == true",
+                    "properties": {
+                      "type": "primary",
+                      "size": "medium",
+                      "mainAxisSize": "max",
+                      "mainAxisAlignment": "center"
+                    },
+                    "label": "View Details",
+                    "icon": "add",
+                    "onAction": [
+                      {
+                        "actionType": "NAVIGATION",
+                        "properties": {
+                          "type": "TEMPLATE",
+                          "name": "beneficiaryDetails",
                           "data": [
                             {
                               "key": "selectedIndividualClientReferenceId",
@@ -1717,7 +1962,7 @@ final dynamic sampleFlows = {
             "data": [
               {
                 "key": "HouseholdClientReferenceId",
-                "value": "{{contextData.navigation.HouseholdClientReferenceId}}"
+                "value": "{{navigation.HouseholdClientReferenceId}}"
               }
             ]
           }
@@ -2417,227 +2662,243 @@ final dynamic sampleFlows = {
       "heading": "Beneficiary Details",
       "description": "Details of beneficiary",
       "wrapperConfig": {
-        "wrapperName": "DeliveryWrapper",
-        "rootEntity": "IndividualModel",
-        "filters": [],
-        "relations": [
-          {
-            "name": "members",
-            "entity": "HouseholdMemberModel",
-            "match": {
-              "field": "individualClientReferenceId",
-              "equalsFrom": "IndividualModel.clientReferenceId"
-            }
-          },
-          {
-            "name": "household",
-            "entity": "HouseholdModel",
-            "match": {
-              "field": "clientReferenceId",
-              "equalsFrom": "members.householdClientReferenceId"
-            }
-          },
-          {
-            "name": "individuals",
-            "entity": "IndividualModel",
-            "match": {
-              "field": "clientReferenceId",
-              "inFrom": "members.individualClientReferenceId"
-            }
-          },
-          {
-            "name": "projectBeneficiaries",
-            "entity": "ProjectBeneficiaryModel",
-            "match": {
-              "field": "beneficiaryClientReferenceId",
-              "equalsFrom": "individuals.clientReferenceId"
-            }
-          },
-          {
-            "name": "tasks",
-            "entity": "TaskModel",
-            "match": {
-              "field": "projectBeneficiaryClientReferenceId",
-              "inFrom": "projectBeneficiaries.clientReferenceId"
-            }
-          },
-          {
-            "name": "sideEffects",
-            "entity": "SideEffectModel",
-            "match": {
-              "field": "clientReferenceId",
-              "equalsFrom": "projectBeneficiaries.clientReferenceId"
-            }
-          },
-          {
-            "name": "referrals",
-            "entity": "ReferralModel",
-            "match": {
-              "field": "clientReferenceId",
-              "equalsFrom": "projectBeneficiaries.clientReferenceId"
-            }
-          }
-        ],
         "fields": {
-          "cycle": {
-            "from": "{{tasks.additionalFields.fields}}",
-            "where": {
-              "left": "{{key}}",
-              "operator": "eq",
-              "right": "cycleIndex"
-            },
-            "select": "{{value}}",
-            "takeLast": true,
-            "default": 1
-          },
           "dose": {
             "from": "{{tasks.additionalFields.fields}}",
             "where": {
               "left": "{{key}}",
-              "operator": "eq",
-              "right": "doseIndex"
+              "right": "doseIndex",
+              "operator": "eq"
             },
             "select": "{{value}}",
-            "takeLast": true,
-            "default": 0
+            "default": 0,
+            "takeLast": true
+          },
+          "cycle": {
+            "from": "{{tasks.additionalFields.fields}}",
+            "where": {
+              "left": "{{key}}",
+              "right": "cycleIndex",
+              "operator": "eq"
+            },
+            "select": "{{value}}",
+            "default": 1,
+            "takeLast": true
           }
         },
+        "filters": [
+          {
+            "field": "clientReferenceId",
+            "equalsFrom": "{{navigation.selectedIndividualClientReferenceId}}"
+          }
+        ],
         "computed": {
-          "currentRunningCycle": {
-            "from":
-                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
-            "where": [
-              {"left": "{{startDate}}", "operator": "lt", "right": "{{now}}"},
-              {"left": "{{endDate}}", "operator": "gt", "right": "{{now}}"}
-            ],
-            "select": "{{id}}",
-            "takeFirst": true,
-            "default": -1
-          },
-          "hasCycleArrived": {
+          "nextDoseId": {
+            "order": 4,
+            "fallback": 1,
             "condition": {
-              "left": "{{cycle}}",
-              "operator": "equals",
-              "right": "{{currentRunningCycle}}"
-            },
-            "fallback": false
+              "if": {
+                "left": {"value": "{{dose}}", "operation": "increment"},
+                "right": "{{deliveryLength}}",
+                "operator": "lte"
+              },
+              "else": 1,
+              "then": {"value": "{{dose}}", "operation": "increment"}
+            }
+          },
+          "nextCycleId": {
+            "order": 5,
+            "fallback": "{{cycle}}",
+            "condition": {
+              "if": {
+                "left": {"value": "{{dose}}", "operation": "increment"},
+                "right": "{{deliveryLength}}",
+                "operator": "lte"
+              },
+              "else": {"value": "{{cycle}}", "operation": "increment"},
+              "then": "{{cycle}}"
+            }
           },
           "deliveryLength": {
             "from":
                 "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "order": 3,
             "where": {
               "left": "{{id}}",
-              "operator": "equals",
-              "right": "{{currentRunningCycle}}"
+              "right": "{{currentRunningCycle}}",
+              "operator": "equals"
             },
             "select": "{{deliveries.length}}",
-            "takeFirst": true,
-            "default": 0
+            "default": 0,
+            "takeFirst": true
           },
-          "nextDoseId": {
+          "hasCycleArrived": {
+            "order": 2,
+            "fallback": false,
             "condition": {
-              "if": {
-                "left": {"operation": "increment", "value": "{{dose}}"},
-                "operator": "lt",
-                "right": "{{deliveryLength}}"
-              },
-              "then": {"operation": "increment", "value": "{{dose}}"},
-              "else": 0
-            },
-            "fallback": 0
+              "left": "{{cycle}}",
+              "right": "{{currentRunningCycle}}",
+              "operator": "equals"
+            }
           },
-          "nextCycleId": {
-            "condition": {
-              "if": {
-                "left": {"operation": "increment", "value": "{{dose}}"},
-                "operator": "lt",
-                "right": "{{deliveryLength}}"
-              },
-              "then": "{{cycle}}",
-              "else": {"operation": "increment", "value": "{{cycle}}"}
-            },
-            "fallback": "{{cycle}}"
-          }
-        },
-        "computedList": {
-          "targetCycle": {
+          "currentRunningCycle": {
             "from":
                 "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
-            "where": {
-              "left": "{{id}}",
-              "operator": "equals",
-              "right": "{{currentRunningCycle}}"
+            "order": 1,
+            "where": [
+              {"left": "{{startDate}}", "right": "{{now}}", "operator": "lt"},
+              {"left": "{{endDate}}", "right": "{{now}}", "operator": "gt"}
+            ],
+            "select": "{{id}}",
+            "default": -1,
+            "takeFirst": true
+          }
+        },
+        "relations": [
+          {
+            "name": "members",
+            "match": {
+              "field": "individualClientReferenceId",
+              "equalsFrom": "IndividualModel.clientReferenceId"
             },
-            "takeLast": true,
-            "fallback": null
+            "entity": "HouseholdMemberModel"
           },
-          "futureTasks": {
-            "from": "{{tasks}}",
-            "where": {
-              "left": "{{item.additionalFields.deliveryStrategy}}",
-              "operator": "equals",
-              "right": "INDIRECT"
-            }
-          },
-          "futureDeliveries": {
-            "from":
-                "singleton.selectedProject.additionalDetails.projectType.cycles",
-            "map": "{{item.deliveries}}",
-            "skip": {"from": "{{dose}}"},
-            "takeWhile": {
-              "left": "{{item.deliveryStrategy}}",
-              "operator": "equals",
-              "right": "INDIRECT"
-            }
-          },
-          "currentDelivery": {
-            "from": "{{targetCycle.0.deliveries}}",
-            "where": {
-              "left": "{{id}}",
-              "operator": "equals",
-              "right": "{{nextDoseId}}"
+          {
+            "name": "household",
+            "match": {
+              "field": "clientReferenceId",
+              "equalsFrom": "members.householdClientReferenceId"
             },
-            "takeLast": true,
-            "fallback": null
+            "entity": "HouseholdModel"
           },
-          "eligibleProductVariants": {
-            "from": "{{currentDelivery.0.doseCriteria}}",
-            "evaluateCondition": {
-              "condition": "{{item.condition}}",
-              "context": ["{{individuals.0}}", "{{household.0}}"],
-              "transformations": {
-                "age": {"type": "ageInMonths", "source": "dateOfBirth"}
-              }
+          {
+            "name": "individuals",
+            "match": {
+              "field": "clientReferenceId",
+              "inFrom": "members.individualClientReferenceId"
             },
-            "takeLast": false,
-            "fallback": []
+            "entity": "IndividualModel"
           },
+          {
+            "name": "projectBeneficiaries",
+            "match": {
+              "field": "beneficiaryClientReferenceId",
+              "equalsFrom": "individuals.clientReferenceId"
+            },
+            "entity": "ProjectBeneficiaryModel"
+          },
+          {
+            "name": "tasks",
+            "match": {
+              "field": "projectBeneficiaryClientReferenceId",
+              "inFrom": "projectBeneficiaries.clientReferenceId"
+            },
+            "entity": "TaskModel"
+          },
+          {
+            "name": "sideEffects",
+            "match": {
+              "field": "clientReferenceId",
+              "equalsFrom": "projectBeneficiaries.clientReferenceId"
+            },
+            "entity": "SideEffectModel"
+          },
+          {
+            "name": "referrals",
+            "match": {
+              "field": "clientReferenceId",
+              "equalsFrom": "projectBeneficiaries.clientReferenceId"
+            },
+            "entity": "ReferralModel"
+          }
+        ],
+        "rootEntity": "IndividualModel",
+        "wrapperName": "DeliveryWrapper",
+        "computedList": {
           "pastCycles": {
             "from":
-                "singleton.selectedProject.additionalDetails.projectType.cycles",
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "order": 6,
             "where": {
               "left": "{{item.id}}",
-              "operator": "lt",
-              "right": "{{cycle}}"
+              "right": "{{cycle}}",
+              "operator": "lt"
             },
             "includeCurrentIf": {
               "condition": {
                 "left": "{{dose}}",
-                "operator": "eq",
-                "right": "{{deliveryLength}}"
+                "right": "{{deliveryLength}}",
+                "operator": "eq"
+              }
+            }
+          },
+          "futureTasks": {
+            "from": "{{tasks}}",
+            "order": 2,
+            "where": {
+              "left": "{{item.additionalFields.deliveryStrategy}}",
+              "right": "INDIRECT",
+              "operator": "equals"
+            }
+          },
+          "targetCycle": {
+            "from":
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "order": 1,
+            "where": {
+              "left": "{{id}}",
+              "right": "{{currentRunningCycle}}",
+              "operator": "equals"
+            },
+            "fallback": null,
+            "takeLast": true
+          },
+          "currentDelivery": {
+            "from": "{{targetCycle.0.deliveries}}",
+            "order": 4,
+            "where": {
+              "left": "{{id}}",
+              "right": "{{nextDoseId}}",
+              "operator": "equals"
+            },
+            "fallback": null,
+            "takeLast": true
+          },
+          "futureDeliveries": {
+            "map": "{{item.deliveries}}",
+            "from":
+                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "skip": {"from": "{{dose}}"},
+            "order": 3,
+            "takeWhile": {
+              "left": "{{item.deliveryStrategy}}",
+              "right": "INDIRECT",
+              "operator": "equals"
+            }
+          },
+          "eligibleProductVariants": {
+            "from": "{{currentDelivery.0.doseCriteria}}",
+            "order": 5,
+            "fallback": [],
+            "takeLast": false,
+            "evaluateCondition": {
+              "context": ["{{individuals.0}}", "{{household.0}}"],
+              "condition": "{{item.condition}}",
+              "transformations": {
+                "age": {"type": "ageInMonths", "source": "dateOfBirth"}
               }
             }
           }
         },
         "searchConfig": {
-          "primary": "individual",
           "select": [
             "individual",
             "household",
             "householdMember",
             "projectBeneficiary",
             "task"
-          ]
+          ],
+          "primary": "individual"
         }
       },
       "body": [
@@ -2666,7 +2927,7 @@ final dynamic sampleFlows = {
                 {
                   "key": "Age",
                   "value":
-                      "{{fn:formatDate(contextData.0.individuals.IndividualModel.dateOfBirth, age)}}"
+                      "{{fn:formatDate(contextData.0.individuals.IndividualModel.dateOfBirth, 'age')}}"
                 },
                 {
                   "key": "Gender",
@@ -2681,7 +2942,7 @@ final dynamic sampleFlows = {
                 {
                   "key": "Date of Registration",
                   "value":
-                      "{{fn:formatDate(contextData.0.projectBeneficiaries.ProjectBeneficiaryModel.dateOfRegistration, date, dd MMMM yyyy)}}"
+                      "{{fn:formatDate(contextData.0.projectBeneficiaries.ProjectBeneficiaryModel.dateOfRegistration, 'date', dd MMM yyyy)}}"
                 }
               ]
             }
@@ -2694,30 +2955,26 @@ final dynamic sampleFlows = {
             {
               "format": "table",
               "data": {
-                "source": "contextData.targetCycle.deliveries",
+                "source": "{{contextData.0.targetCycle.0.deliveries}}",
                 "columns": [
                   {"header": "Dose", "cellValue": "Dose {{item.id}}"},
                   {
-                    "header": "Status",
+                    "header": "DELIVERY_STATUS",
+                    "hidden": false,
                     "cellValue": {
+                      "@default": "Pending",
                       "@condition": [
                         {
                           "when":
-                              "{{currentItem.id}} <= {{contextData.0.dose}}",
+                              "{{fn:isDoseCompleted(currentItem.id, contextData.0.currentRunningCycle)}} == true",
                           "value": "Administered"
                         },
                         {
                           "when":
                               "{{currentItem.id}} == {{contextData.0.nextDoseId}}",
                           "value": "To be administered"
-                        },
-                        {
-                          "when":
-                              "{{currentItem.id}} > {{contextData.0.nextDoseId}}",
-                          "value": "Pending"
                         }
-                      ],
-                      "@default": "Unknown"
+                      ]
                     }
                   },
                   {
@@ -6899,6 +7156,8 @@ final dynamic sampleInventoryFlows = {
               "properties": {
                 "type": "TEMPLATE",
                 "name": "viewTransaction",
+                "navigationMode": "popUntilAndPush",
+                "popUntilPageName": "viewTransaction",
                 "data": []
               }
             }
@@ -7164,24 +7423,19 @@ final dynamic sampleInventoryFlows = {
             },
             {
               "type": "string",
-              "visibilityCondition": {
-                "expression": [
-                  {
-                    "condition":
-                        "warehouseDetails.facilityToWhich==Delivery Team"
-                  }
-                ]
-              },
-              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_teamCode",
+              "enums": [],
+              "label": "APP_CONFIG_INVENTORY_warehouseDetails_teamCode_LABEL",
               "order": 4,
               "value": "",
               "format": "scanner",
-              "hidden": false,
+              "hidden": true,
+              "isMdms": false,
               "tooltip": "",
-              "helpText": "Scan Team Code",
+              "helpText": "",
               "infoText": "",
               "readOnly": false,
               "fieldName": "teamCode",
+              "mandatory": false,
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
@@ -7195,7 +7449,7 @@ final dynamic sampleInventoryFlows = {
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "enums": [],
+              "dropDownOptions": []
             },
           ],
           "navigateTo": {"name": "stockDetails", "type": "form"}
@@ -7457,6 +7711,14 @@ final dynamic sampleInventoryFlows = {
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "contains(stockDetails.productdetail, 'PVAR-2024-11-20-000437')"
+                  }
+                ]
+              },
               "validations": [
                 {
                   "type": "required",
@@ -7655,6 +7917,8 @@ final dynamic sampleInventoryFlows = {
           "properties": {
             "type": "TEMPLATE",
             "name": "stockSuccess",
+            "navigationMode": "popUntilAndPush",
+            "popUntilPageName": "manageStock",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
@@ -7718,6 +7982,8 @@ final dynamic sampleInventoryFlows = {
                 "properties": {
                   "type": "TEMPLATE",
                   "name": "manageStock",
+                  "navigationMode": "popUntilAndPush",
+                  "popUntilPageName": "manageStock",
                 }
               }
             ]
@@ -7758,7 +8024,7 @@ final dynamic sampleInventoryFlows = {
                   "data": [
                     {
                       "key": "additionalFields",
-                      "value": "577E-52D8-B4F8",
+                      "value": "{{scannedMrn}}",
                       "operation": "contains"
                     }
                   ]
@@ -7932,7 +8198,7 @@ final dynamic sampleInventoryFlows = {
                   {
                     "format": "textTemplate",
                     "value":
-                        "{{fn:formatDate(item.items[0].dateOfEntry, dateTime, dd MMMM yyyy)}}"
+                        "{{fn:formatDate(item.items[0].dateOfEntry, 'date', dd MMM yyyy)}}"
                   }
                 ]
               },
@@ -8018,6 +8284,8 @@ final dynamic sampleInventoryFlows = {
                     "properties": {
                       "type": "TEMPLATE",
                       "name": "viewTransactionDetails",
+                      "navigationMode": "popUntilAndPush",
+                      "popUntilPageName": "manageStock",
                       "data": [
                         {"key": "selectedStock", "value": "{{item.groupKey}}"}
                       ]
@@ -8114,7 +8382,7 @@ final dynamic sampleInventoryFlows = {
                   {
                     "key": "INVENTORY_EXPIRY_LABEL",
                     "value":
-                        "{{fn:formatDate(item.additionalFields.fields.expiryDate, dateTime, dd MMMM yyyy)}}"
+                        "{{fn:formatDate(item.additionalFields.fields.expiryDate, 'date', dd MMM yyyy)}}"
                   },
                   {
                     "key":
@@ -8377,7 +8645,7 @@ final dynamic inventoryReportFlows = {
           "children": [
             {
               "type": "template",
-              "format": "dropdown",
+              "format": "dropdownTemplate",
               "label": "STOCKREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
               "required": true,
               "key": "selectedFacility",
@@ -8421,7 +8689,7 @@ final dynamic inventoryReportFlows = {
             },
             {
               "type": "template",
-              "format": "dropdown",
+              "format": "dropdownTemplate",
               "label": "STOCKREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
               "required": true,
               "key": "selectedProduct",
@@ -8824,7 +9092,8 @@ final dynamic permission_handler_config = {
                     {
                       "format": "button",
                       "label": "GRANT_PERMISSION",
-                      "hidden": "{{ context.notificationPermissionGranted }}",
+                      "hidden": false,
+                      "visible": "{{ !context.notificationPermissionGranted }}",
                       "properties": {
                         "type": "primary",
                         "size": "small",
@@ -8886,8 +9155,9 @@ final dynamic permission_handler_config = {
                     {
                       "format": "button",
                       "label": "GRANT_PERMISSION",
-                      "hidden":
-                          "{{ context.ignoreBatteryOptimizationsPermissionGranted }}",
+                      "hidden": false,
+                      "visible":
+                          "{{ !context.ignoreBatteryOptimizationsPermissionGranted }}",
                       "properties": {
                         "type": "primary",
                         "size": "small",
@@ -8949,7 +9219,8 @@ final dynamic permission_handler_config = {
                     {
                       "format": "button",
                       "label": "GRANT_PERMISSION",
-                      "hidden": "{{ context.locationPermissionGranted }}",
+                      "hidden": false,
+                      "visible": "{{ !context.locationPermissionGranted }}",
                       "properties": {
                         "type": "primary",
                         "size": "small",
@@ -9010,8 +9281,9 @@ final dynamic permission_handler_config = {
                     {
                       "format": "button",
                       "label": "GRANT_PERMISSION",
-                      "hidden":
-                          "{{ context.nearbyWifiDevicesPermissionGranted }}",
+                      "hidden": false,
+                      "visible":
+                          "{{ !context.nearbyWifiDevicesPermissionGranted }}",
                       "properties": {
                         "type": "primary",
                         "size": "small",
@@ -9071,7 +9343,9 @@ final dynamic permission_handler_config = {
                     {
                       "format": "button",
                       "label": "GRANT_PERMISSION",
-                      "hidden": "{{ context.bluetoothScanPermissionGranted }}",
+                      "hidden": false,
+                      "visible":
+                          "{{ !context.bluetoothScanPermissionGranted }}",
                       "properties": {
                         "type": "primary",
                         "size": "small",
@@ -9129,7 +9403,8 @@ final dynamic permission_handler_config = {
                     {
                       "format": "button",
                       "label": "GRANT_PERMISSION",
-                      "hidden": "{{ context.cameraPermissionGranted }}",
+                      "hidden": false,
+                      "visible": "{{ !context.cameraPermissionGranted }}",
                       "properties": {
                         "type": "primary",
                         "size": "small",

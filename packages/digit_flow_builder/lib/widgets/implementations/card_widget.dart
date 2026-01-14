@@ -48,6 +48,7 @@ class CardWidget implements FlowWidget {
 
     return DigitCard(
       width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.all(5),
       cardType: WidgetParsers.parseCardType(
           json['properties']?['type']?.toString() ?? 'primary'),
       onPressed: () {

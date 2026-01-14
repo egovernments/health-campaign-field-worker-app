@@ -1,14 +1,14 @@
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
+import 'package:digit_forms_engine/helper/validation_message_helper.dart';
 import 'package:digit_forms_engine/models/property_schema/property_schema.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/dropdown_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:referral_reconciliation/utils/i18_key_constants.dart' as i18;
-import 'package:referral_reconciliation/widgets/localized.dart';
 
 import '../../utils/utils.dart';
+import '../localized.dart';
 
 class CycleDropDown extends LocalizedStatefulWidget {
   const CycleDropDown({
@@ -31,7 +31,9 @@ class _CycleDropDownState extends LocalizedState<CycleDropDown> {
         context.read<FormsBloc>().state.cachedSchemas[_schemaKey]?.pages;
 
     bool isReadOnlyFromSchema = false;
+    bool isRequiredFromSchema = false;
     String? labelFromSchema;
+    dynamic validationMessages;
 
     void walk(Map<String, PropertySchema> node, List<String> pathSoFar) {
       for (final entry in node.entries) {
@@ -42,6 +44,15 @@ class _CycleDropDownState extends LocalizedState<CycleDropDown> {
           isReadOnlyFromSchema =
               (schema.readOnly == true) || (schema.displayOnly == true);
           labelFromSchema = schema.label ?? schema.innerLabel;
+          if (schema.validations != null) {
+            validationMessages = buildValidationMessages(schema.validations, localizations);
+            for (final validation in schema.validations!) {
+              if (validation.type == "required" && validation.value == true) {
+                isRequiredFromSchema = true;
+                break;
+              }
+            }
+          }
           return;
         }
 
@@ -58,28 +69,22 @@ class _CycleDropDownState extends LocalizedState<CycleDropDown> {
 
     return ReactiveWrapperField<dynamic>(
       formControlName: _cycleKey,
-      validationMessages: {
-        'required': (_) =>
-            localizations.translate(i18.common.corecommonRequired),
-      },
+      validationMessages: validationMessages,
       showErrors: (control) => control.invalid && control.touched,
       builder: (field) {
         final form = ReactiveForm.of(context) as FormGroup;
 
         return LabeledField(
-          isRequired: isReadOnlyFromSchema,
+          isRequired: isRequiredFromSchema,
           label: labelFromSchema != null &&
                   localizations.translate(labelFromSchema!).isNotEmpty
-              ? localizations.translate(labelFromSchema!)
-              : localizations.translate(
-                  i18.referralReconciliation.selectCycle,
-                ),
+              ? localizations.translate(labelFromSchema!): "",
           child: Dropdown(
             readOnly: isReadOnlyFromSchema,
             selectedOption: cycles
                 .map((cycle) => DropdownItem(
                       name:
-                          '${localizations.translate(i18.referralReconciliation.cycle)} $cycle',
+                          '${localizations.translate("CYCLE")} $cycle',
                       code: cycle,
                     ))
                 .firstWhere(
@@ -101,7 +106,7 @@ class _CycleDropDownState extends LocalizedState<CycleDropDown> {
                 .map(
                   (cycle) => DropdownItem(
                     name:
-                        '${localizations.translate(i18.referralReconciliation.cycle)} $cycle',
+                        '${localizations.translate("CYCLE")} $cycle',
                     code: cycle,
                   ),
                 )

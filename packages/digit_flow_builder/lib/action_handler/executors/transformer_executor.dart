@@ -79,7 +79,9 @@ class TransformerExecutor extends ActionExecutor {
     FlowCrudStateRegistry().update(config?["name"], flowState);
 
     // Check if this is edit mode
-    final navigationParams = contextData['navigation'] as Map<String, dynamic>?;
+    final navigationParams = contextData['navigation'] is Map
+        ? Map<String, dynamic>.from(contextData['navigation'] as Map)
+        : null;
     final isEdit = navigationParams?['isEdit'] == true ||
         navigationParams?['isEdit'] == 'true';
 
@@ -118,8 +120,10 @@ class TransformerExecutor extends ActionExecutor {
 
       for (final key in keysToTry) {
         if (key == null) continue;
-        final storedNavParams = FlowCrudStateRegistry().getNavigationParams(key);
-        debugPrint('TRANSFORMER: trying key=$key, storedNavParams=$storedNavParams');
+        final storedNavParams =
+            FlowCrudStateRegistry().getNavigationParams(key);
+        debugPrint(
+            'TRANSFORMER: trying key=$key, storedNavParams=$storedNavParams');
         if (storedNavParams != null &&
             storedNavParams['existingModels'] != null) {
           existingModels =
@@ -157,7 +161,8 @@ class TransformerExecutor extends ActionExecutor {
         existingModels != null &&
         existingModels.isNotEmpty) {
       debugPrint('TRANSFORMER: Edit mode - using updateEntitiesFromForm');
-      debugPrint('TRANSFORMER: existingModels count before dedup: ${existingModels.length}');
+      debugPrint(
+          'TRANSFORMER: existingModels count before dedup: ${existingModels.length}');
 
       // Deduplicate existingModels by type first (keep first occurrence)
       final seenExistingTypes = <String>{};
@@ -170,7 +175,8 @@ class TransformerExecutor extends ActionExecutor {
         seenExistingTypes.add(type);
         return true;
       }).toList();
-      debugPrint('TRANSFORMER: existingModels count after dedup: ${dedupedExistingModels.length}');
+      debugPrint(
+          'TRANSFORMER: existingModels count after dedup: ${dedupedExistingModels.length}');
 
       // Filter modelsConfig to only include models that exist in existingModels
       // This prevents trying to create missing models that reference non-existent entities
@@ -189,7 +195,8 @@ class TransformerExecutor extends ActionExecutor {
         context: contextMap,
       );
 
-      debugPrint('TRANSFORMER: updateEntitiesFromForm returned ${entities.length} entities');
+      debugPrint(
+          'TRANSFORMER: updateEntitiesFromForm returned ${entities.length} entities');
 
       // Update clientAuditDetails for all updated entities to reflect modification time
       final userUuid = FlowBuilderSingleton().loggedInUser?.uuid;
@@ -204,10 +211,6 @@ class TransformerExecutor extends ActionExecutor {
           'lastModifiedBy': userUuid,
           'lastModifiedTime': now,
         };
-        // Also increment rowVersion for proper sync
-        final currentRowVersion = map['rowVersion'] as int? ?? 1;
-        map['rowVersion'] = currentRowVersion + 1;
-
         // Recreate entity with updated audit details
         final modelType = entity.runtimeType.toString();
         final factory = DataConverterSingleton()
@@ -219,10 +222,12 @@ class TransformerExecutor extends ActionExecutor {
         return entity;
       }).toList();
 
-      debugPrint('TRANSFORMER: Updated ${entities.length} entities with audit details');
+      debugPrint(
+          'TRANSFORMER: Updated ${entities.length} entities with audit details');
       for (final entity in entities) {
         final map = entity.toMap();
-        debugPrint('TRANSFORMER: Entity ${entity.runtimeType} - rowVersion: ${map['rowVersion']}, auditDetails: ${map['auditDetails'] != null}, clientAuditDetails: ${map['clientAuditDetails']}');
+        debugPrint(
+            'TRANSFORMER: Entity ${entity.runtimeType} - rowVersion: ${map['rowVersion']}, clientAuditDetails: ${map['clientAuditDetails']}');
       }
     } else if (multiEntityField != null) {
       // Check if multiEntityField is configured

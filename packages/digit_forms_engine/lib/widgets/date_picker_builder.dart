@@ -31,6 +31,7 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
       builder: (field) => LabeledField(
         infoText: translateIfPresent(tooltipText, loc),
         label: label,
+        capitalizedFirstLetter: false,
         isRequired: isRequired ?? false,
         child: DigitDateFormInput(
           firstDate: parseDateValue(start),
@@ -40,7 +41,8 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
             form.control(formControlName).markAsTouched();
             DateTime? parsedDate;
             try {
-              parsedDate = DateFormat("dd MMM yyyy").parseStrict(value);
+              final currentLocale = Localizations.localeOf(context).toString();
+              parsedDate = DateFormat("dd MMM yyyy", currentLocale).parseStrict(value);
             } catch (e) {
               // Optional: Handle invalid date input
               parsedDate = null;
@@ -50,6 +52,7 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
           readOnly: readOnly,
           errorMessage: field.errorText,
           innerLabel: innerLabel,
+          initialDate: parseDateValue(start),
           initialValue: () {
             final rawValue = form.control(formControlName).value;
 
@@ -61,7 +64,8 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
               parsed = rawValue;
             } else if (rawValue is String && rawValue.trim().isNotEmpty) {
               try {
-                parsed = DateFormat("dd MMM yyyy").parseStrict(rawValue);
+                final currentLocale = Localizations.localeOf(context).toString();
+                parsed = DateFormat("dd MMM yyyy", currentLocale).parseStrict(rawValue);
               } catch (_) {
                 parsed = null;
               }

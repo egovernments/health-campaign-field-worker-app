@@ -45,8 +45,8 @@ class OpenScannerExecutor extends ActionExecutor {
     final scanType = properties['scanType'] as String? ?? 'qr';
     final fieldName = properties['fieldName'] as String? ?? 'scannedData';
     final singleValue = properties['singleValue'] as bool? ?? true;
-    final quantity = properties['quantity'] as int? ?? 1;
-    final isGS1code = properties['isGS1code'] as bool? ?? false;
+    final quantity = properties['scanLimit'] as int? ?? 1;
+    final isGS1code = properties['isGS1'] as bool? ?? false;
 
     // Get onSuccess and onError actions
     final onSuccessActions = properties['onSuccess'] as List<dynamic>?;

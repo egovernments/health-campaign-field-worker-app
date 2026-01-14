@@ -1,7 +1,6 @@
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_crud_bloc/models/global_search_params.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_flow_builder/blocs/flow_crud_bloc.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_forms_engine/forms_engine.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -12,9 +11,21 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../../utils/i18_key_constants.dart' as i18;
 import '../localized.dart';
+
+/// GlobalKey to access StockReconciliationCard state for validation
+class StockReconciliationCardKey
+    extends GlobalKey<_StockReconciliationCardState> {
+  const StockReconciliationCardKey() : super.constructor();
+
+  /// Validates the form and shows errors. Returns true if valid.
+  bool validate() => currentState?.validate() ?? false;
+
+  /// Returns true if both facility and product are selected
+  bool get isValid => currentState?.isValid ?? false;
+}
 
 class StockReconciliationCard extends LocalizedStatefulWidget {
   final String? label;
@@ -53,16 +64,56 @@ class _StockReconciliationCardState
     'stockInHand': 0,
   };
 
-  bool _listenersAdded = false;
-
   // Cache facilities and product variants to prevent them from being cleared
   List<FacilityModel> _cachedFacilities = [];
   List<ProductVariantModel> _cachedProductVariants = [];
+
+  // Track if fields have been touched (for showing validation errors)
+  bool _facilityTouched = false;
+  bool _productTouched = false;
+
+  /// Checks if both facility and product are selected.
+  bool get isValid => _selectedFacility != null && _selectedProduct != null;
+
+  /// Validates and marks all fields as touched. Returns true if valid.
+  /// This can be called via GlobalKey when parent wants to validate.
+  bool validate() {
+    setState(() {
+      _facilityTouched = true;
+      _productTouched = true;
+    });
+    return isValid;
+  }
+
+  /// Get error message for facility field
+  String? get _facilityError => _facilityTouched && _selectedFacility == null
+      ? localizations.translate('CORE_COMMON_REQUIRED')
+      : null;
+
+  /// Get error message for product field
+  String? get _productError => _productTouched && _selectedProduct == null
+      ? localizations.translate('CORE_COMMON_REQUIRED')
+      : null;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
+
+    // Check if form was submitted - if so, trigger validation
+    final formsState = context.watch<FormsBloc>().state;
+    if (formsState is FormsSubmittedState) {
+      final submittedState = formsState;
+      if ((submittedState.activeSchemaKey == widget.pageSchema ||
+              submittedState.schema.name == widget.pageSchema) &&
+          !_facilityTouched &&
+          !_productTouched) {
+        // Schedule validation for after the build
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) validate();
+        });
+      }
+    }
 
     return ValueListenableBuilder<FlowCrudState?>(
       valueListenable: FlowCrudStateRegistry().listen(widget.pageSchema),
@@ -94,221 +145,170 @@ class _StockReconciliationCardState
           });
         }
 
-        return ReactiveFormBuilder(
-          form: () => _buildForm(),
-          builder: (context, form, child) {
-            // Add listeners just once
-            if (!_listenersAdded) {
-              _listenersAdded = true;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Facility Dropdown
+            LabeledField(
+              isRequired: true,
+              label: localizations.translate('Select Warehouse'),
+              child: DigitDropdown<FacilityModel>(
+                errorMessage: _facilityError,
+                selectedOption: _selectedFacility != null
+                    ? DropdownItem(
+                        name:
+                            localizations.translate('${_selectedFacility!.id}'),
+                        code: _selectedFacility!.id,
+                      )
+                    : null,
+                emptyItemText: localizations.translate('No facilities found'),
+                items: displayFacilities.map((facility) {
+                  return DropdownItem(
+                    name: localizations.translate('${facility.id}'),
+                    code: facility.id,
+                  );
+                }).toList(),
+                onSelect: (value) {
+                  final selected = displayFacilities.firstWhere(
+                    (f) => f.id == value.code,
+                  );
+                  setState(() {
+                    _facilityTouched = true;
+                    _selectedFacility = selected;
+                  });
+                  _triggerStockSearchIfReady(context);
+                  _updateFormData();
+                },
+              ),
+            ),
+            const SizedBox(height: spacer2),
 
-              form.control(_facilityKey).valueChanges.listen((value) {
-                setState(() {
-                  _selectedFacility = value as FacilityModel?;
-                });
-                _triggerStockSearchIfReady(context);
-                _updateFormData(form);
-              });
+            // Product Variant Dropdown
+            LabeledField(
+              isRequired: true,
+              label: localizations.translate('Select Product'),
+              child: DigitDropdown<ProductVariantModel>(
+                errorMessage: _productError,
+                sentenceCaseEnabled: true,
+                selectedOption: _selectedProduct != null
+                    ? DropdownItem(
+                        name: localizations.translate(
+                            _selectedProduct!.sku ?? _selectedProduct!.id),
+                        code: _selectedProduct!.id,
+                      )
+                    : null,
+                emptyItemText: localizations.translate('No products found'),
+                items: displayProductVariants.map((product) {
+                  return DropdownItem(
+                    name: localizations.translate(product.sku ?? product.id),
+                    code: product.id,
+                  );
+                }).toList(),
+                onSelect: (value) {
+                  final selected = displayProductVariants.firstWhere(
+                    (p) => p.id == value.code,
+                  );
+                  setState(() {
+                    _productTouched = true;
+                    _selectedProduct = selected;
+                  });
+                  _triggerStockSearchIfReady(context);
+                  _updateFormData();
+                },
+              ),
+            ),
+            const SizedBox(height: spacer4),
 
-              form.control(_productVariantKey).valueChanges.listen((value) {
-                setState(() {
-                  _selectedProduct = value as ProductVariantModel?;
-                });
-                _triggerStockSearchIfReady(context);
-                _updateFormData(form);
-              });
-            }
-
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Facility Dropdown
-                ReactiveWrapperField<FacilityModel>(
-                  formControlName: _facilityKey,
-                  validationMessages: {
-                    'required': (error) =>
-                        localizations.translate('Facility is required'),
-                  },
-                  showErrors: (control) => control.invalid && control.touched,
-                  builder: (field) {
-                    return LabeledField(
-                      isRequired: true,
-                      label: localizations.translate('Select Warehouse'),
-                      child: DigitDropdown<FacilityModel>(
-                        selectedOption: _selectedFacility != null
-                            ? DropdownItem(
-                                name: localizations
-                                    .translate('${_selectedFacility!.id}'),
-                                code: _selectedFacility!.id,
-                              )
-                            : null,
-                        emptyItemText:
-                            localizations.translate('No facilities found'),
-                        items: displayFacilities.map((facility) {
-                          return DropdownItem(
-                            name: localizations.translate('${facility.id}'),
-                            code: facility.id,
-                          );
-                        }).toList(),
-                        onSelect: (value) {
-                          field.control.markAsTouched();
-                          final selected = displayFacilities.firstWhere(
-                            (f) => f.id == value.code,
-                          );
-                          field.control.value = selected;
-                        },
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: spacer2),
-
-                // Product Variant Dropdown
-                ReactiveWrapperField<ProductVariantModel>(
-                  formControlName: _productVariantKey,
-                  validationMessages: {
-                    'required': (error) =>
-                        localizations.translate('Product is required'),
-                  },
-                  showErrors: (control) => control.invalid && control.touched,
-                  builder: (field) {
-                    return LabeledField(
-                      isRequired: true,
-                      label: localizations.translate('Select Product'),
-                      child: DigitDropdown<ProductVariantModel>(
-                        sentenceCaseEnabled: true,
-                        selectedOption: _selectedProduct != null
-                            ? DropdownItem(
-                                name: localizations.translate(
-                                    _selectedProduct!.sku ??
-                                        _selectedProduct!.id),
-                                code: _selectedProduct!.id,
-                              )
-                            : null,
-                        emptyItemText:
-                            localizations.translate('No products found'),
-                        items: displayProductVariants.map((product) {
-                          return DropdownItem(
-                            name: localizations
-                                .translate(product.sku ?? product.id),
-                            code: product.id,
-                          );
-                        }).toList(),
-                        onSelect: (value) {
-                          field.control.markAsTouched();
-                          final selected = displayProductVariants.firstWhere(
-                            (p) => p.id == value.code,
-                          );
-                          field.control.value = selected;
-                        },
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: spacer4),
-
-                // Stock Metrics Display (only show if both facility and product are selected)
-                if (_selectedFacility != null && _selectedProduct != null) ...[
-                  DigitCard(
-                    margin: const EdgeInsets.all(0),
-                    children: [
-                      Text(
-                        localizations.translate('Stock Metrics'),
-                        style: textTheme.headingS.copyWith(
-                          color: theme.colorTheme.text.primary,
-                        ),
-                      ),
-                      const SizedBox(height: spacer2),
-                      LabelValueItem(
-                        label:
-                            localizations.translate('Date of Reconciliation'),
-                        value:
-                            DateFormat('dd MMMM yyyy').format(DateTime.now()),
-                        labelFlex: 5,
-                      ),
-                      const DigitDivider(),
-                      LabelValueItem(
-                        label: localizations.translate('Stock Received'),
-                        value:
-                            _stockMetrics['stockReceived']!.toStringAsFixed(0),
-                        labelFlex: 5,
-                      ),
-                      const DigitDivider(),
-                      LabelValueItem(
-                        label: localizations.translate('Stock Issued'),
-                        value: _stockMetrics['stockIssued']!.toStringAsFixed(0),
-                        labelFlex: 5,
-                      ),
-                      const DigitDivider(),
-                      LabelValueItem(
-                        label: localizations.translate('Stock Returned'),
-                        value:
-                            _stockMetrics['stockReturned']!.toStringAsFixed(0),
-                        labelFlex: 5,
-                      ),
-                      const DigitDivider(),
-                      LabelValueItem(
-                        label: localizations.translate('Stock Lost'),
-                        value: _stockMetrics['stockLost']!.toStringAsFixed(0),
-                        labelFlex: 5,
-                      ),
-                      const DigitDivider(),
-                      LabelValueItem(
-                        label: localizations.translate('Stock Damaged'),
-                        value:
-                            _stockMetrics['stockDamaged']!.toStringAsFixed(0),
-                        labelFlex: 5,
-                      ),
-                      const DigitDivider(),
-                      LabelValueItem(
-                        label: localizations.translate('Stock on Hand'),
-                        value: _stockMetrics['stockInHand']!.toStringAsFixed(0),
-                        labelFlex: 5,
-                      ),
-                    ],
+            // Stock Metrics Display (only show if both facility and product are selected)
+            if (_selectedFacility != null && _selectedProduct != null) ...[
+              DigitCard(
+                margin: const EdgeInsets.all(0),
+                children: [
+                  Text(
+                    localizations
+                        .translate(i18.stockReconciliationMetrics.stockMetrics),
+                    style: textTheme.headingS.copyWith(
+                      color: theme.colorTheme.text.primary,
+                    ),
                   ),
                   const SizedBox(height: spacer2),
-                  InfoCard(
-                    type: InfoType.info,
-                    description: localizations.translate(
-                      'Please do a manual count of the stock and enter the value below',
-                    ),
-                    title: localizations.translate('Note'),
+                  LabelValueItem(
+                    label: localizations.translate(
+                        i18.stockReconciliationMetrics.dateOfReconciliation),
+                    value: DateFormat('dd MMMM yyyy').format(DateTime.now()),
+                    labelFlex: 5,
+                  ),
+                  const DigitDivider(),
+                  LabelValueItem(
+                    label: localizations.translate(
+                        i18.stockReconciliationMetrics.stockReceived),
+                    value: _stockMetrics['stockReceived']!.toStringAsFixed(0),
+                    labelFlex: 5,
+                  ),
+                  const DigitDivider(),
+                  LabelValueItem(
+                    label: localizations
+                        .translate(i18.stockReconciliationMetrics.stockIssued),
+                    value: _stockMetrics['stockIssued']!.toStringAsFixed(0),
+                    labelFlex: 5,
+                  ),
+                  const DigitDivider(),
+                  LabelValueItem(
+                    label: localizations.translate(
+                        i18.stockReconciliationMetrics.stockReturned),
+                    value: _stockMetrics['stockReturned']!.toStringAsFixed(0),
+                    labelFlex: 5,
+                  ),
+                  const DigitDivider(),
+                  LabelValueItem(
+                    label: localizations
+                        .translate(i18.stockReconciliationMetrics.stockLost),
+                    value: _stockMetrics['stockLost']!.toStringAsFixed(0),
+                    labelFlex: 5,
+                  ),
+                  const DigitDivider(),
+                  LabelValueItem(
+                    label: localizations
+                        .translate(i18.stockReconciliationMetrics.stockDamaged),
+                    value: _stockMetrics['stockDamaged']!.toStringAsFixed(0),
+                    labelFlex: 5,
+                  ),
+                  const DigitDivider(),
+                  LabelValueItem(
+                    label: localizations
+                        .translate(i18.stockReconciliationMetrics.stockOnHand),
+                    value: _stockMetrics['stockInHand']!.toStringAsFixed(0),
+                    labelFlex: 5,
                   ),
                 ],
-              ],
-            );
-          },
+              ),
+              const SizedBox(height: spacer2),
+              InfoCard(
+                type: InfoType.info,
+                description: localizations.translate(
+                  'Please do a manual count of the stock and enter the value below',
+                ),
+                title: localizations.translate('Note'),
+              ),
+            ],
+          ],
         );
       },
     );
   }
 
-  FormGroup _buildForm() {
-    return fb.group({
-      _facilityKey: FormControl<FacilityModel>(
-        validators: [Validators.required],
-      ),
-      _productVariantKey: FormControl<ProductVariantModel>(
-        validators: [Validators.required],
-      ),
-    });
-  }
-
-  void _updateFormData(FormGroup form) {
-    final facility = form.control(_facilityKey).value as FacilityModel?;
-    final product =
-        form.control(_productVariantKey).value as ProductVariantModel?;
-
-    // Update the forms engine with the selected values and calculated metrics
+  void _updateFormData() {
+    // Update the forms engine with the selected values, calculated metrics, and validation status
     context.read<FormsBloc>().add(
           FormsEvent.updateField(
             schemaKey: widget.pageSchema,
             context: context,
             key: 'stockReconciliationCard',
             value: {
-              'facilityId': facility?.id,
-              'productVariantId': product?.id,
+              'facilityId': _selectedFacility?.id,
+              'productVariantId': _selectedProduct?.id,
               'stockMetrics': _stockMetrics,
+              'isValid': _selectedFacility != null && _selectedProduct != null,
             },
           ),
         );

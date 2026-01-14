@@ -1,15 +1,16 @@
 import 'package:digit_data_model/blocs/project_facility/project_facility.dart';
 import 'package:digit_data_model/models/entities/project_facility.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
+import 'package:digit_forms_engine/helper/validation_message_helper.dart';
 import 'package:digit_forms_engine/models/property_schema/property_schema.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/dropdown_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:referral_reconciliation/utils/i18_key_constants.dart' as i18;
-import 'package:referral_reconciliation/utils/utils.dart';
-import 'package:referral_reconciliation/widgets/localized.dart';
+
+import '../../utils/utils.dart';
+import '../localized.dart';
 
 class EvaluationKeyDropDown extends LocalizedStatefulWidget {
   final String schemaName;
@@ -34,7 +35,7 @@ class _EvaluationKeyDropDownState
 
     context.read<ProjectFacilityBloc>().add(ProjectFacilityLoadEvent(
         query: ProjectFacilitySearchModel(
-            projectId: [ReferralReconSingleton().projectId])));
+            projectId: [context.selectedProject.id])));
   }
 
   @override
@@ -55,9 +56,11 @@ class _EvaluationKeyDropDownState
       BuildContext context, List<ProjectFacilityModel> projectFacilities) {
     bool isReadOnlyFromSchema = false;
     String? labelFromSchema;
+    bool isRequiredFromSchema = false;
+    dynamic validationMessages;
 
     final pages =
-        context.read<FormsBloc>().state.cachedSchemas[widget.schemaName]?.pages;
+        context.read<FormsBloc>().state.cachedSchemas[widget.schemaName]?.pages ?? context.read<FormsBloc>().state.cachedSchemas["REFERRAL_CREATE"]?.pages;
 
     void walk(Map<String, PropertySchema> node, List<String> pathSoFar) {
       for (final entry in node.entries) {
@@ -68,6 +71,15 @@ class _EvaluationKeyDropDownState
           isReadOnlyFromSchema =
               (schema.readOnly == true) || (schema.displayOnly == true);
           labelFromSchema = schema.label ?? schema.innerLabel;
+          if (schema.validations != null) {
+            validationMessages = buildValidationMessages(schema.validations, localizations);
+            for (final validation in schema.validations!) {
+              if (validation.type == "required" && validation.value == true) {
+                isRequiredFromSchema = true;
+                break;
+              }
+            }
+          }
           return;
         }
 
@@ -84,16 +96,13 @@ class _EvaluationKeyDropDownState
 
     return ReactiveWrapperField<dynamic>(
       formControlName: _evaluationKey,
-      validationMessages: {
-        'required': (_) =>
-            localizations.translate(i18.common.corecommonRequired),
-      },
+      validationMessages: validationMessages,
       showErrors: (control) => control.invalid && control.touched,
       builder: (field) {
         final form = ReactiveForm.of(context) as FormGroup;
 
         return LabeledField(
-          isRequired: true,
+          isRequired: isRequiredFromSchema,
           label: localizations.translate(labelFromSchema ?? ""),
           child: Dropdown(
             readOnly: isReadOnlyFromSchema,

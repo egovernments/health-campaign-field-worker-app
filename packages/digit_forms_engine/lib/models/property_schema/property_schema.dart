@@ -66,6 +66,11 @@ class PropertySchema with _$PropertySchema {
     // Multi-entity tab configuration
     @JsonKey(fromJson: _multiEntityConfigOrNull)
     MultiEntityConfig? multiEntityConfig,
+    // Screenshot protection for this page
+    bool? preventScreenCapture,
+    // Submit condition for pages - when true, form submits directly instead of navigating to next page
+    @JsonKey(fromJson: _visibilityConditionOrNull)
+    VisibilityCondition? submitCondition,
   }) = _PropertySchema;
 
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>

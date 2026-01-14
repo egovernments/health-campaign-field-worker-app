@@ -1,6 +1,9 @@
+import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:flutter/material.dart';
 
+import '../blocs/flow_crud_bloc.dart';
+import '../utils/interpolation.dart';
 import 'action_config.dart';
 import 'action_executor_registry.dart';
 
@@ -12,6 +15,79 @@ import 'action_executor_registry.dart';
 /// - Better testability through isolated executors
 /// - Clear separation of concerns
 class ActionHandler {
+  /// Traverses a nested data structure following a dot-separated path
+  /// e.g., "tasks.0.status" traverses data['tasks'][0]['status']
+  static dynamic _traversePath(dynamic data, String path) {
+    if (path.isEmpty) return data;
+    dynamic value = data;
+    for (final part in path.split('.')) {
+      if (value == null) return null;
+      if (value is Map) {
+        value = value[part];
+      } else if (value is List) {
+        final index = int.tryParse(part);
+        if (index != null && index >= 0 && index < value.length) {
+          value = value[index];
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
+    }
+    return value;
+  }
+
+  /// Extracts variable paths from condition expression that may need resolution
+  /// from stateWrapper. Looks for patterns like "tasks.0.status" (word.number.word)
+  static Set<String> _extractVariablePaths(String expression) {
+    final paths = <String>{};
+    // Match patterns like: word.number.word or word.number or word.word.word
+    // These are likely paths that need resolution from stateWrapper
+    final pathRegex = RegExp(r'\b([a-zA-Z_]\w*(?:\.\d+|\.[a-zA-Z_]\w*)+)\b');
+    for (final match in pathRegex.allMatches(expression)) {
+      paths.add(match.group(1)!);
+    }
+    return paths;
+  }
+
+  /// Resolves variable paths from stateWrapper/item context and adds them to evaluationData
+  static void _resolveStateWrapperPaths(
+    String expression,
+    Map<String, dynamic> evaluationData,
+    List<dynamic>? stateWrapper,
+    Map<String, dynamic>? item,
+  ) {
+    final paths = _extractVariablePaths(expression);
+    if (paths.isEmpty) return;
+
+    debugPrint('CONDITION_EVAL: Found paths to resolve: $paths');
+
+    // Determine the data source - prefer item (current template iteration) over stateWrapper
+    Map<String, dynamic>? dataSource;
+    if (item != null && item.isNotEmpty) {
+      dataSource = item;
+    } else if (stateWrapper != null && stateWrapper.isNotEmpty) {
+      final first = stateWrapper.first;
+      if (first is Map<String, dynamic>) {
+        dataSource = first;
+      }
+    }
+
+    if (dataSource == null) return;
+
+    for (final path in paths) {
+      // Skip if already in evaluationData
+      if (evaluationData.containsKey(path)) continue;
+
+      final resolved = _traversePath(dataSource, path);
+      if (resolved != null) {
+        evaluationData[path] = resolved;
+        debugPrint('CONDITION_EVAL: Resolved $path = $resolved');
+      }
+    }
+  }
+
   static final ActionExecutorRegistry _registry = ActionExecutorRegistry();
 
   /// Get the registry for external configuration
@@ -68,7 +144,16 @@ class ActionHandler {
         final formData = contextData['formData'] as Map<String, dynamic>? ?? {};
         final navigation = contextData['navigation'] as Map<String, dynamic>? ?? {};
 
-        // Merge formData and navigation for condition evaluation
+        // Get screen key - try route args first, then contextData['parentScreenKey']
+        // (set by CLOSE_POPUP action when used from popup)
+        final screenKey = getEffectiveScreenKey(context, contextData);
+
+        final currentState = FlowCrudStateRegistry().get(screenKey ?? '');
+
+        // Get widgetData from the current state (contains filter selections, etc.)
+        final widgetData = currentState?.widgetData ?? {};
+
+        // Merge formData, navigation, and widgetData for condition evaluation
         // Also convert string "true"/"false" to boolean for proper evaluation
         final evaluationData = <String, dynamic>{};
 
@@ -87,9 +172,58 @@ class ActionHandler {
         addWithTypeConversion(formData);
         addWithTypeConversion(navigation);
 
+        // Add widgetData - flatten list values to check membership
+        // For selection cards, convert list of selected codes to individual keys
+        debugPrint('CONDITION_EVAL: widgetData before processing=$widgetData');
+        widgetData.forEach((key, value) {
+          if (value is List) {
+            // If single element list, store as string for simpler equality checks
+            // e.g., selectedStatus == CLOSED_HOUSEHOLD works when selectedStatus is "CLOSED_HOUSEHOLD"
+            if (value.length == 1) {
+              var singleValue = value.first;
+              // Strip quotes if the value is a quoted string (e.g., "\"VALUE\"" -> "VALUE")
+              if (singleValue is String &&
+                  singleValue.length >= 2 &&
+                  singleValue.startsWith('"') &&
+                  singleValue.endsWith('"')) {
+                singleValue = singleValue.substring(1, singleValue.length - 1);
+              }
+              evaluationData[key] = singleValue;
+              // Don't add value as key - let parser treat literals in expression as-is
+            } else {
+              // For multi-select, keep as list for "in" operations
+              evaluationData[key] = value;
+              for (var item in value) {
+                if (item is String) {
+                  evaluationData[item] = item;
+                }
+              }
+            }
+          } else if (value == 'true') {
+            evaluationData[key] = true;
+          } else if (value == 'false') {
+            evaluationData[key] = false;
+          } else {
+            evaluationData[key] = value;
+          }
+        });
+
+        // Get stateWrapper and item for resolving paths in condition expressions
+        final stateWrapper = currentState?.stateWrapper;
+        final item = contextData['item'] as Map<String, dynamic>?;
+
         for (final condActionJson in conditionalGroup) {
           final condition = condActionJson['condition'] as Map<String, dynamic>;
-          debugPrint('CONDITION_EVAL: expression=${condition['expression']}, data=$evaluationData');
+          var expression = condition['expression'] as String?;
+
+          // Resolve any variable paths from stateWrapper/item context
+          if (expression != null && expression != 'DEFAULT') {
+            expression = resolveTemplate(expression, stateWrapper);
+          }
+
+          condition['expression'] = expression;
+
+          debugPrint('CONDITION_EVAL: expression=$expression, data=$evaluationData');
 
           if (evaluateCondition(condition, evaluationData)) {
             debugPrint('CONDITION_EVAL: Condition matched!');

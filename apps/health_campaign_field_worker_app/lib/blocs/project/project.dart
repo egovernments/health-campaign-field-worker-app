@@ -545,7 +545,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           offSet: offset,
           lastChangedSince: lastChangedSince);
     } catch (e) {
-      debugPrint('erro9r');
+      debugPrint('error');
     }
 
     return stockEntries!;
@@ -823,7 +823,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                   moduleName: 'HCM-ADMIN-CONSOLE',
                   masterDetails: [
                     MdmsMasterDetailModel(
-                      'NewApkConfig',
+                      'FormConfig',
                       filter:
                           "[?(@.project=='${event.model.referenceID}' && @.isSelected==true)]",
                     ),
@@ -835,7 +835,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         );
 
         final formConfigs =
-            formConfigResult['HCM-ADMIN-CONSOLE']['NewApkConfig'];
+            formConfigResult['HCM-ADMIN-CONSOLE']['FormConfig'];
 
         for (final config in formConfigs) {
           await enrichFormSchemasWithEnumsForForms(config);
