@@ -48,7 +48,7 @@ class PropertySchema with _$PropertySchema {
     dynamic value,
     DisplayBehavior? displayBehavior,
     Map<String, dynamic>? conditions,
-    int? order,
+    double? order,
     String? actionLabel,
     String? description,
     List<ValidationRule>? validations,
