@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:attendance_management/widgets/localized.dart';
@@ -99,40 +100,40 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     final prefs = await SharedPreferences.getInstance();
     final schemaJsonRaw = prefs.getString('app_config_schemas');
     try {
-      // if (schemaJsonRaw != null) {
-      //   final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
-      //   final data = allSchemas['PERMISSIONHANDLER'];
-      //   if (data?['disabled']) {
-      //     if (mounted) {
-      //       context.router.replace(BoundarySelectionRoute());
-      //     }
-      //   } else {
-      //     final registrationDeliveryData = data?['data'];
-      //     final flowsData =
-      //         (registrationDeliveryData['flows'] as List<dynamic>?)
-      //                 ?.map((e) => Map<String, dynamic>.from(e as Map))
-      //                 .toList() ??
-      //             [];
-      //     if (flowsData.isNotEmpty) {
-      //       screenConfig = flowsData[0];
-      //       bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
-      //     }
-      //   }
-      // } else {
-      if (permission_handler_config?['disabled'] == true) {
-        _isDisabled = true;
-        if (mounted) {
-          context.router.replace(BoundarySelectionRoute());
+      if (schemaJsonRaw != null) {
+        final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
+        final data = allSchemas['PERMISSIONHANDLER'];
+        if (data?['disabled']) {
+          if (mounted) {
+            context.router.replace(BoundarySelectionRoute());
+          }
+        } else {
+          final registrationDeliveryData = data?['data'];
+          final flowsData =
+              (registrationDeliveryData['flows'] as List<dynamic>?)
+                      ?.map((e) => Map<String, dynamic>.from(e as Map))
+                      .toList() ??
+                  [];
+          if (flowsData.isNotEmpty) {
+            screenConfig = flowsData[0];
+            bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
+          }
         }
-        return; // Skip loading config when disabled
       } else {
-        final flows = permission_handler_config['flows'] as List<dynamic>?;
-        if (flows != null && flows.isNotEmpty) {
-          screenConfig = flows[0] as Map<String, dynamic>;
-          bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
+        if (permission_handler_config?['disabled'] == true) {
+          _isDisabled = true;
+          if (mounted) {
+            context.router.replace(BoundarySelectionRoute());
+          }
+          return; // Skip loading config when disabled
+        } else {
+          final flows = permission_handler_config['flows'] as List<dynamic>?;
+          if (flows != null && flows.isNotEmpty) {
+            screenConfig = flows[0] as Map<String, dynamic>;
+            bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
+          }
         }
       }
-      // }
     } catch (e) {
       debugPrint('config error $e');
     }
