@@ -439,51 +439,60 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       List<FacilityModel> allFacilities,
       String? boundaryType,
       Cycle? currentRunningCycle) async {
-    try {
-      final userObject = await localSecureStore.userRequestModel;
-      final userRoles = userObject!.roles.map((e) => e.code);
-      final lastChangedSince = currentRunningCycle?.startDate;
+    final userObject = await localSecureStore.userRequestModel;
+    final userRoles = userObject!.roles.map((e) => e.code);
+    final lastChangedSince = currentRunningCycle?.startDate;
 
-      Map<String, String> facilityIdUsageMap = {};
+    Map<String, String> facilityIdUsageMap = {};
 
-      for (var element in allFacilities) {
-        facilityIdUsageMap[element.id] = element.usage ?? "";
-      }
+    for (var element in allFacilities) {
+      facilityIdUsageMap[element.id] = element?.usage ?? "";
+    }
 
-      // info : assumption both roles will not be assigned to user
+    // info : assumption both roles will not be assigned to user
 
-      if (userRoles.contains(RolesType.healthFacilitySupervisor.toValue())) {
-        List<String> receiverIds =
-            projectFacilities.map((e) => e.facilityId).toList();
-        final stockSearchModel = StockSearchModel(
-          receiverId: receiverIds,
-          transactionType: [TransactionType.dispatched.toValue()],
-        );
-        final stockEntriesDownloaded =
-            await downloadStockEntries(stockSearchModel, lastChangedSince);
-        await createStockDownloadedEntries(stockEntriesDownloaded);
-      } else if (userRoles.contains(RolesType.warehouseManager.toValue())) {
-        List<String> receiverIds =
-            projectFacilities.map((e) => e.facilityId).toList();
-        final stockSearchModel = StockSearchModel(
-          receiverId: receiverIds,
-          transactionType: [TransactionType.dispatched.toValue()],
-        );
-        final stockEntriesDownloaded =
-            await downloadStockEntries(stockSearchModel, lastChangedSince);
-        await createStockDownloadedEntries(stockEntriesDownloaded);
-      } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
-        final receiverIds = [context.loggedInUserUuid];
-        final stockSearchModel = StockSearchModel(
-          receiverId: receiverIds,
-          transactionType: [TransactionType.dispatched.toValue()],
-        );
-        final stockEntriesDownloaded =
-            await downloadStockEntries(stockSearchModel, lastChangedSince);
-        await createStockDownloadedEntries(stockEntriesDownloaded);
-      }
-    } catch (e) {
-      debugPrint('error');
+    if (userRoles.contains(RolesType.healthFacilitySupervisor.toValue())) {
+      List<String> receiverIds =
+          projectFacilities.map((e) => e.facilityId).toList();
+      receiverIds = receiverIds
+          .where((e) => facilityIdUsageMap[e] == Constants.healthFacility)
+          .toList();
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds,
+        transactionType: [TransactionType.dispatched.toValue()],
+      );
+      final stockEntriesDownloaded =
+          await downloadStockEntries(stockSearchModel, lastChangedSince);
+      // info : create entries in the local repository
+
+      await createStockDownloadedEntries(stockEntriesDownloaded);
+    } else if (userRoles.contains(RolesType.warehouseManager.toValue()) &&
+        boundaryType == Constants.lgaBoundaryLevel) {
+      List<String> receiverIds =
+          projectFacilities.map((e) => e.facilityId).toList();
+      receiverIds = receiverIds
+          .where((e) => facilityIdUsageMap[e] == Constants.lgaFacility)
+          .toList();
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds,
+        transactionType: [TransactionType.dispatched.toValue()],
+      );
+      final stockEntriesDownloaded =
+          await downloadStockEntries(stockSearchModel, lastChangedSince);
+
+      // info : create entries in the local repository
+      await createStockDownloadedEntries(stockEntriesDownloaded);
+    } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
+      final receiverIds = [context.loggedInUserUuid];
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds,
+        transactionType: [TransactionType.dispatched.toValue()],
+      );
+      final stockEntriesDownloaded =
+          await downloadStockEntries(stockSearchModel, lastChangedSince);
+
+      // info : create entries in the local repository
+      await createStockDownloadedEntries(stockEntriesDownloaded);
     }
   }
 
@@ -537,18 +546,13 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       StockSearchModel stockSearchModel, int? lastChangedSince) async {
     var offset = 0;
     var initialLimit = 10;
-    var stockEntries;
 
-    try {
-      stockEntries = await stockRemoteRepository.search(stockSearchModel,
-          limit: initialLimit,
-          offSet: offset,
-          lastChangedSince: lastChangedSince);
-    } catch (e) {
-      debugPrint('error');
-    }
+    final stockEntries = await stockRemoteRepository.search(stockSearchModel,
+        limit: initialLimit,
+        offSet: offset,
+        lastChangedSince: lastChangedSince);
 
-    return stockEntries!;
+    return stockEntries;
   }
 
 // info:  downloads the hfreferral data from remote repository
@@ -834,8 +838,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ).toJson(),
         );
 
-        final formConfigs =
-            formConfigResult['HCM-ADMIN-CONSOLE']['FormConfig'];
+        final formConfigs = formConfigResult['HCM-ADMIN-CONSOLE']['FormConfig'];
 
         for (final config in formConfigs) {
           await enrichFormSchemasWithEnumsForForms(config);

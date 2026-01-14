@@ -20,6 +20,9 @@ import 'action_executor.dart';
 ///     "configName": "stock",           // Key in jsonConfig for transformer config
 ///     "sourceScreenKey": "TEMPLATE::manageStock",  // Optional: screen key to get entities from
 ///     "entityTypes": ["StockModel"],   // Optional: filter specific entity types
+///     "data": [                        // Optional: specify exact entities via resolved paths
+///       {"key": "entities", "value": "{{individual}}"}
+///     ],
 ///     "onError": [...]                 // Actions to execute on error
 ///   }
 /// }
@@ -59,14 +62,43 @@ class ReverseTransformerExecutor extends ActionExecutor {
       // Get entities from stateWrapper
       List<EntityModel> modelInstances = [];
 
-      // Try to get from contextData first
-      if (contextData['entities'] != null && contextData['entities'] is List) {
+      // Check if data parameter is provided with specific entities
+      final dataList = action.properties['data'] as List<dynamic>?;
+      if (dataList != null && dataList.isNotEmpty) {
+        debugPrint('REVERSE_TRANSFORM: Using data parameter for entities');
+        for (final entry in dataList) {
+          if (entry is Map<String, dynamic>) {
+            final key = entry['key'] as String?;
+            final value = entry['value'];
+
+            if (key == 'entities' && value != null) {
+              // Value could be already resolved entity/list or a template string
+              if (value is EntityModel) {
+                modelInstances.add(value);
+              } else if (value is List) {
+                // Extract entities from the list
+                modelInstances.addAll(_extractEntitiesFromWrapper(value));
+              } else if (value is Map<String, dynamic>) {
+                // Extract entities from map structure
+                _extractFromMap(value, modelInstances);
+              }
+            }
+          }
+        }
+        debugPrint(
+            'REVERSE_TRANSFORM: Found ${modelInstances.length} entities from data parameter');
+      }
+
+      // If no entities from data parameter, try contextData
+      if (modelInstances.isEmpty &&
+          contextData['entities'] != null &&
+          contextData['entities'] is List) {
         modelInstances = (contextData['entities'] as List)
             .whereType<EntityModel>()
             .toList();
       }
 
-      // If no entities in context, try to get from FlowCrudStateRegistry
+      // If still no entities, try to get from FlowCrudStateRegistry
       if (modelInstances.isEmpty) {
         final screenKeyToUse = sourceScreenKey ?? currentScreenKey;
         if (screenKeyToUse != null) {
@@ -110,15 +142,10 @@ class ReverseTransformerExecutor extends ActionExecutor {
         final currentState = FlowCrudStateRegistry().get(currentScreenKey);
         final existingFormData = currentState?.formData ?? {};
 
-        // Merge with existing form data (new data takes precedence)
-        final mergedFormData = {
-          ...existingFormData,
-          ...formData,
-        };
 
         final updatedState =
             (currentState ?? const FlowCrudState()).copyWith(
-          formData: mergedFormData,
+          formData: formData,
           stateWrapper: currentState?.stateWrapper,
         );
 

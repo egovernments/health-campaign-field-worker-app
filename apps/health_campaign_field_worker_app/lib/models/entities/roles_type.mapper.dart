@@ -43,6 +43,8 @@ class RolesTypeMapper extends EnumMapper<RolesType> {
         return RolesType.teamSupervisor;
       case "COMMUNITY_DISTRIBUTOR":
         return RolesType.communityDistributor;
+      case "COMMUNITY_SUPERVISOR":
+        return RolesType.communitySupervisor;
       case "HEALTH_FACILITY_SUPERVISOR":
         return RolesType.healthFacilitySupervisor;
       case 'STRING':
@@ -73,6 +75,8 @@ class RolesTypeMapper extends EnumMapper<RolesType> {
         return "TEAM_SUPERVISOR";
       case RolesType.communityDistributor:
         return "COMMUNITY_DISTRIBUTOR";
+      case RolesType.communitySupervisor:
+        return "COMMUNITY_SUPERVISOR";
       case RolesType.healthFacilitySupervisor:
         return "HEALTH_FACILITY_SUPERVISOR";
       case RolesType.String:

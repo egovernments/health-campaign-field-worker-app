@@ -18,6 +18,9 @@ enum NavigationMode {
 
   /// Pop until a specific page is reached, then push new page
   popUntilAndPush,
+
+  /// Pop until a specific page is reached (without pushing)
+  popUntil,
 }
 
 abstract class NavigationService {
@@ -79,6 +82,13 @@ class FlowBuilderNavigationService implements NavigationService {
             _popUntilPage(router, popUntilPageName);
           }
           router.push(route);
+          break;
+
+        case NavigationMode.popUntil:
+          // Pop until a specific page is reached (without pushing)
+          if (popUntilPageName != null && popUntilPageName.isNotEmpty) {
+            _popUntilPage(router, popUntilPageName);
+          }
           break;
       }
     } else {
@@ -199,6 +209,9 @@ class NavigationRegistry {
       case 'popuntilandpush':
       case 'pop_until_and_push':
         return NavigationMode.popUntilAndPush;
+      case 'popuntil':
+      case 'pop_until':
+        return NavigationMode.popUntil;
       case 'push':
       default:
         return NavigationMode.push;

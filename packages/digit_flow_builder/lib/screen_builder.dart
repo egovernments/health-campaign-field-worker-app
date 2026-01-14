@@ -300,7 +300,7 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
               defaultValues: {
                 ...mergedNavParams,
                 ...?widget.defaultValues,
-                ...registryFormData,
+                if(isEdit) ...registryFormData,
                 // System values always present
                 'administrativeArea': localizations
                     .translate(FlowBuilderSingleton().boundary?.code ?? ''),

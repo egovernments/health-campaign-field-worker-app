@@ -46,7 +46,7 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
           : DisplayBehavior.fromJson(
               json['displayBehavior'] as Map<String, dynamic>),
       conditions: json['conditions'] as Map<String, dynamic>?,
-      order: (json['order'] as num?)?.toInt(),
+      order: (json['order'] as num?)?.toDouble(),
       actionLabel: json['actionLabel'] as String?,
       description: json['description'] as String?,
       validations: (json['validations'] as List<dynamic>?)

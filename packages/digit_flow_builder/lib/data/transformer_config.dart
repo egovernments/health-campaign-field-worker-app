@@ -423,7 +423,8 @@ final jsonConfig = {
           "productVariantId": "stockDetails.productdetail.id",
           "referenceId": "__context:projectId",
           "referenceIdType": "__value:PROJECT",
-          "quantity": "stockProductDetails.quantitySent",
+          "quantity":
+              "__switch:__context:stockEntryType:{RECEIPT:stockProductDetails.quantityReceived,RETURNED:stockProductDetails.quantityReturned,ISSUED:stockProductDetails.quantitySent,DAMAGED:stockProductDetails.quantityDamaged,LOSS:stockProductDetails.quantityLost}",
           "wayBillNumber": "stockProductDetails.wayBillNumber",
           "transactionType": "__context:transactionType",
           "transactionReason":

@@ -1113,7 +1113,8 @@ final dynamic sampleFlows = {
               "systemDate": false,
               "validations": [],
               "errorMessage": "",
-              "isMultiSelect": false
+              "isMultiSelect": false,
+              "includeInSummary": true
             }
           ],
           "actionLabel":
@@ -1856,7 +1857,8 @@ final dynamic sampleFlows = {
               "systemDate": false,
               "validations": [],
               "errorMessage": "",
-              "isMultiSelect": false
+              "isMultiSelect": false,
+              "includeInSummary": true
             }
           ],
           "actionLabel":
@@ -7299,7 +7301,6 @@ final dynamic sampleInventoryFlows = {
         {
           "format": "menu_card",
           "heading": "INVENTORY_STOCK_LOSS_HEADING",
-          "visible": "{{fn:hasRole('WAREHOUSE_MANAGER')}} == false",
           "description": "INVENTORY_STOCK_LOSS_DESCRIPTION",
           "icon": 'Store',
           "onAction": [
@@ -7439,6 +7440,7 @@ final dynamic sampleInventoryFlows = {
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
+              "includeInSummary": true,
               "validations": [
                 {
                   "type": "required",
@@ -7571,13 +7573,13 @@ final dynamic sampleInventoryFlows = {
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "Transport type is required"
-                }
-              ],
+              // "validations": [
+              //   {
+              //     "type": "required",
+              //     "value": true,
+              //     "message": "Transport type is required"
+              //   }
+              // ],
               "errorMessage": "",
               "isMultiSelect": false,
               "enums": [
@@ -7600,13 +7602,13 @@ final dynamic sampleInventoryFlows = {
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "Vehicle number is required"
-                }
-              ],
+              // "validations": [
+              //   {
+              //     "type": "required",
+              //     "value": true,
+              //     "message": "Vehicle number is required"
+              //   }
+              // ],
               "errorMessage": "",
               "isMultiSelect": false,
               "enums": null
@@ -7759,6 +7761,131 @@ final dynamic sampleInventoryFlows = {
               ],
               "errorMessage": "",
               "isMultiSelect": false,
+              "enums": null,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "navigation.stockEntryType == 'ISSUED'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "APPONE_INVENTORY_QUANTITY__LOSTLABEL",
+              "order": 5,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Enter the quantity lost by the warehouse",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "quantityLost",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Quantity lost is required"
+                },
+                {
+                  "type": "regex",
+                  "value": r"^[0-9]+$",
+                  "message": "Please enter a valid number"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "navigation.stockEntryType == 'LOSS'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "APPONE_INVENTORY_QUANTITY__DAMAGEDLABEL",
+              "order": 5,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Enter the quantity damaged by the warehouse",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "quantityDamaged",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Quantity Damaged is required"
+                },
+                {
+                  "type": "regex",
+                  "value": r"^[0-9]+$",
+                  "message": "Please enter a valid number"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null,
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "navigation.stockEntryType == 'DAMAGED'",
+                    "type": "custom"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "label": "APPONE_INVENTORY_QUANTITY_RETURNED_LABEL",
+              "order": 5,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Enter the actual quantity returned",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "quantityReturned",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "navigation.stockEntryType == 'RETURNED'",
+                    "type": "custom"
+                  }
+                ]
+              },
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "Quantity received is required"
+                },
+                {
+                  "type": "regex",
+                  "value": r"^[0-9]+$",
+                  "message": "Please enter a valid number"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
               "enums": null
             },
             {
@@ -7778,8 +7905,8 @@ final dynamic sampleInventoryFlows = {
               "visibilityCondition": {
                 "expression": [
                   {
-                    "condition":
-                        "{{navigation.transactionType}} == 'RECEIVED' && stockDetails.facilityFromWhich != 'National Warehouse'"
+                    "condition": "navigation.stockEntryType == 'RECEIPT'",
+                    "type": "custom"
                   }
                 ]
               },
@@ -7982,7 +8109,7 @@ final dynamic sampleInventoryFlows = {
                 "properties": {
                   "type": "TEMPLATE",
                   "name": "manageStock",
-                  "navigationMode": "popUntilAndPush",
+                  "navigationMode": "popUntil",
                   "popUntilPageName": "manageStock",
                 }
               }

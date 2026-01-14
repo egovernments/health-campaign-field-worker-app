@@ -31,7 +31,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     final form = ReactiveForm.of(context) as FormGroup;
 
     // Handle conditional display logic
-    if (_shouldHideField(form)) {
+    if (_shouldHideField(form, widget.schema, widget.formControlName)) {
       return const SizedBox.shrink();
     }
 
@@ -248,11 +248,12 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
   }
 
   /// Conditionally hide based on display behavior
-  bool _shouldHideField(FormGroup form) {
-    final hidden = widget.schema.hidden;
+  bool _shouldHideField(
+      FormGroup form, PropertySchema schema, String formName) {
+    final hidden = schema.hidden;
     if (hidden != null && hidden == true) return true;
 
-    final visibility = widget.schema.visibilityCondition;
+    final visibility = schema.visibilityCondition;
     if (visibility != null && visibility.expression.isNotEmpty) {
       final formState = context.read<FormsBloc>().state;
       final currentPageKey = widget.pageName;
@@ -263,19 +264,16 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         currentPageKey: currentPageKey,
         currentForm: form,
         pages: formState.cachedSchemas[currentSchemaKey]!.pages,
-        navigationParams: widget.navigationParams,
 
         /// TODO: fix hardcode not null condition
       );
 
       final result =
-          evaluateVisibilityExpression(visibility.expression, values);
-      VisibilityManager(
-        schemaMap: {widget.formControlName: widget.schema},
-        formData: form.rawValue,
-        form: form,
-        navigationParams: widget.navigationParams,
-      ).toggleControlVisibility(widget.formControlName, result, widget.schema);
+      evaluateVisibilityExpression(visibility.expression, values);
+      VisibilityManager(schemaMap: {
+        formName: schema,
+      }, formData: form.rawValue, form: form)
+          .toggleControlVisibility(formName, result, widget.schema);
 
       return !result;
     }
@@ -354,7 +352,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           isMultiselect: widget.schema.isMultiSelect ?? false,
-          readOnly: widget.schema.readOnly ?? false,
+          readOnly: _isReadOnly,
         );
 
       case PropertySchemaFormat.mobileNumber:
@@ -363,7 +361,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
           inputType: TextInputType.number,
-          readOnly: widget.schema.readOnly ?? false,
+          readOnly: _isReadOnly,
           validations: widget.schema.validations,
           isRequired: hasRequiredValidation(widget.schema.validations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
@@ -456,7 +454,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           formControlName: widget.formControlName,
           value: widget.schema.value?.toString(),
           validations: widget.schema.validations,
-          readOnly: widget.schema.readOnly ?? false,
+          readOnly: _isReadOnly,
           isRequired: hasRequiredValidation(widget.schema.validations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
@@ -628,7 +626,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
           value: widget.schema.value as String?,
-          readOnly: widget.schema.readOnly ?? false,
+          readOnly: _isReadOnly,
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
@@ -642,42 +640,44 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
   Widget _buildObjectType(FormGroup form) {
     final entries = widget.schema.properties?.entries.toList() ?? [];
 
+    final visibleEntries = entries
+        .where((entry) {
+      final subSchema = entry.value;
+      return !_shouldHideField(form, subSchema, entry.key);
+    })
+        .toList();
+
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: entries
-          .where((entry) {
-            final subSchema = entry.value;
-            return !shouldHideField(subSchema, form);
-          })
-          .toList()
+      children: visibleEntries
           .asMap()
           .entries
           .map((entry) {
-            final index = entry.key;
-            final mapEntry = entry.value;
-            final subSchema = mapEntry.value;
-            final subName = mapEntry.key;
+        final index = entry.key;
+        final mapEntry = entry.value;
 
-            final field = JsonFormBuilder(
-              pageName: widget.pageName,
-              currentSchemaKey: widget.currentSchemaKey,
-              formControlName: subName,
-              schema: subSchema,
-              components: widget.components,
-              navigationParams: widget.navigationParams,
-            );
+        final subSchema = mapEntry.value;
+        final subName = mapEntry.key;
 
-            final isLast = index ==
-                entries.where((e) => !shouldHideField(e.value, form)).length -
-                    1;
+        final field = JsonFormBuilder(
+          pageName: widget.pageName,
+          currentSchemaKey: widget.currentSchemaKey,
+          formControlName: subName,
+          schema: subSchema,
+          components: widget.components,
+          navigationParams: widget.navigationParams,
+        );
 
-            return isLast
-                ? field
-                : Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    child: field,
-                  );
-          })
+        final isLast = index == visibleEntries.length - 1;
+
+        return isLast
+            ? field
+            : Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: field,
+        );
+      })
           .toList(),
     );
   }
