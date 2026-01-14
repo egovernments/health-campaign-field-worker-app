@@ -50,17 +50,29 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
   Map<String, dynamic>? screenConfig;
   List<dynamic> bodyConfig = [];
 
+  // Flag to track if permission handler is disabled
+  bool _isDisabled = false;
+
   @override
   void initState() {
     super.initState();
 
     // Initialize config first, then permissions
     _initializeConfig().then((_) {
+      // Skip permission initialization if disabled
+      if (_isDisabled) return;
+
       // Initialize permissions and check their current status
       _initializePermissions().then((_) {
+        // Skip if disabled
+        if (_isDisabled) return;
+
         // Check permissions to update UI status, but don't auto-navigate
         // User must explicitly click Continue after granting all permissions
         WidgetsBinding.instance.addPostFrameCallback((_) async {
+          // Skip if disabled
+          if (_isDisabled) return;
+
           bool granted = await _checkPermissions();
           if (!granted) {
             if (mounted) {
@@ -91,21 +103,35 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
       if (schemaJsonRaw != null) {
         final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
         final data = allSchemas['PERMISSIONHANDLER'];
-
-        final registrationDeliveryData = data?['data'];
-        final flowsData = (registrationDeliveryData['flows'] as List<dynamic>?)
-                ?.map((e) => Map<String, dynamic>.from(e as Map))
-                .toList() ??
-            [];
-        if (flowsData.isNotEmpty) {
-          screenConfig = flowsData[0];
-          bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
+        if (data?['disabled']) {
+          if (mounted) {
+            context.router.replace(BoundarySelectionRoute());
+          }
+        } else {
+          final registrationDeliveryData = data?['data'];
+          final flowsData =
+              (registrationDeliveryData['flows'] as List<dynamic>?)
+                      ?.map((e) => Map<String, dynamic>.from(e as Map))
+                      .toList() ??
+                  [];
+          if (flowsData.isNotEmpty) {
+            screenConfig = flowsData[0];
+            bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
+          }
         }
       } else {
-        final flows = permission_handler_config['flows'] as List<dynamic>?;
-        if (flows != null && flows.isNotEmpty) {
-          screenConfig = flows[0] as Map<String, dynamic>;
-          bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
+        if (permission_handler_config?['disabled'] == true) {
+          _isDisabled = true;
+          if (mounted) {
+            context.router.replace(BoundarySelectionRoute());
+          }
+          return; // Skip loading config when disabled
+        } else {
+          final flows = permission_handler_config['flows'] as List<dynamic>?;
+          if (flows != null && flows.isNotEmpty) {
+            screenConfig = flows[0] as Map<String, dynamic>;
+            bodyConfig = screenConfig?['body'] as List<dynamic>? ?? [];
+          }
         }
       }
     } catch (e) {
@@ -500,7 +526,9 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
               Toast.showToast(
                 context,
                 message: localizations.translate(
-                  i18.common.coreCommonPermissionsAlert,
+                  backgroundActivityConfirmed
+                      ? i18.common.coreCommonEnablePermissionCheckbox
+                      : i18.common.coreCommonPermissionsAlert,
                 ),
                 type: ToastType.error,
               );
