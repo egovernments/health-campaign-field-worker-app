@@ -6501,7 +6501,7 @@ final dynamic sampleInventoryFlows = {
             {
               "type": "string",
               "label": "APPONE_INVENTORY_QUANTITY__LOSTLABEL",
-              "order": 5,
+              "order": 4,
               "value": "",
               "format": "text",
               "hidden": false,
@@ -6540,7 +6540,7 @@ final dynamic sampleInventoryFlows = {
             {
               "type": "string",
               "label": "APPONE_INVENTORY_QUANTITY__DAMAGEDLABEL",
-              "order": 5,
+              "order": 4,
               "value": "",
               "format": "text",
               "hidden": false,
@@ -6579,7 +6579,7 @@ final dynamic sampleInventoryFlows = {
             {
               "type": "string",
               "label": "APPONE_INVENTORY_QUANTITY_RETURNED_LABEL",
-              "order": 5,
+              "order": 4,
               "value": "",
               "format": "text",
               "hidden": false,
@@ -6618,7 +6618,7 @@ final dynamic sampleInventoryFlows = {
             {
               "type": "string",
               "label": "APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL",
-              "order": 5,
+              "order": 4,
               "value": "",
               "format": "text",
               "hidden": false,
@@ -6657,7 +6657,7 @@ final dynamic sampleInventoryFlows = {
             {
               "type": "string",
               "label": "APPONE_INVENTORY_COMMENT_LABEL",
-              "order": 7,
+              "order": 9,
               "value": "",
               "format": "textArea",
               "hidden": false,
@@ -6691,7 +6691,7 @@ final dynamic sampleInventoryFlows = {
             {
               "type": "string",
               "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_scanResource",
-              "order": 8,
+              "order": 10,
               "value": "",
               "format": "scanner",
               "validations": [
@@ -7076,7 +7076,7 @@ final dynamic sampleInventoryFlows = {
                       },
                       {
                         "format": "textTemplate",
-                        "value": "{{item.items[0].receiverId}}"
+                        "value": "{{item.items[0].senderId}}"
                       }
                     ]
                   },
@@ -7437,7 +7437,7 @@ final dynamic inventoryReportFlows = {
               "actionType": "NAVIGATION",
               "properties": {
                 "type": "TEMPLATE",
-                "name": "reportDetails",
+                "name": "reckonReportDetails",
                 "data": [
                   {"key": "reportType", "value": "reconciliation"},
                   {"key": "facilities", "value": "{{FacilityModel}}"},
@@ -7625,6 +7625,163 @@ final dynamic inventoryReportFlows = {
               {"header": "Quantity", "cellValue": "{{item.quantity}}"}
             ],
             "rows": "{{contextData.0.StockModel}}"
+          }
+        }
+      ]
+    },
+    {
+      "screenType": "TEMPLATE",
+      "name": "reckonReportDetails",
+      "heading": "STOCKREPORTS_REPORT_DETAILS_HEADING",
+      "description": "STOCKREPORTS_REPORT_DETAILS_DESCRIPTION",
+      "initActions": [],
+      "wrapperConfig": {
+        "wrapperName": "StockReconciliationReportWrapper",
+        "groupByType": true,
+        "rootEntity": "StockReconciliation",
+        "filters": [],
+        "relations": [],
+        "searchConfig": {
+          "primary": "stockReconciliation",
+          "select": ["stockReconciliation"]
+        }
+      },
+      "header": [
+        {
+          "type": "template",
+          "format": "backLink",
+          "label": "STOCKREPORTS_REPORT_DETAILS_BACK_BUTTON_LABEL",
+          "onAction": [
+            {"actionType": "BACK_NAVIGATION", "properties": {}}
+          ]
+        }
+      ],
+      "footer": [
+        {
+          "type": "template",
+          "format": "button",
+          "label": "STOCKREPORTS_REPORT_DETAILS_SECONDARY_ACTION_LABEL",
+          "properties": {
+            "type": "secondary",
+            "size": "large",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "onAction": [
+            {"actionType": "BACK_NAVIGATION", "properties": {}}
+          ]
+        }
+      ],
+      "body": [
+        {
+          "type": "template",
+          "format": "card",
+          "children": [
+            {
+              "type": "template",
+              "format": "dropdownTemplate",
+              "label": "STOCKREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
+              "required": true,
+              "key": "selectedFacility",
+              "source": "{{navigation.facilities}}",
+              "displayKey": "id",
+              "valueKey": "id",
+              "visible": "{{fn:hasRole('WAREHOUSE_MANAGER')}}",
+              "onChange": [
+                {
+                  "actionType": "SEARCH_EVENT",
+                  "properties": {
+                    "type": "SEARCH_EVENT",
+                    "name": "stockReconciliation",
+                    "data": [
+                      {
+                        "key": "tenantId",
+                        "value": "{{singleton.selectedProject.tenantId}}",
+                        "operation": "equals"
+                      },
+                      {
+                        "key": "productVariantId",
+                        "value": "{{selectedProduct}}",
+                        "operation": "equals"
+                      },
+                      {
+                        "key": "facilityId",
+                        "value": "{{selectedFacility}}",
+                        "operation": "equals"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "template",
+              "format": "dropdownTemplate",
+              "label": "STOCKREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
+              "required": true,
+              "key": "selectedProduct",
+              "source": "{{navigation.productVariants}}",
+              "displayKey": "sku",
+              "valueKey": "id",
+              "onChange": [
+                {
+                  "actionType": "SEARCH_EVENT",
+                  "properties": {
+                    "type": "SEARCH_EVENT",
+                    "name": "stockReconciliation",
+                    "data": [
+                      {
+                        "key": "tenantId",
+                        "value": "{{singleton.selectedProject.tenantId}}",
+                        "operation": "equals"
+                      },
+                      {
+                        "key": "productVariantId",
+                        "value": "{{selectedProduct}}",
+                        "operation": "equals"
+                      },
+                      {
+                        "key": "facilityId",
+                        "value": "{{selectedFacility}}",
+                        "operation": "equals"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "template",
+          "format": "infoCard",
+          "message": "STOCKREPORTS_REPORT_DETAILS_INFO_CARD_LABEL",
+          "properties": {"type": "info"},
+          "visible":
+              "{{selectedFacility}} == null || {{selectedProduct}} == null"
+        },
+        {
+          "type": "template",
+          "format": "infoCard",
+          "message": "STOCKREPORTS_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
+          "properties": {"type": "info"},
+          "visible":
+              "{{stockReconciliation.length}} == 0 && {{selectedFacility}} != null && {{selectedProduct}} != null && {{navigation.reportType}} != 'reconciliation'"
+        },
+        {
+          "type": "template",
+          "format": "table",
+          "data": {
+            "source": "StockReconciliationModel",
+            "columns": [
+              {
+                "header": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_1_LABEL",
+                "cellValue":
+                    "{{fn:formatDate(item.dateOfReconciliation, 'date', 'dd MMM yyyy')}}"
+              },
+              {"header": "Quantity", "cellValue": "{{item.calculatedCount}}"}
+            ],
+            "rows": "{{contextData.0.StockReconciliationModel}}"
           }
         }
       ]

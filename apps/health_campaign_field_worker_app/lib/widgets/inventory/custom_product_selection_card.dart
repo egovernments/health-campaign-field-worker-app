@@ -12,19 +12,22 @@ import '../localized.dart';
 class ProductSelectionCard extends LocalizedStatefulWidget {
   final dynamic stateData;
   final String pageSchema;
+  final String formKey;
 
-  const ProductSelectionCard(
-      {super.key,
-      super.appLocalizations,
-      required this.stateData,
-      required this.pageSchema});
+  const ProductSelectionCard({
+    super.key,
+    super.appLocalizations,
+    required this.stateData,
+    required this.pageSchema,
+    this.formKey = 'productdetail',
+  });
 
   @override
   State<ProductSelectionCard> createState() => _ProductSelectionCardState();
 }
 
 class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
-  static const _productVariantKey = 'productdetail';
+  String get _productVariantKey => widget.formKey;
   List<DropdownItem>? _prefilledOptions;
   Set<String>? _prefilledProductIds; // Store just the IDs for matching
   bool _initialized = false;
@@ -215,12 +218,16 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
       return const SizedBox.shrink();
     }
 
-    // Extract data
-    final wrapperList =
-        widget.stateData.stateWrapper as List<Map<String, List<dynamic>>>;
+    // Extract data - add null check
+    final wrapperData = widget.stateData?.stateWrapper;
+    if (wrapperData == null) {
+      return const SizedBox.shrink();
+    }
+    final wrapperList = wrapperData as List<Map<String, List<dynamic>>>;
 
     final productVariants = wrapperList.firstWhere(
-        (m) => m.containsKey('ProductVariantModel'))['ProductVariantModel'];
+        (m) => m.containsKey('ProductVariantModel'),
+        orElse: () => {'ProductVariantModel': []})['ProductVariantModel'];
 
     // Initialize from formData on first build (localizations and productVariants are now available)
     if (!_initialized) {

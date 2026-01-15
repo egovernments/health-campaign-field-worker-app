@@ -85,7 +85,7 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
         return AddressModelMapper.fromMap(normalizedMap);
       case 'stock':
         return StockModelMapper.fromMap(normalizedMap);
-      case 'stockRecon':
+      case 'stockReconciliation':
         return StockReconciliationModelMapper.fromMap(normalizedMap);
       case 'pgrService':
         return PgrServiceModelMapper.fromMap(normalizedMap);

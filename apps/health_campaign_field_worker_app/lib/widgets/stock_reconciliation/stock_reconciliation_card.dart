@@ -51,9 +51,6 @@ class StockReconciliationCard extends LocalizedStatefulWidget {
 
 class _StockReconciliationCardState
     extends LocalizedState<StockReconciliationCard> {
-  static const _facilityKey = 'selectedFacility';
-  static const _productVariantKey = 'selectedProductVariant';
-
   FacilityModel? _selectedFacility;
   ProductVariantModel? _selectedProduct;
 
@@ -171,12 +168,13 @@ class _StockReconciliationCardState
                 errorMessage: _facilityError,
                 selectedOption: _selectedFacility != null
                     ? DropdownItem(
-                        name:
-                            localizations.translate('${_selectedFacility!.id}'),
+                        name: localizations
+                            .translate('${_selectedFacility!.id}'),
                         code: _selectedFacility!.id,
                       )
                     : null,
-                emptyItemText: localizations.translate('No facilities found'),
+                emptyItemText:
+                    localizations.translate('No facilities found'),
                 items: displayFacilities.map((facility) {
                   return DropdownItem(
                     name: localizations.translate('${facility.id}'),
@@ -190,6 +188,8 @@ class _StockReconciliationCardState
                   setState(() {
                     _facilityTouched = true;
                     _selectedFacility = selected;
+                    // Mark product as touched too - so error shows if not selected
+                    _productTouched = true;
                   });
                   _triggerStockSearchIfReady(context);
                   _updateFormData();
@@ -215,7 +215,8 @@ class _StockReconciliationCardState
                 emptyItemText: localizations.translate('No products found'),
                 items: displayProductVariants.map((product) {
                   return DropdownItem(
-                    name: localizations.translate(product.sku ?? product.id),
+                    name:
+                        localizations.translate(product.sku ?? product.id),
                     code: product.id,
                   );
                 }).toList(),
@@ -226,6 +227,8 @@ class _StockReconciliationCardState
                   setState(() {
                     _productTouched = true;
                     _selectedProduct = selected;
+                    // Mark facility as touched too - so error shows if not selected
+                    _facilityTouched = true;
                   });
                   _triggerStockSearchIfReady(context);
                   _updateFormData();
