@@ -8,7 +8,6 @@ import 'package:complaints/complaints.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart';
 import 'package:digit_crud_bloc/digit_crud_bloc.dart';
-import 'package:digit_crud_bloc/repositories/local/search_entity_repository.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
@@ -1299,6 +1298,16 @@ class _HomePageState extends LocalizedState<HomePage> {
                         to: 'projectResource',
                         localKey: 'id',
                         foreignKey: 'resource'),
+                    const RelationshipMapping(
+                        from: 'stockReconciliation',
+                        to: 'facility',
+                        localKey: 'facilityId',
+                        foreignKey: 'id'),
+                    const RelationshipMapping(
+                        from: 'stockReconciliation',
+                        to: 'productVariant',
+                        localKey: 'productVariantId',
+                        foreignKey: 'id'),
                   ],
                   nestedModelMappings: [
                     const NestedModelMapping(

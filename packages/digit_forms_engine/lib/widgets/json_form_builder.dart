@@ -55,6 +55,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       currentPageKey: currentPageKey,
       currentForm: form,
       pages: formState.cachedSchemas[currentSchemaKey]!.pages,
+      navigationParams: widget.navigationParams,
     );
 
     bool matched = false;
@@ -84,7 +85,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           if (filledValue is String) {
             try {
               final currentLocale = Localizations.localeOf(context).toString();
-              valueToSet = DateFormat("dd MMM yyyy", currentLocale).parseStrict(filledValue);
+              valueToSet = DateFormat("dd MMM yyyy", currentLocale)
+                  .parseStrict(filledValue);
             } catch (_) {
               // Not a date string → keep as string
               valueToSet = filledValue;
@@ -264,16 +266,17 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         currentPageKey: currentPageKey,
         currentForm: form,
         pages: formState.cachedSchemas[currentSchemaKey]!.pages,
-
-        /// TODO: fix hardcode not null condition
+        navigationParams: widget.navigationParams,
       );
 
       final result =
-      evaluateVisibilityExpression(visibility.expression, values);
-      VisibilityManager(schemaMap: {
-        formName: schema,
-      }, formData: form.rawValue, form: form)
-          .toggleControlVisibility(formName, result, widget.schema);
+          evaluateVisibilityExpression(visibility.expression, values);
+      VisibilityManager(
+        schemaMap: {formName: schema},
+        formData: form.rawValue,
+        form: form,
+        navigationParams: widget.navigationParams,
+      ).toggleControlVisibility(formName, result, widget.schema);
 
       return !result;
     }
@@ -368,7 +371,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           innerLabel:
               translateIfPresent(widget.schema.innerLabel, localizations),
-          prefixText: translateIfPresent(widget.schema.prefixText, localizations),
+          prefixText:
+              translateIfPresent(widget.schema.prefixText, localizations),
         );
 
       case PropertySchemaFormat.dob:
@@ -378,7 +382,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           formControlName: widget.formControlName,
           validations: widget.schema.validations,
           initialDate: _safeTimestamp("startDate") != null
-              ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("startDate")!)
+              ? DateTime.fromMillisecondsSinceEpoch(
+                  _safeTimestamp("startDate")!)
               : null,
         );
 
@@ -403,7 +408,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           form: form,
           formControlName: widget.formControlName,
           start: _safeTimestamp("startDate") != null
-              ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("startDate")!)
+              ? DateTime.fromMillisecondsSinceEpoch(
+                  _safeTimestamp("startDate")!)
               : null,
           end: _safeTimestamp("endDate") != null
               ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("endDate")!)
@@ -550,7 +556,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           form: form,
           formControlName: widget.formControlName,
           start: _safeTimestamp("startDate") != null
-              ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("startDate")!)
+              ? DateTime.fromMillisecondsSinceEpoch(
+                  _safeTimestamp("startDate")!)
               : null,
           end: _safeTimestamp("endDate") != null
               ? DateTime.fromMillisecondsSinceEpoch(_safeTimestamp("endDate")!)
@@ -640,20 +647,15 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
   Widget _buildObjectType(FormGroup form) {
     final entries = widget.schema.properties?.entries.toList() ?? [];
 
-    final visibleEntries = entries
-        .where((entry) {
+    final visibleEntries = entries.where((entry) {
       final subSchema = entry.value;
       return !_shouldHideField(form, subSchema, entry.key);
-    })
-        .toList();
+    }).toList();
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: visibleEntries
-          .asMap()
-          .entries
-          .map((entry) {
+      children: visibleEntries.asMap().entries.map((entry) {
         final index = entry.key;
         final mapEntry = entry.value;
 
@@ -674,11 +676,10 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         return isLast
             ? field
             : Padding(
-          padding: const EdgeInsets.only(bottom: 16.0),
-          child: field,
-        );
-      })
-          .toList(),
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: field,
+              );
+      }).toList(),
     );
   }
 

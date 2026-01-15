@@ -201,7 +201,8 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
     final wrapperList = wrapperData as List<Map<String, List<dynamic>>>;
 
     final projectFacilities = wrapperList.firstWhere(
-        (m) => m.containsKey('ProjectFacilityModel'))['ProjectFacilityModel'];
+        (m) => m.containsKey('ProjectFacilityModel'),
+        orElse: () => {'ProjectFacilityModel': []})['ProjectFacilityModel'];
 
     final labelFromSchema =
         widget.fieldSchema.label ?? widget.fieldSchema.innerLabel;

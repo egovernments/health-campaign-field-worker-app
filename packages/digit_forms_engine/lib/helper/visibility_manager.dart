@@ -24,7 +24,7 @@ class VisibilityManager {
     // Add navigation params to the evaluation context
     if (navigationParams != null) {
       navigationParams!.forEach((key, value) {
-        flatValues['nav.$key'] = value;
+        flatValues['navigation.$key'] = value;
       });
     }
 
