@@ -262,8 +262,8 @@ void initializeFunctionRegistry() {
     if (projectType == null) return false;
 
 // --- Tasks & SideEffects come from stateData ---
-    final tasks = (stateData.modelMap['tasks'] as List?) ?? [];
-    final referral = (stateData.modelMap['referral'] as List?) ?? [];
+    final tasks = args.length>2 ? args[2] : [];
+    final referral = args.length>1 ? args[1] : [];
     if (referral.isNotEmpty) return false;
     final sideEffects = (stateData.modelMap['sideEffects'] as List?) ?? [];
 

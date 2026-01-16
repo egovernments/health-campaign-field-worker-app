@@ -188,6 +188,7 @@ class _LatLngBuilderStatefulWrapperState
                 isRequired: widget.isRequired ?? false,
                 capitalizedFirstLetter: false,
                 child: Stack(
+                  clipBehavior: Clip.none,
                   children: [
                     BaseDigitFormInput(
                       helpText: widget.helpText,
@@ -202,8 +203,7 @@ class _LatLngBuilderStatefulWrapperState
                     if (_accuracy != null && _accuracy! > 5)
                       Positioned(
                         right: 0,
-                        top: 0,
-                        bottom: 40,
+                        top: -4,
                         child: IconButton(
                           icon: Icon(
                             Icons.refresh,
