@@ -816,27 +816,27 @@ final jsonConfig = {
     },
   },
   "referralBeneficaryCreate": {
-    "fallbackModel": "ReferralModel",
+    "fallbackModel": "HFReferralModel",
     "models": {
-      "ReferralModel": {
+      "HFReferralModel": {
         "mappings": {
+          "tenantId": "__context:tenantId",
+          "projectId": "__context:projectId",
+          "projectFacilityId":
+              "__switch:referBeneficiary.evaluationFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.evaluationFacility}",
+          "beneficiaryId": "__context:ProjectBeneficiaryClientReferenceId",
+          "referralCode": "__context:selectedIndividualClientReferenceId",
+          "name": "__context:selectedIndividualName",
+          "symptom": "referBeneficiary.referralReason",
           "nonRecoverableError": "referral.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "rowVersion": "meta.rowVersion",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
-          "projectId": "__context:projectId",
-          "projectBeneficiaryClientReferenceId":
-              "__context:ProjectBeneficiaryClientReferenceId",
-          "recipientType":
-              "__switch:referBeneficiary.evaluationFacility:{Community Health Worker:STAFF,default:__value:FACILITY}",
-          "recipientId":
-              "__switch:referBeneficiary.evaluationFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.evaluationFacility}",
-          "referrerId": "__context:userUUID",
-          "reasons": "collect:referBeneficiary.referralReason",
-          "tenantId": "__context:tenantId",
+          "localityCode": "__context:selectedBoundaryCode",
           "additionalFields": {
-            "boundaryCode": "facilityDetails.administrativeUnit",
+            "boundaryCode": "referBeneficiary.administrativeArea",
+            "referredBy": "__context:userUUID",
             "referralComments": "referBeneficiary.referralComments"
           }
         }

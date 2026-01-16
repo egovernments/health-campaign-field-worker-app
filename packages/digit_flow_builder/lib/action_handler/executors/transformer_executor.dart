@@ -50,18 +50,25 @@ class TransformerExecutor extends ActionExecutor {
     // 🔹 Collect extra key-values from action.properties['data']
     final Map<String, dynamic> extraContext = {};
     final List<dynamic>? extraData = action.properties['data'];
+    debugPrint('TRANSFORMER: extraData from action.properties: $extraData');
+    debugPrint('TRANSFORMER: contextData keys: ${contextData.keys.toList()}');
+    debugPrint('TRANSFORMER: contextData navigation: ${contextData['navigation']}');
+
     if (extraData != null) {
       for (final entry in extraData) {
         final key = entry['key'] as String;
         final valuePath = entry['value'] as String?;
+        debugPrint('TRANSFORMER: Processing extraData key=$key, valuePath=$valuePath');
         if (valuePath != null) {
           final resolvedValue = resolveValue(valuePath, contextData);
+          debugPrint('TRANSFORMER: Resolved value for $key = $resolvedValue');
           if (resolvedValue != null) {
             extraContext[key] = resolvedValue;
           }
         }
       }
     }
+    debugPrint('TRANSFORMER: extraContext after processing: $extraContext');
 
     if (formDataConfig != null) {
       final collectedFormData =
@@ -151,6 +158,9 @@ class TransformerExecutor extends ActionExecutor {
       ...extraContext,
       "beneficiaryType": FlowBuilderSingleton().beneficiaryType?.toValue(),
     };
+
+    debugPrint('TRANSFORMER: contextMap keys: ${contextMap.keys.toList()}');
+    debugPrint('TRANSFORMER: contextMap selectedIndividualName: ${contextMap['selectedIndividualName']}');
 
     List<EntityModel> entities = [];
 

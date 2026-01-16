@@ -126,26 +126,35 @@ class WrapperBuilder {
 
         // 1. Build relations
         for (final relation in config['relations'] ?? []) {
+          debugPrint('WRAPPER_BUILDER: Processing relation: ${relation['name']}');
           final relatedEntities =
               _findRelatedEntities(root, relation, wrapperData, entityMap);
+          debugPrint('WRAPPER_BUILDER: Found ${relatedEntities.length} entities for ${relation['name']}');
           wrapperData[relation['name']] = relatedEntities;
 
           // Handle nested relations
           if (relation['relations'] != null) {
+            debugPrint('WRAPPER_BUILDER: Processing nested relations for ${relation['name']}');
             for (int i = 0; i < relatedEntities.length; i++) {
               final entity = relatedEntities[i];
               final nestedData = <String, dynamic>{};
 
               for (final nestedRelation in relation['relations']) {
+                debugPrint('WRAPPER_BUILDER: Processing nested relation: ${nestedRelation['name']} under ${relation['name']}');
+                debugPrint('WRAPPER_BUILDER: entityMap keys: ${entityMap.keys.toList()}');
+                debugPrint('WRAPPER_BUILDER: Looking for entity type: ${nestedRelation['entity']}');
                 final nestedEntities = _findRelatedEntities(entity,
                     nestedRelation, {...wrapperData, ...nestedData}, entityMap);
+                debugPrint('WRAPPER_BUILDER: Found ${nestedEntities.length} nested entities for ${nestedRelation['name']}');
                 nestedData[nestedRelation['name']] = nestedEntities;
               }
 
+              debugPrint('WRAPPER_BUILDER: nestedData keys: ${nestedData.keys.toList()}');
               if (entity is Map) {
                 entity.addAll(nestedData);
               } else {
                 relatedEntities[i] = {'entity': entity, ...nestedData};
+                debugPrint('WRAPPER_BUILDER: Wrapped entity with nestedData: ${relatedEntities[i]}');
               }
             }
           }

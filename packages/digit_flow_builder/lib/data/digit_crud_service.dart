@@ -93,6 +93,8 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
         return HFReferralModelMapper.fromMap(normalizedMap);
       case 'referral':
         return ReferralModelMapper.fromMap(normalizedMap);
+      case 'name':
+        return NameModelMapper.fromMap(normalizedMap);
       default:
         return EntityModelMapper.fromMap(normalizedMap);
     }

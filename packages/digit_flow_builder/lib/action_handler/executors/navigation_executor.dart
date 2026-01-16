@@ -58,22 +58,35 @@ class NavigationExecutor extends ActionExecutor {
     }
 
     if (navData != null) {
+      debugPrint('NAVIGATION_EXECUTOR: Processing navData with ${navData.length} entries');
+      debugPrint('NAVIGATION_EXECUTOR: contextData keys: ${contextData.keys.toList()}');
+      debugPrint('NAVIGATION_EXECUTOR: contextData navigation: ${contextData['navigation']}');
+
       final resolvedData = navData.map((entry) {
         final key = entry['key'];
         final rawValue = entry['value'];
 
+        debugPrint('NAVIGATION_EXECUTOR: Resolving key=$key, rawValue=$rawValue');
+
         // Try to resolve from state form data first, fallback to contextData
         dynamic resolvedValue = resolveValue(rawValue, stateFormData);
+        debugPrint('NAVIGATION_EXECUTOR: After stateFormData resolve: $resolvedValue');
+
         if (resolvedValue == rawValue || resolvedValue == null) {
           // If not resolved from state, try contextData
           resolvedValue = resolveValue(rawValue, contextData);
+          debugPrint('NAVIGATION_EXECUTOR: After contextData resolve: $resolvedValue');
         }
+
+        debugPrint('NAVIGATION_EXECUTOR: Final resolved key=$key, value=$resolvedValue');
 
         return {
           "key": key,
           "value": resolvedValue,
         };
       }).toList();
+
+      debugPrint('NAVIGATION_EXECUTOR: resolvedData: $resolvedData');
 
       // create a copy with resolved data instead of modifying original
       navigationProperties['data'] = resolvedData;

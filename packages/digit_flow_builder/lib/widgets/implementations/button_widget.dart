@@ -110,13 +110,22 @@ class ButtonWidget implements FlowWidget {
             final navData = action.properties['data'] as List<dynamic>?;
 
             if (navData != null) {
+              debugPrint('BUTTON_WIDGET: Resolving navigation data for action: ${action.actionType}');
+              debugPrint('BUTTON_WIDGET: stateData keys: ${stateData?.keys.toList()}');
+              debugPrint('BUTTON_WIDGET: stateData individual: ${stateData?['individual']}');
+
               final resolvedData = navData.map((entry) {
                 final rawValue = entry['value'];
+                final key = entry['key'];
+
+                debugPrint('BUTTON_WIDGET: Resolving key=$key, rawValue=$rawValue');
 
                 // Try to resolve from stateData first, then widgetData, then formData
                 dynamic resolvedValue = stateData != null
                     ? resolveValue(rawValue, stateData)
                     : rawValue;
+
+                debugPrint('BUTTON_WIDGET: After stateData resolve: key=$key, resolvedValue=$resolvedValue');
 
                 if (resolvedValue == rawValue && widgetData != null) {
                   // If not resolved from stateData, try widgetData
