@@ -188,12 +188,16 @@ class TransformerExecutor extends ActionExecutor {
         ..removeWhere((key, value) => !existingModelTypes.contains(key));
       debugPrint('TRANSFORMER: filteredConfig keys=${filteredConfig.keys}');
 
-      entities = formEntityMapper.updateEntitiesFromForm(
-        existingModels: dedupedExistingModels,
-        formValues: formValuesToUse ?? {},
-        modelsConfig: filteredConfig,
-        context: contextMap,
-      );
+      try{
+        entities = formEntityMapper.updateEntitiesFromForm(
+          existingModels: dedupedExistingModels,
+          formValues: formValuesToUse ?? {},
+          modelsConfig: filteredConfig,
+          context: contextMap,
+        );
+      } catch (e){
+        debugPrint(e.toString());
+      }
 
       debugPrint(
           'TRANSFORMER: updateEntitiesFromForm returned ${entities.length} entities');
