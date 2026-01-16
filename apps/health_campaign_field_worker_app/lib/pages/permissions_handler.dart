@@ -506,10 +506,20 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
               ),
             ),
             Expanded(
-              child: Text(
-                localizations.translate(i18.common.allowBackgroundActivityDesc),
-                style: textTheme.bodyS.copyWith(
-                  color: theme.colorTheme.primary.primary2,
+              child:
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(text: localizations.translate(i18.common.allowBackgroundActivityDesc), style: textTheme.bodyS.copyWith(
+                      color: theme.colorTheme.primary.primary2,
+                    ),),
+                    TextSpan(
+                      text: " *",
+                      style: textTheme.bodyS.copyWith(
+                        color: theme.colorTheme.alert.error,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
