@@ -307,8 +307,8 @@ class FormEntityMapper {
     updateMapping.forEach((customKey, path) {
       final value = getStrictValueFromFormDataOnly(path, formValues);
 
-      if (value != null && value.toString().trim().isNotEmpty) {
-        updatedFields[customKey] = value.toString();
+      if (value != null) {
+        updatedFields[customKey] = value;
       }
     });
 
