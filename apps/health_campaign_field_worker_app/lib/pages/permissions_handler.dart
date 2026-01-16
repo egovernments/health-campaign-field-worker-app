@@ -79,7 +79,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
               Toast.showToast(
                 context,
                 message: localizations.translate(
-                  i18.common.coreCommonPermissionsAlert,
+                  i18.common.permissionsAlert,
                 ),
                 type: ToastType.error,
               );
@@ -516,7 +516,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
           ],
         ),
         DigitButton(
-          label: localizations.translate(i18.common.coreCommonContinue),
+          label: localizations.translate(i18.common.permissionContinue),
           type: DigitButtonType.primary,
           size: DigitButtonSize.large,
           mainAxisSize: MainAxisSize.max,
@@ -527,8 +527,8 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
                 context,
                 message: localizations.translate(
                   backgroundActivityConfirmed
-                      ? i18.common.coreCommonEnablePermissionCheckbox
-                      : i18.common.coreCommonPermissionsAlert,
+                      ? i18.common.enablePermissionCheckbox
+                      : i18.common.permissionsAlert,
                 ),
                 type: ToastType.error,
               );

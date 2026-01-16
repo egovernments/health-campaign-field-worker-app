@@ -15,7 +15,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../blocs/scanner.dart';
@@ -43,7 +46,8 @@ class DigitScannerPage extends LocalizedStatefulWidget {
   State<DigitScannerPage> createState() => DigitScannerPageState();
 }
 
-class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
+class DigitScannerPageState extends LocalizedState<DigitScannerPage>
+    with WidgetsBindingObserver {
   final BarcodeScanner _barcodeScanner = BarcodeScanner();
   bool _canProcess = true;
   bool _isBusy = false;
@@ -59,19 +63,104 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
   bool manualCode = false;
   bool flashStatus = false;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  bool _isPermissionDialogShowing = false;
+  bool _waitingForPermissionFromSettings = false;
   static const _manualCodeFormKey = 'manualCode';
   static const _manualSerialNoFormKey = 'serialNoCode';
   static const _manualExpiryDateFormKey = 'expiryDate';
 
   @override
   void initState() {
-    initializeCameras();
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _checkAndRequestCameraPermission();
     if (!widget.isEditEnabled) {
       context
           .read<DigitScannerBloc>()
           .add(const DigitScannerEvent.handleScanner());
     }
-    super.initState();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && _waitingForPermissionFromSettings) {
+      _waitingForPermissionFromSettings = false;
+      _recheckPermissionAfterSettings();
+    }
+  }
+
+  Future<void> _recheckPermissionAfterSettings() async {
+    final status = await Permission.camera.status;
+    if (mounted) {
+      if (status.isGranted) {
+        initializeCameras();
+      } else if (status.isPermanentlyDenied || status.isDenied) {
+        _showPermissionSettingsDialog();
+      }
+    }
+  }
+
+  Future<void> _checkAndRequestCameraPermission() async {
+    final status = await Permission.camera.status;
+
+    if (status.isGranted) {
+      initializeCameras();
+    } else if (status.isDenied) {
+      // Request permission
+      final result = await Permission.camera.request();
+      if (result.isGranted) {
+        initializeCameras();
+      } else if (result.isPermanentlyDenied) {
+        _showPermissionSettingsDialog();
+      }
+    } else if (status.isPermanentlyDenied) {
+      // Permission permanently denied, show dialog to open settings
+      _showPermissionSettingsDialog();
+    }
+  }
+
+  Future<void> _showPermissionSettingsDialog() async {
+    if (!mounted || _isPermissionDialogShowing) return;
+    _isPermissionDialogShowing = true;
+    await showCustomPopup(
+      context: context,
+      builder: (popupContext) => Popup(
+        title: localizations.translate(i18.scanner.cameraPermissionDenied),
+        description:
+            localizations.translate(i18.scanner.cameraPermissionDeniedDesc),
+        type: PopUpType.simple,
+        actions: [
+          DigitButton(
+            label: localizations.translate(i18.scanner.openSettings),
+            onPressed: () {
+              Navigator.of(popupContext, rootNavigator: true).pop();
+              _isPermissionDialogShowing = false;
+              _waitingForPermissionFromSettings = true;
+              openAppSettings();
+            },
+            type: DigitButtonType.primary,
+            size: DigitButtonSize.large,
+          ),
+          DigitButton(
+            label: localizations.translate(i18.common.coreCommonGoback),
+            onPressed: () {
+              Navigator.of(popupContext, rootNavigator: true).pop();
+              _isPermissionDialogShowing = false;
+              // Clear scanner state and go back
+              context.read<DigitScannerBloc>().add(
+                    const DigitScannerEvent.handleScanner(
+                      barCode: [],
+                      qrCode: [],
+                    ),
+                  );
+              Navigator.of(context).pop();
+            },
+            type: DigitButtonType.secondary,
+            size: DigitButtonSize.large,
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -176,6 +265,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _cameraController?.dispose();
     _barcodeScanner.close();
     super.dispose();
