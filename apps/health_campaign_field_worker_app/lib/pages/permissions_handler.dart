@@ -713,7 +713,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     final iconName = config['value'] as String? ?? '';
 
     return Padding(
-      padding: const EdgeInsets.only(right: spacer2),
+      padding: const EdgeInsets.only(right: 0),
       child: Icon(
         DigitIconMapping.getIcon(iconName),
         color: theme.colorTheme.primary.primary1,
