@@ -54,6 +54,7 @@ class Variables {
   static const _sendTimeoutValue = 6000;
   static const _retryTimeIntervalValue = 5;
   static const _syncDownRetryCountValue = 3;
+  static const _minRamThresholdGbValue = 2.0;
 
   static const _envName = EnvEntry(
     'ENV_NAME',
@@ -117,6 +118,11 @@ class Variables {
   static const _hierarchyType = EnvEntry(
     'HIERARCHY_TYPE',
     'ADMIN',
+  );
+
+  static const _minRamThresholdGb = EnvEntry(
+    'MIN_RAM_THRESHOLD_GB',
+    '$_minRamThresholdGbValue',
   );
 
   const Variables({
@@ -191,6 +197,14 @@ class Variables {
             fallback: _retryTimeInterval.value,
           )) ??
           _retryTimeIntervalValue;
+
+  double get minRamThresholdGb => useFallbackValues
+      ? double.tryParse(_minRamThresholdGb.value) ?? _minRamThresholdGbValue
+      : double.tryParse(_dotEnv.get(
+            _minRamThresholdGb.key,
+            fallback: _minRamThresholdGb.value,
+          )) ??
+          _minRamThresholdGbValue;
 
   EnvType get envType {
     final envName = useFallbackValues
