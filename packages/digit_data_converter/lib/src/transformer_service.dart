@@ -302,7 +302,7 @@ class FormEntityMapper {
     required Map<String, dynamic> formValues,
     required String modelName,
   }) {
-    final updatedFields = <String, String>{};
+    final updatedFields = <String, dynamic>{};
 
     updateMapping.forEach((customKey, path) {
       final value = getStrictValueFromFormDataOnly(path, formValues);
@@ -314,7 +314,7 @@ class FormEntityMapper {
 
     if (updatedFields.isEmpty) return null;
 
-    final existingFields = <String, String>{};
+    final existingFields = <String, dynamic>{};
     if (existingAdditionalFields['fields'] is List) {
       for (final field in existingAdditionalFields['fields']) {
         if (field['key'] != null && field['value'] != null) {
