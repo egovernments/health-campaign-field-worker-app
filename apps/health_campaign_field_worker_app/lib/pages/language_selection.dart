@@ -197,7 +197,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
             final ramKb = int.tryParse(match.group(1) ?? '0') ?? 0;
             final ramGb = ramKb / (1024 * 1024); // Convert to GB
 
-            if (ramGb < 10.0 && mounted) {
+            if (ramGb < envConfig.variables.minRamThresholdGb && mounted) {
               // Show warning dialog for low RAM
               _showLowRamWarningDialog();
               return;
