@@ -8,6 +8,7 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../utils/utils.dart';
@@ -48,21 +49,84 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
   // Validation messages from schema
   String? _requiredValidationMessage;
   String? _minValidationMessage;
+  String? _duplicateValidationMessage;
   dynamic _validationMessages;
 
-  /// Validates the resource card data and shows toast messages for errors.
-  /// Returns true if valid, false otherwise.
-  void _validateAndShowToast(FormGroup form, BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Toast.showToast(
-        position: ToastPosition.aboveOneButtonFooter,
-        context,
-        message: _minValidationMessage ??
-            localizations.translate('CORE_COMMON_RESOURCE_SELECTION_ERROR'),
-        type: ToastType.error,
-      );
-    });
+  @override
+  void dispose() {
+    // Dismiss any active toasts when widget is disposed (e.g., page navigation)
+    ToastManager().dismissAll(showAnim: false);
+    super.dispose();
+  }
 
+  /// Validates the resource card data and shows toast messages for errors.
+  void _validateAndShowToast(FormGroup form, BuildContext context) {
+    final resourceList = (form.control(_resourceDeliveredKey)
+            as FormArray<DeliveryProductVariant?>)
+        .value;
+    final quantityList =
+        (form.control(_quantityDistributedKey) as FormArray<int?>).value;
+
+    String? errorMessage;
+
+    // Case 1: Check if at least one product is selected
+    final hasAnyProductSelected =
+        resourceList?.any((resource) => resource != null) ?? false;
+
+    if (!hasAnyProductSelected) {
+      // No product selected at all - show resource error
+      errorMessage = _requiredValidationMessage ??
+          localizations.translate('CORE_COMMON_REQUIRED_RESOURCE');
+    } else {
+      // Check each row for specific errors
+      for (var i = 0; i < (resourceList ?? []).length; i++) {
+        final resource = resourceList?[i];
+        final quantity = quantityList?[i];
+
+        // Case 1: Resource not selected - show resource error
+        if (resource == null) {
+          errorMessage = _requiredValidationMessage ??
+              localizations.translate('CORE_COMMON_REQUIRED_RESOURCE');
+          break;
+        }
+
+        // Case 2: Quantity is 0 or null - show quantity error
+        if (quantity == null || quantity <= 0) {
+          errorMessage = _minValidationMessage ??
+              localizations.translate('CORE_COMMON_MIN_ERROR');
+          break;
+        }
+      }
+
+      // Case 3: Check for duplicate resource selection
+      if (errorMessage == null) {
+        final selectedProductIds = resourceList
+            ?.where((r) => r != null)
+            .map((r) => r!.productVariantId)
+            .toList();
+        if (selectedProductIds != null) {
+          final uniqueIds = selectedProductIds.toSet();
+          if (uniqueIds.length != selectedProductIds.length) {
+            errorMessage = _duplicateValidationMessage ??
+                localizations.translate('CORE_COMMON_DUPLICATE_RESOURCE_ERROR');
+          }
+        }
+      }
+    }
+
+    if (errorMessage != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        // Only show toast if widget is still mounted (not navigated away)
+        if (mounted) {
+          Toast.showToast(
+            position: ToastPosition.aboveOneButtonFooter,
+            context,
+            message: errorMessage!,
+            type: ToastType.error,
+          );
+        }
+      });
+    }
   }
 
   @override
@@ -104,6 +168,11 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                     ? localizations.translate(validation.message!)
                     : null;
               }
+              if (validation.type == "duplicate" || validation.type == "unique") {
+                _duplicateValidationMessage = validation.message != null
+                    ? localizations.translate(validation.message!)
+                    : null;
+              }
             }
           }
           return; // stop once found
@@ -140,11 +209,15 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
 
                   form.control(_resourceDeliveredKey).valueChanges.listen((_) {
                     _toastShown = false; // Reset toast flag on data change
+                    // Mark parent control as untouched so we can detect next submission
+                    field.control.markAsUntouched();
                     _updateResourceCards(form);
                   });
 
                   form.control(_quantityDistributedKey).valueChanges.listen((_) {
                     _toastShown = false; // Reset toast flag on data change
+                    // Mark parent control as untouched so we can detect next submission
+                    field.control.markAsUntouched();
                     _updateResourceCards(form);
                   });
                 }
@@ -152,14 +225,19 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                 // Show toast when field is invalid and touched (via ReactiveWrapperField)
                 if (field.control.invalid && field.control.touched && !_toastShown) {
                   _toastShown = true;
-                    // if (mounted) {
-                      _validateAndShowToast(form, context);
-                    // }
+                  _validateAndShowToast(form, context);
+                  // Reset flag after delay to allow showing toast on next submission
+                  Future.delayed(const Duration(milliseconds: 500), () {
+                    if (mounted) {
+                      _toastShown = false;
+                    }
+                  });
                 }
 
-                // Reset toast flag when field becomes valid
+                // Reset toast flag and dismiss any active toast when field becomes valid
                 if (!field.control.invalid) {
                   _toastShown = false;
+                  ToastManager().dismissAll(showAnim: false);
                 }
 
                 return Column(
