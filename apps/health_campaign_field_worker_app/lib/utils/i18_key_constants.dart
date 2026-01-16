@@ -192,6 +192,10 @@ class Common {
 
   String get lowRamWarning => 'CORE_COMMON_LOW_RAM_WARNING';
 
+  String get lowRamWarningTitle => 'CORE_COMMON_LOW_RAM_WARNING_TITLE';
+
+  String get lowRamWarningDesc => 'CORE_COMMON_LOW_RAM_WARNING_DESC';
+
   String get allowBackgroundActivityDesc =>
       'PERMISSION_HANDLER_ALLOW_BACKGROUND_ACTIVITY';
 
