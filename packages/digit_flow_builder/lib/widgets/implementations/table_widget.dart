@@ -128,7 +128,7 @@ class TableWidget implements FlowWidget {
       // Case 4: Fallback to resolving from rawState
       else if (stateData != null) {
         final localSource =
-            resolveValueRaw(rowsKey, stateData.rawState, screenKey: screenKey);
+            resolveValueRaw(rowsKey, evalContext, screenKey: screenKey);
         if (localSource is List) {
           sourceList = localSource;
         } else if (localSource != null) {
