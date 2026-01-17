@@ -802,6 +802,14 @@ final jsonConfig = {
           "auditDetails": "__generate:audit",
           "localityCode": "__context:selectedBoundaryCode",
           "additionalFields": {
+            // Dynamically collect all fields from checklist pages
+            "__collectFromPages": [
+              "sideEffectFromCurrentCycle",
+              "sideEffectFromPreviousCycle",
+              "sideEffectFever",
+              "sideEffectSick"
+            ],
+            // Explicit field mappings (will override if duplicate keys)
             "boundaryCode": "facilityDetails.administrativeUnit",
             "referralCycle": "referralDetails.referralCycle",
             "gender": "referralDetails.gender",

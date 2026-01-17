@@ -288,6 +288,52 @@ class ConditionalNavigationExecutor extends ActionExecutor {
       navigationProperties['data'] = resolvedData;
     }
 
+    // Store existingModels in navigation params for edit mode
+    // This allows FETCH_TRANSFORMER_CONFIG to use updateEntitiesFromForm
+    final existingModels = contextData['existingModels'];
+    if (existingModels != null) {
+      final modelsList = existingModels as List;
+      debugPrint(
+          'CONDITIONAL_NAVIGATION: Storing existingModels (${modelsList.length} models)');
+
+      // The flow name is what getScreenKeyFromArgs returns (e.g., "REFERRAL_CREATE")
+      // This is the key that TransformerExecutor will look for
+      final flowName = targetFlow ?? targetName;
+
+      // Store with multiple key formats that TransformerExecutor might try:
+      // 1. Plain flow name (e.g., "REFERRAL_CREATE")
+      final plainNavParams =
+          FlowCrudStateRegistry().getNavigationParams(flowName) ?? {};
+      FlowCrudStateRegistry().updateNavigationParams(flowName, {
+        ...plainNavParams,
+        'existingModels': existingModels,
+      });
+      debugPrint(
+          'CONDITIONAL_NAVIGATION: Stored existingModels for $flowName');
+
+      // 2. FORM::flowName (e.g., "FORM::REFERRAL_CREATE")
+      final formKey = 'FORM::$flowName';
+      final formNavParams =
+          FlowCrudStateRegistry().getNavigationParams(formKey) ?? {};
+      FlowCrudStateRegistry().updateNavigationParams(formKey, {
+        ...formNavParams,
+        'existingModels': existingModels,
+      });
+      debugPrint(
+          'CONDITIONAL_NAVIGATION: Stored existingModels for $formKey');
+
+      // 3. TEMPLATE::flowName (e.g., "TEMPLATE::REFERRAL_CREATE")
+      final templateKey = 'TEMPLATE::$flowName';
+      final templateNavParams =
+          FlowCrudStateRegistry().getNavigationParams(templateKey) ?? {};
+      FlowCrudStateRegistry().updateNavigationParams(templateKey, {
+        ...templateNavParams,
+        'existingModels': existingModels,
+      });
+      debugPrint(
+          'CONDITIONAL_NAVIGATION: Stored existingModels for $templateKey');
+    }
+
     debugPrint(
         'CONDITIONAL_NAVIGATION: Navigating to $targetName with type $targetType');
     NavigationRegistry.navigateTo(navigationProperties);

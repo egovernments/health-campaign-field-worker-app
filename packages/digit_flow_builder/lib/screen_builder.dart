@@ -122,17 +122,12 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
   Future<void> _handleFormSubmission(Map<String, dynamic> formData) async {
     if (!mounted) return;
 
-    final onSubmit = widget.config['onAction'] as List<dynamic>?;
-
-    // Get the latest navigation params from registry (may have been updated by actions)
-    // Try multiple key formats for robust retrieval
+    // Get navigation params
     final screenKey = 'FORM::$_schemaKey';
     final registryNavParams =
         FlowCrudStateRegistry().getNavigationParams(screenKey) ??
             FlowCrudStateRegistry().getNavigationParams(_schemaKey) ??
             {};
-
-    // Merge widget.navigationParams with registry params (registry takes precedence)
     final mergedNavParams = {
       ...?widget.navigationParams,
       ...registryNavParams,
@@ -143,15 +138,101 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
       'navigation': mergedNavParams,
     };
 
-    if (onSubmit != null) {
+    final pages = widget.config['pages'] as List<dynamic>?;
+
+    debugPrint('FORM_SUBMIT: formData keys: ${formData.keys.toList()}');
+    debugPrint('FORM_SUBMIT: navigation params: $mergedNavParams');
+    debugPrint('FORM_SUBMIT: pages count: ${pages?.length ?? 0}');
+
+    if (pages != null && pages.isNotEmpty) {
+      // Collect all MERGE_UPDATE actions from pages that have data in formData
+      final mergeActions = <Map<String, dynamic>>[];
+      Map<String, dynamic>? lastPageWithData;
+      double lastPageOrder = -1;
+
+      for (final page in pages) {
+        if (page is Map<String, dynamic>) {
+          final pageName = page['page'] as String?;
+          final pageOrder = (page['order'] as num?)?.toDouble() ?? 0;
+          final pageOnAction = page['onAction'] as List<dynamic>?;
+
+          debugPrint('FORM_SUBMIT: Checking page $pageName, order: $pageOrder, hasOnAction: ${pageOnAction != null}');
+
+          if (pageName == null) continue;
+
+          // Check if this page has data in formData
+          // formData is structured as: { "pageName": { "field1": value, "field2": value } }
+          final pageData = formData[pageName];
+          final hasPageData = pageData != null &&
+              pageData is Map &&
+              pageData.isNotEmpty;
+
+          debugPrint('FORM_SUBMIT: Page $pageName hasPageData: $hasPageData, pageData: $pageData');
+
+          if (hasPageData && pageOnAction != null) {
+            debugPrint('FORM_SUBMIT: Found data for page $pageName');
+
+            // Collect MERGE_UPDATE_ADDITIONAL_FIELDS actions
+            for (final action in pageOnAction) {
+              if (action is Map<String, dynamic> &&
+                  action['actionType'] == 'MERGE_UPDATE_ADDITIONAL_FIELDS') {
+                mergeActions.add(action);
+              }
+            }
+
+            // Track the last page with data (by order)
+            if (pageOrder > lastPageOrder) {
+              lastPageOrder = pageOrder;
+              lastPageWithData = page;
+            }
+          }
+        }
+      }
+
       // Clear form state via registry
       FormSubmissionRegistry().clearForm(_schemaKey);
 
-      contextData = await ActionHandler.executeActions(
-        onSubmit,
-        context,
-        contextData,
-      );
+      // Execute all MERGE_UPDATE actions first
+      if (mergeActions.isNotEmpty && mounted) {
+        debugPrint('FORM_SUBMIT: Executing ${mergeActions.length} merge actions');
+        contextData = await ActionHandler.executeActions(
+          mergeActions,
+          context,
+          contextData,
+        );
+      }
+
+      // Execute non-merge actions from the last page with data
+      if (lastPageWithData != null && mounted) {
+        final lastPageOnAction = lastPageWithData['onAction'] as List<dynamic>?;
+        if (lastPageOnAction != null) {
+          final nonMergeActions = lastPageOnAction
+              .where((action) =>
+                  action is Map<String, dynamic> &&
+                  action['actionType'] != 'MERGE_UPDATE_ADDITIONAL_FIELDS')
+              .toList();
+
+          if (nonMergeActions.isNotEmpty && mounted) {
+            debugPrint('FORM_SUBMIT: Executing ${nonMergeActions.length} non-merge actions from ${lastPageWithData['page']}');
+            contextData = await ActionHandler.executeActions(
+              nonMergeActions,
+              context,
+              contextData,
+            );
+          }
+        }
+      }
+    } else {
+      // Fallback to flow-level onAction if no pages
+      final onSubmit = widget.config['onAction'] as List<dynamic>?;
+      if (onSubmit != null && mounted) {
+        FormSubmissionRegistry().clearForm(_schemaKey);
+        contextData = await ActionHandler.executeActions(
+          onSubmit,
+          context,
+          contextData,
+        );
+      }
     }
   }
 

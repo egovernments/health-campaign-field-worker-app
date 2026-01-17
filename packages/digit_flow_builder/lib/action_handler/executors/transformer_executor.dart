@@ -21,6 +21,19 @@ class TransformerExecutor extends ActionExecutor {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
+    // Check applyIf condition if specified
+    final applyIf = action.properties['applyIf'] as String?;
+    if (applyIf != null) {
+      final navigation =
+          contextData['navigation'] as Map<String, dynamic>? ?? {};
+      final resolveContext = {'navigation': navigation, ...contextData};
+
+      if (!_evaluateCondition(applyIf, resolveContext)) {
+        debugPrint('TRANSFORMER: Skipping - applyIf condition not met: $applyIf');
+        return contextData;
+      }
+    }
+
     final configName = action.properties['configName'];
     final formDataConfig = action.properties['formDataConfig'];
 
@@ -85,12 +98,14 @@ class TransformerExecutor extends ActionExecutor {
 
     FlowCrudStateRegistry().update(config?["name"], flowState);
 
-    // Check if this is edit mode
+    // Check if this is edit mode (supports both isEdit and isUpdate)
     final navigationParams = contextData['navigation'] is Map
         ? Map<String, dynamic>.from(contextData['navigation'] as Map)
         : null;
     final isEdit = navigationParams?['isEdit'] == true ||
-        navigationParams?['isEdit'] == 'true';
+        navigationParams?['isEdit'] == 'true' ||
+        navigationParams?['isUpdate'] == true ||
+        navigationParams?['isUpdate'] == 'true';
 
     // Check if we should force create new entities even in edit mode
     // This is useful for inventory where edit prefills form but submits as new entities
@@ -365,5 +380,50 @@ class TransformerExecutor extends ActionExecutor {
     }
 
     return result;
+  }
+
+  /// Evaluate a simple condition like "navigation.isUpdate!=true"
+  bool _evaluateCondition(String condition, Map<String, dynamic> context) {
+    try {
+      final isNotEqual = condition.contains('!=');
+      final isEqual = condition.contains('==');
+
+      if (!isEqual && !isNotEqual) {
+        return false;
+      }
+
+      final separator = isNotEqual ? '!=' : '==';
+      final parts = condition.split(separator);
+
+      if (parts.length != 2) {
+        return false;
+      }
+
+      final leftPath = parts[0].trim();
+      final rightValue = parts[1].trim();
+
+      final pathParts = leftPath.split('.');
+      dynamic value = context;
+
+      for (final part in pathParts) {
+        if (value is Map && value.containsKey(part)) {
+          value = value[part];
+        } else {
+          value = null;
+          break;
+        }
+      }
+
+      final leftValue = value?.toString() ?? '';
+
+      if (isNotEqual) {
+        return leftValue != rightValue;
+      } else {
+        return leftValue == rightValue;
+      }
+    } catch (e) {
+      debugPrint('TRANSFORMER: Error evaluating condition "$condition": $e');
+      return false;
+    }
   }
 }

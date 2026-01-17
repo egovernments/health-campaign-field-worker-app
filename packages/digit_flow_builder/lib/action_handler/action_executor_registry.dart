@@ -13,6 +13,7 @@ import 'executors/toast_executor.dart';
 import 'executors/clear_state_executor.dart';
 import 'executors/open_scanner_executor.dart';
 import 'executors/reverse_transformer_executor.dart';
+import 'executors/merge_update_executor.dart';
 
 /// Registry for managing action executors
 class ActionExecutorRegistry {
@@ -42,6 +43,7 @@ class ActionExecutorRegistry {
     register('OPEN_SCANNER', OpenScannerExecutor());
     register('REVERSE_TRANSFORM', ReverseTransformerExecutor());
     register('CLOSE_POPUP', ClosePopupExecutor());
+    register('MERGE_UPDATE_ADDITIONAL_FIELDS', MergeUpdateExecutor());
   }
 
   /// Register a custom executor

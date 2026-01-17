@@ -16185,6 +16185,13 @@ final dynamic hfDD = {
             "format": "button",
             "onAction": [
               {
+                "actionType": "REVERSE_TRANSFORM",
+                "properties": {
+                  "configName": "referralCreation",
+                  "entityTypes": ["HFReferralModel"]
+                }
+              },
+              {
                 "actionType": "CONDITIONAL_NAVIGATION",
                 "properties": {
                   "conditions": [
@@ -16192,7 +16199,7 @@ final dynamic hfDD = {
                       "condition":
                           "0.HFReferralModel.additionalFields.fields.feverQ1==null&&0.HFReferralModel.symptom==FEVER",
                       "navigateTo": {
-                        "name": "sideEffectFever",
+                        "name": "referralDetails",
                         "type": "FORM",
                         "flow": "REFERRAL_CREATE",
                         "data": [
@@ -16212,7 +16219,7 @@ final dynamic hfDD = {
                       "condition":
                           "0.HFReferralModel.additionalFields.fields.sickQ1==null&&0.HFReferralModel.symptom==SICK",
                       "navigateTo": {
-                        "name": "sideEffectSick",
+                        "name": "referralDetails",
                         "type": "FORM",
                         "flow": "REFERRAL_CREATE",
                         "data": [
@@ -16230,9 +16237,9 @@ final dynamic hfDD = {
                     },
                     {
                       "condition":
-                          "0.HFReferralModel.additionalFields.fields.ccQ1==null&&0.HFReferralModel.symptom==DRUG_SE_CC",
+                          "0.HFReferralModel.additionalFields.fields.sideEffectQ1==null&&0.HFReferralModel.symptom==DRUG_SE_CC",
                       "navigateTo": {
-                        "name": "sideEffectFromCurrentCycle",
+                        "name": "referralDetails",
                         "type": "FORM",
                         "flow": "REFERRAL_CREATE",
                         "data": [
@@ -16250,9 +16257,9 @@ final dynamic hfDD = {
                     },
                     {
                       "condition":
-                          "0.HFReferralModel.additionalFields.fields.pcQ1==null&&0.HFReferralModel.symptom==DRUG_SE_PC",
+                          "0.HFReferralModel.additionalFields.fields.sideEffectPQ1==null&&0.HFReferralModel.symptom==DRUG_SE_PC",
                       "navigateTo": {
-                        "name": "sideEffectFromPreviousCycle",
+                        "name": "referralDetails",
                         "type": "FORM",
                         "flow": "REFERRAL_CREATE",
                         "data": [
@@ -16280,7 +16287,7 @@ final dynamic hfDD = {
                 }
               }
             ],
-            "fieldName": "backButton",
+            "fieldName": "actionButton",
             "mandatory": true,
             "properties": {
               "size": "large",
@@ -16781,13 +16788,20 @@ final dynamic hfDD = {
               {
                 "actionType": "CREATE_EVENT",
                 "properties": {
+                  "applyIf": "navigation.isUpdate!=true",
                   "entity": "",
                   "onError": [
                     {
                       "actionType": "SHOW_TOAST",
-                      "properties": {"message": "Failed to create household."}
+                      "properties": {"message": "Failed to create."}
                     }
                   ]
+                }
+              },
+              {
+                "actionType": "UPDATE_EVENT",
+                "properties": {
+                  "applyIf": "navigation.isUpdate==true"
                 }
               },
               {
@@ -17189,13 +17203,20 @@ final dynamic hfDD = {
               {
                 "actionType": "CREATE_EVENT",
                 "properties": {
+                  "applyIf": "navigation.isUpdate!=true",
                   "entity": "",
                   "onError": [
                     {
                       "actionType": "SHOW_TOAST",
-                      "properties": {"message": "Failed to create household."}
+                      "properties": {"message": "Failed to create."}
                     }
                   ]
+                }
+              },
+              {
+                "actionType": "UPDATE_EVENT",
+                "properties": {
+                  "applyIf": "navigation.isUpdate==true"
                 }
               },
               {
@@ -17572,7 +17593,12 @@ final dynamic hfDD = {
                     "errorMessage": "",
                     "isMultiSelect": false,
                     "required.message":
-                        "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR"
+                        "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR",
+                    "visibilityCondition": {
+                      "expression": [
+                        {"condition": "navigation.isUpdate!=true"}
+                      ]
+                    }
                   }
                 ]
               }
@@ -17624,13 +17650,20 @@ final dynamic hfDD = {
               {
                 "actionType": "CREATE_EVENT",
                 "properties": {
+                  "applyIf": "navigation.isUpdate!=true",
                   "entity": "",
                   "onError": [
                     {
                       "actionType": "SHOW_TOAST",
-                      "properties": {"message": "Failed to create household."}
+                      "properties": {"message": "Failed to create."}
                     }
                   ]
+                }
+              },
+              {
+                "actionType": "UPDATE_EVENT",
+                "properties": {
+                  "applyIf": "navigation.isUpdate==true"
                 }
               },
               {
@@ -17872,7 +17905,12 @@ final dynamic hfDD = {
                 "errorMessage": "",
                 "isMultiSelect": false,
                 "required.message":
-                    "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR"
+                    "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR",
+                "visibilityCondition": {
+                  "expression": [
+                    {"condition": "navigation.isUpdate!=true"}
+                  ]
+                }
               }
             ],
             "actionLabel": "HFREFERRAL_REFERRAL_DETAILS_ACTION_LABEL",
@@ -17881,6 +17919,78 @@ final dynamic hfDD = {
             "submitCondition": null,
             "preventScreenCapture": false,
             "conditionalNavigateTo": [
+              {
+                "condition": "navigation.isUpdate==true&&navigation.referralSymptom==DRUG_SE_CC",
+                "navigateTo": {
+                  "name": "sideEffectFromCurrentCycle",
+                  "type": "form",
+                  "data": [
+                    {
+                      "key": "clientReferenceId",
+                      "value": "{{navigation.clientReferenceId}}"
+                    },
+                    {
+                      "key": "referralSymptom",
+                      "value": "{{navigation.referralSymptom}}"
+                    },
+                    {"key": "isUpdate", "value": "true"}
+                  ]
+                }
+              },
+              {
+                "condition": "navigation.isUpdate==true&&navigation.referralSymptom==DRUG_SE_PC",
+                "navigateTo": {
+                  "name": "sideEffectFromPreviousCycle",
+                  "type": "form",
+                  "data": [
+                    {
+                      "key": "clientReferenceId",
+                      "value": "{{navigation.clientReferenceId}}"
+                    },
+                    {
+                      "key": "referralSymptom",
+                      "value": "{{navigation.referralSymptom}}"
+                    },
+                    {"key": "isUpdate", "value": "true"}
+                  ]
+                }
+              },
+              {
+                "condition": "navigation.isUpdate==true&&navigation.referralSymptom==FEVER",
+                "navigateTo": {
+                  "name": "sideEffectFever",
+                  "type": "form",
+                  "data": [
+                    {
+                      "key": "clientReferenceId",
+                      "value": "{{navigation.clientReferenceId}}"
+                    },
+                    {
+                      "key": "referralSymptom",
+                      "value": "{{navigation.referralSymptom}}"
+                    },
+                    {"key": "isUpdate", "value": "true"}
+                  ]
+                }
+              },
+              {
+                "condition": "navigation.isUpdate==true&&navigation.referralSymptom==SICK",
+                "navigateTo": {
+                  "name": "sideEffectSick",
+                  "type": "form",
+                  "data": [
+                    {
+                      "key": "clientReferenceId",
+                      "value": "{{navigation.clientReferenceId}}"
+                    },
+                    {
+                      "key": "referralSymptom",
+                      "value": "{{navigation.referralSymptom}}"
+                    },
+                    {"key": "isUpdate", "value": "true"}
+                  ]
+                }
+              },
               {
                 "condition": "referralDetails.referralReason==DRUG_SE_CC",
                 "navigateTo": {
@@ -18216,13 +18326,20 @@ final dynamic hfDD = {
               {
                 "actionType": "CREATE_EVENT",
                 "properties": {
+                  "applyIf": "navigation.isUpdate!=true",
                   "entity": "",
                   "onError": [
                     {
                       "actionType": "SHOW_TOAST",
-                      "properties": {"message": "Failed to create household."}
+                      "properties": {"message": "Failed to create."}
                     }
                   ]
+                }
+              },
+              {
+                "actionType": "UPDATE_EVENT",
+                "properties": {
+                  "applyIf": "navigation.isUpdate==true"
                 }
               },
               {
@@ -18686,13 +18803,20 @@ final dynamic hfDD = {
               {
                 "actionType": "CREATE_EVENT",
                 "properties": {
+                  "applyIf": "navigation.isUpdate!=true",
                   "entity": "",
                   "onError": [
                     {
                       "actionType": "SHOW_TOAST",
-                      "properties": {"message": "Failed to create household."}
+                      "properties": {"message": "Failed to create."}
                     }
                   ]
+                }
+              },
+              {
+                "actionType": "UPDATE_EVENT",
+                "properties": {
+                  "applyIf": "navigation.isUpdate==true"
                 }
               },
               {
