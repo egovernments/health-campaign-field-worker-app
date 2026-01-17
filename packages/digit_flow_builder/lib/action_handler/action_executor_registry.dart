@@ -1,4 +1,5 @@
 import 'package:digit_flow_builder/action_handler/executors/close_popup_executor.dart';
+import 'package:digit_flow_builder/action_handler/executors/conditional_navigation_executor.dart';
 import 'package:flutter/material.dart';
 import 'action_config.dart';
 import 'executors/action_executor.dart';
@@ -30,6 +31,7 @@ class ActionExecutorRegistry {
   void registerDefaultExecutors() {
     register('NAVIGATION', NavigationExecutor());
     register('BACK_NAVIGATION', BackNavigationExecutor());
+    register('CONDITIONAL_NAVIGATION', ConditionalNavigationExecutor());
     register('CREATE_EVENT', CrudExecutor());
     register('UPDATE_EVENT', UpdateExecutor());
     register('SEARCH_EVENT', SearchExecutor());

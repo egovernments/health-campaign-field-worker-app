@@ -238,8 +238,10 @@ class HFReferralLocalRepository
             .where(
               (h) =>
                   h.key ==
-                      ReferralReconAdditionalFields.nameOfReferral.toValue() ||
-                  h.key == ReferralReconAdditionalFields.referredBy.toValue(),
+                  ReferralReconAdditionalFields.nameOfReferral.toValue()
+              //     ||
+              // h.key == ReferralReconAdditionalFields.referredBy.toValue()
+              ,
             )
             .first
             .value),

@@ -272,8 +272,12 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
           if (state.initialSchemas[widget.schemaKey] != null) {
             final schemaObject = state.cachedSchemas[widget.schemaKey]!;
 
-            // Derive pageName as first page key if none specified externally
-            final pageName = schemaObject.pages.entries.first.key;
+            // Use startPage from navigation params if available, otherwise use first page
+            final startPage = mergedNavParams['startPage'] as String?;
+            final pageName = startPage != null &&
+                    schemaObject.pages.containsKey(startPage)
+                ? startPage
+                : schemaObject.pages.entries.first.key;
 
             // Determine isEdit from merged navigation params (set by NAVIGATION action)
             final isEdit = mergedNavParams['isEdit'] == true ||

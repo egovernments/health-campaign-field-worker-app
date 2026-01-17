@@ -233,6 +233,31 @@ class NavigationRegistry {
         routeMap[routeKey] = (data) =>
             FlowBuilderHomeRoute(pageName: name, navigationParams: data);
       }
+
+      // Also register individual pages within form flows
+      // This allows direct navigation to specific pages like sideEffectFever
+      final pages = flow.value['pages'] as List<dynamic>?;
+      if (pages != null && name != null) {
+        for (final page in pages) {
+          if (page is Map<String, dynamic>) {
+            final pageName = page['page'] as String?;
+            if (pageName != null) {
+              // Register with FORM::pageName key
+              final pageRouteKey = 'FORM::$pageName';
+              routeMap[pageRouteKey] = (data) {
+                // Add the flow name and start page to the navigation data
+                final enrichedData = <String, dynamic>{
+                  ...?data,
+                  'flowName': name,
+                  'startPage': pageName,
+                };
+                return FlowBuilderHomeRoute(
+                    pageName: name, navigationParams: enrichedData);
+              };
+            }
+          }
+        }
+      }
     }
 
     NavigationRegistry.init(FlowBuilderNavigationService(context, routeMap));

@@ -837,7 +837,8 @@ final jsonConfig = {
           "additionalFields": {
             "boundaryCode": "referBeneficiary.administrativeArea",
             "referredBy": "__context:userUUID",
-            "referralComments": "referBeneficiary.referralComments"
+            "referralComments": "referBeneficiary.referralComments",
+            "nameOfReferral": "__context:selectedIndividualName",
           }
         }
       }
