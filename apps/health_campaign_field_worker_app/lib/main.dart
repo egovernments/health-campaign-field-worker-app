@@ -16190,7 +16190,7 @@ final dynamic hfDD = {
                   "conditions": [
                     {
                       "condition":
-                          "0.HFReferralModel.additionalFields.fields.formatName==null&&navigation.referralSymptom==FEVER",
+                          "0.HFReferralModel.additionalFields.fields.feverQ1==null&&0.HFReferralModel.symptom==FEVER",
                       "navigateTo": {
                         "name": "sideEffectFever",
                         "type": "FORM",
@@ -16198,11 +16198,11 @@ final dynamic hfDD = {
                         "data": [
                           {
                             "key": "clientReferenceId",
-                            "value": "{{navigation.clientReferenceId}}"
+                            "value": "{{0.HFReferralModel.clientReferenceId}}"
                           },
                           {
                             "key": "referralSymptom",
-                            "value": "{{navigation.referralSymptom}}"
+                            "value": "{{0.HFReferralModel.symptom}}"
                           },
                           {"key": "isUpdate", "value": "true"}
                         ]
@@ -16210,7 +16210,7 @@ final dynamic hfDD = {
                     },
                     {
                       "condition":
-                          "0.HFReferralModel.additionalFields.fields.formatName==null&&navigation.referralSymptom==SICK",
+                          "0.HFReferralModel.additionalFields.fields.sickQ1==null&&0.HFReferralModel.symptom==SICK",
                       "navigateTo": {
                         "name": "sideEffectSick",
                         "type": "FORM",
@@ -16218,11 +16218,11 @@ final dynamic hfDD = {
                         "data": [
                           {
                             "key": "clientReferenceId",
-                            "value": "{{navigation.clientReferenceId}}"
+                            "value": "{{0.HFReferralModel.clientReferenceId}}"
                           },
                           {
                             "key": "referralSymptom",
-                            "value": "{{navigation.referralSymptom}}"
+                            "value": "{{0.HFReferralModel.symptom}}"
                           },
                           {"key": "isUpdate", "value": "true"}
                         ]
@@ -16230,7 +16230,7 @@ final dynamic hfDD = {
                     },
                     {
                       "condition":
-                          "0.HFReferralModel.additionalFields.fields.formatName==null&&navigation.referralSymptom==DRUG_SE_CC",
+                          "0.HFReferralModel.additionalFields.fields.ccQ1==null&&0.HFReferralModel.symptom==DRUG_SE_CC",
                       "navigateTo": {
                         "name": "sideEffectFromCurrentCycle",
                         "type": "FORM",
@@ -16238,11 +16238,11 @@ final dynamic hfDD = {
                         "data": [
                           {
                             "key": "clientReferenceId",
-                            "value": "{{navigation.clientReferenceId}}"
+                            "value": "{{0.HFReferralModel.clientReferenceId}}"
                           },
                           {
                             "key": "referralSymptom",
-                            "value": "{{navigation.referralSymptom}}"
+                            "value": "{{0.HFReferralModel.symptom}}"
                           },
                           {"key": "isUpdate", "value": "true"}
                         ]
@@ -16250,7 +16250,7 @@ final dynamic hfDD = {
                     },
                     {
                       "condition":
-                          "0.HFReferralModel.additionalFields.fields.formatName==null&&navigation.referralSymptom==DRUG_SE_PC",
+                          "0.HFReferralModel.additionalFields.fields.pcQ1==null&&0.HFReferralModel.symptom==DRUG_SE_PC",
                       "navigateTo": {
                         "name": "sideEffectFromPreviousCycle",
                         "type": "FORM",
@@ -16258,11 +16258,11 @@ final dynamic hfDD = {
                         "data": [
                           {
                             "key": "clientReferenceId",
-                            "value": "{{navigation.clientReferenceId}}"
+                            "value": "{{0.HFReferralModel.clientReferenceId}}"
                           },
                           {
                             "key": "referralSymptom",
-                            "value": "{{navigation.referralSymptom}}"
+                            "value": "{{0.HFReferralModel.symptom}}"
                           },
                           {"key": "isUpdate", "value": "true"}
                         ]
