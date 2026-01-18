@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -429,31 +430,42 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
     RecordHFReferralState referralState,
     List<ProjectFacilityModel> facilities,
   ) {
-    final dateOfEvaluation = referralState.mapOrNull(
-      create: (value) => value.viewOnly &&
-              value.hfReferralModel?.additionalFields?.fields
-                      .where((e) =>
-                          e.key ==
-                          ReferralReconEnums.dateOfEvaluation.toValue())
-                      .firstOrNull
-                      ?.value !=
-                  null
-          ? DigitDateUtils.getFormattedDateToDateTime(
-              DigitDateUtils.getDateFromTimestamp(
-                int.tryParse(value.hfReferralModel?.additionalFields?.fields
-                            .where((e) =>
-                                e.key ==
-                                ReferralReconEnums.dateOfEvaluation.toValue())
-                            .firstOrNull
-                            ?.value
-                            .toString() ??
-                        '') ??
-                    DateTime.now().millisecondsSinceEpoch,
-                dateFormat: defaultDateFormat,
-              ),
-            )
-          : DateTime.now(),
-    );
+    // Extract viewOnly flag and model from state
+    final viewOnly =
+        referralState.mapOrNull(create: (value) => value.viewOnly) ?? false;
+    final hfReferralModel =
+        referralState.mapOrNull(create: (value) => value.hfReferralModel);
+
+    // Use the extension method to get form data (similar to ReverseFormMapper pattern)
+    final formData = hfReferralModel.toFormData();
+
+    // Parse date of evaluation from additional fields
+    DateTime? dateOfEvaluation;
+    if (viewOnly && formData[ReferralReconEnums.dateOfEvaluation.toValue()] != null) {
+      final timestamp = int.tryParse(
+          formData[ReferralReconEnums.dateOfEvaluation.toValue()].toString());
+      if (timestamp != null) {
+        dateOfEvaluation = DigitDateUtils.getFormattedDateToDateTime(
+          DigitDateUtils.getDateFromTimestamp(
+            timestamp,
+            dateFormat: defaultDateFormat,
+          ),
+        );
+      }
+    }
+    dateOfEvaluation ??= DateTime.now();
+
+    // Get facility name for display
+    String? evaluationFacilityValue;
+    if (viewOnly && hfReferralModel?.projectFacilityId != null) {
+      final matchingFacility = facilities
+          .where((e) => e.id == hfReferralModel?.projectFacilityId)
+          .firstOrNull;
+      if (matchingFacility != null) {
+        evaluationFacilityValue =
+            localizations.translate('PJ_FAC_${matchingFacility.id}');
+      }
+    }
 
     return fb.group(<String, Object>{
       _dateOfEvaluationKey: FormControl<DateTime>(
@@ -468,53 +480,18 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
         ],
       ),
       _hfCoordinatorKey: FormControl<String>(
-        value: referralState.mapOrNull(
-          create: (value) => value.viewOnly &&
-                  value.hfReferralModel?.additionalFields?.fields
-                          .where((e) =>
-                              e.key ==
-                              ReferralReconEnums.hFCoordinator.toValue())
-                          .firstOrNull
-                          ?.value !=
-                      null
-              ? value.hfReferralModel?.additionalFields?.fields
-                  .where((e) =>
-                      e.key == ReferralReconEnums.hFCoordinator.toValue())
-                  .firstOrNull
-                  ?.value
-                  .toString()
-              : ReferralReconSingleton().userName,
-        ),
+        value: viewOnly
+            ? formData[ReferralReconEnums.hFCoordinator.toValue()]?.toString()
+            : ReferralReconSingleton().userName,
       ),
       _evaluationFacilityKey: FormControl<String>(
-        value: referralState.mapOrNull(
-          create: (value) => value.viewOnly
-              ? localizations.translate(
-                  'PJ_FAC_${facilities.where(
-                        (e) => e.id == value.hfReferralModel?.projectFacilityId,
-                      ).first.id.toString()}',
-                )
-              : null,
-        ),
+        value: evaluationFacilityValue,
         validators: [Validators.required],
       ),
       _referredByKey: FormControl<String>(
-        value: referralState.mapOrNull(
-          create: (value) => value.viewOnly &&
-                  value.hfReferralModel?.additionalFields?.fields
-                          .where((e) =>
-                              e.key == ReferralReconEnums.referredBy.toValue())
-                          .firstOrNull
-                          ?.value !=
-                      null
-              ? value.hfReferralModel?.additionalFields?.fields
-                  .where(
-                      (e) => e.key == ReferralReconEnums.referredBy.toValue())
-                  .firstOrNull
-                  ?.value
-                  .toString()
-              : null,
-        ),
+        value: viewOnly
+            ? formData[ReferralReconEnums.referredBy.toValue()]?.toString()
+            : null,
       ),
     });
   }

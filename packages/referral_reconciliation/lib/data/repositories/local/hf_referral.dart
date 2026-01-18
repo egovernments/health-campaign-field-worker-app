@@ -7,7 +7,6 @@ import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/entities/hf_additional_fields.dart';
-import '../../../utils/utils.dart';
 
 class HFReferralLocalRepository
     extends LocalRepository<HFReferralModel, HFReferralSearchModel> {
@@ -50,101 +49,39 @@ class HFReferralLocalRepository
           .map((e) {
             final referral = e.readTableOrNull(sql.hFReferral);
             if (referral == null) return null;
-            final additionalData = referral.additionalFields != null
-                ? jsonDecode(referral.additionalFields!)
-                : null;
-            List<Map<String, dynamic>> data =
-                List<Map<String, dynamic>>.from(additionalData['fields']);
-            final HFReferralAdditionalFields additionalFields =
-                HFReferralAdditionalFields(
-              version: 1,
-              fields: [
-                if (getValueByKey(
-                      data,
-                      ReferralReconAdditionalFields.gender.toValue(),
-                    ) !=
-                    null)
-                  AdditionalField(
-                    ReferralReconAdditionalFields.gender.toValue(),
-                    getValueByKey(
-                      data,
-                      ReferralReconAdditionalFields.gender.toValue(),
-                    ),
-                  ),
-                if (getValueByKey(
-                      data,
-                      ReferralReconAdditionalFields.hFCoordinator.toValue(),
-                    ) !=
-                    null)
-                  AdditionalField(
-                    ReferralReconAdditionalFields.hFCoordinator.toValue(),
-                    getValueByKey(
-                      data,
-                      ReferralReconAdditionalFields.hFCoordinator.toValue(),
-                    ),
-                  ),
-                if (getValueByKey(
-                      data,
-                      ReferralReconAdditionalFields.referredBy.toValue(),
-                    ) !=
-                    null)
-                  AdditionalField(
-                    ReferralReconAdditionalFields.referredBy.toValue(),
-                    getValueByKey(
-                      data,
-                      ReferralReconAdditionalFields.referredBy.toValue(),
-                    ),
-                  ),
-                if (getValueByKey(
-                      data,
-                      ReferralReconAdditionalFields.dateOfEvaluation.toValue(),
-                    ) !=
-                    null)
-                  AdditionalField(
-                    ReferralReconAdditionalFields.dateOfEvaluation.toValue(),
-                    getValueByKey(
-                      data,
-                      ReferralReconAdditionalFields.dateOfEvaluation.toValue(),
-                    ),
-                  ),
-                if (getValueByKey(
-                      data,
-                      ReferralReconAdditionalFields.nameOfReferral.toValue(),
-                    ) !=
-                    null)
-                  AdditionalField(
-                    ReferralReconAdditionalFields.nameOfReferral.toValue(),
-                    getValueByKey(
-                      data,
-                      ReferralReconAdditionalFields.nameOfReferral.toValue(),
-                    ),
-                  ),
-                if (getValueByKey(
-                      data,
-                      ReferralReconAdditionalFields.age.toValue(),
-                    ) !=
-                    null)
-                  AdditionalField(
-                    ReferralReconAdditionalFields.age.toValue(),
-                    getValueByKey(
-                      data,
-                      ReferralReconAdditionalFields.age.toValue(),
-                    ),
-                  ),
-                if (getValueByKey(
-                      data,
-                      ReferralReconAdditionalFields.cycle.toValue(),
-                    ) !=
-                    null)
-                  AdditionalField(
-                    ReferralReconAdditionalFields.cycle.toValue(),
-                    getValueByKey(
-                      data,
-                      ReferralReconAdditionalFields.cycle.toValue(),
-                    ),
-                  ),
-              ],
-            );
+
+            // Parse additionalFields dynamically - load ALL fields from database
+            HFReferralAdditionalFields? additionalFields;
+            if (referral.additionalFields != null &&
+                referral.additionalFields!.isNotEmpty) {
+              try {
+                final additionalData = jsonDecode(referral.additionalFields!);
+                if (additionalData != null && additionalData['fields'] != null) {
+                  final List<Map<String, dynamic>> data =
+                      List<Map<String, dynamic>>.from(additionalData['fields']);
+
+                  // Dynamically extract ALL fields from the stored data
+                  final List<AdditionalField> fieldsList = [];
+                  for (final field in data) {
+                    if (field.containsKey('key') && field.containsKey('value')) {
+                      final key = field['key'];
+                      final value = field['value'];
+                      if (key != null && value != null) {
+                        fieldsList.add(AdditionalField(key.toString(), value));
+                      }
+                    }
+                  }
+
+                  additionalFields = HFReferralAdditionalFields(
+                    version: additionalData['version'] ?? 1,
+                    fields: fieldsList,
+                  );
+                }
+              } catch (e) {
+                // Log error but don't crash - continue with null additionalFields
+                additionalFields = null;
+              }
+            }
 
             return HFReferralModel(
               id: referral.id,

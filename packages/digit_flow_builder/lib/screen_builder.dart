@@ -360,12 +360,17 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
                 ? startPage
                 : schemaObject.pages.entries.first.key;
 
-            // Determine isEdit from merged navigation params (set by NAVIGATION action)
+            // Determine isEdit/isUpdate from merged navigation params (set by NAVIGATION action)
+            // Support both 'isEdit' and 'isUpdate' flags for backward compatibility
             final isEdit = mergedNavParams['isEdit'] == true ||
-                mergedNavParams['isEdit'] == 'true';
+                mergedNavParams['isEdit'] == 'true' ||
+                mergedNavParams['isUpdate'] == true ||
+                mergedNavParams['isUpdate'] == 'true';
 
             // Get formData from FlowCrudStateRegistry (set by REVERSE_TRANSFORM action)
             final registryFormData = flowState?.formData ?? {};
+
+            debugPrint('FormScreen: isEdit=$isEdit, registryFormData keys: ${registryFormData.keys.toList()}');
 
             return FormsRenderPage(
               pageName: pageName,

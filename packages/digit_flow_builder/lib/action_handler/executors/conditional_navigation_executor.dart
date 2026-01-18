@@ -288,6 +288,36 @@ class ConditionalNavigationExecutor extends ActionExecutor {
       navigationProperties['data'] = resolvedData;
     }
 
+    // The flow name is what getScreenKeyFromArgs returns (e.g., "REFERRAL_CREATE")
+    // This is the key that the target screen will use
+    final flowName = targetFlow ?? targetName;
+
+    // Store formData from REVERSE_TRANSFORM for the target screen to use
+    // This enables auto-population of form fields when navigating to edit/update screens
+    final formData = contextData['formData'] as Map<String, dynamic>?;
+    if (formData != null && formData.isNotEmpty) {
+      debugPrint('CONDITIONAL_NAVIGATION: Storing formData for target screen');
+      debugPrint('CONDITIONAL_NAVIGATION: formData keys: ${formData.keys.toList()}');
+
+      // Store formData in FlowCrudStateRegistry for the target screen
+      // Use FORM:: prefix as that's what screen_builder uses for form screens
+      final formKey = 'FORM::$flowName';
+      final currentState = FlowCrudStateRegistry().get(formKey);
+      final updatedState = (currentState ?? const FlowCrudState()).copyWith(
+        formData: formData,
+      );
+      FlowCrudStateRegistry().update(formKey, updatedState);
+      debugPrint('CONDITIONAL_NAVIGATION: Stored formData for $formKey');
+
+      // Also store under plain flow name for compatibility
+      final plainState = FlowCrudStateRegistry().get(flowName);
+      final updatedPlainState = (plainState ?? const FlowCrudState()).copyWith(
+        formData: formData,
+      );
+      FlowCrudStateRegistry().update(flowName, updatedPlainState);
+      debugPrint('CONDITIONAL_NAVIGATION: Stored formData for $flowName');
+    }
+
     // Store existingModels in navigation params for edit mode
     // This allows FETCH_TRANSFORMER_CONFIG to use updateEntitiesFromForm
     final existingModels = contextData['existingModels'];
@@ -295,10 +325,6 @@ class ConditionalNavigationExecutor extends ActionExecutor {
       final modelsList = existingModels as List;
       debugPrint(
           'CONDITIONAL_NAVIGATION: Storing existingModels (${modelsList.length} models)');
-
-      // The flow name is what getScreenKeyFromArgs returns (e.g., "REFERRAL_CREATE")
-      // This is the key that TransformerExecutor will look for
-      final flowName = targetFlow ?? targetName;
 
       // Store with multiple key formats that TransformerExecutor might try:
       // 1. Plain flow name (e.g., "REFERRAL_CREATE")

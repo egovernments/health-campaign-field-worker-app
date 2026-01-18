@@ -1,5 +1,8 @@
 // Returns value of the Additional Field Model, by passing the key and additional Fields list as <Map<String, dynamic>>
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/hf_referral.dart';
+
+import '../models/entities/referral_recon_enums.dart';
 
 dynamic getValueByKey(List<Map<String, dynamic>> data, String key) {
   for (var map in data) {
@@ -9,6 +12,57 @@ dynamic getValueByKey(List<Map<String, dynamic>> data, String key) {
   }
 
   return null; // Key not found
+}
+
+/// Extension on HFReferralModel to extract form data for auto-population
+/// Similar to ReverseFormMapper pattern used in registration flow
+extension HFReferralFormDataExtractor on HFReferralModel? {
+  /// Extracts all data from HFReferralModel into a flat Map for form population
+  /// Returns empty map if model is null
+  Map<String, dynamic> toFormData() {
+    if (this == null) return {};
+
+    final model = this!;
+    final formData = <String, dynamic>{};
+
+    // Extract main model fields
+    formData['name'] = model.name;
+    formData['symptom'] = model.symptom;
+    formData['beneficiaryId'] = model.beneficiaryId;
+    formData['referralCode'] = model.referralCode;
+    formData['projectFacilityId'] = model.projectFacilityId;
+    formData['clientReferenceId'] = model.clientReferenceId;
+
+    // Extract all additionalFields into flat map
+    final additionalFields = model.additionalFields?.fields;
+    if (additionalFields != null) {
+      for (final field in additionalFields) {
+        formData[field.key] = field.value;
+      }
+    }
+
+    return formData;
+  }
+
+  /// Gets a specific additional field value by enum key
+  /// Returns null if not found
+  dynamic getAdditionalFieldValue(ReferralReconEnums key) {
+    if (this == null) return null;
+    return this!.additionalFields?.fields
+        .where((e) => e.key == key.toValue())
+        .firstOrNull
+        ?.value;
+  }
+
+  /// Gets a specific additional field value by string key
+  /// Returns null if not found
+  dynamic getAdditionalFieldByKey(String key) {
+    if (this == null) return null;
+    return this!.additionalFields?.fields
+        .where((e) => e.key == key)
+        .firstOrNull
+        ?.value;
+  }
 }
 
 // Class to store the valid max and min age for a campaign
