@@ -30,7 +30,13 @@ class FormulaParser {
         } else if (value is num || value == "null") {
           safeValue = value.toString(); // keep raw numbers
         } else if (value is bool) {
-          safeValue = value.toString().toUpperCase(); // TRUE or FALSE (unquoted)
+          safeValue =
+              value.toString().toUpperCase(); // TRUE or FALSE (unquoted)
+        } else if (value.toString().toLowerCase() == 'true' ||
+            value.toString().toLowerCase() == 'false') {
+          // ⭐ Convert string boolean to actual boolean
+          safeValue =
+              value.toString().toUpperCase(); // TRUE or FALSE (unquoted)
         } else {
           final clean = value.toString().replaceAll('"', '');
           safeValue = '"$clean"'; // wrap strings in quotes

@@ -1306,14 +1306,52 @@ class ComputedListEvaluator {
   static int calculateAgeInMonths(String dob) {
     final dateOfBirth = parseDate(dob);
     final age = DigitDateUtils.calculateAge(dateOfBirth);
-    return age.years*12 + age.months;
+    return age.years * 12 + age.months;
   }
 
   /// Builds the context map by extracting only required keys and applying transformations
+  /// Infers the expected type of a variable from the condition and returns default value
+  static dynamic _getDefaultValueForMissingKey(
+    String key,
+    String resolvedCondition,
+  ) {
+    // Create patterns to match the key in different comparison contexts
+    final patterns = [
+      RegExp('$key\\s*==\\s*(TRUE|FALSE)', caseSensitive: false),
+      RegExp('$key\\s*!=\\s*(TRUE|FALSE)', caseSensitive: false),
+      RegExp('(TRUE|FALSE)\\s*==\\s*$key', caseSensitive: false),
+      RegExp('(TRUE|FALSE)\\s*!=\\s*$key', caseSensitive: false),
+    ];
+
+    // Check if it's a boolean comparison
+    for (final pattern in patterns) {
+      if (pattern.hasMatch(resolvedCondition)) {
+        return 'false'; // Default boolean value as string
+      }
+    }
+
+    // Check if it's a numeric comparison (>=, <=, >, <, ==, !=)
+    final numericPatterns = [
+      RegExp('$key\\s*(>=|<=|>|<|==|!=)\\s*\\d+'),
+      RegExp('\\d+\\s*(>=|<=|>|<|==|!=)\\s*$key'),
+    ];
+
+    for (final pattern in numericPatterns) {
+      if (pattern.hasMatch(resolvedCondition)) {
+        return '0'; // Default numeric value as string
+      }
+    }
+
+    // Default to null for other types
+    return null;
+  }
+
+  /// Updated buildContextForCondition with missing key handling
   static Map<String, dynamic> buildContextForCondition(
     Map<String, dynamic> ctx,
     Map<String, dynamic> conf,
     Set<String> requiredKeys,
+    String resolvedCondition, // ⭐ Add condition parameter
   ) {
     final evaluateConfig = conf['evaluateCondition'] as Map<String, dynamic>?;
     if (evaluateConfig == null) return {};
@@ -1343,7 +1381,8 @@ class ComputedListEvaluator {
 
       // Merge additionalFields if exists
       if (contextAsMap['additionalFields'] is Map<String, dynamic>) {
-        final additional = contextAsMap['additionalFields'] as Map<String, dynamic>;
+        final additional =
+            contextAsMap['additionalFields'] as Map<String, dynamic>;
 
         if (additional['fields'] is List) {
           final fieldsList = additional['fields'] as List;
@@ -1377,6 +1416,17 @@ class ComputedListEvaluator {
       }
     }
 
+    // ⭐ Handle missing required keys with default values
+    for (final key in requiredKeys) {
+      if (!contextMap.containsKey(key)) {
+        final defaultValue =
+            _getDefaultValueForMissingKey(key, resolvedCondition);
+        contextMap[key] = defaultValue;
+        debugPrint(
+            'Missing key "$key" in context, using default: $defaultValue');
+      }
+    }
+
     return contextMap;
   }
 
@@ -1402,7 +1452,8 @@ class ComputedListEvaluator {
       final requiredKeys = extractKeys(resolvedCondition);
 
       // Build the context map with only required keys and applying transformations
-      final flatContext = buildContextForCondition(ctx, conf, requiredKeys);
+      final flatContext =
+          buildContextForCondition(ctx, conf, requiredKeys, resolvedCondition);
 
       if (resolvedCondition == null || resolvedCondition.isEmpty) continue;
 
