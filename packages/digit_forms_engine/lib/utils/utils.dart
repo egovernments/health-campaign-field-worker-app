@@ -131,6 +131,8 @@ bool shouldHideField(PropertySchema schema, FormGroup form) {
   final allOf = display.allOf;
 
   final values = (oneOf ?? allOf!).map((e) {
+    // Skip if control doesn't exist (hidden field without includeInForm: true)
+    if (!form.contains(e)) return false;
     final value = form.control(e).value;
     if (value is bool?) return !(value ?? false);
     if (value is String?) return value?.isNotEmpty ?? false;

@@ -64,6 +64,9 @@ class VisibilityManager {
     bool isVisible,
     PropertySchema schema,
   ) {
+    // Skip if control doesn't exist (hidden field without includeInForm: true)
+    if (!form.contains(key)) return;
+
     final control = form.control(key);
 
     if (isVisible) {

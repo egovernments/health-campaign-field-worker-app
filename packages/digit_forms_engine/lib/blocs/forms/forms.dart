@@ -128,7 +128,10 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
 
     final form = ReactiveForm.of(event.context) as FormGroup;
 
-    form.control(event.key).value = event.value;
+    // Skip if control doesn't exist (hidden field without includeInForm: true)
+    if (form.contains(event.key)) {
+      form.control(event.key).value = event.value;
+    }
 
     final updatedPages = {
       for (final entry in schema.pages.entries)
