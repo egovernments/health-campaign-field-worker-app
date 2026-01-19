@@ -96,6 +96,7 @@ class ButtonWidget implements FlowWidget {
     }
 
     return DigitButton(
+      crossAxisAlignment: CrossAxisAlignment.center,
       label: resolvedLabel,
       isDisabled: isDisabled,
       onPressed: () async {
