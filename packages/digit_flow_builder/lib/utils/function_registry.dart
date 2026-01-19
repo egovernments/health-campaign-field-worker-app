@@ -262,8 +262,8 @@ void initializeFunctionRegistry() {
     if (projectType == null) return false;
 
 // --- Tasks & SideEffects come from stateData ---
-    final tasks = args.length>2 ? args[2] : [];
-    final referral = args.length>1 ? args[1] : [];
+    final tasks = args.length > 2 ? args[2] : [];
+    final referral = args.length > 1 ? args[1] : [];
     if (referral.isNotEmpty) return false;
     final sideEffects = (stateData.modelMap['sideEffects'] as List?) ?? [];
 
@@ -387,18 +387,19 @@ void initializeFunctionRegistry() {
     // Get sideEffects from stateData - convert model objects to Map if needed
     final rawSideEffects = stateData.modelMap['sideEffects'] as List?;
     final sideEffects = rawSideEffects?.map((item) {
-      if (item is Map<String, dynamic>) return item;
-      if (item is Map) return Map<String, dynamic>.from(item);
-      try {
-        return (item as dynamic).toMap() as Map<String, dynamic>;
-      } catch (_) {
-        try {
-          return (item as dynamic).toJson() as Map<String, dynamic>;
-        } catch (_) {
-          return <String, dynamic>{};
-        }
-      }
-    }).toList() ?? [];
+          if (item is Map<String, dynamic>) return item;
+          if (item is Map) return Map<String, dynamic>.from(item);
+          try {
+            return (item as dynamic).toMap() as Map<String, dynamic>;
+          } catch (_) {
+            try {
+              return (item as dynamic).toJson() as Map<String, dynamic>;
+            } catch (_) {
+              return <String, dynamic>{};
+            }
+          }
+        }).toList() ??
+        [];
 
     // If no valid cycle or cycle has no deliveries, return true (nothing to deliver)
     if (selectedCycle == null ||
@@ -432,8 +433,7 @@ void initializeFunctionRegistry() {
       }
 
       final lastTaskStatus = lastTask['status']?.toString().toUpperCase();
-      final isDelivered =
-          lastTaskStatus == 'DELIVERED';
+      final isDelivered = lastTaskStatus == 'DELIVERED';
 
       // If last dose equals total deliveries in cycle AND cycle matches AND status is NOT delivered
       // -> return true (last dose attempted but not delivered)
@@ -452,7 +452,8 @@ void initializeFunctionRegistry() {
 
       // Check side effects if present
       if (sideEffects.isNotEmpty) {
-        return _recordedSideEffectInternal(selectedCycle, lastTask, sideEffects);
+        return _recordedSideEffectInternal(
+            selectedCycle, lastTask, sideEffects);
       }
 
       return false;
@@ -689,10 +690,12 @@ void initializeFunctionRegistry() {
         dynamic pgrService = itemMap['PgrServiceModel'];
         if (pgrService != null && pgrService is! Map) {
           try {
-            pgrService = (pgrService as dynamic).toMap() as Map<String, dynamic>;
+            pgrService =
+                (pgrService as dynamic).toMap() as Map<String, dynamic>;
           } catch (_) {
             try {
-              pgrService = (pgrService as dynamic).toJson() as Map<String, dynamic>;
+              pgrService =
+                  (pgrService as dynamic).toJson() as Map<String, dynamic>;
             } catch (_) {
               pgrService = null;
             }
@@ -708,9 +711,7 @@ void initializeFunctionRegistry() {
     }
 
     // Return as dropdown format [{name: code, code: code}]
-    return uniqueTypes
-        .map((code) => {'name': code, 'code': code})
-        .toList();
+    return uniqueTypes.map((code) => {'name': code, 'code': code}).toList();
   });
 
   /// Registers a function to get unique localities from ComplaintWrapper.
@@ -751,10 +752,12 @@ void initializeFunctionRegistry() {
         dynamic pgrService = itemMap['PgrServiceModel'];
         if (pgrService != null && pgrService is! Map) {
           try {
-            pgrService = (pgrService as dynamic).toMap() as Map<String, dynamic>;
+            pgrService =
+                (pgrService as dynamic).toMap() as Map<String, dynamic>;
           } catch (_) {
             try {
-              pgrService = (pgrService as dynamic).toJson() as Map<String, dynamic>;
+              pgrService =
+                  (pgrService as dynamic).toJson() as Map<String, dynamic>;
             } catch (_) {
               pgrService = null;
             }
@@ -781,10 +784,12 @@ void initializeFunctionRegistry() {
             dynamic locality = address['locality'];
             if (locality != null && locality is! Map) {
               try {
-                locality = (locality as dynamic).toMap() as Map<String, dynamic>;
+                locality =
+                    (locality as dynamic).toMap() as Map<String, dynamic>;
               } catch (_) {
                 try {
-                  locality = (locality as dynamic).toJson() as Map<String, dynamic>;
+                  locality =
+                      (locality as dynamic).toJson() as Map<String, dynamic>;
                 } catch (_) {
                   locality = null;
                 }

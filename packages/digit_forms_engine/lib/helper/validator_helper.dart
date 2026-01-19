@@ -7,6 +7,9 @@ import '../models/property_schema/property_schema.dart';
 // Global registry for page schemas - used by validators to access cross-page values
 final Map<String, Map<String, PropertySchema>> _pagesRegistry = {};
 
+// Global registry for navigation params - used by validators to access navigation values
+final Map<String, Map<String, dynamic>> _navigationParamsRegistry = {};
+
 void registerPagesForValidation(
     String schemaKey, Map<String, PropertySchema> pages) {
   _pagesRegistry[schemaKey] = pages;
@@ -14,6 +17,29 @@ void registerPagesForValidation(
 
 void unregisterPagesForValidation(String schemaKey) {
   _pagesRegistry.remove(schemaKey);
+}
+
+void registerNavigationParams(
+    String schemaKey, Map<String, dynamic> navigationParams) {
+  _navigationParamsRegistry[schemaKey] = navigationParams;
+}
+
+void unregisterNavigationParams(String schemaKey) {
+  _navigationParamsRegistry.remove(schemaKey);
+}
+
+/// Resolves a value that may be a navigation param reference (e.g., "navigation.stockBalance")
+/// Returns the resolved value or null if not found
+dynamic _resolveNavigationValue(dynamic value, String? schemaKey) {
+  if (value is! String || schemaKey == null) return value;
+  if (!value.startsWith('navigation.')) return value;
+
+  final navParams = _navigationParamsRegistry[schemaKey];
+  if (navParams == null) return null;
+
+  // Extract the key after "navigation."
+  final key = value.substring('navigation.'.length);
+  return navParams[key];
 }
 
 List<Validator<T>> buildValidators<T>(PropertySchema schema,
@@ -52,23 +78,59 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema,
 
         case 'min':
         case 'minValue':
-          final parsedValue = parseIntValue(rule.value);
-          if (parsedValue != null) {
-            validators.add(Validators.composeOR([
-              Validators.min(parsedValue) as Validator<T>,
-              Validators.equals(null),
-            ]) as Validator<T>);
+          // Check if value is a navigation param reference
+          if (rule.value is String &&
+              rule.value.startsWith('navigation.') &&
+              schemaKey != null) {
+            validators.add(Validators.delegate((control) {
+              final resolvedValue =
+                  _resolveNavigationValue(rule.value, schemaKey);
+              final minVal = parseIntValue(resolvedValue);
+              if (minVal == null || control.value == null) return null;
+              final numValue = num.tryParse(control.value.toString());
+              if (numValue == null) return null;
+              if (numValue < minVal) {
+                return {'min': {'min': minVal, 'actual': numValue}};
+              }
+              return null;
+            }) as Validator<T>);
+          } else {
+            final parsedValue = parseIntValue(rule.value);
+            if (parsedValue != null) {
+              validators.add(Validators.composeOR([
+                Validators.min(parsedValue) as Validator<T>,
+                Validators.equals(null),
+              ]) as Validator<T>);
+            }
           }
           break;
 
         case 'max':
         case 'maxValue':
-          final parsedValue = parseIntValue(rule.value);
-          if (parsedValue != null) {
-            validators.add(Validators.composeOR([
-              Validators.max(parsedValue) as Validator<T>,
-              Validators.equals(null),
-            ]) as Validator<T>);
+          // Check if value is a navigation param reference
+          if (rule.value is String &&
+              rule.value.startsWith('navigation.') &&
+              schemaKey != null) {
+            validators.add(Validators.delegate((control) {
+              final resolvedValue =
+                  _resolveNavigationValue(rule.value, schemaKey);
+              final maxVal = parseIntValue(resolvedValue);
+              if (maxVal == null || control.value == null) return null;
+              final numValue = num.tryParse(control.value.toString());
+              if (numValue == null) return null;
+              if (numValue > maxVal) {
+                return {'max': {'max': maxVal, 'actual': numValue}};
+              }
+              return null;
+            }) as Validator<T>);
+          } else {
+            final parsedValue = parseIntValue(rule.value);
+            if (parsedValue != null) {
+              validators.add(Validators.composeOR([
+                Validators.max(parsedValue) as Validator<T>,
+                Validators.equals(null),
+              ]) as Validator<T>);
+            }
           }
           break;
 
