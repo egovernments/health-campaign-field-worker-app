@@ -132,26 +132,18 @@ class ReverseTransformerExecutor extends ActionExecutor {
 
       // Update the current screen's state with the form data
       if (currentScreenKey != null) {
-        final currentState = FlowCrudStateRegistry().get(currentScreenKey);
-        final existingFormData = currentState?.formData ?? {};
-
-
-        final updatedState =
-            (currentState ?? const FlowCrudState()).copyWith(
-          formData: formData,
-          stateWrapper: currentState?.stateWrapper,
+        final updatedState = FlowCrudState(
+          formData: Map<String, dynamic>.from(formData),
+          stateWrapper:
+          FlowCrudStateRegistry().get(currentScreenKey)?.stateWrapper,
         );
 
         FlowCrudStateRegistry().update(currentScreenKey, updatedState);
       }
-
       // Return updated context with form data and existing models for update
       return {
         ...contextData,
-        'formData': {
-          ...?contextData['formData'] as Map<String, dynamic>?,
-          ...formData,
-        },
+        'formData': formData,
         'reverseTransformResult': formData,
         // Pass existing models for updateEntitiesFromForm in edit mode
         'existingModels': modelInstances,
