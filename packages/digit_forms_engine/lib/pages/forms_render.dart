@@ -116,6 +116,12 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           registerPagesForValidation(
               widget.currentSchemaKey, schemaObject.pages);
 
+          // Register navigation params for dynamic validation values
+          if (widget.navigationParams != null) {
+            registerNavigationParams(
+                widget.currentSchemaKey, widget.navigationParams!);
+          }
+
           // Check if this page should render as multi-entity tabs
           if (schema.multiEntityConfig != null) {
             return _buildMultiEntityTabPage(context, schema, schemaObject);

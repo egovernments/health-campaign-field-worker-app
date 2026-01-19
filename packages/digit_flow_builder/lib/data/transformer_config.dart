@@ -425,7 +425,7 @@ final jsonConfig = {
           "referenceIdType": "__value:PROJECT",
           "quantity":
               "__switch:__context:stockEntryType:{RECEIPT:stockProductDetails.quantityReceived,RETURNED:stockProductDetails.quantityReturned,ISSUED:stockProductDetails.quantitySent,DAMAGED:stockProductDetails.quantityDamaged,LOSS:stockProductDetails.quantityLost}",
-          "wayBillNumber": "stockProductDetails.wayBillNumber",
+          "waybillNumber": "stockProductDetails.wayBillNumber",
           "transactionType": "__context:transactionType",
           "transactionReason":
               "__switch:__context:stockEntryType:{RECEIPT:__value:RECEIVED,RETURNED:__value:RETURNED,ISSUED:__value:null,DAMAGED:stockDetails.transactionReason,LOSS:stockDetails.transactionReason}",
@@ -440,7 +440,6 @@ final jsonConfig = {
           "additionalFields": {
             "batchNumber": "stockProductDetails.batchNumber",
             "expiryDate": "stockProductDetails.expiryDate",
-            "quantityReceived": "stockProductDetails.quantityReceived",
             "comments": "stockProductDetails.comment",
             "transportType": "stockDetails.transportType",
             "vehicle_number": "stockDetails.vehicleNumber",

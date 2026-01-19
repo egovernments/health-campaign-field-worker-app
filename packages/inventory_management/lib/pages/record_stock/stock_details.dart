@@ -419,7 +419,7 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                               referenceId: stockState.projectId,
                                               referenceIdType: 'PROJECT',
                                               quantity: quantity.toString(),
-                                              wayBillNumber: waybillNumber,
+                                              waybillNumber: waybillNumber,
                                               receiverId: receiverId,
                                               receiverType: receiverType,
                                               senderId: senderId,

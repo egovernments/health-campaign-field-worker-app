@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../main.dart';
 import '../router/app_router.dart';
+import '../sampleJsonConfigs/permission_handler.dart';
 import '../utils/i18_key_constants.dart' as i18;
 
 @RoutePage()
@@ -506,13 +506,16 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
               ),
             ),
             Expanded(
-              child:
-              RichText(
+              child: RichText(
                 text: TextSpan(
                   children: [
-                    TextSpan(text: localizations.translate(i18.common.allowBackgroundActivityDesc), style: textTheme.bodyS.copyWith(
-                      color: theme.colorTheme.primary.primary2,
-                    ),),
+                    TextSpan(
+                      text: localizations
+                          .translate(i18.common.allowBackgroundActivityDesc),
+                      style: textTheme.bodyS.copyWith(
+                        color: theme.colorTheme.primary.primary2,
+                      ),
+                    ),
                     TextSpan(
                       text: " *",
                       style: textTheme.bodyS.copyWith(
