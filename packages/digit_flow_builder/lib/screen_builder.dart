@@ -75,9 +75,14 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
 
     // Clear SearchStateManager for this screen on init
     // This ensures fresh state when same page is pushed again
+    // Clear both key formats since filters may be stored with either format
+    // (full key "TEMPLATE::SEARCH_LIST" or short key "SEARCH_LIST")
     final screenType = widget.config['screenType'] ?? 'TEMPLATE';
     final fullScreenKey = '$screenType::$_schemaKey';
     SearchStateManager().clear(fullScreenKey);
+    if (_schemaKey != fullScreenKey) {
+      SearchStateManager().clear(_schemaKey);
+    }
 
     if (mounted) {
       final initActions = widget.config['initActions'] as List? ?? [];
@@ -169,7 +174,11 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
     final fullScreenKey = '$screenType::$_schemaKey';
 
     // Clear SearchStateManager (filters, orderBy, pagination, callbacks)
+    // Dispose both key formats since filters may be stored with either format
     SearchStateManager().dispose(fullScreenKey);
+    if (_schemaKey != fullScreenKey) {
+      SearchStateManager().dispose(_schemaKey);
+    }
 
     // Clear FlowCrudStateRegistry (formData, widgetData, stateWrapper)
     // Dispose both full screen key AND plain schema key to ensure all navigation params are cleared

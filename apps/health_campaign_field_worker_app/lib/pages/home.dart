@@ -1554,9 +1554,8 @@ class _HomePageState extends LocalizedState<HomePage> {
               context
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
-                    /// FIXME: FOR NOW FETCHING EVERY MODULE AS HOME CARD WERE NOT THERE IN THE "COMMON".. WILL CHECK
                     module: module != null && module.isNotEmpty
-                        ? "$module,${localizationModulesList?.interfaces.where((e) => e.type == Modules.localizationModule).map((e) => e.name.toString()).join(',') ?? ""}"
+                        ? "$module,hcm-common"
                         : localizationModulesList?.interfaces
                                 .where(
                                     (e) => e.type == Modules.localizationModule)

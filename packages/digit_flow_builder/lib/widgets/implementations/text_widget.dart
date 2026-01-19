@@ -36,7 +36,7 @@ class TextWidget implements FlowWidget {
     final textStyle = _parseTextStyle(context, styleKey);
 
     return Text(
-      resolvedValue ?? "--",
+      resolvedValue !="null"? resolvedValue :  "--",
       style: textStyle,
     );
   }
