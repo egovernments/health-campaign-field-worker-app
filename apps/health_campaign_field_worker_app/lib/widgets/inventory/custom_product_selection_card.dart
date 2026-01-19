@@ -322,12 +322,12 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
                       schemaKey: widget.pageSchema,
                       context: context,
                       key: _productVariantKey,
-                      value: selectedModels
+                      value: selectedModels.isNotEmpty ? selectedModels
                           .map((m) => {
                                 "id": m.id,
                                 "sku": m.sku,
                               })
-                          .toList(),
+                          .toList() : null,
                     ),
                   );
             },
