@@ -184,15 +184,23 @@ class SearchStateManager {
   }
 
   /// Get ALL accumulated filters across all searchNames for a screen
+  /// Deduplicates by filter 'key' field - if same key exists in multiple searchNames,
+  /// the later one (by iteration order) wins
   List<dynamic> getAllFilters(String screenKey) {
-    final allFilters = <dynamic>[];
+    final filtersByKey = <String, dynamic>{};
     for (final entry in _state.entries) {
       if (entry.key.startsWith('$screenKey::')) {
         final filters = entry.value['filters'] as List? ?? [];
-        allFilters.addAll(filters);
+        for (final filter in filters) {
+          if (filter is Map && filter['key'] != null) {
+            // Deduplicate by filter key - later entries override earlier ones
+            filtersByKey[filter['key'].toString()] = filter;
+          }
+        }
       }
     }
-    debugPrint('SearchStateManager: getAllFilters for $screenKey found ${allFilters.length} filters');
+    final allFilters = filtersByKey.values.toList();
+    debugPrint('SearchStateManager: getAllFilters for $screenKey found ${allFilters.length} filters (deduplicated by key)');
     return allFilters;
   }
 
