@@ -69,14 +69,15 @@ class ClearStateExecutor extends ActionExecutor {
       // Selective clearing
 
       // 1. Remove specific filters from SearchStateManager
+      // Use removeFiltersByKeysForScreen to clear across ALL searchNames for this screen
+      // This handles cases where filters were added with different 'name' values
       if (filterKeys.isNotEmpty) {
-        SearchStateManager().removeFiltersByKeys(
+        SearchStateManager().removeFiltersByKeysForScreen(
           screenKey,
-          searchName,
           filterKeys,
           triggerSearch: false, // We'll trigger manually if needed
         );
-        debugPrint('✅ CLEAR_STATE: Removed filters: $filterKeys');
+        debugPrint('✅ CLEAR_STATE: Removed filters: $filterKeys for screen: $screenKey');
       }
 
       // 2. Clear orderBy if requested
@@ -111,17 +112,29 @@ class ClearStateExecutor extends ActionExecutor {
       }
     }
 
-    // Trigger search if requested (uses SearchStateManager callback)
+    // Trigger search only if requested AND there are remaining filters
+    // If all filters are cleared, clear the page state instead
     if (triggerSearch) {
-      // This will call the registered callback to re-execute search
-      // with remaining accumulated filters
-      SearchStateManager().updateFilters(
-        screenKey,
-        searchName,
-        [], // Empty list just to trigger the callback
-        triggerSearch: true,
-      );
-      debugPrint('✅ CLEAR_STATE: Triggered search refresh');
+      final hasRemainingFilters = SearchStateManager().hasFiltersForScreen(screenKey);
+      if (hasRemainingFilters) {
+        SearchStateManager().updateFilters(
+          screenKey,
+          searchName,
+          [], // Empty list just to trigger the callback
+          triggerSearch: true,
+        );
+        debugPrint('✅ CLEAR_STATE: Triggered search refresh (remaining filters exist)');
+      } else {
+        // No remaining filters - clear the page state
+        SearchStateManager().updateFilters(
+          screenKey,
+          searchName,
+          [],
+          triggerSearch: false,
+        );
+        FlowCrudStateRegistry().clear(screenKey);
+        debugPrint('✅ CLEAR_STATE: Cleared page state (no remaining filters)');
+      }
     }
 
     return contextData;

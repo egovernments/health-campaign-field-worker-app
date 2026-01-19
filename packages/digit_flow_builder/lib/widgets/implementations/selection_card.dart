@@ -37,19 +37,31 @@ class SelectionCardWidget implements FlowWidget {
     })
         .toList();
 
-    // Use Builder to access the correct context where CrudItemContext is available
-    return Builder(
-      builder: (builderContext) {
-        // Get screen key from the builder context (after CrudItemContext wrapper)
-        final crudContext = CrudItemContext.of(builderContext);
-        final screenKey = crudContext?.screenKey;
+    // Get screen key from context
+    final crudContext = CrudItemContext.of(context);
+    final screenKey = crudContext?.screenKey;
 
-        // Get widgetData from registry to check for stored values
-        final currentState =
-            screenKey != null ? FlowCrudStateRegistry().get(screenKey) : null;
-        final widgetData = currentState?.widgetData ?? {};
+    if (screenKey == null) {
+      // Fallback without state listening
+      return SelectionCard(
+        showParentContainer: true,
+        options: options,
+        initialSelection: const [],
+        allowMultipleSelection: false,
+        width: MediaQuery.of(context).size.width * 0.6,
+        onSelectionChanged: (_) {},
+        valueMapper: (option) => option.name,
+      );
+    }
 
-        // Get initial selection from widgetData if available
+    // Use ValueListenableBuilder to listen to FlowCrudStateRegistry updates
+    // This ensures the widget rebuilds when widgetData changes (e.g., on CLEAR_STATE)
+    return ValueListenableBuilder<FlowCrudState?>(
+      valueListenable: FlowCrudStateRegistry().listen(screenKey),
+      builder: (context, flowState, _) {
+        final widgetData = flowState?.widgetData ?? {};
+
+        // Get selection from widgetData
         List<SelectionCardOption> initialSelection = [];
         if (fieldName != null && widgetData.containsKey(fieldName)) {
           final storedCodes = widgetData[fieldName];
@@ -58,7 +70,6 @@ class SelectionCardWidget implements FlowWidget {
                 .where((opt) => storedCodes.contains(opt.code))
                 .toList();
           } else if (storedCodes is String) {
-            // Handle single value case
             initialSelection = options
                 .where((opt) => opt.code == storedCodes)
                 .toList();
@@ -66,32 +77,29 @@ class SelectionCardWidget implements FlowWidget {
         }
 
         return SelectionCard(
+          key: ValueKey('${screenKey}_${fieldName}_${initialSelection.map((e) => e.code).join(',')}'),
           showParentContainer: true,
-          // equalWidthOptions: true,
           options: options,
           initialSelection: initialSelection,
           allowMultipleSelection: false,
-          width: MediaQuery.of(builderContext).size.width * 0.6,
+          width: MediaQuery.of(context).size.width * 0.6,
           onSelectionChanged: (selectedOptions) {
-            // Update widgetData in flow state if fieldName is provided
-            if (fieldName != null && screenKey != null) {
+            // Update widgetData in flow state
+            if (fieldName != null) {
               final currentFlowState = FlowCrudStateRegistry().get(screenKey);
               final currentWidgetData =
                   Map<String, dynamic>.from(currentFlowState?.widgetData ?? {});
 
-              // Store selected options as list of codes
               final selectedCodes =
                   selectedOptions.map((opt) => opt.code).toList();
               currentWidgetData[fieldName] = selectedCodes;
 
-              // Update the flow state with new widgetData
               if (currentFlowState != null) {
                 final updatedState = currentFlowState.copyWith(
                   widgetData: currentWidgetData,
                 );
                 FlowCrudStateRegistry().update(screenKey, updatedState);
               } else {
-                // Create new state if doesn't exist
                 final newState = FlowCrudState(
                   widgetData: currentWidgetData,
                 );
