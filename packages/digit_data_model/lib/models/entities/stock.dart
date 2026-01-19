@@ -88,7 +88,7 @@ class StockModel extends EntityModel with StockModelMappable {
   final String? transactingPartyId;
   final String? transactingPartyType;
   final String? quantity;
-  final String? wayBillNumber;
+  final String? waybillNumber;
   final String? receiverId;
   final String? receiverType;
   final String? senderId;
@@ -113,7 +113,7 @@ class StockModel extends EntityModel with StockModelMappable {
     this.transactingPartyId,
     this.transactingPartyType,
     this.quantity,
-    this.wayBillNumber,
+    this.waybillNumber,
     this.receiverId,
     this.receiverType,
     this.senderId,
@@ -154,7 +154,7 @@ class StockModel extends EntityModel with StockModelMappable {
       transactingPartyId: Value(transactingPartyId),
       transactingPartyType: Value(transactingPartyType),
       quantity: Value(quantity),
-      waybillNumber: Value(wayBillNumber),
+      waybillNumber: Value(waybillNumber),
       receiverId: Value(receiverId),
       receiverType: Value(receiverType),
       senderId: Value(senderId),

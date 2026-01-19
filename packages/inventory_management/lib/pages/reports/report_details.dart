@@ -462,9 +462,9 @@ class InventoryReportDetailsPageState
                                                           DigitGridCell(
                                                             key: waybillKey,
                                                             value: model
-                                                                    .wayBillNumber ??
+                                                                    .waybillNumber ??
                                                                 model
-                                                                    .wayBillNumber ??
+                                                                    .waybillNumber ??
                                                                 '',
                                                           ),
                                                           DigitGridCell(
