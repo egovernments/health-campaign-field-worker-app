@@ -132,7 +132,7 @@ class WidgetParsers {
       case 'spaceBetween':
         return MainAxisAlignment.spaceBetween;
       default:
-        return MainAxisAlignment.start;
+        return MainAxisAlignment.center;
     }
   }
 }

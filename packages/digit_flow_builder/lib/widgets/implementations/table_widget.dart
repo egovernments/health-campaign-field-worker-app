@@ -186,7 +186,7 @@ class TableWidget implements FlowWidget {
           final finalText = cellValue?.toString() ?? '';
 
           return DigitTableData(
-            localization?.translate(finalText) ?? finalText,
+             finalText!= "null" ? (localization?.translate(finalText) ??finalText) :   "--",
             cellKey: rawCellValue is Map
                 ? 'conditional_$colIndex'
                 : rawCellValue?.toString() ?? '',

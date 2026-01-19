@@ -203,6 +203,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                         return isVisible || includeInForm;
                                       })
                                       .map((entry) => entry.key)
+                                      // Filter out keys that don't have a corresponding form control
+                                      .where((key) => formGroup.contains(key))
                                       .toList() ??
                                   [];
 
