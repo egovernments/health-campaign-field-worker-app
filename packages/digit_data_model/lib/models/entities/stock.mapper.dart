@@ -384,9 +384,9 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
   static String? _$quantity(StockModel v) => v.quantity;
   static const Field<StockModel, String> _f$quantity =
       Field('quantity', _$quantity, opt: true);
-  static String? _$wayBillNumber(StockModel v) => v.wayBillNumber;
-  static const Field<StockModel, String> _f$wayBillNumber =
-      Field('wayBillNumber', _$wayBillNumber, opt: true);
+  static String? _$waybillNumber(StockModel v) => v.waybillNumber;
+  static const Field<StockModel, String> _f$waybillNumber =
+      Field('waybillNumber', _$waybillNumber, opt: true);
   static String? _$receiverId(StockModel v) => v.receiverId;
   static const Field<StockModel, String> _f$receiverId =
       Field('receiverId', _$receiverId, opt: true);
@@ -442,7 +442,7 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
     #transactingPartyId: _f$transactingPartyId,
     #transactingPartyType: _f$transactingPartyType,
     #quantity: _f$quantity,
-    #wayBillNumber: _f$wayBillNumber,
+    #waybillNumber: _f$waybillNumber,
     #receiverId: _f$receiverId,
     #receiverType: _f$receiverType,
     #senderId: _f$senderId,
@@ -481,7 +481,7 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
         transactingPartyId: data.dec(_f$transactingPartyId),
         transactingPartyType: data.dec(_f$transactingPartyType),
         quantity: data.dec(_f$quantity),
-        wayBillNumber: data.dec(_f$wayBillNumber),
+        waybillNumber: data.dec(_f$waybillNumber),
         receiverId: data.dec(_f$receiverId),
         receiverType: data.dec(_f$receiverType),
         senderId: data.dec(_f$senderId),
@@ -567,7 +567,7 @@ abstract class StockModelCopyWith<$R, $In extends StockModel, $Out>
       String? transactingPartyId,
       String? transactingPartyType,
       String? quantity,
-      String? wayBillNumber,
+      String? waybillNumber,
       String? receiverId,
       String? receiverType,
       String? senderId,
@@ -616,7 +616,7 @@ class _StockModelCopyWithImpl<$R, $Out>
           Object? transactingPartyId = $none,
           Object? transactingPartyType = $none,
           Object? quantity = $none,
-          Object? wayBillNumber = $none,
+          Object? waybillNumber = $none,
           Object? receiverId = $none,
           Object? receiverType = $none,
           Object? senderId = $none,
@@ -643,7 +643,7 @@ class _StockModelCopyWithImpl<$R, $Out>
         if (transactingPartyType != $none)
           #transactingPartyType: transactingPartyType,
         if (quantity != $none) #quantity: quantity,
-        if (wayBillNumber != $none) #wayBillNumber: wayBillNumber,
+        if (waybillNumber != $none) #waybillNumber: waybillNumber,
         if (receiverId != $none) #receiverId: receiverId,
         if (receiverType != $none) #receiverType: receiverType,
         if (senderId != $none) #senderId: senderId,
@@ -676,7 +676,7 @@ class _StockModelCopyWithImpl<$R, $Out>
       transactingPartyType:
           data.get(#transactingPartyType, or: $value.transactingPartyType),
       quantity: data.get(#quantity, or: $value.quantity),
-      wayBillNumber: data.get(#wayBillNumber, or: $value.wayBillNumber),
+      waybillNumber: data.get(#waybillNumber, or: $value.waybillNumber),
       receiverId: data.get(#receiverId, or: $value.receiverId),
       receiverType: data.get(#receiverType, or: $value.receiverType),
       senderId: data.get(#senderId, or: $value.senderId),
