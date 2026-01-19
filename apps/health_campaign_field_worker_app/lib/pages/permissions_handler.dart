@@ -536,7 +536,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
               Toast.showToast(
                 context,
                 message: localizations.translate(
-                  backgroundActivityConfirmed
+                  !backgroundActivityConfirmed
                       ? i18.common.enablePermissionCheckbox
                       : i18.common.permissionsAlert,
                 ),
