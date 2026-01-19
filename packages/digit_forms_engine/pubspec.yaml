@@ -38,19 +38,19 @@ dev_dependencies:
   auto_route_generator: ^8.0.0
 
 flutter:
-  assets:
-    - ./
-    - assets/icons/svg/
-    - assets/animated_json/
-    - assets/images/
-    - assets/audio/add.wav
-    - assets/audio/buzzer.wav
+#  assets:
+#    - ./
+#    - assets/icons/svg/
+#    - assets/animated_json/
+#    - assets/images/
+#    - assets/audio/add.wav
+#    - assets/audio/buzzer.wav
 
-  fonts:
-    - family: Roboto
-      fonts:
-        - asset: assets/fonts/Roboto/Roboto-Regular.ttf
-    - family: RobotoCondensed
-      fonts:
-        - asset: assets/fonts/Roboto/RobotoCondensed-Regular.ttf
+#  fonts:
+#    - family: Roboto
+#      fonts:
+#        - asset: assets/fonts/Roboto/Roboto-Regular.ttf
+#    - family: RobotoCondensed
+#      fonts:
+#        - asset: assets/fonts/Roboto/RobotoCondensed-Regular.ttf
   uses-material-design: true
