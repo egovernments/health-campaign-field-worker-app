@@ -128,7 +128,8 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
         title: localizations.translate(i18.scanner.cameraPermissionDenied),
         description:
             localizations.translate(i18.scanner.cameraPermissionDeniedDesc),
-        type: PopUpType.simple,
+        type: PopUpType.alert,
+        inlineActions: true,
         actions: [
           DigitButton(
             label: localizations.translate(i18.scanner.openSettings),
@@ -268,6 +269,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
     WidgetsBinding.instance.removeObserver(this);
     _cameraController?.dispose();
     _barcodeScanner.close();
+    _cameras = [];
     super.dispose();
   }
 

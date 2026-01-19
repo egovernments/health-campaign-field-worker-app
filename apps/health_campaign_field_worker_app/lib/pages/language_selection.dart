@@ -229,7 +229,8 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
       builder: (popupContext) => Popup(
         title: localizations.translate(i18.common.lowRamWarningTitle),
         description: localizations.translate(i18.common.lowRamWarningDesc),
-        type: PopUpType.simple,
+        type: PopUpType.alert,
+        inlineActions: true,
         actions: [
           DigitButton(
             label: localizations.translate(i18.common.coreCommonContinue),
