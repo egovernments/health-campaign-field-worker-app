@@ -47,6 +47,9 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
 
     if (autoFillConditions == null || autoFillConditions.isEmpty) return;
 
+    // Skip if control doesn't exist (hidden field without includeInForm: true)
+    if (!form.contains(widget.formControlName)) return;
+
     final formState = context.read<FormsBloc>().state;
     final currentPageKey = widget.pageName;
     final currentSchemaKey = widget.currentSchemaKey;
