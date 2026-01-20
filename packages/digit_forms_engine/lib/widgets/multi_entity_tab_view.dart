@@ -158,10 +158,21 @@ class _MultiEntityTabViewState extends State<MultiEntityTabView> {
   PropertySchema _createSchemaForEntity(int entityIndex) {
     final originalProperties = widget.schema.properties ?? {};
     final modifiedProperties = <String, PropertySchema>{};
+    final entitySuffix = '_item_$entityIndex';
 
     for (final entry in originalProperties.entries) {
       final fieldName = entry.key;
       final fieldSchema = entry.value;
+
+      // Skip fields that have any entity suffix (e.g., _item_0, _item_1)
+      // These are pre-created entity-specific fields handled separately
+      if (RegExp(r'_item_\d+$').hasMatch(fieldName)) {
+        // Only include if it matches THIS entity's suffix
+        if (fieldName.endsWith(entitySuffix)) {
+          modifiedProperties[fieldName] = fieldSchema;
+        }
+        continue;
+      }
 
       // Skip readonly/hidden fields from renaming
       final shouldRename = fieldSchema.readOnly != true &&
@@ -170,9 +181,15 @@ class _MultiEntityTabViewState extends State<MultiEntityTabView> {
           fieldName != 'id';
 
       if (shouldRename) {
-        // Rename field for this entity
-        final newFieldName = '${fieldName}_item_$entityIndex';
-        modifiedProperties[newFieldName] = fieldSchema;
+        // Check if a pre-created field with custom validation exists for this entity
+        final targetFieldName = '$fieldName$entitySuffix';
+        if (originalProperties.containsKey(targetFieldName)) {
+          // Skip - the pre-created field will be added when we iterate to it
+          continue;
+        } else {
+          // Rename field for this entity
+          modifiedProperties[targetFieldName] = fieldSchema;
+        }
       } else {
         // Keep as-is
         modifiedProperties[fieldName] = fieldSchema;
