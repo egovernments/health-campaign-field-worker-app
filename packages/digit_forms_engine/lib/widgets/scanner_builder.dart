@@ -51,7 +51,8 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
             // Reset active scanner after processing
             _activeScannerId = null;
         if (state.qrCodes.isNotEmpty) {
-          form.control(formControlName).value = state.qrCodes.first;
+          // Join multiple QR codes with dot separator
+          form.control(formControlName).value = state.qrCodes.join('.');
         }
         if (state.barCodes.isNotEmpty) {
           final gs1Data = DigitScannerUtils()
@@ -97,8 +98,13 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                       label: '',
                       onPressed: () {
                         _activeScannerId = formControlName;
+                        // Get current value and split by dot to get list of QR codes
+                        final currentValue = form.control(formControlName).value as String?;
+                        final initialCodes = currentValue?.split('.').where((e) => e.isNotEmpty).toList();
                         context.router.push(DigitScannerRoute(
                           validations: _toScannerValidations(),
+                          isEditEnabled: true,
+                          initialQrCodes: initialCodes,
                         ));
                       },
                       type: DigitButtonType.tertiary,
