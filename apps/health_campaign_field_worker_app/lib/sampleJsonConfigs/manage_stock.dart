@@ -614,14 +614,7 @@ final dynamic sampleInventoryFlows = {
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
-              "visibilityCondition": {
-                "expression": [
-                  {
-                    "condition":
-                        "contains(stockDetails.productdetail, 'PVAR-2024-11-20-000437')"
-                  }
-                ]
-              },
+              "visibilityCondition": {},
               "validations": [
                 {
                   "type": "required",

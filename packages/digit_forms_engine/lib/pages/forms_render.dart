@@ -967,6 +967,9 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     final Map<String, AbstractControl<dynamic>> controls = {};
     final originalProperties = schema.properties ?? {};
 
+    debugPrint('FormsRender: Building form controls for ${entities.length} entities');
+    debugPrint('FormsRender: Original properties: ${originalProperties.keys.toList()}');
+
     // Create controls for each entity
     for (int i = 0; i < entities.length; i++) {
       final entitySuffix = '_item_$i';
@@ -988,6 +991,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               defaultValues: widget.defaultValues,
               schemaKey: widget.currentSchemaKey,
             );
+            debugPrint('FormsRender: Created control for pre-created field: $fieldName');
           }
           continue;
         }
@@ -1027,6 +1031,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
       }
     }
 
+    debugPrint('FormsRender: Final controls: ${controls.keys.toList()}');
     return controls;
   }
 
