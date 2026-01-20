@@ -46,9 +46,14 @@ class CardWidget implements FlowWidget {
       return const SizedBox.shrink();
     }
 
+    // Read spacing from properties (can be conditional, e.g., 0 when child is hidden)
+    final spacingValue = json['properties']?['spacing'];
+    final double? spacing = spacingValue is num ? spacingValue.toDouble() : null;
+
     return DigitCard(
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.all(5),
+      spacing: spacing,
       cardType: WidgetParsers.parseCardType(
           json['properties']?['type']?.toString() ?? 'primary'),
       onPressed: () {

@@ -65,10 +65,15 @@ class TagWidget implements FlowWidget {
         ) ??
         value;
 
-    return Tag(
-      isStroke: true,
-      label: valueText,
-      type: WidgetParsers.parseTagType(json['properties']?['type']),
+    final properties = json['properties'] as Map<String, dynamic>?;
+
+    return WidgetParsers.wrapWithBottomGap(
+      Tag(
+        isStroke: true,
+        label: valueText,
+        type: WidgetParsers.parseTagType(properties?['type']),
+      ),
+      properties,
     );
   }
 }
