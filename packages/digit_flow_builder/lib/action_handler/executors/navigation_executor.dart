@@ -79,14 +79,23 @@ class NavigationExecutor extends ActionExecutor {
       navigationProperties['data'] = resolvedData;
     }
 
-    NavigationRegistry.navigateTo(navigationProperties);
-    final entities = contextData['entities'];
     final config = FlowRegistry.getByName(action.properties['name']);
     final targetName = config?["name"] ?? action.properties['name'];
 
     // Build correct screen key with type prefix (FORM::, TEMPLATE::)
     final targetScreenKey =
         targetType != null ? '$targetType::$targetName' : targetName;
+
+    // Clear target screen's FlowCrudState before navigation
+    // This ensures the new page instance starts fresh without old state
+    // Done AFTER all previous actions (like REVERSE_TRANSFORM) have read source data
+    FlowCrudStateRegistry().clear(targetScreenKey);
+    if (targetName != targetScreenKey) {
+      FlowCrudStateRegistry().clear(targetName);
+    }
+
+    NavigationRegistry.navigateTo(navigationProperties);
+    final entities = contextData['entities'];
 
     if (entities != null) {
       if (config?['wrapperConfig'] != null) {

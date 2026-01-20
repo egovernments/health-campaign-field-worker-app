@@ -26,11 +26,6 @@ class RadioWidget implements FlowWidget {
     // Get screen key for state storage
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
 
-    // Get widgetData from registry to check for stored values
-    final currentState =
-        screenKey != null ? FlowCrudStateRegistry().get(screenKey) : null;
-    final widgetData = currentState?.widgetData ?? {};
-
     // For resolving item-specific fields, we use the current item or first item
     final itemStateData = (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
         ? crudCtx.item
@@ -53,6 +48,53 @@ class RadioWidget implements FlowWidget {
       return const SizedBox.shrink();
     }
 
+    // If no screenKey, fall back to non-reactive behavior
+    if (screenKey == null) {
+      return _buildRadioContent(
+        json: json,
+        context: context,
+        onAction: onAction,
+        screenKey: screenKey,
+        itemStateData: itemStateData,
+        data: data,
+        key: key,
+        localization: localization,
+        widgetData: {},
+      );
+    }
+
+    // Wrap in ValueListenableBuilder to react to state changes
+    return ValueListenableBuilder<FlowCrudState?>(
+      valueListenable: FlowCrudStateRegistry().listen(screenKey),
+      builder: (context, flowState, _) {
+        final widgetData = flowState?.widgetData ?? {};
+
+        return _buildRadioContent(
+          json: json,
+          context: context,
+          onAction: onAction,
+          screenKey: screenKey,
+          itemStateData: itemStateData,
+          data: data,
+          key: key,
+          localization: localization,
+          widgetData: widgetData,
+        );
+      },
+    );
+  }
+
+  Widget _buildRadioContent({
+    required Map<String, dynamic> json,
+    required BuildContext context,
+    required void Function(ActionConfig) onAction,
+    required String? screenKey,
+    required Map<String, dynamic>? itemStateData,
+    required List<dynamic> data,
+    required String? key,
+    required dynamic localization,
+    required Map<String, dynamic> widgetData,
+  }) {
     // Get current selected value from state
     // Priority: widgetData (persisted selection) > itemStateData (entity data)
     dynamic currentValue;
@@ -94,6 +136,7 @@ class RadioWidget implements FlowWidget {
     }).toList();
 
     return RadioList(
+      key: ValueKey('${screenKey}_${key}_${currentValue ?? ''}'),
       radioDigitButtons: radioButtons,
       groupValue: currentValue?.toString() ?? "",
       onChanged: (selectedValue) {
