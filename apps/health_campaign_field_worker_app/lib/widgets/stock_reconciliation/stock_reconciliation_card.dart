@@ -15,6 +15,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../../utils/stock_calculation_utils.dart';
 import '../localized.dart';
 
 /// GlobalKey to access StockReconciliationCard state for validation
@@ -342,118 +343,29 @@ class _StockReconciliationCardState
   void _calculateStockMetrics(FlowCrudState? flowState) {
     if (_selectedFacility == null || _selectedProduct == null) {
       setState(() {
-        _stockMetrics = {
-          'stockReceived': 0,
-          'stockIssued': 0,
-          'stockReturned': 0,
-          'stockLost': 0,
-          'stockDamaged': 0,
-          'stockInHand': 0,
-        };
+        _stockMetrics = StockCalculationUtils.emptyMetrics;
       });
       return;
     }
 
-    // Get stock data filtered by facility and product
-    // Following the pattern from StockReconciliationBloc._handleCalculate
-    final stockList = _getStockList(flowState);
+    // Get stock data from flow state using common utility
+    final stockList = StockCalculationUtils.extractStockListFromWrapper(
+      flowState?.stateWrapper,
+    );
     final facilityId = _selectedFacility!.id;
     final productId = _selectedProduct!.id;
     final loggedInUserUuid = FlowBuilderSingleton().loggedInUserUuid;
 
-    // Filter stocks matching the bloc's logic:
-    // 1. Filter by productVariantId
-    // 2. Filter by facility (either as receiver or sender)
-    // 3. Filter by logged-in user (stocks created by current user only)
-    final filteredStock = stockList.where((stock) {
-      // Must match product
-      if (stock.productVariantId != productId) return false;
-
-      // Must match facility (as receiver OR sender)
-      final matchesReceiver = stock.receiverId == facilityId;
-      final matchesSender = stock.senderId == facilityId;
-      if (!matchesReceiver && !matchesSender) return false;
-
-      // Must be created by logged-in user (matching StockReconciliationBloc logic)
-      if (stock.auditDetails?.createdBy != loggedInUserUuid) return false;
-
-      return true;
-    }).toList();
-
-    debugPrint(
-        'Calculating metrics for ${filteredStock.length} stocks (facility=$facilityId, product=$productId, user=$loggedInUserUuid)');
-
-    // Calculate metrics following StockReconciliationBloc pattern
-    double stockReceived = 0;
-    double stockIssued = 0;
-    double stockReturned = 0;
-    double stockLost = 0;
-    double stockDamaged = 0;
-
-    for (final stock in filteredStock) {
-      final transactionType = stock.transactionType?.toUpperCase() ?? '';
-      final transactionReason = stock.transactionReason?.toUpperCase() ?? '';
-      final quantity = num.tryParse(stock.quantity ?? '0') ?? 0.0;
-
-      // Check if this facility is the receiver or sender
-      final isReceiver = stock.receiverId == facilityId;
-      final isSender = stock.senderId == facilityId;
-
-      debugPrint(
-          'Processing stock: type=$transactionType, reason=$transactionReason, qty=$quantity, isReceiver=$isReceiver, isSender=$isSender');
-
-      // Stock Received: This facility is the receiver AND transactionType == RECEIVED
-      // Accept both: transactionReason == 'RECEIVED' OR transactionReason is empty/null (for regular receipts)
-      if (isReceiver && transactionType == 'RECEIVED') {
-        if (transactionReason == 'RETURNED') {
-          // Stock Returned: transactionReason == RETURNED
-          stockReturned += quantity;
-          debugPrint('  -> Counted as RETURNED: $quantity');
-        } else if (transactionReason.isEmpty ||
-            transactionReason == 'RECEIVED') {
-          // Regular stock receipt: transactionReason is null/empty or explicitly 'RECEIVED'
-          stockReceived += quantity;
-          debugPrint('  -> Counted as RECEIVED: $quantity');
-        }
-      }
-      // Stock Issued/Lost/Damaged: This facility is the sender AND transactionType == DISPATCHED
-      else if (isSender && transactionType == 'DISPATCHED') {
-        if (transactionReason == 'LOST_IN_TRANSIT' ||
-            transactionReason == 'LOST_IN_STORAGE') {
-          // Stock Lost
-          stockLost += quantity;
-          debugPrint('  -> Counted as LOST: $quantity');
-        } else if (transactionReason == 'DAMAGED_IN_TRANSIT' ||
-            transactionReason == 'DAMAGED_IN_STORAGE') {
-          // Stock Damaged
-          stockDamaged += quantity;
-          debugPrint('  -> Counted as DAMAGED: $quantity');
-        } else if (transactionReason.isEmpty) {
-          // Regular dispatch (issued)
-          stockIssued += quantity;
-          debugPrint('  -> Counted as ISSUED: $quantity');
-        }
-      } else {
-        debugPrint('  -> NOT counted (not matching facility)');
-      }
-    }
-
-    // Stock in hand = (received + returned) - (issued + damaged + lost)
-    final stockInHand = (stockReceived + stockReturned) -
-        (stockIssued + stockDamaged + stockLost);
-
-    debugPrint(
-        'Metrics: received=$stockReceived, issued=$stockIssued, returned=$stockReturned, lost=$stockLost, damaged=$stockDamaged, inHand=$stockInHand');
+    // Calculate metrics using common utility
+    final calculatedMetrics = StockCalculationUtils.calculateStockMetrics(
+      stockList: stockList,
+      facilityId: facilityId,
+      productId: productId,
+      loggedInUserUuid: loggedInUserUuid,
+    );
 
     setState(() {
-      _stockMetrics = {
-        'stockReceived': stockReceived.toDouble(),
-        'stockIssued': stockIssued.toDouble(),
-        'stockReturned': stockReturned.toDouble(),
-        'stockLost': stockLost.toDouble(),
-        'stockDamaged': stockDamaged.toDouble(),
-        'stockInHand': stockInHand.toDouble(),
-      };
+      _stockMetrics = calculatedMetrics;
     });
 
     // Update form data with the calculated metrics
@@ -550,32 +462,6 @@ class _StockReconciliationCardState
       }
     } catch (e) {
       debugPrint('Error parsing product variant data: $e');
-    }
-
-    return [];
-  }
-
-  List<StockModel> _getStockList(FlowCrudState? flowState) {
-    try {
-      // Access data from FlowCrudState's stateWrapper
-      final stateWrapper = flowState?.stateWrapper;
-      if (stateWrapper == null || stateWrapper.isEmpty) return [];
-
-      // stateWrapper is a List<Map<String, List<dynamic>>>
-      for (final wrapperMap in stateWrapper) {
-        if (wrapperMap is Map && wrapperMap.containsKey('StockModel')) {
-          final stockData = wrapperMap['StockModel'] as List?;
-          if (stockData != null && stockData.isNotEmpty) {
-            return stockData
-                .map((e) => e is StockModel
-                    ? e
-                    : StockModelMapper.fromMap(e as Map<String, dynamic>))
-                .toList();
-          }
-        }
-      }
-    } catch (e) {
-      debugPrint('Error parsing stock data: $e');
     }
 
     return [];
