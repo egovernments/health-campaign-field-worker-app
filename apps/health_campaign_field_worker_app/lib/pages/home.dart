@@ -236,23 +236,23 @@ class _HomePageState extends LocalizedState<HomePage> {
     });
     registerTaskFunctions();
     FunctionRegistry.register('getQuantityLabel', (args, stateData) {
-      if (args.isEmpty) return 'Quantity received';
+      if (args.isEmpty) return 'APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL';
 
       final sku = args.first?.toString() ?? '';
 
       // Check if the resource is SPAQ-250 mg
       if (sku.trim().toString() == 'SPAQ - 250 mg' ||
           sku.trim().toString() == 'SPAQ - 500 mg') {
-        return 'Tablets received';
+        return 'APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL';
       }
 
-      return 'Quantity received';
+      return 'APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL';
     });
 
     // Stock Transaction Quantity Label Function
     FunctionRegistry.register('getStockQuantityLabel', (args, stateData) {
       if (args.isEmpty) return 'APPONE_INVENTORY_QUANTITY_LABEL';
-      final stockEntryType = args.first?.toString()?.toUpperCase() ?? '';
+      final stockEntryType = args.first?.toString().toUpperCase() ?? '';
 
       const labels = {
         'RECEIPT': 'APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL',
@@ -345,6 +345,56 @@ class _HomePageState extends LocalizedState<HomePage> {
       if (args.isEmpty) return 'receiverId';
       final reportType = args.first?.toString() ?? '';
       return reportType == 'dispatch' ? 'senderId' : 'receiverId';
+    });
+
+    // Get secondary party type based on facility selection
+    // Returns 'STAFF' if Delivery Team is selected, otherwise 'WAREHOUSE'
+    FunctionRegistry.register('getSecondaryType', (args, stateData) {
+      if (args.isEmpty) return 'WAREHOUSE';
+      final facilityFromWhich = args.first?.toString() ?? '';
+      return facilityFromWhich == 'Delivery Team' ? 'STAFF' : 'WAREHOUSE';
+    });
+
+    // Get transacting party label based on stock entry type
+    // RECEIPT/RETURNED -> "Received from", ISSUED/DAMAGED/LOSS -> "Issued to"
+    FunctionRegistry.register('getTransactingPartyLabelByEntryType',
+        (args, stateData) {
+      if (args.isEmpty) return 'INVENTORY_TRANSACTING_PARTY_LABEL';
+      final stockEntryType = args.first?.toString().toUpperCase() ?? '';
+
+      switch (stockEntryType) {
+        case 'RECEIPT':
+        case 'RETURNED':
+          return 'INVENTORY_RECEIVED_FROM_LABEL';
+        case 'ISSUED':
+        case 'DAMAGED':
+        case 'LOSS':
+          return 'INVENTORY_ISSUED_TO_LABEL';
+        default:
+          return 'INVENTORY_TRANSACTING_PARTY_LABEL';
+      }
+    });
+
+    // Get transacting party ID based on stock entry type
+    // RECEIPT/RETURNED -> senderId, ISSUED/DAMAGED/LOSS -> receiverId
+    FunctionRegistry.register('getTransactingPartyByEntryType',
+        (args, stateData) {
+      if (args.length < 3) return '';
+      final stockEntryType = args[0]?.toString().toUpperCase() ?? '';
+      final senderId = args[1]?.toString() ?? '';
+      final receiverId = args[2]?.toString() ?? '';
+
+      switch (stockEntryType) {
+        case 'RECEIPT':
+        case 'RETURNED':
+          return senderId;
+        case 'ISSUED':
+        case 'DAMAGED':
+        case 'LOSS':
+          return receiverId;
+        default:
+          return senderId;
+      }
     });
 
     FunctionRegistry.register('getAdditionalFieldValue', (args, stateData) {

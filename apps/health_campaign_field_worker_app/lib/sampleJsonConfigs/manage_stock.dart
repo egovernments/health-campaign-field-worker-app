@@ -97,6 +97,8 @@ final dynamic sampleInventoryFlows = {
                 "data": [
                   {"key": "stockEntryType", "value": "RECEIPT"},
                   {"key": "transactionType", "value": "RECEIVED"},
+                  {"key": "primaryRole", "value": "RECEIVER"},
+                  {"key": "secondaryRole", "value": "SENDER"},
                   {
                     "key": "mrnNumber",
                     "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
@@ -139,6 +141,8 @@ final dynamic sampleInventoryFlows = {
                 "data": [
                   {"key": "stockEntryType", "value": "ISSUED"},
                   {"key": "transactionType", "value": "DISPATCHED"},
+                  {"key": "primaryRole", "value": "SENDER"},
+                  {"key": "secondaryRole", "value": "RECEIVER"},
                   {
                     "key": "mrnNumber",
                     "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
@@ -166,6 +170,8 @@ final dynamic sampleInventoryFlows = {
                 "data": [
                   {"key": "stockEntryType", "value": "RETURNED"},
                   {"key": "transactionType", "value": "RECEIVED"},
+                  {"key": "primaryRole", "value": "RECEIVER"},
+                  {"key": "secondaryRole", "value": "SENDER"},
                   {
                     "key": "mrnNumber",
                     "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
@@ -190,6 +196,8 @@ final dynamic sampleInventoryFlows = {
                 "data": [
                   {"key": "stockEntryType", "value": "DAMAGED"},
                   {"key": "transactionType", "value": "DISPATCHED"},
+                  {"key": "primaryRole", "value": "SENDER"},
+                  {"key": "secondaryRole", "value": "RECEIVER"},
                   {
                     "key": "mrnNumber",
                     "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
@@ -213,6 +221,8 @@ final dynamic sampleInventoryFlows = {
                 "data": [
                   {"key": "stockEntryType", "value": "LOSS"},
                   {"key": "transactionType", "value": "DISPATCHED"},
+                  {"key": "primaryRole", "value": "SENDER"},
+                  {"key": "secondaryRole", "value": "RECEIVER"},
                   {
                     "key": "mrnNumber",
                     "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
@@ -911,6 +921,13 @@ final dynamic sampleInventoryFlows = {
                 "key": "transactionType",
                 "value": "{{navigation.transactionType}}"
               },
+              {"key": "primaryRole", "value": "{{navigation.primaryRole}}"},
+              {"key": "secondaryRole", "value": "{{navigation.secondaryRole}}"},
+              {
+                "key": "secondaryType",
+                "value":
+                    "{{fn:getSecondaryType(stockDetails.facilityFromWhich)}}"
+              },
               {"key": "mrnNumber", "value": "{{navigation.mrnNumber}}"}
             ],
             "onError": [
@@ -1009,130 +1026,6 @@ final dynamic sampleInventoryFlows = {
               }
             ]
           }
-        }
-      ]
-    },
-    {
-      "screenType": "TEMPLATE",
-      "name": "scanStockReceipt",
-      "heading": "INVENTORY_SCAN_STOCK_RECEIPT_HEADING",
-      "description": "INVENTORY_SCAN_STOCK_RECEIPT_DESCRIPTION",
-      "header": [
-        {
-          "format": "backLink",
-          "label": "CORE_COMMON_BACK",
-          "onAction": [
-            {"actionType": "BACK_NAVIGATION", "properties": {}}
-          ]
-        }
-      ],
-      "initActions": [
-        {
-          "actionType": "OPEN_SCANNER",
-          "properties": {
-            "scanType": "qr",
-            "fieldName": "scannedMrn",
-            "singleValue": true,
-            "quantity": 1,
-            "isGS1code": false,
-            "onSuccess": [
-              {
-                "actionType": "SEARCH_EVENT",
-                "properties": {
-                  "type": "SEARCH_EVENT",
-                  "name": "stock",
-                  "awaitResults": true,
-                  "data": [
-                    {
-                      "key": "additionalFields",
-                      "value": "{{scannedMrn}}",
-                      "operation": "contains"
-                    }
-                  ]
-                }
-              },
-              {
-                "actionType": "REVERSE_TRANSFORM",
-                "properties": {
-                  "configName": "stock",
-                  "entityTypes": ["StockModel"]
-                }
-              },
-              {
-                "actionType": "NAVIGATION",
-                "properties": {
-                  "type": "FORM",
-                  "name": "RECORDSTOCK",
-                  "data": [
-                    {"key": "stockEntryType", "value": "RECEIPT"},
-                    {"key": "transactionType", "value": "RECEIVED"},
-                    {"key": "scannedMrn", "value": "577E-52D8-B4F8"},
-                    {"key": "isEdit", "value": "true"},
-                    {"key": "forceCreate", "value": "true"}
-                  ]
-                }
-              }
-            ]
-          }
-        },
-      ],
-      "wrapperConfig": {
-        "wrapperName": "ScanStockWrapper",
-        "groupByType": true,
-        "rootEntity": "StockModel",
-        "filters": [],
-        "relations": [
-          {"name": "stock", "entity": "StockModel"}
-        ],
-        "searchConfig": {
-          "primary": "stock",
-          "select": ["stock"]
-        }
-      },
-      "body": [
-        {
-          "format": "qrScanner",
-          "label": "INVENTORY_SCAN_MRN_LABEL",
-          "scanType": "qr",
-          "fieldName": "scanPage.scannedMrn",
-          "properties": {
-            "type": "primary",
-            "size": "large",
-            "mainAxisSize": "max"
-          },
-          "onChange": [
-            {
-              "actionType": "SEARCH_EVENT",
-              "properties": {
-                "type": "SEARCH_EVENT",
-                "name": "stock",
-                "data": [
-                  {
-                    "key": "additionalFields",
-                    "value": "680C-E975-B27F",
-                    "operation": "contains"
-                  }
-                ]
-              }
-            },
-            {
-              "actionType": "NAVIGATION",
-              "properties": {
-                "type": "FORM",
-                "name": "RECORDSTOCK",
-                "data": [
-                  {"key": "stockEntryType", "value": "RECEIPT"},
-                  {"key": "transactionType", "value": "RECEIVED"},
-                  {
-                    "key": "mrnNumber",
-                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
-                  },
-                  {"key": "scannedMrn", "value": "{{scanPage.scannedMrn}}"},
-                  {"key": "prefillFromScan", "value": "true"}
-                ]
-              }
-            }
-          ]
         }
       ]
     },
@@ -1239,11 +1132,13 @@ final dynamic sampleInventoryFlows = {
                     "children": [
                       {
                         "format": "textTemplate",
-                        "value": "INVENTORY_ISSUED_TO_LABEL"
+                        "value":
+                            "{{fn:getTransactingPartyLabelByEntryType(item.items[0].additionalFields.fields.stockEntryType)}}"
                       },
                       {
                         "format": "textTemplate",
-                        "value": "{{item.items[0].senderId}}"
+                        "value":
+                            "{{fn:getTransactingPartyByEntryType(item.items[0].additionalFields.fields.stockEntryType, item.items[0].senderId, item.items[0].receiverId)}}"
                       }
                     ]
                   },
@@ -1385,8 +1280,10 @@ final dynamic sampleInventoryFlows = {
                     "value": "{{item.additionalFields.fields.sku}}"
                   },
                   {
-                    "key": "INVENTORY_RECEIVED_FROM_LABEL",
-                    "value": "{{item.receiverId}}"
+                    "key":
+                        "{{fn:getTransactingPartyLabelByEntryType(item.additionalFields.fields.stockEntryType)}}",
+                    "value":
+                        "{{fn:getTransactingPartyByEntryType(item.additionalFields.fields.stockEntryType, item.senderId, item.receiverId)}}"
                   },
                   {
                     "key": "INVENTORY_MRN_NUMBER_LABEL",
