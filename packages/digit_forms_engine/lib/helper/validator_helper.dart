@@ -90,7 +90,9 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema,
               final numValue = num.tryParse(control.value.toString());
               if (numValue == null) return null;
               if (numValue < minVal) {
-                return {'min': {'min': minVal, 'actual': numValue}};
+                return {
+                  'min': {'min': minVal, 'actual': numValue}
+                };
               }
               return null;
             }) as Validator<T>);
@@ -105,7 +107,9 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema,
                 final numValue = num.tryParse(control.value.toString());
                 if (numValue == null) return null; // Not a valid number, skip
                 if (numValue < parsedValue) {
-                  return {'min': {'min': parsedValue, 'actual': numValue}};
+                  return {
+                    'min': {'min': parsedValue, 'actual': numValue}
+                  };
                 }
                 return null;
               }) as Validator<T>);
@@ -127,7 +131,9 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema,
               final numValue = num.tryParse(control.value.toString());
               if (numValue == null) return null;
               if (numValue > maxVal) {
-                return {'max': {'max': maxVal, 'actual': numValue}};
+                return {
+                  'max': {'max': maxVal, 'actual': numValue}
+                };
               }
               return null;
             }) as Validator<T>);
@@ -142,7 +148,9 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema,
                 final numValue = num.tryParse(control.value.toString());
                 if (numValue == null) return null; // Not a valid number, skip
                 if (numValue > parsedValue) {
-                  return {'max': {'max': parsedValue, 'actual': numValue}};
+                  return {
+                    'max': {'max': parsedValue, 'actual': numValue}
+                  };
                 }
                 return null;
               }) as Validator<T>);
@@ -183,7 +191,7 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema,
 
         default:
           if (kDebugMode) {
-            print('Unknown validation type: ${rule.type}');
+            // print('Unknown validation type: ${rule.type}');
           }
           break;
       }

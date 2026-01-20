@@ -3,7 +3,6 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:digit_forms_engine/models/property_schema/property_schema.dart';
-import 'package:digit_forms_engine/models/schema_object/schema_object.dart';
 import 'package:digit_forms_engine/widgets/base_reactive_field_wrapper.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
@@ -134,13 +133,12 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
 
       // Use CrudService directly via singleton instead of bloc
       final crudService = CrudBlocSingleton().crudService;
-      final (results, _) = await crudService.searchEntities(query: searchParams);
+      final (results, _) =
+          await crudService.searchEntities(query: searchParams);
 
       // Extract stock list from results
-      final stockList = results['stock']
-              ?.whereType<StockModel>()
-              .toList() ??
-          <StockModel>[];
+      final stockList =
+          results['stock']?.whereType<StockModel>().toList() ?? <StockModel>[];
 
       debugPrint(
           'ProductSelectionCard: Fetched ${stockList.length} stock records');
@@ -220,11 +218,33 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
   void _updateQuantityFieldValidations() {
     final formsBloc = context.read<FormsBloc>();
     final schema = formsBloc.state.cachedSchemas[widget.pageSchema];
-    if (schema == null) return;
+    if (schema == null) {
+      debugPrint('ProductSelectionCard: ERROR - schema is null');
+      return;
+    }
 
-    // Get the stockProductDetails page schema
-    final stockProductDetailsPage = schema.pages['stockProductDetails'];
-    if (stockProductDetailsPage?.properties == null) return;
+    // Find the page with multiEntityConfig (the page that needs entity-specific fields)
+    String? multiEntityPageKey;
+    PropertySchema? multiEntityPage;
+
+    for (final entry in schema.pages.entries) {
+      if (entry.value.multiEntityConfig != null) {
+        multiEntityPageKey = entry.key;
+        multiEntityPage = entry.value;
+        break;
+      }
+    }
+
+    if (multiEntityPageKey == null || multiEntityPage?.properties == null) {
+      debugPrint(
+          'ProductSelectionCard: ERROR - No page with multiEntityConfig found');
+      return;
+    }
+
+    debugPrint(
+        'ProductSelectionCard: Found multiEntityConfig page: $multiEntityPageKey');
+    debugPrint(
+        'ProductSelectionCard: Updating validations for ${_selectedProducts.length} products');
 
     // Quantity fields that need max validation
     // These are all quantity fields that could potentially need stock validation
@@ -233,12 +253,34 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
       'quantityLost',
       'quantityDamaged',
       'quantityReturned',
-      'quantityReceived',
     ];
 
     // Create a new properties map
     final updatedProperties =
-        Map<String, PropertySchema>.from(stockProductDetailsPage!.properties!);
+        Map<String, PropertySchema>.from(multiEntityPage!.properties!);
+
+    // Store base field schemas before they might be removed
+    // This allows us to create entity-specific fields even if base fields were removed in a previous call
+    final baseFieldSchemas = <String, PropertySchema>{};
+    for (final fieldName in quantityFields) {
+      // First try to get the base field
+      var baseSchema = multiEntityPage.properties![fieldName];
+
+      // If base field is gone, try to get from an existing entity-specific field
+      if (baseSchema == null) {
+        // Find any existing entity-specific field to use as template
+        for (final key in multiEntityPage.properties!.keys) {
+          if (key.startsWith('${fieldName}_item_')) {
+            baseSchema = multiEntityPage.properties![key];
+            break;
+          }
+        }
+      }
+
+      if (baseSchema != null) {
+        baseFieldSchemas[fieldName] = baseSchema;
+      }
+    }
 
     // For each selected product, create entity-specific field validations
     for (var entityIndex = 0;
@@ -252,8 +294,8 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
           'ProductSelectionCard: Entity $entityIndex - product=${product.id}, stockInHand=$stockInHand, maxValue=$maxValue');
 
       for (final fieldName in quantityFields) {
-        // Get the base field schema
-        final baseFieldSchema = stockProductDetailsPage.properties![fieldName];
+        // Get the base field schema (from our stored map)
+        final baseFieldSchema = baseFieldSchemas[fieldName];
         if (baseFieldSchema == null) continue;
 
         // Create the entity-specific field name (matching multi_entity_tab_view pattern)
@@ -269,12 +311,15 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
 
         final newValidations = [
           ...filteredValidations,
-          if (maxValue > 0)
-            ValidationRule(
-              type: 'max',
-              value: maxValue,
-              message: 'Quantity cannot exceed stock in hand ($maxValue)',
-            ),
+          // Always add max validation, even when stockInHand is 0
+          // This prevents entering any quantity when there's no stock
+          ValidationRule(
+            type: 'max',
+            value: maxValue,
+            message: maxValue > 0
+                ? 'Quantity cannot exceed stock in hand ($maxValue)'
+                : 'No stock available',
+          ),
         ];
 
         // Create the entity-specific field schema with validation
@@ -290,16 +335,36 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
         updatedProperties.remove(fieldName);
         debugPrint('ProductSelectionCard: Removed base field: $fieldName');
       }
+
+      // Also remove any old entity-specific fields that are beyond current selection
+      // (e.g., if user had 3 products but now has 2, remove _item_2 fields)
+      final keysToRemove = <String>[];
+      for (final key in updatedProperties.keys) {
+        if (key.startsWith('${fieldName}_item_')) {
+          final indexMatch = RegExp(r'_item_(\d+)$').firstMatch(key);
+          if (indexMatch != null) {
+            final index = int.tryParse(indexMatch.group(1)!);
+            if (index != null && index >= _selectedProducts.length) {
+              keysToRemove.add(key);
+            }
+          }
+        }
+      }
+      for (final key in keysToRemove) {
+        updatedProperties.remove(key);
+        debugPrint('ProductSelectionCard: Removed stale field: $key');
+      }
     }
 
     debugPrint(
-        'ProductSelectionCard: Final properties keys: ${updatedProperties.keys.where((k) => k.contains('quantity')).toList()}');
+        'ProductSelectionCard: Final quantity field keys: ${updatedProperties.keys.where((k) => k.contains('quantity')).toList()}');
+    debugPrint(
+        'ProductSelectionCard: All property keys: ${updatedProperties.keys.toList()}');
 
     // Update the page schema
-    final updatedPage =
-        stockProductDetailsPage.copyWith(properties: updatedProperties);
+    final updatedPage = multiEntityPage.copyWith(properties: updatedProperties);
     final updatedPages = Map<String, PropertySchema>.from(schema.pages);
-    updatedPages['stockProductDetails'] = updatedPage;
+    updatedPages[multiEntityPageKey] = updatedPage;
 
     // Update the full schema
     final updatedSchema = schema.copyWith(pages: updatedPages);
@@ -311,6 +376,18 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
 
     debugPrint(
         'ProductSelectionCard: Updated quantity field validations for ${_selectedProducts.length} entities');
+
+    // Log validation details for each entity-specific field
+    for (var i = 0; i < _selectedProducts.length; i++) {
+      final quantitySentField = updatedProperties['quantitySent_item_$i'];
+      if (quantitySentField != null) {
+        debugPrint(
+            'ProductSelectionCard: quantitySent_item_$i validations: ${quantitySentField.validations?.map((v) => '${v.type}=${v.value}').toList()}');
+      } else {
+        debugPrint(
+            'ProductSelectionCard: ERROR - quantitySent_item_$i not found in updatedProperties');
+      }
+    }
   }
 
   void _initializeFromFormData(List<dynamic>? productVariants) {
@@ -553,75 +630,73 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
 
     // Use BaseReactiveFieldWrapper to automatically handle all validation messages
     return BaseReactiveFieldWrapper(
-          formControlName: _productVariantKey,
-          schema: fieldSchema!, // Pass the schema - it handles all validations!
-          builder: (field) {
-            // Update form control with prefilled value if needed
-            _updateFormControlIfNeeded(field, productVariants);
+      formControlName: _productVariantKey,
+      schema: fieldSchema!, // Pass the schema - it handles all validations!
+      builder: (field) {
+        // Update form control with prefilled value if needed
+        _updateFormControlIfNeeded(field, productVariants);
 
-            return LabeledField(
-              label: localizations.translate(
-                labelFromSchema ?? "Select Product",
-              ),
-              isRequired: true,
-              child: MultiSelectDropDown(
-                errorMessage: field.errorText,
-                helpText: localizations.translate('Select Variants'),
-                options: productVariants!
-                    .map((e) => DropdownItem(
-                          code: e.id,
-                          name: localizations.translate(e.sku ?? e.id),
-                        ))
-                    .toList(),
-                // Convert existing field value into DropdownItems
-                // Use prefilled options from formData if available, otherwise use field value
-                initialOptions:
-                    _prefilledOptions ?? getInitialOptions(field.value),
-                onOptionSelected: (selectedValues) {
-                  field.control.markAsTouched();
+        return LabeledField(
+          label: localizations.translate(
+            labelFromSchema ?? "Select Product",
+          ),
+          isRequired: true,
+          child: MultiSelectDropDown(
+            errorMessage: field.errorText,
+            helpText: localizations.translate('Select Variants'),
+            options: productVariants!
+                .map((e) => DropdownItem(
+                      code: e.id,
+                      name: localizations.translate(e.sku ?? e.id),
+                    ))
+                .toList(),
+            // Convert existing field value into DropdownItems
+            // Use prefilled options from formData if available, otherwise use field value
+            initialOptions: _prefilledOptions ?? getInitialOptions(field.value),
+            onOptionSelected: (selectedValues) {
+              field.control.markAsTouched();
 
-                  // Find selected models from productVariants
-                  final selectedModels = selectedValues
-                      .map((v) => productVariants!
-                          .map((e) => e as ProductVariantModel)
-                          .firstWhere((m) => m.id == v.code))
-                      .toList();
+              // Find selected models from productVariants
+              final selectedModels = selectedValues
+                  .map((v) => productVariants!
+                      .map((e) => e as ProductVariantModel)
+                      .firstWhere((m) => m.id == v.code))
+                  .toList();
 
-                  // Update selected products for stock calculation
-                  setState(() {
-                    _selectedProducts = selectedModels;
-                    _stockSearchTriggered =
-                        false; // Reset to trigger new search
-                  });
+              // Update selected products for stock calculation
+              setState(() {
+                _selectedProducts = selectedModels;
+                _stockSearchTriggered = false; // Reset to trigger new search
+              });
 
-                  // Update form control with list of models
-                  field.control.value = selectedModels;
+              // Update form control with list of models
+              field.control.value = selectedModels;
 
-                  // Push update into FormsBloc with dot-separated ids (or list if you prefer)
-                  context.read<FormsBloc>().add(
-                        FormsEvent.updateField(
-                          schemaKey: widget.pageSchema,
-                          context: context,
-                          key: _productVariantKey,
-                          value: selectedModels.isNotEmpty
-                              ? selectedModels
-                                  .map((m) => {
-                                        "id": m.id,
-                                        "sku": m.sku,
-                                      })
-                                  .toList()
-                              : null,
-                        ),
-                      );
+              // Push update into FormsBloc with dot-separated ids (or list if you prefer)
+              context.read<FormsBloc>().add(
+                    FormsEvent.updateField(
+                      schemaKey: widget.pageSchema,
+                      context: context,
+                      key: _productVariantKey,
+                      value: selectedModels.isNotEmpty
+                          ? selectedModels
+                              .map((m) => {
+                                    "id": m.id,
+                                    "sku": m.sku,
+                                  })
+                              .toList()
+                          : null,
+                    ),
+                  );
 
-                  // Trigger stock search after product selection
-                  if (selectedModels.isNotEmpty) {
-                    _triggerStockSearch(context);
-                  }
-                },
-              ),
-            );
-          },
+              // Trigger stock search after product selection
+              if (selectedModels.isNotEmpty) {
+                _triggerStockSearch(context);
+              }
+            },
+          ),
         );
+      },
+    );
   }
 }
