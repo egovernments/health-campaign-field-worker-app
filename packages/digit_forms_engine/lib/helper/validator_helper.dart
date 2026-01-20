@@ -97,10 +97,18 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema,
           } else {
             final parsedValue = parseIntValue(rule.value);
             if (parsedValue != null) {
-              validators.add(Validators.composeOR([
-                Validators.min(parsedValue) as Validator<T>,
-                Validators.equals(null),
-              ]) as Validator<T>);
+              // Use delegate validator to handle both numeric and string values
+              validators.add(Validators.delegate((control) {
+                if (control.value == null || control.value.toString().isEmpty) {
+                  return null; // Allow null/empty values (required validation handles this)
+                }
+                final numValue = num.tryParse(control.value.toString());
+                if (numValue == null) return null; // Not a valid number, skip
+                if (numValue < parsedValue) {
+                  return {'min': {'min': parsedValue, 'actual': numValue}};
+                }
+                return null;
+              }) as Validator<T>);
             }
           }
           break;
@@ -126,10 +134,18 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema,
           } else {
             final parsedValue = parseIntValue(rule.value);
             if (parsedValue != null) {
-              validators.add(Validators.composeOR([
-                Validators.max(parsedValue) as Validator<T>,
-                Validators.equals(null),
-              ]) as Validator<T>);
+              // Use delegate validator to handle both numeric and string values
+              validators.add(Validators.delegate((control) {
+                if (control.value == null || control.value.toString().isEmpty) {
+                  return null; // Allow null/empty values (required validation handles this)
+                }
+                final numValue = num.tryParse(control.value.toString());
+                if (numValue == null) return null; // Not a valid number, skip
+                if (numValue > parsedValue) {
+                  return {'max': {'max': parsedValue, 'actual': numValue}};
+                }
+                return null;
+              }) as Validator<T>);
             }
           }
           break;
