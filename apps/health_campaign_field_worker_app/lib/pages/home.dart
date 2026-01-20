@@ -118,7 +118,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       (context, stateAccessor) {
         // Access data from any page in the flow
         final beneficiaryDetails =
-            stateAccessor.getPageData('beneficiaryDetails');
+            context.beneficiaryType == BeneficiaryType.individual
+                ? stateAccessor.getPageData('beneficiaryDetails')
+                : stateAccessor.getPageData('householdOverview');
 
         // Build your component with access to all this data
         return ResourceCard(

@@ -1167,7 +1167,7 @@ class ConditionEvaluator {
         if (baseValue is num) {
           return baseValue + 1;
         } else {
-          return int.parse(baseValue) + 1;
+          return int.parse(baseValue ?? '0') + 1;
         }
       }
       // Handle other nested operations
@@ -1465,7 +1465,7 @@ class ComputedListEvaluator {
         final parser = FormulaParser(sanitizedCondition, flatContext);
         final result = parser.parse;
 
-        if (result['isSuccess'] && result['value'] == true) {
+        if (result['isSuccess'] && result['value'] != null) {
           results.add(item);
         }
       } catch (e) {
