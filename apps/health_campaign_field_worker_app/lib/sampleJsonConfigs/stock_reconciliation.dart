@@ -146,7 +146,16 @@ final dynamic stockReconciliationFlows = {
               "validations": [],
               "errorMessage": "",
               "isMultiSelect": false,
-              "enums": []
+              "enums": [],
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition":
+                        "stockReconciliationDetails.manualCount != stockReconciliationDetails.stockInHand",
+                    "type": "custom"
+                  },
+                ]
+              },
             }
           ],
           "value": null,

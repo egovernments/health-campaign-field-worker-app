@@ -5,7 +5,6 @@ import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_forms_engine/forms_engine.dart';
 import 'package:digit_forms_engine/widgets/base_reactive_field_wrapper.dart';
 import 'package:digit_ui_components/digit_components.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_divider.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
@@ -101,11 +100,8 @@ class _StockReconciliationCardState
     final textTheme = theme.digitTextTheme(context);
 
     // Get field schema for validation messages
-    final pages = context
-        .read<FormsBloc>()
-        .state
-        .cachedSchemas[widget.pageSchema]
-        ?.pages;
+    final pages =
+        context.read<FormsBloc>().state.cachedSchemas[widget.pageSchema]?.pages;
     PropertySchema? fieldSchema;
     if (pages != null) {
       for (final page in pages.values) {
@@ -129,191 +125,195 @@ class _StockReconciliationCardState
         }
 
         return ValueListenableBuilder<FlowCrudState?>(
-      valueListenable: FlowCrudStateRegistry().listen(widget.pageSchema),
-      builder: (context, flowState, child) {
-        // Get facilities and product variants from FlowCrudStateRegistry
-        final facilities = _getFacilities(flowState);
-        final productVariants = _getProductVariants(flowState);
+          valueListenable: FlowCrudStateRegistry().listen(widget.pageSchema),
+          builder: (context, flowState, child) {
+            // Get facilities and product variants from FlowCrudStateRegistry
+            final facilities = _getFacilities(flowState);
+            final productVariants = _getProductVariants(flowState);
 
-        // Cache facilities and product variants when they're loaded
-        // This prevents them from being cleared when stock search happens
-        if (facilities.isNotEmpty && _cachedFacilities.isEmpty) {
-          _cachedFacilities = facilities;
-        }
-        if (productVariants.isNotEmpty && _cachedProductVariants.isEmpty) {
-          _cachedProductVariants = productVariants;
-        }
+            // Cache facilities and product variants when they're loaded
+            // This prevents them from being cleared when stock search happens
+            if (facilities.isNotEmpty && _cachedFacilities.isEmpty) {
+              _cachedFacilities = facilities;
+            }
+            if (productVariants.isNotEmpty && _cachedProductVariants.isEmpty) {
+              _cachedProductVariants = productVariants;
+            }
 
-        // Use cached data if current data is empty (happens after stock search)
-        final displayFacilities =
-            facilities.isNotEmpty ? facilities : _cachedFacilities;
-        final displayProductVariants = productVariants.isNotEmpty
-            ? productVariants
-            : _cachedProductVariants;
+            // Use cached data if current data is empty (happens after stock search)
+            final displayFacilities =
+                facilities.isNotEmpty ? facilities : _cachedFacilities;
+            final displayProductVariants = productVariants.isNotEmpty
+                ? productVariants
+                : _cachedProductVariants;
 
-        // Recalculate stock metrics whenever flow state changes and both selections are made
-        if (_selectedFacility != null && _selectedProduct != null) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _calculateStockMetrics(flowState);
-          });
-        }
+            // Recalculate stock metrics whenever flow state changes and both selections are made
+            if (_selectedFacility != null && _selectedProduct != null) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _calculateStockMetrics(flowState);
+              });
+            }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Facility Dropdown
-            LabeledField(
-              isRequired: true,
-              label: localizations.translate('Select Warehouse'),
-              child: DigitDropdown<FacilityModel>(
-                errorMessage: _facilityError,
-                selectedOption: _selectedFacility != null
-                    ? DropdownItem(
-                        name: localizations
-                            .translate('${_selectedFacility!.id}'),
-                        code: _selectedFacility!.id,
-                      )
-                    : null,
-                emptyItemText:
-                    localizations.translate('No facilities found'),
-                items: displayFacilities.map((facility) {
-                  return DropdownItem(
-                    name: localizations.translate('${facility.id}'),
-                    code: facility.id,
-                  );
-                }).toList(),
-                onSelect: (value) {
-                  final selected = displayFacilities.firstWhere(
-                    (f) => f.id == value.code,
-                  );
-                  setState(() {
-                    _facilityTouched = true;
-                    _selectedFacility = selected;
-                    // Mark product as touched too - so error shows if not selected
-                    _productTouched = true;
-                  });
-                  _triggerStockSearchIfReady(context);
-                  _updateFormData();
-                },
-              ),
-            ),
-            const SizedBox(height: spacer2),
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Facility Dropdown
+                LabeledField(
+                  isRequired: true,
+                  label: localizations.translate('Select Warehouse'),
+                  child: DigitDropdown<FacilityModel>(
+                    errorMessage: _facilityError,
+                    selectedOption: _selectedFacility != null
+                        ? DropdownItem(
+                            name: localizations
+                                .translate('${_selectedFacility!.id}'),
+                            code: _selectedFacility!.id,
+                          )
+                        : null,
+                    emptyItemText:
+                        localizations.translate('No facilities found'),
+                    items: displayFacilities.map((facility) {
+                      return DropdownItem(
+                        name: localizations.translate('${facility.id}'),
+                        code: facility.id,
+                      );
+                    }).toList(),
+                    onSelect: (value) {
+                      final selected = displayFacilities.firstWhere(
+                        (f) => f.id == value.code,
+                      );
+                      setState(() {
+                        _facilityTouched = true;
+                        _selectedFacility = selected;
+                        // Mark product as touched too - so error shows if not selected
+                        _productTouched = true;
+                      });
+                      _triggerStockSearchIfReady(context);
+                      _updateFormData();
+                    },
+                  ),
+                ),
+                const SizedBox(height: spacer2),
 
-            // Product Variant Dropdown
-            LabeledField(
-              isRequired: true,
-              label: localizations.translate('Select Product'),
-              child: DigitDropdown<ProductVariantModel>(
-                errorMessage: _productError,
-                sentenceCaseEnabled: true,
-                selectedOption: _selectedProduct != null
-                    ? DropdownItem(
-                        name: localizations.translate(
-                            _selectedProduct!.sku ?? _selectedProduct!.id),
-                        code: _selectedProduct!.id,
-                      )
-                    : null,
-                emptyItemText: localizations.translate('No products found'),
-                items: displayProductVariants.map((product) {
-                  return DropdownItem(
-                    name:
-                        localizations.translate(product.sku ?? product.id),
-                    code: product.id,
-                  );
-                }).toList(),
-                onSelect: (value) {
-                  final selected = displayProductVariants.firstWhere(
-                    (p) => p.id == value.code,
-                  );
-                  setState(() {
-                    _productTouched = true;
-                    _selectedProduct = selected;
-                    // Mark facility as touched too - so error shows if not selected
-                    _facilityTouched = true;
-                  });
-                  _triggerStockSearchIfReady(context);
-                  _updateFormData();
-                },
-              ),
-            ),
-            const SizedBox(height: spacer4),
+                // Product Variant Dropdown
+                LabeledField(
+                  isRequired: true,
+                  label: localizations.translate('Select Product'),
+                  child: DigitDropdown<ProductVariantModel>(
+                    errorMessage: _productError,
+                    sentenceCaseEnabled: true,
+                    selectedOption: _selectedProduct != null
+                        ? DropdownItem(
+                            name: localizations.translate(
+                                _selectedProduct!.sku ?? _selectedProduct!.id),
+                            code: _selectedProduct!.id,
+                          )
+                        : null,
+                    emptyItemText: localizations.translate('No products found'),
+                    items: displayProductVariants.map((product) {
+                      return DropdownItem(
+                        name:
+                            localizations.translate(product.sku ?? product.id),
+                        code: product.id,
+                      );
+                    }).toList(),
+                    onSelect: (value) {
+                      final selected = displayProductVariants.firstWhere(
+                        (p) => p.id == value.code,
+                      );
+                      setState(() {
+                        _productTouched = true;
+                        _selectedProduct = selected;
+                        // Mark facility as touched too - so error shows if not selected
+                        _facilityTouched = true;
+                      });
+                      _triggerStockSearchIfReady(context);
+                      _updateFormData();
+                    },
+                  ),
+                ),
+                const SizedBox(height: spacer4),
 
-            // Stock Metrics Display (only show if both facility and product are selected)
-            if (_selectedFacility != null && _selectedProduct != null) ...[
-              DigitCard(
-                margin: const EdgeInsets.all(0),
-                children: [
-                  Text(
-                    localizations
-                        .translate(i18.stockReconciliationMetrics.stockMetrics),
-                    style: textTheme.headingS.copyWith(
-                      color: theme.colorTheme.text.primary,
-                    ),
+                // Stock Metrics Display (only show if both facility and product are selected)
+                if (_selectedFacility != null && _selectedProduct != null) ...[
+                  DigitCard(
+                    margin: const EdgeInsets.all(0),
+                    children: [
+                      Text(
+                        localizations.translate(
+                            i18.stockReconciliationMetrics.stockMetrics),
+                        style: textTheme.headingS.copyWith(
+                          color: theme.colorTheme.text.primary,
+                        ),
+                      ),
+                      const SizedBox(height: spacer2),
+                      LabelValueItem(
+                        label: localizations.translate(i18
+                            .stockReconciliationMetrics.dateOfReconciliation),
+                        value:
+                            DateFormat('dd MMMM yyyy').format(DateTime.now()),
+                        labelFlex: 5,
+                      ),
+                      const DigitDivider(),
+                      LabelValueItem(
+                        label: localizations.translate(
+                            i18.stockReconciliationMetrics.stockReceived),
+                        value:
+                            _stockMetrics['stockReceived']!.toStringAsFixed(0),
+                        labelFlex: 5,
+                      ),
+                      const DigitDivider(),
+                      LabelValueItem(
+                        label: localizations.translate(
+                            i18.stockReconciliationMetrics.stockIssued),
+                        value: _stockMetrics['stockIssued']!.toStringAsFixed(0),
+                        labelFlex: 5,
+                      ),
+                      const DigitDivider(),
+                      LabelValueItem(
+                        label: localizations.translate(
+                            i18.stockReconciliationMetrics.stockReturned),
+                        value:
+                            _stockMetrics['stockReturned']!.toStringAsFixed(0),
+                        labelFlex: 5,
+                      ),
+                      const DigitDivider(),
+                      LabelValueItem(
+                        label: localizations.translate(
+                            i18.stockReconciliationMetrics.stockLost),
+                        value: _stockMetrics['stockLost']!.toStringAsFixed(0),
+                        labelFlex: 5,
+                      ),
+                      const DigitDivider(),
+                      LabelValueItem(
+                        label: localizations.translate(
+                            i18.stockReconciliationMetrics.stockDamaged),
+                        value:
+                            _stockMetrics['stockDamaged']!.toStringAsFixed(0),
+                        labelFlex: 5,
+                      ),
+                      const DigitDivider(),
+                      LabelValueItem(
+                        label: localizations.translate(
+                            i18.stockReconciliationMetrics.stockOnHand),
+                        value: _stockMetrics['stockInHand']!.toStringAsFixed(0),
+                        labelFlex: 5,
+                      ),
+                    ],
                   ),
                   const SizedBox(height: spacer2),
-                  LabelValueItem(
-                    label: localizations.translate(
-                        i18.stockReconciliationMetrics.dateOfReconciliation),
-                    value: DateFormat('dd MMMM yyyy').format(DateTime.now()),
-                    labelFlex: 5,
-                  ),
-                  const DigitDivider(),
-                  LabelValueItem(
-                    label: localizations.translate(
-                        i18.stockReconciliationMetrics.stockReceived),
-                    value: _stockMetrics['stockReceived']!.toStringAsFixed(0),
-                    labelFlex: 5,
-                  ),
-                  const DigitDivider(),
-                  LabelValueItem(
-                    label: localizations
-                        .translate(i18.stockReconciliationMetrics.stockIssued),
-                    value: _stockMetrics['stockIssued']!.toStringAsFixed(0),
-                    labelFlex: 5,
-                  ),
-                  const DigitDivider(),
-                  LabelValueItem(
-                    label: localizations.translate(
-                        i18.stockReconciliationMetrics.stockReturned),
-                    value: _stockMetrics['stockReturned']!.toStringAsFixed(0),
-                    labelFlex: 5,
-                  ),
-                  const DigitDivider(),
-                  LabelValueItem(
-                    label: localizations
-                        .translate(i18.stockReconciliationMetrics.stockLost),
-                    value: _stockMetrics['stockLost']!.toStringAsFixed(0),
-                    labelFlex: 5,
-                  ),
-                  const DigitDivider(),
-                  LabelValueItem(
-                    label: localizations
-                        .translate(i18.stockReconciliationMetrics.stockDamaged),
-                    value: _stockMetrics['stockDamaged']!.toStringAsFixed(0),
-                    labelFlex: 5,
-                  ),
-                  const DigitDivider(),
-                  LabelValueItem(
-                    label: localizations
-                        .translate(i18.stockReconciliationMetrics.stockOnHand),
-                    value: _stockMetrics['stockInHand']!.toStringAsFixed(0),
-                    labelFlex: 5,
+                  InfoCard(
+                    type: InfoType.info,
+                    description: localizations.translate(
+                      'Please do a manual count of the stock and enter the value below',
+                    ),
+                    title: localizations.translate('Note'),
                   ),
                 ],
-              ),
-              const SizedBox(height: spacer2),
-              InfoCard(
-                type: InfoType.info,
-                description: localizations.translate(
-                  'Please do a manual count of the stock and enter the value below',
-                ),
-                title: localizations.translate('Note'),
-              ),
-            ],
-          ],
+              ],
+            );
+          },
         );
-      },
-    );
       },
     );
   }
@@ -338,6 +338,18 @@ class _StockReconciliationCardState
                 : null, // Set to null when invalid - triggers 'required' validation
           ),
         );
+
+    // Also store stockInHand as a separate field for visibility conditions
+    if (isValidSelection) {
+      context.read<FormsBloc>().add(
+            FormsEvent.updateField(
+              schemaKey: widget.pageSchema,
+              context: context,
+              key: 'stockInHand',
+              value: _stockMetrics['stockInHand']?.toInt() ?? 0,
+            ),
+          );
+    }
   }
 
   void _calculateStockMetrics(FlowCrudState? flowState) {
@@ -387,6 +399,32 @@ class _StockReconciliationCardState
                 : null,
           ),
         );
+
+    // Also store stockInHand as a separate field for visibility conditions
+    // This allows visibility conditions like: manualCount != stockInHand
+    if (isValidSelection) {
+      final stockInHandValue = _stockMetrics['stockInHand']?.toInt() ?? 0;
+
+      context.read<FormsBloc>().add(
+            FormsEvent.updateField(
+              schemaKey: widget.pageSchema,
+              context: context,
+              key: 'stockInHand',
+              value: stockInHandValue,
+            ),
+          );
+
+      // Set manualCount default value to stockInHand
+      // This pre-fills the field so user only needs to change if count differs
+      context.read<FormsBloc>().add(
+            FormsEvent.updateField(
+              schemaKey: widget.pageSchema,
+              context: context,
+              key: 'manualCount',
+              value: stockInHandValue,
+            ),
+          );
+    }
 
     debugPrint('Updated form data with calculated metrics: $_stockMetrics');
   }

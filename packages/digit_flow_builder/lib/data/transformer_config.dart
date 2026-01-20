@@ -430,21 +430,29 @@ final jsonConfig = {
           "transactionReason":
               "__switch:__context:stockEntryType:{RECEIPT:__value:RECEIVED,RETURNED:__value:RETURNED,ISSUED:__value:null,DAMAGED:stockDetails.transactionReason,LOSS:stockDetails.transactionReason}",
           "transactingPartyId": "stockDetails.transactingPartyId",
-          "senderId": "stockDetails.facilityFromWhich",
-          "senderType": "__value:WAREHOUSE",
-          "receiverId": "warehouseDetails.facilityToWhich",
-          "receiverType": "__value:WAREHOUSE",
+          "senderId":
+              "__switch:__context:stockEntryType:{RECEIPT:stockDetails.facilityFromWhich,RETURNED:stockDetails.facilityFromWhich,ISSUED:warehouseDetails.facilityToWhich,DAMAGED:warehouseDetails.facilityToWhich,LOSS:warehouseDetails.facilityToWhich}",
+          "senderType":
+              "__switch:__context:stockEntryType:{RECEIPT:__context:secondaryType,RETURNED:__context:secondaryType,ISSUED:__value:WAREHOUSE,DAMAGED:__value:WAREHOUSE,LOSS:__value:WAREHOUSE}",
+          "receiverId":
+              "__switch:__context:stockEntryType:{RECEIPT:warehouseDetails.facilityToWhich,RETURNED:warehouseDetails.facilityToWhich,ISSUED:stockDetails.facilityFromWhich,DAMAGED:stockDetails.facilityFromWhich,LOSS:stockDetails.facilityFromWhich}",
+          "receiverType":
+              "__switch:__context:stockEntryType:{RECEIPT:__value:WAREHOUSE,RETURNED:__value:WAREHOUSE,ISSUED:__context:secondaryType,DAMAGED:__context:secondaryType,LOSS:__context:secondaryType}",
           "nonRecoverableError": "errors.nonRecoverable",
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
           "additionalFields": {
+            "sku": "stockDetails.productdetail.sku",
             "batchNumber": "stockProductDetails.batchNumber",
             "expiryDate": "stockProductDetails.expiryDate",
             "comments": "stockProductDetails.comment",
             "transportType": "stockDetails.transportType",
             "vehicle_number": "stockDetails.vehicleNumber",
-            "deliveryTeam": "warehouseDetails.teamCode",
-            "mrnNumber": "__context:mrnNumber"
+            "deliveryTeam": "stockDetails.deliveryTeam",
+            "mrnNumber": "__context:mrnNumber",
+            "stockEntryType": "__context:stockEntryType",
+            "primaryRole": "__context:primaryRole",
+            "secondaryRole": "__context:secondaryRole"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
