@@ -95,88 +95,91 @@ class ButtonWidget implements FlowWidget {
           labelText;
     }
 
-    return DigitButton(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      label: resolvedLabel,
-      isDisabled: isDisabled,
-      onPressed: () async {
-        if (json['onAction'] != null) {
-          final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
+    return WidgetParsers.wrapWithBottomGap(
+      DigitButton(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        label: resolvedLabel,
+        isDisabled: isDisabled,
+        onPressed: () async {
+          if (json['onAction'] != null) {
+            final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
 
-          // Pre-resolve navigation data for all actions
-          final resolvedActionsList = actionsList.map((actionJson) {
-            var action = ActionConfig.fromJson(actionJson);
+            // Pre-resolve navigation data for all actions
+            final resolvedActionsList = actionsList.map((actionJson) {
+              var action = ActionConfig.fromJson(actionJson);
 
-            // Resolve navigation data if present
-            final navData = action.properties['data'] as List<dynamic>?;
+              // Resolve navigation data if present
+              final navData = action.properties['data'] as List<dynamic>?;
 
-            if (navData != null) {
-              final resolvedData = navData.map((entry) {
-                final rawValue = entry['value'];
+              if (navData != null) {
+                final resolvedData = navData.map((entry) {
+                  final rawValue = entry['value'];
 
-                // Try to resolve from stateData first, then widgetData, then formData
-                dynamic resolvedValue = stateData != null
-                    ? resolveValue(rawValue, stateData)
-                    : rawValue;
+                  // Try to resolve from stateData first, then widgetData, then formData
+                  dynamic resolvedValue = stateData != null
+                      ? resolveValue(rawValue, stateData)
+                      : rawValue;
 
-                if (resolvedValue == rawValue && widgetData != null) {
-                  // If not resolved from stateData, try widgetData
-                  resolvedValue = resolveValue(rawValue, widgetData);
-                }
+                  if (resolvedValue == rawValue && widgetData != null) {
+                    // If not resolved from stateData, try widgetData
+                    resolvedValue = resolveValue(rawValue, widgetData);
+                  }
 
-                if (resolvedValue == rawValue && formData != null) {
-                  // If not resolved from widgetData, try formData
-                  resolvedValue = resolveValue(rawValue, formData);
-                }
+                  if (resolvedValue == rawValue && formData != null) {
+                    // If not resolved from widgetData, try formData
+                    resolvedValue = resolveValue(rawValue, formData);
+                  }
+
+                  return {
+                    ...Map<String, dynamic>.from(entry), // Keep all original fields (operation, root, etc.)
+                    "value": resolvedValue ?? rawValue,
+                  };
+                }).toList();
 
                 return {
-                  ...Map<String, dynamic>.from(entry), // Keep all original fields (operation, root, etc.)
-                  "value": resolvedValue ?? rawValue,
+                  ...actionJson,
+                  'properties': {
+                    ...action.properties,
+                    'data': resolvedData,
+                  },
                 };
-              }).toList();
+              }
 
-              return {
-                ...actionJson,
-                'properties': {
-                  ...action.properties,
-                  'data': resolvedData,
-                },
-              };
-            }
+              return actionJson;
+            }).toList();
 
-            return actionJson;
-          }).toList();
+            // Build initial context data from current state
+            final initialContextData = <String, dynamic>{
+              'wrappers': const [],
+              if (stateData != null) ...{
+                'item': crudCtx?.item,
+                'contextData': stateData,
+              },
+              if (formData != null) 'formData': formData,
+            };
 
-          // Build initial context data from current state
-          final initialContextData = <String, dynamic>{
-            'wrappers': const [],
-            if (stateData != null) ...{
-              'item': crudCtx?.item,
-              'contextData': stateData,
-            },
-            if (formData != null) 'formData': formData,
-          };
-
-          // Use ActionHandler.executeActions to chain actions with shared contextData
-          // This ensures that REVERSE_TRANSFORM's formData flows to NAVIGATION
-          await ActionHandler.executeActions(
-            resolvedActionsList,
-            context,
-            initialContextData,
-          );
-        }
-      },
-      type: WidgetParsers.parseButtonType(props['type']),
-      size: WidgetParsers.parseButtonSize(props['size']),
-      mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
-      mainAxisAlignment:
-          WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),
-      suffixIcon: json['suffixIcon'] != null
-          ? DigitIconMapping.getIcon(json['suffixIcon'])
-          : null,
-      prefixIcon: json['prefixIcon'] != null
-          ? DigitIconMapping.getIcon(json['prefixIcon'])
-          : null,
+            // Use ActionHandler.executeActions to chain actions with shared contextData
+            // This ensures that REVERSE_TRANSFORM's formData flows to NAVIGATION
+            await ActionHandler.executeActions(
+              resolvedActionsList,
+              context,
+              initialContextData,
+            );
+          }
+        },
+        type: WidgetParsers.parseButtonType(props['type']),
+        size: WidgetParsers.parseButtonSize(props['size']),
+        mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
+        mainAxisAlignment:
+            WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),
+        suffixIcon: json['suffixIcon'] != null
+            ? DigitIconMapping.getIcon(json['suffixIcon'])
+            : null,
+        prefixIcon: json['prefixIcon'] != null
+            ? DigitIconMapping.getIcon(json['prefixIcon'])
+            : null,
+      ),
+      props,
     );
   }
 }

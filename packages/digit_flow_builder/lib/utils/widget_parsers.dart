@@ -135,4 +135,35 @@ class WidgetParsers {
         return MainAxisAlignment.center;
     }
   }
+
+  // ============================================================================
+  // Spacing/Padding helpers
+  // ============================================================================
+
+  /// Wraps a widget with bottom padding if `bottomGap` is specified in properties.
+  ///
+  /// Use this in components to add spacing below themselves. When the component
+  /// is hidden (returns SizedBox.shrink()), no padding is applied.
+  ///
+  /// Usage in widget build method:
+  /// ```dart
+  /// return WidgetParsers.wrapWithBottomGap(
+  ///   MyWidget(...),
+  ///   json['properties'],
+  /// );
+  /// ```
+  static Widget wrapWithBottomGap(Widget child, Map<String, dynamic>? properties) {
+    if (properties == null) return child;
+
+    final bottomGap = properties['bottomGap'];
+    if (bottomGap == null) return child;
+
+    final double gap = bottomGap is num ? bottomGap.toDouble() : 0;
+    if (gap <= 0) return child;
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: gap),
+      child: child,
+    );
+  }
 }
