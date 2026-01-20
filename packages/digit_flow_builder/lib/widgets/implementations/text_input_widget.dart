@@ -27,12 +27,6 @@ class TextInputWidget implements FlowWidget {
     // Get screen key for storing form data
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
 
-    // Get form data and widget data from registry to check for stored values
-    final currentState =
-        screenKey != null ? FlowCrudStateRegistry().get(screenKey) : null;
-    final formData = currentState?.formData ?? {};
-    final widgetData = currentState?.widgetData ?? {};
-
     // For resolving item-specific fields, we use the current item or first item
     final itemStateData = (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
         ? crudCtx.item
@@ -65,28 +59,6 @@ class TextInputWidget implements FlowWidget {
       return const SizedBox.shrink();
     }
 
-    // Get current value from state
-    // Priority: widgetData (persisted input) > itemStateData (entity data) > formData
-    dynamic currentValue;
-    if (key != null) {
-      // First check widgetData for persisted input value
-      if (widgetData.containsKey(key)) {
-        currentValue = widgetData[key];
-      } else {
-        // Then try itemStateData
-        currentValue = resolveValue('{{$key}}', itemStateData);
-        // If not found in itemStateData, check formData directly
-        if (currentValue == '{{$key}}' || currentValue == null) {
-          currentValue = formData[key];
-        }
-      }
-    }
-
-    // Create TextEditingController with initial value
-    final controller = TextEditingController(
-      text: currentValue?.toString() ?? '',
-    );
-
     // Determine keyboard type based on inputType
     TextInputType keyboardType;
     List<TextInputFormatter>? inputFormatters;
@@ -116,37 +88,173 @@ class TextInputWidget implements FlowWidget {
         keyboardType = TextInputType.text;
     }
 
-    // Use Builder to access the correct context where CrudItemContext is available
-    // This ensures screenKey is captured after the widget tree is built (important for popups)
+    // Get initial value from state for the stateful wrapper
+    dynamic initialValue;
+    if (key != null && screenKey != null) {
+      final currentState = FlowCrudStateRegistry().get(screenKey);
+      final formData = currentState?.formData ?? {};
+      final widgetData = currentState?.widgetData ?? {};
+
+      if (widgetData.containsKey(key)) {
+        initialValue = widgetData[key];
+      } else {
+        initialValue = resolveValue('{{$key}}', itemStateData);
+        if (initialValue == '{{$key}}' || initialValue == null) {
+          initialValue = formData[key];
+        }
+      }
+    }
+
+    // Use stateful wrapper to maintain controller and handle external updates
+    return _ReactiveTextInput(
+      key: ValueKey('${screenKey}_$key'),
+      screenKey: screenKey,
+      fieldKey: key,
+      initialValue: initialValue?.toString() ?? '',
+      localizedLabel: localizedLabel,
+      isRequired: isRequired,
+      isReadOnly: isReadOnly,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
+      maxLength: maxLength,
+      json: json,
+      onAction: onAction,
+      itemStateData: itemStateData,
+    );
+  }
+}
+
+/// Stateful wrapper for text input that maintains controller state
+/// and only updates from external changes (not from user's own input)
+class _ReactiveTextInput extends StatefulWidget {
+  final String? screenKey;
+  final String? fieldKey;
+  final String initialValue;
+  final String localizedLabel;
+  final bool isRequired;
+  final bool isReadOnly;
+  final TextInputType keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
+  final int? maxLength;
+  final Map<String, dynamic> json;
+  final void Function(ActionConfig) onAction;
+  final Map<String, dynamic>? itemStateData;
+
+  const _ReactiveTextInput({
+    super.key,
+    required this.screenKey,
+    required this.fieldKey,
+    required this.initialValue,
+    required this.localizedLabel,
+    required this.isRequired,
+    required this.isReadOnly,
+    required this.keyboardType,
+    required this.inputFormatters,
+    required this.maxLength,
+    required this.json,
+    required this.onAction,
+    required this.itemStateData,
+  });
+
+  @override
+  State<_ReactiveTextInput> createState() => _ReactiveTextInputState();
+}
+
+class _ReactiveTextInputState extends State<_ReactiveTextInput> {
+  late TextEditingController _controller;
+  String _lastKnownValue = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialValue);
+    _lastKnownValue = widget.initialValue;
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenKey = widget.screenKey;
+    final key = widget.fieldKey;
+
+    // If no screenKey, just build without listening
+    if (screenKey == null) {
+      return _buildInput(context);
+    }
+
+    // Listen for external state changes
+    return ValueListenableBuilder<FlowCrudState?>(
+      valueListenable: FlowCrudStateRegistry().listen(screenKey),
+      builder: (context, flowState, child) {
+        final widgetData = flowState?.widgetData ?? {};
+        final formData = flowState?.formData ?? {};
+
+        // Get the current value from state
+        dynamic externalValue;
+        if (key != null) {
+          if (widgetData.containsKey(key)) {
+            externalValue = widgetData[key];
+          } else {
+            externalValue = resolveValue('{{$key}}', widget.itemStateData);
+            if (externalValue == '{{$key}}' || externalValue == null) {
+              externalValue = formData[key];
+            }
+          }
+        }
+
+        final externalValueStr = externalValue?.toString() ?? '';
+
+        // Only update controller if the external value differs from what we last set
+        // AND differs from current controller text (to detect external changes)
+        if (externalValueStr != _lastKnownValue &&
+            externalValueStr != _controller.text) {
+          // This is an external change - update the controller
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted && _controller.text != externalValueStr) {
+              _controller.text = externalValueStr;
+              _lastKnownValue = externalValueStr;
+            }
+          });
+        }
+
+        return _buildInput(context);
+      },
+    );
+  }
+
+  Widget _buildInput(BuildContext context) {
     return Builder(
       builder: (builderContext) {
-        // Get screen key from the builder context (after CrudItemContext wrapper)
-        // Fall back to route args for non-popup usage
         final crudContextForCallback = CrudItemContext.of(builderContext);
         final screenKeyForCallback =
             crudContextForCallback?.screenKey ?? getScreenKeyFromArgs(builderContext);
 
         return LabeledField(
-          label: localizedLabel,
-          isRequired: isRequired,
+          label: widget.localizedLabel,
+          isRequired: widget.isRequired,
           child: DigitTextFormInput(
-            controller: controller,
-            readOnly: isReadOnly,
-            keyboardType: keyboardType,
-            inputFormatters: inputFormatters,
-            maxLength: maxLength,
+            controller: _controller,
+            readOnly: widget.isReadOnly,
+            keyboardType: widget.keyboardType,
+            inputFormatters: widget.inputFormatters,
+            maxLength: widget.maxLength,
             onChange: (value) {
-              if (key != null && screenKeyForCallback != null) {
-                // Store the value in widgetData (same as SelectionCardWidget)
+              // Track the value we're setting
+              _lastKnownValue = value;
+
+              if (widget.fieldKey != null && screenKeyForCallback != null) {
                 final currentState =
                     FlowCrudStateRegistry().get(screenKeyForCallback);
                 final currentWidgetData =
                     Map<String, dynamic>.from(currentState?.widgetData ?? {});
 
-                // Update widget data with the input value
-                currentWidgetData[key] = value;
+                currentWidgetData[widget.fieldKey!] = value;
 
-                // Update the registry
                 if (currentState != null) {
                   final updatedState = currentState.copyWith(
                     widgetData: currentWidgetData,
@@ -160,19 +268,17 @@ class TextInputWidget implements FlowWidget {
                 }
               }
 
-              // Trigger onChange actions if defined (even if screenKey is null)
-              if (key != null && json['onChange'] != null) {
+              if (widget.fieldKey != null && widget.json['onChange'] != null) {
                 final actionsList =
-                    List<Map<String, dynamic>>.from(json['onChange']);
+                    List<Map<String, dynamic>>.from(widget.json['onChange']);
 
                 for (var actionJson in actionsList) {
                   var action = ActionConfig.fromJson(actionJson);
 
-                  // Add input value to action context
                   final enhancedProperties = {
                     ...action.properties,
-                    key: value,
-                    '${key}Value': value,
+                    widget.fieldKey!: value,
+                    '${widget.fieldKey}Value': value,
                   };
 
                   action = ActionConfig(
@@ -183,7 +289,7 @@ class TextInputWidget implements FlowWidget {
                     actions: action.actions,
                   );
 
-                  onAction(action);
+                  widget.onAction(action);
                 }
               }
             },
