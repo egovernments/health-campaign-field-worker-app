@@ -95,6 +95,7 @@ class DigitScannerUtils {
     required CameraLensDirection cameraLensDirection,
     required BarcodeScanner barcodeScanner,
     required ScannerLocalization localizations,
+    String? scanLimitMessage,
   }) async {
     // Check if processing is allowed
     if (!canProcess) return;
@@ -146,8 +147,11 @@ class DigitScannerUtils {
               await storeValue(parsedResult);
             } else if (quantity <= result.length) {
               // Handle error if there is a mismatch in the scanned resource count
-              await handleError(
-                  localizations.translate(i18.scanner.scannedQtyExceed));
+              // Use custom message from validations if provided
+              final errorMessage = scanLimitMessage != null
+                  ? localizations.translate(scanLimitMessage)
+                  : localizations.translate(i18.scanner.scannedQtyExceed);
+              await handleError(errorMessage);
             } else {
               // Handle error if there is a mismatch in the scanned resource
               await handleError(
@@ -165,9 +169,16 @@ class DigitScannerUtils {
             await handleError(
                 localizations.translate(i18.scanner.resourceAlreadyScanned));
             return;
-          } else {
-            // Store the QR code if not already scanned
+          } else if (quantity > bloc.state.qrCodes.length) {
+            // Store the QR code if not already scanned and quantity limit not reached
             await storeCode(barcodes.first.displayValue.toString());
+          } else {
+            // Handle error if the quantity limit is reached
+            // Use custom message from validations if provided
+            final errorMessage = scanLimitMessage != null
+                ? localizations.translate(scanLimitMessage)
+                : localizations.translate(i18.scanner.scannedQtyExceed);
+            await handleError(errorMessage);
           }
         }
       }

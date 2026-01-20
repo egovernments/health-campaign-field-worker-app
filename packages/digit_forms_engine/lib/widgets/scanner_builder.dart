@@ -5,6 +5,10 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
   final DateTime? end;
   final bool summaryData;
 
+  /// Tracks which scanner initiated the scan to prevent multiple scanners
+  /// on the same page from reacting to the same state change.
+  static String? _activeScannerId;
+
   const JsonSchemaScannerBuilder({
     required super.formControlName,
     required super.form,
@@ -18,6 +22,18 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
     this.summaryData = false,
   });
 
+  /// Converts ValidationRule list to ScannerValidation list
+  List<ScannerValidation>? _toScannerValidations() {
+    if (validations == null) return null;
+    return validations!
+        .map((v) => ScannerValidation(
+              type: v.type,
+              value: v.value,
+              message: v.message,
+            ))
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = FormLocalization.of(context);
@@ -27,7 +43,13 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
       validationMessages: validationMessages,
       showErrors: (control) => control.invalid && control.touched,
       builder: (field) => BlocConsumer<DigitScannerBloc, DigitScannerState>(
+          listenWhen: (previous, current) {
+            // Only listen if this scanner initiated the scan
+            return _activeScannerId == formControlName;
+          },
           listener: (context, state) {
+            // Reset active scanner after processing
+            _activeScannerId = null;
         if (state.qrCodes.isNotEmpty) {
           form.control(formControlName).value = state.qrCodes.first;
         }
@@ -74,26 +96,9 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                     DigitButton(
                       label: '',
                       onPressed: () {
+                        _activeScannerId = formControlName;
                         context.router.push(DigitScannerRoute(
-                          quantity: validations
-                                  ?.firstWhereOrNull(
-                                      (v) => v.type == 'scanLimit')
-                                  ?.value ??
-                              1,
-                          isGS1code: validations
-                                  ?.firstWhereOrNull((v) => v.type == 'isGS1')
-                                  ?.value ??
-                              false,
-                          singleValue: validations
-                                      ?.firstWhereOrNull(
-                                          (v) => v.type == 'scanLimit')
-                                      ?.value ==
-                                  1
-                              ? true
-                              : false,
-                          regex: validations
-                              ?.firstWhereOrNull((v) => v.type == 'pattern')
-                              ?.value,
+                          validations: _toScannerValidations(),
                         ));
                       },
                       type: DigitButtonType.tertiary,
@@ -138,27 +143,9 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                         DigitButton(
                           label: '',
                           onPressed: () {
+                            _activeScannerId = formControlName;
                             context.router.push(DigitScannerRoute(
-                              quantity: validations
-                                      ?.firstWhereOrNull(
-                                          (v) => v.type == 'scanLimit')
-                                      ?.value ??
-                                  1,
-                              isGS1code: validations
-                                      ?.firstWhereOrNull(
-                                          (v) => v.type == 'isGS1')
-                                      ?.value ??
-                                  false,
-                              singleValue: validations
-                                          ?.firstWhereOrNull(
-                                              (v) => v.type == 'scanLimit')
-                                          ?.value ==
-                                      1
-                                  ? true
-                                  : false,
-                              regex: validations
-                                  ?.firstWhereOrNull((v) => v.type == 'pattern')
-                                  ?.value,
+                              validations: _toScannerValidations(),
                             ));
                           },
                           type: DigitButtonType.tertiary,
@@ -173,28 +160,12 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                     size: DigitButtonSize.large,
                     label: label ?? 'scanner',
                     onPressed: () async {
+                      _activeScannerId = formControlName;
                       context.read<DigitScannerBloc>().add(
                             const DigitScannerEvent.handleScanner(),
                           );
                       context.router.push(DigitScannerRoute(
-                        quantity: validations
-                                ?.firstWhereOrNull((v) => v.type == 'scanLimit')
-                                ?.value ??
-                            1,
-                        isGS1code: validations
-                                ?.firstWhereOrNull((v) => v.type == 'isGS1')
-                                ?.value ??
-                            false,
-                        singleValue: validations
-                                    ?.firstWhereOrNull(
-                                        (v) => v.type == 'scanLimit')
-                                    ?.value ==
-                                1
-                            ? true
-                            : false,
-                        regex: validations
-                            ?.firstWhereOrNull((v) => v.type == 'pattern')
-                            ?.value,
+                        validations: _toScannerValidations(),
                       ));
                     },
                     type: DigitButtonType.secondary,

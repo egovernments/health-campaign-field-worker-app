@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:camera/camera.dart';
+import 'package:digit_scanner/models/scanner_validation.dart';
 import 'package:digit_scanner/utils/scanner_utils.dart';
 import 'package:digit_scanner/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -26,21 +27,41 @@ import '../widgets/vision_detector_views/detector_view.dart';
 
 @RoutePage()
 class DigitScannerPage extends LocalizedStatefulWidget {
+  // Legacy parameters - kept for backward compatibility
   final bool singleValue;
   final int quantity;
   final bool isGS1code;
   final bool isEditEnabled;
   final String? regex;
 
+  // New validations parameter - when provided, takes precedence over legacy params
+  final List<ScannerValidation>? validations;
+
   const DigitScannerPage({
     super.key,
     super.appLocalizations,
-    required this.quantity,
-    required this.isGS1code,
+    this.quantity = 1,
+    this.isGS1code = false,
     this.singleValue = false,
     this.isEditEnabled = false,
     this.regex,
+    this.validations,
   });
+
+  /// Gets the effective quantity - from validations if available, otherwise from legacy param
+  int get effectiveQuantity => validations != null ? validations.scanLimit : quantity;
+
+  /// Gets the effective isGS1code - from validations if available, otherwise from legacy param
+  bool get effectiveIsGS1code => validations != null ? validations.isGS1 : isGS1code;
+
+  /// Gets the effective singleValue - from validations if available, otherwise from legacy param
+  bool get effectiveSingleValue => validations != null ? validations.isSingleValue : singleValue;
+
+  /// Gets the effective regex - from validations if available, otherwise from legacy param
+  String? get effectiveRegex => validations != null ? validations.pattern : regex;
+
+  /// Gets the scan limit exceeded message from validations
+  String? get scanLimitMessage => validations?.scanLimitMessage;
 
   @override
   State<DigitScannerPage> createState() => DigitScannerPageState();
@@ -207,8 +228,8 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
       setBusy: (busy) => mounted ? setState(() => _isBusy = busy) : null,
       setText: (text) => mounted ? setState(() => _text = text) : null,
       updateCustomPaint: (customPaint) => _customPaint = customPaint,
-      isGS1code: widget.isGS1code,
-      quantity: widget.quantity,
+      isGS1code: widget.effectiveIsGS1code,
+      quantity: widget.effectiveQuantity,
       result: result,
       handleError: handleErrorWrapper,
       storeValue: storeValueWrapper,
@@ -216,6 +237,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
       cameraLensDirection: _cameraLensDirection,
       barcodeScanner: _barcodeScanner,
       localizations: localizations,
+      scanLimitMessage: widget.scanLimitMessage,
     );
   }
 
@@ -240,7 +262,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
       context: context,
       code: code,
       player: player,
-      singleValue: widget.singleValue,
+      singleValue: widget.effectiveSingleValue,
       updateCodes: (newCodes) {
         setState(() {
           codes = newCodes;
@@ -298,7 +320,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
   }
 
   FormGroup buildForm() {
-    if (widget.isGS1code) {
+    if (widget.effectiveIsGS1code) {
       return fb.group(<String, Object>{
         _manualCodeFormKey: FormControl<String>(
           validators: [Validators.required],
@@ -317,7 +339,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
 
   manualEntryWidget(
       BuildContext context, ThemeData theme, DigitTextTheme textTheme) {
-    return widget.isGS1code
+    return widget.effectiveIsGS1code
         ? BlocBuilder<DigitScannerBloc, DigitScannerState>(
             builder: (context, state) {
             return ReactiveFormBuilder(
@@ -345,7 +367,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                       child: DigitButton(
                         mainAxisSize: MainAxisSize.max,
                         onPressed: () async {
-                          if (widget.isGS1code) {
+                          if (widget.effectiveIsGS1code) {
                             form.markAllAsTouched();
                             if (!form.valid) return;
 
@@ -386,12 +408,12 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                               DigitScannerEvent.handleScanner(
                                 barCode: updatedBarcodes,
                                 qrCode: state.qrCodes,
-                                regex: widget.regex,
+                                regex: widget.effectiveRegex,
                               ),
                             );
-                            if (updatedBarcodes.length < widget.quantity) {
+                            if (updatedBarcodes.length < widget.effectiveQuantity) {
                               DigitScannerUtils().buildDialog(
-                                  context, localizations, widget.quantity);
+                                  context, localizations, widget.effectiveQuantity);
                             }
                             setState(() {
                               manualCode = false;
@@ -429,15 +451,15 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                 DigitScannerEvent.handleScanner(
                                     barCode: state.barCodes,
                                     qrCode: updatedQRCodes,
-                                    regex: widget.regex),
+                                    regex: widget.effectiveRegex),
                               );
-                              final scannedCount = widget.isGS1code
+                              final scannedCount = widget.effectiveIsGS1code
                                   ? state.barCodes.length
                                   : state.qrCodes.length;
 
-                              if (scannedCount < widget.quantity) {
+                              if (scannedCount < widget.effectiveQuantity) {
                                 DigitScannerUtils().buildDialog(
-                                    context, localizations, widget.quantity);
+                                    context, localizations, widget.effectiveQuantity);
                               }
 
                               setState(() {
@@ -472,7 +494,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                           ),
                           ReactiveWrapperField(
                             formControlName: _manualCodeFormKey,
-                            validationMessages: widget.isGS1code
+                            validationMessages: widget.effectiveIsGS1code
                                 ? {
                                     'required': (object) =>
                                         localizations.translate(
@@ -483,7 +505,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                             builder: (field) {
                               return LabeledField(
                                 label: localizations.translate(
-                                  widget.isGS1code
+                                  widget.effectiveIsGS1code
                                       ? i18.scanner.barCodeBatch
                                       : i18.scanner.resourceCode,
                                 ),
@@ -498,7 +520,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                               );
                             },
                           ),
-                          if (widget.isGS1code) ...[
+                          if (widget.effectiveIsGS1code) ...[
                             ReactiveWrapperField(
                               formControlName: _manualSerialNoFormKey,
                               validationMessages: {
@@ -615,15 +637,15 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                       .toString()
                                       .trim());
                             codes.add(form.control(_manualCodeFormKey).value);
-                            if (updatedQRCodes.length < widget.quantity) {
+                            if (updatedQRCodes.length < widget.effectiveQuantity) {
                               DigitScannerUtils().buildDialog(
-                                  context, localizations, widget.quantity);
+                                  context, localizations, widget.effectiveQuantity);
                             }
                             bloc.add(
                               DigitScannerEvent.handleScanner(
                                 barCode: state.barCodes,
                                 qrCode: updatedQRCodes,
-                                regex: widget.regex,
+                                regex: widget.effectiveRegex,
                               ),
                             );
 
@@ -825,15 +847,15 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                 mainAxisSize: MainAxisSize.max,
                 type: DigitButtonType.primary,
                 onPressed: () async {
-                  final scannedCount = widget.isGS1code
+                  final scannedCount = widget.effectiveIsGS1code
                       ? state.barCodes.length
                       : state.qrCodes.length;
 
-                  if (scannedCount < widget.quantity) {
+                  if (scannedCount < widget.effectiveQuantity) {
                     DigitScannerUtils().buildDialog(
                       context,
                       localizations,
-                      widget.quantity,
+                      widget.effectiveQuantity,
                     );
                     return;
                   } else {
@@ -841,7 +863,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                     bloc.add(DigitScannerEvent.handleScanner(
                       barCode: state.barCodes,
                       qrCode: state.qrCodes,
-                      regex: widget.regex,
+                      regex: widget.effectiveRegex,
                     ));
                     Navigator.of(
                       context,
@@ -854,7 +876,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
         ),
         Positioned(
           bottom: (spacer1 * 10),
-          height: widget.isGS1code
+          height: widget.effectiveIsGS1code
               ? state.barCodes.length < 3
                   ? (state.barCodes.length * 60) + 80
                   : MediaQuery.of(context).size.height / 3
@@ -890,7 +912,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                     left: spacer3,
                   ),
                   width: MediaQuery.of(context).size.width,
-                  child: widget.isGS1code
+                  child: widget.effectiveIsGS1code
                       ? Text(
                           '${state.barCodes.length.toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
                           style: textTheme.headingM
@@ -904,7 +926,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                 ),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: widget.isGS1code
+                    itemCount: widget.effectiveIsGS1code
                         ? state.barCodes.length
                         : state.qrCodes.length,
                     itemBuilder: (BuildContext context, int index) {
@@ -934,7 +956,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                               Flexible(
                                 child: Text(
                                   overflow: TextOverflow.ellipsis,
-                                  widget.isGS1code
+                                  widget.effectiveIsGS1code
                                       ? DigitScannerUtils()
                                           .getGs1CodeFormattedStringAtIndex(
                                               state.barCodes, index)
@@ -956,7 +978,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                 ),
                                 onPressed: () {
                                   final bloc = context.read<DigitScannerBloc>();
-                                  if (widget.isGS1code) {
+                                  if (widget.effectiveIsGS1code) {
                                     result = List.from(
                                       state.barCodes,
                                     );
@@ -969,7 +991,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                       DigitScannerEvent.handleScanner(
                                         barCode: result,
                                         qrCode: state.qrCodes,
-                                        regex: widget.regex,
+                                        regex: widget.effectiveRegex,
                                       ),
                                     );
                                   } else {
@@ -985,7 +1007,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                       DigitScannerEvent.handleScanner(
                                         barCode: state.barCodes,
                                         qrCode: codes,
-                                        regex: widget.regex,
+                                        regex: widget.effectiveRegex,
                                       ),
                                     );
                                   }

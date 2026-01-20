@@ -322,18 +322,16 @@ MapEntry<String, dynamic>? getParsedValues(
       Map.fromEntries(results.whereType<MapEntry<String, dynamic>>()),
     );
   } else {
-    // Check if the control exists before accessing it
-    // This handles cases like MultiEntityTabView where controls may be renamed
-    try {
-      final value = form.control(name).value;
-      if (value == null) {
-        return MapEntry(name, "");
-      }
-      return MapEntry(name, value);
-    } catch (e) {
-      // Control doesn't exist (e.g., renamed in MultiEntityTabView)
-      // Return empty string as default
+    // Skip if control doesn't exist (hidden field without includeInForm: true,
+    // or renamed in MultiEntityTabView)
+    if (!form.contains(name)) {
       return MapEntry(name, "");
     }
+
+    final value = form.control(name).value;
+    if (value == null) {
+      return MapEntry(name, "");
+    }
+    return MapEntry(name, value);
   }
 }
