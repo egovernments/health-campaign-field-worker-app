@@ -37,6 +37,9 @@ class DigitScannerPage extends LocalizedStatefulWidget {
   // New validations parameter - when provided, takes precedence over legacy params
   final List<ScannerValidation>? validations;
 
+  // Initial data for edit mode - pass existing scanned codes
+  final List<String>? initialQrCodes;
+
   const DigitScannerPage({
     super.key,
     super.appLocalizations,
@@ -46,6 +49,7 @@ class DigitScannerPage extends LocalizedStatefulWidget {
     this.isEditEnabled = false,
     this.regex,
     this.validations,
+    this.initialQrCodes,
   });
 
   /// Gets the effective quantity - from validations if available, otherwise from legacy param
@@ -96,9 +100,19 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
     WidgetsBinding.instance.addObserver(this);
     _checkAndRequestCameraPermission();
     if (!widget.isEditEnabled) {
+      // Clear scanner state for new scan
       context
           .read<DigitScannerBloc>()
           .add(const DigitScannerEvent.handleScanner());
+    } else if (widget.initialQrCodes != null && widget.initialQrCodes!.isNotEmpty) {
+      // Initialize with existing data for edit mode
+      codes = List.from(widget.initialQrCodes!);
+      context.read<DigitScannerBloc>().add(
+            DigitScannerEvent.handleScanner(
+              qrCode: widget.initialQrCodes!,
+              barCode: [],
+            ),
+          );
     }
   }
 
@@ -193,7 +207,6 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
     return Scaffold(
       body: BlocBuilder<DigitScannerBloc, DigitScannerState>(
         builder: (context, state) {
-          // ▶️ NEW: show toast if bloc emitted an error and clear state
           if (state.error != null &&
               (state.error?.toString() ?? '').trim().isNotEmpty) {
             Toast.showToast(
@@ -480,6 +493,8 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                     ),
                     children: [
                       DigitCard(
+                        margin: const EdgeInsets.all(spacer2),
+                        cardType: CardType.secondary,
                         children: [
                           Align(
                             alignment: Alignment.topLeft,
@@ -663,7 +678,10 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                       ),
                     ),
                     children: [
-                      DigitCard(children: [
+                      DigitCard(
+                        margin: const EdgeInsets.all(spacer2),
+                        cardType: CardType.secondary,
+                          children: [
                         Align(
                           alignment: Alignment.topLeft,
                           child: Text(
@@ -755,7 +773,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                     style: TextStyle(
                       color: theme.colorScheme.secondary,
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
