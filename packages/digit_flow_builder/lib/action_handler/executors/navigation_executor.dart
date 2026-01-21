@@ -3,8 +3,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../utils/utils.dart';
-import '../../blocs/flow_crud_bloc.dart';
+
 import '../../blocs/state_wrapper_builder.dart';
 import '../../flow_builder.dart';
 import '../../utils/interpolation.dart';
@@ -63,7 +62,8 @@ class NavigationExecutor extends ActionExecutor {
         final rawValue = entry['value'];
 
         // Try to resolve from state form data first, fallback to contextData
-        dynamic resolvedValue = resolveValue(rawValue, stateFormData);
+        dynamic resolvedValue = resolveValue(
+            rawValue, stateFormData ?? currentState?.stateWrapper?.first);
         if (resolvedValue == rawValue || resolvedValue == null) {
           // If not resolved from state, try contextData
           resolvedValue = resolveValue(rawValue, contextData);

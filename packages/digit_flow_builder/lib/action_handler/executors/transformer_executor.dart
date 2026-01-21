@@ -4,7 +4,6 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:flutter/material.dart';
 
-import '../../blocs/flow_crud_bloc.dart';
 import '../../data/transformer_config.dart';
 import '../../flow_builder.dart';
 import '../../utils/interpolation.dart';
@@ -188,7 +187,7 @@ class TransformerExecutor extends ActionExecutor {
         ..removeWhere((key, value) => !existingModelTypes.contains(key));
       debugPrint('TRANSFORMER: filteredConfig keys=${filteredConfig.keys}');
 
-      try{
+      try {
         entities = formEntityMapper.updateEntitiesFromForm(
           existingModels: dedupedExistingModels,
           formValues: formValuesToUse ?? {},
@@ -196,7 +195,7 @@ class TransformerExecutor extends ActionExecutor {
           context: contextMap,
           fallbackFormDataString: fallBackModel,
         );
-      } catch (e){
+      } catch (e) {
         debugPrint(e.toString());
       }
 
