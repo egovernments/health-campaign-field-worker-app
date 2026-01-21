@@ -1020,7 +1020,7 @@ final dynamic sampleInventoryFlows = {
                 "properties": {
                   "type": "TEMPLATE",
                   "name": "manageStock",
-                  "navigationMode": "popUntil",
+                  "navigationMode": "popUntilAndReplace",
                   "popUntilPageName": "manageStock",
                 }
               }
@@ -1291,7 +1291,7 @@ final dynamic sampleInventoryFlows = {
                   },
                   {
                     "key": "INVENTORY_WAYBILL_NUMBER_LABEL",
-                    "value": "{{item.additionalFields.fields.waybillNumber}}"
+                    "value": "{{item.waybillNumber}}"
                   },
                   {
                     "key": "INVENTORY_BATCH_NUMBER_LABEL",
