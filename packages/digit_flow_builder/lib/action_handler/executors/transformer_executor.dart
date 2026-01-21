@@ -167,7 +167,7 @@ class TransformerExecutor extends ActionExecutor {
       // Deduplicate existingModels by type first (keep first occurrence)
       final seenExistingTypes = <String>{};
       final dedupedExistingModels = existingModels.where((model) {
-        final type = model.runtimeType.toString();
+        final type = getEntityTypeName(model);
         if (seenExistingTypes.contains(type)) {
           debugPrint('TRANSFORMER: Removing duplicate existingModel $type');
           return false;
@@ -181,7 +181,7 @@ class TransformerExecutor extends ActionExecutor {
       // Filter modelsConfig to only include models that exist in existingModels
       // This prevents trying to create missing models that reference non-existent entities
       final existingModelTypes =
-          dedupedExistingModels.map((m) => m.runtimeType.toString()).toSet();
+          dedupedExistingModels.map((m) => getEntityTypeName(m)).toSet();
       debugPrint('TRANSFORMER: existingModelTypes=$existingModelTypes');
 
       final filteredConfig = Map<String, dynamic>.from(transformerConfig)
@@ -217,7 +217,7 @@ class TransformerExecutor extends ActionExecutor {
           'lastModifiedTime': now,
         };
         // Recreate entity with updated audit details
-        final modelType = entity.runtimeType.toString();
+        final modelType = getEntityTypeName(entity);
         final factory = DataConverterSingleton()
             .dynamicEntityModelListener
             ?.modelFactoryRegistry[modelType];
@@ -232,7 +232,7 @@ class TransformerExecutor extends ActionExecutor {
       for (final entity in entities) {
         final map = entity.toMap();
         debugPrint(
-            'TRANSFORMER: Entity ${entity.runtimeType} - rowVersion: ${map['rowVersion']}, clientAuditDetails: ${map['clientAuditDetails']}');
+            'TRANSFORMER: Entity ${getEntityTypeName(entity)} - rowVersion: ${map['rowVersion']}, clientAuditDetails: ${map['clientAuditDetails']}');
       }
     } else if (multiEntityField != null) {
       // Check if multiEntityField is configured

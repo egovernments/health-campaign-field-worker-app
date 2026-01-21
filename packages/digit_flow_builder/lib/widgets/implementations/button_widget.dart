@@ -104,9 +104,34 @@ class ButtonWidget implements FlowWidget {
           if (json['onAction'] != null) {
             final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
 
-            // Pre-resolve navigation data for all actions
+            // Pre-resolve navigation data and condition expressions for all actions
             final resolvedActionsList = actionsList.map((actionJson) {
-              var action = ActionConfig.fromJson(actionJson);
+              var resolvedActionJson = Map<String, dynamic>.from(actionJson);
+
+              // Resolve condition expression if present
+              if (actionJson['condition'] != null) {
+                final condition = Map<String, dynamic>.from(actionJson['condition']);
+                final expression = condition['expression'] as String?;
+                if (expression != null && expression.contains('{{')) {
+                  // Resolve the expression template
+                  String resolvedExpression = expression;
+                  if (stateData != null) {
+                    resolvedExpression = resolveTemplate(expression, stateData) ?? expression;
+                  }
+                  if (resolvedExpression == expression && crudStateData != null) {
+                    final contextData = crudCtx?.item ?? crudStateData;
+
+                    resolvedExpression = resolveValueRaw(
+                      expression,
+                      contextData,
+                    );
+                  }
+                  condition['expression'] = resolvedExpression;
+                  resolvedActionJson['condition'] = condition;
+                }
+              }
+
+              var action = ActionConfig.fromJson(resolvedActionJson);
 
               // Resolve navigation data if present
               final navData = action.properties['data'] as List<dynamic>?;
@@ -137,7 +162,7 @@ class ButtonWidget implements FlowWidget {
                 }).toList();
 
                 return {
-                  ...actionJson,
+                  ...resolvedActionJson,
                   'properties': {
                     ...action.properties,
                     'data': resolvedData,
@@ -145,7 +170,7 @@ class ButtonWidget implements FlowWidget {
                 };
               }
 
-              return actionJson;
+              return resolvedActionJson;
             }).toList();
 
             // Build initial context data from current state

@@ -1,7 +1,7 @@
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:flutter/material.dart';
-
+import '../utils/utils.dart';
 import '../blocs/flow_crud_bloc.dart';
 import '../utils/interpolation.dart';
 import 'action_config.dart';
@@ -221,11 +221,13 @@ class ActionHandler {
             expression = resolveTemplate(expression, stateWrapper);
           }
 
-          condition['expression'] = expression;
+          // Create a copy of condition with resolved expression to avoid mutating original config
+          final resolvedCondition = Map<String, dynamic>.from(condition);
+          resolvedCondition['expression'] = expression;
 
           debugPrint('CONDITION_EVAL: expression=$expression, data=$evaluationData');
 
-          if (evaluateCondition(condition, evaluationData)) {
+          if (evaluateCondition(resolvedCondition, evaluationData)) {
             debugPrint('CONDITION_EVAL: Condition matched!');
             final subActions = condActionJson['actions'] as List? ?? [];
             for (final subActionJson in subActions) {

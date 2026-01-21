@@ -74,7 +74,7 @@ class UpdateExecutor extends ActionExecutor {
           .toSet();
 
       entityList = entityList
-          .where((e) => allowedTypes.contains(e.runtimeType.toString()))
+          .where((e) => allowedTypes.contains(getEntityTypeName(e)))
           .toList();
 
       debugPrint(
@@ -103,7 +103,7 @@ class UpdateExecutor extends ActionExecutor {
 
     // Update audit fields and apply field updates for each entity
     final updatedEntities = entityList.map((entity) {
-      final entityType = entity.runtimeType.toString();
+      final entityType = getEntityTypeName(entity);
       final clientAudit = entity.clientAuditDetails;
 
       final updatedClientAudit = clientAudit?.copyWith(
