@@ -355,32 +355,40 @@ class _HomePageState extends LocalizedState<HomePage> {
       return facilityFromWhich == 'Delivery Team' ? 'STAFF' : 'WAREHOUSE';
     });
 
-    // Get transacting party label based on stock entry type
-    // RECEIPT/RETURNED -> "Received from", ISSUED/DAMAGED/LOSS -> "Issued to"
-    FunctionRegistry.register('getTransactingPartyLabelByEntryType',
-        (args, stateData) {
+    // Helper to extract stockEntryType from additionalFields array
+    String getStockEntryTypeFromFields(dynamic fields) {
+      if (fields == null) return '';
+      if (fields is List) {
+        for (var field in fields) {
+          if (field is Map && field['key'] == 'stockEntryType') {
+            return field['value']?.toString().toUpperCase() ?? '';
+          }
+        }
+      }
+      return '';
+    }
+
+    // First page (viewTransaction) - shows sender for RECEIPT/RETURNED, receiver for ISSUED/DAMAGED/LOSS
+    FunctionRegistry.register('getFirstPagePartyLabel', (args, stateData) {
       if (args.isEmpty) return 'INVENTORY_TRANSACTING_PARTY_LABEL';
-      final stockEntryType = args.first?.toString().toUpperCase() ?? '';
+      final stockEntryType = getStockEntryTypeFromFields(args.first);
 
       switch (stockEntryType) {
         case 'RECEIPT':
         case 'RETURNED':
-          return 'INVENTORY_RECEIVED_FROM_LABEL';
+          return 'INVENTORY_SENDER_LABEL';
         case 'ISSUED':
         case 'DAMAGED':
         case 'LOSS':
-          return 'INVENTORY_ISSUED_TO_LABEL';
+          return 'INVENTORY_RECEIVER_LABEL';
         default:
           return 'INVENTORY_TRANSACTING_PARTY_LABEL';
       }
     });
 
-    // Get transacting party ID based on stock entry type
-    // RECEIPT/RETURNED -> senderId, ISSUED/DAMAGED/LOSS -> receiverId
-    FunctionRegistry.register('getTransactingPartyByEntryType',
-        (args, stateData) {
+    FunctionRegistry.register('getFirstPageParty', (args, stateData) {
       if (args.length < 3) return '';
-      final stockEntryType = args[0]?.toString().toUpperCase() ?? '';
+      final stockEntryType = getStockEntryTypeFromFields(args[0]);
       final senderId = args[1]?.toString() ?? '';
       final receiverId = args[2]?.toString() ?? '';
 
@@ -394,6 +402,43 @@ class _HomePageState extends LocalizedState<HomePage> {
           return receiverId;
         default:
           return senderId;
+      }
+    });
+
+    // Second page (viewTransactionDetails) - shows receiver for RECEIPT/RETURNED, sender for ISSUED/DAMAGED/LOSS
+    FunctionRegistry.register('getSecondPagePartyLabel', (args, stateData) {
+      if (args.isEmpty) return 'INVENTORY_TRANSACTING_PARTY_LABEL';
+      final stockEntryType = getStockEntryTypeFromFields(args.first);
+
+      switch (stockEntryType) {
+        case 'RECEIPT':
+        case 'RETURNED':
+          return 'INVENTORY_RECEIVER_LABEL';
+        case 'ISSUED':
+        case 'DAMAGED':
+        case 'LOSS':
+          return 'INVENTORY_SENDER_LABEL';
+        default:
+          return 'INVENTORY_TRANSACTING_PARTY_LABEL';
+      }
+    });
+
+    FunctionRegistry.register('getSecondPageParty', (args, stateData) {
+      if (args.length < 3) return '';
+      final stockEntryType = getStockEntryTypeFromFields(args[0]);
+      final senderId = args[1]?.toString() ?? '';
+      final receiverId = args[2]?.toString() ?? '';
+
+      switch (stockEntryType) {
+        case 'RECEIPT':
+        case 'RETURNED':
+          return receiverId;
+        case 'ISSUED':
+        case 'DAMAGED':
+        case 'LOSS':
+          return senderId;
+        default:
+          return receiverId;
       }
     });
 
