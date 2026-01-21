@@ -3,7 +3,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../../utils/utils.dart';
 import '../../blocs/flow_crud_bloc.dart';
 import '../../blocs/state_wrapper_builder.dart';
 import '../../flow_builder.dart';
@@ -155,7 +155,7 @@ class NavigationExecutor extends ActionExecutor {
               if (wrapperItem is Map<String, dynamic>) {
                 // Update each entity type in the wrapper item
                 for (final updatedEntity in updatedEntities) {
-                  final entityType = updatedEntity.runtimeType.toString();
+                  final entityType = getEntityTypeName(updatedEntity);
                   if (wrapperItem.containsKey(entityType)) {
                     wrapperItem[entityType] = updatedEntity;
                     debugPrint('NAVIGATION: Updated $entityType in wrapper');

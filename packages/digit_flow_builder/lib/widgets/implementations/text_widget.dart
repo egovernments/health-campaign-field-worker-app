@@ -36,9 +36,12 @@ class TextWidget implements FlowWidget {
     final styleKey = properties['style']?.toString();
     final textStyle = _parseTextStyle(context, styleKey);
 
+    final displayValue = (resolvedValue ?? '')
+        .replaceAll(RegExp(r'\bnull\b', caseSensitive: false), '--');
+
     return WidgetParsers.wrapWithBottomGap(
       Text(
-        resolvedValue != "null" ? resolvedValue : "--",
+        displayValue.isEmpty ? '--' : displayValue,
         style: textStyle,
       ),
       properties,

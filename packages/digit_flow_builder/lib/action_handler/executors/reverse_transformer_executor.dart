@@ -6,6 +6,7 @@ import '../../blocs/flow_crud_bloc.dart';
 import '../../data/transformer_config.dart';
 import '../../flow_builder.dart';
 import '../../utils/interpolation.dart';
+import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import 'action_executor.dart';
 
@@ -113,7 +114,7 @@ class ReverseTransformerExecutor extends ActionExecutor {
       // Filter by entity types if specified
       if (entityTypes != null && entityTypes.isNotEmpty) {
         modelInstances = modelInstances.where((entity) {
-          return entityTypes.contains(entity.runtimeType.toString());
+          return entityTypes.contains(getEntityTypeName(entity));
         }).toList();
       }
 
