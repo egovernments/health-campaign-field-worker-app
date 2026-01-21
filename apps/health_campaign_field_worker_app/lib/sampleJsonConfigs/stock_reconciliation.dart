@@ -127,6 +127,26 @@ final dynamic stockReconciliationFlows = {
               "isMultiSelect": false
             },
             {
+              "type": "integer",
+              "label": "",
+              "order": 2,
+              "value": 0,
+              "format": "number",
+              "hidden": true,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": true,
+              "fieldName": "stockInHand",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "includeInForm": true,
+              "validations": [],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
               "type": "string",
               "label": "STOCKRECONCILIATION_STOCKRECONCILIATION_comments_LABEL",
               "order": 3,
@@ -151,7 +171,7 @@ final dynamic stockReconciliationFlows = {
                 "expression": [
                   {
                     "condition":
-                        "stockReconciliationDetails.manualCount != stockReconciliationDetails.stockInHand",
+                        "stockRecon.manualCount != stockRecon.stockInHand && stockRecon.stockReconciliationCard != ''",
                     "type": "custom"
                   },
                 ]

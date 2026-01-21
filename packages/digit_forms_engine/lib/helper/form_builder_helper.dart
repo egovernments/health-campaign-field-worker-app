@@ -56,7 +56,7 @@ FormControl buildFormControl(
 
     case PropertySchemaType.boolean:
       return FormControl<bool>(
-        value: getDefaultValue(name) ?? parseBoolValue(rawValue),
+        value: parseBoolValue(getDefaultValue(name)) ?? parseBoolValue(rawValue),
         validators: validators,
       );
 
@@ -144,8 +144,12 @@ int? parseIntValue(dynamic value) {
 
 bool? parseBoolValue(dynamic value) {
   if (value == null) return null;
-  if (value is bool && value == true) return value;
-  if (value is String) return value.toLowerCase() == 'true' ? true : null;
+  if (value is bool) return value;
+  if (value is String) {
+    final lowerValue = value.toLowerCase();
+    if (lowerValue == 'true') return true;
+    if (lowerValue == 'false') return false;
+  }
   return null;
 }
 

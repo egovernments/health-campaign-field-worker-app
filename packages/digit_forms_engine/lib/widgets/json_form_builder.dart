@@ -650,6 +650,27 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
   Widget _buildObjectType(FormGroup form) {
     final entries = widget.schema.properties?.entries.toList() ?? [];
 
+    // Check if any field has visibility conditions
+    final hasVisibilityConditions = entries.any(
+      (entry) => entry.value.visibilityCondition != null,
+    );
+
+    // If there are visibility conditions, wrap in ReactiveFormConsumer
+    // to ensure fields rebuild when dependent values change
+    if (hasVisibilityConditions) {
+      return ReactiveFormConsumer(
+        builder: (context, formGroup, child) {
+          return _buildObjectFields(formGroup, entries);
+        },
+      );
+    }
+
+    return _buildObjectFields(form, entries);
+  }
+
+  /// Build the object fields column
+  Widget _buildObjectFields(
+      FormGroup form, List<MapEntry<String, PropertySchema>> entries) {
     final visibleEntries = entries.where((entry) {
       final subSchema = entry.value;
       return !_shouldHideField(form, subSchema, entry.key);

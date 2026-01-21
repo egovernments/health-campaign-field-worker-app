@@ -1,5 +1,4 @@
 import 'package:digit_data_model/data_model.dart';
-import 'package:flutter/foundation.dart';
 
 /// Utility class for calculating stock metrics.
 ///
@@ -49,10 +48,6 @@ class StockCalculationUtils {
       return true;
     }).toList();
 
-    debugPrint(
-        'StockCalculationUtils: Calculating metrics for ${filteredStock.length} stocks '
-        '(facility=$facilityId, product=$productId, user=$loggedInUserUuid)');
-
     // Calculate metrics following StockReconciliationBloc pattern
     double stockReceived = 0;
     double stockIssued = 0;
@@ -69,22 +64,16 @@ class StockCalculationUtils {
       final isReceiver = stock.receiverId == facilityId;
       final isSender = stock.senderId == facilityId;
 
-      debugPrint(
-          'StockCalculationUtils: Processing stock - type=$transactionType, '
-          'reason=$transactionReason, qty=$quantity, isReceiver=$isReceiver, isSender=$isSender');
-
       // Stock Received: This facility is the receiver AND transactionType == RECEIVED
       // Accept both: transactionReason == 'RECEIVED' OR transactionReason is empty/null
       if (isReceiver && transactionType == 'RECEIVED') {
         if (transactionReason == 'RETURNED') {
           // Stock Returned: transactionReason == RETURNED
           stockReturned += quantity;
-          debugPrint('  -> Counted as RETURNED: $quantity');
         } else if (transactionReason.isEmpty ||
             transactionReason == 'RECEIVED') {
           // Regular stock receipt
           stockReceived += quantity;
-          debugPrint('  -> Counted as RECEIVED: $quantity');
         }
       }
       // Stock Issued/Lost/Damaged: This facility is the sender AND transactionType == DISPATCHED
@@ -93,30 +82,20 @@ class StockCalculationUtils {
             transactionReason == 'LOST_IN_STORAGE') {
           // Stock Lost
           stockLost += quantity;
-          debugPrint('  -> Counted as LOST: $quantity');
         } else if (transactionReason == 'DAMAGED_IN_TRANSIT' ||
             transactionReason == 'DAMAGED_IN_STORAGE') {
           // Stock Damaged
           stockDamaged += quantity;
-          debugPrint('  -> Counted as DAMAGED: $quantity');
         } else if (transactionReason.isEmpty) {
           // Regular dispatch (issued)
           stockIssued += quantity;
-          debugPrint('  -> Counted as ISSUED: $quantity');
         }
-      } else {
-        debugPrint('  -> NOT counted (not matching facility role)');
       }
     }
 
     // Stock in hand = (received + returned) - (issued + damaged + lost)
     final stockInHand = (stockReceived + stockReturned) -
         (stockIssued + stockDamaged + stockLost);
-
-    debugPrint(
-        'StockCalculationUtils: Final metrics - received=$stockReceived, '
-        'issued=$stockIssued, returned=$stockReturned, lost=$stockLost, '
-        'damaged=$stockDamaged, inHand=$stockInHand');
 
     return {
       'stockReceived': stockReceived,
@@ -155,7 +134,6 @@ class StockCalculationUtils {
       result[productId] = metrics['stockInHand'] ?? 0.0;
     }
 
-    debugPrint('StockCalculationUtils: Stock in hand for products: $result');
     return result;
   }
 
@@ -191,7 +169,7 @@ class StockCalculationUtils {
         }
       }
     } catch (e) {
-      debugPrint('StockCalculationUtils: Error parsing stock data: $e');
+      // Silently handle parsing errors
     }
 
     return [];

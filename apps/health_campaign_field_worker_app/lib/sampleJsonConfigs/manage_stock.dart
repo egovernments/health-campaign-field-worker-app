@@ -1133,12 +1133,12 @@ final dynamic sampleInventoryFlows = {
                       {
                         "format": "textTemplate",
                         "value":
-                            "{{fn:getTransactingPartyLabelByEntryType(item.items[0].additionalFields.fields.stockEntryType)}}"
+                            "{{fn:getFirstPagePartyLabel(item.items[0].additionalFields.fields)}}"
                       },
                       {
                         "format": "textTemplate",
                         "value":
-                            "{{fn:getTransactingPartyByEntryType(item.items[0].additionalFields.fields.stockEntryType, item.items[0].senderId, item.items[0].receiverId)}}"
+                            "{{fn:getFirstPageParty(item.items[0].additionalFields.fields, item.items[0].senderId, item.items[0].receiverId)}}"
                       }
                     ]
                   },
@@ -1281,9 +1281,9 @@ final dynamic sampleInventoryFlows = {
                   },
                   {
                     "key":
-                        "{{fn:getTransactingPartyLabelByEntryType(item.additionalFields.fields.stockEntryType)}}",
+                        "{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
                     "value":
-                        "{{fn:getTransactingPartyByEntryType(item.additionalFields.fields.stockEntryType, item.senderId, item.receiverId)}}"
+                        "{{fn:getSecondPageParty(item.additionalFields.fields, item.senderId, item.receiverId)}}"
                   },
                   {
                     "key": "INVENTORY_MRN_NUMBER_LABEL",

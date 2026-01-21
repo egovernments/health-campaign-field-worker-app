@@ -71,6 +71,60 @@ class _StockReconciliationCardState
   bool _facilityTouched = false;
   bool _productTouched = false;
 
+  // Track if manualCount has been initialized to prevent resetting user edits
+  bool _manualCountInitialized = false;
+
+  // Track if metrics need recalculation (set to true when facility/product changes)
+  bool _needsMetricsRecalculation = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Reset form fields when page is opened fresh
+    // This ensures previous session values don't persist
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _resetFormFields();
+      }
+    });
+  }
+
+  /// Reset form fields to clear any previous session values
+  void _resetFormFields() {
+    context.read<FormsBloc>().add(
+          FormsEvent.updateField(
+            schemaKey: widget.pageSchema,
+            context: context,
+            key: 'stockReconciliationCard',
+            value: null,
+          ),
+        );
+    context.read<FormsBloc>().add(
+          FormsEvent.updateField(
+            schemaKey: widget.pageSchema,
+            context: context,
+            key: 'stockInHand',
+            value: 0,
+          ),
+        );
+    context.read<FormsBloc>().add(
+          FormsEvent.updateField(
+            schemaKey: widget.pageSchema,
+            context: context,
+            key: 'manualCount',
+            value: null,
+          ),
+        );
+    context.read<FormsBloc>().add(
+          FormsEvent.updateField(
+            schemaKey: widget.pageSchema,
+            context: context,
+            key: 'comments',
+            value: null,
+          ),
+        );
+  }
+
   /// Checks if both facility and product are selected.
   bool get isValid => _selectedFacility != null && _selectedProduct != null;
 
@@ -147,10 +201,15 @@ class _StockReconciliationCardState
                 ? productVariants
                 : _cachedProductVariants;
 
-            // Recalculate stock metrics whenever flow state changes and both selections are made
-            if (_selectedFacility != null && _selectedProduct != null) {
+            // Recalculate stock metrics only when needed (facility/product changed)
+            if (_selectedFacility != null &&
+                _selectedProduct != null &&
+                _needsMetricsRecalculation) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                _calculateStockMetrics(flowState);
+                if (mounted && _needsMetricsRecalculation) {
+                  _needsMetricsRecalculation = false;
+                  _calculateStockMetrics(flowState);
+                }
               });
             }
 
@@ -187,6 +246,9 @@ class _StockReconciliationCardState
                         _selectedFacility = selected;
                         // Mark product as touched too - so error shows if not selected
                         _productTouched = true;
+                        // Reset flags when facility changes
+                        _manualCountInitialized = false;
+                        _needsMetricsRecalculation = true;
                       });
                       _triggerStockSearchIfReady(context);
                       _updateFormData();
@@ -226,6 +288,9 @@ class _StockReconciliationCardState
                         _selectedProduct = selected;
                         // Mark facility as touched too - so error shows if not selected
                         _facilityTouched = true;
+                        // Reset flags when product changes
+                        _manualCountInitialized = false;
+                        _needsMetricsRecalculation = true;
                       });
                       _triggerStockSearchIfReady(context);
                       _updateFormData();
@@ -305,9 +370,10 @@ class _StockReconciliationCardState
                   InfoCard(
                     type: InfoType.info,
                     description: localizations.translate(
-                      'Please do a manual count of the stock and enter the value below',
+                      'STOCK_RECONCILIATION_INFO_CARD_CONTENT',
                     ),
-                    title: localizations.translate('Note'),
+                    title: localizations
+                        .translate('STOCK_RECONCILIATION_INFO_CARD_TITLE'),
                   ),
                 ],
               ],
@@ -414,19 +480,21 @@ class _StockReconciliationCardState
             ),
           );
 
-      // Set manualCount default value to stockInHand
+      // Set manualCount default value to stockInHand only on first initialization
       // This pre-fills the field so user only needs to change if count differs
-      context.read<FormsBloc>().add(
-            FormsEvent.updateField(
-              schemaKey: widget.pageSchema,
-              context: context,
-              key: 'manualCount',
-              value: stockInHandValue,
-            ),
-          );
+      // Don't overwrite if user has already edited the value
+      if (!_manualCountInitialized) {
+        _manualCountInitialized = true;
+        context.read<FormsBloc>().add(
+              FormsEvent.updateField(
+                schemaKey: widget.pageSchema,
+                context: context,
+                key: 'manualCount',
+                value: stockInHandValue,
+              ),
+            );
+      }
     }
-
-    debugPrint('Updated form data with calculated metrics: $_stockMetrics');
   }
 
   List<FacilityModel> _getFacilities(FlowCrudState? flowState) {
@@ -471,7 +539,7 @@ class _StockReconciliationCardState
         }
       }
     } catch (e) {
-      debugPrint('Error parsing facility data: $e');
+      // Silently handle parsing errors
     }
 
     return [];
@@ -499,7 +567,7 @@ class _StockReconciliationCardState
         }
       }
     } catch (e) {
-      debugPrint('Error parsing product variant data: $e');
+      // Silently handle parsing errors
     }
 
     return [];
@@ -508,17 +576,12 @@ class _StockReconciliationCardState
   void _triggerStockSearchIfReady(BuildContext context) {
     // Only trigger search if both facility and product are selected
     if (_selectedFacility == null || _selectedProduct == null) {
-      debugPrint('Skipping search - facility or product not selected');
       return;
     }
-
-    debugPrint(
-        'Triggering TWO stock searches for facility=${_selectedFacility!.id}, product=${_selectedProduct!.id}');
 
     // Get tenantId from singleton
     final tenantId = FlowBuilderSingleton().selectedProject?.tenantId;
     if (tenantId == null) {
-      debugPrint('ERROR: TenantId not found in singleton');
       return;
     }
 
@@ -548,13 +611,9 @@ class _StockReconciliationCardState
         orderBy: null,
       );
 
-      debugPrint(
-          'Fetching all stocks for product=${_selectedProduct!.id}, facility filter will be applied in calculation');
-
       context.read<CrudBloc>().add(CrudEventSearch(searchParams));
-    } catch (e, stackTrace) {
-      debugPrint('ERROR creating search params: $e');
-      debugPrint('Stack trace: $stackTrace');
+    } catch (e) {
+      // Search params creation failed - silently ignore
     }
   }
 }
