@@ -333,18 +333,19 @@ final dynamic inventoryReportFlows = {
         {
           "type": "template",
           "format": "infoCard",
-          "message": "STOCKREPORTS_REPORT_DETAILS_INFO_CARD_LABEL",
+          "label": "STOCKRECON_REPORT_DETAILS_INFO_CARD_LABEL",
+          "description": "STOCKRECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
           "properties": {"type": "info"},
-          "visible":
-              "{{selectedFacility}} == null || {{selectedProduct}} == null"
+          "hidden": "{{ selectedFacility == null }}",
         },
         {
           "type": "template",
           "format": "infoCard",
-          "message": "STOCKREPORTS_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
+          "label": "STOCKRECON_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
+          "description":
+              "STOCKRECON_REPORT_DETAILS_NO_RECORD_FOUND_DESCRIPTION",
           "properties": {"type": "info"},
-          "visible":
-              "{{stock.length}} == 0 && {{selectedFacility}} != null && {{selectedProduct}} != null && {{navigation.reportType}} != 'reconciliation'"
+          "hidden": "{{ context.stock.notEmpty }}",
         },
         {
           "type": "template",
@@ -499,18 +500,35 @@ final dynamic inventoryReportFlows = {
         {
           "type": "template",
           "format": "infoCard",
-          "message": "STOCKRECON_REPORT_DETAILS_INFO_CARD_LABEL",
+          "label": "STOCKRECON_REPORT_DETAILS_INFO_CARD_LABEL",
+          "description": "STOCKRECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
           "properties": {"type": "info"},
-          "visible":
-              "{{selectedFacility}} == null || {{selectedProduct}} == null"
+          "visibilityCondition": {
+            "expression": [
+              {
+                "condition":
+                    "{{selectedFacility}} == null || {{selectedProduct}} == null",
+                "type": "custom"
+              }
+            ]
+          },
         },
         {
           "type": "template",
           "format": "infoCard",
-          "message": "STOCKRECON_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
+          "label": "STOCKRECON_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
+          "description":
+              "STOCKRECON_REPORT_DETAILS_NO_RECORD_FOUND_DESCRIPTION",
           "properties": {"type": "info"},
-          "visible":
-              "{{stockReconciliation.length}} == 0 && {{selectedFacility}} != null && {{selectedProduct}} != null"
+          "visibilityCondition": {
+            "expression": [
+              {
+                "condition":
+                    "{{stockReconciliation.length}} == 0 && {{selectedFacility}} != null && {{selectedProduct}} != null",
+                "type": "custom"
+              }
+            ]
+          },
         },
         {
           "type": "template",
