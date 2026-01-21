@@ -1259,6 +1259,8 @@ class ComputedListEvaluator {
   /// Extracts variable names from the condition string
   static Set<String> extractKeys(String condition) {
     final keywords = {"and", "or", "not", "true", "false"};
+    // Mathematical functions to exclude from variable extraction
+    final functions = {"MIN", "MAX", "CEIL", "FLOOR", "ROUND", "ABS", "SQRT", "POW", "SUM", "AVG"};
     final splitPattern = RegExp(r'and|or|not');
     final identifierPattern = RegExp(r'^[a-zA-Z_][a-zA-Z0-9_]*$');
 
@@ -1281,8 +1283,10 @@ class ComputedListEvaluator {
           .where((e) => e.isNotEmpty);
 
       for (final part in parts) {
-        // ✅ Only keep identifier-like parts, ignore numbers & operators
-        if (identifierPattern.hasMatch(part) && !keywords.contains(part)) {
+        // ✅ Only keep identifier-like parts, ignore numbers, operators & function names
+        if (identifierPattern.hasMatch(part) &&
+            !keywords.contains(part) &&
+            !functions.contains(part.toUpperCase())) {
           keys.add(part);
         }
       }
@@ -1291,16 +1295,36 @@ class ComputedListEvaluator {
     return keys;
   }
 
-  /// Applies transformations such as age calculations
+  /// Applies transformations such as age calculations and type conversions
   static dynamic applyTransformation(
       Map<String, dynamic> item, Map<String, dynamic> transform) {
     final type = transform['type'];
     final source = transform['source'];
+    final value = item[source];
 
-    if (type == 'ageInMonths' && source == 'dateOfBirth') {
-      return calculateAgeInMonths(item[source]);
+    switch (type) {
+      case 'ageInMonths':
+        return calculateAgeInMonths(value);
+      case 'int':
+        if (value is int) return value;
+        if (value is num) return value.toInt();
+        if (value is String) return int.tryParse(value) ?? 0;
+        return 0;
+      case 'double':
+        if (value is double) return value;
+        if (value is num) return value.toDouble();
+        if (value is String) return double.tryParse(value) ?? 0.0;
+        return 0.0;
+      case 'bool':
+        if (value is bool) return value;
+        if (value is String) {
+          return value.toLowerCase() == 'true' || value == '1';
+        }
+        if (value is num) return value != 0;
+        return false;
+      default:
+        return value; // fallback - return original value
     }
-    return item[source]; // fallback
   }
 
   static int calculateAgeInMonths(String dob) {
@@ -1466,6 +1490,18 @@ class ComputedListEvaluator {
         final result = parser.parse;
 
         if (result['isSuccess'] && result['value'] == true) {
+          results.add(item);
+        } else if (result['isSuccess'] && result['value'] is num) {
+          final computedValue = result['value'];
+
+          if (item['ProductVariants'] is List) {
+            for (final variant in item['ProductVariants']) {
+              if (variant is Map) {
+                variant['quantity'] = computedValue;
+              }
+            }
+          }
+
           results.add(item);
         }
       } catch (e) {
