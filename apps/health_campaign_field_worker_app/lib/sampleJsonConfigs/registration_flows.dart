@@ -1563,10 +1563,6 @@ final dynamic sampleFlows = {
                               "value": "{{individual.0.clientReferenceId}}"
                             },
                             {
-                              "key": "selectedIndividualName",
-                              "value": "{{individual.0.name.givenName}}"
-                            },
-                            {
                               "key": "HouseholdClientReferenceId",
                               "value": "{{member.0.householdClientReferenceId}}"
                             },
@@ -2420,10 +2416,6 @@ final dynamic sampleFlows = {
                         "{{contextData.navigation.selectedIndividualClientReferenceId}}"
                   },
                   {
-                    "key": "selectedIndividualName",
-                    "value": "{{contextData.navigation.selectedIndividualName}}"
-                  },
-                  {
                     "key": "HouseholdClientReferenceId",
                     "value":
                         "{{ contextData.navigation.HouseholdClientReferenceId }}"
@@ -2568,10 +2560,6 @@ final dynamic sampleFlows = {
                         "{{contextData.navigation.selectedIndividualClientReferenceId}}"
                   },
                   {
-                    "key": "selectedIndividualName",
-                    "value": "{{contextData.navigation.selectedIndividualName}}"
-                  },
-                  {
                     "key": "HouseholdClientReferenceId",
                     "value":
                         "{{ contextData.navigation.HouseholdClientReferenceId }}"
@@ -2684,15 +2672,9 @@ final dynamic sampleFlows = {
               ]
             },
             {
-              "enums": [
-                {"code": "DRUG_SE_CC", "name": "DRUG_SE_CC"},
-                {"code": "DRUG_SE_PC", "name": "DRUG_SE_PC"},
-                {"code": "FEVER", "name": "FEVER"},
-                {"code": "SICK", "name": "SICK"}
-              ],
               "type": "string",
               "label": "HFREFERRAL_REFERRAL_DETAILS_referralReason_LABEL",
-              "order": 4,
+              "order": 5,
               "value": "",
               "format": "radio",
               "hidden": false,
