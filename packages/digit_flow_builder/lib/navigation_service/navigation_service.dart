@@ -21,6 +21,10 @@ enum NavigationMode {
 
   /// Pop until a specific page is reached (without pushing)
   popUntil,
+
+  /// Pop until a specific page is reached, pop that page, then push a fresh instance
+  /// This ensures initActions are triggered on the fresh page instance
+  popUntilAndReplace,
 }
 
 abstract class NavigationService {
@@ -89,6 +93,20 @@ class FlowBuilderNavigationService implements NavigationService {
           if (popUntilPageName != null && popUntilPageName.isNotEmpty) {
             _popUntilPage(router, popUntilPageName);
           }
+          break;
+
+        case NavigationMode.popUntilAndReplace:
+          // Pop until a specific page is reached, pop that page, then push fresh instance
+          // This ensures initActions are triggered on the fresh page
+          if (popUntilPageName != null && popUntilPageName.isNotEmpty) {
+            _popUntilPage(router, popUntilPageName);
+            // Pop the target page itself
+            if (router.canPop()) {
+              router.pop();
+            }
+          }
+          // Push fresh instance of the page
+          router.push(route);
           break;
       }
     } else {
@@ -212,6 +230,9 @@ class NavigationRegistry {
       case 'popuntil':
       case 'pop_until':
         return NavigationMode.popUntil;
+      case 'popuntilandreplace':
+      case 'pop_until_and_replace':
+        return NavigationMode.popUntilAndReplace;
       case 'push':
       default:
         return NavigationMode.push;
