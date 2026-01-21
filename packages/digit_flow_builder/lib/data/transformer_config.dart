@@ -293,7 +293,7 @@ final jsonConfig = {
           "beneficiaryId": "beneficiaryDetails.beneficiaryId",
           "tag": "beneficiaryDetails.scanner",
           "beneficiaryClientReferenceId":
-              "__switch:__context:beneficiaryType:{INDIVIDUAL:__ref:IndividualModel.clientReferenceId,HOUSEHOLD:__ref:HouseholdModel.clientReferenceId}",
+              "__switch:__context:beneficiaryType:{INDIVIDUAL:__ref:IndividualModel.clientReferenceId,HOUSEHOLD:__context:HouseholdClientReferenceId}",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
 
