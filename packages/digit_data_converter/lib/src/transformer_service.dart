@@ -49,7 +49,8 @@ class FormEntityMapper {
             final existingModelData = existingModel.toMap();
 
             final mergedData = mergeAdditionalFields(
-                existingModelData, unmapped, fallbackModelName);
+                existingModelData, unmapped, fallbackModelName,
+                updateExisting: false);
 
             final updatedModel = factory(mergedData);
 
@@ -79,12 +80,14 @@ class FormEntityMapper {
     required Map<String, dynamic> formValues,
     required Map<String, dynamic> modelsConfig,
     required Map<String, dynamic> context,
+    String? fallbackFormDataString,
   }) {
     final List<EntityModel> updatedModels = [];
     final Set<String> existingModelTypes =
         existingModels.map((model) => model.runtimeType.toString()).toSet();
 
     prepopulateGeneratedValuesFromExisting(existingModels, modelsConfig);
+    usedPaths.clear();
 
     // Update existing models if config exists, else keep unchanged
     for (final model in existingModels) {
@@ -116,6 +119,42 @@ class FormEntityMapper {
           updatedModels.add(newModel);
         } catch (e) {
           throw Exception('Error creating missing model $modelName: $e');
+        }
+      }
+    }
+
+    // Get unmapped form fields and merge into additionalDetails (same as create flow)
+    final unmapped = _getUnmappedFields(formValues);
+
+    if (fallbackFormDataString != null && unmapped.isNotEmpty) {
+      final fallbackModelName = fallbackFormDataString;
+      final factory = DataConverterSingleton()
+          .dynamicEntityModelListener
+          ?.modelFactoryRegistry[fallbackModelName];
+
+      if (factory != null) {
+        try {
+          final existingIndex = updatedModels
+              .indexWhere((e) => e.runtimeType.toString() == fallbackModelName);
+
+          if (existingIndex != -1) {
+            final existingModel = updatedModels[existingIndex];
+            final existingModelData = existingModel.toMap();
+
+            final mergedData = mergeAdditionalFields(
+                existingModelData, unmapped, fallbackModelName);
+
+            final updatedModel = factory(mergedData);
+            updatedModels[existingIndex] = updatedModel;
+          }
+        } catch (e) {
+          throw Exception(
+              'Error merging unmapped fields into $fallbackModelName: $e');
+        }
+      } else {
+        if (kDebugMode) {
+          print(
+              'Warning: fallback model factory not found for $fallbackModelName');
         }
       }
     }
@@ -864,8 +903,9 @@ class FormEntityMapper {
   Map<String, dynamic> mergeAdditionalFields(
     Map<String, dynamic> existingModelData,
     Map<String, dynamic> newFields,
-    String modelName,
-  ) {
+    String modelName, {
+    bool updateExisting = true,
+  }) {
     // Clone existing data to avoid mutation
     final mergedData = Map<String, dynamic>.from(existingModelData);
 
@@ -877,23 +917,40 @@ class FormEntityMapper {
         .where((e) => e.value != null && e.value.toString().trim().isNotEmpty)
         .toList();
 
-    final newAdditionalFieldsList = filteredNewFields
-        .map((e) => {'key': e.key, 'value': e.value.toString()})
-        .toList();
+    // Convert new fields to a map for easier lookup
+    final newFieldsMap = {
+      for (final e in filteredNewFields) e.key: e.value.toString()
+    };
 
     if (existingAdditionalFields != null) {
-      // Merge existing additional fields list with new ones, avoid duplicate keys
       final existingFieldsList =
           (existingAdditionalFields['fields'] as List<dynamic>? ?? [])
               .cast<Map<String, dynamic>>();
 
-      final existingKeys = existingFieldsList.map((f) => f['key']).toSet();
+      final mergedFields = <Map<String, dynamic>>[];
+      final processedKeys = <String>{};
 
-      final mergedFields = [
-        ...existingFieldsList,
-        ...newAdditionalFieldsList
-            .where((nf) => !existingKeys.contains(nf['key'])),
-      ];
+      // Update existing fields if updateExisting is true, otherwise keep original
+      for (final field in existingFieldsList) {
+        final key = field['key'] as String?;
+        if (key != null) {
+          if (updateExisting && newFieldsMap.containsKey(key)) {
+            // Update existing field with new value
+            mergedFields.add({'key': key, 'value': newFieldsMap[key]});
+          } else {
+            // Keep original field
+            mergedFields.add(field);
+          }
+          processedKeys.add(key);
+        }
+      }
+
+      // Add new fields that don't exist yet
+      for (final entry in newFieldsMap.entries) {
+        if (!processedKeys.contains(entry.key)) {
+          mergedFields.add({'key': entry.key, 'value': entry.value});
+        }
+      }
 
       mergedData['additionalFields'] = {
         'schema': modelName.replaceAll('Model', ''),
@@ -902,6 +959,10 @@ class FormEntityMapper {
       };
     } else {
       // No existing additionalFields, create new
+      final newAdditionalFieldsList = filteredNewFields
+          .map((e) => {'key': e.key, 'value': e.value.toString()})
+          .toList();
+
       mergedData['additionalFields'] = {
         'schema': modelName.replaceAll('Model', ''),
         'version': 1,
