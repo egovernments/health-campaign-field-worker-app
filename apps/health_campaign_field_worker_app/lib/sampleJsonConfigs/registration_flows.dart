@@ -254,7 +254,7 @@ final dynamic sampleFlows = {
                 "children": [
                   {
                     "type": "template",
-                    "value": "{{ item.headIndividual.0.name.givenName }}",
+                    "value": "{{ headIndividual.0.name.givenName }}",
                     "format": "textTemplate",
                     "fieldName": "headOfHousehold"
                   },
@@ -272,7 +272,7 @@ final dynamic sampleFlows = {
                                 {
                                   "key": "HouseholdClientReferenceId",
                                   "value":
-                                      "{{ item.HouseholdModel.clientReferenceId }}"
+                                      "{{ contextData.HouseholdModel.clientReferenceId }}"
                                 }
                               ],
                               "name": "householdOverview",
@@ -281,8 +281,7 @@ final dynamic sampleFlows = {
                           }
                         ],
                         "condition": {
-                          "expression":
-                              "{{item.tasks.0.status}} != CLOSED_HOUSEHOLD"
+                          "expression": "{{tasks.0.status}} != CLOSED_HOUSEHOLD"
                         }
                       },
                       {
@@ -301,7 +300,7 @@ final dynamic sampleFlows = {
                                 {
                                   "key": "HouseholdClientReferenceId",
                                   "value":
-                                      "{{ item.HouseholdModel.clientReferenceId }}"
+                                      "{{ contextData.HouseholdModel.clientReferenceId }}"
                                 },
                                 {"key": "isEdit", "value": "true"},
                                 {"key": "isClosedHousehold", "value": "true"}
@@ -312,8 +311,7 @@ final dynamic sampleFlows = {
                           }
                         ],
                         "condition": {
-                          "expression":
-                              "{{item.tasks.0.status}} == CLOSED_HOUSEHOLD"
+                          "expression": "{{tasks.0.status}} == CLOSED_HOUSEHOLD"
                         }
                       }
                     ],
@@ -994,18 +992,16 @@ final dynamic sampleFlows = {
               "fieldName": "identifiers",
               "mandatory": true,
               "deleteFlag": false,
-              "enums": [
-                {"code": "DEFAULT", "name": "DEFAULT"}
-              ],
               "innerLabel": "",
               "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR",
               "systemDate": false,
               "validations": [
-                // {
-                //   "type": "required",
-                //   "value": true,
-                //   "message": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idpopulator_mandatory_message"
-                // }
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idpopulator_mandatory_message"
+                }
               ],
               "errorMessage": "",
               "isMultiSelect": false
@@ -1056,10 +1052,6 @@ final dynamic sampleFlows = {
               "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
-              "enums": [
-                {"code": "MALE", "name": "MALE"},
-                {"code": "FEMALE", "name": "FEMALE"}
-              ],
               "schemaCode": "common-masters.GenderType",
               "systemDate": false,
               "validations": [
@@ -1178,8 +1170,6 @@ final dynamic sampleFlows = {
                 ],
                 "name": "householdOverview",
                 "type": "TEMPLATE",
-                "navigationMode": "popUntilAndPush",
-                "popUntilPageName": "searchBeneficiary",
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
@@ -1232,8 +1222,6 @@ final dynamic sampleFlows = {
                 ],
                 "name": "householdOverview",
                 "type": "TEMPLATE",
-                "navigationMode": "popUntilAndPush",
-                "popUntilPageName": "searchBeneficiary",
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
@@ -1283,8 +1271,6 @@ final dynamic sampleFlows = {
                 ],
                 "name": "householdOverview",
                 "type": "TEMPLATE",
-                "navigationMode": "popUntilAndPush",
-                "popUntilPageName": "searchBeneficiary",
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
@@ -1393,7 +1379,6 @@ final dynamic sampleFlows = {
               "format": "row",
               "children": [
                 {
-                  "type": "template",
                   "label": "REGISTRATION_EDIT_HOUSEHOLD_BUTTON_LABEL",
                   "format": "button",
                   "onAction": [
@@ -1419,9 +1404,7 @@ final dynamic sampleFlows = {
                       }
                     }
                   ],
-                  "fieldName": "householdEditButton",
                   "properties": {
-                    "icon": "Edit",
                     "size": "large",
                     "type": "tertiary",
                     "mainAxisSize": "min",
@@ -1468,12 +1451,11 @@ final dynamic sampleFlows = {
                     "children": [
                       {
                         "type": "template",
-                        "value": "{{ item.individual.0.name.givenName }}",
+                        "value": "{{ individual.0.name.givenName }}",
                         "format": "textTemplate",
                         "fieldName": "individualName"
                       },
                       {
-                        "type": "template",
                         "label": "REGISTRATION_EDIT_INDIVIDUAL_BUTTON_LABEL",
                         "format": "button",
                         "onAction": [
@@ -1481,10 +1463,7 @@ final dynamic sampleFlows = {
                             "actionType": "REVERSE_TRANSFORM",
                             "properties": {
                               "data": [
-                                {
-                                  "key": "entities",
-                                  "value": "{{item.individual}}"
-                                }
+                                {"key": "entities", "value": "{{individual}}"}
                               ],
                               "configName": "individualRegistration",
                               "entityTypes": ["IndividualModel"]
@@ -1506,9 +1485,7 @@ final dynamic sampleFlows = {
                             }
                           }
                         ],
-                        "fieldName": "editIndividualButton",
                         "properties": {
-                          "icon": "Edit",
                           "size": "large",
                           "type": "tertiary",
                           "mainAxisSize": "min",
@@ -1516,7 +1493,6 @@ final dynamic sampleFlows = {
                         }
                       }
                     ],
-                    "fieldName": "individualRow",
                     "properties": {
                       "bottomGap": 16,
                       "mainAxisSize": "max",
@@ -1526,7 +1502,7 @@ final dynamic sampleFlows = {
                   {
                     "type": "template",
                     "value":
-                        "{{item.individual.0.gender }} | {{fn:formatDate(item.individual.0.dateOfBirth, 'age')}}",
+                        "{{individual.0.gender }} | {{fn:formatDate(individual.0.dateOfBirth, 'age')}}",
                     "format": "textTemplate",
                     "fieldName": "genderAge",
                     "properties": {"bottomGap": 16}
@@ -1536,24 +1512,16 @@ final dynamic sampleFlows = {
                     "label": "NOT_ELIGIBLE",
                     "format": "tag",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==false",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth, referral, task)}}==false",
                     "fieldName": "notEligible",
-                    "properties": {"tagType": "error"}
-                  },
-                  {
-                    "type": "template",
-                    "label": "BENEFICIARY_REFERRED",
-                    "format": "tag",
-                    "visible": "{{fn:length(item.referral)}} > 0",
-                    "fieldName": "beneficiaryReferred",
-                    "properties": {"tagType": "error"}
+                    "properties": {"tagType": "error", "bottomGap": 16}
                   },
                   {
                     "type": "template",
                     "label": "ADMINISTERED_SUCCESS",
                     "format": "tag",
                     "visible":
-                        "{{fn:isDelivered(item.task.0.status)}}==true && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:length(item.referral)}} <= 0",
+                        "{{fn:isDelivered(task.0.status)}}==true && {{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth, referral, task)}}==true",
                     "fieldName": "administrationSuccess",
                     "properties": {"tagType": "success", "bottomGap": 16}
                   },
@@ -1562,7 +1530,7 @@ final dynamic sampleFlows = {
                     "label": "NOT_VISITED",
                     "format": "tag",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:isDelivered(item.task.0.status)}}==false && {{fn:length(item.referral)}} <= 0",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth, referral, task)}}==true && {{fn:isDelivered(task.0.status)}}==false",
                     "fieldName": "notVisited",
                     "properties": {"tagType": "info", "bottomGap": 16}
                   },
@@ -1571,7 +1539,7 @@ final dynamic sampleFlows = {
                     "label": "DELIVERY",
                     "format": "button",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:length(item.referral)}} <= 0",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth, referral, task)}} == true  && {{fn:checkAllDoseDelivered(task)}} == false",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -1579,17 +1547,16 @@ final dynamic sampleFlows = {
                           "data": [
                             {
                               "key": "selectedIndividualClientReferenceId",
-                              "value": "{{item.individual.0.clientReferenceId}}"
+                              "value": "{{individual.0.clientReferenceId}}"
                             },
                             {
                               "key": "HouseholdClientReferenceId",
-                              "value":
-                                  "{{item.member.0.householdClientReferenceId}}"
+                              "value": "{{member.0.householdClientReferenceId}}"
                             },
                             {
                               "key": "ProjectBeneficiaryClientReferenceId",
                               "value":
-                                  "{{item.projectBeneficiary.0.clientReferenceId}}"
+                                  "{{projectBeneficiary.0.clientReferenceId}}"
                             }
                           ],
                           "name": "CHECKLIST",
@@ -1602,6 +1569,7 @@ final dynamic sampleFlows = {
                     "properties": {
                       "size": "medium",
                       "type": "primary",
+                      "bottomGap": 16,
                       "mainAxisSize": "max",
                       "mainAxisAlignment": "center"
                     }
@@ -1612,7 +1580,7 @@ final dynamic sampleFlows = {
                     "label": "REGISTRATION_VIEW_DETAILS",
                     "format": "button",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true &&  {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:length(item.referral)}} <= 0",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth, referral, task)}} == true &&  {{fn:checkAllDoseDelivered(task)}} == true",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -1624,13 +1592,12 @@ final dynamic sampleFlows = {
                             },
                             {
                               "key": "HouseholdClientReferenceId",
-                              "value":
-                                  "{{item.member.0.householdClientReferenceId}}"
+                              "value": "{{member.0.householdClientReferenceId}}"
                             },
                             {
                               "key": "ProjectBeneficiaryClientReferenceId",
                               "value":
-                                  "{{item.projectBeneficiary.0.clientReferenceId}}"
+                                  "{{projectBeneficiary.0.clientReferenceId}}"
                             }
                           ],
                           "name": "beneficiaryDetails",
@@ -1642,6 +1609,7 @@ final dynamic sampleFlows = {
                     "properties": {
                       "size": "medium",
                       "type": "secondary",
+                      "bottomGap": 16,
                       "mainAxisSize": "max",
                       "mainAxisAlignment": "center"
                     }
@@ -2428,16 +2396,17 @@ final dynamic sampleFlows = {
                   {
                     "key": "selectedIndividualClientReferenceId",
                     "value":
-                        "{{navigation.selectedIndividualClientReferenceId}}"
+                        "{{contextData.navigation.selectedIndividualClientReferenceId}}"
                   },
                   {
                     "key": "HouseholdClientReferenceId",
-                    "value": "{{ navigation.HouseholdClientReferenceId }}"
+                    "value":
+                        "{{ contextData.navigation.HouseholdClientReferenceId }}"
                   },
                   {
                     "key": "ProjectBeneficiaryClientReferenceId",
                     "value":
-                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                        "{{contextData.navigation.ProjectBeneficiaryClientReferenceId}}"
                   }
                 ],
                 "name": "beneficiaryDetails",
@@ -2474,7 +2443,7 @@ final dynamic sampleFlows = {
                   {
                     "key": "ProjectBeneficiaryClientReferenceId",
                     "value":
-                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                        "{{contextData.navigation.ProjectBeneficiaryClientReferenceId}}"
                   }
                 ],
                 "name": "REFER_BENEFICIARY",
@@ -2500,22 +2469,6 @@ final dynamic sampleFlows = {
             {
               "actionType": "FETCH_TRANSFORMER_CONFIG",
               "properties": {
-                "data": [
-                  {
-                    "key": "selectedIndividualClientReferenceId",
-                    "value":
-                        "{{navigation.selectedIndividualClientReferenceId}}"
-                  },
-                  {
-                    "key": "HouseholdClientReferenceId",
-                    "value": "{{ navigation.HouseholdClientReferenceId }}"
-                  },
-                  {
-                    "key": "ProjectBeneficiaryClientReferenceId",
-                    "value":
-                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
-                  }
-                ],
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
@@ -2583,16 +2536,17 @@ final dynamic sampleFlows = {
                   {
                     "key": "selectedIndividualClientReferenceId",
                     "value":
-                        "{{navigation.selectedIndividualClientReferenceId}}"
+                        "{{contextData.navigation.selectedIndividualClientReferenceId}}"
                   },
                   {
                     "key": "HouseholdClientReferenceId",
-                    "value": "{{ navigation.HouseholdClientReferenceId }}"
+                    "value":
+                        "{{ contextData.navigation.HouseholdClientReferenceId }}"
                   },
                   {
                     "key": "ProjectBeneficiaryClientReferenceId",
                     "value":
-                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                        "{{contextData.navigation.ProjectBeneficiaryClientReferenceId}}"
                   }
                 ],
                 "name": "REFER_BENEFICIARY",
@@ -2646,6 +2600,34 @@ final dynamic sampleFlows = {
               "errorMessage": ""
             },
             {
+              "type": "dynamic",
+              "label": "REFER_BENEFICIARY_LABEL_REFERRED_TO",
+              "order": 4,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "evaluationFacility",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "REFER_BENEFICIARY_ADMINISTRATIVE_UNIT_REQUIRED"
+                }
+              ],
+              "errorMessage": "",
+              "includeInForm": true,
+              "isMultiSelect": false
+            },
+            {
               "type": "string",
               "label": "REFER_BENEFICIARY_LABEL_REFERRED_BY",
               "order": 2,
@@ -2669,34 +2651,6 @@ final dynamic sampleFlows = {
               ]
             },
             {
-              "type": "dynamic",
-              "label": "REFER_BENEFICIARY_LABEL_REFERRED_TO",
-              "order": 3,
-              "value": "",
-              "format": "custom",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "healthFacility",
-              "mandatory": true,
-              "deleteFlag": false,
-              "innerLabel": "",
-              "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message": "REFER_BENEFICIARY_ADMINISTRATIVE_UNIT_REQUIRED"
-                }
-              ],
-              "errorMessage": "",
-              "includeInForm": true,
-              "isMultiSelect": false
-            },
-            {
               "type": "string",
               "label": "HFREFERRAL_REFERRAL_DETAILS_referralReason_LABEL",
               "order": 4,
@@ -2713,9 +2667,6 @@ final dynamic sampleFlows = {
               "innerLabel": "",
               "schemaCode": "HCM.REFERRAL_REASONS",
               "systemDate": false,
-              "enums": [
-                {"code": "FEVER", "name": "FEVER"}
-              ],
               "validations": [
                 {
                   "type": "required",
@@ -2749,7 +2700,8 @@ final dynamic sampleFlows = {
               },
               {
                 "key": "ProjectBeneficiaryClientReferenceId",
-                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                "value":
+                    "{{contextData.navigation.ProjectBeneficiaryClientReferenceId}}"
               }
             ],
             "onError": [
@@ -2775,7 +2727,8 @@ final dynamic sampleFlows = {
               },
               {
                 "key": "ProjectBeneficiaryClientReferenceId",
-                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                "value":
+                    "{{contextData.navigation.ProjectBeneficiaryClientReferenceId}}"
               }
             ],
             "entity": "REFERRAL",
@@ -2801,7 +2754,8 @@ final dynamic sampleFlows = {
               },
               {
                 "key": "ProjectBeneficiaryClientReferenceId",
-                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                "value":
+                    "{{contextData.navigation.ProjectBeneficiaryClientReferenceId}}"
               }
             ],
             "name": "referralSuccess",
@@ -3099,11 +3053,12 @@ final dynamic sampleFlows = {
                 "data": [
                   {
                     "key": "ProjectBeneficiaryClientReferenceId",
-                    "value": "{{projectBeneficiaries.0.clientReferenceId}}"
+                    "value":
+                        "{{projectBeneficiaries.ProjectBeneficiaryModel.clientReferenceId}}"
                   },
                   {
                     "key": "HouseholdClientReferenceId",
-                    "value": "{{household.0.clientReferenceId}}"
+                    "value": "{{household.HouseholdModel.clientReferenceId}}"
                   },
                   {"key": "cycleIndex", "value": "{{contextData.nextCycleId}}"},
                   {"key": "doseIndex", "value": "{{contextData.nextDoseId}}"}
@@ -3584,10 +3539,17 @@ final dynamic sampleFlows = {
             "data": [
               {
                 "key": "ProjectBeneficiaryClientReferenceId",
-                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                "value":
+                    "{{contextData.navigation.ProjectBeneficiaryClientReferenceId}}"
               },
-              {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
-              {"key": "doseIndex", "value": "{{navigation.doseIndex}}"}
+              {
+                "key": "cycleIndex",
+                "value": "{{contextData.navigation.cycleIndex}}"
+              },
+              {
+                "key": "doseIndex",
+                "value": "{{contextData.navigation.doseIndex}}"
+              }
             ],
             "onError": [
               {
@@ -3616,11 +3578,12 @@ final dynamic sampleFlows = {
             "data": [
               {
                 "key": "ProjectBeneficiaryClientReferenceId",
-                "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                "value":
+                    "{{contextData.navigation.ProjectBeneficiaryClientReferenceId}}"
               },
               {
                 "key": "HouseholdClientReferenceId",
-                "value": "{{navigation.HouseholdClientReferenceId}}"
+                "value": "{{contextData.navigation.HouseholdClientReferenceId}}"
               }
             ],
             "name": "deliverySuccess",
