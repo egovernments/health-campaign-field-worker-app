@@ -926,8 +926,7 @@ final jsonConfig = {
           "tenantId": "__context:tenantId",
           "projectId": "__context:projectId",
           "projectFacilityId":
-              //"__switch:referBeneficiary.evaluationFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.evaluationFacility}"
-              "__switch:referBeneficiary.projectFacilityId:{Community Health Worker:__context:userUUID,default:referBeneficiary.projectFacilityId}",
+              "__switch:referBeneficiary.evaluationFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.evaluationFacility}",
           "beneficiaryId": "__context:ProjectBeneficiaryClientReferenceId",
           "referralCode": "__context:selectedIndividualClientReferenceId",
           "name": "__context:selectedIndividualName",
@@ -944,10 +943,9 @@ final jsonConfig = {
             "referredBy": "__context:userUUID",
             "referralComments": "referBeneficiary.referralComments",
             "nameOfReferral": "__context:selectedIndividualName",
-            "referralCycle": "__context:cycleIndex",
-            "gender": "__context:selectedIndividualGender",
-            "ageInMonths": "__context:selectedIndividualAgeInMonths",
-            "dateOfEvaluation": "__generate:timestamp"
+            "cycle": "referralDetails.referralCycle",
+            "gender": "referralDetails.gender",
+            "age": "referralDetails.ageInMonths"
           }
         }
       }
