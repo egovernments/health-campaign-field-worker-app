@@ -220,7 +220,11 @@ class HFReferralLocalRepository
                         h.key ==
                         ReferralReconAdditionalFields.nameOfReferral.toValue())
                     .firstOrNull
+<<<<<<< HEAD
                     ?.value),
+=======
+                    ?.value,
+>>>>>>> eecb1efb6 (upsync and downsync is in progress, sync is not happening)
                 // Include localityCode during downsync
                 localityCode: Value(e.localityCode),
               ))
@@ -373,7 +377,11 @@ class HFReferralLocalRepository
             )
             .firstOrNull
             ?.value),
+<<<<<<< HEAD
         localityCode: Value(updatedEntity.localityCode),
+=======
+        localityCode: Value(entity.localityCode),
+>>>>>>> eecb1efb6 (upsync and downsync is in progress, sync is not happening)
       );
 
       await sql.batch((batch) {
