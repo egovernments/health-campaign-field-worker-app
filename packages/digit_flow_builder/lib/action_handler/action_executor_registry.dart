@@ -4,6 +4,7 @@ import 'action_config.dart';
 import 'executors/action_executor.dart';
 import 'executors/navigation_executor.dart';
 import 'executors/back_navigation_executor.dart';
+import 'executors/conditional_navigation_executor.dart';
 import 'executors/crud_executor.dart';
 import 'executors/search_executor.dart';
 import 'executors/refresh_search_executor.dart';
@@ -12,6 +13,7 @@ import 'executors/toast_executor.dart';
 import 'executors/clear_state_executor.dart';
 import 'executors/open_scanner_executor.dart';
 import 'executors/reverse_transformer_executor.dart';
+import 'executors/merge_update_executor.dart';
 
 /// Registry for managing action executors
 class ActionExecutorRegistry {
@@ -30,6 +32,7 @@ class ActionExecutorRegistry {
   void registerDefaultExecutors() {
     register('NAVIGATION', NavigationExecutor());
     register('BACK_NAVIGATION', BackNavigationExecutor());
+    register('CONDITIONAL_NAVIGATION', ConditionalNavigationExecutor());
     register('CREATE_EVENT', CrudExecutor());
     register('UPDATE_EVENT', UpdateExecutor());
     register('SEARCH_EVENT', SearchExecutor());
@@ -40,6 +43,7 @@ class ActionExecutorRegistry {
     register('OPEN_SCANNER', OpenScannerExecutor());
     register('REVERSE_TRANSFORM', ReverseTransformerExecutor());
     register('CLOSE_POPUP', ClosePopupExecutor());
+    register('MERGE_UPDATE_ADDITIONAL_FIELDS', MergeUpdateExecutor());
   }
 
   /// Register a custom executor

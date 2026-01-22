@@ -792,6 +792,7 @@ final jsonConfig = {
     "models": {
       "HFReferralModel": {
         "mappings": {
+          "localityCode": "__context:selectedBoundaryCode",
           "id": "referralDetails.id",
           "tenantId": "__context:tenantId",
           "name": "referralDetails.nameOfChild",
@@ -801,13 +802,17 @@ final jsonConfig = {
           "beneficiaryId": "referralDetails.beneficiaryId",
           "referralCode": "referralDetails.referralCode",
           "nationalLevelId": "referralDetails.nationalLevelId",
-          "symptom": "referralDetails.referralReason",
+          "symptom":
+              "__switch:navigation.isUpdate:{true:navigation.referralSymptom,default:referralDetails.referralReason}",
           "nonRecoverableError": "referralDetails.nonRecoverable",
-          "clientReferenceId": "__generate:uuid",
-          "rowVersion": "meta.rowVersion",
+          "clientReferenceId":
+              "__switch:navigation.isUpdate:{true:navigation.clientReferenceId,default:__generate:uuid}",
+          "rowVersion":
+              "__switch:navigation.isUpdate:{true:navigation.rowVersion,default:meta.rowVersion}",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
+            // Static field mappings
             "boundaryCode": "facilityDetails.administrativeUnit",
             "referralCycle": "referralDetails.referralCycle",
             "gender": "referralDetails.gender",
@@ -816,6 +821,13 @@ final jsonConfig = {
             "dateOfEvaluation": "facilityDetails.dateOfEvaluation",
             "referredBy": "facilityDetails.referredByKey",
             "hfCoordinator": "facilityDetails.hfCoordinator",
+            // Dynamic collection of checklist fields from side effect pages
+            "__collectFromPages": [
+              "sideEffectSick",
+              "sideEffectFever",
+              "sideEffectFromCurrentCycle",
+              "sideEffectFromPreviousCycle"
+            ]
           }
         }
       }

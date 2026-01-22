@@ -57,6 +57,10 @@ class FlowBuilderNavigationService implements NavigationService {
     final key = '$type::$name';
     final builder = routeMap[key];
 
+    debugPrint('NavigationService: navigateTo called with type=$type, name=$name');
+    debugPrint('NavigationService: route key=$key, data=$data');
+    debugPrint('NavigationService: Available routes: ${routeMap.keys.toList()}');
+
     if (builder != null) {
       final route = builder(data);
       final router = context.router;
@@ -193,11 +197,15 @@ class NavigationRegistry {
     // Update navigation params for the target page before navigating
     // Store with both key formats for robust retrieval
     if (data.isNotEmpty && name.isNotEmpty) {
+      debugPrint('NavigationRegistry: Storing navParams for name=$name, data=$data');
       // Store with plain name (e.g., "ADD_MEMBER")
       FlowCrudStateRegistry().updateNavigationParams(name, data);
       // Also store with full screen key (e.g., "FORM::ADD_MEMBER") if type is provided
+      // Normalize type to uppercase to match screen_builder.dart format
       if (type.isNotEmpty) {
-        final fullKey = '$type::$name';
+        final normalizedType = type.toUpperCase();
+        final fullKey = '$normalizedType::$name';
+        debugPrint('NavigationRegistry: Also storing for fullKey=$fullKey');
         FlowCrudStateRegistry().updateNavigationParams(fullKey, data);
       }
     }

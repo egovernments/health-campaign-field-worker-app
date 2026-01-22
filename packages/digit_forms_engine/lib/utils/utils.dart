@@ -229,12 +229,149 @@ bool evaluateVisibilityExpression(
 }
 
 bool evaluateSingleCondition(String condition, Map<String, dynamic> values) {
+  // Handle additionalFields.hasKey(KEY) condition
+  final hasKeyMatch = RegExp(r'additionalFields\.hasKey\(([^)]+)\)').firstMatch(condition);
+  if (hasKeyMatch != null) {
+    final keyToFind = hasKeyMatch.group(1)!.replaceAll(RegExp(r'''['"]'''), '').trim();
+    return _checkAdditionalFieldsHasKey(values, keyToFind);
+  }
+
+  // Handle additionalFields.hasAnyKey(KEY1,KEY2,KEY3) condition
+  final hasAnyKeyMatch = RegExp(r'additionalFields\.hasAnyKey\(([^)]+)\)').firstMatch(condition);
+  if (hasAnyKeyMatch != null) {
+    final keysStr = hasAnyKeyMatch.group(1)!;
+    final keys = keysStr.split(',').map((k) => k.replaceAll(RegExp(r'''['"]'''), '').trim()).toList();
+    return _checkAdditionalFieldsHasAnyKey(values, keys);
+  }
+
+  // Handle additionalFields.getValue(KEY)==VALUE condition
+  final getValueMatch = RegExp(r'additionalFields\.getValue\(([^)]+)\)\s*==\s*(.+)').firstMatch(condition);
+  if (getValueMatch != null) {
+    final keyToFind = getValueMatch.group(1)!.replaceAll(RegExp(r'''['"]'''), '').trim();
+    final expectedValue = getValueMatch.group(2)!.replaceAll(RegExp(r'''['"]'''), '').trim();
+    return _checkAdditionalFieldsValueEquals(values, keyToFind, expectedValue);
+  }
+
+  // Handle symptomType-based navigation: symptomType==VALUE && additionalFields.hasKey(KEY)
+  final symptomWithFieldMatch = RegExp(
+    r'([a-zA-Z_.]+)\s*==\s*([a-zA-Z_]+)\s*&&\s*additionalFields\.hasKey\(([^)]+)\)'
+  ).firstMatch(condition);
+  if (symptomWithFieldMatch != null) {
+    final fieldPath = symptomWithFieldMatch.group(1)!;
+    final expectedSymptom = symptomWithFieldMatch.group(2)!;
+    final additionalFieldKey = symptomWithFieldMatch.group(3)!.replaceAll(RegExp(r'''['"]'''), '').trim();
+
+    // Check symptom type first
+    final symptomValue = _getValueFromPath(values, fieldPath);
+    if (symptomValue?.toString() != expectedSymptom) {
+      return false;
+    }
+    // Then check additionalFields
+    return _checkAdditionalFieldsHasKey(values, additionalFieldKey);
+  }
+
   final value = FormulaParser(
     condition,
     values.isEmpty ? {'dummy': {}} : values,
   );
   final result = value.parse;
   return result["value"] == true;
+}
+
+/// Check if additionalFields contains a specific key
+bool _checkAdditionalFieldsHasKey(Map<String, dynamic> values, String key) {
+  // Look for additionalFields in the context
+  for (final entry in values.entries) {
+    if (entry.key.endsWith('.additionalFields') || entry.key == 'additionalFields') {
+      final additionalFields = entry.value;
+      if (additionalFields is Map && additionalFields.containsKey('fields')) {
+        final fields = additionalFields['fields'];
+        if (fields is List) {
+          for (final field in fields) {
+            if (field is Map && field['key'] == key) {
+              return true;
+            }
+          }
+        }
+      }
+      // Handle when additionalFields is already a Map with key-value pairs
+      if (additionalFields is Map && additionalFields.containsKey(key)) {
+        return true;
+      }
+    }
+    // Also check nested structures
+    if (entry.value is Map) {
+      final nested = entry.value as Map;
+      if (nested.containsKey('additionalFields')) {
+        final additionalFields = nested['additionalFields'];
+        if (additionalFields is Map && additionalFields.containsKey('fields')) {
+          final fields = additionalFields['fields'];
+          if (fields is List) {
+            for (final field in fields) {
+              if (field is Map && field['key'] == key) {
+                return true;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return false;
+}
+
+/// Check if additionalFields contains any of the specified keys
+bool _checkAdditionalFieldsHasAnyKey(Map<String, dynamic> values, List<String> keys) {
+  for (final key in keys) {
+    if (_checkAdditionalFieldsHasKey(values, key)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/// Check if additionalFields has a key with a specific value
+bool _checkAdditionalFieldsValueEquals(Map<String, dynamic> values, String key, String expectedValue) {
+  for (final entry in values.entries) {
+    if (entry.key.endsWith('.additionalFields') || entry.key == 'additionalFields') {
+      final additionalFields = entry.value;
+      if (additionalFields is Map && additionalFields.containsKey('fields')) {
+        final fields = additionalFields['fields'];
+        if (fields is List) {
+          for (final field in fields) {
+            if (field is Map && field['key'] == key) {
+              return field['value']?.toString() == expectedValue;
+            }
+          }
+        }
+      }
+      if (additionalFields is Map && additionalFields.containsKey(key)) {
+        return additionalFields[key]?.toString() == expectedValue;
+      }
+    }
+  }
+  return false;
+}
+
+/// Get value from dot-separated path in the values map
+dynamic _getValueFromPath(Map<String, dynamic> values, String path) {
+  // Direct lookup
+  if (values.containsKey(path)) {
+    return values[path];
+  }
+
+  // Try to find in nested structure
+  final parts = path.split('.');
+  if (parts.length >= 2) {
+    final pageKey = parts[0];
+    final fieldKey = parts.sublist(1).join('.');
+    final fullKey = '$pageKey.$fieldKey';
+    if (values.containsKey(fullKey)) {
+      return values[fullKey];
+    }
+  }
+
+  return null;
 }
 
 Map<String, dynamic> buildVisibilityEvaluationContext({
@@ -251,6 +388,16 @@ Map<String, dynamic> buildVisibilityEvaluationContext({
     navigationParams.forEach((key, value) {
       flatContext['navigation.$key'] = value;
     });
+
+    // Also add additionalFields directly if present for easier access
+    if (navigationParams.containsKey('additionalFields')) {
+      flatContext['additionalFields'] = navigationParams['additionalFields'];
+    }
+
+    // Add symptomType if present
+    if (navigationParams.containsKey('symptomType')) {
+      flatContext['symptomType'] = navigationParams['symptomType'];
+    }
   }
 
   for (final entry in pages.entries) {

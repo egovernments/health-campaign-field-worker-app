@@ -207,6 +207,9 @@ _$NavigateToConfigImpl _$$NavigateToConfigImplFromJson(
     _$NavigateToConfigImpl(
       type: json['type'] as String,
       name: json['name'] as String,
+      data: (json['data'] as List<dynamic>?)
+          ?.map((e) => e as Map<String, dynamic>)
+          .toList(),
     );
 
 Map<String, dynamic> _$$NavigateToConfigImplToJson(
@@ -214,6 +217,7 @@ Map<String, dynamic> _$$NavigateToConfigImplToJson(
     <String, dynamic>{
       'type': instance.type,
       'name': instance.name,
+      'data': instance.data,
     };
 
 _$VisibilityConditionImpl _$$VisibilityConditionImplFromJson(

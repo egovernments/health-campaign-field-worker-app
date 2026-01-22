@@ -175,6 +175,10 @@ class QRScannerWidget implements FlowWidget {
           }).toList();
 
           // Build initial context data from current state
+          // Include navigation params from registry for applyIf evaluation
+          final navigationParams = screenKey != null
+              ? FlowCrudStateRegistry().getNavigationParams(screenKey)
+              : null;
           final initialContextData = <String, dynamic>{
             'wrappers': const [],
             if (stateData != null) ...{
@@ -182,6 +186,7 @@ class QRScannerWidget implements FlowWidget {
               'contextData': stateData,
             },
             if (formData != null) 'formData': formData,
+            if (navigationParams != null) 'navigation': navigationParams,
           };
 
           // Use ActionHandler.executeActions to chain actions with shared contextData

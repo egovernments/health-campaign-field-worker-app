@@ -125,9 +125,18 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
   }
 
   Future<void> _handleFormSubmission(Map<String, dynamic> formData) async {
-    if (!mounted) return;
+    debugPrint('_handleFormSubmission: called with schemaKey=$_schemaKey');
+    debugPrint('_handleFormSubmission: formData keys = ${formData.keys.toList()}');
+    debugPrint('_handleFormSubmission: formData = $formData');
+
+    if (!mounted) {
+      debugPrint('_handleFormSubmission: widget not mounted, returning');
+      return;
+    }
 
     final onSubmit = widget.config['onAction'] as List<dynamic>?;
+    debugPrint('_handleFormSubmission: onSubmit actions = ${onSubmit?.length ?? 0} actions');
+    debugPrint('_handleFormSubmission: onSubmit = $onSubmit');
 
     // Get the latest navigation params from registry (may have been updated by actions)
     // Try multiple key formats for robust retrieval
@@ -142,6 +151,7 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
       ...?widget.navigationParams,
       ...registryNavParams,
     };
+    debugPrint('_handleFormSubmission: mergedNavParams = $mergedNavParams');
 
     Map<String, dynamic> contextData = {
       'formData': formData,
@@ -149,6 +159,7 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
     };
 
     if (onSubmit != null) {
+      debugPrint('_handleFormSubmission: executing ${onSubmit.length} actions');
       // Clear form state via registry
       FormSubmissionRegistry().clearForm(_schemaKey);
 
@@ -157,6 +168,9 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
         context,
         contextData,
       );
+      debugPrint('_handleFormSubmission: actions completed');
+    } else {
+      debugPrint('_handleFormSubmission: NO onSubmit actions found!');
     }
   }
 
@@ -281,8 +295,24 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
           if (state.initialSchemas[widget.schemaKey] != null) {
             final schemaObject = state.cachedSchemas[widget.schemaKey]!;
 
-            // Derive pageName as first page key if none specified externally
-            final pageName = schemaObject.pages.entries.first.key;
+            debugPrint('ScreenBuilder: schemaKey=${widget.schemaKey}');
+            debugPrint('ScreenBuilder: mergedNavParams=$mergedNavParams');
+            debugPrint('ScreenBuilder: schemaObject.pages.keys=${schemaObject.pages.keys.toList()}');
+
+            // Check if startPage is specified in navigation params (for conditional navigation)
+            // Otherwise, use the first page as default
+            String pageName;
+            final startPage = mergedNavParams['startPage'] as String?;
+            debugPrint('ScreenBuilder: startPage from navParams: $startPage');
+            if (startPage != null && schemaObject.pages.containsKey(startPage)) {
+              pageName = startPage;
+              debugPrint('ScreenBuilder: Using startPage from navigation params: $startPage');
+            } else {
+              pageName = schemaObject.pages.entries.first.key;
+              if (startPage != null) {
+                debugPrint('ScreenBuilder: startPage "$startPage" not found in schema pages, using first page: $pageName');
+              }
+            }
 
             // Determine isEdit from merged navigation params (set by NAVIGATION action)
             final isEdit = mergedNavParams['isEdit'] == true ||

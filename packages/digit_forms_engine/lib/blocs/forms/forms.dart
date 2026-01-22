@@ -222,12 +222,19 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
   /// - Emits a FormsSubmittedState with the collected data
   void _onSubmit(FormsSubmitEvent event, FormsStateEmitter emit) {
     final schema = state.cachedSchemas[event.schemaKey];
-    if (schema == null) return;
+    if (schema == null) {
+      debugPrint('FormsBloc._onSubmit: schema is null for key ${event.schemaKey}');
+      return;
+    }
+
+    debugPrint('FormsBloc._onSubmit: schemaKey=${event.schemaKey}');
+    debugPrint('FormsBloc._onSubmit: schema.pages.keys=${schema.pages.keys.toList()}');
 
     final outputData = <String, Map<String, dynamic>>{};
 
     for (final entry in schema.pages.entries) {
       final props = entry.value.properties;
+      debugPrint('FormsBloc._onSubmit: processing page "${entry.key}", has properties=${props != null}, prop count=${props?.length ?? 0}');
       if (props == null) continue;
 
       final pageValues = <String, dynamic>{};
@@ -235,16 +242,25 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
         final prop = propEntry.value;
         final rawValue = prop.value;
 
-        if (prop.hidden == true && prop.includeInForm != true) continue;
+        if (prop.hidden == true && prop.includeInForm != true) {
+          debugPrint('FormsBloc._onSubmit: skipping hidden field "${propEntry.key}" on page "${entry.key}"');
+          continue;
+        }
 
         pageValues[propEntry.key] =
             (rawValue is String && rawValue.trim().isEmpty) ? null : rawValue;
+        debugPrint('FormsBloc._onSubmit: collected "${propEntry.key}"="${pageValues[propEntry.key]}" from page "${entry.key}"');
       }
 
       if (pageValues.isNotEmpty) {
         outputData[entry.key] = pageValues;
+        debugPrint('FormsBloc._onSubmit: added page "${entry.key}" to outputData with ${pageValues.length} fields');
+      } else {
+        debugPrint('FormsBloc._onSubmit: page "${entry.key}" has no values, skipping');
       }
     }
+
+    debugPrint('FormsBloc._onSubmit: final outputData.keys=${outputData.keys.toList()}');
 
     emit(FormsSubmittedState(
       schema: schema,

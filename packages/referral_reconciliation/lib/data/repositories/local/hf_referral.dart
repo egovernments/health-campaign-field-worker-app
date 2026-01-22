@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../models/entities/hf_additional_fields.dart';
 import '../../../utils/utils.dart';
@@ -57,8 +58,9 @@ class HFReferralLocalRepository
             final additionalData = referral.additionalFields != null
                 ? jsonDecode(referral.additionalFields!)
                 : null;
-            List<Map<String, dynamic>> data =
-                List<Map<String, dynamic>>.from(additionalData['fields']);
+            List<Map<String, dynamic>> data = additionalData != null && additionalData['fields'] != null
+                ? List<Map<String, dynamic>>.from(additionalData['fields'])
+                : <Map<String, dynamic>>[];
             final HFReferralAdditionalFields additionalFields =
                 HFReferralAdditionalFields(
               version: 1,
@@ -240,8 +242,64 @@ class HFReferralLocalRepository
     DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
-      final referralCompanion = entity.companion.copyWith(
-        name: Value(entity.additionalFields?.fields
+      debugPrint('HFReferralLocalRepository.update: Starting update for clientReferenceId=${entity.clientReferenceId}');
+      debugPrint('HFReferralLocalRepository.update: Entity additionalFields=${entity.additionalFields?.fields?.map((f) => '${f.key}=${f.value}').toList()}');
+
+      // Fetch existing record to merge additionalFields
+      final existingRecords = await search(
+        HFReferralSearchModel(
+          clientReferenceId: [entity.clientReferenceId],
+        ),
+      );
+
+      debugPrint('HFReferralLocalRepository.update: Found ${existingRecords.length} existing records');
+
+      HFReferralAdditionalFields? mergedAdditionalFields = entity.additionalFields;
+
+      if (existingRecords.isNotEmpty) {
+        final existingRecord = existingRecords.first;
+        final existingFields = existingRecord.additionalFields?.fields ?? [];
+        final newFields = entity.additionalFields?.fields ?? [];
+
+        debugPrint('HFReferralLocalRepository.update: Existing fields count=${existingFields.length}');
+        debugPrint('HFReferralLocalRepository.update: Existing fields=${existingFields.map((f) => '${f.key}=${f.value}').toList()}');
+        debugPrint('HFReferralLocalRepository.update: New fields count=${newFields.length}');
+        debugPrint('HFReferralLocalRepository.update: New fields=${newFields.map((f) => '${f.key}=${f.value}').toList()}');
+
+        // Create a map of existing fields
+        final fieldMap = <String, dynamic>{};
+        for (final field in existingFields) {
+          fieldMap[field.key] = field.value;
+        }
+
+        // Merge new fields (overwrite existing keys, add new ones)
+        for (final field in newFields) {
+          if (field.value != null && field.value.toString().isNotEmpty) {
+            fieldMap[field.key] = field.value;
+          }
+        }
+
+        // Convert back to list of AdditionalField
+        final mergedFieldsList = fieldMap.entries
+            .map((e) => AdditionalField(e.key, e.value))
+            .toList();
+
+        debugPrint('HFReferralLocalRepository.update: Merged fields count=${mergedFieldsList.length}');
+        debugPrint('HFReferralLocalRepository.update: Merged fields=${mergedFieldsList.map((f) => '${f.key}=${f.value}').toList()}');
+
+        mergedAdditionalFields = HFReferralAdditionalFields(
+          version: entity.additionalFields?.version ?? 1,
+          fields: mergedFieldsList,
+        );
+      }
+
+      // Create updated entity with merged additionalFields
+      final updatedEntity = entity.copyWith(
+        additionalFields: mergedAdditionalFields,
+      );
+
+      final referralCompanion = updatedEntity.companion.copyWith(
+        name: Value(mergedAdditionalFields?.fields
             .where(
               (h) =>
                   h.key ==
@@ -249,7 +307,7 @@ class HFReferralLocalRepository
             )
             .firstOrNull
             ?.value),
-        localityCode: Value(entity.localityCode),
+        localityCode: Value(updatedEntity.localityCode),
       );
 
       await sql.batch((batch) {
@@ -262,7 +320,7 @@ class HFReferralLocalRepository
         );
       });
 
-      await super.update(entity,
+      await super.update(updatedEntity,
           createOpLog: createOpLog, dataOperation: dataOperation);
     });
   }

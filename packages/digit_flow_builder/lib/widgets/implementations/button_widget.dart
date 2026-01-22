@@ -174,6 +174,18 @@ class ButtonWidget implements FlowWidget {
             }).toList();
 
             // Build initial context data from current state
+            // Include navigation params from registry for applyIf evaluation
+            // Try multiple key formats for robust retrieval
+            Map<String, dynamic>? navigationParams;
+            if (screenKey != null) {
+              navigationParams = FlowCrudStateRegistry().getNavigationParams(screenKey);
+              debugPrint('BUTTON_WIDGET: screenKey=$screenKey, navParams=$navigationParams');
+              // Try with FORM:: prefix if not found
+              if (navigationParams == null || navigationParams.isEmpty) {
+                navigationParams = FlowCrudStateRegistry().getNavigationParams('FORM::$screenKey');
+                debugPrint('BUTTON_WIDGET: Trying FORM::$screenKey, navParams=$navigationParams');
+              }
+            }
             final initialContextData = <String, dynamic>{
               'wrappers': const [],
               if (stateData != null) ...{
@@ -181,7 +193,9 @@ class ButtonWidget implements FlowWidget {
                 'contextData': stateData,
               },
               if (formData != null) 'formData': formData,
+              if (navigationParams != null && navigationParams.isNotEmpty) 'navigation': navigationParams,
             };
+            debugPrint('BUTTON_WIDGET: initialContextData navigation=${initialContextData['navigation']}');
 
             // Use ActionHandler.executeActions to chain actions with shared contextData
             // This ensures that REVERSE_TRANSFORM's formData flows to NAVIGATION
