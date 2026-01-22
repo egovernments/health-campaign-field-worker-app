@@ -888,7 +888,7 @@ final jsonConfig = {
               "sideEffectFever",
               "sideEffectFromCurrentCycle",
               "sideEffectFromPreviousCycle"
-            ]
+            ],
           }
         }
       }
@@ -944,7 +944,8 @@ final jsonConfig = {
             "nameOfReferral": "__context:selectedIndividualName",
             "cycle": "referralDetails.referralCycle",
             "gender": "referralDetails.gender",
-            "age": "referralDetails.ageInMonths"
+            "age": "referralDetails.ageInMonths",
+            "dateOfEvaluation": "__generate:timestamp"
           }
         }
       }
