@@ -13,6 +13,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/hf_referral_downsync/hf_referral_downsync.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
@@ -88,6 +89,16 @@ class _BoundarySelectionPageState
         .toList()
         .isNotEmpty;
 
+    // Check if user has ONLY HEALTH_FACILITY_WORKER role (not distributor)
+    bool isHealthFacilityWorkerOnly = context.loggedInUserRoles
+            .where(
+              (role) =>
+                  role.code == RolesType.healthFacilityWorker.toValue(),
+            )
+            .toList()
+            .isNotEmpty &&
+        !isDistributor;
+
     return PopScope(
       canPop: shouldPop,
       child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
@@ -141,9 +152,144 @@ class _BoundarySelectionPageState
                       child: ReactiveFormBuilder(
                         form: () => buildForm(state, appConfiguration),
                         builder: (context, form, child) => ScrollableContent(
-                            footer: BlocListener<BeneficiaryDownSyncBloc,
-                                BeneficiaryDownSyncState>(
-                              listener: (context, downSyncState) {
+                            footer: MultiBlocListener(
+                              listeners: [
+                                BlocListener<HFReferralDownSyncBloc,
+                                    HFReferralDownSyncState>(
+                                  listener: (context, hfDownSyncState) {
+                                    LocalizationParams()
+                                        .setModule('boundary', true);
+                                    context.read<LocalizationBloc>().add(
+                                        LocalizationEvent.onUpdateLocalizationIndex(
+                                            index: appConfiguration.languages!
+                                                .indexWhere((element) =>
+                                                    element.value ==
+                                                    AppSharedPreferences()
+                                                        .getSelectedLocale),
+                                            code: AppSharedPreferences()
+                                                .getSelectedLocale!));
+                                    Future.delayed(
+                                        const Duration(milliseconds: 10), () {
+                                      hfDownSyncState.maybeWhen(
+                                        orElse: () => false,
+                                        loading: (isPop) => {
+                                          if (isPop)
+                                            {
+                                              Navigator.of(
+                                                context,
+                                                rootNavigator: true,
+                                              ).popUntil(
+                                                (route) => route is! PopupRoute,
+                                              ),
+                                            },
+                                          DigitSyncDialog.show(
+                                            context,
+                                            type: DialogType.inProgress,
+                                            label: localizations.translate(
+                                              i18.beneficiaryDetails
+                                                  .dataDownloadInProgress,
+                                            ),
+                                            barrierDismissible: false,
+                                          ),
+                                        },
+                                        getBatchSize: (
+                                          batchSize,
+                                          projectId,
+                                          boundaryCode,
+                                          pendingSyncCount,
+                                          boundaryName,
+                                        ) =>
+                                            context
+                                                .read<HFReferralDownSyncBloc>()
+                                                .add(
+                                                  HFReferralDownSyncCheckTotalCountEvent(
+                                                    projectId: context.projectId,
+                                                    boundaryCode: selectedBoundary!
+                                                        .value!.code
+                                                        .toString(),
+                                                    pendingSyncCount:
+                                                        pendingSyncCount,
+                                                    boundaryName: selectedBoundary
+                                                        .value!.name
+                                                        .toString(),
+                                                    batchSize: batchSize,
+                                                  ),
+                                                ),
+                                        dataFound: (initialServerCount,
+                                            batchSize, offset, lastSyncedTime) {
+                                          clickedStatus.value = false;
+                                          // Start download directly for HFReferral
+                                          context
+                                              .read<HFReferralDownSyncBloc>()
+                                              .add(
+                                                HFReferralDownSyncStartEvent(
+                                                  projectId: context.projectId,
+                                                  boundaryCode: selectedBoundary!
+                                                      .value!.code
+                                                      .toString(),
+                                                  batchSize: batchSize,
+                                                  initialServerCount:
+                                                      initialServerCount,
+                                                  boundaryName: selectedBoundary
+                                                      .value!.name
+                                                      .toString(),
+                                                ),
+                                              );
+                                        },
+                                        inProgress: (syncCount, totalCount) {
+                                          // Show progress dialog
+                                        },
+                                        success: (result) {
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).popUntil(
+                                            (route) => route is! PopupRoute,
+                                          );
+                                          clickedStatus.value = true;
+                                          context.router
+                                              .replaceAll([HomeRoute()]);
+                                        },
+                                        failed: () {
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).popUntil(
+                                            (route) => route is! PopupRoute,
+                                          );
+                                          clickedStatus.value = true;
+                                          context.router
+                                              .replaceAll([HomeRoute()]);
+                                        },
+                                        totalCountCheckFailed: () {
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).popUntil(
+                                            (route) => route is! PopupRoute,
+                                          );
+                                          clickedStatus.value = true;
+                                          context.router
+                                              .replaceAll([HomeRoute()]);
+                                        },
+                                        pendingSync: () {
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).popUntil(
+                                            (route) => route is! PopupRoute,
+                                          );
+                                          clickedStatus.value = true;
+                                          context.router
+                                              .replaceAll([HomeRoute()]);
+                                        },
+                                      );
+                                    });
+                                  },
+                                ),
+                                BlocListener<BeneficiaryDownSyncBloc,
+                                    BeneficiaryDownSyncState>(
+                                  listener: (context, downSyncState) {
                                 LocalizationParams()
                                     .setModule('boundary', true);
                                 context.read<LocalizationBloc>().add(
@@ -461,6 +607,8 @@ class _BoundarySelectionPageState
                                   );
                                 });
                               },
+                                ),
+                              ],
                               child: DigitCard(
                                   margin: const EdgeInsets.only(top: spacer2),
                                   children: [
@@ -507,11 +655,37 @@ class _BoundarySelectionPageState
                                                 if (context.mounted) {
                                                   if (isOnline &&
                                                       isDistributor) {
+                                                    // Distributor role: trigger beneficiary down sync
                                                     context
                                                         .read<
                                                             BeneficiaryDownSyncBloc>()
                                                         .add(
                                                           DownSyncGetBatchSizeEvent(
+                                                            appConfiguration: [
+                                                              appConfiguration,
+                                                            ],
+                                                            projectId: context
+                                                                .projectId,
+                                                            boundaryCode:
+                                                                selectedBoundary!
+                                                                    .value!.code
+                                                                    .toString(),
+                                                            pendingSyncCount:
+                                                                pendingSyncCount,
+                                                            boundaryName:
+                                                                selectedBoundary
+                                                                    .value!.name
+                                                                    .toString(),
+                                                          ),
+                                                        );
+                                                  } else if (isOnline &&
+                                                      isHealthFacilityWorkerOnly) {
+                                                    // Only HEALTH_FACILITY_WORKER role: trigger HFReferral down sync
+                                                    context
+                                                        .read<
+                                                            HFReferralDownSyncBloc>()
+                                                        .add(
+                                                          HFReferralDownSyncGetBatchSizeEvent(
                                                             appConfiguration: [
                                                               appConfiguration,
                                                             ],

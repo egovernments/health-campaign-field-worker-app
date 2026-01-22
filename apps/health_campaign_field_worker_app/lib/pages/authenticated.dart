@@ -24,8 +24,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/sync_service_lib.dart';
 
+import 'package:digit_data_model/models/entities/hf_referral.dart';
+
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
+import '../blocs/hf_referral_downsync/hf_referral_downsync.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
@@ -289,6 +292,24 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                           serviceLocalRepository: ctx.read<
                               LocalRepository<ServiceModel,
                                   ServiceSearchModel>>(),
+                        ),
+                      ),
+                      BlocProvider(
+                        create: (ctx) => HFReferralDownSyncBloc(
+                          bandwidthCheckRepository: BandwidthCheckRepository(
+                            DioClient().dio,
+                            bandwidthPath:
+                                envConfig.variables.checkBandwidthApiPath,
+                          ),
+                          hfReferralLocalRepository: ctx.read<
+                              LocalRepository<HFReferralModel,
+                                  HFReferralSearchModel>>(),
+                          hfReferralRemoteRepository: ctx.read<
+                              RemoteRepository<HFReferralModel,
+                                  HFReferralSearchModel>>(),
+                          downSyncLocalRepository: ctx.read<
+                              LocalRepository<DownsyncModel,
+                                  DownsyncSearchModel>>(),
                         ),
                       ),
                       BlocProvider(

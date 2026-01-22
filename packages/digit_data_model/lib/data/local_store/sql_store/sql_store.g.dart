@@ -32262,6 +32262,12 @@ class $HFReferralTable extends HFReferral
   late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
       'additional_fields', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _localityCodeMeta =
+      const VerificationMeta('localityCode');
+  @override
+  late final GeneratedColumn<String> localityCode = GeneratedColumn<String>(
+      'locality_code', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -32286,7 +32292,8 @@ class $HFReferralTable extends HFReferral
         clientReferenceId,
         isDeleted,
         rowVersion,
-        additionalFields
+        additionalFields,
+        localityCode
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -32425,6 +32432,12 @@ class $HFReferralTable extends HFReferral
           additionalFields.isAcceptableOrUnknown(
               data['additional_fields']!, _additionalFieldsMeta));
     }
+    if (data.containsKey('locality_code')) {
+      context.handle(
+          _localityCodeMeta,
+          localityCode.isAcceptableOrUnknown(
+              data['locality_code']!, _localityCodeMeta));
+    }
     return context;
   }
 
@@ -32480,6 +32493,8 @@ class $HFReferralTable extends HFReferral
           .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
       additionalFields: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}additional_fields']),
+      localityCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}locality_code']),
     );
   }
 
@@ -32513,6 +32528,7 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
   final bool? isDeleted;
   final int? rowVersion;
   final String? additionalFields;
+  final String? localityCode;
   const HFReferralData(
       {this.id,
       this.tenantId,
@@ -32536,7 +32552,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
       required this.clientReferenceId,
       this.isDeleted,
       this.rowVersion,
-      this.additionalFields});
+      this.additionalFields,
+      this.localityCode});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -32607,6 +32624,9 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String>(additionalFields);
     }
+    if (!nullToAbsent || localityCode != null) {
+      map['locality_code'] = Variable<String>(localityCode);
+    }
     return map;
   }
 
@@ -32675,6 +32695,9 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
       additionalFields: additionalFields == null && nullToAbsent
           ? const Value.absent()
           : Value(additionalFields),
+      localityCode: localityCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(localityCode),
     );
   }
 
@@ -32707,6 +32730,7 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+      localityCode: serializer.fromJson<String?>(json['localityCode']),
     );
   }
   @override
@@ -32736,6 +32760,7 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
       'additionalFields': serializer.toJson<String?>(additionalFields),
+      'localityCode': serializer.toJson<String?>(localityCode),
     };
   }
 
@@ -32762,7 +32787,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
           String? clientReferenceId,
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
-          Value<String?> additionalFields = const Value.absent()}) =>
+          Value<String?> additionalFields = const Value.absent(),
+          Value<String?> localityCode = const Value.absent()}) =>
       HFReferralData(
         id: id.present ? id.value : this.id,
         tenantId: tenantId.present ? tenantId.value : this.tenantId,
@@ -32814,6 +32840,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
         additionalFields: additionalFields.present
             ? additionalFields.value
             : this.additionalFields,
+        localityCode:
+            localityCode.present ? localityCode.value : this.localityCode,
       );
   @override
   String toString() {
@@ -32840,7 +32868,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
           ..write('clientReferenceId: $clientReferenceId, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
-          ..write('additionalFields: $additionalFields')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('localityCode: $localityCode')
           ..write(')'))
         .toString();
   }
@@ -32869,7 +32898,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
         clientReferenceId,
         isDeleted,
         rowVersion,
-        additionalFields
+        additionalFields,
+        localityCode
       ]);
   @override
   bool operator ==(Object other) =>
@@ -32897,7 +32927,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
           other.clientReferenceId == this.clientReferenceId &&
           other.isDeleted == this.isDeleted &&
           other.rowVersion == this.rowVersion &&
-          other.additionalFields == this.additionalFields);
+          other.additionalFields == this.additionalFields &&
+          other.localityCode == this.localityCode);
 }
 
 class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
@@ -32924,6 +32955,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
   final Value<String?> additionalFields;
+  final Value<String?> localityCode;
   final Value<int> rowid;
   const HFReferralCompanion({
     this.id = const Value.absent(),
@@ -32949,6 +32981,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
+    this.localityCode = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   HFReferralCompanion.insert({
@@ -32975,6 +33008,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
+    this.localityCode = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : clientReferenceId = Value(clientReferenceId);
   static Insertable<HFReferralData> custom({
@@ -33001,6 +33035,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
     Expression<String>? additionalFields,
+    Expression<String>? localityCode,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -33029,6 +33064,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowVersion != null) 'row_version': rowVersion,
       if (additionalFields != null) 'additional_fields': additionalFields,
+      if (localityCode != null) 'locality_code': localityCode,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -33057,6 +33093,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
       Value<String?>? additionalFields,
+      Value<String?>? localityCode,
       Value<int>? rowid}) {
     return HFReferralCompanion(
       id: id ?? this.id,
@@ -33082,6 +33119,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
       isDeleted: isDeleted ?? this.isDeleted,
       rowVersion: rowVersion ?? this.rowVersion,
       additionalFields: additionalFields ?? this.additionalFields,
+      localityCode: localityCode ?? this.localityCode,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -33158,6 +33196,9 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
     if (additionalFields.present) {
       map['additional_fields'] = Variable<String>(additionalFields.value);
     }
+    if (localityCode.present) {
+      map['locality_code'] = Variable<String>(localityCode.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -33190,6 +33231,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
           ..write('additionalFields: $additionalFields, ')
+          ..write('localityCode: $localityCode, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -55375,6 +55417,7 @@ typedef $$HFReferralTableInsertCompanionBuilder = HFReferralCompanion Function({
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
   Value<String?> additionalFields,
+  Value<String?> localityCode,
   Value<int> rowid,
 });
 typedef $$HFReferralTableUpdateCompanionBuilder = HFReferralCompanion Function({
@@ -55401,6 +55444,7 @@ typedef $$HFReferralTableUpdateCompanionBuilder = HFReferralCompanion Function({
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
   Value<String?> additionalFields,
+  Value<String?> localityCode,
   Value<int> rowid,
 });
 
@@ -55447,6 +55491,7 @@ class $$HFReferralTableTableManager extends RootTableManager<
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
+            Value<String?> localityCode = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               HFReferralCompanion(
@@ -55473,6 +55518,7 @@ class $$HFReferralTableTableManager extends RootTableManager<
             isDeleted: isDeleted,
             rowVersion: rowVersion,
             additionalFields: additionalFields,
+            localityCode: localityCode,
             rowid: rowid,
           ),
           getInsertCompanionBuilder: ({
@@ -55499,6 +55545,7 @@ class $$HFReferralTableTableManager extends RootTableManager<
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
+            Value<String?> localityCode = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               HFReferralCompanion.insert(
@@ -55525,6 +55572,7 @@ class $$HFReferralTableTableManager extends RootTableManager<
             isDeleted: isDeleted,
             rowVersion: rowVersion,
             additionalFields: additionalFields,
+            localityCode: localityCode,
             rowid: rowid,
           ),
         ));
@@ -55659,6 +55707,11 @@ class $$HFReferralTableFilterComposer
       column: $state.table.additionalFields,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get localityCode => $state.composableBuilder(
+      column: $state.table.localityCode,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
 }
 
 class $$HFReferralTableOrderingComposer
@@ -55776,6 +55829,11 @@ class $$HFReferralTableOrderingComposer
 
   ColumnOrderings<String> get additionalFields => $state.composableBuilder(
       column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get localityCode => $state.composableBuilder(
+      column: $state.table.localityCode,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }

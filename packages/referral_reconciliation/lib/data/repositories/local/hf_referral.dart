@@ -39,6 +39,10 @@ class HFReferralLocalRepository
                 sql.hFReferral.projectId.isIn(
                   query.projectId!,
                 ),
+              if (query.localityCode != null)
+                sql.hFReferral.localityCode.isIn(
+                  query.localityCode!,
+                ),
               if (userId != null)
                 sql.hFReferral.auditCreatedBy.equals(
                   userId,
@@ -159,6 +163,8 @@ class HFReferralLocalRepository
               beneficiaryId: referral.beneficiaryId,
               referralCode: referral.referralCode,
               nationalLevelId: referral.nationalLevelId,
+              // TODO: Uncomment after running build_runner to regenerate Drift files
+              localityCode: referral.localityCode,
               isDeleted: referral.isDeleted,
               additionalFields: additionalFields,
               auditDetails: AuditDetails(
@@ -210,8 +216,10 @@ class HFReferralLocalRepository
                     .where((h) =>
                         h.key ==
                         ReferralReconAdditionalFields.nameOfReferral.toValue())
-                    .first
-                    .value,
+                    .firstOrNull
+                    ?.value,
+                // Include localityCode during downsync
+                localityCode: Value(e.localityCode),
               ))
           .toList();
 
@@ -239,8 +247,9 @@ class HFReferralLocalRepository
                   h.key ==
                   ReferralReconAdditionalFields.nameOfReferral.toValue(),
             )
-            .first
-            .value),
+            .firstOrNull
+            ?.value),
+        localityCode: Value(entity.localityCode),
       );
 
       await sql.batch((batch) {
