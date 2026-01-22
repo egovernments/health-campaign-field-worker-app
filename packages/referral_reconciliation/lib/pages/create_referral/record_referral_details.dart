@@ -1198,118 +1198,66 @@ class _RecordReferralDetailsPageState
   }
 
   FormGroup buildForm(RecordHFReferralState referralState) {
+    // Extract viewOnly flag and model from state
+    final viewOnly =
+        referralState.mapOrNull(create: (value) => value.viewOnly) ?? false;
+    final hfReferralModel =
+        referralState.mapOrNull(create: (value) => value.hfReferralModel);
+
+    // Use the extension method to get form data (similar to ReverseFormMapper pattern)
+    final formData = hfReferralModel.toFormData();
+
+    // Parse age from additional fields
+    int? ageValue;
+    if (viewOnly && formData[ReferralReconEnums.age.toValue()] != null) {
+      ageValue =
+          int.tryParse(formData[ReferralReconEnums.age.toValue()].toString());
+    }
+
+    // Get name - from additionalFields first, then fallback to main field
+    String? nameValue;
+    if (viewOnly) {
+      nameValue =
+          formData[ReferralReconEnums.nameOfReferral.toValue()]?.toString() ??
+              formData['name']?.toString();
+    } else {
+      nameValue = hfReferralModel?.name;
+    }
+
     return fb.group(<String, Object>{
       _cycleKey: FormControl<String>(
-        value: referralState.mapOrNull(
-          create: (value) => value.viewOnly &&
-                  value.hfReferralModel?.additionalFields?.fields
-                          .where((e) =>
-                              e.key == ReferralReconEnums.cycle.toValue())
-                          .firstOrNull
-                          ?.value !=
-                      null
-              ? value.hfReferralModel?.additionalFields?.fields
-                  .where((e) => e.key == ReferralReconEnums.cycle.toValue())
-                  .firstOrNull
-                  ?.value
-                  .toString()
-              : null,
-        ),
-        disabled: referralState.mapOrNull(
-              create: (value) => value.viewOnly,
-            ) ??
-            false,
+        value: viewOnly
+            ? formData[ReferralReconEnums.cycle.toValue()]?.toString()
+            : null,
+        disabled: viewOnly,
         validators: [
           Validators.required,
         ],
       ),
       _nameOfChildKey: FormControl<String>(
-        value: referralState.mapOrNull(
-          create: (value) => value.viewOnly &&
-                  value.hfReferralModel?.additionalFields?.fields
-                          .where((e) =>
-                              e.key ==
-                              ReferralReconEnums.nameOfReferral.toValue())
-                          .firstOrNull
-                          ?.value !=
-                      null
-              ? value.hfReferralModel?.additionalFields?.fields
-                  .where((e) =>
-                      e.key == ReferralReconEnums.nameOfReferral.toValue())
-                  .firstOrNull
-                  ?.value
-                  .toString()
-              : value.hfReferralModel?.name ?? '',
-        ),
-        disabled: referralState.mapOrNull(
-              create: (value) => value.viewOnly,
-            ) ??
-            false,
+        value: nameValue ?? '',
+        disabled: viewOnly,
         validators: [
           Validators.required,
         ],
       ),
       _beneficiaryIdKey: FormControl<String>(
-        value: referralState.mapOrNull(
-          create: (value) => value.hfReferralModel?.beneficiaryId,
-        ),
-        disabled: referralState.mapOrNull(
-              create: (value) => value.viewOnly,
-            ) ??
-            false,
+        value: formData['beneficiaryId']?.toString(),
+        disabled: viewOnly,
       ),
       _referralCodeKey: FormControl<String>(
-        value: referralState.mapOrNull(
-          create: (value) =>
-              value.viewOnly ? value.hfReferralModel?.referralCode : null,
-        ),
-        disabled: referralState.mapOrNull(
-              create: (value) => value.viewOnly,
-            ) ??
-            false,
+        value: viewOnly ? formData['referralCode']?.toString() : null,
+        disabled: viewOnly,
       ),
       _genderKey: FormControl<String>(
-        value: referralState.mapOrNull(
-          create: (value) => value.viewOnly &&
-                  value.hfReferralModel?.additionalFields?.fields
-                          .where((e) =>
-                              e.key == ReferralReconEnums.gender.toValue())
-                          .firstOrNull
-                          ?.value !=
-                      null
-              ? value.hfReferralModel?.additionalFields?.fields
-                  .where((e) => e.key == ReferralReconEnums.gender.toValue())
-                  .firstOrNull
-                  ?.value
-                  .toString()
-              : null,
-        ),
-        disabled: referralState.mapOrNull(
-              create: (value) => value.viewOnly,
-            ) ??
-            false,
+        value: viewOnly
+            ? formData[ReferralReconEnums.gender.toValue()]?.toString()
+            : null,
+        disabled: viewOnly,
       ),
       _ageKey: FormControl<int>(
-        value: referralState.mapOrNull(
-          create: (value) => value.viewOnly &&
-                  value.hfReferralModel?.additionalFields?.fields
-                          .where(
-                              (e) => e.key == ReferralReconEnums.age.toValue())
-                          .firstOrNull
-                          ?.value !=
-                      null
-              ? int.tryParse(value.hfReferralModel?.additionalFields?.fields
-                      .where((e) => e.key == ReferralReconEnums.age.toValue())
-                      .firstOrNull
-                      ?.value
-                      .toString() ??
-                  '')
-              : null,
-        ),
-        disabled: referralState.mapOrNull(
-              create: (value) => value.viewOnly,
-            ) ??
-            false,
+        value: ageValue,
+        disabled: viewOnly,
         validators: (ReferralReconSingleton()
                         .validIndividualAgeForCampaign
                         .validMaxAge !=
@@ -1334,16 +1282,8 @@ class _RecordReferralDetailsPageState
             : [Validators.required],
       ),
       _referralReason: FormControl<String>(
-        value: referralState.mapOrNull(
-          create: (value) =>
-              value.viewOnly && value.hfReferralModel?.symptom != null
-                  ? value.hfReferralModel?.symptom
-                  : null,
-        ),
-        disabled: referralState.mapOrNull(
-              create: (value) => value.viewOnly,
-            ) ??
-            false,
+        value: viewOnly ? formData['symptom']?.toString() : null,
+        disabled: viewOnly,
         validators: [
           Validators.required,
         ],

@@ -802,14 +802,23 @@ final jsonConfig = {
           "auditDetails": "__generate:audit",
           "localityCode": "__context:selectedBoundaryCode",
           "additionalFields": {
+            // Explicit field mappings matching ReferralReconEnums/ReferralReconAdditionalFields
             "boundaryCode": "facilityDetails.administrativeUnit",
-            "referralCycle": "referralDetails.referralCycle",
+            "cycle": "referralDetails.referralCycle",
             "gender": "referralDetails.gender",
-            "ageInMonths": "referralDetails.ageInMonths",
+            "age": "referralDetails.ageInMonths",
             "nameOfReferral": "referralDetails.nameOfChild",
             "dateOfEvaluation": "facilityDetails.dateOfEvaluation",
             "referredBy": "facilityDetails.referredByKey",
             "hfCoordinator": "facilityDetails.hfCoordinator",
+
+            // Dynamically collect all fields from checklist pages
+            "__collectFromPages": [
+              "sideEffectFromCurrentCycle",
+              "sideEffectFromPreviousCycle",
+              "sideEffectFever",
+              "sideEffectSick"
+            ],
           }
         }
       }
@@ -835,9 +844,21 @@ final jsonConfig = {
           "auditDetails": "__generate:audit",
           "localityCode": "__context:selectedBoundaryCode",
           "additionalFields": {
+            // Explicit field mappings matching ReferralReconEnums/ReferralReconAdditionalFields
             "boundaryCode": "referBeneficiary.administrativeArea",
             "referredBy": "__context:userUUID",
-            "referralComments": "referBeneficiary.referralComments"
+            "referralComments": "referBeneficiary.referralComments",
+            "nameOfReferral": "__context:selectedIndividualName",
+            "cycle": "referralDetails.referralCycle",
+            "gender": "referralDetails.gender",
+            "age": "referralDetails.ageInMonths",
+            // Dynamically collect all fields from checklist pages
+            "__collectFromPages": [
+              "sideEffectFromCurrentCycle",
+              "sideEffectFromPreviousCycle",
+              "sideEffectFever",
+              "sideEffectSick"
+            ],
           }
         }
       }

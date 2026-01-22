@@ -15,20 +15,31 @@ class ReverseFormMapper {
   Map<String, dynamic> buildFormData() {
     final Map<String, dynamic> formData = {};
 
+    debugPrint('ReverseFormMapper: Starting buildFormData');
+    debugPrint('ReverseFormMapper: modelInstances count: ${modelInstances.length}');
+    debugPrint('ReverseFormMapper: modelInstances types: ${modelInstances.map((m) => m.runtimeType.toString()).toList()}');
+    debugPrint('ReverseFormMapper: formConfig models: ${formConfig['models']?.keys.toList()}');
+
     for (final modelEntry in formConfig['models'].entries) {
       final modelName = modelEntry.key;
       final modelConfig = modelEntry.value;
 
+      debugPrint('ReverseFormMapper: Looking for model: $modelName');
+
       EntityModel? instance;
       for (final model in modelInstances) {
+        debugPrint('ReverseFormMapper: Checking ${model.runtimeType.toString()} == $modelName');
         if (model.runtimeType.toString() == modelName) {
           instance = model;
+          debugPrint('ReverseFormMapper: Found matching instance!');
           break;
         }
       }
 
       if (instance != null) {
         final modelMap = instance.toMap();
+        debugPrint('ReverseFormMapper: modelMap keys: ${modelMap.keys.toList()}');
+        debugPrint('ReverseFormMapper: additionalFields in modelMap: ${modelMap['additionalFields']}');
 
         // Apply normal mappings
         _applyMappings(formData, modelMap, modelConfig['mappings'] ?? {});
@@ -37,10 +48,16 @@ class ReverseFormMapper {
         if (modelConfig.containsKey('listMappings')) {
           _applyListMappings(formData, modelMap, modelConfig['listMappings']);
         }
+
+        debugPrint('ReverseFormMapper: formData after mappings: $formData');
+      } else {
+        debugPrint('ReverseFormMapper: No matching instance found for $modelName');
       }
     }
 
-    return _flattenFormData(formData); // ✅ auto-flattened
+    final result = _flattenFormData(formData);
+    debugPrint('ReverseFormMapper: Final flattened formData: $result');
+    return result;
   }
 
   Map<String, dynamic> _flattenFormData(Map<String, dynamic> nestedMap) {
@@ -114,17 +131,42 @@ class ReverseFormMapper {
         _setNestedValue(formData, formFieldPath, modelValue);
       } else if (formFieldPath is Map<String, dynamic>) {
         // Special mapping: additionalFields
+        // The formFieldPath contains the mapping config: {"key": "formPath", ...}
+        // e.g., {"cycle": "referralDetails.referralCycle", "age": "referralDetails.ageInMonths"}
+        debugPrint('ReverseFormMapper: Processing $modelField with Map config');
+        debugPrint('ReverseFormMapper: modelValue type: ${modelValue.runtimeType}');
+        debugPrint('ReverseFormMapper: modelValue: $modelValue');
+
         if (modelField == 'additionalFields' && modelValue is Map) {
+          debugPrint('ReverseFormMapper: Processing additionalFields');
           final fields = modelValue['fields'];
+          debugPrint('ReverseFormMapper: fields type: ${fields?.runtimeType}, value: $fields');
+
           if (fields is List) {
+            debugPrint('ReverseFormMapper: Processing ${fields.length} additional fields');
             for (final field in fields) {
+              debugPrint('ReverseFormMapper: Field entry: $field');
               if (field is Map &&
                   field.containsKey('key') &&
                   field.containsKey('value')) {
                 final key = field['key'];
                 final value = field['value'];
-                if (key is String) {
-                  formData[key] = value;
+                debugPrint('ReverseFormMapper: key=$key, value=$value');
+                if (key is String && value != null) {
+                  // Look up the form path from the mapping config
+                  // e.g., key="cycle" → formPath="referralDetails.referralCycle"
+                  final mappedFormPath = formFieldPath[key];
+                  debugPrint('ReverseFormMapper: Mapping config for $key: $mappedFormPath');
+                  if (mappedFormPath is String &&
+                      !mappedFormPath.startsWith('__')) {
+                    // Use the mapped form path to set the value correctly
+                    debugPrint('ReverseFormMapper: Setting $mappedFormPath = $value');
+                    _setNestedValue(formData, mappedFormPath, value);
+                  } else {
+                    // If no mapping found, use the key directly (backward compatibility)
+                    debugPrint('ReverseFormMapper: No mapping found, using key directly: $key = $value');
+                    formData[key] = value;
+                  }
                 }
               }
             }

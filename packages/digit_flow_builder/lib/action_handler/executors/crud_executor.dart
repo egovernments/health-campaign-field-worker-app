@@ -19,9 +19,70 @@ class CrudExecutor extends ActionExecutor {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
+    final navigation = contextData['navigation'] as Map<String, dynamic>? ?? {};
+    debugPrint('CREATE_EVENT: navigation params: $navigation');
+    debugPrint('CREATE_EVENT: isUpdate value: ${navigation['isUpdate']}');
+
+    // Check applyIf condition if specified
+    final applyIf = action.properties['applyIf'] as String?;
+    if (applyIf != null) {
+      final resolveContext = {'navigation': navigation, ...contextData};
+
+      if (!_evaluateCondition(applyIf, resolveContext)) {
+        debugPrint('CREATE_EVENT: Skipping - applyIf condition not met: $applyIf');
+        return contextData;
+      }
+    }
+
+    debugPrint('CREATE_EVENT: Executing create with entities');
     final entities = contextData['entities'];
     context.read<CrudBloc>().add(CrudEventCreate(entities: entities));
     return contextData;
+  }
+
+  /// Evaluate a simple condition like "navigation.isUpdate!=true"
+  bool _evaluateCondition(String condition, Map<String, dynamic> context) {
+    try {
+      final isNotEqual = condition.contains('!=');
+      final isEqual = condition.contains('==');
+
+      if (!isEqual && !isNotEqual) {
+        return false;
+      }
+
+      final separator = isNotEqual ? '!=' : '==';
+      final parts = condition.split(separator);
+
+      if (parts.length != 2) {
+        return false;
+      }
+
+      final leftPath = parts[0].trim();
+      final rightValue = parts[1].trim();
+
+      final pathParts = leftPath.split('.');
+      dynamic value = context;
+
+      for (final part in pathParts) {
+        if (value is Map && value.containsKey(part)) {
+          value = value[part];
+        } else {
+          value = null;
+          break;
+        }
+      }
+
+      final leftValue = value?.toString() ?? '';
+
+      if (isNotEqual) {
+        return leftValue != rightValue;
+      } else {
+        return leftValue == rightValue;
+      }
+    } catch (e) {
+      debugPrint('CREATE_EVENT: Error evaluating condition "$condition": $e');
+      return false;
+    }
   }
 }
 
@@ -51,6 +112,22 @@ class UpdateExecutor extends ActionExecutor {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
+    final navigation =
+        contextData['navigation'] as Map<String, dynamic>? ?? {};
+    debugPrint('UPDATE_EVENT: navigation params: $navigation');
+
+    // Check applyIf condition if specified
+    final applyIf = action.properties['applyIf'] as String?;
+    if (applyIf != null) {
+      final resolveContext = {'navigation': navigation, ...contextData};
+
+      if (!_evaluateCondition(applyIf, resolveContext)) {
+        debugPrint(
+            'UPDATE_EVENT: Skipping - applyIf condition not met: $applyIf');
+        return contextData;
+      }
+    }
+
     final entities = contextData['entities'];
     if (entities == null || entities is! List || entities.isEmpty) {
       debugPrint('UPDATE_EVENT: No entities found in contextData');
@@ -161,5 +238,50 @@ class UpdateExecutor extends ActionExecutor {
     debugPrint('UPDATE_EVENT: Updating ${updatedEntities.length} entities');
     context.read<CrudBloc>().add(CrudEventUpdate(entities: updatedEntities));
     return contextData;
+  }
+
+  /// Evaluate a simple condition like "navigation.isUpdate==true"
+  bool _evaluateCondition(String condition, Map<String, dynamic> context) {
+    try {
+      final isNotEqual = condition.contains('!=');
+      final isEqual = condition.contains('==');
+
+      if (!isEqual && !isNotEqual) {
+        return false;
+      }
+
+      final separator = isNotEqual ? '!=' : '==';
+      final parts = condition.split(separator);
+
+      if (parts.length != 2) {
+        return false;
+      }
+
+      final leftPath = parts[0].trim();
+      final rightValue = parts[1].trim();
+
+      final pathParts = leftPath.split('.');
+      dynamic value = context;
+
+      for (final part in pathParts) {
+        if (value is Map && value.containsKey(part)) {
+          value = value[part];
+        } else {
+          value = null;
+          break;
+        }
+      }
+
+      final leftValue = value?.toString() ?? '';
+
+      if (isNotEqual) {
+        return leftValue != rightValue;
+      } else {
+        return leftValue == rightValue;
+      }
+    } catch (e) {
+      debugPrint('UPDATE_EVENT: Error evaluating condition "$condition": $e');
+      return false;
+    }
   }
 }

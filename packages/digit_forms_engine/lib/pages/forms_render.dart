@@ -81,6 +81,72 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     _hasInitializedProtection = true;
   }
 
+  /// Evaluate a compound condition with && operator
+  /// Splits the condition and evaluates each part
+  bool _evaluateCompoundCondition(
+      String condition,
+      Map<String, dynamic> values,
+      Map<String, dynamic>? navigationParams) {
+    final parts = condition.split('&&').map((e) => e.trim()).toList();
+    for (final part in parts) {
+      if (!_evaluateConditionWithNavigation(part, values, navigationParams)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /// Evaluate a single condition with navigation parameter support and dot notation handling
+  /// Handles conditions like navigation.isUpdate==true, referralDetails.referralReason==FEVER
+  bool _evaluateConditionWithNavigation(
+      String condition,
+      Map<String, dynamic> values,
+      Map<String, dynamic>? navigationParams) {
+    bool isNotEqual = condition.contains('!=');
+    bool isEqual = condition.contains('==');
+
+    if (isEqual || isNotEqual) {
+      final separator = isNotEqual ? '!=' : '==';
+      final conditionParts = condition.split(separator);
+      if (conditionParts.length == 2) {
+        final leftPart = conditionParts[0].trim();
+        final rightPart = conditionParts[1].trim();
+
+        // Handle navigation.xxx conditions by checking navigationParams directly
+        if (leftPart.startsWith('navigation.') && navigationParams != null) {
+          final navKey = leftPart.substring('navigation.'.length);
+          final navValue = navigationParams[navKey];
+
+          // Convert both to string for comparison
+          final leftValue = navValue?.toString() ?? '';
+          final rightValue = rightPart;
+
+          if (isNotEqual) {
+            return leftValue != rightValue;
+          } else {
+            return leftValue == rightValue;
+          }
+        }
+
+        // Handle dot notation conditions (e.g., referralDetails.referralReason==FEVER)
+        // by directly looking up the key in the values map
+        if (leftPart.contains('.') && values.containsKey(leftPart)) {
+          final leftValue = values[leftPart]?.toString() ?? '';
+          final rightValue = rightPart;
+
+          if (isNotEqual) {
+            return leftValue != rightValue;
+          } else {
+            return leftValue == rightValue;
+          }
+        }
+      }
+    }
+
+    // Fallback to standard evaluation
+    return evaluateSingleCondition(condition, values);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -346,8 +412,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                     navigationParams: widget.navigationParams,
                                   );
 
-                                  // Evaluate condition - use direct isEdit check for isEdit conditions
-                                  // since FormulaParser doesn't handle dot notation well
+                                  // Evaluate condition - handle compound conditions with && and navigation params
                                   bool isConditionTrue;
                                   if (condition == 'isEdit == true' ||
                                       condition ==
@@ -357,9 +422,13 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                       condition ==
                                           'navigation.isEdit == false') {
                                     isConditionTrue = widget.isEdit == false;
+                                  } else if (condition.contains('&&')) {
+                                    // Handle compound conditions with && operator
+                                    isConditionTrue = _evaluateCompoundCondition(
+                                        condition, values, widget.navigationParams);
                                   } else {
-                                    isConditionTrue = evaluateSingleCondition(
-                                        condition, values);
+                                    isConditionTrue = _evaluateConditionWithNavigation(
+                                        condition, values, widget.navigationParams);
                                   }
 
                                   if (isConditionTrue) {

@@ -304,7 +304,30 @@ class FormEntityMapper {
   }) {
     final updatedFields = <String, String>{};
 
+    // Handle dynamic field collection from form pages
+    // Usage: "__collectFromPages": ["sideEffectFever", "sideEffectSick", ...]
+    final collectFromPages = updateMapping['__collectFromPages'];
+    if (collectFromPages is List) {
+      for (final pageName in collectFromPages) {
+        if (pageName is String) {
+          final pageData = formValues[pageName];
+          if (pageData is Map<String, dynamic>) {
+            pageData.forEach((fieldKey, fieldValue) {
+              if (fieldValue != null &&
+                  fieldValue.toString().trim().isNotEmpty) {
+                updatedFields[fieldKey] = fieldValue.toString();
+              }
+            });
+          }
+        }
+      }
+    }
+
+    // Handle explicit field mappings (existing behavior)
     updateMapping.forEach((customKey, path) {
+      // Skip the special __collectFromPages key
+      if (customKey == '__collectFromPages') return;
+
       final value = getStrictValueFromFormDataOnly(path, formValues);
 
       if (value != null && value.toString().trim().isNotEmpty) {
@@ -604,13 +627,52 @@ class FormEntityMapper {
   ) {
     final fieldsList = <Map<String, dynamic>>[];
 
+    // Handle dynamic field collection from form pages
+    // Usage: "__collectFromPages": ["sideEffectFever", "sideEffectSick", ...]
+    final collectFromPages = fieldsMap['__collectFromPages'];
+    if (collectFromPages is List) {
+      for (final pageName in collectFromPages) {
+        if (pageName is String) {
+          final pageData = formValues[pageName];
+          if (pageData is Map<String, dynamic>) {
+            pageData.forEach((fieldKey, fieldValue) {
+              if (fieldValue != null &&
+                  fieldValue.toString().trim().isNotEmpty) {
+                fieldsList.add({
+                  'key': fieldKey,
+                  'value': fieldValue is DateTime
+                      ? fieldValue.millisecondsSinceEpoch
+                      : fieldValue
+                });
+              }
+            });
+          }
+        }
+      }
+    }
+
+    // Handle explicit field mappings (existing behavior)
     fieldsMap.forEach((customKey, path) {
+      // Skip the special __collectFromPages key
+      if (customKey == '__collectFromPages') return;
+
       final value = getValueFromMapping(path, formValues, path, context);
       if (value != null && value.toString().trim().isNotEmpty) {
-        fieldsList.add({
-          'key': customKey,
-          'value': value is DateTime ? value.millisecondsSinceEpoch : value
-        });
+        // Avoid duplicates if field was already collected from pages
+        final existingIndex =
+            fieldsList.indexWhere((f) => f['key'] == customKey);
+        if (existingIndex >= 0) {
+          // Update existing field with explicit mapping value
+          fieldsList[existingIndex] = {
+            'key': customKey,
+            'value': value is DateTime ? value.millisecondsSinceEpoch : value
+          };
+        } else {
+          fieldsList.add({
+            'key': customKey,
+            'value': value is DateTime ? value.millisecondsSinceEpoch : value
+          });
+        }
       }
     });
 
