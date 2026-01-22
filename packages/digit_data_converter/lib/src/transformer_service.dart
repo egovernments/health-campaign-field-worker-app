@@ -837,6 +837,10 @@ class FormEntityMapper {
       };
     }
 
+    if (instruction == '__generate:timestamp' && updateMapping == false) {
+      return DateTime.now().millisecondsSinceEpoch;
+    }
+
     if (instruction.startsWith('__ref:') && updateMapping == false) {
       final parts = instruction.replaceFirst('__ref:', '').split('.');
       if (parts.length != 2) {
