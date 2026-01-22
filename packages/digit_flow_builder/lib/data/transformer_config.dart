@@ -907,6 +907,34 @@ final jsonConfig = {
             "referralComments": "referBeneficiary.referralComments"
           }
         }
+      },
+      "HFReferralModel": {
+        "mappings": {
+          "tenantId": "__context:tenantId",
+          "projectId": "__context:projectId",
+          "projectFacilityId":
+              "__switch:referBeneficiary.evaluationFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.evaluationFacility}",
+          "beneficiaryId": "__context:ProjectBeneficiaryClientReferenceId",
+          "referralCode": "__context:selectedIndividualClientReferenceId",
+          "name": "__context:selectedIndividualName",
+          "symptom": "referBeneficiary.referralReason",
+          "nonRecoverableError": "referral.nonRecoverable",
+          "clientReferenceId": "__generate:uuid",
+          "rowVersion": "meta.rowVersion",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "localityCode": "__context:selectedBoundaryCode",
+          "additionalFields": {
+            // Explicit field mappings matching ReferralReconEnums/ReferralReconAdditionalFields
+            "boundaryCode": "referBeneficiary.administrativeArea",
+            "referredBy": "__context:userUUID",
+            "referralComments": "referBeneficiary.referralComments",
+            "nameOfReferral": "__context:selectedIndividualName",
+            "cycle": "referralDetails.referralCycle",
+            "gender": "referralDetails.gender",
+            "age": "referralDetails.ageInMonths"
+          }
+        }
       }
     }
   }

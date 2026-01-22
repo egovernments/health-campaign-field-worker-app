@@ -978,6 +978,14 @@ final dynamic sampleFlows = {
               "isMultiSelect": false
             },
             {
+              "enums": [
+                {"code": "DEFAULT", "name": "DEFAULT"},
+                {
+                  "code": "UNIQUE_BENEFICIARY_ID",
+                  "name": "UNIQUE_BENEFICIARY_ID"
+                },
+                {"code": "OTHER", "name": "OTHER"}
+              ],
               "type": "string",
               "label":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers",
@@ -1038,6 +1046,11 @@ final dynamic sampleFlows = {
               "isMultiSelect": false
             },
             {
+              "enums": [
+                {"code": "MALE", "name": "MALE"},
+                {"code": "FEMALE", "name": "FEMALE"},
+                {"code": "OTHER", "name": "OTHER"}
+              ],
               "type": "string",
               "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender",
               "order": 5,
@@ -1550,6 +1563,10 @@ final dynamic sampleFlows = {
                               "value": "{{individual.0.clientReferenceId}}"
                             },
                             {
+                              "key": "selectedIndividualName",
+                              "value": "{{individual.0.name.givenName}}"
+                            },
+                            {
                               "key": "HouseholdClientReferenceId",
                               "value": "{{member.0.householdClientReferenceId}}"
                             },
@@ -1589,6 +1606,10 @@ final dynamic sampleFlows = {
                             {
                               "key": "selectedIndividualClientReferenceId",
                               "value": "{{item.individual.0.clientReferenceId}}"
+                            },
+                            {
+                              "key": "selectedIndividualName",
+                              "value": "{{individual.0.name.givenName}}"
                             },
                             {
                               "key": "HouseholdClientReferenceId",
@@ -2399,6 +2420,10 @@ final dynamic sampleFlows = {
                         "{{contextData.navigation.selectedIndividualClientReferenceId}}"
                   },
                   {
+                    "key": "selectedIndividualName",
+                    "value": "{{contextData.navigation.selectedIndividualName}}"
+                  },
+                  {
                     "key": "HouseholdClientReferenceId",
                     "value":
                         "{{ contextData.navigation.HouseholdClientReferenceId }}"
@@ -2435,6 +2460,10 @@ final dynamic sampleFlows = {
                     "key": "selectedIndividualClientReferenceId",
                     "value":
                         "{{navigation.selectedIndividualClientReferenceId}}"
+                  },
+                  {
+                    "key": "selectedIndividualName",
+                    "value": "{{contextData.navigation.selectedIndividualName}}"
                   },
                   {
                     "key": "HouseholdClientReferenceId",
@@ -2537,6 +2566,10 @@ final dynamic sampleFlows = {
                     "key": "selectedIndividualClientReferenceId",
                     "value":
                         "{{contextData.navigation.selectedIndividualClientReferenceId}}"
+                  },
+                  {
+                    "key": "selectedIndividualName",
+                    "value": "{{contextData.navigation.selectedIndividualName}}"
                   },
                   {
                     "key": "HouseholdClientReferenceId",
@@ -2651,6 +2684,12 @@ final dynamic sampleFlows = {
               ]
             },
             {
+              "enums": [
+                {"code": "DRUG_SE_CC", "name": "DRUG_SE_CC"},
+                {"code": "DRUG_SE_PC", "name": "DRUG_SE_PC"},
+                {"code": "FEVER", "name": "FEVER"},
+                {"code": "SICK", "name": "SICK"}
+              ],
               "type": "string",
               "label": "HFREFERRAL_REFERRAL_DETAILS_referralReason_LABEL",
               "order": 4,
@@ -2693,6 +2732,10 @@ final dynamic sampleFlows = {
               {
                 "key": "selectedIndividualClientReferenceId",
                 "value": "{{navigation.selectedIndividualClientReferenceId}}"
+              },
+              {
+                "key": "selectedIndividualName",
+                "value": "{{contextData.navigation.selectedIndividualName}}"
               },
               {
                 "key": "HouseholdClientReferenceId",
