@@ -1021,9 +1021,18 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           await facilityLocalRepository.search(FacilitySearchModel());
       await downloadStockDataBasedOnRole(projectFacilities, facilities,
           event.model.address?.boundaryType, currentRunningCycle);
+
+      emit(state.copyWith(
+        selectedProject: event.model,
+        loading: false,
+        syncError: null,
+        projectType: getSelectedProjectType,
+        selectedCycle: currentRunningCycle,
+      ));
     } catch (_) {
       emit(state.copyWith(
         loading: false,
+        projects: [],
         syncError: ProjectSyncErrorType.projectFacilities,
       ));
     }

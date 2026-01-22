@@ -5,7 +5,6 @@ import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_forms_engine/forms_engine.dart';
 import 'package:digit_forms_engine/widgets/base_reactive_field_wrapper.dart';
 import 'package:digit_ui_components/digit_components.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_divider.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
@@ -15,6 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../../utils/stock_calculation_utils.dart';
 import '../localized.dart';
 
 /// GlobalKey to access StockReconciliationCard state for validation
@@ -51,9 +51,6 @@ class StockReconciliationCard extends LocalizedStatefulWidget {
 
 class _StockReconciliationCardState
     extends LocalizedState<StockReconciliationCard> {
-  static const _facilityKey = 'selectedFacility';
-  static const _productVariantKey = 'selectedProductVariant';
-
   FacilityModel? _selectedFacility;
   ProductVariantModel? _selectedProduct;
 
@@ -73,6 +70,60 @@ class _StockReconciliationCardState
   // Track if fields have been touched (for showing validation errors)
   bool _facilityTouched = false;
   bool _productTouched = false;
+
+  // Track if manualCount has been initialized to prevent resetting user edits
+  bool _manualCountInitialized = false;
+
+  // Track if metrics need recalculation (set to true when facility/product changes)
+  bool _needsMetricsRecalculation = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Reset form fields when page is opened fresh
+    // This ensures previous session values don't persist
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _resetFormFields();
+      }
+    });
+  }
+
+  /// Reset form fields to clear any previous session values
+  void _resetFormFields() {
+    context.read<FormsBloc>().add(
+          FormsEvent.updateField(
+            schemaKey: widget.pageSchema,
+            context: context,
+            key: 'stockReconciliationCard',
+            value: null,
+          ),
+        );
+    context.read<FormsBloc>().add(
+          FormsEvent.updateField(
+            schemaKey: widget.pageSchema,
+            context: context,
+            key: 'stockInHand',
+            value: 0,
+          ),
+        );
+    context.read<FormsBloc>().add(
+          FormsEvent.updateField(
+            schemaKey: widget.pageSchema,
+            context: context,
+            key: 'manualCount',
+            value: null,
+          ),
+        );
+    context.read<FormsBloc>().add(
+          FormsEvent.updateField(
+            schemaKey: widget.pageSchema,
+            context: context,
+            key: 'comments',
+            value: null,
+          ),
+        );
+  }
 
   /// Checks if both facility and product are selected.
   bool get isValid => _selectedFacility != null && _selectedProduct != null;
@@ -103,11 +154,8 @@ class _StockReconciliationCardState
     final textTheme = theme.digitTextTheme(context);
 
     // Get field schema for validation messages
-    final pages = context
-        .read<FormsBloc>()
-        .state
-        .cachedSchemas[widget.pageSchema]
-        ?.pages;
+    final pages =
+        context.read<FormsBloc>().state.cachedSchemas[widget.pageSchema]?.pages;
     PropertySchema? fieldSchema;
     if (pages != null) {
       for (final page in pages.values) {
@@ -131,185 +179,207 @@ class _StockReconciliationCardState
         }
 
         return ValueListenableBuilder<FlowCrudState?>(
-      valueListenable: FlowCrudStateRegistry().listen(widget.pageSchema),
-      builder: (context, flowState, child) {
-        // Get facilities and product variants from FlowCrudStateRegistry
-        final facilities = _getFacilities(flowState);
-        final productVariants = _getProductVariants(flowState);
+          valueListenable: FlowCrudStateRegistry().listen(widget.pageSchema),
+          builder: (context, flowState, child) {
+            // Get facilities and product variants from FlowCrudStateRegistry
+            final facilities = _getFacilities(flowState);
+            final productVariants = _getProductVariants(flowState);
 
-        // Cache facilities and product variants when they're loaded
-        // This prevents them from being cleared when stock search happens
-        if (facilities.isNotEmpty && _cachedFacilities.isEmpty) {
-          _cachedFacilities = facilities;
-        }
-        if (productVariants.isNotEmpty && _cachedProductVariants.isEmpty) {
-          _cachedProductVariants = productVariants;
-        }
+            // Cache facilities and product variants when they're loaded
+            // This prevents them from being cleared when stock search happens
+            if (facilities.isNotEmpty && _cachedFacilities.isEmpty) {
+              _cachedFacilities = facilities;
+            }
+            if (productVariants.isNotEmpty && _cachedProductVariants.isEmpty) {
+              _cachedProductVariants = productVariants;
+            }
 
-        // Use cached data if current data is empty (happens after stock search)
-        final displayFacilities =
-            facilities.isNotEmpty ? facilities : _cachedFacilities;
-        final displayProductVariants = productVariants.isNotEmpty
-            ? productVariants
-            : _cachedProductVariants;
+            // Use cached data if current data is empty (happens after stock search)
+            final displayFacilities =
+                facilities.isNotEmpty ? facilities : _cachedFacilities;
+            final displayProductVariants = productVariants.isNotEmpty
+                ? productVariants
+                : _cachedProductVariants;
 
-        // Recalculate stock metrics whenever flow state changes and both selections are made
-        if (_selectedFacility != null && _selectedProduct != null) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _calculateStockMetrics(flowState);
-          });
-        }
+            // Recalculate stock metrics only when needed (facility/product changed)
+            if (_selectedFacility != null &&
+                _selectedProduct != null &&
+                _needsMetricsRecalculation) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted && _needsMetricsRecalculation) {
+                  _needsMetricsRecalculation = false;
+                  _calculateStockMetrics(flowState);
+                }
+              });
+            }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Facility Dropdown
-            LabeledField(
-              isRequired: true,
-              label: localizations.translate('Select Warehouse'),
-              child: DigitDropdown<FacilityModel>(
-                errorMessage: _facilityError,
-                selectedOption: _selectedFacility != null
-                    ? DropdownItem(
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Facility Dropdown
+                LabeledField(
+                  isRequired: true,
+                  label: localizations.translate('Select Warehouse'),
+                  child: DigitDropdown<FacilityModel>(
+                    errorMessage: _facilityError,
+                    selectedOption: _selectedFacility != null
+                        ? DropdownItem(
+                            name: localizations
+                                .translate('${_selectedFacility!.id}'),
+                            code: _selectedFacility!.id,
+                          )
+                        : null,
+                    emptyItemText:
+                        localizations.translate('No facilities found'),
+                    items: displayFacilities.map((facility) {
+                      return DropdownItem(
+                        name: localizations.translate('${facility.id}'),
+                        code: facility.id,
+                      );
+                    }).toList(),
+                    onSelect: (value) {
+                      final selected = displayFacilities.firstWhere(
+                        (f) => f.id == value.code,
+                      );
+                      setState(() {
+                        _facilityTouched = true;
+                        _selectedFacility = selected;
+                        // Mark product as touched too - so error shows if not selected
+                        _productTouched = true;
+                        // Reset flags when facility changes
+                        _manualCountInitialized = false;
+                        _needsMetricsRecalculation = true;
+                      });
+                      _triggerStockSearchIfReady(context);
+                      _updateFormData();
+                    },
+                  ),
+                ),
+                const SizedBox(height: spacer2),
+
+                // Product Variant Dropdown
+                LabeledField(
+                  isRequired: true,
+                  label: localizations.translate('Select Product'),
+                  child: DigitDropdown<ProductVariantModel>(
+                    errorMessage: _productError,
+                    sentenceCaseEnabled: true,
+                    selectedOption: _selectedProduct != null
+                        ? DropdownItem(
+                            name: localizations.translate(
+                                _selectedProduct!.sku ?? _selectedProduct!.id),
+                            code: _selectedProduct!.id,
+                          )
+                        : null,
+                    emptyItemText: localizations.translate('No products found'),
+                    items: displayProductVariants.map((product) {
+                      return DropdownItem(
                         name:
-                            localizations.translate('${_selectedFacility!.id}'),
-                        code: _selectedFacility!.id,
-                      )
-                    : null,
-                emptyItemText: localizations.translate('No facilities found'),
-                items: displayFacilities.map((facility) {
-                  return DropdownItem(
-                    name: localizations.translate('${facility.id}'),
-                    code: facility.id,
-                  );
-                }).toList(),
-                onSelect: (value) {
-                  final selected = displayFacilities.firstWhere(
-                    (f) => f.id == value.code,
-                  );
-                  setState(() {
-                    _facilityTouched = true;
-                    _selectedFacility = selected;
-                  });
-                  _triggerStockSearchIfReady(context);
-                  _updateFormData();
-                },
-              ),
-            ),
-            const SizedBox(height: spacer2),
+                            localizations.translate(product.sku ?? product.id),
+                        code: product.id,
+                      );
+                    }).toList(),
+                    onSelect: (value) {
+                      final selected = displayProductVariants.firstWhere(
+                        (p) => p.id == value.code,
+                      );
+                      setState(() {
+                        _productTouched = true;
+                        _selectedProduct = selected;
+                        // Mark facility as touched too - so error shows if not selected
+                        _facilityTouched = true;
+                        // Reset flags when product changes
+                        _manualCountInitialized = false;
+                        _needsMetricsRecalculation = true;
+                      });
+                      _triggerStockSearchIfReady(context);
+                      _updateFormData();
+                    },
+                  ),
+                ),
+                const SizedBox(height: spacer4),
 
-            // Product Variant Dropdown
-            LabeledField(
-              isRequired: true,
-              label: localizations.translate('Select Product'),
-              child: DigitDropdown<ProductVariantModel>(
-                errorMessage: _productError,
-                sentenceCaseEnabled: true,
-                selectedOption: _selectedProduct != null
-                    ? DropdownItem(
-                        name: localizations.translate(
-                            _selectedProduct!.sku ?? _selectedProduct!.id),
-                        code: _selectedProduct!.id,
-                      )
-                    : null,
-                emptyItemText: localizations.translate('No products found'),
-                items: displayProductVariants.map((product) {
-                  return DropdownItem(
-                    name: localizations.translate(product.sku ?? product.id),
-                    code: product.id,
-                  );
-                }).toList(),
-                onSelect: (value) {
-                  final selected = displayProductVariants.firstWhere(
-                    (p) => p.id == value.code,
-                  );
-                  setState(() {
-                    _productTouched = true;
-                    _selectedProduct = selected;
-                  });
-                  _triggerStockSearchIfReady(context);
-                  _updateFormData();
-                },
-              ),
-            ),
-            const SizedBox(height: spacer4),
-
-            // Stock Metrics Display (only show if both facility and product are selected)
-            if (_selectedFacility != null && _selectedProduct != null) ...[
-              DigitCard(
-                margin: const EdgeInsets.all(0),
-                children: [
-                  Text(
-                    localizations
-                        .translate(i18.stockReconciliationMetrics.stockMetrics),
-                    style: textTheme.headingS.copyWith(
-                      color: theme.colorTheme.text.primary,
-                    ),
+                // Stock Metrics Display (only show if both facility and product are selected)
+                if (_selectedFacility != null && _selectedProduct != null) ...[
+                  DigitCard(
+                    margin: const EdgeInsets.all(0),
+                    children: [
+                      Text(
+                        localizations.translate(
+                            i18.stockReconciliationMetrics.stockMetrics),
+                        style: textTheme.headingS.copyWith(
+                          color: theme.colorTheme.text.primary,
+                        ),
+                      ),
+                      const SizedBox(height: spacer2),
+                      LabelValueItem(
+                        label: localizations.translate(i18
+                            .stockReconciliationMetrics.dateOfReconciliation),
+                        value:
+                            DateFormat('dd MMMM yyyy').format(DateTime.now()),
+                        labelFlex: 5,
+                      ),
+                      const DigitDivider(),
+                      LabelValueItem(
+                        label: localizations.translate(
+                            i18.stockReconciliationMetrics.stockReceived),
+                        value:
+                            _stockMetrics['stockReceived']!.toStringAsFixed(0),
+                        labelFlex: 5,
+                      ),
+                      const DigitDivider(),
+                      LabelValueItem(
+                        label: localizations.translate(
+                            i18.stockReconciliationMetrics.stockIssued),
+                        value: _stockMetrics['stockIssued']!.toStringAsFixed(0),
+                        labelFlex: 5,
+                      ),
+                      const DigitDivider(),
+                      LabelValueItem(
+                        label: localizations.translate(
+                            i18.stockReconciliationMetrics.stockReturned),
+                        value:
+                            _stockMetrics['stockReturned']!.toStringAsFixed(0),
+                        labelFlex: 5,
+                      ),
+                      const DigitDivider(),
+                      LabelValueItem(
+                        label: localizations.translate(
+                            i18.stockReconciliationMetrics.stockLost),
+                        value: _stockMetrics['stockLost']!.toStringAsFixed(0),
+                        labelFlex: 5,
+                      ),
+                      const DigitDivider(),
+                      LabelValueItem(
+                        label: localizations.translate(
+                            i18.stockReconciliationMetrics.stockDamaged),
+                        value:
+                            _stockMetrics['stockDamaged']!.toStringAsFixed(0),
+                        labelFlex: 5,
+                      ),
+                      const DigitDivider(),
+                      LabelValueItem(
+                        label: localizations.translate(
+                            i18.stockReconciliationMetrics.stockOnHand),
+                        value: _stockMetrics['stockInHand']!.toStringAsFixed(0),
+                        labelFlex: 5,
+                      ),
+                    ],
                   ),
                   const SizedBox(height: spacer2),
-                  LabelValueItem(
-                    label: localizations.translate(
-                        i18.stockReconciliationMetrics.dateOfReconciliation),
-                    value: DateFormat('dd MMMM yyyy').format(DateTime.now()),
-                    labelFlex: 5,
-                  ),
-                  const DigitDivider(),
-                  LabelValueItem(
-                    label: localizations.translate(
-                        i18.stockReconciliationMetrics.stockReceived),
-                    value: _stockMetrics['stockReceived']!.toStringAsFixed(0),
-                    labelFlex: 5,
-                  ),
-                  const DigitDivider(),
-                  LabelValueItem(
-                    label: localizations
-                        .translate(i18.stockReconciliationMetrics.stockIssued),
-                    value: _stockMetrics['stockIssued']!.toStringAsFixed(0),
-                    labelFlex: 5,
-                  ),
-                  const DigitDivider(),
-                  LabelValueItem(
-                    label: localizations.translate(
-                        i18.stockReconciliationMetrics.stockReturned),
-                    value: _stockMetrics['stockReturned']!.toStringAsFixed(0),
-                    labelFlex: 5,
-                  ),
-                  const DigitDivider(),
-                  LabelValueItem(
-                    label: localizations
-                        .translate(i18.stockReconciliationMetrics.stockLost),
-                    value: _stockMetrics['stockLost']!.toStringAsFixed(0),
-                    labelFlex: 5,
-                  ),
-                  const DigitDivider(),
-                  LabelValueItem(
-                    label: localizations
-                        .translate(i18.stockReconciliationMetrics.stockDamaged),
-                    value: _stockMetrics['stockDamaged']!.toStringAsFixed(0),
-                    labelFlex: 5,
-                  ),
-                  const DigitDivider(),
-                  LabelValueItem(
-                    label: localizations
-                        .translate(i18.stockReconciliationMetrics.stockOnHand),
-                    value: _stockMetrics['stockInHand']!.toStringAsFixed(0),
-                    labelFlex: 5,
+                  InfoCard(
+                    type: InfoType.info,
+                    description: localizations.translate(
+                      'STOCK_RECONCILIATION_INFO_CARD_CONTENT',
+                    ),
+                    title: localizations
+                        .translate('STOCK_RECONCILIATION_INFO_CARD_TITLE'),
                   ),
                 ],
-              ),
-              const SizedBox(height: spacer2),
-              InfoCard(
-                type: InfoType.info,
-                description: localizations.translate(
-                  'Please do a manual count of the stock and enter the value below',
-                ),
-                title: localizations.translate('Note'),
-              ),
-            ],
-          ],
+              ],
+            );
+          },
         );
-      },
-    );
       },
     );
   }
@@ -334,123 +404,46 @@ class _StockReconciliationCardState
                 : null, // Set to null when invalid - triggers 'required' validation
           ),
         );
+
+    // Also store stockInHand as a separate field for visibility conditions
+    if (isValidSelection) {
+      context.read<FormsBloc>().add(
+            FormsEvent.updateField(
+              schemaKey: widget.pageSchema,
+              context: context,
+              key: 'stockInHand',
+              value: _stockMetrics['stockInHand']?.toInt() ?? 0,
+            ),
+          );
+    }
   }
 
   void _calculateStockMetrics(FlowCrudState? flowState) {
     if (_selectedFacility == null || _selectedProduct == null) {
       setState(() {
-        _stockMetrics = {
-          'stockReceived': 0,
-          'stockIssued': 0,
-          'stockReturned': 0,
-          'stockLost': 0,
-          'stockDamaged': 0,
-          'stockInHand': 0,
-        };
+        _stockMetrics = StockCalculationUtils.emptyMetrics;
       });
       return;
     }
 
-    // Get stock data filtered by facility and product
-    // Following the pattern from StockReconciliationBloc._handleCalculate
-    final stockList = _getStockList(flowState);
+    // Get stock data from flow state using common utility
+    final stockList = StockCalculationUtils.extractStockListFromWrapper(
+      flowState?.stateWrapper,
+    );
     final facilityId = _selectedFacility!.id;
     final productId = _selectedProduct!.id;
     final loggedInUserUuid = FlowBuilderSingleton().loggedInUserUuid;
 
-    // Filter stocks matching the bloc's logic:
-    // 1. Filter by productVariantId
-    // 2. Filter by facility (either as receiver or sender)
-    // 3. Filter by logged-in user (stocks created by current user only)
-    final filteredStock = stockList.where((stock) {
-      // Must match product
-      if (stock.productVariantId != productId) return false;
-
-      // Must match facility (as receiver OR sender)
-      final matchesReceiver = stock.receiverId == facilityId;
-      final matchesSender = stock.senderId == facilityId;
-      if (!matchesReceiver && !matchesSender) return false;
-
-      // Must be created by logged-in user (matching StockReconciliationBloc logic)
-      if (stock.auditDetails?.createdBy != loggedInUserUuid) return false;
-
-      return true;
-    }).toList();
-
-    debugPrint(
-        'Calculating metrics for ${filteredStock.length} stocks (facility=$facilityId, product=$productId, user=$loggedInUserUuid)');
-
-    // Calculate metrics following StockReconciliationBloc pattern
-    double stockReceived = 0;
-    double stockIssued = 0;
-    double stockReturned = 0;
-    double stockLost = 0;
-    double stockDamaged = 0;
-
-    for (final stock in filteredStock) {
-      final transactionType = stock.transactionType?.toUpperCase() ?? '';
-      final transactionReason = stock.transactionReason?.toUpperCase() ?? '';
-      final quantity = num.tryParse(stock.quantity ?? '0') ?? 0.0;
-
-      // Check if this facility is the receiver or sender
-      final isReceiver = stock.receiverId == facilityId;
-      final isSender = stock.senderId == facilityId;
-
-      debugPrint(
-          'Processing stock: type=$transactionType, reason=$transactionReason, qty=$quantity, isReceiver=$isReceiver, isSender=$isSender');
-
-      // Stock Received: This facility is the receiver AND transactionType == RECEIVED
-      // Accept both: transactionReason == 'RECEIVED' OR transactionReason is empty/null (for regular receipts)
-      if (isReceiver && transactionType == 'RECEIVED') {
-        if (transactionReason == 'RETURNED') {
-          // Stock Returned: transactionReason == RETURNED
-          stockReturned += quantity;
-          debugPrint('  -> Counted as RETURNED: $quantity');
-        } else if (transactionReason.isEmpty ||
-            transactionReason == 'RECEIVED') {
-          // Regular stock receipt: transactionReason is null/empty or explicitly 'RECEIVED'
-          stockReceived += quantity;
-          debugPrint('  -> Counted as RECEIVED: $quantity');
-        }
-      }
-      // Stock Issued/Lost/Damaged: This facility is the sender AND transactionType == DISPATCHED
-      else if (isSender && transactionType == 'DISPATCHED') {
-        if (transactionReason == 'LOST_IN_TRANSIT' ||
-            transactionReason == 'LOST_IN_STORAGE') {
-          // Stock Lost
-          stockLost += quantity;
-          debugPrint('  -> Counted as LOST: $quantity');
-        } else if (transactionReason == 'DAMAGED_IN_TRANSIT' ||
-            transactionReason == 'DAMAGED_IN_STORAGE') {
-          // Stock Damaged
-          stockDamaged += quantity;
-          debugPrint('  -> Counted as DAMAGED: $quantity');
-        } else if (transactionReason.isEmpty) {
-          // Regular dispatch (issued)
-          stockIssued += quantity;
-          debugPrint('  -> Counted as ISSUED: $quantity');
-        }
-      } else {
-        debugPrint('  -> NOT counted (not matching facility)');
-      }
-    }
-
-    // Stock in hand = (received + returned) - (issued + damaged + lost)
-    final stockInHand = (stockReceived + stockReturned) -
-        (stockIssued + stockDamaged + stockLost);
-
-    debugPrint(
-        'Metrics: received=$stockReceived, issued=$stockIssued, returned=$stockReturned, lost=$stockLost, damaged=$stockDamaged, inHand=$stockInHand');
+    // Calculate metrics using common utility
+    final calculatedMetrics = StockCalculationUtils.calculateStockMetrics(
+      stockList: stockList,
+      facilityId: facilityId,
+      productId: productId,
+      loggedInUserUuid: loggedInUserUuid,
+    );
 
     setState(() {
-      _stockMetrics = {
-        'stockReceived': stockReceived.toDouble(),
-        'stockIssued': stockIssued.toDouble(),
-        'stockReturned': stockReturned.toDouble(),
-        'stockLost': stockLost.toDouble(),
-        'stockDamaged': stockDamaged.toDouble(),
-        'stockInHand': stockInHand.toDouble(),
-      };
+      _stockMetrics = calculatedMetrics;
     });
 
     // Update form data with the calculated metrics
@@ -473,7 +466,35 @@ class _StockReconciliationCardState
           ),
         );
 
-    debugPrint('Updated form data with calculated metrics: $_stockMetrics');
+    // Also store stockInHand as a separate field for visibility conditions
+    // This allows visibility conditions like: manualCount != stockInHand
+    if (isValidSelection) {
+      final stockInHandValue = _stockMetrics['stockInHand']?.toInt() ?? 0;
+
+      context.read<FormsBloc>().add(
+            FormsEvent.updateField(
+              schemaKey: widget.pageSchema,
+              context: context,
+              key: 'stockInHand',
+              value: stockInHandValue,
+            ),
+          );
+
+      // Set manualCount default value to stockInHand only on first initialization
+      // This pre-fills the field so user only needs to change if count differs
+      // Don't overwrite if user has already edited the value
+      if (!_manualCountInitialized) {
+        _manualCountInitialized = true;
+        context.read<FormsBloc>().add(
+              FormsEvent.updateField(
+                schemaKey: widget.pageSchema,
+                context: context,
+                key: 'manualCount',
+                value: stockInHandValue,
+              ),
+            );
+      }
+    }
   }
 
   List<FacilityModel> _getFacilities(FlowCrudState? flowState) {
@@ -518,7 +539,7 @@ class _StockReconciliationCardState
         }
       }
     } catch (e) {
-      debugPrint('Error parsing facility data: $e');
+      // Silently handle parsing errors
     }
 
     return [];
@@ -546,33 +567,7 @@ class _StockReconciliationCardState
         }
       }
     } catch (e) {
-      debugPrint('Error parsing product variant data: $e');
-    }
-
-    return [];
-  }
-
-  List<StockModel> _getStockList(FlowCrudState? flowState) {
-    try {
-      // Access data from FlowCrudState's stateWrapper
-      final stateWrapper = flowState?.stateWrapper;
-      if (stateWrapper == null || stateWrapper.isEmpty) return [];
-
-      // stateWrapper is a List<Map<String, List<dynamic>>>
-      for (final wrapperMap in stateWrapper) {
-        if (wrapperMap is Map && wrapperMap.containsKey('StockModel')) {
-          final stockData = wrapperMap['StockModel'] as List?;
-          if (stockData != null && stockData.isNotEmpty) {
-            return stockData
-                .map((e) => e is StockModel
-                    ? e
-                    : StockModelMapper.fromMap(e as Map<String, dynamic>))
-                .toList();
-          }
-        }
-      }
-    } catch (e) {
-      debugPrint('Error parsing stock data: $e');
+      // Silently handle parsing errors
     }
 
     return [];
@@ -581,17 +576,12 @@ class _StockReconciliationCardState
   void _triggerStockSearchIfReady(BuildContext context) {
     // Only trigger search if both facility and product are selected
     if (_selectedFacility == null || _selectedProduct == null) {
-      debugPrint('Skipping search - facility or product not selected');
       return;
     }
-
-    debugPrint(
-        'Triggering TWO stock searches for facility=${_selectedFacility!.id}, product=${_selectedProduct!.id}');
 
     // Get tenantId from singleton
     final tenantId = FlowBuilderSingleton().selectedProject?.tenantId;
     if (tenantId == null) {
-      debugPrint('ERROR: TenantId not found in singleton');
       return;
     }
 
@@ -621,13 +611,9 @@ class _StockReconciliationCardState
         orderBy: null,
       );
 
-      debugPrint(
-          'Fetching all stocks for product=${_selectedProduct!.id}, facility filter will be applied in calculation');
-
       context.read<CrudBloc>().add(CrudEventSearch(searchParams));
-    } catch (e, stackTrace) {
-      debugPrint('ERROR creating search params: $e');
-      debugPrint('Stack trace: $stackTrace');
+    } catch (e) {
+      // Search params creation failed - silently ignore
     }
   }
 }

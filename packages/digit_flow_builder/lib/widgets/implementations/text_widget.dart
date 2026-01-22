@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../utils/utils.dart';
+import '../../utils/widget_parsers.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 import '../localization_context.dart';
@@ -35,9 +36,15 @@ class TextWidget implements FlowWidget {
     final styleKey = properties['style']?.toString();
     final textStyle = _parseTextStyle(context, styleKey);
 
-    return Text(
-      resolvedValue ?? "--",
-      style: textStyle,
+    final displayValue = (resolvedValue ?? '')
+        .replaceAll(RegExp(r'\bnull\b', caseSensitive: false), '--');
+
+    return WidgetParsers.wrapWithBottomGap(
+      Text(
+        displayValue.isEmpty ? '--' : displayValue,
+        style: textStyle,
+      ),
+      properties,
     );
   }
 

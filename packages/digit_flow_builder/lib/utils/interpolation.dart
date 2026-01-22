@@ -182,10 +182,12 @@ String interpolateWithCrudStates({
               ...stateData.modelMap,
               if (item != null) ...item,
             };
-            return resolveValueRaw(placeholder, contextData, stateData: stateData);
+            return resolveValueRaw(placeholder, contextData,
+                stateData: stateData);
           }).toList();
 
-    return FunctionRegistry.call(fnName, resolvedArgs, stateData)?.toString() ?? '';
+    return FunctionRegistry.call(fnName, resolvedArgs, stateData)?.toString() ??
+        '';
   });
 
   // --- Normal placeholder resolution ---
@@ -272,7 +274,8 @@ String interpolateWithCrudStates({
   });
 
   // --- Fallback: Handle modelName.index.field patterns like individual.0.dateOfBirth ---
-  final modelPathRegex = RegExp(r'\{\{\s*([a-zA-Z_]\w*)\.(\d+)(?:\.([a-zA-Z_][\w.]*))?\s*\}\}');
+  final modelPathRegex =
+      RegExp(r'\{\{\s*([a-zA-Z_]\w*)\.(\d+)(?:\.([a-zA-Z_][\w.]*))?\s*\}\}');
   template = template.replaceAllMapped(modelPathRegex, (match) {
     final modelName = match.group(1)!;
     final indexStr = match.group(2)!;
@@ -366,7 +369,9 @@ Map<String, dynamic> preprocessConfigWithState(
         }
 
         result[key] = value; // keep actionType as is
-      } else if ((key == "visible" || key == "disabled" || key == "hidden") && value is String && value.contains('{{')) {
+      } else if ((key == "visible" || key == "disabled") &&
+          value is String &&
+          value.contains('{{')) {
         // Preprocess visible/disabled property with listIndex for correct resolution
         // Only preprocess if listIndex is provided, otherwise keep original
         // to be processed later when listIndex is available

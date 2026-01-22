@@ -1268,6 +1268,8 @@ class ComputedListEvaluator {
   /// Extracts variable names from the condition string
   static Set<String> extractKeys(String condition) {
     final keywords = {"and", "or", "not", "true", "false"};
+    // Mathematical functions to exclude from variable extraction
+    final functions = {"MIN", "MAX", "CEIL", "FLOOR", "ROUND", "ABS", "SQRT", "POW", "SUM", "AVG"};
     final splitPattern = RegExp(r'and|or|not');
     final identifierPattern = RegExp(r'^[a-zA-Z_][a-zA-Z0-9_]*$');
 
@@ -1290,8 +1292,10 @@ class ComputedListEvaluator {
           .where((e) => e.isNotEmpty);
 
       for (final part in parts) {
-        // ✅ Only keep identifier-like parts, ignore numbers & operators
-        if (identifierPattern.hasMatch(part) && !keywords.contains(part)) {
+        // ✅ Only keep identifier-like parts, ignore numbers, operators & function names
+        if (identifierPattern.hasMatch(part) &&
+            !keywords.contains(part) &&
+            !functions.contains(part.toUpperCase())) {
           keys.add(part);
         }
       }
@@ -1300,29 +1304,87 @@ class ComputedListEvaluator {
     return keys;
   }
 
-  /// Applies transformations such as age calculations
+  /// Applies transformations such as age calculations and type conversions
   static dynamic applyTransformation(
       Map<String, dynamic> item, Map<String, dynamic> transform) {
     final type = transform['type'];
     final source = transform['source'];
+    final value = item[source];
 
-    if (type == 'ageInMonths' && source == 'dateOfBirth') {
-      return calculateAgeInMonths(item[source]);
+    switch (type) {
+      case 'ageInMonths':
+        return calculateAgeInMonths(value);
+      case 'int':
+        if (value is int) return value;
+        if (value is num) return value.toInt();
+        if (value is String) return int.tryParse(value) ?? 0;
+        return 0;
+      case 'double':
+        if (value is double) return value;
+        if (value is num) return value.toDouble();
+        if (value is String) return double.tryParse(value) ?? 0.0;
+        return 0.0;
+      case 'bool':
+        if (value is bool) return value;
+        if (value is String) {
+          return value.toLowerCase() == 'true' || value == '1';
+        }
+        if (value is num) return value != 0;
+        return false;
+      default:
+        return value; // fallback - return original value
     }
-    return item[source]; // fallback
   }
 
   static int calculateAgeInMonths(String dob) {
     final dateOfBirth = parseDate(dob);
     final age = DigitDateUtils.calculateAge(dateOfBirth);
-    return age.years*12 + age.months;
+    return age.years * 12 + age.months;
   }
 
   /// Builds the context map by extracting only required keys and applying transformations
+  /// Infers the expected type of a variable from the condition and returns default value
+  static dynamic _getDefaultValueForMissingKey(
+    String key,
+    String resolvedCondition,
+  ) {
+    // Create patterns to match the key in different comparison contexts
+    final patterns = [
+      RegExp('$key\\s*==\\s*(TRUE|FALSE)', caseSensitive: false),
+      RegExp('$key\\s*!=\\s*(TRUE|FALSE)', caseSensitive: false),
+      RegExp('(TRUE|FALSE)\\s*==\\s*$key', caseSensitive: false),
+      RegExp('(TRUE|FALSE)\\s*!=\\s*$key', caseSensitive: false),
+    ];
+
+    // Check if it's a boolean comparison
+    for (final pattern in patterns) {
+      if (pattern.hasMatch(resolvedCondition)) {
+        return 'false'; // Default boolean value as string
+      }
+    }
+
+    // Check if it's a numeric comparison (>=, <=, >, <, ==, !=)
+    final numericPatterns = [
+      RegExp('$key\\s*(>=|<=|>|<|==|!=)\\s*\\d+'),
+      RegExp('\\d+\\s*(>=|<=|>|<|==|!=)\\s*$key'),
+    ];
+
+    for (final pattern in numericPatterns) {
+      if (pattern.hasMatch(resolvedCondition)) {
+        return '0'; // Default numeric value as string
+      }
+    }
+
+    // Default to null for other types
+    return null;
+  }
+
+  /// Updated buildContextForCondition with missing key handling
   static Map<String, dynamic> buildContextForCondition(
     Map<String, dynamic> ctx,
     Map<String, dynamic> conf,
     Set<String> requiredKeys,
+    String resolvedCondition, // ⭐ Add condition parameter
   ) {
     final evaluateConfig = conf['evaluateCondition'] as Map<String, dynamic>?;
     if (evaluateConfig == null) return {};
@@ -1352,7 +1414,8 @@ class ComputedListEvaluator {
 
       // Merge additionalFields if exists
       if (contextAsMap['additionalFields'] is Map<String, dynamic>) {
-        final additional = contextAsMap['additionalFields'] as Map<String, dynamic>;
+        final additional =
+            contextAsMap['additionalFields'] as Map<String, dynamic>;
 
         if (additional['fields'] is List) {
           final fieldsList = additional['fields'] as List;
@@ -1386,6 +1449,17 @@ class ComputedListEvaluator {
       }
     }
 
+    // ⭐ Handle missing required keys with default values
+    for (final key in requiredKeys) {
+      if (!contextMap.containsKey(key)) {
+        final defaultValue =
+            _getDefaultValueForMissingKey(key, resolvedCondition);
+        contextMap[key] = defaultValue;
+        debugPrint(
+            'Missing key "$key" in context, using default: $defaultValue');
+      }
+    }
+
     return contextMap;
   }
 
@@ -1411,7 +1485,8 @@ class ComputedListEvaluator {
       final requiredKeys = extractKeys(resolvedCondition);
 
       // Build the context map with only required keys and applying transformations
-      final flatContext = buildContextForCondition(ctx, conf, requiredKeys);
+      final flatContext =
+          buildContextForCondition(ctx, conf, requiredKeys, resolvedCondition);
 
       if (resolvedCondition == null || resolvedCondition.isEmpty) continue;
 
@@ -1424,6 +1499,18 @@ class ComputedListEvaluator {
         final result = parser.parse;
 
         if (result['isSuccess'] && result['value'] == true) {
+          results.add(item);
+        } else if (result['isSuccess'] && result['value'] is num) {
+          final computedValue = result['value'];
+
+          if (item['ProductVariants'] is List) {
+            for (final variant in item['ProductVariants']) {
+              if (variant is Map) {
+                variant['quantity'] = computedValue;
+              }
+            }
+          }
+
           results.add(item);
         }
       } catch (e) {

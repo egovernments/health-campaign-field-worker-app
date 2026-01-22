@@ -133,6 +133,49 @@ class SearchStateManager {
     }
   }
 
+  /// Remove filters by their 'key' field values across ALL searchNames for a screen
+  /// This is useful when filters are added with different searchNames but need to be cleared together
+  void removeFiltersByKeysForScreen(
+    String screenKey,
+    List<String> filterKeys, {
+    bool triggerSearch = true,
+  }) {
+    int totalRemoved = 0;
+    String? lastModifiedKey;
+
+    // Find all composite keys for this screen
+    final keysToCheck = _state.keys.where((k) => k.startsWith('$screenKey::')).toList();
+
+    for (final compositeKey in keysToCheck) {
+      final existing =
+          List<dynamic>.from(_state[compositeKey]!['filters'] as List? ?? []);
+      final beforeCount = existing.length;
+
+      existing.removeWhere((f) => f is Map && filterKeys.contains(f['key']));
+
+      if (beforeCount != existing.length) {
+        _state[compositeKey]!['filters'] = existing;
+        totalRemoved += beforeCount - existing.length;
+        lastModifiedKey = compositeKey;
+        debugPrint(
+            'SearchStateManager: Removed ${beforeCount - existing.length} filters for keys=$filterKeys from $compositeKey');
+      }
+    }
+
+    debugPrint(
+        'SearchStateManager: Total removed $totalRemoved filters for keys=$filterKeys across screen $screenKey');
+
+    // Trigger search on the default composite key if any filters were removed
+    if (triggerSearch && totalRemoved > 0) {
+      final defaultKey = _compositeKey(screenKey, 'default');
+      if (_searchCallbacks.containsKey(defaultKey)) {
+        _notifyChange(defaultKey);
+      } else if (lastModifiedKey != null && _searchCallbacks.containsKey(lastModifiedKey)) {
+        _notifyChange(lastModifiedKey);
+      }
+    }
+  }
+
   /// Get accumulated filters for a specific searchName
   List<dynamic> getFilters(String screenKey, String searchName) {
     final compositeKey = _compositeKey(screenKey, searchName);
@@ -141,15 +184,23 @@ class SearchStateManager {
   }
 
   /// Get ALL accumulated filters across all searchNames for a screen
+  /// Deduplicates by filter 'key' field - if same key exists in multiple searchNames,
+  /// the later one (by iteration order) wins
   List<dynamic> getAllFilters(String screenKey) {
-    final allFilters = <dynamic>[];
+    final filtersByKey = <String, dynamic>{};
     for (final entry in _state.entries) {
       if (entry.key.startsWith('$screenKey::')) {
         final filters = entry.value['filters'] as List? ?? [];
-        allFilters.addAll(filters);
+        for (final filter in filters) {
+          if (filter is Map && filter['key'] != null) {
+            // Deduplicate by filter key - later entries override earlier ones
+            filtersByKey[filter['key'].toString()] = filter;
+          }
+        }
       }
     }
-    debugPrint('SearchStateManager: getAllFilters for $screenKey found ${allFilters.length} filters');
+    final allFilters = filtersByKey.values.toList();
+    debugPrint('SearchStateManager: getAllFilters for $screenKey found ${allFilters.length} filters (deduplicated by key)');
     return allFilters;
   }
 

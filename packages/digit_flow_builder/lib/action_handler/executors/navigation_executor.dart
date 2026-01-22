@@ -4,7 +4,6 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/flow_crud_bloc.dart';
 import '../../blocs/state_wrapper_builder.dart';
 import '../../flow_builder.dart';
 import '../../utils/interpolation.dart';
@@ -58,27 +57,32 @@ class NavigationExecutor extends ActionExecutor {
     }
 
     if (navData != null) {
-      debugPrint('NAVIGATION_EXECUTOR: Processing navData with ${navData.length} entries');
-      debugPrint('NAVIGATION_EXECUTOR: contextData keys: ${contextData.keys.toList()}');
-      debugPrint('NAVIGATION_EXECUTOR: contextData navigation: ${contextData['navigation']}');
+      debugPrint(
+          'NAVIGATION_EXECUTOR: Processing navData with ${navData.length} entries');
+      debugPrint(
+          'NAVIGATION_EXECUTOR: contextData keys: ${contextData.keys.toList()}');
+      debugPrint(
+          'NAVIGATION_EXECUTOR: contextData navigation: ${contextData['navigation']}');
 
       final resolvedData = navData.map((entry) {
         final key = entry['key'];
         final rawValue = entry['value'];
 
-        debugPrint('NAVIGATION_EXECUTOR: Resolving key=$key, rawValue=$rawValue');
+        debugPrint(
+            'NAVIGATION_EXECUTOR: Resolving key=$key, rawValue=$rawValue');
 
         // Try to resolve from state form data first, fallback to contextData
-        dynamic resolvedValue = resolveValue(rawValue, stateFormData);
-        debugPrint('NAVIGATION_EXECUTOR: After stateFormData resolve: $resolvedValue');
-
+        dynamic resolvedValue = resolveValue(
+            rawValue, stateFormData ?? currentState?.stateWrapper?.first);
         if (resolvedValue == rawValue || resolvedValue == null) {
           // If not resolved from state, try contextData
           resolvedValue = resolveValue(rawValue, contextData);
-          debugPrint('NAVIGATION_EXECUTOR: After contextData resolve: $resolvedValue');
+          debugPrint(
+              'NAVIGATION_EXECUTOR: After contextData resolve: $resolvedValue');
         }
 
-        debugPrint('NAVIGATION_EXECUTOR: Final resolved key=$key, value=$resolvedValue');
+        debugPrint(
+            'NAVIGATION_EXECUTOR: Final resolved key=$key, value=$resolvedValue');
 
         return {
           "key": key,
@@ -92,14 +96,23 @@ class NavigationExecutor extends ActionExecutor {
       navigationProperties['data'] = resolvedData;
     }
 
-    NavigationRegistry.navigateTo(navigationProperties);
-    final entities = contextData['entities'];
     final config = FlowRegistry.getByName(action.properties['name']);
     final targetName = config?["name"] ?? action.properties['name'];
 
     // Build correct screen key with type prefix (FORM::, TEMPLATE::)
     final targetScreenKey =
         targetType != null ? '$targetType::$targetName' : targetName;
+
+    // Clear target screen's FlowCrudState before navigation
+    // This ensures the new page instance starts fresh without old state
+    // Done AFTER all previous actions (like REVERSE_TRANSFORM) have read source data
+    FlowCrudStateRegistry().clear(targetScreenKey);
+    if (targetName != targetScreenKey) {
+      FlowCrudStateRegistry().clear(targetName);
+    }
+
+    NavigationRegistry.navigateTo(navigationProperties);
+    final entities = contextData['entities'];
 
     if (entities != null) {
       if (config?['wrapperConfig'] != null) {
@@ -159,7 +172,7 @@ class NavigationExecutor extends ActionExecutor {
               if (wrapperItem is Map<String, dynamic>) {
                 // Update each entity type in the wrapper item
                 for (final updatedEntity in updatedEntities) {
-                  final entityType = updatedEntity.runtimeType.toString();
+                  final entityType = getEntityTypeName(updatedEntity);
                   if (wrapperItem.containsKey(entityType)) {
                     wrapperItem[entityType] = updatedEntity;
                     debugPrint('NAVIGATION: Updated $entityType in wrapper');

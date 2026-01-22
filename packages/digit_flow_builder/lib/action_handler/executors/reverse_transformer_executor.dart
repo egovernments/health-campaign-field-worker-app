@@ -6,6 +6,7 @@ import '../../blocs/flow_crud_bloc.dart';
 import '../../data/transformer_config.dart';
 import '../../flow_builder.dart';
 import '../../utils/interpolation.dart';
+import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import 'action_executor.dart';
 
@@ -61,6 +62,7 @@ class ReverseTransformerExecutor extends ActionExecutor {
 
       // Get entities from stateWrapper
       List<EntityModel> modelInstances = [];
+      final seen = <EntityModel>{};
 
       // Check if data parameter is provided with specific entities
       final dataList = action.properties['data'] as List<dynamic>?;
@@ -72,16 +74,8 @@ class ReverseTransformerExecutor extends ActionExecutor {
             final value = entry['value'];
 
             if (key == 'entities' && value != null) {
-              // Value could be already resolved entity/list or a template string
-              if (value is EntityModel) {
-                modelInstances.add(value);
-              } else if (value is List) {
-                // Extract entities from the list
-                modelInstances.addAll(_extractEntitiesFromWrapper(value));
-              } else if (value is Map<String, dynamic>) {
-                // Extract entities from map structure
-                _extractFromMap(value, modelInstances);
-              }
+              // Extract entities using unified recursive method with deduplication
+              _extractEntitiesRecursive(value, modelInstances, seen);
             }
           }
         }
@@ -120,7 +114,7 @@ class ReverseTransformerExecutor extends ActionExecutor {
       // Filter by entity types if specified
       if (entityTypes != null && entityTypes.isNotEmpty) {
         modelInstances = modelInstances.where((entity) {
-          return entityTypes.contains(entity.runtimeType.toString());
+          return entityTypes.contains(getEntityTypeName(entity));
         }).toList();
       }
 
@@ -139,26 +133,18 @@ class ReverseTransformerExecutor extends ActionExecutor {
 
       // Update the current screen's state with the form data
       if (currentScreenKey != null) {
-        final currentState = FlowCrudStateRegistry().get(currentScreenKey);
-        final existingFormData = currentState?.formData ?? {};
-
-
-        final updatedState =
-            (currentState ?? const FlowCrudState()).copyWith(
-          formData: formData,
-          stateWrapper: currentState?.stateWrapper,
+        final updatedState = FlowCrudState(
+          formData: Map<String, dynamic>.from(formData),
+          stateWrapper:
+          FlowCrudStateRegistry().get(currentScreenKey)?.stateWrapper,
         );
 
         FlowCrudStateRegistry().update(currentScreenKey, updatedState);
       }
-
       // Return updated context with form data and existing models for update
       return {
         ...contextData,
-        'formData': {
-          ...?contextData['formData'] as Map<String, dynamic>?,
-          ...formData,
-        },
+        'formData': formData,
         'reverseTransformResult': formData,
         // Pass existing models for updateEntitiesFromForm in edit mode
         'existingModels': modelInstances,
@@ -184,38 +170,41 @@ class ReverseTransformerExecutor extends ActionExecutor {
   /// The stateWrapper may contain wrapped objects or direct EntityModel instances
   List<EntityModel> _extractEntitiesFromWrapper(List<dynamic> wrapper) {
     final entities = <EntityModel>[];
+    final seen = <EntityModel>{};
 
-    for (final item in wrapper) {
-      if (item is EntityModel) {
-        entities.add(item);
-      } else if (item is Map<String, dynamic>) {
-        // Try to extract entities from wrapped objects
-        _extractFromMap(item, entities);
-      } else if (item is List) {
-        // Recursively extract from nested lists
-        entities.addAll(_extractEntitiesFromWrapper(item));
-      }
-    }
+    _extractEntitiesRecursive(wrapper, entities, seen);
 
     return entities;
   }
 
-  /// Recursively extracts EntityModel instances from a map
-  void _extractFromMap(Map<String, dynamic> map, List<EntityModel> entities) {
-    for (final value in map.values) {
-      if (value is EntityModel) {
-        entities.add(value);
-      } else if (value is List) {
-        for (final item in value) {
-          if (item is EntityModel) {
-            entities.add(item);
-          } else if (item is Map<String, dynamic>) {
-            _extractFromMap(item, entities);
-          }
-        }
-      } else if (value is Map<String, dynamic>) {
-        _extractFromMap(value, entities);
+  /// Recursively extracts entities from any dynamic structure
+  void _extractEntitiesRecursive(
+    dynamic item,
+    List<EntityModel> entities,
+    Set<EntityModel> seen,
+  ) {
+    if (item is EntityModel) {
+      if (!seen.contains(item)) {
+        seen.add(item);
+        entities.add(item);
       }
+    } else if (item is Map<String, dynamic>) {
+      _extractFromMap(item, entities, seen);
+    } else if (item is List) {
+      for (final element in item) {
+        _extractEntitiesRecursive(element, entities, seen);
+      }
+    }
+  }
+
+  /// Recursively extracts EntityModel instances from a map
+  void _extractFromMap(
+    Map<String, dynamic> map,
+    List<EntityModel> entities,
+    Set<EntityModel> seen,
+  ) {
+    for (final value in map.values) {
+      _extractEntitiesRecursive(value, entities, seen);
     }
   }
 }

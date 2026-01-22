@@ -25,11 +25,6 @@ class DropdownWidget implements FlowWidget {
     // Get screen key for navigation params resolution
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
 
-    // Get form data and widget data from registry to check for stored values
-    final currentState =
-        screenKey != null ? FlowCrudStateRegistry().get(screenKey) : null;
-    final formData = currentState?.formData ?? {};
-    final widgetData = currentState?.widgetData ?? {};
     // For resolving item-specific fields (like labels), we use the current item or first item
     final itemStateData = (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
         ? crudCtx.item
@@ -54,6 +49,72 @@ class DropdownWidget implements FlowWidget {
       return const SizedBox.shrink();
     }
 
+    final displayKey = json['displayKey'] as String? ?? 'name';
+    final valueKey = json['valueKey'] as String? ?? 'id';
+
+    // If no screenKey, fall back to non-reactive behavior
+    if (screenKey == null) {
+      return _buildDropdownContent(
+        json: json,
+        context: context,
+        onAction: onAction,
+        localization: localization,
+        crudCtx: crudCtx,
+        screenKey: screenKey,
+        itemStateData: itemStateData,
+        label: label,
+        key: key,
+        isRequired: isRequired,
+        displayKey: displayKey,
+        valueKey: valueKey,
+        formData: {},
+        widgetData: {},
+      );
+    }
+
+    // Wrap in ValueListenableBuilder to react to state changes
+    return ValueListenableBuilder<FlowCrudState?>(
+      valueListenable: FlowCrudStateRegistry().listen(screenKey),
+      builder: (context, flowState, _) {
+        final formData = flowState?.formData ?? {};
+        final widgetData = flowState?.widgetData ?? {};
+
+        return _buildDropdownContent(
+          json: json,
+          context: context,
+          onAction: onAction,
+          localization: localization,
+          crudCtx: crudCtx,
+          screenKey: screenKey,
+          itemStateData: itemStateData,
+          label: label,
+          key: key,
+          isRequired: isRequired,
+          displayKey: displayKey,
+          valueKey: valueKey,
+          formData: formData,
+          widgetData: widgetData,
+        );
+      },
+    );
+  }
+
+  Widget _buildDropdownContent({
+    required Map<String, dynamic> json,
+    required BuildContext context,
+    required void Function(ActionConfig) onAction,
+    required dynamic localization,
+    required CrudItemContext? crudCtx,
+    required String? screenKey,
+    required Map<String, dynamic>? itemStateData,
+    required String label,
+    required String? key,
+    required bool isRequired,
+    required String displayKey,
+    required String valueKey,
+    required Map<String, dynamic> formData,
+    required Map<String, dynamic> widgetData,
+  }) {
     // Resolve source data (support both 'source' and 'enums' fields)
     dynamic sourceData;
     final sourceField = json['source'] ?? json['enums'];
@@ -166,9 +227,6 @@ class DropdownWidget implements FlowWidget {
       }
     }
 
-    final displayKey = json['displayKey'] as String? ?? 'name';
-    final valueKey = json['valueKey'] as String? ?? 'id';
-
     // Get current selected value from state
     // Priority: widgetData (persisted selection) > itemStateData (entity data) > formData
     dynamic currentValue;
@@ -207,6 +265,7 @@ class DropdownWidget implements FlowWidget {
       label: label,
       isRequired: isRequired,
       child: DigitDropdown(
+        key: ValueKey('${screenKey}_${key}_${currentValue ?? ''}'),
         selectedOption: selectedItem,
         sentenceCaseEnabled: true,
         items: items,

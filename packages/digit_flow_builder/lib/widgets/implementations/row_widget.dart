@@ -21,28 +21,31 @@ class RowWidget implements FlowWidget {
     final stateData = crudCtx?.stateData;
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
 
-    return Row(
-      mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
-      mainAxisAlignment: WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),
-      children: (json['children'] as List).map<Widget>((childJson) {
-        final processedChild = stateData != null
-            ? preprocessConfigWithState(
-                Map<String, dynamic>.from(childJson),
-                stateData,
-                listIndex: crudCtx?.listIndex,
-                item: crudCtx?.item,
-              )
-            : Map<String, dynamic>.from(childJson);
+    return WidgetParsers.wrapWithBottomGap(
+      Row(
+        mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
+        mainAxisAlignment: WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),
+        children: (json['children'] as List).map<Widget>((childJson) {
+          final processedChild = stateData != null
+              ? preprocessConfigWithState(
+                  Map<String, dynamic>.from(childJson),
+                  stateData,
+                  listIndex: crudCtx?.listIndex,
+                  item: crudCtx?.item,
+                )
+              : Map<String, dynamic>.from(childJson);
 
-        return CrudItemContext(
-          stateData: stateData,
-          listIndex: crudCtx?.listIndex,
-          item: crudCtx?.item,
-          screenKey: crudCtx?.screenKey,
-          child: LayoutMapper.map(processedChild, stateData, context, onAction,
-              item: crudCtx?.item, listIndex: crudCtx?.listIndex),
-        );
-      }).toList(),
+          return CrudItemContext(
+            stateData: stateData,
+            listIndex: crudCtx?.listIndex,
+            item: crudCtx?.item,
+            screenKey: crudCtx?.screenKey,
+            child: LayoutMapper.map(processedChild, stateData, context, onAction,
+                item: crudCtx?.item, listIndex: crudCtx?.listIndex),
+          );
+        }).toList(),
+      ),
+      props,
     );
   }
 }

@@ -10,6 +10,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i2;
 import 'package:digit_scanner/blocs/app_localization.dart' as _i4;
+import 'package:digit_scanner/models/scanner_validation.dart' as _i5;
 import 'package:digit_scanner/pages/qr_scanner.dart' as _i1;
 import 'package:flutter/material.dart' as _i3;
 
@@ -17,7 +18,8 @@ abstract class $DigitScannerPackageRoute extends _i2.AutoRouterModule {
   @override
   final Map<String, _i2.PageFactory> pagesMap = {
     DigitScannerRoute.name: (routeData) {
-      final args = routeData.argsAs<DigitScannerRouteArgs>();
+      final args = routeData.argsAs<DigitScannerRouteArgs>(
+          orElse: () => const DigitScannerRouteArgs());
       return _i2.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i1.DigitScannerPage(
@@ -28,6 +30,8 @@ abstract class $DigitScannerPackageRoute extends _i2.AutoRouterModule {
           singleValue: args.singleValue,
           isEditEnabled: args.isEditEnabled,
           regex: args.regex,
+          validations: args.validations,
+          initialQrCodes: args.initialQrCodes,
         ),
       );
     }
@@ -40,11 +44,13 @@ class DigitScannerRoute extends _i2.PageRouteInfo<DigitScannerRouteArgs> {
   DigitScannerRoute({
     _i3.Key? key,
     _i4.ScannerLocalization? appLocalizations,
-    required int quantity,
-    required bool isGS1code,
+    int quantity = 1,
+    bool isGS1code = false,
     bool singleValue = false,
     bool isEditEnabled = false,
     String? regex,
+    List<_i5.ScannerValidation>? validations,
+    List<String>? initialQrCodes,
     List<_i2.PageRouteInfo>? children,
   }) : super(
           DigitScannerRoute.name,
@@ -56,6 +62,8 @@ class DigitScannerRoute extends _i2.PageRouteInfo<DigitScannerRouteArgs> {
             singleValue: singleValue,
             isEditEnabled: isEditEnabled,
             regex: regex,
+            validations: validations,
+            initialQrCodes: initialQrCodes,
           ),
           initialChildren: children,
         );
@@ -70,11 +78,13 @@ class DigitScannerRouteArgs {
   const DigitScannerRouteArgs({
     this.key,
     this.appLocalizations,
-    required this.quantity,
-    required this.isGS1code,
+    this.quantity = 1,
+    this.isGS1code = false,
     this.singleValue = false,
     this.isEditEnabled = false,
     this.regex,
+    this.validations,
+    this.initialQrCodes,
   });
 
   final _i3.Key? key;
@@ -91,8 +101,12 @@ class DigitScannerRouteArgs {
 
   final String? regex;
 
+  final List<_i5.ScannerValidation>? validations;
+
+  final List<String>? initialQrCodes;
+
   @override
   String toString() {
-    return 'DigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled, regex: $regex}';
+    return 'DigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled, regex: $regex, validations: $validations, initialQrCodes: $initialQrCodes}';
   }
 }

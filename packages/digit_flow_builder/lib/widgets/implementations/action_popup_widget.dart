@@ -89,7 +89,7 @@ class ActionPopupWidget implements FlowWidget {
       builder: (ctx) {
         return Popup(
           title: localization?.translate(title) ?? title,
-          description: localization?.translate(description ??"") ?? description,
+          description: description!=null && localization!.translate(description).trim().isNotEmpty ? description : null,
           titleIcon: titleIconName != null
               ? Icon(
                   DigitIconMapping.getIcon(titleIconName),

@@ -118,15 +118,22 @@ class _MultiEntityTabViewState extends State<MultiEntityTabView> {
     // Create a schema with renamed fields for this entity
     final entitySchema = _createSchemaForEntity(entityIndex);
 
+    debugPrint('MultiEntityTabView: Building form for entity $entityIndex');
+    debugPrint('MultiEntityTabView: Navigation params: ${widget.navigationParams}');
+    debugPrint('MultiEntityTabView: Entity schema properties: ${entitySchema.properties?.keys.toList()}');
+
+    final nonHiddenFields = entitySchema.properties?.entries.where((entry) {
+      final fieldSchema = entry.value;
+      return fieldSchema.hidden != true;
+    }).toList() ?? [];
+
+    debugPrint('MultiEntityTabView: Non-hidden fields for entity $entityIndex: ${nonHiddenFields.map((e) => e.key).toList()}');
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(spacer2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: entitySchema.properties?.entries.where((entry) {
-              final fieldSchema = entry.value;
-              // Only render non-hidden fields
-              return fieldSchema.hidden != true;
-            }).map((entry) {
+        children: nonHiddenFields.map((entry) {
               final fieldName = entry.key;
               final fieldSchema = entry.value;
 
@@ -146,8 +153,7 @@ class _MultiEntityTabViewState extends State<MultiEntityTabView> {
                   },
                 ),
               );
-            }).toList() ??
-            [],
+            }).toList(),
       ),
     );
   }
@@ -158,10 +164,25 @@ class _MultiEntityTabViewState extends State<MultiEntityTabView> {
   PropertySchema _createSchemaForEntity(int entityIndex) {
     final originalProperties = widget.schema.properties ?? {};
     final modifiedProperties = <String, PropertySchema>{};
+    final entitySuffix = '_item_$entityIndex';
+
+    debugPrint('MultiEntityTabView: Creating schema for entity $entityIndex');
+    debugPrint('MultiEntityTabView: Original properties: ${originalProperties.keys.toList()}');
 
     for (final entry in originalProperties.entries) {
       final fieldName = entry.key;
       final fieldSchema = entry.value;
+
+      // Skip fields that have any entity suffix (e.g., _item_0, _item_1)
+      // These are pre-created entity-specific fields handled separately
+      if (RegExp(r'_item_\d+$').hasMatch(fieldName)) {
+        // Only include if it matches THIS entity's suffix
+        if (fieldName.endsWith(entitySuffix)) {
+          modifiedProperties[fieldName] = fieldSchema;
+          debugPrint('MultiEntityTabView: Added pre-created field: $fieldName');
+        }
+        continue;
+      }
 
       // Skip readonly/hidden fields from renaming
       final shouldRename = fieldSchema.readOnly != true &&
@@ -170,15 +191,25 @@ class _MultiEntityTabViewState extends State<MultiEntityTabView> {
           fieldName != 'id';
 
       if (shouldRename) {
-        // Rename field for this entity
-        final newFieldName = '${fieldName}_item_$entityIndex';
-        modifiedProperties[newFieldName] = fieldSchema;
+        // Check if a pre-created field with custom validation exists for this entity
+        final targetFieldName = '$fieldName$entitySuffix';
+        if (originalProperties.containsKey(targetFieldName)) {
+          // Skip - the pre-created field will be added when we iterate to it
+          debugPrint('MultiEntityTabView: Skipping $fieldName - pre-created $targetFieldName exists');
+          continue;
+        } else {
+          // Rename field for this entity
+          modifiedProperties[targetFieldName] = fieldSchema;
+          debugPrint('MultiEntityTabView: Renamed $fieldName -> $targetFieldName');
+        }
       } else {
         // Keep as-is
         modifiedProperties[fieldName] = fieldSchema;
+        debugPrint('MultiEntityTabView: Kept as-is: $fieldName');
       }
     }
 
+    debugPrint('MultiEntityTabView: Final properties for entity $entityIndex: ${modifiedProperties.keys.toList()}');
     return widget.schema.copyWith(properties: modifiedProperties);
   }
 }

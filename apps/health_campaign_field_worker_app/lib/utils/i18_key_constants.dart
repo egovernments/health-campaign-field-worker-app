@@ -63,6 +63,7 @@ class Common {
   const Common();
 
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
+  String get permissionContinue => 'PERMISSION_CONTINUE';
 
   String get coreCommonAge => 'CORE_COMMON_AGE';
 
@@ -172,10 +173,10 @@ class Common {
   String get coreCommonErrorDescription =>
       'CORE_COMMON_UNKNOWN_ERROR_DESCRIPTION';
 
-  String get coreCommonPermissionsAlert => 'CORE_COMMON_PERMISSIONS_ALERT';
+  String get permissionsAlert => 'PERMISSIONS_ALERT';
 
-  String get coreCommonEnablePermissionCheckbox =>
-      'CORE_COMMON_ENABLE_PERMISSION_CHECKBOX';
+  String get enablePermissionCheckbox =>
+      'ENABLE_PERMISSION_CHECKBOX';
 
   String get allowPermissions => 'CORE_COMMON_ALLOW_PERMISSIONS';
 
@@ -191,8 +192,12 @@ class Common {
 
   String get lowRamWarning => 'CORE_COMMON_LOW_RAM_WARNING';
 
+  String get lowRamWarningTitle => 'CORE_COMMON_LOW_RAM_WARNING_TITLE';
+
+  String get lowRamWarningDesc => 'CORE_COMMON_LOW_RAM_WARNING_DESC';
+
   String get allowBackgroundActivityDesc =>
-      'CORE_COMMON_ALLOW_BACKGROUND_ACTIVITY';
+      'PERMISSION_HANDLER_ALLOW_BACKGROUND_ACTIVITY';
 
   String get qrInventory => 'QR_INVENTORY';
 

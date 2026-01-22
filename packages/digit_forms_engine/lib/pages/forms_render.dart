@@ -182,6 +182,12 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           registerPagesForValidation(
               widget.currentSchemaKey, schemaObject.pages);
 
+          // Register navigation params for dynamic validation values
+          if (widget.navigationParams != null) {
+            registerNavigationParams(
+                widget.currentSchemaKey, widget.navigationParams!);
+          }
+
           // Check if this page should render as multi-entity tabs
           if (schema.multiEntityConfig != null) {
             return _buildMultiEntityTabPage(context, schema, schemaObject);
@@ -269,6 +275,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                         return isVisible || includeInForm;
                                       })
                                       .map((entry) => entry.key)
+                                      // Filter out keys that don't have a corresponding form control
+                                      .where((key) => formGroup.contains(key))
                                       .toList() ??
                                   [];
 
@@ -962,10 +970,21 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
       PropertySchema schema, int entityIndex) {
     final originalProperties = schema.properties ?? {};
     final modifiedProperties = <String, PropertySchema>{};
+    final entitySuffix = '_item_$entityIndex';
 
     for (final entry in originalProperties.entries) {
       final fieldName = entry.key;
       final fieldSchema = entry.value;
+
+      // Skip fields that have any entity suffix (e.g., _item_0, _item_1)
+      // These are pre-created entity-specific fields handled separately
+      if (RegExp(r'_item_\d+$').hasMatch(fieldName)) {
+        // Only include if it matches THIS entity's suffix
+        if (fieldName.endsWith(entitySuffix)) {
+          modifiedProperties[fieldName] = fieldSchema;
+        }
+        continue;
+      }
 
       // Skip readonly/hidden fields from renaming
       final shouldRename = fieldSchema.readOnly != true &&
@@ -974,9 +993,15 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           fieldName != 'id';
 
       if (shouldRename) {
-        // Rename field for this entity
-        final newFieldName = '${fieldName}_item_$entityIndex';
-        modifiedProperties[newFieldName] = fieldSchema;
+        // Check if a pre-created field with custom validation exists for this entity
+        final targetFieldName = '$fieldName$entitySuffix';
+        if (originalProperties.containsKey(targetFieldName)) {
+          // Skip - the pre-created field will be added when we iterate to it
+          continue;
+        } else {
+          // Rename field for this entity
+          modifiedProperties[targetFieldName] = fieldSchema;
+        }
       } else {
         // Keep as-is
         modifiedProperties[fieldName] = fieldSchema;
@@ -1009,13 +1034,36 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     List<dynamic> entities,
   ) {
     final Map<String, AbstractControl<dynamic>> controls = {};
+    final originalProperties = schema.properties ?? {};
+
+    debugPrint('FormsRender: Building form controls for ${entities.length} entities');
+    debugPrint('FormsRender: Original properties: ${originalProperties.keys.toList()}');
 
     // Create controls for each entity
     for (int i = 0; i < entities.length; i++) {
-      for (final entry in schema.properties?.entries ??
-          <MapEntry<String, PropertySchema>>[]) {
+      final entitySuffix = '_item_$i';
+
+      for (final entry in originalProperties.entries) {
         final fieldName = entry.key;
         final fieldSchema = entry.value;
+
+        // Skip fields that have any entity suffix (e.g., _item_0, _item_1)
+        // These are pre-created entity-specific fields handled separately
+        if (RegExp(r'_item_\d+$').hasMatch(fieldName)) {
+          // Only create control if it matches THIS entity's suffix
+          if (fieldName.endsWith(entitySuffix) &&
+              !controls.containsKey(fieldName)) {
+            controls[fieldName] = buildFormControl(
+              fieldName,
+              fieldSchema,
+              schema,
+              defaultValues: widget.defaultValues,
+              schemaKey: widget.currentSchemaKey,
+            );
+            debugPrint('FormsRender: Created control for pre-created field: $fieldName');
+          }
+          continue;
+        }
 
         // Skip readonly/hidden fields from renaming
         final shouldRename = fieldSchema.readOnly != true &&
@@ -1024,7 +1072,12 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
             fieldName != 'id';
 
         if (shouldRename) {
-          final suffixedFieldName = '${fieldName}_item_$i';
+          final suffixedFieldName = '$fieldName$entitySuffix';
+          // Check if a pre-created field exists for this entity
+          if (originalProperties.containsKey(suffixedFieldName)) {
+            // Skip - the pre-created field control will be added when we iterate to it
+            continue;
+          }
           controls[suffixedFieldName] = buildFormControl(
             suffixedFieldName,
             fieldSchema,
@@ -1047,6 +1100,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
       }
     }
 
+    debugPrint('FormsRender: Final controls: ${controls.keys.toList()}');
     return controls;
   }
 

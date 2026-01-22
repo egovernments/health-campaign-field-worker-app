@@ -8,7 +8,6 @@ import 'package:complaints/complaints.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart';
 import 'package:digit_crud_bloc/digit_crud_bloc.dart';
-import 'package:digit_crud_bloc/repositories/local/search_entity_repository.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
@@ -47,9 +46,15 @@ import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
-import '../main.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
+import '../sampleJsonConfigs/closed_household.dart';
+import '../sampleJsonConfigs/complaints.dart';
+import '../sampleJsonConfigs/hf_referral.dart';
+import '../sampleJsonConfigs/inventory_reports.dart';
+import '../sampleJsonConfigs/manage_stock.dart';
+import '../sampleJsonConfigs/registration_flows.dart';
+import '../sampleJsonConfigs/stock_reconciliation.dart';
 import '../utils/debound.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -231,23 +236,23 @@ class _HomePageState extends LocalizedState<HomePage> {
     });
     registerTaskFunctions();
     FunctionRegistry.register('getQuantityLabel', (args, stateData) {
-      if (args.isEmpty) return 'Quantity received';
+      if (args.isEmpty) return 'APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL';
 
       final sku = args.first?.toString() ?? '';
 
       // Check if the resource is SPAQ-250 mg
       if (sku.trim().toString() == 'SPAQ - 250 mg' ||
           sku.trim().toString() == 'SPAQ - 500 mg') {
-        return 'Tablets received';
+        return 'APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL';
       }
 
-      return 'Quantity received';
+      return 'APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL';
     });
 
     // Stock Transaction Quantity Label Function
     FunctionRegistry.register('getStockQuantityLabel', (args, stateData) {
       if (args.isEmpty) return 'APPONE_INVENTORY_QUANTITY_LABEL';
-      final stockEntryType = args.first?.toString()?.toUpperCase() ?? '';
+      final stockEntryType = args.first?.toString().toUpperCase() ?? '';
 
       const labels = {
         'RECEIPT': 'APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL',
@@ -340,6 +345,101 @@ class _HomePageState extends LocalizedState<HomePage> {
       if (args.isEmpty) return 'receiverId';
       final reportType = args.first?.toString() ?? '';
       return reportType == 'dispatch' ? 'senderId' : 'receiverId';
+    });
+
+    // Get secondary party type based on facility selection
+    // Returns 'STAFF' if Delivery Team is selected, otherwise 'WAREHOUSE'
+    FunctionRegistry.register('getSecondaryType', (args, stateData) {
+      if (args.isEmpty) return 'WAREHOUSE';
+      final facilityFromWhich = args.first?.toString() ?? '';
+      return facilityFromWhich == 'Delivery Team' ? 'STAFF' : 'WAREHOUSE';
+    });
+
+    // Helper to extract stockEntryType from additionalFields array
+    String getStockEntryTypeFromFields(dynamic fields) {
+      if (fields == null) return '';
+      if (fields is List) {
+        for (var field in fields) {
+          if (field is Map && field['key'] == 'stockEntryType') {
+            return field['value']?.toString().toUpperCase() ?? '';
+          }
+        }
+      }
+      return '';
+    }
+
+    // First page (viewTransaction) - shows sender for RECEIPT/RETURNED, receiver for ISSUED/DAMAGED/LOSS
+    FunctionRegistry.register('getFirstPagePartyLabel', (args, stateData) {
+      if (args.isEmpty) return 'INVENTORY_TRANSACTING_PARTY_LABEL';
+      final stockEntryType = getStockEntryTypeFromFields(args.first);
+
+      switch (stockEntryType) {
+        case 'RECEIPT':
+        case 'RETURNED':
+          return 'INVENTORY_SENDER_LABEL';
+        case 'ISSUED':
+        case 'DAMAGED':
+        case 'LOSS':
+          return 'INVENTORY_RECEIVER_LABEL';
+        default:
+          return 'INVENTORY_TRANSACTING_PARTY_LABEL';
+      }
+    });
+
+    FunctionRegistry.register('getFirstPageParty', (args, stateData) {
+      if (args.length < 3) return '';
+      final stockEntryType = getStockEntryTypeFromFields(args[0]);
+      final senderId = args[1]?.toString() ?? '';
+      final receiverId = args[2]?.toString() ?? '';
+
+      switch (stockEntryType) {
+        case 'RECEIPT':
+        case 'RETURNED':
+          return senderId;
+        case 'ISSUED':
+        case 'DAMAGED':
+        case 'LOSS':
+          return receiverId;
+        default:
+          return senderId;
+      }
+    });
+
+    // Second page (viewTransactionDetails) - shows receiver for RECEIPT/RETURNED, sender for ISSUED/DAMAGED/LOSS
+    FunctionRegistry.register('getSecondPagePartyLabel', (args, stateData) {
+      if (args.isEmpty) return 'INVENTORY_TRANSACTING_PARTY_LABEL';
+      final stockEntryType = getStockEntryTypeFromFields(args.first);
+
+      switch (stockEntryType) {
+        case 'RECEIPT':
+        case 'RETURNED':
+          return 'INVENTORY_RECEIVER_LABEL';
+        case 'ISSUED':
+        case 'DAMAGED':
+        case 'LOSS':
+          return 'INVENTORY_SENDER_LABEL';
+        default:
+          return 'INVENTORY_TRANSACTING_PARTY_LABEL';
+      }
+    });
+
+    FunctionRegistry.register('getSecondPageParty', (args, stateData) {
+      if (args.length < 3) return '';
+      final stockEntryType = getStockEntryTypeFromFields(args[0]);
+      final senderId = args[1]?.toString() ?? '';
+      final receiverId = args[2]?.toString() ?? '';
+
+      switch (stockEntryType) {
+        case 'RECEIPT':
+        case 'RETURNED':
+          return receiverId;
+        case 'ISSUED':
+        case 'DAMAGED':
+        case 'LOSS':
+          return senderId;
+        default:
+          return receiverId;
+      }
     });
 
     FunctionRegistry.register('getAdditionalFieldValue', (args, stateData) {
@@ -1299,6 +1399,16 @@ class _HomePageState extends LocalizedState<HomePage> {
                         to: 'projectResource',
                         localKey: 'id',
                         foreignKey: 'resource'),
+                    const RelationshipMapping(
+                        from: 'stockReconciliation',
+                        to: 'facility',
+                        localKey: 'facilityId',
+                        foreignKey: 'id'),
+                    const RelationshipMapping(
+                        from: 'stockReconciliation',
+                        to: 'productVariant',
+                        localKey: 'productVariantId',
+                        foreignKey: 'id'),
                   ],
                   nestedModelMappings: [
                     const NestedModelMapping(
@@ -1545,9 +1655,8 @@ class _HomePageState extends LocalizedState<HomePage> {
               context
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
-                    /// FIXME: FOR NOW FETCHING EVERY MODULE AS HOME CARD WERE NOT THERE IN THE "COMMON".. WILL CHECK
                     module: module != null && module.isNotEmpty
-                        ? "$module,${localizationModulesList?.interfaces.where((e) => e.type == Modules.localizationModule).map((e) => e.name.toString()).join(',') ?? ""}"
+                        ? "$module,hcm-common,hcm-login,hcm-scanner"
                         : localizationModulesList?.interfaces
                                 .where(
                                     (e) => e.type == Modules.localizationModule)

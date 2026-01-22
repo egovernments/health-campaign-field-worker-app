@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../main.dart';
 import '../router/app_router.dart';
+import '../sampleJsonConfigs/permission_handler.dart';
 import '../utils/i18_key_constants.dart' as i18;
 
 @RoutePage()
@@ -79,7 +79,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
               Toast.showToast(
                 context,
                 message: localizations.translate(
-                  i18.common.coreCommonPermissionsAlert,
+                  i18.common.permissionsAlert,
                 ),
                 type: ToastType.error,
               );
@@ -506,17 +506,30 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
               ),
             ),
             Expanded(
-              child: Text(
-                localizations.translate(i18.common.allowBackgroundActivityDesc),
-                style: textTheme.bodyS.copyWith(
-                  color: theme.colorTheme.primary.primary2,
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: localizations
+                          .translate(i18.common.allowBackgroundActivityDesc),
+                      style: textTheme.bodyS.copyWith(
+                        color: theme.colorTheme.primary.primary2,
+                      ),
+                    ),
+                    TextSpan(
+                      text: " *",
+                      style: textTheme.bodyS.copyWith(
+                        color: theme.colorTheme.alert.error,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
           ],
         ),
         DigitButton(
-          label: localizations.translate(i18.common.coreCommonContinue),
+          label: localizations.translate(i18.common.permissionContinue),
           type: DigitButtonType.primary,
           size: DigitButtonSize.large,
           mainAxisSize: MainAxisSize.max,
@@ -526,9 +539,9 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
               Toast.showToast(
                 context,
                 message: localizations.translate(
-                  backgroundActivityConfirmed
-                      ? i18.common.coreCommonEnablePermissionCheckbox
-                      : i18.common.coreCommonPermissionsAlert,
+                  !backgroundActivityConfirmed
+                      ? i18.common.enablePermissionCheckbox
+                      : i18.common.permissionsAlert,
                 ),
                 type: ToastType.error,
               );
@@ -703,7 +716,7 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
     final iconName = config['value'] as String? ?? '';
 
     return Padding(
-      padding: const EdgeInsets.only(right: spacer2),
+      padding: const EdgeInsets.only(right: 0),
       child: Icon(
         DigitIconMapping.getIcon(iconName),
         color: theme.colorTheme.primary.primary1,

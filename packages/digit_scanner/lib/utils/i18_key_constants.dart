@@ -174,4 +174,9 @@ class Scanner {
   String get batchNoRequired => 'BARCODE_BATCH_NO_REQUIRED';
   String get serialNoRequired => 'BARCODE_SERIAL_NO_REQUIRED';
   String get expiryDateRequired => 'BARCODE_EXPIRY_DATE_REQUIRED';
+
+  String get cameraPermissionDenied => 'CAMERA_PERMISSION_DENIED';
+  String get cameraPermissionDeniedDesc => 'CAMERA_PERMISSION_DENIED_DESC';
+  String get openSettings => 'OPEN_SETTINGS';
+  String get cameraPermissionRequired => 'CAMERA_PERMISSION_REQUIRED';
 }
