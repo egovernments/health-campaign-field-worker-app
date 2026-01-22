@@ -343,13 +343,47 @@ class FormEntityMapper {
   }) {
     final updatedFields = <String, dynamic>{};
 
+    debugPrint('_updateAdditionalFieldsFromMapping: updateMapping keys = ${updateMapping.keys}');
+    debugPrint('_updateAdditionalFieldsFromMapping: formValues keys = ${formValues.keys}');
+
+    // Handle dynamic collection from pages using "__collectFromPages"
+    if (updateMapping.containsKey('__collectFromPages')) {
+      final pagesToCollect = updateMapping['__collectFromPages'];
+      debugPrint('_updateAdditionalFieldsFromMapping: __collectFromPages = $pagesToCollect');
+      if (pagesToCollect is List) {
+        for (final pageName in pagesToCollect) {
+          debugPrint('_updateAdditionalFieldsFromMapping: checking page "$pageName", exists=${formValues.containsKey(pageName)}');
+          if (pageName is String && formValues.containsKey(pageName)) {
+            final pageData = formValues[pageName];
+            debugPrint('_updateAdditionalFieldsFromMapping: pageData for "$pageName" = $pageData');
+            if (pageData is Map<String, dynamic>) {
+              pageData.forEach((fieldKey, fieldValue) {
+                if (fieldValue != null && fieldValue.toString().trim().isNotEmpty) {
+                  debugPrint('_updateAdditionalFieldsFromMapping: adding field "$fieldKey" = "$fieldValue"');
+                  updatedFields[fieldKey] = fieldValue is DateTime
+                      ? fieldValue.millisecondsSinceEpoch
+                      : fieldValue;
+                }
+              });
+            }
+          }
+        }
+      }
+    }
+
+    // Handle static field mappings
     updateMapping.forEach((customKey, path) {
+      // Skip the special __collectFromPages key
+      if (customKey == '__collectFromPages') return;
+
       final value = getStrictValueFromFormDataOnly(path, formValues);
 
       if (value != null) {
         updatedFields[customKey] = value;
       }
     });
+
+    debugPrint('_updateAdditionalFieldsFromMapping: updatedFields = $updatedFields');
 
     if (updatedFields.isEmpty) return null;
 
@@ -370,6 +404,8 @@ class FormEntityMapper {
     final mergedFields = existingFields.entries
         .map((e) => {'key': e.key, 'value': e.value})
         .toList();
+
+    debugPrint('_updateAdditionalFieldsFromMapping: mergedFields count = ${mergedFields.length}');
 
     return {
       'schema': existingAdditionalFields['schema'] ?? modelName,
@@ -642,16 +678,61 @@ class FormEntityMapper {
     Map<String, dynamic> context,
   ) {
     final fieldsList = <Map<String, dynamic>>[];
+    final addedKeys = <String>{}; // Track added keys to avoid duplicates
 
+    debugPrint('_mapAdditionalFields: fieldsMap keys = ${fieldsMap.keys}');
+    debugPrint('_mapAdditionalFields: formValues keys = ${formValues.keys}');
+
+    // Handle dynamic collection from pages using "__collectFromPages"
+    if (fieldsMap.containsKey('__collectFromPages')) {
+      final pagesToCollect = fieldsMap['__collectFromPages'];
+      debugPrint('_mapAdditionalFields: __collectFromPages = $pagesToCollect');
+      if (pagesToCollect is List) {
+        for (final pageName in pagesToCollect) {
+          debugPrint('_mapAdditionalFields: checking page "$pageName", exists=${formValues.containsKey(pageName)}');
+          if (pageName is String && formValues.containsKey(pageName)) {
+            final pageData = formValues[pageName];
+            debugPrint('_mapAdditionalFields: pageData for "$pageName" = $pageData (type: ${pageData.runtimeType})');
+            if (pageData is Map<String, dynamic>) {
+              pageData.forEach((fieldKey, fieldValue) {
+                debugPrint('_mapAdditionalFields: field "$fieldKey" = "$fieldValue"');
+                if (fieldValue != null &&
+                    fieldValue.toString().trim().isNotEmpty &&
+                    !addedKeys.contains(fieldKey)) {
+                  fieldsList.add({
+                    'key': fieldKey,
+                    'value': fieldValue is DateTime
+                        ? fieldValue.millisecondsSinceEpoch
+                        : fieldValue
+                  });
+                  addedKeys.add(fieldKey);
+                }
+              });
+            }
+          }
+        }
+      }
+    }
+
+    // Handle static field mappings (existing behavior)
     fieldsMap.forEach((customKey, path) {
+      // Skip the special __collectFromPages key
+      if (customKey == '__collectFromPages') return;
+
       final value = getValueFromMapping(path, formValues, path, context);
-      if (value != null && value.toString().trim().isNotEmpty) {
+      if (value != null &&
+          value.toString().trim().isNotEmpty &&
+          !addedKeys.contains(customKey)) {
         fieldsList.add({
           'key': customKey,
           'value': value is DateTime ? value.millisecondsSinceEpoch : value
         });
+        addedKeys.add(customKey);
       }
     });
+
+    debugPrint('_mapAdditionalFields: final fieldsList count = ${fieldsList.length}');
+    debugPrint('_mapAdditionalFields: final fieldsList = $fieldsList');
 
     if (fieldsList.isEmpty) return null;
 
@@ -789,18 +870,17 @@ class FormEntityMapper {
       // Recursively resolve key — handles __context:, __ref:, etc.
       final keyValue =
           getValueFromMapping(keyInstruction, data, currentModel, context);
-      if (keyValue == null) {
-        throw Exception(
-            'Key value "$keyInstruction" resolved to null in __switch');
-      }
 
       final mapping = _parseSwitchMapping(mappingString);
-      final resolvedInstruction =
-          mapping[keyValue.toString()] ?? mapping['default'];
+
+      // If keyValue is null, use the 'default' case
+      final resolvedInstruction = keyValue == null
+          ? mapping['default']
+          : (mapping[keyValue.toString()] ?? mapping['default']);
 
       if (resolvedInstruction == null) {
         throw Exception(
-            'No switch case found for "$keyValue" in instruction "$instruction"');
+            'No switch case found for "${keyValue ?? 'null'}" in instruction "$instruction"');
       }
 
       return getValueFromMapping(

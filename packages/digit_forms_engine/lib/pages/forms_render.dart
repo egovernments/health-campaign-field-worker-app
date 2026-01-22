@@ -401,6 +401,58 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                     // Handle form navigation
                                     if (targetPageName != null &&
                                         targetPageType == 'form') {
+                                      // Process navigateTo.data and merge with existing navigationParams
+                                      final mergedNavParams = <String, dynamic>{
+                                        ...?widget.navigationParams,
+                                      };
+
+                                      // Process data array from navigateTo if present
+                                      final navData = navigateTo.data;
+                                      if (navData != null) {
+                                        for (final entry in navData) {
+                                          final key = entry['key'] as String?;
+                                          var value = entry['value'];
+
+                                          if (key != null) {
+                                            // Resolve template values like {{navigation.clientReferenceId}}
+                                            if (value is String && value.contains('{{')) {
+                                              final templateRegex = RegExp(r'\{\{([^}]+)\}\}');
+                                              value = value.replaceAllMapped(templateRegex, (match) {
+                                                final path = match.group(1)?.trim() ?? '';
+                                                // Try to resolve from existing navigation params
+                                                if (path.startsWith('navigation.')) {
+                                                  final navKey = path.substring('navigation.'.length);
+                                                  return widget.navigationParams?[navKey]?.toString() ?? '';
+                                                }
+                                                // Try to resolve from form values
+                                                final formState = context.read<FormsBloc>().state;
+                                                final schema = formState.cachedSchemas[widget.currentSchemaKey];
+                                                if (schema != null) {
+                                                  for (final pageEntry in schema.pages.entries) {
+                                                    final props = pageEntry.value.properties;
+                                                    if (props != null && props.containsKey(path)) {
+                                                      return props[path]?.value?.toString() ?? '';
+                                                    }
+                                                    // Check if path is pageName.fieldName format
+                                                    if (path.contains('.')) {
+                                                      final parts = path.split('.');
+                                                      if (parts.length == 2 && parts[0] == pageEntry.key) {
+                                                        final fieldValue = props?[parts[1]]?.value;
+                                                        if (fieldValue != null) {
+                                                          return fieldValue.toString();
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                                return match.group(0) ?? '';
+                                              });
+                                            }
+                                            mergedNavParams[key] = value;
+                                          }
+                                        }
+                                      }
+
                                       context.router.push(FormsRenderRoute(
                                         isEdit: widget.isEdit,
                                         customComponents:
@@ -409,9 +461,25 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                             widget.currentSchemaKey,
                                         pageName: targetPageName,
                                         defaultValues: widget.defaultValues,
-                                        navigationParams:
-                                            widget.navigationParams,
+                                        navigationParams: mergedNavParams,
                                       ));
+                                      return; // Skip default logic
+                                    }
+
+                                    // Handle template navigation (external screens)
+                                    if (targetPageName != null &&
+                                        targetPageType == 'template') {
+                                      // Submit the form first before navigating to template
+                                      context.read<FormsBloc>().add(
+                                          FormsSubmitEvent(
+                                              isEdit: widget.isEdit,
+                                              schemaKey:
+                                                  widget.currentSchemaKey));
+                                      // Pop all form pages (template will be pushed by flow builder)
+                                      context.router.popUntil((route) {
+                                        return route.settings.name !=
+                                            FormsRenderRoute.name;
+                                      });
                                       return; // Skip default logic
                                     }
 

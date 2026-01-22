@@ -24,6 +24,10 @@ class TransformerExecutor extends ActionExecutor {
     final formDataConfig = action.properties['formDataConfig'];
 
     debugPrint('TRANSFORMER: Starting with configName=$configName');
+    debugPrint('TRANSFORMER: contextData keys = ${contextData.keys.toList()}');
+    debugPrint('TRANSFORMER: contextData[formData] = ${contextData['formData']}');
+    debugPrint('TRANSFORMER: contextData[formData] keys = ${(contextData['formData'] as Map?)?.keys.toList()}');
+    debugPrint('TRANSFORMER: contextData[navigation] = ${contextData['navigation']}');
 
     final configData = jsonConfig[configName];
     if (configData == null) {
@@ -77,12 +81,23 @@ class TransformerExecutor extends ActionExecutor {
 
     FlowCrudStateRegistry().update(config?["name"], flowState);
 
-    // Check if this is edit mode
+    // Check if this is edit mode (supports both isEdit and isUpdate flags)
     final navigationParams = contextData['navigation'] is Map
         ? Map<String, dynamic>.from(contextData['navigation'] as Map)
         : null;
     final isEdit = navigationParams?['isEdit'] == true ||
-        navigationParams?['isEdit'] == 'true';
+        navigationParams?['isEdit'] == 'true' ||
+        navigationParams?['isUpdate'] == true ||
+        navigationParams?['isUpdate'] == 'true';
+
+    // Add navigation params to formValuesToUse so that __switch:navigation.* directives can resolve
+    if (navigationParams != null && navigationParams.isNotEmpty) {
+      formValuesToUse = {
+        ...formValuesToUse ?? {},
+        'navigation': navigationParams,
+      };
+      debugPrint('TRANSFORMER: Added navigation params to formValues: $navigationParams');
+    }
 
     // Check if we should force create new entities even in edit mode
     // This is useful for inventory where edit prefills form but submits as new entities
@@ -91,17 +106,31 @@ class TransformerExecutor extends ActionExecutor {
         navigationParams?['forceCreate'] == 'true';
 
     // Get existing models - try multiple sources:
-    // 1. From contextData (passed through action chain from REVERSE_TRANSFORM)
-    // 2. From navigation params in registry (stored by NAVIGATION executor)
+    // 1. From contextData['existingModels'] (passed through action chain from REVERSE_TRANSFORM)
+    // 2. From contextData['entities'] (from SEARCH_EVENT with awaitResults)
+    // 3. From navigation params in registry (stored by NAVIGATION executor)
     List<EntityModel>? existingModels;
 
-    // First try contextData (from REVERSE_TRANSFORM in same action chain)
+    // First try contextData['existingModels'] (from REVERSE_TRANSFORM in same action chain)
     if (contextData['existingModels'] != null) {
       final contextModels = contextData['existingModels'];
       if (contextModels is List) {
         existingModels = contextModels.whereType<EntityModel>().toList();
         debugPrint(
             'TRANSFORMER: Found existingModels in contextData: ${existingModels.length}');
+      }
+    }
+
+    // If no existingModels, try contextData['entities'] (from SEARCH_EVENT with awaitResults)
+    // This is useful when a search is done before the transformer to fetch the entity for update
+    if ((existingModels == null || existingModels.isEmpty) &&
+        isEdit &&
+        contextData['entities'] != null) {
+      final searchedEntities = contextData['entities'];
+      if (searchedEntities is List) {
+        existingModels = searchedEntities.whereType<EntityModel>().toList();
+        debugPrint(
+            'TRANSFORMER: Found entities from SEARCH_EVENT for update: ${existingModels.length}');
       }
     }
 
@@ -299,6 +328,15 @@ class TransformerExecutor extends ActionExecutor {
         context: contextMap,
         fallbackFormDataString: fallBackModel,
       );
+    }
+
+    debugPrint('TRANSFORMER: Created ${entities.length} entities');
+    for (final entity in entities) {
+      final entityType = getEntityTypeName(entity);
+      final map = entity.toMap();
+      debugPrint('TRANSFORMER: Entity type=$entityType');
+      debugPrint('TRANSFORMER: Entity clientReferenceId=${map['clientReferenceId']}');
+      debugPrint('TRANSFORMER: Entity additionalFields=${map['additionalFields']}');
     }
 
     contextData['entities'] = entities;

@@ -1818,7 +1818,9 @@ NavigateToConfig _$NavigateToConfigFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$NavigateToConfig {
   String get type => throw _privateConstructorUsedError; // "template" or "form"
-  String get name => throw _privateConstructorUsedError;
+  String get name =>
+      throw _privateConstructorUsedError; // route name or form name
+  List<Map<String, dynamic>>? get data => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -1832,7 +1834,7 @@ abstract class $NavigateToConfigCopyWith<$Res> {
           NavigateToConfig value, $Res Function(NavigateToConfig) then) =
       _$NavigateToConfigCopyWithImpl<$Res, NavigateToConfig>;
   @useResult
-  $Res call({String type, String name});
+  $Res call({String type, String name, List<Map<String, dynamic>>? data});
 }
 
 /// @nodoc
@@ -1850,6 +1852,7 @@ class _$NavigateToConfigCopyWithImpl<$Res, $Val extends NavigateToConfig>
   $Res call({
     Object? type = null,
     Object? name = null,
+    Object? data = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -1860,6 +1863,10 @@ class _$NavigateToConfigCopyWithImpl<$Res, $Val extends NavigateToConfig>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
+      data: freezed == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<Map<String, dynamic>>?,
     ) as $Val);
   }
 }
@@ -1872,7 +1879,7 @@ abstract class _$$NavigateToConfigImplCopyWith<$Res>
       __$$NavigateToConfigImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String type, String name});
+  $Res call({String type, String name, List<Map<String, dynamic>>? data});
 }
 
 /// @nodoc
@@ -1888,6 +1895,7 @@ class __$$NavigateToConfigImplCopyWithImpl<$Res>
   $Res call({
     Object? type = null,
     Object? name = null,
+    Object? data = freezed,
   }) {
     return _then(_$NavigateToConfigImpl(
       type: null == type
@@ -1898,6 +1906,10 @@ class __$$NavigateToConfigImplCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
+      data: freezed == data
+          ? _value._data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<Map<String, dynamic>>?,
     ));
   }
 }
@@ -1905,7 +1917,11 @@ class __$$NavigateToConfigImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$NavigateToConfigImpl implements _NavigateToConfig {
-  const _$NavigateToConfigImpl({required this.type, required this.name});
+  const _$NavigateToConfigImpl(
+      {required this.type,
+      required this.name,
+      final List<Map<String, dynamic>>? data})
+      : _data = data;
 
   factory _$NavigateToConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$NavigateToConfigImplFromJson(json);
@@ -1915,10 +1931,21 @@ class _$NavigateToConfigImpl implements _NavigateToConfig {
 // "template" or "form"
   @override
   final String name;
+// route name or form name
+  final List<Map<String, dynamic>>? _data;
+// route name or form name
+  @override
+  List<Map<String, dynamic>>? get data {
+    final value = _data;
+    if (value == null) return null;
+    if (_data is EqualUnmodifiableListView) return _data;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'NavigateToConfig(type: $type, name: $name)';
+    return 'NavigateToConfig(type: $type, name: $name, data: $data)';
   }
 
   @override
@@ -1927,12 +1954,14 @@ class _$NavigateToConfigImpl implements _NavigateToConfig {
         (other.runtimeType == runtimeType &&
             other is _$NavigateToConfigImpl &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.name, name) || other.name == name));
+            (identical(other.name, name) || other.name == name) &&
+            const DeepCollectionEquality().equals(other._data, _data));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, type, name);
+  int get hashCode => Object.hash(
+      runtimeType, type, name, const DeepCollectionEquality().hash(_data));
 
   @JsonKey(ignore: true)
   @override
@@ -1952,7 +1981,8 @@ class _$NavigateToConfigImpl implements _NavigateToConfig {
 abstract class _NavigateToConfig implements NavigateToConfig {
   const factory _NavigateToConfig(
       {required final String type,
-      required final String name}) = _$NavigateToConfigImpl;
+      required final String name,
+      final List<Map<String, dynamic>>? data}) = _$NavigateToConfigImpl;
 
   factory _NavigateToConfig.fromJson(Map<String, dynamic> json) =
       _$NavigateToConfigImpl.fromJson;
@@ -1961,6 +1991,8 @@ abstract class _NavigateToConfig implements NavigateToConfig {
   String get type;
   @override // "template" or "form"
   String get name;
+  @override // route name or form name
+  List<Map<String, dynamic>>? get data;
   @override
   @JsonKey(ignore: true)
   _$$NavigateToConfigImplCopyWith<_$NavigateToConfigImpl> get copyWith =>

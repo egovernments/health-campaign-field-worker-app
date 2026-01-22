@@ -81,10 +81,12 @@ class ButtonWidget implements FlowWidget {
         isDisabled: isDisabled,
         onPressed: () async {
           if (json['onAction'] != null) {
-            final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
+            final actionsList =
+                List<Map<String, dynamic>>.from(json['onAction']);
 
             // Helper function to resolve navigation data for an action
-            Map<String, dynamic> resolveNavDataForAction(Map<String, dynamic> actionJson) {
+            Map<String, dynamic> resolveNavDataForAction(
+                Map<String, dynamic> actionJson) {
               var action = ActionConfig.fromJson(actionJson);
               final navData = action.properties['data'] as List<dynamic>?;
 
@@ -97,18 +99,22 @@ class ButtonWidget implements FlowWidget {
                       ? resolveValue(rawValue, flowState.evalContext)
                       : rawValue;
 
-                  if (resolvedValue == rawValue && flowState.widgetData.isNotEmpty) {
+                  if (resolvedValue == rawValue &&
+                      flowState.widgetData.isNotEmpty) {
                     // If not resolved from stateData, try widgetData
-                    resolvedValue = resolveValue(rawValue, flowState.widgetData);
+                    resolvedValue =
+                        resolveValue(rawValue, flowState.widgetData);
                   }
 
-                  if (resolvedValue == rawValue && flowState.formData.isNotEmpty) {
+                  if (resolvedValue == rawValue &&
+                      flowState.formData.isNotEmpty) {
                     // If not resolved from widgetData, try formData
                     resolvedValue = resolveValue(rawValue, flowState.formData);
                   }
 
                   return {
-                    ...Map<String, dynamic>.from(entry), // Keep all original fields (operation, root, etc.)
+                    ...Map<String, dynamic>.from(
+                        entry), // Keep all original fields (operation, root, etc.)
                     "value": resolvedValue ?? rawValue,
                   };
                 }).toList();
@@ -131,12 +137,16 @@ class ButtonWidget implements FlowWidget {
 
               // Resolve condition expression if present
               if (actionJson['condition'] != null) {
-                final condition = Map<String, dynamic>.from(actionJson['condition']);
+                final condition =
+                    Map<String, dynamic>.from(actionJson['condition']);
                 final expression = condition['expression'] as String?;
                 if (expression != null && expression.contains('{{')) {
                   // Resolve the expression template using flowState.evalContext
-                  String resolvedExpression = resolveTemplate(expression, flowState.evalContext) ?? expression;
-                  if (resolvedExpression == expression && crudStateData != null) {
+                  String resolvedExpression =
+                      resolveTemplate(expression, flowState.evalContext) ??
+                          expression;
+                  if (resolvedExpression == expression &&
+                      crudStateData != null) {
                     resolvedExpression = resolveValueRaw(
                       expression,
                       flowState.evalContext,
@@ -149,14 +159,17 @@ class ButtonWidget implements FlowWidget {
 
               // Check if this is a conditional action with nested actions array
               if (actionJson['actions'] != null) {
-                final nestedActions = List<Map<String, dynamic>>.from(actionJson['actions']);
+                final nestedActions =
+                    List<Map<String, dynamic>>.from(actionJson['actions']);
                 final resolvedNestedActions = nestedActions.map((nestedAction) {
-                  return resolveNavDataForAction(Map<String, dynamic>.from(nestedAction));
+                  return resolveNavDataForAction(
+                      Map<String, dynamic>.from(nestedAction));
                 }).toList();
                 resolvedActionJson['actions'] = resolvedNestedActions;
               } else {
                 // Resolve navigation data for top-level action
-                resolvedActionJson = resolveNavDataForAction(resolvedActionJson);
+                resolvedActionJson =
+                    resolveNavDataForAction(resolvedActionJson);
               }
 
               return resolvedActionJson;
@@ -167,6 +180,8 @@ class ButtonWidget implements FlowWidget {
               'wrappers': const [],
               ...flowState.evalContext,
             };
+            debugPrint(
+                'BUTTON_WIDGET: initialContextData navigation=${initialContextData['navigation']}');
 
             // Use ActionHandler.executeActions to chain actions with shared contextData
             // This ensures that REVERSE_TRANSFORM's formData flows to NAVIGATION

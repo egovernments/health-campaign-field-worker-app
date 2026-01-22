@@ -51,7 +51,12 @@ class UpdateExecutor extends ActionExecutor {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
+    debugPrint('UPDATE_EVENT: Starting execution');
+    debugPrint('UPDATE_EVENT: contextData keys=${contextData.keys.toList()}');
+
     final entities = contextData['entities'];
+    debugPrint('UPDATE_EVENT: entities type=${entities?.runtimeType}, isEmpty=${entities is List ? entities.isEmpty : 'not a list'}');
+
     if (entities == null || entities is! List || entities.isEmpty) {
       debugPrint('UPDATE_EVENT: No entities found in contextData');
       return contextData;
@@ -159,6 +164,12 @@ class UpdateExecutor extends ActionExecutor {
     }).toList();
 
     debugPrint('UPDATE_EVENT: Updating ${updatedEntities.length} entities');
+    for (final entity in updatedEntities) {
+      final entityType = getEntityTypeName(entity);
+      final map = entity.toMap();
+      debugPrint('UPDATE_EVENT: Entity type=$entityType, clientReferenceId=${map['clientReferenceId']}');
+      debugPrint('UPDATE_EVENT: Entity additionalFields=${map['additionalFields']}');
+    }
     context.read<CrudBloc>().add(CrudEventUpdate(entities: updatedEntities));
     return contextData;
   }

@@ -24,10 +24,10 @@ class QRScannerWidget implements FlowWidget {
 
   @override
   Widget build(
-      Map<String, dynamic> json,
-      BuildContext context,
-      void Function(ActionConfig) onAction,
-      ) {
+    Map<String, dynamic> json,
+    BuildContext context,
+    void Function(ActionConfig) onAction,
+  ) {
     final flowState = WidgetStateContext.of(context);
     final crudStateData = flowState.stateData;
 
@@ -122,7 +122,8 @@ class QRScannerWidget implements FlowWidget {
                 final rawValue = entry['value'];
 
                 // Resolve using flowState.evalContext which contains all data sources
-                dynamic resolvedValue = resolveValue(rawValue, flowState.evalContext);
+                dynamic resolvedValue =
+                    resolveValue(rawValue, flowState.evalContext);
                 if (resolvedValue == rawValue) {
                   resolvedValue = rawValue;
                 }
@@ -167,7 +168,7 @@ class QRScannerWidget implements FlowWidget {
       size: WidgetParsers.parseButtonSize(props['size']),
       mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
       mainAxisAlignment:
-      WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),
+          WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),
       suffixIcon: json['suffixIcon'] != null
           ? DigitIconMapping.getIcon(json['suffixIcon'])
           : null,

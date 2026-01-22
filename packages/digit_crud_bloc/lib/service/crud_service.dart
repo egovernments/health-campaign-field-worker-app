@@ -40,7 +40,12 @@ class CrudService {
   /// Initializes relationship graph and nested mappings for CRUD operations.
   ///
   /// Must be called before using [searchEntities].
+  /// Safe to call multiple times - will only initialize once.
   void init() {
+    if (_isInitialized) {
+      _log('CrudService already initialized, skipping re-initialization.');
+      return;
+    }
     _buildRelationshipGraph();
     _initNestedMappings();
     _isInitialized = true;

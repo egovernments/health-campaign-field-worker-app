@@ -254,7 +254,86 @@ class ActionHandler {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
+    // Check applyIf condition before executing the action
+    final applyIf = action.properties['applyIf'] as String?;
+    if (applyIf != null && applyIf.isNotEmpty) {
+      final shouldApply = _evaluateApplyIfCondition(applyIf, context, contextData);
+      if (!shouldApply) {
+        debugPrint('ACTION_HANDLER: Skipping ${action.actionType} - applyIf condition not met: $applyIf');
+        return contextData;
+      }
+    }
+
     return await _registry.execute(action, context, contextData);
+  }
+
+  /// Evaluates an applyIf condition string against the context data.
+  /// Supports expressions like:
+  /// - "navigation.isUpdate==true"
+  /// - "navigation.isUpdate!=true"
+  static bool _evaluateApplyIfCondition(String applyIf, BuildContext context, Map<String, dynamic> contextData) {
+    try {
+      // Build evaluation data from contextData
+      final evaluationData = <String, dynamic>{};
+
+      // PRIORITY: Use contextData['navigation'] first (passed through action chain)
+      // This is the most up-to-date source from the current form submission
+      Map<String, dynamic> navigation = contextData['navigation'] as Map<String, dynamic>? ?? {};
+      debugPrint('ACTION_HANDLER: Navigation from contextData: $navigation');
+
+      // If contextData doesn't have navigation, try registry as fallback
+      if (navigation.isEmpty) {
+        final screenKey = getEffectiveScreenKey(context, contextData);
+        debugPrint('ACTION_HANDLER: applyIf screenKey=$screenKey');
+        if (screenKey != null) {
+          final storedNavParams = FlowCrudStateRegistry().getNavigationParams(screenKey);
+          if (storedNavParams != null) {
+            navigation = Map<String, dynamic>.from(storedNavParams);
+            debugPrint('ACTION_HANDLER: Fallback to registry navigation: $navigation');
+          }
+        }
+      }
+
+      // Add navigation params with type conversion
+      navigation.forEach((key, value) {
+        if (value == 'true') {
+          evaluationData['navigation.$key'] = true;
+          evaluationData[key] = true;
+        } else if (value == 'false') {
+          evaluationData['navigation.$key'] = false;
+          evaluationData[key] = false;
+        } else if (value == true || value == false) {
+          evaluationData['navigation.$key'] = value;
+          evaluationData[key] = value;
+        } else {
+          evaluationData['navigation.$key'] = value;
+          evaluationData[key] = value;
+        }
+      });
+
+      // Add form data
+      final formData = contextData['formData'] as Map<String, dynamic>? ?? {};
+      formData.forEach((key, value) {
+        evaluationData['formData.$key'] = value;
+      });
+
+      debugPrint('ACTION_HANDLER: Evaluating applyIf="$applyIf" with evaluationData keys=${evaluationData.keys}');
+
+      // Use FormulaParser to evaluate the condition
+      final parser = FormulaParser(
+        applyIf,
+        evaluationData.isEmpty ? {'dummy': {}} : evaluationData,
+      );
+
+      final result = parser.parse;
+      final isSuccess = result["isSuccess"] == true && result["value"] == true;
+      debugPrint('ACTION_HANDLER: applyIf result=$result, shouldApply=$isSuccess');
+      return isSuccess;
+    } catch (e) {
+      debugPrint('ACTION_HANDLER: Error evaluating applyIf condition "$applyIf": $e');
+      // If parsing fails, execute the action (fail-open)
+      return true;
+    }
   }
 
   /// Helper to flatten nested form data for condition evaluation

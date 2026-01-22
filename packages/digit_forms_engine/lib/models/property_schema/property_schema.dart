@@ -116,6 +116,7 @@ class NavigateToConfig with _$NavigateToConfig {
   const factory NavigateToConfig({
     required String type, // "template" or "form"
     required String name, // route name or form name
+    List<Map<String, dynamic>>? data, // Navigation data to pass
   }) = _NavigateToConfig;
 
   factory NavigateToConfig.fromJson(Map<String, dynamic> json) =>
