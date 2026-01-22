@@ -180,6 +180,8 @@ class ButtonWidget implements FlowWidget {
               'wrappers': const [],
               ...flowState.evalContext,
             };
+            debugPrint(
+                'BUTTON_WIDGET: initialContextData navigation=${initialContextData['navigation']}');
 
             // Use ActionHandler.executeActions to chain actions with shared contextData
             // This ensures that REVERSE_TRANSFORM's formData flows to NAVIGATION

@@ -58,10 +58,16 @@ class HFReferralLocalRepository
             final additionalData = referral.additionalFields != null
                 ? jsonDecode(referral.additionalFields!)
                 : null;
+<<<<<<< HEAD
             List<Map<String, dynamic>> data =
                 additionalData != null && additionalData['fields'] != null
                     ? List<Map<String, dynamic>>.from(additionalData['fields'])
                     : <Map<String, dynamic>>[];
+=======
+            List<Map<String, dynamic>> data = additionalData != null && additionalData['fields'] != null
+                ? List<Map<String, dynamic>>.from(additionalData['fields'])
+                : <Map<String, dynamic>>[];
+>>>>>>> 8f7e085f1 (now atleast the hfreferral additional data i sgetting stored)
             final HFReferralAdditionalFields additionalFields =
                 HFReferralAdditionalFields(
               version: 1,
@@ -247,30 +253,44 @@ class HFReferralLocalRepository
     DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
+<<<<<<< HEAD
       debugPrint(
           'HFReferralLocalRepository.update: Starting update for clientReferenceId=${entity.clientReferenceId}');
       debugPrint(
           'HFReferralLocalRepository.update: Entity additionalFields=${entity.additionalFields?.fields?.map((f) => '${f.key}=${f.value}').toList()}');
 
       // Fetch existing record to merge fields
+=======
+      debugPrint('HFReferralLocalRepository.update: Starting update for clientReferenceId=${entity.clientReferenceId}');
+      debugPrint('HFReferralLocalRepository.update: Entity additionalFields=${entity.additionalFields?.fields?.map((f) => '${f.key}=${f.value}').toList()}');
+
+      // Fetch existing record to merge additionalFields
+>>>>>>> 8f7e085f1 (now atleast the hfreferral additional data i sgetting stored)
       final existingRecords = await search(
         HFReferralSearchModel(
           clientReferenceId: [entity.clientReferenceId],
         ),
       );
 
+<<<<<<< HEAD
       debugPrint(
           'HFReferralLocalRepository.update: Found ${existingRecords.length} existing records');
 
       HFReferralAdditionalFields? mergedAdditionalFields =
           entity.additionalFields;
       HFReferralModel updatedEntity = entity;
+=======
+      debugPrint('HFReferralLocalRepository.update: Found ${existingRecords.length} existing records');
+
+      HFReferralAdditionalFields? mergedAdditionalFields = entity.additionalFields;
+>>>>>>> 8f7e085f1 (now atleast the hfreferral additional data i sgetting stored)
 
       if (existingRecords.isNotEmpty) {
         final existingRecord = existingRecords.first;
         final existingFields = existingRecord.additionalFields?.fields ?? [];
         final newFields = entity.additionalFields?.fields ?? [];
 
+<<<<<<< HEAD
         debugPrint(
             'HFReferralLocalRepository.update: Existing fields count=${existingFields.length}');
         debugPrint(
@@ -279,6 +299,12 @@ class HFReferralLocalRepository
             'HFReferralLocalRepository.update: New fields count=${newFields.length}');
         debugPrint(
             'HFReferralLocalRepository.update: New fields=${newFields.map((f) => '${f.key}=${f.value}').toList()}');
+=======
+        debugPrint('HFReferralLocalRepository.update: Existing fields count=${existingFields.length}');
+        debugPrint('HFReferralLocalRepository.update: Existing fields=${existingFields.map((f) => '${f.key}=${f.value}').toList()}');
+        debugPrint('HFReferralLocalRepository.update: New fields count=${newFields.length}');
+        debugPrint('HFReferralLocalRepository.update: New fields=${newFields.map((f) => '${f.key}=${f.value}').toList()}');
+>>>>>>> 8f7e085f1 (now atleast the hfreferral additional data i sgetting stored)
 
         // Create a map of existing fields
         final fieldMap = <String, dynamic>{};
@@ -298,15 +324,21 @@ class HFReferralLocalRepository
             .map((e) => AdditionalField(e.key, e.value))
             .toList();
 
+<<<<<<< HEAD
         debugPrint(
             'HFReferralLocalRepository.update: Merged fields count=${mergedFieldsList.length}');
         debugPrint(
             'HFReferralLocalRepository.update: Merged fields=${mergedFieldsList.map((f) => '${f.key}=${f.value}').toList()}');
+=======
+        debugPrint('HFReferralLocalRepository.update: Merged fields count=${mergedFieldsList.length}');
+        debugPrint('HFReferralLocalRepository.update: Merged fields=${mergedFieldsList.map((f) => '${f.key}=${f.value}').toList()}');
+>>>>>>> 8f7e085f1 (now atleast the hfreferral additional data i sgetting stored)
 
         mergedAdditionalFields = HFReferralAdditionalFields(
           version: entity.additionalFields?.version ?? 1,
           fields: mergedFieldsList,
         );
+<<<<<<< HEAD
 
         // Get current timestamp for modified times
         final currentTime = DateTime.now().millisecondsSinceEpoch;
@@ -368,6 +400,15 @@ class HFReferralLocalRepository
         );
       }
 
+=======
+      }
+
+      // Create updated entity with merged additionalFields
+      final updatedEntity = entity.copyWith(
+        additionalFields: mergedAdditionalFields,
+      );
+
+>>>>>>> 8f7e085f1 (now atleast the hfreferral additional data i sgetting stored)
       final referralCompanion = updatedEntity.companion.copyWith(
         name: Value(mergedAdditionalFields?.fields
             .where(
@@ -378,10 +419,14 @@ class HFReferralLocalRepository
             .firstOrNull
             ?.value),
 <<<<<<< HEAD
+<<<<<<< HEAD
         localityCode: Value(updatedEntity.localityCode),
 =======
         localityCode: Value(entity.localityCode),
 >>>>>>> eecb1efb6 (upsync and downsync is in progress, sync is not happening)
+=======
+        localityCode: Value(updatedEntity.localityCode),
+>>>>>>> 8f7e085f1 (now atleast the hfreferral additional data i sgetting stored)
       );
 
       await sql.batch((batch) {
