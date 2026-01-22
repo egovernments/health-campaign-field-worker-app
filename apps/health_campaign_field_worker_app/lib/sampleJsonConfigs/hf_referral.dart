@@ -1381,16 +1381,45 @@ final dynamic sampleReferralFlows = {
                       "type": "FORM",
                       "flow": "REFERRAL_CREATE",
                       "data": [
-                        {"key": "clientReferenceId", "value": "{{0.HFReferralModel.clientReferenceId}}"},
-                        {"key": "referralSymptom", "value": "{{0.HFReferralModel.symptom}}"},
+                        {
+                          "key": "clientReferenceId",
+                          "value": "{{0.HFReferralModel.clientReferenceId}}"
+                        },
+                        {
+                          "key": "referralSymptom",
+                          "value": "{{0.HFReferralModel.symptom}}"
+                        },
                         {"key": "isUpdate", "value": "true"},
-                        {"key": "rowVersion", "value": "{{0.HFReferralModel.rowVersion}}"},
-                        {"key": "nameOfChild", "value": "{{0.HFReferralModel.name}}"},
-                        {"key": "beneficiaryId", "value": "{{0.HFReferralModel.beneficiaryId}}"},
-                        {"key": "referralCode", "value": "{{0.HFReferralModel.referralCode}}"},
-                        {"key": "ageInMonths", "value": "{{0.HFReferralModel.additionalFields.fields.ageInMonths}}"},
-                        {"key": "gender", "value": "{{0.HFReferralModel.additionalFields.fields.gender}}"},
-                        {"key": "referralReason", "value": "{{0.HFReferralModel.symptom}}"}
+                        {
+                          "key": "rowVersion",
+                          "value": "{{0.HFReferralModel.rowVersion}}"
+                        },
+                        {
+                          "key": "nameOfChild",
+                          "value": "{{0.HFReferralModel.name}}"
+                        },
+                        {
+                          "key": "beneficiaryId",
+                          "value": "{{0.HFReferralModel.beneficiaryId}}"
+                        },
+                        {
+                          "key": "referralCode",
+                          "value": "{{0.HFReferralModel.referralCode}}"
+                        },
+                        {
+                          "key": "ageInMonths",
+                          "value":
+                              "{{0.HFReferralModel.additionalFields.fields.ageInMonths}}"
+                        },
+                        {
+                          "key": "gender",
+                          "value":
+                              "{{0.HFReferralModel.additionalFields.fields.gender}}"
+                        },
+                        {
+                          "key": "referralReason",
+                          "value": "{{0.HFReferralModel.symptom}}"
+                        }
                       ]
                     }
                   },
@@ -1402,16 +1431,45 @@ final dynamic sampleReferralFlows = {
                       "type": "FORM",
                       "flow": "REFERRAL_CREATE",
                       "data": [
-                        {"key": "clientReferenceId", "value": "{{0.HFReferralModel.clientReferenceId}}"},
-                        {"key": "referralSymptom", "value": "{{0.HFReferralModel.symptom}}"},
+                        {
+                          "key": "clientReferenceId",
+                          "value": "{{0.HFReferralModel.clientReferenceId}}"
+                        },
+                        {
+                          "key": "referralSymptom",
+                          "value": "{{0.HFReferralModel.symptom}}"
+                        },
                         {"key": "isUpdate", "value": "true"},
-                        {"key": "rowVersion", "value": "{{0.HFReferralModel.rowVersion}}"},
-                        {"key": "nameOfChild", "value": "{{0.HFReferralModel.name}}"},
-                        {"key": "beneficiaryId", "value": "{{0.HFReferralModel.beneficiaryId}}"},
-                        {"key": "referralCode", "value": "{{0.HFReferralModel.referralCode}}"},
-                        {"key": "ageInMonths", "value": "{{0.HFReferralModel.additionalFields.fields.ageInMonths}}"},
-                        {"key": "gender", "value": "{{0.HFReferralModel.additionalFields.fields.gender}}"},
-                        {"key": "referralReason", "value": "{{0.HFReferralModel.symptom}}"}
+                        {
+                          "key": "rowVersion",
+                          "value": "{{0.HFReferralModel.rowVersion}}"
+                        },
+                        {
+                          "key": "nameOfChild",
+                          "value": "{{0.HFReferralModel.name}}"
+                        },
+                        {
+                          "key": "beneficiaryId",
+                          "value": "{{0.HFReferralModel.beneficiaryId}}"
+                        },
+                        {
+                          "key": "referralCode",
+                          "value": "{{0.HFReferralModel.referralCode}}"
+                        },
+                        {
+                          "key": "ageInMonths",
+                          "value":
+                              "{{0.HFReferralModel.additionalFields.fields.ageInMonths}}"
+                        },
+                        {
+                          "key": "gender",
+                          "value":
+                              "{{0.HFReferralModel.additionalFields.fields.gender}}"
+                        },
+                        {
+                          "key": "referralReason",
+                          "value": "{{0.HFReferralModel.symptom}}"
+                        }
                       ]
                     }
                   },
@@ -1423,16 +1481,45 @@ final dynamic sampleReferralFlows = {
                       "type": "FORM",
                       "flow": "REFERRAL_CREATE",
                       "data": [
-                        {"key": "clientReferenceId", "value": "{{0.HFReferralModel.clientReferenceId}}"},
-                        {"key": "referralSymptom", "value": "{{0.HFReferralModel.symptom}}"},
+                        {
+                          "key": "clientReferenceId",
+                          "value": "{{0.HFReferralModel.clientReferenceId}}"
+                        },
+                        {
+                          "key": "referralSymptom",
+                          "value": "{{0.HFReferralModel.symptom}}"
+                        },
                         {"key": "isUpdate", "value": "true"},
-                        {"key": "rowVersion", "value": "{{0.HFReferralModel.rowVersion}}"},
-                        {"key": "nameOfChild", "value": "{{0.HFReferralModel.name}}"},
-                        {"key": "beneficiaryId", "value": "{{0.HFReferralModel.beneficiaryId}}"},
-                        {"key": "referralCode", "value": "{{0.HFReferralModel.referralCode}}"},
-                        {"key": "ageInMonths", "value": "{{0.HFReferralModel.additionalFields.fields.ageInMonths}}"},
-                        {"key": "gender", "value": "{{0.HFReferralModel.additionalFields.fields.gender}}"},
-                        {"key": "referralReason", "value": "{{0.HFReferralModel.symptom}}"}
+                        {
+                          "key": "rowVersion",
+                          "value": "{{0.HFReferralModel.rowVersion}}"
+                        },
+                        {
+                          "key": "nameOfChild",
+                          "value": "{{0.HFReferralModel.name}}"
+                        },
+                        {
+                          "key": "beneficiaryId",
+                          "value": "{{0.HFReferralModel.beneficiaryId}}"
+                        },
+                        {
+                          "key": "referralCode",
+                          "value": "{{0.HFReferralModel.referralCode}}"
+                        },
+                        {
+                          "key": "ageInMonths",
+                          "value":
+                              "{{0.HFReferralModel.additionalFields.fields.ageInMonths}}"
+                        },
+                        {
+                          "key": "gender",
+                          "value":
+                              "{{0.HFReferralModel.additionalFields.fields.gender}}"
+                        },
+                        {
+                          "key": "referralReason",
+                          "value": "{{0.HFReferralModel.symptom}}"
+                        }
                       ]
                     }
                   },
@@ -1444,16 +1531,45 @@ final dynamic sampleReferralFlows = {
                       "type": "FORM",
                       "flow": "REFERRAL_CREATE",
                       "data": [
-                        {"key": "clientReferenceId", "value": "{{0.HFReferralModel.clientReferenceId}}"},
-                        {"key": "referralSymptom", "value": "{{0.HFReferralModel.symptom}}"},
+                        {
+                          "key": "clientReferenceId",
+                          "value": "{{0.HFReferralModel.clientReferenceId}}"
+                        },
+                        {
+                          "key": "referralSymptom",
+                          "value": "{{0.HFReferralModel.symptom}}"
+                        },
                         {"key": "isUpdate", "value": "true"},
-                        {"key": "rowVersion", "value": "{{0.HFReferralModel.rowVersion}}"},
-                        {"key": "nameOfChild", "value": "{{0.HFReferralModel.name}}"},
-                        {"key": "beneficiaryId", "value": "{{0.HFReferralModel.beneficiaryId}}"},
-                        {"key": "referralCode", "value": "{{0.HFReferralModel.referralCode}}"},
-                        {"key": "ageInMonths", "value": "{{0.HFReferralModel.additionalFields.fields.ageInMonths}}"},
-                        {"key": "gender", "value": "{{0.HFReferralModel.additionalFields.fields.gender}}"},
-                        {"key": "referralReason", "value": "{{0.HFReferralModel.symptom}}"}
+                        {
+                          "key": "rowVersion",
+                          "value": "{{0.HFReferralModel.rowVersion}}"
+                        },
+                        {
+                          "key": "nameOfChild",
+                          "value": "{{0.HFReferralModel.name}}"
+                        },
+                        {
+                          "key": "beneficiaryId",
+                          "value": "{{0.HFReferralModel.beneficiaryId}}"
+                        },
+                        {
+                          "key": "referralCode",
+                          "value": "{{0.HFReferralModel.referralCode}}"
+                        },
+                        {
+                          "key": "ageInMonths",
+                          "value":
+                              "{{0.HFReferralModel.additionalFields.fields.ageInMonths}}"
+                        },
+                        {
+                          "key": "gender",
+                          "value":
+                              "{{0.HFReferralModel.additionalFields.fields.gender}}"
+                        },
+                        {
+                          "key": "referralReason",
+                          "value": "{{0.HFReferralModel.symptom}}"
+                        }
                       ]
                     }
                   },
@@ -1684,6 +1800,59 @@ final dynamic sampleReferralFlows = {
             "mainAxisSize": "max",
             "mainAxisAlignment": "center"
           }
+        },
+
+        // TODO::
+        {
+          "type": "template",
+          "label": "SCAN_BENEFICIARY",
+          "format": "qrScanner",
+          "onAction": [
+            {
+              "actionType": "OPEN_SCANNER",
+              "properties": {
+                "isGS1": false,
+                "scanType": "qr",
+                "fieldName": "beneficiaryId",
+                "onSuccess": [
+                  {
+                    "actionType": "SEARCH_EVENT",
+                    "properties": {
+                      "data": [
+                        {
+                          "key": "beneficiaryId",
+                          "value": "{{beneficiaryId}}",
+                          "operation": "equals"
+                        }
+                      ],
+                      "name": "hFReferral",
+                      "type": "SEARCH_EVENT",
+                      "awaitResults": true
+                    }
+                  }
+                ],
+                "scanLimit": 1,
+                "singleValue": true
+              }
+            }
+          ],
+          "fieldName": "qrScanner",
+          "showLabel": false,
+          "properties": {
+            "icon": "QrCodeScanner",
+            "size": "large",
+            "type": "secondary",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          },
+          "validations": [
+            {
+              "type": "scanLimit",
+              "value": 1,
+              "message": "SCANLIMIT_ERROR_MESSAGE"
+            },
+            {"type": "isGS1", "value": false}
+          ]
         }
       ],
       "header": [
