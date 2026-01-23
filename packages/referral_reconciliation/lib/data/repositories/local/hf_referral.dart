@@ -59,15 +59,21 @@ class HFReferralLocalRepository
                 ? jsonDecode(referral.additionalFields!)
                 : null;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dc25320be (working in sync i need to check for referral sync)
             List<Map<String, dynamic>> data =
                 additionalData != null && additionalData['fields'] != null
                     ? List<Map<String, dynamic>>.from(additionalData['fields'])
                     : <Map<String, dynamic>>[];
+<<<<<<< HEAD
 =======
             List<Map<String, dynamic>> data = additionalData != null && additionalData['fields'] != null
                 ? List<Map<String, dynamic>>.from(additionalData['fields'])
                 : <Map<String, dynamic>>[];
 >>>>>>> 8f7e085f1 (now atleast the hfreferral additional data i sgetting stored)
+=======
+>>>>>>> dc25320be (working in sync i need to check for referral sync)
             final HFReferralAdditionalFields additionalFields =
                 HFReferralAdditionalFields(
               version: 1,
@@ -227,10 +233,14 @@ class HFReferralLocalRepository
                         ReferralReconAdditionalFields.nameOfReferral.toValue())
                     .firstOrNull
 <<<<<<< HEAD
+<<<<<<< HEAD
                     ?.value),
 =======
                     ?.value,
 >>>>>>> eecb1efb6 (upsync and downsync is in progress, sync is not happening)
+=======
+                    ?.value),
+>>>>>>> dc25320be (working in sync i need to check for referral sync)
                 // Include localityCode during downsync
                 localityCode: Value(e.localityCode),
               ))
@@ -254,10 +264,14 @@ class HFReferralLocalRepository
   }) async {
     return retryLocalCallOperation(() async {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dc25320be (working in sync i need to check for referral sync)
       debugPrint(
           'HFReferralLocalRepository.update: Starting update for clientReferenceId=${entity.clientReferenceId}');
       debugPrint(
           'HFReferralLocalRepository.update: Entity additionalFields=${entity.additionalFields?.fields?.map((f) => '${f.key}=${f.value}').toList()}');
+<<<<<<< HEAD
 
       // Fetch existing record to merge fields
 =======
@@ -266,12 +280,17 @@ class HFReferralLocalRepository
 
       // Fetch existing record to merge additionalFields
 >>>>>>> 8f7e085f1 (now atleast the hfreferral additional data i sgetting stored)
+=======
+
+      // Fetch existing record to merge fields
+>>>>>>> dc25320be (working in sync i need to check for referral sync)
       final existingRecords = await search(
         HFReferralSearchModel(
           clientReferenceId: [entity.clientReferenceId],
         ),
       );
 
+<<<<<<< HEAD
 <<<<<<< HEAD
       debugPrint(
           'HFReferralLocalRepository.update: Found ${existingRecords.length} existing records');
@@ -284,6 +303,14 @@ class HFReferralLocalRepository
 
       HFReferralAdditionalFields? mergedAdditionalFields = entity.additionalFields;
 >>>>>>> 8f7e085f1 (now atleast the hfreferral additional data i sgetting stored)
+=======
+      debugPrint(
+          'HFReferralLocalRepository.update: Found ${existingRecords.length} existing records');
+
+      HFReferralAdditionalFields? mergedAdditionalFields =
+          entity.additionalFields;
+      HFReferralModel updatedEntity = entity;
+>>>>>>> dc25320be (working in sync i need to check for referral sync)
 
       if (existingRecords.isNotEmpty) {
         final existingRecord = existingRecords.first;
@@ -291,6 +318,9 @@ class HFReferralLocalRepository
         final newFields = entity.additionalFields?.fields ?? [];
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dc25320be (working in sync i need to check for referral sync)
         debugPrint(
             'HFReferralLocalRepository.update: Existing fields count=${existingFields.length}');
         debugPrint(
@@ -299,12 +329,15 @@ class HFReferralLocalRepository
             'HFReferralLocalRepository.update: New fields count=${newFields.length}');
         debugPrint(
             'HFReferralLocalRepository.update: New fields=${newFields.map((f) => '${f.key}=${f.value}').toList()}');
+<<<<<<< HEAD
 =======
         debugPrint('HFReferralLocalRepository.update: Existing fields count=${existingFields.length}');
         debugPrint('HFReferralLocalRepository.update: Existing fields=${existingFields.map((f) => '${f.key}=${f.value}').toList()}');
         debugPrint('HFReferralLocalRepository.update: New fields count=${newFields.length}');
         debugPrint('HFReferralLocalRepository.update: New fields=${newFields.map((f) => '${f.key}=${f.value}').toList()}');
 >>>>>>> 8f7e085f1 (now atleast the hfreferral additional data i sgetting stored)
+=======
+>>>>>>> dc25320be (working in sync i need to check for referral sync)
 
         // Create a map of existing fields
         final fieldMap = <String, dynamic>{};
@@ -325,19 +358,26 @@ class HFReferralLocalRepository
             .toList();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dc25320be (working in sync i need to check for referral sync)
         debugPrint(
             'HFReferralLocalRepository.update: Merged fields count=${mergedFieldsList.length}');
         debugPrint(
             'HFReferralLocalRepository.update: Merged fields=${mergedFieldsList.map((f) => '${f.key}=${f.value}').toList()}');
+<<<<<<< HEAD
 =======
         debugPrint('HFReferralLocalRepository.update: Merged fields count=${mergedFieldsList.length}');
         debugPrint('HFReferralLocalRepository.update: Merged fields=${mergedFieldsList.map((f) => '${f.key}=${f.value}').toList()}');
 >>>>>>> 8f7e085f1 (now atleast the hfreferral additional data i sgetting stored)
+=======
+>>>>>>> dc25320be (working in sync i need to check for referral sync)
 
         mergedAdditionalFields = HFReferralAdditionalFields(
           version: entity.additionalFields?.version ?? 1,
           fields: mergedFieldsList,
         );
+<<<<<<< HEAD
 <<<<<<< HEAD
 
         // Get current timestamp for modified times
@@ -402,11 +442,68 @@ class HFReferralLocalRepository
 
 =======
       }
+=======
+>>>>>>> dc25320be (working in sync i need to check for referral sync)
 
-      // Create updated entity with merged additionalFields
-      final updatedEntity = entity.copyWith(
-        additionalFields: mergedAdditionalFields,
-      );
+        // Get current timestamp for modified times
+        final currentTime = DateTime.now().millisecondsSinceEpoch;
+
+        // Create updated entity preserving existing field values when incoming is null
+        // and properly handling created/modified timestamps
+        updatedEntity = HFReferralModel(
+          // Preserve id from existing if not provided
+          id: entity.id ?? existingRecord.id,
+          clientReferenceId: entity.clientReferenceId,
+          // Preserve existing values if incoming is null
+          tenantId: entity.tenantId ?? existingRecord.tenantId,
+          name: entity.name ?? existingRecord.name,
+          projectId: entity.projectId ?? existingRecord.projectId,
+          projectFacilityId:
+              entity.projectFacilityId ?? existingRecord.projectFacilityId,
+          symptom: entity.symptom ?? existingRecord.symptom,
+          symptomSurveyId:
+              entity.symptomSurveyId ?? existingRecord.symptomSurveyId,
+          beneficiaryId: entity.beneficiaryId ?? existingRecord.beneficiaryId,
+          referralCode: entity.referralCode ?? existingRecord.referralCode,
+          nationalLevelId:
+              entity.nationalLevelId ?? existingRecord.nationalLevelId,
+          localityCode: entity.localityCode ?? existingRecord.localityCode,
+          rowVersion: entity.rowVersion ?? existingRecord.rowVersion,
+          isDeleted: entity.isDeleted ?? existingRecord.isDeleted,
+          nonRecoverableError:
+              entity.nonRecoverableError ?? existingRecord.nonRecoverableError,
+          additionalFields: mergedAdditionalFields,
+          // Preserve createdTime from existing, update modifiedTime to now
+          auditDetails: AuditDetails(
+            createdBy: existingRecord.auditDetails?.createdBy ??
+                entity.auditDetails?.createdBy ??
+                '',
+            createdTime: existingRecord.auditDetails?.createdTime ??
+                entity.auditDetails?.createdTime ??
+                currentTime,
+            lastModifiedBy: entity.auditDetails?.lastModifiedBy ??
+                existingRecord.auditDetails?.lastModifiedBy,
+            lastModifiedTime: currentTime,
+          ),
+          // Preserve clientCreatedTime from existing, update clientModifiedTime to now
+          clientAuditDetails: ClientAuditDetails(
+            createdBy: existingRecord.clientAuditDetails?.createdBy ??
+                entity.clientAuditDetails?.createdBy ??
+                '',
+            createdTime: existingRecord.clientAuditDetails?.createdTime ??
+                entity.clientAuditDetails?.createdTime ??
+                currentTime,
+            lastModifiedBy: entity.clientAuditDetails?.lastModifiedBy ??
+                existingRecord.clientAuditDetails?.lastModifiedBy,
+            lastModifiedTime: currentTime,
+          ),
+        );
+      } else {
+        // No existing record - create updated entity with merged additionalFields only
+        updatedEntity = entity.copyWith(
+          additionalFields: mergedAdditionalFields,
+        );
+      }
 
 >>>>>>> 8f7e085f1 (now atleast the hfreferral additional data i sgetting stored)
       final referralCompanion = updatedEntity.companion.copyWith(
