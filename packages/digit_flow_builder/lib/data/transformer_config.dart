@@ -926,7 +926,8 @@ final jsonConfig = {
           "tenantId": "__context:tenantId",
           "projectId": "__context:projectId",
           "projectFacilityId":
-              "__switch:referBeneficiary.evaluationFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.evaluationFacility}",
+              //"__switch:referBeneficiary.evaluationFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.evaluationFacility}"
+              "__switch:referBeneficiary.projectFacilityId:{Community Health Worker:__context:userUUID,default:referBeneficiary.projectFacilityId}",
           "beneficiaryId": "__context:ProjectBeneficiaryClientReferenceId",
           "referralCode": "__context:selectedIndividualClientReferenceId",
           "name": "__context:selectedIndividualName",
