@@ -849,7 +849,8 @@ final jsonConfig = {
           "recipientType":
               "__switch:referBeneficiary.evaluationFacility:{Community Health Worker:STAFF,default:__value:FACILITY}",
           "recipientId":
-              "__switch:referBeneficiary.evaluationFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.evaluationFacility}",
+              //"__switch:referBeneficiary.evaluationFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.evaluationFacility}"
+              "__switch:referBeneficiary.facilityId:{Community Health Worker:__context:userUUID,default:referBeneficiary.facilityId}",
           "referrerId": "__context:userUUID",
           "reasons": "collect:referBeneficiary.referralReason",
           "tenantId": "__context:tenantId",
@@ -864,7 +865,8 @@ final jsonConfig = {
           "tenantId": "__context:tenantId",
           "projectId": "__context:projectId",
           "projectFacilityId":
-              "__switch:referBeneficiary.evaluationFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.evaluationFacility}",
+              //"__switch:referBeneficiary.evaluationFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.evaluationFacility}"
+              "__switch:referBeneficiary.projectFacilityId:{Community Health Worker:__context:userUUID,default:referBeneficiary.projectFacilityId}",
           "beneficiaryId": "__context:ProjectBeneficiaryClientReferenceId",
           "referralCode": "__context:selectedIndividualClientReferenceId",
           "name": "__context:selectedIndividualName",

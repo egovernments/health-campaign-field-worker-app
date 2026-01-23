@@ -27,7 +27,8 @@ class EvaluationKeyDropDown extends LocalizedStatefulWidget {
 class _EvaluationKeyDropDownState
     extends LocalizedState<EvaluationKeyDropDown> {
   static const _evaluationKey = 'evaluationFacility';
- // Fixed the unnamed constructor issue
+  static const _facilityIdKey = 'facilityId';
+  static const _projectFacilityIdKey = 'projectFacilityId';
 
   @override
   void initState() {
@@ -59,8 +60,12 @@ class _EvaluationKeyDropDownState
     bool isRequiredFromSchema = false;
     dynamic validationMessages;
 
-    final pages =
-        context.read<FormsBloc>().state.cachedSchemas[widget.schemaName]?.pages ?? context.read<FormsBloc>().state.cachedSchemas["REFERRAL_CREATE"]?.pages;
+    final pages = context
+            .read<FormsBloc>()
+            .state
+            .cachedSchemas[widget.schemaName]
+            ?.pages ??
+        context.read<FormsBloc>().state.cachedSchemas["REFERRAL_CREATE"]?.pages;
 
     void walk(Map<String, PropertySchema> node, List<String> pathSoFar) {
       for (final entry in node.entries) {
@@ -72,7 +77,8 @@ class _EvaluationKeyDropDownState
               (schema.readOnly == true) || (schema.displayOnly == true);
           labelFromSchema = schema.label ?? schema.innerLabel;
           if (schema.validations != null) {
-            validationMessages = buildValidationMessages(schema.validations, localizations);
+            validationMessages =
+                buildValidationMessages(schema.validations, localizations);
             for (final validation in schema.validations!) {
               if (validation.type == "required" && validation.value == true) {
                 isRequiredFromSchema = true;
@@ -116,6 +122,7 @@ class _EvaluationKeyDropDownState
               form.control(_evaluationKey).markAsTouched();
               form.control(_evaluationKey).value = val.code;
 
+              // Store the projectFacilityId (val.code is projectFacilityId)
               context.read<FormsBloc>().add(
                     FormsEvent.updateField(
                       context: context,
@@ -124,6 +131,33 @@ class _EvaluationKeyDropDownState
                       value: val.code,
                     ),
                   );
+
+              // For REFER_BENEFICIARY, also store separate facilityId and projectFacilityId
+              // so transformer can map them to different entities
+              if (widget.schemaName == "REFER_BENEFICIARY") {
+                final facilityId = _getFacilityIdForProjectFacility(
+                    projectFacilities, val.code);
+
+                // Store facilityId for Referral entity
+                context.read<FormsBloc>().add(
+                      FormsEvent.updateField(
+                        context: context,
+                        schemaKey: widget.schemaName,
+                        key: _facilityIdKey,
+                        value: facilityId,
+                      ),
+                    );
+
+                // Store projectFacilityId for HFReferral entity
+                context.read<FormsBloc>().add(
+                      FormsEvent.updateField(
+                        context: context,
+                        schemaKey: widget.schemaName,
+                        key: _projectFacilityIdKey,
+                        value: val.code,
+                      ),
+                    );
+              }
             },
           ),
         );
@@ -135,8 +169,20 @@ class _EvaluationKeyDropDownState
     return keys
         .map((key) => DropdownItem(
               name: key.facilityId,
-              code: widget.schemaName == "REFER_BENEFICIARY" ? key.facilityId : key.id,
+              // Store projectFacilityId (key.id) as the code
+              // facilityId will be stored separately via onSelect
+              code: key.id,
             ))
         .toList();
+  }
+
+  /// Get the facilityId for a given projectFacilityId from the list
+  String? _getFacilityIdForProjectFacility(
+      List<ProjectFacilityModel> projectFacilities, String? projectFacilityId) {
+    if (projectFacilityId == null) return null;
+    final facility = projectFacilities
+        .where((f) => f.id == projectFacilityId)
+        .firstOrNull;
+    return facility?.facilityId;
   }
 }
