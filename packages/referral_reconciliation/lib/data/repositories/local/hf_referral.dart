@@ -58,9 +58,10 @@ class HFReferralLocalRepository
             final additionalData = referral.additionalFields != null
                 ? jsonDecode(referral.additionalFields!)
                 : null;
-            List<Map<String, dynamic>> data = additionalData != null && additionalData['fields'] != null
-                ? List<Map<String, dynamic>>.from(additionalData['fields'])
-                : <Map<String, dynamic>>[];
+            List<Map<String, dynamic>> data =
+                additionalData != null && additionalData['fields'] != null
+                    ? List<Map<String, dynamic>>.from(additionalData['fields'])
+                    : <Map<String, dynamic>>[];
             final HFReferralAdditionalFields additionalFields =
                 HFReferralAdditionalFields(
               version: 1,
@@ -214,12 +215,12 @@ class HFReferralLocalRepository
     return retryLocalCallOperation(() async {
       final referralCompanions = entities
           .map((e) => e.companion.copyWith(
-                name: e.additionalFields?.fields
+                name: Value(e.additionalFields?.fields
                     .where((h) =>
                         h.key ==
                         ReferralReconAdditionalFields.nameOfReferral.toValue())
                     .firstOrNull
-                    ?.value,
+                    ?.value),
                 // Include localityCode during downsync
                 localityCode: Value(e.localityCode),
               ))
@@ -242,29 +243,38 @@ class HFReferralLocalRepository
     DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
-      debugPrint('HFReferralLocalRepository.update: Starting update for clientReferenceId=${entity.clientReferenceId}');
-      debugPrint('HFReferralLocalRepository.update: Entity additionalFields=${entity.additionalFields?.fields?.map((f) => '${f.key}=${f.value}').toList()}');
+      debugPrint(
+          'HFReferralLocalRepository.update: Starting update for clientReferenceId=${entity.clientReferenceId}');
+      debugPrint(
+          'HFReferralLocalRepository.update: Entity additionalFields=${entity.additionalFields?.fields?.map((f) => '${f.key}=${f.value}').toList()}');
 
-      // Fetch existing record to merge additionalFields
+      // Fetch existing record to merge fields
       final existingRecords = await search(
         HFReferralSearchModel(
           clientReferenceId: [entity.clientReferenceId],
         ),
       );
 
-      debugPrint('HFReferralLocalRepository.update: Found ${existingRecords.length} existing records');
+      debugPrint(
+          'HFReferralLocalRepository.update: Found ${existingRecords.length} existing records');
 
-      HFReferralAdditionalFields? mergedAdditionalFields = entity.additionalFields;
+      HFReferralAdditionalFields? mergedAdditionalFields =
+          entity.additionalFields;
+      HFReferralModel updatedEntity = entity;
 
       if (existingRecords.isNotEmpty) {
         final existingRecord = existingRecords.first;
         final existingFields = existingRecord.additionalFields?.fields ?? [];
         final newFields = entity.additionalFields?.fields ?? [];
 
-        debugPrint('HFReferralLocalRepository.update: Existing fields count=${existingFields.length}');
-        debugPrint('HFReferralLocalRepository.update: Existing fields=${existingFields.map((f) => '${f.key}=${f.value}').toList()}');
-        debugPrint('HFReferralLocalRepository.update: New fields count=${newFields.length}');
-        debugPrint('HFReferralLocalRepository.update: New fields=${newFields.map((f) => '${f.key}=${f.value}').toList()}');
+        debugPrint(
+            'HFReferralLocalRepository.update: Existing fields count=${existingFields.length}');
+        debugPrint(
+            'HFReferralLocalRepository.update: Existing fields=${existingFields.map((f) => '${f.key}=${f.value}').toList()}');
+        debugPrint(
+            'HFReferralLocalRepository.update: New fields count=${newFields.length}');
+        debugPrint(
+            'HFReferralLocalRepository.update: New fields=${newFields.map((f) => '${f.key}=${f.value}').toList()}');
 
         // Create a map of existing fields
         final fieldMap = <String, dynamic>{};
@@ -284,19 +294,75 @@ class HFReferralLocalRepository
             .map((e) => AdditionalField(e.key, e.value))
             .toList();
 
-        debugPrint('HFReferralLocalRepository.update: Merged fields count=${mergedFieldsList.length}');
-        debugPrint('HFReferralLocalRepository.update: Merged fields=${mergedFieldsList.map((f) => '${f.key}=${f.value}').toList()}');
+        debugPrint(
+            'HFReferralLocalRepository.update: Merged fields count=${mergedFieldsList.length}');
+        debugPrint(
+            'HFReferralLocalRepository.update: Merged fields=${mergedFieldsList.map((f) => '${f.key}=${f.value}').toList()}');
 
         mergedAdditionalFields = HFReferralAdditionalFields(
           version: entity.additionalFields?.version ?? 1,
           fields: mergedFieldsList,
         );
-      }
 
-      // Create updated entity with merged additionalFields
-      final updatedEntity = entity.copyWith(
-        additionalFields: mergedAdditionalFields,
-      );
+        // Get current timestamp for modified times
+        final currentTime = DateTime.now().millisecondsSinceEpoch;
+
+        // Create updated entity preserving existing field values when incoming is null
+        // and properly handling created/modified timestamps
+        updatedEntity = HFReferralModel(
+          // Preserve id from existing if not provided
+          id: entity.id ?? existingRecord.id,
+          clientReferenceId: entity.clientReferenceId,
+          // Preserve existing values if incoming is null
+          tenantId: entity.tenantId ?? existingRecord.tenantId,
+          name: entity.name ?? existingRecord.name,
+          projectId: entity.projectId ?? existingRecord.projectId,
+          projectFacilityId:
+              entity.projectFacilityId ?? existingRecord.projectFacilityId,
+          symptom: entity.symptom ?? existingRecord.symptom,
+          symptomSurveyId:
+              entity.symptomSurveyId ?? existingRecord.symptomSurveyId,
+          beneficiaryId: entity.beneficiaryId ?? existingRecord.beneficiaryId,
+          referralCode: entity.referralCode ?? existingRecord.referralCode,
+          nationalLevelId:
+              entity.nationalLevelId ?? existingRecord.nationalLevelId,
+          localityCode: entity.localityCode ?? existingRecord.localityCode,
+          rowVersion: entity.rowVersion ?? existingRecord.rowVersion,
+          isDeleted: entity.isDeleted ?? existingRecord.isDeleted,
+          nonRecoverableError:
+              entity.nonRecoverableError ?? existingRecord.nonRecoverableError,
+          additionalFields: mergedAdditionalFields,
+          // Preserve createdTime from existing, update modifiedTime to now
+          auditDetails: AuditDetails(
+            createdBy: existingRecord.auditDetails?.createdBy ??
+                entity.auditDetails?.createdBy ??
+                '',
+            createdTime: existingRecord.auditDetails?.createdTime ??
+                entity.auditDetails?.createdTime ??
+                currentTime,
+            lastModifiedBy: entity.auditDetails?.lastModifiedBy ??
+                existingRecord.auditDetails?.lastModifiedBy,
+            lastModifiedTime: currentTime,
+          ),
+          // Preserve clientCreatedTime from existing, update clientModifiedTime to now
+          clientAuditDetails: ClientAuditDetails(
+            createdBy: existingRecord.clientAuditDetails?.createdBy ??
+                entity.clientAuditDetails?.createdBy ??
+                '',
+            createdTime: existingRecord.clientAuditDetails?.createdTime ??
+                entity.clientAuditDetails?.createdTime ??
+                currentTime,
+            lastModifiedBy: entity.clientAuditDetails?.lastModifiedBy ??
+                existingRecord.clientAuditDetails?.lastModifiedBy,
+            lastModifiedTime: currentTime,
+          ),
+        );
+      } else {
+        // No existing record - create updated entity with merged additionalFields only
+        updatedEntity = entity.copyWith(
+          additionalFields: mergedAdditionalFields,
+        );
+      }
 
       final referralCompanion = updatedEntity.companion.copyWith(
         name: Value(mergedAdditionalFields?.fields

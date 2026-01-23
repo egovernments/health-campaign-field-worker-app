@@ -103,7 +103,7 @@ class HFReferralDownSyncBloc
         // Get total count from server
         final initialResults = await hfReferralRemoteRepository.search(
           HFReferralSearchModel(
-            projectId: [event.projectId],
+            //projectId: [event.projectId],
             localityCode: [event.boundaryCode],
           ),
         );
@@ -161,7 +161,7 @@ class HFReferralDownSyncBloc
       // Fetch HFReferral data from server
       final hfReferrals = await hfReferralRemoteRepository.search(
         HFReferralSearchModel(
-          projectId: [event.projectId],
+          //projectId: [event.projectId],
           localityCode: [event.boundaryCode],
         ),
       );
