@@ -202,6 +202,21 @@ class TransformerExecutor extends ActionExecutor {
       }
     }
 
+    // Auto-calculate current cycle index if not already in context
+    // This allows transformer config to use __context:cycleIndex
+    if (!contextMap.containsKey('cycleIndex') ||
+        contextMap['cycleIndex'] == null) {
+      final currentCycleIndex = _getCurrentCycleIndex();
+      if (currentCycleIndex != null) {
+        // Format as zero-padded string (e.g., 1 -> "01", 10 -> "10")
+        final formattedCycleIndex =
+            currentCycleIndex.toString().padLeft(2, '0');
+        contextMap['cycleIndex'] = formattedCycleIndex;
+        debugPrint(
+            'TRANSFORMER: Added cycleIndex to context: $formattedCycleIndex');
+      }
+    }
+
     List<EntityModel> entities = [];
 
     // Use updateEntitiesFromForm for edit mode with existing models
@@ -492,8 +507,7 @@ class TransformerExecutor extends ActionExecutor {
                 final genderString = gender.toString();
                 // Handle "Gender.male" -> "MALE"
                 if (genderString.contains('.')) {
-                  genderStr =
-                      genderString.split('.').last.toUpperCase();
+                  genderStr = genderString.split('.').last.toUpperCase();
                 } else {
                   genderStr = genderString.toUpperCase();
                 }
@@ -569,5 +583,43 @@ class TransformerExecutor extends ActionExecutor {
     }
 
     return months;
+  }
+
+  /// Get the current running cycle index from project type
+  /// Returns the cycle id where startDate < now < endDate
+  int? _getCurrentCycleIndex() {
+    try {
+      final projectType = FlowBuilderSingleton().projectType;
+      if (projectType == null) {
+        debugPrint('TRANSFORMER: No projectType found in FlowBuilderSingleton');
+        return null;
+      }
+
+      final cycles = projectType.cycles;
+      if (cycles == null || cycles.isEmpty) {
+        debugPrint('TRANSFORMER: No cycles found in projectType');
+        return null;
+      }
+
+      final now = DateTime.now().millisecondsSinceEpoch;
+
+      // Find the current running cycle (where startDate < now < endDate)
+      for (final cycle in cycles) {
+        final startDate = cycle.startDate ?? 0;
+        final endDate = cycle.endDate ?? 0;
+
+        if (startDate < now && now < endDate) {
+          debugPrint(
+              'TRANSFORMER: Found current cycle - id=${cycle.id}, startDate=$startDate, endDate=$endDate');
+          return cycle.id;
+        }
+      }
+
+      debugPrint('TRANSFORMER: No active cycle found');
+      return null;
+    } catch (e) {
+      debugPrint('TRANSFORMER: Error getting current cycle index: $e');
+      return null;
+    }
   }
 }
