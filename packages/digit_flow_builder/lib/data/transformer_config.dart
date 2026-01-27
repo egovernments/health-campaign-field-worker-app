@@ -883,9 +883,9 @@ final jsonConfig = {
             "referredBy": "__context:userUUID",
             "referralComments": "referBeneficiary.referralComments",
             "nameOfReferral": "__context:selectedIndividualName",
-            "cycle": "referralDetails.referralCycle",
-            "gender": "referralDetails.gender",
-            "age": "referralDetails.ageInMonths",
+            "cycle": "__context:cycleIndex",
+            "gender": "__context:selectedIndividualGender",
+            "ageInMonths": "__context:selectedIndividualAgeInMonths",
             "dateOfEvaluation": "__generate:timestamp"
           }
         }
