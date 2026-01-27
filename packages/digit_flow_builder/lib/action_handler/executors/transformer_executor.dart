@@ -25,9 +25,12 @@ class TransformerExecutor extends ActionExecutor {
 
     debugPrint('TRANSFORMER: Starting with configName=$configName');
     debugPrint('TRANSFORMER: contextData keys = ${contextData.keys.toList()}');
-    debugPrint('TRANSFORMER: contextData[formData] = ${contextData['formData']}');
-    debugPrint('TRANSFORMER: contextData[formData] keys = ${(contextData['formData'] as Map?)?.keys.toList()}');
-    debugPrint('TRANSFORMER: contextData[navigation] = ${contextData['navigation']}');
+    debugPrint(
+        'TRANSFORMER: contextData[formData] = ${contextData['formData']}');
+    debugPrint(
+        'TRANSFORMER: contextData[formData] keys = ${(contextData['formData'] as Map?)?.keys.toList()}');
+    debugPrint(
+        'TRANSFORMER: contextData[navigation] = ${contextData['navigation']}');
 
     final configData = jsonConfig[configName];
     if (configData == null) {
@@ -96,7 +99,8 @@ class TransformerExecutor extends ActionExecutor {
         ...formValuesToUse ?? {},
         'navigation': navigationParams,
       };
-      debugPrint('TRANSFORMER: Added navigation params to formValues: $navigationParams');
+      debugPrint(
+          'TRANSFORMER: Added navigation params to formValues: $navigationParams');
     }
 
     // Check if we should force create new entities even in edit mode
@@ -180,6 +184,24 @@ class TransformerExecutor extends ActionExecutor {
       "beneficiaryType": FlowBuilderSingleton().beneficiaryType?.toValue(),
     };
 
+    // Auto-fetch individual data if selectedIndividualClientReferenceId is in navigation
+    // This allows transformer config to use __context:selectedIndividualGender, etc.
+    final selectedIndividualId =
+        navigationParams?['selectedIndividualClientReferenceId'];
+    if (selectedIndividualId != null) {
+      final individualData =
+          _fetchIndividualDataFromRegistry(selectedIndividualId);
+      if (individualData != null) {
+        contextMap['selectedIndividualGender'] = individualData['gender'];
+        contextMap['selectedIndividualAgeInMonths'] =
+            individualData['ageInMonths'];
+        contextMap['selectedIndividualDateOfBirth'] =
+            individualData['dateOfBirth'];
+        debugPrint(
+            'TRANSFORMER: Added individual data to context - gender=${individualData['gender']}, ageInMonths=${individualData['ageInMonths']}');
+      }
+    }
+
     List<EntityModel> entities = [];
 
     // Use updateEntitiesFromForm for edit mode with existing models
@@ -245,7 +267,8 @@ class TransformerExecutor extends ActionExecutor {
           modifiedEntities.add(updatedEntity);
           debugPrint('TRANSFORMER: $entityType has changes - will be updated');
         } else {
-          debugPrint('TRANSFORMER: $entityType has NO changes - skipping update');
+          debugPrint(
+              'TRANSFORMER: $entityType has NO changes - skipping update');
         }
       }
 
@@ -335,8 +358,10 @@ class TransformerExecutor extends ActionExecutor {
       final entityType = getEntityTypeName(entity);
       final map = entity.toMap();
       debugPrint('TRANSFORMER: Entity type=$entityType');
-      debugPrint('TRANSFORMER: Entity clientReferenceId=${map['clientReferenceId']}');
-      debugPrint('TRANSFORMER: Entity additionalFields=${map['additionalFields']}');
+      debugPrint(
+          'TRANSFORMER: Entity clientReferenceId=${map['clientReferenceId']}');
+      debugPrint(
+          'TRANSFORMER: Entity additionalFields=${map['additionalFields']}');
     }
 
     contextData['entities'] = entities;
