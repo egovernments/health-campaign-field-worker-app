@@ -64,9 +64,11 @@ class DigitBlocObserver extends BlocObserver {
 }
 ```
 
-#### 4. Future Extension (Easiest - No try-catch needed!)
+#### 4. Future Extension (No try-catch at call site)
 ```dart
 extension LoggedFuture<T> on Future<T> {
+  /// Wraps the Future with automatic error logging
+  /// The try-catch is inside the extension - callers don't write it
   Future<T> logged(String operation, {LogCategory? category}) async {
     try {
       return await this;
@@ -78,6 +80,7 @@ extension LoggedFuture<T> on Future<T> {
 }
 
 // Usage - just add .logged() to any Future
+// Errors are automatically logged without wrapping in try-catch
 await api.getHouseholds().logged('fetch households');
 await repository.save(entity).logged('save entity');
 await crudBloc.create(data).logged('create record');
@@ -97,180 +100,7 @@ await crudBloc.create(data).logged('create record');
 
 ---
 
-## 2. Why Custom Logger vs Existing Packages?
-
-### Comparison with Popular Packages
-
-| Feature | `logger` | `logging` | `talker` | **digit_logger** |
-|---------|----------|-----------|----------|------------------|
-| **Offline-first storage** | No | No | No | Yes (Isar/SQLite) |
-| **PII sanitization** | No | No | No | Yes (built-in patterns) |
-| **Remote sync with retry** | No | No | No | Yes (configurable) |
-| **Correlation IDs** | No | No | No | Yes (Zone-based) |
-| **Domain categories** | No | Basic | Basic | Yes (extensible, schema/form/transform) |
-| **Size limits** | No | No | No | Yes (prevent OOM) |
-| **Circular ref handling** | No | No | No | Yes |
-| **Deduplication** | No | No | No | Yes |
-| **Session tracking** | No | No | No | Yes |
-| **Health checks** | No | No | No | Yes |
-| **Graceful degradation** | No | No | No | Yes |
-| **Pre-init buffer** | No | No | No | Yes |
-| **Compile-time stripping** | Partial | No | No | Yes (trace/debug in release) |
-| **Query/export API** | No | No | Partial | Yes |
-| **Field worker optimized** | No | No | No | Yes |
-
-### Why Existing Packages Don't Fit
-
-#### `logger` (pub.dev/packages/logger)
-```dart
-// What it offers:
-Logger().d("Debug message");  // Pretty console output
-
-// What it lacks:
-// - No persistent storage
-// - No offline sync
-// - No PII protection
-// - No correlation tracing
-// - Categories are just strings, no domain-specific filtering
-```
-
-#### `logging` (dart.dev official)
-```dart
-// What it offers:
-final log = Logger('MyClass');
-log.info('Hello');  // Hierarchical loggers
-
-// What it lacks:
-// - Console only, no storage
-// - No structured context data
-// - No sanitization
-// - No mobile-specific features
-```
-
-#### `talker` (pub.dev/packages/talker)
-```dart
-// What it offers:
-Talker().debug('message');  // Pretty output + error handling
-TalkerFlutterObserver();    // BLoC/Route observers
-
-// What it lacks:
-// - Storage is in-memory only (lost on restart)
-// - No remote sync
-// - No PII protection
-// - No correlation IDs
-// - No deduplication
-```
-
-### Key Advantages of digit_logger
-
-#### 1. **Offline-First for Field Workers**
-```dart
-// Field worker loses connectivity for hours
-DigitLogger.info('Household registered', context: {'id': 'HH-123'});
-// Log stored locally in Isar
-
-// When back online - automatic sync
-// Logs delivered to server with retry
-```
-
-#### 2. **PII Protection Built-In**
-```dart
-// Existing packages - PII leaks to logs
-logger.d('User: ${user.aadhaarNumber}');  // Dangerous!
-
-// digit_logger - automatic redaction
-DigitLogger.info('User registered', context: {
-  'aadhaarNumber': '1234-5678-9012',  // Redacted: ***REDACTED***
-  'name': 'John',                      // Kept as-is
-});
-```
-
-#### 3. **Domain-Specific Categories**
-```dart
-// Existing packages - generic categories
-logger.d('Schema error');  // How to filter JSON-specific issues?
-
-// digit_logger - filter by domain
-DigitLogger.schema.error('Invalid field type', context: {...});
-DigitLogger.transform.warn('Mapping failed', context: {...});
-
-// Query only schema issues from last hour:
-await DigitLogger.query(LogFilter(
-  categories: [LogCategory.schema],
-  minLevel: LogLevel.warn,
-  startTime: DateTime.now().subtract(Duration(hours: 1)),
-));
-```
-
-#### 4. **Correlation Across Operations**
-```dart
-// Existing packages - no way to trace related logs
-logger.d('Step 1');
-await someAsyncOp();
-logger.d('Step 2');  // How to link these?
-
-// digit_logger - automatic correlation
-await CorrelationContext.run(CorrelationContext.generate(), () async {
-  DigitLogger.info('Starting registration');  // corrId: abc-123
-  await validateForm();
-  DigitLogger.info('Form validated');          // corrId: abc-123
-  await saveData();
-  DigitLogger.info('Data saved');              // corrId: abc-123
-});
-// All 3 logs linked by correlation ID
-```
-
-#### 5. **Graceful Degradation**
-```dart
-// Existing packages - if logging fails, you might not know
-try {
-  logger.d('message');
-} catch (e) {
-  // Now what? Log the logging error? 🤔
-}
-
-// digit_logger - built-in fallbacks
-// If Isar fails → buffer in memory
-// If memory full → fallback to console
-// If console fails → silent drop (never crash)
-// Health check available to monitor
-final health = await DigitLogger.healthCheck();
-```
-
-#### 6. **Size Protection**
-```dart
-// Existing packages - can OOM with large context
-logger.d('Data', error: hugeJsonObject);  // Memory spike!
-
-// digit_logger - automatic limits
-DigitLogger.debug('Data', context: hugeJsonObject);
-// Context > 10KB? Dropped with marker
-// Message > 1000 chars? Truncated
-// Circular reference? Replaced with [circular]
-```
-
-### When to Use Existing Packages Instead
-
-| Use Case | Recommended Package |
-|----------|---------------------|
-| Simple console debugging during development | `logger` |
-| Dart-only (non-Flutter) server apps | `logging` |
-| Quick prototype with pretty output | `talker` |
-| Already have custom backend logging infra | Extend existing |
-
-### When digit_logger is the Right Choice
-
-- Field worker apps with **intermittent connectivity**
-- Apps handling **sensitive PII data** (health, finance, government)
-- **JSON-driven architectures** needing deep debugging visibility
-- Need to **correlate logs** across complex async operations
-- Must **query/export logs** for support tickets
-- Required **audit trail** with remote sync
-- Multiple packages need **consistent logging** (digit_forms_engine, digit_flow_builder)
-
----
-
-## 3. Architecture
+## 2. Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -321,7 +151,7 @@ DigitLogger.debug('Data', context: hugeJsonObject);
 
 ---
 
-## 4. Log Levels
+## 3. Log Levels
 
 | Level | Value | Usage | Console Color | Compiled in Release |
 |-------|-------|-------|---------------|---------------------|
@@ -357,7 +187,7 @@ static void trace(String message, {...}) {
 
 ---
 
-## 5. Log Categories
+## 4. Log Categories
 
 ### Core Categories (Built-in)
 
@@ -421,7 +251,7 @@ class LogCategory {
 
 ---
 
-## 6. Log Entry Structure
+## 5. Log Entry Structure
 
 ```dart
 class LogEntry {
@@ -530,7 +360,7 @@ String displayTime(DateTime utc) => utc.toLocal().toString();
 
 ---
 
-## 7. PII Protection & Sanitization
+## 6. PII Protection & Sanitization
 
 ### Sensitive Data Patterns
 
@@ -635,7 +465,7 @@ class SanitizationConfig {
 
 ---
 
-## 8. Storage Strategy
+## 7. Storage Strategy
 
 ### Abstract Storage Interface
 
@@ -711,7 +541,7 @@ class DeduplicationConfig {
 
 ---
 
-## 9. Graceful Degradation
+## 8. Graceful Degradation
 
 ### Failure Handling Strategy
 
@@ -775,7 +605,7 @@ if (!health.isStorageHealthy) {
 
 ---
 
-## 10. Remote Sync Strategy
+## 9. Remote Sync Strategy
 
 ### Sync Configuration
 
@@ -853,6 +683,287 @@ class RetryPolicy {
 
 ---
 
+## 10. Firebase Crashlytics Integration
+
+By default, digit_logger supports **Terminal + Firebase Crashlytics** as output targets. This section addresses Firebase limitations and how to overcome them.
+
+### Firebase Limitations & Solutions
+
+| Firebase Limitation | Solution |
+|---------------------|----------|
+| 64 breadcrumb limit | Smart rotation - keep important logs, rotate old ones |
+| No deduplication | Dedupe locally before sending to Firebase |
+| Log size limits | Smart truncation with priority preservation |
+| No correlation ID query | Use Firebase custom keys for filtering |
+| Privacy concerns | Hash PII before sending |
+| Same crash on multiple devices | Firebase auto-groups by crash signature |
+
+### Firebase Integration Class
+
+```dart
+class FirebaseCrashlyticsIntegration implements LogTarget {
+  final FirebaseCrashlytics _crashlytics;
+  final _breadcrumbs = Queue<LogEntry>();
+  static const _maxBreadcrumbs = 64;
+
+  /// Priority weights for smart rotation
+  static const _levelPriority = {
+    LogLevel.fatal: 100,
+    LogLevel.error: 80,
+    LogLevel.warn: 40,
+    LogLevel.info: 20,
+    LogLevel.debug: 5,
+    LogLevel.trace: 1,
+  };
+
+  @override
+  Future<void> write(LogEntry entry) async {
+    // 1. Deduplicate before adding
+    if (_isDuplicate(entry)) {
+      _incrementDuplicateCount(entry);
+      return;
+    }
+
+    // 2. Smart rotation if at limit
+    if (_breadcrumbs.length >= _maxBreadcrumbs) {
+      _rotateSmartly(entry);
+    }
+
+    // 3. Sanitize and truncate
+    final sanitized = _sanitizeForFirebase(entry);
+
+    // 4. Send to Firebase
+    await _crashlytics.log(_formatBreadcrumb(sanitized));
+
+    // 5. Set custom keys for filtering
+    await _setCustomKeys(entry);
+
+    _breadcrumbs.add(entry);
+  }
+}
+```
+
+### Smart Breadcrumb Rotation
+
+```dart
+void _rotateSmartly(LogEntry newEntry) {
+  // Never remove errors/fatals unless we have too many
+  final errorCount = _breadcrumbs.where(
+    (e) => e.level == LogLevel.error || e.level == LogLevel.fatal
+  ).length;
+
+  if (errorCount < _maxBreadcrumbs ~/ 2) {
+    // Remove lowest priority log
+    final toRemove = _breadcrumbs.reduce((a, b) =>
+      _levelPriority[a.level]! < _levelPriority[b.level]! ? a : b
+    );
+    _breadcrumbs.remove(toRemove);
+  } else {
+    // Too many errors - remove oldest error
+    _breadcrumbs.removeWhere((e) =>
+      e.level != LogLevel.error && e.level != LogLevel.fatal
+    );
+    if (_breadcrumbs.length >= _maxBreadcrumbs) {
+      _breadcrumbs.removeFirst();
+    }
+  }
+}
+```
+
+### Deduplication Before Firebase
+
+```dart
+final _recentHashes = <String, int>{};  // hash -> count
+static const _dedupeWindow = Duration(minutes: 1);
+
+bool _isDuplicate(LogEntry entry) {
+  final hash = _computeHash(entry);
+  final existing = _recentHashes[hash];
+  return existing != null;
+}
+
+void _incrementDuplicateCount(LogEntry entry) {
+  final hash = _computeHash(entry);
+  _recentHashes[hash] = (_recentHashes[hash] ?? 0) + 1;
+
+  // Update last breadcrumb with count
+  final last = _breadcrumbs.lastWhere(
+    (e) => _computeHash(e) == hash,
+    orElse: () => entry,
+  );
+  // Firebase breadcrumb updated with "(x5)" suffix
+}
+
+String _computeHash(LogEntry entry) {
+  return '${entry.level}:${entry.category.code}:${entry.message}'.hashCode.toString();
+}
+```
+
+### Smart Truncation
+
+```dart
+String _formatBreadcrumb(LogEntry entry, {int maxLength = 1000}) {
+  // Priority order: level > category > correlation > message > context
+  final buffer = StringBuffer();
+
+  // Always include (14 chars max)
+  buffer.write('[${entry.level.name.substring(0, 3).toUpperCase()}]');
+  buffer.write('[${entry.category.code}]');
+
+  // Include correlation if present (45 chars)
+  if (entry.correlationId != null) {
+    buffer.write('[${entry.correlationId!.substring(0, 8)}]');
+  }
+
+  // Remaining space for message
+  final remaining = maxLength - buffer.length - 10; // 10 for safety
+  if (entry.message.length > remaining) {
+    buffer.write(entry.message.substring(0, remaining));
+    buffer.write('...');
+  } else {
+    buffer.write(entry.message);
+
+    // Add context if space permits
+    final contextSpace = remaining - entry.message.length;
+    if (contextSpace > 20 && entry.context != null) {
+      final contextStr = jsonEncode(entry.context);
+      buffer.write(' ');
+      buffer.write(contextStr.length > contextSpace
+        ? '${contextStr.substring(0, contextSpace - 3)}...'
+        : contextStr);
+    }
+  }
+
+  return buffer.toString();
+}
+```
+
+### Custom Keys for Correlation ID Filtering
+
+```dart
+Future<void> _setCustomKeys(LogEntry entry) async {
+  // Set correlation ID as custom key for Firebase Console filtering
+  if (entry.correlationId != null) {
+    await _crashlytics.setCustomKey('correlation_id', entry.correlationId!);
+  }
+
+  // Set session ID
+  await _crashlytics.setCustomKey('session_id', entry.sessionId);
+
+  // Set last category (useful for filtering crashes)
+  await _crashlytics.setCustomKey('last_category', entry.category.code);
+
+  // Set user ID (hashed)
+  if (entry.userId != null) {
+    await _crashlytics.setUserId(PrivacyHasher.hash(entry.userId!));
+  }
+}
+```
+
+### Privacy Hashing Before Firebase
+
+```dart
+class PrivacyHasher {
+  static final _salt = Uuid().v4(); // Session-unique salt
+
+  /// One-way hash for PII - same input = same output within session
+  /// Different between sessions for privacy
+  static String hash(String value) {
+    final bytes = utf8.encode('$_salt:$value');
+    final digest = sha256.convert(bytes);
+    return digest.toString().substring(0, 16); // Short hash
+  }
+
+  /// Hash user ID for Firebase
+  static String hashUserId(String userId) => 'user_${hash(userId)}';
+
+  /// Hash phone number
+  static String hashPhone(String phone) => 'phone_${hash(phone)}';
+}
+
+// Usage in sanitization
+Map<String, dynamic> _sanitizeForFirebase(LogEntry entry) {
+  final context = entry.context;
+  if (context == null) return {};
+
+  return context.map((key, value) {
+    if (LogSanitizer.sensitiveKeys.contains(key.toLowerCase())) {
+      return MapEntry(key, PrivacyHasher.hash(value.toString()));
+    }
+    return MapEntry(key, value);
+  });
+}
+```
+
+### How Firebase Handles Same Crash on Multiple Devices
+
+Firebase Crashlytics **automatically groups crashes** by:
+
+1. **Crash signature**: Stack trace pattern matching
+2. **Exception type**: Same exception class
+3. **Crash location**: Same file and line number
+
+**What you see in Firebase Console:**
+```
+Issue: NullPointerException in transform_executor.dart:156
+├── 127 events  (127 occurrences across all devices)
+├── 45 users    (45 unique devices affected)
+├── Versions: 1.0.0 (89), 1.0.1 (38)
+└── Devices: Samsung (52), Xiaomi (41), OnePlus (34)
+```
+
+**How to leverage this:**
+```dart
+// Record fatal with consistent categorization
+Future<void> recordFatal(Object error, StackTrace stack, LogEntry entry) async {
+  // Set context before recording
+  await _crashlytics.setCustomKey('category', entry.category.code);
+  await _crashlytics.setCustomKey('correlation_id', entry.correlationId ?? 'none');
+
+  // Record the error - Firebase groups automatically
+  await _crashlytics.recordError(
+    error,
+    stack,
+    reason: entry.message,
+    fatal: entry.level == LogLevel.fatal,
+  );
+}
+```
+
+### Configuration
+
+```dart
+class FirebaseConfig {
+  /// Enable Firebase Crashlytics integration
+  final bool enabled; // Default: true in production
+
+  /// Minimum level to send to Firebase
+  final LogLevel minLevel; // Default: LogLevel.info
+
+  /// Enable privacy hashing
+  final bool hashPII; // Default: true
+
+  /// Custom keys to always set
+  final Map<String, String> customKeys;
+
+  /// Breadcrumb rotation strategy
+  final RotationStrategy rotationStrategy; // Default: priority-based
+}
+
+enum RotationStrategy {
+  /// Remove oldest regardless of level
+  fifo,
+
+  /// Remove lowest priority first
+  priorityBased,
+
+  /// Keep errors, rotate others
+  preserveErrors,
+}
+```
+
+---
+
 ## 11. Correlation & Tracing
 
 ### Correlation ID
@@ -874,9 +985,9 @@ class CorrelationContext {
 
 // Usage
 await CorrelationContext.run(CorrelationContext.generate(), () async {
-  DigitLogger.info('Starting operation'); // Automatically has correlationId
-  await doSomething();
-  DigitLogger.info('Operation complete'); // Same correlationId
+DigitLogger.info('Starting operation'); // Automatically has correlationId
+await doSomething();
+DigitLogger.info('Operation complete'); // Same correlationId
 });
 ```
 
@@ -921,18 +1032,18 @@ class DigitLogger {
 
   /// Log before init - buffered until init completes
   static void _logOrBuffer(LogLevel level, String message, ...) {
-    if (_instance != null) {
-      _instance!._log(level, message, ...);
-    } else if (_preInitBuffer.length < _maxPreInitBuffer) {
-      _preInitBuffer.add(_PendingLog(level, message, ...));
-    }
-    // If buffer full, drop (graceful degradation)
+  if (_instance != null) {
+  _instance!._log(level, message, ...);
+  } else if (_preInitBuffer.length < _maxPreInitBuffer) {
+  _preInitBuffer.add(_PendingLog(level, message, ...));
+  }
+  // If buffer full, drop (graceful degradation)
   }
 
   /// Get instance for DI
   static DigitLogger get instance {
-    assert(_instance != null, 'DigitLogger.init() must be called first');
-    return _instance!;
+  assert(_instance != null, 'DigitLogger.init() must be called first');
+  return _instance!;
   }
 }
 ```
@@ -1086,8 +1197,8 @@ void main() {
 
     expect(capture.logs, contains(
       isA<LogEntry>()
-        .having((e) => e.level, 'level', LogLevel.warn)
-        .having((e) => e.message, 'message', contains('missing')),
+          .having((e) => e.level, 'level', LogLevel.warn)
+          .having((e) => e.message, 'message', contains('missing')),
     ));
   });
 }
