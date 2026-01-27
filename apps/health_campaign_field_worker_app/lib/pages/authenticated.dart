@@ -312,6 +312,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                     switch (context.router.topRoute.name) {
                                       case ProjectSelectionRoute.name:
                                       case BoundarySelectionRoute.name:
+                                      case PermissionsRoute.name:
                                         shouldShowDrawer = false;
                                         break;
                                       default:
