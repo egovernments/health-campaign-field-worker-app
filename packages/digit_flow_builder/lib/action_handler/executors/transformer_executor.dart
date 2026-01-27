@@ -534,23 +534,82 @@ class TransformerExecutor extends ActionExecutor {
         return null;
       }
 
-      final cycles = projectType.cycles;
-      if (cycles == null || cycles.isEmpty) {
-        debugPrint('TRANSFORMER: No cycles found in projectType');
-        return null;
-      }
+      // Search for the individual in the state wrapper
+      // Structure: stateWrapper -> wrapper -> members[] -> individual[]
+      for (final wrapper in stateWrapper) {
+        if (wrapper is! Map) continue;
 
-      final now = DateTime.now().millisecondsSinceEpoch;
+        // Get the members list from wrapper
+        final members = wrapper['members'];
+        if (members == null) continue;
 
-      // Find the current running cycle (where startDate < now < endDate)
-      for (final cycle in cycles) {
-        final startDate = cycle.startDate ?? 0;
-        final endDate = cycle.endDate ?? 0;
+        // Handle both List and single object
+        final memberList = members is List ? members : [members];
 
-        if (startDate < now && now < endDate) {
-          debugPrint(
-              'TRANSFORMER: Found current cycle - id=${cycle.id}, startDate=$startDate, endDate=$endDate');
-          return cycle.id;
+        for (final member in memberList) {
+          if (member == null || member is! Map) continue;
+
+          // Get the individual list from member
+          final individuals = member['individual'];
+          if (individuals == null) continue;
+
+          final individualList =
+              individuals is List ? individuals : [individuals];
+
+          for (final individual in individualList) {
+            if (individual == null) continue;
+
+            // Get clientReferenceId from the individual
+            String? individualClientRefId;
+            dynamic gender;
+            dynamic dateOfBirth;
+
+            if (individual is Map) {
+              individualClientRefId =
+                  individual['clientReferenceId']?.toString();
+              gender = individual['gender'];
+              dateOfBirth = individual['dateOfBirth'];
+            } else {
+              // Try to access it as an EntityModel
+              try {
+                final map = (individual as dynamic).toMap();
+                individualClientRefId = map['clientReferenceId']?.toString();
+                gender = map['gender'];
+                dateOfBirth = map['dateOfBirth'];
+              } catch (_) {
+                continue;
+              }
+            }
+
+            if (individualClientRefId == clientReferenceId) {
+              // Found the individual, extract data
+              // Handle Gender enum - convert to string value
+              String? genderStr;
+              if (gender != null) {
+                final genderString = gender.toString();
+                // Handle "Gender.male" -> "MALE"
+                if (genderString.contains('.')) {
+                  genderStr = genderString.split('.').last.toUpperCase();
+                } else {
+                  genderStr = genderString.toUpperCase();
+                }
+              }
+
+              // Calculate age in months
+              int? ageInMonths;
+              if (dateOfBirth != null) {
+                ageInMonths = _calculateAgeInMonths(dateOfBirth);
+              }
+
+              debugPrint(
+                  'TRANSFORMER: Found individual - gender=$genderStr, ageInMonths=$ageInMonths, dateOfBirth=$dateOfBirth');
+              return {
+                'gender': genderStr,
+                'ageInMonths': ageInMonths,
+                'dateOfBirth': dateOfBirth,
+              };
+            }
+          }
         }
       }
 
@@ -560,5 +619,50 @@ class TransformerExecutor extends ActionExecutor {
       debugPrint('TRANSFORMER: Error getting current cycle index: $e');
       return null;
     }
+  }
+
+  /// Calculate age in months from date of birth
+  int _calculateAgeInMonths(dynamic dateValue) {
+    DateTime? birthDate;
+
+    if (dateValue is int) {
+      birthDate = DateTime.fromMillisecondsSinceEpoch(dateValue);
+    } else if (dateValue is String) {
+      // Try parsing as timestamp first
+      final timestamp = int.tryParse(dateValue);
+      if (timestamp != null) {
+        birthDate = DateTime.fromMillisecondsSinceEpoch(timestamp);
+      } else if (dateValue.contains('/')) {
+        // Handle dd/MM/yyyy format
+        try {
+          final parts = dateValue.split('/');
+          if (parts.length == 3) {
+            final day = int.parse(parts[0]);
+            final month = int.parse(parts[1]);
+            final year = int.parse(parts[2]);
+            birthDate = DateTime(year, month, day);
+          }
+        } catch (_) {
+          // Fall through to DateTime.tryParse
+        }
+      }
+      // Try parsing as ISO date string
+      birthDate ??= DateTime.tryParse(dateValue);
+    } else if (dateValue is DateTime) {
+      birthDate = dateValue;
+    }
+
+    if (birthDate == null) return 0;
+
+    final now = DateTime.now();
+    final months =
+        (now.year - birthDate.year) * 12 + (now.month - birthDate.month);
+
+    // Adjust if the day hasn't occurred yet this month
+    if (now.day < birthDate.day) {
+      return months - 1;
+    }
+
+    return months;
   }
 }
