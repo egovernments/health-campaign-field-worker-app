@@ -39,7 +39,7 @@ final dynamic sampleReferralFlows = {
       "footer": [
         {
           "type": "template",
-          "label": "REFERRAL_OVERVIEW_PRIMARY_ACTION_LABEL",
+          "label": "{{navigation.buttonLabel}}",
           "format": "button",
           "onAction": [
             {
@@ -424,6 +424,10 @@ final dynamic sampleReferralFlows = {
                             {
                               "key": "referralSymptom",
                               "value": "{{ HFReferralModel.symptom }}"
+                            },
+                            {
+                              "key": "buttonLabel",
+                              "value": "{{fn:computeReferralButtonLabel(HFReferralModel.symptom, HFReferralModel.additionalFields.fields)}}"
                             }
                           ],
                           "name": "referralOverview",

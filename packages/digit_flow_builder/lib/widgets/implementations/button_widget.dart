@@ -39,6 +39,21 @@ class ButtonWidget implements FlowWidget {
     final formData = currentState?.formData;
     final widgetData = currentState?.widgetData;
 
+    // Get navigation params for label resolution
+    Map<String, dynamic>? navigationParams;
+    if (screenKey != null) {
+      navigationParams = FlowCrudStateRegistry().getNavigationParams(screenKey);
+      // Try with different type prefixes if not found
+      if (navigationParams == null || navigationParams.isEmpty) {
+        navigationParams =
+            FlowCrudStateRegistry().getNavigationParams('FORM::$screenKey');
+      }
+      if (navigationParams == null || navigationParams.isEmpty) {
+        navigationParams =
+            FlowCrudStateRegistry().getNavigationParams('TEMPLATE::$screenKey');
+      }
+    }
+
     // Create evaluation context
     final evalContext = {
       'item': crudCtx?.item,
@@ -81,11 +96,23 @@ class ButtonWidget implements FlowWidget {
         template: labelText,
         stateData: crudStateData,
         item: crudCtx?.item,
+        navigationParams: navigationParams,
       );
       // Translate if it's a pure localization key (no templates remaining)
       if (!resolvedLabel.contains('{{')) {
         resolvedLabel = localization?.translate(resolvedLabel) ?? resolvedLabel;
       }
+    } else if (labelText.contains('{{navigation.') && navigationParams != null) {
+      // Handle navigation params even without crudStateData
+      final navParams = navigationParams; // Local non-null reference
+      resolvedLabel = labelText.replaceAllMapped(
+        RegExp(r'\{\{\s*navigation\.(\w+)\s*\}\}'),
+        (match) {
+          final key = match.group(1);
+          return navParams[key]?.toString() ?? '';
+        },
+      );
+      resolvedLabel = localization?.translate(resolvedLabel) ?? resolvedLabel;
     } else {
       resolvedLabel = resolveTemplate(
             labelText,
@@ -141,18 +168,24 @@ class ButtonWidget implements FlowWidget {
                   final rawValue = entry['value'];
 
                   // Try to resolve from stateData first, then widgetData, then formData
+                  // Use resolveValueRaw directly to pass crudStateData for function resolution
                   dynamic resolvedValue = stateData != null
-                      ? resolveValue(rawValue, stateData)
+                      ? resolveValueRaw(rawValue, stateData,
+                          stateData: crudStateData,
+                          widgetData: widgetData,
+                          screenKey: screenKey)
                       : rawValue;
 
                   if (resolvedValue == rawValue && widgetData != null) {
                     // If not resolved from stateData, try widgetData
-                    resolvedValue = resolveValue(rawValue, widgetData);
+                    resolvedValue = resolveValueRaw(rawValue, widgetData,
+                        stateData: crudStateData, screenKey: screenKey);
                   }
 
                   if (resolvedValue == rawValue && formData != null) {
                     // If not resolved from widgetData, try formData
-                    resolvedValue = resolveValue(rawValue, formData);
+                    resolvedValue = resolveValueRaw(rawValue, formData,
+                        stateData: crudStateData, screenKey: screenKey);
                   }
 
                   return {
@@ -174,18 +207,7 @@ class ButtonWidget implements FlowWidget {
             }).toList();
 
             // Build initial context data from current state
-            // Include navigation params from registry for applyIf evaluation
-            // Try multiple key formats for robust retrieval
-            Map<String, dynamic>? navigationParams;
-            if (screenKey != null) {
-              navigationParams = FlowCrudStateRegistry().getNavigationParams(screenKey);
-              debugPrint('BUTTON_WIDGET: screenKey=$screenKey, navParams=$navigationParams');
-              // Try with FORM:: prefix if not found
-              if (navigationParams == null || navigationParams.isEmpty) {
-                navigationParams = FlowCrudStateRegistry().getNavigationParams('FORM::$screenKey');
-                debugPrint('BUTTON_WIDGET: Trying FORM::$screenKey, navParams=$navigationParams');
-              }
-            }
+            // Navigation params already retrieved at widget build time
             final initialContextData = <String, dynamic>{
               'wrappers': const [],
               if (stateData != null) ...{
