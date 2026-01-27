@@ -71,7 +71,7 @@ class TagWidget implements FlowWidget {
       Tag(
         isStroke: true,
         label: valueText,
-        type: WidgetParsers.parseTagType(properties?['type']),
+        type: WidgetParsers.parseTagType(properties?['tagType']),
       ),
       properties,
     );
