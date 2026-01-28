@@ -425,7 +425,6 @@ final jsonConfig = {
           "status": "__value:INELIGIBLE",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
-          "resources": "list:TaskResourceModel",
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
           "plannedStartDate": "taskDetails.plannedStartDate",
@@ -469,27 +468,6 @@ final jsonConfig = {
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
-        },
-        "listMappings": {
-          "TaskResourceModel": {
-            "listSource": "DeliveryDetails.resourceCard",
-            "mappings": {
-              "id": "id",
-              "clientReferenceId": "__generate:uuid",
-              "taskId": "taskId",
-              "productVariantId":
-              "DeliveryDetails.resourceCard.resourceDelivered.productId",
-              "quantity": "DeliveryDetails.resourceCard.quantityDistributed",
-              "isDelivered": "__value:true",
-              "deliveryComment": "DeliveryDetails.deliveryComment",
-              "nonRecoverableError": "error.nonRecoverable",
-              "taskclientReferenceId": "__ref:TaskModel.clientReferenceId",
-              "tenantId": "__context:tenantId",
-              "rowVersion": "meta.rowVersion",
-              "clientAuditDetails": "__generate:clientAudit",
-              "auditDetails": "__generate:audit",
-            }
-          }
         }
       }
     }

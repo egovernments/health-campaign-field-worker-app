@@ -53,6 +53,7 @@ class FormsRenderPage extends LocalizedStatefulWidget {
 
 class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
   bool _hasInitializedProtection = false;
+  bool _isSubmitting = false;
 
   /// Unique identifier for this form page instance in the protection manager
   String get _protectionPageId =>
@@ -161,7 +162,20 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                     .translate(schema.actionLabel ?? 'Next')
                                 : localizations
                                     .translate(schema.actionLabel ?? 'Submit'),
-                            onPressed: () {
+                            onPressed: () async {
+                              // Prevent multiple simultaneous submissions
+                              if (_isSubmitting) return;
+
+                              // Set flag synchronously FIRST to block rapid taps
+                              _isSubmitting = true;
+
+                              // Then update UI
+                              setState(() {});
+
+                              // Add small delay to allow custom component to update schema data
+                              await Future.delayed(
+                                  const Duration(milliseconds: 200));
+
                               // 1. Get visible keys only (skip hidden fields and fields with visibility conditions)
                               final currentKeys = schema.properties?.entries
                                       .where((entry) {
@@ -226,13 +240,21 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                 return control.errors.isNotEmpty;
                               });
 
-                              if (hasErrors) return;
+                              if (hasErrors) {
+                                _isSubmitting = false;
+                                setState(() {});
+                                return;
+                              }
 
                               // 3. Check validity of just the visible controls
                               final isCurrentPageValid = currentKeys
                                   .every((key) => formGroup.control(key).valid);
 
-                              if (!isCurrentPageValid) return;
+                              if (!isCurrentPageValid) {
+                                _isSubmitting = false;
+                                setState(() {});
+                                return;
+                              }
 
                               // 4. Proceed with value extraction and state update
                               final values = JsonForms.getFormValues(
@@ -718,11 +740,28 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                               .translate(schema.actionLabel ?? 'Next')
                           : localizations
                               .translate(schema.actionLabel ?? 'Submit'),
-                      onPressed: () {
+                      onPressed: () async {
+                        // Prevent multiple simultaneous submissions
+                        if (_isSubmitting) return;
+
+                        // Set flag synchronously FIRST to block rapid taps
+                        _isSubmitting = true;
+
+                        // Then update UI
+                        setState(() {});
+
+                        // Add small delay to allow custom component to update schema data
+                        await Future.delayed(
+                            const Duration(milliseconds: 200));
+
                         // Mark all controls as touched
                         formGroup.markAllAsTouched();
 
-                        if (!formGroup.valid) return;
+                        if (!formGroup.valid) {
+                          _isSubmitting = false;
+                          setState(() {});
+                          return;
+                        }
 
                         // Extract values and update schema
                         final values =
@@ -1057,7 +1096,19 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
             DigitButton(
               mainAxisSize: MainAxisSize.max,
               label: localizations.translate('CORE_COMMON_SUBMIT'),
-              onPressed: () {
+              onPressed: () async {
+                // Prevent multiple simultaneous submissions
+                if (_isSubmitting) return;
+
+                // Set flag synchronously FIRST to block rapid taps
+                _isSubmitting = true;
+
+                // Then update UI
+                setState(() {});
+
+                // Add small delay to allow custom component to update schema data
+                await Future.delayed(const Duration(milliseconds: 200));
+
                 context.read<FormsBloc>().add(FormsSubmitEvent(
                     schemaKey: widget.currentSchemaKey, isEdit: widget.isEdit));
 
