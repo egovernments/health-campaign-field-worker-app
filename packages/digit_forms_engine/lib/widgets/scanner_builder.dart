@@ -5,10 +5,6 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
   final DateTime? end;
   final bool summaryData;
 
-  /// Tracks which scanner initiated the scan to prevent multiple scanners
-  /// on the same page from reacting to the same state change.
-  static String? _activeScannerId;
-
   const JsonSchemaScannerBuilder({
     required super.formControlName,
     required super.form,
@@ -45,11 +41,13 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
       builder: (field) => BlocConsumer<DigitScannerBloc, DigitScannerState>(
           listenWhen: (previous, current) {
             // Only listen if this scanner initiated the scan
-            return _activeScannerId == formControlName;
+            return current.scannerId == formControlName;
+          },
+          buildWhen: (previous, current) {
+            // Only rebuild if this scanner initiated the scan
+            return current.scannerId == formControlName;
           },
           listener: (context, state) {
-            // Reset active scanner after processing
-            _activeScannerId = null;
         if (state.qrCodes.isNotEmpty) {
           // Join multiple QR codes with dot separator
           form.control(formControlName).value = state.qrCodes.join('.');
@@ -69,7 +67,9 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
           form.control(formControlName).value = '$gtin,$serial,$batch,$expiry';
         }
       }, builder: (context, state) {
-        return state.qrCodes.isNotEmpty && summaryData
+        // Only show scanned data if this scanner initiated the scan
+        final isThisScanner = state.scannerId == formControlName;
+        return isThisScanner && state.qrCodes.isNotEmpty && summaryData
             ? Container(
                 padding: EdgeInsets.zero,
                 width: MediaQuery.of(context).size.width,
@@ -97,7 +97,6 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                     DigitButton(
                       label: '',
                       onPressed: () {
-                        _activeScannerId = formControlName;
                         // Get current value and split by dot to get list of QR codes
                         final currentValue = form.control(formControlName).value as String?;
                         final initialCodes = currentValue?.split('.').where((e) => e.isNotEmpty).toList();
@@ -105,6 +104,7 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                           validations: _toScannerValidations(),
                           isEditEnabled: true,
                           initialQrCodes: initialCodes,
+                          scannerId: formControlName,
                         ));
                       },
                       type: DigitButtonType.tertiary,
@@ -114,7 +114,7 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                   ],
                 ),
               )
-            : state.barCodes.isNotEmpty && summaryData
+            : isThisScanner && state.barCodes.isNotEmpty && summaryData
                 ? Container(
                     padding: EdgeInsets.zero,
                     width: MediaQuery.of(context).size.width,
@@ -149,9 +149,9 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                         DigitButton(
                           label: '',
                           onPressed: () {
-                            _activeScannerId = formControlName;
                             context.router.push(DigitScannerRoute(
                               validations: _toScannerValidations(),
+                              scannerId: formControlName,
                             ));
                           },
                           type: DigitButtonType.tertiary,
@@ -166,12 +166,14 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                     size: DigitButtonSize.large,
                     label: label ?? 'scanner',
                     onPressed: () async {
-                      _activeScannerId = formControlName;
                       context.read<DigitScannerBloc>().add(
-                            const DigitScannerEvent.handleScanner(),
+                            DigitScannerEvent.handleScanner(
+                              scannerId: formControlName,
+                            ),
                           );
                       context.router.push(DigitScannerRoute(
                         validations: _toScannerValidations(),
+                        scannerId: formControlName,
                       ));
                     },
                     type: DigitButtonType.secondary,
