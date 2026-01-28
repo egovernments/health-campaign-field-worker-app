@@ -326,17 +326,11 @@ class MultiTableFilterResolver {
 
   /// Logs debug information in debug mode only.
   void _log(String message) {
-    if (kDebugMode) {
-      debugPrint('[MultiTableFilterResolver] $message');
-    }
+    // Disabled - use DigitLogger in calling code if needed
   }
 
   /// Logs error information.
   void _logError(String message, Object error, StackTrace stackTrace) {
-    if (kDebugMode) {
-      debugPrint('[MultiTableFilterResolver] ERROR: $message');
-      debugPrint('Error: $error');
-      debugPrint('StackTrace: $stackTrace');
-    }
+    // Disabled - use DigitLogger in calling code if needed
   }
 }

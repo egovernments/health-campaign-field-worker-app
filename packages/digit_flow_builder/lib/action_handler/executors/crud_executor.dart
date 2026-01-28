@@ -53,14 +53,12 @@ class UpdateExecutor extends ActionExecutor {
   ) async {
     final entities = contextData['entities'];
     if (entities == null || entities is! List || entities.isEmpty) {
-      debugPrint('UPDATE_EVENT: No entities found in contextData');
       return contextData;
     }
 
     // Cast List<dynamic> to List<EntityModel>
     var entityList = entities.whereType<EntityModel>().toList();
     if (entityList.isEmpty) {
-      debugPrint('UPDATE_EVENT: No valid EntityModel instances found');
       return contextData;
     }
 
@@ -76,13 +74,9 @@ class UpdateExecutor extends ActionExecutor {
       entityList = entityList
           .where((e) => allowedTypes.contains(getEntityTypeName(e)))
           .toList();
-
-      debugPrint(
-          'UPDATE_EVENT: Filtered to ${entityList.length} entities of types: $allowedTypes');
     }
 
     if (entityList.isEmpty) {
-      debugPrint('UPDATE_EVENT: No entities after filtering');
       return contextData;
     }
 
@@ -124,9 +118,6 @@ class UpdateExecutor extends ActionExecutor {
         }
 
         if (entityUpdates.isNotEmpty) {
-          debugPrint(
-              'UPDATE_EVENT: Applying updates to $entityType: $entityUpdates');
-
           // Convert entity to map, apply updates, recreate entity
           final entityMap = entity.toMap();
           entityUpdates.forEach((key, value) {
@@ -158,7 +149,6 @@ class UpdateExecutor extends ActionExecutor {
       return entity.copyWith(clientAuditDetails: updatedClientAudit);
     }).toList();
 
-    debugPrint('UPDATE_EVENT: Updating ${updatedEntities.length} entities');
     context.read<CrudBloc>().add(CrudEventUpdate(entities: updatedEntities));
     return contextData;
   }

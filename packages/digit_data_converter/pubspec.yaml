@@ -13,6 +13,8 @@ dependencies:
     sdk: flutter
 
   digit_data_model: ^1.2.0-dev.1-console
+  digit_logger:
+    path: ../digit_logger
   uuid: ^4.5.1
 
 dev_dependencies:

@@ -1,3 +1,4 @@
+import 'package:digit_logger/digit_logger.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +100,7 @@ class OpenScannerExecutor extends ActionExecutor {
 
       // If we have a scanned value, process it
       if (scannedValue != null && scannedValue.isNotEmpty) {
-        debugPrint('OPEN_SCANNER: Scanned value: $scannedValue');
+        DigitLogger.debug('OPEN_SCANNER: Scanned value received', category: LogCategory.general, context: {'scannedValue': scannedValue});
 
         // Update form data in FlowCrudStateRegistry
         if (screenKey != null) {
@@ -125,7 +126,7 @@ class OpenScannerExecutor extends ActionExecutor {
 
           // Execute onSuccess actions if provided
           if (onSuccessActions != null && onSuccessActions.isNotEmpty) {
-            debugPrint('OPEN_SCANNER: Executing onSuccess actions');
+            DigitLogger.debug('OPEN_SCANNER: Executing onSuccess actions', category: LogCategory.general);
 
             // Resolve any template values in the actions using scanned value
             final resolvedActions = _resolveActionsWithContext(
@@ -146,7 +147,7 @@ class OpenScannerExecutor extends ActionExecutor {
       } else {
         // No value scanned - check for errors
         if (scannerState.error != null && scannerState.error!.isNotEmpty) {
-          debugPrint('OPEN_SCANNER: Scanner error: ${scannerState.error}');
+          DigitLogger.error('OPEN_SCANNER: Scanner error', category: LogCategory.general, context: {'error': scannerState.error});
 
           if (onErrorActions != null && onErrorActions.isNotEmpty) {
             Map<String, dynamic> errorContext = {
@@ -165,8 +166,7 @@ class OpenScannerExecutor extends ActionExecutor {
         }
       }
     } catch (e, stackTrace) {
-      debugPrint('OPEN_SCANNER: Error: $e');
-      debugPrint('Stack trace: $stackTrace');
+      DigitLogger.error('OPEN_SCANNER: Error', category: LogCategory.general, context: {'error': e.toString()}, error: e, stackTrace: stackTrace);
 
       if (onErrorActions != null && onErrorActions.isNotEmpty) {
         Map<String, dynamic> errorContext = {

@@ -1,5 +1,6 @@
 import 'package:digit_data_converter/src/reverse_transformer_service.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_logger/digit_logger.dart';
 import 'package:flutter/material.dart';
 
 import '../../blocs/flow_crud_bloc.dart';
@@ -49,14 +50,14 @@ class ReverseTransformerExecutor extends ActionExecutor {
 
     try {
       if (configName == null) {
-        debugPrint('REVERSE_TRANSFORM: configName is required');
+        DigitLogger.warn('REVERSE_TRANSFORM: configName is required', category: LogCategory.transform);
         return contextData;
       }
 
       // Get transformer config
       final transformerConfig = jsonConfig[configName];
       if (transformerConfig == null) {
-        debugPrint('REVERSE_TRANSFORM: Config not found for: $configName');
+        DigitLogger.warn('REVERSE_TRANSFORM: Config not found', category: LogCategory.transform, context: {'configName': configName});
         return contextData;
       }
 
@@ -67,7 +68,7 @@ class ReverseTransformerExecutor extends ActionExecutor {
       // Check if data parameter is provided with specific entities
       final dataList = action.properties['data'] as List<dynamic>?;
       if (dataList != null && dataList.isNotEmpty) {
-        debugPrint('REVERSE_TRANSFORM: Using data parameter for entities');
+        DigitLogger.debug('REVERSE_TRANSFORM: Using data parameter for entities', category: LogCategory.transform);
         for (final entry in dataList) {
           if (entry is Map<String, dynamic>) {
             final key = entry['key'] as String?;
@@ -79,8 +80,7 @@ class ReverseTransformerExecutor extends ActionExecutor {
             }
           }
         }
-        debugPrint(
-            'REVERSE_TRANSFORM: Found ${modelInstances.length} entities from data parameter');
+        DigitLogger.debug('REVERSE_TRANSFORM: Found entities from data parameter', category: LogCategory.transform, context: {'count': modelInstances.length});
       }
 
       // If no entities from data parameter, try contextData
@@ -107,7 +107,7 @@ class ReverseTransformerExecutor extends ActionExecutor {
       }
 
       if (modelInstances.isEmpty) {
-        debugPrint('REVERSE_TRANSFORM: No entities found to transform');
+        DigitLogger.debug('REVERSE_TRANSFORM: No entities found to transform', category: LogCategory.transform);
         return contextData;
       }
 
@@ -118,8 +118,7 @@ class ReverseTransformerExecutor extends ActionExecutor {
         }).toList();
       }
 
-      debugPrint(
-          'REVERSE_TRANSFORM: Transforming ${modelInstances.length} entities');
+      DigitLogger.debug('REVERSE_TRANSFORM: Transforming entities', category: LogCategory.transform, context: {'count': modelInstances.length});
 
       // Use ReverseFormMapper to convert entities to form data
       final mapper = ReverseFormMapper(
@@ -129,7 +128,7 @@ class ReverseTransformerExecutor extends ActionExecutor {
 
       final formData = mapper.buildFormData();
 
-      debugPrint('REVERSE_TRANSFORM: Generated form data: $formData');
+      DigitLogger.trace('REVERSE_TRANSFORM: Generated form data', category: LogCategory.transform, context: {'formData': formData});
 
       // Update the current screen's state with the form data
       if (currentScreenKey != null) {
@@ -150,8 +149,7 @@ class ReverseTransformerExecutor extends ActionExecutor {
         'existingModels': modelInstances,
       };
     } catch (e, stackTrace) {
-      debugPrint('REVERSE_TRANSFORM: Error: $e');
-      debugPrint('Stack trace: $stackTrace');
+      DigitLogger.error('REVERSE_TRANSFORM: Error', category: LogCategory.transform, context: {'error': e.toString()}, error: e, stackTrace: stackTrace);
 
       if (onErrorActions != null && onErrorActions.isNotEmpty) {
         // Execute error actions would be handled by caller

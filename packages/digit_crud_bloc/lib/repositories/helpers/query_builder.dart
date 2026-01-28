@@ -261,7 +261,6 @@ class QueryBuilder {
             final latVal = row.read<double>('latitude');
             lat = (latVal is int) ? latVal.toDouble() : latVal as double?;
           } catch (e) {
-            debugPrint('Failed to read latitude: $e');
             lat = null;
           }
 
@@ -269,17 +268,14 @@ class QueryBuilder {
             final lonVal = row.read<double>('longitude');
             lon = (lonVal is int) ? lonVal.toDouble() : lonVal as double?;
           } catch (e) {
-            debugPrint('Failed to read longitude: $e');
             lon = null;
           }
 
           if (lat == null || lon == null) {
-            debugPrint('Skipping row due to null lat/lon');
             return false;
           }
 
           final distance = haversine(centerLat!, centerLon!, lat, lon);
-          debugPrint('Lat: $lat, Lon: $lon → Distance: $distance km');
           return distance <= radiusInKm!;
         }).length;
       } else {
@@ -346,7 +342,7 @@ class QueryBuilder {
               rowMap['additional_fields'] = decoded;
             }
           } catch (e) {
-            debugPrint('Failed to decode additional_fields JSON: $e');
+            // Invalid JSON in additional_fields - ignore
           }
         }
       }

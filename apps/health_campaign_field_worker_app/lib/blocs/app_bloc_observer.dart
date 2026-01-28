@@ -1,5 +1,5 @@
+import 'package:digit_logger/digit_logger.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
-import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,9 +10,15 @@ class AppBlocObserver extends BlocObserver {
     if (!kDebugMode) return;
     if (bloc is LocationBloc) return;
 
-    AppLogger.instance.info(
-      transition.nextState,
-      title: '${bloc.runtimeType}.onTransition: ${transition.event}',
+    DigitLogger.trace(
+      'BLoC transition',
+      category: LogCategory.state,
+      context: {
+        'bloc': bloc.runtimeType.toString(),
+        'event': transition.event.runtimeType.toString(),
+        'currentState': transition.currentState.runtimeType.toString(),
+        'nextState': transition.nextState.runtimeType.toString(),
+      },
     );
   }
 
@@ -21,20 +27,30 @@ class AppBlocObserver extends BlocObserver {
     super.onChange(bloc, change);
     if (!kDebugMode || bloc.runtimeType.toString().endsWith('Bloc')) return;
 
-    AppLogger.instance.info(
-      change.nextState,
-      title: '${bloc.runtimeType}.onChange',
+    DigitLogger.trace(
+      'Cubit change',
+      category: LogCategory.state,
+      context: {
+        'cubit': bloc.runtimeType.toString(),
+        'currentState': change.currentState.runtimeType.toString(),
+        'nextState': change.nextState.runtimeType.toString(),
+      },
     );
   }
 
   @override
   void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
     super.onError(bloc, error, stackTrace);
-    if (!kDebugMode) return;
 
-    AppLogger.instance.error(
-      title: bloc.runtimeType.toString(),
+    // Always log BLoC errors (not just in debug mode)
+    DigitLogger.error(
+      'BLoC error',
+      category: LogCategory.state,
+      error: error,
       stackTrace: stackTrace,
+      context: {
+        'bloc': bloc.runtimeType.toString(),
+      },
     );
   }
 }

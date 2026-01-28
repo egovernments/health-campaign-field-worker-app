@@ -263,15 +263,9 @@ class _CameraViewState extends State<CameraView> {
       });
       _controller?.getMinExposureOffset().then((value) {
         _minAvailableExposureOffset = value;
-        if (kDebugMode) {
-          print('minAvailableExposureOffset: $_minAvailableExposureOffset');
-        }
       });
       _controller?.getMaxExposureOffset().then((value) {
         _maxAvailableExposureOffset = value;
-        if (kDebugMode) {
-          print('maxAvailableExposureOffset: $_maxAvailableExposureOffset');
-        }
       });
       _controller?.startImageStream(_processCameraImage).then((value) {
         if (widget.onCameraFeedReady != null) {

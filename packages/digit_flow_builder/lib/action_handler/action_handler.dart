@@ -61,8 +61,6 @@ class ActionHandler {
     final paths = _extractVariablePaths(expression);
     if (paths.isEmpty) return;
 
-    debugPrint('CONDITION_EVAL: Found paths to resolve: $paths');
-
     // Determine the data source - prefer item (current template iteration) over stateWrapper
     Map<String, dynamic>? dataSource;
     if (item != null && item.isNotEmpty) {
@@ -83,7 +81,6 @@ class ActionHandler {
       final resolved = _traversePath(dataSource, path);
       if (resolved != null) {
         evaluationData[path] = resolved;
-        debugPrint('CONDITION_EVAL: Resolved $path = $resolved');
       }
     }
   }
@@ -103,20 +100,15 @@ class ActionHandler {
 
     final flatData = flattenFormData(data);
 
-    debugPrint('CONDITION_EVAL_FLAT: flatData=$flatData');
-
     try {
       final parser = FormulaParser(
         expression,
         flatData.isEmpty ? {'dummy': {}} : flatData,
       );
 
-      debugPrint('CONDITION_EVAL_FLAT: parsedExpression=${parser.parsedExpression}');
       final result = parser.parse;
-      debugPrint('CONDITION_EVAL_FLAT: result=$result');
       return result["isSuccess"] && result["value"] == true;
     } catch (e) {
-      debugPrint('CONDITION_EVAL_FLAT: error=$e');
       // If parsing fails, return false
       return false;
     }
@@ -174,7 +166,6 @@ class ActionHandler {
 
         // Add widgetData - flatten list values to check membership
         // For selection cards, convert list of selected codes to individual keys
-        debugPrint('CONDITION_EVAL: widgetData before processing=$widgetData');
         widgetData.forEach((key, value) {
           if (value is List) {
             // If single element list, store as string for simpler equality checks
@@ -225,10 +216,7 @@ class ActionHandler {
           final resolvedCondition = Map<String, dynamic>.from(condition);
           resolvedCondition['expression'] = expression;
 
-          debugPrint('CONDITION_EVAL: expression=$expression, data=$evaluationData');
-
           if (evaluateCondition(resolvedCondition, evaluationData)) {
-            debugPrint('CONDITION_EVAL: Condition matched!');
             final subActions = condActionJson['actions'] as List? ?? [];
             for (final subActionJson in subActions) {
               final action = ActionConfig.fromJson(subActionJson);

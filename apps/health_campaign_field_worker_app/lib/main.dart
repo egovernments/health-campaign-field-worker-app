@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
+import 'package:digit_logger/digit_logger.dart';
 import 'package:digit_ui_components/digit_components.dart';
-import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -19,6 +19,7 @@ import 'pages/error_boundary.dart';
 import 'router/app_router.dart';
 import 'utils/background_service.dart';
 import 'utils/environment_config.dart';
+import 'utils/logger_util.dart';
 import 'utils/utils.dart';
 import 'widgets/db_error_handler.dart';
 
@@ -32,19 +33,28 @@ void main() async {
 
   DartPluginRegistrant.ensureInitialized();
 
+  // Initialize environment config first (needed for logger)
+  await envConfig.initialize();
+
+  // Initialize logger with env-based configuration
+  await LoggerUtil.initialize();
+
   await initializeAllMappers();
   final info = await PackageInfo.fromPlatform();
   setupErrorWidget();
 
+  // Set up BLoC observer for state and error logging
   Bloc.observer = AppBlocObserver();
+
   await AppSharedPreferences().init();
   if (AppSharedPreferences().isFirstLaunch) {
-    AppLogger.instance.info('App Launched First Time', title: 'main');
+    DigitLogger.info(
+      'App launched first time',
+      category: LogCategory.lifecycle,
+    );
     await AppSharedPreferences().appLaunchedFirstTime();
     await LocalSecureStore.instance.deleteAll();
   }
-
-  await envConfig.initialize();
   WidgetsBinding.instance.addObserver(AppLifecycleObserver());
   _dio = DioClient().dio;
 

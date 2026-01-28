@@ -137,9 +137,7 @@ class ReverseFormMapper {
           _applyMappings(formData, modelValue, formFieldPath);
         }
       } else {
-        // Unsupported format
-        debugPrint(
-            'Unsupported formFieldPath type: ${formFieldPath.runtimeType}');
+        // Unsupported formFieldPath type - skip
       }
     }
   }

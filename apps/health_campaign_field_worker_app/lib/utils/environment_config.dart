@@ -125,6 +125,23 @@ class Variables {
     '$_minRamThresholdGbValue',
   );
 
+  // Logger configuration
+  // Valid values: trace, debug, info, warn, error, fatal
+  static const _logMinLevel = EnvEntry(
+    'LOG_MIN_LEVEL',
+    'info', // Default to info for production safety
+  );
+
+  static const _logEnabled = EnvEntry(
+    'LOG_ENABLED',
+    'true',
+  );
+
+  static const _logSanitizationEnabled = EnvEntry(
+    'LOG_SANITIZATION_ENABLED',
+    'true', // Default to true for PII protection
+  );
+
   const Variables({
     this.useFallbackValues = false,
     required DotEnv dotEnv,
@@ -213,6 +230,27 @@ class Variables {
 
     return EnvType.values.firstWhereOrNull((env) => env.name == envName) ??
         EnvType.dev;
+  }
+
+  /// Minimum log level (trace, debug, info, warn, error, fatal)
+  String get logMinLevel => useFallbackValues
+      ? _logMinLevel.value
+      : _dotEnv.get(_logMinLevel.key, fallback: _logMinLevel.value);
+
+  /// Whether logging is enabled
+  bool get logEnabled {
+    final value = useFallbackValues
+        ? _logEnabled.value
+        : _dotEnv.get(_logEnabled.key, fallback: _logEnabled.value);
+    return value.toLowerCase() == 'true';
+  }
+
+  /// Whether PII sanitization is enabled in logs
+  bool get logSanitizationEnabled {
+    final value = useFallbackValues
+        ? _logSanitizationEnabled.value
+        : _dotEnv.get(_logSanitizationEnabled.key, fallback: _logSanitizationEnabled.value);
+    return value.toLowerCase() == 'true';
   }
 }
 

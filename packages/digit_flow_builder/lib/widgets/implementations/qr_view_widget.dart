@@ -122,7 +122,7 @@ class QrViewWidget implements FlowWidget {
       // For now, just return the QR code widget
       return qrWidget;
     } catch (e) {
-      debugPrint('Error creating QR code: $e');
+      // QR code creation error - return empty widget
       return const SizedBox.shrink();
     }
   }

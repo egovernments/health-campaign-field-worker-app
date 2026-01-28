@@ -120,8 +120,6 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
       {'dummy': {}}
     );
 
-    debugPrint("CONDITION_EVAL: parsed=${parser.parsedExpression}");
-
     final parsed = parser.parse;
     final isTrue = parsed["isSuccess"] && parsed["value"] == true;
 

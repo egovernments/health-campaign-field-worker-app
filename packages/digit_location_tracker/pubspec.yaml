@@ -20,6 +20,8 @@ dependencies:
   path_provider: ^2.0.11
   isar: ^3.0.5
   digit_data_model: ^1.1.2
+  digit_logger:
+    path: ../digit_logger
 
 dev_dependencies:
   flutter_test:

@@ -176,9 +176,7 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
 
     return transformed;
   } catch (e, stackTrace) {
-    // Log and rethrow to propagate error to the outer try-catch
-    debugPrint('Error inside transformJson: $e');
-    debugPrint('$stackTrace');
+    // Transform error - rethrow to propagate to caller
     rethrow;
   }
 }
@@ -355,13 +353,11 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
         if (fnMatch != null) {
           final fnName = fnMatch.group(1)!;
           final argsExpr = fnMatch.group(2) ?? '';
-          print('🟢 FUNCTION CALL: $fnName with argsExpr: "$argsExpr"');
 
           final resolvedArgs = argsExpr.trim().isEmpty
               ? <dynamic>[]
               : argsExpr.split(',').map((rawArg) {
                   final trimmed = rawArg.trim();
-                  print('🟢 Resolving arg: "$trimmed"');
 
                   // Check if it's a quoted literal (string)
                   if (trimmed.startsWith("'") || trimmed.startsWith('"')) {
@@ -385,11 +381,9 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
                       widgetData: widgetData,
                       screenKey: screenKey,
                       stateData: stateData);
-                  print('🟢 Arg "$trimmed" resolved to: ${resolved.runtimeType} = $resolved');
                   return resolved;
                 }).toList();
 
-          print('🟢 All resolved args: $resolvedArgs (types: ${resolvedArgs.map((e) => e.runtimeType).toList()})');
           return FunctionRegistry.call(
             fnName,
             resolvedArgs,

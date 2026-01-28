@@ -1,5 +1,5 @@
 import 'package:digit_data_model/data_model.dart';
-import 'package:flutter/foundation.dart';
+import 'package:digit_logger/digit_logger.dart';
 
 import '../utils/utils.dart';
 
@@ -65,10 +65,10 @@ class FormEntityMapper {
               'Error mapping fallback model $fallbackModelName: $e');
         }
       } else {
-        if (kDebugMode) {
-          print(
-              'Warning: fallback model factory not found for $fallbackModelName');
-        }
+        DigitLogger.warn(
+          'Fallback model factory not found for $fallbackModelName',
+          category: LogCategory.transform,
+        );
       }
     }
 
@@ -152,10 +152,10 @@ class FormEntityMapper {
               'Error merging unmapped fields into $fallbackModelName: $e');
         }
       } else {
-        if (kDebugMode) {
-          print(
-              'Warning: fallback model factory not found for $fallbackModelName');
-        }
+        DigitLogger.warn(
+          'Fallback model factory not found for $fallbackModelName',
+          category: LogCategory.transform,
+        );
       }
     }
 
@@ -285,7 +285,6 @@ class FormEntityMapper {
     final listSourcePath = listMapping['listSource'] as String?;
 
     if (listSourcePath == null) {
-      debugPrint('listSource missing in listMapping');
       return originalList.cast<Map<String, dynamic>>();
     }
 
@@ -483,18 +482,19 @@ class FormEntityMapper {
     // Remove "collect:" prefix
     final pathWithoutPrefix = sourcePath.replaceFirst('collect:', '');
 
-    if (kDebugMode) {
-      print('🔍 _collectFieldFromList called with path: "$pathWithoutPrefix"');
-    }
+    DigitLogger.trace(
+      '_collectFieldFromList called with path: "$pathWithoutPrefix"',
+      category: LogCategory.transform,
+    );
 
     // Resolve the full path to get the value
     final resolvedValue =
         getValueFromMapping(pathWithoutPrefix, formValues, modelName, context);
 
-    if (kDebugMode) {
-      print('   Resolved value type: ${resolvedValue.runtimeType}');
-      print('   Resolved value: $resolvedValue');
-    }
+    DigitLogger.trace(
+      'Resolved value type: ${resolvedValue.runtimeType}, value: $resolvedValue',
+      category: LogCategory.transform,
+    );
 
     // If null, return empty list
     if (resolvedValue == null) {
@@ -534,9 +534,10 @@ class FormEntityMapper {
       result.add(resolvedValue.toString());
     }
 
-    if (kDebugMode) {
-      print('   Final collected list: $result');
-    }
+    DigitLogger.trace(
+      'Final collected list: $result',
+      category: LogCategory.transform,
+    );
 
     return result;
   }
@@ -859,9 +860,10 @@ class FormEntityMapper {
           (current.first as Map<String, dynamic>).containsKey(key)) {
         current = (current.first as Map<String, dynamic>)[key];
       } else {
-        if (kDebugMode) {
-          print('Warning: Key "$key" not found while resolving path "$path".');
-        }
+        DigitLogger.trace(
+          'Key "$key" not found while resolving path "$path"',
+          category: LogCategory.transform,
+        );
         return null;
       }
 

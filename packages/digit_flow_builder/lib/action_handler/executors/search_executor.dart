@@ -4,6 +4,7 @@ import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_crud_bloc/models/global_search_params.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_formula_parser/digit_formula_parser.dart';
+import 'package:digit_logger/digit_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -100,7 +101,7 @@ class SearchExecutor extends ActionExecutor {
           screenKey: screenKey,
         );
 
-        debugPrint('SEARCH_EVENT: Evaluating applyIf resolved="$expression"');
+        DigitLogger.debug('SEARCH_EVENT: Evaluating applyIf', category: LogCategory.condition, context: {'expression': expression});
 
         // Build context for formula parser
         final parserContext = <String, dynamic>{
@@ -119,17 +120,14 @@ class SearchExecutor extends ActionExecutor {
           final conditionMet =
               result["isSuccess"] == true && result["value"] == true;
 
-          debugPrint(
-              'SEARCH_EVENT: applyIf result=$result, conditionMet=$conditionMet');
+          DigitLogger.trace('SEARCH_EVENT: applyIf result', category: LogCategory.condition, context: {'result': result, 'conditionMet': conditionMet});
 
           if (!conditionMet) {
-            debugPrint(
-                'SEARCH_EVENT: Skipping filter ${filterData['key']} - applyIf condition not met');
+            DigitLogger.debug('SEARCH_EVENT: Skipping filter - applyIf condition not met', category: LogCategory.condition, context: {'filterKey': filterData['key']});
             continue;
           }
         } catch (e) {
-          debugPrint(
-              'SEARCH_EVENT: Error evaluating applyIf for ${filterData['key']}: $e');
+          DigitLogger.error('SEARCH_EVENT: Error evaluating applyIf', category: LogCategory.condition, context: {'filterKey': filterData['key'], 'error': e.toString()});
           continue;
         }
       }
@@ -252,13 +250,11 @@ class SearchExecutor extends ActionExecutor {
 
     // Early return if no filters are applicable
     if (filters.isEmpty) {
-      debugPrint(
-          'SEARCH_EVENT: No filters to apply - all filters were skipped or empty. Returning early.');
+      DigitLogger.debug('SEARCH_EVENT: No filters to apply - all filters were skipped or empty', category: LogCategory.storage);
       return contextData;
     }
 
-    debugPrint(
-        'SEARCH_EVENT: Executing with ${filters.length} accumulated filters for $searchName');
+    DigitLogger.debug('SEARCH_EVENT: Executing with accumulated filters', category: LogCategory.storage, context: {'filterCount': filters.length, 'searchName': searchName});
 
     final config = FlowRegistry.getByName(screenKey ?? '');
 
@@ -300,8 +296,7 @@ class SearchExecutor extends ActionExecutor {
           final valueIfTrue = ternaryMatch.group(2)!;
           final valueIfFalse = ternaryMatch.group(3)!;
 
-          debugPrint(
-              'SEARCH_EVENT: Ternary condition="$condition", ifTrue=$valueIfTrue, ifFalse=$valueIfFalse');
+          DigitLogger.trace('SEARCH_EVENT: Ternary condition', category: LogCategory.condition, context: {'condition': condition, 'ifTrue': valueIfTrue, 'ifFalse': valueIfFalse});
 
           // Evaluate condition with formula parser
           try {
@@ -320,13 +315,11 @@ class SearchExecutor extends ActionExecutor {
 
             resolvedOrderBy[entry.key] =
                 conditionMet ? valueIfTrue : valueIfFalse;
-            debugPrint(
-                'SEARCH_EVENT: Ternary result=$result, resolved to: ${resolvedOrderBy[entry.key]}');
+            DigitLogger.trace('SEARCH_EVENT: Ternary result', category: LogCategory.condition, context: {'result': result, 'resolvedTo': resolvedOrderBy[entry.key]});
           } catch (e) {
             // Fallback to valueIfFalse on error
             resolvedOrderBy[entry.key] = valueIfFalse;
-            debugPrint(
-                'SEARCH_EVENT: Ternary evaluation failed: $e, using default: $valueIfFalse');
+            DigitLogger.warn('SEARCH_EVENT: Ternary evaluation failed, using default', category: LogCategory.condition, context: {'error': e.toString(), 'default': valueIfFalse});
           }
         } else {
           // No ternary, use resolved value directly
@@ -345,16 +338,14 @@ class SearchExecutor extends ActionExecutor {
       }
 
       orderBy = SearchOrderBy.fromJson(resolvedOrderBy);
-      debugPrint(
-          'SEARCH_EVENT: OrderBy resolved - field: ${orderBy.field}, order: ${orderBy.order}');
+      DigitLogger.debug('SEARCH_EVENT: OrderBy resolved', category: LogCategory.storage, context: {'field': orderBy.field, 'order': orderBy.order});
     } else if (screenKey != null) {
       // Check for accumulated orderBy from previous search events
       final accumulatedOrderBy =
           SearchStateManager().getOrderBy(screenKey, searchName);
       if (accumulatedOrderBy != null) {
         orderBy = SearchOrderBy.fromJson(accumulatedOrderBy);
-        debugPrint(
-            'SEARCH_EVENT: Using accumulated orderBy - field: ${orderBy.field}, order: ${orderBy.order}');
+        DigitLogger.debug('SEARCH_EVENT: Using accumulated orderBy', category: LogCategory.storage, context: {'field': orderBy.field, 'order': orderBy.order});
       }
     }
 
@@ -380,8 +371,7 @@ class SearchExecutor extends ActionExecutor {
 
         // Initialize pagination window for bidirectional support
         if (screenKey != null) {
-          debugPrint(
-              'SEARCH_EVENT: Initializing pagination window with screenKey=$screenKey');
+          DigitLogger.debug('SEARCH_EVENT: Initializing pagination window', category: LogCategory.storage, context: {'screenKey': screenKey});
 
           // Legacy pagination state (for backwards compatibility)
           SearchStateManager().updatePagination(
@@ -401,16 +391,14 @@ class SearchExecutor extends ActionExecutor {
 
           // Set pagination info in registry so FlowCrudBloc can update window after data loads
           final registryKey = screenKey.split('::').last;
-          debugPrint(
-              'SEARCH_EVENT: Setting paginationInfo with registryKey=$registryKey');
+          DigitLogger.debug('SEARCH_EVENT: Setting paginationInfo', category: LogCategory.storage, context: {'registryKey': registryKey});
           FlowCrudStateRegistry().setPaginationInfo(
             registryKey,
             limit: limit,
             maxItems: maxItems,
           );
         }
-        debugPrint(
-            'SEARCH_EVENT: Using pagination - offset=0, limit=$limit, maxItems=$maxItems');
+        DigitLogger.debug('SEARCH_EVENT: Using pagination', category: LogCategory.storage, context: {'offset': 0, 'limit': limit, 'maxItems': maxItems});
       }
     }
 
@@ -447,7 +435,7 @@ class SearchExecutor extends ActionExecutor {
             entities.addAll(entityList);
           }
 
-          debugPrint('SEARCH_EVENT: Found ${entities.length} entities');
+          DigitLogger.debug('SEARCH_EVENT: Found entities', category: LogCategory.storage, context: {'count': entities.length});
 
           // Update FlowCrudStateRegistry with search results
           if (screenKey != null) {
@@ -479,7 +467,7 @@ class SearchExecutor extends ActionExecutor {
           });
         } else if (state is CrudStateError) {
           subscription.cancel();
-          debugPrint('SEARCH_EVENT: Error - ${state.message}');
+          DigitLogger.error('SEARCH_EVENT: Error', category: LogCategory.storage, context: {'message': state.message});
           completer.complete({
             ...contextData,
             'errorType': 'searchError',
@@ -514,8 +502,7 @@ class SearchExecutor extends ActionExecutor {
         SearchStateManager().getOrderBy(screenKey, searchName);
 
     if (accumulatedFilters.isEmpty) {
-      debugPrint(
-          'SearchCallback: No accumulated filters for $searchName, skipping');
+      DigitLogger.debug('SearchCallback: No accumulated filters, skipping', category: LogCategory.storage, context: {'searchName': searchName});
       return;
     }
 
@@ -560,8 +547,7 @@ class SearchExecutor extends ActionExecutor {
       filterLogic: MultiTableFilterLogic.and,
     );
 
-    debugPrint(
-        'SearchCallback: Executing search with ${filters.length} accumulated filters for $searchName');
+    DigitLogger.debug('SearchCallback: Executing search with accumulated filters', category: LogCategory.storage, context: {'filterCount': filters.length, 'searchName': searchName});
 
     // Execute search
     crudBloc.add(CrudEventSearch(searchParams));

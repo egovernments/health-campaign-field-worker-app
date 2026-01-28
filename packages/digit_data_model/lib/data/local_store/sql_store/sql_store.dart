@@ -154,9 +154,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
             try {
               await migrator.addColumn(project, project.projectType);
             } catch (e) {
-              if (kDebugMode) {
-                print("Failed to add column for projectType");
-              }
+              // Migration error - column may already exist
             }
           }
           if (from < 5) {
@@ -221,10 +219,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
                   attendanceRegister, attendanceRegister.localityCode);
               await migrator.addColumn(service, service.referenceId);
             } catch (e) {
-              if (kDebugMode) {
-                print(
-                    "Failed to add columns for householdType, attendance - localityCode, and service - relatedClientReferenceId");
-              }
+              // Migration error - columns may already exist
             }
           }
           if (from < 7) {
@@ -296,25 +291,17 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
                 await customStatement(
                     'ALTER TABLE target_temp RENAME TO target;');
               } catch (e) {
-                if (kDebugMode) {
-                  print(
-                      "Migration failed while updating beneficiaryType to TEXT: $e");
-                }
+                // Migration error - beneficiaryType conversion may have already been done
               }
             } catch (e) {
-              if (kDebugMode) {
-                print(
-                    "Failed to add columns for serviceAttributes - serviceClientReferenceId, id, identifier - individualClientReferenceId, individualId");
-              }
+              // Migration error - columns may already exist
             }
           }
           if (from < 8) {
             try {
               await migrator.addColumn(attendee, attendee.tag);
             } catch (e) {
-              if (kDebugMode) {
-                print("Failed to add columns for attendee, tag");
-              }
+              // Migration error - column may already exist
             }
           }
         },
@@ -346,9 +333,11 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
       _initializeSqlCipher();
 
       // Return a `NativeDatabase` that uses the file for storage.
+      // Note: logStatements disabled to prevent verbose SQL logging in console.
+      // Use DigitLogger for controlled logging instead.
       return NativeDatabase(
         file,
-        logStatements: kDebugMode,
+        logStatements: false,
         setup: (database) {
           // If an encryption key is provided, set it using SQLCipher's PRAGMA key
           if (encryptionKey != null && encryptionKey.isNotEmpty) {
@@ -376,9 +365,6 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
     // If the database doesn't exist, no migration is needed
     if (!await dbFile.exists()) {
-      if (kDebugMode) {
-        print('Database file does not exist, no migration needed');
-      }
       return DatabaseMigrationResult.noMigrationNeeded;
     }
 
@@ -407,11 +393,6 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
         schemaVersion = versionResult.isNotEmpty
             ? versionResult.first['user_version'] as int
             : 0;
-
-        if (kDebugMode) {
-          print('Database is UNENCRYPTED - migration required');
-          print('Current schema version: $schemaVersion');
-        }
       }
       testPlainDb.dispose();
       testPlainDb = null;
@@ -419,9 +400,6 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
       testPlainDb?.dispose();
       testPlainDb = null;
       // Failed to read without key - database might be encrypted
-      if (kDebugMode) {
-        print('Cannot read database without key (likely encrypted): $e');
-      }
     }
 
     // Step 2: If database is not unencrypted, verify it's encrypted with our key
@@ -434,15 +412,9 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
         testEncDb.execute('SELECT count(*) FROM sqlite_master;');
         testEncDb.dispose();
 
-        if (kDebugMode) {
-          print('Database is already encrypted with the correct key, no migration needed');
-        }
         return DatabaseMigrationResult.noMigrationNeeded;
       } catch (e) {
         testEncDb?.dispose();
-        if (kDebugMode) {
-          print('Database encrypted with different key or corrupted: $e');
-        }
         // Database is encrypted with a different key or corrupted
         // Return keyMismatch so the caller can show an error to the user
         return DatabaseMigrationResult.keyMismatch;
@@ -453,10 +425,6 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
     sqlite3.Database? plainDb;
     try {
       plainDb = sqlite3.sqlite3.open(dbFile.path);
-
-      if (kDebugMode) {
-        print('Starting encryption migration...');
-      }
 
       // Clean up any existing temp file
       if (await tempEncryptedFile.exists()) {
@@ -480,19 +448,12 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
       await dbFile.delete();
       await tempEncryptedFile.rename(dbFile.path);
 
-      if (kDebugMode) {
-        print('Database migration to encrypted completed successfully');
-      }
-
       return DatabaseMigrationResult.migrationSuccess;
     } catch (e) {
       plainDb?.dispose();
       // Clean up temp file if it exists
       if (await tempEncryptedFile.exists()) {
         await tempEncryptedFile.delete();
-      }
-      if (kDebugMode) {
-        print('Database migration failed: $e');
       }
       return DatabaseMigrationResult.migrationFailed;
     }
@@ -507,16 +468,10 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
       if (await dbFile.exists()) {
         await dbFile.delete();
-        if (kDebugMode) {
-          print('Database deleted successfully');
-        }
         return true;
       }
       return false;
     } catch (e) {
-      if (kDebugMode) {
-        print('Failed to delete database: $e');
-      }
       return false;
     }
   }

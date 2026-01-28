@@ -52,6 +52,8 @@ dependencies:
   google_mlkit_commons: ^0.7.1
   intl: ^0.19.0
   permission_handler: ^11.3.1
+  digit_logger:
+    path: ../digit_logger
 
 dev_dependencies:
   flutter_test:

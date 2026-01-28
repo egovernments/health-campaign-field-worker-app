@@ -114,7 +114,7 @@ class DigitScannerUtils {
     try {
       barcodes = await barcodeScanner.processImage(inputImage);
     } catch (e) {
-      debugPrint('Error processing image: $e');
+      // Barcode processing error - silently return
       return;
     }
 

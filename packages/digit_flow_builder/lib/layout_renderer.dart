@@ -106,15 +106,8 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
     // Check if near top
     final nearTop = metrics.pixels <= buffer;
 
-    // Debug: Log scroll state periodically
-    debugPrint('ScrollState: pixels=${metrics.pixels.toInt()}, max=${metrics.maxScrollExtent.toInt()}, '
-        'nearTop=$nearTop, nearBottom=$nearBottom, '
-        'triggeredTop=$_hasTriggeredAtTop, triggeredBottom=$_hasTriggeredAtBottom, '
-        'hasUpActions=${_onScrollUpActions != null}');
-
     // Trigger load down when reaching bottom
     if (nearBottom && !_hasTriggeredAtBottom && _onScrollDownActions != null) {
-      debugPrint('ScrollListener: Triggering scroll DOWN');
       _hasTriggeredAtBottom = true;
       _triggerScrollActions('down');
     } else if (!nearBottom && metrics.pixels < metrics.maxScrollExtent * 0.8) {
@@ -124,7 +117,6 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
 
     // Trigger load up when reaching top
     if (nearTop && !_hasTriggeredAtTop && _onScrollUpActions != null) {
-      debugPrint('ScrollListener: Triggering scroll UP');
       _hasTriggeredAtTop = true;
       _triggerScrollActions('up');
     } else if (!nearTop && metrics.pixels > metrics.maxScrollExtent * 0.2) {
@@ -213,10 +205,6 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
       builder: (context, flowState, __) {
         final stateData = extractCrudStateData(screenKey);
         final isLoading = flowState?.isLoading ?? false;
-        final currentWrapperLength = flowState?.stateWrapper?.length ?? 0;
-
-        debugPrint('LayoutRenderer: REBUILD - screenKey=$screenKey, '
-            'wrapperLength=$currentWrapperLength, isLoading=$isLoading');
 
         return LocalizationContext(
           localization: localizations,

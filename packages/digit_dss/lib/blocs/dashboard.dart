@@ -114,7 +114,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             add(DashboardEvent.handleSearch(
                 selectedDate: event.selectedDate)); // Trigger search event
           } catch (e) {
-            debugPrint(e.toString()); // Print error
             add(const DashboardEvent.handleSearch(
               isNetworkError: true,
             ));
@@ -127,7 +126,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         }
       }
     } catch (e) {
-      debugPrint(e.toString());
+      // Dashboard initialization error - swallow
     }
   }
 

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
-import 'package:flutter/foundation.dart';
+import 'package:digit_logger/digit_logger.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -83,9 +83,11 @@ triggerLocationTracker(String methodChannel,
       "stopAfterTimestamp": stopAfterTimestamp,
     });
   } on PlatformException catch (e) {
-    if (kDebugMode) {
-      print("Error: $e");
-    }
+    DigitLogger.error(
+      'Location tracker platform error',
+      category: LogCategory.lifecycle,
+      error: e,
+    );
   }
 }
 

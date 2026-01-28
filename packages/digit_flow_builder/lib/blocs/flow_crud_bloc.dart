@@ -73,14 +73,10 @@ class FlowCrudBloc extends CrudBloc {
             List<dynamic>.from(existingState!.stateWrapper!);
         existingWrapper.addAll(newWrapper);
         wrapper = existingWrapper;
-        debugPrint(
-            'FlowCrudBloc: Legacy appended ${newWrapper.length} items, total=${wrapper.length}');
       } else if ((scrollDirection != null || legacyAppendMode) &&
           newEntities.isEmpty) {
         // Scroll/append mode but no new entities - preserve existing data
         wrapper = existingState?.stateWrapper;
-        debugPrint(
-            'FlowCrudBloc: No new data, preserving ${wrapper?.length ?? 0} existing items');
 
         // Update SearchStateManager to mark no more data in this direction
         _updateNoMoreData(scrollDirection);
@@ -149,11 +145,7 @@ class FlowCrudBloc extends CrudBloc {
       if (result.length > maxItems) {
         final trimCount = result.length - maxItems;
         result = result.sublist(trimCount);
-        debugPrint('FlowCrudBloc: Trimmed $trimCount items from start');
       }
-
-      debugPrint(
-          'FlowCrudBloc: Appended ${newWrapper.length} items (down), totalBeforeTrim=$totalBeforeTrim, afterTrim=${result.length}');
     } else if (direction == 'up') {
       // Prepend new items to the start
       result = List<dynamic>.from(newWrapper);
@@ -164,11 +156,7 @@ class FlowCrudBloc extends CrudBloc {
       if (result.length > maxItems) {
         final trimCount = result.length - maxItems;
         result = result.sublist(0, result.length - trimCount);
-        debugPrint('FlowCrudBloc: Trimmed $trimCount items from end');
       }
-
-      debugPrint(
-          'FlowCrudBloc: Prepended ${newWrapper.length} items (up), totalBeforeTrim=$totalBeforeTrim, afterTrim=${result.length}');
     } else {
       // Unknown direction, just use new wrapper
       result = newWrapper;
@@ -176,9 +164,6 @@ class FlowCrudBloc extends CrudBloc {
     }
 
     // Update pagination window state with PRE-TRIM total so offsets are calculated correctly
-    debugPrint(
-        'FlowCrudBloc: Calling _updatePaginationWindow - direction=$direction, '
-        'loadedCount=${newWrapper.length}, totalBeforeTrim=$totalBeforeTrim');
     _updatePaginationWindow(
         direction, newWrapper.length, totalBeforeTrim, paginationInfo);
 
@@ -208,9 +193,6 @@ class FlowCrudBloc extends CrudBloc {
     // Use screenKey without prefix - matches how SearchExecutor initializes the window
     final limit = paginationInfo?['limit'];
 
-    debugPrint('FlowCrudBloc: _updatePaginationWindowInitial called - '
-        'screenKey=$screenKey, loadedCount=$loadedCount, limit=$limit');
-
     if (limit != null) {
       SearchStateManager().onDataLoaded(
         screenKey, // Use screenKey without prefix to match initialization
@@ -219,11 +201,6 @@ class FlowCrudBloc extends CrudBloc {
         loadedCount: loadedCount,
         totalInWindow: loadedCount,
       );
-      debugPrint(
-          'FlowCrudBloc: Updated pagination window - endOffset should now be $loadedCount');
-    } else {
-      debugPrint(
-          'FlowCrudBloc: Skipped pagination window update - limit is null (paginationInfo=$paginationInfo)');
     }
   }
 
@@ -254,7 +231,6 @@ class FlowCrudBloc extends CrudBloc {
     // Dispose SearchStateManager (clears accumulated filters, callbacks, etc.)
     SearchStateManager().dispose(fullScreenKey);
 
-    debugPrint('FlowCrudBloc: Disposed state for $fullScreenKey');
     return super.close();
   }
 }
@@ -276,7 +252,6 @@ class FlowCrudStateRegistry {
   /// Set append mode for next state update (used by REFRESH_SEARCH) - DEPRECATED
   void setAppendMode(String key, bool append) {
     _appendMode[key] = append;
-    debugPrint('FlowCrudStateRegistry: Set appendMode=$append for $key');
   }
 
   /// Get and consume append mode (called during state update) - DEPRECATED
@@ -289,8 +264,6 @@ class FlowCrudStateRegistry {
   /// Set scroll direction for next state update (used by REFRESH_SEARCH)
   void setScrollDirection(String key, String direction) {
     _scrollDirection[key] = direction;
-    debugPrint(
-        'FlowCrudStateRegistry: Set scrollDirection=$direction for $key');
   }
 
   /// Get and consume scroll direction (called during state update)
@@ -305,8 +278,6 @@ class FlowCrudStateRegistry {
   void setPaginationInfo(String key,
       {required int limit, required int maxItems}) {
     _paginationInfo[key] = {'limit': limit, 'maxItems': maxItems};
-    debugPrint(
-        'FlowCrudStateRegistry: Set paginationInfo limit=$limit, maxItems=$maxItems for $key');
   }
 
   /// Get and consume pagination info

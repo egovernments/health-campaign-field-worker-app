@@ -1,3 +1,4 @@
+import 'package:digit_logger/digit_logger.dart';
 import 'package:flutter/material.dart';
 
 import '../../blocs/flow_crud_bloc.dart';
@@ -30,7 +31,7 @@ class ClearStateExecutor extends ActionExecutor {
     final screenKey = getEffectiveScreenKey(context, contextData);
 
     if (screenKey == null) {
-      debugPrint('⚠️ CLEAR_STATE: No screenKey found, skipping');
+      DigitLogger.warn('CLEAR_STATE: No screenKey found, skipping', category: LogCategory.state);
       return contextData;
     }
 
@@ -64,7 +65,7 @@ class ClearStateExecutor extends ActionExecutor {
       FlowCrudStateRegistry().clear(screenKey);
       SearchStateManager().clear(screenKey, searchName);
 
-      debugPrint('✅ CLEAR_STATE: Cleared all state for screen: $screenKey');
+      DigitLogger.debug('CLEAR_STATE: Cleared all state for screen', category: LogCategory.state, context: {'screenKey': screenKey});
     } else {
       // Selective clearing
 
@@ -77,7 +78,7 @@ class ClearStateExecutor extends ActionExecutor {
           filterKeys,
           triggerSearch: false, // We'll trigger manually if needed
         );
-        debugPrint('✅ CLEAR_STATE: Removed filters: $filterKeys for screen: $screenKey');
+        DigitLogger.debug('CLEAR_STATE: Removed filters', category: LogCategory.state, context: {'filterKeys': filterKeys, 'screenKey': screenKey});
       }
 
       // 2. Clear orderBy if requested
@@ -88,7 +89,7 @@ class ClearStateExecutor extends ActionExecutor {
           null,
           triggerSearch: false,
         );
-        debugPrint('✅ CLEAR_STATE: Cleared orderBy');
+        DigitLogger.debug('CLEAR_STATE: Cleared orderBy', category: LogCategory.state);
       }
 
       // 3. Remove specific keys from widgetData
@@ -107,7 +108,7 @@ class ClearStateExecutor extends ActionExecutor {
           );
           FlowCrudStateRegistry().update(screenKey, updatedState);
 
-          debugPrint('✅ CLEAR_STATE: Removed widgetData keys: $widgetKeys');
+          DigitLogger.debug('CLEAR_STATE: Removed widgetData keys', category: LogCategory.state, context: {'widgetKeys': widgetKeys});
         }
       }
     }
@@ -123,7 +124,7 @@ class ClearStateExecutor extends ActionExecutor {
           [], // Empty list just to trigger the callback
           triggerSearch: true,
         );
-        debugPrint('✅ CLEAR_STATE: Triggered search refresh (remaining filters exist)');
+        DigitLogger.debug('CLEAR_STATE: Triggered search refresh (remaining filters exist)', category: LogCategory.state);
       } else {
         // No remaining filters - clear the page state
         SearchStateManager().updateFilters(
@@ -133,7 +134,7 @@ class ClearStateExecutor extends ActionExecutor {
           triggerSearch: false,
         );
         FlowCrudStateRegistry().clear(screenKey);
-        debugPrint('✅ CLEAR_STATE: Cleared page state (no remaining filters)');
+        DigitLogger.debug('CLEAR_STATE: Cleared page state (no remaining filters)', category: LogCategory.state);
       }
     }
 

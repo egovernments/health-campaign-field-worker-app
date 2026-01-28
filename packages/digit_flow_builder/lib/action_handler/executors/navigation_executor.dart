@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_logger/digit_logger.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -123,15 +124,13 @@ class NavigationExecutor extends ActionExecutor {
                 (state!.stateWrapper as List).isNotEmpty) {
               existingWrapper = List<dynamic>.from(state.stateWrapper as List);
               foundKey = key;
-              debugPrint(
-                  'NAVIGATION: Found existing wrapper with key=$key, items=${existingWrapper.length}');
+              DigitLogger.debug('NAVIGATION: Found existing wrapper', category: LogCategory.navigation, context: {'key': key, 'itemsCount': existingWrapper.length});
               break;
             }
           }
 
           if (existingWrapper.isEmpty) {
-            debugPrint(
-                'NAVIGATION: No existing wrapper found, building new wrapper');
+            DigitLogger.debug('NAVIGATION: No existing wrapper found, building new wrapper', category: LogCategory.navigation);
             // Fall back to building new wrapper
             final wrapper = WrapperBuilder(
               entities as List<EntityModel>,
@@ -147,8 +146,7 @@ class NavigationExecutor extends ActionExecutor {
             // The wrapper items are Map<String, dynamic> with entity types as keys
             final updatedEntities =
                 (entities as List).whereType<EntityModel>().toList();
-            debugPrint(
-                'NAVIGATION: Updating ${updatedEntities.length} entities in existing wrapper');
+            DigitLogger.debug('NAVIGATION: Updating entities in existing wrapper', category: LogCategory.navigation, context: {'count': updatedEntities.length});
 
             for (int i = 0; i < existingWrapper.length; i++) {
               final wrapperItem = existingWrapper[i];
@@ -158,14 +156,13 @@ class NavigationExecutor extends ActionExecutor {
                   final entityType = getEntityTypeName(updatedEntity);
                   if (wrapperItem.containsKey(entityType)) {
                     wrapperItem[entityType] = updatedEntity;
-                    debugPrint('NAVIGATION: Updated $entityType in wrapper');
+                    DigitLogger.trace('NAVIGATION: Updated entity in wrapper', category: LogCategory.navigation, context: {'entityType': entityType});
                   }
                 }
               }
             }
 
-            debugPrint(
-                'NAVIGATION: Edit mode - updated wrapper with ${updatedEntities.length} entities');
+            DigitLogger.debug('NAVIGATION: Edit mode - updated wrapper', category: LogCategory.navigation, context: {'entitiesCount': updatedEntities.length});
 
             final flowState = const FlowCrudState().copyWith(
               stateWrapper: existingWrapper,
@@ -189,8 +186,8 @@ class NavigationExecutor extends ActionExecutor {
 
     // Determine which form data to use
     Map<String, dynamic>? formValuesToUse = contextData['formData'];
-    debugPrint('NAVIGATION: contextData formData: $formValuesToUse');
-    debugPrint('NAVIGATION: targetScreenKey: $targetScreenKey');
+    DigitLogger.trace('NAVIGATION: contextData formData', category: LogCategory.navigation, context: {'formData': formValuesToUse});
+    DigitLogger.debug('NAVIGATION: targetScreenKey', category: LogCategory.navigation, context: {'targetScreenKey': targetScreenKey});
 
     final formDataConfig = action.properties['formDataConfig'];
     if (formDataConfig != null) {
@@ -204,22 +201,20 @@ class NavigationExecutor extends ActionExecutor {
 
     // Get existing state to preserve stateWrapper and other data
     final existingState = FlowCrudStateRegistry().get(targetScreenKey);
-    debugPrint(
-        'NAVIGATION: existingState formData: ${existingState?.formData}');
+    DigitLogger.trace('NAVIGATION: existingState formData', category: LogCategory.navigation, context: {'formData': existingState?.formData});
 
     final mergedFormData = {
       ...?existingState?.formData,
       ...?formValuesToUse,
     };
-    debugPrint('NAVIGATION: merged formData: $mergedFormData');
+    DigitLogger.trace('NAVIGATION: merged formData', category: LogCategory.navigation, context: {'mergedFormData': mergedFormData});
 
     final flowState = (existingState ?? const FlowCrudState()).copyWith(
       formData: mergedFormData,
     );
 
     FlowCrudStateRegistry().update(targetScreenKey, flowState);
-    debugPrint(
-        'NAVIGATION: Updated registry with formData for $targetScreenKey');
+    DigitLogger.debug('NAVIGATION: Updated registry with formData', category: LogCategory.navigation, context: {'targetScreenKey': targetScreenKey});
 
     // Store existingModels in navigation params for edit mode
     // This allows FETCH_TRANSFORMER_CONFIG to use updateEntitiesFromForm
@@ -227,8 +222,7 @@ class NavigationExecutor extends ActionExecutor {
     final existingModels = contextData['existingModels'];
     if (existingModels != null) {
       final modelsList = existingModels as List;
-      debugPrint(
-          'NAVIGATION: Storing existingModels (${modelsList.length} models)');
+      DigitLogger.debug('NAVIGATION: Storing existingModels', category: LogCategory.navigation, context: {'count': modelsList.length});
 
       // Store with full screen key (FORM::ADD_MEMBER)
       final currentNavParams =
@@ -237,7 +231,7 @@ class NavigationExecutor extends ActionExecutor {
         ...currentNavParams,
         'existingModels': existingModels,
       });
-      debugPrint('NAVIGATION: Stored existingModels for $targetScreenKey');
+      DigitLogger.debug('NAVIGATION: Stored existingModels', category: LogCategory.navigation, context: {'key': targetScreenKey});
 
       // Also store with plain name for compatibility (ADD_MEMBER)
       if (targetName != targetScreenKey) {
@@ -247,7 +241,7 @@ class NavigationExecutor extends ActionExecutor {
           ...plainNavParams,
           'existingModels': existingModels,
         });
-        debugPrint('NAVIGATION: Also stored existingModels for $targetName');
+        DigitLogger.debug('NAVIGATION: Also stored existingModels for plain name', category: LogCategory.navigation, context: {'key': targetName});
       }
     }
 

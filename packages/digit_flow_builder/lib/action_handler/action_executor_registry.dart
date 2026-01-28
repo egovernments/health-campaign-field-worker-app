@@ -66,7 +66,6 @@ class ActionExecutorRegistry {
     final executor = getExecutor(action.actionType);
 
     if (executor == null) {
-      debugPrint('⚠️ No executor found for action type: ${action.actionType}');
       return contextData;
     }
 
@@ -81,10 +80,7 @@ class ActionExecutorRegistry {
     try {
       return await executor.execute(action, context, enrichedContextData);
     } catch (e, stackTrace) {
-      debugPrint('❌ Error executing action ${action.actionType}: $e');
-      debugPrint('Stack trace: $stackTrace');
-
-      // Return original context data if execution fails
+      // Execution error - return original context data
       return contextData;
     }
   }

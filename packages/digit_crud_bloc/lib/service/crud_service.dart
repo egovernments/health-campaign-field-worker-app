@@ -214,16 +214,16 @@ class CrudService {
   /// Logs debug information in debug mode only.
   void _log(String message) {
     if (kDebugMode) {
-      debugPrint('[CrudService] $message');
+      // debugPrint('[CrudService] $message');
     }
   }
 
   /// Logs error information.
   void _logError(String message, Object error, StackTrace stackTrace) {
     if (kDebugMode) {
-      debugPrint('[CrudService] ERROR: $message');
-      debugPrint('Error: $error');
-      debugPrint('StackTrace: $stackTrace');
+      // debugPrint('[CrudService] ERROR: $message');
+      // debugPrint('Error: $error');
+      // debugPrint('StackTrace: $stackTrace');
     }
   }
 }

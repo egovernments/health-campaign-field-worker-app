@@ -38,10 +38,9 @@ class FilterWidget implements FlowWidget {
             await showFilterPopup(context, json['label'] ?? 'Filters');
 
         if (filters != null && filters.isNotEmpty) {
-          debugPrint("Selected filters: $filters");
-          // update state or trigger action here
+          // Filters selected - update state or trigger action here
         } else {
-          debugPrint("No filters selected, reset applied");
+          // No filters selected - reset applied
         }
       },
       type: DigitButtonType.tertiary,

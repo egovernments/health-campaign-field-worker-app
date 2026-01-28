@@ -282,12 +282,8 @@ Map<String, dynamic>? _notEqualToValidator(
     }
   });
 
-  debugPrint('Flat Values $flatValues');
-  debugPrint('Looking for otherFieldName: $otherFieldName');
-
   // Look up the other field's value
   final otherValue = flatValues[otherFieldName];
-  debugPrint('Found otherValue: $otherValue');
 
   // Allow null or empty values to pass (required validation handles that separately)
   if (currentValue == null ||

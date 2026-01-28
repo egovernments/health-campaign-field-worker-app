@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:digit_logger/digit_logger.dart';
 import 'package:screen_protector/screen_protector.dart';
 
 /// A singleton manager for handling screen protection across navigation.
@@ -23,8 +23,6 @@ class ScreenProtectionManager {
 
     // Add to stack
     _pageStack.add(_PageEntry(pageName: pageName, isProtected: isProtected));
-    debugPrint('📋 ScreenProtectionManager: Registered $pageName (protected: $isProtected)');
-    debugPrint('📋 Stack: ${_pageStack.map((e) => "${e.pageName}:${e.isProtected}").join(" -> ")}');
 
     // Update protection based on current page
     _updateProtection();
@@ -34,8 +32,6 @@ class ScreenProtectionManager {
   /// Call this in dispose.
   void unregisterPage(String pageName) {
     _pageStack.removeWhere((entry) => entry.pageName == pageName);
-    debugPrint('📋 ScreenProtectionManager: Unregistered $pageName');
-    debugPrint('📋 Stack: ${_pageStack.map((e) => "${e.pageName}:${e.isProtected}").join(" -> ")}');
 
     // Update protection based on the page that's now on top
     _updateProtection();
@@ -46,7 +42,6 @@ class ScreenProtectionManager {
     final index = _pageStack.indexWhere((entry) => entry.pageName == pageName);
     if (index != -1) {
       _pageStack[index] = _PageEntry(pageName: pageName, isProtected: isProtected);
-      debugPrint('📋 ScreenProtectionManager: Updated $pageName (protected: $isProtected)');
       _updateProtection();
     }
   }
@@ -73,9 +68,12 @@ class ScreenProtectionManager {
       await ScreenProtector.protectDataLeakageOn();
       await ScreenProtector.preventScreenshotOn();
       _isProtectionEnabled = true;
-      debugPrint('🔒 ScreenProtectionManager: Protection ENABLED');
     } catch (e) {
-      debugPrint('⚠️ ScreenProtectionManager: Failed to enable protection: $e');
+      DigitLogger.warn(
+        'Failed to enable screen protection',
+        category: LogCategory.lifecycle,
+        context: {'error': e.toString()},
+      );
     }
   }
 
@@ -84,17 +82,18 @@ class ScreenProtectionManager {
       await ScreenProtector.protectDataLeakageOff();
       await ScreenProtector.preventScreenshotOff();
       _isProtectionEnabled = false;
-      debugPrint('🔓 ScreenProtectionManager: Protection DISABLED');
     } catch (e) {
-      debugPrint('⚠️ ScreenProtectionManager: Failed to disable protection: $e');
+      DigitLogger.warn(
+        'Failed to disable screen protection',
+        category: LogCategory.lifecycle,
+        context: {'error': e.toString()},
+      );
     }
   }
 
   /// Force refresh protection state for a specific page.
   /// Useful when navigating back to a page.
   Future<void> refreshProtection(String pageName, bool isProtected) async {
-    debugPrint('🔄 ScreenProtectionManager: Refreshing protection for $pageName');
-
     // Update the page's protection state
     final index = _pageStack.indexWhere((entry) => entry.pageName == pageName);
     if (index != -1) {

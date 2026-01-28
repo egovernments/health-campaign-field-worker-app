@@ -1,0 +1,21 @@
+name: digit_logger
+description: A lightweight, offline-first logging package for Flutter applications with JSON-driven architectures.
+version: 0.1.0
+homepage: https://github.com/egovernments/health-campaign-field-worker-app
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  uuid: ^4.0.0
+  crypto: ^3.0.0
+  flutter_bloc: ^8.1.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  mocktail: ^1.0.2

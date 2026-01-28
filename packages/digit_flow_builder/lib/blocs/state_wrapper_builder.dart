@@ -177,7 +177,7 @@ class WrapperBuilder {
         wrappers.add(wrapperData);
       }
     } catch (e, st) {
-      debugPrint('WrapperBuilder.build error: $e\n$st');
+      // WrapperBuilder.build error - swallow to allow graceful degradation
     } finally {
       // Clear cache after build to free memory
       EnhancedEntityFieldAccessor.clearCache();
@@ -217,8 +217,7 @@ class WrapperBuilder {
 
         groupedByField.putIfAbsent(groupKey, () => []).add(entity);
       } catch (e) {
-        debugPrint('Error grouping entity by field $fieldPath: $e');
-        // Put ungroupable entities in unique 'null' groups
+        // Error grouping entity - put in unique 'null' group
         groupedByField
             .putIfAbsent('null_${nullCounter++}', () => [])
             .add(entity);
@@ -640,7 +639,7 @@ class WrapperBuilder {
 
       return current;
     } catch (e) {
-      debugPrint('WrapperBuilder._resolveValue error: $e for path=$path');
+      // Path resolution error - return null
       return null;
     }
   }
@@ -803,7 +802,7 @@ Map<String, dynamic> _flattenContextForFormulaParser(
           flat[fieldKey] = fieldValue;
         });
       } catch (e) {
-        debugPrint('Error flattening EntityModel $key: $e');
+        // EntityModel flattening error - skip
       }
     } else if (value is Map) {
       // Flatten nested maps
@@ -816,7 +815,7 @@ Map<String, dynamic> _flattenContextForFormulaParser(
               flat['${key}.${nestedKey}.${fieldKey}'] = fieldValue;
             });
           } catch (e) {
-            debugPrint('Error flattening nested EntityModel: $e');
+            // Nested EntityModel flattening error - skip
           }
         } else {
           // Regular nested values
@@ -836,7 +835,7 @@ Map<String, dynamic> _flattenContextForFormulaParser(
               flat['${key}[$i].${fieldKey}'] = fieldValue;
             });
           } catch (e) {
-            debugPrint('Error flattening list EntityModel: $e');
+            // List EntityModel flattening error - skip
           }
         } else {
           flat['${key}[$i]'] = value[i];
@@ -909,10 +908,10 @@ Map<String, dynamic> _applyFieldTransformations(
           }
           break;
         default:
-          debugPrint('Unknown transformation type: $type');
+          // Unknown transformation type - skip
       }
     } catch (e) {
-      debugPrint('Error applying transformation $transformedFieldName: $e');
+      // Transformation error - skip
     }
   });
 
@@ -994,7 +993,6 @@ dynamic _evaluateCustomExpression(
     String expression, Map<String, dynamic> context) {
   // This is a placeholder for custom expressions
   // Could be extended to support simple arithmetic or string operations
-  debugPrint('Custom expression evaluation not implemented: $expression');
   return null;
 }
 
@@ -1055,8 +1053,7 @@ dynamic _evaluateWithCondition(
         }
       }
     } catch (e) {
-      debugPrint('Formula evaluation error: $e');
-      // Continue to next item on error
+      // Formula evaluation error - continue to next item
     }
   }
 
@@ -1446,8 +1443,6 @@ class ComputedListEvaluator {
         final defaultValue =
             _getDefaultValueForMissingKey(key, resolvedCondition);
         contextMap[key] = defaultValue;
-        debugPrint(
-            'Missing key "$key" in context, using default: $defaultValue');
       }
     }
 
@@ -1505,8 +1500,7 @@ class ComputedListEvaluator {
           results.add(item);
         }
       } catch (e) {
-        debugPrint('Formula evaluation error in computedList: $e');
-        // Continue to next item on error
+        // Formula evaluation error in computedList - continue to next item
       }
     }
 

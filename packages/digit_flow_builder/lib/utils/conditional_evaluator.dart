@@ -1,5 +1,6 @@
 import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_formula_parser/digit_formula_parser.dart';
+import 'package:digit_logger/digit_logger.dart';
 import 'package:flutter/material.dart';
 
 import '../blocs/flow_crud_bloc.dart';
@@ -104,7 +105,11 @@ class ConditionalEvaluator {
 
       return boolResult;
     } catch (e) {
-      print('❌ Error evaluating expression "$expression": $e');
+      DigitLogger.warn(
+        'Error evaluating expression',
+        category: LogCategory.condition,
+        context: {'expression': expression, 'error': e.toString()},
+      );
       return false;
     }
   }

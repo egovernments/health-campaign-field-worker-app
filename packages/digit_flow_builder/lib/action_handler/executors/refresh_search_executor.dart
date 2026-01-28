@@ -1,5 +1,6 @@
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_crud_bloc/models/global_search_params.dart';
+import 'package:digit_logger/digit_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -48,7 +49,7 @@ class RefreshSearchExecutor extends ActionExecutor {
         crudCtx?.screenKey ?? getEffectiveScreenKey(context, contextData);
 
     if (screenKey == null) {
-      debugPrint('REFRESH_SEARCH: No screen key found, cannot refresh');
+      DigitLogger.debug('REFRESH_SEARCH: No screen key found, cannot refresh', category: LogCategory.storage);
       return contextData;
     }
 
@@ -56,7 +57,7 @@ class RefreshSearchExecutor extends ActionExecutor {
     final hasFilters = SearchStateManager().hasFiltersForScreen(screenKey);
 
     if (!hasFilters) {
-      debugPrint('REFRESH_SEARCH: No accumulated filters for screen, skipping');
+      DigitLogger.debug('REFRESH_SEARCH: No accumulated filters for screen, skipping', category: LogCategory.storage);
       return contextData;
     }
 
@@ -97,13 +98,13 @@ class RefreshSearchExecutor extends ActionExecutor {
             : defaultMaxItems);
 
     // Get or initialize pagination window
-    debugPrint('REFRESH_SEARCH: Looking for pagination window with screenKey=$screenKey');
+    DigitLogger.debug('REFRESH_SEARCH: Looking for pagination window', category: LogCategory.storage, context: {'screenKey': screenKey});
     var window = stateManager.getPaginationWindow(screenKey, paginationKey);
-    debugPrint('REFRESH_SEARCH: Found window=$window');
+    DigitLogger.trace('REFRESH_SEARCH: Found window', category: LogCategory.storage, context: {'window': window?.toString()});
 
     if (window == null) {
       // Initialize window if not exists (shouldn't happen normally)
-      debugPrint('REFRESH_SEARCH: Window not found, initializing new one');
+      DigitLogger.debug('REFRESH_SEARCH: Window not found, initializing new one', category: LogCategory.storage);
       stateManager.initPaginationWindow(
         screenKey,
         paginationKey,
@@ -118,22 +119,21 @@ class RefreshSearchExecutor extends ActionExecutor {
     if (direction == 'down') {
       offset = stateManager.prepareLoadDown(screenKey, paginationKey);
       if (offset == null) {
-        debugPrint('REFRESH_SEARCH: Cannot load down - no more data');
+        DigitLogger.debug('REFRESH_SEARCH: Cannot load down - no more data', category: LogCategory.storage);
         return contextData;
       }
     } else if (direction == 'up') {
       offset = stateManager.prepareLoadUp(screenKey, paginationKey);
       if (offset == null) {
-        debugPrint('REFRESH_SEARCH: Cannot load up - at beginning');
+        DigitLogger.debug('REFRESH_SEARCH: Cannot load up - at beginning', category: LogCategory.storage);
         return contextData;
       }
     } else {
-      debugPrint('REFRESH_SEARCH: Unknown direction: $direction');
+      DigitLogger.warn('REFRESH_SEARCH: Unknown direction', category: LogCategory.storage, context: {'direction': direction});
       return contextData;
     }
 
-    debugPrint(
-        'REFRESH_SEARCH: Loading $direction from offset=$offset, limit=$limit');
+    DigitLogger.debug('REFRESH_SEARCH: Loading page', category: LogCategory.storage, context: {'direction': direction, 'offset': offset, 'limit': limit});
 
     // Get ALL accumulated filters for the screen (across all searchNames)
     final accumulatedFilters = stateManager.getAllFilters(screenKey);
@@ -162,7 +162,7 @@ class RefreshSearchExecutor extends ActionExecutor {
     }
 
     if (filters.isEmpty) {
-      debugPrint('REFRESH_SEARCH: No filters to apply');
+      DigitLogger.debug('REFRESH_SEARCH: No filters to apply', category: LogCategory.storage);
       return contextData;
     }
 
@@ -186,8 +186,7 @@ class RefreshSearchExecutor extends ActionExecutor {
       maxItems: maxItems,
     );
 
-    debugPrint(
-        'REFRESH_SEARCH: Dispatching search with ${filters.length} filters, direction=$direction');
+    DigitLogger.debug('REFRESH_SEARCH: Dispatching search', category: LogCategory.storage, context: {'filterCount': filters.length, 'direction': direction});
 
     // Dispatch search - FlowCrudBloc.onTransition handles state update
     final crudBloc = context.read<CrudBloc>();

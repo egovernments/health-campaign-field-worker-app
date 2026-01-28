@@ -140,9 +140,7 @@ class PanelCardWidget implements FlowWidget {
           additionalWidgets = widgets;
         }
       } catch (e, stackTrace) {
-        debugPrint('Error building additionalWidgets: $e');
-        debugPrint('StackTrace: $stackTrace');
-        // Return null to avoid breaking the panel card
+        // Widget build error - return null to avoid breaking the panel card
         additionalWidgets = null;
       }
     }

@@ -33,14 +33,14 @@ class SearchStateManager {
   ) {
     final key = _compositeKey(screenKey, searchName);
     _searchCallbacks[key] = onSearch;
-    debugPrint('SearchStateManager: Registered callback for $key');
+    // debugPrint('SearchStateManager: Registered callback for $key');
   }
 
   /// Unregister search callback (call on dispose)
   void unregisterSearchCallback(String screenKey, String searchName) {
     final key = _compositeKey(screenKey, searchName);
     _searchCallbacks.remove(key);
-    debugPrint('SearchStateManager: Unregistered callback for $key');
+    // debugPrint('SearchStateManager: Unregistered callback for $key');
   }
 
   /// Get or create ValueNotifier for listening to changes
@@ -58,7 +58,7 @@ class SearchStateManager {
 
     // Call search callback if registered
     if (_searchCallbacks.containsKey(compositeKey)) {
-      debugPrint('SearchStateManager: Triggering search for $compositeKey');
+      // debugPrint('SearchStateManager: Triggering search for $compositeKey');
       _searchCallbacks[compositeKey]!();
     }
   }
@@ -91,12 +91,12 @@ class SearchStateManager {
 
       if (existingIndex >= 0) {
         existing[existingIndex] = newFilter;
-        debugPrint(
-            'SearchStateManager: Updated filter key=$filterKey for $compositeKey');
+        // debugPrint(
+        //     'SearchStateManager: Updated filter key=$filterKey for $compositeKey');
       } else {
         existing.add(newFilter);
-        debugPrint(
-            'SearchStateManager: Added filter key=$filterKey for $compositeKey');
+        // // debugPrint(
+        //     'SearchStateManager: Added filter key=$filterKey for $compositeKey');
       }
     }
 
@@ -125,8 +125,8 @@ class SearchStateManager {
 
     _state[compositeKey]!['filters'] = existing;
 
-    debugPrint(
-        'SearchStateManager: Removed ${beforeCount - existing.length} filters for keys=$filterKeys from $compositeKey');
+    // debugPrint(
+    //     'SearchStateManager: Removed ${beforeCount - existing.length} filters for keys=$filterKeys from $compositeKey');
 
     if (triggerSearch && beforeCount != existing.length) {
       _notifyChange(compositeKey);
@@ -157,13 +157,13 @@ class SearchStateManager {
         _state[compositeKey]!['filters'] = existing;
         totalRemoved += beforeCount - existing.length;
         lastModifiedKey = compositeKey;
-        debugPrint(
-            'SearchStateManager: Removed ${beforeCount - existing.length} filters for keys=$filterKeys from $compositeKey');
+        // debugPrint(
+        //     'SearchStateManager: Removed ${beforeCount - existing.length} filters for keys=$filterKeys from $compositeKey');
       }
     }
 
-    debugPrint(
-        'SearchStateManager: Total removed $totalRemoved filters for keys=$filterKeys across screen $screenKey');
+    // debugPrint(
+    //     'SearchStateManager: Total removed $totalRemoved filters for keys=$filterKeys across screen $screenKey');
 
     // Trigger search on the default composite key if any filters were removed
     if (triggerSearch && totalRemoved > 0) {
@@ -200,7 +200,7 @@ class SearchStateManager {
       }
     }
     final allFilters = filtersByKey.values.toList();
-    debugPrint('SearchStateManager: getAllFilters for $screenKey found ${allFilters.length} filters (deduplicated by key)');
+    // debugPrint('SearchStateManager: getAllFilters for $screenKey found ${allFilters.length} filters (deduplicated by key)');
     return allFilters;
   }
 
@@ -229,7 +229,7 @@ class SearchStateManager {
     final oldOrderBy = _state[compositeKey]!['orderBy'];
     _state[compositeKey]!['orderBy'] = orderBy;
 
-    debugPrint('SearchStateManager: Updated orderBy for $compositeKey: $orderBy');
+    // debugPrint('SearchStateManager: Updated orderBy for $compositeKey: $orderBy');
 
     // Only trigger if orderBy actually changed
     if (triggerSearch && _orderByChanged(oldOrderBy, orderBy)) {
@@ -279,7 +279,7 @@ class SearchStateManager {
       'totalInWindow': initialItemCount,
     };
 
-    debugPrint('SearchStateManager: Initialized pagination window for $compositeKey: limit=$limit, maxItems=$effectiveMaxItems');
+    // debugPrint('SearchStateManager: Initialized pagination window for $compositeKey: limit=$limit, maxItems=$effectiveMaxItems');
   }
 
   /// Get current pagination window state
@@ -326,11 +326,11 @@ class SearchStateManager {
     final hasMoreDown = windowData['hasMoreDown'] as bool? ?? false;
 
     if (!hasMoreDown) {
-      debugPrint('SearchStateManager: Cannot load down - no more data');
+      // debugPrint('SearchStateManager: Cannot load down - no more data');
       return null;
     }
 
-    debugPrint('SearchStateManager: Preparing load down from offset $endOffset');
+    // debugPrint('SearchStateManager: Preparing load down from offset $endOffset');
     return endOffset;
   }
 
@@ -346,12 +346,12 @@ class SearchStateManager {
     final hasMoreUp = windowData['hasMoreUp'] as bool? ?? false;
 
     if (!hasMoreUp || startOffset <= 0) {
-      debugPrint('SearchStateManager: Cannot load up - at beginning');
+      // debugPrint('SearchStateManager: Cannot load up - at beginning');
       return null;
     }
 
     final newOffset = (startOffset - limit).clamp(0, startOffset);
-    debugPrint('SearchStateManager: Preparing load up from offset $newOffset');
+    // debugPrint('SearchStateManager: Preparing load up from offset $newOffset');
     return newOffset;
   }
 
@@ -367,8 +367,8 @@ class SearchStateManager {
     final compositeKey = _compositeKey(screenKey, searchName);
     final windowData = _state[compositeKey]?['paginationWindow'] as Map<String, dynamic>?;
 
-    debugPrint('SearchStateManager.onDataLoaded: screenKey=$screenKey, direction=$direction, '
-        'loadedCount=$loadedCount, totalInWindow=$totalInWindow, windowData=${windowData != null}');
+    // debugPrint('SearchStateManager.onDataLoaded: screenKey=$screenKey, direction=$direction, '
+    //     'loadedCount=$loadedCount, totalInWindow=$totalInWindow, windowData=${windowData != null}');
 
     if (windowData == null) return;
 
@@ -377,8 +377,8 @@ class SearchStateManager {
     final maxItems = windowData['maxItems'] as int? ??
         ((windowData['windowSize'] as int? ?? 3) * limit);
 
-    debugPrint('SearchStateManager.onDataLoaded: limit=$limit, maxItems=$maxItems, '
-        'willTrim=${totalInWindow > maxItems} (totalInWindow=$totalInWindow > maxItems=$maxItems)');
+    // debugPrint('SearchStateManager.onDataLoaded: limit=$limit, maxItems=$maxItems, '
+    //     'willTrim=${totalInWindow > maxItems} (totalInWindow=$totalInWindow > maxItems=$maxItems)');
 
     if (direction == 'initial') {
       // First load
@@ -421,9 +421,9 @@ class SearchStateManager {
     }
 
     _state[compositeKey]!['paginationWindow'] = windowData;
-    debugPrint('SearchStateManager: Updated window after $direction load: '
-        'startOffset=${windowData['startOffset']}, endOffset=${windowData['endOffset']}, '
-        'totalInWindow=${windowData['totalInWindow']}, hasMoreUp=${windowData['hasMoreUp']}, hasMoreDown=${windowData['hasMoreDown']}');
+    // debugPrint('SearchStateManager: Updated window after $direction load: '
+    //     'startOffset=${windowData['startOffset']}, endOffset=${windowData['endOffset']}, '
+    //     'totalInWindow=${windowData['totalInWindow']}, hasMoreUp=${windowData['hasMoreUp']}, hasMoreDown=${windowData['hasMoreDown']}');
   }
 
   /// Reset pagination window (call when filters change)
@@ -431,7 +431,7 @@ class SearchStateManager {
     final compositeKey = _compositeKey(screenKey, searchName);
     if (_state.containsKey(compositeKey)) {
       _state[compositeKey]!.remove('paginationWindow');
-      debugPrint('SearchStateManager: Reset pagination window for $compositeKey');
+      // debugPrint('SearchStateManager: Reset pagination window for $compositeKey');
     }
   }
 
@@ -452,7 +452,7 @@ class SearchStateManager {
     if (limit != null) pagination['limit'] = limit;
     _state[compositeKey]!['pagination'] = pagination;
 
-    debugPrint('SearchStateManager: Updated pagination for $compositeKey: offset=$offset, limit=$limit');
+    // debugPrint('SearchStateManager: Updated pagination for $compositeKey: offset=$offset, limit=$limit');
   }
 
   /// Get current pagination state - DEPRECATED: use getPaginationWindow instead
@@ -476,7 +476,7 @@ class SearchStateManager {
     pagination['offset'] = newOffset;
     _state[compositeKey]!['pagination'] = pagination;
 
-    debugPrint('SearchStateManager: Incremented offset for $compositeKey: $currentOffset -> $newOffset');
+    // debugPrint('SearchStateManager: Incremented offset for $compositeKey: $currentOffset -> $newOffset');
     return newOffset;
   }
 
@@ -485,7 +485,7 @@ class SearchStateManager {
     final compositeKey = _compositeKey(screenKey, searchName);
     if (_state.containsKey(compositeKey)) {
       _state[compositeKey]!['pagination'] = <String, dynamic>{'offset': 0};
-      debugPrint('SearchStateManager: Reset pagination for $compositeKey');
+      // debugPrint('SearchStateManager: Reset pagination for $compositeKey');
     }
     // Also reset the window if it exists
     resetPaginationWindow(screenKey, searchName);
@@ -507,7 +507,7 @@ class SearchStateManager {
     if (searchName != null) {
       final compositeKey = _compositeKey(screenKey, searchName);
       _state.remove(compositeKey);
-      debugPrint('SearchStateManager: Cleared state for $compositeKey');
+      // debugPrint('SearchStateManager: Cleared state for $compositeKey');
     } else {
       // Clear all for this screen
       final keysToRemove =
@@ -515,8 +515,8 @@ class SearchStateManager {
       for (final key in keysToRemove) {
         _state.remove(key);
       }
-      debugPrint(
-          'SearchStateManager: Cleared all state for screen $screenKey (${keysToRemove.length} entries)');
+      // debugPrint(
+      //     'SearchStateManager: Cleared all state for screen $screenKey (${keysToRemove.length} entries)');
     }
   }
 
@@ -539,7 +539,7 @@ class SearchStateManager {
         _state.remove(key);
       }
     }
-    debugPrint('SearchStateManager: Disposed for $screenKey${searchName != null ? '::$searchName' : ' (all)'}');
+    // debugPrint('SearchStateManager: Disposed for $screenKey${searchName != null ? '::$searchName' : ' (all)'}');
   }
 
   /// Dispose all state (use with caution, typically on app restart)
@@ -550,7 +550,7 @@ class SearchStateManager {
     _notifiers.clear();
     _searchCallbacks.clear();
     _state.clear();
-    debugPrint('SearchStateManager: Disposed all state');
+    // debugPrint('SearchStateManager: Disposed all state');
   }
 }
 

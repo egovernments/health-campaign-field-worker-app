@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_location_tracker/utils/utils.dart';
-import 'package:flutter/foundation.dart';
+import 'package:digit_logger/digit_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 
@@ -67,9 +67,11 @@ class LocationTrackerService {
         }
       });
     } catch (e) {
-      if (kDebugMode) {
-        print('oplog entry error $e');
-      }
+      DigitLogger.error(
+        'Oplog entry error',
+        category: LogCategory.storage,
+        error: e,
+      );
     }
   }
 
@@ -87,9 +89,12 @@ class LocationTrackerService {
         // Add the model to the list
         userActionModels.add(model);
       } catch (e) {
-        if (kDebugMode) {
-          print('Error parsing log: $log, error: $e');
-        }
+        DigitLogger.error(
+          'Error parsing location log',
+          category: LogCategory.storage,
+          error: e,
+          context: {'log': log},
+        );
       }
     }
 

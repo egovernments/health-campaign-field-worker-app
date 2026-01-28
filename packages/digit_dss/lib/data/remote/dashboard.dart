@@ -100,7 +100,6 @@ class DashboardRemoteRepository {
       }
     } on DioException catch (e) {
       // Handle Dio exceptions and log the error
-      debugPrint(e.toString());
       AppLogger.instance.error(
         title: 'Dashboard Repository',
         message: '$e',

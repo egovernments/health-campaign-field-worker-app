@@ -110,7 +110,6 @@ class FlowBuilderNavigationService implements NavigationService {
           break;
       }
     } else {
-      debugPrint('⚠️ No route found for key: $key');
       Toast.showToast(context,
           message: 'No route found for key: $key', type: ToastType.error);
     }
@@ -158,8 +157,7 @@ class FlowBuilderNavigationService implements NavigationService {
         return route.settings.name == 'HomeRoute';
       });
     } catch (e) {
-      debugPrint('⚠️ Error navigating to HOME: $e');
-      // Fallback: try to pop if possible
+      // Navigation error - try fallback
       if (context.router.canPop()) {
         context.router.pop();
       }
