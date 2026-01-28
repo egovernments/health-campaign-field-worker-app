@@ -269,6 +269,7 @@ class DigitScannerUtils {
     bloc.add(DigitScannerEvent.handleScanner(
       barCode: bloc.state.barCodes, // Keep existing barcodes
       qrCode: codes, // Update QR codes with the new list
+      scannerId: bloc.state.scannerId, // Preserve the scanner ID
     ));
 
     // Wait for 5 seconds before completing the function
@@ -309,6 +310,7 @@ class DigitScannerUtils {
     bloc.add(DigitScannerEvent.handleScanner(
       barCode: result, // Update barcodes with the new list
       qrCode: bloc.state.qrCodes, // Keep existing QR codes
+      scannerId: bloc.state.scannerId, // Preserve the scanner ID
     ));
 
     // Update the state with the new list of results

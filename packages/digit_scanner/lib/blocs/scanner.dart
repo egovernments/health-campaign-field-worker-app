@@ -34,6 +34,7 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
           barCodes: event.barCode,
           qrCodes: event.qrCode,
           error: null,
+          scannerId: event.scannerId,
         ));
         return;
       }
@@ -84,6 +85,7 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
           manualError: manualError,
         )
             : null,
+        scannerId: event.scannerId,
       ));
     } catch (error) {
       rethrow;
@@ -111,6 +113,10 @@ class DigitScannerEvent with _$DigitScannerEvent {
     @Default([]) List<String> qrCode,
     @Default('') String manualCode,
     String? regex,
+    /// Identifier for which scanner field initiated this scan.
+    /// Used to prevent multiple scanner fields from reacting to the same state change.
+    /// Defaults to 'default' for backward compatibility with existing flows.
+    @Default('default') String scannerId,
   }) = DigitScannerScanEvent;
 }
 
@@ -122,5 +128,9 @@ class DigitScannerState with _$DigitScannerState {
     @Default(false) bool loading,
     @Default(false) bool duplicate,
     String? error,
+    /// Identifier for which scanner field this state belongs to.
+    /// Used to filter state changes for specific scanner fields.
+    /// Defaults to 'default' for backward compatibility.
+    @Default('default') String scannerId,
   }) = _DigitScannerState;
 }
