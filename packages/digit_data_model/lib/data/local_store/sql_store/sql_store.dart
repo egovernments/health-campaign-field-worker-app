@@ -1,6 +1,7 @@
 // Importing necessary packages and files.
 import 'dart:io';
 
+import 'package:digit_data_model/data/local_store/sql_store/digit_query_interceptor.dart';
 import 'package:digit_data_model/data/local_store/sql_store/tables/localization.dart';
 import 'package:digit_data_model/data/local_store/sql_store/tables/user_action.dart';
 import 'package:drift/drift.dart';
@@ -332,12 +333,11 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
       // Initialize SQLCipher library for encryption support
       _initializeSqlCipher();
 
-      // Return a `NativeDatabase` that uses the file for storage.
-      // Note: logStatements disabled to prevent verbose SQL logging in console.
-      // Use DigitLogger for controlled logging instead.
-      return NativeDatabase(
+      // Create the native database without built-in logging
+      // We use DigitQueryInterceptor for logging through DigitLogger
+      final nativeDb = NativeDatabase(
         file,
-        logStatements: false,
+        logStatements: false, // Logging handled by DigitQueryInterceptor
         setup: (database) {
           // If an encryption key is provided, set it using SQLCipher's PRAGMA key
           if (encryptionKey != null && encryptionKey.isNotEmpty) {
@@ -345,6 +345,12 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
             database.execute("PRAGMA key = '$encryptionKey';");
           }
         },
+      );
+
+      // Wrap with DigitQueryInterceptor to route SQL logs through DigitLogger
+      // Logging is only enabled in debug mode to avoid performance overhead
+      return nativeDb.interceptWith(
+        DigitQueryInterceptor(enabled: kDebugMode),
       );
     });
   }
