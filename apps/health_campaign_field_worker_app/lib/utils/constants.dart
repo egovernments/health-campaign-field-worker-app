@@ -87,6 +87,27 @@ class Constants {
   }
 
   static const String localizationApiPath = 'localization/messages/v1/_search';
+  // Modules to load initially (fetch from server and cache locally)
+  static const List<String> initialLocalizationModules = [
+    'digit-privacy-policy',
+    'hcm-login',
+    'hcm-common',
+    'digit-scanner',
+  ];
+
+  // Modules to load when inside packages
+  static const List<String> packageLocalizationModules = [
+    'hcm-common',
+    'hcm-login',
+    'digit-scanner',
+  ];
+
+  // Modules to load on home page and logout
+  static const List<String> homeLocalizationModules = [
+    'hcm-login',
+    'hcm-common',
+    'digit-privacy-policy',
+  ];
   static const String surveyFormPreviewDateFormat = 'dd MMMM yyyy';
   static const String defaultDateFormat = 'dd/MM/yyyy';
   static const String defaultDateTimeFormat = 'dd/MM/yyyy hh:mm a';
