@@ -133,7 +133,19 @@ class _HomePageState extends LocalizedState<HomePage> {
       (context, stateAccessor) {
         // Build your component with access to all this data
         return const EvaluationKeyDropDown(
+          schemaName: "REFERRAL_CREATE",
+            formControlName: "healthFacility"
+        );
+      },
+    );
+
+    CustomComponentRegistry().registerBuilder(
+      'healthFacility',
+          (context, stateAccessor) {
+        // Build your component with access to all this data
+        return const EvaluationKeyDropDown(
           schemaName: "REFER_BENEFICIARY",
+            formControlName: "healthFacility"
         );
       },
     );
@@ -951,32 +963,32 @@ class _HomePageState extends LocalizedState<HomePage> {
               dynamicEntityModelListener: EntityModelMapMapper(),
             );
             try {
-              if (schemaJsonRaw != null) {
-                final allSchemas =
-                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                final data = allSchemas['REGISTRATION'];
-
-                final registrationDeliveryData = data?['data'];
-                final flowsData =
-                    (registrationDeliveryData['flows'] as List<dynamic>?)
-                            ?.map((e) => Map<String, dynamic>.from(e as Map))
-                            .toList() ??
-                        [];
-                FlowRegistry.setConfig(flowsData);
-                NavigationRegistry.setupNavigation(context);
-
-                context.router.push(
-                  FlowBuilderHomeRoute(
-                      pageName: registrationDeliveryData["initialPage"]),
-                );
-              } else {
+              // if (schemaJsonRaw != null) {
+              //   final allSchemas =
+              //       json.decode(schemaJsonRaw) as Map<String, dynamic>;
+              //   final data = allSchemas['REGISTRATION'];
+              //
+              //   final registrationDeliveryData = data?['data'];
+              //   final flowsData =
+              //       (registrationDeliveryData['flows'] as List<dynamic>?)
+              //               ?.map((e) => Map<String, dynamic>.from(e as Map))
+              //               .toList() ??
+              //           [];
+              //   FlowRegistry.setConfig(flowsData);
+              //   NavigationRegistry.setupNavigation(context);
+              //
+              //   context.router.push(
+              //     FlowBuilderHomeRoute(
+              //         pageName: registrationDeliveryData["initialPage"]),
+              //   );
+              // } else {
                 FlowRegistry.setConfig(
                     sampleFlows["flows"] as List<Map<String, dynamic>>);
                 NavigationRegistry.setupNavigation(context);
                 context.router.push(
                   FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
                 );
-              }
+              // }
             } catch (e) {
               debugPrint('error $e');
             }

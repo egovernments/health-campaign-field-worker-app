@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../layout_renderer.dart';
+import '../../utils/flow_widget_state.dart';
 import '../../utils/interpolation.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
@@ -18,19 +19,18 @@ class ListViewWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final crudCtx = CrudItemContext.of(context);
-    final stateData = crudCtx?.stateData;
+    final flowState = WidgetStateContext.of(context);
+    final stateData = flowState.stateData;
 
     final dataSourceKey = json['dataSource'] as String?;
-    final rawState = stateData?.rawState ?? [];
+    final rawState = flowState.contextData ?? [];
     var items = rawState;
 
     if (dataSourceKey != null && rawState.isNotEmpty) {
       if (dataSourceKey.startsWith('item.')) {
         final fieldPath = dataSourceKey.substring(5);
-        final currentItem = crudCtx?.item;
-        items = currentItem != null
-            ? _resolveNestedField(currentItem, fieldPath)
+        items = flowState.itemData != null
+            ? _resolveNestedField(flowState.itemData!, fieldPath)
             : [];
       } else {
         items = rawState[0]?[dataSourceKey];
@@ -89,7 +89,7 @@ class ListViewWidget implements FlowWidget {
           stateData: stateData,
           listIndex: index,
           item: safeItem,
-          screenKey: crudCtx?.screenKey,
+          screenKey: flowState.screenKey,
           child: Column(
             children: [
               mappedChild,
