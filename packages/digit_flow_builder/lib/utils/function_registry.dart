@@ -262,9 +262,7 @@ void initializeFunctionRegistry() {
     if (projectType == null) return false;
 
 // --- Tasks & SideEffects come from stateData ---
-    final tasks = args.length > 2 ? args[2] : [];
-    final referral = args.length > 1 ? args[1] : [];
-    if (referral.isNotEmpty) return false;
+    final tasks = args.length > 1 ? args[1] : [];
     final sideEffects = (stateData.modelMap['sideEffects'] as List?) ?? [];
 
 // --- Current active cycle ---
@@ -283,6 +281,29 @@ void initializeFunctionRegistry() {
 
 // --- Eligibility logic ---
     bool recordedSideEffect = false;
+
+    if (tasks.isNotEmpty) {
+      final item = tasks.last;
+
+      Map<String, dynamic> lastTask;
+
+      if (item is Map<String, dynamic>) {
+        lastTask = item;
+      } else {
+        try {
+          lastTask = (item as dynamic).toMap() as Map<String, dynamic>;
+        } catch (_) {
+          try {
+            lastTask = (item as dynamic).toJson() as Map<String, dynamic>;
+          } catch (_) {
+            lastTask = <String, dynamic>{};
+          }
+        }
+      }
+
+      if (lastTask['status'] == "INELIGIBLE") return false;
+    }
+
     if (tasks.isNotEmpty && sideEffects.isNotEmpty) {
       final lastTask = tasks.last as Map<String, dynamic>;
       final lastSideEffect = sideEffects.last as Map<String, dynamic>;

@@ -20,24 +20,29 @@ mixin _$DigitScannerEvent {
   List<String> get qrCode => throw _privateConstructorUsedError;
   String get manualCode => throw _privateConstructorUsedError;
   String? get regex => throw _privateConstructorUsedError;
+
+  /// Identifier for which scanner field initiated this scan.
+  /// Used to prevent multiple scanner fields from reacting to the same state change.
+  /// Defaults to 'default' for backward compatibility with existing flows.
+  String get scannerId => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(List<GS1Barcode> barCode, List<String> qrCode,
-            String manualCode, String? regex)
+            String manualCode, String? regex, String scannerId)
         handleScanner,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(List<GS1Barcode> barCode, List<String> qrCode,
-            String manualCode, String? regex)?
+            String manualCode, String? regex, String scannerId)?
         handleScanner,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(List<GS1Barcode> barCode, List<String> qrCode,
-            String manualCode, String? regex)?
+            String manualCode, String? regex, String scannerId)?
         handleScanner,
     required TResult orElse(),
   }) =>
@@ -74,7 +79,8 @@ abstract class $DigitScannerEventCopyWith<$Res> {
       {List<GS1Barcode> barCode,
       List<String> qrCode,
       String manualCode,
-      String? regex});
+      String? regex,
+      String scannerId});
 }
 
 /// @nodoc
@@ -94,6 +100,7 @@ class _$DigitScannerEventCopyWithImpl<$Res, $Val extends DigitScannerEvent>
     Object? qrCode = null,
     Object? manualCode = null,
     Object? regex = freezed,
+    Object? scannerId = null,
   }) {
     return _then(_value.copyWith(
       barCode: null == barCode
@@ -112,6 +119,10 @@ class _$DigitScannerEventCopyWithImpl<$Res, $Val extends DigitScannerEvent>
           ? _value.regex
           : regex // ignore: cast_nullable_to_non_nullable
               as String?,
+      scannerId: null == scannerId
+          ? _value.scannerId
+          : scannerId // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -129,7 +140,8 @@ abstract class _$$DigitScannerScanEventImplCopyWith<$Res>
       {List<GS1Barcode> barCode,
       List<String> qrCode,
       String manualCode,
-      String? regex});
+      String? regex,
+      String scannerId});
 }
 
 /// @nodoc
@@ -147,6 +159,7 @@ class __$$DigitScannerScanEventImplCopyWithImpl<$Res>
     Object? qrCode = null,
     Object? manualCode = null,
     Object? regex = freezed,
+    Object? scannerId = null,
   }) {
     return _then(_$DigitScannerScanEventImpl(
       barCode: null == barCode
@@ -165,6 +178,10 @@ class __$$DigitScannerScanEventImplCopyWithImpl<$Res>
           ? _value.regex
           : regex // ignore: cast_nullable_to_non_nullable
               as String?,
+      scannerId: null == scannerId
+          ? _value.scannerId
+          : scannerId // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -176,7 +193,8 @@ class _$DigitScannerScanEventImpl implements DigitScannerScanEvent {
       {final List<GS1Barcode> barCode = const [],
       final List<String> qrCode = const [],
       this.manualCode = '',
-      this.regex})
+      this.regex,
+      this.scannerId = 'default'})
       : _barCode = barCode,
         _qrCode = qrCode;
 
@@ -204,9 +222,16 @@ class _$DigitScannerScanEventImpl implements DigitScannerScanEvent {
   @override
   final String? regex;
 
+  /// Identifier for which scanner field initiated this scan.
+  /// Used to prevent multiple scanner fields from reacting to the same state change.
+  /// Defaults to 'default' for backward compatibility with existing flows.
+  @override
+  @JsonKey()
+  final String scannerId;
+
   @override
   String toString() {
-    return 'DigitScannerEvent.handleScanner(barCode: $barCode, qrCode: $qrCode, manualCode: $manualCode, regex: $regex)';
+    return 'DigitScannerEvent.handleScanner(barCode: $barCode, qrCode: $qrCode, manualCode: $manualCode, regex: $regex, scannerId: $scannerId)';
   }
 
   @override
@@ -218,7 +243,9 @@ class _$DigitScannerScanEventImpl implements DigitScannerScanEvent {
             const DeepCollectionEquality().equals(other._qrCode, _qrCode) &&
             (identical(other.manualCode, manualCode) ||
                 other.manualCode == manualCode) &&
-            (identical(other.regex, regex) || other.regex == regex));
+            (identical(other.regex, regex) || other.regex == regex) &&
+            (identical(other.scannerId, scannerId) ||
+                other.scannerId == scannerId));
   }
 
   @override
@@ -227,7 +254,8 @@ class _$DigitScannerScanEventImpl implements DigitScannerScanEvent {
       const DeepCollectionEquality().hash(_barCode),
       const DeepCollectionEquality().hash(_qrCode),
       manualCode,
-      regex);
+      regex,
+      scannerId);
 
   @JsonKey(ignore: true)
   @override
@@ -240,32 +268,32 @@ class _$DigitScannerScanEventImpl implements DigitScannerScanEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(List<GS1Barcode> barCode, List<String> qrCode,
-            String manualCode, String? regex)
+            String manualCode, String? regex, String scannerId)
         handleScanner,
   }) {
-    return handleScanner(barCode, qrCode, manualCode, regex);
+    return handleScanner(barCode, qrCode, manualCode, regex, scannerId);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(List<GS1Barcode> barCode, List<String> qrCode,
-            String manualCode, String? regex)?
+            String manualCode, String? regex, String scannerId)?
         handleScanner,
   }) {
-    return handleScanner?.call(barCode, qrCode, manualCode, regex);
+    return handleScanner?.call(barCode, qrCode, manualCode, regex, scannerId);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(List<GS1Barcode> barCode, List<String> qrCode,
-            String manualCode, String? regex)?
+            String manualCode, String? regex, String scannerId)?
         handleScanner,
     required TResult orElse(),
   }) {
     if (handleScanner != null) {
-      return handleScanner(barCode, qrCode, manualCode, regex);
+      return handleScanner(barCode, qrCode, manualCode, regex, scannerId);
     }
     return orElse();
   }
@@ -304,7 +332,8 @@ abstract class DigitScannerScanEvent implements DigitScannerEvent {
       {final List<GS1Barcode> barCode,
       final List<String> qrCode,
       final String manualCode,
-      final String? regex}) = _$DigitScannerScanEventImpl;
+      final String? regex,
+      final String scannerId}) = _$DigitScannerScanEventImpl;
 
   @override
   List<GS1Barcode> get barCode;
@@ -314,6 +343,12 @@ abstract class DigitScannerScanEvent implements DigitScannerEvent {
   String get manualCode;
   @override
   String? get regex;
+  @override
+
+  /// Identifier for which scanner field initiated this scan.
+  /// Used to prevent multiple scanner fields from reacting to the same state change.
+  /// Defaults to 'default' for backward compatibility with existing flows.
+  String get scannerId;
   @override
   @JsonKey(ignore: true)
   _$$DigitScannerScanEventImplCopyWith<_$DigitScannerScanEventImpl>
@@ -327,6 +362,11 @@ mixin _$DigitScannerState {
   bool get loading => throw _privateConstructorUsedError;
   bool get duplicate => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
+
+  /// Identifier for which scanner field this state belongs to.
+  /// Used to filter state changes for specific scanner fields.
+  /// Defaults to 'default' for backward compatibility.
+  String get scannerId => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $DigitScannerStateCopyWith<DigitScannerState> get copyWith =>
@@ -344,7 +384,8 @@ abstract class $DigitScannerStateCopyWith<$Res> {
       List<String> qrCodes,
       bool loading,
       bool duplicate,
-      String? error});
+      String? error,
+      String scannerId});
 }
 
 /// @nodoc
@@ -365,6 +406,7 @@ class _$DigitScannerStateCopyWithImpl<$Res, $Val extends DigitScannerState>
     Object? loading = null,
     Object? duplicate = null,
     Object? error = freezed,
+    Object? scannerId = null,
   }) {
     return _then(_value.copyWith(
       barCodes: null == barCodes
@@ -387,6 +429,10 @@ class _$DigitScannerStateCopyWithImpl<$Res, $Val extends DigitScannerState>
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as String?,
+      scannerId: null == scannerId
+          ? _value.scannerId
+          : scannerId // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -404,7 +450,8 @@ abstract class _$$DigitScannerStateImplCopyWith<$Res>
       List<String> qrCodes,
       bool loading,
       bool duplicate,
-      String? error});
+      String? error,
+      String scannerId});
 }
 
 /// @nodoc
@@ -423,6 +470,7 @@ class __$$DigitScannerStateImplCopyWithImpl<$Res>
     Object? loading = null,
     Object? duplicate = null,
     Object? error = freezed,
+    Object? scannerId = null,
   }) {
     return _then(_$DigitScannerStateImpl(
       barCodes: null == barCodes
@@ -445,6 +493,10 @@ class __$$DigitScannerStateImplCopyWithImpl<$Res>
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as String?,
+      scannerId: null == scannerId
+          ? _value.scannerId
+          : scannerId // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -457,7 +509,8 @@ class _$DigitScannerStateImpl implements _DigitScannerState {
       final List<String> qrCodes = const [],
       this.loading = false,
       this.duplicate = false,
-      this.error})
+      this.error,
+      this.scannerId = 'default'})
       : _barCodes = barCodes,
         _qrCodes = qrCodes;
 
@@ -488,9 +541,16 @@ class _$DigitScannerStateImpl implements _DigitScannerState {
   @override
   final String? error;
 
+  /// Identifier for which scanner field this state belongs to.
+  /// Used to filter state changes for specific scanner fields.
+  /// Defaults to 'default' for backward compatibility.
+  @override
+  @JsonKey()
+  final String scannerId;
+
   @override
   String toString() {
-    return 'DigitScannerState(barCodes: $barCodes, qrCodes: $qrCodes, loading: $loading, duplicate: $duplicate, error: $error)';
+    return 'DigitScannerState(barCodes: $barCodes, qrCodes: $qrCodes, loading: $loading, duplicate: $duplicate, error: $error, scannerId: $scannerId)';
   }
 
   @override
@@ -503,7 +563,9 @@ class _$DigitScannerStateImpl implements _DigitScannerState {
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.duplicate, duplicate) ||
                 other.duplicate == duplicate) &&
-            (identical(other.error, error) || other.error == error));
+            (identical(other.error, error) || other.error == error) &&
+            (identical(other.scannerId, scannerId) ||
+                other.scannerId == scannerId));
   }
 
   @override
@@ -513,7 +575,8 @@ class _$DigitScannerStateImpl implements _DigitScannerState {
       const DeepCollectionEquality().hash(_qrCodes),
       loading,
       duplicate,
-      error);
+      error,
+      scannerId);
 
   @JsonKey(ignore: true)
   @override
@@ -529,7 +592,8 @@ abstract class _DigitScannerState implements DigitScannerState {
       final List<String> qrCodes,
       final bool loading,
       final bool duplicate,
-      final String? error}) = _$DigitScannerStateImpl;
+      final String? error,
+      final String scannerId}) = _$DigitScannerStateImpl;
 
   @override
   List<GS1Barcode> get barCodes;
@@ -541,6 +605,12 @@ abstract class _DigitScannerState implements DigitScannerState {
   bool get duplicate;
   @override
   String? get error;
+  @override
+
+  /// Identifier for which scanner field this state belongs to.
+  /// Used to filter state changes for specific scanner fields.
+  /// Defaults to 'default' for backward compatibility.
+  String get scannerId;
   @override
   @JsonKey(ignore: true)
   _$$DigitScannerStateImplCopyWith<_$DigitScannerStateImpl> get copyWith =>

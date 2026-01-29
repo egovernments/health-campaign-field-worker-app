@@ -62,8 +62,11 @@ class NavigationExecutor extends ActionExecutor {
         final rawValue = entry['value'];
 
         // Try to resolve from state form data first, fallback to contextData
+        final stateWrapperFirst = (currentState?.stateWrapper?.isNotEmpty == true)
+            ? currentState?.stateWrapper?.first
+            : null;
         dynamic resolvedValue = resolveValue(
-            rawValue, stateFormData ?? currentState?.stateWrapper?.first);
+            rawValue, stateFormData ?? stateWrapperFirst);
         if (resolvedValue == rawValue || resolvedValue == null) {
           // If not resolved from state, try contextData
           resolvedValue = resolveValue(rawValue, contextData);

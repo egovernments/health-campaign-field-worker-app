@@ -1,13 +1,10 @@
-import 'package:digit_scanner/blocs/scanner.dart';
-import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../action_handler/action_handler.dart';
-import '../../blocs/flow_crud_bloc.dart';
 import '../../utils/conditional_evaluator.dart';
+import '../../utils/flow_widget_state.dart';
 import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
 import '../../utils/widget_parsers.dart';
@@ -31,33 +28,14 @@ class QRScannerWidget implements FlowWidget {
       BuildContext context,
       void Function(ActionConfig) onAction,
       ) {
-    final crudCtx = CrudItemContext.of(context);
-    final crudStateData = crudCtx?.stateData;
-    final stateData = (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
-        ? crudCtx.item
-        : crudCtx?.stateData?.rawState != null &&
-        crudCtx!.stateData!.rawState.isNotEmpty
-        ? crudCtx.stateData?.rawState.first
-        : null;
-
-    // Get form data from registry for resolving form field values
-    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
-    final formData = screenKey != null
-        ? FlowCrudStateRegistry().get(screenKey)?.formData
-        : null;
-
-    // Create evaluation context
-    final evalContext = {
-      'item': crudCtx?.item,
-      'contextData': crudCtx?.stateData?.rawState ?? {},
-      ...crudStateData?.modelMap ?? {},
-    };
+    final flowState = WidgetStateContext.of(context);
+    final crudStateData = flowState.stateData;
 
     // Check visibility condition
     if (json['visible'] != null) {
       final visible = ConditionalEvaluator.evaluate(
         json['visible'],
-        evalContext,
+        flowState.evalContext,
         stateData: crudStateData,
       );
       if (visible == false) {
@@ -70,7 +48,7 @@ class QRScannerWidget implements FlowWidget {
     if (json['disabled'] != null) {
       final disabledResult = ConditionalEvaluator.evaluate(
         json['disabled'],
-        evalContext,
+        flowState.evalContext,
         stateData: crudStateData,
       );
       isDisabled = disabledResult == true;
@@ -87,7 +65,7 @@ class QRScannerWidget implements FlowWidget {
       resolvedLabel = interpolateWithCrudStates(
         template: labelText,
         stateData: crudStateData,
-        item: crudCtx?.item,
+        item: flowState.itemData,
       );
       // Translate if it's a pure localization key (no templates remaining)
       if (!resolvedLabel.contains('{{')) {
@@ -96,7 +74,7 @@ class QRScannerWidget implements FlowWidget {
     } else {
       resolvedLabel = resolveTemplate(
             labelText,
-            stateData,
+            flowState.evalContext,
             localization: localization,
           ) ??
           labelText;
@@ -143,14 +121,10 @@ class QRScannerWidget implements FlowWidget {
                 final key = entry['key'] as String;
                 final rawValue = entry['value'];
 
-                // Try to resolve from stateData first, then fallback to formData
-                dynamic resolvedValue = stateData != null
-                    ? resolveValue(rawValue, stateData)
-                    : rawValue;
-
-                if (resolvedValue == rawValue && formData != null) {
-                  // If not resolved from stateData, try formData
-                  resolvedValue = resolveValue(rawValue, formData);
+                // Resolve using flowState.evalContext which contains all data sources
+                dynamic resolvedValue = resolveValue(rawValue, flowState.evalContext);
+                if (resolvedValue == rawValue) {
+                  resolvedValue = rawValue;
                 }
 
                 return {
@@ -174,14 +148,10 @@ class QRScannerWidget implements FlowWidget {
             };
           }).toList();
 
-          // Build initial context data from current state
+          // Build initial context data from current state using flowState.evalContext
           final initialContextData = <String, dynamic>{
             'wrappers': const [],
-            if (stateData != null) ...{
-              'item': crudCtx?.item,
-              'contextData': stateData,
-            },
-            if (formData != null) 'formData': formData,
+            ...flowState.evalContext,
           };
 
           // Use ActionHandler.executeActions to chain actions with shared contextData

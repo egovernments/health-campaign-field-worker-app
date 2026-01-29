@@ -5,10 +5,6 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
   final DateTime? end;
   final bool summaryData;
 
-  /// Tracks which scanner initiated the scan to prevent multiple scanners
-  /// on the same page from reacting to the same state change.
-  static String? _activeScannerId;
-
   const JsonSchemaScannerBuilder({
     required super.formControlName,
     required super.form,
@@ -45,14 +41,16 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
       builder: (field) => BlocConsumer<DigitScannerBloc, DigitScannerState>(
           listenWhen: (previous, current) {
             // Only listen if this scanner initiated the scan
-            return _activeScannerId == formControlName;
+            return current.scannerId == formControlName;
+          },
+          buildWhen: (previous, current) {
+            // Only rebuild if this scanner initiated the scan
+            return current.scannerId == formControlName;
           },
           listener: (context, state) {
-            // Reset active scanner after processing
-            _activeScannerId = null;
         if (state.qrCodes.isNotEmpty) {
-          // Join multiple QR codes with dot separator
-          form.control(formControlName).value = state.qrCodes.join('.');
+          // Join multiple QR codes with comma separator
+          form.control(formControlName).value = state.qrCodes.join(', ');
         }
         if (state.barCodes.isNotEmpty) {
           final gs1Data = DigitScannerUtils()
@@ -69,7 +67,36 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
           form.control(formControlName).value = '$gtin,$serial,$batch,$expiry';
         }
       }, builder: (context, state) {
-        return state.qrCodes.isNotEmpty && summaryData
+        // Check if this scanner initiated the scan OR if form has pre-populated data
+        final isThisScanner = state.scannerId == formControlName;
+        final formValue = form.control(formControlName).value as String?;
+        final hasFormValue = formValue != null && formValue.isNotEmpty;
+
+        // Check if this is barcode data (GS1 format: exactly 4 comma-separated parts)
+        // GS1 barcodes have format: GTIN,SERIAL,BATCH,EXPIRY
+        bool isGS1BarcodeFormat(String value) {
+          final parts = value.split(',').map((e) => e.trim()).toList();
+          // GS1 barcodes have exactly 4 parts
+          return parts.length == 4;
+        }
+
+        final isBarcodeData = (isThisScanner && state.barCodes.isNotEmpty) ||
+            (hasFormValue && isGS1BarcodeFormat(formValue));
+
+        // Use bloc state qrCodes if this scanner just scanned, otherwise parse from form value
+        // QR codes are comma-separated
+        final displayQrCodes = isThisScanner && state.qrCodes.isNotEmpty
+            ? state.qrCodes
+            : (!isBarcodeData && hasFormValue
+                ? formValue.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList()
+                : <String>[]);
+
+        // Show barcode summary first (if barcode data exists), then QR summary
+        final showBarcodeSummary = isBarcodeData && summaryData;
+        final showQrSummary = !showBarcodeSummary && displayQrCodes.isNotEmpty && summaryData;
+
+        // Show barcode (GS1) summary
+        return showBarcodeSummary
             ? Container(
                 padding: EdgeInsets.zero,
                 width: MediaQuery.of(context).size.width,
@@ -83,28 +110,78 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                       child: LabelValueSummary(
                         padding: EdgeInsets.zero,
                         withDivider: false,
-                        items: [
-                          LabelValueItem(
-                            label: label ?? 'Voucher code',
-                            value: state.qrCodes.first,
-                            labelFlex: 5,
-                            maxLines: 5,
-                            padding: EdgeInsets.zero,
-                          ),
-                        ],
+                        items: isThisScanner && state.barCodes.isNotEmpty
+                            // Use bloc state when available
+                            ? (DigitScannerUtils()
+                                    .getGs1CodeFormattedStringAtIndex(
+                                        state.barCodes, 0))
+                                .entries
+                                .map((entry) {
+                                return LabelValueItem(
+                                  labelFlex: 5,
+                                  label: "GS1_${entry.key}",
+                                  value: entry.value is DateTime
+                                      ? DateFormat('d MMMM yyyy')
+                                          .format(entry.value)
+                                          .toString()
+                                      : entry.value,
+                                  maxLines: 5,
+                                );
+                              }).toList()
+                            // Fall back to parsing form value (GTIN,SERIAL,BATCH,EXPIRY format)
+                            : () {
+                                final parts = formValue!.split(',');
+                                final items = <LabelValueItem>[];
+                                if (parts.isNotEmpty && parts[0].isNotEmpty) {
+                                  items.add(LabelValueItem(
+                                    labelFlex: 5,
+                                    label: "GS1_01",
+                                    value: parts[0],
+                                    maxLines: 5,
+                                  ));
+                                }
+                                if (parts.length > 1 && parts[1].isNotEmpty) {
+                                  items.add(LabelValueItem(
+                                    labelFlex: 5,
+                                    label: "GS1_21",
+                                    value: parts[1],
+                                    maxLines: 5,
+                                  ));
+                                }
+                                if (parts.length > 2 && parts[2].isNotEmpty) {
+                                  items.add(LabelValueItem(
+                                    labelFlex: 5,
+                                    label: "GS1_10",
+                                    value: parts[2],
+                                    maxLines: 5,
+                                  ));
+                                }
+                                if (parts.length > 3 && parts[3].isNotEmpty) {
+                                  items.add(LabelValueItem(
+                                    labelFlex: 5,
+                                    label: "GS1_11",
+                                    value: parts[3],
+                                    maxLines: 5,
+                                  ));
+                                }
+                                return items;
+                              }(),
                       ),
                     ),
                     DigitButton(
                       label: '',
                       onPressed: () {
-                        _activeScannerId = formControlName;
-                        // Get current value and split by dot to get list of QR codes
-                        final currentValue = form.control(formControlName).value as String?;
-                        final initialCodes = currentValue?.split('.').where((e) => e.isNotEmpty).toList();
+                        // Clear scanner state before navigating to edit barcode
+                        context.read<DigitScannerBloc>().add(
+                              DigitScannerEvent.handleScanner(
+                                barCode: [],
+                                qrCode: [],
+                                scannerId: formControlName,
+                              ),
+                            );
                         context.router.push(DigitScannerRoute(
                           validations: _toScannerValidations(),
-                          isEditEnabled: true,
-                          initialQrCodes: initialCodes,
+                          scannerId: formControlName,
                         ));
                       },
                       type: DigitButtonType.tertiary,
@@ -114,7 +191,8 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                   ],
                 ),
               )
-            : state.barCodes.isNotEmpty && summaryData
+            // Show QR code summary
+            : showQrSummary
                 ? Container(
                     padding: EdgeInsets.zero,
                     width: MediaQuery.of(context).size.width,
@@ -128,30 +206,35 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                           child: LabelValueSummary(
                             padding: EdgeInsets.zero,
                             withDivider: false,
-                            items: (DigitScannerUtils()
-                                    .getGs1CodeFormattedStringAtIndex(
-                                        state.barCodes, 0))
-                                .entries
-                                .map((entry) {
-                              return LabelValueItem(
+                            items: [
+                              LabelValueItem(
+                                label: label ?? 'Voucher code',
+                                // Show all QR codes comma-separated
+                                value: displayQrCodes.join(', '),
                                 labelFlex: 5,
-                                label: "GS1_${entry.key}",
-                                value: entry.value is DateTime
-                                    ? DateFormat('d MMMM yyyy')
-                                        .format(entry.value)
-                                        .toString()
-                                    : entry.value,
                                 maxLines: 5,
-                              );
-                            }).toList(),
+                                padding: EdgeInsets.zero,
+                              ),
+                            ],
                           ),
                         ),
                         DigitButton(
                           label: '',
                           onPressed: () {
-                            _activeScannerId = formControlName;
+                            // Clear scanner state before navigating to edit QR codes
+                            context.read<DigitScannerBloc>().add(
+                                  DigitScannerEvent.handleScanner(
+                                    barCode: [],
+                                    qrCode: [],
+                                    scannerId: formControlName,
+                                  ),
+                                );
+                            // Use displayQrCodes which already has the parsed data
                             context.router.push(DigitScannerRoute(
                               validations: _toScannerValidations(),
+                              isEditEnabled: true,
+                              initialQrCodes: displayQrCodes,
+                              scannerId: formControlName,
                             ));
                           },
                           type: DigitButtonType.tertiary,
@@ -161,17 +244,20 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                       ],
                     ),
                   )
+                // Show scan button (no data yet)
                 : DigitButton(
                     capitalizeLetters: false,
                     size: DigitButtonSize.large,
                     label: label ?? 'scanner',
                     onPressed: () async {
-                      _activeScannerId = formControlName;
                       context.read<DigitScannerBloc>().add(
-                            const DigitScannerEvent.handleScanner(),
+                            DigitScannerEvent.handleScanner(
+                              scannerId: formControlName,
+                            ),
                           );
                       context.router.push(DigitScannerRoute(
                         validations: _toScannerValidations(),
+                        scannerId: formControlName,
                       ));
                     },
                     type: DigitButtonType.secondary,

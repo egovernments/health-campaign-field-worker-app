@@ -40,6 +40,10 @@ class DigitScannerPage extends LocalizedStatefulWidget {
   // Initial data for edit mode - pass existing scanned codes
   final List<String>? initialQrCodes;
 
+  /// Identifier for which scanner field initiated this scan.
+  /// Used to prevent multiple scanner fields from reacting to the same state change.
+  final String scannerId;
+
   const DigitScannerPage({
     super.key,
     super.appLocalizations,
@@ -50,6 +54,7 @@ class DigitScannerPage extends LocalizedStatefulWidget {
     this.regex,
     this.validations,
     this.initialQrCodes,
+    this.scannerId = 'default',
   });
 
   /// Gets the effective quantity - from validations if available, otherwise from legacy param
@@ -103,7 +108,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
       // Clear scanner state for new scan
       context
           .read<DigitScannerBloc>()
-          .add(const DigitScannerEvent.handleScanner());
+          .add(DigitScannerEvent.handleScanner(scannerId: widget.scannerId));
     } else if (widget.initialQrCodes != null && widget.initialQrCodes!.isNotEmpty) {
       // Initialize with existing data for edit mode
       codes = List.from(widget.initialQrCodes!);
@@ -111,6 +116,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
             DigitScannerEvent.handleScanner(
               qrCode: widget.initialQrCodes!,
               barCode: [],
+              scannerId: widget.scannerId,
             ),
           );
     }
@@ -184,9 +190,10 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
               _isPermissionDialogShowing = false;
               // Clear scanner state and go back
               context.read<DigitScannerBloc>().add(
-                    const DigitScannerEvent.handleScanner(
+                    DigitScannerEvent.handleScanner(
                       barCode: [],
                       qrCode: [],
+                      scannerId: widget.scannerId,
                     ),
                   );
               Navigator.of(context).pop();
@@ -216,8 +223,8 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
             );
             // Clear scanner state (barcodes, qrcodes, and implicitly error)
             context.read<DigitScannerBloc>().add(
-                  const DigitScannerEvent.handleScanner(
-                      barCode: [], qrCode: []),
+                  DigitScannerEvent.handleScanner(
+                      barCode: [], qrCode: [], scannerId: widget.scannerId),
                 );
           }
           return _cameras.isNotEmpty
@@ -422,6 +429,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                 barCode: updatedBarcodes,
                                 qrCode: state.qrCodes,
                                 regex: widget.effectiveRegex,
+                                scannerId: widget.scannerId,
                               ),
                             );
                             if (updatedBarcodes.length < widget.effectiveQuantity) {
@@ -464,7 +472,8 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                 DigitScannerEvent.handleScanner(
                                     barCode: state.barCodes,
                                     qrCode: updatedQRCodes,
-                                    regex: widget.effectiveRegex),
+                                    regex: widget.effectiveRegex,
+                                    scannerId: widget.scannerId),
                               );
                               final scannedCount = widget.effectiveIsGS1code
                                   ? state.barCodes.length
@@ -661,6 +670,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                 barCode: state.barCodes,
                                 qrCode: updatedQRCodes,
                                 regex: widget.effectiveRegex,
+                                scannerId: widget.scannerId,
                               ),
                             );
 
@@ -737,9 +747,10 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
             onBackButtonPressed: () {
               context
                   .read<DigitScannerBloc>()
-                  .add(const DigitScannerEvent.handleScanner(
+                  .add(DigitScannerEvent.handleScanner(
                     barCode: [],
                     qrCode: [],
+                    scannerId: widget.scannerId,
                   ));
               Navigator.of(context).pop();
             },
@@ -830,9 +841,10 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                 ),
                 onPressed: () {
                   context.read<DigitScannerBloc>().add(
-                        const DigitScannerEvent.handleScanner(
+                        DigitScannerEvent.handleScanner(
                           barCode: [],
                           qrCode: [],
+                          scannerId: widget.scannerId,
                         ),
                       );
                   setState(() {
@@ -882,6 +894,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                       barCode: state.barCodes,
                       qrCode: state.qrCodes,
                       regex: widget.effectiveRegex,
+                      scannerId: widget.scannerId,
                     ));
                     Navigator.of(
                       context,
@@ -1010,6 +1023,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                         barCode: result,
                                         qrCode: state.qrCodes,
                                         regex: widget.effectiveRegex,
+                                        scannerId: widget.scannerId,
                                       ),
                                     );
                                   } else {
@@ -1026,6 +1040,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                         barCode: state.barCodes,
                                         qrCode: codes,
                                         regex: widget.effectiveRegex,
+                                        scannerId: widget.scannerId,
                                       ),
                                     );
                                   }

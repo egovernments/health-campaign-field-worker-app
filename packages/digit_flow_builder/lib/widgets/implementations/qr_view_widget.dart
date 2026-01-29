@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../action_handler/action_config.dart';
-import '../../utils/interpolation.dart';
+import '../../utils/flow_widget_state.dart';
 import '../../utils/utils.dart';
-import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 
 class QrViewWidget implements FlowWidget {
@@ -17,23 +16,12 @@ class QrViewWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final crudCtx = CrudItemContext.of(context);
+    final flowState = WidgetStateContext.of(context);
 
-    // Get screen key for navigation params resolution
-    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
-
-    // For resolving item-specific fields, we use the current item or first item
-    final itemStateData = (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
-        ? crudCtx.item
-        : crudCtx?.stateData?.rawState != null &&
-                crudCtx!.stateData!.rawState.isNotEmpty
-            ? crudCtx.stateData?.rawState.first
-            : null;
-
-    // Resolve the QR data (supports placeholders like {{singleton.loggedInUserUuid}})
+    // Resolve the QR data using flowState.evalContext
     final dataTemplate = json['data'] as String? ?? '';
     final qrData =
-        resolveTemplate(dataTemplate, itemStateData, screenKey: screenKey);
+        resolveTemplate(dataTemplate, flowState.evalContext, screenKey: flowState.screenKey);
 
     // If no data, return empty widget
     if (qrData.isEmpty) {

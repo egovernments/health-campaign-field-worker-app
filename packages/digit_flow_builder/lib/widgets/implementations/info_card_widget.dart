@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
 import '../../utils/conditional_evaluator.dart';
-import '../../utils/interpolation.dart';
-import '../../widget_registry.dart';
+import '../../utils/flow_widget_state.dart';
 import '../flow_widget_interface.dart';
 import '../localization_context.dart';
 
@@ -20,35 +19,25 @@ class InfoCardWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final crudCtx = CrudItemContext.of(context);
-    final items = crudCtx?.stateData?.rawState ?? [];
-    final modelMap = crudCtx?.stateData?.modelMap ?? {};
+    final flowState = WidgetStateContext.of(context);
+    final items = flowState.contextData ?? [];
 
-    // Get screenKey and navigation params for visibility evaluation
-    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
-    final navigationParams = screenKey != null
-        ? FlowCrudStateRegistry().getNavigationParams(screenKey) ?? {}
-        : <String, dynamic>{};
-    final formData = screenKey != null
-        ? FlowCrudStateRegistry().get(screenKey)?.formData ?? {}
+    // Get navigation params for visibility evaluation
+    final navigationParams = flowState.screenKey != null
+        ? FlowCrudStateRegistry().getNavigationParams(flowState.screenKey!) ?? {}
         : <String, dynamic>{};
 
-    // Create evaluation context that includes modelMap for named entity access
+    // Build evaluation context with navigation params
     final evalContext = {
-      'item': crudCtx?.item,
-      'contextData': crudCtx?.stateData?.rawState ?? {},
+      ...flowState.evalContext,
       'navigation': navigationParams,
-      ...modelMap,
-      // Include modelMap so {{stock}}, {{productVariant}} etc. can be resolved
-      ...formData,
-      // Include formData for {{selectedProduct}}, {{selectedFacility}} etc.
     };
 
     // Check visibility condition
     final visible = ConditionalEvaluator.evaluate(
       json['visible'] ?? true,
       evalContext,
-      screenKey: screenKey,
+      screenKey: flowState.screenKey,
     );
 
     if (visible == false || items.isNotEmpty) {

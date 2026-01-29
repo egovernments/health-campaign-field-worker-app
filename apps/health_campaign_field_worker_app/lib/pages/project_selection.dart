@@ -79,7 +79,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
               final projectSelected = state.selectedProject;
 
               if (syncDialogRoute?.isActive ?? false) {
-                Navigator.of(context).removeRoute(syncDialogRoute!);
+                Navigator.of(context, rootNavigator: true).removeRoute(syncDialogRoute!);
               }
 
               if (error != null) {
@@ -99,7 +99,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                           ? (cxt) {
                               if (syncDialogRoute != null &&
                                   syncDialogRoute!.isActive) {
-                                Navigator.of(cxt).removeRoute(syncDialogRoute!);
+                                Navigator.of(cxt, rootNavigator: true).removeRoute(syncDialogRoute!);
                               }
                               context
                                   .read<ProjectBloc>()
@@ -108,7 +108,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                           : (cxt) {
                               if (syncDialogRoute != null &&
                                   syncDialogRoute!.isActive) {
-                                Navigator.of(cxt).removeRoute(syncDialogRoute!);
+                                Navigator.of(cxt, rootNavigator: true).removeRoute(syncDialogRoute!);
                               }
                               cxt.read<ProjectBloc>().add(
                                     ProjectSelectProjectEvent(
@@ -123,14 +123,14 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                       ),
                       action: (context) {
                         if (syncDialogRoute?.isActive ?? false) {
-                          Navigator.of(context).removeRoute(syncDialogRoute!);
+                          Navigator.of(context, rootNavigator: true).removeRoute(syncDialogRoute!);
                         }
                       },
                     ),
                   ),
                 );
 
-                Navigator.of(context).push(syncDialogRoute!);
+                Navigator.of(context, rootNavigator: true).push(syncDialogRoute!);
 
                 return;
               } else if (state.loading) {
@@ -145,7 +145,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                   ),
                 );
 
-                Navigator.of(context).push(syncDialogRoute!);
+                Navigator.of(context, rootNavigator: true).push(syncDialogRoute!);
               }
 
               final selectedProject = state.selectedProject;
