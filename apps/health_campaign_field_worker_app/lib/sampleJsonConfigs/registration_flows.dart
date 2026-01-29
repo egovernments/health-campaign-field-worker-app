@@ -163,7 +163,7 @@ final dynamic sampleFlows = {
                         }
                       ],
                       "condition": {
-                        "expression": "selectedStatus == ADMINISTRATION_SUCCESS || selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == ADMINISTRATION_FAILED"
+                        "expression": "selectedStatus == ADMINISTRATION_SUCCESS || selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == ADMINISTRATION_FAILED || selectedStatus == INELIGIBLE"
                       }
                     },
                     {
@@ -215,6 +215,26 @@ final dynamic sampleFlows = {
                       ],
                       "condition": {
                         "expression": "selectedStatus == NOT_ADMINISTERED"
+                      }
+                    },
+                    {
+                      "actions": [
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "data": [
+                              {
+                                "key": "projectId",
+                                "root": "referral",
+                                "value": "{{singleton.selectedProject.id}}",
+                                "operation": "equals"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "condition": {
+                        "expression": "selectedStatus == BENEFICIARY_REFERRED"
                       }
                     }
                   ],
