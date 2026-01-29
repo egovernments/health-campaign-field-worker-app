@@ -2,7 +2,7 @@ import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:flutter/material.dart';
 
 import '../../flow_builder.dart';
-import '../../utils/interpolation.dart';
+import '../../utils/flow_widget_state.dart';
 import '../flow_widget_interface.dart';
 
 class SearchBarWidget implements FlowWidget {
@@ -15,14 +15,13 @@ class SearchBarWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
+    final flowState = WidgetStateContext.of(context);
     final localization = LocalizationContext.maybeOf(context);
     final hintText = json['label'] ?? '';
     final localizedHint = localization?.translate(hintText) ?? hintText;
     final fieldName = (json['fieldName'] ?? 'searchBar') as String;
 
-    // Get screenKey for storing widget data
-    final crudCtx = CrudItemContext.of(context);
-    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
+    final screenKey = flowState.screenKey;
 
     // Get validation rules
     final validations = json['validation'] as List<dynamic>? ?? [];

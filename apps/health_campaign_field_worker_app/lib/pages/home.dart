@@ -133,7 +133,19 @@ class _HomePageState extends LocalizedState<HomePage> {
       (context, stateAccessor) {
         // Build your component with access to all this data
         return const EvaluationKeyDropDown(
+          schemaName: "REFERRAL_CREATE",
+            formControlName: "healthFacility"
+        );
+      },
+    );
+
+    CustomComponentRegistry().registerBuilder(
+      'healthFacility',
+          (context, stateAccessor) {
+        // Build your component with access to all this data
+        return const EvaluationKeyDropDown(
           schemaName: "REFER_BENEFICIARY",
+            formControlName: "healthFacility"
         );
       },
     );
@@ -951,32 +963,32 @@ class _HomePageState extends LocalizedState<HomePage> {
               dynamicEntityModelListener: EntityModelMapMapper(),
             );
             try {
-              if (schemaJsonRaw != null) {
-                final allSchemas =
-                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                final data = allSchemas['REGISTRATION'];
-
-                final registrationDeliveryData = data?['data'];
-                final flowsData =
-                    (registrationDeliveryData['flows'] as List<dynamic>?)
-                            ?.map((e) => Map<String, dynamic>.from(e as Map))
-                            .toList() ??
-                        [];
-                FlowRegistry.setConfig(flowsData);
-                NavigationRegistry.setupNavigation(context);
-
-                context.router.push(
-                  FlowBuilderHomeRoute(
-                      pageName: registrationDeliveryData["initialPage"]),
-                );
-              } else {
+              // if (schemaJsonRaw != null) {
+              //   final allSchemas =
+              //       json.decode(schemaJsonRaw) as Map<String, dynamic>;
+              //   final data = allSchemas['REGISTRATION'];
+              //
+              //   final registrationDeliveryData = data?['data'];
+              //   final flowsData =
+              //       (registrationDeliveryData['flows'] as List<dynamic>?)
+              //               ?.map((e) => Map<String, dynamic>.from(e as Map))
+              //               .toList() ??
+              //           [];
+              //   FlowRegistry.setConfig(flowsData);
+              //   NavigationRegistry.setupNavigation(context);
+              //
+              //   context.router.push(
+              //     FlowBuilderHomeRoute(
+              //         pageName: registrationDeliveryData["initialPage"]),
+              //   );
+              // } else {
                 FlowRegistry.setConfig(
                     sampleFlows["flows"] as List<Map<String, dynamic>>);
                 NavigationRegistry.setupNavigation(context);
                 context.router.push(
                   FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
                 );
-              }
+              // }
             } catch (e) {
               debugPrint('error $e');
             }
@@ -1645,8 +1657,9 @@ class _HomePageState extends LocalizedState<HomePage> {
               context
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onRemoteLoadLocalization(
-                    module: module ??
-                        "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                    module: module != null && module.isNotEmpty
+                        ? "$module,${Constants.packageLocalizationModules.join(',')}"
+                        : Constants.homeLocalizationModules.join(','),
                     tenantId: envConfig.variables.tenantId,
                     locale: selectedLocale!,
                     path: Constants.localizationApiPath,
@@ -1656,13 +1669,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
                     module: module != null && module.isNotEmpty
-                        ? "$module,hcm-common,hcm-login,hcm-scanner"
-                        : localizationModulesList?.interfaces
-                                .where(
-                                    (e) => e.type == Modules.localizationModule)
-                                .map((e) => e.name.toString())
-                                .join(',') ??
-                            "",
+                        ? "$module,${Constants.packageLocalizationModules.join(',')}"
+                        : Constants.homeLocalizationModules.join(','),
                     tenantId: envConfig.variables.tenantId,
                     locale: selectedLocale!,
                     path: Constants.localizationApiPath,

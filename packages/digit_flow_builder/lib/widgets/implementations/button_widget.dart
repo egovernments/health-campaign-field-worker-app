@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../action_handler/action_handler.dart';
-import '../../blocs/flow_crud_bloc.dart';
 import '../../utils/conditional_evaluator.dart';
+import '../../utils/flow_widget_state.dart';
 import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
 import '../../utils/widget_parsers.dart';
@@ -22,35 +22,14 @@ class ButtonWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final crudCtx = CrudItemContext.of(context);
-    final crudStateData = crudCtx?.stateData;
-    final stateData = (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
-        ? crudCtx.item
-        : crudCtx?.stateData?.rawState != null &&
-                crudCtx!.stateData!.rawState.isNotEmpty
-            ? crudCtx.stateData?.rawState.first
-            : null;
-
-    // Get form data and widget data from registry for resolving field values
-    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
-    final currentState = screenKey != null
-        ? FlowCrudStateRegistry().get(screenKey)
-        : null;
-    final formData = currentState?.formData;
-    final widgetData = currentState?.widgetData;
-
-    // Create evaluation context
-    final evalContext = {
-      'item': crudCtx?.item,
-      'contextData': crudCtx?.stateData?.rawState ?? {},
-      ...crudStateData?.modelMap ?? {},
-    };
+    final flowState = WidgetStateContext.of(context);
+    final crudStateData = flowState.stateData;
 
     // Check visibility condition
     if (json['visible'] != null) {
       final visible = ConditionalEvaluator.evaluate(
         json['visible'],
-        evalContext,
+        flowState.evalContext,
         stateData: crudStateData,
       );
       if (visible == false) {
@@ -63,7 +42,7 @@ class ButtonWidget implements FlowWidget {
     if (json['disabled'] != null) {
       final disabledResult = ConditionalEvaluator.evaluate(
         json['disabled'],
-        evalContext,
+        flowState.evalContext,
         stateData: crudStateData,
       );
       isDisabled = disabledResult == true;
@@ -80,7 +59,7 @@ class ButtonWidget implements FlowWidget {
       resolvedLabel = interpolateWithCrudStates(
         template: labelText,
         stateData: crudStateData,
-        item: crudCtx?.item,
+        item: flowState.itemData,
       );
       // Translate if it's a pure localization key (no templates remaining)
       if (!resolvedLabel.contains('{{')) {
@@ -89,7 +68,7 @@ class ButtonWidget implements FlowWidget {
     } else {
       resolvedLabel = resolveTemplate(
             labelText,
-            stateData,
+            flowState.evalContext,
             localization: localization,
           ) ??
           labelText;
@@ -104,36 +83,9 @@ class ButtonWidget implements FlowWidget {
           if (json['onAction'] != null) {
             final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
 
-            // Pre-resolve navigation data and condition expressions for all actions
-            final resolvedActionsList = actionsList.map((actionJson) {
-              var resolvedActionJson = Map<String, dynamic>.from(actionJson);
-
-              // Resolve condition expression if present
-              if (actionJson['condition'] != null) {
-                final condition = Map<String, dynamic>.from(actionJson['condition']);
-                final expression = condition['expression'] as String?;
-                if (expression != null && expression.contains('{{')) {
-                  // Resolve the expression template
-                  String resolvedExpression = expression;
-                  if (stateData != null) {
-                    resolvedExpression = resolveTemplate(expression, stateData) ?? expression;
-                  }
-                  if (resolvedExpression == expression && crudStateData != null) {
-                    final contextData = crudCtx?.item ?? crudStateData;
-
-                    resolvedExpression = resolveValueRaw(
-                      expression,
-                      contextData,
-                    );
-                  }
-                  condition['expression'] = resolvedExpression;
-                  resolvedActionJson['condition'] = condition;
-                }
-              }
-
-              var action = ActionConfig.fromJson(resolvedActionJson);
-
-              // Resolve navigation data if present
+            // Helper function to resolve navigation data for an action
+            Map<String, dynamic> resolveNavDataForAction(Map<String, dynamic> actionJson) {
+              var action = ActionConfig.fromJson(actionJson);
               final navData = action.properties['data'] as List<dynamic>?;
 
               if (navData != null) {
@@ -141,18 +93,18 @@ class ButtonWidget implements FlowWidget {
                   final rawValue = entry['value'];
 
                   // Try to resolve from stateData first, then widgetData, then formData
-                  dynamic resolvedValue = stateData != null
-                      ? resolveValue(rawValue, stateData)
+                  dynamic resolvedValue = flowState.evalContext.isNotEmpty
+                      ? resolveValue(rawValue, flowState.evalContext)
                       : rawValue;
 
-                  if (resolvedValue == rawValue && widgetData != null) {
+                  if (resolvedValue == rawValue && flowState.widgetData.isNotEmpty) {
                     // If not resolved from stateData, try widgetData
-                    resolvedValue = resolveValue(rawValue, widgetData);
+                    resolvedValue = resolveValue(rawValue, flowState.widgetData);
                   }
 
-                  if (resolvedValue == rawValue && formData != null) {
+                  if (resolvedValue == rawValue && flowState.formData.isNotEmpty) {
                     // If not resolved from widgetData, try formData
-                    resolvedValue = resolveValue(rawValue, formData);
+                    resolvedValue = resolveValue(rawValue, flowState.formData);
                   }
 
                   return {
@@ -162,7 +114,7 @@ class ButtonWidget implements FlowWidget {
                 }).toList();
 
                 return {
-                  ...resolvedActionJson,
+                  ...actionJson,
                   'properties': {
                     ...action.properties,
                     'data': resolvedData,
@@ -170,17 +122,50 @@ class ButtonWidget implements FlowWidget {
                 };
               }
 
+              return actionJson;
+            }
+
+            // Pre-resolve navigation data and condition expressions for all actions
+            final resolvedActionsList = actionsList.map((actionJson) {
+              var resolvedActionJson = Map<String, dynamic>.from(actionJson);
+
+              // Resolve condition expression if present
+              if (actionJson['condition'] != null) {
+                final condition = Map<String, dynamic>.from(actionJson['condition']);
+                final expression = condition['expression'] as String?;
+                if (expression != null && expression.contains('{{')) {
+                  // Resolve the expression template using flowState.evalContext
+                  String resolvedExpression = resolveTemplate(expression, flowState.evalContext) ?? expression;
+                  if (resolvedExpression == expression && crudStateData != null) {
+                    resolvedExpression = resolveValueRaw(
+                      expression,
+                      flowState.evalContext,
+                    );
+                  }
+                  condition['expression'] = resolvedExpression;
+                  resolvedActionJson['condition'] = condition;
+                }
+              }
+
+              // Check if this is a conditional action with nested actions array
+              if (actionJson['actions'] != null) {
+                final nestedActions = List<Map<String, dynamic>>.from(actionJson['actions']);
+                final resolvedNestedActions = nestedActions.map((nestedAction) {
+                  return resolveNavDataForAction(Map<String, dynamic>.from(nestedAction));
+                }).toList();
+                resolvedActionJson['actions'] = resolvedNestedActions;
+              } else {
+                // Resolve navigation data for top-level action
+                resolvedActionJson = resolveNavDataForAction(resolvedActionJson);
+              }
+
               return resolvedActionJson;
             }).toList();
 
-            // Build initial context data from current state
+            // Build initial context data from current state using flowState.evalContext
             final initialContextData = <String, dynamic>{
               'wrappers': const [],
-              if (stateData != null) ...{
-                'item': crudCtx?.item,
-                'contextData': stateData,
-              },
-              if (formData != null) 'formData': formData,
+              ...flowState.evalContext,
             };
 
             // Use ActionHandler.executeActions to chain actions with shared contextData
