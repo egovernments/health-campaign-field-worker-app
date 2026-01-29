@@ -4,10 +4,8 @@ import 'package:digit_ui_components/widgets/atoms/digit_back_button.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
-import '../../blocs/flow_crud_bloc.dart';
-import '../../utils/interpolation.dart';
+import '../../utils/flow_widget_state.dart';
 import '../../utils/utils.dart';
-import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 import '../localization_context.dart';
 
@@ -21,27 +19,14 @@ class BackLinkWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final crudCtx = CrudItemContext.of(context);
-    final stateData = (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
-        ? crudCtx.item
-        : crudCtx?.stateData?.rawState != null &&
-                crudCtx!.stateData!.rawState.isNotEmpty
-            ? crudCtx.stateData?.rawState.first
-            : null;
-
+    final flowState = WidgetStateContext.of(context);
     final localization = LocalizationContext.maybeOf(context);
 
-    // Get form data from registry for resolving form field values
-    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
-    final formData = screenKey != null
-        ? FlowCrudStateRegistry().get(screenKey)?.formData
-        : null;
-
-    // Resolve template with localization support for mixed content
+    // Resolve template using flowState.evalContext
     final labelText = json['label'] ?? '';
     final label = resolveTemplate(
           labelText,
-          stateData,
+          flowState.evalContext,
           localization: localization,
         ) ??
         labelText;
@@ -63,19 +48,12 @@ class BackLinkWidget implements FlowWidget {
                 final key = entry['key'] as String;
                 final rawValue = entry['value'];
 
-                // Try to resolve from stateData first, then fallback to formData
-                dynamic resolvedValue = stateData != null
-                    ? resolveValue(rawValue, stateData)
-                    : rawValue;
-
-                if (resolvedValue == rawValue && formData != null) {
-                  // If not resolved from stateData, try formData
-                  resolvedValue = resolveValue(rawValue, formData);
-                }
+                // Resolve using flowState.evalContext which contains all data sources
+                final resolvedValue = resolveValue(rawValue, flowState.evalContext);
 
                 return {
                   "key": key,
-                  "value": resolvedValue,
+                  "value": resolvedValue == rawValue ? rawValue : resolvedValue,
                 };
               }).toList();
 
