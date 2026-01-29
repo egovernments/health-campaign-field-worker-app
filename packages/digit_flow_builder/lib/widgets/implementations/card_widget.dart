@@ -2,9 +2,9 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
-import '../../blocs/flow_crud_bloc.dart';
 import '../../layout_renderer.dart';
 import '../../utils/conditional_evaluator.dart';
+import '../../utils/flow_widget_state.dart';
 import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
 import '../../utils/widget_parsers.dart';
@@ -21,25 +21,14 @@ class CardWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
+    final flowState = WidgetStateContext.of(context);
     final crudCtx = CrudItemContext.of(context);
-    final stateData = crudCtx?.stateData;
-
-    // Get form data from registry for resolving form field values
-    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
-    final formData = screenKey != null
-        ? FlowCrudStateRegistry().get(screenKey)?.formData
-        : null;
-
-    // Create evaluation context
-    final evalContext = {
-      'item': crudCtx?.item,
-      'contextData': crudCtx?.stateData?.rawState ?? {},
-    };
+    final stateData = flowState.stateData;
 
     // Check visibility condition
     final visible = ConditionalEvaluator.evaluate(
       json['visible'] ?? true,
-      evalContext,
+      flowState.evalContext,
     );
 
     if (visible == false) {
@@ -71,19 +60,12 @@ class CardWidget implements FlowWidget {
                 final key = entry['key'] as String;
                 final rawValue = entry['value'];
 
-                // Try to resolve from modelMap first, then fallback to formData
-                dynamic resolvedValue = stateData != null
-                    ? resolveValue(rawValue, stateData.modelMap)
-                    : rawValue;
-
-                if (resolvedValue == rawValue && formData != null) {
-                  // If not resolved from modelMap, try formData
-                  resolvedValue = resolveValue(rawValue, formData);
-                }
+                // Resolve using flowState.evalContext which contains all data sources
+                final resolvedValue = resolveValue(rawValue, flowState.evalContext);
 
                 return {
                   "key": key,
-                  "value": resolvedValue,
+                  "value": resolvedValue == rawValue ? rawValue : resolvedValue,
                 };
               }).toList();
 

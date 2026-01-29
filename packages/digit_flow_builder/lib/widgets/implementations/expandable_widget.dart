@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../action_handler/action_config.dart';
 import '../../layout_renderer.dart';
 import '../../utils/conditional_evaluator.dart';
+import '../../utils/flow_widget_state.dart';
 import '../../utils/interpolation.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
@@ -19,19 +20,12 @@ class ExpandableWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final crudCtx = CrudItemContext.of(context);
-    final stateData = crudCtx?.stateData;
-
-    // Create evaluation context
-    final evalContext = {
-      'item': crudCtx?.item,
-      'contextData': crudCtx?.stateData?.rawState ?? {},
-    };
+    final flowState = WidgetStateContext.of(context);
 
     // Check visibility condition
     final visible = ConditionalEvaluator.evaluate(
       json['visible'] ?? true,
-      evalContext,
+      flowState.evalContext,
     );
 
     if (visible == false) {
@@ -41,8 +35,7 @@ class ExpandableWidget implements FlowWidget {
     return _ExpandableStateful(
       json: json,
       onAction: onAction,
-      stateData: stateData,
-      crudCtx: crudCtx,
+      flowState: flowState,
     );
   }
 }
@@ -50,14 +43,12 @@ class ExpandableWidget implements FlowWidget {
 class _ExpandableStateful extends StatefulWidget {
   final Map<String, dynamic> json;
   final void Function(ActionConfig) onAction;
-  final CrudStateData? stateData;
-  final CrudItemContext? crudCtx;
+  final FlowWidgetState flowState;
 
   const _ExpandableStateful({
     required this.json,
     required this.onAction,
-    this.stateData,
-    this.crudCtx,
+    required this.flowState,
   });
 
   @override
@@ -76,6 +67,8 @@ class _ExpandableStatefulState extends State<_ExpandableStateful> {
   @override
   Widget build(BuildContext context) {
     final localization = LocalizationContext.maybeOf(context);
+    final flowState = widget.flowState;
+    final stateData = flowState.stateData;
 
     // Resolve expand/collapse labels
     final expandLabelText =
@@ -91,27 +84,27 @@ class _ExpandableStatefulState extends State<_ExpandableStateful> {
     // Build children widgets
     final childrenJson = widget.json['children'] as List<dynamic>? ?? [];
     final childWidgets = childrenJson.map<Widget>((childJson) {
-      final processed = widget.stateData != null
+      final processed = stateData != null
           ? preprocessConfigWithState(
               Map<String, dynamic>.from(childJson),
-              widget.stateData!,
-              listIndex: widget.crudCtx?.listIndex,
-              item: widget.crudCtx?.item,
+              stateData,
+              listIndex: flowState.listIndex,
+              item: flowState.itemData,
             )
           : Map<String, dynamic>.from(childJson);
 
       return CrudItemContext(
-        stateData: widget.stateData,
-        listIndex: widget.crudCtx?.listIndex,
-        item: widget.crudCtx?.item,
-        screenKey: widget.crudCtx?.screenKey,
+        stateData: stateData,
+        listIndex: flowState.listIndex,
+        item: flowState.itemData,
+        screenKey: flowState.screenKey,
         child: LayoutMapper.map(
           processed,
-          widget.stateData,
+          stateData,
           context,
           widget.onAction,
-          item: widget.crudCtx?.item,
-          listIndex: widget.crudCtx?.listIndex,
+          item: flowState.itemData,
+          listIndex: flowState.listIndex,
         ),
       );
     }).toList();

@@ -14,10 +14,12 @@ import '../localized.dart';
 
 class EvaluationKeyDropDown extends LocalizedStatefulWidget {
   final String schemaName;
+  final String formControlName;
   const EvaluationKeyDropDown({
     super.key,
     super.appLocalizations,
     required this.schemaName,
+    required this.formControlName,
   });
 
   @override
@@ -26,8 +28,6 @@ class EvaluationKeyDropDown extends LocalizedStatefulWidget {
 
 class _EvaluationKeyDropDownState
     extends LocalizedState<EvaluationKeyDropDown> {
-  static const _evaluationKey = 'evaluationFacility';
- // Fixed the unnamed constructor issue
 
   @override
   void initState() {
@@ -67,7 +67,7 @@ class _EvaluationKeyDropDownState
         final key = entry.key;
         final schema = entry.value;
 
-        if (key == _evaluationKey) {
+        if (key == widget.formControlName) {
           isReadOnlyFromSchema =
               (schema.readOnly == true) || (schema.displayOnly == true);
           labelFromSchema = schema.label ?? schema.innerLabel;
@@ -95,7 +95,7 @@ class _EvaluationKeyDropDownState
     }
 
     return ReactiveWrapperField<dynamic>(
-      formControlName: _evaluationKey,
+      formControlName: widget.formControlName,
       validationMessages: validationMessages,
       showErrors: (control) => control.invalid && control.touched,
       builder: (field) {
@@ -107,20 +107,20 @@ class _EvaluationKeyDropDownState
           child: Dropdown(
             readOnly: isReadOnlyFromSchema,
             selectedOption: _mapItems(projectFacilities).firstWhere(
-              (item) => item.code == form.control(_evaluationKey).value,
+              (item) => item.code == form.control(widget.formControlName).value,
               orElse: () => const DropdownItem(name: '', code: ''),
             ),
             errorMessage: field.errorText,
             items: _mapItems(projectFacilities),
             onSelect: (val) {
-              form.control(_evaluationKey).markAsTouched();
-              form.control(_evaluationKey).value = val.code;
+              form.control(widget.formControlName).markAsTouched();
+              form.control(widget.formControlName).value = val.code;
 
               context.read<FormsBloc>().add(
                     FormsEvent.updateField(
                       context: context,
                       schemaKey: widget.schemaName,
-                      key: _evaluationKey,
+                      key: widget.formControlName,
                       value: val.code,
                     ),
                   );
