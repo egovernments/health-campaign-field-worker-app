@@ -2,9 +2,9 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
+import '../../utils/flow_widget_state.dart';
 import '../../utils/utils.dart';
 import '../../utils/widget_parsers.dart';
-import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 import '../localization_context.dart';
 
@@ -19,14 +19,15 @@ class TextWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final crudCtx = CrudItemContext.of(context);
+    final state = WidgetStateContext.of(context);
     final localization = LocalizationContext.maybeOf(context);
 
-    // Resolve template with localization support for mixed content
+    // Resolve template using state.evalContext which provides all contexts:
+    // itemData, parentData, contextData, formData, widgetData, modelMap
     final value = json['value'] ?? '';
     final resolvedValue = resolveTemplate(
           value,
-          crudCtx?.item != null ? crudCtx!.item : crudCtx?.stateData?.rawState,
+          state.evalContext,
           localization: localization,
         ) ??
         value;

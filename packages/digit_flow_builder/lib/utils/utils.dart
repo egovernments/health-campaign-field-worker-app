@@ -303,9 +303,39 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
       // Check if contextData is a structured evaluation context (has nested keys)
       final isStructuredContext = contextData is Map &&
           (contextData.containsKey('contextData') ||
-              contextData.containsKey('currentItem'));
+              contextData.containsKey('currentItem') ||
+              contextData.containsKey('itemData') ||
+              contextData.containsKey('parentData') ||
+              contextData.containsKey('formData'));
 
-      // Handle currentItem. prefix (for table row conditions)
+      // Handle itemData. prefix (new unified naming)
+      if (path.startsWith('itemData.')) {
+        if (isStructuredContext && contextData.containsKey('itemData')) {
+          final innerPath = path.substring('itemData.'.length);
+          return _resolvePath(contextData['itemData'], innerPath);
+        }
+        path = path.substring('itemData.'.length);
+      }
+
+      // Handle parentData. prefix (new unified naming)
+      if (path.startsWith('parentData.')) {
+        if (isStructuredContext && contextData.containsKey('parentData')) {
+          final innerPath = path.substring('parentData.'.length);
+          return _resolvePath(contextData['parentData'], innerPath);
+        }
+        path = path.substring('parentData.'.length);
+      }
+
+      // Handle formData. prefix (new unified naming)
+      if (path.startsWith('formData.')) {
+        if (isStructuredContext && contextData.containsKey('formData')) {
+          final innerPath = path.substring('formData.'.length);
+          return _resolvePath(contextData['formData'], innerPath);
+        }
+        path = path.substring('formData.'.length);
+      }
+
+      // Handle currentItem. prefix (for table row conditions) - legacy
       if (path.startsWith('currentItem.')) {
         if (isStructuredContext && contextData.containsKey('currentItem')) {
           final innerPath = path.substring('currentItem.'.length);
@@ -326,7 +356,7 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
         path = path.substring('contextData.'.length);
       }
 
-      // Handle item. prefix
+      // Handle item. prefix - legacy (maps to itemData)
       if (path.startsWith('item.')) {
         if (isStructuredContext && contextData.containsKey('item')) {
           final innerPath = path.substring('item.'.length);
@@ -336,8 +366,13 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
         path = path.substring('item.'.length);
       }
 
-      // Handle widgetData access (for filter selections, etc.)
+      // Handle widgetData. prefix (for filter selections, etc.)
       if (path.startsWith('widgetData.')) {
+        if (isStructuredContext && contextData.containsKey('widgetData')) {
+          final innerPath = path.substring('widgetData.'.length);
+          return _resolvePath(contextData['widgetData'], innerPath);
+        }
+        // Fallback to widgetData parameter
         path = path.substring('widgetData.'.length);
         return widgetData != null ? _resolvePath(widgetData, path) : null;
       }

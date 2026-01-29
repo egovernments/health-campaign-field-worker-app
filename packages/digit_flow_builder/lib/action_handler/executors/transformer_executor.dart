@@ -202,6 +202,28 @@ class TransformerExecutor extends ActionExecutor {
       debugPrint(
           'TRANSFORMER: updateEntitiesFromForm returned ${entities.length} entities');
 
+      // Filter to only include entities that actually changed
+      final modifiedEntities = <EntityModel>[];
+      for (final updatedEntity in entities) {
+        final entityType = getEntityTypeName(updatedEntity);
+        // Find the original entity of the same type
+        final originalEntity = dedupedExistingModels.firstWhere(
+          (e) => getEntityTypeName(e) == entityType,
+          orElse: () => updatedEntity,
+        );
+
+        if (_hasEntityChanged(originalEntity, updatedEntity)) {
+          modifiedEntities.add(updatedEntity);
+          debugPrint('TRANSFORMER: $entityType has changes - will be updated');
+        } else {
+          debugPrint('TRANSFORMER: $entityType has NO changes - skipping update');
+        }
+      }
+
+      entities = modifiedEntities;
+      debugPrint(
+          'TRANSFORMER: After filtering unchanged, ${entities.length} entities to update');
+
       // Update clientAuditDetails for all updated entities to reflect modification time
       final userUuid = FlowBuilderSingleton().loggedInUser?.uuid;
       final now = DateTime.now().millisecondsSinceEpoch;
@@ -359,5 +381,68 @@ class TransformerExecutor extends ActionExecutor {
     }
 
     return result;
+  }
+
+  /// Compares two entities to check if actual data has changed.
+  /// Excludes audit fields and rowVersion from comparison.
+  bool _hasEntityChanged(EntityModel original, EntityModel updated) {
+    final originalMap = original.toMap();
+    final updatedMap = updated.toMap();
+
+    // Fields to exclude from comparison (metadata that changes on every update)
+    const excludeFields = {
+      'clientAuditDetails',
+      'auditDetails',
+      'rowVersion',
+      'lastModifiedBy',
+      'lastModifiedTime',
+      'createdBy',
+      'createdTime',
+    };
+
+    // Compare all fields except excluded ones
+    final allKeys = <String>{
+      ...originalMap.keys,
+      ...updatedMap.keys,
+    }..removeAll(excludeFields);
+
+    for (final key in allKeys) {
+      final originalValue = originalMap[key];
+      final updatedValue = updatedMap[key];
+
+      if (!_deepEquals(originalValue, updatedValue)) {
+        debugPrint(
+            'TRANSFORMER: Field "$key" changed: $originalValue -> $updatedValue');
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /// Deep equality check for nested maps and lists
+  bool _deepEquals(dynamic a, dynamic b) {
+    if (a == b) return true;
+    if (a == null || b == null) return false;
+    if (a.runtimeType != b.runtimeType) return false;
+
+    if (a is Map && b is Map) {
+      if (a.length != b.length) return false;
+      for (final key in a.keys) {
+        if (!b.containsKey(key)) return false;
+        if (!_deepEquals(a[key], b[key])) return false;
+      }
+      return true;
+    }
+
+    if (a is List && b is List) {
+      if (a.length != b.length) return false;
+      for (int i = 0; i < a.length; i++) {
+        if (!_deepEquals(a[i], b[i])) return false;
+      }
+      return true;
+    }
+
+    return a == b;
   }
 }
