@@ -49,6 +49,8 @@ class _BoundarySelectionPageState
   Map<String, TextEditingController> dropdownControllers = {};
   late StreamSubscription syncSubscription;
   var leastLevelBoundaries;
+  // Flag to track if HF Referral downsync is triggered silently from beneficiary downsync
+  bool _isSilentHFReferralSync = false;
 
   @override
   void initState() {
@@ -57,6 +59,9 @@ class _BoundarySelectionPageState
     context.read<SyncBloc>().add(SyncRefreshEvent(context.loggedInUserUuid));
     context.read<BeneficiaryDownSyncBloc>().add(
           const DownSyncResetStateEvent(),
+        );
+    context.read<HFReferralDownSyncBloc>().add(
+          const HFReferralDownSyncResetStateEvent(),
         );
     super.initState();
     listenToSyncCount();
@@ -67,6 +72,10 @@ class _BoundarySelectionPageState
     context.read<BeneficiaryDownSyncBloc>().add(
           const DownSyncResetStateEvent(),
         );
+    context.read<HFReferralDownSyncBloc>().add(
+          const HFReferralDownSyncResetStateEvent(),
+        );
+    _isSilentHFReferralSync = false;
     super.deactivate();
   }
 
@@ -88,15 +97,17 @@ class _BoundarySelectionPageState
         .toList()
         .isNotEmpty;
 
+    // Check if user has HEALTH_FACILITY_WORKER role
+    bool isHealthFacilityWorker = context.loggedInUserRoles
+        .where(
+          (role) => role.code == RolesType.healthFacilityWorker.toValue(),
+        )
+        .toList()
+        .isNotEmpty;
+
     // Check if user has ONLY HEALTH_FACILITY_WORKER role (not distributor)
-    bool isHealthFacilityWorkerOnly = context.loggedInUserRoles
-            .where(
-              (role) =>
-                  role.code == RolesType.healthFacilityWorker.toValue(),
-            )
-            .toList()
-            .isNotEmpty &&
-        !isDistributor;
+    bool isHealthFacilityWorkerOnly =
+        isHealthFacilityWorker && !isDistributor;
 
     return PopScope(
       canPop: shouldPop,
@@ -156,6 +167,73 @@ class _BoundarySelectionPageState
                                 BlocListener<HFReferralDownSyncBloc,
                                     HFReferralDownSyncState>(
                                   listener: (context, hfDownSyncState) {
+                                    // If silent sync (triggered from beneficiary downsync), skip UI updates
+                                    if (_isSilentHFReferralSync) {
+                                      hfDownSyncState.maybeWhen(
+                                        orElse: () => false,
+                                        getBatchSize: (
+                                          batchSize,
+                                          projectId,
+                                          boundaryCode,
+                                          pendingSyncCount,
+                                          boundaryName,
+                                        ) =>
+                                            context
+                                                .read<HFReferralDownSyncBloc>()
+                                                .add(
+                                                  HFReferralDownSyncCheckTotalCountEvent(
+                                                    projectId: context.projectId,
+                                                    boundaryCode: selectedBoundary!
+                                                        .value!.code
+                                                        .toString(),
+                                                    pendingSyncCount: 0,
+                                                    boundaryName: selectedBoundary
+                                                        .value!.name
+                                                        .toString(),
+                                                    batchSize: batchSize,
+                                                  ),
+                                                ),
+                                        dataFound: (initialServerCount,
+                                            batchSize, offset, lastSyncedTime) {
+                                          // Start download directly for HFReferral (silently)
+                                          context
+                                              .read<HFReferralDownSyncBloc>()
+                                              .add(
+                                                HFReferralDownSyncStartEvent(
+                                                  projectId: context.projectId,
+                                                  boundaryCode: selectedBoundary!
+                                                      .value!.code
+                                                      .toString(),
+                                                  batchSize: batchSize,
+                                                  initialServerCount:
+                                                      initialServerCount,
+                                                  boundaryName: selectedBoundary
+                                                      .value!.name
+                                                      .toString(),
+                                                ),
+                                              );
+                                        },
+                                        success: (result) {
+                                          // Silent sync completed, reset flag
+                                          _isSilentHFReferralSync = false;
+                                        },
+                                        failed: () {
+                                          // Silent sync failed, reset flag (don't block user)
+                                          _isSilentHFReferralSync = false;
+                                        },
+                                        totalCountCheckFailed: () {
+                                          // Silent sync check failed, reset flag
+                                          _isSilentHFReferralSync = false;
+                                        },
+                                        pendingSync: () {
+                                          // Silent sync has pending, reset flag
+                                          _isSilentHFReferralSync = false;
+                                        },
+                                      );
+                                      return;
+                                    }
+
+                                    // Normal HF Referral downsync flow (when user has ONLY HEALTH_FACILITY_WORKER role)
                                     LocalizationParams()
                                         .setModule('boundary', true);
                                     context.read<LocalizationBloc>().add(
@@ -374,6 +452,31 @@ class _BoundarySelectionPageState
                                     ),
                                     dataFound: (initialServerCount, batchSize) {
                                       clickedStatus.value = false;
+
+                                      // If no beneficiary data but user has HEALTH_FACILITY_WORKER role,
+                                      // trigger HF Referral downsync silently
+                                      if (initialServerCount == 0 &&
+                                          isHealthFacilityWorker) {
+                                        _isSilentHFReferralSync = true;
+                                        context
+                                            .read<HFReferralDownSyncBloc>()
+                                            .add(
+                                              HFReferralDownSyncGetBatchSizeEvent(
+                                                appConfiguration: [
+                                                  appConfiguration,
+                                                ],
+                                                projectId: context.projectId,
+                                                boundaryCode: selectedBoundary!
+                                                    .value!.code
+                                                    .toString(),
+                                                pendingSyncCount: 0,
+                                                boundaryName: selectedBoundary
+                                                    .value!.name
+                                                    .toString(),
+                                              ),
+                                            );
+                                      }
+
                                       showDownloadDialog(
                                         context,
                                         model: DownloadBeneficiary(
@@ -458,6 +561,28 @@ class _BoundarySelectionPageState
                                       }
                                     },
                                     success: (result) {
+                                      // If user also has HEALTH_FACILITY_WORKER role, trigger HF Referral downsync silently
+                                      if (isHealthFacilityWorker) {
+                                        _isSilentHFReferralSync = true;
+                                        context
+                                            .read<HFReferralDownSyncBloc>()
+                                            .add(
+                                              HFReferralDownSyncGetBatchSizeEvent(
+                                                appConfiguration: [
+                                                  appConfiguration,
+                                                ],
+                                                projectId: context.projectId,
+                                                boundaryCode: selectedBoundary!
+                                                    .value!.code
+                                                    .toString(),
+                                                pendingSyncCount: 0,
+                                                boundaryName: selectedBoundary
+                                                    .value!.name
+                                                    .toString(),
+                                              ),
+                                            );
+                                      }
+
                                       int? epochTime = result.lastSyncedTime;
 
                                       String date =

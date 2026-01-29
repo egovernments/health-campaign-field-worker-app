@@ -100,13 +100,14 @@ class HFReferralDownSyncBloc
           : existingDownSyncData.first.offset ?? 0;
 
       try {
-        // Get total count from server
+        // Get total count from server (fetch from current offset to get new records)
         final initialResults = await hfReferralRemoteRepository.search(
-          HFReferralSearchModel(
-            //projectId: [event.projectId],
-            localityCode: [event.boundaryCode],
-          ),
-        );
+            HFReferralSearchModel(
+              //projectId: [event.projectId],
+              localityCode: [event.boundaryCode],
+            ),
+            offSet: offset,
+            limit: 10);
 
         int serverTotalCount = initialResults.length;
 
@@ -158,13 +159,14 @@ class HFReferralDownSyncBloc
 
       emit(HFReferralDownSyncState.inProgress(offset, totalCount));
 
-      // Fetch HFReferral data from server
+      // Fetch HFReferral data from server (from current offset to get new records)
       final hfReferrals = await hfReferralRemoteRepository.search(
-        HFReferralSearchModel(
-          //projectId: [event.projectId],
-          localityCode: [event.boundaryCode],
-        ),
-      );
+          HFReferralSearchModel(
+            //projectId: [event.projectId],
+            localityCode: [event.boundaryCode],
+          ),
+          offSet: offset,
+          limit: 10);
 
       if (hfReferrals.isNotEmpty) {
         // Bulk create HFReferrals with localityCode
@@ -192,18 +194,19 @@ class HFReferralDownSyncBloc
 
         await hfReferralLocalRepository.bulkCreate(hfReferralsWithLocality);
 
-        // Update downsync record
+        // Update downsync record with cumulative offset
+        final newOffset = offset + hfReferrals.length;
         await downSyncLocalRepository.update(DownsyncModel(
-          offset: hfReferrals.length,
+          offset: newOffset,
           limit: event.batchSize,
           lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
-          totalCount: hfReferrals.length,
+          totalCount: newOffset,
           locality: 'hfReferral_${event.boundaryCode}',
           boundaryName: event.boundaryName,
         ));
 
         final result = DownsyncModel(
-          offset: hfReferrals.length,
+          offset: newOffset,
           lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
           totalCount: hfReferrals.length,
           locality: event.boundaryCode,
@@ -212,18 +215,18 @@ class HFReferralDownSyncBloc
 
         emit(HFReferralDownSyncState.success(result));
       } else {
-        // No data found, update downsync record
+        // No new data found, preserve existing offset and update lastSyncedTime
         await downSyncLocalRepository.update(DownsyncModel(
-          offset: 0,
-          limit: 0,
+          offset: offset,
+          limit: event.batchSize,
           lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
-          totalCount: 0,
+          totalCount: offset,
           locality: 'hfReferral_${event.boundaryCode}',
           boundaryName: event.boundaryName,
         ));
 
         final result = DownsyncModel(
-          offset: 0,
+          offset: offset,
           lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
           totalCount: 0,
           locality: event.boundaryCode,
