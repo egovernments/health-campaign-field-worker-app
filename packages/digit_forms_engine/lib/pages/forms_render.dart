@@ -55,6 +55,10 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
   bool _hasInitializedProtection = false;
   bool _isSubmitting = false;
 
+  /// GlobalKey to access MultiEntityTabViewState for programmatic tab navigation
+  final GlobalKey<MultiEntityTabViewState> _multiEntityTabKey =
+      GlobalKey<MultiEntityTabViewState>();
+
   /// Unique identifier for this form page instance in the protection manager
   String get _protectionPageId =>
       'form_${widget.currentSchemaKey}_${widget.pageName}';
@@ -319,7 +323,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                   schemaObject.pages.entries.elementAt(index);
 
                               // Check submitCondition - if true, submit form directly
-                              final submitCondition = currentPage.value.submitCondition;
+                              final submitCondition =
+                                  currentPage.value.submitCondition;
                               if (submitCondition != null) {
                                 final submitEvalContext =
                                     buildVisibilityEvaluationContext(
@@ -331,7 +336,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                 // Add isEdit to context
                                 submitEvalContext['isEdit'] = widget.isEdit;
 
-                                final shouldSubmit = evaluateVisibilityExpression(
+                                final shouldSubmit =
+                                    evaluateVisibilityExpression(
                                   submitCondition.expression,
                                   submitEvalContext,
                                 );
@@ -593,8 +599,9 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                     translateIfPresent(schema.description,
                                             localizations) !=
                                         null &&
-                                    localizations.translate(
-                                            schema.description!).trim()
+                                    localizations
+                                        .translate(schema.description!)
+                                        .trim()
                                         .isNotEmpty) ...[
                                   const SizedBox(
                                     height: spacer1,
@@ -751,13 +758,46 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                         setState(() {});
 
                         // Add small delay to allow custom component to update schema data
-                        await Future.delayed(
-                            const Duration(milliseconds: 200));
+                        await Future.delayed(const Duration(milliseconds: 200));
 
                         // Mark all controls as touched
                         formGroup.markAllAsTouched();
 
                         if (!formGroup.valid) {
+                          // Find the first tab with errors
+                          int? firstErrorTabIndex;
+                          for (int i = 0; i < entities.length; i++) {
+                            final entitySuffix = '_item_$i';
+                            final hasErrorInTab =
+                                formGroup.controls.entries.any(
+                              (entry) =>
+                                  entry.key.endsWith(entitySuffix) &&
+                                  entry.value.errors.isNotEmpty,
+                            );
+                            if (hasErrorInTab) {
+                              firstErrorTabIndex = i;
+                              break;
+                            }
+                          }
+
+                          // Navigate to the tab with errors
+                          if (firstErrorTabIndex != null) {
+                            _multiEntityTabKey.currentState
+                                ?.goToTab(firstErrorTabIndex);
+                          }
+
+                          // Show error toast
+                          final errorMessage = localizations
+                              .translate('CORE_COMMON_VALIDATION_ERROR');
+                          Toast.showToast(
+                            context,
+                            message:
+                                errorMessage == 'CORE_COMMON_VALIDATION_ERROR'
+                                    ? 'CORE_COMMON_VALIDATION_ERROR'
+                                    : errorMessage,
+                            type: ToastType.error,
+                          );
+
                           _isSubmitting = false;
                           setState(() {});
                           return;
@@ -893,6 +933,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                           child: entities.length == 1
                               ? _buildSingleEntityForm(schema, entities[0])
                               : MultiEntityTabView(
+                                  key: _multiEntityTabKey,
                                   schema: schema,
                                   pageName: widget.pageName,
                                   currentSchemaKey: widget.currentSchemaKey,
@@ -1006,8 +1047,10 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     final Map<String, AbstractControl<dynamic>> controls = {};
     final originalProperties = schema.properties ?? {};
 
-    debugPrint('FormsRender: Building form controls for ${entities.length} entities');
-    debugPrint('FormsRender: Original properties: ${originalProperties.keys.toList()}');
+    debugPrint(
+        'FormsRender: Building form controls for ${entities.length} entities');
+    debugPrint(
+        'FormsRender: Original properties: ${originalProperties.keys.toList()}');
 
     // Create controls for each entity
     for (int i = 0; i < entities.length; i++) {
@@ -1030,7 +1073,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               defaultValues: widget.defaultValues,
               schemaKey: widget.currentSchemaKey,
             );
-            debugPrint('FormsRender: Created control for pre-created field: $fieldName');
+            debugPrint(
+                'FormsRender: Created control for pre-created field: $fieldName');
           }
           continue;
         }
