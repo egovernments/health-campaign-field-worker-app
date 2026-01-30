@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../action_handler/action_handler.dart';
+import '../../blocs/flow_crud_bloc.dart';
 import '../../utils/conditional_evaluator.dart';
 import '../../utils/flow_widget_state.dart';
 import '../../utils/interpolation.dart';
@@ -163,9 +164,19 @@ class ButtonWidget implements FlowWidget {
             }).toList();
 
             // Build initial context data from current state using flowState.evalContext
+            // Also include navigation params from registry for condition evaluation
+            final screenKey = flowState.screenKey;
+            final navigationParams = screenKey != null
+                ? FlowCrudStateRegistry().getNavigationParams(screenKey) ??
+                    FlowCrudStateRegistry()
+                        .getNavigationParams(screenKey.split('::').last) ??
+                    {}
+                : <String, dynamic>{};
+
             final initialContextData = <String, dynamic>{
               'wrappers': const [],
               ...flowState.evalContext,
+              'navigation': navigationParams,
             };
 
             // Use ActionHandler.executeActions to chain actions with shared contextData

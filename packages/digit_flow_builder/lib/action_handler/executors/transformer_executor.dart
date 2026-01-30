@@ -52,15 +52,25 @@ class TransformerExecutor extends ActionExecutor {
     if (extraData != null) {
       for (final entry in extraData) {
         final key = entry['key'] as String;
-        final valuePath = entry['value'] as String?;
+        final valuePath = entry['value'];
         if (valuePath != null) {
-          final resolvedValue = resolveValue(valuePath, contextData);
+          // If valuePath is a string (template), resolve it; otherwise use directly
+          dynamic resolvedValue;
+          if (valuePath is String) {
+            resolvedValue = resolveValue(valuePath, contextData);
+          } else {
+            // Direct value (list, map, etc.)
+            resolvedValue = valuePath;
+          }
+          debugPrint(
+              'TRANSFORMER: extraContext key=$key, valuePath=$valuePath, resolvedType=${resolvedValue?.runtimeType}, resolved=$resolvedValue');
           if (resolvedValue != null) {
             extraContext[key] = resolvedValue;
           }
         }
       }
     }
+    debugPrint('TRANSFORMER: Final extraContext=$extraContext');
 
     if (formDataConfig != null) {
       final collectedFormData =
@@ -216,7 +226,8 @@ class TransformerExecutor extends ActionExecutor {
           modifiedEntities.add(updatedEntity);
           debugPrint('TRANSFORMER: $entityType has changes - will be updated');
         } else {
-          debugPrint('TRANSFORMER: $entityType has NO changes - skipping update');
+          debugPrint(
+              'TRANSFORMER: $entityType has NO changes - skipping update');
         }
       }
 

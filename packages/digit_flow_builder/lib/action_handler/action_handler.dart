@@ -172,6 +172,9 @@ class ActionHandler {
         addWithTypeConversion(formData);
         addWithTypeConversion(navigation);
 
+        debugPrint('CONDITION_EVAL: navigation=$navigation');
+        debugPrint('CONDITION_EVAL: evaluationData after adding navigation=$evaluationData');
+
         // Add widgetData - flatten list values to check membership
         // For selection cards, convert list of selected codes to individual keys
         debugPrint('CONDITION_EVAL: widgetData before processing=$widgetData');
