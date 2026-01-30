@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
 import '../../utils/conditional_evaluator.dart';
-import '../../utils/flow_widget_state.dart';
+import '../../utils/interpolation.dart';
+import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 import '../localization_context.dart';
 
@@ -19,33 +20,73 @@ class InfoCardWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final flowState = WidgetStateContext.of(context);
-    final items = flowState.contextData ?? [];
+    final crudCtx = CrudItemContext.of(context);
+    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
 
-    // Get navigation params for visibility evaluation
-    final navigationParams = flowState.screenKey != null
-        ? FlowCrudStateRegistry().getNavigationParams(flowState.screenKey!) ?? {}
-        : <String, dynamic>{};
-
-    // Build evaluation context with navigation params
-    final evalContext = {
-      ...flowState.evalContext,
-      'navigation': navigationParams,
-    };
-
-    // Check visibility condition
-    final visible = ConditionalEvaluator.evaluate(
-      json['visible'] ?? true,
-      evalContext,
-      screenKey: flowState.screenKey,
-    );
-
-    if (visible == false || items.isNotEmpty) {
-      return const SizedBox.shrink();
+    // If no screenKey, build without state listening
+    if (screenKey == null) {
+      return _buildInfoCard(json, context, crudCtx, {}, {});
     }
 
+    // Wrap in ValueListenableBuilder to react to state changes
+    return ValueListenableBuilder<FlowCrudState?>(
+      valueListenable: FlowCrudStateRegistry().listen(screenKey),
+      builder: (context, flowState, _) {
+        final widgetData = flowState?.widgetData ?? {};
+        final formData = flowState?.formData ?? {};
+        final modelMap = crudCtx?.stateData?.modelMap ?? {};
+
+        // Create evaluation context
+        final evalContext = {
+          'item': crudCtx?.item,
+          'contextData': crudCtx?.stateData?.rawState ?? {},
+          'context': modelMap,
+          ...modelMap,
+          ...formData,
+          ...widgetData,
+        };
+
+        // Check hidden condition
+        if (json['hidden'] != null) {
+          final hiddenResult = ConditionalEvaluator.evaluate(
+            json['hidden'],
+            evalContext,
+            screenKey: screenKey,
+            stateData: crudCtx?.stateData,
+          );
+          if (hiddenResult == true) {
+            return const SizedBox.shrink();
+          }
+        }
+
+        // Check visible condition
+        if (json['visible'] != null) {
+          final visibleResult = ConditionalEvaluator.evaluate(
+            json['visible'],
+            evalContext,
+            screenKey: screenKey,
+            stateData: crudCtx?.stateData,
+          );
+          if (visibleResult == false) {
+            return const SizedBox.shrink();
+          }
+        }
+
+        return _buildInfoCard(json, context, crudCtx, widgetData, formData);
+      },
+    );
+  }
+
+  Widget _buildInfoCard(
+    Map<String, dynamic> json,
+    BuildContext context,
+    CrudItemContext? crudCtx,
+    Map<String, dynamic> widgetData,
+    Map<String, dynamic> formData,
+  ) {
     // Determine info type from config (default to info)
-    final typeString = json['type']?.toString().toLowerCase() ?? 'info';
+    final typeString =
+        json['properties']?['type']?.toString().toLowerCase() ?? 'info';
     final infoType = typeString == 'error'
         ? InfoType.error
         : typeString == 'warning'
@@ -54,12 +95,10 @@ class InfoCardWidget implements FlowWidget {
                 ? InfoType.success
                 : InfoType.info;
 
-    if (items.isNotEmpty) return const SizedBox.shrink();
-
     final localization = LocalizationContext.maybeOf(context);
 
     return InfoCard(
-      type: InfoType.info,
+      type: infoType,
       title:
           localization?.translate(json['label'] ?? '') ?? (json['label'] ?? ''),
       description: localization?.translate(json['description'] ?? '') ??

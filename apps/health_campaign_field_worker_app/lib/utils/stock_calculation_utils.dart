@@ -76,15 +76,24 @@ class StockCalculationUtils {
           stockReceived += quantity;
         }
       }
+      // Stock Lost: transactionType == LOSS
+      else if (isSender && transactionType == 'LOSS') {
+        stockLost += quantity;
+      }
+      // Stock Damaged: transactionType == DAMAGED
+      else if (isSender && transactionType == 'DAMAGED') {
+        stockDamaged += quantity;
+      }
       // Stock Issued/Lost/Damaged: This facility is the sender AND transactionType == DISPATCHED
+      // Also handles legacy data where LOSS/DAMAGED used DISPATCHED with transactionReason
       else if (isSender && transactionType == 'DISPATCHED') {
         if (transactionReason == 'LOST_IN_TRANSIT' ||
             transactionReason == 'LOST_IN_STORAGE') {
-          // Stock Lost
+          // Stock Lost (legacy format)
           stockLost += quantity;
         } else if (transactionReason == 'DAMAGED_IN_TRANSIT' ||
             transactionReason == 'DAMAGED_IN_STORAGE') {
-          // Stock Damaged
+          // Stock Damaged (legacy format)
           stockDamaged += quantity;
         } else if (transactionReason.isEmpty) {
           // Regular dispatch (issued)

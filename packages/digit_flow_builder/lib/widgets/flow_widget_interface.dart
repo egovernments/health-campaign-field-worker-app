@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../action_handler/action_config.dart';
+import '../blocs/flow_crud_bloc.dart';
 import '../utils/conditional_evaluator.dart';
 import '../widget_registry.dart';
 
@@ -37,21 +38,53 @@ class FlowWidgetFactory {
     final modelMap = crudCtx?.stateData?.modelMap ?? {};
     final stateData = crudCtx?.stateData;
 
+    // Get screenKey and widget data for visibility evaluation
+    final screenKey = crudCtx?.screenKey;
+    final flowState = screenKey != null
+        ? FlowCrudStateRegistry().get(screenKey)
+        : null;
+    final widgetData = flowState?.widgetData ?? {};
+    final formData = flowState?.formData ?? {};
+
     // Create evaluation context that includes modelMap for named entity access
     final evalContext = {
       'item': crudCtx?.item,
       'contextData': crudCtx?.stateData?.rawState ?? {},
-      ...modelMap, // Include modelMap so {{stock}}, {{productVariant}} etc. can be resolved
+      'context': crudCtx?.stateData?.modelMap ?? {},
+      ...modelMap,
+      // Include modelMap so {{stock}}, {{productVariant}} etc. can be resolved
+      ...formData,
+      // Include formData
+      ...widgetData,
+      // Include widgetData for {{selectedFacility}}, {{selectedProduct}} etc.
     };
 
-    // Check visibility condition
-    final visible = json['hidden'] == true
-        ? false
-        : ConditionalEvaluator.evaluate(
-            json['visible'] ?? true,
-            evalContext,
-            stateData: stateData,
-          );
+    // Check hidden condition first (if hidden evaluates to true, widget is not visible)
+    bool visible = true;
+    if (json['hidden'] != null) {
+      final hiddenResult = ConditionalEvaluator.evaluate(
+        json['hidden'],
+        evalContext,
+        screenKey: screenKey,
+        stateData: stateData,
+      );
+      if (hiddenResult == true) {
+        visible = false;
+      }
+    }
+
+    // If not hidden, check visible condition
+    if (visible && json['visible'] != null) {
+      final visibleResult = ConditionalEvaluator.evaluate(
+        json['visible'],
+        evalContext,
+        screenKey: screenKey,
+        stateData: stateData,
+      );
+      if (visibleResult == false) {
+        visible = false;
+      }
+    }
 
     if (visible == false) {
       return const SizedBox.shrink();

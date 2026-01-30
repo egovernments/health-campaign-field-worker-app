@@ -102,7 +102,7 @@ class FlowBuilderNavigationService implements NavigationService {
             _popUntilPage(router, popUntilPageName);
             // Pop the target page itself
             if (router.canPop()) {
-              router.pop();
+              router.maybePop();
             }
           }
           // Push fresh instance of the page
