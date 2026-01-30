@@ -29,16 +29,25 @@ class MultiEntityTabView extends StatefulWidget {
   });
 
   @override
-  State<MultiEntityTabView> createState() => _MultiEntityTabViewState();
+  State<MultiEntityTabView> createState() => MultiEntityTabViewState();
 }
 
-class _MultiEntityTabViewState extends State<MultiEntityTabView> {
+class MultiEntityTabViewState extends State<MultiEntityTabView> {
   int selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
     selectedIndex = 0;
+  }
+
+  /// Navigate to a specific tab by index
+  void goToTab(int index) {
+    if (index >= 0 && index < widget.entities.length) {
+      setState(() {
+        selectedIndex = index;
+      });
+    }
   }
 
   String _getEntityName(dynamic entity) {
@@ -83,6 +92,7 @@ class _MultiEntityTabViewState extends State<MultiEntityTabView> {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: DigitTabBar(
+            key: ValueKey('tab_bar_$selectedIndex'),
             tabBarThemeData: const DigitTabBarThemeData(
               tabWidth: 220, // Fixed width for scrolling
             ),
