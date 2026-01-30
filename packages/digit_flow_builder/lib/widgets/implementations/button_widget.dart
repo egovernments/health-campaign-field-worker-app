@@ -131,50 +131,27 @@ class ButtonWidget implements FlowWidget {
           if (json['onAction'] != null) {
             final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
 
-            // Pre-resolve navigation data and condition expressions for all actions
-            final resolvedActionsList = actionsList.map((actionJson) {
-              var resolvedActionJson = Map<String, dynamic>.from(actionJson);
-
-              // Resolve condition expression if present
-              if (actionJson['condition'] != null) {
-                final condition = Map<String, dynamic>.from(actionJson['condition']);
-                final expression = condition['expression'] as String?;
-                if (expression != null && expression.contains('{{')) {
-                  // Resolve the expression template
-                  String resolvedExpression = expression;
-                  if (stateData != null) {
-                    resolvedExpression = resolveTemplate(expression, stateData) ?? expression;
-                  }
-                  if (resolvedExpression == expression && crudStateData != null) {
-                    final contextData = crudCtx?.item ?? crudStateData;
-
-                    resolvedExpression = resolveValueRaw(
-                      expression,
-                      contextData,
-                    );
-                  }
-                  condition['expression'] = resolvedExpression;
-                  resolvedActionJson['condition'] = condition;
-                }
-              }
-
-              var action = ActionConfig.fromJson(resolvedActionJson);
-
-              // Resolve navigation data if present
+            // Helper function to resolve navigation data for an action
+            Map<String, dynamic> resolveNavDataForAction(Map<String, dynamic> actionJson) {
+              var action = ActionConfig.fromJson(actionJson);
               final navData = action.properties['data'] as List<dynamic>?;
 
               if (navData != null) {
                 final resolvedData = navData.map((entry) {
                   final rawValue = entry['value'];
 
-                  // Try to resolve from stateData first, then widgetData, then formData
-                  // Use resolveValueRaw directly to pass crudStateData for function resolution
-                  dynamic resolvedValue = stateData != null
-                      ? resolveValueRaw(rawValue, stateData,
-                          stateData: crudStateData,
-                          widgetData: widgetData,
-                          screenKey: screenKey)
+                  // Try to resolve from evalContext first, then stateData with full params, then widgetData, then formData
+                  dynamic resolvedValue = evalContext.isNotEmpty
+                      ? resolveValue(rawValue, evalContext)
                       : rawValue;
+
+                  // If not resolved from evalContext, try with resolveValueRaw for function resolution
+                  if (resolvedValue == rawValue && stateData != null) {
+                    resolvedValue = resolveValueRaw(rawValue, stateData,
+                        stateData: crudStateData,
+                        widgetData: widgetData,
+                        screenKey: screenKey);
+                  }
 
                   if (resolvedValue == rawValue && widgetData != null) {
                     // If not resolved from stateData, try widgetData
@@ -195,12 +172,52 @@ class ButtonWidget implements FlowWidget {
                 }).toList();
 
                 return {
-                  ...resolvedActionJson,
+                  ...actionJson,
                   'properties': {
                     ...action.properties,
                     'data': resolvedData,
                   },
                 };
+              }
+
+              return actionJson;
+            }
+
+            // Pre-resolve navigation data and condition expressions for all actions
+            final resolvedActionsList = actionsList.map((actionJson) {
+              var resolvedActionJson = Map<String, dynamic>.from(actionJson);
+
+              // Resolve condition expression if present
+              if (actionJson['condition'] != null) {
+                final condition = Map<String, dynamic>.from(actionJson['condition']);
+                final expression = condition['expression'] as String?;
+                if (expression != null && expression.contains('{{')) {
+                  // Resolve the expression template
+                  String resolvedExpression = expression;
+                  if (stateData != null) {
+                    resolvedExpression = resolveTemplate(expression, evalContext) ?? expression;
+                  }
+                  if (resolvedExpression == expression && crudStateData != null) {
+                    resolvedExpression = resolveValueRaw(
+                      expression,
+                      evalContext,
+                    );
+                  }
+                  condition['expression'] = resolvedExpression;
+                  resolvedActionJson['condition'] = condition;
+                }
+              }
+
+              // Check if this is a conditional action with nested actions array
+              if (actionJson['actions'] != null) {
+                final nestedActions = List<Map<String, dynamic>>.from(actionJson['actions']);
+                final resolvedNestedActions = nestedActions.map((nestedAction) {
+                  return resolveNavDataForAction(Map<String, dynamic>.from(nestedAction));
+                }).toList();
+                resolvedActionJson['actions'] = resolvedNestedActions;
+              } else {
+                // Resolve navigation data for top-level action
+                resolvedActionJson = resolveNavDataForAction(resolvedActionJson);
               }
 
               return resolvedActionJson;

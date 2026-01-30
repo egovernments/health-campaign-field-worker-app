@@ -32,6 +32,7 @@ import '../blocs/hf_referral_downsync/hf_referral_downsync.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
+import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/remote_client.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
@@ -333,6 +334,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                     switch (context.router.topRoute.name) {
                                       case ProjectSelectionRoute.name:
                                       case BoundarySelectionRoute.name:
+                                      case PermissionsRoute.name:
                                         shouldShowDrawer = false;
                                         break;
                                       default:
@@ -513,6 +515,14 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                   .translate(i18.common.coreCommonLogout),
               onLogOut: () {
                 context.read<BoundaryBloc>().add(const BoundaryResetEvent());
+                context.read<LocalizationBloc>().add(
+                      LocalizationEvent.onLoadLocalization(
+                        module: Constants.homeLocalizationModules.join(','),
+                        tenantId: envConfig.variables.tenantId,
+                        locale: AppSharedPreferences().getSelectedLocale ?? '',
+                        path: Constants.localizationApiPath,
+                      ),
+                    );
                 context.read<AuthBloc>().add(const AuthLogoutEvent());
               },
               footer: PoweredByDigit(
@@ -586,8 +596,10 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                 }
 
                 final staticModules = localizationModulesList.interfaces
-                    .where(
-                        (element) => element.type == Modules.localizationModule)
+                    .where((element) =>
+                        element.type == Modules.localizationModule &&
+                        Constants.homeLocalizationModules
+                            .contains(element.name.toString()))
                     .map((e) => e.name.toString())
                     .followedBy([
                   'hcm-boundary-${envConfig.variables.hierarchyType}'

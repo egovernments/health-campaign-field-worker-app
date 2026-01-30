@@ -427,7 +427,8 @@ final dynamic sampleReferralFlows = {
                             },
                             {
                               "key": "buttonLabel",
-                              "value": "{{fn:computeReferralButtonLabel(HFReferralModel.symptom, HFReferralModel.additionalFields.fields)}}"
+                              "value":
+                                  "{{fn:computeReferralButtonLabel(HFReferralModel.symptom, HFReferralModel.additionalFields.fields)}}"
                             }
                           ],
                           "name": "referralOverview",
@@ -1665,6 +1666,16 @@ final dynamic sampleReferralFlows = {
                   "systemDate": false,
                   "validations": [
                     {
+                      "type": "minAge",
+                      "value": 3,
+                      "message": "AGE_VALIDATION_ADDMEMBER"
+                    },
+                    {
+                      "type": "maxAge",
+                      "value": 1800,
+                      "message": "AGE_VALIDATION_ADDMEMBER"
+                    },
+                    {
                       "type": "required",
                       "value": true,
                       "message":
@@ -1674,7 +1685,7 @@ final dynamic sampleReferralFlows = {
                   "errorMessage": "",
                   "isMultiSelect": false,
                   "required.message":
-                      "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_REQUIRED_ERROR"
+                      "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_REQUIRED_ERROR",
                 },
                 {
                   "type": "string",

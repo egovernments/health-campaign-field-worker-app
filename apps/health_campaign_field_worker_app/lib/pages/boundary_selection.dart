@@ -56,6 +56,7 @@ class _BoundarySelectionPageState
   void initState() {
     context.syncRefresh();
     LocalizationParams().setModule('common', false);
+    LocalizationParams().setCode([i18.common.coreCommonContinue]);
     context.read<SyncBloc>().add(SyncRefreshEvent(context.loggedInUserUuid));
     context.read<BeneficiaryDownSyncBloc>().add(
           const DownSyncResetStateEvent(),

@@ -201,6 +201,90 @@ class _HomePageState extends LocalizedState<HomePage> {
         );
       },
     );
+
+// Compute Referral Button Label Function
+// Called from referralInbox "Open" button to compute and pass label to referralOverview
+// Takes symptom and additionalFields.fields as arguments
+// Returns 'Continue' label if symptom-specific key doesn't exist, otherwise 'Back' label
+    FunctionRegistry.register('computeReferralButtonLabel', (args, stateData) {
+      debugPrint('🔵 computeReferralButtonLabel called with args: $args');
+
+      try {
+        if (args.isEmpty) {
+          debugPrint('🔵 No args provided, returning BACK_LABEL');
+          return 'REFERRAL_OVERVIEW_BACK_LABEL';
+        }
+
+// args[0] = symptom (string)
+// args[1] = additionalFields.fields (Map or List)
+        final symptom = args[0]?.toString() ?? '';
+        final fields = args.length > 1 ? args[1] : null;
+
+        debugPrint('🔵 symptom: $symptom');
+        debugPrint('🔵 fields type: ${fields?.runtimeType}, value: $fields');
+
+        if (symptom.isEmpty) {
+          debugPrint('🔵 Empty symptom, returning BACK_LABEL');
+          return 'REFERRAL_OVERVIEW_BACK_LABEL';
+        }
+
+// Map symptom types to their corresponding keys
+        final symptomKeyMap = {
+          'FEVER': 'feverQ1',
+          'SICK': 'sickQ1',
+          'DRUG_SE_CC': 'sideEffectQ1',
+          'DRUG_SE_PC': 'sideEffectPQ1',
+        };
+
+        final keyToCheck = symptomKeyMap[symptom];
+        if (keyToCheck == null) {
+          debugPrint('🔵 Unknown symptom "$symptom", returning BACK_LABEL');
+          return 'REFERRAL_OVERVIEW_BACK_LABEL';
+        }
+
+        debugPrint('🔵 Checking for key: $keyToCheck');
+
+// Check if the key exists in fields
+        bool keyExists = false;
+
+        if (fields is Map) {
+// Direct map access
+          if (fields.containsKey(keyToCheck)) {
+            final value = fields[keyToCheck];
+            keyExists = value != null &&
+                value.toString().isNotEmpty &&
+                value.toString() != 'null';
+            debugPrint('🔵 Found key $keyToCheck in Map with value: $value');
+          }
+        } else if (fields is List) {
+// List of {key, value} entries
+          for (var field in fields) {
+            if (field is Map && field['key'] == keyToCheck) {
+              final value = field['value'];
+              keyExists = value != null &&
+                  value.toString().isNotEmpty &&
+                  value.toString() != 'null';
+              debugPrint('🔵 Found key $keyToCheck in List with value: $value');
+              break;
+            }
+          }
+        }
+
+        debugPrint('🔵 keyExists: $keyExists');
+
+        final result = keyExists
+            ? 'REFERRAL_OVERVIEW_BACK_LABEL'
+            : 'REFERRAL_OVERVIEW_CONTINUE_LABEL';
+        debugPrint('🔵 RETURNING: $result');
+
+        return result;
+      } catch (e, stackTrace) {
+        debugPrint('🔵 Error in computeReferralButtonLabel: $e');
+        debugPrint('🔵 StackTrace: $stackTrace');
+        return 'REFERRAL_OVERVIEW_BACK_LABEL';
+      }
+    });
+
     FunctionRegistry.register('generateUniqueMaterialNoteNumber',
         (args, stateData) {
       // Generate a synchronous unique ID without async operations
@@ -1646,8 +1730,9 @@ class _HomePageState extends LocalizedState<HomePage> {
               context
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onRemoteLoadLocalization(
-                    module: module ??
-                        "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                    module: module != null && module.isNotEmpty
+                        ? "$module,${Constants.packageLocalizationModules.join(',')}"
+                        : Constants.homeLocalizationModules.join(','),
                     tenantId: envConfig.variables.tenantId,
                     locale: selectedLocale!,
                     path: Constants.localizationApiPath,
@@ -1657,13 +1742,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
                     module: module != null && module.isNotEmpty
-                        ? "$module,hcm-common,hcm-login,hcm-scanner"
-                        : localizationModulesList?.interfaces
-                                .where(
-                                    (e) => e.type == Modules.localizationModule)
-                                .map((e) => e.name.toString())
-                                .join(',') ??
-                            "",
+                        ? "$module,${Constants.packageLocalizationModules.join(',')}"
+                        : Constants.homeLocalizationModules.join(','),
                     tenantId: envConfig.variables.tenantId,
                     locale: selectedLocale!,
                     path: Constants.localizationApiPath,
