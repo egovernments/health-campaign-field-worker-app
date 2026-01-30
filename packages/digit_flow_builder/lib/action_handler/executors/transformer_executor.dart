@@ -24,6 +24,13 @@ class TransformerExecutor extends ActionExecutor {
     final formDataConfig = action.properties['formDataConfig'];
 
     debugPrint('TRANSFORMER: Starting with configName=$configName');
+    debugPrint('TRANSFORMER: contextData keys = ${contextData.keys.toList()}');
+    debugPrint(
+        'TRANSFORMER: contextData[formData] = ${contextData['formData']}');
+    debugPrint(
+        'TRANSFORMER: contextData[formData] keys = ${(contextData['formData'] as Map?)?.keys.toList()}');
+    debugPrint(
+        'TRANSFORMER: contextData[navigation] = ${contextData['navigation']}');
 
     final configData = jsonConfig[configName];
     if (configData == null) {
@@ -87,12 +94,24 @@ class TransformerExecutor extends ActionExecutor {
 
     FlowCrudStateRegistry().update(config?["name"], flowState);
 
-    // Check if this is edit mode
+    // Check if this is edit mode (supports both isEdit and isUpdate flags)
     final navigationParams = contextData['navigation'] is Map
         ? Map<String, dynamic>.from(contextData['navigation'] as Map)
         : null;
     final isEdit = navigationParams?['isEdit'] == true ||
-        navigationParams?['isEdit'] == 'true';
+        navigationParams?['isEdit'] == 'true' ||
+        navigationParams?['isUpdate'] == true ||
+        navigationParams?['isUpdate'] == 'true';
+
+    // Add navigation params to formValuesToUse so that __switch:navigation.* directives can resolve
+    if (navigationParams != null && navigationParams.isNotEmpty) {
+      formValuesToUse = {
+        ...formValuesToUse ?? {},
+        'navigation': navigationParams,
+      };
+      debugPrint(
+          'TRANSFORMER: Added navigation params to formValues: $navigationParams');
+    }
 
     // Check if we should force create new entities even in edit mode
     // This is useful for inventory where edit prefills form but submits as new entities
@@ -105,13 +124,26 @@ class TransformerExecutor extends ActionExecutor {
     // 2. From navigation params in registry (stored by NAVIGATION executor)
     List<EntityModel>? existingModels;
 
-    // First try contextData (from REVERSE_TRANSFORM in same action chain)
+    // First try contextData['existingModels'] (from REVERSE_TRANSFORM in same action chain)
     if (contextData['existingModels'] != null) {
       final contextModels = contextData['existingModels'];
       if (contextModels is List) {
         existingModels = contextModels.whereType<EntityModel>().toList();
         debugPrint(
             'TRANSFORMER: Found existingModels in contextData: ${existingModels.length}');
+      }
+    }
+
+    // If no existingModels, try contextData['entities'] (from SEARCH_EVENT with awaitResults)
+    // This is useful when a search is done before the transformer to fetch the entity for update
+    if ((existingModels == null || existingModels.isEmpty) &&
+        isEdit &&
+        contextData['entities'] != null) {
+      final searchedEntities = contextData['entities'];
+      if (searchedEntities is List) {
+        existingModels = searchedEntities.whereType<EntityModel>().toList();
+        debugPrint(
+            'TRANSFORMER: Found entities from SEARCH_EVENT for update: ${existingModels.length}');
       }
     }
 
@@ -160,6 +192,39 @@ class TransformerExecutor extends ActionExecutor {
       ...extraContext,
       "beneficiaryType": FlowBuilderSingleton().beneficiaryType?.toValue(),
     };
+
+    // Auto-fetch individual data if selectedIndividualClientReferenceId is in navigation
+    // This allows transformer config to use __context:selectedIndividualGender, etc.
+    final selectedIndividualId =
+        navigationParams?['selectedIndividualClientReferenceId'];
+    if (selectedIndividualId != null) {
+      final individualData =
+          _fetchIndividualDataFromRegistry(selectedIndividualId);
+      if (individualData != null) {
+        contextMap['selectedIndividualGender'] = individualData['gender'];
+        contextMap['selectedIndividualAgeInMonths'] =
+            individualData['ageInMonths'];
+        contextMap['selectedIndividualDateOfBirth'] =
+            individualData['dateOfBirth'];
+        debugPrint(
+            'TRANSFORMER: Added individual data to context - gender=${individualData['gender']}, ageInMonths=${individualData['ageInMonths']}');
+      }
+    }
+
+    // Auto-calculate current cycle index if not already in context
+    // This allows transformer config to use __context:cycleIndex
+    if (!contextMap.containsKey('cycleIndex') ||
+        contextMap['cycleIndex'] == null) {
+      final currentCycleIndex = _getCurrentCycleIndex();
+      if (currentCycleIndex != null) {
+        // Format as zero-padded string (e.g., 1 -> "01", 10 -> "10")
+        final formattedCycleIndex =
+            currentCycleIndex.toString().padLeft(2, '0');
+        contextMap['cycleIndex'] = formattedCycleIndex;
+        debugPrint(
+            'TRANSFORMER: Added cycleIndex to context: $formattedCycleIndex');
+      }
+    }
 
     List<EntityModel> entities = [];
 
@@ -455,5 +520,190 @@ class TransformerExecutor extends ActionExecutor {
     }
 
     return a == b;
+  }
+
+  /// Fetch individual data from the state registry using clientReferenceId
+  /// Returns a map with 'gender', 'ageInMonths', and 'dateOfBirth'
+  Map<String, dynamic>? _fetchIndividualDataFromRegistry(
+      String clientReferenceId) {
+    try {
+      // Try to find the individual from the householdOverview state
+      final householdState = FlowCrudStateRegistry().get('householdOverview');
+      final stateWrapper = householdState?.stateWrapper;
+
+      if (stateWrapper == null || stateWrapper.isEmpty) {
+        debugPrint('TRANSFORMER: No stateWrapper found in householdOverview');
+        return null;
+      }
+
+      // Search for the individual in the state wrapper
+      // Structure: stateWrapper -> wrapper -> members[] -> individual[]
+      for (final wrapper in stateWrapper) {
+        if (wrapper is! Map) continue;
+
+        // Get the members list from wrapper
+        final members = wrapper['members'];
+        if (members == null) continue;
+
+        // Handle both List and single object
+        final memberList = members is List ? members : [members];
+
+        for (final member in memberList) {
+          if (member == null || member is! Map) continue;
+
+          // Get the individual list from member
+          final individuals = member['individual'];
+          if (individuals == null) continue;
+
+          final individualList =
+              individuals is List ? individuals : [individuals];
+
+          for (final individual in individualList) {
+            if (individual == null) continue;
+
+            // Get clientReferenceId from the individual
+            String? individualClientRefId;
+            dynamic gender;
+            dynamic dateOfBirth;
+
+            if (individual is Map) {
+              individualClientRefId =
+                  individual['clientReferenceId']?.toString();
+              gender = individual['gender'];
+              dateOfBirth = individual['dateOfBirth'];
+            } else {
+              // Try to access it as an EntityModel
+              try {
+                final map = (individual as dynamic).toMap();
+                individualClientRefId = map['clientReferenceId']?.toString();
+                gender = map['gender'];
+                dateOfBirth = map['dateOfBirth'];
+              } catch (_) {
+                continue;
+              }
+            }
+
+            if (individualClientRefId == clientReferenceId) {
+              // Found the individual, extract data
+              // Handle Gender enum - convert to string value
+              String? genderStr;
+              if (gender != null) {
+                final genderString = gender.toString();
+                // Handle "Gender.male" -> "MALE"
+                if (genderString.contains('.')) {
+                  genderStr = genderString.split('.').last.toUpperCase();
+                } else {
+                  genderStr = genderString.toUpperCase();
+                }
+              }
+
+              // Calculate age in months
+              int? ageInMonths;
+              if (dateOfBirth != null) {
+                ageInMonths = _calculateAgeInMonths(dateOfBirth);
+              }
+
+              debugPrint(
+                  'TRANSFORMER: Found individual - gender=$genderStr, ageInMonths=$ageInMonths, dateOfBirth=$dateOfBirth');
+              return {
+                'gender': genderStr,
+                'ageInMonths': ageInMonths,
+                'dateOfBirth': dateOfBirth,
+              };
+            }
+          }
+        }
+      }
+
+      debugPrint(
+          'TRANSFORMER: Individual not found with clientReferenceId=$clientReferenceId');
+      return null;
+    } catch (e, st) {
+      debugPrint('TRANSFORMER: Error fetching individual data: $e\n$st');
+      return null;
+    }
+  }
+
+  /// Calculate age in months from date of birth
+  int _calculateAgeInMonths(dynamic dateValue) {
+    DateTime? birthDate;
+
+    if (dateValue is int) {
+      birthDate = DateTime.fromMillisecondsSinceEpoch(dateValue);
+    } else if (dateValue is String) {
+      // Try parsing as timestamp first
+      final timestamp = int.tryParse(dateValue);
+      if (timestamp != null) {
+        birthDate = DateTime.fromMillisecondsSinceEpoch(timestamp);
+      } else if (dateValue.contains('/')) {
+        // Handle dd/MM/yyyy format
+        try {
+          final parts = dateValue.split('/');
+          if (parts.length == 3) {
+            final day = int.parse(parts[0]);
+            final month = int.parse(parts[1]);
+            final year = int.parse(parts[2]);
+            birthDate = DateTime(year, month, day);
+          }
+        } catch (_) {
+          // Fall through to DateTime.tryParse
+        }
+      }
+      // Try parsing as ISO date string
+      birthDate ??= DateTime.tryParse(dateValue);
+    } else if (dateValue is DateTime) {
+      birthDate = dateValue;
+    }
+
+    if (birthDate == null) return 0;
+
+    final now = DateTime.now();
+    final months =
+        (now.year - birthDate.year) * 12 + (now.month - birthDate.month);
+
+    // Adjust if the day hasn't occurred yet this month
+    if (now.day < birthDate.day) {
+      return months - 1;
+    }
+
+    return months;
+  }
+
+  /// Get the current running cycle index from project type
+  /// Returns the cycle id where startDate < now < endDate
+  int? _getCurrentCycleIndex() {
+    try {
+      final projectType = FlowBuilderSingleton().projectType;
+      if (projectType == null) {
+        debugPrint('TRANSFORMER: No projectType found in FlowBuilderSingleton');
+        return null;
+      }
+
+      final cycles = projectType.cycles;
+      if (cycles == null || cycles.isEmpty) {
+        debugPrint('TRANSFORMER: No cycles found in projectType');
+        return null;
+      }
+
+      final now = DateTime.now().millisecondsSinceEpoch;
+
+      // Find the current running cycle (where startDate < now < endDate)
+      for (final cycle in cycles) {
+        final startDate = cycle.startDate;
+        final endDate = cycle.endDate;
+
+        if (startDate < now && now < endDate) {
+          debugPrint(
+              'TRANSFORMER: Found current cycle - id=${cycle.id}, startDate=$startDate, endDate=$endDate');
+          return cycle.id;
+        }
+      }
+
+      debugPrint('TRANSFORMER: No active cycle found');
+      return null;
+    } catch (e) {
+      debugPrint('TRANSFORMER: Error getting current cycle index: $e');
+      return null;
+    }
   }
 }

@@ -1036,4 +1036,35 @@ void initializeFunctionRegistry() {
 
     return true;
   });
+
+  /// Registers a function to calculate age in months from a date of birth.
+  ///
+  /// - **Function Name**: `'calculateAgeInMonths'`
+  /// - **Arguments**: A list where the first element is the date of birth string.
+  /// - **Returns**: The total age in months as an integer, or 0 if the input is invalid.
+  FunctionRegistry.register('calculateAgeInMonths', (args, stateData) {
+    if (args.isEmpty) return 0;
+
+    final rawValue = args.first;
+    if (rawValue == null) return 0;
+
+    DateTime? dob;
+    if (rawValue is int) {
+      dob = DateTime.fromMillisecondsSinceEpoch(rawValue);
+    } else if (rawValue is String) {
+      // Try parsing as int timestamp first
+      final timestamp = int.tryParse(rawValue);
+      if (timestamp != null) {
+        dob = DateTime.fromMillisecondsSinceEpoch(timestamp);
+      } else {
+        // Otherwise, parse as formatted date string
+        dob = DigitDateUtils.getFormattedDateToDateTime(rawValue);
+      }
+    }
+
+    if (dob == null) return 0;
+
+    final age = DigitDateUtils.calculateAge(dob);
+    return age.years * 12 + age.months;
+  });
 }

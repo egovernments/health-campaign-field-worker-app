@@ -842,8 +842,8 @@ class _HomePageState extends LocalizedState<HomePage> {
             // }
 
             final prefs = await SharedPreferences.getInstance();
-            final schemaJsonRaw = prefs.getString('app_config_schemas');
-
+            dynamic schemaJsonRaw = prefs.getString('app_config_schemas');
+            schemaJsonRaw = null;
             RegistrationDeliverySingleton()
                 .setHouseholdType(HouseholdType.family);
 
@@ -1341,7 +1341,8 @@ class _HomePageState extends LocalizedState<HomePage> {
               );
               WidgetRegistry.initialize();
               final prefs = await SharedPreferences.getInstance();
-              final schemaJsonRaw = prefs.getString('app_config_schemas');
+              dynamic schemaJsonRaw = prefs.getString('app_config_schemas');
+              schemaJsonRaw = null;
 
               if (schemaJsonRaw != null) {
                 final allSchemas =
