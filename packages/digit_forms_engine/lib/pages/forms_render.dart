@@ -418,6 +418,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                         navigationParams:
                                             widget.navigationParams,
                                       ));
+                                      _isSubmitting = false;
                                       return; // Skip default logic
                                     }
 
@@ -464,6 +465,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                     pageName: nextPageEntry.first.key,
                                     defaultValues: widget.defaultValues,
                                     navigationParams: widget.navigationParams));
+                                _isSubmitting = false;
                               } else {
                                 if (schemaObject.summary) {
                                   context.router.push(FormsRenderRoute(
@@ -475,6 +477,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                       defaultValues: widget.defaultValues,
                                       navigationParams:
                                           widget.navigationParams));
+                                  _isSubmitting = false;
                                 } else {
                                   final contextValue =
                                       buildVisibilityEvaluationContext(
@@ -883,6 +886,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                             defaultValues: widget.defaultValues,
                             navigationParams: widget.navigationParams,
                           ));
+                          _isSubmitting = false;
                         } else {
                           context.read<FormsBloc>().add(
                                 FormsSubmitEvent(
