@@ -133,7 +133,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       (context, stateAccessor) {
         // Build your component with access to all this data
         return const EvaluationKeyDropDown(
-            schemaName: "REFERRAL_CREATE", formControlName: "healthFacility");
+            schemaName: "REFERRAL_CREATE", formControlName: "evaluationFacility");
       },
     );
 
