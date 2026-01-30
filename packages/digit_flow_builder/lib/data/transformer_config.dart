@@ -327,6 +327,91 @@ final jsonConfig = {
       },
     }
   },
+  "indirectBulkDelivery": {
+    "fallbackModel": "TaskModel",
+    "models": {
+      "TaskModel": {
+        "listSource": "__context:futureDoses",
+        "skipFirst": 1,
+        "mappings": {
+          "id": "taskDetails.id",
+          "projectId": "__context:projectId",
+          "projectBeneficiaryId": "taskDetails.projectBeneficiaryId",
+          "projectBeneficiaryClientReferenceId":
+              "__context:ProjectBeneficiaryClientReferenceId",
+          "createdBy": "__context:userId",
+          "status": "__value:ADMINISTRATION_SUCCESS",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "clientReferenceId": "__generate:uuid",
+          "resources": "list:TaskResourceModel",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "plannedStartDate": "taskDetails.plannedStartDate",
+          "plannedEndDate": "taskDetails.plannedEndDate",
+          "actualStartDate": "taskDetails.actualStartDate",
+          "actualEndDate": "taskDetails.actualEndDate",
+          "createdDate": "__generate:timestamp",
+          "address": {
+            "id": "address.id",
+            "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
+            "doorNo": "address.doorNo",
+            "latitude": "address.latLng[0]",
+            "longitude": "address.latLng[1]",
+            "locationAccuracy": "address.latLng[1]",
+            "addressLine1": "address.addressLine1",
+            "addressLine2": "address.addressLine2",
+            "landmark": "address.landmark",
+            "city": "address.city",
+            "type": "__value:PERMANENT",
+            "pincode": "address.pincode",
+            "buildingName": "address.buildingName",
+            "street": "address.street",
+            "boundaryType": "address.boundaryType",
+            "boundary": "address.boundary",
+            "locality": {
+              "code": "__context:selectedBoundaryCode",
+              "name": "__context:boundary.name",
+              "nonRecoverableError": "address.nonRecoverable",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion"
+            },
+            "nonRecoverableError": "address.nonRecoverable",
+            "tenantId": "__context:tenantId",
+            "rowVersion": "meta.rowVersion",
+            "clientAuditDetails": "__generate:clientAudit",
+            "auditDetails": "__generate:audit"
+          },
+          "additionalFields": {
+            "doseIndex": "__listItem:id",
+            "cycleIndex": "__context:cycleIndex",
+            "deliveryStrategy": "__listItem:deliveryStrategy"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit"
+        },
+        "listMappings": {
+          "TaskResourceModel": {
+            "listSource": "__listItem:ProductVariants",
+            "mappings": {
+              "id": "id",
+              "clientReferenceId": "__generate:uuid",
+              "taskId": "taskId",
+              "productVariantId": "productVariantId",
+              "quantity": "__value:1",
+              "isDelivered": "__value:true",
+              "deliveryComment": "DeliveryDetails.deliveryComment",
+              "nonRecoverableError": "error.nonRecoverable",
+              "taskclientReferenceId": "__ref:TaskModel.clientReferenceId",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion",
+              "clientAuditDetails": "__generate:clientAudit",
+              "auditDetails": "__generate:audit"
+            }
+          }
+        }
+      }
+    }
+  },
   "delivery": {
     "fallbackModel": "TaskModel",
     "models": {
@@ -382,7 +467,8 @@ final jsonConfig = {
           },
           "additionalFields": {
             "doseIndex": "__context:doseIndex",
-            "cycleIndex": "__context:cycleIndex"
+            "cycleIndex": "__context:cycleIndex",
+            "deliveryStrategy": "__context:deliveryStrategy"
           },
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
@@ -420,7 +506,7 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "projectBeneficiaryId": "taskDetails.projectBeneficiaryId",
           "projectBeneficiaryClientReferenceId":
-          "__context:ProjectBeneficiaryClientReferenceId",
+              "__context:ProjectBeneficiaryClientReferenceId",
           "createdBy": "__context:userId",
           "status": "__value:INELIGIBLE",
           "nonRecoverableError": "errors.nonRecoverable",
