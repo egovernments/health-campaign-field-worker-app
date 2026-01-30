@@ -1,288 +1,279 @@
 final dynamic sampleComplaintFlows = {
   "name": "COMPLAINTS",
-  "initialPage": "complaintInbox",
-  "project": "CMP-2025-08-04-004846",
-  "version": 1,
-  "disabled": false,
-  "isSelected": true,
   "flows": [
     {
-      "screenType": "TEMPLATE",
-      "name": "complaintInbox",
-      "heading": "COMPLAINT_INBOX_HEADING",
-      "description": "COMPLAINT_INBOX_DESCRIPTION",
-      "initActions": [
-        {
-          "actionType": "SEARCH_EVENT",
-          "properties": {
-            "type": "SEARCH_EVENT",
-            "name": "pgrService",
-            "data": [
-              {
-                "key": "tenantId",
-                "value": "{{singleton.selectedProject.tenantId}}",
-                "operation": "equals"
-              }
-            ]
-          }
-        }
-      ],
-      "header": [
-        {
-          "format": "backLink",
-          "type": "template",
-          "label": "COMPLAINT_INBOX_BACK",
-          "onAction": [
-            {"actionType": "BACK_NAVIGATION", "properties": {}}
-          ]
-        }
-      ],
-      "footer": [
-        {
-          "format": "button",
-          "type": "template",
-          "fieldName": "fileComplaint",
-          "label": "COMPLAINT_INBOX_PRIMARY_ACTION",
-          "properties": {
-            "type": "primary",
-            "size": "large",
-            "mainAxisSize": "max",
-            "mainAxisAlignment": "center"
-          },
-          "onAction": [
-            {
-              "actionType": "NAVIGATION",
-              "properties": {
-                "type": "FORM",
-                "name": "COMPLAINT_CREATE",
-                "data": []
-              }
-            }
-          ]
-        }
-      ],
-      "wrapperConfig": {
-        "wrapperName": "ComplaintWrapper",
-        "rootEntity": "PgrServiceModel",
-        "filters": [],
-        "relations": [],
-        "searchConfig": {
-          "primary": "pgrService",
-          "select": ["pgrService"]
-        }
-      },
       "body": [
         {
           "format": "row",
-          "properties": {
-            "mainAxisAlignment": "spaceBetween",
-            "mainAxisSize": "max"
-          },
           "children": [
             {
               "type": "template",
-              "format": "actionPopup",
               "label": "COMPLAINT_INBOX_SEARCH_LABEL",
+              "format": "actionPopup",
+              "fieldName": "searchComplaints",
               "properties": {
-                "suffixIcon": "Search",
-                "type": "tertiary",
+                "icon": "Search",
                 "size": "medium",
-                "mainAxisSize": "min",
-                "mainAxisAlignment": "start",
+                "type": "tertiary",
+                "suffixIcon": "Search",
                 "popupConfig": {
+                  "body": [
+                    {
+                      "type": "template",
+                      "label": "COMPLAINT_INBOX_SEARCH_COMPLAINT_NUMBER_LABEL",
+                      "format": "textInput",
+                      "fieldName": "complaintNumber"
+                    },
+                    {
+                      "type": "template",
+                      "label": "COMPLAINT_INBOX_SEARCH_MOBILE_NUMBER_LABEL",
+                      "format": "textInput",
+                      "fieldName": "mobileNumber"
+                    }
+                  ],
                   "type": "default",
                   "title": "COMPLAINT_INBOX_SEARCH_LABEL",
                   "titleIcon": "Search",
-                  "showCloseButton": true,
-                  "barrierDismissible": true,
-                  "body": [
-                    {
-                      "type": "template",
-                      "format": "textInput",
-                      "label": "COMPLAINT_INBOX_SEARCH_COMPLAINT_NUMBER_LABEL",
-                      "fieldName": "complaintNumber",
-                    },
-                    {
-                      "type": "template",
-                      "format": "textInput",
-                      "label": "COMPLAINT_INBOX_SEARCH_MOBILE_NUMBER_LABEL",
-                      "fieldName": "mobileNumber",
-                    }
-                  ],
                   "footerActions": [
                     {
                       "type": "template",
-                      "format": "button",
                       "label": "COMPLAINT_INBOX_SEARCH_SECONDARY_ACTION_LABEL",
-                      "properties": {
-                        "type": "secondary",
-                        "size": "large",
-                        "mainAxisSize": "max"
-                      },
-                      "onAction": [
-                        {"actionType": "CLEAR_STATE", "properties": {}},
-                        {"actionType": "CLOSE_POPUP", "properties": {}}
-                      ]
-                    },
-                    {
-                      "type": "template",
                       "format": "button",
-                      "label": "COMPLAINT_INBOX_SEARCH_PRIMARY_ACTION_LABEL",
-                      "properties": {
-                        "type": "primary",
-                        "size": "large",
-                        "mainAxisSize": "max"
-                      },
                       "onAction": [
-                        {"actionType": "CLOSE_POPUP", "properties": {}},
                         {
-                          "actionType": "SEARCH_EVENT",
+                          "actionType": "CLEAR_STATE",
                           "properties": {
-                            "name": "PgrServiceModel",
-                            "data": [
-                              {
-                                "key": "serviceRequestId",
-                                "value": "{{ widgetData.complaintNumber }}",
-                                "operation": "in"
-                              },
-                              {
-                                "key": "serviceRequestId",
-                                "value": "{{ widgetData.mobileNumber }}",
-                                "operation": "in"
-                              }
-                            ]
+                            "name": "pgrService",
+                            "filterKeys": [
+                              "serviceRequestId",
+                              "mobileNumber"
+                            ],
+                            "widgetKeys": [
+                              "complaintNumber",
+                              "mobileNumber"
+                            ],
+                            "triggerSearch": true
                           }
                         }
-                      ]
-                    }
-                  ]
-                }
-              },
-            },
-            {
-              "type": "template",
-              "format": "actionPopup",
-              "label": "COMPLAINT_INBOX_FILTER_LABEL",
-              "properties": {
-                "type": "tertiary",
-                "size": "medium",
-                "mainAxisSize": "min",
-                "mainAxisAlignment": "start",
-                "popupConfig": {
-                  "type": "default",
-                  "title": "COMPLAINT_INBOX_FILTER_LABEL",
-                  "titleIcon": "filter",
-                  "showCloseButton": true,
-                  "barrierDismissible": true,
-                  "body": [
-                    {
-                      "type": "template",
-                      "format": "radioList",
-                      "fieldName": "assignTo",
-                      "data": [
-                        {"code": "ASSIGN_TO_ME", "name": "ASSIGN_TO_ME"},
-                        {"code": "ASSIGN_TO_ALL", "name": "ASSIGN_TO_ALL"},
                       ],
-                    },
-                    {
-                      "type": "template",
-                      "format": "dropdown",
-                      "label": "COMPLAINT_INBOX_FILTER_COMPLAINT_TYPE_LABEL",
-                      "fieldName": "complaintType",
-                      "enums": "{{fn:getUniqueComplaintTypes()}}",
-                    },
-                    {
-                      "type": "template",
-                      "format": "dropdown",
-                      "label": "COMPLAINT_INBOX_FILTER_LOCALITY_TYPE_LABEL",
-                      "fieldName": "locality",
-                      "enums": "{{fn:getUniqueLocalities()}}",
-                    }
-                  ],
-                  "footerActions": [
-                    {
-                      "type": "template",
-                      "format": "button",
-                      "label": "COMPLAINT_INBOX_FILTER_SECONDARY_ACTION_LABEL",
+                      "fieldName": "cancel",
                       "properties": {
+                        "size": "large",
                         "type": "secondary",
-                        "size": "large",
                         "mainAxisSize": "max"
-                      },
-                      "onAction": [
-                        {"actionType": "CLEAR_STATE", "properties": {}},
-                        {"actionType": "CLOSE_POPUP", "properties": {}}
-                      ]
+                      }
                     },
                     {
                       "type": "template",
+                      "label": "COMPLAINT_INBOX_SEARCH_PRIMARY_ACTION_LABEL",
                       "format": "button",
-                      "label": "COMPLAINT_INBOX_FILTER_PRIMARY_ACTION_LABEL",
-                      "properties": {
-                        "type": "primary",
-                        "size": "large",
-                        "mainAxisSize": "max"
-                      },
                       "onAction": [
-                        {"actionType": "CLOSE_POPUP", "properties": {}},
+                        {
+                          "actionType": "CLEAR_STATE",
+                          "properties": {
+                            "name": "pgrService",
+                            "filterKeys": [
+                              "serviceRequestId",
+                              "mobileNumber"
+                            ]
+                          }
+                        },
+                        {
+                          "actionType": "CLOSE_POPUP",
+                          "properties": {
+                            "parentScreenKey": "complaintInbox"
+                          }
+                        },
                         {
                           "actionType": "SEARCH_EVENT",
                           "properties": {
-                            "defaultRoot": "pgrService",
                             "data": [
                               {
+                                "key": "serviceRequestId",
+                                "root": "pgrService",
+                                "value": "{{complaintNumber}}",
+                                "operation": "contains"
+                              },
+                              {
+                                "key": "mobileNumber",
                                 "root": "pgrComplainant",
+                                "value": "{{mobileNumber}}",
+                                "operation": "contains"
+                              }
+                            ],
+                            "name": "pgrService"
+                          }
+                        }
+                      ],
+                      "fieldName": "search",
+                      "properties": {
+                        "size": "large",
+                        "type": "primary",
+                        "mainAxisSize": "max"
+                      }
+                    }
+                  ],
+                  "showCloseButton": true,
+                  "barrierDismissible": true
+                },
+                "mainAxisSize": "min",
+                "mainAxisAlignment": "start"
+              }
+            },
+            {
+              "icon": "FilterAlt",
+              "type": "template",
+              "label": "COMPLAINT_INBOX_FILTER_LABEL",
+              "format": "actionPopup",
+              "fieldName": "complaintsFilter",
+              "properties": {
+                "icon": "FilterAlt",
+                "size": "medium",
+                "type": "tertiary",
+                "popupConfig": {
+                  "body": [
+                    {
+                      "data": [
+                        {
+                          "code": "ASSIGN_TO_ME",
+                          "name": "ASSIGN_TO_ME"
+                        },
+                        {
+                          "code": "ASSIGN_TO_ALL",
+                          "name": "ASSIGN_TO_ALL"
+                        }
+                      ],
+                      "type": "template",
+                      "format": "radioList",
+                      "fieldName": "assignTo"
+                    },
+                    {
+                      "type": "template",
+                      "enums": "{{fn:getUniqueComplaintTypes(contextData)}}",
+                      "label": "COMPLAINT_INBOX_FILTER_COMPLAINT_TYPE_LABEL",
+                      "format": "dropdownTemplate",
+                      "valueKey": "code",
+                      "fieldName": "complaintType"
+                    },
+                    {
+                      "type": "template",
+                      "enums": "{{fn:getUniqueLocalities(contextData)}}",
+                      "label": "COMPLAINT_INBOX_FILTER_LOCALITY_TYPE_LABEL",
+                      "format": "dropdownTemplate",
+                      "valueKey": "code",
+                      "fieldName": "locality"
+                    }
+                  ],
+                  "type": "default",
+                  "title": "COMPLAINT_INBOX_FILTER_LABEL",
+                  "titleIcon": "FilterAlt",
+                  "footerActions": [
+                    {
+                      "type": "template",
+                      "label": "COMPLAINT_INBOX_FILTER_SECONDARY_ACTION_LABEL",
+                      "format": "button",
+                      "onAction": [
+                        {
+                          "actionType": "CLEAR_STATE",
+                          "properties": {
+                            "name": "pgrService",
+                            "filterKeys": [
+                              "name",
+                              "serviceCode",
+                              "localityBoundaryCode"
+                            ],
+                            "widgetKeys": [
+                              "assignTo",
+                              "complaintType",
+                              "locality"
+                            ],
+                            "triggerSearch": true
+                          }
+                        }
+                      ],
+                      "fieldName": "cancel",
+                      "properties": {
+                        "size": "large",
+                        "type": "secondary",
+                        "mainAxisSize": "max"
+                      }
+                    },
+                    {
+                      "type": "template",
+                      "label": "COMPLAINT_INBOX_FILTER_PRIMARY_ACTION_LABEL",
+                      "format": "button",
+                      "onAction": [
+                        {
+                          "actionType": "CLEAR_STATE",
+                          "properties": {
+                            "name": "pgrService",
+                            "filterKeys": [
+                              "name",
+                              "serviceCode",
+                              "localityBoundaryCode"
+                            ]
+                          }
+                        },
+                        {
+                          "actionType": "CLOSE_POPUP",
+                          "properties": {}
+                        },
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "data": [
+                              {
                                 "key": "name",
-                                "value": "{{singleton.loggedInUserName}}",
-                                "operation": "equals",
-                                "applyIf":
-                                    "{{ widgetData.assignTo == 'ASSIGN_TO_ME' }}"
+                                "root": "pgrComplainant",
+                                "value": "{{singleton.loggedInUser.name}}",
+                                "applyIf": "{{ assignTo }} == ASSIGN_TO_ME",
+                                "operation": "equals"
                               },
                               {
                                 "key": "serviceCode",
-                                "value": "{{ widgetData.complaintType }}",
-                                "operation": "equals",
-                                "applyIf":
-                                    "{{ widgetData.complaintType.isNotEmpty }}"
+                                "value": "{{complaintType }}",
+                                "applyIf": "{{complaintType }} !=null && {{complaintType }} !=null",
+                                "operation": "equals"
                               },
                               {
+                                "key": "localityBoundaryCode",
                                 "root": "address",
-                                "key": "locality.code",
-                                "value": "{{ widgetData.locality }}",
-                                "operation": "equals",
-                                "applyIf":
-                                    "{{ widgetData.locality.isNotEmpty }}"
+                                "value": "{{ locality }}",
+                                "applyIf": "{{locality }} !=null && {{locality }} !=null",
+                                "operation": "equals"
                               }
-                            ]
+                            ],
+                            "name": "pgrService"
                           }
                         }
-                      ]
+                      ],
+                      "fieldName": "filter",
+                      "properties": {
+                        "size": "large",
+                        "type": "primary",
+                        "mainAxisSize": "max"
+                      }
                     }
-                  ]
-                }
-              },
-              "suffixIcon": "FilterAlt"
+                  ],
+                  "showCloseButton": true,
+                  "barrierDismissible": true
+                },
+                "mainAxisSize": "min",
+                "mainAxisAlignment": "start"
+              }
             },
             {
               "type": "template",
-              "format": "actionPopup",
               "label": "COMPLAINT_INBOX_SORT_LABEL",
+              "format": "actionPopup",
+              "fieldName": "sortComplaints",
               "properties": {
-                "type": "tertiary",
+                "icon": "SortSvg",
                 "size": "medium",
-                "mainAxisSize": "min",
-                "mainAxisAlignment": "start",
+                "type": "tertiary",
                 "popupConfig": {
-                  "type": "default",
-                  "title": "COMPLAINT_INBOX_SORT_POPUP_LABEL",
-                  "titleIcon": "Sort",
-                  "showCloseButton": true,
-                  "barrierDismissible": true,
                   "body": [
                     {
-                      "type": "template",
-                      "format": "radioList",
-                      "fieldName": "sotyBy",
                       "data": [
                         {
                           "code": "LATEST_FIRST",
@@ -291,77 +282,97 @@ final dynamic sampleComplaintFlows = {
                         {
                           "code": "LATEST_LAST",
                           "name": "COMPLAINT_INBOX_SORT_LATEST_LAST"
-                        },
+                        }
                       ],
-                    },
+                      "type": "template",
+                      "format": "radioList",
+                      "fieldName": "sortBy"
+                    }
                   ],
+                  "type": "default",
+                  "title": "COMPLAINT_INBOX_SORT_POPUP_LABEL",
+                  "titleIcon": "SortSvg",
                   "footerActions": [
                     {
                       "type": "template",
-                      "format": "button",
                       "label": "COMPLAINT_INBOX_SORT_SECONDARY_ACTION_LABEL",
-                      "properties": {
-                        "type": "secondary",
-                        "size": "large",
-                        "mainAxisSize": "max"
-                      },
+                      "format": "button",
                       "onAction": [
-                        {"actionType": "CLEAR_STATE", "properties": {}},
-                        {"actionType": "CLOSE_POPUP", "properties": {}}
-                      ]
+                        {
+                          "actionType": "CLEAR_STATE",
+                          "properties": {
+                            "name": "pgrService",
+                            "widgetKeys": [
+                              "sortBy"
+                            ],
+                            "triggerSearch": true
+                          }
+                        }
+                      ],
+                      "fieldName": "cancel",
+                      "properties": {
+                        "size": "large",
+                        "type": "secondary",
+                        "mainAxisSize": "max"
+                      }
                     },
                     {
                       "type": "template",
-                      "format": "button",
                       "label": "COMPLAINT_INBOX_SORT_PRIMARY_ACTION_LABEL",
-                      "properties": {
-                        "type": "primary",
-                        "size": "large",
-                        "mainAxisSize": "max"
-                      },
+                      "format": "button",
                       "onAction": [
-                        {"actionType": "CLOSE_POPUP", "properties": {}},
+                        {
+                          "actionType": "CLOSE_POPUP",
+                          "properties": {}
+                        },
                         {
                           "actionType": "SEARCH_EVENT",
                           "properties": {
-                            "name": "IndividualModel",
                             "data": [
                               {
-                                "key": "status",
-                                "value": "{{ widgetData.selectedStatus }}",
-                                "operation": "in"
+                                "key": "tenantId",
+                                "value": "{{singleton.selectedProject.tenantId}}",
+                                "operation": "equals"
                               }
-                            ]
+                            ],
+                            "name": "pgrService",
+                            "orderBy": {
+                              "field": "auditCreatedTime",
+                              "order": "{{ sortBy }} == LATEST_FIRST ? desc : asc"
+                            }
                           }
                         }
-                      ]
+                      ],
+                      "fieldName": "sort",
+                      "properties": {
+                        "size": "large",
+                        "type": "primary",
+                        "mainAxisSize": "max"
+                      }
                     }
-                  ]
-                }
+                  ],
+                  "showCloseButton": true,
+                  "barrierDismissible": true
+                },
+                "mainAxisSize": "min",
+                "mainAxisAlignment": "start"
               },
               "suffixIcon": "SortSvg"
             }
-          ]
+          ],
+          "properties": {
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "spaceBetween"
+          }
         },
         {
-          "format": "listView",
-          "type": "template",
-          "fieldName": "listView",
-          "hidden": false,
           "data": "ComplaintWrapper",
-          "properties": {
-            "spacing": "spacer4",
-          },
-          "visibilityCondition": "{{ context.ComplaintWrapper.empty }}",
+          "type": "template",
           "child": {
-            "format": "card",
             "type": "template",
-            "fieldName": "complaintCard",
+            "format": "card",
             "children": [
               {
-                "format": "labelPairList",
-                "type": "template",
-                "fieldName": "labelPairComplaint",
                 "data": [
                   {
                     "key": "COMPLAINT_INBOX_COMPLAINT_NUMBER",
@@ -374,8 +385,7 @@ final dynamic sampleComplaintFlows = {
                   },
                   {
                     "key": "COMPLAINT_INBOX_COMPLAINT_DATE",
-                    "value":
-                        "{{fn:formatDate(item.PgrServiceModel.auditDetails.createdTime, dateTime, dd MMM yyyy)}}"
+                    "value": "{{fn:formatDate(item.PgrServiceModel.auditDetails.createdTime, dateTime, 'date', dd MMM yyyy)}}"
                   },
                   {
                     "key": "COMPLAINT_INBOX_COMPLAINT_AREA",
@@ -385,56 +395,132 @@ final dynamic sampleComplaintFlows = {
                     "key": "COMPLAINT_INBOX_COMPLAINT_STATUS",
                     "value": "{{item.PgrServiceModel.applicationStatus}}"
                   }
-                ]
+                ],
+                "type": "template",
+                "format": "labelPairList",
+                "fieldName": "labelPairComplaint"
               },
               {
-                "format": "button",
                 "type": "template",
-                "fieldName": "viewDetails",
                 "label": "COMPLAINT_DETAILS_VIEW_ACTION_LABEL",
-                "properties": {
-                  "type": "secondary",
-                  "size": "large",
-                  "mainAxisSize": "max",
-                  "mainAxisAlignment": "center"
-                },
+                "format": "button",
                 "onAction": [
                   {
                     "actionType": "NAVIGATION",
                     "properties": {
-                      "type": "TEMPLATE",
-                      "name": "complaintView",
                       "data": [
                         {
                           "key": "clientReferenceId",
-                          "value":
-                              "{{ item.PgrServiceModel.clientReferenceId }}"
+                          "value": "{{ item.PgrServiceModel.clientReferenceId }}"
                         }
-                      ]
+                      ],
+                      "name": "complaintView",
+                      "type": "TEMPLATE"
                     }
                   }
-                ]
+                ],
+                "fieldName": "viewDetails",
+                "properties": {
+                  "size": "large",
+                  "type": "secondary",
+                  "mainAxisSize": "max",
+                  "mainAxisAlignment": "center"
+                }
               }
-            ]
+            ],
+            "fieldName": "complaintCard"
+          },
+          "format": "listView",
+          "hidden": false,
+          "fieldName": "listView",
+          "properties": {
+            "spacing": "spacer4"
+          },
+          "visibilityCondition": "{{ context.ComplaintWrapper.empty }}"
+        }
+      ],
+      "name": "complaintInbox",
+      "footer": [
+        {
+          "type": "template",
+          "label": "COMPLAINT_INBOX_PRIMARY_ACTION",
+          "format": "button",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "data": [],
+                "name": "COMPLAINT_CREATE",
+                "type": "FORM"
+              }
+            }
+          ],
+          "fieldName": "fileComplaint",
+          "mandatory": true,
+          "properties": {
+            "size": "large",
+            "type": "primary",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
           }
         }
-      ]
+      ],
+      "header": [
+        {
+          "type": "template",
+          "label": "COMPLAINT_INBOX_BACK",
+          "format": "backLink",
+          "onAction": [
+            {
+              "actionType": "BACK_NAVIGATION",
+              "properties": {
+                "name": "HOME",
+                "type": "HOME"
+              }
+            }
+          ]
+        }
+      ],
+      "heading": "COMPLAINT_INBOX_HEADING",
+      "screenType": "TEMPLATE",
+      "description": "COMPLAINT_INBOX_DESCRIPTION",
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "data": [
+              {
+                "key": "tenantId",
+                "value": "{{singleton.selectedProject.tenantId}}",
+                "operation": "equals"
+              }
+            ],
+            "name": "pgrService",
+            "type": "SEARCH_EVENT"
+          }
+        }
+      ],
+      "wrapperConfig": {
+        "filters": [],
+        "relations": [],
+        "rootEntity": "PgrServiceModel",
+        "wrapperName": "ComplaintWrapper",
+        "searchConfig": {
+          "select": [
+            "pgrService"
+          ],
+          "primary": "pgrService"
+        }
+      }
     },
     {
-      "screenType": "FORM",
       "name": "COMPLAINT_CREATE",
-      "project": "CMP-2025-08-04-004846",
-      "version": 1,
-      "disabled": false,
-      "isSelected": true,
       "pages": [
         {
           "page": "complaintType",
           "type": "object",
           "label": "COMPLAINT_TYPE_HEADING",
           "order": 1,
-          "actionLabel": "COMPLAINT_TYPE_DESCRIPTION",
-          "description": "APPONE_COMPLAINTTYPE_DESCRIPTION",
           "properties": [
             {
               "type": "string",
@@ -446,13 +532,14 @@ final dynamic sampleComplaintFlows = {
               "infoText": "",
               "readOnly": false,
               "fieldName": "complaintType",
+              "mandatory": true,
               "deleteFlag": false,
-              "innerLabel": "",
               "enums": [
                 {"code": "SyncNotWorking", "name": "Sync Not Working"},
                 {"code": "NotEnoughStock", "name": "Not Enough Stock"},
                 {"code": "Other", "name": "Other"}
               ],
+              "innerLabel": "",
               "schemaCode": "RAINMAKER-PGR.ServiceDefs",
               "systemDate": false,
               "validations": [
@@ -491,19 +578,49 @@ final dynamic sampleComplaintFlows = {
               "errorMessage": "",
               "isMultiSelect": false,
               "visibilityCondition": {
-                "expression": "complaintType.complaintType==Other"
+                "expression": [
+                  {
+                    "condition": "complaintType.complaintType==Other"
+                  }
+                ]
               }
             }
-          ]
+          ],
+          "actionLabel": "COMPLAINT_TYPE_ACTION_LABEL",
+          "description": "APPONE_COMPLAINTTYPE_DESCRIPTION"
         },
         {
           "page": "locationDetails",
           "type": "object",
           "label": "LOCATION_DETAILS_HEADING",
           "order": 3,
-          "actionLabel": "LOCATION_DETAILS_ACTION_LABEL",
-          "description": "LOCATION_DETAILS_DESCRIPTION",
           "properties": [
+            {
+              "type": "string",
+              "label": "COMPLAINT_DETAILS_administrativeArea_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "locality",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "administrativeArea",
+              "mandatory": true,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "COMPLAINT_DETAILS_administrativeArea_REQUIRED_ERROR"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
             {
               "type": "string",
               "label": "LOCATION_DETAILS_addressLine1_LABEL",
@@ -583,9 +700,18 @@ final dynamic sampleComplaintFlows = {
             {
               "type": "string",
               "enums": [
-                {"code": "PERMANENT", "name": "PERMANENT"},
-                {"code": "CORRESPONDENCE", "name": "CORRESPONDENCE"},
-                {"code": "OTHER", "name": "OTHER"}
+                {
+                  "code": "PERMANENT",
+                  "name": "PERMANENT"
+                },
+                {
+                  "code": "CORRESPONDENCE",
+                  "name": "CORRESPONDENCE"
+                },
+                {
+                  "code": "OTHER",
+                  "name": "OTHER"
+                }
               ],
               "label": "LOCATION_DETAILS_typeOfAddress_LABEL",
               "order": 5,
@@ -605,7 +731,9 @@ final dynamic sampleComplaintFlows = {
               "isMultiSelect": false,
               "includeInSummary": false
             }
-          ]
+          ],
+          "actionLabel": "LOCATION_DETAILS_ACTION_LABEL",
+          "description": "LOCATION_DETAILS_DESCRIPTION"
         },
         {
           "page": "complaintDetails",
@@ -617,32 +745,6 @@ final dynamic sampleComplaintFlows = {
             "type": "template"
           },
           "properties": [
-            {
-              "type": "string",
-              "label": "COMPLAINT_DETAILS_administrativeArea_LABEL",
-              "order": 1,
-              "value": "",
-              "format": "locality",
-              "hidden": false,
-              "tooltip": "",
-              "helpText": "",
-              "infoText": "",
-              "readOnly": false,
-              "fieldName": "administrativeArea",
-              "deleteFlag": false,
-              "innerLabel": "",
-              "systemDate": false,
-              "validations": [
-                {
-                  "type": "required",
-                  "value": true,
-                  "message":
-                      "COMPLAINT_DETAILS_administrativeArea_REQUIRED_ERROR"
-                }
-              ],
-              "errorMessage": "",
-              "isMultiSelect": false
-            },
             {
               "type": "string",
               "enums": [
@@ -665,6 +767,7 @@ final dynamic sampleComplaintFlows = {
               "infoText": "",
               "readOnly": false,
               "fieldName": "complaintRaisedFor",
+              "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
@@ -672,8 +775,7 @@ final dynamic sampleComplaintFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                      "COMPLAINT_DETAILS_complaintRaisedFor_REQUIRED_ERROR"
+                  "message": "COMPLAINT_DETAILS_complaintRaisedFor_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -691,6 +793,7 @@ final dynamic sampleComplaintFlows = {
               "infoText": "",
               "readOnly": false,
               "fieldName": "name",
+              "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
@@ -706,8 +809,7 @@ final dynamic sampleComplaintFlows = {
               "autoFillCondition": [
                 {
                   "value": "{{loggedInUserName}}",
-                  "expression":
-                      "complaintDetails.complaintRaisedFor==COMPLAINTS_RAISED_FOR_MYSELF"
+                  "expression": "complaintDetails.complaintRaisedFor==COMPLAINTS_RAISED_FOR_MYSELF"
                 }
               ]
             },
@@ -723,6 +825,7 @@ final dynamic sampleComplaintFlows = {
               "infoText": "",
               "readOnly": false,
               "fieldName": "contactNumber",
+              "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
               "prefixText": "+91",
@@ -732,6 +835,16 @@ final dynamic sampleComplaintFlows = {
                   "type": "required",
                   "value": true,
                   "message": "COMPLAINT_DETAILS_contactNumber_REQUIRED_ERROR"
+                },
+                {
+                  "type": "minLength",
+                  "value": 10,
+                  "message": "MOBILE_LENGTH_10_DIGIT"
+                },
+                {
+                  "type": "maxLength",
+                  "value": 10,
+                  "message": "MOBILE_LENGTH_10_DIGIT"
                 }
               ],
               "errorMessage": "",
@@ -739,8 +852,7 @@ final dynamic sampleComplaintFlows = {
               "autoFillCondition": [
                 {
                   "value": "{{loggedInUserMobileNumber}}",
-                  "expression":
-                      "complaintDetails.complaintRaisedFor==COMPLAINTS_RAISED_FOR_MYSELF"
+                  "expression": "complaintDetails.complaintRaisedFor==COMPLAINTS_RAISED_FOR_MYSELF"
                 }
               ]
             },
@@ -778,6 +890,18 @@ final dynamic sampleComplaintFlows = {
               "innerLabel": "",
               "prefixText": "+91",
               "systemDate": false,
+              "validations": [
+                {
+                  "type": "minLength",
+                  "value": 10,
+                  "message": "MOBILE_LENGTH_10_DIGITS"
+                },
+                {
+                  "type": "maxLength",
+                  "value": 10,
+                  "message": "MOBILE_LENGTH_10_DIGITS"
+                }
+              ],
               "errorMessage": "",
               "isMultiSelect": false
             },
@@ -793,6 +917,7 @@ final dynamic sampleComplaintFlows = {
               "infoText": "",
               "readOnly": false,
               "fieldName": "complaintDescription",
+              "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
@@ -800,8 +925,7 @@ final dynamic sampleComplaintFlows = {
                 {
                   "type": "required",
                   "value": true,
-                  "message":
-                      "COMPLAINT_DETAILS_complaintDescription_REQUIRED_ERROR"
+                  "message": "COMPLAINT_DETAILS_complaintDescription_REQUIRED_ERROR"
                 }
               ],
               "errorMessage": "",
@@ -812,27 +936,21 @@ final dynamic sampleComplaintFlows = {
           "description": "COMPLAINT_DETAILS_DESCRIPTION"
         }
       ],
-      "wrapperConfig": {
-        "wrapperName": "ComplaintWrapper",
-        "rootEntity": "PgrServiceModel",
-        "filters": [],
-        "relations": [],
-        "searchConfig": {
-          "primary": "pgrService",
-          "select": ["pgrService"]
-        }
-      },
+      "version": 1,
+      "disabled": false,
       "onAction": [
         {
           "actionType": "FETCH_TRANSFORMER_CONFIG",
           "properties": {
-            "configName": "complaintRegistration",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to fetch config."}
+                "properties": {
+                  "message": "Failed to fetch config."
+                }
               }
-            ]
+            ],
+            "configName": "complaintRegistration"
           }
         },
         {
@@ -842,7 +960,9 @@ final dynamic sampleComplaintFlows = {
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to create household."}
+                "properties": {
+                  "message": "Failed to create household."
+                }
               }
             ]
           }
@@ -850,137 +970,103 @@ final dynamic sampleComplaintFlows = {
         {
           "actionType": "NAVIGATION",
           "properties": {
-            "type": "TEMPLATE",
-            "name": "complaintAcknowledgement",
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Navigation failed."}
-              }
-            ],
             "data": [
               {
                 "key": "complaintClientReferenceId",
-                "value":
-                    "{{contextData.entities.PgrServiceModel.clientReferenceId}}"
+                "value": "{{contextData.entities.PgrServiceModel.clientReferenceId}}"
+              }
+            ],
+            "name": "complaintAcknowledgement",
+            "type": "TEMPLATE",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {
+                  "message": "Navigation failed."
+                }
               }
             ]
           }
         }
-      ]
+      ],
+      "isSelected": true,
+      "screenType": "FORM",
+      "wrapperConfig": {
+        "filters": [],
+        "relations": [],
+        "rootEntity": "PgrServiceModel",
+        "wrapperName": "ComplaintWrapper",
+        "searchConfig": {
+          "select": [
+            "pgrService"
+          ],
+          "primary": "pgrService"
+        }
+      }
     },
     {
-      "screenType": "TEMPLATE",
-      "name": "complaintAcknowledgement",
-      "heading": "",
-      "description": "",
-      "header": [
-        {
-          "format": "backLink",
-          "label": "Back",
-          "onAction": [
-            {
-              "actionType": "BACK_NAVIGATION",
-              "properties": {"type": "TEMPLATE", "name": "complaintInbox"}
-            }
-          ]
-        }
-      ],
       "body": [
         {
-          "format": "panelCard",
           "type": "template",
-          "fieldName": "complaintSuccess",
           "label": "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_LABEL",
-          "description":
-              "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_DESCRIPTION",
-          "properties": {"type": "success"},
-          "secondaryAction": {
+          "format": "panelCard",
+          "heading": "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_LABEL",
+          "fieldName": "complaintSuccess",
+          "mandatory": true,
+          "properties": {
+            "type": "success"
+          },
+          "description": "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_DESCRIPTION",
+          "primaryAction": {
             "type": "template",
+            "label": "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_ACTION_LABEL",
             "format": "button",
-            "fieldName": "backToComplaints",
-            "label":
-                "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_ACTION_LABEL",
+            "hidden": false,
             "onAction": [
               {
                 "actionType": "NAVIGATION",
-                "properties": {"type": "TEMPLATE", "name": "complaintInbox"}
+                "properties": {
+                  "name": "complaintInbox",
+                  "type": "TEMPLATE"
+                }
               }
-            ]
+            ],
+            "fieldName": "backToComplaints",
+            "mandatory": true,
+            "properties": {
+              "type": "primary"
+            }
           }
         }
-      ]
-    },
-    {
-      "screenType": "TEMPLATE",
-      "name": "complaintView",
-      "heading": "COMPLAINT_VIEW_HEADING",
-      "description": "",
+      ],
+      "name": "complaintAcknowledgement",
       "header": [
         {
-          "format": "backLink",
           "label": "Back",
-          "onAction": [
-            {"actionType": "BACK_NAVIGATION", "properties": {}}
-          ]
-        }
-      ],
-      "footer": [
-        {
-          "format": "button",
-          "type": "template",
-          "fieldName": "close",
-          "label": "COMPLAINT_VIEW_ACTION_LABEL",
-          "properties": {
-            "type": "primary",
-            "size": "large",
-            "mainAxisSize": "max",
-            "mainAxisAlignment": "center"
-          },
+          "format": "backLink",
           "onAction": [
             {
-              "actionType": "NAVIGATION",
-              "properties": {"type": "TEMPLATE", "name": "complaintInbox"}
-            }
-          ]
-        }
-      ],
-      "initActions": [
-        {
-          "actionType": "SEARCH_EVENT",
-          "properties": {
-            "type": "SEARCH_EVENT",
-            "name": "pgrService",
-            "data": [
-              {
-                "key": "clientReferenceId",
-                "value": "{{navigation.clientReferenceId}}",
-                "operation": "equals"
+              "actionType": "BACK_NAVIGATION",
+              "properties": {
+                "name": "complaintInbox",
+                "type": "TEMPLATE"
               }
-            ]
-          }
+            }
+          ],
+          "mandatory": true
         }
       ],
-      "wrapperConfig": {
-        "wrapperName": "ComplaintWrapper",
-        "rootEntity": "PgrServiceModel",
-        "filters": [],
-        "relations": [],
-        "searchConfig": {
-          "primary": "pgrService",
-          "select": ["pgrService"]
-        }
-      },
+      "heading": "",
+      "screenType": "TEMPLATE",
+      "description": ""
+    },
+    {
       "body": [
         {
-          "format": "card",
           "type": "template",
-          "fieldName": "listOfComplaints",
+          "format": "card",
           "children": [
             {
-              "format": "labelPairList",
-              "type": "template",
-              "fieldName": "complaintsLabelPair",
               "data": [
                 {
                   "key": "COMPLAINT_VIEW_COMPLAINTS_NUMBER",
@@ -994,8 +1080,7 @@ final dynamic sampleComplaintFlows = {
                 },
                 {
                   "key": "COMPLAINT_VIEW_COMPLAINTS_DATE",
-                  "value":
-                      "{{fn:formatDate(0.PgrServiceModel.auditDetails.createdTime, dateTime, dd MMM yyyy)}}",
+                  "value": "{{fn:formatDate(0.PgrServiceModel.auditDetails.createdTime, 'date', dd MMM yyyy)}}",
                   "defaultValue": "NA"
                 },
                 {
@@ -1018,11 +1103,92 @@ final dynamic sampleComplaintFlows = {
                   "value": "{{0.PgrServiceModel.description}}",
                   "defaultValue": "NA"
                 }
-              ]
+              ],
+              "type": "template",
+              "format": "labelPairList",
+              "fieldName": "complaintsLabelPair",
+              "mandatory": true
             }
-          ]
+          ],
+          "fieldName": "listOfComplaints"
         }
-      ]
+      ],
+      "name": "complaintView",
+      "footer": [
+        {
+          "type": "template",
+          "label": "COMPLAINT_VIEW_ACTION_LABEL",
+          "format": "button",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "name": "complaintInbox",
+                "type": "TEMPLATE"
+              }
+            }
+          ],
+          "fieldName": "close",
+          "mandatory": true,
+          "properties": {
+            "size": "large",
+            "type": "primary",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          }
+        }
+      ],
+      "header": [
+        {
+          "label": "Back",
+          "format": "backLink",
+          "onAction": [
+            {
+              "actionType": "BACK_NAVIGATION",
+              "properties": {}
+            }
+          ],
+          "mandatory": true
+        }
+      ],
+      "heading": "COMPLAINT_VIEW_HEADING",
+      "screenType": "TEMPLATE",
+      "description": "",
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "data": [
+              {
+                "key": "clientReferenceId",
+                "value": "{{navigation.clientReferenceId}}",
+                "operation": "equals"
+              }
+            ],
+            "name": "pgrService",
+            "type": "SEARCH_EVENT"
+          }
+        }
+      ],
+      "wrapperConfig": {
+        "filters": [],
+        "relations": [],
+        "rootEntity": "PgrServiceModel",
+        "wrapperName": "ComplaintWrapper",
+        "searchConfig": {
+          "select": [
+            "pgrService"
+          ],
+          "primary": "pgrService"
+        }
+      }
     }
-  ]
+  ],
+  "order": 4,
+  "active": true,
+  "project": "MR-DN",
+  "version": 1,
+  "disabled": false,
+  "isSelected": true,
+  "initialPage": "complaintInbox"
 };
