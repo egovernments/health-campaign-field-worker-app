@@ -183,6 +183,8 @@ class WrapperBuilder {
       EnhancedEntityFieldAccessor.clearCache();
     }
 
+    debugPrint(wrappers.toString());
+
     return wrappers;
   }
 
@@ -1260,7 +1262,18 @@ class ComputedListEvaluator {
   static Set<String> extractKeys(String condition) {
     final keywords = {"and", "or", "not", "true", "false"};
     // Mathematical functions to exclude from variable extraction
-    final functions = {"MIN", "MAX", "CEIL", "FLOOR", "ROUND", "ABS", "SQRT", "POW", "SUM", "AVG"};
+    final functions = {
+      "MIN",
+      "MAX",
+      "CEIL",
+      "FLOOR",
+      "ROUND",
+      "ABS",
+      "SQRT",
+      "POW",
+      "SUM",
+      "AVG"
+    };
     final splitPattern = RegExp(r'and|or|not');
     final identifierPattern = RegExp(r'^[a-zA-Z_][a-zA-Z0-9_]*$');
 
