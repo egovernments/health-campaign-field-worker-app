@@ -158,10 +158,20 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
     String locale,
   ) {
     setState(() {});
+
+    final filteredModules = localizationModulesList
+        .where((element) =>
+            element.type == Modules.localizationModule &&
+            Constants.homeLocalizationModules.contains(element.name.toString()))
+        .map((e) => e.name.toString())
+        .followedBy([
+          'hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()}'
+        ])
+        .join(',');
+
     context.read<LocalizationBloc>().add(
           LocalizationEvent.onLoadLocalization(
-            module:
-                'hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.map((e) => e.name.toString()).join(',').toString()}',
+            module: filteredModules,
             tenantId: tenantId,
             locale: locale,
             path: Constants.localizationApiPath,
