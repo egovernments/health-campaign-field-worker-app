@@ -4,8 +4,10 @@ import 'package:digit_ui_components/widgets/atoms/digit_back_button.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
-import '../../utils/flow_widget_state.dart';
+import '../../blocs/flow_crud_bloc.dart';
+import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
+import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 import '../localization_context.dart';
 
@@ -19,14 +21,27 @@ class BackLinkWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final flowState = WidgetStateContext.of(context);
+    final crudCtx = CrudItemContext.of(context);
+    final stateData = (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
+        ? crudCtx.item
+        : crudCtx?.stateData?.rawState != null &&
+                crudCtx!.stateData!.rawState.isNotEmpty
+            ? crudCtx.stateData?.rawState.first
+            : null;
+
     final localization = LocalizationContext.maybeOf(context);
 
-    // Resolve template using flowState.evalContext
+    // Get form data from registry for resolving form field values
+    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
+    final formData = screenKey != null
+        ? FlowCrudStateRegistry().get(screenKey)?.formData
+        : null;
+
+    // Resolve template with localization support for mixed content
     final labelText = json['label'] ?? '';
     final label = resolveTemplate(
           labelText,
-          flowState.evalContext,
+          stateData,
           localization: localization,
         ) ??
         labelText;
@@ -48,12 +63,19 @@ class BackLinkWidget implements FlowWidget {
                 final key = entry['key'] as String;
                 final rawValue = entry['value'];
 
-                // Resolve using flowState.evalContext which contains all data sources
-                final resolvedValue = resolveValue(rawValue, flowState.evalContext);
+                // Try to resolve from stateData first, then fallback to formData
+                dynamic resolvedValue = stateData != null
+                    ? resolveValue(rawValue, stateData)
+                    : rawValue;
+
+                if (resolvedValue == rawValue && formData != null) {
+                  // If not resolved from stateData, try formData
+                  resolvedValue = resolveValue(rawValue, formData);
+                }
 
                 return {
                   "key": key,
-                  "value": resolvedValue == rawValue ? rawValue : resolvedValue,
+                  "value": resolvedValue,
                 };
               }).toList();
 

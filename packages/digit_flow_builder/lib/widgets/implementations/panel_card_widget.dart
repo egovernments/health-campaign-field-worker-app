@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
-import '../../utils/flow_widget_state.dart';
+import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
@@ -20,31 +20,47 @@ class PanelCardWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final flowState = WidgetStateContext.of(context);
-    final navigationData = flowState.screenKey != null
-        ? FlowCrudStateRegistry().getNavigationParams(flowState.screenKey!)
-        : null;
+    final currentKey = getScreenKeyFromArgs(context) ?? '';
+    final navigationData =
+        FlowCrudStateRegistry().getNavigationParams(currentKey);
 
-    // Build evaluation context with navigation params
-    final evalContext = {
-      ...flowState.evalContext,
-      if (navigationData != null) 'navigation': navigationData,
-    };
+    final crudCtx = CrudItemContext.of(context);
+
+    // Merge navigation data with crud context data for template resolution
+    final contextData =
+        crudCtx?.item != null ? crudCtx!.item : crudCtx?.stateData?.rawState;
+    final Map<String, dynamic> mergedData = {};
+
+    if (contextData != null) {
+      if (contextData is List) {
+        if (contextData.isNotEmpty &&
+            contextData.first is Map<String, dynamic>) {
+          mergedData.addAll(contextData.first as Map<String, dynamic>);
+        }
+      } else if (contextData is Map<String, dynamic>) {
+        mergedData.addAll(contextData);
+      }
+    }
+
+    if (navigationData is Map<String, dynamic>) {
+      mergedData["navigation"] = navigationData;
+    }
 
     final localization = LocalizationContext.maybeOf(context);
 
-    // Use resolveTemplate with evalContext
+    // Use resolveTemplate with localization parameter to handle mixed
+    // localization keys and template placeholders correctly
     final labelText = json['label'] ?? '';
     final label = resolveTemplate(
       labelText,
-      evalContext,
+      mergedData,
       localization: localization,
     );
 
     final descriptionText = json['description'] ?? '';
     final description = resolveTemplate(
       descriptionText,
-      evalContext,
+      mergedData,
       localization: localization,
     );
 
@@ -55,22 +71,32 @@ class PanelCardWidget implements FlowWidget {
       if (actionJson == null) return;
 
       final actionsList = actionJson['onAction'];
+      final stateData = (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
+          ? crudCtx.item
+          : crudCtx?.stateData?.rawState != null &&
+                  crudCtx!.stateData!.rawState.isNotEmpty
+              ? crudCtx.stateData!.rawState.first
+              : null;
 
       for (var actionMap in actionsList) {
         var action = ActionConfig.fromJson(actionMap);
         final navData = action.properties['data'] as List<dynamic>?;
 
-        if (navData != null) {
+        if (navData != null && (stateData != null || navigationData != null)) {
           final resolvedData = navData.map((entry) {
             final key = entry['key'] as String;
             final rawValue = entry['value'];
+            final Map<String, dynamic> mergedData = {};
 
-            // Resolve using evalContext which contains all data sources
-            final resolvedValue = resolveValue(rawValue, evalContext);
+            if (navigationData is Map<String, dynamic>) {
+              mergedData["navigation"] = navigationData;
+            }
+
+            final resolvedValue = resolveValue(rawValue, mergedData);
 
             return {
               "key": key,
-              "value": resolvedValue == rawValue ? rawValue : resolvedValue,
+              "value": resolvedValue,
             };
           }).toList();
 

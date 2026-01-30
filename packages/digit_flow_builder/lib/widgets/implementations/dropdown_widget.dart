@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
-import '../../utils/flow_widget_state.dart';
+import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
@@ -20,19 +20,29 @@ class DropdownWidget implements FlowWidget {
     void Function(ActionConfig) onAction,
   ) {
     final localization = LocalizationContext.maybeOf(context);
-    final state = WidgetStateContext.of(context);
     final crudCtx = CrudItemContext.of(context);
 
-    final label = resolveTemplate(json['label'], state.evalContext,
-            screenKey: state.screenKey, localization: localization) ??
+    // Get screen key for navigation params resolution
+    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
+
+    // For resolving item-specific fields (like labels), we use the current item or first item
+    final itemStateData = (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
+        ? crudCtx.item
+        : crudCtx?.stateData?.rawState != null &&
+                crudCtx!.stateData!.rawState.isNotEmpty
+            ? crudCtx.stateData?.rawState.first
+            : null;
+
+    final label = resolveTemplate(json['label'], itemStateData,
+            screenKey: screenKey, localization: localization) ??
         '';
     final key = (json['key'] ?? json['fieldName']) as String?;
     final isRequired = json['required'] == true;
     final visible = json['visible'] == null ||
         (json['visible'] is bool && json['visible'] == true) ||
         (json['visible'] is String &&
-            resolveValue(json['visible'], state.evalContext,
-                    screenKey: state.screenKey) ==
+            resolveValue(json['visible'], itemStateData,
+                    screenKey: screenKey) ==
                 true);
 
     if (!visible) {
@@ -43,38 +53,31 @@ class DropdownWidget implements FlowWidget {
     final valueKey = json['valueKey'] as String? ?? 'id';
 
     // If no screenKey, fall back to non-reactive behavior
-    if (state.screenKey == null) {
+    if (screenKey == null) {
       return _buildDropdownContent(
         json: json,
         context: context,
         onAction: onAction,
         localization: localization,
         crudCtx: crudCtx,
-        screenKey: state.screenKey,
-        evalContext: state.evalContext,
+        screenKey: screenKey,
+        itemStateData: itemStateData,
         label: label,
         key: key,
         isRequired: isRequired,
         displayKey: displayKey,
         valueKey: valueKey,
-        formData: state.formData,
-        widgetData: state.widgetData,
+        formData: {},
+        widgetData: {},
       );
     }
 
     // Wrap in ValueListenableBuilder to react to state changes
     return ValueListenableBuilder<FlowCrudState?>(
-      valueListenable: FlowCrudStateRegistry().listen(state.screenKey!),
+      valueListenable: FlowCrudStateRegistry().listen(screenKey),
       builder: (context, flowState, _) {
         final formData = flowState?.formData ?? {};
         final widgetData = flowState?.widgetData ?? {};
-
-        // Rebuild evalContext with updated formData/widgetData from registry
-        final updatedEvalContext = {
-          ...state.evalContext,
-          'formData': formData,
-          'widgetData': widgetData,
-        };
 
         return _buildDropdownContent(
           json: json,
@@ -82,8 +85,8 @@ class DropdownWidget implements FlowWidget {
           onAction: onAction,
           localization: localization,
           crudCtx: crudCtx,
-          screenKey: state.screenKey,
-          evalContext: updatedEvalContext,
+          screenKey: screenKey,
+          itemStateData: itemStateData,
           label: label,
           key: key,
           isRequired: isRequired,
@@ -103,7 +106,7 @@ class DropdownWidget implements FlowWidget {
     required dynamic localization,
     required CrudItemContext? crudCtx,
     required String? screenKey,
-    required Map<String, dynamic> evalContext,
+    required Map<String, dynamic>? itemStateData,
     required String label,
     required String? key,
     required bool isRequired,
@@ -127,12 +130,19 @@ class DropdownWidget implements FlowWidget {
 
         // Case 0: Function call (fn:functionName(...))
         if (cleanKey.startsWith("fn:")) {
-          // Use evalContext which already contains all data sources
+          // Build context data with stateData.rawState available as 'contextData'
+          final stateData = crudCtx?.stateData;
+          final contextData = {
+            'contextData': stateData?.rawState ?? [],
+            'item': crudCtx?.item,
+            ...?stateData?.modelMap,
+            if (crudCtx?.item != null) ...?crudCtx?.item,
+          };
           sourceData = resolveValueRaw(
             "{{ $cleanKey }}",
-            evalContext,
+            contextData,
             screenKey: screenKey,
-            stateData: crudCtx?.stateData,
+            stateData: stateData,
           );
         }
         // Case 1: Singleton path
@@ -140,27 +150,27 @@ class DropdownWidget implements FlowWidget {
           sourceData =
               resolveValueRaw("{{ $cleanKey }}", null, screenKey: screenKey);
         }
-        // Case 2: Navigation path
+        // Case 2: Navigation path (NEW - now handled by resolveValueRaw)
         else if (cleanKey.startsWith("navigation.")) {
           // First check if we've cached this navigation data in formData
           final cacheKey = '_cached_$cleanKey';
           if (formData.containsKey(cacheKey)) {
             sourceData = formData[cacheKey];
           } else {
-            // Get navigation params and add to evalContext
+            // Get navigation params from FlowCrudStateRegistry
             final navigationParams = screenKey != null
                 ? FlowCrudStateRegistry().getNavigationParams(screenKey)
                 : null;
-            final navContext = {
-              ...evalContext,
+            final contextData = {
               'navigation': navigationParams ?? {},
             };
 
-            // Resolve from navigation context
-            sourceData = resolveValueRaw("{{ $cleanKey }}", navContext,
+            // Resolve from navigation params
+            sourceData = resolveValueRaw("{{ $cleanKey }}", contextData,
                 screenKey: screenKey);
 
             // Cache the navigation data in formData to survive state updates
+            // IMPORTANT: Defer this until after the build phase completes to avoid setState during build
             if (sourceData != null && screenKey != null) {
               final dataToCache = sourceData;
               final screenKeyToCache = screenKey;
@@ -218,7 +228,7 @@ class DropdownWidget implements FlowWidget {
     }
 
     // Get current selected value from state
-    // Priority: widgetData (persisted selection) > evalContext (entity data) > formData
+    // Priority: widgetData (persisted selection) > itemStateData (entity data) > formData
     dynamic currentValue;
     if (key != null) {
       // First check widgetData for persisted selection
@@ -226,10 +236,10 @@ class DropdownWidget implements FlowWidget {
         currentValue = widgetData[key];
       }
       else {
-        // Then try evalContext (contains itemData, parentData, formData, etc.)
+        // Then try itemStateData
         currentValue =
-            resolveValue('{{$key}}', evalContext, screenKey: screenKey);
-        // If not found, check formData directly
+            resolveValue('{{$key}}', itemStateData, screenKey: screenKey);
+        // If not found in itemStateData, check formData directly
         if (currentValue == '{{$key}}' || currentValue == null) {
           currentValue = formData[key];
         }

@@ -4,8 +4,9 @@ import 'package:flutter/services.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
-import '../../utils/flow_widget_state.dart';
+import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
+import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 import '../localization_context.dart';
 
@@ -19,11 +20,23 @@ class TextInputWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final state = WidgetStateContext.of(context);
+    final crudCtx = CrudItemContext.of(context);
+    final stateData = crudCtx?.stateData;
     final localization = LocalizationContext.maybeOf(context);
 
+    // Get screen key for storing form data
+    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
+
+    // For resolving item-specific fields, we use the current item or first item
+    final itemStateData = (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
+        ? crudCtx.item
+        : crudCtx?.stateData?.rawState != null &&
+                crudCtx!.stateData!.rawState.isNotEmpty
+            ? crudCtx.stateData?.rawState.first
+            : null;
+
     final key = (json['key'] ?? json['fieldName']) as String?;
-    final label = resolveTemplate(json['label'], state.evalContext) ?? '';
+    final label = resolveTemplate(json['label'], itemStateData) ?? '';
     final localizedLabel = localization?.translate(label) ?? label;
 
     final placeholder = json['placeholder'] as String? ?? '';
@@ -40,7 +53,7 @@ class TextInputWidget implements FlowWidget {
     final visible = json['visible'] == null ||
         (json['visible'] is bool && json['visible'] == true) ||
         (json['visible'] is String &&
-            resolveValue(json['visible'], state.evalContext) == true);
+            resolveValue(json['visible'], itemStateData) == true);
 
     if (!visible) {
       return const SizedBox.shrink();
@@ -77,21 +90,25 @@ class TextInputWidget implements FlowWidget {
 
     // Get initial value from state for the stateful wrapper
     dynamic initialValue;
-    if (key != null && state.screenKey != null) {
-      if (state.widgetData.containsKey(key)) {
-        initialValue = state.widgetData[key];
+    if (key != null && screenKey != null) {
+      final currentState = FlowCrudStateRegistry().get(screenKey);
+      final formData = currentState?.formData ?? {};
+      final widgetData = currentState?.widgetData ?? {};
+
+      if (widgetData.containsKey(key)) {
+        initialValue = widgetData[key];
       } else {
-        initialValue = resolveValue('{{$key}}', state.evalContext);
+        initialValue = resolveValue('{{$key}}', itemStateData);
         if (initialValue == '{{$key}}' || initialValue == null) {
-          initialValue = state.formData[key];
+          initialValue = formData[key];
         }
       }
     }
 
     // Use stateful wrapper to maintain controller and handle external updates
     return _ReactiveTextInput(
-      key: ValueKey('${state.screenKey}_$key'),
-      screenKey: state.screenKey,
+      key: ValueKey('${screenKey}_$key'),
+      screenKey: screenKey,
       fieldKey: key,
       initialValue: initialValue?.toString() ?? '',
       localizedLabel: localizedLabel,
@@ -102,7 +119,7 @@ class TextInputWidget implements FlowWidget {
       maxLength: maxLength,
       json: json,
       onAction: onAction,
-      evalContext: state.evalContext,
+      itemStateData: itemStateData,
     );
   }
 }
@@ -121,7 +138,7 @@ class _ReactiveTextInput extends StatefulWidget {
   final int? maxLength;
   final Map<String, dynamic> json;
   final void Function(ActionConfig) onAction;
-  final Map<String, dynamic> evalContext;
+  final Map<String, dynamic>? itemStateData;
 
   const _ReactiveTextInput({
     super.key,
@@ -136,7 +153,7 @@ class _ReactiveTextInput extends StatefulWidget {
     required this.maxLength,
     required this.json,
     required this.onAction,
-    required this.evalContext,
+    required this.itemStateData,
   });
 
   @override
@@ -183,7 +200,7 @@ class _ReactiveTextInputState extends State<_ReactiveTextInput> {
           if (widgetData.containsKey(key)) {
             externalValue = widgetData[key];
           } else {
-            externalValue = resolveValue('{{$key}}', widget.evalContext);
+            externalValue = resolveValue('{{$key}}', widget.itemStateData);
             if (externalValue == '{{$key}}' || externalValue == null) {
               externalValue = formData[key];
             }
@@ -213,7 +230,9 @@ class _ReactiveTextInputState extends State<_ReactiveTextInput> {
   Widget _buildInput(BuildContext context) {
     return Builder(
       builder: (builderContext) {
-        final screenKeyForCallback = FlowWidgetStateAccessor.getScreenKey(builderContext);
+        final crudContextForCallback = CrudItemContext.of(builderContext);
+        final screenKeyForCallback =
+            crudContextForCallback?.screenKey ?? getScreenKeyFromArgs(builderContext);
 
         return LabeledField(
           label: widget.localizedLabel,

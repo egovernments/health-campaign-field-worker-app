@@ -427,7 +427,8 @@ final dynamic sampleReferralFlows = {
                             },
                             {
                               "key": "buttonLabel",
-                              "value": "{{fn:computeReferralButtonLabel(HFReferralModel.symptom, HFReferralModel.additionalFields.fields)}}"
+                              "value":
+                                  "{{fn:computeReferralButtonLabel(HFReferralModel.symptom, HFReferralModel.additionalFields.fields)}}"
                             }
                           ],
                           "name": "referralOverview",

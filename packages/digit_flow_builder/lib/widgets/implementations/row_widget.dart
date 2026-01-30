@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../layout_renderer.dart';
-import '../../utils/flow_widget_state.dart';
 import '../../utils/interpolation.dart';
 import '../../utils/widget_parsers.dart';
 import '../../widget_registry.dart';
@@ -18,8 +17,8 @@ class RowWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final flowState = WidgetStateContext.of(context);
-    final stateData = flowState.stateData;
+    final crudCtx = CrudItemContext.of(context);
+    final stateData = crudCtx?.stateData;
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
 
     return WidgetParsers.wrapWithBottomGap(
@@ -31,18 +30,18 @@ class RowWidget implements FlowWidget {
               ? preprocessConfigWithState(
                   Map<String, dynamic>.from(childJson),
                   stateData,
-                  listIndex: flowState.listIndex,
-                  item: flowState.itemData,
+                  listIndex: crudCtx?.listIndex,
+                  item: crudCtx?.item,
                 )
               : Map<String, dynamic>.from(childJson);
 
           return CrudItemContext(
             stateData: stateData,
-            listIndex: flowState.listIndex,
-            item: flowState.itemData,
-            screenKey: flowState.screenKey,
+            listIndex: crudCtx?.listIndex,
+            item: crudCtx?.item,
+            screenKey: crudCtx?.screenKey,
             child: LayoutMapper.map(processedChild, stateData, context, onAction,
-                item: flowState.itemData, listIndex: flowState.listIndex),
+                item: crudCtx?.item, listIndex: crudCtx?.listIndex),
           );
         }).toList(),
       ),

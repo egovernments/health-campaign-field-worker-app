@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
-import '../../utils/flow_widget_state.dart';
+import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 import '../localization_context.dart';
 
@@ -17,7 +17,6 @@ class SelectionCardWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final flowState = WidgetStateContext.of(context);
     final data = json['enums'] as List<dynamic>? ?? [];
     final fieldName = json['fieldName'] as String?;
     final localization = LocalizationContext.maybeOf(context);
@@ -38,7 +37,9 @@ class SelectionCardWidget implements FlowWidget {
     })
         .toList();
 
-    final screenKey = flowState.screenKey;
+    // Get screen key from context
+    final crudContext = CrudItemContext.of(context);
+    final screenKey = crudContext?.screenKey;
 
     if (screenKey == null) {
       // Fallback without state listening
