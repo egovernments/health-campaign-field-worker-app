@@ -4,7 +4,6 @@ import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
-import '../../utils/flow_widget_state.dart';
 import '../../utils/interpolation.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
@@ -20,16 +19,17 @@ class ActionPopupWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final flowState = WidgetStateContext.of(context);
     final localization = LocalizationContext.maybeOf(context);
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
     final popupConfig = props['popupConfig'] as Map<String, dynamic>?;
 
-    // Use flowState for context data
-    final stateData = flowState.stateData;
-    final item = flowState.itemData;
-    final listIndex = flowState.listIndex;
-    final screenKey = flowState.screenKey;
+    // Capture context data in build method, not in callback
+    final crudContext = CrudItemContext.of(context);
+    final screenKey = crudContext?.screenKey ?? getScreenKeyFromArgs(context);
+    final stateData =
+        screenKey != null ? extractCrudStateData(screenKey) : null;
+    final item = crudContext?.item;
+    final listIndex = crudContext?.listIndex;
 
     return DigitButton(
         mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),

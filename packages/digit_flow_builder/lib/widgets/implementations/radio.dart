@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
-import '../../utils/flow_widget_state.dart';
+import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
+import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
 import '../localization_context.dart';
 
@@ -19,7 +20,19 @@ class RadioWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final state = WidgetStateContext.of(context);
+    final crudCtx = CrudItemContext.of(context);
+    final stateData = crudCtx?.stateData;
+
+    // Get screen key for state storage
+    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
+
+    // For resolving item-specific fields, we use the current item or first item
+    final itemStateData = (crudCtx?.item != null && crudCtx!.item!.isNotEmpty)
+        ? crudCtx.item
+        : crudCtx?.stateData?.rawState != null &&
+                crudCtx!.stateData!.rawState.isNotEmpty
+            ? crudCtx.stateData?.rawState.first
+            : null;
 
     final data = json['data'] as List<dynamic>? ?? [];
     final key = (json['key'] ?? json['fieldName']) as String?;
@@ -29,45 +42,39 @@ class RadioWidget implements FlowWidget {
     final visible = json['visible'] == null ||
         (json['visible'] is bool && json['visible'] == true) ||
         (json['visible'] is String &&
-            resolveValue(json['visible'], state.evalContext) == true);
+            resolveValue(json['visible'], itemStateData) == true);
 
     if (!visible) {
       return const SizedBox.shrink();
     }
 
     // If no screenKey, fall back to non-reactive behavior
-    if (state.screenKey == null) {
+    if (screenKey == null) {
       return _buildRadioContent(
         json: json,
         context: context,
         onAction: onAction,
-        screenKey: state.screenKey,
-        evalContext: state.evalContext,
+        screenKey: screenKey,
+        itemStateData: itemStateData,
         data: data,
         key: key,
         localization: localization,
-        widgetData: state.widgetData,
+        widgetData: {},
       );
     }
 
     // Wrap in ValueListenableBuilder to react to state changes
     return ValueListenableBuilder<FlowCrudState?>(
-      valueListenable: FlowCrudStateRegistry().listen(state.screenKey!),
+      valueListenable: FlowCrudStateRegistry().listen(screenKey),
       builder: (context, flowState, _) {
         final widgetData = flowState?.widgetData ?? {};
-
-        // Rebuild evalContext with updated widgetData from registry
-        final updatedEvalContext = {
-          ...state.evalContext,
-          'widgetData': widgetData,
-        };
 
         return _buildRadioContent(
           json: json,
           context: context,
           onAction: onAction,
-          screenKey: state.screenKey,
-          evalContext: updatedEvalContext,
+          screenKey: screenKey,
+          itemStateData: itemStateData,
           data: data,
           key: key,
           localization: localization,
@@ -82,22 +89,22 @@ class RadioWidget implements FlowWidget {
     required BuildContext context,
     required void Function(ActionConfig) onAction,
     required String? screenKey,
-    required Map<String, dynamic> evalContext,
+    required Map<String, dynamic>? itemStateData,
     required List<dynamic> data,
     required String? key,
     required dynamic localization,
     required Map<String, dynamic> widgetData,
   }) {
     // Get current selected value from state
-    // Priority: widgetData (persisted selection) > evalContext (entity data)
+    // Priority: widgetData (persisted selection) > itemStateData (entity data)
     dynamic currentValue;
     if (key != null) {
       // First check widgetData for persisted selection
       if (widgetData.containsKey(key)) {
         currentValue = widgetData[key];
       } else {
-        // Fall back to evalContext
-        currentValue = resolveValue('{{$key}}', evalContext);
+        // Fall back to itemStateData
+        currentValue = resolveValue('{{$key}}', itemStateData);
         // If unresolved template, treat as null
         if (currentValue == '{{$key}}') {
           currentValue = null;

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
 import '../../utils/conditional_evaluator.dart';
-import '../../utils/flow_widget_state.dart';
+import '../../utils/interpolation.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
 import '../flow_widget_interface.dart';
@@ -23,28 +23,36 @@ class TableWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final flowState = WidgetStateContext.of(context);
-    final stateData = flowState.stateData;
+    final crudCtx = CrudItemContext.of(context);
+    final stateData = crudCtx?.stateData;
+    final modelMap = crudCtx?.stateData?.modelMap ?? {};
     final localization = LocalizationContext.maybeOf(context);
 
-    // Get navigation params for visibility evaluation
-    final navigationParams = flowState.screenKey != null
-        ? FlowCrudStateRegistry().getNavigationParams(flowState.screenKey!) ?? {}
+    // Get screenKey and navigation params for visibility evaluation
+    final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
+    final navigationParams = screenKey != null
+        ? FlowCrudStateRegistry().getNavigationParams(screenKey) ?? {}
+        : <String, dynamic>{};
+    final formData = screenKey != null
+        ? FlowCrudStateRegistry().get(screenKey)?.formData ?? {}
         : <String, dynamic>{};
 
-    // Build evaluation context with navigation params
+    // Create evaluation context that includes modelMap for named entity access
     final evalContext = {
-      ...flowState.evalContext,
+      'currentItem': crudCtx?.item,
+      'contextData': crudCtx?.stateData?.rawState ?? {},
       'navigation': navigationParams,
-      // Legacy support for existing templates
-      'currentItem': flowState.itemData,
+      ...modelMap,
+      // Include modelMap so {{stock}}, {{productVariant}} etc. can be resolved
+      ...formData,
+      // Include formData for {{selectedProduct}}, {{selectedFacility}} etc.
     };
 
     // Check visibility condition
     final visible = ConditionalEvaluator.evaluate(
       json['visible'] ?? true,
       evalContext,
-      screenKey: flowState.screenKey,
+      screenKey: screenKey,
     );
 
     if (visible == false) {
@@ -63,9 +71,9 @@ class TableWidget implements FlowWidget {
       final cellValue = col['cellValue'];
       final headerTemplate = col['header']?.toString() ?? '';
 
-      // Resolve header template using evalContext (supports {{formData.x}}, {{itemData.x}}, etc.)
+      // Resolve header template to support {{selectedProduct.sku}} etc.
       final resolvedHeader =
-      resolveTemplate(headerTemplate, evalContext, screenKey: flowState.screenKey);
+      resolveTemplate(headerTemplate, formData, screenKey: screenKey);
 
       return DigitTableColumn(
         header: localization?.translate(resolvedHeader) ?? resolvedHeader,
@@ -92,7 +100,7 @@ class TableWidget implements FlowWidget {
       // Case 1: Singleton path
       if (cleanKey.startsWith("singleton")) {
         final resolved =
-            resolveValueRaw("{{ $cleanKey }}", null, screenKey: flowState.screenKey);
+            resolveValueRaw("{{ $cleanKey }}", null, screenKey: screenKey);
         if (resolved is List) {
           sourceList = resolved;
         } else if (resolved != null) {
@@ -100,9 +108,9 @@ class TableWidget implements FlowWidget {
         }
       }
       // Case 2: If the current item already has this source (table inside listView)
-      else if (flowState.itemData != null && (flowState.itemData?[cleanKey] != null)) {
+      else if (crudCtx?.item != null && (crudCtx!.item?[cleanKey] != null)) {
         final localSource =
-            resolveValueRaw("{{ $cleanKey }}", flowState.itemData, screenKey: flowState.screenKey);
+            resolveValueRaw("{{ $cleanKey }}", crudCtx.item, screenKey: screenKey);
         if (localSource is List) {
           sourceList = localSource;
         } else if (localSource != null) {
@@ -120,7 +128,7 @@ class TableWidget implements FlowWidget {
       // Case 4: Fallback to resolving from rawState
       else if (stateData != null) {
         final localSource =
-            resolveValueRaw(rowsKey, evalContext, screenKey: flowState.screenKey);
+            resolveValueRaw(rowsKey, evalContext, screenKey: screenKey);
         if (localSource is List) {
           sourceList = localSource;
         } else if (localSource != null) {
@@ -131,19 +139,30 @@ class TableWidget implements FlowWidget {
 
     if (sourceList.isEmpty) return const SizedBox.shrink();
 
-    // Use contextData from evalContext (already contains the rawState list)
-    final contextDataList = flowState.contextData ?? [];
+    // Prepare contextData from rawState for conditions that need global state access
+    final rawState = crudCtx?.stateData?.rawState ?? [];
+    // Keep as list for {{contextData.0.field}} access pattern
+    final contextDataList = rawState is List ? rawState : [rawState];
+    // Also provide first item as map for backward compatibility
+    final contextDataMap = (rawState is List && rawState.isNotEmpty)
+        ? (rawState.first is Map
+            ? Map<String, dynamic>.from(rawState.first as Map)
+            : <String, dynamic>{})
+        : <String, dynamic>{};
 
     final rows = sourceList.asMap().entries.map((entry) {
       final rowItem = entry.value;
 
       // Build evaluation context for cell values
-      // Uses evalContext as base, with row-specific 'item' and 'itemData' override
+      // - For simple templates like {{item.id}}, rowItem is used directly
+      // - For conditions needing global state like {{contextData.0.dose}}, we provide contextDataList
       final cellEvalContext = {
-        ...evalContext,
         'item': rowItem,
-        'itemData': rowItem is Map<String, dynamic> ? rowItem : null,
-        'currentItem': rowItem, // Legacy support
+        'contextData': contextDataList,
+        ...evalContext,
+        // Also spread contextDataMap for direct access like {{contextData.dose}}
+        // when used without index (backward compatibility)
+        ...contextDataMap,
       };
 
       return DigitTableRow(
@@ -155,9 +174,12 @@ class TableWidget implements FlowWidget {
           // Resolve static localization keys from cellValue (text without {{}})
           final rawCellValue = colConfig['cellValue'] is String ? resolveStaticString(colConfig['cellValue'], localization) : colConfig['cellValue'];
 
+
+          final evalContext = cellEvalContext;
+
           final cellValue = ConditionalEvaluator.evaluate(
-              rawCellValue, cellEvalContext,
-              screenKey: flowState.screenKey, stateData: stateData);
+              rawCellValue, evalContext,
+              screenKey: screenKey, stateData: stateData);
 
           // cellValue should already be resolved by ConditionalEvaluator
           // Just convert to string
