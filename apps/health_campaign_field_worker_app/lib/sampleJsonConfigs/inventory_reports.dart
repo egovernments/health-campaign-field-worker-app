@@ -375,7 +375,10 @@ final dynamic inventoryReportFlows = {
                 "header": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_3_LABEL",
                 "cellValue": "{{item.waybillNumber}}"
               },
-              {"header": "Quantity", "cellValue": "{{item.quantity}}"}
+              {
+                "header": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_4_LABEL",
+                "cellValue": "{{item.quantity}}"
+              }
             ],
             "rows": "{{contextData.0.StockModel}}"
           }
@@ -538,7 +541,10 @@ final dynamic inventoryReportFlows = {
                 "cellValue":
                     "{{fn:formatDate(item.dateOfReconciliation, 'date', 'dd MMM yyyy')}}"
               },
-              {"header": "Quantity", "cellValue": "{{item.calculatedCount}}"}
+              {
+                "header": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_4_LABEL",
+                "cellValue": "{{item.calculatedCount}}"
+              }
             ],
             "rows": "{{contextData.0.StockReconciliationModel}}"
           }

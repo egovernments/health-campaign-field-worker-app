@@ -133,7 +133,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       (context, stateAccessor) {
         // Build your component with access to all this data
         return const EvaluationKeyDropDown(
-            schemaName: "REFERRAL_CREATE", formControlName: "evaluationFacility");
+            schemaName: "REFERRAL_CREATE",
+            formControlName: "evaluationFacility");
       },
     );
 
@@ -482,6 +483,80 @@ class _HomePageState extends LocalizedState<HomePage> {
       }
 
       return '0';
+    });
+
+    // Get user's assigned facility ID based on their role and boundary level
+    // For distributors: returns the logged-in user UUID
+    // For warehouse managers: returns the facility ID based on boundary type
+    FunctionRegistry.register('getUserFacilityId', (args, stateData) {
+      final isDistributor = InventorySingleton().isDistributor ?? false;
+      final isWareHouseMgr = InventorySingleton().isWareHouseMgr ?? false;
+
+      // For distributors who are not warehouse managers, return their user UUID
+      if (isDistributor && !isWareHouseMgr) {
+        return InventorySingleton().loggedInUserUuid ?? '';
+      }
+
+      // For warehouse managers and other roles, get facility from wrapper data
+      if (stateData == null) return '';
+
+      try {
+        // Get facility list from stateData - CrudStateData has modelMap property
+        List<Map<String, dynamic>>? projectFacilities;
+
+        // stateData is CrudStateData which has modelMap: Map<String, List<Map<String, dynamic>>>
+        if (stateData.modelMap != null) {
+          projectFacilities = stateData.modelMap['ProjectFacilityModel'];
+        }
+
+        if (projectFacilities == null || projectFacilities.isEmpty) {
+          return '';
+        }
+
+        // Return first facility ID (user's assigned facility)
+        // Note: Could be enhanced to filter by boundary type if needed
+        for (var facility in projectFacilities) {
+          final facilityId = facility['facilityId']?.toString() ?? '';
+          if (facilityId.isNotEmpty) {
+            return facilityId;
+          }
+        }
+
+        return '';
+      } catch (e) {
+        debugPrint('getUserFacilityId error: $e');
+        return '';
+      }
+    });
+
+    // Get facility name from facility ID
+    FunctionRegistry.register('getFacilityName', (args, stateData) {
+      if (args.isEmpty) return '';
+      final facilityId = args.first?.toString() ?? '';
+      if (facilityId.isEmpty) return '';
+
+      // Return a localization key that can be translated
+      return 'FAC_$facilityId';
+    });
+
+    // Get transaction status type for tag styling
+    FunctionRegistry.register('getTransactionStatusType', (args, stateData) {
+      if (args.isEmpty) return 'default';
+      final transactionType = args.first?.toString().toUpperCase() ?? '';
+
+      switch (transactionType) {
+        case 'DISPATCHED':
+          return 'warning'; // Orange/Yellow - pending action
+        case 'RECEIVED':
+          return 'success'; // Green - completed
+        case 'RETURNED':
+          return 'info'; // Blue - returned
+        case 'DAMAGED':
+        case 'LOSS':
+          return 'error'; // Red - issue
+        default:
+          return 'default';
+      }
     });
   }
 

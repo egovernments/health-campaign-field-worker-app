@@ -428,7 +428,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       List<ProjectFacilityModel> projectFacilities,
       List<FacilityModel> allFacilities,
       String? boundaryType,
-      Cycle? currentRunningCycle) async {
+      ProjectCycle? currentRunningCycle) async {
     final userObject = await localSecureStore.userRequestModel;
     final userRoles = userObject!.roles.map((e) => e.code);
     final lastChangedSince = currentRunningCycle?.startDate;
@@ -893,14 +893,17 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     final getSelectedProjectType = await localSecureStore.selectedProjectType;
-    final currentRunningCycle = getSelectedProjectType?.cycles
-        ?.where(
-          (e) =>
-              (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-              (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
-          // Return null when no matching cycle is found
-        )
-        .firstOrNull;
+    final getSelectedProject = await localSecureStore.selectedProject;
+
+    final currentRunningCycle =
+        getSelectedProject?.additionalDetails?.projectType?.cycles
+            ?.where(
+              (e) =>
+                  (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+                  (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+              // Return null when no matching cycle is found
+            )
+            .firstOrNull;
 
     try {
       final projectFacilities = await projectFacilityLocalRepository
@@ -1077,7 +1080,7 @@ class ProjectState with _$ProjectState {
   const factory ProjectState({
     @Default([]) List<ProjectModel> projects,
     ProjectType? projectType,
-    Cycle? selectedCycle,
+    ProjectCycle? selectedCycle,
     ProjectModel? selectedProject,
     @Default(false) bool loading,
     ProjectSyncErrorType? syncError,
