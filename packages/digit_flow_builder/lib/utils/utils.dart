@@ -264,7 +264,7 @@ String resolveTemplate(
     result = result.replaceAll(fullPlaceholder, valueStr);
   }
 
-  return result;
+  return _translateWithLocalization(result, localization);
 }
 
 /// Helper to translate using localization (supports FlowBuilderLocalization)
