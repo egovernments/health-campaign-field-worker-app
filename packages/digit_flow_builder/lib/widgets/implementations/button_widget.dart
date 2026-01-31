@@ -94,9 +94,8 @@ class ButtonWidget implements FlowWidget {
                   final rawValue = entry['value'];
 
                   // Try to resolve from stateData first, then widgetData, then formData
-                  dynamic resolvedValue = flowState.evalContext.isNotEmpty
-                      ? resolveValue(rawValue, flowState.evalContext)
-                      : rawValue;
+                  dynamic resolvedValue = resolveValue(rawValue, flowState.evalContext)
+                      ?? rawValue;
 
                   if (resolvedValue == rawValue && flowState.widgetData.isNotEmpty) {
                     // If not resolved from stateData, try widgetData
