@@ -152,12 +152,7 @@ bool isHidden(PropertySchema property) {
 
 /// Checks if the string can be parsed as a DateTime
 bool isDateTime(String input) {
-  try {
-    DateTime.parse(input);
-    return true;
-  } catch (_) {
-    return false;
-  }
+  return DateTime.tryParse(input) != null;
 }
 
 bool isDateLike(String input) {
