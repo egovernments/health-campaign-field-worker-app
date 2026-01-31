@@ -264,7 +264,7 @@ String resolveTemplate(
     result = result.replaceAll(fullPlaceholder, valueStr);
   }
 
-  return result;
+  return _translateWithLocalization(result, localization);
 }
 
 /// Helper to translate using localization (supports FlowBuilderLocalization)
@@ -612,6 +612,9 @@ dynamic _resolvePath(dynamic root, String path) {
     return current;
   }
   if (current is num) {
+    return current;
+  }
+  if(current is Map){
     return current;
   }
   return current?.toString();
