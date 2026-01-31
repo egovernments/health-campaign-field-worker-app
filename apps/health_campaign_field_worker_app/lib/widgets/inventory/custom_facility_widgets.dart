@@ -295,22 +295,29 @@ class __FacilityCardContentState extends State<_FacilityCardContent> {
       wrapperData = recordStockState?.stateWrapper;
     }
 
-    // If still null, show loading indicator
-    if (wrapperData == null) {
-      debugPrint('FacilityCard: wrapperData is null, showing loading');
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: CircularProgressIndicator(),
-        ),
-      );
+    // Extract ProjectFacilityModel from wrapper data
+    // Handle different wrapper data structures
+    List<dynamic>? projectFacilities;
+
+    if (wrapperData != null && wrapperData is List && wrapperData.isNotEmpty) {
+      final firstItem = wrapperData.first;
+      if (firstItem is Map) {
+        // Old structure: List<Map<String, List<dynamic>>>
+        final wrapperList = wrapperData as List<Map<String, List<dynamic>>>;
+        projectFacilities = wrapperList.firstWhere(
+            (m) => m.containsKey('ProjectFacilityModel'),
+            orElse: () => {'ProjectFacilityModel': []})['ProjectFacilityModel'];
+      } else if (firstItem is ProjectFacilityModel) {
+        // Direct list of ProjectFacilityModel
+        projectFacilities = wrapperData;
+      } else {
+        // Mixed EntityModel list - filter for ProjectFacilityModel
+        projectFacilities =
+            wrapperData.whereType<ProjectFacilityModel>().toList();
+      }
     }
 
-    final wrapperList = wrapperData as List<Map<String, List<dynamic>>>;
-
-    final projectFacilities = wrapperList.firstWhere(
-        (m) => m.containsKey('ProjectFacilityModel'),
-        orElse: () => {'ProjectFacilityModel': []})['ProjectFacilityModel'];
+    projectFacilities ??= [];
 
     final labelFromSchema =
         widget.fieldSchema.label ?? widget.fieldSchema.innerLabel;
