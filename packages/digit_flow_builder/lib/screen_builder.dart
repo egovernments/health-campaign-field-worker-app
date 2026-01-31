@@ -129,18 +129,9 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
 
     final onSubmit = widget.config['onAction'] as List<dynamic>?;
 
-    // Get the latest navigation params from registry (may have been updated by actions)
-    // Try multiple key formats for robust retrieval
-    final screenKey = 'FORM::$_schemaKey';
-    final registryNavParams =
-        FlowCrudStateRegistry().getNavigationParams(screenKey) ??
-            FlowCrudStateRegistry().getNavigationParams(_schemaKey) ??
-            {};
-
     // Merge widget.navigationParams with registry params (registry takes precedence)
     final mergedNavParams = {
       ...?widget.navigationParams,
-      ...registryNavParams,
     };
 
     Map<String, dynamic> contextData = {

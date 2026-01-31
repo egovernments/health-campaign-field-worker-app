@@ -55,11 +55,11 @@ class ActionPopupWidget implements FlowWidget {
         },
         type: _parseButtonType(props['type']),
         size: _parseButtonSize(props['size']),
-        suffixIcon: json['suffixIcon'] != null
-            ? DigitIconMapping.getIcon(json['suffixIcon'])
+        suffixIcon: props['suffixIcon'] != null
+            ? DigitIconMapping.getIcon(props['suffixIcon'])
             : null,
-        prefixIcon: json['prefixIcon'] != null
-            ? DigitIconMapping.getIcon(json['prefixIcon'])
+        prefixIcon: props['prefixIcon'] != null
+            ? DigitIconMapping.getIcon(props['prefixIcon'])
             : null);
   }
 
