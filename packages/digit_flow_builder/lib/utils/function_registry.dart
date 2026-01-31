@@ -1067,4 +1067,57 @@ void initializeFunctionRegistry() {
     final age = DigitDateUtils.calculateAge(dob);
     return age.years * 12 + age.months;
   });
+
+  /// Registers a function to compute the referral button label based on symptom and checklist data.
+  ///
+  /// - **Function Name**: `'computeReferralButtonLabel'`
+  /// - **Arguments**:
+  ///   - First argument: symptom (e.g., 'FEVER', 'SICK', 'DRUG_SE_CC', 'DRUG_SE_PC')
+  ///   - Second argument: additionalFields.fields (List of {key, value} maps)
+  /// - **Returns**: 'CORE_COMMON_GO_BACK' if checklist exists, 'CORE_COMMON_CONTINUE' if not.
+  ///
+  /// This function checks if the related checklist key exists for the given symptom:
+  /// - FEVER → feverQ1
+  /// - SICK → sickQ1
+  /// - DRUG_SE_CC → sideEffectQ1
+  /// - DRUG_SE_PC → sideEffectPQ1
+  /// hf-referral impel
+  FunctionRegistry.register('computeReferralButtonLabel', (args, stateData) {
+    if (args.isEmpty) return 'CORE_COMMON_CONTINUE';
+
+    final symptom = args[0]?.toString().toUpperCase() ?? '';
+    final fields = args.length > 1 ? args[1] : null;
+
+    // Map symptom to its corresponding checklist key
+    final symptomToChecklistKey = {
+      'FEVER': 'feverQ1',
+      'SICK': 'sickQ1',
+      'DRUG_SE_CC': 'sideEffectQ1',
+      'DRUG_SE_PC': 'sideEffectPQ1',
+    };
+
+    final checklistKey = symptomToChecklistKey[symptom];
+    if (checklistKey == null) {
+      // Unknown symptom, default to continue
+      return 'CORE_COMMON_CONTINUE';
+    }
+
+    // Check if the checklist key exists in additionalFields.fields
+    bool checklistExists = false;
+
+    if (fields is List) {
+      for (final field in fields) {
+        if (field is Map && field['key'] == checklistKey) {
+          final value = field['value'];
+          if (value != null && value.toString().trim().isNotEmpty) {
+            checklistExists = true;
+            break;
+          }
+        }
+      }
+    }
+
+    // If checklist exists → Go Back, otherwise → Continue
+    return checklistExists ? 'CORE_COMMON_GO_BACK' : 'CORE_COMMON_CONTINUE';
+  });
 }

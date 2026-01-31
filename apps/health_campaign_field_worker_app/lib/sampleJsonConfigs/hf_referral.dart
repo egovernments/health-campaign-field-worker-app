@@ -36,10 +36,27 @@ final dynamic sampleReferralFlows = {
       ],
       "name": "referralOverview",
       "order": 4,
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "data": [
+              {
+                "key": "clientReferenceId",
+                "value": "{{navigation.clientReferenceId}}",
+                "operation": "equals"
+              }
+            ],
+            "name": "hFReferral",
+            "type": "SEARCH_EVENT",
+            "awaitResults": true
+          }
+        }
+      ],
       "footer": [
         {
           "type": "template",
-          "label": "{{navigation.buttonLabel}}",
+          "label": "{{fn:computeReferralButtonLabel(HFReferralModel.0.symptom, HFReferralModel.0.additionalFields.fields)}}",
           "format": "button",
           "onAction": [
             {
