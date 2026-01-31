@@ -198,16 +198,30 @@ class TransformerExecutor extends ActionExecutor {
     final selectedIndividualId =
         navigationParams?['selectedIndividualClientReferenceId'];
     if (selectedIndividualId != null) {
+      // Add selectedIndividualClientReferenceId to context for use in mappings
+      contextMap['selectedIndividualClientReferenceId'] = selectedIndividualId;
+
       final individualData =
           _fetchIndividualDataFromRegistry(selectedIndividualId);
       if (individualData != null) {
+        contextMap['selectedIndividualName'] = individualData['name'];
         contextMap['selectedIndividualGender'] = individualData['gender'];
         contextMap['selectedIndividualAgeInMonths'] =
             individualData['ageInMonths'];
         contextMap['selectedIndividualDateOfBirth'] =
             individualData['dateOfBirth'];
         debugPrint(
-            'TRANSFORMER: Added individual data to context - gender=${individualData['gender']}, ageInMonths=${individualData['ageInMonths']}');
+            'TRANSFORMER: Added individual data to context - name=${individualData['name']}, gender=${individualData['gender']}, ageInMonths=${individualData['ageInMonths']}');
+      }
+
+      // Fetch ProjectBeneficiaryClientReferenceId from household state
+      final projectBeneficiaryId =
+          _fetchProjectBeneficiaryClientReferenceId(selectedIndividualId);
+      if (projectBeneficiaryId != null) {
+        contextMap['ProjectBeneficiaryClientReferenceId'] =
+            projectBeneficiaryId;
+        debugPrint(
+            'TRANSFORMER: Added ProjectBeneficiaryClientReferenceId to context: $projectBeneficiaryId');
       }
     }
 
@@ -224,6 +238,15 @@ class TransformerExecutor extends ActionExecutor {
         debugPrint(
             'TRANSFORMER: Added cycleIndex to context: $formattedCycleIndex');
       }
+    }
+
+    // Add transient form values to context
+    // These are values stored by custom widgets that need to be accessible via __context:
+    final transientValues = TransientFormValueRegistry().all;
+    if (transientValues.isNotEmpty) {
+      contextMap.addAll(transientValues);
+      debugPrint(
+          'TRANSFORMER: Added transient form values to context: ${transientValues.keys.toList()}');
     }
 
     List<EntityModel> entities = [];
@@ -566,11 +589,22 @@ class TransformerExecutor extends ActionExecutor {
             dynamic gender;
             dynamic dateOfBirth;
 
+            dynamic individualName;
+
             if (individual is Map) {
               individualClientRefId =
                   individual['clientReferenceId']?.toString();
               gender = individual['gender'];
               dateOfBirth = individual['dateOfBirth'];
+              // Extract name from individual
+              final name = individual['name'];
+              if (name is Map) {
+                final givenName = name['givenName'] ?? '';
+                final familyName = name['familyName'] ?? '';
+                individualName = '$givenName'.trim();
+              } else if (name is String) {
+                individualName = name;
+              }
             } else {
               // Try to access it as an EntityModel
               try {
@@ -578,6 +612,15 @@ class TransformerExecutor extends ActionExecutor {
                 individualClientRefId = map['clientReferenceId']?.toString();
                 gender = map['gender'];
                 dateOfBirth = map['dateOfBirth'];
+                // Extract name from individual
+                final name = map['name'];
+                if (name is Map) {
+                  final givenName = name['givenName'] ?? '';
+                  final familyName = name['familyName'] ?? '';
+                  individualName = '$givenName'.trim();
+                } else if (name is String) {
+                  individualName = name;
+                }
               } catch (_) {
                 continue;
               }
@@ -604,8 +647,9 @@ class TransformerExecutor extends ActionExecutor {
               }
 
               debugPrint(
-                  'TRANSFORMER: Found individual - gender=$genderStr, ageInMonths=$ageInMonths, dateOfBirth=$dateOfBirth');
+                  'TRANSFORMER: Found individual - name=$individualName, gender=$genderStr, ageInMonths=$ageInMonths, dateOfBirth=$dateOfBirth');
               return {
+                'name': individualName,
                 'gender': genderStr,
                 'ageInMonths': ageInMonths,
                 'dateOfBirth': dateOfBirth,
@@ -620,6 +664,108 @@ class TransformerExecutor extends ActionExecutor {
       return null;
     } catch (e, st) {
       debugPrint('TRANSFORMER: Error fetching individual data: $e\n$st');
+      return null;
+    }
+  }
+
+  /// Fetch ProjectBeneficiaryClientReferenceId from the state registry
+  /// for the given individual clientReferenceId
+  String? _fetchProjectBeneficiaryClientReferenceId(
+      String individualClientReferenceId) {
+    try {
+      final householdState = FlowCrudStateRegistry().get('householdOverview');
+      final stateWrapper = householdState?.stateWrapper;
+
+      if (stateWrapper == null || stateWrapper.isEmpty) {
+        debugPrint(
+            'TRANSFORMER: No stateWrapper found for ProjectBeneficiary lookup');
+        return null;
+      }
+
+      // Search for the project beneficiary in the state wrapper
+      // Structure: stateWrapper -> wrapper -> members[] -> projectBeneficiaries[]
+      for (final wrapper in stateWrapper) {
+        if (wrapper is! Map) continue;
+
+        // Get the members list from wrapper
+        final members = wrapper['members'];
+        if (members == null) continue;
+
+        final memberList = members is List ? members : [members];
+
+        for (final member in memberList) {
+          if (member == null || member is! Map) continue;
+
+          // Check if this member's individual matches our target
+          final individuals = member['individual'];
+          if (individuals == null) continue;
+
+          final individualList =
+              individuals is List ? individuals : [individuals];
+
+          bool isMatchingMember = false;
+          for (final individual in individualList) {
+            if (individual == null) continue;
+
+            String? individualClientRefId;
+            if (individual is Map) {
+              individualClientRefId =
+                  individual['clientReferenceId']?.toString();
+            } else {
+              try {
+                final map = (individual as dynamic).toMap();
+                individualClientRefId = map['clientReferenceId']?.toString();
+              } catch (_) {
+                continue;
+              }
+            }
+
+            if (individualClientRefId == individualClientReferenceId) {
+              isMatchingMember = true;
+              break;
+            }
+          }
+
+          if (isMatchingMember) {
+            // Found the matching member, now get the projectBeneficiary
+            final projectBeneficiaries = member['projectBeneficiaries'];
+            if (projectBeneficiaries == null) continue;
+
+            final beneficiaryList = projectBeneficiaries is List
+                ? projectBeneficiaries
+                : [projectBeneficiaries];
+
+            if (beneficiaryList.isNotEmpty) {
+              final beneficiary = beneficiaryList.first;
+              String? clientRefId;
+
+              if (beneficiary is Map) {
+                clientRefId = beneficiary['clientReferenceId']?.toString();
+              } else {
+                try {
+                  final map = (beneficiary as dynamic).toMap();
+                  clientRefId = map['clientReferenceId']?.toString();
+                } catch (_) {
+                  // Ignore
+                }
+              }
+
+              if (clientRefId != null) {
+                debugPrint(
+                    'TRANSFORMER: Found ProjectBeneficiaryClientReferenceId: $clientRefId');
+                return clientRefId;
+              }
+            }
+          }
+        }
+      }
+
+      debugPrint(
+          'TRANSFORMER: ProjectBeneficiary not found for individual=$individualClientReferenceId');
+      return null;
+    } catch (e, st) {
+      debugPrint(
+          'TRANSFORMER: Error fetching ProjectBeneficiaryClientReferenceId: $e\n$st');
       return null;
     }
   }
