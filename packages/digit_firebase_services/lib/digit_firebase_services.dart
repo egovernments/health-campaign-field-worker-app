@@ -13,7 +13,7 @@ Future initialize({
   await Firebase.initializeApp(options: options);
 
   // Enable Crashlytics collection (even in debug mode for testing)
-  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+  // await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
 
   FlutterError.onError = (errorDetails) {
     onErrorMessage?.call(

@@ -206,9 +206,8 @@ class Constants {
     final appConfigs = await isar.appConfigurations.where().findAll();
     final config = appConfigs.firstOrNull;
 
-    // final enableCrashlytics =
-    //     config?.firebaseConfig?.enableCrashlytics ?? false;
-    final enableCrashlytics = false; // TODO: Remove hardcoding and uncomment above
+    final enableCrashlytics =
+        config?.firebaseConfig?.enableCrashlytics ?? false; // TODO: Remove hardcoding and uncomment above
     if (enableCrashlytics) {
       firebase_services.initialize(
         options: DefaultFirebaseOptions.currentPlatform,

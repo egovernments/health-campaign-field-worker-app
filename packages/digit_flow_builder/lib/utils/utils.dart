@@ -614,6 +614,9 @@ dynamic _resolvePath(dynamic root, String path) {
   if (current is num) {
     return current;
   }
+  if(current is Map){
+    return current;
+  }
   return current?.toString();
 }
 

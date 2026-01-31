@@ -56,6 +56,7 @@ class CrudBloc extends Bloc<CrudEvent, CrudState> {
       return;
     }
     try {
+      if (!service.isInitialized) service.init();
       final (results, totalCount) =
           await service.searchEntities(query: event.searchParams);
       emit(CrudState.loaded(
@@ -73,6 +74,7 @@ class CrudBloc extends Bloc<CrudEvent, CrudState> {
   ) async {
     emit(const CrudState.loading());
     try {
+      if (!service.isInitialized) service.init();
       await service.createEntities(event.entities);
       emit(CrudState.persisted(event.entities));
     } catch (e) {
@@ -86,6 +88,7 @@ class CrudBloc extends Bloc<CrudEvent, CrudState> {
   ) async {
     emit(const CrudState.loading());
     try {
+      if (!service.isInitialized) service.init();
       await service.updateEntities(event.entities);
       emit(CrudState.persisted(event.entities));
     } catch (e) {
@@ -99,6 +102,7 @@ class CrudBloc extends Bloc<CrudEvent, CrudState> {
   ) async {
     emit(const CrudState.loading());
     try {
+      if (!service.isInitialized) service.init();
       await service.deleteEntities(event.entities);
       emit(CrudState.persisted(event.entities));
     } catch (e) {
