@@ -272,11 +272,7 @@ bool evaluateVisibilityExpression(
       preprocessResult.values.isEmpty ? {'dummy': {}} : preprocessResult.values,
     );
 
-    final parser = FormulaParser(
-      expr.condition,
-      values.isEmpty ? {'dummy': {}} : values,
-    );
-    final result = parser.parse;
+    final result = value.parse;
     if (result["value"] == true) {
       return true;
     }
