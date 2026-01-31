@@ -507,7 +507,6 @@ final dynamic sampleReferralFlows = {
           }
         },
 
-        // TODO::
         {
           "type": "template",
           "label": "SCAN_BENEFICIARY",
@@ -533,6 +532,37 @@ final dynamic sampleReferralFlows = {
                       "name": "hFReferral",
                       "type": "SEARCH_EVENT",
                       "awaitResults": true
+                    }
+                  },
+                  {
+                    "actionType": "CONDITIONAL_NAVIGATION",
+                    "properties": {
+                      "conditions": [
+                        {
+                          "condition": "0.HFReferralModel.clientReferenceId!=null",
+                          "navigateTo": {
+                            "name": "referralOverview",
+                            "type": "TEMPLATE",
+                            "data": [
+                              {
+                                "key": "clientReferenceId",
+                                "value": "{{0.HFReferralModel.clientReferenceId}}"
+                              },
+                              {
+                                "key": "referralSymptom",
+                                "value": "{{0.HFReferralModel.symptom}}"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "defaultAction": {
+                        "actionType": "SHOW_TOAST",
+                        "properties": {
+                          "message": "HF_REFERRAL_NOT_FOUND",
+                          "type": "error"
+                        }
+                      }
                     }
                   }
                 ],
