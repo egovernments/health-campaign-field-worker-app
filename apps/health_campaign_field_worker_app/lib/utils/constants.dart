@@ -208,7 +208,7 @@ class Constants {
 
     // final enableCrashlytics =
     //     config?.firebaseConfig?.enableCrashlytics ?? false;
-    final enableCrashlytics = true; // TODO: Remove hardcoding and uncomment above
+    final enableCrashlytics = false; // TODO: Remove hardcoding and uncomment above
     if (enableCrashlytics) {
       firebase_services.initialize(
         options: DefaultFirebaseOptions.currentPlatform,
