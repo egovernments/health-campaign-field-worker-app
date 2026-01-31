@@ -12,6 +12,9 @@ Future initialize({
 }) async {
   await Firebase.initializeApp(options: options);
 
+  // Enable Crashlytics collection (even in debug mode for testing)
+  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+
   FlutterError.onError = (errorDetails) {
     onErrorMessage?.call(
       'Diagnostic node: '

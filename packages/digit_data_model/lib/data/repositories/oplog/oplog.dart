@@ -46,6 +46,38 @@ abstract class OpLogManager<T extends EntityModel> {
         .createdByEqualTo(createdBy)
         .findAllSync();
 
+    // Handle update operations with null serverGeneratedId by copying from create record
+    final updateOpLogsWithNullServerId = isar.opLogs
+        .filter()
+        .entityTypeEqualTo(type)
+        .operationEqualTo(DataOperation.update)
+        .serverGeneratedIdIsNull()
+        .nonRecoverableErrorEqualTo(false)
+        .syncedUpEqualTo(false)
+        .syncedDownEqualTo(false)
+        .createdByEqualTo(createdBy)
+        .findAllSync();
+
+    for (final updateOpLog in updateOpLogsWithNullServerId) {
+      final createOpLog = isar.opLogs
+          .filter()
+          .clientReferenceIdEqualTo(updateOpLog.clientReferenceId)
+          .operationEqualTo(DataOperation.create)
+          .serverGeneratedIdIsNotNull()
+          .findFirstSync();
+
+      if (createOpLog != null && createOpLog.serverGeneratedId != null) {
+        final entry = OpLogEntry.fromOpLog<T>(updateOpLog);
+        final updatedEntry = entry.copyWith(
+          serverGeneratedId: createOpLog.serverGeneratedId,
+          rowVersion: createOpLog.rowVersion,
+        );
+        isar.writeTxnSync(() {
+          isar.opLogs.putSync(updatedEntry.oplog);
+        });
+      }
+    }
+
     final updateOpLogs = isar.opLogs
         .filter()
         .entityTypeEqualTo(type)

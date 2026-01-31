@@ -92,14 +92,14 @@ class Constants {
     'digit-privacy-policy',
     'hcm-login',
     'hcm-common',
-    'digit-scanner',
+    'hcm-scanner',
   ];
 
   // Modules to load when inside packages
   static const List<String> packageLocalizationModules = [
     'hcm-common',
     'hcm-login',
-    'digit-scanner',
+    'hcm-scanner',
   ];
 
   // Modules to load on home page and logout
@@ -107,6 +107,7 @@ class Constants {
     'hcm-login',
     'hcm-common',
     'digit-privacy-policy',
+    'hcm-scanner',
   ];
   static const String surveyFormPreviewDateFormat = 'dd MMMM yyyy';
   static const String defaultDateFormat = 'dd/MM/yyyy';
@@ -205,8 +206,9 @@ class Constants {
     final appConfigs = await isar.appConfigurations.where().findAll();
     final config = appConfigs.firstOrNull;
 
-    final enableCrashlytics =
-        config?.firebaseConfig?.enableCrashlytics ?? false;
+    // final enableCrashlytics =
+    //     config?.firebaseConfig?.enableCrashlytics ?? false;
+    final enableCrashlytics = false; // TODO: Remove hardcoding and uncomment above
     if (enableCrashlytics) {
       firebase_services.initialize(
         options: DefaultFirebaseOptions.currentPlatform,

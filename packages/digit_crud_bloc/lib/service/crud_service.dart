@@ -41,6 +41,7 @@ class CrudService {
   ///
   /// Must be called before using [searchEntities].
   void init() {
+    if (_isInitialized) return;
     _buildRelationshipGraph();
     _initNestedMappings();
     _isInitialized = true;
