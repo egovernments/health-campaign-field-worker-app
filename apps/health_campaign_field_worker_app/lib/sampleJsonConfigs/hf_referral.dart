@@ -17,11 +17,11 @@ final dynamic sampleReferralFlows = {
               "data": [
                 {
                   "key": "REFERRAL_INBOX_NAME",
-                  "value": "{{0.HFReferralModel.name}}"
+                  "value": "{{HFReferralModel.0.name}}"
                 },
                 {
                   "key": "REFERRAL_INBOX_REFERRAL_SYMPTOM",
-                  "value": "{{0.HFReferralModel.symptom}}"
+                  "value": "{{HFReferralModel.0.symptom}}"
                 }
               ],
               "type": "template",
@@ -314,6 +314,7 @@ final dynamic sampleReferralFlows = {
         "relations": [],
         "rootEntity": "HFReferralModel",
         "wrapperName": "hFReferral",
+        "groupByType": true,
         "searchConfig": {
           "select": ["hFReferral"],
           "primary": "hFReferral"
@@ -393,7 +394,7 @@ final dynamic sampleReferralFlows = {
           "description": "REFERRAL_INBOX_INFO_CARD_DESCRIPTION"
         },
         {
-          "data": "hFReferral",
+          "dataSource": "HFReferralModel",
           "type": "template",
           "child": {
             "format": "card",
@@ -404,7 +405,7 @@ final dynamic sampleReferralFlows = {
                 "children": [
                   {
                     "type": "template",
-                    "value": "{{ HFReferralModel.name }}",
+                    "value": "{{ itemData.name }}",
                     "format": "textTemplate",
                     "fieldName": "referralName"
                   },
@@ -419,15 +420,16 @@ final dynamic sampleReferralFlows = {
                           "data": [
                             {
                               "key": "clientReferenceId",
-                              "value": "{{ HFReferralModel.clientReferenceId }}"
+                              "value": "{{ itemData.clientReferenceId }}"
                             },
                             {
                               "key": "referralSymptom",
-                              "value": "{{ HFReferralModel.symptom }}"
+                              "value": "{{ itemData.symptom }}"
                             },
                             {
                               "key": "buttonLabel",
-                              "value": "{{fn:computeReferralButtonLabel(HFReferralModel.symptom, HFReferralModel.additionalFields.fields)}}"
+                              "value":
+                                  "{{fn:computeReferralButtonLabel(itemData.symptom, itemData.additionalFields.fields)}}"
                             }
                           ],
                           "name": "referralOverview",
@@ -447,7 +449,7 @@ final dynamic sampleReferralFlows = {
               },
               {
                 "value":
-                    "HF_REFERRAL_INBOX_DATE_OF_EVALUATION {{ fn:formatDate(HFReferralModel.additionalFields.fields.dateOfEvaluation, 'date', dd MMM yyyy) }}",
+                    "HF_REFERRAL_INBOX_DATE_OF_EVALUATION {{ fn:formatDate(itemData.additionalFields.fields.dateOfEvaluation, 'date', dd MMM yyyy) }}",
                 "format": "textTemplate",
                 "fieldName": "textTemplatetext"
               }
@@ -565,6 +567,7 @@ final dynamic sampleReferralFlows = {
         "relations": [],
         "rootEntity": "HFReferralModel",
         "wrapperName": "hFReferral",
+        "groupByType": true,
         "searchConfig": {
           "select": ["hFReferral"],
           "primary": "hFReferral"
@@ -829,8 +832,13 @@ final dynamic sampleReferralFlows = {
                   }
                 },
                 {
-                  "actionType": "UPDATE_EVENT",
-                  "properties": {"applyIf": "navigation.isUpdate==true"}
+                  "actionType": "MERGE_UPDATE_ADDITIONAL_FIELDS",
+                  "properties": {
+                    "applyIf": "navigation.isUpdate==true",
+                    "entityType": "HFReferralModel",
+                    "clientReferenceId": "{{navigation.clientReferenceId}}",
+                    "collectFromPages": ["sideEffectSick"]
+                  }
                 },
                 {
                   "actionType": "NAVIGATION",
@@ -1310,8 +1318,13 @@ final dynamic sampleReferralFlows = {
                   }
                 },
                 {
-                  "actionType": "UPDATE_EVENT",
-                  "properties": {"applyIf": "navigation.isUpdate==true"}
+                  "actionType": "MERGE_UPDATE_ADDITIONAL_FIELDS",
+                  "properties": {
+                    "applyIf": "navigation.isUpdate==true",
+                    "entityType": "HFReferralModel",
+                    "clientReferenceId": "{{navigation.clientReferenceId}}",
+                    "collectFromPages": ["sideEffectFromPreviousCycle"]
+                  }
                 },
                 {
                   "actionType": "NAVIGATION",
@@ -2503,8 +2516,13 @@ final dynamic sampleReferralFlows = {
                   }
                 },
                 {
-                  "actionType": "UPDATE_EVENT",
-                  "properties": {"applyIf": "navigation.isUpdate==true"}
+                  "actionType": "MERGE_UPDATE_ADDITIONAL_FIELDS",
+                  "properties": {
+                    "applyIf": "navigation.isUpdate==true",
+                    "entityType": "HFReferralModel",
+                    "clientReferenceId": "{{navigation.clientReferenceId}}",
+                    "collectFromPages": ["sideEffectFever"]
+                  }
                 },
                 {
                   "actionType": "NAVIGATION",
@@ -3046,8 +3064,13 @@ final dynamic sampleReferralFlows = {
                   }
                 },
                 {
-                  "actionType": "UPDATE_EVENT",
-                  "properties": {"applyIf": "navigation.isUpdate==true"}
+                  "actionType": "MERGE_UPDATE_ADDITIONAL_FIELDS",
+                  "properties": {
+                    "applyIf": "navigation.isUpdate==true",
+                    "entityType": "HFReferralModel",
+                    "clientReferenceId": "{{navigation.clientReferenceId}}",
+                    "collectFromPages": ["sideEffectFromCurrentCycle"]
+                  }
                 },
                 {
                   "actionType": "NAVIGATION",

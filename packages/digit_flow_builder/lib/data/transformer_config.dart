@@ -968,13 +968,10 @@ final jsonConfig = {
             "dateOfEvaluation": "facilityDetails.dateOfEvaluation",
             "referredBy": "facilityDetails.referredByKey",
             "hfCoordinator": "facilityDetails.hfCoordinator",
-            // Dynamic collection of checklist fields from side effect pages
-            "__collectFromPages": [
-              "sideEffectSick",
-              "sideEffectFever",
-              "sideEffectFromCurrentCycle",
-              "sideEffectFromPreviousCycle"
-            ],
+            // Note: Checklist fields from side effect pages (sideEffectSick, sideEffectFever,
+            // sideEffectFromCurrentCycle, sideEffectFromPreviousCycle) are handled by
+            // MERGE_UPDATE_ADDITIONAL_FIELDS action in hf_referral.dart onAction handlers.
+            // Do not use __collectFromPages here as it's not processed by digit_data_converter.
           }
         }
       }
