@@ -333,8 +333,8 @@ final dynamic inventoryReportFlows = {
         {
           "type": "template",
           "format": "infoCard",
-          "label": "STOCKRECON_REPORT_DETAILS_INFO_CARD_LABEL",
-          "description": "STOCKRECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
+          "label": "STOCK_REPORT_DETAILS_INFO_CARD_LABEL",
+          "description": "STOCK_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
           "properties": {"type": "info"},
           "hidden":
               "{{fn:isNotEmpty(selectedFacility)}} && {{fn:isNotEmpty(selectedProduct)}}",
@@ -342,12 +342,11 @@ final dynamic inventoryReportFlows = {
         {
           "type": "template",
           "format": "infoCard",
-          "label": "STOCKRECON_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
-          "description":
-              "STOCKRECON_REPORT_DETAILS_NO_RECORD_FOUND_DESCRIPTION",
+          "label": "STOCK_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
+          "description": "STOCK_REPORT_DETAILS_NO_RECORD_FOUND_DESCRIPTION",
           "properties": {"type": "info"},
           "hidden":
-              "{{fn:length(stock)}} > 0 || {{fn:isEmpty(selectedFacility)}} || {{fn:isEmpty(selectedProduct)}}",
+              "{{fn:isNotEmpty(stock)}} < 0 && {{fn:isEmpty(selectedFacility)}} && {{fn:isEmpty(selectedProduct)}}",
         },
         {
           "type": "template",
@@ -528,7 +527,7 @@ final dynamic inventoryReportFlows = {
               "STOCKRECON_REPORT_DETAILS_NO_RECORD_FOUND_DESCRIPTION",
           "properties": {"type": "info"},
           "hidden":
-              "{{fn:length(stockReconciliation)}} > 0 || {{fn:isEmpty(selectedReconFacility)}} || {{fn:isEmpty(selectedReckonProduct)}}",
+              "{{fn:length(stockReconciliation)}} < 0 && {{fn:isEmpty(selectedReconFacility)}} && {{fn:isEmpty(selectedReckonProduct)}}",
         },
         {
           "type": "template",
