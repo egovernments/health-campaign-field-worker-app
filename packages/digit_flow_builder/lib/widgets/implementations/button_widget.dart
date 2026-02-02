@@ -166,7 +166,7 @@ class ButtonWidget implements FlowWidget {
             // Also include navigation params from registry for condition evaluation
             final screenKey = flowState.screenKey;
             final navigationParams = screenKey != null
-                ? FlowCrudStateRegistry().getNavigationParams(screenKey) ??
+                ? FlowCrudStateRegistry().getNavigationParams(flowState.compositeKey ?? screenKey) ??
                     FlowCrudStateRegistry()
                         .getNavigationParams(screenKey.split('::').last) ??
                     {}

@@ -21,8 +21,142 @@ class SearchStateManager {
   // Search callbacks per composite key - called when state changes
   final Map<String, void Function()> _searchCallbacks = {};
 
-  String _compositeKey(String screenKey, String searchName) =>
-      '$screenKey::$searchName';
+  // Instance tracking: screenKey -> current instanceId
+  final Map<String, String> _instanceIds = {};
+
+  /// Get composite key using screenKey, instanceId, and searchName
+  String _compositeKey(String screenKey, String searchName) {
+    final instanceId = _instanceIds[screenKey];
+    if (instanceId != null) {
+      return '$screenKey::$instanceId::$searchName';
+    }
+    return '$screenKey::$searchName';
+  }
+
+  /// Get composite key prefix for a screenKey (used for cleanup)
+  String _screenKeyPrefix(String screenKey) {
+    final instanceId = _instanceIds[screenKey];
+    if (instanceId != null) {
+      return '$screenKey::$instanceId::';
+    }
+    return '$screenKey::';
+  }
+
+  /// Register instanceId for a screen key
+  void registerInstance(String screenKey, String instanceId) {
+    _instanceIds[screenKey] = instanceId;
+    debugPrint('SearchStateManager: Registered instanceId $instanceId for $screenKey');
+  }
+
+  /// Get the current instanceId for a screen key
+  String? getInstanceId(String screenKey) => _instanceIds[screenKey];
+
+  /// Check if the given instanceId matches the current one for this screen
+  bool isCurrentInstance(String screenKey, String instanceId) {
+    return _instanceIds[screenKey] == instanceId;
+  }
+
+  /// Dispose state only if the given instanceId is the current owner
+  /// Returns true if disposed, false if skipped
+  bool disposeIfOwner(String screenKey, String instanceId) {
+    if (_instanceIds[screenKey] != instanceId) {
+      debugPrint('SearchStateManager: Skipped dispose for $screenKey - instanceId $instanceId is not current owner (current: ${_instanceIds[screenKey]})');
+      return false;
+    }
+    // Dispose using the specific instanceId
+    _disposeForInstance(screenKey, instanceId);
+    _instanceIds.remove(screenKey);
+    return true;
+  }
+
+  /// Internal dispose for a specific instance
+  void _disposeForInstance(String screenKey, String instanceId) {
+    final prefix = '$screenKey::$instanceId::';
+    final keysToRemove = _notifiers.keys.where((k) => k.startsWith(prefix)).toList();
+    for (final key in keysToRemove) {
+      _notifiers[key]?.dispose();
+      _notifiers.remove(key);
+      _searchCallbacks.remove(key);
+      _state.remove(key);
+    }
+    debugPrint('SearchStateManager: Disposed ${keysToRemove.length} entries for $prefix');
+  }
+
+  // ============ Composite Key Methods (Direct Access) ============
+
+  /// Dispose state directly using a composite key (pageName::instanceId)
+  void disposeByCompositeKey(String compositeKey) {
+    final prefix = '$compositeKey::';
+    final keysToRemove = _notifiers.keys.where((k) => k.startsWith(prefix)).toList();
+    for (final key in keysToRemove) {
+      _notifiers[key]?.dispose();
+      _notifiers.remove(key);
+      _searchCallbacks.remove(key);
+      _state.remove(key);
+    }
+    debugPrint('SearchStateManager: Disposed ${keysToRemove.length} entries for compositeKey $compositeKey');
+  }
+
+  /// Update window after data is loaded using composite key directly
+  void onDataLoadedByCompositeKey(
+    String compositeKey,
+    String searchName, {
+    required String direction,
+    required int loadedCount,
+    required int totalInWindow,
+  }) {
+    final fullKey = '$compositeKey::$searchName';
+    final windowData = _state[fullKey]?['paginationWindow'] as Map<String, dynamic>?;
+
+    debugPrint('SearchStateManager.onDataLoadedByCompositeKey: compositeKey=$compositeKey, direction=$direction, '
+        'loadedCount=$loadedCount, totalInWindow=$totalInWindow, windowData=${windowData != null}');
+
+    if (windowData == null) return;
+
+    final limit = windowData['limit'] as int? ?? 10;
+    final maxItems = windowData['maxItems'] as int? ??
+        ((windowData['windowSize'] as int? ?? 3) * limit);
+
+    if (direction == 'initial') {
+      windowData['startOffset'] = 0;
+      windowData['endOffset'] = loadedCount;
+      windowData['hasMoreUp'] = false;
+      windowData['hasMoreDown'] = loadedCount >= limit;
+      windowData['totalInWindow'] = loadedCount;
+    } else if (direction == 'down') {
+      final oldEndOffset = windowData['endOffset'] as int? ?? 0;
+      windowData['endOffset'] = oldEndOffset + loadedCount;
+      windowData['hasMoreDown'] = loadedCount >= limit;
+      windowData['totalInWindow'] = totalInWindow;
+
+      if (totalInWindow > maxItems) {
+        final trimCount = totalInWindow - maxItems;
+        final oldStartOffset = windowData['startOffset'] as int? ?? 0;
+        windowData['startOffset'] = oldStartOffset + trimCount;
+        windowData['hasMoreUp'] = true;
+        windowData['totalInWindow'] = maxItems;
+      }
+    } else if (direction == 'up') {
+      final oldStartOffset = windowData['startOffset'] as int? ?? 0;
+      final newStartOffset = (oldStartOffset - loadedCount).clamp(0, oldStartOffset);
+      windowData['startOffset'] = newStartOffset;
+      windowData['hasMoreUp'] = newStartOffset > 0;
+      windowData['totalInWindow'] = totalInWindow;
+
+      if (totalInWindow > maxItems) {
+        final trimCount = totalInWindow - maxItems;
+        final oldEndOffset = windowData['endOffset'] as int? ?? 0;
+        windowData['endOffset'] = oldEndOffset - trimCount;
+        windowData['hasMoreDown'] = true;
+        windowData['totalInWindow'] = maxItems;
+      }
+    }
+
+    _state[fullKey]!['paginationWindow'] = windowData;
+    debugPrint('SearchStateManager: Updated window after $direction load for $fullKey');
+  }
+
+  // ============ End Composite Key Methods ============
 
   /// Register a callback to be called when search state changes.
   /// Typically called from screen builder with access to CrudBloc.
@@ -143,8 +277,9 @@ class SearchStateManager {
     int totalRemoved = 0;
     String? lastModifiedKey;
 
-    // Find all composite keys for this screen
-    final keysToCheck = _state.keys.where((k) => k.startsWith('$screenKey::')).toList();
+    // Find all composite keys for this screen (use instanceId-aware prefix)
+    final prefix = _screenKeyPrefix(screenKey);
+    final keysToCheck = _state.keys.where((k) => k.startsWith(prefix)).toList();
 
     for (final compositeKey in keysToCheck) {
       final existing =
@@ -187,9 +322,10 @@ class SearchStateManager {
   /// Deduplicates by filter 'key' field - if same key exists in multiple searchNames,
   /// the later one (by iteration order) wins
   List<dynamic> getAllFilters(String screenKey) {
+    final prefix = _screenKeyPrefix(screenKey);
     final filtersByKey = <String, dynamic>{};
     for (final entry in _state.entries) {
-      if (entry.key.startsWith('$screenKey::')) {
+      if (entry.key.startsWith(prefix)) {
         final filters = entry.value['filters'] as List? ?? [];
         for (final filter in filters) {
           if (filter is Map && filter['key'] != null) {
@@ -206,8 +342,9 @@ class SearchStateManager {
 
   /// Check if there are any filters for the screen (across all searchNames)
   bool hasFiltersForScreen(String screenKey) {
+    final prefix = _screenKeyPrefix(screenKey);
     for (final entry in _state.entries) {
-      if (entry.key.startsWith('$screenKey::')) {
+      if (entry.key.startsWith(prefix)) {
         final filters = entry.value['filters'] as List? ?? [];
         if (filters.isNotEmpty) return true;
       }
@@ -509,9 +646,10 @@ class SearchStateManager {
       _state.remove(compositeKey);
       debugPrint('SearchStateManager: Cleared state for $compositeKey');
     } else {
-      // Clear all for this screen
+      // Clear all for this screen (use instanceId-aware prefix)
+      final prefix = _screenKeyPrefix(screenKey);
       final keysToRemove =
-          _state.keys.where((k) => k.startsWith('$screenKey::')).toList();
+          _state.keys.where((k) => k.startsWith(prefix)).toList();
       for (final key in keysToRemove) {
         _state.remove(key);
       }
@@ -529,9 +667,10 @@ class SearchStateManager {
       _searchCallbacks.remove(compositeKey);
       _state.remove(compositeKey);
     } else {
-      // Dispose all for this screen
+      // Dispose all for this screen (use instanceId-aware prefix)
+      final prefix = _screenKeyPrefix(screenKey);
       final keysToRemove =
-          _notifiers.keys.where((k) => k.startsWith('$screenKey::')).toList();
+          _notifiers.keys.where((k) => k.startsWith(prefix)).toList();
       for (final key in keysToRemove) {
         _notifiers[key]?.dispose();
         _notifiers.remove(key);
@@ -539,6 +678,7 @@ class SearchStateManager {
         _state.remove(key);
       }
     }
+    _instanceIds.remove(screenKey);
     debugPrint('SearchStateManager: Disposed for $screenKey${searchName != null ? '::$searchName' : ' (all)'}');
   }
 
@@ -550,6 +690,7 @@ class SearchStateManager {
     _notifiers.clear();
     _searchCallbacks.clear();
     _state.clear();
+    _instanceIds.clear();
     debugPrint('SearchStateManager: Disposed all state');
   }
 }

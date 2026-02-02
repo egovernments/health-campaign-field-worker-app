@@ -690,6 +690,27 @@ String _tryTranslate(String key, dynamic localization) {
   }
 }
 
+/// Generates a unique instance ID for a page
+/// Format: {screenType}_{pageName}_{timestamp}
+String generateInstanceId(String pageName) {
+  return '${pageName}_${DateTime.now().millisecondsSinceEpoch}';
+}
+
+/// Gets instanceId from navigationParams or generates a new one
+String getOrGenerateInstanceId(
+  Map<String, dynamic>? navigationParams,
+  String pageName,
+) {
+  return navigationParams?['_instanceId'] as String? ??
+      generateInstanceId(pageName);
+}
+
+/// Creates a composite key from pageName and instanceId
+/// Format: {pageName}::{instanceId}
+String createCompositeKey(String pageName, String instanceId) {
+  return '$pageName::$instanceId';
+}
+
 /// Returns the type name of an EntityModel as a string.
 /// This function uses `is` checks instead of runtimeType.toString()
 /// to ensure it works correctly in release mode with obfuscation enabled.
