@@ -54,7 +54,7 @@ class FlowBuilderNavigationService implements NavigationService {
     NavigationMode navigationMode = NavigationMode.push,
     String? popUntilPageName,
   }) {
-    final key = '$type::$name';
+    final key = name;
     final builder = routeMap[key];
 
     if (builder != null) {
@@ -116,39 +116,39 @@ class FlowBuilderNavigationService implements NavigationService {
     }
   }
 
-  /// Pops routes until the specified page name is found
-  void _popUntilPage(StackRouter router, String targetPageName) {
-    // Special handling for HOME
-    if (targetPageName == 'HOME') {
-      router.popUntil((route) => route.settings.name == 'HomeRoute');
-      return;
-    }
-
-    // Check if target page exists in the stack
-    bool targetExists = false;
-    for (final route in router.stack) {
-      if (route.name?.contains('FlowBuilderHomeRoute') == true) {
-        final args = route.arguments;
-        if (args is FlowBuilderHomeRouteArgs &&
-            args.pageName == targetPageName) {
-          targetExists = true;
-          break;
-        }
+    /// Pops routes until the specified page name is found
+    void _popUntilPage(StackRouter router, String targetPageName) {
+      // Special handling for HOME
+      if (targetPageName == 'HOME') {
+        router.popUntil((route) => route.settings.name == 'HomeRoute');
+        return;
       }
-    }
 
-    if (targetExists) {
-      router.popUntil((route) {
-        if (route.settings.name?.contains('FlowBuilderHomeRoute') == true) {
-          final args = route.settings.arguments;
-          if (args is FlowBuilderHomeRouteArgs) {
-            return args.pageName == targetPageName;
+      // Check if target page exists in the stack
+      bool targetExists = false;
+      for (final route in router.stack) {
+        if (route.name?.contains('FlowBuilderHomeRoute') == true) {
+          final args = route.arguments;
+          if (args is FlowBuilderHomeRouteArgs &&
+              args.pageName == targetPageName) {
+            targetExists = true;
+            break;
           }
         }
-        return false;
-      });
+      }
+
+      if (targetExists) {
+        router.popUntil((route) {
+          if (route.settings.name?.contains('FlowBuilderHomeRoute') == true) {
+            final args = route.settings.arguments;
+            if (args is FlowBuilderHomeRouteArgs) {
+              return args.pageName == targetPageName;
+            }
+          }
+          return false;
+        });
+      }
     }
-  }
 
   @override
   void navigateToHome() {
@@ -190,16 +190,24 @@ class NavigationRegistry {
       data[entry['key']] = entry['value'];
     }
 
+    // Use instanceId from properties if provided (from navigation executor),
+    // otherwise generate a new one (fallback for direct navigation calls)
+    final instanceId = properties['_instanceId'] as String? ??
+        '${type}_${name}_${DateTime.now().millisecondsSinceEpoch}';
+    data['_instanceId'] = instanceId;
+    debugPrint('NavigationRegistry: Using instanceId $instanceId for $name');
+
     // Update navigation params for the target page before navigating
-    // Store with both key formats for robust retrieval
+    // Store with multiple key formats for robust retrieval
     if (data.isNotEmpty && name.isNotEmpty) {
-      // Store with plain name (e.g., "ADD_MEMBER")
+      // Store with plain name (e.g., "deliverySuccess")
       FlowCrudStateRegistry().updateNavigationParams(name, data);
-      // Also store with full screen key (e.g., "FORM::ADD_MEMBER") if type is provided
-      if (type.isNotEmpty) {
-        final fullKey = '$type::$name';
-        FlowCrudStateRegistry().updateNavigationParams(fullKey, data);
-      }
+
+      // Store with composite key (e.g., "deliverySuccess::instanceId123")
+      // This is the key format used by widgets to retrieve navigation params
+      final compositeKey = createCompositeKey(name, instanceId);
+      FlowCrudStateRegistry().updateNavigationParams(compositeKey, data);
+      debugPrint('NavigationRegistry: Stored navigation params with compositeKey=$compositeKey');
     }
 
     // Parse navigation mode from properties
@@ -248,7 +256,7 @@ class NavigationRegistry {
       final name = flow.value['name'];
 
       if (screenType != null && name != null) {
-        final routeKey = '$screenType::$name';
+        final routeKey = name;
 
         // Provide a function that returns the appropriate PageRouteInfo
         routeMap[routeKey] = (data) =>

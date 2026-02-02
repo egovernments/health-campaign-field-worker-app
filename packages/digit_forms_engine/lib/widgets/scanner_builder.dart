@@ -72,6 +72,17 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
         final formValue = form.control(formControlName).value as String?;
         final hasFormValue = formValue != null && formValue.isNotEmpty;
 
+        // Sync form value with state when returning from scanner page
+        // The listener may miss state changes that happen during navigation
+        if (isThisScanner && state.qrCodes.isNotEmpty) {
+          final stateValue = state.qrCodes.join(', ');
+          if (formValue != stateValue) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              form.control(formControlName).value = stateValue;
+            });
+          }
+        }
+
         // Check if this is barcode data (GS1 format: exactly 4 comma-separated parts)
         // GS1 barcodes have format: GTIN,SERIAL,BATCH,EXPIRY
         bool isGS1BarcodeFormat(String value) {

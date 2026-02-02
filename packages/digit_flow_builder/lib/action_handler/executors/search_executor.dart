@@ -33,18 +33,22 @@ class SearchExecutor extends ActionExecutor {
     final screenKey =
         crudCtx?.screenKey ?? getEffectiveScreenKey(context, contextData);
 
+    // Get composite key for FlowCrudStateRegistry operations
+    final compositeKey =
+        getEffectiveCompositeKey(context, contextData);
+
     // Register search callback (SearchStateManager handles deduplication)
     // This allows ClearStateExecutor to trigger search with accumulated filters
-    if (screenKey != null) {
+    if (screenKey != null && compositeKey != null) {
       final crudBloc = context.read<CrudBloc>();
       final config = FlowRegistry.getByName(screenKey.split('::').last);
 
       SearchStateManager().registerSearchCallback(
-        screenKey,
+        compositeKey,
         searchName,
         () => _executeSearchWithAccumulatedFilters(
           crudBloc,
-          screenKey,
+          compositeKey,
           searchName,
           config,
         ),
@@ -52,22 +56,22 @@ class SearchExecutor extends ActionExecutor {
     }
 
     // Get widgetData from FlowCrudStateRegistry (for filter values)
-    final widgetData = screenKey != null
-        ? FlowCrudStateRegistry().get(screenKey)?.widgetData ?? {}
+    final widgetData = compositeKey != null
+        ? FlowCrudStateRegistry().get(compositeKey)?.widgetData ?? {}
         : <String, dynamic>{};
 
     // Get formData from FlowCrudStateRegistry (for dropdown values)
-    final formData = screenKey != null
-        ? FlowCrudStateRegistry().get(screenKey)?.formData ?? {}
+    final formData = compositeKey != null
+        ? FlowCrudStateRegistry().get(compositeKey)?.formData ?? {}
         : <String, dynamic>{};
 
     // Get navigation params from contextData or registry
     final navigationFromContext =
         contextData['navigation'] as Map<String, dynamic>? ?? {};
-    final navigationFromRegistry = screenKey != null
-        ? FlowCrudStateRegistry().getNavigationParams(screenKey) ??
+    final navigationFromRegistry = compositeKey != null
+        ? FlowCrudStateRegistry().getNavigationParams(compositeKey) ??
             FlowCrudStateRegistry()
-                .getNavigationParams(screenKey.split('::').last) ??
+                .getNavigationParams(screenKey?.split('::').last ?? '') ??
             {}
         : <String, dynamic>{};
     final mergedNavigation = {
@@ -208,21 +212,21 @@ class SearchExecutor extends ActionExecutor {
     }
 
     // Update SearchStateManager with resolved filters (will merge with existing)
-    if (screenKey != null && resolvedFilters.isNotEmpty) {
+    if (compositeKey != null && resolvedFilters.isNotEmpty) {
       SearchStateManager().updateFilters(
-        screenKey,
+        compositeKey,
         searchName,
         resolvedFilters,
         triggerSearch: false, // We'll execute search directly below
       );
 
       // Reset pagination when filters change (new search starts from offset 0)
-      SearchStateManager().resetPagination(screenKey, searchName);
+      SearchStateManager().resetPagination(compositeKey, searchName);
     }
 
     // Get ALL accumulated filters from SearchStateManager (across all searchNames)
-    final accumulatedFilters = screenKey != null
-        ? SearchStateManager().getAllFilters(screenKey)
+    final accumulatedFilters = compositeKey != null
+        ? SearchStateManager().getAllFilters(compositeKey)
         : resolvedFilters;
 
     // Convert accumulated filters to SearchFilter objects
@@ -335,9 +339,9 @@ class SearchExecutor extends ActionExecutor {
       }
 
       // Store resolved orderBy in SearchStateManager
-      if (screenKey != null) {
+      if (compositeKey != null) {
         SearchStateManager().updateOrderBy(
-          screenKey,
+          compositeKey,
           searchName,
           resolvedOrderBy,
           triggerSearch: false,
@@ -347,10 +351,10 @@ class SearchExecutor extends ActionExecutor {
       orderBy = SearchOrderBy.fromJson(resolvedOrderBy);
       debugPrint(
           'SEARCH_EVENT: OrderBy resolved - field: ${orderBy.field}, order: ${orderBy.order}');
-    } else if (screenKey != null) {
+    } else if (compositeKey != null) {
       // Check for accumulated orderBy from previous search events
       final accumulatedOrderBy =
-          SearchStateManager().getOrderBy(screenKey, searchName);
+          SearchStateManager().getOrderBy(compositeKey, searchName);
       if (accumulatedOrderBy != null) {
         orderBy = SearchOrderBy.fromJson(accumulatedOrderBy);
         debugPrint(
@@ -379,13 +383,13 @@ class SearchExecutor extends ActionExecutor {
         pagination = PaginationParams(offset: 0, limit: limit);
 
         // Initialize pagination window for bidirectional support
-        if (screenKey != null) {
+        if (compositeKey != null) {
           debugPrint(
-              'SEARCH_EVENT: Initializing pagination window with screenKey=$screenKey');
+              'SEARCH_EVENT: Initializing pagination window with compositeKey=$compositeKey');
 
           // Legacy pagination state (for backwards compatibility)
           SearchStateManager().updatePagination(
-            screenKey,
+            compositeKey,
             '_pagination',
             offset: 0,
             limit: limit,
@@ -393,14 +397,14 @@ class SearchExecutor extends ActionExecutor {
 
           // Initialize bidirectional pagination window
           SearchStateManager().initPaginationWindow(
-            screenKey,
+            compositeKey,
             '_pagination',
             limit: limit,
             maxItems: maxItems,
           );
 
           // Set pagination info in registry so FlowCrudBloc can update window after data loads
-          final registryKey = screenKey.split('::').last;
+          final registryKey = screenKey?.split('::').last ?? '';
           debugPrint(
               'SEARCH_EVENT: Setting paginationInfo with registryKey=$registryKey');
           FlowCrudStateRegistry().setPaginationInfo(
@@ -450,8 +454,8 @@ class SearchExecutor extends ActionExecutor {
           debugPrint('SEARCH_EVENT: Found ${entities.length} entities');
 
           // Update FlowCrudStateRegistry with search results
-          if (screenKey != null) {
-            final currentState = FlowCrudStateRegistry().get(screenKey);
+          if (compositeKey != null) {
+            final currentState = FlowCrudStateRegistry().get(compositeKey);
 
             // Build wrapper if config exists
             List<dynamic>? wrapper;
@@ -459,7 +463,7 @@ class SearchExecutor extends ActionExecutor {
               wrapper = WrapperBuilder(
                 entities,
                 config?['wrapperConfig'],
-                screenKey: screenKey,
+                screenKey: compositeKey,
               ).build();
             }
 
@@ -468,7 +472,7 @@ class SearchExecutor extends ActionExecutor {
               base: state,
               stateWrapper: wrapper ?? entities,
             );
-            FlowCrudStateRegistry().update(screenKey, updatedState);
+            FlowCrudStateRegistry().update(compositeKey, updatedState);
           }
 
           // Return context with entities

@@ -6,12 +6,13 @@ import 'utils/interpolation.dart';
 import 'widgets/flow_widget_interface.dart';
 import 'widgets/widget_registration.dart';
 
-/// Provides stateData, listIndex, item, screenKey automatically down the tree
+/// Provides stateData, listIndex, item, screenKey, compositeKey automatically down the tree
 class CrudItemContext extends InheritedWidget {
   final CrudStateData? stateData;
   final int? listIndex;
   final Map<String, dynamic>? item;
   final String? screenKey;
+  final String? compositeKey; // screenKey::instanceId for unique page instance identification
 
   const CrudItemContext({
     super.key,
@@ -20,6 +21,7 @@ class CrudItemContext extends InheritedWidget {
     this.listIndex,
     this.item,
     this.screenKey,
+    this.compositeKey,
   });
 
   static CrudItemContext? of(BuildContext context) {
@@ -32,8 +34,9 @@ class CrudItemContext extends InheritedWidget {
     final listIndexChanged = listIndex != oldWidget.listIndex;
     final itemChanged = item.toString() != oldWidget.item.toString();
     final screenChanged = screenKey != oldWidget.screenKey;
+    final compositeKeyChanged = compositeKey != oldWidget.compositeKey;
 
-    return stateChanged || listIndexChanged || itemChanged || screenChanged;
+    return stateChanged || listIndexChanged || itemChanged || screenChanged || compositeKeyChanged;
   }
 }
 

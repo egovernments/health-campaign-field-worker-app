@@ -77,6 +77,7 @@ class ListViewWidget implements FlowWidget {
         onAction,
         item: safeItem,
         listIndex: index,
+        compositeKey: flowState.compositeKey,
       );
 
       if (mappedChild is SizedBox &&
@@ -90,6 +91,7 @@ class ListViewWidget implements FlowWidget {
           listIndex: index,
           item: safeItem,
           screenKey: flowState.screenKey,
+          compositeKey: flowState.compositeKey,
           child: Column(
             children: [
               mappedChild,
