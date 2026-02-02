@@ -34,12 +34,18 @@ class InfoCardWidget implements FlowWidget {
       builder: (context, flowState, _) {
         final widgetData = flowState?.widgetData ?? {};
         final formData = flowState?.formData ?? {};
-        final modelMap = crudCtx?.stateData?.modelMap ?? {};
+
+        // Extract modelMap from flowState's stateWrapper (for search results)
+        // This ensures we have the latest data after search events
+        final stateData = flowState?.stateWrapper != null
+            ? extractCrudStateData(screenKey)
+            : crudCtx?.stateData;
+        final modelMap = stateData?.modelMap ?? crudCtx?.stateData?.modelMap ?? {};
 
         // Create evaluation context
         final evalContext = {
           'item': crudCtx?.item,
-          'contextData': crudCtx?.stateData?.rawState ?? {},
+          'contextData': stateData?.rawState ?? crudCtx?.stateData?.rawState ?? {},
           'context': modelMap,
           ...modelMap,
           ...formData,
@@ -52,7 +58,7 @@ class InfoCardWidget implements FlowWidget {
             json['hidden'],
             evalContext,
             screenKey: screenKey,
-            stateData: crudCtx?.stateData,
+            stateData: stateData,
           );
           if (hiddenResult == true) {
             return const SizedBox.shrink();
@@ -65,7 +71,7 @@ class InfoCardWidget implements FlowWidget {
             json['visible'],
             evalContext,
             screenKey: screenKey,
-            stateData: crudCtx?.stateData,
+            stateData: stateData,
           );
           if (visibleResult == false) {
             return const SizedBox.shrink();

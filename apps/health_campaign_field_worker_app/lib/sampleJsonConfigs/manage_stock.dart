@@ -1313,7 +1313,7 @@ final dynamic sampleInventoryFlows = {
       "body": [
         {
           "format": "infoCard",
-          "hidden": "{{ context.stock.isNotEmpty }}",
+          "hidden": "{{fn:length(stock)}} < 0}}",
           "label": "INVENTORY_NO_TRANSACTIONS_LABEL",
           "description": "INVENTORY_NO_TRANSACTIONS_DESCRIPTION"
         },
@@ -1607,10 +1607,7 @@ final dynamic sampleInventoryFlows = {
         "groupBy": "additionalFields.fields.mrnNumber",
         "filters": [],
         "relations": [
-          {
-            "name": "stock",
-            "entity": "StockModel"
-          },
+          {"name": "stock", "entity": "StockModel"},
           {
             "name": "projectFacility",
             "entity": "ProjectFacilityModel",
@@ -1630,7 +1627,10 @@ final dynamic sampleInventoryFlows = {
           "label": "INVENTORY_TRANSACTION_TYPE_FILTER_LABEL",
           "value": "PENDING_RECEIPT",
           "enums": [
-            {"code": "PENDING_RECEIPT", "name": "INVENTORY_PENDING_RECEIPT_LABEL"},
+            {
+              "code": "PENDING_RECEIPT",
+              "name": "INVENTORY_PENDING_RECEIPT_LABEL"
+            },
             {"code": "RECEIVED", "name": "INVENTORY_RECEIVED_LABEL"},
             {"code": "DISPATCHED", "name": "INVENTORY_DISPATCHED_LABEL"}
           ],
@@ -1685,7 +1685,8 @@ final dynamic sampleInventoryFlows = {
                   },
                   {
                     "format": "textTemplate",
-                    "value": "{{fn:formatDate(item.items[0].dateOfEntry, 'date', dd MMM yyyy)}}"
+                    "value":
+                        "{{fn:formatDate(item.items[0].dateOfEntry, 'date', dd MMM yyyy)}}"
                   }
                 ]
               },
@@ -1709,13 +1710,15 @@ final dynamic sampleInventoryFlows = {
                       },
                       {
                         "format": "textTemplate",
-                        "value": "{{fn:getFacilityName(item.items[0].senderId)}}"
+                        "value":
+                            "{{fn:getFacilityName(item.items[0].senderId)}}"
                       }
                     ]
                   },
                   {
                     "format": "tag",
-                    "type": "{{fn:getTransactionStatusType(item.items[0].transactionType)}}",
+                    "type":
+                        "{{fn:getTransactionStatusType(item.items[0].transactionType)}}",
                     "label": "{{item.items[0].transactionType}}"
                   }
                 ]
@@ -1726,7 +1729,8 @@ final dynamic sampleInventoryFlows = {
                 "dataSource": "item.items",
                 "child": {
                   "format": "textTemplate",
-                  "value": "{{item.additionalFields.fields.sku}}: {{item.quantity}}"
+                  "value":
+                      "{{item.additionalFields.fields.sku}}: {{item.quantity}}"
                 }
               },
               {
