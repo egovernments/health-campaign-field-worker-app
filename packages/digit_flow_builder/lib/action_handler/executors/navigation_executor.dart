@@ -36,7 +36,10 @@ class NavigationExecutor extends ActionExecutor {
     // Get current screen's state data for resolving navigation values
     final screenKey =
         getScreenKeyFromArgs(context) ?? context.router.currentPath;
-    final currentState = FlowCrudStateRegistry().get(screenKey);
+
+    // Get composite key for current screen's FlowCrudStateRegistry operations
+    final currentCompositeKey = getCompositeKey(context, screenKey: screenKey);
+    final currentState = FlowCrudStateRegistry().get(currentCompositeKey ?? screenKey);
     final stateFormData = currentState?.formData;
 
     // Get navigation mode and popUntilPageName from action properties
@@ -66,7 +69,7 @@ class NavigationExecutor extends ActionExecutor {
             ? currentState?.stateWrapper?.first
             : null;
         dynamic resolvedValue = resolveValue(
-            rawValue, stateFormData ?? stateWrapperFirst);
+            rawValue, stateFormData ?? stateWrapperFirst) ?? rawValue;
         if (resolvedValue == rawValue || resolvedValue == null) {
           // If not resolved from state, try contextData
           resolvedValue = resolveValue(rawValue, contextData);
@@ -86,16 +89,19 @@ class NavigationExecutor extends ActionExecutor {
     final targetName = config?["name"] ?? action.properties['name'];
 
     // Build correct screen key with type prefix (FORM::, TEMPLATE::)
-    final targetScreenKey =
-        targetType != null ? '$targetType::$targetName' : targetName;
+    final targetScreenKey = targetName;
+
+    // Generate instanceId for target page BEFORE navigation
+    // This ensures we can store state with the same key the target page will use
+    final targetInstanceId = generateInstanceId(targetScreenKey);
+    final targetCompositeKey = createCompositeKey(targetScreenKey, targetInstanceId);
+
+    // Add instanceId to navigation properties so target page receives it
+    navigationProperties['_instanceId'] = targetInstanceId;
 
     // Clear target screen's FlowCrudState before navigation
     // This ensures the new page instance starts fresh without old state
-    // Done AFTER all previous actions (like REVERSE_TRANSFORM) have read source data
-    FlowCrudStateRegistry().clear(targetScreenKey);
-    if (targetName != targetScreenKey) {
-      FlowCrudStateRegistry().clear(targetName);
-    }
+    FlowCrudStateRegistry().clear(targetCompositeKey);
 
     NavigationRegistry.navigateTo(navigationProperties);
     final entities = contextData['entities'];
@@ -111,25 +117,14 @@ class NavigationExecutor extends ActionExecutor {
         if (isEditMode) {
           // For edit mode, update entities within the existing stateWrapper structure
           // The wrapper is a List<Map<String, dynamic>> not List<EntityModel>
-          // Try multiple key formats to find the existing wrapper
+          final state = FlowCrudStateRegistry().get(targetCompositeKey);
           List<dynamic> existingWrapper = [];
-          String? foundKey;
-          final keysToTry = [
-            targetScreenKey,
-            targetName,
-            if (targetType != null) '$targetType::$targetName',
-          ];
 
-          for (final key in keysToTry) {
-            final state = FlowCrudStateRegistry().get(key);
-            if (state?.stateWrapper != null &&
-                (state!.stateWrapper as List).isNotEmpty) {
-              existingWrapper = List<dynamic>.from(state.stateWrapper as List);
-              foundKey = key;
-              debugPrint(
-                  'NAVIGATION: Found existing wrapper with key=$key, items=${existingWrapper.length}');
-              break;
-            }
+          if (state?.stateWrapper != null &&
+              (state!.stateWrapper as List).isNotEmpty) {
+            existingWrapper = List<dynamic>.from(state.stateWrapper as List);
+            debugPrint(
+                'NAVIGATION: Found existing wrapper with key=$targetCompositeKey, items=${existingWrapper.length}');
           }
 
           if (existingWrapper.isEmpty) {
@@ -139,12 +134,12 @@ class NavigationExecutor extends ActionExecutor {
             final wrapper = WrapperBuilder(
               entities as List<EntityModel>,
               config!['wrapperConfig'],
-              screenKey: targetScreenKey,
+              screenKey: targetCompositeKey,
             ).build();
             final flowState = const FlowCrudState().copyWith(
               stateWrapper: wrapper,
             );
-            FlowCrudStateRegistry().update(targetScreenKey, flowState);
+            FlowCrudStateRegistry().update(targetCompositeKey, flowState);
           } else {
             // Update entities within the existing wrapper structure
             // The wrapper items are Map<String, dynamic> with entity types as keys
@@ -173,19 +168,19 @@ class NavigationExecutor extends ActionExecutor {
             final flowState = const FlowCrudState().copyWith(
               stateWrapper: existingWrapper,
             );
-            FlowCrudStateRegistry().update(targetScreenKey, flowState);
+            FlowCrudStateRegistry().update(targetCompositeKey, flowState);
           }
         } else {
           // For create mode, build wrapper from entities as before
           final wrapper = WrapperBuilder(
             entities,
             config?['wrapperConfig'],
-            screenKey: targetScreenKey,
+            screenKey: targetCompositeKey,
           ).build();
           final flowState = const FlowCrudState().copyWith(
             stateWrapper: wrapper,
           );
-          FlowCrudStateRegistry().update(targetScreenKey, flowState);
+          FlowCrudStateRegistry().update(targetCompositeKey, flowState);
         }
       }
     }
@@ -206,7 +201,7 @@ class NavigationExecutor extends ActionExecutor {
     }
 
     // Get existing state to preserve stateWrapper and other data
-    final existingState = FlowCrudStateRegistry().get(targetScreenKey);
+    final existingState = FlowCrudStateRegistry().get(targetCompositeKey);
     debugPrint(
         'NAVIGATION: existingState formData: ${existingState?.formData}');
 
@@ -220,38 +215,26 @@ class NavigationExecutor extends ActionExecutor {
       formData: mergedFormData,
     );
 
-    FlowCrudStateRegistry().update(targetScreenKey, flowState);
+    FlowCrudStateRegistry().update(targetCompositeKey, flowState);
     debugPrint(
-        'NAVIGATION: Updated registry with formData for $targetScreenKey');
+        'NAVIGATION: Updated registry with formData for $targetCompositeKey');
 
     // Store existingModels in navigation params for edit mode
     // This allows FETCH_TRANSFORMER_CONFIG to use updateEntitiesFromForm
-    // Store with both keys (full screen key and plain name) for robust retrieval
     final existingModels = contextData['existingModels'];
     if (existingModels != null) {
       final modelsList = existingModels as List;
       debugPrint(
           'NAVIGATION: Storing existingModels (${modelsList.length} models)');
 
-      // Store with full screen key (FORM::ADD_MEMBER)
+      // Store with composite key
       final currentNavParams =
-          FlowCrudStateRegistry().getNavigationParams(targetScreenKey) ?? {};
-      FlowCrudStateRegistry().updateNavigationParams(targetScreenKey, {
+          FlowCrudStateRegistry().getNavigationParams(targetCompositeKey) ?? {};
+      FlowCrudStateRegistry().updateNavigationParams(targetCompositeKey, {
         ...currentNavParams,
         'existingModels': existingModels,
       });
-      debugPrint('NAVIGATION: Stored existingModels for $targetScreenKey');
-
-      // Also store with plain name for compatibility (ADD_MEMBER)
-      if (targetName != targetScreenKey) {
-        final plainNavParams =
-            FlowCrudStateRegistry().getNavigationParams(targetName) ?? {};
-        FlowCrudStateRegistry().updateNavigationParams(targetName, {
-          ...plainNavParams,
-          'existingModels': existingModels,
-        });
-        debugPrint('NAVIGATION: Also stored existingModels for $targetName');
-      }
+      debugPrint('NAVIGATION: Stored existingModels for $targetCompositeKey');
     }
 
     return contextData;

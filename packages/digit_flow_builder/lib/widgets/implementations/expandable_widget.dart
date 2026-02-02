@@ -98,6 +98,7 @@ class _ExpandableStatefulState extends State<_ExpandableStateful> {
         listIndex: flowState.listIndex,
         item: flowState.itemData,
         screenKey: flowState.screenKey,
+        compositeKey: flowState.compositeKey,
         child: LayoutMapper.map(
           processed,
           stateData,
@@ -105,6 +106,7 @@ class _ExpandableStatefulState extends State<_ExpandableStateful> {
           widget.onAction,
           item: flowState.itemData,
           listIndex: flowState.listIndex,
+          compositeKey: flowState.compositeKey,
         ),
       );
     }).toList();

@@ -55,6 +55,21 @@ String? getScreenKeyFromArgs(BuildContext context) {
   return null;
 }
 
+/// Try to extract the instanceId from Navigator args
+String? getInstanceIdFromArgs(BuildContext context) {
+  final args = ModalRoute.of(context)?.settings.arguments;
+
+  if (args is FlowBuilderHomeRouteArgs) {
+    return args.navigationParams?['_instanceId']?.toString();
+  }
+
+  if (args is Map<String, dynamic>) {
+    return args['_instanceId']?.toString();
+  }
+
+  return null;
+}
+
 /// Gets the effective screen key from multiple sources in priority order:
 /// 1. Route arguments (from getScreenKeyFromArgs)
 /// 2. contextData['parentScreenKey'] (injected by popup actions)
@@ -72,6 +87,47 @@ String? getEffectiveScreenKey(
 
   // Fall back to parentScreenKey (injected by popup actions through action_executor_registry)
   return contextData['parentScreenKey'] as String?;
+}
+
+/// Gets the composite key for the current screen.
+/// Composite key format: {screenKey}::{instanceId}
+/// Falls back to screenKey if instanceId is not available.
+///
+/// This should be used when accessing FlowCrudStateRegistry to ensure
+/// proper isolation between multiple instances of the same screen.
+String? getCompositeKey(BuildContext context, {String? screenKey}) {
+  final currentScreenKey = screenKey ?? getScreenKeyFromArgs(context);
+  if (currentScreenKey == null) return null;
+
+  final instanceId = getInstanceIdFromArgs(context);
+  if (instanceId != null) {
+    return createCompositeKey(currentScreenKey, instanceId);
+  }
+
+  return currentScreenKey;
+}
+
+/// Gets the effective composite key from multiple sources.
+/// Similar to getEffectiveScreenKey but returns composite key.
+String? getEffectiveCompositeKey(
+  BuildContext context,
+  Map<String, dynamic> contextData,
+) {
+  final screenKey = getEffectiveScreenKey(context, contextData);
+  if (screenKey == null) return null;
+
+  final instanceId = getInstanceIdFromArgs(context);
+  if (instanceId != null) {
+    return createCompositeKey(screenKey, instanceId);
+  }
+
+  // Try to get instanceId from contextData
+  final contextInstanceId = contextData['_instanceId']?.toString();
+  if (contextInstanceId != null) {
+    return createCompositeKey(screenKey, contextInstanceId);
+  }
+
+  return screenKey;
 }
 
 /// Extracts model maps + raw state from the FlowCrudStateRegistry
