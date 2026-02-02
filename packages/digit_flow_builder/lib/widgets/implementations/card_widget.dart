@@ -100,8 +100,10 @@ class CardWidget implements FlowWidget {
           listIndex: crudCtx?.listIndex,
           item: crudCtx?.item,
           screenKey: crudCtx?.screenKey,
+          compositeKey: flowState.compositeKey,
           child: LayoutMapper.map(processed, stateData, context, onAction,
-              item: crudCtx?.item, listIndex: crudCtx?.listIndex),
+              item: crudCtx?.item, listIndex: crudCtx?.listIndex,
+              compositeKey: flowState.compositeKey),
         );
       }).toList(),
     );

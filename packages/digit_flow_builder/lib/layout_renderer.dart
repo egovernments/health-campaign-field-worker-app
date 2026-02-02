@@ -20,12 +20,14 @@ import 'widget_registry.dart';
 class LayoutRendererPage extends LocalizedStatefulWidget {
   final Map<String, dynamic> config;
   final List<String>? watchedScreenKeys;
+  final String? compositeKey;
 
   const LayoutRendererPage({
     super.key,
     super.appLocalizations,
     required this.config,
     this.watchedScreenKeys,
+    this.compositeKey,
   });
 
   @override
@@ -79,14 +81,14 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
   }
 
   /// Handles scroll notifications from the page
-  bool _handleScrollNotification(ScrollNotification notification, String screenKey) {
+  bool _handleScrollNotification(ScrollNotification notification, String compositeKey) {
     // Only handle scroll updates, not start/end
     if (notification is! ScrollUpdateNotification) return false;
 
     final metrics = notification.metrics;
 
     // Skip if not scrollable or already loading
-    final isLoading = FlowCrudStateRegistry().get(screenKey)?.isLoading ?? false;
+    final isLoading = FlowCrudStateRegistry().get(compositeKey)?.isLoading ?? false;
     if (metrics.maxScrollExtent == 0 || isLoading) return false;
 
     if (_triggerMode == 'bidirectional') {
@@ -207,11 +209,13 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
 
     final screenKey =
         getScreenKeyFromArgs(context) ?? context.router.currentPath;
+    // Use widget.compositeKey if provided (from ScreenBuilder), otherwise fallback to computing it
+    final compositeKey = widget.compositeKey ?? getCompositeKey(context, screenKey: screenKey) ?? screenKey;
 
     return ValueListenableBuilder(
-      valueListenable: FlowCrudStateRegistry().listen(screenKey),
+      valueListenable: FlowCrudStateRegistry().listen(compositeKey),
       builder: (context, flowState, __) {
-        final stateData = extractCrudStateData(screenKey);
+        final stateData = extractCrudStateData(compositeKey);
         final isLoading = flowState?.isLoading ?? false;
         final currentWrapperLength = flowState?.stateWrapper?.length ?? 0;
 
@@ -221,7 +225,7 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
         return LocalizationContext(
           localization: localizations,
           child: NotificationListener<ScrollNotification>(
-            onNotification: (notification) => _handleScrollNotification(notification, screenKey),
+            onNotification: (notification) => _handleScrollNotification(notification, compositeKey),
             child: Stack(
               children: [
                 Scaffold(
@@ -306,6 +310,7 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                                 return CrudItemContext(
                                   stateData: stateData,
                                   screenKey: screenKey,
+                                  compositeKey: compositeKey,
                                   child: LayoutMapper.map(
                                     processed,
                                     stateData,
@@ -315,6 +320,7 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                                         'wrappers': const [],
                                       });
                                     },
+                                    compositeKey: compositeKey,
                                   ),
                                 );
                               })
@@ -421,15 +427,22 @@ class LayoutMapper {
     Map<String, dynamic>? item,
     int? listIndex,
     String? screenKey,
+    String? compositeKey,
   }) {
+    final effectiveScreenKey = screenKey ?? CrudItemContext.of(context)?.screenKey;
+    final effectiveCompositeKey = compositeKey ??
+        CrudItemContext.of(context)?.compositeKey ??
+        effectiveScreenKey;
+
     return CrudItemContext(
       stateData: stateData,
       listIndex: listIndex,
       item: item,
-      screenKey: screenKey ?? CrudItemContext.of(context)?.screenKey,
+      screenKey: effectiveScreenKey,
+      compositeKey: effectiveCompositeKey,
       child: ValueListenableBuilder(
         valueListenable: FlowCrudStateRegistry().listen(
-          screenKey ?? CrudItemContext.of(context)?.screenKey ?? "",
+          effectiveCompositeKey ?? "",
         ),
         builder: (context, _, __) {
           return WidgetRegistry.build(json, context, onAction);

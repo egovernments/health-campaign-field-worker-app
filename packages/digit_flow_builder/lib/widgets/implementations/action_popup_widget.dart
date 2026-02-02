@@ -30,6 +30,7 @@ class ActionPopupWidget implements FlowWidget {
     final item = flowState.itemData;
     final listIndex = flowState.listIndex;
     final screenKey = flowState.screenKey;
+    final compositeKey = flowState.compositeKey;
 
     return DigitButton(
         mainAxisSize: _parseMainAxisSize(props['mainAxisSize']),
@@ -50,7 +51,7 @@ class ActionPopupWidget implements FlowWidget {
           // Show popup if popupConfig is provided
           if (popupConfig != null) {
             await _showActionPopup(context, popupConfig, onAction, screenKey,
-                stateData, item, listIndex);
+                stateData, item, listIndex, compositeKey);
           }
         },
         type: _parseButtonType(props['type']),
@@ -72,6 +73,7 @@ class ActionPopupWidget implements FlowWidget {
     CrudStateData? stateData,
     Map<String, dynamic>? item,
     int? listIndex,
+    String? compositeKey,
   ) {
     final localization = LocalizationContext.maybeOf(context);
     final title = popupConfig['title'] as String? ?? 'Popup';
@@ -112,6 +114,7 @@ class ActionPopupWidget implements FlowWidget {
                   child: CrudItemContext(
                     stateData: stateData,
                     screenKey: screenKey,
+                    compositeKey: compositeKey,
                     item: item,
                     listIndex: listIndex,
                     child: Builder(

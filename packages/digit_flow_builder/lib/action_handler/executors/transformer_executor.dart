@@ -83,9 +83,14 @@ class TransformerExecutor extends ActionExecutor {
 
     final flowState = const FlowCrudState().copyWith(formData: formValuesToUse);
 
-    final config = FlowRegistry.getByName(getScreenKeyFromArgs(context) ?? '');
+    final screenKey = getScreenKeyFromArgs(context);
+    final config = FlowRegistry.getByName(screenKey ?? '');
 
-    FlowCrudStateRegistry().update(config?["name"], flowState);
+    // Get composite key for current screen
+    final compositeKey = getCompositeKey(context, screenKey: screenKey);
+
+    // Update state with composite key if available, fallback to config name
+    FlowCrudStateRegistry().update(compositeKey ?? config?["name"], flowState);
 
     // Check if this is edit mode
     final navigationParams = contextData['navigation'] is Map
@@ -117,14 +122,12 @@ class TransformerExecutor extends ActionExecutor {
 
     // If not in contextData, try registry navigation params
     if (existingModels == null || existingModels.isEmpty) {
-      final screenKey = getScreenKeyFromArgs(context);
-      debugPrint('TRANSFORMER: screenKey from args: $screenKey');
+      debugPrint('TRANSFORMER: screenKey from args: $screenKey, compositeKey: $compositeKey');
 
       // Try multiple key formats - the navigation executor stores with FORM:: prefix
       final keysToTry = <String?>[
+        compositeKey,
         screenKey,
-        if (screenKey != null) 'FORM::$screenKey',
-        if (screenKey != null) 'TEMPLATE::$screenKey',
       ];
 
       for (final key in keysToTry) {
