@@ -76,6 +76,17 @@ class StockCalculationUtils {
           stockReceived += quantity;
         }
       }
+      // Stock Received from dispatch: This facility is the receiver AND transactionType == DISPATCHED
+      // This handles stock received when another facility dispatches TO this facility
+      else if (isReceiver && transactionType == 'DISPATCHED') {
+        // Only count as received if not a damage/loss reason (those don't reach receiver)
+        if (transactionReason != 'LOST_IN_TRANSIT' &&
+            transactionReason != 'LOST_IN_STORAGE' &&
+            transactionReason != 'DAMAGED_IN_TRANSIT' &&
+            transactionReason != 'DAMAGED_IN_STORAGE') {
+          stockReceived += quantity;
+        }
+      }
       // Stock Lost: transactionType == LOSS
       else if (isSender && transactionType == 'LOSS') {
         stockLost += quantity;
@@ -95,8 +106,8 @@ class StockCalculationUtils {
             transactionReason == 'DAMAGED_IN_STORAGE') {
           // Stock Damaged (legacy format)
           stockDamaged += quantity;
-        } else if (transactionReason.isEmpty) {
-          // Regular dispatch (issued)
+        } else {
+          // Regular dispatch (issued) - includes empty reason and any other reason
           stockIssued += quantity;
         }
       }
@@ -166,8 +177,15 @@ class StockCalculationUtils {
 
     try {
       for (final wrapperMap in stateWrapper) {
-        if (wrapperMap is Map && wrapperMap.containsKey('StockModel')) {
-          final stockData = wrapperMap['StockModel'] as List?;
+        if (wrapperMap is Map) {
+          // Check for both 'StockModel' and 'stock' keys (CrudBloc uses 'stock')
+          List? stockData;
+          if (wrapperMap.containsKey('StockModel')) {
+            stockData = wrapperMap['StockModel'] as List?;
+          } else if (wrapperMap.containsKey('stock')) {
+            stockData = wrapperMap['stock'] as List?;
+          }
+
           if (stockData != null && stockData.isNotEmpty) {
             return stockData
                 .map((e) => e is StockModel

@@ -83,6 +83,12 @@ class QueryBuilder {
           return '$column NOT IN (${List.filled(values.length, '?').join(', ')})';
         case 'within':
           return '1 = 1';
+        case 'equalsAny':
+          // Supports OR condition: field contains comma-separated column names
+          // Example: field='senderId,receiverId', value='F-123'
+          // Generates: (sender_id = ? OR receiver_id = ?)
+          final columns = filter.field.split(',').map((f) => camelToSnake(f.trim())).toList();
+          return '(${columns.map((c) => '$c = ?').join(' OR ')})';
         default:
           throw Exception('Unsupported operator: ${filter.operator}');
       }
@@ -103,6 +109,13 @@ class QueryBuilder {
         case 'notIn':
           final list = _normalizeToList(filter.value);
           args.addAll(list.map((v) => Variable.withString(v.toString())));
+          break;
+        case 'equalsAny':
+          // Add the same value for each column in the OR condition
+          final columnCount = filter.field.split(',').length;
+          for (int i = 0; i < columnCount; i++) {
+            args.add(Variable.withString(filter.value.toString()));
+          }
           break;
         case 'isNotNull':
         case 'isNull':
@@ -175,6 +188,30 @@ class QueryBuilder {
             lonExpr.isBetweenValues(minLon, maxLon);
 
         whereClauses.add(boundingBox);
+        continue;
+      }
+
+      // Handle equalsAny operator separately (multiple columns with OR)
+      if (filter.operator == 'equalsAny') {
+        final columnNames = filter.field.split(',').map((f) => camelToSnake(f.trim())).toList();
+        final List<Expression<bool>> orClauses = [];
+
+        for (final colName in columnNames) {
+          final col = dynamicTable.$columns.firstWhere(
+            (c) => c.$name == colName,
+            orElse: () => throw Exception('Column $colName not found in $table'),
+          );
+          orClauses.add(col.equals(filter.value));
+        }
+
+        // Combine with OR: (col1 = value OR col2 = value)
+        if (orClauses.isNotEmpty) {
+          Expression<bool> combined = orClauses.first;
+          for (int i = 1; i < orClauses.length; i++) {
+            combined = combined | orClauses[i];
+          }
+          whereClauses.add(combined);
+        }
         continue;
       }
 
