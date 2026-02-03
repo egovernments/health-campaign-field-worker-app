@@ -330,8 +330,8 @@ class _HomePageState extends LocalizedState<HomePage> {
         'receipt': ['RECEIVED'],
         'dispatch': ['DISPATCHED'],
         'returned': ['RECEIVED'],
-        'damage': ['DAMAGED'],
-        'loss': ['LOSS']
+        'damage': ['DISPATCHED'],
+        'loss': ['DISPATCHED']
       };
       return types[reportType] ?? [];
     });
