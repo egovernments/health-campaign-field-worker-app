@@ -21,8 +21,8 @@ class PanelCardWidget implements FlowWidget {
     void Function(ActionConfig) onAction,
   ) {
     final flowState = WidgetStateContext.of(context);
-    final navigationData = flowState.screenKey != null
-        ? FlowCrudStateRegistry().getNavigationParams(flowState.screenKey!)
+    final navigationData = flowState.compositeKey != null
+        ? FlowCrudStateRegistry().getNavigationParams(flowState.compositeKey!)
         : null;
 
     // Build evaluation context with navigation params
