@@ -34,8 +34,11 @@ class SearchExecutor extends ActionExecutor {
         crudCtx?.screenKey ?? getEffectiveScreenKey(context, contextData);
 
     // Get composite key for FlowCrudStateRegistry operations
+    // IMPORTANT: Try CrudItemContext.compositeKey first - it's correctly passed
+    // from popups via ActionPopupWidget. Only fall back to getEffectiveCompositeKey
+    // when not in a popup context (i.e., CrudItemContext is null or has no compositeKey)
     final compositeKey =
-        getEffectiveCompositeKey(context, contextData);
+        crudCtx?.compositeKey ?? getEffectiveCompositeKey(context, contextData);
 
     // Register search callback (SearchStateManager handles deduplication)
     // This allows ClearStateExecutor to trigger search with accumulated filters
@@ -508,14 +511,14 @@ class SearchExecutor extends ActionExecutor {
   /// This is called via the registered callback when triggered by ClearStateExecutor
   static void _executeSearchWithAccumulatedFilters(
     CrudBloc crudBloc,
-    String screenKey,
+    String compositeKey,
     String searchName,
     Map<String, dynamic>? config,
   ) {
     final accumulatedFilters =
-        SearchStateManager().getFilters(screenKey, searchName);
+        SearchStateManager().getFilters(compositeKey, searchName);
     final accumulatedOrderBy =
-        SearchStateManager().getOrderBy(screenKey, searchName);
+        SearchStateManager().getOrderBy(compositeKey, searchName);
 
     if (accumulatedFilters.isEmpty) {
       debugPrint(
