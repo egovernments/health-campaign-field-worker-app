@@ -27,9 +27,12 @@ class TableWidget implements FlowWidget {
     final stateData = flowState.stateData;
     final localization = LocalizationContext.maybeOf(context);
 
+    // Use compositeKey for registry operations (includes instanceId for proper isolation)
+    final compositeKey = flowState.compositeKey ?? flowState.screenKey;
+
     // Get navigation params for visibility evaluation
-    final navigationParams = flowState.screenKey != null
-        ? FlowCrudStateRegistry().getNavigationParams(flowState.screenKey!) ?? {}
+    final navigationParams = compositeKey != null
+        ? FlowCrudStateRegistry().getNavigationParams(compositeKey) ?? {}
         : <String, dynamic>{};
 
     // Build evaluation context with navigation params

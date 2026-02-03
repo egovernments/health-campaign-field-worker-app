@@ -17,7 +17,6 @@ class SelectionCardWidget implements FlowWidget {
     BuildContext context,
     void Function(ActionConfig) onAction,
   ) {
-    final flowState = WidgetStateContext.of(context);
     final data = json['enums'] as List<dynamic>? ?? [];
     final fieldName = json['fieldName'] as String?;
     final localization = LocalizationContext.maybeOf(context);
@@ -38,9 +37,10 @@ class SelectionCardWidget implements FlowWidget {
     })
         .toList();
 
-    final screenKey = flowState.screenKey;
+    final State = WidgetStateContext.of(context);
+    final crudStateData = State.stateData;
 
-    if (screenKey == null) {
+    if (State.compositeKey == null) {
       // Fallback without state listening
       return SelectionCard(
         showParentContainer: true,
@@ -56,7 +56,7 @@ class SelectionCardWidget implements FlowWidget {
     // Use ValueListenableBuilder to listen to FlowCrudStateRegistry updates
     // This ensures the widget rebuilds when widgetData changes (e.g., on CLEAR_STATE)
     return ValueListenableBuilder<FlowCrudState?>(
-      valueListenable: FlowCrudStateRegistry().listen(screenKey),
+      valueListenable: FlowCrudStateRegistry().listen(State.compositeKey!),
       builder: (context, flowState, _) {
         final widgetData = flowState?.widgetData ?? {};
 
@@ -76,7 +76,7 @@ class SelectionCardWidget implements FlowWidget {
         }
 
         return SelectionCard(
-          key: ValueKey('${screenKey}_${fieldName}_${initialSelection.map((e) => e.code).join(',')}'),
+          key: ValueKey('${State.screenKey}_${fieldName}_${initialSelection.map((e) => e.code).join(',')}'),
           showParentContainer: true,
           options: options,
           initialSelection: initialSelection,
@@ -85,7 +85,7 @@ class SelectionCardWidget implements FlowWidget {
           onSelectionChanged: (selectedOptions) {
             // Update widgetData in flow state
             if (fieldName != null) {
-              final currentFlowState = FlowCrudStateRegistry().get(screenKey);
+              final currentFlowState = FlowCrudStateRegistry().get(State.compositeKey!);
               final currentWidgetData =
                   Map<String, dynamic>.from(currentFlowState?.widgetData ?? {});
 
@@ -97,12 +97,12 @@ class SelectionCardWidget implements FlowWidget {
                 final updatedState = currentFlowState.copyWith(
                   widgetData: currentWidgetData,
                 );
-                FlowCrudStateRegistry().update(screenKey, updatedState);
+                FlowCrudStateRegistry().update(State.compositeKey!, updatedState);
               } else {
                 final newState = FlowCrudState(
                   widgetData: currentWidgetData,
                 );
-                FlowCrudStateRegistry().update(screenKey, newState);
+                FlowCrudStateRegistry().update(State.compositeKey!, newState);
               }
             }
           },

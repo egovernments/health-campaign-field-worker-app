@@ -21,7 +21,8 @@ class SearchBarWidget implements FlowWidget {
     final localizedHint = localization?.translate(hintText) ?? hintText;
     final fieldName = (json['fieldName'] ?? 'searchBar') as String;
 
-    final screenKey = flowState.screenKey;
+    // Use compositeKey for registry operations (includes instanceId for proper isolation)
+    final compositeKey = flowState.compositeKey ?? flowState.screenKey;
 
     // Get validation rules
     final validations = json['validation'] as List<dynamic>? ?? [];
@@ -46,8 +47,8 @@ class SearchBarWidget implements FlowWidget {
       hintText: localizedHint,
       onChanged: (value) {
         // Store the searchBar value in widgetData for WrapperBuilder to access
-        if (screenKey != null) {
-          final currentState = FlowCrudStateRegistry().get(screenKey);
+        if (compositeKey != null) {
+          final currentState = FlowCrudStateRegistry().get(compositeKey);
           final currentWidgetData =
               currentState?.widgetData ?? <String, dynamic>{};
           final Map<String, dynamic> updatedWidgetData = {
@@ -56,7 +57,7 @@ class SearchBarWidget implements FlowWidget {
           };
           if (currentState != null) {
             FlowCrudStateRegistry().update(
-              screenKey,
+              compositeKey,
               currentState.copyWith(widgetData: updatedWidgetData),
             );
           }

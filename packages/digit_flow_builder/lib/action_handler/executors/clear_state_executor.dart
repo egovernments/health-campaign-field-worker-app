@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../blocs/flow_crud_bloc.dart';
 import '../../blocs/search_state_manager.dart';
 import '../../utils/interpolation.dart';
+import '../../widget_registry.dart';
 import '../action_config.dart';
 import 'action_executor.dart';
 
@@ -27,10 +28,16 @@ class ClearStateExecutor extends ActionExecutor {
     Map<String, dynamic> contextData,
   ) async {
     // Use getEffectiveScreenKey to handle popup context
-    final screenKey = getEffectiveScreenKey(context, contextData);
+    final crudCtx = CrudItemContext.of(context);
+    final screenKey =
+        crudCtx?.screenKey ?? getEffectiveScreenKey(context, contextData);
 
     // Get composite key for FlowCrudStateRegistry operations
-    final compositeKey = getEffectiveCompositeKey(context, contextData);
+    // IMPORTANT: Try CrudItemContext.compositeKey first - it's correctly passed
+    // from popups via ActionPopupWidget. Only fall back to getEffectiveCompositeKey
+    // when not in a popup context.
+    final compositeKey =
+        crudCtx?.compositeKey ?? getEffectiveCompositeKey(context, contextData);
 
     if (compositeKey == null) {
       debugPrint('⚠️ CLEAR_STATE: No compositeKey found, skipping');
