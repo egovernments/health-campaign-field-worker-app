@@ -74,6 +74,8 @@ class MergeUpdateExecutor extends ActionExecutor {
     if (applyIf != null) {
       final navigation =
           contextData['navigation'] as Map<String, dynamic>? ?? {};
+      debugPrint('MERGE_UPDATE: navigation params from contextData: $navigation');
+      debugPrint('MERGE_UPDATE: contextData keys: ${contextData.keys.toList()}');
       final resolveContext = {'navigation': navigation, ...contextData};
 
       if (!_evaluateCondition(applyIf, resolveContext)) {
@@ -220,7 +222,11 @@ class MergeUpdateExecutor extends ActionExecutor {
       }
     });
 
-    final searchRoot = entityType.replaceAll('Model', '');
+    // Convert entityType to table name format: "HFReferralModel" -> "hFReferral"
+    final entityName = entityType.replaceAll('Model', '');
+    final searchRoot = entityName.isNotEmpty
+        ? '${entityName[0].toLowerCase()}${entityName.substring(1)}'
+        : entityName;
     final searchParams = GlobalSearchParameters(
       filters: [
         SearchFilter(
@@ -231,7 +237,7 @@ class MergeUpdateExecutor extends ActionExecutor {
         ),
       ],
       primaryModel: searchRoot,
-      select: [],
+      select: [searchRoot],
     );
 
     crudBloc.add(CrudEventSearch(searchParams));

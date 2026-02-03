@@ -958,8 +958,13 @@ final dynamic sampleReferralFlows = {
               }
             },
             {
-              "actionType": "UPDATE_EVENT",
-              "properties": {"applyIf": "navigation.isUpdate==true"}
+              "actionType": "MERGE_UPDATE_ADDITIONAL_FIELDS",
+              "properties": {
+                "applyIf": "navigation.isUpdate==true",
+                "entityType": "HFReferralModel",
+                "clientReferenceId": "{{navigation.clientReferenceId}}",
+                "collectFromPages": ["sideEffectSick"]
+              }
             },
             {
               "actionType": "NAVIGATION",
@@ -1444,8 +1449,13 @@ final dynamic sampleReferralFlows = {
               }
             },
             {
-              "actionType": "UPDATE_EVENT",
-              "properties": {"applyIf": "navigation.isUpdate==true"}
+              "actionType": "MERGE_UPDATE_ADDITIONAL_FIELDS",
+              "properties": {
+                "applyIf": "navigation.isUpdate==true",
+                "entityType": "HFReferralModel",
+                "clientReferenceId": "{{navigation.clientReferenceId}}",
+                "collectFromPages": ["sideEffectFromPreviousCycle"]
+              }
             },
             {
               "actionType": "NAVIGATION",
@@ -2642,8 +2652,13 @@ final dynamic sampleReferralFlows = {
               }
             },
             {
-              "actionType": "UPDATE_EVENT",
-              "properties": {"applyIf": "navigation.isUpdate==true"}
+              "actionType": "MERGE_UPDATE_ADDITIONAL_FIELDS",
+              "properties": {
+                "applyIf": "navigation.isUpdate==true",
+                "entityType": "HFReferralModel",
+                "clientReferenceId": "{{navigation.clientReferenceId}}",
+                "collectFromPages": ["sideEffectFever"]
+              }
             },
             {
               "actionType": "NAVIGATION",
@@ -3190,8 +3205,13 @@ final dynamic sampleReferralFlows = {
               }
             },
             {
-              "actionType": "UPDATE_EVENT",
-              "properties": {"applyIf": "navigation.isUpdate==true"}
+              "actionType": "MERGE_UPDATE_ADDITIONAL_FIELDS",
+              "properties": {
+                "applyIf": "navigation.isUpdate==true",
+                "entityType": "HFReferralModel",
+                "clientReferenceId": "{{navigation.clientReferenceId}}",
+                "collectFromPages": ["sideEffectFromCurrentCycle"]
+              }
             },
             {
               "actionType": "NAVIGATION",
@@ -3717,8 +3737,13 @@ final dynamic sampleReferralFlows = {
           }
         },
         {
-          "actionType": "UPDATE_EVENT",
-          "properties": {"applyIf": "navigation.isUpdate==true"}
+          "actionType": "MERGE_UPDATE_ADDITIONAL_FIELDS",
+          "properties": {
+            "applyIf": "navigation.isUpdate==true",
+            "entityType": "HFReferralModel",
+            "clientReferenceId": "{{navigation.clientReferenceId}}",
+            "collectFromPages": ["sideEffectSick", "sideEffectFever", "sideEffectFromPreviousCycle", "sideEffectFromCurrentCycle"]
+          }
         },
         {
           "actionType": "NAVIGATION",
