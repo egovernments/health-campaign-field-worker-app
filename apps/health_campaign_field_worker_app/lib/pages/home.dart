@@ -133,7 +133,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       (context, stateAccessor) {
         // Build your component with access to all this data
         return const EvaluationKeyDropDown(
-            schemaName: "REFERRAL_CREATE", formControlName: "evaluationFacility");
+            schemaName: "REFERRAL_CREATE",
+            formControlName: "evaluationFacility");
       },
     );
 
@@ -1664,7 +1665,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
                     module: module != null && module.isNotEmpty
-                        ? "$module,hcm-common,hcm-login,hcm-scanner"
+                        ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist"
                         : localizationModulesList?.interfaces
                                 .where(
                                     (e) => e.type == Modules.localizationModule)
