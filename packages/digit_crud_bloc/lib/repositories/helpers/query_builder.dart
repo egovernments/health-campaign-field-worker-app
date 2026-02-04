@@ -77,9 +77,11 @@ class QueryBuilder {
           return '$column IS NULL';
         case 'in':
           final values = _normalizeToList(filter.value);
+          if (values.isEmpty) return '1 = 1';
           return '$column IN (${List.filled(values.length, '?').join(', ')})';
         case 'notIn':
           final values = _normalizeToList(filter.value);
+          if (values.isEmpty) return '1 = 1';
           return '$column NOT IN (${List.filled(values.length, '?').join(', ')})';
         case 'within':
           return '1 = 1';
@@ -108,7 +110,9 @@ class QueryBuilder {
         case 'in':
         case 'notIn':
           final list = _normalizeToList(filter.value);
-          args.addAll(list.map((v) => Variable.withString(v.toString())));
+          if (list.isNotEmpty) {
+            args.addAll(list.map((v) => Variable.withString(v.toString())));
+          }
           break;
         case 'equalsAny':
           // Add the same value for each column in the OR condition
@@ -237,6 +241,7 @@ class QueryBuilder {
           break;
         case 'in':
           final list = _normalizeToList(filter.value);
+          if (list.isEmpty) break; // Empty list = no filter (match all)
           if (col is GeneratedColumn<int>) {
             whereClauses.add(col.isIn(list.map((v) => v is int ? v : int.tryParse(v.toString()) ?? 0).toList()));
           } else if (col is GeneratedColumn<String>) {
@@ -245,6 +250,7 @@ class QueryBuilder {
           break;
         case 'notIn':
           final list = _normalizeToList(filter.value);
+          if (list.isEmpty) break; // Empty list = no filter (match all)
           if (col is GeneratedColumn<int>) {
             whereClauses.add(col.isNotIn(list.map((v) => v is int ? v : int.tryParse(v.toString()) ?? 0).toList()));
           } else if (col is GeneratedColumn<String>) {

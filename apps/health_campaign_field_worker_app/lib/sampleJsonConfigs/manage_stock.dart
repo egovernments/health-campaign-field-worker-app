@@ -197,7 +197,7 @@ final dynamic sampleInventoryFlows = {
                 "name": "RECORDSTOCK",
                 "data": [
                   {"key": "stockEntryType", "value": "DAMAGED"},
-                  {"key": "transactionType", "value": "DAMAGED"},
+                  {"key": "transactionType", "value": "DISPATCHED"},
                   {"key": "primaryRole", "value": "SENDER"},
                   {"key": "secondaryRole", "value": "RECEIVER"},
                   {
@@ -222,7 +222,7 @@ final dynamic sampleInventoryFlows = {
                 "name": "RECORDSTOCK",
                 "data": [
                   {"key": "stockEntryType", "value": "LOSS"},
-                  {"key": "transactionType", "value": "LOSS"},
+                  {"key": "transactionType", "value": "DISPATCHED"},
                   {"key": "primaryRole", "value": "SENDER"},
                   {"key": "secondaryRole", "value": "RECEIVER"},
                   {

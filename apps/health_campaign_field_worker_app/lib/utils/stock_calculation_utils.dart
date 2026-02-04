@@ -5,6 +5,20 @@ import 'package:digit_data_model/data_model.dart';
 /// This provides common stock calculation methods that can be reused across
 /// different widgets like StockReconciliationCard and ProductSelectionCard.
 class StockCalculationUtils {
+  /// Extracts the stockEntryType from a StockModel's additionalFields.
+  /// Returns uppercase value (e.g., 'RECEIPT', 'ISSUED', 'RETURNED', 'DAMAGED', 'LOSS')
+  /// or empty string if not found.
+  static String _getStockEntryType(StockModel stock) {
+    final fields = stock.additionalFields?.fields;
+    if (fields == null) return '';
+    for (final field in fields) {
+      if (field.key == 'stockEntryType') {
+        return field.value?.toString().toUpperCase() ?? '';
+      }
+    }
+    return '';
+  }
+
   /// Calculates stock metrics for a given facility and product from a list of stocks.
   ///
   /// Parameters:
@@ -60,30 +74,20 @@ class StockCalculationUtils {
       final transactionReason = stock.transactionReason?.toUpperCase() ?? '';
       final quantity = num.tryParse(stock.quantity ?? '0') ?? 0.0;
 
+      // Extract stockEntryType from additionalFields as fallback
+      final stockEntryType = _getStockEntryType(stock);
+
       // Check if this facility is the receiver or sender
       final isReceiver = stock.receiverId == facilityId;
       final isSender = stock.senderId == facilityId;
 
       // Stock Received: This facility is the receiver AND transactionType == RECEIVED
-      // Accept both: transactionReason == 'RECEIVED' OR transactionReason is empty/null
       if (isReceiver && transactionType == 'RECEIVED') {
-        if (transactionReason == 'RETURNED') {
-          // Stock Returned: transactionReason == RETURNED
+        if (transactionReason == 'RETURNED' ||
+            stockEntryType == 'RETURNED') {
           stockReturned += quantity;
         } else if (transactionReason.isEmpty ||
             transactionReason == 'RECEIVED') {
-          // Regular stock receipt
-          stockReceived += quantity;
-        }
-      }
-      // Stock Received from dispatch: This facility is the receiver AND transactionType == DISPATCHED
-      // This handles stock received when another facility dispatches TO this facility
-      else if (isReceiver && transactionType == 'DISPATCHED') {
-        // Only count as received if not a damage/loss reason (those don't reach receiver)
-        if (transactionReason != 'LOST_IN_TRANSIT' &&
-            transactionReason != 'LOST_IN_STORAGE' &&
-            transactionReason != 'DAMAGED_IN_TRANSIT' &&
-            transactionReason != 'DAMAGED_IN_STORAGE') {
           stockReceived += quantity;
         }
       }
@@ -96,19 +100,33 @@ class StockCalculationUtils {
         stockDamaged += quantity;
       }
       // Stock Issued/Lost/Damaged: This facility is the sender AND transactionType == DISPATCHED
-      // Also handles legacy data where LOSS/DAMAGED used DISPATCHED with transactionReason
+      // Check sender first so damage/loss is counted correctly when senderId == receiverId
       else if (isSender && transactionType == 'DISPATCHED') {
         if (transactionReason == 'LOST_IN_TRANSIT' ||
-            transactionReason == 'LOST_IN_STORAGE') {
-          // Stock Lost (legacy format)
+            transactionReason == 'LOST_IN_STORAGE' ||
+            stockEntryType == 'LOSS') {
           stockLost += quantity;
         } else if (transactionReason == 'DAMAGED_IN_TRANSIT' ||
-            transactionReason == 'DAMAGED_IN_STORAGE') {
-          // Stock Damaged (legacy format)
+            transactionReason == 'DAMAGED_IN_STORAGE' ||
+            stockEntryType == 'DAMAGED') {
           stockDamaged += quantity;
         } else {
-          // Regular dispatch (issued) - includes empty reason and any other reason
+          // Regular dispatch (issued)
           stockIssued += quantity;
+        }
+      }
+      // Stock Received from dispatch: This facility is the receiver AND transactionType == DISPATCHED
+      // This handles stock received when another facility dispatches TO this facility
+      else if (isReceiver && transactionType == 'DISPATCHED') {
+        if (transactionReason == 'LOST_IN_TRANSIT' ||
+            transactionReason == 'LOST_IN_STORAGE' ||
+            transactionReason == 'DAMAGED_IN_TRANSIT' ||
+            transactionReason == 'DAMAGED_IN_STORAGE' ||
+            stockEntryType == 'LOSS' ||
+            stockEntryType == 'DAMAGED') {
+          // Damage/loss entries - don't count as received
+        } else {
+          stockReceived += quantity;
         }
       }
     }
