@@ -367,7 +367,9 @@ class _HomePageState extends LocalizedState<HomePage> {
     FunctionRegistry.register('getSenderOrReceiver', (args, stateData) {
       if (args.isEmpty) return 'receiverId';
       final reportType = args.first?.toString() ?? '';
-      return reportType == 'dispatch' ? 'senderId' : 'receiverId';
+      // For dispatch/damage/loss the warehouse is the sender
+      const senderTypes = {'dispatch', 'damage', 'loss'};
+      return senderTypes.contains(reportType) ? 'senderId' : 'receiverId';
     });
 
     // Get secondary party type based on facility selection
