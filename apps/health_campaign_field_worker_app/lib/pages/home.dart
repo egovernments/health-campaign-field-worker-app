@@ -1278,7 +1278,9 @@ class _HomePageState extends LocalizedState<HomePage> {
           label: i18.home.mySurveyForm,
           onPressed: () {
             // if (isTriggerLocalisation) {
-            triggerLocalization();
+            final moduleName =
+                'hcm-checklist-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
             isTriggerLocalisation = false;
             // }
             context.router.push(SurveyFormWrapperRoute());
