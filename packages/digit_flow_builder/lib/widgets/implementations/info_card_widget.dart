@@ -22,15 +22,17 @@ class InfoCardWidget implements FlowWidget {
   ) {
     final crudCtx = CrudItemContext.of(context);
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
+    // Use compositeKey for registry operations (includes instanceId for proper isolation)
+    final compositeKey = crudCtx?.compositeKey ?? getCompositeKey(context, screenKey: screenKey);
 
-    // If no screenKey, build without state listening
-    if (screenKey == null) {
+    // If no compositeKey, build without state listening
+    if (compositeKey == null) {
       return _buildInfoCard(json, context, crudCtx, {}, {});
     }
 
     // Wrap in ValueListenableBuilder to react to state changes
     return ValueListenableBuilder<FlowCrudState?>(
-      valueListenable: FlowCrudStateRegistry().listen(screenKey),
+      valueListenable: FlowCrudStateRegistry().listen(compositeKey),
       builder: (context, flowState, _) {
         final widgetData = flowState?.widgetData ?? {};
         final formData = flowState?.formData ?? {};
@@ -51,7 +53,7 @@ class InfoCardWidget implements FlowWidget {
           final hiddenResult = ConditionalEvaluator.evaluate(
             json['hidden'],
             evalContext,
-            screenKey: screenKey,
+            screenKey: compositeKey,
             stateData: crudCtx?.stateData,
           );
           if (hiddenResult == true) {
@@ -64,7 +66,7 @@ class InfoCardWidget implements FlowWidget {
           final visibleResult = ConditionalEvaluator.evaluate(
             json['visible'],
             evalContext,
-            screenKey: screenKey,
+            screenKey: compositeKey,
             stateData: crudCtx?.stateData,
           );
           if (visibleResult == false) {

@@ -113,7 +113,9 @@ String? getEffectiveCompositeKey(
   BuildContext context,
   Map<String, dynamic> contextData,
 ) {
-  final screenKey = getEffectiveScreenKey(context, contextData);
+  final data = contextData;
+
+  final screenKey = data['parentScreenKey'] ?? getEffectiveScreenKey(context, data);
   if (screenKey == null) return null;
 
   final instanceId = getInstanceIdFromArgs(context);
