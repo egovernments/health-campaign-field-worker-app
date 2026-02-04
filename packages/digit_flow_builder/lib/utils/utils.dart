@@ -534,6 +534,18 @@ dynamic _resolvePath(dynamic root, String path) {
         continue;
       }
 
+      // Handle 'first' and 'last' keywords
+      if (part == 'first') {
+        if (current.isEmpty) return null;
+        current = current.first;
+        continue;
+      }
+      if (part == 'last') {
+        if (current.isEmpty) return null;
+        current = current.last;
+        continue;
+      }
+
       final idx = int.tryParse(part);
       if (idx != null) {
         if (idx < 0 || idx >= current.length) return null;
