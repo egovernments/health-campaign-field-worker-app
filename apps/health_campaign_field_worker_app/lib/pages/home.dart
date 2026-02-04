@@ -350,6 +350,20 @@ class _HomePageState extends LocalizedState<HomePage> {
       return reasons[reportType] ?? [];
     });
 
+    FunctionRegistry.register('getStockEntryType', (args, stateData) {
+      if (args.isEmpty) return '';
+      final reportType = args.first?.toString() ?? '';
+
+      const entryTypes = {
+        'receipt': 'RECEIPT',
+        'dispatch': 'ISSUED',
+        'returned': 'RETURNED',
+        'damage': 'DAMAGED',
+        'loss': 'LOSS',
+      };
+      return entryTypes[reportType] ?? '';
+    });
+
     FunctionRegistry.register('getSenderOrReceiver', (args, stateData) {
       if (args.isEmpty) return 'receiverId';
       final reportType = args.first?.toString() ?? '';
@@ -449,40 +463,6 @@ class _HomePageState extends LocalizedState<HomePage> {
         default:
           return receiverId;
       }
-    });
-
-    FunctionRegistry.register('getAdditionalFieldValue', (args, stateData) {
-      if (args.length < 2) return '0';
-      final additionalFields = args[0];
-      final key = args[1]?.toString() ?? '';
-
-      if (additionalFields == null) return '0';
-
-      // Handle both Map and object with fields property
-      List<dynamic>? fields;
-      if (additionalFields is Map) {
-        fields = additionalFields['fields'] as List<dynamic>?;
-      } else {
-        try {
-          fields = (additionalFields as dynamic).fields as List<dynamic>?;
-        } catch (_) {
-          return '0';
-        }
-      }
-
-      if (fields == null) return '0';
-
-      // Find the field with matching key
-      for (var field in fields) {
-        if (field is Map && field['key'] == key) {
-          final value = field['value'];
-          if (value == null) return '0';
-          final parsed = double.tryParse(value.toString()) ?? 0.0;
-          return parsed.toStringAsFixed(0);
-        }
-      }
-
-      return '0';
     });
 
     // Get user's assigned facility ID based on their role and boundary level
