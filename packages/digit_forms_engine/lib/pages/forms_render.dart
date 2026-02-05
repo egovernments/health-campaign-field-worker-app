@@ -543,11 +543,20 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                                     ctx,
                                                     rootNavigator: true,
                                                   ).pop();
+                                                  _isSubmitting = false;
+                                                  setState(() {});
                                                 },
                                                 type: DigitButtonType.secondary,
                                                 size: DigitButtonSize.large)
                                           ]),
-                                    );
+                                    ).then((_) {
+                                      // Reset flag if popup dismissed without submitting
+                                      // (e.g. tapping outside the popup)
+                                      if (_isSubmitting) {
+                                        _isSubmitting = false;
+                                        setState(() {});
+                                      }
+                                    });
                                   } else {
                                     context.read<FormsBloc>().add(
                                         FormsSubmitEvent(

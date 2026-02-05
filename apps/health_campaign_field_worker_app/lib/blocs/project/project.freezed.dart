@@ -320,7 +320,7 @@ abstract class ProjectSelectProjectEvent implements ProjectEvent {
 mixin _$ProjectState {
   List<ProjectModel> get projects => throw _privateConstructorUsedError;
   ProjectType? get projectType => throw _privateConstructorUsedError;
-  Cycle? get selectedCycle => throw _privateConstructorUsedError;
+  ProjectCycle? get selectedCycle => throw _privateConstructorUsedError;
   ProjectModel? get selectedProject => throw _privateConstructorUsedError;
   bool get loading => throw _privateConstructorUsedError;
   ProjectSyncErrorType? get syncError => throw _privateConstructorUsedError;
@@ -339,13 +339,12 @@ abstract class $ProjectStateCopyWith<$Res> {
   $Res call(
       {List<ProjectModel> projects,
       ProjectType? projectType,
-      Cycle? selectedCycle,
+      ProjectCycle? selectedCycle,
       ProjectModel? selectedProject,
       bool loading,
       ProjectSyncErrorType? syncError});
 
   $ProjectTypeCopyWith<$Res>? get projectType;
-  $CycleCopyWith<$Res>? get selectedCycle;
 }
 
 /// @nodoc
@@ -380,7 +379,7 @@ class _$ProjectStateCopyWithImpl<$Res, $Val extends ProjectState>
       selectedCycle: freezed == selectedCycle
           ? _value.selectedCycle
           : selectedCycle // ignore: cast_nullable_to_non_nullable
-              as Cycle?,
+              as ProjectCycle?,
       selectedProject: freezed == selectedProject
           ? _value.selectedProject
           : selectedProject // ignore: cast_nullable_to_non_nullable
@@ -407,18 +406,6 @@ class _$ProjectStateCopyWithImpl<$Res, $Val extends ProjectState>
       return _then(_value.copyWith(projectType: value) as $Val);
     });
   }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $CycleCopyWith<$Res>? get selectedCycle {
-    if (_value.selectedCycle == null) {
-      return null;
-    }
-
-    return $CycleCopyWith<$Res>(_value.selectedCycle!, (value) {
-      return _then(_value.copyWith(selectedCycle: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
@@ -432,15 +419,13 @@ abstract class _$$ProjectStateImplCopyWith<$Res>
   $Res call(
       {List<ProjectModel> projects,
       ProjectType? projectType,
-      Cycle? selectedCycle,
+      ProjectCycle? selectedCycle,
       ProjectModel? selectedProject,
       bool loading,
       ProjectSyncErrorType? syncError});
 
   @override
   $ProjectTypeCopyWith<$Res>? get projectType;
-  @override
-  $CycleCopyWith<$Res>? get selectedCycle;
 }
 
 /// @nodoc
@@ -473,7 +458,7 @@ class __$$ProjectStateImplCopyWithImpl<$Res>
       selectedCycle: freezed == selectedCycle
           ? _value.selectedCycle
           : selectedCycle // ignore: cast_nullable_to_non_nullable
-              as Cycle?,
+              as ProjectCycle?,
       selectedProject: freezed == selectedProject
           ? _value.selectedProject
           : selectedProject // ignore: cast_nullable_to_non_nullable
@@ -515,7 +500,7 @@ class _$ProjectStateImpl extends _ProjectState {
   @override
   final ProjectType? projectType;
   @override
-  final Cycle? selectedCycle;
+  final ProjectCycle? selectedCycle;
   @override
   final ProjectModel? selectedProject;
   @override
@@ -567,7 +552,7 @@ abstract class _ProjectState extends ProjectState {
   const factory _ProjectState(
       {final List<ProjectModel> projects,
       final ProjectType? projectType,
-      final Cycle? selectedCycle,
+      final ProjectCycle? selectedCycle,
       final ProjectModel? selectedProject,
       final bool loading,
       final ProjectSyncErrorType? syncError}) = _$ProjectStateImpl;
@@ -578,7 +563,7 @@ abstract class _ProjectState extends ProjectState {
   @override
   ProjectType? get projectType;
   @override
-  Cycle? get selectedCycle;
+  ProjectCycle? get selectedCycle;
   @override
   ProjectModel? get selectedProject;
   @override

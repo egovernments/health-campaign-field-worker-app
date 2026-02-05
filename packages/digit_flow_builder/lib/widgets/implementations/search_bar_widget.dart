@@ -83,8 +83,6 @@ class SearchBarWidget implements FlowWidget {
               onAction(action);
             }
           }
-        } else if (value.isEmpty) {
-          FlowCrudStateRegistry().clearAll();
         }
       },
     );

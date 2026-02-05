@@ -245,7 +245,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       context: context,
       locale: AppSharedPreferences().getSelectedLocale!,
       moduleKey:
-          'INVENTORY,REGISTRATION,COMPLAINTS,HFREFERRAL,CLOSEHOUSEHOLD,COMPLAINTS,STOCKREPORTS,STOCKRECONCILIATION,PERMISSIONHANDLER',
+          'INVENTORY,REGISTRATION,COMPLAINTS,HFREFERRAL,CLOSEHOUSEHOLD,COMPLAINTS,STOCKREPORTS,STOCKRECONCILIATION,PERMISSIONHANDLER,CHECKLIST',
       /// TODO: NEED TO MOVE CONSTANT FILE
       projectReferenceId: context.selectedProject.referenceID ?? '',
     );

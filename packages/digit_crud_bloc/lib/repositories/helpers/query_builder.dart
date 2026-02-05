@@ -77,12 +77,20 @@ class QueryBuilder {
           return '$column IS NULL';
         case 'in':
           final values = _normalizeToList(filter.value);
+          if (values.isEmpty) return '1 = 1';
           return '$column IN (${List.filled(values.length, '?').join(', ')})';
         case 'notIn':
           final values = _normalizeToList(filter.value);
+          if (values.isEmpty) return '1 = 1';
           return '$column NOT IN (${List.filled(values.length, '?').join(', ')})';
         case 'within':
           return '1 = 1';
+        case 'equalsAny':
+          // Supports OR condition: field contains comma-separated column names
+          // Example: field='senderId,receiverId', value='F-123'
+          // Generates: (sender_id = ? OR receiver_id = ?)
+          final columns = filter.field.split(',').map((f) => camelToSnake(f.trim())).toList();
+          return '(${columns.map((c) => '$c = ?').join(' OR ')})';
         default:
           throw Exception('Unsupported operator: ${filter.operator}');
       }
@@ -102,7 +110,16 @@ class QueryBuilder {
         case 'in':
         case 'notIn':
           final list = _normalizeToList(filter.value);
-          args.addAll(list.map((v) => Variable.withString(v.toString())));
+          if (list.isNotEmpty) {
+            args.addAll(list.map((v) => Variable.withString(v.toString())));
+          }
+          break;
+        case 'equalsAny':
+          // Add the same value for each column in the OR condition
+          final columnCount = filter.field.split(',').length;
+          for (int i = 0; i < columnCount; i++) {
+            args.add(Variable.withString(filter.value.toString()));
+          }
           break;
         case 'isNotNull':
         case 'isNull':
@@ -178,6 +195,30 @@ class QueryBuilder {
         continue;
       }
 
+      // Handle equalsAny operator separately (multiple columns with OR)
+      if (filter.operator == 'equalsAny') {
+        final columnNames = filter.field.split(',').map((f) => camelToSnake(f.trim())).toList();
+        final List<Expression<bool>> orClauses = [];
+
+        for (final colName in columnNames) {
+          final col = dynamicTable.$columns.firstWhere(
+            (c) => c.$name == colName,
+            orElse: () => throw Exception('Column $colName not found in $table'),
+          );
+          orClauses.add(col.equals(filter.value));
+        }
+
+        // Combine with OR: (col1 = value OR col2 = value)
+        if (orClauses.isNotEmpty) {
+          Expression<bool> combined = orClauses.first;
+          for (int i = 1; i < orClauses.length; i++) {
+            combined = combined | orClauses[i];
+          }
+          whereClauses.add(combined);
+        }
+        continue;
+      }
+
       final columnName = camelToSnake(filter.field);
       final col = dynamicTable.$columns.firstWhere(
         (c) => c.$name == columnName,
@@ -200,6 +241,7 @@ class QueryBuilder {
           break;
         case 'in':
           final list = _normalizeToList(filter.value);
+          if (list.isEmpty) break; // Empty list = no filter (match all)
           if (col is GeneratedColumn<int>) {
             whereClauses.add(col.isIn(list.map((v) => v is int ? v : int.tryParse(v.toString()) ?? 0).toList()));
           } else if (col is GeneratedColumn<String>) {
@@ -208,6 +250,7 @@ class QueryBuilder {
           break;
         case 'notIn':
           final list = _normalizeToList(filter.value);
+          if (list.isEmpty) break; // Empty list = no filter (match all)
           if (col is GeneratedColumn<int>) {
             whereClauses.add(col.isNotIn(list.map((v) => v is int ? v : int.tryParse(v.toString()) ?? 0).toList()));
           } else if (col is GeneratedColumn<String>) {
