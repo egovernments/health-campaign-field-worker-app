@@ -253,13 +253,29 @@ class WrapperBuilder {
     final filters = config['filters'] as List<dynamic>?;
     if (filters == null || filters.isEmpty) return true;
 
+    // Get navigation params from registry for template resolution
+    final navigationParams = screenKey != null
+        ? FlowCrudStateRegistry().getNavigationParams(screenKey!) ?? {}
+        : <String, dynamic>{};
+
+    // Build context for resolving equalsFrom templates
+    final resolveContext = <String, dynamic>{
+      'navigation': navigationParams,
+    };
+
     for (final filter in filters) {
       final field = filter['field'];
       final equals = filter['equals'];
+      final equalsFrom = filter['equalsFrom'] as String?;
 
       if (!filter.containsKey('entity')) {
         final value = EnhancedEntityFieldAccessor.getFieldValue(root, field);
-        if (equals != null && value != equals) return false;
+
+        // Handle equalsFrom with template resolution
+        if (equalsFrom != null) {
+          final resolvedEquals = _resolveValue(equalsFrom, root, resolveContext);
+          if (resolvedEquals != null && value != resolvedEquals) return false;
+        } else if (equals != null && value != equals) return false;
       } else {
         final entityType = filter['entity'];
         final condition = filter['condition'];
