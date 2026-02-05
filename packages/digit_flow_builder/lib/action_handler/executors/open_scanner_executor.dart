@@ -45,7 +45,10 @@ class OpenScannerExecutor extends ActionExecutor {
     final scanType = properties['scanType'] as String? ?? 'qr';
     final fieldName = properties['fieldName'] as String? ?? 'scannedData';
     final singleValue = properties['singleValue'] as bool? ?? true;
-    final quantity = properties['scanLimit'] as int? ?? 1;
+    final scanLimit = properties['scanLimit'];
+    final quantity = scanLimit is String
+        ? (int.tryParse(scanLimit) ?? 1)
+        : (scanLimit as int? ?? 1);
     final isGS1code = properties['isGS1'] as bool? ?? false;
 
     // Get onSuccess and onError actions
@@ -58,7 +61,7 @@ class OpenScannerExecutor extends ActionExecutor {
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
 
     // Get composite key for FlowCrudStateRegistry operations
-    final compositeKey =  getCompositeKey(context, screenKey: screenKey);
+    final compositeKey = getCompositeKey(context, screenKey: screenKey);
 
     try {
       final scannerBloc = context.read<DigitScannerBloc>();
