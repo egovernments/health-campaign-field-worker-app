@@ -269,10 +269,10 @@ final dynamic inventoryReportFlows = {
                         "operation": "equals"
                       },
                       {
-                        "key": "transactionType",
+                        "key": "additionalFields",
                         "value":
-                            "{{fn:getTransactionType(navigation.reportType)}}",
-                        "operation": "in"
+                            "{{fn:getStockEntryType(navigation.reportType)}}",
+                        "operation": "contains"
                       },
                       {
                         "key":
@@ -312,10 +312,10 @@ final dynamic inventoryReportFlows = {
                         "operation": "equals"
                       },
                       {
-                        "key": "transactionType",
+                        "key": "additionalFields",
                         "value":
-                            "{{fn:getTransactionType(navigation.reportType)}}",
-                        "operation": "in"
+                            "{{fn:getStockEntryType(navigation.reportType)}}",
+                        "operation": "contains"
                       },
                       {
                         "key":
@@ -333,8 +333,8 @@ final dynamic inventoryReportFlows = {
         {
           "type": "template",
           "format": "infoCard",
-          "label": "STOCKRECON_REPORT_DETAILS_INFO_CARD_LABEL",
-          "description": "STOCKRECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
+          "label": "STOCK_REPORT_DETAILS_INFO_CARD_LABEL",
+          "description": "STOCK_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
           "properties": {"type": "info"},
           "hidden":
               "{{fn:isNotEmpty(selectedFacility)}} && {{fn:isNotEmpty(selectedProduct)}}",
@@ -342,12 +342,11 @@ final dynamic inventoryReportFlows = {
         {
           "type": "template",
           "format": "infoCard",
-          "label": "STOCKRECON_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
-          "description":
-              "STOCKRECON_REPORT_DETAILS_NO_RECORD_FOUND_DESCRIPTION",
+          "label": "STOCK_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
+          "description": "STOCK_REPORT_DETAILS_NO_RECORD_FOUND_DESCRIPTION",
           "properties": {"type": "info"},
           "hidden":
-              "{{fn:length(stock)}} > 0 || {{fn:isEmpty(selectedFacility)}} || {{fn:isEmpty(selectedProduct)}}",
+              "{{fn:isNotEmpty(stock)}} < 0 && {{fn:isEmpty(selectedFacility)}} && {{fn:isEmpty(selectedProduct)}}",
         },
         {
           "type": "template",
@@ -375,7 +374,10 @@ final dynamic inventoryReportFlows = {
                 "header": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_3_LABEL",
                 "cellValue": "{{item.waybillNumber}}"
               },
-              {"header": "Quantity", "cellValue": "{{item.quantity}}"}
+              {
+                "header": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_4_LABEL",
+                "cellValue": "{{item.quantity}}"
+              }
             ],
             "rows": "{{contextData.0.StockModel}}"
           }
@@ -525,7 +527,7 @@ final dynamic inventoryReportFlows = {
               "STOCKRECON_REPORT_DETAILS_NO_RECORD_FOUND_DESCRIPTION",
           "properties": {"type": "info"},
           "hidden":
-              "{{fn:length(stockReconciliation)}} > 0 || {{fn:isEmpty(selectedReconFacility)}} || {{fn:isEmpty(selectedReckonProduct)}}",
+              "{{fn:length(stockReconciliation)}} < 0 && {{fn:isEmpty(selectedReconFacility)}} && {{fn:isEmpty(selectedReckonProduct)}}",
         },
         {
           "type": "template",
@@ -538,7 +540,10 @@ final dynamic inventoryReportFlows = {
                 "cellValue":
                     "{{fn:formatDate(item.dateOfReconciliation, 'date', 'dd MMM yyyy')}}"
               },
-              {"header": "Quantity", "cellValue": "{{item.calculatedCount}}"}
+              {
+                "header": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_4_LABEL",
+                "cellValue": "{{item.calculatedCount}}"
+              }
             ],
             "rows": "{{contextData.0.StockReconciliationModel}}"
           }
