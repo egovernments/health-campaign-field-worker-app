@@ -73,7 +73,9 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
   }
 
   void _handleConnectivityChange(List<ConnectivityResult> result) {
-    final isOffline = result.isEmpty || result.first == ConnectivityResult.none;
+    final isOnline = result.contains(ConnectivityResult.wifi) ||
+        result.contains(ConnectivityResult.mobile);
+    final isOffline = !isOnline;
 
     if (isOffline && !_isOfflineDialogShowing && mounted) {
       _showNoInternetDialog();
