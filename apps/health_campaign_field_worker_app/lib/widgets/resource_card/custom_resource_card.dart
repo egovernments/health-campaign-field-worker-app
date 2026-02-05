@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/blocs/product_variant/product_variant.dart';
 import 'package:digit_data_model/models/entities/product_variant.dart';
@@ -43,8 +45,12 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
   static const _resourceCardKey = 'resourceCard';
   late List<int?> _maxQuantities;
 
-  bool _listenersAdded = false;
   bool _toastShown = false;
+
+  // Memoized form and subscription management
+  FormGroup? _memoizedForm;
+  List<DeliveryProductVariant>? _lastProductVariants;
+  final List<StreamSubscription> _formSubscriptions = [];
 
   // Validation messages from schema
   String? _requiredValidationMessage;
@@ -54,6 +60,11 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
 
   @override
   void dispose() {
+    // Cancel all form subscriptions
+    for (final subscription in _formSubscriptions) {
+      subscription.cancel();
+    }
+    _formSubscriptions.clear();
     // Dismiss any active toasts when widget is disposed (e.g., page navigation)
     ToastManager().dismissAll(showAnim: false);
     super.dispose();
@@ -168,7 +179,8 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                     ? localizations.translate(validation.message!)
                     : null;
               }
-              if (validation.type == "duplicate" || validation.type == "unique") {
+              if (validation.type == "duplicate" ||
+                  validation.type == "unique") {
                 _duplicateValidationMessage = validation.message != null
                     ? localizations.translate(validation.message!)
                     : null;
@@ -186,7 +198,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
       }
     }
 
-// Kick off the recursive search
+    // Kick off the recursive search
     walk(pages!, []);
 
     return ReactiveWrapperField<dynamic>(
@@ -199,31 +211,15 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
             final productVariants = getProductVariants();
 
             return ReactiveFormBuilder(
-              form: () => buildForm(context, productVariants),
+              form: () => _getOrCreateForm(context, productVariants),
               builder: (context, form, child) {
-                // Add listeners just once
-                if (!_listenersAdded) {
-                  _listenersAdded = true;
-
-                  _updateResourceCards(form); // Initial update
-
-                  form.control(_resourceDeliveredKey).valueChanges.listen((_) {
-                    _toastShown = false; // Reset toast flag on data change
-                    // Mark parent control as untouched so we can detect next submission
-                    field.control.markAsUntouched();
-                    _updateResourceCards(form);
-                  });
-
-                  form.control(_quantityDistributedKey).valueChanges.listen((_) {
-                    _toastShown = false; // Reset toast flag on data change
-                    // Mark parent control as untouched so we can detect next submission
-                    field.control.markAsUntouched();
-                    _updateResourceCards(form);
-                  });
-                }
+                // Attach listeners when form changes
+                _attachListenersIfNeeded(form, field);
 
                 // Show toast when field is invalid and touched (via ReactiveWrapperField)
-                if (field.control.invalid && field.control.touched && !_toastShown) {
+                if (field.control.invalid &&
+                    field.control.touched &&
+                    !_toastShown) {
                   _toastShown = true;
                   _validateAndShowToast(form, context);
                   // Reset flag after delay to allow showing toast on next submission
@@ -245,7 +241,9 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (labelFromSchema != null &&
-                        localizations.translate(labelFromSchema!).isNotEmpty) ...[
+                        localizations
+                            .translate(labelFromSchema!)
+                            .isNotEmpty) ...[
                       Text(
                         localizations.translate(labelFromSchema!),
                         style: textTheme.bodyL.copyWith(
@@ -405,6 +403,75 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
     return true;
   }
 
+  /// Gets the memoized form or creates a new one if product variants changed
+  FormGroup _getOrCreateForm(
+    BuildContext context,
+    List<DeliveryProductVariant>? productVariants,
+  ) {
+    // Check if we need to create a new form (first time or variants changed)
+    final variantsChanged = !_listEquals(_lastProductVariants, productVariants);
+
+    if (_memoizedForm == null || variantsChanged) {
+      // Cancel existing subscriptions before creating new form
+      for (final subscription in _formSubscriptions) {
+        subscription.cancel();
+      }
+      _formSubscriptions.clear();
+
+      _lastProductVariants =
+          productVariants != null ? List.from(productVariants) : null;
+      _memoizedForm = _buildForm(context, productVariants);
+    }
+
+    return _memoizedForm!;
+  }
+
+  /// Compare two lists of DeliveryProductVariant by productVariantId
+  bool _listEquals(
+    List<DeliveryProductVariant>? a,
+    List<DeliveryProductVariant>? b,
+  ) {
+    if (a == null && b == null) return true;
+    if (a == null || b == null) return false;
+    if (a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i].productVariantId != b[i].productVariantId) return false;
+    }
+    return true;
+  }
+
+  /// Attaches listeners to form controls, managing subscriptions properly
+  void _attachListenersIfNeeded(FormGroup form, ReactiveFormFieldState field) {
+    // If this is a different form instance, cancel old subscriptions and reattach
+    if (_memoizedForm != form) {
+      // This shouldn't happen with memoization, but handle it safely
+      return;
+    }
+
+    // If subscriptions already exist for this form, don't re-attach
+    if (_formSubscriptions.isNotEmpty) return;
+
+    // Initial update
+    _updateResourceCards(form);
+
+    // Attach listeners and store subscriptions
+    _formSubscriptions.add(
+      form.control(_resourceDeliveredKey).valueChanges.listen((_) {
+        _toastShown = false;
+        field.control.markAsUntouched();
+        _updateResourceCards(form);
+      }),
+    );
+
+    _formSubscriptions.add(
+      form.control(_quantityDistributedKey).valueChanges.listen((_) {
+        _toastShown = false;
+        field.control.markAsUntouched();
+        _updateResourceCards(form);
+      }),
+    );
+  }
+
   void addController(FormGroup form) {
     (form.control(_resourceDeliveredKey) as FormArray).add(
       FormControl<DeliveryProductVariant>(),
@@ -414,7 +481,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
     );
   }
 
-  FormGroup buildForm(
+  FormGroup _buildForm(
     BuildContext context,
     List<DeliveryProductVariant>? productVariants,
   ) {
@@ -430,8 +497,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
 
     _maxQuantities = List<int?>.generate(
       _controllers.length,
-          (index) => (productVariants != null &&
-          index < productVariants.length)
+      (index) => (productVariants != null && index < productVariants.length)
           ? productVariants[index].quantity
           : null,
     );
@@ -458,8 +524,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
         _controllers.map((e) {
           final index = _controllers.indexOf(e);
           return FormControl<int>(
-            value: (productVariants != null &&
-                index < productVariants.length)
+            value: (productVariants != null && index < productVariants.length)
                 ? productVariants[index].quantity
                 : 0,
             validators: [Validators.min(1)],
@@ -477,13 +542,13 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
         data?.stateWrapper?.first?['eligibleProductVariants'] as List?;
     final productVariants = (eligible != null && eligible.isNotEmpty)
         ? eligible
-        .whereType<Map<String, dynamic>>() // safety
-        .expand((item) =>
-    (item['ProductVariants'] as List?)
-        ?.whereType<Map<String, dynamic>>()
-        .map((e) => DeliveryProductVariantMapper.fromMap(e)) ??
-        const <DeliveryProductVariant>[])
-        .toList()
+            .whereType<Map<String, dynamic>>() // safety
+            .expand((item) =>
+                (item['ProductVariants'] as List?)
+                    ?.whereType<Map<String, dynamic>>()
+                    .map((e) => DeliveryProductVariantMapper.fromMap(e)) ??
+                const <DeliveryProductVariant>[])
+            .toList()
         : (data?.stateWrapper?.first?['ProductVariants'] as List?)
                 ?.map((e) => DeliveryProductVariantMapper.fromMap(
                     e as Map<String, dynamic>))

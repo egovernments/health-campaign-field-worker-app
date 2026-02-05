@@ -81,6 +81,15 @@ class Common {
 
   String get coreCommonCancel => 'CORE_COMMON_CANCEL';
 
+  String get coreCommonDelete => 'CORE_COMMON_DELETE';
+
+  String get coreCommonQuantityDistributed => 'CORE_COMMON_QUANTITY_DISTRIBUTED';
+
+  String get coreCommonDeleteResource => 'CORE_COMMON_DELETE_RESOURCE';
+
+  String get coreCommonDeleteResourceConfirmation =>
+      'CORE_COMMON_DELETE_RESOURCE_CONFIRMATION';
+
   String get corecommonRequired => 'CORE_COMMON_REQUIRED';
 
   String get coreCommonReasonRequired => 'CORE_COMMON_REASON_REQUIRED';

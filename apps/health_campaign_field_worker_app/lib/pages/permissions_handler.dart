@@ -103,10 +103,12 @@ class _PermissionsScreenState extends LocalizedState<PermissionsPage> {
       if (schemaJsonRaw != null) {
         final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
         final data = allSchemas['PERMISSIONHANDLER'];
-        if (data?['data']?['disabled']) {
+        if (data?['data']?['disabled'] == true) {
+          _isDisabled = true;
           if (mounted) {
             context.router.replace(BoundarySelectionRoute());
           }
+          return; // Skip loading config when disabled
         } else {
           final registrationDeliveryData = data?['data'];
           final flowsData =

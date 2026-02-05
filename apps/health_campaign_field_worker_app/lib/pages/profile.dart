@@ -156,11 +156,10 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                                   final connectivityResult =
                                       await (Connectivity()
                                           .checkConnectivity());
-                                  final isOnline =
-                                      connectivityResult.firstOrNull ==
-                                              ConnectivityResult.wifi ||
-                                          connectivityResult.firstOrNull ==
-                                              ConnectivityResult.mobile;
+                                  final isOnline = connectivityResult
+                                          .contains(ConnectivityResult.wifi) ||
+                                      connectivityResult
+                                          .contains(ConnectivityResult.mobile);
 
                                   if (!isOnline) {
                                     if (context.mounted) {

@@ -77,7 +77,7 @@ class ResourceBeneficiaryCardState
         formControlName: 'quantityDistributed.${widget.cardIndex}',
         builder: (field) => LabeledField(
           label: localizations.translate(
-            'Quantity Distributed',
+            i18.common.coreCommonQuantityDistributed,
           ),
           capitalizedFirstLetter: false,
           child: DigitNumericFormInput(
@@ -112,12 +112,12 @@ class ResourceBeneficiaryCardState
                         context: context,
                         builder: (ctx) => Popup(
                           title: localizations.translate(
-                            'Are you sure you want to delete this resource?',
+                            i18.common.coreCommonDeleteResourceConfirmation,
                           ),
                           actions: [
                             DigitButton(
                                 label: localizations.translate(
-                                  "delete",
+                                  i18.common.coreCommonDelete,
                                 ),
                                 onPressed: () {
                                   Navigator.of(
@@ -145,7 +145,7 @@ class ResourceBeneficiaryCardState
                       }
                     },
                     label: localizations.translate(
-                      'Delete Resource',
+                      i18.common.coreCommonDeleteResource,
                     ),
                     prefixIcon: Icons.delete,
                     type: DigitButtonType.tertiary,

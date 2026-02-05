@@ -30,548 +30,548 @@ mixin _$ProjectEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initialize,
-    TResult Function(ProjectModel model)? selectProject,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(ProjectInitializeEvent value) initialize,
-    required TResult Function(ProjectSelectProjectEvent value) selectProject,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(ProjectInitializeEvent value)? initialize,
-    TResult? Function(ProjectSelectProjectEvent value)? selectProject,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(ProjectInitializeEvent value)? initialize,
-    TResult Function(ProjectSelectProjectEvent value)? selectProject,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  TResult Function()? initialize,
+  TResult Function(ProjectModel model)? selectProject,
+  required TResult orElse(),
+}) =>
+throw _privateConstructorUsedError;
+@optionalTypeArgs
+TResult map<TResult extends Object?>({
+  required TResult Function(ProjectInitializeEvent value) initialize,
+  required TResult Function(ProjectSelectProjectEvent value) selectProject,
+}) =>
+    throw _privateConstructorUsedError;
+@optionalTypeArgs
+TResult? mapOrNull<TResult extends Object?>({
+  TResult? Function(ProjectInitializeEvent value)? initialize,
+  TResult? Function(ProjectSelectProjectEvent value)? selectProject,
+}) =>
+    throw _privateConstructorUsedError;
+@optionalTypeArgs
+TResult maybeMap<TResult extends Object?>({
+TResult Function(ProjectInitializeEvent value)? initialize,
+TResult Function(ProjectSelectProjectEvent value)? selectProject,
+required TResult orElse(),
+}) =>
+throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ProjectEventCopyWith<$Res> {
-  factory $ProjectEventCopyWith(
-          ProjectEvent value, $Res Function(ProjectEvent) then) =
-      _$ProjectEventCopyWithImpl<$Res, ProjectEvent>;
+factory $ProjectEventCopyWith(
+ProjectEvent value, $Res Function(ProjectEvent) then) =
+_$ProjectEventCopyWithImpl<$Res, ProjectEvent>;
 }
 
 /// @nodoc
 class _$ProjectEventCopyWithImpl<$Res, $Val extends ProjectEvent>
-    implements $ProjectEventCopyWith<$Res> {
-  _$ProjectEventCopyWithImpl(this._value, this._then);
+implements $ProjectEventCopyWith<$Res> {
+_$ProjectEventCopyWithImpl(this._value, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+// ignore: unused_field
+final $Val _value;
+// ignore: unused_field
+final $Res Function($Val) _then;
 }
 
 /// @nodoc
 abstract class _$$ProjectInitializeEventImplCopyWith<$Res> {
-  factory _$$ProjectInitializeEventImplCopyWith(
-          _$ProjectInitializeEventImpl value,
-          $Res Function(_$ProjectInitializeEventImpl) then) =
-      __$$ProjectInitializeEventImplCopyWithImpl<$Res>;
+factory _$$ProjectInitializeEventImplCopyWith(
+_$ProjectInitializeEventImpl value,
+$Res Function(_$ProjectInitializeEventImpl) then) =
+__$$ProjectInitializeEventImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
 class __$$ProjectInitializeEventImplCopyWithImpl<$Res>
-    extends _$ProjectEventCopyWithImpl<$Res, _$ProjectInitializeEventImpl>
-    implements _$$ProjectInitializeEventImplCopyWith<$Res> {
-  __$$ProjectInitializeEventImplCopyWithImpl(
-      _$ProjectInitializeEventImpl _value,
-      $Res Function(_$ProjectInitializeEventImpl) _then)
-      : super(_value, _then);
+extends _$ProjectEventCopyWithImpl<$Res, _$ProjectInitializeEventImpl>
+implements _$$ProjectInitializeEventImplCopyWith<$Res> {
+__$$ProjectInitializeEventImplCopyWithImpl(
+_$ProjectInitializeEventImpl _value,
+$Res Function(_$ProjectInitializeEventImpl) _then)
+    : super(_value, _then);
 }
 
 /// @nodoc
 
 class _$ProjectInitializeEventImpl implements ProjectInitializeEvent {
-  const _$ProjectInitializeEventImpl();
+const _$ProjectInitializeEventImpl();
 
-  @override
-  String toString() {
-    return 'ProjectEvent.initialize()';
-  }
+@override
+String toString() {
+return 'ProjectEvent.initialize()';
+}
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ProjectInitializeEventImpl);
-  }
+@override
+bool operator ==(Object other) {
+return identical(this, other) ||
+(other.runtimeType == runtimeType &&
+other is _$ProjectInitializeEventImpl);
+}
 
-  @override
-  int get hashCode => runtimeType.hashCode;
+@override
+int get hashCode => runtimeType.hashCode;
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initialize,
-    required TResult Function(ProjectModel model) selectProject,
-  }) {
-    return initialize();
-  }
+@override
+@optionalTypeArgs
+TResult when<TResult extends Object?>({
+required TResult Function() initialize,
+required TResult Function(ProjectModel model) selectProject,
+}) {
+return initialize();
+}
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initialize,
-    TResult? Function(ProjectModel model)? selectProject,
-  }) {
-    return initialize?.call();
-  }
+@override
+@optionalTypeArgs
+TResult? whenOrNull<TResult extends Object?>({
+TResult? Function()? initialize,
+TResult? Function(ProjectModel model)? selectProject,
+}) {
+return initialize?.call();
+}
 
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initialize,
-    TResult Function(ProjectModel model)? selectProject,
-    required TResult orElse(),
-  }) {
-    if (initialize != null) {
-      return initialize();
-    }
-    return orElse();
-  }
+@override
+@optionalTypeArgs
+TResult maybeWhen<TResult extends Object?>({
+TResult Function()? initialize,
+TResult Function(ProjectModel model)? selectProject,
+required TResult orElse(),
+}) {
+if (initialize != null) {
+return initialize();
+}
+return orElse();
+}
 
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(ProjectInitializeEvent value) initialize,
-    required TResult Function(ProjectSelectProjectEvent value) selectProject,
-  }) {
-    return initialize(this);
-  }
+@override
+@optionalTypeArgs
+TResult map<TResult extends Object?>({
+required TResult Function(ProjectInitializeEvent value) initialize,
+required TResult Function(ProjectSelectProjectEvent value) selectProject,
+}) {
+return initialize(this);
+}
 
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(ProjectInitializeEvent value)? initialize,
-    TResult? Function(ProjectSelectProjectEvent value)? selectProject,
-  }) {
-    return initialize?.call(this);
-  }
+@override
+@optionalTypeArgs
+TResult? mapOrNull<TResult extends Object?>({
+TResult? Function(ProjectInitializeEvent value)? initialize,
+TResult? Function(ProjectSelectProjectEvent value)? selectProject,
+}) {
+return initialize?.call(this);
+}
 
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(ProjectInitializeEvent value)? initialize,
-    TResult Function(ProjectSelectProjectEvent value)? selectProject,
-    required TResult orElse(),
-  }) {
-    if (initialize != null) {
-      return initialize(this);
-    }
-    return orElse();
-  }
+@override
+@optionalTypeArgs
+TResult maybeMap<TResult extends Object?>({
+TResult Function(ProjectInitializeEvent value)? initialize,
+TResult Function(ProjectSelectProjectEvent value)? selectProject,
+required TResult orElse(),
+}) {
+if (initialize != null) {
+return initialize(this);
+}
+return orElse();
+}
 }
 
 abstract class ProjectInitializeEvent implements ProjectEvent {
-  const factory ProjectInitializeEvent() = _$ProjectInitializeEventImpl;
+const factory ProjectInitializeEvent() = _$ProjectInitializeEventImpl;
 }
 
 /// @nodoc
 abstract class _$$ProjectSelectProjectEventImplCopyWith<$Res> {
-  factory _$$ProjectSelectProjectEventImplCopyWith(
-          _$ProjectSelectProjectEventImpl value,
-          $Res Function(_$ProjectSelectProjectEventImpl) then) =
-      __$$ProjectSelectProjectEventImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({ProjectModel model});
+factory _$$ProjectSelectProjectEventImplCopyWith(
+_$ProjectSelectProjectEventImpl value,
+$Res Function(_$ProjectSelectProjectEventImpl) then) =
+__$$ProjectSelectProjectEventImplCopyWithImpl<$Res>;
+@useResult
+$Res call({ProjectModel model});
 }
 
 /// @nodoc
 class __$$ProjectSelectProjectEventImplCopyWithImpl<$Res>
-    extends _$ProjectEventCopyWithImpl<$Res, _$ProjectSelectProjectEventImpl>
-    implements _$$ProjectSelectProjectEventImplCopyWith<$Res> {
-  __$$ProjectSelectProjectEventImplCopyWithImpl(
-      _$ProjectSelectProjectEventImpl _value,
-      $Res Function(_$ProjectSelectProjectEventImpl) _then)
-      : super(_value, _then);
+extends _$ProjectEventCopyWithImpl<$Res, _$ProjectSelectProjectEventImpl>
+implements _$$ProjectSelectProjectEventImplCopyWith<$Res> {
+__$$ProjectSelectProjectEventImplCopyWithImpl(
+_$ProjectSelectProjectEventImpl _value,
+$Res Function(_$ProjectSelectProjectEventImpl) _then)
+    : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? model = null,
-  }) {
-    return _then(_$ProjectSelectProjectEventImpl(
-      null == model
-          ? _value.model
-          : model // ignore: cast_nullable_to_non_nullable
-              as ProjectModel,
-    ));
-  }
+@pragma('vm:prefer-inline')
+@override
+$Res call({
+Object? model = null,
+}) {
+return _then(_$ProjectSelectProjectEventImpl(
+null == model
+? _value.model
+    : model // ignore: cast_nullable_to_non_nullable
+as ProjectModel,
+));
+}
 }
 
 /// @nodoc
 
 class _$ProjectSelectProjectEventImpl implements ProjectSelectProjectEvent {
-  const _$ProjectSelectProjectEventImpl(this.model);
+const _$ProjectSelectProjectEventImpl(this.model);
 
-  @override
-  final ProjectModel model;
+@override
+final ProjectModel model;
 
-  @override
-  String toString() {
-    return 'ProjectEvent.selectProject(model: $model)';
-  }
+@override
+String toString() {
+return 'ProjectEvent.selectProject(model: $model)';
+}
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ProjectSelectProjectEventImpl &&
-            (identical(other.model, model) || other.model == model));
-  }
+@override
+bool operator ==(Object other) {
+return identical(this, other) ||
+(other.runtimeType == runtimeType &&
+other is _$ProjectSelectProjectEventImpl &&
+(identical(other.model, model) || other.model == model));
+}
 
-  @override
-  int get hashCode => Object.hash(runtimeType, model);
+@override
+int get hashCode => Object.hash(runtimeType, model);
 
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ProjectSelectProjectEventImplCopyWith<_$ProjectSelectProjectEventImpl>
-      get copyWith => __$$ProjectSelectProjectEventImplCopyWithImpl<
-          _$ProjectSelectProjectEventImpl>(this, _$identity);
+@JsonKey(ignore: true)
+@override
+@pragma('vm:prefer-inline')
+_$$ProjectSelectProjectEventImplCopyWith<_$ProjectSelectProjectEventImpl>
+get copyWith => __$$ProjectSelectProjectEventImplCopyWithImpl<
+_$ProjectSelectProjectEventImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initialize,
-    required TResult Function(ProjectModel model) selectProject,
-  }) {
-    return selectProject(model);
-  }
+@override
+@optionalTypeArgs
+TResult when<TResult extends Object?>({
+required TResult Function() initialize,
+required TResult Function(ProjectModel model) selectProject,
+}) {
+return selectProject(model);
+}
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initialize,
-    TResult? Function(ProjectModel model)? selectProject,
-  }) {
-    return selectProject?.call(model);
-  }
+@override
+@optionalTypeArgs
+TResult? whenOrNull<TResult extends Object?>({
+TResult? Function()? initialize,
+TResult? Function(ProjectModel model)? selectProject,
+}) {
+return selectProject?.call(model);
+}
 
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initialize,
-    TResult Function(ProjectModel model)? selectProject,
-    required TResult orElse(),
-  }) {
-    if (selectProject != null) {
-      return selectProject(model);
-    }
-    return orElse();
-  }
+@override
+@optionalTypeArgs
+TResult maybeWhen<TResult extends Object?>({
+TResult Function()? initialize,
+TResult Function(ProjectModel model)? selectProject,
+required TResult orElse(),
+}) {
+if (selectProject != null) {
+return selectProject(model);
+}
+return orElse();
+}
 
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(ProjectInitializeEvent value) initialize,
-    required TResult Function(ProjectSelectProjectEvent value) selectProject,
-  }) {
-    return selectProject(this);
-  }
+@override
+@optionalTypeArgs
+TResult map<TResult extends Object?>({
+required TResult Function(ProjectInitializeEvent value) initialize,
+required TResult Function(ProjectSelectProjectEvent value) selectProject,
+}) {
+return selectProject(this);
+}
 
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(ProjectInitializeEvent value)? initialize,
-    TResult? Function(ProjectSelectProjectEvent value)? selectProject,
-  }) {
-    return selectProject?.call(this);
-  }
+@override
+@optionalTypeArgs
+TResult? mapOrNull<TResult extends Object?>({
+TResult? Function(ProjectInitializeEvent value)? initialize,
+TResult? Function(ProjectSelectProjectEvent value)? selectProject,
+}) {
+return selectProject?.call(this);
+}
 
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(ProjectInitializeEvent value)? initialize,
-    TResult Function(ProjectSelectProjectEvent value)? selectProject,
-    required TResult orElse(),
-  }) {
-    if (selectProject != null) {
-      return selectProject(this);
-    }
-    return orElse();
-  }
+@override
+@optionalTypeArgs
+TResult maybeMap<TResult extends Object?>({
+TResult Function(ProjectInitializeEvent value)? initialize,
+TResult Function(ProjectSelectProjectEvent value)? selectProject,
+required TResult orElse(),
+}) {
+if (selectProject != null) {
+return selectProject(this);
+}
+return orElse();
+}
 }
 
 abstract class ProjectSelectProjectEvent implements ProjectEvent {
-  const factory ProjectSelectProjectEvent(final ProjectModel model) =
-      _$ProjectSelectProjectEventImpl;
+const factory ProjectSelectProjectEvent(final ProjectModel model) =
+_$ProjectSelectProjectEventImpl;
 
-  ProjectModel get model;
-  @JsonKey(ignore: true)
-  _$$ProjectSelectProjectEventImplCopyWith<_$ProjectSelectProjectEventImpl>
-      get copyWith => throw _privateConstructorUsedError;
+ProjectModel get model;
+@JsonKey(ignore: true)
+_$$ProjectSelectProjectEventImplCopyWith<_$ProjectSelectProjectEventImpl>
+get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 mixin _$ProjectState {
-  List<ProjectModel> get projects => throw _privateConstructorUsedError;
-  ProjectType? get projectType => throw _privateConstructorUsedError;
-  ProjectCycle? get selectedCycle => throw _privateConstructorUsedError;
-  ProjectModel? get selectedProject => throw _privateConstructorUsedError;
-  bool get loading => throw _privateConstructorUsedError;
-  ProjectSyncErrorType? get syncError => throw _privateConstructorUsedError;
+List<ProjectModel> get projects => throw _privateConstructorUsedError;
+ProjectType? get projectType => throw _privateConstructorUsedError;
+ProjectCycle? get selectedCycle => throw _privateConstructorUsedError;
+ProjectModel? get selectedProject => throw _privateConstructorUsedError;
+bool get loading => throw _privateConstructorUsedError;
+ProjectSyncErrorType? get syncError => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
-  $ProjectStateCopyWith<ProjectState> get copyWith =>
-      throw _privateConstructorUsedError;
+@JsonKey(ignore: true)
+$ProjectStateCopyWith<ProjectState> get copyWith =>
+throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ProjectStateCopyWith<$Res> {
-  factory $ProjectStateCopyWith(
-          ProjectState value, $Res Function(ProjectState) then) =
-      _$ProjectStateCopyWithImpl<$Res, ProjectState>;
-  @useResult
-  $Res call(
-      {List<ProjectModel> projects,
-      ProjectType? projectType,
-      ProjectCycle? selectedCycle,
-      ProjectModel? selectedProject,
-      bool loading,
-      ProjectSyncErrorType? syncError});
+factory $ProjectStateCopyWith(
+ProjectState value, $Res Function(ProjectState) then) =
+_$ProjectStateCopyWithImpl<$Res, ProjectState>;
+@useResult
+$Res call(
+{List<ProjectModel> projects,
+ProjectType? projectType,
+ProjectCycle? selectedCycle,
+ProjectModel? selectedProject,
+bool loading,
+ProjectSyncErrorType? syncError});
 
-  $ProjectTypeCopyWith<$Res>? get projectType;
+$ProjectTypeCopyWith<$Res>? get projectType;
 }
 
 /// @nodoc
 class _$ProjectStateCopyWithImpl<$Res, $Val extends ProjectState>
-    implements $ProjectStateCopyWith<$Res> {
-  _$ProjectStateCopyWithImpl(this._value, this._then);
+implements $ProjectStateCopyWith<$Res> {
+_$ProjectStateCopyWithImpl(this._value, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+// ignore: unused_field
+final $Val _value;
+// ignore: unused_field
+final $Res Function($Val) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? projects = null,
-    Object? projectType = freezed,
-    Object? selectedCycle = freezed,
-    Object? selectedProject = freezed,
-    Object? loading = null,
-    Object? syncError = freezed,
-  }) {
-    return _then(_value.copyWith(
-      projects: null == projects
-          ? _value.projects
-          : projects // ignore: cast_nullable_to_non_nullable
-              as List<ProjectModel>,
-      projectType: freezed == projectType
-          ? _value.projectType
-          : projectType // ignore: cast_nullable_to_non_nullable
-              as ProjectType?,
-      selectedCycle: freezed == selectedCycle
-          ? _value.selectedCycle
-          : selectedCycle // ignore: cast_nullable_to_non_nullable
-              as ProjectCycle?,
-      selectedProject: freezed == selectedProject
-          ? _value.selectedProject
-          : selectedProject // ignore: cast_nullable_to_non_nullable
-              as ProjectModel?,
-      loading: null == loading
-          ? _value.loading
-          : loading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      syncError: freezed == syncError
-          ? _value.syncError
-          : syncError // ignore: cast_nullable_to_non_nullable
-              as ProjectSyncErrorType?,
-    ) as $Val);
-  }
+@pragma('vm:prefer-inline')
+@override
+$Res call({
+Object? projects = null,
+Object? projectType = freezed,
+Object? selectedCycle = freezed,
+Object? selectedProject = freezed,
+Object? loading = null,
+Object? syncError = freezed,
+}) {
+return _then(_value.copyWith(
+projects: null == projects
+? _value.projects
+    : projects // ignore: cast_nullable_to_non_nullable
+as List<ProjectModel>,
+projectType: freezed == projectType
+? _value.projectType
+    : projectType // ignore: cast_nullable_to_non_nullable
+as ProjectType?,
+selectedCycle: freezed == selectedCycle
+? _value.selectedCycle
+    : selectedCycle // ignore: cast_nullable_to_non_nullable
+as ProjectCycle?,
+selectedProject: freezed == selectedProject
+? _value.selectedProject
+    : selectedProject // ignore: cast_nullable_to_non_nullable
+as ProjectModel?,
+loading: null == loading
+? _value.loading
+    : loading // ignore: cast_nullable_to_non_nullable
+as bool,
+syncError: freezed == syncError
+? _value.syncError
+    : syncError // ignore: cast_nullable_to_non_nullable
+as ProjectSyncErrorType?,
+) as $Val);
+}
 
-  @override
-  @pragma('vm:prefer-inline')
-  $ProjectTypeCopyWith<$Res>? get projectType {
-    if (_value.projectType == null) {
-      return null;
-    }
+@override
+@pragma('vm:prefer-inline')
+$ProjectTypeCopyWith<$Res>? get projectType {
+if (_value.projectType == null) {
+return null;
+}
 
-    return $ProjectTypeCopyWith<$Res>(_value.projectType!, (value) {
-      return _then(_value.copyWith(projectType: value) as $Val);
-    });
-  }
+return $ProjectTypeCopyWith<$Res>(_value.projectType!, (value) {
+return _then(_value.copyWith(projectType: value) as $Val);
+});
+}
 }
 
 /// @nodoc
 abstract class _$$ProjectStateImplCopyWith<$Res>
-    implements $ProjectStateCopyWith<$Res> {
-  factory _$$ProjectStateImplCopyWith(
-          _$ProjectStateImpl value, $Res Function(_$ProjectStateImpl) then) =
-      __$$ProjectStateImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {List<ProjectModel> projects,
-      ProjectType? projectType,
-      ProjectCycle? selectedCycle,
-      ProjectModel? selectedProject,
-      bool loading,
-      ProjectSyncErrorType? syncError});
+implements $ProjectStateCopyWith<$Res> {
+factory _$$ProjectStateImplCopyWith(
+_$ProjectStateImpl value, $Res Function(_$ProjectStateImpl) then) =
+__$$ProjectStateImplCopyWithImpl<$Res>;
+@override
+@useResult
+$Res call(
+{List<ProjectModel> projects,
+ProjectType? projectType,
+ProjectCycle? selectedCycle,
+ProjectModel? selectedProject,
+bool loading,
+ProjectSyncErrorType? syncError});
 
-  @override
-  $ProjectTypeCopyWith<$Res>? get projectType;
+@override
+$ProjectTypeCopyWith<$Res>? get projectType;
 }
 
 /// @nodoc
 class __$$ProjectStateImplCopyWithImpl<$Res>
-    extends _$ProjectStateCopyWithImpl<$Res, _$ProjectStateImpl>
-    implements _$$ProjectStateImplCopyWith<$Res> {
-  __$$ProjectStateImplCopyWithImpl(
-      _$ProjectStateImpl _value, $Res Function(_$ProjectStateImpl) _then)
-      : super(_value, _then);
+extends _$ProjectStateCopyWithImpl<$Res, _$ProjectStateImpl>
+implements _$$ProjectStateImplCopyWith<$Res> {
+__$$ProjectStateImplCopyWithImpl(
+_$ProjectStateImpl _value, $Res Function(_$ProjectStateImpl) _then)
+    : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? projects = null,
-    Object? projectType = freezed,
-    Object? selectedCycle = freezed,
-    Object? selectedProject = freezed,
-    Object? loading = null,
-    Object? syncError = freezed,
-  }) {
-    return _then(_$ProjectStateImpl(
-      projects: null == projects
-          ? _value._projects
-          : projects // ignore: cast_nullable_to_non_nullable
-              as List<ProjectModel>,
-      projectType: freezed == projectType
-          ? _value.projectType
-          : projectType // ignore: cast_nullable_to_non_nullable
-              as ProjectType?,
-      selectedCycle: freezed == selectedCycle
-          ? _value.selectedCycle
-          : selectedCycle // ignore: cast_nullable_to_non_nullable
-              as ProjectCycle?,
-      selectedProject: freezed == selectedProject
-          ? _value.selectedProject
-          : selectedProject // ignore: cast_nullable_to_non_nullable
-              as ProjectModel?,
-      loading: null == loading
-          ? _value.loading
-          : loading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      syncError: freezed == syncError
-          ? _value.syncError
-          : syncError // ignore: cast_nullable_to_non_nullable
-              as ProjectSyncErrorType?,
-    ));
-  }
+@pragma('vm:prefer-inline')
+@override
+$Res call({
+Object? projects = null,
+Object? projectType = freezed,
+Object? selectedCycle = freezed,
+Object? selectedProject = freezed,
+Object? loading = null,
+Object? syncError = freezed,
+}) {
+return _then(_$ProjectStateImpl(
+projects: null == projects
+? _value._projects
+    : projects // ignore: cast_nullable_to_non_nullable
+as List<ProjectModel>,
+projectType: freezed == projectType
+? _value.projectType
+    : projectType // ignore: cast_nullable_to_non_nullable
+as ProjectType?,
+selectedCycle: freezed == selectedCycle
+? _value.selectedCycle
+    : selectedCycle // ignore: cast_nullable_to_non_nullable
+as ProjectCycle?,
+selectedProject: freezed == selectedProject
+? _value.selectedProject
+    : selectedProject // ignore: cast_nullable_to_non_nullable
+as ProjectModel?,
+loading: null == loading
+? _value.loading
+    : loading // ignore: cast_nullable_to_non_nullable
+as bool,
+syncError: freezed == syncError
+? _value.syncError
+    : syncError // ignore: cast_nullable_to_non_nullable
+as ProjectSyncErrorType?,
+));
+}
 }
 
 /// @nodoc
 
 class _$ProjectStateImpl extends _ProjectState {
-  const _$ProjectStateImpl(
-      {final List<ProjectModel> projects = const [],
-      this.projectType,
-      this.selectedCycle,
-      this.selectedProject,
-      this.loading = false,
-      this.syncError})
-      : _projects = projects,
-        super._();
+const _$ProjectStateImpl(
+{final List<ProjectModel> projects = const [],
+this.projectType,
+this.selectedCycle,
+this.selectedProject,
+this.loading = false,
+this.syncError})
+    : _projects = projects,
+super._();
 
-  final List<ProjectModel> _projects;
-  @override
-  @JsonKey()
-  List<ProjectModel> get projects {
-    if (_projects is EqualUnmodifiableListView) return _projects;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_projects);
-  }
+final List<ProjectModel> _projects;
+@override
+@JsonKey()
+List<ProjectModel> get projects {
+if (_projects is EqualUnmodifiableListView) return _projects;
+// ignore: implicit_dynamic_type
+return EqualUnmodifiableListView(_projects);
+}
 
-  @override
-  final ProjectType? projectType;
-  @override
-  final ProjectCycle? selectedCycle;
-  @override
-  final ProjectModel? selectedProject;
-  @override
-  @JsonKey()
-  final bool loading;
-  @override
-  final ProjectSyncErrorType? syncError;
+@override
+final ProjectType? projectType;
+@override
+final ProjectCycle? selectedCycle;
+@override
+final ProjectModel? selectedProject;
+@override
+@JsonKey()
+final bool loading;
+@override
+final ProjectSyncErrorType? syncError;
 
-  @override
-  String toString() {
-    return 'ProjectState(projects: $projects, projectType: $projectType, selectedCycle: $selectedCycle, selectedProject: $selectedProject, loading: $loading, syncError: $syncError)';
-  }
+@override
+String toString() {
+return 'ProjectState(projects: $projects, projectType: $projectType, selectedCycle: $selectedCycle, selectedProject: $selectedProject, loading: $loading, syncError: $syncError)';
+}
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ProjectStateImpl &&
-            const DeepCollectionEquality().equals(other._projects, _projects) &&
-            (identical(other.projectType, projectType) ||
-                other.projectType == projectType) &&
-            (identical(other.selectedCycle, selectedCycle) ||
-                other.selectedCycle == selectedCycle) &&
-            (identical(other.selectedProject, selectedProject) ||
-                other.selectedProject == selectedProject) &&
-            (identical(other.loading, loading) || other.loading == loading) &&
-            (identical(other.syncError, syncError) ||
-                other.syncError == syncError));
-  }
+@override
+bool operator ==(Object other) {
+return identical(this, other) ||
+(other.runtimeType == runtimeType &&
+other is _$ProjectStateImpl &&
+const DeepCollectionEquality().equals(other._projects, _projects) &&
+(identical(other.projectType, projectType) ||
+other.projectType == projectType) &&
+(identical(other.selectedCycle, selectedCycle) ||
+other.selectedCycle == selectedCycle) &&
+(identical(other.selectedProject, selectedProject) ||
+other.selectedProject == selectedProject) &&
+(identical(other.loading, loading) || other.loading == loading) &&
+(identical(other.syncError, syncError) ||
+other.syncError == syncError));
+}
 
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_projects),
-      projectType,
-      selectedCycle,
-      selectedProject,
-      loading,
-      syncError);
+@override
+int get hashCode => Object.hash(
+runtimeType,
+const DeepCollectionEquality().hash(_projects),
+projectType,
+selectedCycle,
+selectedProject,
+loading,
+syncError);
 
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ProjectStateImplCopyWith<_$ProjectStateImpl> get copyWith =>
-      __$$ProjectStateImplCopyWithImpl<_$ProjectStateImpl>(this, _$identity);
+@JsonKey(ignore: true)
+@override
+@pragma('vm:prefer-inline')
+_$$ProjectStateImplCopyWith<_$ProjectStateImpl> get copyWith =>
+__$$ProjectStateImplCopyWithImpl<_$ProjectStateImpl>(this, _$identity);
 }
 
 abstract class _ProjectState extends ProjectState {
-  const factory _ProjectState(
-      {final List<ProjectModel> projects,
-      final ProjectType? projectType,
-      final ProjectCycle? selectedCycle,
-      final ProjectModel? selectedProject,
-      final bool loading,
-      final ProjectSyncErrorType? syncError}) = _$ProjectStateImpl;
-  const _ProjectState._() : super._();
+const factory _ProjectState(
+{final List<ProjectModel> projects,
+final ProjectType? projectType,
+final ProjectCycle? selectedCycle,
+final ProjectModel? selectedProject,
+final bool loading,
+final ProjectSyncErrorType? syncError}) = _$ProjectStateImpl;
+const _ProjectState._() : super._();
 
-  @override
-  List<ProjectModel> get projects;
-  @override
-  ProjectType? get projectType;
-  @override
-  ProjectCycle? get selectedCycle;
-  @override
-  ProjectModel? get selectedProject;
-  @override
-  bool get loading;
-  @override
-  ProjectSyncErrorType? get syncError;
-  @override
-  @JsonKey(ignore: true)
-  _$$ProjectStateImplCopyWith<_$ProjectStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+List<ProjectModel> get projects;
+@override
+ProjectType? get projectType;
+@override
+ProjectCycle? get selectedCycle;
+@override
+ProjectModel? get selectedProject;
+@override
+bool get loading;
+@override
+ProjectSyncErrorType? get syncError;
+@override
+@JsonKey(ignore: true)
+_$$ProjectStateImplCopyWith<_$ProjectStateImpl> get copyWith =>
+throw _privateConstructorUsedError;
 }

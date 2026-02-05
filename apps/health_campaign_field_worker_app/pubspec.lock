@@ -392,14 +392,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.18.0"
-  complaints:
-    dependency: "direct main"
-    description:
-      name: complaints
-      sha256: "7c546afd57447d42900b7bffff1f23166d1d56374135fd4dd8600c9c3bcb8dac"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0-dev.1-console"
   connectivity_plus:
     dependency: "direct main"
     description:
@@ -1396,14 +1388,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.19.0"
-  inventory_management:
-    dependency: "direct main"
-    description:
-      name: inventory_management
-      sha256: "0f8cd2635b08afb1aa2c3bd104c18615d5ab33aa693fc06e13c3d43af71782c2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.6"
   io:
     dependency: transitive
     description:
@@ -1892,16 +1876,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
-  referral_reconciliation:
-    dependency: "direct main"
-    description:
-      name: referral_reconciliation
-      sha256: f86265a1dbbbe93de51af56700e6754ba14206ac6c5425b4c0a46e7375f08cb0
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.6+1"
   registration_delivery:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: registration_delivery
       sha256: e0594d5ec0b3feaacbfc10d7c6447cf4d6ca0ffd7bb7a12502f5fc8ba81721de
@@ -2081,14 +2057,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.5"
-  sqlite3_flutter_libs:
-    dependency: transitive
-    description:
-      name: sqlite3_flutter_libs
-      sha256: "1e800ebe7f85a80a66adacaa6febe4d5f4d8b75f244e9838a27cb2ffc7aec08d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.41"
   sqlparser:
     dependency: transitive
     description:
@@ -2479,5 +2447,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.3 <3.9.0"
+  dart: ">=3.4.3 <4.0.0"
   flutter: ">=3.22.0"

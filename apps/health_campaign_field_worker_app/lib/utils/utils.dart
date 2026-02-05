@@ -102,8 +102,8 @@ performBackgroundService({
 }) async {
   final connectivityResult = await (Connectivity().checkConnectivity());
 
-  final isOnline = connectivityResult.firstOrNull == ConnectivityResult.wifi ||
-      connectivityResult.firstOrNull == ConnectivityResult.mobile;
+  final isOnline = connectivityResult.contains(ConnectivityResult.wifi) ||
+      connectivityResult.contains(ConnectivityResult.mobile);
   final service = FlutterBackgroundService();
   var isRunning = await service.isRunning();
 
@@ -484,8 +484,8 @@ initializeAllMappers() async {
 void attemptSyncUp(BuildContext context) async {
   // Check for internet connectivity first
   final connectivityResult = await Connectivity().checkConnectivity();
-  final isOnline = connectivityResult.firstOrNull == ConnectivityResult.wifi ||
-      connectivityResult.firstOrNull == ConnectivityResult.mobile;
+  final isOnline = connectivityResult.contains(ConnectivityResult.wifi) ||
+      connectivityResult.contains(ConnectivityResult.mobile);
 
   if (!isOnline) {
     if (context.mounted) {
