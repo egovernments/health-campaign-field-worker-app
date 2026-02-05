@@ -330,8 +330,8 @@ class _HomePageState extends LocalizedState<HomePage> {
         'receipt': ['RECEIVED'],
         'dispatch': ['DISPATCHED'],
         'returned': ['RECEIVED'],
-        'damage': ['DAMAGED'],
-        'loss': ['LOSS']
+        'damage': ['DISPATCHED'],
+        'loss': ['DISPATCHED']
       };
       return types[reportType] ?? [];
     });
@@ -350,10 +350,26 @@ class _HomePageState extends LocalizedState<HomePage> {
       return reasons[reportType] ?? [];
     });
 
+    FunctionRegistry.register('getStockEntryType', (args, stateData) {
+      if (args.isEmpty) return '';
+      final reportType = args.first?.toString() ?? '';
+
+      const entryTypes = {
+        'receipt': 'RECEIPT',
+        'dispatch': 'ISSUED',
+        'returned': 'RETURNED',
+        'damage': 'DAMAGED',
+        'loss': 'LOSS',
+      };
+      return entryTypes[reportType] ?? '';
+    });
+
     FunctionRegistry.register('getSenderOrReceiver', (args, stateData) {
       if (args.isEmpty) return 'receiverId';
       final reportType = args.first?.toString() ?? '';
-      return reportType == 'dispatch' ? 'senderId' : 'receiverId';
+      // For dispatch/damage/loss the warehouse is the sender
+      const senderTypes = {'dispatch', 'damage', 'loss'};
+      return senderTypes.contains(reportType) ? 'senderId' : 'receiverId';
     });
 
     // Get secondary party type based on facility selection
@@ -451,38 +467,78 @@ class _HomePageState extends LocalizedState<HomePage> {
       }
     });
 
-    FunctionRegistry.register('getAdditionalFieldValue', (args, stateData) {
-      if (args.length < 2) return '0';
-      final additionalFields = args[0];
-      final key = args[1]?.toString() ?? '';
+    // Get user's assigned facility ID based on their role and boundary level
+    // For distributors: returns the logged-in user UUID
+    // For warehouse managers: returns the facility ID based on boundary type
+    FunctionRegistry.register('getUserFacilityId', (args, stateData) {
+      final isDistributor = InventorySingleton().isDistributor ?? false;
+      final isWareHouseMgr = InventorySingleton().isWareHouseMgr ?? false;
 
-      if (additionalFields == null) return '0';
-
-      // Handle both Map and object with fields property
-      List<dynamic>? fields;
-      if (additionalFields is Map) {
-        fields = additionalFields['fields'] as List<dynamic>?;
-      } else {
-        try {
-          fields = (additionalFields as dynamic).fields as List<dynamic>?;
-        } catch (_) {
-          return '0';
-        }
+      // For distributors who are not warehouse managers, return their user UUID
+      if (isDistributor && !isWareHouseMgr) {
+        return InventorySingleton().loggedInUserUuid ?? '';
       }
 
-      if (fields == null) return '0';
+      // For warehouse managers and other roles, get facility from wrapper data
+      if (stateData == null) return '';
 
-      // Find the field with matching key
-      for (var field in fields) {
-        if (field is Map && field['key'] == key) {
-          final value = field['value'];
-          if (value == null) return '0';
-          final parsed = double.tryParse(value.toString()) ?? 0.0;
-          return parsed.toStringAsFixed(0);
+      try {
+        // Get facility list from stateData - CrudStateData has modelMap property
+        List<Map<String, dynamic>>? projectFacilities;
+
+        // stateData is CrudStateData which has modelMap: Map<String, List<Map<String, dynamic>>>
+        if (stateData.modelMap != null) {
+          projectFacilities = stateData.modelMap['ProjectFacilityModel'];
         }
-      }
 
-      return '0';
+        if (projectFacilities == null || projectFacilities.isEmpty) {
+          return '';
+        }
+
+        // Return first facility ID (user's assigned facility)
+        // Note: Could be enhanced to filter by boundary type if needed
+        for (var facility in projectFacilities) {
+          final facilityId = facility['facilityId']?.toString() ?? '';
+          if (facilityId.isNotEmpty) {
+            return facilityId;
+          }
+        }
+
+        return '';
+      } catch (e) {
+        debugPrint('getUserFacilityId error: $e');
+        return '';
+      }
+    });
+
+    // Get facility name from facility ID
+    FunctionRegistry.register('getFacilityName', (args, stateData) {
+      if (args.isEmpty) return '';
+      final facilityId = args.first?.toString() ?? '';
+      if (facilityId.isEmpty) return '';
+
+      // Return a localization key that can be translated
+      return 'FAC_$facilityId';
+    });
+
+    // Get transaction status type for tag styling
+    FunctionRegistry.register('getTransactionStatusType', (args, stateData) {
+      if (args.isEmpty) return 'default';
+      final transactionType = args.first?.toString().toUpperCase() ?? '';
+
+      switch (transactionType) {
+        case 'DISPATCHED':
+          return 'warning'; // Orange/Yellow - pending action
+        case 'RECEIVED':
+          return 'success'; // Green - completed
+        case 'RETURNED':
+          return 'info'; // Blue - returned
+        case 'DAMAGED':
+        case 'LOSS':
+          return 'error'; // Red - issue
+        default:
+          return 'default';
+      }
     });
   }
 
