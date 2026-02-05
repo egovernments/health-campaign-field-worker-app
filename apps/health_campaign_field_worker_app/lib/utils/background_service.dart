@@ -27,7 +27,7 @@ import '../widgets/network_manager_provider_wrapper.dart';
 import 'environment_config.dart';
 import 'utils.dart';
 
-final LocalSqlDataStore _sql = LocalSqlDataStore();
+late LocalSqlDataStore _sql;
 late Dio _dio;
 Future<Isar> isarFuture = Constants().isar;
 
@@ -114,6 +114,10 @@ void onStart(ServiceInstance service) async {
 
   _dio = DioClient().dio;
   final _isar = await isarFuture;
+
+  // Initialize encrypted database for background service
+  final encryptionKey = await LocalSecureStore.instance.getOrCreateDbEncryptionKey();
+  _sql = LocalSqlDataStore(encryptionKey: encryptionKey);
 
   final userRequestModel = await LocalSecureStore.instance.userRequestModel;
   final selectedProject = await LocalSecureStore.instance.selectedProject;

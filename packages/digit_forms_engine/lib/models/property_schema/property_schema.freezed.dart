@@ -37,10 +37,18 @@ mixin _$PropertySchema {
   String? get startDate => throw _privateConstructorUsedError;
   @JsonKey(fromJson: _stringOrNull)
   String? get endDate => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _intOrNull)
   int? get minValue => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _intOrNull)
   int? get maxValue => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _intOrNull)
   int? get minLength => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _intOrNull)
   int? get maxLength => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _intOrNull)
+  int? get min => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _intOrNull)
+  int? get max => throw _privateConstructorUsedError;
   String? get helpText => throw _privateConstructorUsedError;
   String? get tooltip => throw _privateConstructorUsedError;
   String? get prefixText => throw _privateConstructorUsedError;
@@ -51,15 +59,33 @@ mixin _$PropertySchema {
   dynamic get value => throw _privateConstructorUsedError;
   DisplayBehavior? get displayBehavior => throw _privateConstructorUsedError;
   Map<String, dynamic>? get conditions => throw _privateConstructorUsedError;
-  int? get order => throw _privateConstructorUsedError;
+  double? get order => throw _privateConstructorUsedError;
   String? get actionLabel => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   List<ValidationRule>? get validations => throw _privateConstructorUsedError;
   bool? get includeInForm => throw _privateConstructorUsedError;
   bool? get includeInSummary => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _navigateToConfigOrNull)
   NavigateToConfig? get navigateTo => throw _privateConstructorUsedError;
   @JsonKey(fromJson: _visibilityConditionOrNull)
   VisibilityCondition? get visibilityCondition =>
+      throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _conditionalNavigateListOrNull)
+  List<ConditionalNavigateTo>? get conditionalNavigateTo =>
+      throw _privateConstructorUsedError; // New: AutoFillCondition list
+  @JsonKey(fromJson: _autoFillConditionListOrNull)
+  List<AutoFillCondition>? get autoFillCondition =>
+      throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _showAlertOrNull)
+  ShowAlertPopUp? get showAlertPopUp =>
+      throw _privateConstructorUsedError; // Multi-entity tab configuration
+  @JsonKey(fromJson: _multiEntityConfigOrNull)
+  MultiEntityConfig? get multiEntityConfig =>
+      throw _privateConstructorUsedError; // Screenshot protection for this page
+  bool? get preventScreenCapture =>
+      throw _privateConstructorUsedError; // Submit condition for pages - when true, form submits directly instead of navigating to next page
+  @JsonKey(fromJson: _visibilityConditionOrNull)
+  VisibilityCondition? get submitCondition =>
       throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -89,10 +115,12 @@ abstract class $PropertySchemaCopyWith<$Res> {
       PropertySchemaFormat? format,
       @JsonKey(fromJson: _stringOrNull) String? startDate,
       @JsonKey(fromJson: _stringOrNull) String? endDate,
-      int? minValue,
-      int? maxValue,
-      int? minLength,
-      int? maxLength,
+      @JsonKey(fromJson: _intOrNull) int? minValue,
+      @JsonKey(fromJson: _intOrNull) int? maxValue,
+      @JsonKey(fromJson: _intOrNull) int? minLength,
+      @JsonKey(fromJson: _intOrNull) int? maxLength,
+      @JsonKey(fromJson: _intOrNull) int? min,
+      @JsonKey(fromJson: _intOrNull) int? max,
       String? helpText,
       String? tooltip,
       String? prefixText,
@@ -103,19 +131,32 @@ abstract class $PropertySchemaCopyWith<$Res> {
       dynamic value,
       DisplayBehavior? displayBehavior,
       Map<String, dynamic>? conditions,
-      int? order,
+      double? order,
       String? actionLabel,
       String? description,
       List<ValidationRule>? validations,
       bool? includeInForm,
       bool? includeInSummary,
-      NavigateToConfig? navigateTo,
+      @JsonKey(fromJson: _navigateToConfigOrNull) NavigateToConfig? navigateTo,
       @JsonKey(fromJson: _visibilityConditionOrNull)
-      VisibilityCondition? visibilityCondition});
+      VisibilityCondition? visibilityCondition,
+      @JsonKey(fromJson: _conditionalNavigateListOrNull)
+      List<ConditionalNavigateTo>? conditionalNavigateTo,
+      @JsonKey(fromJson: _autoFillConditionListOrNull)
+      List<AutoFillCondition>? autoFillCondition,
+      @JsonKey(fromJson: _showAlertOrNull) ShowAlertPopUp? showAlertPopUp,
+      @JsonKey(fromJson: _multiEntityConfigOrNull)
+      MultiEntityConfig? multiEntityConfig,
+      bool? preventScreenCapture,
+      @JsonKey(fromJson: _visibilityConditionOrNull)
+      VisibilityCondition? submitCondition});
 
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
   $NavigateToConfigCopyWith<$Res>? get navigateTo;
   $VisibilityConditionCopyWith<$Res>? get visibilityCondition;
+  $ShowAlertPopUpCopyWith<$Res>? get showAlertPopUp;
+  $MultiEntityConfigCopyWith<$Res>? get multiEntityConfig;
+  $VisibilityConditionCopyWith<$Res>? get submitCondition;
 }
 
 /// @nodoc
@@ -147,6 +188,8 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? maxValue = freezed,
     Object? minLength = freezed,
     Object? maxLength = freezed,
+    Object? min = freezed,
+    Object? max = freezed,
     Object? helpText = freezed,
     Object? tooltip = freezed,
     Object? prefixText = freezed,
@@ -165,6 +208,12 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? includeInSummary = freezed,
     Object? navigateTo = freezed,
     Object? visibilityCondition = freezed,
+    Object? conditionalNavigateTo = freezed,
+    Object? autoFillCondition = freezed,
+    Object? showAlertPopUp = freezed,
+    Object? multiEntityConfig = freezed,
+    Object? preventScreenCapture = freezed,
+    Object? submitCondition = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -231,6 +280,14 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.maxLength
           : maxLength // ignore: cast_nullable_to_non_nullable
               as int?,
+      min: freezed == min
+          ? _value.min
+          : min // ignore: cast_nullable_to_non_nullable
+              as int?,
+      max: freezed == max
+          ? _value.max
+          : max // ignore: cast_nullable_to_non_nullable
+              as int?,
       helpText: freezed == helpText
           ? _value.helpText
           : helpText // ignore: cast_nullable_to_non_nullable
@@ -274,7 +331,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
       order: freezed == order
           ? _value.order
           : order // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as double?,
       actionLabel: freezed == actionLabel
           ? _value.actionLabel
           : actionLabel // ignore: cast_nullable_to_non_nullable
@@ -302,6 +359,30 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
       visibilityCondition: freezed == visibilityCondition
           ? _value.visibilityCondition
           : visibilityCondition // ignore: cast_nullable_to_non_nullable
+              as VisibilityCondition?,
+      conditionalNavigateTo: freezed == conditionalNavigateTo
+          ? _value.conditionalNavigateTo
+          : conditionalNavigateTo // ignore: cast_nullable_to_non_nullable
+              as List<ConditionalNavigateTo>?,
+      autoFillCondition: freezed == autoFillCondition
+          ? _value.autoFillCondition
+          : autoFillCondition // ignore: cast_nullable_to_non_nullable
+              as List<AutoFillCondition>?,
+      showAlertPopUp: freezed == showAlertPopUp
+          ? _value.showAlertPopUp
+          : showAlertPopUp // ignore: cast_nullable_to_non_nullable
+              as ShowAlertPopUp?,
+      multiEntityConfig: freezed == multiEntityConfig
+          ? _value.multiEntityConfig
+          : multiEntityConfig // ignore: cast_nullable_to_non_nullable
+              as MultiEntityConfig?,
+      preventScreenCapture: freezed == preventScreenCapture
+          ? _value.preventScreenCapture
+          : preventScreenCapture // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      submitCondition: freezed == submitCondition
+          ? _value.submitCondition
+          : submitCondition // ignore: cast_nullable_to_non_nullable
               as VisibilityCondition?,
     ) as $Val);
   }
@@ -342,6 +423,42 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
       return _then(_value.copyWith(visibilityCondition: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ShowAlertPopUpCopyWith<$Res>? get showAlertPopUp {
+    if (_value.showAlertPopUp == null) {
+      return null;
+    }
+
+    return $ShowAlertPopUpCopyWith<$Res>(_value.showAlertPopUp!, (value) {
+      return _then(_value.copyWith(showAlertPopUp: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $MultiEntityConfigCopyWith<$Res>? get multiEntityConfig {
+    if (_value.multiEntityConfig == null) {
+      return null;
+    }
+
+    return $MultiEntityConfigCopyWith<$Res>(_value.multiEntityConfig!, (value) {
+      return _then(_value.copyWith(multiEntityConfig: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $VisibilityConditionCopyWith<$Res>? get submitCondition {
+    if (_value.submitCondition == null) {
+      return null;
+    }
+
+    return $VisibilityConditionCopyWith<$Res>(_value.submitCondition!, (value) {
+      return _then(_value.copyWith(submitCondition: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -367,10 +484,12 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       PropertySchemaFormat? format,
       @JsonKey(fromJson: _stringOrNull) String? startDate,
       @JsonKey(fromJson: _stringOrNull) String? endDate,
-      int? minValue,
-      int? maxValue,
-      int? minLength,
-      int? maxLength,
+      @JsonKey(fromJson: _intOrNull) int? minValue,
+      @JsonKey(fromJson: _intOrNull) int? maxValue,
+      @JsonKey(fromJson: _intOrNull) int? minLength,
+      @JsonKey(fromJson: _intOrNull) int? maxLength,
+      @JsonKey(fromJson: _intOrNull) int? min,
+      @JsonKey(fromJson: _intOrNull) int? max,
       String? helpText,
       String? tooltip,
       String? prefixText,
@@ -381,15 +500,25 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       dynamic value,
       DisplayBehavior? displayBehavior,
       Map<String, dynamic>? conditions,
-      int? order,
+      double? order,
       String? actionLabel,
       String? description,
       List<ValidationRule>? validations,
       bool? includeInForm,
       bool? includeInSummary,
-      NavigateToConfig? navigateTo,
+      @JsonKey(fromJson: _navigateToConfigOrNull) NavigateToConfig? navigateTo,
       @JsonKey(fromJson: _visibilityConditionOrNull)
-      VisibilityCondition? visibilityCondition});
+      VisibilityCondition? visibilityCondition,
+      @JsonKey(fromJson: _conditionalNavigateListOrNull)
+      List<ConditionalNavigateTo>? conditionalNavigateTo,
+      @JsonKey(fromJson: _autoFillConditionListOrNull)
+      List<AutoFillCondition>? autoFillCondition,
+      @JsonKey(fromJson: _showAlertOrNull) ShowAlertPopUp? showAlertPopUp,
+      @JsonKey(fromJson: _multiEntityConfigOrNull)
+      MultiEntityConfig? multiEntityConfig,
+      bool? preventScreenCapture,
+      @JsonKey(fromJson: _visibilityConditionOrNull)
+      VisibilityCondition? submitCondition});
 
   @override
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
@@ -397,6 +526,12 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
   $NavigateToConfigCopyWith<$Res>? get navigateTo;
   @override
   $VisibilityConditionCopyWith<$Res>? get visibilityCondition;
+  @override
+  $ShowAlertPopUpCopyWith<$Res>? get showAlertPopUp;
+  @override
+  $MultiEntityConfigCopyWith<$Res>? get multiEntityConfig;
+  @override
+  $VisibilityConditionCopyWith<$Res>? get submitCondition;
 }
 
 /// @nodoc
@@ -426,6 +561,8 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? maxValue = freezed,
     Object? minLength = freezed,
     Object? maxLength = freezed,
+    Object? min = freezed,
+    Object? max = freezed,
     Object? helpText = freezed,
     Object? tooltip = freezed,
     Object? prefixText = freezed,
@@ -444,6 +581,12 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? includeInSummary = freezed,
     Object? navigateTo = freezed,
     Object? visibilityCondition = freezed,
+    Object? conditionalNavigateTo = freezed,
+    Object? autoFillCondition = freezed,
+    Object? showAlertPopUp = freezed,
+    Object? multiEntityConfig = freezed,
+    Object? preventScreenCapture = freezed,
+    Object? submitCondition = freezed,
   }) {
     return _then(_$PropertySchemaImpl(
       type: null == type
@@ -510,6 +653,14 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.maxLength
           : maxLength // ignore: cast_nullable_to_non_nullable
               as int?,
+      min: freezed == min
+          ? _value.min
+          : min // ignore: cast_nullable_to_non_nullable
+              as int?,
+      max: freezed == max
+          ? _value.max
+          : max // ignore: cast_nullable_to_non_nullable
+              as int?,
       helpText: freezed == helpText
           ? _value.helpText
           : helpText // ignore: cast_nullable_to_non_nullable
@@ -553,7 +704,7 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
       order: freezed == order
           ? _value.order
           : order // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as double?,
       actionLabel: freezed == actionLabel
           ? _value.actionLabel
           : actionLabel // ignore: cast_nullable_to_non_nullable
@@ -582,6 +733,30 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.visibilityCondition
           : visibilityCondition // ignore: cast_nullable_to_non_nullable
               as VisibilityCondition?,
+      conditionalNavigateTo: freezed == conditionalNavigateTo
+          ? _value._conditionalNavigateTo
+          : conditionalNavigateTo // ignore: cast_nullable_to_non_nullable
+              as List<ConditionalNavigateTo>?,
+      autoFillCondition: freezed == autoFillCondition
+          ? _value._autoFillCondition
+          : autoFillCondition // ignore: cast_nullable_to_non_nullable
+              as List<AutoFillCondition>?,
+      showAlertPopUp: freezed == showAlertPopUp
+          ? _value.showAlertPopUp
+          : showAlertPopUp // ignore: cast_nullable_to_non_nullable
+              as ShowAlertPopUp?,
+      multiEntityConfig: freezed == multiEntityConfig
+          ? _value.multiEntityConfig
+          : multiEntityConfig // ignore: cast_nullable_to_non_nullable
+              as MultiEntityConfig?,
+      preventScreenCapture: freezed == preventScreenCapture
+          ? _value.preventScreenCapture
+          : preventScreenCapture // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      submitCondition: freezed == submitCondition
+          ? _value.submitCondition
+          : submitCondition // ignore: cast_nullable_to_non_nullable
+              as VisibilityCondition?,
     ));
   }
 }
@@ -605,10 +780,12 @@ class _$PropertySchemaImpl implements _PropertySchema {
       this.format,
       @JsonKey(fromJson: _stringOrNull) this.startDate,
       @JsonKey(fromJson: _stringOrNull) this.endDate,
-      this.minValue,
-      this.maxValue,
-      this.minLength,
-      this.maxLength,
+      @JsonKey(fromJson: _intOrNull) this.minValue,
+      @JsonKey(fromJson: _intOrNull) this.maxValue,
+      @JsonKey(fromJson: _intOrNull) this.minLength,
+      @JsonKey(fromJson: _intOrNull) this.maxLength,
+      @JsonKey(fromJson: _intOrNull) this.min,
+      @JsonKey(fromJson: _intOrNull) this.max,
       this.helpText,
       this.tooltip,
       this.prefixText,
@@ -625,12 +802,22 @@ class _$PropertySchemaImpl implements _PropertySchema {
       final List<ValidationRule>? validations,
       this.includeInForm,
       this.includeInSummary,
-      this.navigateTo,
-      @JsonKey(fromJson: _visibilityConditionOrNull) this.visibilityCondition})
+      @JsonKey(fromJson: _navigateToConfigOrNull) this.navigateTo,
+      @JsonKey(fromJson: _visibilityConditionOrNull) this.visibilityCondition,
+      @JsonKey(fromJson: _conditionalNavigateListOrNull)
+      final List<ConditionalNavigateTo>? conditionalNavigateTo,
+      @JsonKey(fromJson: _autoFillConditionListOrNull)
+      final List<AutoFillCondition>? autoFillCondition,
+      @JsonKey(fromJson: _showAlertOrNull) this.showAlertPopUp,
+      @JsonKey(fromJson: _multiEntityConfigOrNull) this.multiEntityConfig,
+      this.preventScreenCapture,
+      @JsonKey(fromJson: _visibilityConditionOrNull) this.submitCondition})
       : _properties = properties,
         _enums = enums,
         _conditions = conditions,
-        _validations = validations;
+        _validations = validations,
+        _conditionalNavigateTo = conditionalNavigateTo,
+        _autoFillCondition = autoFillCondition;
 
   factory _$PropertySchemaImpl.fromJson(Map<String, dynamic> json) =>
       _$$PropertySchemaImplFromJson(json);
@@ -680,13 +867,23 @@ class _$PropertySchemaImpl implements _PropertySchema {
   @JsonKey(fromJson: _stringOrNull)
   final String? endDate;
   @override
+  @JsonKey(fromJson: _intOrNull)
   final int? minValue;
   @override
+  @JsonKey(fromJson: _intOrNull)
   final int? maxValue;
   @override
+  @JsonKey(fromJson: _intOrNull)
   final int? minLength;
   @override
+  @JsonKey(fromJson: _intOrNull)
   final int? maxLength;
+  @override
+  @JsonKey(fromJson: _intOrNull)
+  final int? min;
+  @override
+  @JsonKey(fromJson: _intOrNull)
+  final int? max;
   @override
   final String? helpText;
   @override
@@ -716,7 +913,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
   }
 
   @override
-  final int? order;
+  final double? order;
   @override
   final String? actionLabel;
   @override
@@ -736,14 +933,55 @@ class _$PropertySchemaImpl implements _PropertySchema {
   @override
   final bool? includeInSummary;
   @override
+  @JsonKey(fromJson: _navigateToConfigOrNull)
   final NavigateToConfig? navigateTo;
   @override
   @JsonKey(fromJson: _visibilityConditionOrNull)
   final VisibilityCondition? visibilityCondition;
+  final List<ConditionalNavigateTo>? _conditionalNavigateTo;
+  @override
+  @JsonKey(fromJson: _conditionalNavigateListOrNull)
+  List<ConditionalNavigateTo>? get conditionalNavigateTo {
+    final value = _conditionalNavigateTo;
+    if (value == null) return null;
+    if (_conditionalNavigateTo is EqualUnmodifiableListView)
+      return _conditionalNavigateTo;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+// New: AutoFillCondition list
+  final List<AutoFillCondition>? _autoFillCondition;
+// New: AutoFillCondition list
+  @override
+  @JsonKey(fromJson: _autoFillConditionListOrNull)
+  List<AutoFillCondition>? get autoFillCondition {
+    final value = _autoFillCondition;
+    if (value == null) return null;
+    if (_autoFillCondition is EqualUnmodifiableListView)
+      return _autoFillCondition;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  @JsonKey(fromJson: _showAlertOrNull)
+  final ShowAlertPopUp? showAlertPopUp;
+// Multi-entity tab configuration
+  @override
+  @JsonKey(fromJson: _multiEntityConfigOrNull)
+  final MultiEntityConfig? multiEntityConfig;
+// Screenshot protection for this page
+  @override
+  final bool? preventScreenCapture;
+// Submit condition for pages - when true, form submits directly instead of navigating to next page
+  @override
+  @JsonKey(fromJson: _visibilityConditionOrNull)
+  final VisibilityCondition? submitCondition;
 
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, min: $min, max: $max, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp, multiEntityConfig: $multiEntityConfig, preventScreenCapture: $preventScreenCapture, submitCondition: $submitCondition)';
   }
 
   @override
@@ -778,6 +1016,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
                 other.minLength == minLength) &&
             (identical(other.maxLength, maxLength) ||
                 other.maxLength == maxLength) &&
+            (identical(other.min, min) || other.min == min) &&
+            (identical(other.max, max) || other.max == max) &&
             (identical(other.helpText, helpText) ||
                 other.helpText == helpText) &&
             (identical(other.tooltip, tooltip) || other.tooltip == tooltip) &&
@@ -809,7 +1049,19 @@ class _$PropertySchemaImpl implements _PropertySchema {
             (identical(other.navigateTo, navigateTo) ||
                 other.navigateTo == navigateTo) &&
             (identical(other.visibilityCondition, visibilityCondition) ||
-                other.visibilityCondition == visibilityCondition));
+                other.visibilityCondition == visibilityCondition) &&
+            const DeepCollectionEquality()
+                .equals(other._conditionalNavigateTo, _conditionalNavigateTo) &&
+            const DeepCollectionEquality()
+                .equals(other._autoFillCondition, _autoFillCondition) &&
+            (identical(other.showAlertPopUp, showAlertPopUp) ||
+                other.showAlertPopUp == showAlertPopUp) &&
+            (identical(other.multiEntityConfig, multiEntityConfig) ||
+                other.multiEntityConfig == multiEntityConfig) &&
+            (identical(other.preventScreenCapture, preventScreenCapture) ||
+                other.preventScreenCapture == preventScreenCapture) &&
+            (identical(other.submitCondition, submitCondition) ||
+                other.submitCondition == submitCondition));
   }
 
   @JsonKey(ignore: true)
@@ -832,6 +1084,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
         maxValue,
         minLength,
         maxLength,
+        min,
+        max,
         helpText,
         tooltip,
         prefixText,
@@ -849,7 +1103,13 @@ class _$PropertySchemaImpl implements _PropertySchema {
         includeInForm,
         includeInSummary,
         navigateTo,
-        visibilityCondition
+        visibilityCondition,
+        const DeepCollectionEquality().hash(_conditionalNavigateTo),
+        const DeepCollectionEquality().hash(_autoFillCondition),
+        showAlertPopUp,
+        multiEntityConfig,
+        preventScreenCapture,
+        submitCondition
       ]);
 
   @JsonKey(ignore: true)
@@ -883,10 +1143,12 @@ abstract class _PropertySchema implements PropertySchema {
       final PropertySchemaFormat? format,
       @JsonKey(fromJson: _stringOrNull) final String? startDate,
       @JsonKey(fromJson: _stringOrNull) final String? endDate,
-      final int? minValue,
-      final int? maxValue,
-      final int? minLength,
-      final int? maxLength,
+      @JsonKey(fromJson: _intOrNull) final int? minValue,
+      @JsonKey(fromJson: _intOrNull) final int? maxValue,
+      @JsonKey(fromJson: _intOrNull) final int? minLength,
+      @JsonKey(fromJson: _intOrNull) final int? maxLength,
+      @JsonKey(fromJson: _intOrNull) final int? min,
+      @JsonKey(fromJson: _intOrNull) final int? max,
       final String? helpText,
       final String? tooltip,
       final String? prefixText,
@@ -897,15 +1159,26 @@ abstract class _PropertySchema implements PropertySchema {
       final dynamic value,
       final DisplayBehavior? displayBehavior,
       final Map<String, dynamic>? conditions,
-      final int? order,
+      final double? order,
       final String? actionLabel,
       final String? description,
       final List<ValidationRule>? validations,
       final bool? includeInForm,
       final bool? includeInSummary,
+      @JsonKey(fromJson: _navigateToConfigOrNull)
       final NavigateToConfig? navigateTo,
       @JsonKey(fromJson: _visibilityConditionOrNull)
-      final VisibilityCondition? visibilityCondition}) = _$PropertySchemaImpl;
+      final VisibilityCondition? visibilityCondition,
+      @JsonKey(fromJson: _conditionalNavigateListOrNull)
+      final List<ConditionalNavigateTo>? conditionalNavigateTo,
+      @JsonKey(fromJson: _autoFillConditionListOrNull)
+      final List<AutoFillCondition>? autoFillCondition,
+      @JsonKey(fromJson: _showAlertOrNull) final ShowAlertPopUp? showAlertPopUp,
+      @JsonKey(fromJson: _multiEntityConfigOrNull)
+      final MultiEntityConfig? multiEntityConfig,
+      final bool? preventScreenCapture,
+      @JsonKey(fromJson: _visibilityConditionOrNull)
+      final VisibilityCondition? submitCondition}) = _$PropertySchemaImpl;
 
   factory _PropertySchema.fromJson(Map<String, dynamic> json) =
       _$PropertySchemaImpl.fromJson;
@@ -939,13 +1212,23 @@ abstract class _PropertySchema implements PropertySchema {
   @JsonKey(fromJson: _stringOrNull)
   String? get endDate;
   @override
+  @JsonKey(fromJson: _intOrNull)
   int? get minValue;
   @override
+  @JsonKey(fromJson: _intOrNull)
   int? get maxValue;
   @override
+  @JsonKey(fromJson: _intOrNull)
   int? get minLength;
   @override
+  @JsonKey(fromJson: _intOrNull)
   int? get maxLength;
+  @override
+  @JsonKey(fromJson: _intOrNull)
+  int? get min;
+  @override
+  @JsonKey(fromJson: _intOrNull)
+  int? get max;
   @override
   String? get helpText;
   @override
@@ -967,7 +1250,7 @@ abstract class _PropertySchema implements PropertySchema {
   @override
   Map<String, dynamic>? get conditions;
   @override
-  int? get order;
+  double? get order;
   @override
   String? get actionLabel;
   @override
@@ -979,10 +1262,28 @@ abstract class _PropertySchema implements PropertySchema {
   @override
   bool? get includeInSummary;
   @override
+  @JsonKey(fromJson: _navigateToConfigOrNull)
   NavigateToConfig? get navigateTo;
   @override
   @JsonKey(fromJson: _visibilityConditionOrNull)
   VisibilityCondition? get visibilityCondition;
+  @override
+  @JsonKey(fromJson: _conditionalNavigateListOrNull)
+  List<ConditionalNavigateTo>? get conditionalNavigateTo;
+  @override // New: AutoFillCondition list
+  @JsonKey(fromJson: _autoFillConditionListOrNull)
+  List<AutoFillCondition>? get autoFillCondition;
+  @override
+  @JsonKey(fromJson: _showAlertOrNull)
+  ShowAlertPopUp? get showAlertPopUp;
+  @override // Multi-entity tab configuration
+  @JsonKey(fromJson: _multiEntityConfigOrNull)
+  MultiEntityConfig? get multiEntityConfig;
+  @override // Screenshot protection for this page
+  bool? get preventScreenCapture;
+  @override // Submit condition for pages - when true, form submits directly instead of navigating to next page
+  @JsonKey(fromJson: _visibilityConditionOrNull)
+  VisibilityCondition? get submitCondition;
   @override
   @JsonKey(ignore: true)
   _$$PropertySchemaImplCopyWith<_$PropertySchemaImpl> get copyWith =>
@@ -1672,7 +1973,8 @@ VisibilityCondition _$VisibilityConditionFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$VisibilityCondition {
-  String get expression => throw _privateConstructorUsedError;
+  List<VisibilityExpression> get expression =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -1686,7 +1988,7 @@ abstract class $VisibilityConditionCopyWith<$Res> {
           VisibilityCondition value, $Res Function(VisibilityCondition) then) =
       _$VisibilityConditionCopyWithImpl<$Res, VisibilityCondition>;
   @useResult
-  $Res call({String expression});
+  $Res call({List<VisibilityExpression> expression});
 }
 
 /// @nodoc
@@ -1708,7 +2010,7 @@ class _$VisibilityConditionCopyWithImpl<$Res, $Val extends VisibilityCondition>
       expression: null == expression
           ? _value.expression
           : expression // ignore: cast_nullable_to_non_nullable
-              as String,
+              as List<VisibilityExpression>,
     ) as $Val);
   }
 }
@@ -1721,7 +2023,7 @@ abstract class _$$VisibilityConditionImplCopyWith<$Res>
       __$$VisibilityConditionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String expression});
+  $Res call({List<VisibilityExpression> expression});
 }
 
 /// @nodoc
@@ -1739,9 +2041,9 @@ class __$$VisibilityConditionImplCopyWithImpl<$Res>
   }) {
     return _then(_$VisibilityConditionImpl(
       expression: null == expression
-          ? _value.expression
+          ? _value._expression
           : expression // ignore: cast_nullable_to_non_nullable
-              as String,
+              as List<VisibilityExpression>,
     ));
   }
 }
@@ -1749,13 +2051,20 @@ class __$$VisibilityConditionImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$VisibilityConditionImpl implements _VisibilityCondition {
-  const _$VisibilityConditionImpl({required this.expression});
+  const _$VisibilityConditionImpl(
+      {required final List<VisibilityExpression> expression})
+      : _expression = expression;
 
   factory _$VisibilityConditionImpl.fromJson(Map<String, dynamic> json) =>
       _$$VisibilityConditionImplFromJson(json);
 
+  final List<VisibilityExpression> _expression;
   @override
-  final String expression;
+  List<VisibilityExpression> get expression {
+    if (_expression is EqualUnmodifiableListView) return _expression;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_expression);
+  }
 
   @override
   String toString() {
@@ -1767,13 +2076,14 @@ class _$VisibilityConditionImpl implements _VisibilityCondition {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$VisibilityConditionImpl &&
-            (identical(other.expression, expression) ||
-                other.expression == expression));
+            const DeepCollectionEquality()
+                .equals(other._expression, _expression));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, expression);
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_expression));
 
   @JsonKey(ignore: true)
   @override
@@ -1791,16 +2101,1050 @@ class _$VisibilityConditionImpl implements _VisibilityCondition {
 }
 
 abstract class _VisibilityCondition implements VisibilityCondition {
-  const factory _VisibilityCondition({required final String expression}) =
+  const factory _VisibilityCondition(
+          {required final List<VisibilityExpression> expression}) =
       _$VisibilityConditionImpl;
 
   factory _VisibilityCondition.fromJson(Map<String, dynamic> json) =
       _$VisibilityConditionImpl.fromJson;
 
   @override
-  String get expression;
+  List<VisibilityExpression> get expression;
   @override
   @JsonKey(ignore: true)
   _$$VisibilityConditionImplCopyWith<_$VisibilityConditionImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+VisibilityExpression _$VisibilityExpressionFromJson(Map<String, dynamic> json) {
+  return _VisibilityExpression.fromJson(json);
+}
+
+/// @nodoc
+mixin _$VisibilityExpression {
+  String get condition => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $VisibilityExpressionCopyWith<VisibilityExpression> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $VisibilityExpressionCopyWith<$Res> {
+  factory $VisibilityExpressionCopyWith(VisibilityExpression value,
+          $Res Function(VisibilityExpression) then) =
+      _$VisibilityExpressionCopyWithImpl<$Res, VisibilityExpression>;
+  @useResult
+  $Res call({String condition});
+}
+
+/// @nodoc
+class _$VisibilityExpressionCopyWithImpl<$Res,
+        $Val extends VisibilityExpression>
+    implements $VisibilityExpressionCopyWith<$Res> {
+  _$VisibilityExpressionCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? condition = null,
+  }) {
+    return _then(_value.copyWith(
+      condition: null == condition
+          ? _value.condition
+          : condition // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$VisibilityExpressionImplCopyWith<$Res>
+    implements $VisibilityExpressionCopyWith<$Res> {
+  factory _$$VisibilityExpressionImplCopyWith(_$VisibilityExpressionImpl value,
+          $Res Function(_$VisibilityExpressionImpl) then) =
+      __$$VisibilityExpressionImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String condition});
+}
+
+/// @nodoc
+class __$$VisibilityExpressionImplCopyWithImpl<$Res>
+    extends _$VisibilityExpressionCopyWithImpl<$Res, _$VisibilityExpressionImpl>
+    implements _$$VisibilityExpressionImplCopyWith<$Res> {
+  __$$VisibilityExpressionImplCopyWithImpl(_$VisibilityExpressionImpl _value,
+      $Res Function(_$VisibilityExpressionImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? condition = null,
+  }) {
+    return _then(_$VisibilityExpressionImpl(
+      condition: null == condition
+          ? _value.condition
+          : condition // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$VisibilityExpressionImpl implements _VisibilityExpression {
+  const _$VisibilityExpressionImpl({required this.condition});
+
+  factory _$VisibilityExpressionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$VisibilityExpressionImplFromJson(json);
+
+  @override
+  final String condition;
+
+  @override
+  String toString() {
+    return 'VisibilityExpression(condition: $condition)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$VisibilityExpressionImpl &&
+            (identical(other.condition, condition) ||
+                other.condition == condition));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, condition);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$VisibilityExpressionImplCopyWith<_$VisibilityExpressionImpl>
+      get copyWith =>
+          __$$VisibilityExpressionImplCopyWithImpl<_$VisibilityExpressionImpl>(
+              this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$VisibilityExpressionImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _VisibilityExpression implements VisibilityExpression {
+  const factory _VisibilityExpression({required final String condition}) =
+      _$VisibilityExpressionImpl;
+
+  factory _VisibilityExpression.fromJson(Map<String, dynamic> json) =
+      _$VisibilityExpressionImpl.fromJson;
+
+  @override
+  String get condition;
+  @override
+  @JsonKey(ignore: true)
+  _$$VisibilityExpressionImplCopyWith<_$VisibilityExpressionImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+ConditionalNavigateTo _$ConditionalNavigateToFromJson(
+    Map<String, dynamic> json) {
+  return _ConditionalNavigateTo.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ConditionalNavigateTo {
+  String get condition => throw _privateConstructorUsedError;
+  NavigateToConfig get navigateTo => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $ConditionalNavigateToCopyWith<ConditionalNavigateTo> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ConditionalNavigateToCopyWith<$Res> {
+  factory $ConditionalNavigateToCopyWith(ConditionalNavigateTo value,
+          $Res Function(ConditionalNavigateTo) then) =
+      _$ConditionalNavigateToCopyWithImpl<$Res, ConditionalNavigateTo>;
+  @useResult
+  $Res call({String condition, NavigateToConfig navigateTo});
+
+  $NavigateToConfigCopyWith<$Res> get navigateTo;
+}
+
+/// @nodoc
+class _$ConditionalNavigateToCopyWithImpl<$Res,
+        $Val extends ConditionalNavigateTo>
+    implements $ConditionalNavigateToCopyWith<$Res> {
+  _$ConditionalNavigateToCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? condition = null,
+    Object? navigateTo = null,
+  }) {
+    return _then(_value.copyWith(
+      condition: null == condition
+          ? _value.condition
+          : condition // ignore: cast_nullable_to_non_nullable
+              as String,
+      navigateTo: null == navigateTo
+          ? _value.navigateTo
+          : navigateTo // ignore: cast_nullable_to_non_nullable
+              as NavigateToConfig,
+    ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $NavigateToConfigCopyWith<$Res> get navigateTo {
+    return $NavigateToConfigCopyWith<$Res>(_value.navigateTo, (value) {
+      return _then(_value.copyWith(navigateTo: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$ConditionalNavigateToImplCopyWith<$Res>
+    implements $ConditionalNavigateToCopyWith<$Res> {
+  factory _$$ConditionalNavigateToImplCopyWith(
+          _$ConditionalNavigateToImpl value,
+          $Res Function(_$ConditionalNavigateToImpl) then) =
+      __$$ConditionalNavigateToImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String condition, NavigateToConfig navigateTo});
+
+  @override
+  $NavigateToConfigCopyWith<$Res> get navigateTo;
+}
+
+/// @nodoc
+class __$$ConditionalNavigateToImplCopyWithImpl<$Res>
+    extends _$ConditionalNavigateToCopyWithImpl<$Res,
+        _$ConditionalNavigateToImpl>
+    implements _$$ConditionalNavigateToImplCopyWith<$Res> {
+  __$$ConditionalNavigateToImplCopyWithImpl(_$ConditionalNavigateToImpl _value,
+      $Res Function(_$ConditionalNavigateToImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? condition = null,
+    Object? navigateTo = null,
+  }) {
+    return _then(_$ConditionalNavigateToImpl(
+      condition: null == condition
+          ? _value.condition
+          : condition // ignore: cast_nullable_to_non_nullable
+              as String,
+      navigateTo: null == navigateTo
+          ? _value.navigateTo
+          : navigateTo // ignore: cast_nullable_to_non_nullable
+              as NavigateToConfig,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ConditionalNavigateToImpl implements _ConditionalNavigateTo {
+  const _$ConditionalNavigateToImpl(
+      {required this.condition, required this.navigateTo});
+
+  factory _$ConditionalNavigateToImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ConditionalNavigateToImplFromJson(json);
+
+  @override
+  final String condition;
+  @override
+  final NavigateToConfig navigateTo;
+
+  @override
+  String toString() {
+    return 'ConditionalNavigateTo(condition: $condition, navigateTo: $navigateTo)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ConditionalNavigateToImpl &&
+            (identical(other.condition, condition) ||
+                other.condition == condition) &&
+            (identical(other.navigateTo, navigateTo) ||
+                other.navigateTo == navigateTo));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, condition, navigateTo);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ConditionalNavigateToImplCopyWith<_$ConditionalNavigateToImpl>
+      get copyWith => __$$ConditionalNavigateToImplCopyWithImpl<
+          _$ConditionalNavigateToImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ConditionalNavigateToImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _ConditionalNavigateTo implements ConditionalNavigateTo {
+  const factory _ConditionalNavigateTo(
+          {required final String condition,
+          required final NavigateToConfig navigateTo}) =
+      _$ConditionalNavigateToImpl;
+
+  factory _ConditionalNavigateTo.fromJson(Map<String, dynamic> json) =
+      _$ConditionalNavigateToImpl.fromJson;
+
+  @override
+  String get condition;
+  @override
+  NavigateToConfig get navigateTo;
+  @override
+  @JsonKey(ignore: true)
+  _$$ConditionalNavigateToImplCopyWith<_$ConditionalNavigateToImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+AutoFillCondition _$AutoFillConditionFromJson(Map<String, dynamic> json) {
+  return _AutoFillCondition.fromJson(json);
+}
+
+/// @nodoc
+mixin _$AutoFillCondition {
+  String get expression => throw _privateConstructorUsedError;
+  dynamic get value => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $AutoFillConditionCopyWith<AutoFillCondition> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $AutoFillConditionCopyWith<$Res> {
+  factory $AutoFillConditionCopyWith(
+          AutoFillCondition value, $Res Function(AutoFillCondition) then) =
+      _$AutoFillConditionCopyWithImpl<$Res, AutoFillCondition>;
+  @useResult
+  $Res call({String expression, dynamic value});
+}
+
+/// @nodoc
+class _$AutoFillConditionCopyWithImpl<$Res, $Val extends AutoFillCondition>
+    implements $AutoFillConditionCopyWith<$Res> {
+  _$AutoFillConditionCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? expression = null,
+    Object? value = freezed,
+  }) {
+    return _then(_value.copyWith(
+      expression: null == expression
+          ? _value.expression
+          : expression // ignore: cast_nullable_to_non_nullable
+              as String,
+      value: freezed == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$AutoFillConditionImplCopyWith<$Res>
+    implements $AutoFillConditionCopyWith<$Res> {
+  factory _$$AutoFillConditionImplCopyWith(_$AutoFillConditionImpl value,
+          $Res Function(_$AutoFillConditionImpl) then) =
+      __$$AutoFillConditionImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String expression, dynamic value});
+}
+
+/// @nodoc
+class __$$AutoFillConditionImplCopyWithImpl<$Res>
+    extends _$AutoFillConditionCopyWithImpl<$Res, _$AutoFillConditionImpl>
+    implements _$$AutoFillConditionImplCopyWith<$Res> {
+  __$$AutoFillConditionImplCopyWithImpl(_$AutoFillConditionImpl _value,
+      $Res Function(_$AutoFillConditionImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? expression = null,
+    Object? value = freezed,
+  }) {
+    return _then(_$AutoFillConditionImpl(
+      expression: null == expression
+          ? _value.expression
+          : expression // ignore: cast_nullable_to_non_nullable
+              as String,
+      value: freezed == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$AutoFillConditionImpl implements _AutoFillCondition {
+  const _$AutoFillConditionImpl(
+      {required this.expression, required this.value});
+
+  factory _$AutoFillConditionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AutoFillConditionImplFromJson(json);
+
+  @override
+  final String expression;
+  @override
+  final dynamic value;
+
+  @override
+  String toString() {
+    return 'AutoFillCondition(expression: $expression, value: $value)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AutoFillConditionImpl &&
+            (identical(other.expression, expression) ||
+                other.expression == expression) &&
+            const DeepCollectionEquality().equals(other.value, value));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, expression, const DeepCollectionEquality().hash(value));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AutoFillConditionImplCopyWith<_$AutoFillConditionImpl> get copyWith =>
+      __$$AutoFillConditionImplCopyWithImpl<_$AutoFillConditionImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$AutoFillConditionImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _AutoFillCondition implements AutoFillCondition {
+  const factory _AutoFillCondition(
+      {required final String expression,
+      required final dynamic value}) = _$AutoFillConditionImpl;
+
+  factory _AutoFillCondition.fromJson(Map<String, dynamic> json) =
+      _$AutoFillConditionImpl.fromJson;
+
+  @override
+  String get expression;
+  @override
+  dynamic get value;
+  @override
+  @JsonKey(ignore: true)
+  _$$AutoFillConditionImplCopyWith<_$AutoFillConditionImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+ShowAlertPopUp _$ShowAlertPopUpFromJson(Map<String, dynamic> json) {
+  return _ShowAlertPopUp.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ShowAlertPopUp {
+  String get title => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError; // optional
+  String get primaryActionLabel => throw _privateConstructorUsedError;
+  String get secondaryActionLabel => throw _privateConstructorUsedError;
+  List<AlertCondition>? get conditions => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $ShowAlertPopUpCopyWith<ShowAlertPopUp> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ShowAlertPopUpCopyWith<$Res> {
+  factory $ShowAlertPopUpCopyWith(
+          ShowAlertPopUp value, $Res Function(ShowAlertPopUp) then) =
+      _$ShowAlertPopUpCopyWithImpl<$Res, ShowAlertPopUp>;
+  @useResult
+  $Res call(
+      {String title,
+      String? description,
+      String primaryActionLabel,
+      String secondaryActionLabel,
+      List<AlertCondition>? conditions});
+}
+
+/// @nodoc
+class _$ShowAlertPopUpCopyWithImpl<$Res, $Val extends ShowAlertPopUp>
+    implements $ShowAlertPopUpCopyWith<$Res> {
+  _$ShowAlertPopUpCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? title = null,
+    Object? description = freezed,
+    Object? primaryActionLabel = null,
+    Object? secondaryActionLabel = null,
+    Object? conditions = freezed,
+  }) {
+    return _then(_value.copyWith(
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      primaryActionLabel: null == primaryActionLabel
+          ? _value.primaryActionLabel
+          : primaryActionLabel // ignore: cast_nullable_to_non_nullable
+              as String,
+      secondaryActionLabel: null == secondaryActionLabel
+          ? _value.secondaryActionLabel
+          : secondaryActionLabel // ignore: cast_nullable_to_non_nullable
+              as String,
+      conditions: freezed == conditions
+          ? _value.conditions
+          : conditions // ignore: cast_nullable_to_non_nullable
+              as List<AlertCondition>?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$ShowAlertPopUpImplCopyWith<$Res>
+    implements $ShowAlertPopUpCopyWith<$Res> {
+  factory _$$ShowAlertPopUpImplCopyWith(_$ShowAlertPopUpImpl value,
+          $Res Function(_$ShowAlertPopUpImpl) then) =
+      __$$ShowAlertPopUpImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String title,
+      String? description,
+      String primaryActionLabel,
+      String secondaryActionLabel,
+      List<AlertCondition>? conditions});
+}
+
+/// @nodoc
+class __$$ShowAlertPopUpImplCopyWithImpl<$Res>
+    extends _$ShowAlertPopUpCopyWithImpl<$Res, _$ShowAlertPopUpImpl>
+    implements _$$ShowAlertPopUpImplCopyWith<$Res> {
+  __$$ShowAlertPopUpImplCopyWithImpl(
+      _$ShowAlertPopUpImpl _value, $Res Function(_$ShowAlertPopUpImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? title = null,
+    Object? description = freezed,
+    Object? primaryActionLabel = null,
+    Object? secondaryActionLabel = null,
+    Object? conditions = freezed,
+  }) {
+    return _then(_$ShowAlertPopUpImpl(
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      primaryActionLabel: null == primaryActionLabel
+          ? _value.primaryActionLabel
+          : primaryActionLabel // ignore: cast_nullable_to_non_nullable
+              as String,
+      secondaryActionLabel: null == secondaryActionLabel
+          ? _value.secondaryActionLabel
+          : secondaryActionLabel // ignore: cast_nullable_to_non_nullable
+              as String,
+      conditions: freezed == conditions
+          ? _value._conditions
+          : conditions // ignore: cast_nullable_to_non_nullable
+              as List<AlertCondition>?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ShowAlertPopUpImpl implements _ShowAlertPopUp {
+  const _$ShowAlertPopUpImpl(
+      {required this.title,
+      this.description,
+      required this.primaryActionLabel,
+      required this.secondaryActionLabel,
+      final List<AlertCondition>? conditions})
+      : _conditions = conditions;
+
+  factory _$ShowAlertPopUpImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ShowAlertPopUpImplFromJson(json);
+
+  @override
+  final String title;
+  @override
+  final String? description;
+// optional
+  @override
+  final String primaryActionLabel;
+  @override
+  final String secondaryActionLabel;
+  final List<AlertCondition>? _conditions;
+  @override
+  List<AlertCondition>? get conditions {
+    final value = _conditions;
+    if (value == null) return null;
+    if (_conditions is EqualUnmodifiableListView) return _conditions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  String toString() {
+    return 'ShowAlertPopUp(title: $title, description: $description, primaryActionLabel: $primaryActionLabel, secondaryActionLabel: $secondaryActionLabel, conditions: $conditions)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ShowAlertPopUpImpl &&
+            (identical(other.title, title) || other.title == title) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.primaryActionLabel, primaryActionLabel) ||
+                other.primaryActionLabel == primaryActionLabel) &&
+            (identical(other.secondaryActionLabel, secondaryActionLabel) ||
+                other.secondaryActionLabel == secondaryActionLabel) &&
+            const DeepCollectionEquality()
+                .equals(other._conditions, _conditions));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      title,
+      description,
+      primaryActionLabel,
+      secondaryActionLabel,
+      const DeepCollectionEquality().hash(_conditions));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ShowAlertPopUpImplCopyWith<_$ShowAlertPopUpImpl> get copyWith =>
+      __$$ShowAlertPopUpImplCopyWithImpl<_$ShowAlertPopUpImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ShowAlertPopUpImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _ShowAlertPopUp implements ShowAlertPopUp {
+  const factory _ShowAlertPopUp(
+      {required final String title,
+      final String? description,
+      required final String primaryActionLabel,
+      required final String secondaryActionLabel,
+      final List<AlertCondition>? conditions}) = _$ShowAlertPopUpImpl;
+
+  factory _ShowAlertPopUp.fromJson(Map<String, dynamic> json) =
+      _$ShowAlertPopUpImpl.fromJson;
+
+  @override
+  String get title;
+  @override
+  String? get description;
+  @override // optional
+  String get primaryActionLabel;
+  @override
+  String get secondaryActionLabel;
+  @override
+  List<AlertCondition>? get conditions;
+  @override
+  @JsonKey(ignore: true)
+  _$$ShowAlertPopUpImplCopyWith<_$ShowAlertPopUpImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+AlertCondition _$AlertConditionFromJson(Map<String, dynamic> json) {
+  return _AlertCondition.fromJson(json);
+}
+
+/// @nodoc
+mixin _$AlertCondition {
+  String get expression =>
+      throw _privateConstructorUsedError; // e.g., condition or "DEFAULT"
+  String get value => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $AlertConditionCopyWith<AlertCondition> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $AlertConditionCopyWith<$Res> {
+  factory $AlertConditionCopyWith(
+          AlertCondition value, $Res Function(AlertCondition) then) =
+      _$AlertConditionCopyWithImpl<$Res, AlertCondition>;
+  @useResult
+  $Res call({String expression, String value});
+}
+
+/// @nodoc
+class _$AlertConditionCopyWithImpl<$Res, $Val extends AlertCondition>
+    implements $AlertConditionCopyWith<$Res> {
+  _$AlertConditionCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? expression = null,
+    Object? value = null,
+  }) {
+    return _then(_value.copyWith(
+      expression: null == expression
+          ? _value.expression
+          : expression // ignore: cast_nullable_to_non_nullable
+              as String,
+      value: null == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$AlertConditionImplCopyWith<$Res>
+    implements $AlertConditionCopyWith<$Res> {
+  factory _$$AlertConditionImplCopyWith(_$AlertConditionImpl value,
+          $Res Function(_$AlertConditionImpl) then) =
+      __$$AlertConditionImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String expression, String value});
+}
+
+/// @nodoc
+class __$$AlertConditionImplCopyWithImpl<$Res>
+    extends _$AlertConditionCopyWithImpl<$Res, _$AlertConditionImpl>
+    implements _$$AlertConditionImplCopyWith<$Res> {
+  __$$AlertConditionImplCopyWithImpl(
+      _$AlertConditionImpl _value, $Res Function(_$AlertConditionImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? expression = null,
+    Object? value = null,
+  }) {
+    return _then(_$AlertConditionImpl(
+      expression: null == expression
+          ? _value.expression
+          : expression // ignore: cast_nullable_to_non_nullable
+              as String,
+      value: null == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$AlertConditionImpl implements _AlertCondition {
+  const _$AlertConditionImpl({required this.expression, required this.value});
+
+  factory _$AlertConditionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AlertConditionImplFromJson(json);
+
+  @override
+  final String expression;
+// e.g., condition or "DEFAULT"
+  @override
+  final String value;
+
+  @override
+  String toString() {
+    return 'AlertCondition(expression: $expression, value: $value)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AlertConditionImpl &&
+            (identical(other.expression, expression) ||
+                other.expression == expression) &&
+            (identical(other.value, value) || other.value == value));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, expression, value);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AlertConditionImplCopyWith<_$AlertConditionImpl> get copyWith =>
+      __$$AlertConditionImplCopyWithImpl<_$AlertConditionImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$AlertConditionImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _AlertCondition implements AlertCondition {
+  const factory _AlertCondition(
+      {required final String expression,
+      required final String value}) = _$AlertConditionImpl;
+
+  factory _AlertCondition.fromJson(Map<String, dynamic> json) =
+      _$AlertConditionImpl.fromJson;
+
+  @override
+  String get expression;
+  @override // e.g., condition or "DEFAULT"
+  String get value;
+  @override
+  @JsonKey(ignore: true)
+  _$$AlertConditionImplCopyWith<_$AlertConditionImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+MultiEntityConfig _$MultiEntityConfigFromJson(Map<String, dynamic> json) {
+  return _MultiEntityConfig.fromJson(json);
+}
+
+/// @nodoc
+mixin _$MultiEntityConfig {
+  String get sourcePageKey =>
+      throw _privateConstructorUsedError; // Page containing the multi-select field
+  String get sourceFieldKey => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $MultiEntityConfigCopyWith<MultiEntityConfig> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $MultiEntityConfigCopyWith<$Res> {
+  factory $MultiEntityConfigCopyWith(
+          MultiEntityConfig value, $Res Function(MultiEntityConfig) then) =
+      _$MultiEntityConfigCopyWithImpl<$Res, MultiEntityConfig>;
+  @useResult
+  $Res call({String sourcePageKey, String sourceFieldKey});
+}
+
+/// @nodoc
+class _$MultiEntityConfigCopyWithImpl<$Res, $Val extends MultiEntityConfig>
+    implements $MultiEntityConfigCopyWith<$Res> {
+  _$MultiEntityConfigCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? sourcePageKey = null,
+    Object? sourceFieldKey = null,
+  }) {
+    return _then(_value.copyWith(
+      sourcePageKey: null == sourcePageKey
+          ? _value.sourcePageKey
+          : sourcePageKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      sourceFieldKey: null == sourceFieldKey
+          ? _value.sourceFieldKey
+          : sourceFieldKey // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$MultiEntityConfigImplCopyWith<$Res>
+    implements $MultiEntityConfigCopyWith<$Res> {
+  factory _$$MultiEntityConfigImplCopyWith(_$MultiEntityConfigImpl value,
+          $Res Function(_$MultiEntityConfigImpl) then) =
+      __$$MultiEntityConfigImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String sourcePageKey, String sourceFieldKey});
+}
+
+/// @nodoc
+class __$$MultiEntityConfigImplCopyWithImpl<$Res>
+    extends _$MultiEntityConfigCopyWithImpl<$Res, _$MultiEntityConfigImpl>
+    implements _$$MultiEntityConfigImplCopyWith<$Res> {
+  __$$MultiEntityConfigImplCopyWithImpl(_$MultiEntityConfigImpl _value,
+      $Res Function(_$MultiEntityConfigImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? sourcePageKey = null,
+    Object? sourceFieldKey = null,
+  }) {
+    return _then(_$MultiEntityConfigImpl(
+      sourcePageKey: null == sourcePageKey
+          ? _value.sourcePageKey
+          : sourcePageKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      sourceFieldKey: null == sourceFieldKey
+          ? _value.sourceFieldKey
+          : sourceFieldKey // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$MultiEntityConfigImpl implements _MultiEntityConfig {
+  const _$MultiEntityConfigImpl(
+      {required this.sourcePageKey, required this.sourceFieldKey});
+
+  factory _$MultiEntityConfigImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MultiEntityConfigImplFromJson(json);
+
+  @override
+  final String sourcePageKey;
+// Page containing the multi-select field
+  @override
+  final String sourceFieldKey;
+
+  @override
+  String toString() {
+    return 'MultiEntityConfig(sourcePageKey: $sourcePageKey, sourceFieldKey: $sourceFieldKey)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$MultiEntityConfigImpl &&
+            (identical(other.sourcePageKey, sourcePageKey) ||
+                other.sourcePageKey == sourcePageKey) &&
+            (identical(other.sourceFieldKey, sourceFieldKey) ||
+                other.sourceFieldKey == sourceFieldKey));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, sourcePageKey, sourceFieldKey);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$MultiEntityConfigImplCopyWith<_$MultiEntityConfigImpl> get copyWith =>
+      __$$MultiEntityConfigImplCopyWithImpl<_$MultiEntityConfigImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$MultiEntityConfigImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _MultiEntityConfig implements MultiEntityConfig {
+  const factory _MultiEntityConfig(
+      {required final String sourcePageKey,
+      required final String sourceFieldKey}) = _$MultiEntityConfigImpl;
+
+  factory _MultiEntityConfig.fromJson(Map<String, dynamic> json) =
+      _$MultiEntityConfigImpl.fromJson;
+
+  @override
+  String get sourcePageKey;
+  @override // Page containing the multi-select field
+  String get sourceFieldKey;
+  @override
+  @JsonKey(ignore: true)
+  _$$MultiEntityConfigImplCopyWith<_$MultiEntityConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

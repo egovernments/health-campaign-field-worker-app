@@ -1,22 +1,56 @@
 import 'package:digit_forms_engine/helper/form_builder_helper.dart';
-import 'package:digit_forms_engine/utils/utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../models/property_schema/property_schema.dart';
 
-List<Validator<T>> buildValidators<T>(
-  PropertySchema schema, {
-  Map<String, dynamic>? validationContext,
-}) {
+// Global registry for page schemas - used by validators to access cross-page values
+final Map<String, Map<String, PropertySchema>> _pagesRegistry = {};
+
+// Global registry for navigation params - used by validators to access navigation values
+final Map<String, Map<String, dynamic>> _navigationParamsRegistry = {};
+
+void registerPagesForValidation(
+    String schemaKey, Map<String, PropertySchema> pages) {
+  _pagesRegistry[schemaKey] = pages;
+}
+
+void unregisterPagesForValidation(String schemaKey) {
+  _pagesRegistry.remove(schemaKey);
+}
+
+void registerNavigationParams(
+    String schemaKey, Map<String, dynamic> navigationParams) {
+  _navigationParamsRegistry[schemaKey] = navigationParams;
+}
+
+void unregisterNavigationParams(String schemaKey) {
+  _navigationParamsRegistry.remove(schemaKey);
+}
+
+/// Resolves a value that may be a navigation param reference (e.g., "navigation.stockBalance")
+/// Returns the resolved value or null if not found
+dynamic _resolveNavigationValue(dynamic value, String? schemaKey) {
+  if (value is! String || schemaKey == null) return value;
+  if (!value.startsWith('navigation.')) return value;
+
+  final navParams = _navigationParamsRegistry[schemaKey];
+  if (navParams == null) return null;
+
+  // Extract the key after "navigation."
+  final key = value.substring('navigation.'.length);
+  return navParams[key];
+}
+
+List<Validator<T>> buildValidators<T>(PropertySchema schema,
+    {String? schemaKey}) {
   final List<Validator<T>> validators = [];
 
   if (schema.validations != null) {
     for (final rule in schema.validations!) {
       switch (rule.type) {
         case 'minLength':
-          final parsedValue =
-              _resolveValidationValue(rule.value, validationContext);
+          final parsedValue = parseIntValue(rule.value);
 
           if (schema.type != PropertySchemaType.integer) {
             if (parsedValue != null) {
@@ -31,8 +65,7 @@ List<Validator<T>> buildValidators<T>(
           break;
 
         case 'maxLength':
-          final parsedValue =
-              _resolveValidationValue(rule.value, validationContext);
+          final parsedValue = parseIntValue(rule.value);
           if (parsedValue != null &&
               schema.type != PropertySchemaType.integer) {
             validators.add(Validators.composeOR([
@@ -45,25 +78,83 @@ List<Validator<T>> buildValidators<T>(
 
         case 'min':
         case 'minValue':
-          final parsedValue =
-              _resolveValidationValue(rule.value, validationContext);
-          if (parsedValue != null) {
-            validators.add(Validators.composeOR([
-              Validators.min(parsedValue) as Validator<T>,
-              Validators.equals(null),
-            ]) as Validator<T>);
+          // Check if value is a navigation param reference
+          if (rule.value is String &&
+              rule.value.startsWith('navigation.') &&
+              schemaKey != null) {
+            validators.add(Validators.delegate((control) {
+              final resolvedValue =
+                  _resolveNavigationValue(rule.value, schemaKey);
+              final minVal = parseIntValue(resolvedValue);
+              if (minVal == null || control.value == null) return null;
+              final numValue = num.tryParse(control.value.toString());
+              if (numValue == null) return null;
+              if (numValue < minVal) {
+                return {
+                  'min': {'min': minVal, 'actual': numValue}
+                };
+              }
+              return null;
+            }) as Validator<T>);
+          } else {
+            final parsedValue = parseIntValue(rule.value);
+            if (parsedValue != null) {
+              // Use delegate validator to handle both numeric and string values
+              validators.add(Validators.delegate((control) {
+                if (control.value == null || control.value.toString().isEmpty) {
+                  return null; // Allow null/empty values (required validation handles this)
+                }
+                final numValue = num.tryParse(control.value.toString());
+                if (numValue == null) return null; // Not a valid number, skip
+                if (numValue < parsedValue) {
+                  return {
+                    'min': {'min': parsedValue, 'actual': numValue}
+                  };
+                }
+                return null;
+              }) as Validator<T>);
+            }
           }
           break;
 
         case 'max':
         case 'maxValue':
-          final parsedValue =
-              _resolveValidationValue(rule.value, validationContext);
-          if (parsedValue != null) {
-            validators.add(Validators.composeOR([
-              Validators.max(parsedValue) as Validator<T>,
-              Validators.equals(null),
-            ]) as Validator<T>);
+          // Check if value is a navigation param reference
+          if (rule.value is String &&
+              rule.value.startsWith('navigation.') &&
+              schemaKey != null) {
+            validators.add(Validators.delegate((control) {
+              final resolvedValue =
+                  _resolveNavigationValue(rule.value, schemaKey);
+              final maxVal = parseIntValue(resolvedValue);
+              if (maxVal == null || control.value == null) return null;
+              final numValue = num.tryParse(control.value.toString());
+              if (numValue == null) return null;
+              if (numValue > maxVal) {
+                return {
+                  'max': {'max': maxVal, 'actual': numValue}
+                };
+              }
+              return null;
+            }) as Validator<T>);
+          } else {
+            final parsedValue = parseIntValue(rule.value);
+            if (parsedValue != null) {
+              // Use delegate validator to handle both numeric and string values
+              validators.add(Validators.delegate((control) {
+                if (control.value == null || control.value.toString().isEmpty) {
+                  return null; // Allow null/empty values (required validation handles this)
+                }
+                final numValue = num.tryParse(control.value.toString());
+                if (numValue == null) return null; // Not a valid number, skip
+                if (numValue > parsedValue) {
+                  return {
+                    'max': {'max': parsedValue, 'actual': numValue}
+                  };
+                }
+                return null;
+              }) as Validator<T>);
+            }
           }
           break;
 
@@ -89,9 +180,18 @@ List<Validator<T>> buildValidators<T>(
           }
           break;
 
+        case 'notEqualTo':
+          if (rule.value is String && schemaKey != null) {
+            validators.add(Validators.delegate(
+              (control) => _notEqualToValidator(
+                  rule.value as String, control, schemaKey),
+            ) as Validator<T>);
+          }
+          break;
+
         default:
           if (kDebugMode) {
-            print('Unknown validation type: ${rule.type}');
+            // print('Unknown validation type: ${rule.type}');
           }
           break;
       }
@@ -99,27 +199,6 @@ List<Validator<T>> buildValidators<T>(
   }
 
   return validators;
-}
-
-/// Resolve template variables in validation values
-/// Supports {{fieldName}} syntax to reference other field values
-int? _resolveValidationValue(dynamic value, Map<String, dynamic>? context) {
-  if (value == null) return null;
-
-  // If it's already a number, return it
-  if (value is int) return value;
-
-  // If it's a string with template variables
-  if (value is String && value.contains('{{') && context != null) {
-    final resolved = resolveTemplateVariables(
-      value,
-      formValues: context,
-    );
-    return parseIntValue(resolved);
-  }
-
-  // Fallback to parsing
-  return parseIntValue(value);
 }
 
 /// Checks if the validations contain a rule of type 'required'.
@@ -171,5 +250,57 @@ int? getMaxLength(List<ValidationRule>? validations) {
       return parseIntValue(rule.value);
     }
   }
+  return null;
+}
+
+/// Custom validator that checks if a field's value is not equal to another field's value
+/// Supports both current page fields and cross-page references using dot notation (e.g., 'warehouseDetails.facilityFromWhich')
+Map<String, dynamic>? _notEqualToValidator(
+    String otherFieldName, AbstractControl<dynamic> control, String schemaKey) {
+  final form = control.parent;
+  if (form is! FormGroup) return null;
+
+  final currentValue = control.value;
+
+  // Build flat value map from all pages
+  final pages = _pagesRegistry[schemaKey];
+  if (pages == null) return null;
+
+  final flatValues = <String, dynamic>{};
+
+  // Add current form values
+  form.controls.forEach((key, control) {
+    flatValues[key] = control.value;
+  });
+
+  // Add all page values with dot notation
+  pages.forEach((pageKey, pageSchema) {
+    if (pageSchema.properties != null) {
+      pageSchema.properties!.forEach((fieldKey, fieldSchema) {
+        flatValues['$pageKey.$fieldKey'] = fieldSchema.value;
+      });
+    }
+  });
+
+  debugPrint('Flat Values $flatValues');
+  debugPrint('Looking for otherFieldName: $otherFieldName');
+
+  // Look up the other field's value
+  final otherValue = flatValues[otherFieldName];
+  debugPrint('Found otherValue: $otherValue');
+
+  // Allow null or empty values to pass (required validation handles that separately)
+  if (currentValue == null ||
+      currentValue == '' ||
+      otherValue == null ||
+      otherValue == '') {
+    return null;
+  }
+
+  // Check if values are equal
+  if (currentValue == otherValue) {
+    return {'notEqualTo': true};
+  }
+
   return null;
 }

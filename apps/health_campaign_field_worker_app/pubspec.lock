@@ -371,9 +371,10 @@ packages:
   closed_household:
     dependency: "direct main"
     description:
-      path: "../../packages/closed_household"
-      relative: true
-    source: path
+      name: closed_household
+      sha256: "3a1f82d50996a6593643f7bb5a28d89b2b0f01b02997374a90180cf3ca9e7856"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.1.0-dev.1-console"
   code_builder:
     dependency: transitive
@@ -394,9 +395,10 @@ packages:
   complaints:
     dependency: "direct main"
     description:
-      path: "../../packages/complaints"
-      relative: true
-    source: path
+      name: complaints
+      sha256: "7c546afd57447d42900b7bffff1f23166d1d56374135fd4dd8600c9c3bcb8dac"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.1.0-dev.1-console"
   connectivity_plus:
     dependency: "direct main"
@@ -571,13 +573,20 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.1"
+  digit_flow_builder:
+    dependency: "direct main"
+    description:
+      path: "../../packages/digit_flow_builder"
+      relative: true
+    source: path
+    version: "0.0.1"
   digit_forms_engine:
     dependency: "direct main"
     description:
       path: "../../packages/digit_forms_engine"
       relative: true
     source: path
-    version: "0.0.11-dev"
+    version: "0.0.2-dev"
   digit_formula_parser:
     dependency: "direct overridden"
     description:
@@ -588,9 +597,10 @@ packages:
   digit_location_tracker:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_location_tracker"
-      relative: true
-    source: path
+      name: digit_location_tracker
+      sha256: a93bda5b07db112210e08c7a76f0627957d931d5106c8a7db8876503cc2fd06f
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.0"
   digit_scanner:
     dependency: "direct main"
@@ -598,7 +608,7 @@ packages:
       path: "../../packages/digit_scanner"
       relative: true
     source: path
-    version: "0.0.1-console"
+    version: "0.0.2-console"
   digit_showcase:
     dependency: "direct main"
     description:
@@ -609,12 +619,11 @@ packages:
   digit_ui_components:
     dependency: "direct main"
     description:
-      path: "flutter/digit-ui-components/digit_components"
-      ref: beneficiary-idgen
-      resolved-ref: "0d90abcdc4faeef92f887bad05a785f15e254793"
-      url: "https://github.com/egovernments/DIGIT-UI-LIBRARIES"
-    source: git
-    version: "0.2.3+1"
+      name: digit_ui_components
+      sha256: "45864b746a61557c45c117c06c879344addb1f3a9a91639e0f6c1b9e4c3f905e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.4"
   dio:
     dependency: "direct main"
     description:
@@ -1390,9 +1399,10 @@ packages:
   inventory_management:
     dependency: "direct main"
     description:
-      path: "../../packages/inventory_management"
-      relative: true
-    source: path
+      name: inventory_management
+      sha256: "0f8cd2635b08afb1aa2c3bd104c18615d5ab33aa693fc06e13c3d43af71782c2"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.6"
   io:
     dependency: transitive
@@ -1426,6 +1436,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0+1"
+  jailbreak_root_detection:
+    dependency: "direct main"
+    description:
+      name: jailbreak_root_detection
+      sha256: c611229940a09785bd686364e92a40b07724926d2496c931527805101eb3da86
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.6"
   js:
     dependency: transitive
     description:
@@ -1877,17 +1895,19 @@ packages:
   referral_reconciliation:
     dependency: "direct main"
     description:
-      path: "../../packages/referral_reconciliation"
-      relative: true
-    source: path
-    version: "1.0.6"
+      name: referral_reconciliation
+      sha256: f86265a1dbbbe93de51af56700e6754ba14206ac6c5425b4c0a46e7375f08cb0
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.6+1"
   registration_delivery:
     dependency: "direct main"
     description:
-      path: "../../packages/registration_delivery"
-      relative: true
-    source: path
-    version: "1.1.1-dev.7-console"
+      name: registration_delivery
+      sha256: e0594d5ec0b3feaacbfc10d7c6447cf4d6ca0ffd7bb7a12502f5fc8ba81721de
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1-dev.8-console"
   rxdart:
     dependency: transitive
     description:
@@ -1896,6 +1916,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.27.7"
+  screen_protector:
+    dependency: "direct main"
+    description:
+      name: screen_protector
+      sha256: "104a294c9e105a398ae93c477089de9bd30747c71157f2c733375a4ed761eaa7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.1"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -2037,6 +2065,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+  sqlcipher_flutter_libs:
+    dependency: "direct main"
+    description:
+      name: sqlcipher_flutter_libs
+      sha256: dd1fcc74d5baf3c36ad53e2652b2d06c9f8747494a3ccde0076e88b159dfe622
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.8"
   sqlite3:
     dependency: transitive
     description:
@@ -2046,13 +2082,13 @@ packages:
     source: hosted
     version: "2.4.5"
   sqlite3_flutter_libs:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: sqlite3_flutter_libs
-      sha256: "636b0fe8a2de894e5455572f6cbbc458f4ffecfe9f860b79439e27041ea4f0b9"
+      sha256: "1e800ebe7f85a80a66adacaa6febe4d5f4d8b75f244e9838a27cb2ffc7aec08d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.27"
+    version: "0.5.41"
   sqlparser:
     dependency: transitive
     description:
@@ -2114,7 +2150,7 @@ packages:
       path: "../../packages/sync_service"
       relative: true
     source: path
-    version: "1.0.5"
+    version: "1.0.3"
   synchronized:
     dependency: transitive
     description:
@@ -2443,5 +2479,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.0 <4.0.0"
+  dart: ">=3.4.3 <3.9.0"
   flutter: ">=3.22.0"

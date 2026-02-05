@@ -67,7 +67,6 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
     on<FormsLoadEvent>(_onLoad);
     on<FormsUpdateFieldEvent>(_onUpdateField);
     on<FormsUpdateEvent>(_handleUpdateForm);
-    on<FormsClearFieldEvent>(_onClearField);
     on<FormsClearPageEvent>(_onClearPage);
     on<FormsClearFormEvent>(_onClearForm);
     on<FormsSubmitEvent>(_onSubmit);
@@ -129,7 +128,10 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
 
     final form = ReactiveForm.of(event.context) as FormGroup;
 
-    form.control(event.key).value = event.value;
+    // Skip if control doesn't exist (hidden field without includeInForm: true)
+    if (form.contains(event.key)) {
+      form.control(event.key).value = event.value;
+    }
 
     final updatedPages = {
       for (final entry in schema.pages.entries)
@@ -166,17 +168,6 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
       cachedSchemas: updatedSchemas,
       initialSchemas: state.initialSchemas,
     ));
-  }
-
-  /// Clear a specific field by setting its value to null.
-  ///
-  /// This method delegates to _onUpdateField with a null value.
-  void _onClearField(FormsClearFieldEvent event, FormsStateEmitter emit) {
-    // add(FormsUpdateFieldEvent(
-    //   schemaKey: event.schemaKey,
-    //   key: event.key,
-    //   value: null,
-    // ));
   }
 
   /// Clear all fields on a single page by setting their values to null.
@@ -301,14 +292,6 @@ class FormsEvent with _$FormsEvent {
     required SchemaObject schema,
     required String schemaKey,
   }) = FormsUpdateEvent;
-
-  /// Clear a specific field (sets value to null).
-  ///
-  /// This event clears the value of a specific field by setting it to null.
-  const factory FormsEvent.clearField({
-    required String schemaKey,
-    required String key,
-  }) = FormsClearFieldEvent;
 
   /// Clear all fields on a single page.
   ///

@@ -9,16 +9,40 @@ FormControl buildFormControl(
   PropertySchema parentSchema, {
   String? defaultLatlng,
   Map<String, dynamic>? defaultValues,
+  String? schemaKey,
 }) {
-  final validators = buildValidators(schema);
+  final validators = buildValidators(schema, schemaKey: schemaKey);
   final format = schema.format;
   final rawValue = schema.value;
+
+  // Helper to get default value - checks both the exact name and base name (without _item_N suffix)
+  dynamic getDefaultValue(String fieldName) {
+    if (defaultValues == null) return null;
+
+    // First try exact match
+    if (defaultValues.containsKey(fieldName)) {
+      return defaultValues[fieldName];
+    }
+
+    // If field has _item_N suffix, try looking up the base field name
+    // This supports edit mode where reverse transform provides base keys (e.g., "quantitySent")
+    // but form controls are created with suffixed keys (e.g., "quantitySent_item_0")
+    final itemSuffixMatch = RegExp(r'^(.+)_item_\d+$').firstMatch(fieldName);
+    if (itemSuffixMatch != null) {
+      final baseFieldName = itemSuffixMatch.group(1)!;
+      if (defaultValues.containsKey(baseFieldName)) {
+        return defaultValues[baseFieldName];
+      }
+    }
+
+    return null;
+  }
 
   switch (schema.type) {
     case PropertySchemaType.integer:
       if (format == PropertySchemaFormat.date) {
         return FormControl<DateTime>(
-          value: parseDateValue(defaultValues?[name]) ??
+          value: parseDateValue(getDefaultValue(name)) ??
               (schema.systemDate == true
                   ? DateTime.now()
                   : parseDateValue(rawValue)),
@@ -26,23 +50,25 @@ FormControl buildFormControl(
         );
       }
       return FormControl<int>(
-        value: parseIntValue(defaultValues?[name]) ?? parseIntValue(rawValue),
+        value: parseIntValue(getDefaultValue(name)) ?? parseIntValue(rawValue),
         validators: validators,
       );
 
     case PropertySchemaType.boolean:
       return FormControl<bool>(
-        value: defaultValues?[name] ?? parseBoolValue(rawValue),
+        value: parseBoolValue(getDefaultValue(name)) ?? parseBoolValue(rawValue),
         validators: validators,
       );
 
     case PropertySchemaType.dynamic:
-      return FormControl<dynamic>();
+      return FormControl<dynamic>(
+        validators: validators,
+      );
 
     case PropertySchemaType.string:
       if (format == PropertySchemaFormat.date) {
         return FormControl<DateTime>(
-          value: parseDateValue(defaultValues?[name]) ??
+          value: parseDateValue(getDefaultValue(name)) ??
               (schema.systemDate == true
                   ? DateTime.now()
                   : parseDateValue(rawValue)),
@@ -52,7 +78,17 @@ FormControl buildFormControl(
         /// TODO: need to create constant beneficiary id type
         final availableIDs = defaultValues?['availableIDs'];
 
-        // Determine which ID to use and its label
+        // Check for existing value first (edit mode)
+        final existingValue = getDefaultValue(name);
+        if (existingValue != null && existingValue.toString().isNotEmpty) {
+          // In edit mode, use the existing identifier value
+          return FormControl<String>(
+            value: existingValue.toString(),
+            validators: validators,
+          );
+        }
+
+        // New registration - determine which ID to use and its label
         final selectedLabel = availableIDs?['UNIQUE_BENEFICIARY_ID'] != null
             ? 'UNIQUE_BENEFICIARY_ID'
             : 'DEFAULT';
@@ -66,22 +102,22 @@ FormControl buildFormControl(
         );
       } else if (format == PropertySchemaFormat.latLng) {
         return FormControl<String>(
-          value: defaultValues?[name] ?? rawValue?.toString(),
+          value: getDefaultValue(name) ?? rawValue?.toString(),
           validators: validators,
         );
       } else if (format == PropertySchemaFormat.locality) {
         return FormControl<String>(
-          value: defaultValues?[name] ?? rawValue?.toString(),
+          value: getDefaultValue('administrativeArea') ?? rawValue?.toString(),
           validators: validators,
         );
       } else if (format == PropertySchemaFormat.numeric) {
         return FormControl<int>(
-          value: parseIntValue(defaultValues?[name] ?? rawValue),
+          value: parseIntValue(getDefaultValue(name) ?? rawValue),
           validators: validators,
         );
       } else {
         return FormControl<String>(
-          value: defaultValues?[name] ??
+          value: getDefaultValue(name) ??
               (rawValue?.toString().isEmpty ?? true
                   ? null
                   : rawValue.toString()),
@@ -91,7 +127,7 @@ FormControl buildFormControl(
 
     default:
       return FormControl<String>(
-        value: defaultValues?[name] ??
+        value: getDefaultValue(name) ??
             (rawValue?.toString().isEmpty ?? true ? null : rawValue.toString()),
         validators: validators,
       );
@@ -108,8 +144,12 @@ int? parseIntValue(dynamic value) {
 
 bool? parseBoolValue(dynamic value) {
   if (value == null) return null;
-  if (value is bool && value == true) return value;
-  if (value is String) return value.toLowerCase() == 'true' ? true : null;
+  if (value is bool) return value;
+  if (value is String) {
+    final lowerValue = value.toLowerCase();
+    if (lowerValue == 'true') return true;
+    if (lowerValue == 'false') return false;
+  }
   return null;
 }
 

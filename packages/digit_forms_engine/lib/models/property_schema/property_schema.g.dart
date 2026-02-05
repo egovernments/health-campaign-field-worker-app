@@ -27,10 +27,12 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
           unknownValue: PropertySchemaFormat.text),
       startDate: _stringOrNull(json['startDate']),
       endDate: _stringOrNull(json['endDate']),
-      minValue: (json['minValue'] as num?)?.toInt(),
-      maxValue: (json['maxValue'] as num?)?.toInt(),
-      minLength: (json['minLength'] as num?)?.toInt(),
-      maxLength: (json['maxLength'] as num?)?.toInt(),
+      minValue: _intOrNull(json['minValue']),
+      maxValue: _intOrNull(json['maxValue']),
+      minLength: _intOrNull(json['minLength']),
+      maxLength: _intOrNull(json['maxLength']),
+      min: _intOrNull(json['min']),
+      max: _intOrNull(json['max']),
       helpText: json['helpText'] as String?,
       tooltip: json['tooltip'] as String?,
       prefixText: json['prefixText'] as String?,
@@ -44,7 +46,7 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
           : DisplayBehavior.fromJson(
               json['displayBehavior'] as Map<String, dynamic>),
       conditions: json['conditions'] as Map<String, dynamic>?,
-      order: (json['order'] as num?)?.toInt(),
+      order: (json['order'] as num?)?.toDouble(),
       actionLabel: json['actionLabel'] as String?,
       description: json['description'] as String?,
       validations: (json['validations'] as List<dynamic>?)
@@ -52,12 +54,17 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
           .toList(),
       includeInForm: json['includeInForm'] as bool?,
       includeInSummary: json['includeInSummary'] as bool?,
-      navigateTo: json['navigateTo'] == null
-          ? null
-          : NavigateToConfig.fromJson(
-              json['navigateTo'] as Map<String, dynamic>),
+      navigateTo: _navigateToConfigOrNull(json['navigateTo']),
       visibilityCondition:
           _visibilityConditionOrNull(json['visibilityCondition']),
+      conditionalNavigateTo:
+          _conditionalNavigateListOrNull(json['conditionalNavigateTo']),
+      autoFillCondition:
+          _autoFillConditionListOrNull(json['autoFillCondition']),
+      showAlertPopUp: _showAlertOrNull(json['showAlertPopUp']),
+      multiEntityConfig: _multiEntityConfigOrNull(json['multiEntityConfig']),
+      preventScreenCapture: json['preventScreenCapture'] as bool?,
+      submitCondition: _visibilityConditionOrNull(json['submitCondition']),
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -88,6 +95,8 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('maxValue', instance.maxValue);
   writeNotNull('minLength', instance.minLength);
   writeNotNull('maxLength', instance.maxLength);
+  writeNotNull('min', instance.min);
+  writeNotNull('max', instance.max);
   writeNotNull('helpText', instance.helpText);
   writeNotNull('tooltip', instance.tooltip);
   writeNotNull('prefixText', instance.prefixText);
@@ -107,6 +116,14 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('includeInSummary', instance.includeInSummary);
   writeNotNull('navigateTo', instance.navigateTo?.toJson());
   writeNotNull('visibilityCondition', instance.visibilityCondition?.toJson());
+  writeNotNull('conditionalNavigateTo',
+      instance.conditionalNavigateTo?.map((e) => e.toJson()).toList());
+  writeNotNull('autoFillCondition',
+      instance.autoFillCondition?.map((e) => e.toJson()).toList());
+  writeNotNull('showAlertPopUp', instance.showAlertPopUp?.toJson());
+  writeNotNull('multiEntityConfig', instance.multiEntityConfig?.toJson());
+  writeNotNull('preventScreenCapture', instance.preventScreenCapture);
+  writeNotNull('submitCondition', instance.submitCondition?.toJson());
   return val;
 }
 
@@ -132,6 +149,7 @@ const _$PropertySchemaFormatEnumMap = {
   PropertySchemaFormat.scanner: 'scanner',
   PropertySchemaFormat.idPopulator: 'idPopulator',
   PropertySchemaFormat.mobileNumber: 'mobileNumber',
+  PropertySchemaFormat.textArea: 'textArea',
   PropertySchemaFormat.text: 'text',
 };
 
@@ -201,11 +219,102 @@ Map<String, dynamic> _$$NavigateToConfigImplToJson(
 _$VisibilityConditionImpl _$$VisibilityConditionImplFromJson(
         Map<String, dynamic> json) =>
     _$VisibilityConditionImpl(
-      expression: json['expression'] as String,
+      expression: (json['expression'] as List<dynamic>)
+          .map((e) => VisibilityExpression.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$VisibilityConditionImplToJson(
         _$VisibilityConditionImpl instance) =>
     <String, dynamic>{
       'expression': instance.expression,
+    };
+
+_$VisibilityExpressionImpl _$$VisibilityExpressionImplFromJson(
+        Map<String, dynamic> json) =>
+    _$VisibilityExpressionImpl(
+      condition: json['condition'] as String,
+    );
+
+Map<String, dynamic> _$$VisibilityExpressionImplToJson(
+        _$VisibilityExpressionImpl instance) =>
+    <String, dynamic>{
+      'condition': instance.condition,
+    };
+
+_$ConditionalNavigateToImpl _$$ConditionalNavigateToImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ConditionalNavigateToImpl(
+      condition: json['condition'] as String,
+      navigateTo:
+          NavigateToConfig.fromJson(json['navigateTo'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$$ConditionalNavigateToImplToJson(
+        _$ConditionalNavigateToImpl instance) =>
+    <String, dynamic>{
+      'condition': instance.condition,
+      'navigateTo': instance.navigateTo,
+    };
+
+_$AutoFillConditionImpl _$$AutoFillConditionImplFromJson(
+        Map<String, dynamic> json) =>
+    _$AutoFillConditionImpl(
+      expression: json['expression'] as String,
+      value: json['value'],
+    );
+
+Map<String, dynamic> _$$AutoFillConditionImplToJson(
+        _$AutoFillConditionImpl instance) =>
+    <String, dynamic>{
+      'expression': instance.expression,
+      'value': instance.value,
+    };
+
+_$ShowAlertPopUpImpl _$$ShowAlertPopUpImplFromJson(Map<String, dynamic> json) =>
+    _$ShowAlertPopUpImpl(
+      title: json['title'] as String,
+      description: json['description'] as String?,
+      primaryActionLabel: json['primaryActionLabel'] as String,
+      secondaryActionLabel: json['secondaryActionLabel'] as String,
+      conditions: (json['conditions'] as List<dynamic>?)
+          ?.map((e) => AlertCondition.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$$ShowAlertPopUpImplToJson(
+        _$ShowAlertPopUpImpl instance) =>
+    <String, dynamic>{
+      'title': instance.title,
+      'description': instance.description,
+      'primaryActionLabel': instance.primaryActionLabel,
+      'secondaryActionLabel': instance.secondaryActionLabel,
+      'conditions': instance.conditions,
+    };
+
+_$AlertConditionImpl _$$AlertConditionImplFromJson(Map<String, dynamic> json) =>
+    _$AlertConditionImpl(
+      expression: json['expression'] as String,
+      value: json['value'] as String,
+    );
+
+Map<String, dynamic> _$$AlertConditionImplToJson(
+        _$AlertConditionImpl instance) =>
+    <String, dynamic>{
+      'expression': instance.expression,
+      'value': instance.value,
+    };
+
+_$MultiEntityConfigImpl _$$MultiEntityConfigImplFromJson(
+        Map<String, dynamic> json) =>
+    _$MultiEntityConfigImpl(
+      sourcePageKey: json['sourcePageKey'] as String,
+      sourceFieldKey: json['sourceFieldKey'] as String,
+    );
+
+Map<String, dynamic> _$$MultiEntityConfigImplToJson(
+        _$MultiEntityConfigImpl instance) =>
+    <String, dynamic>{
+      'sourcePageKey': instance.sourcePageKey,
+      'sourceFieldKey': instance.sourceFieldKey,
     };

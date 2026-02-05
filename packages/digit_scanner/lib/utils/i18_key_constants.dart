@@ -175,9 +175,8 @@ class Scanner {
   String get serialNoRequired => 'BARCODE_SERIAL_NO_REQUIRED';
   String get expiryDateRequired => 'BARCODE_EXPIRY_DATE_REQUIRED';
 
-  String get scanLimitReached => 'SCANNER_SCAN_LIMIT_REACHED';
-  String get invalidGS1Code => 'SCANNER_INVALID_GS1_CODE';
-  String get patternMismatch => 'SCANNER_PATTERN_MISMATCH';
-  String get duplicateCode => 'SCANNER_DUPLICATE_CODE';
-  String get scannerFailed => 'SCANNER_FAILED';
+  String get cameraPermissionDenied => 'CAMERA_PERMISSION_DENIED';
+  String get cameraPermissionDeniedDesc => 'CAMERA_PERMISSION_DENIED_DESC';
+  String get openSettings => 'OPEN_SETTINGS';
+  String get cameraPermissionRequired => 'CAMERA_PERMISSION_REQUIRED';
 }

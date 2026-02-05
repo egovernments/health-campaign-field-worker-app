@@ -23,7 +23,6 @@ mixin _$FormsEvent {
             String schemaKey, String key, dynamic value, BuildContext context)
         updateField,
     required TResult Function(SchemaObject schema, String schemaKey) update,
-    required TResult Function(String schemaKey, String key) clearField,
     required TResult Function(String schemaKey, String pageKey) clearPage,
     required TResult Function(String schemaKey) clearForm,
     required TResult Function(String schemaKey, bool isEdit) submit,
@@ -36,7 +35,6 @@ mixin _$FormsEvent {
             String schemaKey, String key, dynamic value, BuildContext context)?
         updateField,
     TResult? Function(SchemaObject schema, String schemaKey)? update,
-    TResult? Function(String schemaKey, String key)? clearField,
     TResult? Function(String schemaKey, String pageKey)? clearPage,
     TResult? Function(String schemaKey)? clearForm,
     TResult? Function(String schemaKey, bool isEdit)? submit,
@@ -49,7 +47,6 @@ mixin _$FormsEvent {
             String schemaKey, String key, dynamic value, BuildContext context)?
         updateField,
     TResult Function(SchemaObject schema, String schemaKey)? update,
-    TResult Function(String schemaKey, String key)? clearField,
     TResult Function(String schemaKey, String pageKey)? clearPage,
     TResult Function(String schemaKey)? clearForm,
     TResult Function(String schemaKey, bool isEdit)? submit,
@@ -61,7 +58,6 @@ mixin _$FormsEvent {
     required TResult Function(FormsLoadEvent value) load,
     required TResult Function(FormsUpdateFieldEvent value) updateField,
     required TResult Function(FormsUpdateEvent value) update,
-    required TResult Function(FormsClearFieldEvent value) clearField,
     required TResult Function(FormsClearPageEvent value) clearPage,
     required TResult Function(FormsClearFormEvent value) clearForm,
     required TResult Function(FormsSubmitEvent value) submit,
@@ -72,7 +68,6 @@ mixin _$FormsEvent {
     TResult? Function(FormsLoadEvent value)? load,
     TResult? Function(FormsUpdateFieldEvent value)? updateField,
     TResult? Function(FormsUpdateEvent value)? update,
-    TResult? Function(FormsClearFieldEvent value)? clearField,
     TResult? Function(FormsClearPageEvent value)? clearPage,
     TResult? Function(FormsClearFormEvent value)? clearForm,
     TResult? Function(FormsSubmitEvent value)? submit,
@@ -83,7 +78,6 @@ mixin _$FormsEvent {
     TResult Function(FormsLoadEvent value)? load,
     TResult Function(FormsUpdateFieldEvent value)? updateField,
     TResult Function(FormsUpdateEvent value)? update,
-    TResult Function(FormsClearFieldEvent value)? clearField,
     TResult Function(FormsClearPageEvent value)? clearPage,
     TResult Function(FormsClearFormEvent value)? clearForm,
     TResult Function(FormsSubmitEvent value)? submit,
@@ -187,7 +181,6 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
             String schemaKey, String key, dynamic value, BuildContext context)
         updateField,
     required TResult Function(SchemaObject schema, String schemaKey) update,
-    required TResult Function(String schemaKey, String key) clearField,
     required TResult Function(String schemaKey, String pageKey) clearPage,
     required TResult Function(String schemaKey) clearForm,
     required TResult Function(String schemaKey, bool isEdit) submit,
@@ -203,7 +196,6 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
             String schemaKey, String key, dynamic value, BuildContext context)?
         updateField,
     TResult? Function(SchemaObject schema, String schemaKey)? update,
-    TResult? Function(String schemaKey, String key)? clearField,
     TResult? Function(String schemaKey, String pageKey)? clearPage,
     TResult? Function(String schemaKey)? clearForm,
     TResult? Function(String schemaKey, bool isEdit)? submit,
@@ -219,7 +211,6 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
             String schemaKey, String key, dynamic value, BuildContext context)?
         updateField,
     TResult Function(SchemaObject schema, String schemaKey)? update,
-    TResult Function(String schemaKey, String key)? clearField,
     TResult Function(String schemaKey, String pageKey)? clearPage,
     TResult Function(String schemaKey)? clearForm,
     TResult Function(String schemaKey, bool isEdit)? submit,
@@ -237,7 +228,6 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     required TResult Function(FormsLoadEvent value) load,
     required TResult Function(FormsUpdateFieldEvent value) updateField,
     required TResult Function(FormsUpdateEvent value) update,
-    required TResult Function(FormsClearFieldEvent value) clearField,
     required TResult Function(FormsClearPageEvent value) clearPage,
     required TResult Function(FormsClearFormEvent value) clearForm,
     required TResult Function(FormsSubmitEvent value) submit,
@@ -251,7 +241,6 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     TResult? Function(FormsLoadEvent value)? load,
     TResult? Function(FormsUpdateFieldEvent value)? updateField,
     TResult? Function(FormsUpdateEvent value)? update,
-    TResult? Function(FormsClearFieldEvent value)? clearField,
     TResult? Function(FormsClearPageEvent value)? clearPage,
     TResult? Function(FormsClearFormEvent value)? clearForm,
     TResult? Function(FormsSubmitEvent value)? submit,
@@ -265,7 +254,6 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     TResult Function(FormsLoadEvent value)? load,
     TResult Function(FormsUpdateFieldEvent value)? updateField,
     TResult Function(FormsUpdateEvent value)? update,
-    TResult Function(FormsClearFieldEvent value)? clearField,
     TResult Function(FormsClearPageEvent value)? clearPage,
     TResult Function(FormsClearFormEvent value)? clearForm,
     TResult Function(FormsSubmitEvent value)? submit,
@@ -390,7 +378,6 @@ class _$FormsUpdateFieldEventImpl implements FormsUpdateFieldEvent {
             String schemaKey, String key, dynamic value, BuildContext context)
         updateField,
     required TResult Function(SchemaObject schema, String schemaKey) update,
-    required TResult Function(String schemaKey, String key) clearField,
     required TResult Function(String schemaKey, String pageKey) clearPage,
     required TResult Function(String schemaKey) clearForm,
     required TResult Function(String schemaKey, bool isEdit) submit,
@@ -406,7 +393,6 @@ class _$FormsUpdateFieldEventImpl implements FormsUpdateFieldEvent {
             String schemaKey, String key, dynamic value, BuildContext context)?
         updateField,
     TResult? Function(SchemaObject schema, String schemaKey)? update,
-    TResult? Function(String schemaKey, String key)? clearField,
     TResult? Function(String schemaKey, String pageKey)? clearPage,
     TResult? Function(String schemaKey)? clearForm,
     TResult? Function(String schemaKey, bool isEdit)? submit,
@@ -422,7 +408,6 @@ class _$FormsUpdateFieldEventImpl implements FormsUpdateFieldEvent {
             String schemaKey, String key, dynamic value, BuildContext context)?
         updateField,
     TResult Function(SchemaObject schema, String schemaKey)? update,
-    TResult Function(String schemaKey, String key)? clearField,
     TResult Function(String schemaKey, String pageKey)? clearPage,
     TResult Function(String schemaKey)? clearForm,
     TResult Function(String schemaKey, bool isEdit)? submit,
@@ -440,7 +425,6 @@ class _$FormsUpdateFieldEventImpl implements FormsUpdateFieldEvent {
     required TResult Function(FormsLoadEvent value) load,
     required TResult Function(FormsUpdateFieldEvent value) updateField,
     required TResult Function(FormsUpdateEvent value) update,
-    required TResult Function(FormsClearFieldEvent value) clearField,
     required TResult Function(FormsClearPageEvent value) clearPage,
     required TResult Function(FormsClearFormEvent value) clearForm,
     required TResult Function(FormsSubmitEvent value) submit,
@@ -454,7 +438,6 @@ class _$FormsUpdateFieldEventImpl implements FormsUpdateFieldEvent {
     TResult? Function(FormsLoadEvent value)? load,
     TResult? Function(FormsUpdateFieldEvent value)? updateField,
     TResult? Function(FormsUpdateEvent value)? update,
-    TResult? Function(FormsClearFieldEvent value)? clearField,
     TResult? Function(FormsClearPageEvent value)? clearPage,
     TResult? Function(FormsClearFormEvent value)? clearForm,
     TResult? Function(FormsSubmitEvent value)? submit,
@@ -468,7 +451,6 @@ class _$FormsUpdateFieldEventImpl implements FormsUpdateFieldEvent {
     TResult Function(FormsLoadEvent value)? load,
     TResult Function(FormsUpdateFieldEvent value)? updateField,
     TResult Function(FormsUpdateEvent value)? update,
-    TResult Function(FormsClearFieldEvent value)? clearField,
     TResult Function(FormsClearPageEvent value)? clearPage,
     TResult Function(FormsClearFormEvent value)? clearForm,
     TResult Function(FormsSubmitEvent value)? submit,
@@ -586,7 +568,6 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
             String schemaKey, String key, dynamic value, BuildContext context)
         updateField,
     required TResult Function(SchemaObject schema, String schemaKey) update,
-    required TResult Function(String schemaKey, String key) clearField,
     required TResult Function(String schemaKey, String pageKey) clearPage,
     required TResult Function(String schemaKey) clearForm,
     required TResult Function(String schemaKey, bool isEdit) submit,
@@ -602,7 +583,6 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
             String schemaKey, String key, dynamic value, BuildContext context)?
         updateField,
     TResult? Function(SchemaObject schema, String schemaKey)? update,
-    TResult? Function(String schemaKey, String key)? clearField,
     TResult? Function(String schemaKey, String pageKey)? clearPage,
     TResult? Function(String schemaKey)? clearForm,
     TResult? Function(String schemaKey, bool isEdit)? submit,
@@ -618,7 +598,6 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
             String schemaKey, String key, dynamic value, BuildContext context)?
         updateField,
     TResult Function(SchemaObject schema, String schemaKey)? update,
-    TResult Function(String schemaKey, String key)? clearField,
     TResult Function(String schemaKey, String pageKey)? clearPage,
     TResult Function(String schemaKey)? clearForm,
     TResult Function(String schemaKey, bool isEdit)? submit,
@@ -636,7 +615,6 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
     required TResult Function(FormsLoadEvent value) load,
     required TResult Function(FormsUpdateFieldEvent value) updateField,
     required TResult Function(FormsUpdateEvent value) update,
-    required TResult Function(FormsClearFieldEvent value) clearField,
     required TResult Function(FormsClearPageEvent value) clearPage,
     required TResult Function(FormsClearFormEvent value) clearForm,
     required TResult Function(FormsSubmitEvent value) submit,
@@ -650,7 +628,6 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
     TResult? Function(FormsLoadEvent value)? load,
     TResult? Function(FormsUpdateFieldEvent value)? updateField,
     TResult? Function(FormsUpdateEvent value)? update,
-    TResult? Function(FormsClearFieldEvent value)? clearField,
     TResult? Function(FormsClearPageEvent value)? clearPage,
     TResult? Function(FormsClearFormEvent value)? clearForm,
     TResult? Function(FormsSubmitEvent value)? submit,
@@ -664,7 +641,6 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
     TResult Function(FormsLoadEvent value)? load,
     TResult Function(FormsUpdateFieldEvent value)? updateField,
     TResult Function(FormsUpdateEvent value)? update,
-    TResult Function(FormsClearFieldEvent value)? clearField,
     TResult Function(FormsClearPageEvent value)? clearPage,
     TResult Function(FormsClearFormEvent value)? clearForm,
     TResult Function(FormsSubmitEvent value)? submit,
@@ -687,190 +663,6 @@ abstract class FormsUpdateEvent implements FormsEvent {
   @JsonKey(ignore: true)
   _$$FormsUpdateEventImplCopyWith<_$FormsUpdateEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$FormsClearFieldEventImplCopyWith<$Res> {
-  factory _$$FormsClearFieldEventImplCopyWith(_$FormsClearFieldEventImpl value,
-          $Res Function(_$FormsClearFieldEventImpl) then) =
-      __$$FormsClearFieldEventImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String schemaKey, String key});
-}
-
-/// @nodoc
-class __$$FormsClearFieldEventImplCopyWithImpl<$Res>
-    extends _$FormsEventCopyWithImpl<$Res, _$FormsClearFieldEventImpl>
-    implements _$$FormsClearFieldEventImplCopyWith<$Res> {
-  __$$FormsClearFieldEventImplCopyWithImpl(_$FormsClearFieldEventImpl _value,
-      $Res Function(_$FormsClearFieldEventImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? schemaKey = null,
-    Object? key = null,
-  }) {
-    return _then(_$FormsClearFieldEventImpl(
-      schemaKey: null == schemaKey
-          ? _value.schemaKey
-          : schemaKey // ignore: cast_nullable_to_non_nullable
-              as String,
-      key: null == key
-          ? _value.key
-          : key // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$FormsClearFieldEventImpl implements FormsClearFieldEvent {
-  const _$FormsClearFieldEventImpl(
-      {required this.schemaKey, required this.key});
-
-  @override
-  final String schemaKey;
-  @override
-  final String key;
-
-  @override
-  String toString() {
-    return 'FormsEvent.clearField(schemaKey: $schemaKey, key: $key)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$FormsClearFieldEventImpl &&
-            (identical(other.schemaKey, schemaKey) ||
-                other.schemaKey == schemaKey) &&
-            (identical(other.key, key) || other.key == key));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, schemaKey, key);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$FormsClearFieldEventImplCopyWith<_$FormsClearFieldEventImpl>
-      get copyWith =>
-          __$$FormsClearFieldEventImplCopyWithImpl<_$FormsClearFieldEventImpl>(
-              this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(List<String> schemas) load,
-    required TResult Function(
-            String schemaKey, String key, dynamic value, BuildContext context)
-        updateField,
-    required TResult Function(SchemaObject schema, String schemaKey) update,
-    required TResult Function(String schemaKey, String key) clearField,
-    required TResult Function(String schemaKey, String pageKey) clearPage,
-    required TResult Function(String schemaKey) clearForm,
-    required TResult Function(String schemaKey, bool isEdit) submit,
-  }) {
-    return clearField(schemaKey, key);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<String> schemas)? load,
-    TResult? Function(
-            String schemaKey, String key, dynamic value, BuildContext context)?
-        updateField,
-    TResult? Function(SchemaObject schema, String schemaKey)? update,
-    TResult? Function(String schemaKey, String key)? clearField,
-    TResult? Function(String schemaKey, String pageKey)? clearPage,
-    TResult? Function(String schemaKey)? clearForm,
-    TResult? Function(String schemaKey, bool isEdit)? submit,
-  }) {
-    return clearField?.call(schemaKey, key);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<String> schemas)? load,
-    TResult Function(
-            String schemaKey, String key, dynamic value, BuildContext context)?
-        updateField,
-    TResult Function(SchemaObject schema, String schemaKey)? update,
-    TResult Function(String schemaKey, String key)? clearField,
-    TResult Function(String schemaKey, String pageKey)? clearPage,
-    TResult Function(String schemaKey)? clearForm,
-    TResult Function(String schemaKey, bool isEdit)? submit,
-    required TResult orElse(),
-  }) {
-    if (clearField != null) {
-      return clearField(schemaKey, key);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(FormsLoadEvent value) load,
-    required TResult Function(FormsUpdateFieldEvent value) updateField,
-    required TResult Function(FormsUpdateEvent value) update,
-    required TResult Function(FormsClearFieldEvent value) clearField,
-    required TResult Function(FormsClearPageEvent value) clearPage,
-    required TResult Function(FormsClearFormEvent value) clearForm,
-    required TResult Function(FormsSubmitEvent value) submit,
-  }) {
-    return clearField(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FormsLoadEvent value)? load,
-    TResult? Function(FormsUpdateFieldEvent value)? updateField,
-    TResult? Function(FormsUpdateEvent value)? update,
-    TResult? Function(FormsClearFieldEvent value)? clearField,
-    TResult? Function(FormsClearPageEvent value)? clearPage,
-    TResult? Function(FormsClearFormEvent value)? clearForm,
-    TResult? Function(FormsSubmitEvent value)? submit,
-  }) {
-    return clearField?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(FormsLoadEvent value)? load,
-    TResult Function(FormsUpdateFieldEvent value)? updateField,
-    TResult Function(FormsUpdateEvent value)? update,
-    TResult Function(FormsClearFieldEvent value)? clearField,
-    TResult Function(FormsClearPageEvent value)? clearPage,
-    TResult Function(FormsClearFormEvent value)? clearForm,
-    TResult Function(FormsSubmitEvent value)? submit,
-    required TResult orElse(),
-  }) {
-    if (clearField != null) {
-      return clearField(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class FormsClearFieldEvent implements FormsEvent {
-  const factory FormsClearFieldEvent(
-      {required final String schemaKey,
-      required final String key}) = _$FormsClearFieldEventImpl;
-
-  String get schemaKey;
-  String get key;
-  @JsonKey(ignore: true)
-  _$$FormsClearFieldEventImplCopyWith<_$FormsClearFieldEventImpl>
-      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -953,7 +745,6 @@ class _$FormsClearPageEventImpl implements FormsClearPageEvent {
             String schemaKey, String key, dynamic value, BuildContext context)
         updateField,
     required TResult Function(SchemaObject schema, String schemaKey) update,
-    required TResult Function(String schemaKey, String key) clearField,
     required TResult Function(String schemaKey, String pageKey) clearPage,
     required TResult Function(String schemaKey) clearForm,
     required TResult Function(String schemaKey, bool isEdit) submit,
@@ -969,7 +760,6 @@ class _$FormsClearPageEventImpl implements FormsClearPageEvent {
             String schemaKey, String key, dynamic value, BuildContext context)?
         updateField,
     TResult? Function(SchemaObject schema, String schemaKey)? update,
-    TResult? Function(String schemaKey, String key)? clearField,
     TResult? Function(String schemaKey, String pageKey)? clearPage,
     TResult? Function(String schemaKey)? clearForm,
     TResult? Function(String schemaKey, bool isEdit)? submit,
@@ -985,7 +775,6 @@ class _$FormsClearPageEventImpl implements FormsClearPageEvent {
             String schemaKey, String key, dynamic value, BuildContext context)?
         updateField,
     TResult Function(SchemaObject schema, String schemaKey)? update,
-    TResult Function(String schemaKey, String key)? clearField,
     TResult Function(String schemaKey, String pageKey)? clearPage,
     TResult Function(String schemaKey)? clearForm,
     TResult Function(String schemaKey, bool isEdit)? submit,
@@ -1003,7 +792,6 @@ class _$FormsClearPageEventImpl implements FormsClearPageEvent {
     required TResult Function(FormsLoadEvent value) load,
     required TResult Function(FormsUpdateFieldEvent value) updateField,
     required TResult Function(FormsUpdateEvent value) update,
-    required TResult Function(FormsClearFieldEvent value) clearField,
     required TResult Function(FormsClearPageEvent value) clearPage,
     required TResult Function(FormsClearFormEvent value) clearForm,
     required TResult Function(FormsSubmitEvent value) submit,
@@ -1017,7 +805,6 @@ class _$FormsClearPageEventImpl implements FormsClearPageEvent {
     TResult? Function(FormsLoadEvent value)? load,
     TResult? Function(FormsUpdateFieldEvent value)? updateField,
     TResult? Function(FormsUpdateEvent value)? update,
-    TResult? Function(FormsClearFieldEvent value)? clearField,
     TResult? Function(FormsClearPageEvent value)? clearPage,
     TResult? Function(FormsClearFormEvent value)? clearForm,
     TResult? Function(FormsSubmitEvent value)? submit,
@@ -1031,7 +818,6 @@ class _$FormsClearPageEventImpl implements FormsClearPageEvent {
     TResult Function(FormsLoadEvent value)? load,
     TResult Function(FormsUpdateFieldEvent value)? updateField,
     TResult Function(FormsUpdateEvent value)? update,
-    TResult Function(FormsClearFieldEvent value)? clearField,
     TResult Function(FormsClearPageEvent value)? clearPage,
     TResult Function(FormsClearFormEvent value)? clearForm,
     TResult Function(FormsSubmitEvent value)? submit,
@@ -1127,7 +913,6 @@ class _$FormsClearFormEventImpl implements FormsClearFormEvent {
             String schemaKey, String key, dynamic value, BuildContext context)
         updateField,
     required TResult Function(SchemaObject schema, String schemaKey) update,
-    required TResult Function(String schemaKey, String key) clearField,
     required TResult Function(String schemaKey, String pageKey) clearPage,
     required TResult Function(String schemaKey) clearForm,
     required TResult Function(String schemaKey, bool isEdit) submit,
@@ -1143,7 +928,6 @@ class _$FormsClearFormEventImpl implements FormsClearFormEvent {
             String schemaKey, String key, dynamic value, BuildContext context)?
         updateField,
     TResult? Function(SchemaObject schema, String schemaKey)? update,
-    TResult? Function(String schemaKey, String key)? clearField,
     TResult? Function(String schemaKey, String pageKey)? clearPage,
     TResult? Function(String schemaKey)? clearForm,
     TResult? Function(String schemaKey, bool isEdit)? submit,
@@ -1159,7 +943,6 @@ class _$FormsClearFormEventImpl implements FormsClearFormEvent {
             String schemaKey, String key, dynamic value, BuildContext context)?
         updateField,
     TResult Function(SchemaObject schema, String schemaKey)? update,
-    TResult Function(String schemaKey, String key)? clearField,
     TResult Function(String schemaKey, String pageKey)? clearPage,
     TResult Function(String schemaKey)? clearForm,
     TResult Function(String schemaKey, bool isEdit)? submit,
@@ -1177,7 +960,6 @@ class _$FormsClearFormEventImpl implements FormsClearFormEvent {
     required TResult Function(FormsLoadEvent value) load,
     required TResult Function(FormsUpdateFieldEvent value) updateField,
     required TResult Function(FormsUpdateEvent value) update,
-    required TResult Function(FormsClearFieldEvent value) clearField,
     required TResult Function(FormsClearPageEvent value) clearPage,
     required TResult Function(FormsClearFormEvent value) clearForm,
     required TResult Function(FormsSubmitEvent value) submit,
@@ -1191,7 +973,6 @@ class _$FormsClearFormEventImpl implements FormsClearFormEvent {
     TResult? Function(FormsLoadEvent value)? load,
     TResult? Function(FormsUpdateFieldEvent value)? updateField,
     TResult? Function(FormsUpdateEvent value)? update,
-    TResult? Function(FormsClearFieldEvent value)? clearField,
     TResult? Function(FormsClearPageEvent value)? clearPage,
     TResult? Function(FormsClearFormEvent value)? clearForm,
     TResult? Function(FormsSubmitEvent value)? submit,
@@ -1205,7 +986,6 @@ class _$FormsClearFormEventImpl implements FormsClearFormEvent {
     TResult Function(FormsLoadEvent value)? load,
     TResult Function(FormsUpdateFieldEvent value)? updateField,
     TResult Function(FormsUpdateEvent value)? update,
-    TResult Function(FormsClearFieldEvent value)? clearField,
     TResult Function(FormsClearPageEvent value)? clearPage,
     TResult Function(FormsClearFormEvent value)? clearForm,
     TResult Function(FormsSubmitEvent value)? submit,
@@ -1308,7 +1088,6 @@ class _$FormsSubmitEventImpl implements FormsSubmitEvent {
             String schemaKey, String key, dynamic value, BuildContext context)
         updateField,
     required TResult Function(SchemaObject schema, String schemaKey) update,
-    required TResult Function(String schemaKey, String key) clearField,
     required TResult Function(String schemaKey, String pageKey) clearPage,
     required TResult Function(String schemaKey) clearForm,
     required TResult Function(String schemaKey, bool isEdit) submit,
@@ -1324,7 +1103,6 @@ class _$FormsSubmitEventImpl implements FormsSubmitEvent {
             String schemaKey, String key, dynamic value, BuildContext context)?
         updateField,
     TResult? Function(SchemaObject schema, String schemaKey)? update,
-    TResult? Function(String schemaKey, String key)? clearField,
     TResult? Function(String schemaKey, String pageKey)? clearPage,
     TResult? Function(String schemaKey)? clearForm,
     TResult? Function(String schemaKey, bool isEdit)? submit,
@@ -1340,7 +1118,6 @@ class _$FormsSubmitEventImpl implements FormsSubmitEvent {
             String schemaKey, String key, dynamic value, BuildContext context)?
         updateField,
     TResult Function(SchemaObject schema, String schemaKey)? update,
-    TResult Function(String schemaKey, String key)? clearField,
     TResult Function(String schemaKey, String pageKey)? clearPage,
     TResult Function(String schemaKey)? clearForm,
     TResult Function(String schemaKey, bool isEdit)? submit,
@@ -1358,7 +1135,6 @@ class _$FormsSubmitEventImpl implements FormsSubmitEvent {
     required TResult Function(FormsLoadEvent value) load,
     required TResult Function(FormsUpdateFieldEvent value) updateField,
     required TResult Function(FormsUpdateEvent value) update,
-    required TResult Function(FormsClearFieldEvent value) clearField,
     required TResult Function(FormsClearPageEvent value) clearPage,
     required TResult Function(FormsClearFormEvent value) clearForm,
     required TResult Function(FormsSubmitEvent value) submit,
@@ -1372,7 +1148,6 @@ class _$FormsSubmitEventImpl implements FormsSubmitEvent {
     TResult? Function(FormsLoadEvent value)? load,
     TResult? Function(FormsUpdateFieldEvent value)? updateField,
     TResult? Function(FormsUpdateEvent value)? update,
-    TResult? Function(FormsClearFieldEvent value)? clearField,
     TResult? Function(FormsClearPageEvent value)? clearPage,
     TResult? Function(FormsClearFormEvent value)? clearForm,
     TResult? Function(FormsSubmitEvent value)? submit,
@@ -1386,7 +1161,6 @@ class _$FormsSubmitEventImpl implements FormsSubmitEvent {
     TResult Function(FormsLoadEvent value)? load,
     TResult Function(FormsUpdateFieldEvent value)? updateField,
     TResult Function(FormsUpdateEvent value)? update,
-    TResult Function(FormsClearFieldEvent value)? clearField,
     TResult Function(FormsClearPageEvent value)? clearPage,
     TResult Function(FormsClearFormEvent value)? clearForm,
     TResult Function(FormsSubmitEvent value)? submit,

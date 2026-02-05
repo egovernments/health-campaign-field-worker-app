@@ -3,18 +3,19 @@ import 'dart:convert';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
-import 'package:closed_household/closed_household.dart';
-import 'package:closed_household/router/closed_household_router.gm.dart';
-import 'package:complaints/complaints.dart';
-import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:crypto/crypto.dart';
+import 'package:digit_crud_bloc/digit_crud_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
-import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
+import 'package:digit_flow_builder/data/digit_crud_service.dart';
+import 'package:digit_flow_builder/flow_builder.dart';
+import 'package:digit_flow_builder/router/flow_builder_routes.gm.dart';
+import 'package:digit_flow_builder/utils/function_registry.dart';
 import 'package:digit_location_tracker/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
@@ -24,13 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:inventory_management/inventory_management.dart';
-import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:recase/recase.dart';
-import 'package:referral_reconciliation/referral_reconciliation.dart';
-import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
-import 'package:registration_delivery/registration_delivery.dart';
-import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
@@ -47,16 +42,31 @@ import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
+import '../sampleJsonConfigs/closed_household.dart';
+import '../sampleJsonConfigs/complaints.dart';
+import '../sampleJsonConfigs/hf_referral.dart';
+import '../sampleJsonConfigs/inventory_reports.dart';
+import '../sampleJsonConfigs/manage_stock.dart';
+import '../sampleJsonConfigs/registration_flows.dart';
+import '../sampleJsonConfigs/stock_reconciliation.dart';
 import '../utils/debound.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/least_level_boundary_singleton.dart';
 import '../utils/utils.dart';
+import '../widgets/h_f_referral/evaluation_facility.dart';
+import '../widgets/h_f_referral/project_cycles.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
+import '../widgets/inventory/custom_facility_widgets.dart';
+import '../widgets/inventory/custom_product_selection_card.dart';
 import '../widgets/localized.dart';
+import '../widgets/progress_bar/beneficiary_progress.dart';
+import '../widgets/resource_card/custom_resource_card.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
+import '../widgets/stock_reconciliation/stock_reconciliation_card.dart';
+import '../widgets/task_functions.dart';
 
 @RoutePage()
 class HomePage extends LocalizedStatefulWidget {
@@ -90,6 +100,450 @@ class _HomePageState extends LocalizedState<HomePage> {
     });
     //// Function to set initial Data required for the packages to run
     setPackagesSingleton(context);
+
+    // Register custom components for forms
+    _registerCustomComponents();
+  }
+
+  /// Register custom components for forms engine
+  void _registerCustomComponents() {
+    // Example 1: Register a dynamic resource card with multi-page state access
+    CustomComponentRegistry().registerBuilder(
+      'resourceCard',
+      (context, stateAccessor) {
+        // Access data from any page in the flow
+        final beneficiaryDetails =
+            stateAccessor.getPageData('beneficiaryDetails');
+
+        // Build your component with access to all this data
+        return ResourceCard(
+          stateData: beneficiaryDetails,
+          pageSchema: 'DELIVERY',
+        );
+      },
+    );
+
+    CustomComponentRegistry().registerBuilder(
+      'evaluationFacility',
+      (context, stateAccessor) {
+        // Build your component with access to all this data
+        return const EvaluationKeyDropDown(
+            schemaName: "REFERRAL_CREATE",
+            formControlName: "evaluationFacility");
+      },
+    );
+
+    CustomComponentRegistry().registerBuilder(
+      'healthFacility',
+      (context, stateAccessor) {
+        // Build your component with access to all this data
+        return const EvaluationKeyDropDown(
+            schemaName: "REFER_BENEFICIARY", formControlName: "healthFacility");
+      },
+    );
+
+    CustomComponentRegistry().registerBuilder(
+      'referralCycle',
+      (context, stateAccessor) {
+        // Build your component with access to all this data
+        return const CycleDropDown();
+      },
+    );
+    CustomComponentRegistry().registerBuilder(
+      'facilityToWhich',
+      (context, stateAccessor) {
+        // Access data from RECORDSTOCK form (where formData is stored by NAVIGATION executor)
+        final stockData = stateAccessor.getPageData('manageStock');
+
+        // Build your component with access to all this data
+        return FacilityCard(
+          stateData: stockData,
+          schemaName: 'RECORDSTOCK',
+          formKey: 'facilityToWhich',
+          dependantFormKey: 'teamCode',
+        );
+      },
+    );
+    CustomComponentRegistry().registerBuilder(
+      'facilityFromWhich',
+      (context, stateAccessor) {
+        // Access data from RECORDSTOCK form (where formData is stored by NAVIGATION executor)
+        final stockData = stateAccessor.getPageData('manageStock');
+
+        // Build your component with access to all this data
+        return FacilityCard(
+          stateData: stockData,
+          schemaName: 'RECORDSTOCK',
+          formKey: 'facilityFromWhich',
+          dependantFormKey: 'deliveryTeam',
+        );
+      },
+    );
+    CustomComponentRegistry().registerBuilder(
+      'productdetail',
+      (context, stateAccessor) {
+        // Access data from any page in the flow
+        final stockData = stateAccessor.getPageData('manageStock');
+
+        // Build your component with access to all this data
+        return ProductSelectionCard(
+          stateData: stockData,
+          pageSchema: 'RECORDSTOCK',
+        );
+      },
+    );
+    CustomComponentRegistry().registerBuilder(
+      'stockReconciliationCard',
+      (context, stateAccessor) {
+        // Access data from stock reconciliation page
+        final reconciliationData = stateAccessor.getPageData('stockRecon');
+
+        // Build stock reconciliation component with facility, product, and metrics
+        return StockReconciliationCard(
+          stateData: reconciliationData,
+          pageSchema: 'stockReconciliationDetails',
+        );
+      },
+    );
+    FunctionRegistry.register('generateUniqueMaterialNoteNumber',
+        (args, stateData) {
+      // Generate a synchronous unique ID without async operations
+      int timestamp = DateTime.now().millisecondsSinceEpoch;
+      String userUuid = context.loggedInUserUuid;
+
+      // Create a combined string with timestamp and user UUID
+      String combinedId = '$userUuid$timestamp';
+
+      // Generate SHA-256 hash
+      List<int> bytes = utf8.encode(combinedId);
+      Digest sha256Hash = sha256.convert(bytes);
+
+      // Convert the hash to a 12-character string and make it uppercase
+      String hashString = sha256Hash.toString();
+      String uniqueId = hashString.substring(0, 12).toUpperCase();
+
+      // Add a hyphen every 4 characters
+      String formattedUniqueId = uniqueId.replaceAllMapped(
+        RegExp(r'.{1,4}'),
+        (match) => '${match.group(0)}-',
+      );
+
+      // Remove the last hyphen
+      formattedUniqueId =
+          formattedUniqueId.substring(0, formattedUniqueId.length - 1);
+
+      if (kDebugMode) {
+        print('uniqueId : $formattedUniqueId');
+      }
+
+      return formattedUniqueId;
+    });
+    registerTaskFunctions();
+    FunctionRegistry.register('getQuantityLabel', (args, stateData) {
+      if (args.isEmpty) return 'APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL';
+
+      final sku = args.first?.toString() ?? '';
+
+      // Check if the resource is SPAQ-250 mg
+      if (sku.trim().toString() == 'SPAQ - 250 mg' ||
+          sku.trim().toString() == 'SPAQ - 500 mg') {
+        return 'APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL';
+      }
+
+      return 'APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL';
+    });
+
+    // Stock Transaction Quantity Label Function
+    FunctionRegistry.register('getStockQuantityLabel', (args, stateData) {
+      if (args.isEmpty) return 'APPONE_INVENTORY_QUANTITY_LABEL';
+      final stockEntryType = args.first?.toString().toUpperCase() ?? '';
+
+      const labels = {
+        'RECEIPT': 'APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL',
+        'RETURNED': 'APPONE_INVENTORY_QUANTITY_RETURNED_LABEL',
+        'ISSUED': 'APPONE_INVENTORY_QUANTITY_SENT_LABEL',
+        'DISPATCH': 'APPONE_INVENTORY_QUANTITY_SENT_LABEL',
+        'LOSS': 'APPONE_INVENTORY_QUANTITY_LOST_LABEL',
+        'DAMAGED': 'APPONE_INVENTORY_QUANTITY_DAMAGED_LABEL'
+      };
+      return labels[stockEntryType] ?? 'APPONE_INVENTORY_QUANTITY_LABEL';
+    });
+
+    // Inventory Report Functions
+    FunctionRegistry.register('getReportTitle', (args, stateData) {
+      if (args.isEmpty) return '';
+      final reportType = args.first?.toString() ?? '';
+
+      const titles = {
+        'receipt': 'INVENTORY_REPORT_DETAILS_RECEIPT_REPORT_TITLE',
+        'dispatch': 'INVENTORY_REPORT_DETAILS_DISPATCH_REPORT_TITLE',
+        'returned': 'INVENTORY_REPORT_DETAILS_RETURNED_REPORT_TITLE',
+        'damage': 'INVENTORY_REPORT_DETAILS_DAMAGE_REPORT_TITLE',
+        'loss': 'INVENTORY_REPORT_DETAILS_LOSS_REPORT_TITLE',
+        'reconciliation': 'INVENTORY_REPORT_DETAILS_RECONCILIATION_REPORT_TITLE'
+      };
+      return titles[reportType] ?? '';
+    });
+
+    FunctionRegistry.register('getTransactingPartyLabel', (args, stateData) {
+      if (args.isEmpty) return '';
+      final reportType = args.first?.toString() ?? '';
+
+      const labels = {
+        'receipt': 'INVENTORY_REPORT_DETAILS_RECEIPT_TRANSACTING_PARTY_LABEL',
+        'dispatch': 'INVENTORY_REPORT_DETAILS_DISPATCH_TRANSACTING_PARTY_LABEL',
+        'returned': 'INVENTORY_REPORT_DETAILS_RETURNED_TRANSACTING_PARTY_LABEL',
+        'damage': 'INVENTORY_REPORT_DETAILS_DAMAGED_TRANSACTING_PARTY_LABEL',
+        'loss': 'INVENTORY_REPORT_DETAILS_LOSS_TRANSACTING_PARTY_LABEL'
+      };
+      return labels[reportType] ?? '';
+    });
+
+    FunctionRegistry.register('getTransactingParty', (args, stateData) {
+      if (args.length < 2) return '';
+      final reportType = args[0]?.toString() ?? '';
+      final item = args[1];
+
+      if (item == null) return '';
+
+      // For dispatch, show receiver; for others, show sender
+      if (reportType == 'dispatch') {
+        return item['receiverId']?.toString() ??
+            item['receiverType']?.toString() ??
+            '';
+      }
+      return item['senderId']?.toString() ??
+          item['senderType']?.toString() ??
+          '';
+    });
+
+    FunctionRegistry.register('getTransactionType', (args, stateData) {
+      if (args.isEmpty) return [];
+      final reportType = args.first?.toString() ?? '';
+
+      const types = {
+        'receipt': ['RECEIVED'],
+        'dispatch': ['DISPATCHED'],
+        'returned': ['RECEIVED'],
+        'damage': ['DISPATCHED'],
+        'loss': ['DISPATCHED']
+      };
+      return types[reportType] ?? [];
+    });
+
+    FunctionRegistry.register('getTransactionReason', (args, stateData) {
+      if (args.isEmpty) return [];
+      final reportType = args.first?.toString() ?? '';
+
+      const reasons = {
+        'receipt': ['RECEIVED'],
+        'dispatch': [],
+        'returned': ['RETURNED'],
+        'damage': ['DAMAGED_IN_STORAGE', 'DAMAGED_IN_TRANSIT'],
+        'loss': ['LOST_IN_STORAGE', 'LOST_IN_TRANSIT']
+      };
+      return reasons[reportType] ?? [];
+    });
+
+    FunctionRegistry.register('getStockEntryType', (args, stateData) {
+      if (args.isEmpty) return '';
+      final reportType = args.first?.toString() ?? '';
+
+      const entryTypes = {
+        'receipt': 'RECEIPT',
+        'dispatch': 'ISSUED',
+        'returned': 'RETURNED',
+        'damage': 'DAMAGED',
+        'loss': 'LOSS',
+      };
+      return entryTypes[reportType] ?? '';
+    });
+
+    FunctionRegistry.register('getSenderOrReceiver', (args, stateData) {
+      if (args.isEmpty) return 'receiverId';
+      final reportType = args.first?.toString() ?? '';
+      // For dispatch/damage/loss the warehouse is the sender
+      const senderTypes = {'dispatch', 'damage', 'loss'};
+      return senderTypes.contains(reportType) ? 'senderId' : 'receiverId';
+    });
+
+    // Get secondary party type based on facility selection
+    // Returns 'STAFF' if Delivery Team is selected, otherwise 'WAREHOUSE'
+    FunctionRegistry.register('getSecondaryType', (args, stateData) {
+      if (args.isEmpty) return 'WAREHOUSE';
+      final facilityFromWhich = args.first?.toString() ?? '';
+      return facilityFromWhich == 'Delivery Team' ? 'STAFF' : 'WAREHOUSE';
+    });
+
+    // Helper to extract stockEntryType from additionalFields array
+    String getStockEntryTypeFromFields(dynamic fields) {
+      if (fields == null) return '';
+      if (fields is List) {
+        for (var field in fields) {
+          if (field is Map && field['key'] == 'stockEntryType') {
+            return field['value']?.toString().toUpperCase() ?? '';
+          }
+        }
+      }
+      return '';
+    }
+
+    // First page (viewTransaction) - shows sender for RECEIPT/RETURNED, receiver for ISSUED/DAMAGED/LOSS
+    FunctionRegistry.register('getFirstPagePartyLabel', (args, stateData) {
+      if (args.isEmpty) return 'INVENTORY_TRANSACTING_PARTY_LABEL';
+      final stockEntryType = getStockEntryTypeFromFields(args.first);
+
+      switch (stockEntryType) {
+        case 'RECEIPT':
+        case 'RETURNED':
+          return 'INVENTORY_SENDER_LABEL';
+        case 'ISSUED':
+        case 'DAMAGED':
+        case 'LOSS':
+          return 'INVENTORY_RECEIVER_LABEL';
+        default:
+          return 'INVENTORY_TRANSACTING_PARTY_LABEL';
+      }
+    });
+
+    FunctionRegistry.register('getFirstPageParty', (args, stateData) {
+      if (args.length < 3) return '';
+      final stockEntryType = getStockEntryTypeFromFields(args[0]);
+      final senderId = args[1]?.toString() ?? '';
+      final receiverId = args[2]?.toString() ?? '';
+
+      switch (stockEntryType) {
+        case 'RECEIPT':
+        case 'RETURNED':
+          return senderId;
+        case 'ISSUED':
+        case 'DAMAGED':
+        case 'LOSS':
+          return receiverId;
+        default:
+          return senderId;
+      }
+    });
+
+    // Second page (viewTransactionDetails) - shows receiver for RECEIPT/RETURNED, sender for ISSUED/DAMAGED/LOSS
+    FunctionRegistry.register('getSecondPagePartyLabel', (args, stateData) {
+      if (args.isEmpty) return 'INVENTORY_TRANSACTING_PARTY_LABEL';
+      final stockEntryType = getStockEntryTypeFromFields(args.first);
+
+      switch (stockEntryType) {
+        case 'RECEIPT':
+        case 'RETURNED':
+          return 'INVENTORY_RECEIVER_LABEL';
+        case 'ISSUED':
+        case 'DAMAGED':
+        case 'LOSS':
+          return 'INVENTORY_SENDER_LABEL';
+        default:
+          return 'INVENTORY_TRANSACTING_PARTY_LABEL';
+      }
+    });
+
+    FunctionRegistry.register('getSecondPageParty', (args, stateData) {
+      if (args.length < 3) return '';
+      final stockEntryType = getStockEntryTypeFromFields(args[0]);
+      final senderId = args[1]?.toString() ?? '';
+      final receiverId = args[2]?.toString() ?? '';
+
+      switch (stockEntryType) {
+        case 'RECEIPT':
+        case 'RETURNED':
+          return receiverId;
+        case 'ISSUED':
+        case 'DAMAGED':
+        case 'LOSS':
+          return senderId;
+        default:
+          return receiverId;
+      }
+    });
+
+    // Get user's assigned facility ID based on their role and boundary level
+    // For distributors: returns the logged-in user UUID
+    // For warehouse managers: returns the facility ID based on boundary type
+    FunctionRegistry.register('getUserFacilityId', (args, stateData) {
+      final isDistributor = context.loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.distributor.toValue(),
+      )
+          .toList()
+          .isNotEmpty;
+      final isWareHouseMgr = context.loggedInUserRoles
+          .where(
+              (role) => role.code == RolesType.warehouseManager.toValue())
+          .toList()
+          .isNotEmpty;
+
+      // For distributors who are not warehouse managers, return their user UUID
+      if (isDistributor && !isWareHouseMgr) {
+        return context.loggedInUserUuid ?? '';
+      }
+
+      // For warehouse managers and other roles, get facility from wrapper data
+      if (stateData == null) return '';
+
+      try {
+        // Get facility list from stateData - CrudStateData has modelMap property
+        List<Map<String, dynamic>>? projectFacilities;
+
+        // stateData is CrudStateData which has modelMap: Map<String, List<Map<String, dynamic>>>
+        if (stateData.modelMap != null) {
+          projectFacilities = stateData.modelMap['ProjectFacilityModel'];
+        }
+
+        if (projectFacilities == null || projectFacilities.isEmpty) {
+          return '';
+        }
+
+        // Return first facility ID (user's assigned facility)
+        // Note: Could be enhanced to filter by boundary type if needed
+        for (var facility in projectFacilities) {
+          final facilityId = facility['facilityId']?.toString() ?? '';
+          if (facilityId.isNotEmpty) {
+            return facilityId;
+          }
+        }
+
+        return '';
+      } catch (e) {
+        debugPrint('getUserFacilityId error: $e');
+        return '';
+      }
+    });
+
+    // Get facility name from facility ID
+    FunctionRegistry.register('getFacilityName', (args, stateData) {
+      if (args.isEmpty) return '';
+      final facilityId = args.first?.toString() ?? '';
+      if (facilityId.isEmpty) return '';
+
+      // Return a localization key that can be translated
+      return 'FAC_$facilityId';
+    });
+
+    // Get transaction status type for tag styling
+    FunctionRegistry.register('getTransactionStatusType', (args, stateData) {
+      if (args.isEmpty) return 'default';
+      final transactionType = args.first?.toString().toUpperCase() ?? '';
+
+      switch (transactionType) {
+        case 'DISPATCHED':
+          return 'warning'; // Orange/Yellow - pending action
+        case 'RECEIVED':
+          return 'success'; // Green - completed
+        case 'RETURNED':
+          return 'info'; // Blue - returned
+        case 'DAMAGED':
+        case 'LOSS':
+          return 'error'; // Red - issue
+        default:
+          return 'default';
+      }
+    });
   }
 
   //  Be sure to cancel subscription after you are done
@@ -336,12 +790,87 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.announcement,
           label: i18.home.fileComplaint,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
+          onPressed: () async {
+            // if (isTriggerLocalisation) {
+            final moduleName =
+                'hcm-complaints-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+            // }
+            try {
+              CrudBlocSingleton().setData(
+                crudService: DigitCrudService(
+                  context: context,
+                  relationshipMap: [
+                    const RelationshipMapping(
+                        from: 'pgrComplainant',
+                        to: 'pgrService',
+                        localKey: 'complaintClientReferenceId',
+                        foreignKey: 'clientReferenceId'),
+                    const RelationshipMapping(
+                        from: 'address',
+                        to: 'pgrService',
+                        localKey: 'relatedClientReferenceId',
+                        foreignKey: 'clientReferenceId'),
+                  ],
+                  nestedModelMappings: [
+                    const NestedModelMapping(
+                      rootModel: 'pgrService',
+                      fields: {
+                        'user': NestedFieldMapping(
+                          table: 'pgrComplainant',
+                          localKey: 'clientReferenceId',
+                          foreignKey: 'complaintClientReferenceId',
+                          type: NestedMappingType.one,
+                        ),
+                        'address': NestedFieldMapping(
+                          table: 'address',
+                          localKey: 'clientReferenceId',
+                          foreignKey: 'relatedClientReferenceId',
+                          type: NestedMappingType.one,
+                        )
+                      },
+                    ),
+                  ],
+                  searchEntityRepository:
+                      context.read<SearchEntityRepository>(),
+                ),
+                dynamicEntityModelListener: EntityModelMapMapper(),
+              );
+              WidgetRegistry.initialize();
+              final prefs = await SharedPreferences.getInstance();
+              final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+              if (schemaJsonRaw != null) {
+                final allSchemas =
+                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                final complaint = allSchemas['COMPLAINTS'];
+
+                final complaintsData = complaint?['data'];
+                final flowsData = (complaintsData['flows'] as List<dynamic>?)
+                        ?.map((e) => Map<String, dynamic>.from(e as Map))
+                        .toList() ??
+                    [];
+                FlowRegistry.setConfig(flowsData);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(pageName: complaintsData["initialPage"]),
+                );
+              } else {
+                FlowRegistry.setConfig(sampleComplaintFlows["flows"]
+                    as List<Map<String, dynamic>>);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: sampleComplaintFlows["initialPage"]),
+                );
+              }
+            } catch (e) {
+              debugPrint('error $e');
             }
-            context.router.push(const ComplaintsInboxWrapperRoute());
+            // context.router.push(ManageStocksRoute());
           },
         ),
       ),
@@ -366,140 +895,178 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
-            if (isTriggerLocalisation) {
-              final moduleName =
-                  'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
-              triggerLocalization(module: moduleName);
-              isTriggerLocalisation = false;
-            }
+            // if (isTriggerLocalisation) {
+            final moduleName =
+                'hcm-registration-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+            // }
 
             final prefs = await SharedPreferences.getInstance();
             final schemaJsonRaw = prefs.getString('app_config_schemas');
 
-            if (schemaJsonRaw != null) {
-              final allSchemas =
-                  json.decode(schemaJsonRaw) as Map<String, dynamic>;
+            FlowBuilderSingleton().setPersistenceConfiguration(
+                persistenceConfiguration:
+                    PersistenceConfiguration.offlineFirst);
+            WidgetRegistry.initialize();
+            CrudBlocSingleton().setData(
+              crudService: DigitCrudService(
+                context: context,
+                relationshipMap: [
+                  const RelationshipMapping(
+                      from: 'name',
+                      to: 'individual',
+                      localKey: 'individualClientReferenceId',
+                      foreignKey: 'clientReferenceId'),
+                  const RelationshipMapping(
+                      from: 'identifier',
+                      to: 'individual',
+                      localKey: 'individualClientReferenceId',
+                      foreignKey: 'clientReferenceId'),
+                  const RelationshipMapping(
+                      from: 'householdMember',
+                      to: 'individual',
+                      localKey: 'individualClientReferenceId',
+                      foreignKey: 'clientReferenceId'),
+                  const RelationshipMapping(
+                      from: 'address',
+                      to: 'household',
+                      localKey: 'relatedClientReferenceId',
+                      foreignKey: 'clientReferenceId'),
+                  const RelationshipMapping(
+                      from: 'householdMember',
+                      to: 'household',
+                      localKey: 'householdClientReferenceId',
+                      foreignKey: 'clientReferenceId'),
+                  const RelationshipMapping(
+                      from: 'projectBeneficiary',
+                      to: 'task',
+                      localKey: 'clientReferenceId',
+                      foreignKey: 'projectBeneficiaryClientReferenceId'),
+                  const RelationshipMapping(
+                      from: 'projectBeneficiary',
+                      to: 'referral',
+                      localKey: 'clientReferenceId',
+                      foreignKey: 'projectBeneficiaryClientReferenceId'),
+                  // Conditional mapping
+                  if (FlowBuilderSingleton().beneficiaryType ==
+                      BeneficiaryType.household)
+                    const RelationshipMapping(
+                      from: 'projectBeneficiary',
+                      to: 'household',
+                      localKey: 'beneficiaryClientReferenceId',
+                      foreignKey: 'clientReferenceId',
+                    )
+                  else
+                    const RelationshipMapping(
+                      from: 'projectBeneficiary',
+                      to: 'individual',
+                      localKey: 'beneficiaryClientReferenceId',
+                      foreignKey: 'clientReferenceId',
+                    ),
+                ],
+                nestedModelMappings: [
+                  const NestedModelMapping(
+                    rootModel: 'individual',
+                    fields: {
+                      'name': NestedFieldMapping(
+                        table: 'name',
+                        localKey: 'clientReferenceId',
+                        foreignKey: 'individualClientReferenceId',
+                        type: NestedMappingType.one,
+                      ),
+                      'address': NestedFieldMapping(
+                        table: 'address',
+                        localKey: 'clientReferenceId',
+                        foreignKey: 'relatedClientReferenceId',
+                        type: NestedMappingType.many,
+                      ),
+                      'identifiers': NestedFieldMapping(
+                        table: 'identifier',
+                        localKey: 'clientReferenceId',
+                        foreignKey: 'individualClientReferenceId',
+                        type: NestedMappingType.many,
+                      ),
+                    },
+                  ),
+                  const NestedModelMapping(
+                    rootModel: 'household',
+                    fields: {
+                      'address': NestedFieldMapping(
+                        table: 'address',
+                        localKey: 'clientReferenceId',
+                        foreignKey: 'relatedClientReferenceId',
+                        type: NestedMappingType.one,
+                      ),
+                    },
+                  ),
+                  const NestedModelMapping(
+                    rootModel: 'task',
+                    fields: {
+                      'resource': NestedFieldMapping(
+                        table: 'resource',
+                        localKey: 'taskclientReferenceId',
+                        foreignKey: 'clientReferenceId',
+                        type: NestedMappingType.many,
+                      ),
+                    },
+                  ),
+                ],
+                searchEntityRepository: context.read<SearchEntityRepository>(),
+              ),
+              dynamicEntityModelListener: EntityModelMapMapper(),
+            );
+            try {
+              if (schemaJsonRaw != null) {
+                final allSchemas =
+                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                final data = allSchemas['REGISTRATION'];
 
-              final registrationSchemaEntry =
-                  allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
+                final registrationDeliveryData = data?['data'];
+                final flowsData =
+                    (registrationDeliveryData['flows'] as List<dynamic>?)
+                            ?.map((e) => Map<String, dynamic>.from(e as Map))
+                            .toList() ??
+                        [];
+                FlowRegistry.setConfig(flowsData);
+                NavigationRegistry.setupNavigation(context);
 
-              final registrationSchemaData = registrationSchemaEntry?['data'];
-
-              final deliverySchemaEntry =
-                  allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
-
-              final deliverySchemaData = deliverySchemaEntry?['data'];
-
-              if (registrationSchemaData != null ||
-                  deliverySchemaData != null) {
-                // Extract templates from both schemas
-                final regTemplatesRaw = registrationSchemaData?['templates'];
-
-                final delTemplatesRaw = deliverySchemaData?['templates'];
-
-                final Map<String, dynamic> regTemplateMap =
-                    regTemplatesRaw is Map<String, dynamic>
-                        ? regTemplatesRaw
-                        : {};
-
-                final Map<String, dynamic> delTemplateMap =
-                    delTemplatesRaw is Map<String, dynamic>
-                        ? delTemplatesRaw
-                        : {};
-
-                final templates = {
-                  for (final entry in {...delTemplateMap}.entries)
-                    entry.key: TemplateConfig.fromJson(
-                        entry.value as Map<String, dynamic>)
-                };
-
-                final registrationConfig = json.encode(registrationSchemaData);
-                final deliveryConfig = json.encode(deliverySchemaData);
-
-                RegistrationDeliverySingleton().setTemplateConfigs(templates);
-                RegistrationDeliverySingleton()
-                    .setRegistrationConfig(registrationConfig);
-                RegistrationDeliverySingleton()
-                    .setDeliveryConfig(deliveryConfig);
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: registrationDeliveryData["initialPage"]),
+                );
+              } else {
+                FlowRegistry.setConfig(
+                    sampleFlows["flows"] as List<Map<String, dynamic>>);
+                NavigationRegistry.setupNavigation(context);
+                context.router.push(
+                  FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
+                );
               }
+            } catch (e) {
+              debugPrint('error $e');
             }
-            RegistrationDeliverySingleton()
-                .setHouseholdType(HouseholdType.family);
-
-            await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
       ),
 
-      // i18.home.distributionLabel: homeShowcaseData.distributionPoint.buildWith(
+      /// TODO: NEED TO UPDATE CLF
+
+      // i18.home.clfLabel: homeShowcaseData.clf.buildWith(
       //   child: HomeItemCard(
-      //     icon: Icons.person,
-      //     label: i18.home.distributionLabel,
+      //     icon: Icons.account_balance,
+      //     label: i18.home.clfLabel,
       //     onPressed: () async {
+      //       RegistrationDeliverySingleton()
+      //           .setHouseholdType(HouseholdType.community);
       //       if (isTriggerLocalisation) {
-      //         final moduleName =
-      //             'hcm-deliveryflow-${context.selectedProject.referenceID}';
-      //         triggerLocalization(module: moduleName);
+      //         triggerLocalization();
       //         isTriggerLocalisation = false;
       //       }
-      //
-      //       final prefs = await SharedPreferences.getInstance();
-      //       final schemaJsonRaw = prefs.getString('app_config_schemas');
-      //
-      //       if (schemaJsonRaw != null) {
-      //         final allSchemas =
-      //             json.decode(schemaJsonRaw) as Map<String, dynamic>;
-      //
-      //         final deliverySchemaEntry =
-      //             allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
-      //
-      //         final deliverySchemaData = deliverySchemaEntry?['data'];
-      //
-      //         if (deliverySchemaData != null) {
-      //           // Extract templates from both schemas
-      //           final delTemplatesRaw = deliverySchemaData?['templates'];
-      //
-      //           final Map<String, dynamic> delTemplateMap =
-      //               delTemplatesRaw is Map<String, dynamic>
-      //                   ? delTemplatesRaw
-      //                   : {};
-      //
-      //           final templates = {
-      //             for (final entry in {...delTemplateMap}.entries)
-      //               entry.key: TemplateConfig.fromJson(
-      //                   entry.value as Map<String, dynamic>)
-      //           };
-      //
-      //           final deliveryConfig = json.encode(deliverySchemaData);
-      //
-      //           RegistrationDeliverySingleton().setTemplateConfigs(templates);
-      //           RegistrationDeliverySingleton()
-      //               .setDeliveryConfig(deliveryConfig);
-      //         }
-      //       }
-      //       RegistrationDeliverySingleton()
-      //           .setHouseholdType(HouseholdType.family);
-      //
       //       await context.router.push(const RegistrationDeliveryWrapperRoute());
       //     },
       //   ),
       // ),
-
-      i18.home.clfLabel: homeShowcaseData.clf.buildWith(
-        child: HomeItemCard(
-          icon: Icons.account_balance,
-          label: i18.home.clfLabel,
-          onPressed: () async {
-            RegistrationDeliverySingleton()
-                .setHouseholdType(HouseholdType.community);
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            await context.router.push(const RegistrationDeliveryWrapperRoute());
-          },
-        ),
-      ),
 
       i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
         child: HomeItemCard(
@@ -508,12 +1075,60 @@ class _HomePageState extends LocalizedState<HomePage> {
           customIconSize: 40,
           customIcon: Constants.closedHouseholdSvg,
           label: i18.home.closedHouseHoldLabel,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
+          onPressed: () async {
+            // if (isTriggerLocalisation) {
+            final moduleName =
+                'hcm-closehousehold-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+            // }
+            try {
+              CrudBlocSingleton().setData(
+                crudService: DigitCrudService(
+                  context: context,
+                  relationshipMap: [],
+                  nestedModelMappings: [],
+                  searchEntityRepository:
+                      context.read<SearchEntityRepository>(),
+                ),
+                dynamicEntityModelListener: EntityModelMapMapper(),
+              );
+              WidgetRegistry.initialize();
+              final prefs = await SharedPreferences.getInstance();
+              final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+              if (schemaJsonRaw != null) {
+                final allSchemas =
+                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                final closeHousehold = allSchemas['CLOSEHOUSEHOLD'];
+
+                final closeHouseholdData = closeHousehold?['data'];
+                final flowsData =
+                    (closeHouseholdData['flows'] as List<dynamic>?)
+                            ?.map((e) => Map<String, dynamic>.from(e as Map))
+                            .toList() ??
+                        [];
+                FlowRegistry.setConfig(flowsData);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: closeHouseholdData["initialPage"]),
+                );
+              } else {
+                FlowRegistry.setConfig(sampleCloseHouseholdFlows["flows"]
+                    as List<Map<String, dynamic>>);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: sampleComplaintFlows["initialPage"]),
+                );
+              }
+            } catch (e) {
+              debugPrint('error $e');
             }
-            context.router.push(const ClosedHouseholdWrapperRoute());
+            //   context.router.push(const ClosedHouseholdWrapperRoute());
           },
         ),
       ),
@@ -522,12 +1137,93 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.store_mall_directory,
           label: i18.home.manageStockLabel,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
+          onPressed: () async {
+            // if (isTriggerLocalisation) {
+            final moduleName =
+                'hcm-inventory-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+            // }
+            try {
+              CrudBlocSingleton().setData(
+                crudService: DigitCrudService(
+                  context: context,
+                  relationshipMap: [
+                    const RelationshipMapping(
+                        from: 'facility',
+                        to: 'projectFacility',
+                        localKey: 'id',
+                        foreignKey: 'facilityId'),
+                    const RelationshipMapping(
+                        from: 'projectResource',
+                        to: 'projectFacility',
+                        localKey: 'projectId',
+                        foreignKey: 'projectId'),
+                    const RelationshipMapping(
+                        from: 'productVariant',
+                        to: 'projectResource',
+                        localKey: 'id',
+                        foreignKey: 'resource'),
+                  ],
+                  nestedModelMappings: [
+                    const NestedModelMapping(
+                      rootModel: 'projectFacility',
+                      fields: {
+                        'facility': NestedFieldMapping(
+                          table: 'facility',
+                          localKey: 'facilityId',
+                          foreignKey: 'id',
+                          type: NestedMappingType.one,
+                        ),
+                        'projectResources': NestedFieldMapping(
+                          table: 'projectResource',
+                          localKey: 'projectId',
+                          foreignKey: 'projectId',
+                          type: NestedMappingType.many,
+                        ),
+                      },
+                    ),
+                  ],
+                  searchEntityRepository:
+                      context.read<SearchEntityRepository>(),
+                ),
+                dynamicEntityModelListener: EntityModelMapMapper(),
+              );
+              WidgetRegistry.initialize();
+              final prefs = await SharedPreferences.getInstance();
+              final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+              if (schemaJsonRaw != null) {
+                final allSchemas =
+                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                final manageStock = allSchemas['INVENTORY'];
+
+                final manageStockData = manageStock?['data'];
+                final flowsData = (manageStockData['flows'] as List<dynamic>?)
+                        ?.map((e) => Map<String, dynamic>.from(e as Map))
+                        .toList() ??
+                    [];
+                FlowRegistry.setConfig(flowsData);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: manageStockData["initialPage"]),
+                );
+              } else {
+                FlowRegistry.setConfig(sampleInventoryFlows["flows"]
+                    as List<Map<String, dynamic>>);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: sampleInventoryFlows["initialPage"]),
+                );
+              }
+            } catch (e) {
+              debugPrint('error $e');
             }
-            context.router.push(ManageStocksRoute());
+            // context.router.push(ManageStocksRoute());
           },
         ),
       ),
@@ -536,12 +1232,98 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.menu_book,
           label: i18.home.stockReconciliationLabel,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
+          onPressed: () async {
+            // if (isTriggerLocalisation) {
+            final moduleName =
+                'hcm-stockreconciliation-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+            // }
+            try {
+              CrudBlocSingleton().setData(
+                crudService: DigitCrudService(
+                  context: context,
+                  relationshipMap: [
+                    const RelationshipMapping(
+                        from: 'facility',
+                        to: 'projectFacility',
+                        localKey: 'id',
+                        foreignKey: 'facilityId'),
+                    const RelationshipMapping(
+                        from: 'projectResource',
+                        to: 'projectFacility',
+                        localKey: 'projectId',
+                        foreignKey: 'projectId'),
+                    const RelationshipMapping(
+                        from: 'productVariant',
+                        to: 'projectResource',
+                        localKey: 'id',
+                        foreignKey: 'resource'),
+                    const RelationshipMapping(
+                        from: 'stock',
+                        to: 'facility',
+                        localKey: 'facilityId',
+                        foreignKey: 'id'),
+                  ],
+                  nestedModelMappings: [
+                    const NestedModelMapping(
+                      rootModel: 'projectFacility',
+                      fields: {
+                        'facility': NestedFieldMapping(
+                          table: 'facility',
+                          localKey: 'facilityId',
+                          foreignKey: 'id',
+                          type: NestedMappingType.one,
+                        ),
+                        'projectResources': NestedFieldMapping(
+                          table: 'projectResource',
+                          localKey: 'projectId',
+                          foreignKey: 'projectId',
+                          type: NestedMappingType.many,
+                        ),
+                      },
+                    ),
+                  ],
+                  searchEntityRepository:
+                      context.read<SearchEntityRepository>(),
+                ),
+                dynamicEntityModelListener: EntityModelMapMapper(),
+              );
+              WidgetRegistry.initialize();
+              final prefs = await SharedPreferences.getInstance();
+              final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+              if (schemaJsonRaw != null) {
+                final allSchemas =
+                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                final manageStock = allSchemas['STOCKRECONCILIATION'];
+
+                final manageStockData = manageStock?['data'];
+                final flowsData = (manageStockData['flows'] as List<dynamic>?)
+                        ?.map((e) => Map<String, dynamic>.from(e as Map))
+                        .toList() ??
+                    [];
+                FlowRegistry.setConfig(flowsData);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: manageStockData["initialPage"]),
+                );
+              } else {
+                FlowRegistry.setConfig(stockReconciliationFlows["flows"]
+                    as List<Map<String, dynamic>>);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: stockReconciliationFlows["initialPage"]),
+                );
+              }
+            } catch (e) {
+              debugPrint('error $e');
             }
-            context.router.push(StockReconciliationRoute());
+            // context.router.push(StockReconciliationRoute());
           },
         ),
       ),
@@ -554,10 +1336,12 @@ class _HomePageState extends LocalizedState<HomePage> {
           customIconSize: spacer8,
           label: i18.home.mySurveyForm,
           onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
+            // if (isTriggerLocalisation) {
+            final moduleName =
+                'hcm-checklist-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+            // }
             context.router.push(SurveyFormWrapperRoute());
           },
         ),
@@ -600,11 +1384,57 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.supervised_user_circle_rounded,
           label: i18.home.beneficiaryReferralLabel,
           onPressed: () async {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
+            // if (isTriggerLocalisation) {
+            final moduleName =
+                'hcm-hfreferral-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+            // }
+            try {
+              CrudBlocSingleton().setData(
+                crudService: DigitCrudService(
+                  context: context,
+                  relationshipMap: [],
+                  nestedModelMappings: [],
+                  searchEntityRepository:
+                      context.read<SearchEntityRepository>(),
+                ),
+                dynamicEntityModelListener: EntityModelMapMapper(),
+              );
+              WidgetRegistry.initialize();
+              final prefs = await SharedPreferences.getInstance();
+              final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+              if (schemaJsonRaw != null) {
+                final allSchemas =
+                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                final referral = allSchemas['HFREFERRAL'];
+
+                final referralData = referral?['data'];
+                final flowsData = (referralData['flows'] as List<dynamic>?)
+                        ?.map((e) => Map<String, dynamic>.from(e as Map))
+                        .toList() ??
+                    [];
+                FlowRegistry.setConfig(flowsData);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(pageName: referralData["initialPage"]),
+                );
+              } else {
+                FlowRegistry.setConfig(
+                    sampleReferralFlows["flows"] as List<Map<String, dynamic>>);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: sampleReferralFlows["initialPage"]),
+                );
+              }
+            } catch (e) {
+              debugPrint('error $e');
             }
-            context.router.push(SearchReferralReconciliationsRoute());
+            // context.router.push(SearchReferralReconciliationsRoute());
           },
         ),
       ),
@@ -612,12 +1442,103 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.announcement,
           label: i18.home.viewReportsLabel,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
+          onPressed: () async {
+            // if (isTriggerLocalisation) {
+            final moduleName =
+                'hcm-stockreports-${context.selectedProject.referenceID}';
+            triggerLocalization(module: moduleName);
+            isTriggerLocalisation = false;
+            // }
+            try {
+              CrudBlocSingleton().setData(
+                crudService: DigitCrudService(
+                  context: context,
+                  relationshipMap: [
+                    const RelationshipMapping(
+                        from: 'facility',
+                        to: 'projectFacility',
+                        localKey: 'id',
+                        foreignKey: 'facilityId'),
+                    const RelationshipMapping(
+                        from: 'projectResource',
+                        to: 'projectFacility',
+                        localKey: 'projectId',
+                        foreignKey: 'projectId'),
+                    const RelationshipMapping(
+                        from: 'productVariant',
+                        to: 'projectResource',
+                        localKey: 'id',
+                        foreignKey: 'resource'),
+                    const RelationshipMapping(
+                        from: 'stockReconciliation',
+                        to: 'facility',
+                        localKey: 'facilityId',
+                        foreignKey: 'id'),
+                    const RelationshipMapping(
+                        from: 'stockReconciliation',
+                        to: 'productVariant',
+                        localKey: 'productVariantId',
+                        foreignKey: 'id'),
+                  ],
+                  nestedModelMappings: [
+                    const NestedModelMapping(
+                      rootModel: 'projectFacility',
+                      fields: {
+                        'facility': NestedFieldMapping(
+                          table: 'facility',
+                          localKey: 'facilityId',
+                          foreignKey: 'id',
+                          type: NestedMappingType.one,
+                        ),
+                        'projectResources': NestedFieldMapping(
+                          table: 'projectResource',
+                          localKey: 'projectId',
+                          foreignKey: 'projectId',
+                          type: NestedMappingType.many,
+                        ),
+                      },
+                    ),
+                  ],
+                  searchEntityRepository:
+                      context.read<SearchEntityRepository>(),
+                ),
+                dynamicEntityModelListener: EntityModelMapMapper(),
+              );
+              WidgetRegistry.initialize();
+              final prefs = await SharedPreferences.getInstance();
+              final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+              if (schemaJsonRaw != null) {
+                final allSchemas =
+                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                final manageStock = allSchemas['STOCKREPORTS'];
+
+                final manageStockData = manageStock?['data'];
+                final flowsData = (manageStockData['flows'] as List<dynamic>?)
+                        ?.map((e) => Map<String, dynamic>.from(e as Map))
+                        .toList() ??
+                    [];
+                FlowRegistry.setConfig(flowsData);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: manageStockData["initialPage"]),
+                );
+              } else {
+                FlowRegistry.setConfig(inventoryReportFlows["flows"]
+                    as List<Map<String, dynamic>>);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: inventoryReportFlows["initialPage"]),
+                );
+              }
+            } catch (e) {
+              debugPrint('error $e');
             }
-            context.router.push(InventoryReportSelectionRoute());
+            // context.router.push(InventoryReportSelectionRoute());
           },
         ),
       ),
@@ -627,11 +1548,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
           onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            ;
+            // if (isTriggerLocalisation) {
+            triggerLocalization();
+            isTriggerLocalisation = false;
+            // };
             context.router.push(const ManageAttendanceRoute());
           },
         ),
@@ -656,10 +1576,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.send,
           label: i18.home.dataShare,
           onPressed: () async {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
+            // if (isTriggerLocalisation) {
+            triggerLocalization();
+            isTriggerLocalisation = false;
+            // }
             context.router.push(const DataShareHomeRoute());
           },
         ),
@@ -669,31 +1589,32 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.bar_chart_sharp,
           label: i18.home.dashboard,
           onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            ;
+            // if (isTriggerLocalisation) {
+            triggerLocalization();
+            isTriggerLocalisation = false;
+            // };
             context.router.push(const UserDashboardRoute());
           },
         ),
       ),
-      i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.buildWith(
-        child: HomeItemCard(
-          label: i18.home.beneficiaryIdLabel,
-          onPressed: () {
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            context.router.push(BeneficiaryIdDownSyncRoute());
-          },
-          icon: Icons.account_box,
-          enableCustomIcon: true,
-          customIconSize: spacer9,
-          customIcon: Constants.beneficiaryIdDownload,
-        ),
-      ),
+
+      /// TODO: NEED TO PICK CHANGES RELATED TO BENEFICIARY DOWNSYNC
+      // i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.buildWith(
+      //   child: HomeItemCard(
+      //     label: i18.home.beneficiaryIdLabel,
+      //     onPressed: () {
+      //       // if (isTriggerLocalisation) {
+      //       triggerLocalization();
+      //       isTriggerLocalisation = false;
+      //       // }
+      //       context.router.push(BeneficiaryIdDownSyncRoute());
+      //     },
+      //     icon: Icons.account_box,
+      //     enableCustomIcon: true,
+      //     customIconSize: spacer9,
+      //     customIcon: Constants.beneficiaryIdDownload,
+      //   ),
+      // ),
       i18.home.transitPostLabel: homeShowcaseData.transitPost.buildWith(
           child: HomeItemCard(
         icon: Icons.vaccines_outlined,
@@ -731,8 +1652,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey,
       i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
-      // i18.home.distributionLabel:
-      //     homeShowcaseData.distributionPoint.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -753,7 +1672,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryIdLabel,
       i18.home.dataShare,
       i18.home.db,
-      // i18.home.distributionLabel
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -809,8 +1727,14 @@ class _HomePageState extends LocalizedState<HomePage> {
               context
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
-                    module: module ??
-                        "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                    module: module != null && module.isNotEmpty
+                        ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist"
+                        : localizationModulesList?.interfaces
+                                .where(
+                                    (e) => e.type == Modules.localizationModule)
+                                .map((e) => e.name.toString())
+                                .join(',') ??
+                            "",
                     tenantId: envConfig.variables.tenantId,
                     locale: selectedLocale!,
                     path: Constants.localizationApiPath,
@@ -844,21 +1768,7 @@ void setPackagesSingleton(BuildContext context) {
           minAge: context.selectedProjectType?.validMinAge,
           maxAge: context.selectedProjectType?.validMaxAge,
         );
-        ComplaintsSingleton().setInitialData(
-          tenantId: envConfig.variables.tenantId,
-          loggedInUserUuid: context.loggedInUserUuid,
-          userMobileNumber: context.loggedInUser.mobileNumber,
-          loggedInUserName: context.loggedInUser.name,
-          complaintTypes:
-              appConfiguration.complaintTypes!.map((e) => e.code).toList(),
-          userName: context.loggedInUser.name ?? '',
-        );
-
-        RegistrationDeliverySingleton().setInitialData(
-          beneficiaryIdMinCount:
-              appConfiguration.beneficiaryIdConfig?.first.minCount.toInt(),
-          beneficiaryIdBatchSize:
-              appConfiguration.beneficiaryIdConfig?.first.batchSize.toInt(),
+        FlowBuilderSingleton().setInitialData(
           loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,
@@ -866,58 +1776,12 @@ void setPackagesSingleton(BuildContext context) {
           selectedBeneficiaryType: context.beneficiaryType,
           projectType: context.selectedProjectType,
           selectedProject: context.selectedProject,
-          genderOptions:
-              appConfiguration.genderOptions!.map((e) => e.code).toList(),
-          idTypeOptions:
-              appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
-          memberRelationTypeOptions: appConfiguration.relationShipTypeOptions!
-              .map((e) => e.code)
+          userRoles: context.loggedInUserRoles
+              .map((role) => {
+                    'code': role.code,
+                    'name': role.name,
+                  })
               .toList(),
-          householdDeletionReasonOptions: appConfiguration
-              .householdDeletionReasonOptions!
-              .map((e) => e.code)
-              .toList(),
-          householdMemberDeletionReasonOptions: appConfiguration
-              .householdMemberDeletionReasonOptions!
-              .map((e) => e.code)
-              .toList(),
-          deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
-              .map((e) => e.code)
-              .toList(),
-          symptomsTypes: appConfiguration.symptomsTypes
-              ?.where((e) => e.active)
-              .map((e) => e.code)
-              .toList(),
-          searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
-              ? appConfiguration.searchHouseHoldFilters!
-                  .where((e) => e.active)
-                  .map((e) => e.code)
-                  .toList()
-              : [],
-          searchCLFFilters: appConfiguration.searchCLFFilters != null
-              ? appConfiguration.searchCLFFilters!
-                  .where((e) => e.active)
-                  .map((e) => e.code)
-                  .toList()
-              : [],
-          referralReasons: appConfiguration.referralReasons
-              ?.where((e) => e.active)
-              .map((e) => e.code)
-              .toList(),
-          houseStructureTypes: appConfiguration.houseStructureTypes
-              ?.where((e) => e.active)
-              .map((e) => e.code)
-              .toList(),
-          refusalReasons: appConfiguration.refusalReasons
-              ?.where((e) => e.active)
-              .map((e) => e.code)
-              .toList(),
-        );
-
-        ClosedHouseholdSingleton().setInitialData(
-          loggedInUserUuid: context.loggedInUserUuid,
-          projectId: context.projectId,
-          beneficiaryType: context.beneficiaryType,
         );
 
         AttendanceSingleton().setInitialData(
@@ -947,52 +1811,6 @@ void setPackagesSingleton(BuildContext context) {
               }),
         );
 
-        ReferralReconSingleton().setInitialData(
-          userName: context.loggedInUser.name ?? '',
-          userUUid: context.loggedInUserUuid,
-          projectId: context.selectedProject.id,
-          projectName: context.selectedProject.name,
-          roleCode: RolesType.healthFacilityWorker.toValue(),
-          appVersion: Constants().version,
-          tenantId: envConfig.variables.tenantId,
-          validIndividualAgeForCampaign: ValidIndividualAgeForCampaign(
-            validMinAge: context.selectedProjectType?.validMinAge ?? 3,
-            validMaxAge: context.selectedProjectType?.validMaxAge ?? 64,
-          ),
-          genderOptions:
-              appConfiguration.genderOptions?.map((e) => e.code).toList() ?? [],
-          cycles: context.cycles,
-          referralReasons: appConfiguration.referralReasons
-                  ?.where((e) => e.active)
-                  .map((e) => e.code)
-                  .toList() ??
-              [],
-          checklistTypes:
-              appConfiguration.checklistTypes?.map((e) => e.code).toList() ??
-                  [],
-        );
-
-        InventorySingleton().setInitialData(
-          isWareHouseMgr: context.loggedInUserRoles
-              .where(
-                  (role) => role.code == RolesType.warehouseManager.toValue())
-              .toList()
-              .isNotEmpty,
-          isDistributor: context.loggedInUserRoles
-              .where(
-                (role) => role.code == RolesType.distributor.toValue(),
-              )
-              .toList()
-              .isNotEmpty,
-          loggedInUser: context.loggedInUserModel,
-          projectId: context.projectId,
-          loggedInUserUuid: context.loggedInUserUuid,
-          transportTypes: appConfiguration.transportTypes
-              ?.map((e) => InventoryTransportTypes()
-                ..name = e.code
-                ..code = e.code)
-              .toList(),
-        );
         DashboardSingleton().setInitialData(
             projectId: context.projectId,
             tenantId: envConfig.variables.tenantId,

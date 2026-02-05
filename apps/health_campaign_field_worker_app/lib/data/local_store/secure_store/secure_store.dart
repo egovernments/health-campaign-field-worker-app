@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../models/auth/auth_model.dart';
 import '../../../models/role_actions/role_actions_model.dart';
@@ -19,6 +21,7 @@ class LocalSecureStore {
   static const isAppInActiveKey = 'isAppInActiveKey';
   static const manualSyncKey = 'manualSyncKey';
   static const selectedProjectTypeKey = 'selectedProjectType';
+  static const dbEncryptionKeyKey = 'dbEncryptionKey';
 
   final storage = const FlutterSecureStorage();
 
@@ -85,6 +88,19 @@ class LocalSecureStore {
     }
   }
 
+  Future<ProjectType?> get selectedProjectType async {
+    final projectBody = await storage.read(key: selectedProjectTypeKey);
+    if (projectBody == null) return null;
+
+    try {
+      final projectType = ProjectType.fromJson(json.decode(projectBody));
+
+      return projectType;
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<bool> get isAppInActive async {
     final hasRun = await storage.read(key: isAppInActiveKey);
 
@@ -137,6 +153,13 @@ class LocalSecureStore {
     await storage.write(
       key: selectedProjectKey,
       value: projectModel.toJson(),
+    );
+  }
+
+  Future<void> setSelectedProjectType(ProjectType? projectType) async {
+    await storage.write(
+      key: selectedProjectTypeKey,
+      value: json.encode(projectType),
     );
   }
 
@@ -203,7 +226,15 @@ class LocalSecureStore {
   }
 
   Future<void> deleteAll() async {
+    // Preserve the database encryption key before deleting all
+    final encryptionKey = await storage.read(key: dbEncryptionKeyKey);
+
     await storage.deleteAll();
+
+    // Restore the encryption key if it existed
+    if (encryptionKey != null) {
+      await storage.write(key: dbEncryptionKeyKey, value: encryptionKey);
+    }
   }
 
   /*Sets the bool value of project setup as true once project data is downloaded*/
@@ -224,5 +255,24 @@ class LocalSecureStore {
       default:
         return false;
     }
+  }
+
+  /// Generates a cryptographically secure random encryption key for the database.
+  /// Returns a 32-character hex string (128-bit key).
+  String _generateEncryptionKey() {
+    final random = Random.secure();
+    final values = List<int>.generate(32, (i) => random.nextInt(256));
+    return values.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join();
+  }
+
+  /// Gets the database encryption key from secure storage.
+  /// If no key exists, generates and stores a new one.
+  Future<String> getOrCreateDbEncryptionKey() async {
+    String? key = await storage.read(key: dbEncryptionKeyKey);
+    if (key == null) {
+      key = _generateEncryptionKey();
+      await storage.write(key: dbEncryptionKeyKey, value: key);
+    }
+    return key;
   }
 }

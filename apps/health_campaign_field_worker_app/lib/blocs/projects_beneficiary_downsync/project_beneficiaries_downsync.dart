@@ -8,7 +8,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:registration_delivery/registration_delivery.dart';
 import 'package:survey_form/models/entities/service.dart';
 import 'package:sync_service/sync_service_lib.dart';
 

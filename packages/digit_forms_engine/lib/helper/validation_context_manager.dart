@@ -138,7 +138,6 @@ class ValidationContextManager {
           // Rebuild validators with updated context
           final newValidators = buildValidators(
             schema,
-            validationContext: context,
           );
 
           // Update validators and re-validate

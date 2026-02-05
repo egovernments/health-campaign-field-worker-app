@@ -3,11 +3,14 @@ library json_schema_builder;
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_forms_engine/blocs/app_localization.dart';
+import 'package:digit_forms_engine/forms_engine.dart';
 import 'package:digit_forms_engine/helper/form_builder_helper.dart';
 import 'package:digit_forms_engine/helper/validator_helper.dart';
-import 'package:digit_forms_engine/models/property_schema/property_schema.dart';
+import 'package:digit_forms_engine/helper/visibility_manager.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:digit_scanner/models/scanner_validation.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
+import 'package:digit_scanner/utils/scanner_utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
@@ -45,6 +48,7 @@ part 'radio_builder.dart';
 part 'scanner_builder.dart';
 part 'selection_builder.dart';
 part 'string_builder.dart';
+part 'text_area_builder.dart';
 
 abstract class JsonSchemaBuilder<T> extends StatelessWidget {
   final FormGroup form;
