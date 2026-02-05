@@ -145,8 +145,7 @@ class TableWidget implements FlowWidget {
       final cellEvalContext = {
         ...evalContext,
         'item': rowItem,
-        'itemData': rowItem is Map<String, dynamic> ? rowItem : null,
-        'currentItem': rowItem, // Legacy support
+        'itemData': rowItem is Map<String, dynamic> ? rowItem : null // Legacy support
       };
 
       return DigitTableRow(
