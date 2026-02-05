@@ -166,13 +166,23 @@ class WrapperBuilder {
           }
         }
 
-        // 3. Computed fields
-        final computed = _applyComputed(wrapperData, config);
-        wrapperData.addAll(computed);
 
-        // 4. Computed list fields
-        final computedList = _applyComputedList(wrapperData, config);
-        wrapperData.addAll(computedList);
+        try{
+          // 3. Computed fields
+          final computed = _applyComputed(wrapperData, config);
+          wrapperData.addAll(computed);
+        } catch(e){
+          print(e.toString());
+        }
+
+        try{
+          // 4. Computed list fields
+          final computedList = _applyComputedList(wrapperData, config);
+          wrapperData.addAll(computedList);
+        } catch(e){
+          print(e.toString());
+        }
+
 
         wrappers.add(wrapperData);
       }
@@ -687,9 +697,17 @@ class WrapperBuilder {
       switch (condition['operator']) {
         case 'eq':
         case 'equals':
+          // Use numeric comparison if both can be coerced to int
+          if (lNum != null && rNum != null) {
+            return lNum == rNum;
+          }
           return left == right;
         case 'neq':
         case 'notEquals':
+          // Use numeric comparison if both can be coerced to int
+          if (lNum != null && rNum != null) {
+            return lNum != rNum;
+          }
           return left != right;
         case 'lt':
           return (lNum != null && rNum != null)
@@ -1168,8 +1186,17 @@ class ConditionEvaluator {
         final baseValue = resolve(context, value['value']);
         if (baseValue is num) {
           return baseValue + 1;
+        } else if (baseValue is List) {
+          if (baseValue.isEmpty) {
+            return 1; // fallback for empty list
+          }
+          final lastItem = baseValue.last;
+          if (lastItem is num) {
+            return lastItem + 1;
+          }
+          return int.parse(lastItem.toString()) + 1;
         } else {
-          return int.parse(baseValue) + 1;
+          return int.parse(baseValue.toString()) + 1;
         }
       }
       // Handle other nested operations
