@@ -5,11 +5,29 @@ import 'dart:math' as math;
 
 import 'package:digit_crud_bloc/models/global_search_params.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:drift/drift.dart';
+import 'package:drift/drift.dart' hide OrderBy;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class QueryBuilder {
+  /// Normalizes a value to a List for 'in' and 'notIn' operators.
+  /// Handles cases where a single string is passed instead of a list.
+  /// Also trims string values.
+  static List<dynamic> _normalizeToList(dynamic value) {
+    if (value is List) {
+      // Trim string values in the list
+      return value.map((v) => v is String ? v.trim() : v).toList();
+    } else if (value is String) {
+      // Split by comma if it contains commas, otherwise wrap as single-item list
+      final trimmed = value.trim();
+      if (trimmed.contains(',')) {
+        return trimmed.split(',').map((v) => v.trim()).where((v) => v.isNotEmpty).toList();
+      }
+      return [trimmed];
+    }
+    return [value];
+  }
+
   static String camelToSnake(String input) {
     return input.replaceAllMapped(
       RegExp(r'[A-Z]'),
@@ -58,13 +76,21 @@ class QueryBuilder {
         case 'isNull':
           return '$column IS NULL';
         case 'in':
-          final values = filter.value as List;
+          final values = _normalizeToList(filter.value);
+          if (values.isEmpty) return '1 = 1';
           return '$column IN (${List.filled(values.length, '?').join(', ')})';
         case 'notIn':
-          final values = filter.value as List;
+          final values = _normalizeToList(filter.value);
+          if (values.isEmpty) return '1 = 1';
           return '$column NOT IN (${List.filled(values.length, '?').join(', ')})';
         case 'within':
           return '1 = 1';
+        case 'equalsAny':
+          // Supports OR condition: field contains comma-separated column names
+          // Example: field='senderId,receiverId', value='F-123'
+          // Generates: (sender_id = ? OR receiver_id = ?)
+          final columns = filter.field.split(',').map((f) => camelToSnake(f.trim())).toList();
+          return '(${columns.map((c) => '$c = ?').join(' OR ')})';
         default:
           throw Exception('Unsupported operator: ${filter.operator}');
       }
@@ -83,8 +109,17 @@ class QueryBuilder {
           break;
         case 'in':
         case 'notIn':
-          final list = filter.value as List;
-          args.addAll(list.map((v) => Variable.withString(v.toString())));
+          final list = _normalizeToList(filter.value);
+          if (list.isNotEmpty) {
+            args.addAll(list.map((v) => Variable.withString(v.toString())));
+          }
+          break;
+        case 'equalsAny':
+          // Add the same value for each column in the OR condition
+          final columnCount = filter.field.split(',').length;
+          for (int i = 0; i < columnCount; i++) {
+            args.add(Variable.withString(filter.value.toString()));
+          }
           break;
         case 'isNotNull':
         case 'isNull':
@@ -105,6 +140,7 @@ class QueryBuilder {
     PaginationParams? pagination,
     bool isPrimaryTable = false,
     void Function(int count)? onCountFetched,
+    SearchOrderBy? orderBy,
   }) async {
     final dynamicTable = sql.allTables.firstWhere(
       (t) => t.actualTableName == camelToSnake(table),
@@ -159,6 +195,30 @@ class QueryBuilder {
         continue;
       }
 
+      // Handle equalsAny operator separately (multiple columns with OR)
+      if (filter.operator == 'equalsAny') {
+        final columnNames = filter.field.split(',').map((f) => camelToSnake(f.trim())).toList();
+        final List<Expression<bool>> orClauses = [];
+
+        for (final colName in columnNames) {
+          final col = dynamicTable.$columns.firstWhere(
+            (c) => c.$name == colName,
+            orElse: () => throw Exception('Column $colName not found in $table'),
+          );
+          orClauses.add(col.equals(filter.value));
+        }
+
+        // Combine with OR: (col1 = value OR col2 = value)
+        if (orClauses.isNotEmpty) {
+          Expression<bool> combined = orClauses.first;
+          for (int i = 1; i < orClauses.length; i++) {
+            combined = combined | orClauses[i];
+          }
+          whereClauses.add(combined);
+        }
+        continue;
+      }
+
       final columnName = camelToSnake(filter.field);
       final col = dynamicTable.$columns.firstWhere(
         (c) => c.$name == columnName,
@@ -180,19 +240,21 @@ class QueryBuilder {
           whereClauses.add(col.isNull());
           break;
         case 'in':
-          final list = (filter.value as List);
+          final list = _normalizeToList(filter.value);
+          if (list.isEmpty) break; // Empty list = no filter (match all)
           if (col is GeneratedColumn<int>) {
-            whereClauses.add(col.isIn(list.cast<int>()));
+            whereClauses.add(col.isIn(list.map((v) => v is int ? v : int.tryParse(v.toString()) ?? 0).toList()));
           } else if (col is GeneratedColumn<String>) {
-            whereClauses.add(col.isIn(list.cast<String>()));
+            whereClauses.add(col.isIn(list.map((v) => v.toString()).toList()));
           }
           break;
         case 'notIn':
-          final list = (filter.value as List);
+          final list = _normalizeToList(filter.value);
+          if (list.isEmpty) break; // Empty list = no filter (match all)
           if (col is GeneratedColumn<int>) {
-            whereClauses.add(col.isNotIn(list.cast<int>()));
+            whereClauses.add(col.isNotIn(list.map((v) => v is int ? v : int.tryParse(v.toString()) ?? 0).toList()));
           } else if (col is GeneratedColumn<String>) {
-            whereClauses.add(col.isNotIn(list.cast<String>()));
+            whereClauses.add(col.isNotIn(list.map((v) => v.toString()).toList()));
           }
           break;
         default:
@@ -283,6 +345,24 @@ class QueryBuilder {
       dataQuery.where(buildAnd(whereClauses));
     }
     dataQuery.addColumns(dynamicTable.$columns);
+
+    // Apply ordering if provided
+    if (orderBy != null && isPrimaryTable) {
+      final SearchOrderBy searchOrder = orderBy;
+      final orderColumn = camelToSnake(searchOrder.field);
+      final col = dynamicTable.$columns.firstWhere(
+        (c) => c.$name == orderColumn,
+        orElse: () =>
+            throw Exception('Order column $orderColumn not found in $table'),
+      );
+
+      final orderingMode = searchOrder.order.toUpperCase() == 'ASC'
+          ? OrderingMode.asc
+          : OrderingMode.desc;
+
+      dataQuery.orderBy([OrderingTerm(expression: col, mode: orderingMode)]);
+    }
+
     if (pagination != null && isPrimaryTable) {
       dataQuery.limit(pagination.limit, offset: pagination.offset);
     }

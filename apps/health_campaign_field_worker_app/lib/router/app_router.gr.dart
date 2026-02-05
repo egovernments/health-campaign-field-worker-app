@@ -31,11 +31,9 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     AuthenticatedRouteWrapper.name: (routeData) {
-      final args = routeData.argsAs<AuthenticatedRouteWrapperArgs>(
-          orElse: () => const AuthenticatedRouteWrapperArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: AuthenticatedPageWrapper(key: args.key),
+        child: const AuthenticatedPageWrapper(),
       );
     },
     BeneficiariesReportRoute.name: (routeData) {
@@ -133,6 +131,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: WrappedRoute(child: const PeerToPeerWrapperPage()),
       );
     },
+    PermissionsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const PermissionsPage(),
+      );
+    },
     ProfileRoute.name: (routeData) {
       final args = routeData.argsAs<ProfileRouteArgs>(
           orElse: () => const ProfileRouteArgs());
@@ -182,17 +186,13 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    ...InventoryRoute().pagesMap,
     ...AttendanceRoute().pagesMap,
-    ...ReferralReconciliationRoute().pagesMap,
     ...DigitScannerPackageRoute().pagesMap,
-    ...RegistrationDeliveryRoute().pagesMap,
-    ...ClosedHouseholdPackageRoute().pagesMap,
     ...DashboardRoute().pagesMap,
     ...SurveyFormRoute().pagesMap,
-    ...ComplaintsRoute().pagesMap,
     ...TransitPostRoute().pagesMap,
     ...FormsRoute().pagesMap,
+    ...FlowBuilderRoute().pagesMap,
   };
 }
 
@@ -256,32 +256,16 @@ class AcknowledgementRouteArgs {
 
 /// generated route for
 /// [AuthenticatedPageWrapper]
-class AuthenticatedRouteWrapper
-    extends PageRouteInfo<AuthenticatedRouteWrapperArgs> {
-  AuthenticatedRouteWrapper({
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
+class AuthenticatedRouteWrapper extends PageRouteInfo<void> {
+  const AuthenticatedRouteWrapper({List<PageRouteInfo>? children})
+      : super(
           AuthenticatedRouteWrapper.name,
-          args: AuthenticatedRouteWrapperArgs(key: key),
           initialChildren: children,
         );
 
   static const String name = 'AuthenticatedRouteWrapper';
 
-  static const PageInfo<AuthenticatedRouteWrapperArgs> page =
-      PageInfo<AuthenticatedRouteWrapperArgs>(name);
-}
-
-class AuthenticatedRouteWrapperArgs {
-  const AuthenticatedRouteWrapperArgs({this.key});
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'AuthenticatedRouteWrapperArgs{key: $key}';
-  }
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -586,6 +570,20 @@ class PeerToPeerWrapperRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'PeerToPeerWrapperRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PermissionsPage]
+class PermissionsRoute extends PageRouteInfo<void> {
+  const PermissionsRoute({List<PageRouteInfo>? children})
+      : super(
+          PermissionsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'PermissionsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

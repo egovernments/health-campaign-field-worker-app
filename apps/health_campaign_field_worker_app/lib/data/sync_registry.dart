@@ -1,6 +1,4 @@
-import 'package:complaints/data/repositories/remote/pgr_service.dart';
-import 'package:complaints/models/pgr_complaints.dart';
-import 'package:complaints/models/pgr_complaints_response.dart';
+import 'package:digit_data_model/data/repositories/package_repository/remote/pgr_service.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +15,7 @@ class CustomSyncRegistry implements SyncUpOperation {
       await remote.bulkUpdate(entities);
     } catch (e) {
       debugPrint('$e');
+      rethrow;
     }
   }
 
@@ -26,6 +25,7 @@ class CustomSyncRegistry implements SyncUpOperation {
       await remote.bulkDelete(entities);
     } catch (e) {
       debugPrint('$e');
+      rethrow;
     }
   }
 
@@ -35,9 +35,9 @@ class CustomSyncRegistry implements SyncUpOperation {
       await remote.singleCreate(entity);
     } catch (e) {
       debugPrint('$e');
+      rethrow;
     }
   }
-
 
   @override
   Future<void> singleUpdate(EntityModel entity, LocalRepository local) async {
@@ -45,6 +45,7 @@ class CustomSyncRegistry implements SyncUpOperation {
       await remote.singleUpdate(entity);
     } catch (e) {
       debugPrint('$e');
+      rethrow;
     }
   }
 
@@ -131,6 +132,7 @@ class CustomSyncRegistry implements SyncUpOperation {
       }
     } catch (e) {
       debugPrint('$e');
+      rethrow;
     }
   }
 

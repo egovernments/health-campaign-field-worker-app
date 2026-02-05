@@ -1,4 +1,3 @@
-import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_showcase/showcase_widget.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
@@ -60,22 +59,7 @@ class _ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
         return stockReconciliationShowcaseData.showcaseData.map(
           (e) => e.showcaseKey,
         );
-      case ComplaintTypeRoute.name:
-        return complaintTypeShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
-      case ComplaintsDetailsRoute.name:
-        return complaintsDetailsShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
-      case ComplaintsInboxRoute.name:
-        return complaintsInboxShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
-      case ComplaintsDetailsViewRoute.name:
-        return complaintsDetailsViewShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
+
       default:
         return null;
     }

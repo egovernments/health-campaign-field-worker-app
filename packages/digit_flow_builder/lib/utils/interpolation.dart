@@ -1,0 +1,452 @@
+import 'package:digit_data_model/data_model.dart';
+import 'package:flutter/material.dart';
+
+import '../blocs/flow_crud_bloc.dart';
+import '../router/flow_builder_routes.gm.dart';
+import 'function_registry.dart';
+import 'utils.dart';
+
+/// Recursively walks a dynamic structure (Map, List, String, etc.)
+/// and applies [transform] to every String value.
+Map<String, dynamic> deepMapStrings(
+  Map<String, dynamic> input,
+  String Function(String) transform,
+) {
+  return input.map((key, value) {
+    if (value is String) {
+      return MapEntry(key, transform(value));
+    } else if (value is Map<String, dynamic>) {
+      return MapEntry(key, deepMapStrings(value, transform));
+    } else if (value is List) {
+      return MapEntry(
+        key,
+        value.map((e) {
+          if (e is String) return transform(e);
+          if (e is Map<String, dynamic>) return deepMapStrings(e, transform);
+          return e;
+        }).toList(),
+      );
+    } else {
+      return MapEntry(key, value);
+    }
+  });
+}
+
+/// Holds normalized CRUD state data for templating and lookups
+class CrudStateData {
+  final Map<String, List<Map<String, dynamic>>> modelMap;
+  final List<dynamic> rawState;
+
+  CrudStateData(this.modelMap, this.rawState);
+}
+
+/// Try to extract the screenKey from Navigator args
+String? getScreenKeyFromArgs(BuildContext context) {
+  final args = ModalRoute.of(context)?.settings.arguments;
+
+  if (args is Map<String, dynamic>) {
+    return args['screenKey']?.toString();
+  }
+
+  if (args is FlowBuilderHomeRouteArgs) {
+    return args.pageName; // this is your pageName param
+  }
+
+  return null;
+}
+
+/// Try to extract the instanceId from Navigator args
+String? getInstanceIdFromArgs(BuildContext context) {
+  final args = ModalRoute.of(context)?.settings.arguments;
+
+  if (args is FlowBuilderHomeRouteArgs) {
+    return args.navigationParams?['_instanceId']?.toString();
+  }
+
+  if (args is Map<String, dynamic>) {
+    return args['_instanceId']?.toString();
+  }
+
+  return null;
+}
+
+/// Gets the effective screen key from multiple sources in priority order:
+/// 1. Route arguments (from getScreenKeyFromArgs)
+/// 2. contextData['parentScreenKey'] (injected by popup actions)
+///
+/// This is a utility for action executors to get the correct screen key,
+/// especially when actions are triggered from popups where the context
+/// doesn't have access to the parent page's route arguments.
+String? getEffectiveScreenKey(
+  BuildContext context,
+  Map<String, dynamic> contextData,
+) {
+  // First try to get from route arguments
+  final fromArgs = getScreenKeyFromArgs(context);
+  if (fromArgs != null) return fromArgs;
+
+  // Fall back to parentScreenKey (injected by popup actions through action_executor_registry)
+  return contextData['parentScreenKey'] as String?;
+}
+
+/// Gets the composite key for the current screen.
+/// Composite key format: {screenKey}::{instanceId}
+/// Falls back to screenKey if instanceId is not available.
+///
+/// This should be used when accessing FlowCrudStateRegistry to ensure
+/// proper isolation between multiple instances of the same screen.
+String? getCompositeKey(BuildContext context, {String? screenKey}) {
+  final currentScreenKey = screenKey ?? getScreenKeyFromArgs(context);
+  if (currentScreenKey == null) return null;
+
+  final instanceId = getInstanceIdFromArgs(context);
+  if (instanceId != null) {
+    return createCompositeKey(currentScreenKey, instanceId);
+  }
+
+  return currentScreenKey;
+}
+
+/// Gets the effective composite key from multiple sources.
+/// Similar to getEffectiveScreenKey but returns composite key.
+String? getEffectiveCompositeKey(
+  BuildContext context,
+  Map<String, dynamic> contextData,
+) {
+  final data = contextData;
+
+  final screenKey = data['parentScreenKey'] ?? getEffectiveScreenKey(context, data);
+  if (screenKey == null) return null;
+
+  final instanceId = getInstanceIdFromArgs(context);
+  if (instanceId != null) {
+    return createCompositeKey(screenKey, instanceId);
+  }
+
+  // Try to get instanceId from contextData
+  final contextInstanceId = contextData['_instanceId']?.toString();
+  if (contextInstanceId != null) {
+    return createCompositeKey(screenKey, contextInstanceId);
+  }
+
+  return screenKey;
+}
+
+/// Extracts model maps + raw state from the FlowCrudStateRegistry
+CrudStateData extractCrudStateData(String screenKey) {
+  final crudState = FlowCrudStateRegistry().get(screenKey);
+  final List<dynamic>? state =
+      crudState is FlowCrudState ? crudState.stateWrapper : null;
+
+  final Map<String, List<Map<String, dynamic>>> modelMap = {};
+
+  void addEntity(dynamic entity, {String? overrideKey}) {
+    final typeKey = overrideKey ?? getEntityKey(entity);
+    Map<String, dynamic>? map;
+    if (entity is Map<String, dynamic>) {
+      map = entity;
+    } else if (entity is EntityModel) {
+      map = entity.toMap();
+    }
+    if (map != null) {
+      modelMap.putIfAbsent(typeKey, () => []).add(map);
+      for (final entry in map.entries) {
+        if (entry.value is List) {
+          for (final item in entry.value) {
+            addEntity(item, overrideKey: entry.key);
+          }
+        }
+      }
+    }
+  }
+
+  if (state != null) {
+    for (final entity in state) {
+      addEntity(entity);
+    }
+  }
+
+  return CrudStateData(modelMap, state ?? []);
+}
+
+/// String interpolation helper for {{context.*}}, {{item.*}}, {{navigation.*}}, and {{widgetData.*}}
+String interpolateWithCrudStates({
+  required String template,
+  required CrudStateData stateData,
+  int? listIndex,
+  Map<String, dynamic>? item,
+  Map<String, dynamic>? navigationParams,
+  Map<String, dynamic>? rowItem, // row-level override (for table rows)
+  Map<String, dynamic>?
+      widgetData, // widget state data (e.g., filter selections)
+}) {
+  // TODO: update row and interpolation to consider row index to render table content
+
+  dynamic traverse(dynamic start, String? path) {
+    if (path == null || path.isEmpty) return start;
+    var value = start;
+    for (final part in path.split('.')) {
+      if (value is Map && value.containsKey(part)) {
+        value = value[part];
+      } else {
+        return null;
+      }
+    }
+    return value;
+  }
+
+  // --- Function resolution first: {{fn:someFunc(arg1, arg2)}}
+  final fnRegex = RegExp(r'\{\{\s*fn:(\w+)\((.*?)\)\s*\}\}');
+  template = template.replaceAllMapped(fnRegex, (match) {
+    final fnName = match.group(1)!;
+    final argsExpr = match.group(2) ?? '';
+
+    final resolvedArgs = argsExpr.trim().isEmpty
+        ? <dynamic>[]
+        : argsExpr.split(',').map((rawArg) {
+            final trimmed = rawArg.trim();
+
+            // Check if it's a quoted literal (string)
+            if (trimmed.startsWith("'") || trimmed.startsWith('"')) {
+              return trimmed.replaceAll(RegExp(r"""^['"]|['"]$"""), '');
+            }
+
+            // Check if it's a number
+            final numValue = num.tryParse(trimmed);
+            if (numValue != null) {
+              return numValue;
+            }
+
+            // Try to resolve from item first (for member-level data like "task")
+            if (item != null && item.containsKey(trimmed)) {
+              return item[trimmed];
+            }
+
+            // Try to resolve from rowItem
+            if (rowItem != null && rowItem.containsKey(trimmed)) {
+              return rowItem[trimmed];
+            }
+
+            // Try to resolve from widgetData (for dropdown selections, filter values, etc.)
+            if (widgetData != null && widgetData.containsKey(trimmed)) {
+              return widgetData[trimmed];
+            }
+
+            // Try to resolve from stateData.modelMap
+            if (stateData.modelMap.containsKey(trimmed)) {
+              return stateData.modelMap[trimmed];
+            }
+
+            // Fallback: use resolveValueRaw for complex paths
+            final placeholder = '{{ $trimmed }}';
+            final contextData = {
+              'item': item,
+              'contextData': stateData.rawState,
+              ...stateData.modelMap,
+              if (item != null) ...item,
+            };
+            return resolveValueRaw(placeholder, contextData,
+                widgetData: widgetData, stateData: stateData);
+          }).toList();
+
+    return FunctionRegistry.call(fnName, resolvedArgs, stateData)?.toString() ??
+        '';
+  });
+
+  // --- Normal placeholder resolution ---
+  final regex = RegExp(
+    r'\{\{\s*(context|item|navigation|widgetData)\.([A-Za-z_][\w]*)'
+    r'(?:\.([\w.]+))?\s*\}\}',
+  );
+
+  template = template.replaceAllMapped(regex, (match) {
+    final source = match.group(1);
+    final modelNameOrKey = match.group(2);
+    final fieldPath = match.group(3);
+
+    // 1) Row-level data (highest priority)
+    if (rowItem != null) {
+      // Try rowItem directly as the model instance
+      if (rowItem.containsKey(modelNameOrKey)) {
+        final v = traverse(rowItem[modelNameOrKey], fieldPath);
+        return v?.toString() ?? '';
+      }
+      // Or maybe rowItem itself is the model instance
+      final v = traverse(rowItem, fieldPath ?? modelNameOrKey);
+      if (v != null) return v.toString();
+    }
+
+    // 2) Item-level (from parent list view)
+    if (source == 'item' && item != null) {
+      dynamic val = item[modelNameOrKey];
+      final resolved = traverse(val, fieldPath);
+      return resolved?.toString() ?? '';
+    }
+
+    // 3) Context-level (global models)
+    if (source == 'context') {
+      final models = stateData.modelMap[modelNameOrKey];
+
+      if (models == null) return '';
+
+      if (models is List) {
+        // ✅ IMPORTANT CHANGE:
+        // If rowItem exists, IGNORE listIndex (use rowItem only)
+        if (rowItem != null) return '';
+        final idx = listIndex ?? 0;
+        if (idx < 0 || idx >= models.length) return '';
+        final resolved = traverse(models[idx], fieldPath);
+        return resolved?.toString() ?? '';
+      } else {
+        final resolved = traverse(models, fieldPath);
+        return resolved?.toString() ?? '';
+      }
+    }
+
+    // 4) Navigation params
+    if (source == 'navigation' && navigationParams != null) {
+      final resolved = traverse(navigationParams[modelNameOrKey], fieldPath);
+      return resolved?.toString() ?? '';
+    }
+
+    // 5) Widget data (filter selections, form state, etc.)
+    if (source == 'widgetData' && widgetData != null) {
+      final resolved = traverse(widgetData[modelNameOrKey], fieldPath);
+      return resolved?.toString() ?? '';
+    }
+
+    return '';
+  });
+
+  // --- Fallback: Handle modelName.index.field patterns like individual.0.dateOfBirth ---
+  final modelPathRegex =
+      RegExp(r'\{\{\s*([a-zA-Z_]\w*)\.(\d+)(?:\.([a-zA-Z_][\w.]*))?\s*\}\}');
+  template = template.replaceAllMapped(modelPathRegex, (match) {
+    final modelName = match.group(1)!;
+    final indexStr = match.group(2)!;
+    final fieldPath = match.group(3);
+
+    // Special handling for contextData - use rawState directly
+    if (modelName == 'contextData') {
+      final idx = int.tryParse(indexStr) ?? 0;
+      if (idx < 0 || idx >= stateData.rawState.length) return '';
+
+      final contextItem = stateData.rawState[idx];
+      if (fieldPath == null) return contextItem?.toString() ?? '';
+
+      final resolved = traverse(contextItem, fieldPath);
+      return resolved?.toString() ?? '';
+    }
+
+    final models = stateData.modelMap[modelName];
+    if (models == null || models is! List) return match.group(0)!;
+
+    // Use listIndex if available, otherwise use the index from the template
+    final idx = listIndex ?? int.tryParse(indexStr) ?? 0;
+    if (idx < 0 || idx >= models.length) return '';
+
+    final model = models[idx];
+    if (fieldPath == null) return model?.toString() ?? '';
+
+    final resolved = traverse(model, fieldPath);
+    return resolved?.toString() ?? '';
+  });
+
+  return template;
+}
+
+String getEntityKey(dynamic entity) {
+  if (entity is EntityModel) {
+    return entity.runtimeType
+        .toString()
+        .replaceAll(RegExp(r'^_+\$?'), '')
+        .replaceAll(RegExp(r'Impl$'), '');
+  }
+  if (entity is Map<String, dynamic> && entity.containsKey('type')) {
+    return entity['type'].toString();
+  }
+  return entity.runtimeType.toString();
+}
+
+Map<String, dynamic> preprocessConfigWithState(
+  Map<String, dynamic> config,
+  CrudStateData stateData, {
+  int? listIndex,
+  Map<String, dynamic>? item,
+}) {
+  Map<String, dynamic> walk(Map<String, dynamic> node,
+      {bool skipActions = false}) {
+    final result = <String, dynamic>{};
+
+    node.forEach((key, value) {
+      // Skip processing onAction blocks - they should be lazy evaluated on click
+      if (key == "onAction") {
+        result[key] = value; // Keep onAction as-is, don't process
+        return;
+      }
+
+      if (key == "actionType" && value == "NAVIGATION" && !skipActions) {
+        final props = node["properties"];
+        if (props is Map<String, dynamic> && props["data"] is List) {
+          final params = <String, dynamic>{};
+
+          for (final entry in (props["data"] as List)) {
+            final k = entry["key"]?.toString();
+            final rawValue = entry["value"]?.toString();
+
+            if (k != null && rawValue != null) {
+              final resolved = interpolateWithCrudStates(
+                template: "{{$rawValue}}",
+                stateData: stateData,
+                listIndex: listIndex,
+                item: item,
+              );
+              params[k] = resolved;
+            }
+          }
+
+          if (params.isNotEmpty) {
+            final screenKey = props["name"]?.toString() ?? "";
+            if (screenKey.isNotEmpty) {
+              FlowCrudStateRegistry().updateNavigationParams(screenKey, params);
+            }
+          }
+        }
+
+        result[key] = value; // keep actionType as is
+      } else if ((key == "visible" || key == "disabled") &&
+          value is String &&
+          value.contains('{{')) {
+        // Preprocess visible/disabled property with listIndex for correct resolution
+        // Only preprocess if listIndex is provided, otherwise keep original
+        // to be processed later when listIndex is available
+        if (listIndex != null) {
+          final resolved = interpolateWithCrudStates(
+            template: value,
+            stateData: stateData,
+            listIndex: listIndex,
+            item: item,
+          );
+          result[key] = resolved;
+        } else {
+          // Keep original - will be processed later with correct listIndex
+          result[key] = value;
+        }
+      } else if (value is Map<String, dynamic>) {
+        result[key] = walk(value, skipActions: skipActions);
+      } else if (value is List) {
+        result[key] = value.map((e) {
+          if (e is Map<String, dynamic>)
+            return walk(e, skipActions: skipActions);
+          return e;
+        }).toList();
+      } else {
+        result[key] = value;
+      }
+    });
+
+    return result;
+  }
+
+  return walk(config);
+}

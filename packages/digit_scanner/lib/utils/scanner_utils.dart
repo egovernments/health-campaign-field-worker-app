@@ -78,179 +78,112 @@ class DigitScannerUtils {
     return input.length > 20 ? '${input.substring(0, 20)}...' : input;
   }
 
-  String? gtinFrom(GS1Barcode b) {
-    // GTIN lives in AI (01). If you’re scanning “contained items” it might be (02).
-    return b.elements['01']?.data ?? b.elements['02']?.data;
-  }
-
-  // Put somewhere in utils
-  String normalizeGs1(String s) {
-    if (s.isEmpty) return s;
-
-    // If the scan already contains ASCII 29 (FNC1), just strip whitespace.
-    const gs = '\u001d';
-    if (s.contains(gs)) {
-      return s.replaceAll(RegExp(r'\s+'), '');
-    }
-
-    // Human form: "(AI) value (AI) value ..." possibly with spaces
-    if (!s.contains('(')) {
-      // Plain Code-128/EAN text (no AIs) – return cleaned, parser will error if not GS1.
-      return s.replaceAll(RegExp(r'\s+'), '');
-    }
-
-    // AIs that are variable-length → need FNC1 *after the value* if followed by another AI
-    const varAIs = {
-      '10',
-      '21',
-      '22',
-      '235',
-      '240',
-      '241',
-      '242',
-      '243',
-      '250',
-      '251',
-      '254',
-      '255',
-      '30',
-      '37',
-      '3922',
-      '3932',
-      '3933',
-      '41',
-      '42',
-      '421',
-      '422',
-      '423',
-      '710',
-      '711',
-      '712',
-      '713',
-      '714',
-      '715',
-      '7031',
-      '8200',
-      '90',
-      '91',
-      '92',
-      '93',
-      '94',
-      '95',
-      '96',
-      '97',
-      '98',
-      '99'
-    };
-
-    // Remove all spaces, then parse “(AI)VALUE” chunks
-    final compact = s.replaceAll(RegExp(r'\s+'), '');
-    final re = RegExp(r'\((\d{2,4})\)([^()]+)'); // (AI)VALUE
-    final matches = re.allMatches(compact).toList();
-    if (matches.isEmpty) return compact;
-
-    final buf = StringBuffer();
-    for (var i = 0; i < matches.length; i++) {
-      final ai = matches[i].group(1)!;
-      final val = matches[i].group(2)!;
-      buf.write(ai);
-      buf.write(val);
-      final hasNext = i < matches.length - 1;
-      if (hasNext && varAIs.contains(ai))
-        buf.write(gs); // FNC1 after variable-length AI
-    }
-    return buf.toString();
-  }
-
-  // Returns the *value* of the first AI parsed from the barcode.
-// Dart maps preserve insertion order, so `.entries.first` is the left-most AI.
-  String? firstAIValue(GS1Barcode p) {
-    if (p.elements.isEmpty) return null;
-    final first = p.elements.entries.first.value;
-    // For all the AIs you listed, `.data` is the printable value
-    final v = first.data?.toString().trim();
-    return (v == null || v.isEmpty) ? null : v;
-  }
-
   Future<void> processImage({
     required BuildContext context,
     required InputImage inputImage,
     required bool canProcess,
     required bool isBusy,
-    required Function(bool) setBusy,
-    required Function(String) setText,
-    required Function(CustomPaint?) updateCustomPaint,
+    required Function setBusy,
+    required Function setText,
+    required Function updateCustomPaint,
     required bool isGS1code,
     required int quantity,
-    required List<dynamic> result, // not used (ok to keep)
-    required Future<void> Function(String) handleError,
+    required List<GS1Barcode> result,
+    required Function handleError,
+    required Function storeValue,
+    required Function storeCode,
     required CameraLensDirection cameraLensDirection,
     required BarcodeScanner barcodeScanner,
     required ScannerLocalization localizations,
-    Map<String, String>? validations,
-    String? regex, // pass-through to bloc
+    String? scanLimitMessage,
   }) async {
-    if (!canProcess || isBusy) return;
+    // Check if processing is allowed
+    if (!canProcess) return;
+
+    // Check if another processing is in progress
+    if (isBusy) return;
+
     setBusy(true);
+
+    // Clear previous text state
     setText('');
 
+    // Process the image to detect barcodes
     final List<Barcode> barcodes;
+
     try {
       barcodes = await barcodeScanner.processImage(inputImage);
-    } catch (_) {
-      setBusy(false);
+    } catch (e) {
+      debugPrint('Error processing image: $e');
       return;
     }
 
+    // Check if the input image has valid metadata for size and rotation
     if (inputImage.metadata?.size != null &&
         inputImage.metadata?.rotation != null) {
+      // If barcodes are found
       if (barcodes.isNotEmpty) {
         final bloc = context.read<DigitScannerBloc>();
-        final first =
-            (barcodes.first.rawValue ?? barcodes.first.displayValue)?.trim();
 
-        if (first != null && first.isNotEmpty) {
-          if (isGS1code) {
-            try {
-              // Prefer rawValue for machine data; fall back to displayValue
-              final data =
-                  (barcodes.first.rawValue ?? barcodes.first.displayValue)
-                      ?.trim();
-              if (data == null || data.isEmpty) {
-                await handleError(
-                    localizations.translate(i18.scanner.resourcesScanFailed));
-              } else {
-                final parser = GS1BarcodeParser.defaultParser();
-                final parsed = parser.parse(data); // ← keep the full object
-                bloc.add(DigitScannerEvent.handleScanner(
-                  barCode: [parsed], // ← store GS1Barcode, not GTIN
-                  isGS1: true,
-                  quantity: quantity,
-                  regex: regex,
-                ));
-              }
-            } catch (e) {
+        // Check if the widget is scanning GS1 codes
+        if (isGS1code) {
+          try {
+            // Parse the first barcode using GS1BarcodeParser
+            final parser = GS1BarcodeParser.defaultParser();
+            final parsedResult =
+                parser.parse(barcodes.first.displayValue.toString());
+
+            // Check if the barcode has already been scanned
+            final alreadyScanned = bloc.state.barCodes.any((element) =>
+                element.elements.entries.last.value.data ==
+                parsedResult.elements.entries.last.value.data);
+
+            if (alreadyScanned) {
+              // Handle error if the barcode is already scanned
               await handleError(
-                  localizations.translate(i18.scanner.resourcesScanFailed));
+                  localizations.translate(i18.scanner.resourceAlreadyScanned));
+            } else if (quantity > result.length) {
+              // Store the parsed result if the quantity is greater than result length
+              await storeValue(parsedResult);
+            } else if (quantity <= result.length) {
+              // Handle error if there is a mismatch in the scanned resource count
+              // Use custom message from validations if provided
+              final errorMessage = scanLimitMessage != null
+                  ? localizations.translate(scanLimitMessage)
+                  : localizations.translate(i18.scanner.scannedQtyExceed);
+              await handleError(errorMessage);
+            } else {
+              // Handle error if there is a mismatch in the scanned resource
+              await handleError(
+                  localizations.translate(i18.scanner.invalidBarcode));
             }
+          } catch (e) {
+            // Handle error if parsing fails
+            await handleError(
+                localizations.translate(i18.scanner.resourcesScanFailed));
+          }
+        } else {
+          // For non-GS1 codes
+          if (bloc.state.qrCodes.contains(barcodes.first.displayValue)) {
+            // Handle error if the QR code is already scanned
+            await handleError(
+                localizations.translate(i18.scanner.resourceAlreadyScanned));
+            return;
+          } else if (quantity > bloc.state.qrCodes.length) {
+            // Store the QR code if not already scanned and quantity limit not reached
+            await storeCode(barcodes.first.displayValue.toString());
           } else {
-            // QR-mode unchanged
-            final first =
-                (barcodes.first.displayValue ?? barcodes.first.rawValue)
-                    ?.trim();
-            if (first != null && first.isNotEmpty) {
-              bloc.add(DigitScannerEvent.handleScanner(
-                qrCode: [first],
-                isGS1: false,
-                quantity: quantity,
-                regex: regex,
-              ));
-            }
+            // Handle error if the quantity limit is reached
+            // Use custom message from validations if provided
+            final errorMessage = scanLimitMessage != null
+                ? localizations.translate(scanLimitMessage)
+                : localizations.translate(i18.scanner.scannedQtyExceed);
+            await handleError(errorMessage);
           }
         }
       }
 
-      // draw overlays as you already do...
+      // Create a custom painter to draw the detected barcodes
       final painter = BarcodeDetectorPainter(
         barcodes,
         inputImage.metadata!.size,
@@ -259,16 +192,20 @@ class DigitScannerUtils {
       );
       updateCustomPaint(CustomPaint(painter: painter));
     } else {
+      // Display the number of barcodes found and their raw values
       String text =
           '${localizations.translate(i18.scanner.barCodesFound)}: ${barcodes.length}\n\n';
-      for (final b in barcodes) {
+      for (final barcode in barcodes) {
         text +=
-            '${localizations.translate(i18.scanner.barCode)}: ${b.rawValue}\n\n';
+            '${localizations.translate(i18.scanner.barCode)}: ${barcode.rawValue}\n\n';
       }
       setText(text);
+
+      // TODO: set _customPaint to draw boundingRect on top of image
       updateCustomPaint(null);
     }
 
+    // Mark the processing as complete
     setBusy(false);
   }
 
@@ -292,6 +229,9 @@ class DigitScannerUtils {
         message: localizations.translate(message),
       );
     }
+
+    // Wait for 2 seconds before proceeding
+    await Future.delayed(const Duration(seconds: 2));
 
     // Update the state to allow processing again and indicate not busy
     setStateCallback();
@@ -329,6 +269,7 @@ class DigitScannerUtils {
     bloc.add(DigitScannerEvent.handleScanner(
       barCode: bloc.state.barCodes, // Keep existing barcodes
       qrCode: codes, // Update QR codes with the new list
+      scannerId: bloc.state.scannerId, // Preserve the scanner ID
     ));
 
     // Wait for 5 seconds before completing the function
@@ -369,6 +310,7 @@ class DigitScannerUtils {
     bloc.add(DigitScannerEvent.handleScanner(
       barCode: result, // Update barcodes with the new list
       qrCode: bloc.state.qrCodes, // Keep existing QR codes
+      scannerId: bloc.state.scannerId, // Preserve the scanner ID
     ));
 
     // Update the state with the new list of results
@@ -378,10 +320,13 @@ class DigitScannerUtils {
     await Future.delayed(const Duration(seconds: 5));
   }
 
-  Map<String, dynamic> getGs1CodeFormattedString(List<GS1Barcode> barCodes) {
-    final elements = barCodes.last;
-
-    return elements.getAIsData;
+  Map<String, dynamic> getGs1CodeFormattedStringAtIndex(
+      List<GS1Barcode> barCodes, int index) {
+    if (index >= 0 && index < barCodes.length) {
+      final elements = barCodes[index];
+      return elements.getAIsData;
+    }
+    return {};
   }
 
   String generateGS1Barcode({

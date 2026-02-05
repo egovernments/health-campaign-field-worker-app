@@ -91,11 +91,15 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                       type: DigitButtonType.primary,
                       size: DigitButtonSize.large,
                       onPressed: () {
-                        context.router.replace(HomeRoute());
+                        context.router.replaceAll([HomeRoute()]);
                       },
                     ),
                   ]),
-              header: const BackNavigationHelpHeaderWidget(),
+              header: BackNavigationHelpHeaderWidget(
+                handleback: () {
+                  context.router.replaceAll([HomeRoute()]);
+                },
+              ),
               children: [
                 BlocListener<BeneficiaryDownSyncBloc, BeneficiaryDownSyncState>(
                   listener: (ctx, state) {

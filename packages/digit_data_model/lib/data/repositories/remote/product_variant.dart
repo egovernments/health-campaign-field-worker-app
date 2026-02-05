@@ -6,7 +6,8 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 
-class ProductVariantRemoteRepository extends RemoteRepository<ProductVariantModel, ProductVariantSearchModel> {
+class ProductVariantRemoteRepository
+    extends RemoteRepository<ProductVariantModel, ProductVariantSearchModel> {
   ProductVariantRemoteRepository(
     super.dio, {
     required super.actionMap,
@@ -15,10 +16,11 @@ class ProductVariantRemoteRepository extends RemoteRepository<ProductVariantMode
 
   @override
   FutureOr<List<ProductVariantModel>> search(
-      ProductVariantSearchModel query, {
-        int? offSet,
-        int? limit,
-      }) async {
+    ProductVariantSearchModel query, {
+    int? offSet,
+    int? limit,
+    int? lastChangedSince,
+  }) async {
     Response response;
 
     try {
@@ -35,15 +37,15 @@ class ProductVariantRemoteRepository extends RemoteRepository<ProductVariantMode
             data: entityName == 'User'
                 ? query.toMap()
                 : {
-              isPlural
-                  ? entityNamePlural
-                  : entityName == 'ServiceDefinition'
-                  ? 'ServiceDefinitionCriteria'
-                  : entityName == 'Downsync'
-                  ? 'DownsyncCriteria'
-                  : entityName:
-              isPlural ? [query.toMap()] : query.toMap(),
-            },
+                    isPlural
+                            ? entityNamePlural
+                            : entityName == 'ServiceDefinition'
+                                ? 'ServiceDefinitionCriteria'
+                                : entityName == 'Downsync'
+                                    ? 'DownsyncCriteria'
+                                    : entityName:
+                        isPlural ? [query.toMap()] : query.toMap(),
+                  },
           );
         },
       );
@@ -74,9 +76,9 @@ class ProductVariantRemoteRepository extends RemoteRepository<ProductVariantMode
     }
 
     final entityResponse = await responseMap[
-    (isSearchResponsePlural || entityName == 'ServiceDefinition')
-        ? entityNamePlural
-        : entityName];
+        (isSearchResponsePlural || entityName == 'ServiceDefinition')
+            ? entityNamePlural
+            : entityName];
 
     if (entityResponse is! List) {
       throw InvalidApiResponseException(
@@ -89,8 +91,9 @@ class ProductVariantRemoteRepository extends RemoteRepository<ProductVariantMode
     final entityList = entityResponse.whereType<Map<String, dynamic>>();
     var mapperRes = <ProductVariantModel>[];
     try {
-      mapperRes =
-          entityList.map((e) => MapperContainer.globals.fromMap<ProductVariantModel>(e)).toList();
+      mapperRes = entityList
+          .map((e) => MapperContainer.globals.fromMap<ProductVariantModel>(e))
+          .toList();
     } catch (e) {
       rethrow;
     }

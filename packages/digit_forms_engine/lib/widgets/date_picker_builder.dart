@@ -31,6 +31,7 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
       builder: (field) => LabeledField(
         infoText: translateIfPresent(tooltipText, loc),
         label: label,
+        capitalizedFirstLetter: false,
         isRequired: isRequired ?? false,
         child: DigitDateFormInput(
           firstDate: parseDateValue(start),
@@ -40,7 +41,8 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
             form.control(formControlName).markAsTouched();
             DateTime? parsedDate;
             try {
-              parsedDate = DateFormat("dd MMM yyyy").parseStrict(value);
+              final currentLocale = Localizations.localeOf(context).toString();
+              parsedDate = DateFormat("dd MMM yyyy", currentLocale).parseStrict(value);
             } catch (e) {
               // Optional: Handle invalid date input
               parsedDate = null;
@@ -50,13 +52,33 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
           readOnly: readOnly,
           errorMessage: field.errorText,
           innerLabel: innerLabel,
-          initialValue: form.control(formControlName).value != null
-              ? formatDateLocalized(
-                  context,
-                  form.control(formControlName).value as DateTime,
-                  Constants().dateMonthYearFormat,
-                )
-              : null,
+          initialDate: parseDateValue(start),
+          initialValue: () {
+            final rawValue = form.control(formControlName).value;
+
+            if (rawValue == null) return null;
+
+            DateTime? parsed;
+
+            if (rawValue is DateTime) {
+              parsed = rawValue;
+            } else if (rawValue is String && rawValue.trim().isNotEmpty) {
+              try {
+                final currentLocale = Localizations.localeOf(context).toString();
+                parsed = DateFormat("dd MMM yyyy", currentLocale).parseStrict(rawValue);
+              } catch (_) {
+                parsed = null;
+              }
+            }
+
+            return parsed != null
+                ? formatDateLocalized(
+                    context,
+                    parsed,
+                    Constants().dateMonthYearFormat,
+                  )
+                : null;
+          }(),
         ),
       ),
     );

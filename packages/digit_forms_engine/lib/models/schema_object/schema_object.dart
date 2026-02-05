@@ -50,19 +50,6 @@ class ActionSchema with _$ActionSchema {
 }
 
 @freezed
-class ShowAlertPopUp with _$ShowAlertPopUp {
-  const factory ShowAlertPopUp({
-    required String title,
-    String? description, // optional
-    required String primaryActionLabel,
-    required String secondaryActionLabel,
-  }) = _ShowAlertPopUp;
-
-  factory ShowAlertPopUp.fromJson(Map<String, dynamic> json) =>
-      _$ShowAlertPopUpFromJson(json);
-}
-
-@freezed
 class ActionItemSchema with _$ActionItemSchema {
   @JsonSerializable(explicitToJson: true, includeIfNull: false)
   const factory ActionItemSchema({

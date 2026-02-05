@@ -1,8 +1,9 @@
-import 'package:digit_formula_parser/digit_formula_parser.dart';
 import 'package:test/test.dart';
+import 'package:digit_formula_parser/digit_formula_parser.dart';
 
 void main() {
   group('Digit Formula Parser - Comprehensive Tests', () {
+    
     group('String Comparison Tests', () {
       test('Quoted string equality comparison', () {
         final parser = FormulaParser('"hello" == "hello"');
@@ -297,16 +298,14 @@ void main() {
       });
 
       test('Nested parentheses', () {
-        final parser = FormulaParser(
-            '((user_name==user_name && 10>5) || (admin==admin && 3<2))');
+        final parser = FormulaParser('((user_name==user_name && 10>5) || (admin==admin && 3<2))');
         final result = parser.parse;
         expect(result['isSuccess'], true);
         expect(result['value'], true);
       });
 
       test('Multiple nested parentheses', () {
-        final parser = FormulaParser(
-            '(((user_name==user_name && 10>5) || (admin==admin && 3<2)) && "test"=="test")');
+        final parser = FormulaParser('(((user_name==user_name && 10>5) || (admin==admin && 3<2)) && "test"=="test")');
         final result = parser.parse;
         expect(result['isSuccess'], true);
         expect(result['value'], true);
@@ -315,40 +314,35 @@ void main() {
 
     group('Complex Expression Tests', () {
       test('OR with AND and parentheses', () {
-        final parser =
-            FormulaParser('"rachana"=="rachana" || (corrent==corrent && 3!=5)');
+        final parser = FormulaParser('"rachana"=="rachana" || (corrent==corrent && 3!=5)');
         final result = parser.parse;
         expect(result['isSuccess'], true);
         expect(result['value'], true);
       });
 
       test('Complex mixed expression', () {
-        final parser = FormulaParser(
-            '(user_name==user_name && 10>5) || (admin==admin && 3<2)');
+        final parser = FormulaParser('(user_name==user_name && 10>5) || (admin==admin && 3<2)');
         final result = parser.parse;
         expect(result['isSuccess'], true);
         expect(result['value'], true);
       });
 
       test('Complex expression with nested parentheses', () {
-        final parser = FormulaParser(
-            '((user_name==user_name && 10>5) || (admin==admin && 3<2)) && "test"=="test"');
+        final parser = FormulaParser('((user_name==user_name && 10>5) || (admin==admin && 3<2)) && "test"=="test"');
         final result = parser.parse;
         expect(result['isSuccess'], true);
         expect(result['value'], true);
       });
 
       test('Complex expression with mixed types', () {
-        final parser =
-            FormulaParser('"hello"=="world" || ("test"=="test" && 5>3)');
+        final parser = FormulaParser('"hello"=="world" || ("test"=="test" && 5>3)');
         final result = parser.parse;
         expect(result['isSuccess'], true);
         expect(result['value'], true);
       });
 
       test('Complex expression with all operators', () {
-        final parser = FormulaParser(
-            '("user"=="admin" && 5>3) || ("guest"=="guest" && 10<5) || ("test"=="test")');
+        final parser = FormulaParser('("user"=="admin" && 5>3) || ("guest"=="guest" && 10<5) || ("test"=="test")');
         final result = parser.parse;
         expect(result['isSuccess'], true);
         expect(result['value'], true);
@@ -428,8 +422,7 @@ void main() {
         final parser = FormulaParser('"a"=="b" || "c"=="c" && "d"=="e"');
         final result = parser.parse;
         expect(result['isSuccess'], true);
-        expect(result['value'],
-            false); // Should be false because AND is evaluated first
+        expect(result['value'], false); // Should be false because AND is evaluated first
       });
 
       test('Parentheses override precedence', () {
@@ -440,8 +433,7 @@ void main() {
       });
 
       test('Complex precedence with parentheses', () {
-        final parser =
-            FormulaParser('"a"=="a" && ("b"=="c" || "d"=="d") && "e"=="e"');
+        final parser = FormulaParser('"a"=="a" && ("b"=="c" || "d"=="d") && "e"=="e"');
         final result = parser.parse;
         expect(result['isSuccess'], true);
         expect(result['value'], true);
@@ -450,28 +442,25 @@ void main() {
 
     group('Performance and Stress Tests', () {
       test('Multiple nested parentheses', () {
-        final parser = FormulaParser(
-            '((((user==user && 1==1) || (admin==admin && 2==2)) && (test==test || demo==demo)) && final==final)');
+        final parser = FormulaParser('((((user==user && 1==1) || (admin==admin && 2==2)) && (test==test || demo==demo)) && final==final)');
         final result = parser.parse;
         expect(result['isSuccess'], true);
         expect(result['value'], true);
       });
 
       test('Long chain of OR operations', () {
-        final parser = FormulaParser(
-            '"a"=="b" || "c"=="d" || "e"=="f" || "g"=="g" || "h"=="i"');
+        final parser = FormulaParser('"a"=="b" || "c"=="d" || "e"=="f" || "g"=="g" || "h"=="i"');
         final result = parser.parse;
         expect(result['isSuccess'], true);
         expect(result['value'], true);
       });
 
       test('Long chain of AND operations', () {
-        final parser = FormulaParser(
-            '"a"=="a" && "b"=="b" && "c"=="c" && "d"=="d" && "e"=="e"');
+        final parser = FormulaParser('"a"=="a" && "b"=="b" && "c"=="c" && "d"=="d" && "e"=="e"');
         final result = parser.parse;
         expect(result['isSuccess'], true);
         expect(result['value'], true);
       });
     });
   });
-}
+} 

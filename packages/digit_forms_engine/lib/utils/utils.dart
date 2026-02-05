@@ -20,6 +20,36 @@ class Constants {
   static const String checklistViewDateFormat = 'dd/MM/yyyy hh:mm a';
 }
 
+int? minFromValidations(List<ValidationRule>? validations) {
+  if (validations == null) return null;
+
+  final rule = validations.firstWhere(
+        (v) => v.type == 'min',
+    orElse: () => const ValidationRule(type: ''),
+  );
+
+  if (rule.value == null) return null;
+
+  return rule.value is int
+      ? rule.value as int
+      : int.tryParse(rule.value.toString());
+}
+
+int? maxFromValidations(List<ValidationRule>? validations) {
+  if (validations == null) return null;
+
+  final rule = validations.firstWhere(
+        (v) => v.type == 'max',
+    orElse: () => const ValidationRule(type: ''),
+  );
+
+  if (rule.value == null) return null;
+
+  return rule.value is int
+      ? rule.value as int
+      : int.tryParse(rule.value.toString());
+}
+
 /// `IdGen` is a singleton class that generates unique identifiers.
 /// It uses the `Uuid` package to generate version 1 UUIDs.
 class IdGen {
@@ -38,11 +68,20 @@ class IdGen {
   String get identifier => uuid.v1();
 }
 
-String? translateIfPresent(String? key, FormLocalization localizations) {
+String? translateIfPresent(String? key, dynamic localizations) {
   if (key == null || key == "" || key.trim().isEmpty) return null;
 
   final value = localizations.translate(key);
-  if (value == "" || value.trim().isEmpty) return null;
+  // If translation returns empty or just whitespace, check if it's the same as the key
+  // If they're the same, the key wasn't found in localization, so return the key as-is
+  // Otherwise, if it's empty, return null
+  if (value == "" || value.trim().isEmpty) {
+    // Translation returned empty - check if the key itself is a valid message
+    if (key.trim().isNotEmpty && key.trim() != value.trim()) {
+      return key.trim();
+    }
+    return null;
+  }
   return value.trim();
 }
 
@@ -92,6 +131,8 @@ bool shouldHideField(PropertySchema schema, FormGroup form) {
   final allOf = display.allOf;
 
   final values = (oneOf ?? allOf!).map((e) {
+    // Skip if control doesn't exist (hidden field without includeInForm: true)
+    if (!form.contains(e)) return false;
     final value = form.control(e).value;
     if (value is bool?) return !(value ?? false);
     if (value is String?) return value?.isNotEmpty ?? false;
@@ -111,12 +152,15 @@ bool isHidden(PropertySchema property) {
 
 /// Checks if the string can be parsed as a DateTime
 bool isDateTime(String input) {
-  try {
-    DateTime.parse(input);
-    return true;
-  } catch (_) {
-    return false;
-  }
+
+  if (RegExp(r'^\d{4}-\d{2}-\d{2}').hasMatch(input)) {
+     return DateTime.tryParse(input) != null;// ISO 8601
+  } else if (RegExp(r'^\d{2}/\d{2}/\d{4}$').hasMatch(input)) {
+     return DateTime.tryParse(input) != null;
+  }  
+  
+  return false;
+
 }
 
 bool isDateLike(String input) {
@@ -137,7 +181,7 @@ DateTime parseDate(String input) {
     final year = int.parse(parts[2]);
     return DateTime(year, month, day);
   }
-  throw FormatException('Unsupported date format');
+  throw const FormatException('Unsupported date format');
 }
 
 bool isDotSeparatedKey(String input) {
@@ -157,24 +201,117 @@ String formatDateLocalized(
   return DateFormat(pattern, locale).format(date);
 }
 
-bool evaluateVisibilityExpression(
+DateTime? parseDateLocalized(
+    BuildContext context, String value, String pattern) {
+  final locale = Localizations.localeOf(context).toString();
+  try {
+    return DateFormat(pattern, locale).parseStrict(value);
+  } catch (_) {
+    return null;
+  }
+}
+
+String getLocale(BuildContext context) {
+  return Localizations.localeOf(context).toString();
+}
+
+class ExpressionPreprocessResult {
+  final String expression;
+  final Map<String, dynamic> values;
+
+  ExpressionPreprocessResult({
+    required this.expression,
+    required this.values,
+  });
+}
+
+ExpressionPreprocessResult _preprocessExpression(
     String expression, Map<String, dynamic> values) {
+  String modifiedExpression = expression;
+  Map<String, dynamic> updatedValues = Map.from(values);
+
+  // Find all function calls in the expression
+  final functionCallPattern = RegExp(r'(\w+)\((.*?)\)');
+  final functionCalls = functionCallPattern.allMatches(expression);
+
+  for (final match in functionCalls) {
+    final functionName = match.group(1)!;
+    final args = match.group(2)!;
+    final fullFunctionCall = match.group(0)!;
+
+    // Check if function exists in registry
+    if (functionRegistry.containsKey(functionName)) {
+      // Parse arguments to get the actual key name from the arguments
+      final keyFromArgs = args.trim();
+
+      // Check if the key from arguments exists in values
+      if (values.containsKey(keyFromArgs)) {
+        // Parse arguments for function execution
+        final argList = _parseArguments(args, values);
+
+        // Execute function
+        final functionResult = functionRegistry[functionName]!(argList);
+
+        // Update the original key's value with calculated result
+        updatedValues[keyFromArgs] = functionResult;
+
+        // Replace function call with the original key name
+        modifiedExpression = modifiedExpression.replaceAll(fullFunctionCall, keyFromArgs);
+      }
+    }
+  }
+
+  return ExpressionPreprocessResult(
+    expression: modifiedExpression,
+    values: updatedValues,
+  );
+}
+
+bool evaluateVisibilityExpression(
+    List<VisibilityExpression> expressions, Map<String, dynamic> values) {
+
+  // Any condition must be true (OR logic)
+  for (final expr in expressions) {
+    // Preprocess expression to handle function calls
+    final preprocessResult = _preprocessExpression(expr.condition, values);
+
+    final value = FormulaParser(
+      preprocessResult.expression,
+      preprocessResult.values.isEmpty ? {'dummy': {}} : preprocessResult.values,
+    );
+
+    final result = value.parse;
+    if (result["value"] == true) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool evaluateSingleCondition(String condition, Map<String, dynamic> values) {
   final value = FormulaParser(
-    expression,
+    condition,
     values.isEmpty ? {'dummy': {}} : values,
   );
-
-  final error = value.parse;
-  return error["value"] == true;
+  final result = value.parse;
+  return result["value"] == true;
 }
 
 Map<String, dynamic> buildVisibilityEvaluationContext({
   required String currentPageKey,
   required FormGroup currentForm,
   required Map<String, PropertySchema> pages,
+  Map<String, dynamic>? navigationParams,
 }) {
   final Map<String, dynamic> flatContext = {};
   bool isPastCurrentPage = false;
+
+  // Add navigation params to the context if provided
+  if (navigationParams != null) {
+    navigationParams.forEach((key, value) {
+      flatContext['navigation.$key'] = value;
+    });
+  }
 
   for (final entry in pages.entries) {
     final pageKey = entry.key;
@@ -218,7 +355,17 @@ Map<String, dynamic> getFormValues(
       .whereType<MapEntry<String, dynamic>>()
       .toList();
 
-  return Map.fromEntries(values);
+  final result = Map.fromEntries(values);
+
+  // Additionally, collect any form controls with entity suffixes (e.g., fieldName_item_0)
+  // These are created by MultiEntityTabView and need to be preserved for the transformer
+  for (final controlKey in form.controls.keys) {
+    if (controlKey.contains('_item_')) {
+      result[controlKey] = form.control(controlKey).value;
+    }
+  }
+
+  return result;
 }
 
 MapEntry<String, dynamic>? getParsedValues(
@@ -235,6 +382,12 @@ MapEntry<String, dynamic>? getParsedValues(
       Map.fromEntries(results.whereType<MapEntry<String, dynamic>>()),
     );
   } else {
+    // Skip if control doesn't exist (hidden field without includeInForm: true,
+    // or renamed in MultiEntityTabView)
+    if (!form.contains(name)) {
+      return MapEntry(name, "");
+    }
+
     final value = form.control(name).value;
     if (value == null) {
       return MapEntry(name, "");
@@ -243,111 +396,56 @@ MapEntry<String, dynamic>? getParsedValues(
   }
 }
 
-/// Resolves template variables in a string using the format {{key.subkey}}
-///
-/// This method replaces placeholders in the format {{key}} or {{key.subkey}}
-/// with actual values from the provided context maps.
-///
-/// @param template The template string containing {{key}} placeholders
-/// @param formValues Current form values from the active page
-/// @param defaultValues Default values that may contain template variables
-/// @param allPageValues Combined values from all form pages
-/// @return The resolved string with placeholders replaced by actual values
-String resolveTemplateVariables(
-  String template, {
-  Map<String, dynamic>? formValues,
-  Map<String, dynamic>? defaultValues,
-  Map<String, dynamic>? allPageValues,
-}) {
-  if (template.isEmpty) return template;
+List<dynamic> _parseArguments(String args, Map<String, dynamic> values) {
+  if (args.trim().isEmpty) return [];
 
-  // Regular expression to match {{key}} or {{key.subkey.subsubkey}}
-  final regex = RegExp(r'\{\{([^}]+)\}\}');
+  final argList = <dynamic>[];
+  final parts = args.split(',');
 
-  return template.replaceAllMapped(regex, (match) {
-    final fullKey = match.group(1)?.trim() ?? '';
-    if (fullKey.isEmpty) return match.group(0) ?? '';
+  for (final part in parts) {
+    final trimmed = part.trim();
 
-    // Try to resolve the value from different sources
-    dynamic resolvedValue;
-
-    // Split the key by dots for nested access
-    final keyParts = fullKey.split('.');
-
-    // Priority 1: Check current form values
-    if (formValues != null) {
-      resolvedValue = _getNestedValue(formValues, keyParts);
+    // Check if it's a string literal
+    if ((trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+        (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
+      argList.add(trimmed.substring(1, trimmed.length - 1));
     }
-
-    // Priority 2: Check all page values if not found
-    if (resolvedValue == null && allPageValues != null) {
-      resolvedValue = _getNestedValue(allPageValues, keyParts);
+    // Check if it's a variable reference
+    else if (values.containsKey(trimmed)) {
+      argList.add(values[trimmed]);
     }
-
-    // Priority 3: Check default values
-    if (resolvedValue == null && defaultValues != null) {
-      // First check if the default value itself contains the key
-      resolvedValue = _getNestedValue(defaultValues, keyParts);
-
-      // If not found, check if there's an exact match for special keys like eToken
-      if (resolvedValue == null && keyParts.length == 1) {
-        // Check if the key exists directly in default values
-        resolvedValue = defaultValues[fullKey];
-      }
+    // Try to parse as number
+    else if (double.tryParse(trimmed) != null) {
+      argList.add(double.parse(trimmed));
     }
-
-    // Return the resolved value or the original placeholder if not found
-    if (resolvedValue != null) {
-      return resolvedValue.toString();
-    }
-
-    // Return original placeholder if value not found
-    return match.group(0) ?? '';
-  });
-}
-
-/// Helper method to get nested value from a map using dot notation
-/// Supports both Map and List access:
-/// - Map: {{object.field}}
-/// - List: {{list.first}}, {{list.last}}, {{list.0}}
-dynamic _getNestedValue(Map<String, dynamic> map, List<String> keys) {
-  // First try direct key lookup (for keys stored with dots like "beneficiaryDetails.nameOfIndividual")
-  final fullKey = keys.join('.');
-  if (map.containsKey(fullKey)) {
-    return map[fullKey];
-  }
-
-  // Then try nested lookup
-  dynamic current = map;
-
-  for (final key in keys) {
-    if (current is Map<String, dynamic>) {
-      current = current[key];
-    } else if (current is List) {
-      // Handle list access
-      if (key == 'first') {
-        current = current.isNotEmpty ? current.first : null;
-      } else if (key == 'last') {
-        current = current.isNotEmpty ? current.last : null;
-      } else if (key == 'length') {
-        current = current.length;
-      } else {
-        // Try parsing as index (e.g., "0", "1", "2")
-        final index = int.tryParse(key);
-        if (index != null && index >= 0 && index < current.length) {
-          current = current[index];
-        } else {
-          return null;
-        }
-      }
-    } else {
-      return null;
-    }
-
-    if (current == null) {
-      return null;
+    // Default to string
+    else {
+      argList.add(trimmed);
     }
   }
 
-  return current;
+  return argList;
 }
+
+final functionRegistry = {
+  'calculateAgeInMonths': (List<dynamic> args) {
+    final dobString = args[0] as String;
+    if (dobString.isEmpty) return 0;
+
+    DateTime dob;
+    try {
+      // Try parsing as is first (ISO format)
+      dob = DateTime.parse(dobString);
+    } catch (_) {
+      // If that fails, try parsing DD/MM/YYYY format
+      try {
+        dob = parseDate(dobString);
+      } catch (_) {
+        return 0; // Return 0 if date parsing fails
+      }
+    }
+
+    final today = DateTime.now();
+    return (today.year - dob.year) * 12 + today.month - dob.month;
+  },
+};

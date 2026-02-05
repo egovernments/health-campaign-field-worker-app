@@ -1,6 +1,6 @@
 name: sync_service
 description: "Sync Service package provides access to sync to offline applications"
-version: 1.0.5
+version: 1.0.3
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/sync_service
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 
@@ -15,7 +15,6 @@ dependencies:
   freezed_annotation: ^2.4.1
   dart_mappable: ^4.2.2
   drift: ^2.18.0
-  sqlite3_flutter_libs: ^0.5.11+1
   path_provider: ^2.1.3
   path: ^1.9.0
   uuid: ^4.4.0
@@ -27,7 +26,7 @@ dependencies:
   flutter_background_service: ^5.0.5
   provider: ^6.1.2
   flutter_secure_storage: ^9.2.2
-  digit_data_model: ^1.1.5
+  digit_data_model: ^1.1.0
 
 dev_dependencies:
   flutter_test:

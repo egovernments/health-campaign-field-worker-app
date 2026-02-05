@@ -1,6 +1,5 @@
 library json_forms;
 
-import 'package:digit_forms_engine/helper/validation_context_manager.dart';
 import 'package:digit_forms_engine/utils/utils.dart';
 import 'package:digit_forms_engine/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +14,7 @@ class JsonForms extends StatelessWidget {
   final Map<String, dynamic>? defaultValues;
   final String pageName;
   final String currentSchemaKey;
+  final Map<String, dynamic>? navigationParams;
 
   const JsonForms({
     super.key,
@@ -23,12 +23,14 @@ class JsonForms extends StatelessWidget {
     this.defaultValues,
     required this.pageName,
     required this.currentSchemaKey,
+    this.navigationParams,
   });
 
   static Map<String, AbstractControl<dynamic>> getFormControls(
     PropertySchema schema, {
     String? defaultLatlng,
     Map<String, dynamic>? defaultValues,
+    String? schemaKey,
   }) {
     assert(schema.properties != null);
 
@@ -41,39 +43,11 @@ class JsonForms extends StatelessWidget {
             schema,
             defaultLatlng: defaultLatlng,
             defaultValues: defaultValues,
+            schemaKey: schemaKey,
           ),
     };
 
     return controls;
-  }
-
-  /// Set up cross-field validation for a FormGroup
-  /// This should be called after the FormGroup is created
-  /// to enable template variable support in validation rules
-  ///
-  /// Example usage:
-  /// ```dart
-  /// final formGroup = fb.group(JsonForms.getFormControls(schema));
-  /// JsonForms.setupValidationContext(formGroup, schema);
-  /// ```
-  static ValidationContextManager setupValidationContext(
-    FormGroup formGroup,
-    PropertySchema schema,
-  ) {
-    assert(schema.properties != null);
-
-    // Extract only the schemas for fields that are in the form
-    final fieldSchemas = <String, PropertySchema>{};
-    for (final entry in schema.properties!.entries) {
-      if (!isHidden(entry.value) || entry.value.includeInForm == true) {
-        fieldSchemas[entry.key] = entry.value;
-      }
-    }
-
-    return ValidationContextManager(
-      formGroup: formGroup,
-      schemas: fieldSchemas,
-    );
   }
 
   static Map<String, dynamic> getFormValues(
@@ -87,7 +61,17 @@ class JsonForms extends StatelessWidget {
         .whereType<MapEntry<String, dynamic>>()
         .toList();
 
-    return Map.fromEntries(values);
+    final result = Map.fromEntries(values);
+
+    // Additionally, collect any form controls with entity suffixes (e.g., fieldName_item_0)
+    // These are created by MultiEntityTabView and need to be preserved for the transformer
+    for (final controlKey in form.controls.keys) {
+      if (controlKey.contains('_item_')) {
+        result[controlKey] = form.control(controlKey).value;
+      }
+    }
+
+    return result;
   }
 
   static MapEntry<String, dynamic>? _getParsedValues(
@@ -104,6 +88,12 @@ class JsonForms extends StatelessWidget {
         Map.fromEntries(results.whereType<MapEntry<String, dynamic>>()),
       );
     } else {
+      // Skip if control doesn't exist (hidden field without includeInForm: true,
+      // or renamed in MultiEntityTabView)
+      if (!form.contains(name)) {
+        return null;
+      }
+
       final value = form.control(name).value;
       if (value == null) return null;
       return MapEntry(name, value);
@@ -117,5 +107,6 @@ class JsonForms extends StatelessWidget {
         components: childrens,
         pageName: pageName,
         currentSchemaKey: currentSchemaKey,
+        navigationParams: navigationParams,
       );
 }

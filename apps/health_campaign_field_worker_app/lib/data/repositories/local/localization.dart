@@ -30,9 +30,9 @@ class LocalizationLocalRepository {
         if (LocalizationParams().exclude == true) {
           // Exclude modules but include records where the code matches
           final moduleCondition =
-              sql.localization.module.contains(moduleToExclude).not();
+          sql.localization.module.contains(moduleToExclude).not();
           final codeCondition = LocalizationParams().code != null &&
-                  LocalizationParams().code!.isNotEmpty
+              LocalizationParams().code!.isNotEmpty
               ? sql.localization.code.isIn(LocalizationParams().code!.toList())
               : const Constant(false); // True if no code filter
 
@@ -41,14 +41,24 @@ class LocalizationLocalRepository {
         } else {
           // Include specified modules and optionally filter by code
           final moduleCondition =
-              sql.localization.module.contains(moduleToExclude);
+          sql.localization.module.contains(moduleToExclude);
           final codeCondition = LocalizationParams().code != null &&
-                  LocalizationParams().code!.isNotEmpty
+              LocalizationParams().code!.isNotEmpty
               ? sql.localization.code.isIn(LocalizationParams().code!.toList())
               : const Constant(false);
 
+          final moduleList =
+          moduleToExclude.split(',').map((e) => e.trim()).toList();
+
           // Combine conditions: module matches and optionally code filter
-          andConditions.add(buildAnd([moduleCondition | codeCondition]));
+          andConditions.add(
+            buildOr([
+              sql.localization.module.isIn(moduleList),
+              codeCondition,
+            ]),
+          );
+
+          /// CHECK THE CONDITION FAILING HERE
         }
       } else if (LocalizationParams().code != null &&
           LocalizationParams().code!.isNotEmpty) {
@@ -81,8 +91,8 @@ class LocalizationLocalRepository {
 
   FutureOr<List<Localization>> fetchLocalization(
       {required LocalSqlDataStore sql,
-      required String locale,
-      required String module}) async {
+        required String locale,
+        required String module}) async {
     return retryLocalCallOperation(() async {
       final moduleList = module.split(',').map((e) => e.trim()).toList();
 

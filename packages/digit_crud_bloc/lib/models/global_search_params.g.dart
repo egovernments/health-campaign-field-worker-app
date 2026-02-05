@@ -29,6 +29,13 @@ _$GlobalSearchParametersImpl _$$GlobalSearchParametersImplFromJson(
               .toList() ??
           const [],
       primaryModel: json['primaryModel'] as String?,
+      primaryKeyField: json['primaryKeyField'] as String?,
+      filterLogic: $enumDecodeNullable(
+              _$MultiTableFilterLogicEnumMap, json['filterLogic']) ??
+          MultiTableFilterLogic.and,
+      orderBy: json['orderBy'] == null
+          ? null
+          : SearchOrderBy.fromJson(json['orderBy'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$GlobalSearchParametersImplToJson(
@@ -40,7 +47,15 @@ Map<String, dynamic> _$$GlobalSearchParametersImplToJson(
       'relationshipMappings': instance.relationshipMappings,
       'nestedMappings': instance.nestedMappings,
       'primaryModel': instance.primaryModel,
+      'primaryKeyField': instance.primaryKeyField,
+      'filterLogic': _$MultiTableFilterLogicEnumMap[instance.filterLogic]!,
+      'orderBy': instance.orderBy,
     };
+
+const _$MultiTableFilterLogicEnumMap = {
+  MultiTableFilterLogic.and: 'and',
+  MultiTableFilterLogic.or: 'or',
+};
 
 _$SearchFilterImpl _$$SearchFilterImplFromJson(Map<String, dynamic> json) =>
     _$SearchFilterImpl(
@@ -143,4 +158,16 @@ Map<String, dynamic> _$$NestedModelMappingImplToJson(
     <String, dynamic>{
       'rootModel': instance.rootModel,
       'fields': instance.fields,
+    };
+
+_$SearchOrderByImpl _$$SearchOrderByImplFromJson(Map<String, dynamic> json) =>
+    _$SearchOrderByImpl(
+      field: json['field'] as String,
+      order: json['order'] as String? ?? 'DESC',
+    );
+
+Map<String, dynamic> _$$SearchOrderByImplToJson(_$SearchOrderByImpl instance) =>
+    <String, dynamic>{
+      'field': instance.field,
+      'order': instance.order,
     };
