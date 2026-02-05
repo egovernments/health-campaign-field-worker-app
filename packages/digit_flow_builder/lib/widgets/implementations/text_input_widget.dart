@@ -48,7 +48,12 @@ class TextInputWidget implements FlowWidget {
 
     // Determine keyboard type based on inputType
     TextInputType keyboardType;
-    List<TextInputFormatter>? inputFormatters;
+    List<TextInputFormatter> inputFormatters = [];
+
+    // Allow only ASCII characters (letters, numbers, punctuation, spaces) - blocks all emojis
+    final noEmojiFilter = FilteringTextInputFormatter.allow(
+      RegExp(r'[\x00-\x7F]'),  // ASCII only (0-127)
+    );
 
     switch (inputType.toLowerCase()) {
       case 'number':
@@ -58,11 +63,12 @@ class TextInputWidget implements FlowWidget {
       case 'decimal':
         keyboardType = const TextInputType.numberWithOptions(decimal: true);
         inputFormatters = [
-          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*'))
+          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
         ];
         break;
       case 'email':
         keyboardType = TextInputType.emailAddress;
+        inputFormatters = [noEmojiFilter];
         break;
       case 'phone':
         keyboardType = TextInputType.phone;
@@ -70,9 +76,11 @@ class TextInputWidget implements FlowWidget {
         break;
       case 'multiline':
         keyboardType = TextInputType.multiline;
+        inputFormatters = [noEmojiFilter];
         break;
       default:
         keyboardType = TextInputType.text;
+        inputFormatters = [noEmojiFilter];
     }
 
     // Use compositeKey for registry operations (includes instanceId for proper isolation)
