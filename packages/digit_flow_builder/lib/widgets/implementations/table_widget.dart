@@ -166,18 +166,27 @@ class TableWidget implements FlowWidget {
           // Just convert to string
           final finalText = cellValue?.toString() ?? '';
 
+          final displayText = finalText != "null"
+              ? (localization?.translate(finalText) ?? finalText)
+              : "--";
+
           return DigitTableData(
-             finalText!= "null" ? (localization?.translate(finalText) ??finalText) :   "--",
+            displayText,
             cellKey: rawCellValue is Map
                 ? 'conditional_$colIndex'
                 : rawCellValue?.toString() ?? '',
+            widget: Text(
+              displayText,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           );
         }).toList(),
       );
     }).toList();
 
     return SizedBox(
-      height: (rows.length * 52.0 + 64),
+      height: rows.length * 52.0 + 64,
       child: DigitTable(
         enableBorder: true,
         withRowDividers: false,
