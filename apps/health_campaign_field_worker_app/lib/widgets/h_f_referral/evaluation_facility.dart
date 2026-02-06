@@ -1,5 +1,6 @@
 import 'package:digit_data_model/blocs/project_facility/project_facility.dart';
 import 'package:digit_data_model/models/entities/project_facility.dart';
+import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:digit_forms_engine/helper/validation_message_helper.dart';
 import 'package:digit_forms_engine/models/property_schema/property_schema.dart';
@@ -124,6 +125,22 @@ class _EvaluationKeyDropDownState
                       value: val.code,
                     ),
                   );
+
+              // Store the project facility id separately for HFReferralModel
+              // This is needed because the dropdown code stores facilityId for REFER_BENEFICIARY
+              // but HFReferralModel needs the project facility id
+              if (widget.schemaName == "REFER_BENEFICIARY") {
+                final selectedFacility = projectFacilities.firstWhere(
+                  (f) => f.facilityId == val.code,
+                  orElse: () => projectFacilities.first,
+                );
+
+                // Store in transient registry for transformer to access via __context:
+                TransientFormValueRegistry().set(
+                  'selectedProjectFacilityId',
+                  selectedFacility.id,
+                );
+              }
             },
           ),
         );

@@ -85,15 +85,13 @@ class SearchBarWidget implements FlowWidget {
           }
         } else if (json['onAction'] != null) {
           // Below minimum chars — remove only this search bar's filter (not the entire state)
-          final actionsList =
-              List<Map<String, dynamic>>.from(json['onAction']);
+          final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
 
           final searchBarFilterKeys = <String>[];
           String searchName = 'default';
 
           for (var raw in actionsList) {
-            searchName =
-                (raw['properties']?['name'] as String?) ?? searchName;
+            searchName = (raw['properties']?['name'] as String?) ?? searchName;
             final data = raw['properties']?['data'] as List?;
             if (data != null) {
               for (var item in data) {

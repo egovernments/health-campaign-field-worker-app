@@ -56,11 +56,14 @@ class FlowCrudBloc extends CrudBloc {
 
       final newEntities =
           crudState.results.values.expand((list) => list).toList();
-      final newWrapper = WrapperBuilder(
-        newEntities,
-        flowConfig['wrapperConfig'],
-        screenKey: screenKey,
-      ).build();
+      final wrapperConfig = flowConfig['wrapperConfig'] as Map<String, dynamic>?;
+      final newWrapper = wrapperConfig != null
+          ? WrapperBuilder(
+              newEntities,
+              wrapperConfig,
+              screenKey: screenKey,
+            ).build()
+          : newEntities;
       if (scrollDirection != null && existingState?.stateWrapper != null) {
         // Bidirectional pagination mode
         wrapper = _handleBidirectionalPagination(
@@ -109,11 +112,14 @@ class FlowCrudBloc extends CrudBloc {
       FlowCrudStateRegistry().updateByCompositeKey(compositeKey, flowState);
     } else if (crudState is CrudStatePersisted) {
       final entities = crudState.entities;
-      wrapper = WrapperBuilder(
-        entities,
-        flowConfig['wrapperConfig'],
-        screenKey: screenKey,
-      ).build();
+      final persistedWrapperConfig = flowConfig['wrapperConfig'] as Map<String, dynamic>?;
+      wrapper = persistedWrapperConfig != null
+          ? WrapperBuilder(
+              entities,
+              persistedWrapperConfig,
+              screenKey: screenKey,
+            ).build()
+          : entities;
       // Preserve existing formData and widgetData when creating new state
       final flowState = FlowCrudState(
         base: crudState,

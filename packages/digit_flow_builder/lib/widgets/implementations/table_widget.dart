@@ -60,22 +60,20 @@ class TableWidget implements FlowWidget {
     final rawColumns = (data['columns'] as List<dynamic>?) ?? [];
 
     // Create column headers with resolved templates
-    final columns = rawColumns
-        .where((col) => col['isActive'] != false)
-        .map((col) {
+    final columns =
+        rawColumns.where((col) => col['isActive'] != false).map((col) {
       final cellValue = col['cellValue'];
       final headerTemplate = col['header']?.toString() ?? '';
 
       // Resolve header template using evalContext (supports {{formData.x}}, {{itemData.x}}, etc.)
-      final resolvedHeader =
-      resolveTemplate(headerTemplate, evalContext, screenKey: flowState.screenKey);
+      final resolvedHeader = resolveTemplate(headerTemplate, evalContext,
+          screenKey: flowState.screenKey);
 
       return DigitTableColumn(
         header: localization?.translate(resolvedHeader) ?? resolvedHeader,
         cellValue: cellValue is String ? cellValue : jsonEncode(cellValue),
       );
-    })
-        .toList();
+    }).toList();
 
     // Step 1: Resolve data source from either 'rows' or 'source' (both should point to same data)
     List<dynamic> sourceList = [];
@@ -94,8 +92,8 @@ class TableWidget implements FlowWidget {
 
       // Case 1: Singleton path
       if (cleanKey.startsWith("singleton")) {
-        final resolved =
-            resolveValueRaw("{{ $cleanKey }}", null, screenKey: flowState.screenKey);
+        final resolved = resolveValueRaw("{{ $cleanKey }}", null,
+            screenKey: flowState.screenKey);
         if (resolved is List) {
           sourceList = resolved;
         } else if (resolved != null) {
@@ -103,9 +101,11 @@ class TableWidget implements FlowWidget {
         }
       }
       // Case 2: If the current item already has this source (table inside listView)
-      else if (flowState.itemData != null && (flowState.itemData?[cleanKey] != null)) {
-        final localSource =
-            resolveValueRaw("{{ $cleanKey }}", flowState.itemData, screenKey: flowState.screenKey);
+      else if (flowState.itemData != null &&
+          (flowState.itemData?[cleanKey] != null)) {
+        final localSource = resolveValueRaw(
+            "{{ $cleanKey }}", flowState.itemData,
+            screenKey: flowState.screenKey);
         if (localSource is List) {
           sourceList = localSource;
         } else if (localSource != null) {
@@ -122,8 +122,8 @@ class TableWidget implements FlowWidget {
       }
       // Case 4: Fallback to resolving from rawState
       else if (stateData != null) {
-        final localSource =
-            resolveValueRaw(rowsKey, evalContext, screenKey: flowState.screenKey);
+        final localSource = resolveValueRaw(rowsKey, evalContext,
+            screenKey: flowState.screenKey);
         if (localSource is List) {
           sourceList = localSource;
         } else if (localSource != null) {
@@ -145,7 +145,8 @@ class TableWidget implements FlowWidget {
       final cellEvalContext = {
         ...evalContext,
         'item': rowItem,
-        'itemData': rowItem is Map<String, dynamic> ? rowItem : null // Legacy support
+        'itemData':
+            rowItem is Map<String, dynamic> ? rowItem : null // Legacy support
       };
 
       return DigitTableRow(
@@ -155,7 +156,9 @@ class TableWidget implements FlowWidget {
 
           // Get the raw cellValue configuration
           // Resolve static localization keys from cellValue (text without {{}})
-          final rawCellValue = colConfig['cellValue'] is String ? resolveStaticString(colConfig['cellValue'], localization) : colConfig['cellValue'];
+          final rawCellValue = colConfig['cellValue'] is String
+              ? resolveStaticString(colConfig['cellValue'], localization)
+              : colConfig['cellValue'];
 
           final cellValue = ConditionalEvaluator.evaluate(
               rawCellValue, cellEvalContext,

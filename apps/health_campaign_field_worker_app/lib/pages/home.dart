@@ -470,12 +470,11 @@ class _HomePageState extends LocalizedState<HomePage> {
       final isDistributor = context.loggedInUserRoles
           .where(
             (role) => role.code == RolesType.distributor.toValue(),
-      )
+          )
           .toList()
           .isNotEmpty;
       final isWareHouseMgr = context.loggedInUserRoles
-          .where(
-              (role) => role.code == RolesType.warehouseManager.toValue())
+          .where((role) => role.code == RolesType.warehouseManager.toValue())
           .toList()
           .isNotEmpty;
 
