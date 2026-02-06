@@ -42,18 +42,21 @@ class RefreshSearchExecutor extends ActionExecutor {
     final direction = data['direction'] as String? ?? 'down';
     final paginationConfig = data['pagination'] as Map<String, dynamic>?;
 
-    // Get screen key
+    // Get composite key (includes instanceId for proper isolation)
+    // IMPORTANT: Try CrudItemContext.compositeKey first - it's correctly passed
+    // from popups via ActionPopupWidget. Only fall back to getEffectiveCompositeKey
+    // when not in a popup context.
     final crudCtx = CrudItemContext.of(context);
-    final screenKey =
-        crudCtx?.screenKey ?? getEffectiveScreenKey(context, contextData);
+    final compositeKey =
+        crudCtx?.compositeKey ?? getEffectiveCompositeKey(context, contextData);
 
-    if (screenKey == null) {
-      debugPrint('REFRESH_SEARCH: No screen key found, cannot refresh');
+    if (compositeKey == null) {
+      debugPrint('REFRESH_SEARCH: No composite key found, cannot refresh');
       return contextData;
     }
 
     // Check if there are any accumulated filters for this screen
-    final hasFilters = SearchStateManager().hasFiltersForScreen(screenKey);
+    final hasFilters = SearchStateManager().hasFiltersForScreen(compositeKey);
 
     if (!hasFilters) {
       debugPrint('REFRESH_SEARCH: No accumulated filters for screen, skipping');
@@ -64,7 +67,7 @@ class RefreshSearchExecutor extends ActionExecutor {
     return _executeWithBidirectionalPagination(
       context,
       contextData,
-      screenKey,
+      compositeKey,
       direction,
       paginationConfig,
     );
@@ -73,7 +76,7 @@ class RefreshSearchExecutor extends ActionExecutor {
   Future<Map<String, dynamic>> _executeWithBidirectionalPagination(
     BuildContext context,
     Map<String, dynamic> contextData,
-    String screenKey,
+    String compositeKey,
     String direction,
     Map<String, dynamic>? paginationConfig,
   ) async {
@@ -81,7 +84,7 @@ class RefreshSearchExecutor extends ActionExecutor {
     const paginationKey = '_pagination';
 
     // Get config for default pagination settings
-    final config = FlowRegistry.getByName(screenKey.split('::').last);
+    final config = FlowRegistry.getByName(compositeKey.split('::').last);
     final defaultPaginationConfig =
         config?['wrapperConfig']?['searchConfig']?['pagination'];
     final defaultLimit = defaultPaginationConfig?['limit'] as int? ?? 10;
@@ -97,32 +100,32 @@ class RefreshSearchExecutor extends ActionExecutor {
             : defaultMaxItems);
 
     // Get or initialize pagination window
-    debugPrint('REFRESH_SEARCH: Looking for pagination window with screenKey=$screenKey');
-    var window = stateManager.getPaginationWindow(screenKey, paginationKey);
+    debugPrint('REFRESH_SEARCH: Looking for pagination window with compositeKey=$compositeKey');
+    var window = stateManager.getPaginationWindow(compositeKey, paginationKey);
     debugPrint('REFRESH_SEARCH: Found window=$window');
 
     if (window == null) {
       // Initialize window if not exists (shouldn't happen normally)
       debugPrint('REFRESH_SEARCH: Window not found, initializing new one');
       stateManager.initPaginationWindow(
-        screenKey,
+        compositeKey,
         paginationKey,
         limit: limit,
         maxItems: maxItems,
       );
-      window = stateManager.getPaginationWindow(screenKey, paginationKey);
+      window = stateManager.getPaginationWindow(compositeKey, paginationKey);
     }
 
     // Determine offset based on direction
     int? offset;
     if (direction == 'down') {
-      offset = stateManager.prepareLoadDown(screenKey, paginationKey);
+      offset = stateManager.prepareLoadDown(compositeKey, paginationKey);
       if (offset == null) {
         debugPrint('REFRESH_SEARCH: Cannot load down - no more data');
         return contextData;
       }
     } else if (direction == 'up') {
-      offset = stateManager.prepareLoadUp(screenKey, paginationKey);
+      offset = stateManager.prepareLoadUp(compositeKey, paginationKey);
       if (offset == null) {
         debugPrint('REFRESH_SEARCH: Cannot load up - at beginning');
         return contextData;
@@ -136,7 +139,7 @@ class RefreshSearchExecutor extends ActionExecutor {
         'REFRESH_SEARCH: Loading $direction from offset=$offset, limit=$limit');
 
     // Get ALL accumulated filters for the screen (across all searchNames)
-    final accumulatedFilters = stateManager.getAllFilters(screenKey);
+    final accumulatedFilters = stateManager.getAllFilters(compositeKey);
 
     // Convert to SearchFilter objects
     final filters = <SearchFilter>[];
@@ -178,7 +181,7 @@ class RefreshSearchExecutor extends ActionExecutor {
     );
 
     // Set mode in registry - FlowCrudBloc.onTransition will handle it
-    final registryKey = screenKey.split('::').last;
+    final registryKey = compositeKey.split('::').last;
     FlowCrudStateRegistry().setScrollDirection(registryKey, direction);
     FlowCrudStateRegistry().setPaginationInfo(
       registryKey,

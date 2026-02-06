@@ -264,7 +264,7 @@ String resolveTemplate(
     result = result.replaceAll(fullPlaceholder, valueStr);
   }
 
-  return result;
+  return _translateWithLocalization(result, localization);
 }
 
 /// Helper to translate using localization (supports FlowBuilderLocalization)
@@ -433,7 +433,25 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
         }
       }
 
-      // Normal path resolution
+      // Check widgetData for unprefixed simple variables first
+      // This handles cases like {{fn:isEmpty(selectedReconFacility)}} where
+      // selectedReconFacility is a widget data field (dropdown selection)
+      if (widgetData != null && !path.contains('.')) {
+        final widgetValue = widgetData[path];
+        if (widgetValue != null) {
+          return widgetValue;
+        }
+      }
+
+      // Also check widgetData for dotted paths that might exist there
+      if (widgetData != null && path.contains('.')) {
+        final widgetValue = _resolvePath(widgetData, path);
+        if (widgetValue != null) {
+          return widgetValue;
+        }
+      }
+
+      // Normal path resolution from contextData
       return _resolvePath(contextData, path);
     }
     return value;
@@ -534,6 +552,18 @@ dynamic _resolvePath(dynamic root, String path) {
         continue;
       }
 
+      // Handle 'first' and 'last' keywords
+      if (part == 'first') {
+        if (current.isEmpty) return null;
+        current = current.first;
+        continue;
+      }
+      if (part == 'last') {
+        if (current.isEmpty) return null;
+        current = current.last;
+        continue;
+      }
+
       final idx = int.tryParse(part);
       if (idx != null) {
         if (idx < 0 || idx >= current.length) return null;
@@ -614,6 +644,9 @@ dynamic _resolvePath(dynamic root, String path) {
   if (current is num) {
     return current;
   }
+  if(current is Map){
+    return current;
+  }
   return current?.toString();
 }
 
@@ -685,6 +718,27 @@ String _tryTranslate(String key, dynamic localization) {
   } catch (_) {
     return key;
   }
+}
+
+/// Generates a unique instance ID for a page
+/// Format: {screenType}_{pageName}_{timestamp}
+String generateInstanceId(String pageName) {
+  return '${pageName}_${DateTime.now().millisecondsSinceEpoch}';
+}
+
+/// Gets instanceId from navigationParams or generates a new one
+String getOrGenerateInstanceId(
+  Map<String, dynamic>? navigationParams,
+  String pageName,
+) {
+  return navigationParams?['_instanceId'] as String? ??
+      generateInstanceId(pageName);
+}
+
+/// Creates a composite key from pageName and instanceId
+/// Format: {pageName}::{instanceId}
+String createCompositeKey(String pageName, String instanceId) {
+  return '$pageName::$instanceId';
 }
 
 /// Returns the type name of an EntityModel as a string.

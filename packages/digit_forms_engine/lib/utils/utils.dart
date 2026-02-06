@@ -152,7 +152,15 @@ bool isHidden(PropertySchema property) {
 
 /// Checks if the string can be parsed as a DateTime
 bool isDateTime(String input) {
-  return DateTime.tryParse(input) != null;
+
+  if (RegExp(r'^\d{4}-\d{2}-\d{2}').hasMatch(input)) {
+     return DateTime.tryParse(input) != null;// ISO 8601
+  } else if (RegExp(r'^\d{2}/\d{2}/\d{4}$').hasMatch(input)) {
+     return DateTime.tryParse(input) != null;
+  }  
+  
+  return false;
+
 }
 
 bool isDateLike(String input) {
@@ -173,7 +181,7 @@ DateTime parseDate(String input) {
     final year = int.parse(parts[2]);
     return DateTime(year, month, day);
   }
-  throw FormatException('Unsupported date format');
+  throw const FormatException('Unsupported date format');
 }
 
 bool isDotSeparatedKey(String input) {
@@ -272,11 +280,7 @@ bool evaluateVisibilityExpression(
       preprocessResult.values.isEmpty ? {'dummy': {}} : preprocessResult.values,
     );
 
-    final parser = FormulaParser(
-      expr.condition,
-      values.isEmpty ? {'dummy': {}} : values,
-    );
-    final result = parser.parse;
+    final result = value.parse;
     if (result["value"] == true) {
       return true;
     }

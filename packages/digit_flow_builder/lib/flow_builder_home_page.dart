@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'data/digit_data_converter.dart';
 import 'flow_builder.dart';
+import 'utils/utils.dart';
 
 @RoutePage()
 class FlowBuilderHomePage extends LocalizedStatefulWidget {
@@ -29,6 +30,8 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
   bool _formSchemaLoaded = false;
   bool _isForm = false;
   bool _preventScreenCapture = false;
+  late final String _instanceId;
+  late final String _compositeKey;
 
   @override
   void initState() {
@@ -36,6 +39,14 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
     final config = FlowRegistry.getByName(widget.pageName);
     _isForm = config?['screenType'] == 'FORM';
     _preventScreenCapture = config?['preventScreenCapture'] == true;
+
+    // Get or generate instanceId for this page instance
+    final screenType = config?['screenType'] ?? 'TEMPLATE';
+    _instanceId = getOrGenerateInstanceId(
+      widget.navigationParams,
+      widget.pageName,
+    );
+    _compositeKey = createCompositeKey(widget.pageName, _instanceId);
 
     // For TEMPLATE screens, register with ScreenProtectionManager
     // FORM screens are handled by FormsRenderPage
@@ -72,7 +83,10 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
     if (!_isForm) {
       ScreenProtectionManager().unregisterPage(widget.pageName);
     }
-    FlowCrudStateRegistry().dispose(widget.pageName);
+    // Dispose state using the composite key (pageName::instanceId)
+    // This ensures only this page instance's state is disposed
+    FlowCrudStateRegistry().disposeByCompositeKey(_compositeKey);
+    SearchStateManager().disposeByCompositeKey(_compositeKey);
     super.dispose();
   }
 
@@ -93,6 +107,7 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
             return FlowCrudBloc(
               flowConfig: config,
               service: crudService,
+              instanceId: _instanceId,
               onUpdate: (screenKey, state) {},
             )..add(const CrudEventInitialize());
           },
@@ -101,6 +116,7 @@ class _FlowBuilderHomePageState extends State<FlowBuilderHomePage> {
       child: ScreenBuilder(
         config: config,
         navigationParams: widget.navigationParams,
+        instanceId: _instanceId,
       ),
     );
   }

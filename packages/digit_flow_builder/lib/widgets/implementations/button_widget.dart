@@ -84,6 +84,24 @@ class ButtonWidget implements FlowWidget {
           if (json['onAction'] != null) {
             final actionsList = List<Map<String, dynamic>>.from(json['onAction']);
 
+            // Read current data from registry at click time
+            // flowState data is captured at widget build time and may be stale
+            final compositeKey = flowState.compositeKey ?? flowState.screenKey;
+            final registryState = compositeKey != null
+                ? FlowCrudStateRegistry().get(compositeKey)
+                : null;
+            final currentWidgetData = registryState?.widgetData ?? flowState.widgetData;
+            final currentFormData = registryState?.formData ?? flowState.formData;
+
+            // Build evalContext with latest widgetData and formData
+            final currentEvalContext = <String, dynamic>{
+              ...flowState.evalContext,
+              ...currentFormData,
+              ...currentWidgetData,
+              'widgetData': currentWidgetData,
+              'formData': currentFormData,
+            };
+
             // Helper function to resolve navigation data for an action
             Map<String, dynamic> resolveNavDataForAction(Map<String, dynamic> actionJson) {
               var action = ActionConfig.fromJson(actionJson);
@@ -93,19 +111,18 @@ class ButtonWidget implements FlowWidget {
                 final resolvedData = navData.map((entry) {
                   final rawValue = entry['value'];
 
-                  // Try to resolve from stateData first, then widgetData, then formData
-                  dynamic resolvedValue = flowState.evalContext.isNotEmpty
-                      ? resolveValue(rawValue, flowState.evalContext)
-                      : rawValue;
+                  // Try to resolve from evalContext first, then widgetData, then formData
+                  dynamic resolvedValue = resolveValue(rawValue, currentEvalContext)
+                      ?? rawValue;
 
-                  if (resolvedValue == rawValue && flowState.widgetData.isNotEmpty) {
-                    // If not resolved from stateData, try widgetData
-                    resolvedValue = resolveValue(rawValue, flowState.widgetData);
+                  if (resolvedValue == rawValue && currentWidgetData.isNotEmpty) {
+                    // If not resolved from evalContext, try widgetData
+                    resolvedValue = resolveValue(rawValue, currentWidgetData);
                   }
 
-                  if (resolvedValue == rawValue && flowState.formData.isNotEmpty) {
+                  if (resolvedValue == rawValue && currentFormData.isNotEmpty) {
                     // If not resolved from widgetData, try formData
-                    resolvedValue = resolveValue(rawValue, flowState.formData);
+                    resolvedValue = resolveValue(rawValue, currentFormData);
                   }
 
                   return {
@@ -135,12 +152,12 @@ class ButtonWidget implements FlowWidget {
                 final condition = Map<String, dynamic>.from(actionJson['condition']);
                 final expression = condition['expression'] as String?;
                 if (expression != null && expression.contains('{{')) {
-                  // Resolve the expression template using flowState.evalContext
-                  String resolvedExpression = resolveTemplate(expression, flowState.evalContext) ?? expression;
+                  // Resolve the expression template using current registry data
+                  String resolvedExpression = resolveTemplate(expression, currentEvalContext) ?? expression;
                   if (resolvedExpression == expression && crudStateData != null) {
                     resolvedExpression = resolveValueRaw(
                       expression,
-                      flowState.evalContext,
+                      currentEvalContext,
                     );
                   }
                   condition['expression'] = resolvedExpression;
@@ -163,11 +180,11 @@ class ButtonWidget implements FlowWidget {
               return resolvedActionJson;
             }).toList();
 
-            // Build initial context data from current state using flowState.evalContext
+            // Build initial context data using current registry data
             // Also include navigation params from registry for condition evaluation
             final screenKey = flowState.screenKey;
             final navigationParams = screenKey != null
-                ? FlowCrudStateRegistry().getNavigationParams(screenKey) ??
+                ? FlowCrudStateRegistry().getNavigationParams(compositeKey ?? screenKey) ??
                     FlowCrudStateRegistry()
                         .getNavigationParams(screenKey.split('::').last) ??
                     {}
@@ -175,7 +192,7 @@ class ButtonWidget implements FlowWidget {
 
             final initialContextData = <String, dynamic>{
               'wrappers': const [],
-              ...flowState.evalContext,
+              ...currentEvalContext,
               'navigation': navigationParams,
             };
 

@@ -700,8 +700,18 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
   }
 
   List<Widget> _buildForm() {
+    // Sort attributes by order field
+    final sortedAttributes = initialAttributes!
+        .where((att) => att.isActive == true)
+        .toList()
+      ..sort((a, b) {
+        final orderA = int.tryParse(a.order ?? '0') ?? 0;
+        final orderB = int.tryParse(b.order ?? '0') ?? 0;
+        return orderA.compareTo(orderB);
+      });
+
     return [
-      ...initialAttributes!.where((att) => att.isActive == true).map((
+      ...sortedAttributes.map((
           e,
           ) {
         String? description = e.additionalFields?.fields
@@ -711,35 +721,144 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
         int index = (initialAttributes ?? []).indexOf(e);
         return Column(children: [
           if (e.dataType == 'String' && !(e.code ?? '').contains('.')) ...[
-            FormField<String>(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) {
-                  if (((controller[index].text == null ||
-                      controller[index].text == '') &&
-                      e.required == true)) {
-                    return localizations.translate("${e.code}_REQUIRED");
-                  }
-                  if (e.regex != null) {
-                    return (RegExp(e.regex!).hasMatch(controller[index].text!))
-                        ? null
-                        : localizations.translate("${e.code}_REGEX");
-                  }
+            DigitCard(cardType: CardType.primary, children: [
+              FormField<String>(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    if (((controller[index].text == null ||
+                        controller[index].text == '') &&
+                        e.required == true)) {
+                      return localizations.translate("${e.code}_REQUIRED");
+                    }
+                    if (e.regex != null) {
+                      return (RegExp(e.regex!).hasMatch(controller[index].text!))
+                          ? null
+                          : localizations.translate("${e.code}_REGEX");
+                    }
 
-                  return null;
-                },
-                builder: (field) {
-                  return LabeledField(
-                      label: localizations.translate(
+                    return null;
+                  },
+                  builder: (field) {
+                    return LabeledField(
+                        label: localizations.translate(
+                          '${selectedServiceDefinition?.code}.${e.code}',
+                        ),
+                        capitalizedFirstLetter: false,
+                        charCondition: true,
+                        description: description != null
+                            ? localizations.translate(
+                          '${selectedServiceDefinition?.code}.$description',
+                        )
+                            : null,
+                        isRequired: e.required ?? false,
+                        child: DigitTextFormInput(
+                          onChange: (value) {
+                            field.didChange(value);
+                            controller[index].text = value;
+                            surveyFormKey.currentState?.validate();
+                          },
+                          errorMessage: field.errorText,
+                          controller: controller[index],
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(
+                              "[a-zA-Z0-9]",
+                            )),
+                          ],
+                        ));
+                  }),
+            ]),
+          ] else if (e.dataType == 'Numeric' &&
+
+              /// TODO:need to fix the data type to something more generic
+              !(e.code ?? '').contains('.')) ...[
+            DigitCard(cardType: CardType.primary, children: [
+              FormField<String>(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    if (((controller[index].text == null ||
+                        controller[index].text == '') &&
+                        e.required == true)) {
+                      return localizations.translate(
+                        i18.common.corecommonRequired,
+                      );
+                    }
+                    if (e.regex != null) {
+                      return (RegExp(e.regex!).hasMatch(controller[index].text!))
+                          ? null
+                          : localizations.translate("${e.code}_REGEX");
+                    }
+
+                    return null;
+                  },
+                  builder: (field) {
+                    if (controller[index].text.isEmpty) {
+                      controller[index].text = '0';
+                    }
+                    return LabeledField(
+                      label: localizations
+                          .translate(
                         '${selectedServiceDefinition?.code}.${e.code}',
-                      ),
-                      capitalizedFirstLetter: false,
-                      charCondition: true,
+                      )
+                          .trim(),
                       description: description != null
                           ? localizations.translate(
                         '${selectedServiceDefinition?.code}.$description',
                       )
                           : null,
                       isRequired: e.required ?? false,
+                      capitalizedFirstLetter: false,
+                      charCondition: true,
+                      child: DigitNumericFormInput(
+                        onChange: (value) {
+                          field.didChange(value);
+                          controller[index].text = value;
+                          surveyFormKey.currentState?.validate();
+                        },
+                        step: 1,
+                        minValue: 0,
+                        errorMessage: field.errorText,
+                        keyboardType: TextInputType.number,
+                        controller: controller[index],
+                      ),
+                    );
+                  }),
+            ]),
+          ] else if (e.dataType == 'Number' &&
+              !(e.code ?? '').contains('.')) ...[
+            DigitCard(cardType: CardType.primary, children: [
+              FormField<String>(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    if (((controller[index].text == null ||
+                        controller[index].text == '') &&
+                        e.required == true)) {
+                      return localizations.translate(
+                        i18.common.corecommonRequired,
+                      );
+                    }
+                    if (e.regex != null) {
+                      return (RegExp(e.regex!).hasMatch(controller[index].text!))
+                          ? null
+                          : localizations.translate("${e.code}_REGEX");
+                    }
+
+                    return null;
+                  },
+                  builder: (field) {
+                    return LabeledField(
+                      label: localizations
+                          .translate(
+                        '${selectedServiceDefinition?.code}.${e.code}',
+                      )
+                          .trim(),
+                      description: description != null
+                          ? localizations.translate(
+                        '${selectedServiceDefinition?.code}.$description',
+                      )
+                          : null,
+                      isRequired: e.required ?? false,
+                      capitalizedFirstLetter: false,
+                      charCondition: true,
                       child: DigitTextFormInput(
                         onChange: (value) {
                           field.didChange(value);
@@ -747,185 +866,84 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                           surveyFormKey.currentState?.validate();
                         },
                         errorMessage: field.errorText,
-                        controller: controller[index],
+                        keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(RegExp(
-                            "[a-zA-Z0-9]",
+                            "[0-9]",
                           )),
                         ],
-                      ));
-                }),
-          ] else if (e.dataType == 'Numeric' &&
-
-              /// TODO:need to fix the data type to something more generic
-              !(e.code ?? '').contains('.')) ...[
-            FormField<String>(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) {
-                  if (((controller[index].text == null ||
-                      controller[index].text == '') &&
-                      e.required == true)) {
-                    return localizations.translate(
-                      i18.common.corecommonRequired,
+                        controller: controller[index],
+                      ),
                     );
-                  }
-                  if (e.regex != null) {
-                    return (RegExp(e.regex!).hasMatch(controller[index].text!))
-                        ? null
-                        : localizations.translate("${e.code}_REGEX");
-                  }
-
-                  return null;
-                },
-                builder: (field) {
-                  if (controller[index].text.isEmpty) {
-                    controller[index].text = '0';
-                  }
-                  return LabeledField(
-                    label: localizations
-                        .translate(
-                      '${selectedServiceDefinition?.code}.${e.code}',
-                    )
-                        .trim(),
-                    description: description != null
-                        ? localizations.translate(
-                      '${selectedServiceDefinition?.code}.$description',
-                    )
-                        : null,
-                    isRequired: e.required ?? false,
-                    capitalizedFirstLetter: false,
-                    charCondition: true,
-                    child: DigitNumericFormInput(
-                      onChange: (value) {
-                        field.didChange(value);
-                        controller[index].text = value;
-                        surveyFormKey.currentState?.validate();
-                      },
-                      step: 1,
-                      minValue: 0,
-                      errorMessage: field.errorText,
-                      keyboardType: TextInputType.number,
-                      controller: controller[index],
-                    ),
-                  );
-                }),
-          ] else if (e.dataType == 'Number' &&
-              !(e.code ?? '').contains('.')) ...[
-            FormField<String>(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) {
-                  if (((controller[index].text == null ||
-                      controller[index].text == '') &&
-                      e.required == true)) {
-                    return localizations.translate(
-                      i18.common.corecommonRequired,
-                    );
-                  }
-                  if (e.regex != null) {
-                    return (RegExp(e.regex!).hasMatch(controller[index].text!))
-                        ? null
-                        : localizations.translate("${e.code}_REGEX");
-                  }
-
-                  return null;
-                },
-                builder: (field) {
-                  return LabeledField(
-                    label: localizations
-                        .translate(
-                      '${selectedServiceDefinition?.code}.${e.code}',
-                    )
-                        .trim(),
-                    description: description != null
-                        ? localizations.translate(
-                      '${selectedServiceDefinition?.code}.$description',
-                    )
-                        : null,
-                    isRequired: e.required ?? false,
-                    capitalizedFirstLetter: false,
-                    charCondition: true,
-                    child: DigitTextFormInput(
-                      onChange: (value) {
-                        field.didChange(value);
-                        controller[index].text = value;
-                        surveyFormKey.currentState?.validate();
-                      },
-                      errorMessage: field.errorText,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(
-                          "[0-9]",
-                        )),
-                      ],
-                      controller: controller[index],
-                    ),
-                  );
-                }),
+                  }),
+            ]),
           ] else if (e.dataType == 'MultiValueList' &&
               !(e.code ?? '').contains('.') &&
               !isSelectionCard(e)) ...[
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.all(spacer2),
-                child: LabeledField(
-                  label: localizations.translate(
-                    '${selectedServiceDefinition?.code}.${e.code}',
-                  ),
-                  description: description != null
-                      ? localizations.translate(
-                    '${selectedServiceDefinition?.code}.$description',
-                  )
-                      : null,
-                  isRequired: e.required ?? false,
-                  capitalizedFirstLetter: false,
-                  charCondition: true,
-                  child: BlocBuilder<ServiceBloc, ServiceState>(
-                    builder: (context, state) {
-                      return Column(
-                        children: e.values!
-                            .map((item) => DigitCheckbox(
-                          label: localizations.translate(
-                              '${selectedServiceDefinition?.code}.${item}'),
-                          value: controller[index]
-                              .text
-                              .split('.')
-                              .contains(e),
-                          onChanged: (value) {
-                            context.read<ServiceBloc>().add(
-                              ServiceSurveyFormEvent(
-                                value: e.toString(),
-                                submitTriggered: submitTriggered,
-                              ),
-                            );
-                            final String ele;
-                            var val = controller[index].text.split('.');
-                            if (val.contains(e)) {
-                              val.remove(e);
-                              ele = val.join(".");
-                            } else {
-                              ele = "${controller[index].text}.$e";
-                            }
-                            controller[index].value =
-                                TextEditingController.fromValue(
-                                  TextEditingValue(
-                                    text: ele,
-                                  ),
-                                ).value;
+            DigitCard(cardType: CardType.primary, children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(spacer2),
+                  child: LabeledField(
+                    label: localizations.translate(
+                      '${selectedServiceDefinition?.code}.${e.code}',
+                    ),
+                    description: description != null
+                        ? localizations.translate(
+                      '${selectedServiceDefinition?.code}.$description',
+                    )
+                        : null,
+                    isRequired: e.required ?? false,
+                    capitalizedFirstLetter: false,
+                    charCondition: true,
+                    child: BlocBuilder<ServiceBloc, ServiceState>(
+                      builder: (context, state) {
+                        return Column(
+                          children: e.values!
+                              .map((item) => DigitCheckbox(
+                            label: localizations.translate(
+                                '${selectedServiceDefinition?.code}.${item}'),
+                            value: controller[index]
+                                .text
+                                .split('.')
+                                .contains(e),
+                            onChanged: (value) {
+                              context.read<ServiceBloc>().add(
+                                ServiceSurveyFormEvent(
+                                  value: e.toString(),
+                                  submitTriggered: submitTriggered,
+                                ),
+                              );
+                              final String ele;
+                              var val = controller[index].text.split('.');
+                              if (val.contains(e)) {
+                                val.remove(e);
+                                ele = val.join(".");
+                              } else {
+                                ele = "${controller[index].text}.$e";
+                              }
+                              controller[index].value =
+                                  TextEditingController.fromValue(
+                                    TextEditingValue(
+                                      text: ele,
+                                    ),
+                                  ).value;
 
-                            // If the field is required and no option is selected, trigger validation
-                            if (e.required == true && val.isEmpty) {
-                              submitTriggered = true;
-                            }
-                          },
-                        ))
-                            .toList(),
-                      );
-                    },
+                              // If the field is required and no option is selected, trigger validation
+                              if (e.required == true && val.isEmpty) {
+                                submitTriggered = true;
+                              }
+                            },
+                          ))
+                              .toList(),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
-            ),
+            ]),
           ] else if (e.dataType == 'SingleValueList') ...[
             if (!(e.code ?? '').contains('.'))
               DigitCard(cardType: CardType.secondary, children: [

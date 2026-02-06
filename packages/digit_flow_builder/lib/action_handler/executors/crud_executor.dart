@@ -19,9 +19,77 @@ class CrudExecutor extends ActionExecutor {
     BuildContext context,
     Map<String, dynamic> contextData,
   ) async {
+    debugPrint('CREATE_EVENT: ========== STARTING ==========');
+    debugPrint('CREATE_EVENT: contextData keys: ${contextData.keys.toList()}');
+
+    // Check applyIf condition before executing
+    final applyIf = action.properties['applyIf'] as String?;
+    debugPrint('CREATE_EVENT: applyIf condition: $applyIf');
+
+    if (applyIf != null) {
+      final navigation =
+          contextData['navigation'] as Map<String, dynamic>? ?? {};
+      debugPrint('CREATE_EVENT: navigation params: $navigation');
+
+      final resolveContext = {'navigation': navigation, ...contextData};
+
+      if (!_evaluateCondition(applyIf, resolveContext)) {
+        debugPrint('CREATE_EVENT: Skipping - condition not met: $applyIf');
+        return contextData;
+      }
+      debugPrint('CREATE_EVENT: Condition met, proceeding with create');
+    }
+
     final entities = contextData['entities'];
+    if (entities == null || (entities is List && entities.isEmpty)) {
+      debugPrint('CREATE_EVENT: No entities to create');
+      return contextData;
+    }
+
+    debugPrint('CREATE_EVENT: Creating ${entities is List ? entities.length : 1} entities');
     context.read<CrudBloc>().add(CrudEventCreate(entities: entities));
     return contextData;
+  }
+
+  /// Evaluate condition like "navigation.isUpdate!=true"
+  bool _evaluateCondition(String condition, Map<String, dynamic> context) {
+    try {
+      final isNotEqual = condition.contains('!=');
+      final isEqual = condition.contains('==');
+
+      if (!isEqual && !isNotEqual) return false;
+
+      final separator = isNotEqual ? '!=' : '==';
+      final parts = condition.split(separator);
+
+      if (parts.length != 2) return false;
+
+      final leftPath = parts[0].trim();
+      final rightValue = parts[1].trim().toLowerCase();
+
+      // Resolve left path
+      final pathParts = leftPath.split('.');
+      dynamic value = context;
+
+      for (final part in pathParts) {
+        if (value is Map && value.containsKey(part)) {
+          value = value[part];
+        } else {
+          value = null;
+          break;
+        }
+      }
+
+      final leftValue = value?.toString().toLowerCase() ?? '';
+
+      debugPrint(
+          'CREATE_EVENT: Condition check - "$leftValue" ${isNotEqual ? '!=' : '=='} "$rightValue"');
+
+      return isNotEqual ? leftValue != rightValue : leftValue == rightValue;
+    } catch (e) {
+      debugPrint('CREATE_EVENT: Error evaluating condition: $e');
+      return false;
+    }
   }
 }
 
@@ -41,6 +109,7 @@ class CrudExecutor extends ActionExecutor {
 ///      }
 ///    }
 ///    ```
+/// 3. Change detection: compares entities with existingModels and only updates changed ones
 class UpdateExecutor extends ActionExecutor {
   @override
   bool canHandle(String actionType) => actionType == 'UPDATE_EVENT';
@@ -56,6 +125,10 @@ class UpdateExecutor extends ActionExecutor {
       debugPrint('UPDATE_EVENT: No entities found in contextData');
       return contextData;
     }
+
+    // Get existing models for change comparison
+    final existingModels = contextData['existingModels'] as List<dynamic>?;
+    final existingModelsList = existingModels?.whereType<EntityModel>().toList() ?? [];
 
     // Cast List<dynamic> to List<EntityModel>
     var entityList = entities.whereType<EntityModel>().toList();
@@ -102,7 +175,9 @@ class UpdateExecutor extends ActionExecutor {
     }
 
     // Update audit fields and apply field updates for each entity
-    final updatedEntities = entityList.map((entity) {
+    final processedEntities = <EntityModel>[];
+
+    for (final entity in entityList) {
       final entityType = getEntityTypeName(entity);
       final clientAudit = entity.clientAuditDetails;
 
@@ -110,6 +185,8 @@ class UpdateExecutor extends ActionExecutor {
         lastModifiedBy: FlowBuilderSingleton().loggedInUserUuid,
         lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
       );
+
+      EntityModel updatedEntity = entity;
 
       // Check if there are field updates for this entity type
       if (modifyMap.isNotEmpty) {
@@ -149,17 +226,102 @@ class UpdateExecutor extends ActionExecutor {
               ?.modelFactoryRegistry[entityType];
 
           if (factory != null) {
-            return factory(entityMap);
+            updatedEntity = factory(entityMap);
           }
+        } else {
+          // No field updates, just update audit
+          updatedEntity = entity.copyWith(clientAuditDetails: updatedClientAudit);
         }
+      } else {
+        // No field updates, just update audit
+        updatedEntity = entity.copyWith(clientAuditDetails: updatedClientAudit);
       }
 
-      // No field updates, just update audit
-      return entity.copyWith(clientAuditDetails: updatedClientAudit);
-    }).toList();
+      // Find the original entity of the same type for comparison
+      final originalEntity = existingModelsList.firstWhere(
+        (e) => getEntityTypeName(e) == entityType,
+        orElse: () => updatedEntity, // If no original found, treat as changed
+      );
 
-    debugPrint('UPDATE_EVENT: Updating ${updatedEntities.length} entities');
-    context.read<CrudBloc>().add(CrudEventUpdate(entities: updatedEntities));
+      // Only add to update list if entity has actually changed
+      if (_hasEntityChanged(originalEntity, updatedEntity)) {
+        processedEntities.add(updatedEntity);
+        debugPrint('UPDATE_EVENT: $entityType has changes - will be updated');
+      } else {
+        debugPrint('UPDATE_EVENT: $entityType has NO changes - skipping update');
+      }
+    }
+
+    if (processedEntities.isEmpty) {
+      debugPrint('UPDATE_EVENT: No entities have changes, skipping update');
+      return contextData;
+    }
+
+    debugPrint('UPDATE_EVENT: Updating ${processedEntities.length} entities (${entityList.length - processedEntities.length} unchanged)');
+    context.read<CrudBloc>().add(CrudEventUpdate(entities: processedEntities));
     return contextData;
+  }
+
+  /// Compares two entities to check if actual data has changed.
+  /// Excludes audit fields and rowVersion from comparison.
+  bool _hasEntityChanged(EntityModel original, EntityModel updated) {
+    final originalMap = original.toMap();
+    final updatedMap = updated.toMap();
+
+    // Fields to exclude from comparison (metadata that changes on every update)
+    const excludeFields = {
+      'clientAuditDetails',
+      'auditDetails',
+      'rowVersion',
+      'lastModifiedBy',
+      'lastModifiedTime',
+      'createdBy',
+      'createdTime',
+    };
+
+    // Compare all fields except excluded ones
+    final allKeys = <String>{
+      ...originalMap.keys,
+      ...updatedMap.keys,
+    }..removeAll(excludeFields);
+
+    for (final key in allKeys) {
+      final originalValue = originalMap[key];
+      final updatedValue = updatedMap[key];
+
+      if (!_deepEquals(originalValue, updatedValue)) {
+        debugPrint(
+            'UPDATE_EVENT: Field "$key" changed: $originalValue -> $updatedValue');
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /// Deep equality check for nested maps and lists
+  bool _deepEquals(dynamic a, dynamic b) {
+    if (a == b) return true;
+    if (a == null || b == null) return false;
+    if (a.runtimeType != b.runtimeType) return false;
+
+    if (a is Map && b is Map) {
+      if (a.length != b.length) return false;
+      for (final key in a.keys) {
+        if (!b.containsKey(key)) return false;
+        if (!_deepEquals(a[key], b[key])) return false;
+      }
+      return true;
+    }
+
+    if (a is List && b is List) {
+      if (a.length != b.length) return false;
+      for (int i = 0; i < a.length; i++) {
+        if (!_deepEquals(a[i], b[i])) return false;
+      }
+      return true;
+    }
+
+    return a == b;
   }
 }

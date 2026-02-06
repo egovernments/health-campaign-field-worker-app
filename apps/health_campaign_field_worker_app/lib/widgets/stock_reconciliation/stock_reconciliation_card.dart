@@ -219,7 +219,7 @@ class _StockReconciliationCardState
                 // Facility Dropdown
                 LabeledField(
                   isRequired: true,
-                  label: localizations.translate('Select Warehouse'),
+                  label: localizations.translate('SELECT_WAREHOUSE'),
                   child: DigitDropdown<FacilityModel>(
                     errorMessage: _facilityError,
                     selectedOption: _selectedFacility != null
@@ -230,7 +230,7 @@ class _StockReconciliationCardState
                           )
                         : null,
                     emptyItemText:
-                        localizations.translate('No facilities found'),
+                        localizations.translate('NO_FACILITIES_FOUND'),
                     items: displayFacilities.map((facility) {
                       return DropdownItem(
                         name: localizations.translate('${facility.id}'),
@@ -260,7 +260,7 @@ class _StockReconciliationCardState
                 // Product Variant Dropdown
                 LabeledField(
                   isRequired: true,
-                  label: localizations.translate('Select Product'),
+                  label: localizations.translate('SELECT_PRODUCT'),
                   child: DigitDropdown<ProductVariantModel>(
                     errorMessage: _productError,
                     sentenceCaseEnabled: true,
@@ -271,7 +271,7 @@ class _StockReconciliationCardState
                             code: _selectedProduct!.id,
                           )
                         : null,
-                    emptyItemText: localizations.translate('No products found'),
+                    emptyItemText: localizations.translate('NO_PRODUCTS_FOUND'),
                     items: displayProductVariants.map((product) {
                       return DropdownItem(
                         name:
@@ -585,9 +585,10 @@ class _StockReconciliationCardState
       return;
     }
 
+    final facilityId = _selectedFacility!.id;
+
     try {
-      // Fetch all stocks for the product and tenant
-      // The calculation method will filter by facility (receiverId OR senderId)
+      // Fetch stocks for the product and tenant where facility is sender OR receiver
       final filters = <SearchFilter>[
         SearchFilter(
           root: 'stock',
@@ -600,6 +601,13 @@ class _StockReconciliationCardState
           field: 'productVariantId',
           operator: 'equals',
           value: _selectedProduct!.id,
+        ),
+        // Check if facility is sender OR receiver using equalsAny operator
+        SearchFilter(
+          root: 'stock',
+          field: 'senderId,receiverId',
+          operator: 'equalsAny',
+          value: facilityId,
         ),
       ];
 

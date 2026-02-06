@@ -48,7 +48,12 @@ class TextInputWidget implements FlowWidget {
 
     // Determine keyboard type based on inputType
     TextInputType keyboardType;
-    List<TextInputFormatter>? inputFormatters;
+    List<TextInputFormatter> inputFormatters = [];
+
+    // Allow only ASCII characters (letters, numbers, punctuation, spaces) - blocks all emojis
+    final noEmojiFilter = FilteringTextInputFormatter.allow(
+      RegExp(r'[\x00-\x7F]'),  // ASCII only (0-127)
+    );
 
     switch (inputType.toLowerCase()) {
       case 'number':
@@ -58,11 +63,12 @@ class TextInputWidget implements FlowWidget {
       case 'decimal':
         keyboardType = const TextInputType.numberWithOptions(decimal: true);
         inputFormatters = [
-          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*'))
+          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
         ];
         break;
       case 'email':
         keyboardType = TextInputType.emailAddress;
+        inputFormatters = [noEmojiFilter];
         break;
       case 'phone':
         keyboardType = TextInputType.phone;
@@ -70,14 +76,19 @@ class TextInputWidget implements FlowWidget {
         break;
       case 'multiline':
         keyboardType = TextInputType.multiline;
+        inputFormatters = [noEmojiFilter];
         break;
       default:
         keyboardType = TextInputType.text;
+        inputFormatters = [noEmojiFilter];
     }
+
+    // Use compositeKey for registry operations (includes instanceId for proper isolation)
+    final compositeKey = state.compositeKey ?? state.screenKey;
 
     // Get initial value from state for the stateful wrapper
     dynamic initialValue;
-    if (key != null && state.screenKey != null) {
+    if (key != null && compositeKey != null) {
       if (state.widgetData.containsKey(key)) {
         initialValue = state.widgetData[key];
       } else {
@@ -90,8 +101,8 @@ class TextInputWidget implements FlowWidget {
 
     // Use stateful wrapper to maintain controller and handle external updates
     return _ReactiveTextInput(
-      key: ValueKey('${state.screenKey}_$key'),
-      screenKey: state.screenKey,
+      key: ValueKey('${compositeKey}_$key'),
+      compositeKey: compositeKey,
       fieldKey: key,
       initialValue: initialValue?.toString() ?? '',
       localizedLabel: localizedLabel,
@@ -110,7 +121,7 @@ class TextInputWidget implements FlowWidget {
 /// Stateful wrapper for text input that maintains controller state
 /// and only updates from external changes (not from user's own input)
 class _ReactiveTextInput extends StatefulWidget {
-  final String? screenKey;
+  final String? compositeKey;
   final String? fieldKey;
   final String initialValue;
   final String localizedLabel;
@@ -125,7 +136,7 @@ class _ReactiveTextInput extends StatefulWidget {
 
   const _ReactiveTextInput({
     super.key,
-    required this.screenKey,
+    required this.compositeKey,
     required this.fieldKey,
     required this.initialValue,
     required this.localizedLabel,
@@ -162,17 +173,17 @@ class _ReactiveTextInputState extends State<_ReactiveTextInput> {
 
   @override
   Widget build(BuildContext context) {
-    final screenKey = widget.screenKey;
+    final compositeKey = widget.compositeKey;
     final key = widget.fieldKey;
 
-    // If no screenKey, just build without listening
-    if (screenKey == null) {
+    // If no compositeKey, just build without listening
+    if (compositeKey == null) {
       return _buildInput(context);
     }
 
     // Listen for external state changes
     return ValueListenableBuilder<FlowCrudState?>(
-      valueListenable: FlowCrudStateRegistry().listen(screenKey),
+      valueListenable: FlowCrudStateRegistry().listen(compositeKey),
       builder: (context, flowState, child) {
         final widgetData = flowState?.widgetData ?? {};
         final formData = flowState?.formData ?? {};
@@ -213,7 +224,8 @@ class _ReactiveTextInputState extends State<_ReactiveTextInput> {
   Widget _buildInput(BuildContext context) {
     return Builder(
       builder: (builderContext) {
-        final screenKeyForCallback = FlowWidgetStateAccessor.getScreenKey(builderContext);
+        // Use compositeKey from widget for registry operations
+        final compositeKeyForCallback = widget.compositeKey;
 
         return LabeledField(
           label: widget.localizedLabel,
@@ -228,9 +240,9 @@ class _ReactiveTextInputState extends State<_ReactiveTextInput> {
               // Track the value we're setting
               _lastKnownValue = value;
 
-              if (widget.fieldKey != null && screenKeyForCallback != null) {
+              if (widget.fieldKey != null && compositeKeyForCallback != null) {
                 final currentState =
-                    FlowCrudStateRegistry().get(screenKeyForCallback);
+                    FlowCrudStateRegistry().get(compositeKeyForCallback);
                 final currentWidgetData =
                     Map<String, dynamic>.from(currentState?.widgetData ?? {});
 
@@ -240,12 +252,12 @@ class _ReactiveTextInputState extends State<_ReactiveTextInput> {
                   final updatedState = currentState.copyWith(
                     widgetData: currentWidgetData,
                   );
-                  FlowCrudStateRegistry().update(screenKeyForCallback, updatedState);
+                  FlowCrudStateRegistry().update(compositeKeyForCallback, updatedState);
                 } else {
                   final newState = FlowCrudState(
                     widgetData: currentWidgetData,
                   );
-                  FlowCrudStateRegistry().update(screenKeyForCallback, newState);
+                  FlowCrudStateRegistry().update(compositeKeyForCallback, newState);
                 }
               }
 

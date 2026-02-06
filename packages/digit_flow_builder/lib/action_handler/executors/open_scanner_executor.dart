@@ -45,7 +45,10 @@ class OpenScannerExecutor extends ActionExecutor {
     final scanType = properties['scanType'] as String? ?? 'qr';
     final fieldName = properties['fieldName'] as String? ?? 'scannedData';
     final singleValue = properties['singleValue'] as bool? ?? true;
-    final quantity = properties['scanLimit'] as int? ?? 1;
+    final scanLimit = properties['scanLimit'];
+    final quantity = scanLimit is String
+        ? (int.tryParse(scanLimit) ?? 1)
+        : (scanLimit as int? ?? 1);
     final isGS1code = properties['isGS1'] as bool? ?? false;
 
     // Get onSuccess and onError actions
@@ -56,6 +59,9 @@ class OpenScannerExecutor extends ActionExecutor {
     // then fall back to route args
     final crudCtx = CrudItemContext.of(context);
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
+
+    // Get composite key for FlowCrudStateRegistry operations
+    final compositeKey = getCompositeKey(context, screenKey: screenKey);
 
     try {
       final scannerBloc = context.read<DigitScannerBloc>();
@@ -102,8 +108,8 @@ class OpenScannerExecutor extends ActionExecutor {
         debugPrint('OPEN_SCANNER: Scanned value: $scannedValue');
 
         // Update form data in FlowCrudStateRegistry
-        if (screenKey != null) {
-          final currentState = FlowCrudStateRegistry().get(screenKey);
+        if (compositeKey != null) {
+          final currentState = FlowCrudStateRegistry().get(compositeKey);
           final formData = currentState?.formData ?? {};
           final existingStateWrapper = currentState?.stateWrapper;
 
@@ -113,7 +119,7 @@ class OpenScannerExecutor extends ActionExecutor {
             stateWrapper: existingStateWrapper, // Preserve stateWrapper
           );
 
-          FlowCrudStateRegistry().update(screenKey, updatedState);
+          FlowCrudStateRegistry().update(compositeKey, updatedState);
 
           // Return updated context with scanned value and preserve stateWrapper
           Map<String, dynamic> updatedContext = {

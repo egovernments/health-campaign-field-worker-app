@@ -50,6 +50,8 @@ final dynamic sampleInventoryFlows = {
           "properties": {
             "type": "SEARCH_EVENT",
             "name": "projectFacility",
+            "awaitResults": true,
+            "skipAccumulatedFilters": true,
             "data": [
               {
                 "key": "projectId",
@@ -195,7 +197,7 @@ final dynamic sampleInventoryFlows = {
                 "name": "RECORDSTOCK",
                 "data": [
                   {"key": "stockEntryType", "value": "DAMAGED"},
-                  {"key": "transactionType", "value": "DAMAGED"},
+                  {"key": "transactionType", "value": "DISPATCHED"},
                   {"key": "primaryRole", "value": "SENDER"},
                   {"key": "secondaryRole", "value": "RECEIVER"},
                   {
@@ -220,7 +222,7 @@ final dynamic sampleInventoryFlows = {
                 "name": "RECORDSTOCK",
                 "data": [
                   {"key": "stockEntryType", "value": "LOSS"},
-                  {"key": "transactionType", "value": "LOSS"},
+                  {"key": "transactionType", "value": "DISPATCHED"},
                   {"key": "primaryRole", "value": "SENDER"},
                   {"key": "secondaryRole", "value": "RECEIVER"},
                   {
@@ -228,6 +230,22 @@ final dynamic sampleInventoryFlows = {
                     "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
                   }
                 ]
+              }
+            }
+          ]
+        },
+        {
+          "format": "menu_card",
+          "heading": "INVENTORY_INCOMING_TRANSACTIONS_HEADING",
+          "description": "INVENTORY_INCOMING_TRANSACTIONS_DESCRIPTION",
+          "icon": 'Inbox',
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "TEMPLATE",
+                "name": "incomingTransactions",
+                "data": []
               }
             }
           ]
@@ -375,6 +393,8 @@ final dynamic sampleInventoryFlows = {
           "properties": {
             "type": "SEARCH_EVENT",
             "name": "projectFacility",
+            "awaitResults": true,
+            "skipAccumulatedFilters": true,
             "data": [
               {
                 "key": "projectId",
@@ -492,6 +512,27 @@ final dynamic sampleInventoryFlows = {
                   "value": true,
                   "message":
                       "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
+                },
+                {
+                  "type": "facilityHierarchy",
+                  "value": {
+                    "hierarchyMapping": {
+                      "State": {
+                        "forReceipt": ["LGA Facility"],
+                        "forIssue": ["LGA Facility"]
+                      },
+                      "LGA": {
+                        "forReceipt": ["State Facility"],
+                        "forIssue": ["Health Facility"]
+                      },
+                      "Health Facility": {
+                        "forReceipt": ["LGA Facility"],
+                        "forIssue": ["DELIVERY_TEAM"]
+                      }
+                    },
+                    "useTransactionType": true
+                  },
+                  "message": ""
                 }
               ],
               "errorMessage": "",
@@ -596,6 +637,27 @@ final dynamic sampleInventoryFlows = {
                   "type": "notEqualTo",
                   "value": "warehouseDetails.facilityToWhich",
                   "message": "Facility from and to must be different"
+                },
+                {
+                  "type": "facilityHierarchy",
+                  "value": {
+                    "hierarchyMapping": {
+                      "State": {
+                        "forReceipt": ["Central Facility"],
+                        "forIssue": ["LGA Facility"]
+                      },
+                      "LGA": {
+                        "forReceipt": ["State Facility"],
+                        "forIssue": ["Health Facility"]
+                      },
+                      "Health Facility": {
+                        "forReceipt": ["LGA Facility"],
+                        "forIssue": ["DELIVERY_TEAM"]
+                      }
+                    },
+                    "useTransactionType": true
+                  },
+                  "message": ""
                 }
               ],
               "errorMessage": "",
@@ -1251,7 +1313,7 @@ final dynamic sampleInventoryFlows = {
       "body": [
         {
           "format": "infoCard",
-          "hidden": "{{ context.stock.isNotEmpty }}",
+          "hidden": "{{fn:length(stock)}} < 0}}",
           "label": "INVENTORY_NO_TRANSACTIONS_LABEL",
           "description": "INVENTORY_NO_TRANSACTIONS_DESCRIPTION"
         },
@@ -1480,6 +1542,255 @@ final dynamic sampleInventoryFlows = {
                   {
                     "key": "INVENTORY_COMMENTS_LABEL",
                     "value": "{{item.additionalFields.fields.comments}}"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "screenType": "TEMPLATE",
+      "name": "incomingTransactions",
+      "heading": "INVENTORY_INCOMING_TRANSACTIONS_HEADING",
+      "description": "INVENTORY_INCOMING_TRANSACTIONS_DESCRIPTION",
+      "header": [
+        {
+          "format": "backLink",
+          "label": "CORE_COMMON_BACK",
+          "onAction": [
+            {"actionType": "BACK_NAVIGATION", "properties": {}}
+          ]
+        }
+      ],
+      "footer": [],
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "type": "SEARCH_EVENT",
+            "name": "projectFacility",
+            "data": [
+              {
+                "key": "projectId",
+                "value": "{{singleton.selectedProject.id}}",
+                "operation": "equals"
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "type": "SEARCH_EVENT",
+            "name": "stock",
+            "data": [
+              {
+                "key": "receiverId",
+                "value": "{{fn:getUserFacilityId()}}",
+                "operation": "equals"
+              },
+              {
+                "key": "transactionType",
+                "value": "DISPATCHED",
+                "operation": "equals"
+              }
+            ]
+          }
+        }
+      ],
+      "wrapperConfig": {
+        "wrapperName": "IncomingStockWrapper",
+        "groupByType": true,
+        "rootEntity": "StockModel",
+        "groupBy": "additionalFields.fields.mrnNumber",
+        "filters": [],
+        "relations": [
+          {"name": "stock", "entity": "StockModel"},
+          {
+            "name": "projectFacility",
+            "entity": "ProjectFacilityModel",
+            "match": {"field": "projectId", "equalsFrom": "projectId"}
+          }
+        ],
+        "searchConfig": {
+          "primary": "stock",
+          "select": ["stock", "projectFacility"],
+          "orderBy": {"field": "clientCreatedTime", "order": "DESC"}
+        }
+      },
+      "body": [
+        {
+          "format": "dropdown",
+          "fieldName": "transactionTypeFilter",
+          "label": "INVENTORY_TRANSACTION_TYPE_FILTER_LABEL",
+          "value": "PENDING_RECEIPT",
+          "enums": [
+            {
+              "code": "PENDING_RECEIPT",
+              "name": "INVENTORY_PENDING_RECEIPT_LABEL"
+            },
+            {"code": "RECEIVED", "name": "INVENTORY_RECEIVED_LABEL"},
+            {"code": "DISPATCHED", "name": "INVENTORY_DISPATCHED_LABEL"}
+          ],
+          "onChange": [
+            {
+              "actionType": "SEARCH_EVENT",
+              "properties": {
+                "type": "SEARCH_EVENT",
+                "name": "stock",
+                "awaitResults": true,
+                "data": [
+                  {
+                    "key": "receiverId",
+                    "value": "{{fn:getUserFacilityId()}}",
+                    "operation": "equals"
+                  },
+                  {
+                    "key": "transactionType",
+                    "value": "{{incomingTransactions.transactionTypeFilter}}",
+                    "operation": "equals"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "format": "infoCard",
+          "hidden": "{{ context.stock.isNotEmpty }}",
+          "label": "INVENTORY_NO_INCOMING_TRANSACTIONS_LABEL",
+          "description": "INVENTORY_NO_INCOMING_TRANSACTIONS_DESCRIPTION"
+        },
+        {
+          "format": "listView",
+          "hidden": "{{ context.stock.isEmpty }}",
+          "fieldName": "incomingList",
+          "dataSource": "StockModel",
+          "child": {
+            "format": "card",
+            "children": [
+              {
+                "format": "row",
+                "properties": {
+                  "mainAxisAlignment": "spaceBetween",
+                  "mainAxisSize": "max"
+                },
+                "children": [
+                  {
+                    "format": "tag",
+                    "type": "",
+                    "label": "INVENTORY_MRN_TAG_LABEL {{item.groupKey}}"
+                  },
+                  {
+                    "format": "textTemplate",
+                    "value":
+                        "{{fn:formatDate(item.items[0].dateOfEntry, 'date', dd MMM yyyy)}}"
+                  }
+                ]
+              },
+              {
+                "format": "row",
+                "properties": {
+                  "mainAxisAlignment": "spaceBetween",
+                  "mainAxisSize": "max"
+                },
+                "children": [
+                  {
+                    "format": "column",
+                    "properties": {
+                      "mainAxisAlignment": "spaceBetween",
+                      "mainAxisSize": "min"
+                    },
+                    "children": [
+                      {
+                        "format": "textTemplate",
+                        "value": "INVENTORY_SENDER_LABEL"
+                      },
+                      {
+                        "format": "textTemplate",
+                        "value":
+                            "{{fn:getFacilityName(item.items[0].senderId)}}"
+                      }
+                    ]
+                  },
+                  {
+                    "format": "tag",
+                    "type":
+                        "{{fn:getTransactionStatusType(item.items[0].transactionType)}}",
+                    "label": "{{item.items[0].transactionType}}"
+                  }
+                ]
+              },
+              {
+                "format": "listView",
+                "fieldName": "groupedItems",
+                "dataSource": "item.items",
+                "child": {
+                  "format": "textTemplate",
+                  "value":
+                      "{{item.additionalFields.fields.sku}}: {{item.quantity}}"
+                }
+              },
+              {
+                "format": "button",
+                "label": "INVENTORY_ACKNOWLEDGE_RECEIPT_LABEL",
+                "visible": "{{item.items[0].transactionType == 'DISPATCHED'}}",
+                "properties": {
+                  "type": "primary",
+                  "size": "large",
+                  "mainAxisSize": "max",
+                  "mainAxisAlignment": "center"
+                },
+                "onAction": [
+                  {
+                    "actionType": "REVERSE_TRANSFORM",
+                    "properties": {
+                      "configName": "stock",
+                      "entityTypes": ["StockModel"],
+                      "sourceData": "item.items"
+                    }
+                  },
+                  {
+                    "actionType": "NAVIGATION",
+                    "properties": {
+                      "type": "FORM",
+                      "name": "RECORDSTOCK",
+                      "data": [
+                        {"key": "stockEntryType", "value": "RECEIPT"},
+                        {"key": "transactionType", "value": "RECEIVED"},
+                        {"key": "primaryRole", "value": "RECEIVER"},
+                        {"key": "secondaryRole", "value": "SENDER"},
+                        {"key": "scannedMrn", "value": "{{item.groupKey}}"},
+                        {"key": "isEdit", "value": "true"},
+                        {"key": "prefillFromScan", "value": "true"},
+                        {"key": "mrnNumber", "value": "{{item.groupKey}}"}
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "format": "button",
+                "label": "INVENTORY_VIEW_DETAILS_LABEL",
+                "visible": "{{item.items[0].transactionType != 'DISPATCHED'}}",
+                "properties": {
+                  "type": "secondary",
+                  "size": "large",
+                  "mainAxisSize": "max",
+                  "mainAxisAlignment": "center"
+                },
+                "onAction": [
+                  {
+                    "actionType": "NAVIGATION",
+                    "properties": {
+                      "type": "TEMPLATE",
+                      "name": "viewTransactionDetails",
+                      "data": [
+                        {"key": "selectedStock", "value": "{{item.groupKey}}"}
+                      ]
+                    }
                   }
                 ]
               }

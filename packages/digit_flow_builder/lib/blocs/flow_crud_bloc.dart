@@ -7,13 +7,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class FlowCrudBloc extends CrudBloc {
   final Map<String, dynamic> flowConfig;
   final String screenKey;
+  final String instanceId;
+  final String compositeKey;
   final void Function(String screenKey, FlowCrudState state)? onUpdate;
 
   FlowCrudBloc({
     required this.flowConfig,
     required super.service,
+    required this.instanceId,
     this.onUpdate,
-  }) : screenKey = '${flowConfig["name"]}' {
+  })  : screenKey = '${flowConfig["name"]}',
+        compositeKey = '${flowConfig["name"]}::$instanceId' {
     // We don't listen directly anymore — handled in onTransition
   }
 
@@ -23,7 +27,7 @@ class FlowCrudBloc extends CrudBloc {
 
     final CrudState crudState = transition.nextState;
     List<dynamic>? wrapper;
-    final existingState = FlowCrudStateRegistry().get(screenKey);
+    final existingState = FlowCrudStateRegistry().getByCompositeKey(compositeKey);
 
     // Handle loading state
     if (crudState is CrudStateLoading) {
@@ -34,7 +38,7 @@ class FlowCrudBloc extends CrudBloc {
         widgetData: existingState?.widgetData,
         isLoading: true,
       );
-      FlowCrudStateRegistry().update(screenKey, flowState);
+      FlowCrudStateRegistry().updateByCompositeKey(compositeKey, flowState);
       return;
     }
 
@@ -42,21 +46,24 @@ class FlowCrudBloc extends CrudBloc {
       // Consume scroll direction and pagination info when we have loaded data
       // This prevents intermediate states (Loading) from consuming the flags
       final scrollDirection =
-          FlowCrudStateRegistry().consumeScrollDirection(screenKey);
+          FlowCrudStateRegistry().consumeScrollDirectionByCompositeKey(compositeKey);
       final paginationInfo =
-          FlowCrudStateRegistry().consumePaginationInfo(screenKey);
+          FlowCrudStateRegistry().consumePaginationInfoByCompositeKey(compositeKey);
 
       // Fallback to legacy append mode for backwards compatibility
       final legacyAppendMode =
-          FlowCrudStateRegistry().consumeAppendMode(screenKey);
+          FlowCrudStateRegistry().consumeAppendModeByCompositeKey(compositeKey);
 
       final newEntities =
           crudState.results.values.expand((list) => list).toList();
-      final newWrapper = WrapperBuilder(
-        newEntities,
-        flowConfig['wrapperConfig'],
-        screenKey: screenKey,
-      ).build();
+      final wrapperConfig = flowConfig['wrapperConfig'] as Map<String, dynamic>?;
+      final newWrapper = wrapperConfig != null
+          ? WrapperBuilder(
+              newEntities,
+              wrapperConfig,
+              screenKey: screenKey,
+            ).build()
+          : newEntities;
       if (scrollDirection != null && existingState?.stateWrapper != null) {
         // Bidirectional pagination mode
         wrapper = _handleBidirectionalPagination(
@@ -101,15 +108,18 @@ class FlowCrudBloc extends CrudBloc {
         isLoading: false,
       );
 
-      onUpdate?.call(screenKey, flowState);
-      FlowCrudStateRegistry().update(screenKey, flowState);
+      onUpdate?.call(compositeKey, flowState);
+      FlowCrudStateRegistry().updateByCompositeKey(compositeKey, flowState);
     } else if (crudState is CrudStatePersisted) {
       final entities = crudState.entities;
-      wrapper = WrapperBuilder(
-        entities,
-        flowConfig['wrapperConfig'],
-        screenKey: screenKey,
-      ).build();
+      final persistedWrapperConfig = flowConfig['wrapperConfig'] as Map<String, dynamic>?;
+      wrapper = persistedWrapperConfig != null
+          ? WrapperBuilder(
+              entities,
+              persistedWrapperConfig,
+              screenKey: screenKey,
+            ).build()
+          : entities;
       // Preserve existing formData and widgetData when creating new state
       final flowState = FlowCrudState(
         base: crudState,
@@ -119,8 +129,8 @@ class FlowCrudBloc extends CrudBloc {
         isLoading: false,
       );
 
-      onUpdate?.call(screenKey, flowState);
-      FlowCrudStateRegistry().update(screenKey, flowState);
+      onUpdate?.call(compositeKey, flowState);
+      FlowCrudStateRegistry().updateByCompositeKey(compositeKey, flowState);
     }
   }
 
@@ -192,9 +202,9 @@ class FlowCrudBloc extends CrudBloc {
     int totalInWindow,
     Map<String, int>? paginationInfo,
   ) {
-    // Use screenKey without prefix - matches how SearchExecutor initializes the window
-    SearchStateManager().onDataLoaded(
-      screenKey, // Use screenKey without prefix to match initialization
+    // Use compositeKey for this page instance's state
+    SearchStateManager().onDataLoadedByCompositeKey(
+      compositeKey,
       '_pagination',
       direction: direction,
       loadedCount: loadedCount,
@@ -205,15 +215,14 @@ class FlowCrudBloc extends CrudBloc {
   /// Update pagination window for initial load
   void _updatePaginationWindowInitial(
       int loadedCount, Map<String, int>? paginationInfo) {
-    // Use screenKey without prefix - matches how SearchExecutor initializes the window
     final limit = paginationInfo?['limit'];
 
     debugPrint('FlowCrudBloc: _updatePaginationWindowInitial called - '
-        'screenKey=$screenKey, loadedCount=$loadedCount, limit=$limit');
+        'compositeKey=$compositeKey, loadedCount=$loadedCount, limit=$limit');
 
     if (limit != null) {
-      SearchStateManager().onDataLoaded(
-        screenKey, // Use screenKey without prefix to match initialization
+      SearchStateManager().onDataLoadedByCompositeKey(
+        compositeKey,
         '_pagination',
         direction: 'initial',
         loadedCount: loadedCount,
@@ -231,30 +240,24 @@ class FlowCrudBloc extends CrudBloc {
   void _updateNoMoreData(String? direction) {
     if (direction == null) return;
 
-    // Use screenKey without prefix - matches how SearchExecutor initializes the window
-    SearchStateManager().onDataLoaded(
-      screenKey, // Use screenKey without prefix to match initialization
+    // Use compositeKey for this page instance's state
+    SearchStateManager().onDataLoadedByCompositeKey(
+      compositeKey,
       '_pagination',
       direction: direction,
       loadedCount: 0,
       totalInWindow:
-          FlowCrudStateRegistry().get(screenKey)?.stateWrapper?.length ?? 0,
+          FlowCrudStateRegistry().getByCompositeKey(compositeKey)?.stateWrapper?.length ?? 0,
     );
   }
 
   @override
   Future<void> close() {
-    // Build full screenKey with screenType for SearchStateManager
-    final screenType = flowConfig['screenType'] ?? 'TEMPLATE';
-    final fullScreenKey = '$screenType::$screenKey';
+    // Dispose using composite key - each page instance has its own state
+    FlowCrudStateRegistry().disposeByCompositeKey(compositeKey);
+    SearchStateManager().disposeByCompositeKey(compositeKey);
 
-    // Dispose FlowCrudStateRegistry
-    FlowCrudStateRegistry().dispose(screenKey);
-
-    // Dispose SearchStateManager (clears accumulated filters, callbacks, etc.)
-    SearchStateManager().dispose(fullScreenKey);
-
-    debugPrint('FlowCrudBloc: Disposed state for $fullScreenKey');
+    debugPrint('FlowCrudBloc: Disposed state for $compositeKey');
     return super.close();
   }
 }
@@ -265,6 +268,7 @@ class FlowCrudStateRegistry {
   final Map<String, bool> _appendMode = {};
   final Map<String, String> _scrollDirection = {}; // 'up' or 'down'
   final Map<String, Map<String, int>> _paginationInfo = {}; // limit, windowSize
+  final Map<String, String> _instanceIds = {}; // screenKey -> current instanceId
 
   static final FlowCrudStateRegistry _instance =
       FlowCrudStateRegistry._internal();
@@ -273,67 +277,199 @@ class FlowCrudStateRegistry {
 
   factory FlowCrudStateRegistry() => _instance;
 
+  /// Get composite key using screenKey and instanceId
+  String _compositeKey(String screenKey, String instanceId) =>
+      '${screenKey}::$instanceId';
+
+  /// Get composite key for current instance of a screenKey
+  String? _currentCompositeKey(String screenKey) {
+    final instanceId = _instanceIds[screenKey];
+    if (instanceId == null) return null;
+    return _compositeKey(screenKey, instanceId);
+  }
+
+  /// Register instanceId for a screen key
+  void registerInstance(String key, String instanceId) {
+    _instanceIds[key] = instanceId;
+    debugPrint('FlowCrudStateRegistry: Registered instanceId $instanceId for $key');
+  }
+
+  /// Get the current instanceId for a screen key
+  String? getInstanceId(String key) => _instanceIds[key];
+
+  /// Check if the given instanceId matches the current one for this key
+  bool isCurrentInstance(String key, String instanceId) {
+    return _instanceIds[key] == instanceId;
+  }
+
+  /// Dispose state only if the given instanceId is the current owner
+  /// Returns true if disposed, false if skipped
+  bool disposeIfOwner(String key, String instanceId) {
+    if (_instanceIds[key] != instanceId) {
+      debugPrint('FlowCrudStateRegistry: Skipped dispose for $key - instanceId $instanceId is not current owner (current: ${_instanceIds[key]})');
+      return false;
+    }
+    // Use composite key for actual disposal
+    final compositeKey = _compositeKey(key, instanceId);
+    _disposeCompositeKey(compositeKey);
+    _instanceIds.remove(key);
+    return true;
+  }
+
+  /// Internal dispose using composite key
+  void _disposeCompositeKey(String compositeKey) {
+    if (_map.containsKey(compositeKey)) {
+      _map[compositeKey]!.dispose();
+      _map.remove(compositeKey);
+    }
+    _navParams.remove(compositeKey);
+    _scrollDirection.remove(compositeKey);
+    _paginationInfo.remove(compositeKey);
+    debugPrint('FlowCrudStateRegistry: Disposed compositeKey $compositeKey');
+  }
+
+  /// Dispose state directly using a composite key (pageName::instanceId)
+  /// Use this when you have the full composite key
+  void disposeByCompositeKey(String compositeKey) {
+    _disposeCompositeKey(compositeKey);
+  }
+
+  // ============ Composite Key Methods (Direct Access) ============
+
+  /// Update state using composite key directly
+  void updateByCompositeKey(String compositeKey, FlowCrudState state) {
+    _map.putIfAbsent(compositeKey, () => ValueNotifier<FlowCrudState?>(null)).value = state;
+  }
+
+  /// Get state using composite key directly
+  FlowCrudState? getByCompositeKey(String compositeKey) => _map[compositeKey]?.value;
+
+  /// Listen to state using composite key directly
+  ValueNotifier<FlowCrudState?> listenByCompositeKey(String compositeKey) {
+    return _map.putIfAbsent(compositeKey, () => ValueNotifier<FlowCrudState?>(null));
+  }
+
+  /// Consume append mode using composite key directly
+  bool consumeAppendModeByCompositeKey(String compositeKey) {
+    final append = _appendMode[compositeKey] ?? false;
+    _appendMode.remove(compositeKey);
+    return append;
+  }
+
+  /// Consume scroll direction using composite key directly
+  String? consumeScrollDirectionByCompositeKey(String compositeKey) {
+    final direction = _scrollDirection[compositeKey];
+    _scrollDirection.remove(compositeKey);
+    return direction;
+  }
+
+  /// Consume pagination info using composite key directly
+  Map<String, int>? consumePaginationInfoByCompositeKey(String compositeKey) {
+    final info = _paginationInfo[compositeKey];
+    _paginationInfo.remove(compositeKey);
+    return info;
+  }
+
+  /// Set scroll direction using composite key directly
+  void setScrollDirectionByCompositeKey(String compositeKey, String direction) {
+    _scrollDirection[compositeKey] = direction;
+    debugPrint('FlowCrudStateRegistry: Set scrollDirection=$direction for $compositeKey');
+  }
+
+  /// Set pagination info using composite key directly
+  void setPaginationInfoByCompositeKey(String compositeKey, {required int limit, required int maxItems}) {
+    _paginationInfo[compositeKey] = {'limit': limit, 'maxItems': maxItems};
+    debugPrint('FlowCrudStateRegistry: Set paginationInfo limit=$limit, maxItems=$maxItems for $compositeKey');
+  }
+
+  /// Update navigation params using composite key directly
+  void updateNavigationParamsByCompositeKey(String compositeKey, Map<String, dynamic>? params) {
+    _navParams[compositeKey] = params;
+  }
+
+  /// Get navigation params using composite key directly
+  Map<String, dynamic>? getNavigationParamsByCompositeKey(String compositeKey) {
+    return _navParams[compositeKey];
+  }
+
+  // ============ End Composite Key Methods ============
+
   /// Set append mode for next state update (used by REFRESH_SEARCH) - DEPRECATED
   void setAppendMode(String key, bool append) {
-    _appendMode[key] = append;
-    debugPrint('FlowCrudStateRegistry: Set appendMode=$append for $key');
+    final compositeKey = _currentCompositeKey(key) ?? key;
+    _appendMode[compositeKey] = append;
+    debugPrint('FlowCrudStateRegistry: Set appendMode=$append for $compositeKey');
   }
 
   /// Get and consume append mode (called during state update) - DEPRECATED
   bool consumeAppendMode(String key) {
-    final append = _appendMode[key] ?? false;
-    _appendMode.remove(key);
+    final compositeKey = _currentCompositeKey(key) ?? key;
+    final append = _appendMode[compositeKey] ?? false;
+    _appendMode.remove(compositeKey);
     return append;
   }
 
   /// Set scroll direction for next state update (used by REFRESH_SEARCH)
   void setScrollDirection(String key, String direction) {
-    _scrollDirection[key] = direction;
+    final compositeKey = _currentCompositeKey(key) ?? key;
+    _scrollDirection[compositeKey] = direction;
     debugPrint(
-        'FlowCrudStateRegistry: Set scrollDirection=$direction for $key');
+        'FlowCrudStateRegistry: Set scrollDirection=$direction for $compositeKey');
   }
 
   /// Get and consume scroll direction (called during state update)
   /// Returns 'down', 'up', or null if not set
   String? consumeScrollDirection(String key) {
-    final direction = _scrollDirection[key];
-    _scrollDirection.remove(key);
+    final compositeKey = _currentCompositeKey(key) ?? key;
+    final direction = _scrollDirection[compositeKey];
+    _scrollDirection.remove(compositeKey);
     return direction;
   }
 
   /// Set pagination info for window management
   void setPaginationInfo(String key,
       {required int limit, required int maxItems}) {
-    _paginationInfo[key] = {'limit': limit, 'maxItems': maxItems};
+    final compositeKey = _currentCompositeKey(key) ?? key;
+    _paginationInfo[compositeKey] = {'limit': limit, 'maxItems': maxItems};
     debugPrint(
-        'FlowCrudStateRegistry: Set paginationInfo limit=$limit, maxItems=$maxItems for $key');
+        'FlowCrudStateRegistry: Set paginationInfo limit=$limit, maxItems=$maxItems for $compositeKey');
   }
 
   /// Get and consume pagination info
   Map<String, int>? consumePaginationInfo(String key) {
-    final info = _paginationInfo[key];
-    _paginationInfo.remove(key);
+    final compositeKey = _currentCompositeKey(key) ?? key;
+    final info = _paginationInfo[compositeKey];
+    _paginationInfo.remove(compositeKey);
     return info;
   }
 
   void update(String key, FlowCrudState state) {
-    _map.putIfAbsent(key, () => ValueNotifier<FlowCrudState?>(null)).value =
+    // Use composite key if instanceId is registered for this screenKey
+    final compositeKey = _currentCompositeKey(key) ?? key;
+    _map.putIfAbsent(compositeKey, () => ValueNotifier<FlowCrudState?>(null)).value =
         state;
   }
 
   ValueNotifier<FlowCrudState?> listen(String key) {
-    return _map.putIfAbsent(key, () => ValueNotifier<FlowCrudState?>(null));
+    // Use composite key if instanceId is registered for this screenKey
+    final compositeKey = _currentCompositeKey(key) ?? key;
+    return _map.putIfAbsent(compositeKey, () => ValueNotifier<FlowCrudState?>(null));
   }
 
-  FlowCrudState? get(String key) => _map[key]?.value;
+  FlowCrudState? get(String key) {
+    // Use composite key if instanceId is registered for this screenKey
+    final compositeKey = _currentCompositeKey(key) ?? key;
+    return _map[compositeKey]?.value;
+  }
 
   void clear(String key) {
-    if (_map.containsKey(key)) {
-      _map[key]!.value = null;
+    final compositeKey = _currentCompositeKey(key) ?? key;
+    if (_map.containsKey(compositeKey)) {
+      _map[compositeKey]!.value = null;
     }
-    _navParams.remove(key);
-    _scrollDirection.remove(key);
-    _paginationInfo.remove(key);
+    _navParams.remove(compositeKey);
+    _scrollDirection.remove(compositeKey);
+    _paginationInfo.remove(compositeKey);
   }
 
   void clearAll() {
@@ -343,16 +479,19 @@ class FlowCrudStateRegistry {
     _navParams.clear();
     _scrollDirection.clear();
     _paginationInfo.clear();
+    _instanceIds.clear();
   }
 
   void dispose(String key) {
-    if (_map.containsKey(key)) {
-      _map[key]!.dispose();
-      _map.remove(key);
+    final compositeKey = _currentCompositeKey(key) ?? key;
+    if (_map.containsKey(compositeKey)) {
+      _map[compositeKey]!.dispose();
+      _map.remove(compositeKey);
     }
-    _navParams.remove(key);
-    _scrollDirection.remove(key);
-    _paginationInfo.remove(key);
+    _navParams.remove(compositeKey);
+    _scrollDirection.remove(compositeKey);
+    _paginationInfo.remove(compositeKey);
+    _instanceIds.remove(key);
   }
 
   void disposeAll() {
@@ -363,14 +502,17 @@ class FlowCrudStateRegistry {
     _navParams.clear();
     _scrollDirection.clear();
     _paginationInfo.clear();
+    _instanceIds.clear();
   }
 
   void updateNavigationParams(String key, Map<String, dynamic>? params) {
-    _navParams[key] = params;
+    final compositeKey =  key;
+    _navParams[compositeKey] = params;
   }
 
   Map<String, dynamic>? getNavigationParams(String key) {
-    return _navParams[key];
+    final compositeKey = key ;
+    return _navParams[compositeKey];
   }
 }
 

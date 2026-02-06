@@ -90,9 +90,14 @@ class TransformerExecutor extends ActionExecutor {
 
     final flowState = const FlowCrudState().copyWith(formData: formValuesToUse);
 
-    final config = FlowRegistry.getByName(getScreenKeyFromArgs(context) ?? '');
+    final screenKey = getScreenKeyFromArgs(context);
+    final config = FlowRegistry.getByName(screenKey ?? '');
 
-    FlowCrudStateRegistry().update(config?["name"], flowState);
+    // Get composite key for current screen
+    final compositeKey = getCompositeKey(context, screenKey: screenKey);
+
+    // Update state with composite key if available, fallback to config name
+    FlowCrudStateRegistry().update(compositeKey ?? config?["name"], flowState);
 
     // Check if this is edit mode (supports both isEdit and isUpdate flags)
     final navigationParams = contextData['navigation'] is Map
@@ -149,14 +154,12 @@ class TransformerExecutor extends ActionExecutor {
 
     // If not in contextData, try registry navigation params
     if (existingModels == null || existingModels.isEmpty) {
-      final screenKey = getScreenKeyFromArgs(context);
-      debugPrint('TRANSFORMER: screenKey from args: $screenKey');
+      debugPrint('TRANSFORMER: screenKey from args: $screenKey, compositeKey: $compositeKey');
 
       // Try multiple key formats - the navigation executor stores with FORM:: prefix
       final keysToTry = <String?>[
+        compositeKey,
         screenKey,
-        if (screenKey != null) 'FORM::$screenKey',
-        if (screenKey != null) 'TEMPLATE::$screenKey',
       ];
 
       for (final key in keysToTry) {
@@ -300,60 +303,10 @@ class TransformerExecutor extends ActionExecutor {
       debugPrint(
           'TRANSFORMER: updateEntitiesFromForm returned ${entities.length} entities');
 
-      // Filter to only include entities that actually changed
-      final modifiedEntities = <EntityModel>[];
-      for (final updatedEntity in entities) {
-        final entityType = getEntityTypeName(updatedEntity);
-        // Find the original entity of the same type
-        final originalEntity = dedupedExistingModels.firstWhere(
-          (e) => getEntityTypeName(e) == entityType,
-          orElse: () => updatedEntity,
-        );
-
-        if (_hasEntityChanged(originalEntity, updatedEntity)) {
-          modifiedEntities.add(updatedEntity);
-          debugPrint('TRANSFORMER: $entityType has changes - will be updated');
-        } else {
-          debugPrint(
-              'TRANSFORMER: $entityType has NO changes - skipping update');
-        }
-      }
-
-      entities = modifiedEntities;
+      // Pass existingModels to contextData for UpdateExecutor to compare and filter unchanged entities
+      contextData['existingModels'] = dedupedExistingModels;
       debugPrint(
-          'TRANSFORMER: After filtering unchanged, ${entities.length} entities to update');
-
-      // Update clientAuditDetails for all updated entities to reflect modification time
-      final userUuid = FlowBuilderSingleton().loggedInUser?.uuid;
-      final now = DateTime.now().millisecondsSinceEpoch;
-      entities = entities.map((entity) {
-        final map = entity.toMap();
-        // Update clientAuditDetails with lastModifiedBy and lastModifiedTime
-        final existingClientAudit =
-            map['clientAuditDetails'] as Map<String, dynamic>? ?? {};
-        map['clientAuditDetails'] = {
-          ...existingClientAudit,
-          'lastModifiedBy': userUuid,
-          'lastModifiedTime': now,
-        };
-        // Recreate entity with updated audit details
-        final modelType = getEntityTypeName(entity);
-        final factory = DataConverterSingleton()
-            .dynamicEntityModelListener
-            ?.modelFactoryRegistry[modelType];
-        if (factory != null) {
-          return factory(map);
-        }
-        return entity;
-      }).toList();
-
-      debugPrint(
-          'TRANSFORMER: Updated ${entities.length} entities with audit details');
-      for (final entity in entities) {
-        final map = entity.toMap();
-        debugPrint(
-            'TRANSFORMER: Entity ${getEntityTypeName(entity)} - rowVersion: ${map['rowVersion']}, clientAuditDetails: ${map['clientAuditDetails']}');
-      }
+          'TRANSFORMER: Passing ${dedupedExistingModels.length} existingModels to contextData for change detection in UpdateExecutor');
     } else if (multiEntityField != null) {
       // Check if multiEntityField is configured
       // Manually traverse the nested path to get the multi-select array

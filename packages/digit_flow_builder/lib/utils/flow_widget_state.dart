@@ -49,6 +49,9 @@ class WidgetStateContext {
   /// The screen key for this widget context.
   final String? screenKey;
 
+  /// The composite key (screenKey::instanceId) for FlowCrudStateRegistry operations.
+  final String? compositeKey;
+
   /// Current list index (when in a list context).
   final int? listIndex;
 
@@ -82,6 +85,7 @@ class WidgetStateContext {
     this.widgetData = const {},
     this.modelMap = const {},
     this.screenKey,
+    this.compositeKey,
     this.listIndex,
     this.stateData,
   });
@@ -137,8 +141,10 @@ class WidgetStateContext {
   static WidgetStateContext of(BuildContext context) {
     final crudCtx = CrudItemContext.of(context);
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
+    final compositeKey = crudCtx?.compositeKey ??
+        getCompositeKey(context, screenKey: screenKey);
     final registryState =
-        screenKey != null ? FlowCrudStateRegistry().get(screenKey) : null;
+        compositeKey != null ? FlowCrudStateRegistry().get(compositeKey) : null;
 
     return WidgetStateContext(
       itemData: crudCtx?.item,
@@ -148,6 +154,7 @@ class WidgetStateContext {
       widgetData: registryState?.widgetData ?? {},
       modelMap: crudCtx?.stateData?.modelMap ?? {},
       screenKey: screenKey,
+      compositeKey: compositeKey,
       listIndex: crudCtx?.listIndex,
       stateData: crudCtx?.stateData,
     );
@@ -175,7 +182,9 @@ class WidgetStateContext {
   static ValueListenable<FlowCrudState?> listen(BuildContext context) {
     final crudCtx = CrudItemContext.of(context);
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
-    return FlowCrudStateRegistry().listen(screenKey ?? '');
+    final compositeKey = crudCtx?.compositeKey ??
+        getCompositeKey(context, screenKey: screenKey);
+    return FlowCrudStateRegistry().listen(compositeKey ?? '');
   }
 
   /// Get screen key from context.
@@ -186,58 +195,58 @@ class WidgetStateContext {
 
   /// Update widgetData for this screen in the registry.
   void updateWidgetData(String key, dynamic value) {
-    if (screenKey == null) return;
+    if (compositeKey == null) return;
 
-    final currentState = FlowCrudStateRegistry().get(screenKey!);
+    final currentState = FlowCrudStateRegistry().get(compositeKey!);
     final existing = Map<String, dynamic>.from(currentState?.widgetData ?? {});
     existing[key] = value;
 
     final updatedState = (currentState ?? const FlowCrudState()).copyWith(
       widgetData: existing,
     );
-    FlowCrudStateRegistry().update(screenKey!, updatedState);
+    FlowCrudStateRegistry().update(compositeKey!, updatedState);
   }
 
   /// Update multiple widgetData entries.
   void updateWidgetDataBatch(Map<String, dynamic> updates) {
-    if (screenKey == null) return;
+    if (compositeKey == null) return;
 
-    final currentState = FlowCrudStateRegistry().get(screenKey!);
+    final currentState = FlowCrudStateRegistry().get(compositeKey!);
     final existing = Map<String, dynamic>.from(currentState?.widgetData ?? {});
     existing.addAll(updates);
 
     final updatedState = (currentState ?? const FlowCrudState()).copyWith(
       widgetData: existing,
     );
-    FlowCrudStateRegistry().update(screenKey!, updatedState);
+    FlowCrudStateRegistry().update(compositeKey!, updatedState);
   }
 
   /// Update formData for this screen in the registry.
   void updateFormData(String key, dynamic value) {
-    if (screenKey == null) return;
+    if (compositeKey == null) return;
 
-    final currentState = FlowCrudStateRegistry().get(screenKey!);
+    final currentState = FlowCrudStateRegistry().get(compositeKey!);
     final existing = Map<String, dynamic>.from(currentState?.formData ?? {});
     existing[key] = value;
 
     final updatedState = (currentState ?? const FlowCrudState()).copyWith(
       formData: existing,
     );
-    FlowCrudStateRegistry().update(screenKey!, updatedState);
+    FlowCrudStateRegistry().update(compositeKey!, updatedState);
   }
 
   /// Update multiple formData entries.
   void updateFormDataBatch(Map<String, dynamic> updates) {
-    if (screenKey == null) return;
+    if (compositeKey == null) return;
 
-    final currentState = FlowCrudStateRegistry().get(screenKey!);
+    final currentState = FlowCrudStateRegistry().get(compositeKey!);
     final existing = Map<String, dynamic>.from(currentState?.formData ?? {});
     existing.addAll(updates);
 
     final updatedState = (currentState ?? const FlowCrudState()).copyWith(
       formData: existing,
     );
-    FlowCrudStateRegistry().update(screenKey!, updatedState);
+    FlowCrudStateRegistry().update(compositeKey!, updatedState);
   }
 
   /// Build a reactive widget that rebuilds on state changes.
@@ -247,13 +256,15 @@ class WidgetStateContext {
   ) {
     final crudCtx = CrudItemContext.of(context);
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
+    final compositeKey = crudCtx?.compositeKey ??
+        getCompositeKey(context, screenKey: screenKey);
 
-    if (screenKey == null) {
+    if (compositeKey == null) {
       return builder(context, of(context));
     }
 
     return ValueListenableBuilder<FlowCrudState?>(
-      valueListenable: FlowCrudStateRegistry().listen(screenKey),
+      valueListenable: FlowCrudStateRegistry().listen(compositeKey),
       builder: (context, flowState, _) {
         final state = WidgetStateContext(
           itemData: crudCtx?.item,
@@ -263,6 +274,7 @@ class WidgetStateContext {
           widgetData: flowState?.widgetData ?? {},
           modelMap: crudCtx?.stateData?.modelMap ?? {},
           screenKey: screenKey,
+          compositeKey: compositeKey,
           listIndex: crudCtx?.listIndex,
           stateData: crudCtx?.stateData,
         );

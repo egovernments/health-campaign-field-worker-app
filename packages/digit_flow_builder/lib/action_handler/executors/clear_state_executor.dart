@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../blocs/flow_crud_bloc.dart';
 import '../../blocs/search_state_manager.dart';
 import '../../utils/interpolation.dart';
+import '../../widget_registry.dart';
 import '../action_config.dart';
 import 'action_executor.dart';
 
@@ -27,10 +28,19 @@ class ClearStateExecutor extends ActionExecutor {
     Map<String, dynamic> contextData,
   ) async {
     // Use getEffectiveScreenKey to handle popup context
-    final screenKey = getEffectiveScreenKey(context, contextData);
+    final crudCtx = CrudItemContext.of(context);
+    final screenKey =
+        crudCtx?.screenKey ?? getEffectiveScreenKey(context, contextData);
 
-    if (screenKey == null) {
-      debugPrint('⚠️ CLEAR_STATE: No screenKey found, skipping');
+    // Get composite key for FlowCrudStateRegistry operations
+    // IMPORTANT: Try CrudItemContext.compositeKey first - it's correctly passed
+    // from popups via ActionPopupWidget. Only fall back to getEffectiveCompositeKey
+    // when not in a popup context.
+    final compositeKey =
+        crudCtx?.compositeKey ?? getEffectiveCompositeKey(context, contextData);
+
+    if (compositeKey == null) {
+      debugPrint('⚠️ CLEAR_STATE: No compositeKey found, skipping');
       return contextData;
     }
 
@@ -61,10 +71,10 @@ class ClearStateExecutor extends ActionExecutor {
     // If clearAll is true or no specific keys provided, clear everything
     if (clearAll || (filterKeys.isEmpty && widgetKeys.isEmpty && !clearOrderBy)) {
       // Clear entire state for this screen (original behavior)
-      FlowCrudStateRegistry().clear(screenKey);
-      SearchStateManager().clear(screenKey, searchName);
+      FlowCrudStateRegistry().clear(compositeKey);
+      SearchStateManager().clear(compositeKey, searchName);
 
-      debugPrint('✅ CLEAR_STATE: Cleared all state for screen: $screenKey');
+      debugPrint('✅ CLEAR_STATE: Cleared all state for screen: $compositeKey');
     } else {
       // Selective clearing
 
@@ -73,17 +83,17 @@ class ClearStateExecutor extends ActionExecutor {
       // This handles cases where filters were added with different 'name' values
       if (filterKeys.isNotEmpty) {
         SearchStateManager().removeFiltersByKeysForScreen(
-          screenKey,
+          compositeKey,
           filterKeys,
           triggerSearch: false, // We'll trigger manually if needed
         );
-        debugPrint('✅ CLEAR_STATE: Removed filters: $filterKeys for screen: $screenKey');
+        debugPrint('✅ CLEAR_STATE: Removed filters: $filterKeys for screen: $compositeKey');
       }
 
       // 2. Clear orderBy if requested
       if (clearOrderBy) {
         SearchStateManager().updateOrderBy(
-          screenKey,
+          compositeKey,
           searchName,
           null,
           triggerSearch: false,
@@ -93,7 +103,7 @@ class ClearStateExecutor extends ActionExecutor {
 
       // 3. Remove specific keys from widgetData
       if (widgetKeys.isNotEmpty) {
-        final currentState = FlowCrudStateRegistry().get(screenKey);
+        final currentState = FlowCrudStateRegistry().get(compositeKey);
         if (currentState != null) {
           final updatedWidgetData =
               Map<String, dynamic>.from(currentState.widgetData ?? {});
@@ -105,7 +115,7 @@ class ClearStateExecutor extends ActionExecutor {
           final updatedState = currentState.copyWith(
             widgetData: updatedWidgetData,
           );
-          FlowCrudStateRegistry().update(screenKey, updatedState);
+          FlowCrudStateRegistry().update(compositeKey, updatedState);
 
           debugPrint('✅ CLEAR_STATE: Removed widgetData keys: $widgetKeys');
         }
@@ -115,10 +125,10 @@ class ClearStateExecutor extends ActionExecutor {
     // Trigger search only if requested AND there are remaining filters
     // If all filters are cleared, clear the page state instead
     if (triggerSearch) {
-      final hasRemainingFilters = SearchStateManager().hasFiltersForScreen(screenKey);
+      final hasRemainingFilters = SearchStateManager().hasFiltersForScreen(compositeKey);
       if (hasRemainingFilters) {
         SearchStateManager().updateFilters(
-          screenKey,
+          compositeKey,
           searchName,
           [], // Empty list just to trigger the callback
           triggerSearch: true,
@@ -127,12 +137,12 @@ class ClearStateExecutor extends ActionExecutor {
       } else {
         // No remaining filters - clear the page state
         SearchStateManager().updateFilters(
-          screenKey,
+          compositeKey,
           searchName,
           [],
           triggerSearch: false,
         );
-        FlowCrudStateRegistry().clear(screenKey);
+        FlowCrudStateRegistry().clear(compositeKey);
         debugPrint('✅ CLEAR_STATE: Cleared page state (no remaining filters)');
       }
     }

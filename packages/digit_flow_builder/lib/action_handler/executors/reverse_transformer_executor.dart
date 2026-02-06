@@ -47,6 +47,14 @@ class ReverseTransformerExecutor extends ActionExecutor {
     final crudCtx = CrudItemContext.of(context);
     final currentScreenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
 
+    var compositeKey = "";
+
+    final instanceId = getInstanceIdFromArgs(context);
+    if(instanceId !=null && currentScreenKey!=null){
+       compositeKey = createCompositeKey(currentScreenKey, instanceId);
+    }
+
+
     try {
       if (configName == null) {
         debugPrint('REVERSE_TRANSFORM: configName is required');
@@ -96,7 +104,7 @@ class ReverseTransformerExecutor extends ActionExecutor {
       if (modelInstances.isEmpty) {
         final screenKeyToUse = sourceScreenKey ?? currentScreenKey;
         if (screenKeyToUse != null) {
-          final flowState = FlowCrudStateRegistry().get(screenKeyToUse);
+          final flowState = FlowCrudStateRegistry().get(compositeKey);
           final stateWrapper = flowState?.stateWrapper;
 
           if (stateWrapper != null && stateWrapper is List) {
@@ -136,10 +144,10 @@ class ReverseTransformerExecutor extends ActionExecutor {
         final updatedState = FlowCrudState(
           formData: Map<String, dynamic>.from(formData),
           stateWrapper:
-          FlowCrudStateRegistry().get(currentScreenKey)?.stateWrapper,
+          FlowCrudStateRegistry().get(compositeKey)?.stateWrapper,
         );
 
-        FlowCrudStateRegistry().update(currentScreenKey, updatedState);
+        FlowCrudStateRegistry().update(compositeKey, updatedState);
       }
       // Return updated context with form data and existing models for update
       return {
