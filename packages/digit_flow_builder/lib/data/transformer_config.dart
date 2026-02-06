@@ -83,7 +83,8 @@ final jsonConfig = {
           },
           "additionalFields": {
             "weight": "beneficiaryDetails.weight",
-            "height": "beneficiaryDetails.height"
+            "height": "beneficiaryDetails.height",
+            "isPregnant": "beneficiaryDetails.isPregnant"
           },
           "bloodGroup": "health.bloodGroup",
           "gender": "beneficiaryDetails.gender",
@@ -222,7 +223,8 @@ final jsonConfig = {
           },
           "additionalFields": {
             "weight": "beneficiaryDetails.weight",
-            "height": "beneficiaryDetails.height"
+            "height": "beneficiaryDetails.height",
+            "isPregnant": "beneficiaryDetails.isPregnant"
           },
           "bloodGroup": "health.bloodGroup",
           "gender": "beneficiaryDetails.gender",
