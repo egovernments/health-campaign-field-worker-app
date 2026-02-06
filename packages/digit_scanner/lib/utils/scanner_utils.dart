@@ -96,8 +96,6 @@ class DigitScannerUtils {
     required BarcodeScanner barcodeScanner,
     required ScannerLocalization localizations,
     String? scanLimitMessage,
-    String? regex,
-    String? patternMessage,
   }) async {
     // Check if processing is allowed
     if (!canProcess) return;
@@ -144,15 +142,6 @@ class DigitScannerUtils {
               // Handle error if the barcode is already scanned
               await handleError(
                   localizations.translate(i18.scanner.resourceAlreadyScanned));
-            } else if (regex != null &&
-                regex.trim().isNotEmpty &&
-                !RegExp(regex).hasMatch(
-                    barcodes.first.displayValue.toString())) {
-              // Handle error if barcode doesn't match regex pattern
-              final errorMsg = patternMessage != null
-                  ? localizations.translate(patternMessage)
-                  : localizations.translate(i18.scanner.invalidBarcode);
-              await handleError(errorMsg);
             } else if (quantity > result.length) {
               // Store the parsed result if the quantity is greater than result length
               await storeValue(parsedResult);
@@ -180,15 +169,6 @@ class DigitScannerUtils {
             await handleError(
                 localizations.translate(i18.scanner.resourceAlreadyScanned));
             return;
-          } else if (regex != null &&
-              regex.trim().isNotEmpty &&
-              !RegExp(regex).hasMatch(
-                  barcodes.first.displayValue.toString())) {
-            // Handle error if QR code doesn't match regex pattern
-            final errorMsg = patternMessage != null
-                ? localizations.translate(patternMessage)
-                : localizations.translate(i18.scanner.invalidBarcode);
-            await handleError(errorMsg);
           } else if (quantity > bloc.state.qrCodes.length) {
             // Store the QR code if not already scanned and quantity limit not reached
             await storeCode(barcodes.first.displayValue.toString());
