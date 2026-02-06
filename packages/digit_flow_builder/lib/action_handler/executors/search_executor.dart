@@ -515,14 +515,15 @@ class SearchExecutor extends ActionExecutor {
     String searchName,
     Map<String, dynamic>? config,
   ) {
+    // Use getAllFilters (across all searchNames) — consistent with the main search path
     final accumulatedFilters =
-        SearchStateManager().getFilters(compositeKey, searchName);
+        SearchStateManager().getAllFilters(compositeKey);
     final accumulatedOrderBy =
         SearchStateManager().getOrderBy(compositeKey, searchName);
 
     if (accumulatedFilters.isEmpty) {
       debugPrint(
-          'SearchCallback: No accumulated filters for $searchName, skipping');
+          'SearchCallback: No accumulated filters for $compositeKey, skipping');
       return;
     }
 
