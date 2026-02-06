@@ -1,11 +1,9 @@
 final dynamic sampleReferralFlows = {
+  "id": "b4702adb-5d57-4a78-9091-82805385d738",
+  "tenantId": "mz",
+  "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
+  "uniqueIdentifier": "HFREFERRAL.MR-DN",
   "name": "HFREFERRAL",
-  "initialPage": "referralInbox",
-  "order": 9,
-  "project": "LLIN-mz",
-  "version": 1,
-  "disabled": false,
-  "isSelected": true,
   "flows": [
     {
       "body": [
@@ -22,6 +20,11 @@ final dynamic sampleReferralFlows = {
                 {
                   "key": "REFERRAL_INBOX_REFERRAL_SYMPTOM",
                   "value": "{{HFReferralModel.0.symptom}}"
+                },
+                {
+                  "key": "REFERRAL_INBOX_REFERRAL_STATUS",
+                  "value":
+                      "{{fn:computeReferralStatus(HFReferralModel.0.symptom, HFReferralModel.0.additionalFields.fields)}}"
                 }
               ],
               "type": "template",
@@ -36,27 +39,11 @@ final dynamic sampleReferralFlows = {
       ],
       "name": "referralOverview",
       "order": 4,
-      "initActions": [
-        {
-          "actionType": "SEARCH_EVENT",
-          "properties": {
-            "data": [
-              {
-                "key": "clientReferenceId",
-                "value": "{{navigation.clientReferenceId}}",
-                "operation": "equals"
-              }
-            ],
-            "name": "hFReferral",
-            "type": "SEARCH_EVENT",
-            "awaitResults": true
-          }
-        }
-      ],
       "footer": [
         {
           "type": "template",
-          "label": "{{fn:computeReferralButtonLabel(HFReferralModel.0.symptom, HFReferralModel.0.additionalFields.fields)}}",
+          "label":
+              "{{fn:computeReferralButtonLabel(HFReferralModel.0.symptom, HFReferralModel.0.additionalFields.fields)}}",
           "format": "button",
           "onAction": [
             {
@@ -74,9 +61,6 @@ final dynamic sampleReferralFlows = {
                     "condition":
                         "0.HFReferralModel.additionalFields.fields.feverQ1==null&&0.HFReferralModel.symptom==FEVER",
                     "navigateTo": {
-                      "name": "referralDetails",
-                      "type": "FORM",
-                      "flow": "REFERRAL_CREATE",
                       "data": [
                         {
                           "key": "clientReferenceId",
@@ -117,16 +101,16 @@ final dynamic sampleReferralFlows = {
                           "key": "referralReason",
                           "value": "{{0.HFReferralModel.symptom}}"
                         }
-                      ]
+                      ],
+                      "flow": "REFERRAL_CREATE",
+                      "name": "referralDetails",
+                      "type": "FORM"
                     }
                   },
                   {
                     "condition":
                         "0.HFReferralModel.additionalFields.fields.sickQ1==null&&0.HFReferralModel.symptom==SICK",
                     "navigateTo": {
-                      "name": "referralDetails",
-                      "type": "FORM",
-                      "flow": "REFERRAL_CREATE",
                       "data": [
                         {
                           "key": "clientReferenceId",
@@ -167,16 +151,16 @@ final dynamic sampleReferralFlows = {
                           "key": "referralReason",
                           "value": "{{0.HFReferralModel.symptom}}"
                         }
-                      ]
+                      ],
+                      "flow": "REFERRAL_CREATE",
+                      "name": "referralDetails",
+                      "type": "FORM"
                     }
                   },
                   {
                     "condition":
                         "0.HFReferralModel.additionalFields.fields.sideEffectQ1==null&&0.HFReferralModel.symptom==DRUG_SE_CC",
                     "navigateTo": {
-                      "name": "referralDetails",
-                      "type": "FORM",
-                      "flow": "REFERRAL_CREATE",
                       "data": [
                         {
                           "key": "clientReferenceId",
@@ -217,16 +201,16 @@ final dynamic sampleReferralFlows = {
                           "key": "referralReason",
                           "value": "{{0.HFReferralModel.symptom}}"
                         }
-                      ]
+                      ],
+                      "flow": "REFERRAL_CREATE",
+                      "name": "referralDetails",
+                      "type": "FORM"
                     }
                   },
                   {
                     "condition":
                         "0.HFReferralModel.additionalFields.fields.sideEffectPQ1==null&&0.HFReferralModel.symptom==DRUG_SE_PC",
                     "navigateTo": {
-                      "name": "referralDetails",
-                      "type": "FORM",
-                      "flow": "REFERRAL_CREATE",
                       "data": [
                         {
                           "key": "clientReferenceId",
@@ -267,15 +251,18 @@ final dynamic sampleReferralFlows = {
                           "key": "referralReason",
                           "value": "{{0.HFReferralModel.symptom}}"
                         }
-                      ]
+                      ],
+                      "flow": "REFERRAL_CREATE",
+                      "name": "referralDetails",
+                      "type": "FORM"
                     }
                   },
                   {
                     "default": true,
                     "navigateTo": {
+                      "data": [],
                       "name": "referralInbox",
-                      "type": "TEMPLATE",
-                      "data": []
+                      "type": "TEMPLATE"
                     }
                   }
                 ]
@@ -330,8 +317,8 @@ final dynamic sampleReferralFlows = {
         "filters": [],
         "relations": [],
         "rootEntity": "HFReferralModel",
-        "wrapperName": "hFReferral",
         "groupByType": true,
+        "wrapperName": "hFReferral",
         "searchConfig": {
           "select": ["hFReferral"],
           "primary": "hFReferral"
@@ -400,7 +387,10 @@ final dynamic sampleReferralFlows = {
             }
           ],
           "fieldName": "searchBar",
-          "mandatory": true
+          "mandatory": true,
+          "validation": [
+            {"key": "minSearchChars", "error": "", "value": 3}
+          ]
         },
         {
           "type": "template",
@@ -411,7 +401,6 @@ final dynamic sampleReferralFlows = {
           "description": "REFERRAL_INBOX_INFO_CARD_DESCRIPTION"
         },
         {
-          "dataSource": "HFReferralModel",
           "type": "template",
           "child": {
             "format": "card",
@@ -465,17 +454,29 @@ final dynamic sampleReferralFlows = {
                 }
               },
               {
-                "value":
-                    "HF_REFERRAL_INBOX_DATE_OF_EVALUATION {{ fn:formatDate(itemData.additionalFields.fields.dateOfEvaluation, 'date', dd MMM yyyy) }}",
-                "format": "textTemplate",
-                "fieldName": "textTemplatetext"
+                "type": "template",
+                "format": "row",
+                "children": [
+                  {
+                    "value":
+                        "HF_REFERRAL_INBOX_DATE_OF_EVALUATION {{ fn:formatDate(itemData.additionalFields.fields.dateOfEvaluation, 'date', dd MMM yyyy) }}",
+                    "format": "textTemplate",
+                    "fieldName": "textTemplatetext"
+                  }
+                ],
+                "fieldName": "dateRow",
+                "properties": {
+                  "mainAxisSize": "max",
+                  "mainAxisAlignment": "start"
+                }
               }
             ],
             "fieldName": "templateCard"
           },
           "format": "listView",
           "hidden": false,
-          "fieldName": "listView"
+          "fieldName": "listView",
+          "dataSource": "HFReferralModel"
         }
       ],
       "name": "referralInbox",
@@ -506,7 +507,6 @@ final dynamic sampleReferralFlows = {
             "mainAxisAlignment": "center"
           }
         },
-
         {
           "type": "template",
           "label": "SCAN_BENEFICIARY",
@@ -539,28 +539,30 @@ final dynamic sampleReferralFlows = {
                     "properties": {
                       "conditions": [
                         {
-                          "condition": "0.HFReferralModel.clientReferenceId!=null",
+                          "condition":
+                              "0.HFReferralModel.clientReferenceId!=null",
                           "navigateTo": {
-                            "name": "referralOverview",
-                            "type": "TEMPLATE",
                             "data": [
                               {
                                 "key": "clientReferenceId",
-                                "value": "{{0.HFReferralModel.clientReferenceId}}"
+                                "value":
+                                    "{{0.HFReferralModel.clientReferenceId}}"
                               },
                               {
                                 "key": "referralSymptom",
                                 "value": "{{0.HFReferralModel.symptom}}"
                               }
-                            ]
+                            ],
+                            "name": "referralOverview",
+                            "type": "TEMPLATE"
                           }
                         }
                       ],
                       "defaultAction": {
                         "actionType": "SHOW_TOAST",
                         "properties": {
-                          "message": "HF_REFERRAL_NOT_FOUND",
-                          "type": "error"
+                          "type": "error",
+                          "message": "HF_REFERRAL_NOT_FOUND"
                         }
                       }
                     }
@@ -613,11 +615,12 @@ final dynamic sampleReferralFlows = {
         "filters": [],
         "relations": [],
         "rootEntity": "HFReferralModel",
-        "wrapperName": "hFReferral",
         "groupByType": true,
+        "wrapperName": "hFReferral",
         "searchConfig": {
           "select": ["hFReferral"],
-          "primary": "hFReferral"
+          "primary": "hFReferral",
+          "pagination": {"limit": 10, "maxItems": 30}
         }
       },
       "submitCondition": null,
@@ -840,17 +843,17 @@ final dynamic sampleReferralFlows = {
                 {
                   "actionType": "SEARCH_EVENT",
                   "properties": {
-                    "applyIf": "navigation.isUpdate==true",
-                    "awaitResults": true,
-                    "name": "HFReferral",
                     "data": [
                       {
                         "key": "clientReferenceId",
+                        "root": "HFReferral",
                         "value": "{{navigation.clientReferenceId}}",
-                        "operation": "equals",
-                        "root": "HFReferral"
+                        "operation": "equals"
                       }
-                    ]
+                    ],
+                    "name": "HFReferral",
+                    "applyIf": "navigation.isUpdate==true",
+                    "awaitResults": true
                   }
                 },
                 {
@@ -868,8 +871,8 @@ final dynamic sampleReferralFlows = {
                 {
                   "actionType": "CREATE_EVENT",
                   "properties": {
-                    "applyIf": "navigation.isUpdate!=true",
                     "entity": "",
+                    "applyIf": "navigation.isUpdate!=true",
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
@@ -883,8 +886,8 @@ final dynamic sampleReferralFlows = {
                   "properties": {
                     "applyIf": "navigation.isUpdate==true",
                     "entityType": "HFReferralModel",
-                    "clientReferenceId": "{{navigation.clientReferenceId}}",
-                    "collectFromPages": ["sideEffectSick"]
+                    "collectFromPages": ["sideEffectSick"],
+                    "clientReferenceId": "{{navigation.clientReferenceId}}"
                   }
                 },
                 {
@@ -912,24 +915,24 @@ final dynamic sampleReferralFlows = {
           ],
           "module": "HFREFERRAL",
           "heading": "HFREFERRAL_SIDEEFFECTFROMSICK_HEADING",
-          "project": "CMP-2026-01-14-010690",
+          "project": "MR-DN",
           "summary": false,
           "version": 1,
           "onAction": [
             {
               "actionType": "SEARCH_EVENT",
               "properties": {
-                "applyIf": "navigation.isUpdate==true",
-                "awaitResults": true,
-                "name": "HFReferral",
                 "data": [
                   {
                     "key": "clientReferenceId",
+                    "root": "HFReferral",
                     "value": "{{navigation.clientReferenceId}}",
-                    "operation": "equals",
-                    "root": "HFReferral"
+                    "operation": "equals"
                   }
-                ]
+                ],
+                "name": "HFReferral",
+                "applyIf": "navigation.isUpdate==true",
+                "awaitResults": true
               }
             },
             {
@@ -947,8 +950,8 @@ final dynamic sampleReferralFlows = {
             {
               "actionType": "CREATE_EVENT",
               "properties": {
-                "applyIf": "navigation.isUpdate!=true",
                 "entity": "",
+                "applyIf": "navigation.isUpdate!=true",
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
@@ -962,8 +965,8 @@ final dynamic sampleReferralFlows = {
               "properties": {
                 "applyIf": "navigation.isUpdate==true",
                 "entityType": "HFReferralModel",
-                "clientReferenceId": "{{navigation.clientReferenceId}}",
-                "collectFromPages": ["sideEffectSick"]
+                "collectFromPages": ["sideEffectSick"],
+                "clientReferenceId": "{{navigation.clientReferenceId}}"
               }
             },
             {
@@ -1331,17 +1334,17 @@ final dynamic sampleReferralFlows = {
                 {
                   "actionType": "SEARCH_EVENT",
                   "properties": {
-                    "applyIf": "navigation.isUpdate==true",
-                    "awaitResults": true,
-                    "name": "HFReferral",
                     "data": [
                       {
                         "key": "clientReferenceId",
+                        "root": "HFReferral",
                         "value": "{{navigation.clientReferenceId}}",
-                        "operation": "equals",
-                        "root": "HFReferral"
+                        "operation": "equals"
                       }
-                    ]
+                    ],
+                    "name": "HFReferral",
+                    "applyIf": "navigation.isUpdate==true",
+                    "awaitResults": true
                   }
                 },
                 {
@@ -1359,8 +1362,8 @@ final dynamic sampleReferralFlows = {
                 {
                   "actionType": "CREATE_EVENT",
                   "properties": {
-                    "applyIf": "navigation.isUpdate!=true",
                     "entity": "",
+                    "applyIf": "navigation.isUpdate!=true",
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
@@ -1374,8 +1377,8 @@ final dynamic sampleReferralFlows = {
                   "properties": {
                     "applyIf": "navigation.isUpdate==true",
                     "entityType": "HFReferralModel",
-                    "clientReferenceId": "{{navigation.clientReferenceId}}",
-                    "collectFromPages": ["sideEffectFromPreviousCycle"]
+                    "collectFromPages": ["sideEffectFromPreviousCycle"],
+                    "clientReferenceId": "{{navigation.clientReferenceId}}"
                   }
                 },
                 {
@@ -1403,24 +1406,24 @@ final dynamic sampleReferralFlows = {
           ],
           "module": "HFREFERRAL",
           "heading": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_HEADING",
-          "project": "CMP-2026-01-14-010690",
+          "project": "MR-DN",
           "summary": false,
           "version": 1,
           "onAction": [
             {
               "actionType": "SEARCH_EVENT",
               "properties": {
-                "applyIf": "navigation.isUpdate==true",
-                "awaitResults": true,
-                "name": "HFReferral",
                 "data": [
                   {
                     "key": "clientReferenceId",
+                    "root": "HFReferral",
                     "value": "{{navigation.clientReferenceId}}",
-                    "operation": "equals",
-                    "root": "HFReferral"
+                    "operation": "equals"
                   }
-                ]
+                ],
+                "name": "HFReferral",
+                "applyIf": "navigation.isUpdate==true",
+                "awaitResults": true
               }
             },
             {
@@ -1438,8 +1441,8 @@ final dynamic sampleReferralFlows = {
             {
               "actionType": "CREATE_EVENT",
               "properties": {
-                "applyIf": "navigation.isUpdate!=true",
                 "entity": "",
+                "applyIf": "navigation.isUpdate!=true",
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
@@ -1453,8 +1456,8 @@ final dynamic sampleReferralFlows = {
               "properties": {
                 "applyIf": "navigation.isUpdate==true",
                 "entityType": "HFReferralModel",
-                "clientReferenceId": "{{navigation.clientReferenceId}}",
-                "collectFromPages": ["sideEffectFromPreviousCycle"]
+                "collectFromPages": ["sideEffectFromPreviousCycle"],
+                "clientReferenceId": "{{navigation.clientReferenceId}}"
               }
             },
             {
@@ -1789,19 +1792,13 @@ final dynamic sampleReferralFlows = {
                       "HFREFERRAL_REFERRAL_DETAILS_gender_REQUIRED_ERROR"
                 },
                 {
+                  "type": "string",
                   "enums": [
                     {"code": "DRUG_SE_CC", "name": "DRUG_SE_CC"},
                     {"code": "DRUG_SE_PC", "name": "DRUG_SE_PC"},
                     {"code": "FEVER", "name": "FEVER"},
                     {"code": "SICK", "name": "SICK"}
                   ],
-                  "dropDownOptions": [
-                    {"code": "DRUG_SE_CC", "name": "DRUG_SE_CC"},
-                    {"code": "DRUG_SE_PC", "name": "DRUG_SE_PC"},
-                    {"code": "FEVER", "name": "FEVER"},
-                    {"code": "SICK", "name": "SICK"}
-                  ],
-                  "type": "string",
                   "label": "HFREFERRAL_REFERRAL_DETAILS_referralReason_LABEL",
                   "order": 7,
                   "value": "",
@@ -1829,6 +1826,12 @@ final dynamic sampleReferralFlows = {
                   ],
                   "errorMessage": "",
                   "isMultiSelect": false,
+                  "dropDownOptions": [
+                    {"code": "DRUG_SE_CC", "name": "DRUG_SE_CC"},
+                    {"code": "DRUG_SE_PC", "name": "DRUG_SE_PC"},
+                    {"code": "FEVER", "name": "FEVER"},
+                    {"code": "SICK", "name": "SICK"}
+                  ],
                   "required.message":
                       "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR",
                   "visibilityCondition": {
@@ -1868,7 +1871,7 @@ final dynamic sampleReferralFlows = {
           ],
           "module": "HFREFERRAL",
           "heading": "HFREFERRAL_REFERRAL_DETAILS_HEADING",
-          "project": "CMP-2026-01-14-010690",
+          "project": "MR-DN",
           "summary": false,
           "version": 1,
           "onAction": [
@@ -1887,8 +1890,8 @@ final dynamic sampleReferralFlows = {
             {
               "actionType": "CREATE_EVENT",
               "properties": {
-                "applyIf": "navigation.isUpdate!=true",
                 "entity": "",
+                "applyIf": "navigation.isUpdate!=true",
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
@@ -2098,19 +2101,13 @@ final dynamic sampleReferralFlows = {
                   "HFREFERRAL_REFERRAL_DETAILS_gender_REQUIRED_ERROR"
             },
             {
+              "type": "string",
               "enums": [
                 {"code": "DRUG_SE_CC", "name": "DRUG_SE_CC"},
                 {"code": "DRUG_SE_PC", "name": "DRUG_SE_PC"},
                 {"code": "FEVER", "name": "FEVER"},
                 {"code": "SICK", "name": "SICK"}
               ],
-              "dropDownOptions": [
-                {"code": "DRUG_SE_CC", "name": "DRUG_SE_CC"},
-                {"code": "DRUG_SE_PC", "name": "DRUG_SE_PC"},
-                {"code": "FEVER", "name": "FEVER"},
-                {"code": "SICK", "name": "SICK"}
-              ],
-              "type": "string",
               "label": "HFREFERRAL_REFERRAL_DETAILS_referralReason_LABEL",
               "order": 7,
               "value": "",
@@ -2138,6 +2135,12 @@ final dynamic sampleReferralFlows = {
               ],
               "errorMessage": "",
               "isMultiSelect": false,
+              "dropDownOptions": [
+                {"code": "DRUG_SE_CC", "name": "DRUG_SE_CC"},
+                {"code": "DRUG_SE_PC", "name": "DRUG_SE_PC"},
+                {"code": "FEVER", "name": "FEVER"},
+                {"code": "SICK", "name": "SICK"}
+              ],
               "required.message":
                   "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR",
               "visibilityCondition": {
@@ -2157,8 +2160,6 @@ final dynamic sampleReferralFlows = {
               "condition":
                   "navigation.isUpdate==true&&navigation.referralSymptom==DRUG_SE_CC",
               "navigateTo": {
-                "name": "sideEffectFromCurrentCycle",
-                "type": "form",
                 "data": [
                   {
                     "key": "clientReferenceId",
@@ -2170,15 +2171,15 @@ final dynamic sampleReferralFlows = {
                   },
                   {"key": "isUpdate", "value": "true"},
                   {"key": "rowVersion", "value": "{{navigation.rowVersion}}"}
-                ]
+                ],
+                "name": "sideEffectFromCurrentCycle",
+                "type": "form"
               }
             },
             {
               "condition":
                   "navigation.isUpdate==true&&navigation.referralSymptom==DRUG_SE_PC",
               "navigateTo": {
-                "name": "sideEffectFromPreviousCycle",
-                "type": "form",
                 "data": [
                   {
                     "key": "clientReferenceId",
@@ -2190,15 +2191,15 @@ final dynamic sampleReferralFlows = {
                   },
                   {"key": "isUpdate", "value": "true"},
                   {"key": "rowVersion", "value": "{{navigation.rowVersion}}"}
-                ]
+                ],
+                "name": "sideEffectFromPreviousCycle",
+                "type": "form"
               }
             },
             {
               "condition":
                   "navigation.isUpdate==true&&navigation.referralSymptom==FEVER",
               "navigateTo": {
-                "name": "sideEffectFever",
-                "type": "form",
                 "data": [
                   {
                     "key": "clientReferenceId",
@@ -2210,15 +2211,15 @@ final dynamic sampleReferralFlows = {
                   },
                   {"key": "isUpdate", "value": "true"},
                   {"key": "rowVersion", "value": "{{navigation.rowVersion}}"}
-                ]
+                ],
+                "name": "sideEffectFever",
+                "type": "form"
               }
             },
             {
               "condition":
                   "navigation.isUpdate==true&&navigation.referralSymptom==SICK",
               "navigateTo": {
-                "name": "sideEffectSick",
-                "type": "form",
                 "data": [
                   {
                     "key": "clientReferenceId",
@@ -2230,7 +2231,9 @@ final dynamic sampleReferralFlows = {
                   },
                   {"key": "isUpdate", "value": "true"},
                   {"key": "rowVersion", "value": "{{navigation.rowVersion}}"}
-                ]
+                ],
+                "name": "sideEffectSick",
+                "type": "form"
               }
             },
             {
@@ -2534,17 +2537,17 @@ final dynamic sampleReferralFlows = {
                 {
                   "actionType": "SEARCH_EVENT",
                   "properties": {
-                    "applyIf": "navigation.isUpdate==true",
-                    "awaitResults": true,
-                    "name": "HFReferral",
                     "data": [
                       {
                         "key": "clientReferenceId",
+                        "root": "HFReferral",
                         "value": "{{navigation.clientReferenceId}}",
-                        "operation": "equals",
-                        "root": "HFReferral"
+                        "operation": "equals"
                       }
-                    ]
+                    ],
+                    "name": "HFReferral",
+                    "applyIf": "navigation.isUpdate==true",
+                    "awaitResults": true
                   }
                 },
                 {
@@ -2562,8 +2565,8 @@ final dynamic sampleReferralFlows = {
                 {
                   "actionType": "CREATE_EVENT",
                   "properties": {
-                    "applyIf": "navigation.isUpdate!=true",
                     "entity": "",
+                    "applyIf": "navigation.isUpdate!=true",
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
@@ -2577,8 +2580,8 @@ final dynamic sampleReferralFlows = {
                   "properties": {
                     "applyIf": "navigation.isUpdate==true",
                     "entityType": "HFReferralModel",
-                    "clientReferenceId": "{{navigation.clientReferenceId}}",
-                    "collectFromPages": ["sideEffectFever"]
+                    "collectFromPages": ["sideEffectFever"],
+                    "clientReferenceId": "{{navigation.clientReferenceId}}"
                   }
                 },
                 {
@@ -2606,24 +2609,24 @@ final dynamic sampleReferralFlows = {
           ],
           "module": "HFREFERRAL",
           "heading": "HFREFERRAL_SIDEEFFECTFROMFEVER_HEADING",
-          "project": "CMP-2026-01-14-010690",
+          "project": "MR-DN",
           "summary": false,
           "version": 1,
           "onAction": [
             {
               "actionType": "SEARCH_EVENT",
               "properties": {
-                "applyIf": "navigation.isUpdate==true",
-                "awaitResults": true,
-                "name": "HFReferral",
                 "data": [
                   {
                     "key": "clientReferenceId",
+                    "root": "HFReferral",
                     "value": "{{navigation.clientReferenceId}}",
-                    "operation": "equals",
-                    "root": "HFReferral"
+                    "operation": "equals"
                   }
-                ]
+                ],
+                "name": "HFReferral",
+                "applyIf": "navigation.isUpdate==true",
+                "awaitResults": true
               }
             },
             {
@@ -2641,8 +2644,8 @@ final dynamic sampleReferralFlows = {
             {
               "actionType": "CREATE_EVENT",
               "properties": {
-                "applyIf": "navigation.isUpdate!=true",
                 "entity": "",
+                "applyIf": "navigation.isUpdate!=true",
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
@@ -2656,8 +2659,8 @@ final dynamic sampleReferralFlows = {
               "properties": {
                 "applyIf": "navigation.isUpdate==true",
                 "entityType": "HFReferralModel",
-                "clientReferenceId": "{{navigation.clientReferenceId}}",
-                "collectFromPages": ["sideEffectFever"]
+                "collectFromPages": ["sideEffectFever"],
+                "clientReferenceId": "{{navigation.clientReferenceId}}"
               }
             },
             {
@@ -3087,17 +3090,17 @@ final dynamic sampleReferralFlows = {
                 {
                   "actionType": "SEARCH_EVENT",
                   "properties": {
-                    "applyIf": "navigation.isUpdate==true",
-                    "awaitResults": true,
-                    "name": "HFReferral",
                     "data": [
                       {
                         "key": "clientReferenceId",
+                        "root": "HFReferral",
                         "value": "{{navigation.clientReferenceId}}",
-                        "operation": "equals",
-                        "root": "HFReferral"
+                        "operation": "equals"
                       }
-                    ]
+                    ],
+                    "name": "HFReferral",
+                    "applyIf": "navigation.isUpdate==true",
+                    "awaitResults": true
                   }
                 },
                 {
@@ -3115,8 +3118,8 @@ final dynamic sampleReferralFlows = {
                 {
                   "actionType": "CREATE_EVENT",
                   "properties": {
-                    "applyIf": "navigation.isUpdate!=true",
                     "entity": "",
+                    "applyIf": "navigation.isUpdate!=true",
                     "onError": [
                       {
                         "actionType": "SHOW_TOAST",
@@ -3130,8 +3133,8 @@ final dynamic sampleReferralFlows = {
                   "properties": {
                     "applyIf": "navigation.isUpdate==true",
                     "entityType": "HFReferralModel",
-                    "clientReferenceId": "{{navigation.clientReferenceId}}",
-                    "collectFromPages": ["sideEffectFromCurrentCycle"]
+                    "collectFromPages": ["sideEffectFromCurrentCycle"],
+                    "clientReferenceId": "{{navigation.clientReferenceId}}"
                   }
                 },
                 {
@@ -3159,24 +3162,24 @@ final dynamic sampleReferralFlows = {
           ],
           "module": "HFREFERRAL",
           "heading": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_HEADING",
-          "project": "CMP-2026-01-14-010690",
+          "project": "MR-DN",
           "summary": false,
           "version": 1,
           "onAction": [
             {
               "actionType": "SEARCH_EVENT",
               "properties": {
-                "applyIf": "navigation.isUpdate==true",
-                "awaitResults": true,
-                "name": "HFReferral",
                 "data": [
                   {
                     "key": "clientReferenceId",
+                    "root": "HFReferral",
                     "value": "{{navigation.clientReferenceId}}",
-                    "operation": "equals",
-                    "root": "HFReferral"
+                    "operation": "equals"
                   }
-                ]
+                ],
+                "name": "HFReferral",
+                "applyIf": "navigation.isUpdate==true",
+                "awaitResults": true
               }
             },
             {
@@ -3194,8 +3197,8 @@ final dynamic sampleReferralFlows = {
             {
               "actionType": "CREATE_EVENT",
               "properties": {
-                "applyIf": "navigation.isUpdate!=true",
                 "entity": "",
+                "applyIf": "navigation.isUpdate!=true",
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
@@ -3209,8 +3212,8 @@ final dynamic sampleReferralFlows = {
               "properties": {
                 "applyIf": "navigation.isUpdate==true",
                 "entityType": "HFReferralModel",
-                "clientReferenceId": "{{navigation.clientReferenceId}}",
-                "collectFromPages": ["sideEffectFromCurrentCycle"]
+                "collectFromPages": ["sideEffectFromCurrentCycle"],
+                "clientReferenceId": "{{navigation.clientReferenceId}}"
               }
             },
             {
@@ -3517,7 +3520,7 @@ final dynamic sampleReferralFlows = {
           ],
           "module": "HFREFERRAL",
           "heading": "HFREFERRAL_FACILITY_DETAILS_HEADING",
-          "project": "CMP-2026-01-14-010690",
+          "project": "MR-DN",
           "summary": false,
           "version": 1,
           "onAction": [
@@ -3690,7 +3693,7 @@ final dynamic sampleReferralFlows = {
           "preventScreenCapture": false
         }
       ],
-      "project": "CMP-2026-01-14-010690",
+      "project": "MR-DN",
       "summary": false,
       "version": 2,
       "disabled": false,
@@ -3698,17 +3701,17 @@ final dynamic sampleReferralFlows = {
         {
           "actionType": "SEARCH_EVENT",
           "properties": {
-            "applyIf": "navigation.isUpdate==true",
-            "awaitResults": true,
-            "name": "HFReferral",
             "data": [
               {
                 "key": "clientReferenceId",
+                "root": "HFReferral",
                 "value": "{{navigation.clientReferenceId}}",
-                "operation": "equals",
-                "root": "HFReferral"
+                "operation": "equals"
               }
-            ]
+            ],
+            "name": "HFReferral",
+            "applyIf": "navigation.isUpdate==true",
+            "awaitResults": true
           }
         },
         {
@@ -3726,8 +3729,8 @@ final dynamic sampleReferralFlows = {
         {
           "actionType": "CREATE_EVENT",
           "properties": {
-            "applyIf": "navigation.isUpdate!=true",
             "entity": "",
+            "applyIf": "navigation.isUpdate!=true",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
@@ -3741,8 +3744,13 @@ final dynamic sampleReferralFlows = {
           "properties": {
             "applyIf": "navigation.isUpdate==true",
             "entityType": "HFReferralModel",
-            "clientReferenceId": "{{navigation.clientReferenceId}}",
-            "collectFromPages": ["sideEffectSick", "sideEffectFever", "sideEffectFromPreviousCycle", "sideEffectFromCurrentCycle"]
+            "collectFromPages": [
+              "sideEffectSick",
+              "sideEffectFever",
+              "sideEffectFromPreviousCycle",
+              "sideEffectFromCurrentCycle"
+            ],
+            "clientReferenceId": "{{navigation.clientReferenceId}}"
           }
         },
         {
@@ -3763,5 +3771,19 @@ final dynamic sampleReferralFlows = {
       "isSelected": true,
       "screenType": "FORM"
     }
-  ]
+  ],
+  "order": 3,
+  "active": true,
+  "project": "MR-DN",
+  "version": 1,
+  "disabled": false,
+  "isSelected": true,
+  "initialPage": "referralInbox",
+  "isActive": true,
+  "auditDetails": {
+    "createdBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
+    "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+    "createdTime": 1766043208665,
+    "lastModifiedTime": 1770362941024
+  }
 };
