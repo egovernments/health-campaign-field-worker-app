@@ -642,6 +642,8 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
           ),
           isRequired: true,
           child: MultiSelectDropDown(
+            sentenceCaseEnabled: false,
+            emptyItemText: localizations.translate('NO_OPTIONS_AVAILABLE'),
             errorMessage: field.errorText,
             helpText: localizations.translate('Select Variants'),
             options: productVariants!
