@@ -25,13 +25,59 @@ class ConditionalEvaluator {
       widgetData = currentState?.widgetData;
     }
 
+    // Enhance context with key aliases from stateData.modelMap
+    // This allows templates to use 'stock' or 'stockReconciliation' even if
+    // the key is 'Stock', 'StockModel', or 'StockReconciliationModel'
+    dynamic enhancedContext = context;
+    if (stateData != null && stateData.modelMap.isNotEmpty) {
+      final Map<String, dynamic> contextMap = context is Map<String, dynamic>
+          ? Map<String, dynamic>.from(context)
+          : <String, dynamic>{};
+
+      // Add key aliases for modelMap keys
+      for (final entry in stateData.modelMap.entries) {
+        final key = entry.key;
+        final lowerKey = key.toLowerCase();
+
+        // Add lowercase version if not already present
+        if (!contextMap.containsKey(lowerKey)) {
+          contextMap[lowerKey] = entry.value;
+        }
+
+        // Also add without 'Model' suffix preserving original casing
+        // (e.g., 'StockReconciliationModel' -> 'StockReconciliation' and 'stockReconciliation')
+        if (key.endsWith('Model')) {
+          final shortKey = key.substring(0, key.length - 5);
+          if (!contextMap.containsKey(shortKey)) {
+            contextMap[shortKey] = entry.value;
+          }
+          // Also add camelCase version (first letter lowercase)
+          if (shortKey.isNotEmpty) {
+            final camelKey = shortKey[0].toLowerCase() + shortKey.substring(1);
+            if (!contextMap.containsKey(camelKey)) {
+              contextMap[camelKey] = entry.value;
+            }
+          }
+        }
+
+        // Also add lowercase without 'model' suffix
+        if (lowerKey.endsWith('model')) {
+          final shortKey = lowerKey.substring(0, lowerKey.length - 5);
+          if (!contextMap.containsKey(shortKey)) {
+            contextMap[shortKey] = entry.value;
+          }
+        }
+      }
+      enhancedContext = contextMap;
+    }
+
     // Handle string expressions with templates/functions (e.g., "{{fn:hasRole('ADMIN')}} == true")
     if (value is String) {
       String resolved = value;
 
       // If it contains templates, resolve them first
       if (value.contains('{{')) {
-        resolved = resolveTemplate(value, context,
+        resolved = resolveTemplate(value, enhancedContext,
             screenKey: screenKey, stateData: stateData, widgetData: widgetData);
       }
 

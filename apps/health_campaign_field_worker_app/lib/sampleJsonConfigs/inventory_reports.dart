@@ -336,7 +336,7 @@ final dynamic inventoryReportFlows = {
           "label": "STOCK_REPORT_DETAILS_INFO_CARD_LABEL",
           "description": "STOCK_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
           "properties": {"type": "info"},
-          "hidden":
+          "visible":
               "{{fn:isNotEmpty(selectedFacility)}} && {{fn:isNotEmpty(selectedProduct)}}",
         },
         {
@@ -345,8 +345,8 @@ final dynamic inventoryReportFlows = {
           "label": "STOCK_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
           "description": "STOCK_REPORT_DETAILS_NO_RECORD_FOUND_DESCRIPTION",
           "properties": {"type": "info"},
-          "hidden":
-              "{{fn:isNotEmpty(stock)}} < 0 && {{fn:isEmpty(selectedFacility)}} && {{fn:isEmpty(selectedProduct)}}",
+          "visible":
+              "{{fn:isNotEmpty(stock)}} && {{fn:isNotEmpty(selectedFacility)}}",
         },
         {
           "type": "template",
@@ -516,7 +516,7 @@ final dynamic inventoryReportFlows = {
           "label": "STOCKRECON_REPORT_DETAILS_INFO_CARD_LABEL",
           "description": "STOCKRECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
           "properties": {"type": "info"},
-          "hidden":
+          "visible":
               "{{fn:isNotEmpty(selectedReconFacility)}} && {{fn:isNotEmpty(selectedReckonProduct)}}",
         },
         {
@@ -526,8 +526,8 @@ final dynamic inventoryReportFlows = {
           "description":
               "STOCKRECON_REPORT_DETAILS_NO_RECORD_FOUND_DESCRIPTION",
           "properties": {"type": "info"},
-          "hidden":
-              "{{fn:length(stockReconciliation)}} < 0 && {{fn:isEmpty(selectedReconFacility)}} && {{fn:isEmpty(selectedReckonProduct)}}",
+          "visible":
+              "{{fn:length(stockReconciliation)}} == 0 && {{fn:isNotEmpty(selectedReconFacility)}} && {{fn:isNotEmpty(selectedReckonProduct)}}"
         },
         {
           "type": "template",
@@ -536,12 +536,36 @@ final dynamic inventoryReportFlows = {
             "source": "StockReconciliationModel",
             "columns": [
               {
-                "header": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_1_LABEL",
+                "header": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_1_LABEL",
                 "cellValue":
                     "{{fn:formatDate(item.dateOfReconciliation, 'date', 'dd MMM yyyy')}}"
               },
               {
-                "header": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_4_LABEL",
+                "header": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_2_LABEL",
+                "cellValue": "{{item.additionalFields.fields.stockReceived}}"
+              },
+              {
+                "header": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_3_LABEL",
+                "cellValue": "{{item.additionalFields.fields.stockIssued}}"
+              },
+              {
+                "header": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_4_LABEL",
+                "cellValue": "{{item.additionalFields.fields.stockReturned}}"
+              },
+              {
+                "header": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_5_LABEL",
+                "cellValue": "{{item.additionalFields.fields.stockLost}}"
+              },
+              {
+                "header": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_6_LABEL",
+                "cellValue": "{{item.additionalFields.fields.stockDamaged}}"
+              },
+              {
+                "header": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_7_LABEL",
+                "cellValue": "{{item.physicalCount}}"
+              },
+              {
+                "header": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_8_LABEL",
                 "cellValue": "{{item.calculatedCount}}"
               }
             ],

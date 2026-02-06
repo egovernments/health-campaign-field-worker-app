@@ -334,10 +334,13 @@ class DigitScannerUtils {
     required String batchNumber,
     required DateTime expiryDate,
     required String serialNumber,
+    String? gtin,
   }) {
     const groupSeparator = '\u001d'; // ASCII 29
     final formattedDate = DateFormat('yyMMdd').format(expiryDate);
 
-    return '10$batchNumber${groupSeparator}17${formattedDate}21$serialNumber$groupSeparator';
+    // Include GTIN (01) if provided
+    final gtinPart = gtin != null && gtin.isNotEmpty ? '01$gtin$groupSeparator' : '';
+    return '${gtinPart}10$batchNumber${groupSeparator}17${formattedDate}21$serialNumber$groupSeparator';
   }
 }
