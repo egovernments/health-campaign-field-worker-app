@@ -398,7 +398,8 @@ final dynamic sampleReferralFlows = {
           "format": "infoCard",
           "hidden": false,
           "fieldName": "matchNotFound",
-          "description": "REFERRAL_INBOX_INFO_CARD_DESCRIPTION"
+          "description": "REFERRAL_INBOX_INFO_CARD_DESCRIPTION",
+          "showOnEmptySearch": true
         },
         {
           "type": "template",
