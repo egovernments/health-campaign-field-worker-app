@@ -638,14 +638,14 @@ class _ProductSelectionCardState extends LocalizedState<ProductSelectionCard> {
 
         return LabeledField(
           label: localizations.translate(
-            labelFromSchema ?? "Select Product",
+            labelFromSchema ?? "SELECT_PRODUCT",
           ),
           isRequired: true,
           child: MultiSelectDropDown(
             sentenceCaseEnabled: false,
             emptyItemText: localizations.translate('NO_OPTIONS_AVAILABLE'),
             errorMessage: field.errorText,
-            helpText: localizations.translate('Select Variants'),
+            helpText: localizations.translate('SELECT_PRODUCT_VARIANTS'),
             options: productVariants!
                 .map((e) => DropdownItem(
                       code: e.id,

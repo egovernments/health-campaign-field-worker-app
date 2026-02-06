@@ -11,6 +11,7 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/models/scanner_validation.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:digit_scanner/utils/scanner_utils.dart';
+import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';

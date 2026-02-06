@@ -189,16 +189,50 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                     DigitButton(
                       label: '',
                       onPressed: () {
-                        // Clear scanner state before navigating to edit barcode
+                        // For barcode edit, use existing state.barCodes if available,
+                        // otherwise parse from form value
+                        List<GS1Barcode> existingBarcodes = [];
+                        if (isThisScanner && state.barCodes.isNotEmpty) {
+                          existingBarcodes = List.from(state.barCodes);
+                        } else if (formValue != null) {
+                          // Parse form value (GTIN,SERIAL,BATCH,EXPIRY) back to GS1Barcode
+                          final parts = formValue.split(',');
+                          if (parts.length >= 4) {
+                            final gtin = parts[0].trim();
+                            final serial = parts[1].trim();
+                            final batch = parts[2].trim();
+                            final expiryStr = parts[3].trim();
+
+                            DateTime expiryDate;
+                            try {
+                              expiryDate = DateFormat('dd MMM yyyy').parse(expiryStr);
+                            } catch (_) {
+                              expiryDate = DateTime.now().add(const Duration(days: 365));
+                            }
+
+                            final barcodeString = DigitScannerUtils().generateGS1Barcode(
+                              serialNumber: serial,
+                              expiryDate: expiryDate,
+                              batchNumber: batch,
+                              gtin: gtin,
+                            );
+
+                            final parser = GS1BarcodeParser.defaultParser();
+                            existingBarcodes = [parser.parse(barcodeString)];
+                          }
+                        }
+
+                        // Send existing barcodes to bloc before navigating
                         context.read<DigitScannerBloc>().add(
                               DigitScannerEvent.handleScanner(
-                                barCode: [],
+                                barCode: existingBarcodes,
                                 qrCode: [],
                                 scannerId: formControlName,
                               ),
                             );
                         context.router.push(DigitScannerRoute(
                           validations: _toScannerValidations(),
+                          isEditEnabled: true,
                           scannerId: formControlName,
                         ));
                       },
