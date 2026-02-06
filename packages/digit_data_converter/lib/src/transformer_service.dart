@@ -1248,11 +1248,12 @@ class FormEntityMapper {
 
     void extractUnmapped(Map<String, dynamic> data) {
       data.forEach((key, value) {
-        if (usedPaths.contains(key)) return;
         if (value is Map<String, dynamic>) {
           extractUnmapped(value);
         } else {
-          unmapped[key] = value;
+          if (!usedPaths.contains(key)) {
+            unmapped[key] = value;
+          }
         }
       });
     }

@@ -79,13 +79,11 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
         barCodes: validBarcodes,
         qrCodes: validQRCodes,
         error: anyInvalid
-            ? (event.patternMessage != null && event.patternMessage!.trim().isNotEmpty)
-                ? event.patternMessage!
-                : _buildErrorMessage(
-                    invalidBarcodesCount: invalidBarcodeCount,
-                    invalidQRCodesCount: invalidQRCodeCount,
-                    manualError: manualError,
-                  )
+            ? _buildErrorMessage(
+          invalidBarcodesCount: invalidBarcodeCount,
+          invalidQRCodesCount: invalidQRCodeCount,
+          manualError: manualError,
+        )
             : null,
         scannerId: event.scannerId,
       ));
@@ -115,7 +113,6 @@ class DigitScannerEvent with _$DigitScannerEvent {
     @Default([]) List<String> qrCode,
     @Default('') String manualCode,
     String? regex,
-    String? patternMessage,
     /// Identifier for which scanner field initiated this scan.
     /// Used to prevent multiple scanner fields from reacting to the same state change.
     /// Defaults to 'default' for backward compatibility with existing flows.
