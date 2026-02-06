@@ -20,6 +20,7 @@ mixin _$DigitScannerEvent {
   List<String> get qrCode => throw _privateConstructorUsedError;
   String get manualCode => throw _privateConstructorUsedError;
   String? get regex => throw _privateConstructorUsedError;
+  String? get patternMessage => throw _privateConstructorUsedError;
 
   /// Identifier for which scanner field initiated this scan.
   /// Used to prevent multiple scanner fields from reacting to the same state change.
@@ -27,22 +28,37 @@ mixin _$DigitScannerEvent {
   String get scannerId => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<GS1Barcode> barCode, List<String> qrCode,
-            String manualCode, String? regex, String scannerId)
+    required TResult Function(
+            List<GS1Barcode> barCode,
+            List<String> qrCode,
+            String manualCode,
+            String? regex,
+            String? patternMessage,
+            String scannerId)
         handleScanner,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<GS1Barcode> barCode, List<String> qrCode,
-            String manualCode, String? regex, String scannerId)?
+    TResult? Function(
+            List<GS1Barcode> barCode,
+            List<String> qrCode,
+            String manualCode,
+            String? regex,
+            String? patternMessage,
+            String scannerId)?
         handleScanner,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<GS1Barcode> barCode, List<String> qrCode,
-            String manualCode, String? regex, String scannerId)?
+    TResult Function(
+            List<GS1Barcode> barCode,
+            List<String> qrCode,
+            String manualCode,
+            String? regex,
+            String? patternMessage,
+            String scannerId)?
         handleScanner,
     required TResult orElse(),
   }) =>
@@ -80,6 +96,7 @@ abstract class $DigitScannerEventCopyWith<$Res> {
       List<String> qrCode,
       String manualCode,
       String? regex,
+      String? patternMessage,
       String scannerId});
 }
 
@@ -100,6 +117,7 @@ class _$DigitScannerEventCopyWithImpl<$Res, $Val extends DigitScannerEvent>
     Object? qrCode = null,
     Object? manualCode = null,
     Object? regex = freezed,
+    Object? patternMessage = freezed,
     Object? scannerId = null,
   }) {
     return _then(_value.copyWith(
@@ -118,6 +136,10 @@ class _$DigitScannerEventCopyWithImpl<$Res, $Val extends DigitScannerEvent>
       regex: freezed == regex
           ? _value.regex
           : regex // ignore: cast_nullable_to_non_nullable
+              as String?,
+      patternMessage: freezed == patternMessage
+          ? _value.patternMessage
+          : patternMessage // ignore: cast_nullable_to_non_nullable
               as String?,
       scannerId: null == scannerId
           ? _value.scannerId
@@ -141,6 +163,7 @@ abstract class _$$DigitScannerScanEventImplCopyWith<$Res>
       List<String> qrCode,
       String manualCode,
       String? regex,
+      String? patternMessage,
       String scannerId});
 }
 
@@ -159,6 +182,7 @@ class __$$DigitScannerScanEventImplCopyWithImpl<$Res>
     Object? qrCode = null,
     Object? manualCode = null,
     Object? regex = freezed,
+    Object? patternMessage = freezed,
     Object? scannerId = null,
   }) {
     return _then(_$DigitScannerScanEventImpl(
@@ -178,6 +202,10 @@ class __$$DigitScannerScanEventImplCopyWithImpl<$Res>
           ? _value.regex
           : regex // ignore: cast_nullable_to_non_nullable
               as String?,
+      patternMessage: freezed == patternMessage
+          ? _value.patternMessage
+          : patternMessage // ignore: cast_nullable_to_non_nullable
+              as String?,
       scannerId: null == scannerId
           ? _value.scannerId
           : scannerId // ignore: cast_nullable_to_non_nullable
@@ -194,6 +222,7 @@ class _$DigitScannerScanEventImpl implements DigitScannerScanEvent {
       final List<String> qrCode = const [],
       this.manualCode = '',
       this.regex,
+      this.patternMessage,
       this.scannerId = 'default'})
       : _barCode = barCode,
         _qrCode = qrCode;
@@ -221,6 +250,8 @@ class _$DigitScannerScanEventImpl implements DigitScannerScanEvent {
   final String manualCode;
   @override
   final String? regex;
+  @override
+  final String? patternMessage;
 
   /// Identifier for which scanner field initiated this scan.
   /// Used to prevent multiple scanner fields from reacting to the same state change.
@@ -231,7 +262,7 @@ class _$DigitScannerScanEventImpl implements DigitScannerScanEvent {
 
   @override
   String toString() {
-    return 'DigitScannerEvent.handleScanner(barCode: $barCode, qrCode: $qrCode, manualCode: $manualCode, regex: $regex, scannerId: $scannerId)';
+    return 'DigitScannerEvent.handleScanner(barCode: $barCode, qrCode: $qrCode, manualCode: $manualCode, regex: $regex, patternMessage: $patternMessage, scannerId: $scannerId)';
   }
 
   @override
@@ -244,6 +275,8 @@ class _$DigitScannerScanEventImpl implements DigitScannerScanEvent {
             (identical(other.manualCode, manualCode) ||
                 other.manualCode == manualCode) &&
             (identical(other.regex, regex) || other.regex == regex) &&
+            (identical(other.patternMessage, patternMessage) ||
+                other.patternMessage == patternMessage) &&
             (identical(other.scannerId, scannerId) ||
                 other.scannerId == scannerId));
   }
@@ -255,6 +288,7 @@ class _$DigitScannerScanEventImpl implements DigitScannerScanEvent {
       const DeepCollectionEquality().hash(_qrCode),
       manualCode,
       regex,
+      patternMessage,
       scannerId);
 
   @JsonKey(ignore: true)
@@ -267,33 +301,51 @@ class _$DigitScannerScanEventImpl implements DigitScannerScanEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<GS1Barcode> barCode, List<String> qrCode,
-            String manualCode, String? regex, String scannerId)
+    required TResult Function(
+            List<GS1Barcode> barCode,
+            List<String> qrCode,
+            String manualCode,
+            String? regex,
+            String? patternMessage,
+            String scannerId)
         handleScanner,
   }) {
-    return handleScanner(barCode, qrCode, manualCode, regex, scannerId);
+    return handleScanner(
+        barCode, qrCode, manualCode, regex, patternMessage, scannerId);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<GS1Barcode> barCode, List<String> qrCode,
-            String manualCode, String? regex, String scannerId)?
+    TResult? Function(
+            List<GS1Barcode> barCode,
+            List<String> qrCode,
+            String manualCode,
+            String? regex,
+            String? patternMessage,
+            String scannerId)?
         handleScanner,
   }) {
-    return handleScanner?.call(barCode, qrCode, manualCode, regex, scannerId);
+    return handleScanner?.call(
+        barCode, qrCode, manualCode, regex, patternMessage, scannerId);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<GS1Barcode> barCode, List<String> qrCode,
-            String manualCode, String? regex, String scannerId)?
+    TResult Function(
+            List<GS1Barcode> barCode,
+            List<String> qrCode,
+            String manualCode,
+            String? regex,
+            String? patternMessage,
+            String scannerId)?
         handleScanner,
     required TResult orElse(),
   }) {
     if (handleScanner != null) {
-      return handleScanner(barCode, qrCode, manualCode, regex, scannerId);
+      return handleScanner(
+          barCode, qrCode, manualCode, regex, patternMessage, scannerId);
     }
     return orElse();
   }
@@ -333,6 +385,7 @@ abstract class DigitScannerScanEvent implements DigitScannerEvent {
       final List<String> qrCode,
       final String manualCode,
       final String? regex,
+      final String? patternMessage,
       final String scannerId}) = _$DigitScannerScanEventImpl;
 
   @override
@@ -343,6 +396,8 @@ abstract class DigitScannerScanEvent implements DigitScannerEvent {
   String get manualCode;
   @override
   String? get regex;
+  @override
+  String? get patternMessage;
   @override
 
   /// Identifier for which scanner field initiated this scan.

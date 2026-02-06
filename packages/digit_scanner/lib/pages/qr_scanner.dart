@@ -72,6 +72,9 @@ class DigitScannerPage extends LocalizedStatefulWidget {
   /// Gets the scan limit exceeded message from validations
   String? get scanLimitMessage => validations?.scanLimitMessage;
 
+  /// Gets the pattern validation message from validations
+  String? get patternMessage => validations?.patternMessage;
+
   @override
   State<DigitScannerPage> createState() => DigitScannerPageState();
 }
@@ -212,22 +215,23 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
     final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
-      body: BlocBuilder<DigitScannerBloc, DigitScannerState>(
-        builder: (context, state) {
+      body: BlocConsumer<DigitScannerBloc, DigitScannerState>(
+        listener: (context, state) {
           if (state.error != null &&
               (state.error?.toString() ?? '').trim().isNotEmpty) {
             Toast.showToast(
               context,
               type: ToastType.error,
-              message: state.error.toString(),
-              sentenceCaseEnabled: false
+              message: localizations.translate(state.error.toString()),
+              sentenceCaseEnabled: false,
             );
-            // Clear scanner state (barcodes, qrcodes, and implicitly error)
             context.read<DigitScannerBloc>().add(
                   DigitScannerEvent.handleScanner(
                       barCode: [], qrCode: [], scannerId: widget.scannerId),
                 );
           }
+        },
+        builder: (context, state) {
           return _cameras.isNotEmpty
               ? !manualCode
                   ? scanWidget(context, theme, textTheme, state)
@@ -259,6 +263,8 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
       barcodeScanner: _barcodeScanner,
       localizations: localizations,
       scanLimitMessage: widget.scanLimitMessage,
+      regex: widget.effectiveRegex,
+      patternMessage: widget.patternMessage,
     );
   }
 
@@ -430,6 +436,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                 barCode: updatedBarcodes,
                                 qrCode: state.qrCodes,
                                 regex: widget.effectiveRegex,
+                                patternMessage: widget.patternMessage,
                                 scannerId: widget.scannerId,
                               ),
                             );
@@ -475,6 +482,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                     barCode: state.barCodes,
                                     qrCode: updatedQRCodes,
                                     regex: widget.effectiveRegex,
+                                    patternMessage: widget.patternMessage,
                                     scannerId: widget.scannerId),
                               );
                               final scannedCount = widget.effectiveIsGS1code
@@ -673,6 +681,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                 barCode: state.barCodes,
                                 qrCode: updatedQRCodes,
                                 regex: widget.effectiveRegex,
+                                patternMessage: widget.patternMessage,
                                 scannerId: widget.scannerId,
                               ),
                             );
@@ -896,12 +905,9 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                     bloc.add(DigitScannerEvent.handleScanner(
                       barCode: state.barCodes,
                       qrCode: state.qrCodes,
-                      regex: widget.effectiveRegex,
                       scannerId: widget.scannerId,
                     ));
-                    Navigator.of(
-                      context,
-                    ).pop();
+                    Navigator.of(context).pop();
                   }
                 },
               ),
@@ -1026,6 +1032,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                         barCode: result,
                                         qrCode: state.qrCodes,
                                         regex: widget.effectiveRegex,
+                                        patternMessage: widget.patternMessage,
                                         scannerId: widget.scannerId,
                                       ),
                                     );
@@ -1043,6 +1050,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                         barCode: state.barCodes,
                                         qrCode: codes,
                                         regex: widget.effectiveRegex,
+                                        patternMessage: widget.patternMessage,
                                         scannerId: widget.scannerId,
                                       ),
                                     );
