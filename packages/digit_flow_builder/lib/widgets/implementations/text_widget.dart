@@ -44,6 +44,8 @@ class TextWidget implements FlowWidget {
       Text(
         displayValue.isEmpty ? '--' : displayValue,
         style: textStyle,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 2,
       ),
       properties,
     );
