@@ -140,17 +140,35 @@ class _ProximitySearchStatefulState extends State<_ProximitySearchStateful> {
     );
     final radius = radiusValidation?['value'];
 
-    for (var raw in onActionList) {
-      final updated = Map<String, dynamic>.from(raw);
+    final bool isProximityDisabled = !value;
 
+    for (var raw in onActionList) {
+      // When proximity is disabled, remove only this filter (not the entire state)
+      if (isProximityDisabled) {
+        final searchName = raw['properties']?['name'] as String? ?? 'default';
+        final filterKey = json['fieldName'] as String?;
+
+        widget.onAction(ActionConfig.fromJson({
+          'actionType': 'CLEAR_STATE',
+          'properties': {
+            'type': 'CLEAR_STATE',
+            'name': searchName,
+            'filterKeys': [filterKey],
+            'triggerSearch': true,
+          },
+        }));
+        continue;
+      }
+
+      final updated = Map<String, dynamic>.from(raw);
       updated['properties'] ??= {};
 
-      // ✨ NEW: Evaluate actionType from config dynamically
+      // Evaluate actionType from config dynamically
       final rawType = raw['actionType'] ?? "";
-      final dynamicType = resolveDynamicType(rawType, value);
+      final resolvedActionType = resolveDynamicType(rawType, value);
 
-      updated['actionType'] = dynamicType;
-      updated['properties']['type'] = dynamicType;
+      updated['actionType'] = resolvedActionType;
+      updated['properties']['type'] = resolvedActionType;
 
       // Data override
       final existingData = raw['properties']?['data'] ?? [];

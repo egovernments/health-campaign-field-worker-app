@@ -244,6 +244,7 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                                       (action) {
                                         ActionHandler.execute(action, context, {
                                           'wrappers': const [],
+                                          '_compositeKey': compositeKey,
                                         });
                                       },
                                     ))
@@ -263,6 +264,7 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                                     (action) {
                                       ActionHandler.execute(action, context, {
                                         'wrappers': const [],
+                                        '_compositeKey': compositeKey,
                                       });
                                     },
                                   ))
@@ -318,6 +320,7 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                                     (action) {
                                       ActionHandler.execute(action, context, {
                                         'wrappers': const [],
+                                        '_compositeKey': compositeKey,
                                       });
                                     },
                                     compositeKey: compositeKey,

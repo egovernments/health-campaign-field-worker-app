@@ -109,10 +109,19 @@ String? getCompositeKey(BuildContext context, {String? screenKey}) {
 
 /// Gets the effective composite key from multiple sources.
 /// Similar to getEffectiveScreenKey but returns composite key.
+///
+/// Resolution order:
+/// 1. contextData['_compositeKey'] — pre-computed by layout renderer
+/// 2. Route arguments (screenKey + instanceId)
+/// 3. contextData['parentScreenKey'] + contextData['_instanceId']
 String? getEffectiveCompositeKey(
   BuildContext context,
   Map<String, dynamic> contextData,
 ) {
+  // Prefer pre-computed compositeKey passed via contextData
+  final preComputed = contextData['_compositeKey'] as String?;
+  if (preComputed != null) return preComputed;
+
   final data = contextData;
 
   final screenKey = data['parentScreenKey'] ?? getEffectiveScreenKey(context, data);
