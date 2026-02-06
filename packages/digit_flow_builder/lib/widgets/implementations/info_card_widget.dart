@@ -1,3 +1,4 @@
+import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_ui_components/enum/app_enums.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_info_card.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,19 @@ class InfoCardWidget implements FlowWidget {
           ...formData,
           ...widgetData,
         };
+
+        // Handle showOnEmptySearch: only show when a search completed with no results
+        final showOnEmptySearch = json['showOnEmptySearch'] == true;
+        if (showOnEmptySearch) {
+          final base = flowState?.base;
+          final stateWrapper = flowState?.stateWrapper;
+          // Show only when search has completed (CrudStateLoaded) and results are empty
+          final hasSearchCompleted = base is CrudStateLoaded;
+          final hasNoResults = stateWrapper == null || stateWrapper.isEmpty;
+          if (!hasSearchCompleted || !hasNoResults) {
+            return const SizedBox.shrink();
+          }
+        }
 
         // Check hidden condition
         if (json['hidden'] != null) {

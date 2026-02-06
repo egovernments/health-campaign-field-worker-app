@@ -454,6 +454,11 @@ final dynamic sampleReferralFlows = {
                   "mainAxisAlignment": "spaceBetween"
                 }
               },
+              // {
+              //     "value": "HF_REFERRAL_INBOX_DATE_OF_EVALUATION {{ fn:formatDate(itemData.additionalFields.fields.dateOfEvaluation, 'date', dd MMM yyyy) }}",
+              //     "format": "textTemplate",
+              //     "fieldName": "textTemplatetext"
+              // },
               {
                 "type": "template",
                 "format": "row",
