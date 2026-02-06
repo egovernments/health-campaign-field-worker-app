@@ -585,9 +585,10 @@ class _StockReconciliationCardState
       return;
     }
 
+    final facilityId = _selectedFacility!.id;
+
     try {
-      // Fetch all stocks for the product and tenant
-      // The calculation method will filter by facility (receiverId OR senderId)
+      // Fetch stocks for the product and tenant where facility is sender OR receiver
       final filters = <SearchFilter>[
         SearchFilter(
           root: 'stock',
@@ -600,6 +601,13 @@ class _StockReconciliationCardState
           field: 'productVariantId',
           operator: 'equals',
           value: _selectedProduct!.id,
+        ),
+        // Check if facility is sender OR receiver using equalsAny operator
+        SearchFilter(
+          root: 'stock',
+          field: 'senderId,receiverId',
+          operator: 'equalsAny',
+          value: facilityId,
         ),
       ];
 
