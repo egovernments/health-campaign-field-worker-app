@@ -113,7 +113,9 @@ String? getEffectiveCompositeKey(
   BuildContext context,
   Map<String, dynamic> contextData,
 ) {
-  final screenKey = getEffectiveScreenKey(context, contextData);
+  final data = contextData;
+
+  final screenKey = data['parentScreenKey'] ?? getEffectiveScreenKey(context, data);
   if (screenKey == null) return null;
 
   final instanceId = getInstanceIdFromArgs(context);
@@ -225,6 +227,11 @@ String interpolateWithCrudStates({
               return rowItem[trimmed];
             }
 
+            // Try to resolve from widgetData (for dropdown selections, filter values, etc.)
+            if (widgetData != null && widgetData.containsKey(trimmed)) {
+              return widgetData[trimmed];
+            }
+
             // Try to resolve from stateData.modelMap
             if (stateData.modelMap.containsKey(trimmed)) {
               return stateData.modelMap[trimmed];
@@ -239,7 +246,7 @@ String interpolateWithCrudStates({
               if (item != null) ...item,
             };
             return resolveValueRaw(placeholder, contextData,
-                stateData: stateData);
+                widgetData: widgetData, stateData: stateData);
           }).toList();
 
     return FunctionRegistry.call(fnName, resolvedArgs, stateData)?.toString() ??

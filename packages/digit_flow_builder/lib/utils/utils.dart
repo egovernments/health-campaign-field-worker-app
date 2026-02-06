@@ -433,7 +433,25 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
         }
       }
 
-      // Normal path resolution
+      // Check widgetData for unprefixed simple variables first
+      // This handles cases like {{fn:isEmpty(selectedReconFacility)}} where
+      // selectedReconFacility is a widget data field (dropdown selection)
+      if (widgetData != null && !path.contains('.')) {
+        final widgetValue = widgetData[path];
+        if (widgetValue != null) {
+          return widgetValue;
+        }
+      }
+
+      // Also check widgetData for dotted paths that might exist there
+      if (widgetData != null && path.contains('.')) {
+        final widgetValue = _resolvePath(widgetData, path);
+        if (widgetValue != null) {
+          return widgetValue;
+        }
+      }
+
+      // Normal path resolution from contextData
       return _resolvePath(contextData, path);
     }
     return value;
@@ -531,6 +549,18 @@ dynamic _resolvePath(dynamic root, String path) {
       // Handle .length property access
       if (part == 'length') {
         current = current.length;
+        continue;
+      }
+
+      // Handle 'first' and 'last' keywords
+      if (part == 'first') {
+        if (current.isEmpty) return null;
+        current = current.first;
+        continue;
+      }
+      if (part == 'last') {
+        if (current.isEmpty) return null;
+        current = current.last;
         continue;
       }
 

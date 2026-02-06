@@ -340,7 +340,7 @@ final jsonConfig = {
           "projectBeneficiaryClientReferenceId":
               "__context:ProjectBeneficiaryClientReferenceId",
           "createdBy": "__context:userId",
-          "status": "__value:ADMINISTRATION_SUCCESS",
+          "status": "__value:DELIVERED",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "resources": "list:TaskResourceModel",
@@ -391,7 +391,7 @@ final jsonConfig = {
         },
         "listMappings": {
           "TaskResourceModel": {
-            "listSource": "__listItem:ProductVariants",
+            "listSource": "__listItem:doseCriteria[0].ProductVariants",
             "mappings": {
               "id": "id",
               "clientReferenceId": "__generate:uuid",

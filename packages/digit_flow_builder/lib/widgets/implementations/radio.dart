@@ -35,13 +35,16 @@ class RadioWidget implements FlowWidget {
       return const SizedBox.shrink();
     }
 
-    // If no screenKey, fall back to non-reactive behavior
-    if (state.screenKey == null) {
+    // Use compositeKey for registry operations (includes instanceId for proper isolation)
+    final compositeKey = state.compositeKey ?? state.screenKey;
+
+    // If no compositeKey, fall back to non-reactive behavior
+    if (compositeKey == null) {
       return _buildRadioContent(
         json: json,
         context: context,
         onAction: onAction,
-        screenKey: state.screenKey,
+        compositeKey: compositeKey,
         evalContext: state.evalContext,
         data: data,
         key: key,
@@ -52,7 +55,7 @@ class RadioWidget implements FlowWidget {
 
     // Wrap in ValueListenableBuilder to react to state changes
     return ValueListenableBuilder<FlowCrudState?>(
-      valueListenable: FlowCrudStateRegistry().listen(state.screenKey!),
+      valueListenable: FlowCrudStateRegistry().listen(compositeKey),
       builder: (context, flowState, _) {
         final widgetData = flowState?.widgetData ?? {};
 
@@ -66,7 +69,7 @@ class RadioWidget implements FlowWidget {
           json: json,
           context: context,
           onAction: onAction,
-          screenKey: state.screenKey,
+          compositeKey: compositeKey,
           evalContext: updatedEvalContext,
           data: data,
           key: key,
@@ -81,7 +84,7 @@ class RadioWidget implements FlowWidget {
     required Map<String, dynamic> json,
     required BuildContext context,
     required void Function(ActionConfig) onAction,
-    required String? screenKey,
+    required String? compositeKey,
     required Map<String, dynamic> evalContext,
     required List<dynamic> data,
     required String? key,
@@ -129,7 +132,7 @@ class RadioWidget implements FlowWidget {
     }).toList();
 
     return RadioList(
-      key: ValueKey('${screenKey}_${key}_${currentValue ?? ''}'),
+      key: ValueKey('${compositeKey}_${key}_${currentValue ?? ''}'),
       radioDigitButtons: radioButtons,
       groupValue: currentValue?.toString() ?? "",
       onChanged: (selectedValue) {
@@ -141,8 +144,8 @@ class RadioWidget implements FlowWidget {
           );
 
           // Store selected value in widgetData only (for filters)
-          if (screenKey != null) {
-            final currentState = FlowCrudStateRegistry().get(screenKey);
+          if (compositeKey != null) {
+            final currentState = FlowCrudStateRegistry().get(compositeKey);
             final existingWidgetData = currentState?.widgetData ?? {};
 
             // Update widget data with the selected value
@@ -156,7 +159,7 @@ class RadioWidget implements FlowWidget {
                 (currentState ?? const FlowCrudState()).copyWith(
               widgetData: updatedWidgetData,
             );
-            FlowCrudStateRegistry().update(screenKey, updatedState);
+            FlowCrudStateRegistry().update(compositeKey, updatedState);
           }
 
           // Trigger onChange actions if defined

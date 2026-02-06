@@ -42,15 +42,18 @@ class DropdownWidget implements FlowWidget {
     final displayKey = json['displayKey'] as String? ?? 'name';
     final valueKey = json['valueKey'] as String? ?? 'id';
 
-    // If no screenKey, fall back to non-reactive behavior
-    if (state.screenKey == null) {
+    // Use compositeKey for registry operations (includes instanceId for proper isolation)
+    final compositeKey = state.compositeKey ?? state.screenKey;
+
+    // If no compositeKey, fall back to non-reactive behavior
+    if (compositeKey == null) {
       return _buildDropdownContent(
         json: json,
         context: context,
         onAction: onAction,
         localization: localization,
         crudCtx: crudCtx,
-        screenKey: state.screenKey,
+        compositeKey: compositeKey,
         evalContext: state.evalContext,
         label: label,
         key: key,
@@ -64,7 +67,7 @@ class DropdownWidget implements FlowWidget {
 
     // Wrap in ValueListenableBuilder to react to state changes
     return ValueListenableBuilder<FlowCrudState?>(
-      valueListenable: FlowCrudStateRegistry().listen(state.screenKey!),
+      valueListenable: FlowCrudStateRegistry().listen(compositeKey),
       builder: (context, flowState, _) {
         final formData = flowState?.formData ?? {};
         final widgetData = flowState?.widgetData ?? {};
@@ -82,7 +85,7 @@ class DropdownWidget implements FlowWidget {
           onAction: onAction,
           localization: localization,
           crudCtx: crudCtx,
-          screenKey: state.screenKey,
+          compositeKey: compositeKey,
           evalContext: updatedEvalContext,
           label: label,
           key: key,
@@ -102,7 +105,7 @@ class DropdownWidget implements FlowWidget {
     required void Function(ActionConfig) onAction,
     required dynamic localization,
     required CrudItemContext? crudCtx,
-    required String? screenKey,
+    required String? compositeKey,
     required Map<String, dynamic> evalContext,
     required String label,
     required String? key,
@@ -131,14 +134,14 @@ class DropdownWidget implements FlowWidget {
           sourceData = resolveValueRaw(
             "{{ $cleanKey }}",
             evalContext,
-            screenKey: screenKey,
+            screenKey: compositeKey,
             stateData: crudCtx?.stateData,
           );
         }
         // Case 1: Singleton path
         else if (cleanKey.startsWith("singleton")) {
           sourceData =
-              resolveValueRaw("{{ $cleanKey }}", null, screenKey: screenKey);
+              resolveValueRaw("{{ $cleanKey }}", null, screenKey: compositeKey);
         }
         // Case 2: Navigation path
         else if (cleanKey.startsWith("navigation.")) {
@@ -148,8 +151,8 @@ class DropdownWidget implements FlowWidget {
             sourceData = formData[cacheKey];
           } else {
             // Get navigation params and add to evalContext
-            final navigationParams = screenKey != null
-                ? FlowCrudStateRegistry().getNavigationParams(screenKey)
+            final navigationParams = compositeKey != null
+                ? FlowCrudStateRegistry().getNavigationParams(compositeKey)
                 : null;
             final navContext = {
               ...evalContext,
@@ -158,15 +161,15 @@ class DropdownWidget implements FlowWidget {
 
             // Resolve from navigation context
             sourceData = resolveValueRaw("{{ $cleanKey }}", navContext,
-                screenKey: screenKey);
+                screenKey: compositeKey);
 
             // Cache the navigation data in formData to survive state updates
-            if (sourceData != null && screenKey != null) {
+            if (sourceData != null && compositeKey != null) {
               final dataToCache = sourceData;
-              final screenKeyToCache = screenKey;
+              final compositeKeyToCache = compositeKey;
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 final currentStateForCache =
-                    FlowCrudStateRegistry().get(screenKeyToCache);
+                    FlowCrudStateRegistry().get(compositeKeyToCache);
                 final existingFormDataForCache =
                     currentStateForCache?.formData ?? {};
                 final updatedFormDataForCache = {
@@ -178,7 +181,7 @@ class DropdownWidget implements FlowWidget {
                   formData: updatedFormDataForCache,
                 );
                 FlowCrudStateRegistry()
-                    .update(screenKeyToCache, updatedStateForCache);
+                    .update(compositeKeyToCache, updatedStateForCache);
               });
             }
           }
@@ -186,7 +189,7 @@ class DropdownWidget implements FlowWidget {
         // Case 3: If the current item already has this source
         else if (crudCtx?.item != null && (crudCtx!.item?[cleanKey] != null)) {
           sourceData =
-              resolveValueRaw(cleanKey, crudCtx.item, screenKey: screenKey);
+              resolveValueRaw(cleanKey, crudCtx.item, screenKey: compositeKey);
         }
         // Case 4: Try modelMap first (for grouped entities like ProjectFacilityModel)
         else if (crudCtx?.stateData?.modelMap != null &&
@@ -208,7 +211,7 @@ class DropdownWidget implements FlowWidget {
           }
           // Fallback: try resolveValueRaw
           sourceData ??=
-              resolveValueRaw("{{ $cleanKey }}", rawState, screenKey: screenKey);
+              resolveValueRaw("{{ $cleanKey }}", rawState, screenKey: compositeKey);
         }
       }
       // Case 6: Direct array
@@ -228,7 +231,7 @@ class DropdownWidget implements FlowWidget {
       else {
         // Then try evalContext (contains itemData, parentData, formData, etc.)
         currentValue =
-            resolveValue('{{$key}}', evalContext, screenKey: screenKey);
+            resolveValue('{{$key}}', evalContext, screenKey: compositeKey);
         // If not found, check formData directly
         if (currentValue == '{{$key}}' || currentValue == null) {
           currentValue = formData[key];
@@ -255,7 +258,7 @@ class DropdownWidget implements FlowWidget {
       label: label,
       isRequired: isRequired,
       child: DigitDropdown(
-        key: ValueKey('${screenKey}_${key}_${currentValue ?? ''}'),
+        key: ValueKey('${compositeKey}_${key}_${currentValue ?? ''}'),
         selectedOption: selectedItem,
         sentenceCaseEnabled: true,
         items: items,
@@ -280,8 +283,8 @@ class DropdownWidget implements FlowWidget {
             }
 
             // IMPORTANT: Store the selected value in the form state and widget data before triggering onChange
-            if (screenKey != null) {
-              final currentState = FlowCrudStateRegistry().get(screenKey);
+            if (compositeKey != null) {
+              final currentState = FlowCrudStateRegistry().get(compositeKey);
               final existingFormData = currentState?.formData ?? {};
               final existingWidgetData = currentState?.widgetData ?? {};
 
@@ -297,7 +300,7 @@ class DropdownWidget implements FlowWidget {
                   (currentState ?? const FlowCrudState()).copyWith(
                 widgetData: updatedWidgetData,
               );
-              FlowCrudStateRegistry().update(screenKey, updatedState);
+              FlowCrudStateRegistry().update(compositeKey, updatedState);
             }
 
             // Trigger onChange actions if defined
