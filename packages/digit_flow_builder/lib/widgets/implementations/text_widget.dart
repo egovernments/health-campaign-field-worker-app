@@ -41,13 +41,11 @@ class TextWidget implements FlowWidget {
         .replaceAll(RegExp(r'\bnull\b', caseSensitive: false), '--');
 
     return WidgetParsers.wrapWithBottomGap(
-      Flexible(
-        child: Text(
-          displayValue.isEmpty ? '--' : displayValue,
-          style: textStyle,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 2,
-        ),
+      Text(
+        displayValue.isEmpty ? '--' : displayValue,
+        style: textStyle,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 2,
       ),
       properties,
     );
