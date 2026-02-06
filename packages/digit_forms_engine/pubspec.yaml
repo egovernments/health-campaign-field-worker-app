@@ -26,6 +26,7 @@ dependencies:
   provider: ^6.1.5
   digit_formula_parser: ^1.0.0
   screen_protector: 1.4.1
+  gs1_barcode_parser: ^1.0.5
 
 dev_dependencies:
   flutter_test:
@@ -38,19 +39,19 @@ dev_dependencies:
   auto_route_generator: ^8.0.0
 
 flutter:
-#  assets:
-#    - ./
-#    - assets/icons/svg/
-#    - assets/animated_json/
-#    - assets/images/
-#    - assets/audio/add.wav
-#    - assets/audio/buzzer.wav
-
-#  fonts:
-#    - family: Roboto
-#      fonts:
-#        - asset: assets/fonts/Roboto/Roboto-Regular.ttf
-#    - family: RobotoCondensed
-#      fonts:
-#        - asset: assets/fonts/Roboto/RobotoCondensed-Regular.ttf
+  #  assets:
+  #    - ./
+  #    - assets/icons/svg/
+  #    - assets/animated_json/
+  #    - assets/images/
+  #    - assets/audio/add.wav
+  #    - assets/audio/buzzer.wav
+  
+  #  fonts:
+  #    - family: Roboto
+  #      fonts:
+  #        - asset: assets/fonts/Roboto/Roboto-Regular.ttf
+  #    - family: RobotoCondensed
+  #      fonts:
+  #        - asset: assets/fonts/Roboto/RobotoCondensed-Regular.ttf
   uses-material-design: true
