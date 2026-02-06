@@ -115,6 +115,8 @@ class DropdownWidget implements FlowWidget {
     required Map<String, dynamic> formData,
     required Map<String, dynamic> widgetData,
   }) {
+
+    final localization = LocalizationContext.maybeOf(context);
     // Resolve source data (support both 'source' and 'enums' fields)
     dynamic sourceData;
     final sourceField = json['source'] ?? json['enums'];
@@ -260,9 +262,9 @@ class DropdownWidget implements FlowWidget {
       child: DigitDropdown(
         key: ValueKey('${compositeKey}_${key}_${currentValue ?? ''}'),
         selectedOption: selectedItem,
-        sentenceCaseEnabled: true,
+        sentenceCaseEnabled: false,
         items: items,
-        emptyItemText: 'NO_OPTIONS_AVAILABLE',
+        emptyItemText: localization?.translate('NO_OPTIONS_AVAILABLE') ?? "NO_OPTIONS_AVAILABLE",
         onSelect: (value) {
           // Update state
           if (key != null) {

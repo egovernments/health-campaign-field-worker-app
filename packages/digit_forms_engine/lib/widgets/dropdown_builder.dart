@@ -34,8 +34,10 @@ class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
         isRequired: isRequired ?? false,
         child: isMultiselect
             ? MultiSelectDropDown(
+          sentenceCaseEnabled: false,
                 readOnly: readOnly,
                 helpText: helpText,
+          emptyItemText: loc.translate('NO_OPTIONS_AVAILABLE'),
                 errorMessage: field.errorText,
                 initialOptions: field.value != null &&
                         (field.value as String).trim().isNotEmpty
@@ -72,7 +74,9 @@ class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
               )
             : DigitDropdown<String>(
                 readOnly: readOnly,
+                sentenceCaseEnabled: false,
                 helpText: helpText,
+                emptyItemText: loc.translate('NO_OPTIONS_AVAILABLE'),
                 errorMessage: field.errorText,
                 selectedOption: field.value != null
                     ? DropdownItem(

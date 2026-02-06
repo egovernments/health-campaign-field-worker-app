@@ -227,6 +227,7 @@ class DigitScannerUtils {
         context,
         type: ToastType.error,
         message: localizations.translate(message),
+        sentenceCaseEnabled: false
       );
     }
 
