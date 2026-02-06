@@ -220,6 +220,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
               context,
               type: ToastType.error,
               message: state.error.toString(),
+              sentenceCaseEnabled: false
             );
             // Clear scanner state (barcodes, qrcodes, and implicitly error)
             context.read<DigitScannerBloc>().add(
@@ -456,6 +457,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                 type: ToastType.error,
                                 message: localizations
                                     .translate(i18.scanner.enterManualCode),
+                                sentenceCaseEnabled: false,
                               );
                             } else {
                               final bloc = context.read<DigitScannerBloc>();
@@ -650,6 +652,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                               type: ToastType.error,
                               message: localizations
                                   .translate(i18.scanner.enterManualCode),
+                              sentenceCaseEnabled: false
                             );
                           } else {
                             final bloc = context.read<DigitScannerBloc>();

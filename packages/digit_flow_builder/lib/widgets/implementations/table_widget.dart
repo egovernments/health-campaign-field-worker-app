@@ -176,7 +176,7 @@ class TableWidget implements FlowWidget {
                 : rawCellValue?.toString() ?? '',
             widget: Text(
               displayText,
-              maxLines: 1,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
           );
