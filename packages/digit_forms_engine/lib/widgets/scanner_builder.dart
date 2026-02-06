@@ -51,8 +51,7 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
         if (state.qrCodes.isNotEmpty) {
           // Join multiple QR codes with comma separator
           form.control(formControlName).value = state.qrCodes.join(', ');
-        }
-        if (state.barCodes.isNotEmpty) {
+        } else if (state.barCodes.isNotEmpty) {
           final gs1Data = DigitScannerUtils()
               .getGs1CodeFormattedStringAtIndex(state.barCodes, 0);
 
@@ -65,6 +64,9 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
               : gs1Data['11']?.toString() ?? '';
 
           form.control(formControlName).value = '$gtin,$serial,$batch,$expiry';
+        } else {
+          // Clear the form value when all scanned data has been deleted
+          form.control(formControlName).value = null;
         }
       }, builder: (context, state) {
         // Check if this scanner initiated the scan OR if form has pre-populated data
@@ -81,6 +83,11 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
               form.control(formControlName).value = stateValue;
             });
           }
+        } else if (isThisScanner && state.qrCodes.isEmpty && state.barCodes.isEmpty && hasFormValue) {
+          // Clear form value when all scanned data has been deleted
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            form.control(formControlName).value = null;
+          });
         }
 
         // Check if this is barcode data (GS1 format: exactly 4 comma-separated parts)
