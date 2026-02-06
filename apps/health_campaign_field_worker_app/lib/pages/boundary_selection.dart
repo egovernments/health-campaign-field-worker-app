@@ -123,7 +123,8 @@ class _BoundarySelectionPageState
 
                           final combinedCodes = [
                             ...finalCodes,
-                            ...labelCodeList
+                            ...labelCodeList,
+                            i18.common.coreCommonSubmit
                           ];
 
                           LocalizationParams().setCode(combinedCodes);
@@ -767,7 +768,7 @@ class _BoundarySelectionPageState
           .map((key) => '${envConfig.variables.hierarchyType}_$key')
           .toList();
 
-      final combinedCodes = [...finalCodes, ...labelCodeList];
+      final combinedCodes = [...finalCodes, ...labelCodeList, i18.common.coreCommonSubmit];
 
       LocalizationParams().setCode(combinedCodes);
       context.read<LocalizationBloc>().add(

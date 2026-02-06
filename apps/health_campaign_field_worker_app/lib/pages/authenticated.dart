@@ -149,7 +149,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                   return const SizedBox.shrink();
                                 } else {
                                   LocalizationParams()
-                                      .setCode([selectedBoundary.code!]);
+                                      .setCode([selectedBoundary.code!, i18.common.coreCommonSubmit]);
                                   final boundaryName =
                                       AppLocalizations.of(context).translate(
                                     selectedBoundary.code ??
