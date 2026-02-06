@@ -240,14 +240,26 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
             onPressed: () {
               Navigator.of(popupContext, rootNavigator: true).pop();
               _isPermissionDialogShowing = false;
-              // Clear scanner state and go back
-              context.read<DigitScannerBloc>().add(
-                    DigitScannerEvent.handleScanner(
-                      barCode: [],
-                      qrCode: [],
-                      scannerId: widget.scannerId,
-                    ),
-                  );
+              if (widget.isEditEnabled &&
+                  widget.initialQrCodes != null &&
+                  widget.initialQrCodes!.isNotEmpty) {
+                // Restore initial values when canceling edit
+                context.read<DigitScannerBloc>().add(
+                      DigitScannerEvent.handleScanner(
+                        qrCode: widget.initialQrCodes!,
+                        barCode: [],
+                        scannerId: widget.scannerId,
+                      ),
+                    );
+              } else {
+                context.read<DigitScannerBloc>().add(
+                      DigitScannerEvent.handleScanner(
+                        barCode: [],
+                        qrCode: [],
+                        scannerId: widget.scannerId,
+                      ),
+                    );
+              }
               Navigator.of(context).pop();
             },
             type: DigitButtonType.secondary,
@@ -806,13 +818,26 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
             onCameraLensDirectionChanged: (value) =>
                 _cameraLensDirection = value,
             onBackButtonPressed: () {
-              context
-                  .read<DigitScannerBloc>()
-                  .add(DigitScannerEvent.handleScanner(
-                    barCode: [],
-                    qrCode: [],
-                    scannerId: widget.scannerId,
-                  ));
+              if (widget.isEditEnabled &&
+                  widget.initialQrCodes != null &&
+                  widget.initialQrCodes!.isNotEmpty) {
+                // Restore initial values when canceling edit
+                context.read<DigitScannerBloc>().add(
+                      DigitScannerEvent.handleScanner(
+                        qrCode: widget.initialQrCodes!,
+                        barCode: [],
+                        scannerId: widget.scannerId,
+                      ),
+                    );
+              } else {
+                context
+                    .read<DigitScannerBloc>()
+                    .add(DigitScannerEvent.handleScanner(
+                      barCode: [],
+                      qrCode: [],
+                      scannerId: widget.scannerId,
+                    ));
+              }
               Navigator.of(context).pop();
             },
           ),
