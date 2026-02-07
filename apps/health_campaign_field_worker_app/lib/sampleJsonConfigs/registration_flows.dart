@@ -3105,8 +3105,24 @@ final dynamic sampleFlows = {
                     "key": "HouseholdClientReferenceId",
                     "value": "{{household.0.clientReferenceId}}"
                   },
-                  {"key": "cycleIndex", "value": "{{contextData.nextCycleId}}"},
-                  {"key": "doseIndex", "value": "{{contextData.nextDoseId}}"}
+                  {
+                    "key": "cycleIndex",
+                    "value": "{{contextData.0.nextCycleId}}"
+                  },
+                  {"key": "doseIndex", "value": "{{contextData.0.nextDoseId}}"},
+                  {
+                    "key": "deliveryStrategy",
+                    "value":
+                        "{{contextData.0.currentDelivery.0.deliveryStrategy}}"
+                  },
+                  {
+                    "key": "totalDosesInCycle",
+                    "value": "{{contextData.0.deliveryLength}}"
+                  },
+                  {
+                    "key": "futureDoses",
+                    "value": "{{contextData.0.futureDeliveries}}"
+                  }
                 ],
                 "name": "DELIVERY",
                 "type": "FORM"
@@ -3351,12 +3367,10 @@ final dynamic sampleFlows = {
             "takeLast": true
           },
           "futureDeliveries": {
-            "map": "{{item.deliveries}}",
-            "from":
-                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "from": "{{targetCycle.0.deliveries}}",
             "skip": {"from": "{{dose}}"},
             "order": 3,
-            "takeWhile": {
+            "where": {
               "left": "{{item.deliveryStrategy}}",
               "right": "INDIRECT",
               "operator": "equals"
@@ -3587,7 +3601,11 @@ final dynamic sampleFlows = {
                 "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
               },
               {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
-              {"key": "doseIndex", "value": "{{navigation.doseIndex}}"}
+              {"key": "doseIndex", "value": "{{navigation.doseIndex}}"},
+              {
+                "key": "deliveryStrategy",
+                "value": "{{navigation.deliveryStrategy}}"
+              },
             ],
             "onError": [
               {
@@ -3609,6 +3627,50 @@ final dynamic sampleFlows = {
               }
             ]
           }
+        },
+        {
+          "actions": [
+            {
+              "actionType": "FETCH_TRANSFORMER_CONFIG",
+              "properties": {
+                "data": [
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value":
+                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  },
+                  {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
+                  {
+                    "key": "deliveryStrategy",
+                    "value": "{{navigation.deliveryStrategy}}"
+                  },
+                  {"key": "futureDoses", "value": "{{navigation.futureDoses}}"}
+                ],
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {
+                      "message": "Failed to fetch config for bulk delivery."
+                    }
+                  }
+                ],
+                "configName": "indirectBulkDelivery"
+              }
+            },
+            {
+              "actionType": "CREATE_EVENT",
+              "properties": {
+                "entity": "TaskModel",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "Failed to create bulk tasks."}
+                  }
+                ]
+              }
+            }
+          ],
+          "condition": {"expression": "doseIndex == '1'"}
         },
         {
           "actionType": "NAVIGATION",
