@@ -799,6 +799,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                               type: ToastType.error,
                               message: localizations
                                   .translate(i18.scanner.enterManualCode),
+                                sentenceCaseEnabled: false,
                             );
                           } else {
                             final bloc = context.read<DigitScannerBloc>();
