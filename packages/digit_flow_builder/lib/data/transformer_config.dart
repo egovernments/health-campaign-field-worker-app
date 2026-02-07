@@ -334,7 +334,7 @@ final jsonConfig = {
     "models": {
       "TaskModel": {
         "listSource": "__context:futureDoses",
-        "skipFirst": 1,
+        "skipFirst": 0,
         "mappings": {
           "id": "taskDetails.id",
           "projectId": "__context:projectId",
@@ -395,7 +395,6 @@ final jsonConfig = {
           "TaskResourceModel": {
             "listSource": "__listItem:doseCriteria[0].ProductVariants",
             "mappings": {
-              "id": "id",
               "clientReferenceId": "__generate:uuid",
               "taskId": "taskId",
               "productVariantId": "productVariantId",
