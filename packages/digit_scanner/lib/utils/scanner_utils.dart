@@ -136,9 +136,14 @@ class DigitScannerUtils {
                 parser.parse(barcodes.first.displayValue.toString());
 
             // Check if the barcode has already been scanned
-            final alreadyScanned = bloc.state.barCodes.any((element) =>
-                element.elements.entries.last.value.data ==
-                parsedResult.elements.entries.last.value.data);
+            final alreadyScanned = bloc.state.barCodes.any((element) {
+              if (element.elements.entries.isEmpty ||
+                  parsedResult.elements.entries.isEmpty) {
+                return false;
+              }
+              return element.elements.entries.last.value.data ==
+                  parsedResult.elements.entries.last.value.data;
+            });
 
             if (alreadyScanned) {
               // Handle error if the barcode is already scanned
@@ -247,7 +252,7 @@ class DigitScannerUtils {
         context,
         type: ToastType.error,
         message: localizations.translate(message),
-        sentenceCaseEnabled: false
+          sentenceCaseEnabled: false,
       );
     }
 
@@ -321,7 +326,12 @@ class DigitScannerUtils {
 
     // Remove duplicate entries based on the last value in the elements map
     result.removeDuplicates(
-      (element) => element.elements.entries.last.value.data,
+      (element) {
+        if (element.elements.entries.isEmpty) {
+          return ''; // Return empty string for empty elements
+        }
+        return element.elements.entries.last.value.data;
+      },
     );
 
     // Add the new parsed result to the list
@@ -360,7 +370,8 @@ class DigitScannerUtils {
     final formattedDate = DateFormat('yyMMdd').format(expiryDate);
 
     // Include GTIN (01) if provided
-    final gtinPart = gtin != null && gtin.isNotEmpty ? '01$gtin$groupSeparator' : '';
+    final gtinPart =
+        gtin != null && gtin.isNotEmpty ? '01$gtin$groupSeparator' : '';
     return '${gtinPart}10$batchNumber${groupSeparator}17${formattedDate}21$serialNumber$groupSeparator';
   }
 }

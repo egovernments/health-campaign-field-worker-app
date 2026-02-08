@@ -110,6 +110,58 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
   static const _manualSerialNoFormKey = 'serialNoCode';
   static const _manualExpiryDateFormKey = 'expiryDate';
 
+  /// Safely parses DateTime from form control value
+  /// Handles String, DateTime, int (milliseconds), and null values
+  DateTime _parseExpiryDate(dynamic value) {
+    // If already a DateTime, return it
+    if (value is DateTime) return value;
+
+    // If it's a String, try to parse with different formats
+    if (value is String) {
+      final trimmed = value.trim();
+      if (trimmed.isEmpty) return DateTime.now();
+
+      // Try common date formats
+      final formats = [
+        "dd/MM/yyyy",
+        "dd/MM/yy",
+        "dd MMM yyyy",
+        "yyyy-MM-dd",
+        "MM/dd/yyyy",
+      ];
+
+      for (final format in formats) {
+        try {
+          return DateFormat(format).parse(trimmed);
+        } catch (_) {
+          // Try next format
+        }
+      }
+
+      // Try ISO8601 as fallback
+      try {
+        return DateTime.parse(trimmed);
+      } catch (_) {
+        debugPrint('Failed to parse date string: $trimmed');
+        return DateTime.now();
+      }
+    }
+
+    // If it's an int, treat as milliseconds since epoch
+    if (value is int) {
+      try {
+        return DateTime.fromMillisecondsSinceEpoch(value);
+      } catch (_) {
+        debugPrint('Failed to parse date from milliseconds: $value');
+        return DateTime.now();
+      }
+    }
+
+    // For any other type or null, return current date
+    debugPrint('Unexpected date type: ${value.runtimeType}');
+    return DateTime.now();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -135,40 +187,47 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
         widget.initialBarcodeData!.isNotEmpty) {
       // Initialize with existing barcode (GS1) data for edit mode
       // Parse the comma-separated string (GTIN,SERIAL,BATCH,EXPIRY) back to GS1Barcode
-      final parts = widget.initialBarcodeData!.split(',');
-      if (parts.length >= 4) {
-        final gtin = parts[0].trim();
-        final serial = parts[1].trim();
-        final batch = parts[2].trim();
-        final expiryStr = parts[3].trim();
+      try {
+        final parts = widget.initialBarcodeData!.split(',');
+        if (parts.length >= 4 &&
+            parts.every((part) => part.trim().isNotEmpty)) {
+          final gtin = parts[0].trim();
+          final serial = parts[1].trim();
+          final batch = parts[2].trim();
+          final expiryStr = parts[3].trim();
 
-        // Parse expiry date (format: dd MMM yyyy)
-        DateTime? expiryDate;
-        try {
-          expiryDate = DateFormat('dd MMM yyyy').parse(expiryStr);
-        } catch (_) {
-          expiryDate = DateTime.now().add(const Duration(days: 365));
+          // Parse expiry date (format: dd MMM yyyy)
+          DateTime? expiryDate;
+          try {
+            expiryDate = DateFormat('dd MMM yyyy').parse(expiryStr);
+          } catch (_) {
+            expiryDate = DateTime.now().add(const Duration(days: 365));
+          }
+
+          // Generate GS1 barcode string and parse it
+          final barcodeString = DigitScannerUtils().generateGS1Barcode(
+            serialNumber: serial,
+            expiryDate: expiryDate,
+            batchNumber: batch,
+            gtin: gtin,
+          );
+
+          final parser = GS1BarcodeParser.defaultParser();
+          final parsed = parser.parse(barcodeString);
+
+          result = [parsed];
+          context.read<DigitScannerBloc>().add(
+                DigitScannerEvent.handleScanner(
+                  qrCode: [],
+                  barCode: [parsed],
+                  scannerId: widget.scannerId,
+                ),
+              );
         }
-
-        // Generate GS1 barcode string and parse it
-        final barcodeString = DigitScannerUtils().generateGS1Barcode(
-          serialNumber: serial,
-          expiryDate: expiryDate,
-          batchNumber: batch,
-          gtin: gtin,
-        );
-
-        final parser = GS1BarcodeParser.defaultParser();
-        final parsed = parser.parse(barcodeString);
-
-        result = [parsed];
-        context.read<DigitScannerBloc>().add(
-              DigitScannerEvent.handleScanner(
-                qrCode: [],
-                barCode: [parsed],
-                scannerId: widget.scannerId,
-              ),
-            );
+      } catch (e) {
+        debugPrint('Error parsing initial barcode data: $e');
+        // Initialize with empty result on parse error
+        result = [];
       }
     }
   }
@@ -461,57 +520,68 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
 
                             final bloc = context.read<DigitScannerBloc>();
                             codes.add(form.control(_manualCodeFormKey).value);
-                            final barcodeString =
-                                DigitScannerUtils().generateGS1Barcode(
-                              serialNumber: form
-                                  .control(_manualSerialNoFormKey)
-                                  .value
-                                  .toString()
-                                  .trim(),
-                              expiryDate: form
-                                  .control(_manualExpiryDateFormKey)
-                                  .value as DateTime,
-                              batchNumber: form
-                                  .control(_manualCodeFormKey)
-                                  .value
-                                  .toString()
-                                  .trim(),
-                            );
 
-// Now parse it using your existing model
-                            final parser = GS1BarcodeParser.defaultParser();
-                            final parsed = parser.parse(barcodeString);
-                            // ✅ Append to existing barcodes; DO NOT touch qrCodes in GS1 mode
-                            final updatedBarcodes =
-                                List<GS1Barcode>.from(state.barCodes)
-                                  ..add(parsed);
+                            try {
+                              final barcodeString =
+                                  DigitScannerUtils().generateGS1Barcode(
+                                serialNumber: form
+                                    .control(_manualSerialNoFormKey)
+                                    .value
+                                    .toString()
+                                    .trim(),
+                                expiryDate: _parseExpiryDate(form
+                                    .control(_manualExpiryDateFormKey)
+                                    .value),
+                                batchNumber: form
+                                    .control(_manualCodeFormKey)
+                                    .value
+                                    .toString()
+                                    .trim(),
+                              );
 
-                            // Keep local mirror in sync (used by UI)
-                            setState(() {
-                              result = updatedBarcodes;
-                              manualCode = false;
-                            });
+                              // Now parse it using your existing model
+                              final parser = GS1BarcodeParser.defaultParser();
+                              final parsed = parser.parse(barcodeString);
+                              // ✅ Append to existing barcodes; DO NOT touch qrCodes in GS1 mode
+                              final updatedBarcodes =
+                                  List<GS1Barcode>.from(state.barCodes)
+                                    ..add(parsed);
 
-                            bloc.add(
-                              DigitScannerEvent.handleScanner(
-                                barCode: updatedBarcodes,
-                                qrCode: state.qrCodes,
-                                regex: widget.effectiveRegex,
-                                patternMessage: widget.patternMessage,
-                                scannerId: widget.scannerId,
-                              ),
-                            );
-                            if (updatedBarcodes.length <
-                                widget.effectiveQuantity) {
-                              DigitScannerUtils().buildDialog(context,
-                                  localizations, widget.effectiveQuantity);
+                              // Keep local mirror in sync (used by UI)
+                              setState(() {
+                                result = updatedBarcodes;
+                                manualCode = false;
+                              });
+
+                              bloc.add(
+                                DigitScannerEvent.handleScanner(
+                                  barCode: updatedBarcodes,
+                                  qrCode: state.qrCodes,
+                                  regex: widget.effectiveRegex,
+                                  patternMessage: widget.patternMessage,
+                                  scannerId: widget.scannerId,
+                                ),
+                              );
+                              if (updatedBarcodes.length <
+                                  widget.effectiveQuantity) {
+                                DigitScannerUtils().buildDialog(context,
+                                    localizations, widget.effectiveQuantity);
+                              }
+                              setState(() {
+                                manualCode = false;
+                              });
+
+                              initializeCameras();
+                            } catch (e) {
+                              debugPrint('Error parsing manual GS1 barcode: $e');
+                              Toast.showToast(
+                                context,
+                                type: ToastType.error,
+                                message: localizations.translate(
+                                    i18.scanner.resourcesScanFailed),
+                                sentenceCaseEnabled: false,
+                              );
                             }
-                            setState(() {
-                              manualCode = false;
-                            });
-                            // Quantity gate for GS1
-
-                            initializeCameras();
                           } else {
                             if (form.control(_manualCodeFormKey).value ==
                                     null ||
@@ -526,7 +596,6 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                 type: ToastType.error,
                                 message: localizations
                                     .translate(i18.scanner.enterManualCode),
-                                sentenceCaseEnabled: false,
                               );
                             } else {
                               final bloc = context.read<DigitScannerBloc>();
@@ -663,15 +732,23 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                       cancelText: localizations.translate(
                                         i18.common.coreCommonCancel,
                                       ),
-                                      initialValue: DateFormat('dd/MM/yy')
-                                          .format(field.control.value),
+                                      initialValue: DateFormat('dd/MM/yyyy')
+                                          .format(_parseExpiryDate(
+                                              field.control.value)),
                                       readOnly: false,
                                       onChange: (value) {
-                                        form
-                                            .control(_manualExpiryDateFormKey)
-                                            .value = DateFormat(
-                                                "dd/MM/yyyy")
-                                            .parse(value);
+                                        try {
+                                          form
+                                              .control(_manualExpiryDateFormKey)
+                                              .value = DateFormat(
+                                                  "dd/MM/yyyy")
+                                              .parse(value);
+                                        } catch (e) {
+                                          debugPrint('Error parsing date: $e');
+                                          form
+                                              .control(_manualExpiryDateFormKey)
+                                              .value = DateTime.now();
+                                        }
                                       },
                                     ),
                                   );
@@ -717,11 +794,13 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                   .toString()
                                   .trim()
                                   .isEmpty) {
-                            Toast.showToast(context,
-                                type: ToastType.error,
-                                message: localizations
-                                    .translate(i18.scanner.enterManualCode),
-                                sentenceCaseEnabled: false);
+                            Toast.showToast(
+                              context,
+                              type: ToastType.error,
+                              message: localizations
+                                  .translate(i18.scanner.enterManualCode),
+                                sentenceCaseEnabled: false,
+                            );
                           } else {
                             final bloc = context.read<DigitScannerBloc>();
                             final updatedQRCodes =
