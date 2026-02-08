@@ -1178,8 +1178,6 @@ final dynamic sampleFlows = {
                 ],
                 "name": "householdOverview",
                 "type": "TEMPLATE",
-                "navigationMode": "popUntilAndPush",
-                "popUntilPageName": "searchBeneficiary",
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
@@ -1232,8 +1230,6 @@ final dynamic sampleFlows = {
                 ],
                 "name": "householdOverview",
                 "type": "TEMPLATE",
-                "navigationMode": "popUntilAndPush",
-                "popUntilPageName": "searchBeneficiary",
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",
@@ -1283,8 +1279,6 @@ final dynamic sampleFlows = {
                 ],
                 "name": "householdOverview",
                 "type": "TEMPLATE",
-                "navigationMode": "popUntilAndPush",
-                "popUntilPageName": "searchBeneficiary",
                 "onError": [
                   {
                     "actionType": "SHOW_TOAST",

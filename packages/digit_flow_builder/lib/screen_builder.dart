@@ -266,8 +266,17 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
           if (state.initialSchemas[widget.schemaKey] != null) {
             final schemaObject = state.cachedSchemas[widget.schemaKey]!;
 
-            // Derive pageName as first page key if none specified externally
-            final pageName = schemaObject.pages.entries.first.key;
+            // [OPTIONAL] Support for startPage navigation parameter.
+            // If 'startPage' is provided in navigation params and exists in the schema,
+            // use it as the initial page. Otherwise, fall back to the first page.
+            // This allows CONDITIONAL_NAVIGATION to skip to a specific page in a flow.
+            // To disable this feature, simply don't pass 'startPage' in navigation params.
+            final startPage = mergedNavParams['startPage'] as String?;
+            final pageName = (startPage != null &&
+                    startPage.isNotEmpty &&
+                    schemaObject.pages.containsKey(startPage))
+                ? startPage
+                : schemaObject.pages.entries.first.key;
 
             // Determine isEdit from merged navigation params (set by NAVIGATION action)
             final isEdit = mergedNavParams['isEdit'] == true ||
