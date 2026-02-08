@@ -3207,25 +3207,41 @@ final dynamic sampleFlows = {
             "fallback": 1,
             "condition": {
               "if": {
-                "left": {"value": "{{dose}}", "operation": "increment"},
-                "right": "{{deliveryLength}}",
-                "operator": "lte"
+                "left": "{{cycle}}",
+                "right": "{{currentRunningCycle}}",
+                "operator": "equals"
               },
-              "else": 1,
-              "then": {"value": "{{dose}}", "operation": "increment"}
+              "then": {
+                "if": {
+                  "left": {"value": "{{dose}}", "operation": "increment"},
+                  "right": "{{deliveryLength}}",
+                  "operator": "lte"
+                },
+                "then": {"value": "{{dose}}", "operation": "increment"},
+                "else": 1
+              },
+              "else": 1
             }
           },
           "nextCycleId": {
             "order": 5,
-            "fallback": "{{cycle}}",
+            "fallback": "{{currentRunningCycle}}",
             "condition": {
               "if": {
-                "left": {"value": "{{dose}}", "operation": "increment"},
-                "right": "{{deliveryLength}}",
-                "operator": "lte"
+                "left": "{{cycle}}",
+                "right": "{{currentRunningCycle}}",
+                "operator": "equals"
               },
-              "else": {"value": "{{cycle}}", "operation": "increment"},
-              "then": "{{cycle}}"
+              "then": {
+                "if": {
+                  "left": {"value": "{{dose}}", "operation": "increment"},
+                  "right": "{{deliveryLength}}",
+                  "operator": "lte"
+                },
+                "then": "{{cycle}}",
+                "else": {"value": "{{cycle}}", "operation": "increment"}
+              },
+              "else": "{{currentRunningCycle}}"
             }
           },
           "deliveryLength": {
@@ -3261,6 +3277,19 @@ final dynamic sampleFlows = {
             "select": "{{id}}",
             "default": -1,
             "takeFirst": true
+          },
+          "effectiveDose": {
+            "order": 6,
+            "fallback": 0,
+            "condition": {
+              "if": {
+                "left": "{{nextCycleId}}",
+                "right": "{{cycle}}",
+                "operator": "equals"
+              },
+              "then": "{{dose}}",
+              "else": 0
+            }
           }
         },
         "relations": [
@@ -3368,7 +3397,7 @@ final dynamic sampleFlows = {
           },
           "futureDeliveries": {
             "from": "{{targetCycle.0.deliveries}}",
-            "skip": {"from": "{{dose}}"},
+            "skip": {"from": "{{effectiveDose}}"},
             "order": 3,
             "where": {
               "left": "{{item.deliveryStrategy}}",
@@ -3605,7 +3634,7 @@ final dynamic sampleFlows = {
               {
                 "key": "deliveryStrategy",
                 "value": "{{navigation.deliveryStrategy}}"
-              },
+              }
             ],
             "onError": [
               {
@@ -3619,7 +3648,7 @@ final dynamic sampleFlows = {
         {
           "actionType": "CREATE_EVENT",
           "properties": {
-            "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
+            "entity": "TASK",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
@@ -3670,7 +3699,7 @@ final dynamic sampleFlows = {
               }
             }
           ],
-          "condition": {"expression": "doseIndex == '1'"}
+          "condition": {"expression": "doseIndex == 1"}
         },
         {
           "actionType": "NAVIGATION",
@@ -3692,7 +3721,9 @@ final dynamic sampleFlows = {
                 "actionType": "SHOW_TOAST",
                 "properties": {"message": "Navigation failed."}
               }
-            ]
+            ],
+            "navigationMode": "popUntilAndPush",
+            "popUntilPageName": "householdOverview"
           }
         }
       ],
