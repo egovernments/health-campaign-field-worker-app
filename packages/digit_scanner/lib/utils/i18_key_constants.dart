@@ -179,4 +179,5 @@ class Scanner {
   String get cameraPermissionDeniedDesc => 'CAMERA_PERMISSION_DENIED_DESC';
   String get openSettings => 'OPEN_SETTINGS';
   String get cameraPermissionRequired => 'CAMERA_PERMISSION_REQUIRED';
+  String get unableToScan => 'UNABLE_TO_SCAN';
 }
