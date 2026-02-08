@@ -3099,8 +3099,24 @@ final dynamic sampleFlows = {
                     "key": "HouseholdClientReferenceId",
                     "value": "{{household.0.clientReferenceId}}"
                   },
-                  {"key": "cycleIndex", "value": "{{contextData.nextCycleId}}"},
-                  {"key": "doseIndex", "value": "{{contextData.nextDoseId}}"}
+                  {
+                    "key": "cycleIndex",
+                    "value": "{{contextData.0.nextCycleId}}"
+                  },
+                  {"key": "doseIndex", "value": "{{contextData.0.nextDoseId}}"},
+                  {
+                    "key": "deliveryStrategy",
+                    "value":
+                        "{{contextData.0.currentDelivery.0.deliveryStrategy}}"
+                  },
+                  {
+                    "key": "totalDosesInCycle",
+                    "value": "{{contextData.0.deliveryLength}}"
+                  },
+                  {
+                    "key": "futureDoses",
+                    "value": "{{contextData.0.futureDeliveries}}"
+                  }
                 ],
                 "name": "DELIVERY",
                 "type": "FORM"
@@ -3185,25 +3201,41 @@ final dynamic sampleFlows = {
             "fallback": 1,
             "condition": {
               "if": {
-                "left": {"value": "{{dose}}", "operation": "increment"},
-                "right": "{{deliveryLength}}",
-                "operator": "lte"
+                "left": "{{cycle}}",
+                "right": "{{currentRunningCycle}}",
+                "operator": "equals"
               },
-              "else": 1,
-              "then": {"value": "{{dose}}", "operation": "increment"}
+              "then": {
+                "if": {
+                  "left": {"value": "{{dose}}", "operation": "increment"},
+                  "right": "{{deliveryLength}}",
+                  "operator": "lte"
+                },
+                "then": {"value": "{{dose}}", "operation": "increment"},
+                "else": 1
+              },
+              "else": 1
             }
           },
           "nextCycleId": {
             "order": 5,
-            "fallback": "{{cycle}}",
+            "fallback": "{{currentRunningCycle}}",
             "condition": {
               "if": {
-                "left": {"value": "{{dose}}", "operation": "increment"},
-                "right": "{{deliveryLength}}",
-                "operator": "lte"
+                "left": "{{cycle}}",
+                "right": "{{currentRunningCycle}}",
+                "operator": "equals"
               },
-              "else": {"value": "{{cycle}}", "operation": "increment"},
-              "then": "{{cycle}}"
+              "then": {
+                "if": {
+                  "left": {"value": "{{dose}}", "operation": "increment"},
+                  "right": "{{deliveryLength}}",
+                  "operator": "lte"
+                },
+                "then": "{{cycle}}",
+                "else": {"value": "{{cycle}}", "operation": "increment"}
+              },
+              "else": "{{currentRunningCycle}}"
             }
           },
           "deliveryLength": {
@@ -3239,6 +3271,19 @@ final dynamic sampleFlows = {
             "select": "{{id}}",
             "default": -1,
             "takeFirst": true
+          },
+          "effectiveDose": {
+            "order": 6,
+            "fallback": 0,
+            "condition": {
+              "if": {
+                "left": "{{nextCycleId}}",
+                "right": "{{cycle}}",
+                "operator": "equals"
+              },
+              "then": "{{dose}}",
+              "else": 0
+            }
           }
         },
         "relations": [
@@ -3345,12 +3390,10 @@ final dynamic sampleFlows = {
             "takeLast": true
           },
           "futureDeliveries": {
-            "map": "{{item.deliveries}}",
-            "from":
-                "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
-            "skip": {"from": "{{dose}}"},
+            "from": "{{targetCycle.0.deliveries}}",
+            "skip": {"from": "{{effectiveDose}}"},
             "order": 3,
-            "takeWhile": {
+            "where": {
               "left": "{{item.deliveryStrategy}}",
               "right": "INDIRECT",
               "operator": "equals"
@@ -3581,7 +3624,11 @@ final dynamic sampleFlows = {
                 "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
               },
               {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
-              {"key": "doseIndex", "value": "{{navigation.doseIndex}}"}
+              {"key": "doseIndex", "value": "{{navigation.doseIndex}}"},
+              {
+                "key": "deliveryStrategy",
+                "value": "{{navigation.deliveryStrategy}}"
+              }
             ],
             "onError": [
               {
@@ -3595,7 +3642,7 @@ final dynamic sampleFlows = {
         {
           "actionType": "CREATE_EVENT",
           "properties": {
-            "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
+            "entity": "TASK",
             "onError": [
               {
                 "actionType": "SHOW_TOAST",
@@ -3603,6 +3650,50 @@ final dynamic sampleFlows = {
               }
             ]
           }
+        },
+        {
+          "actions": [
+            {
+              "actionType": "FETCH_TRANSFORMER_CONFIG",
+              "properties": {
+                "data": [
+                  {
+                    "key": "ProjectBeneficiaryClientReferenceId",
+                    "value":
+                        "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  },
+                  {"key": "cycleIndex", "value": "{{navigation.cycleIndex}}"},
+                  {
+                    "key": "deliveryStrategy",
+                    "value": "{{navigation.deliveryStrategy}}"
+                  },
+                  {"key": "futureDoses", "value": "{{navigation.futureDoses}}"}
+                ],
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {
+                      "message": "Failed to fetch config for bulk delivery."
+                    }
+                  }
+                ],
+                "configName": "indirectBulkDelivery"
+              }
+            },
+            {
+              "actionType": "CREATE_EVENT",
+              "properties": {
+                "entity": "TaskModel",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "Failed to create bulk tasks."}
+                  }
+                ]
+              }
+            }
+          ],
+          "condition": {"expression": "doseIndex == 1"}
         },
         {
           "actionType": "NAVIGATION",
@@ -3624,7 +3715,9 @@ final dynamic sampleFlows = {
                 "actionType": "SHOW_TOAST",
                 "properties": {"message": "Navigation failed."}
               }
-            ]
+            ],
+            "navigationMode": "popUntilAndPush",
+            "popUntilPageName": "householdOverview"
           }
         }
       ],

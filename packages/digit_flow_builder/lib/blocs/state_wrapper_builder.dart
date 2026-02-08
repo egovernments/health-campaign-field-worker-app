@@ -166,23 +166,21 @@ class WrapperBuilder {
           }
         }
 
-
-        try{
+        try {
           // 3. Computed fields
           final computed = _applyComputed(wrapperData, config);
           wrapperData.addAll(computed);
-        } catch(e){
+        } catch (e) {
           print(e.toString());
         }
 
-        try{
+        try {
           // 4. Computed list fields
           final computedList = _applyComputedList(wrapperData, config);
           wrapperData.addAll(computedList);
-        } catch(e){
+        } catch (e) {
           print(e.toString());
         }
-
 
         wrappers.add(wrapperData);
       }
@@ -273,7 +271,8 @@ class WrapperBuilder {
 
         // Handle equalsFrom with template resolution
         if (equalsFrom != null) {
-          final resolvedEquals = _resolveValue(equalsFrom, root, resolveContext);
+          final resolvedEquals =
+              _resolveValue(equalsFrom, root, resolveContext);
           if (resolvedEquals != null && value != resolvedEquals) return false;
         } else if (equals != null && value != equals) return false;
       } else {
@@ -625,22 +624,27 @@ class WrapperBuilder {
 
             final List<dynamic> next = [];
             for (final item in current) {
-              dynamic val;
-              if (item is Map) {
-                val = item[part];
-              } else if (item is EntityModel)
-                val = EnhancedEntityFieldAccessor.getFieldValue(item, part);
-              else if (item is AdditionalField) if ((part == 'key')) {
-                val = item.key;
-              } else {
-                val = (part == 'value') ? item.value : null;
-              }
-              if (val != null) {
-                if (val is Iterable && val is! String) {
-                  next.addAll(val.where((e) => e != null));
+              try {
+                dynamic val;
+                if (item is Map) {
+                  val = item[part];
+                } else if (item is EntityModel)
+                  val = EnhancedEntityFieldAccessor.getFieldValue(item, part);
+                else if (item is AdditionalField) if ((part == 'key')) {
+                  val = item.key;
                 } else {
-                  next.add(val);
+                  val = (part == 'value') ? item.value : null;
                 }
+                if (val != null) {
+                  if (val is Iterable && val is! String) {
+                    next.addAll(val.where((e) => e != null));
+                  } else {
+                    next.add(val);
+                  }
+                }
+              } catch (_) {
+                // Skip items where field access fails (e.g., tasks without additionalFields)
+                continue;
               }
             }
             if (next.isEmpty) return null;

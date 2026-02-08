@@ -163,7 +163,14 @@ final dynamic stockReconciliationFlows = {
               "innerLabel": "",
               "systemDate": false,
               "includeInForm": true,
-              "validations": [],
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "STOCKRECONCILIATION_STOCKRECONCILIATION_comments_REQUIRED_ERROR"
+                }
+              ],
               "errorMessage": "",
               "isMultiSelect": false,
               "enums": [],
