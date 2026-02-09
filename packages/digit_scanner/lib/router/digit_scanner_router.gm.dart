@@ -32,6 +32,7 @@ abstract class $DigitScannerPackageRoute extends _i2.AutoRouterModule {
           regex: args.regex,
           validations: args.validations,
           initialQrCodes: args.initialQrCodes,
+          initialBarcodeData: args.initialBarcodeData,
           scannerId: args.scannerId,
         ),
       );
@@ -52,6 +53,7 @@ class DigitScannerRoute extends _i2.PageRouteInfo<DigitScannerRouteArgs> {
     String? regex,
     List<_i5.ScannerValidation>? validations,
     List<String>? initialQrCodes,
+    String? initialBarcodeData,
     String scannerId = 'default',
     List<_i2.PageRouteInfo>? children,
   }) : super(
@@ -66,6 +68,7 @@ class DigitScannerRoute extends _i2.PageRouteInfo<DigitScannerRouteArgs> {
             regex: regex,
             validations: validations,
             initialQrCodes: initialQrCodes,
+            initialBarcodeData: initialBarcodeData,
             scannerId: scannerId,
           ),
           initialChildren: children,
@@ -88,6 +91,7 @@ class DigitScannerRouteArgs {
     this.regex,
     this.validations,
     this.initialQrCodes,
+    this.initialBarcodeData,
     this.scannerId = 'default',
   });
 
@@ -109,10 +113,12 @@ class DigitScannerRouteArgs {
 
   final List<String>? initialQrCodes;
 
+  final String? initialBarcodeData;
+
   final String scannerId;
 
   @override
   String toString() {
-    return 'DigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled, regex: $regex, validations: $validations, initialQrCodes: $initialQrCodes, scannerId: $scannerId}';
+    return 'DigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled, regex: $regex, validations: $validations, initialQrCodes: $initialQrCodes, initialBarcodeData: $initialBarcodeData, scannerId: $scannerId}';
   }
 }
