@@ -25,7 +25,7 @@ class SearchBarWidget implements FlowWidget {
     final compositeKey = flowState.compositeKey ?? flowState.screenKey;
 
     // Get validation rules
-    final validations = json['validation'] as List<dynamic>? ?? [];
+    final validations = json['validations'] as List<dynamic>? ?? [];
     int minSearchChars = 1; // Default: trigger on any input
 
     // Parse validation rules
