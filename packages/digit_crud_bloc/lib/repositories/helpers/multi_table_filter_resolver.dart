@@ -144,11 +144,15 @@ class MultiTableFilterResolver {
       filterLogic,
     );
 
-    // If combined constraints are empty after AND logic, no results
-    if (filterLogic == MultiTableFilterLogic.and &&
-        resolvedConstraintSets.isNotEmpty &&
-        combinedConstraints.isEmpty) {
-      return const MultiTableFilterResult.empty();
+    // If combined constraints are empty after resolution, no results
+    if (resolvedConstraintSets.isNotEmpty && combinedConstraints.isEmpty) {
+      // For AND logic: intersection is empty → no results
+      // For OR logic: union is empty → no related rows matched, and if
+      //   there are no primary table filters either, return empty
+      if (filterLogic == MultiTableFilterLogic.and ||
+          primaryTableFilters.isEmpty) {
+        return const MultiTableFilterResult.empty();
+      }
     }
 
     return MultiTableFilterResult(

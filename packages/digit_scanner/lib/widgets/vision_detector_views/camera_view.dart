@@ -60,11 +60,21 @@ class _CameraViewState extends State<CameraView> {
   }
 
   void _initialize() async {
-    _cameras = widget.cameras;
-    _cameraIndex = _cameras.indexWhere(
-        (camera) => camera.lensDirection == widget.initialCameraLensDirection);
-    if (_cameraIndex != -1) {
-      _startLiveFeed();
+    try {
+      _cameras = widget.cameras;
+      if (_cameras.isEmpty) {
+        return;
+      }
+      _cameraIndex = _cameras.indexWhere(
+          (camera) => camera.lensDirection == widget.initialCameraLensDirection);
+      if (_cameraIndex == -1 && _cameras.isNotEmpty) {
+        _cameraIndex = 0;
+      }
+      if (_cameraIndex != -1) {
+        _startLiveFeed();
+      }
+    } catch (e) {
+      if (kDebugMode) print('Unable to scan: Camera initialization failed - $e');
     }
   }
 
@@ -247,42 +257,71 @@ class _CameraViewState extends State<CameraView> {
       );
 
   Future _startLiveFeed() async {
-    final camera = _cameras[_cameraIndex];
-    _controller = widget.cameraController;
-
-    _controller?.initialize().then((_) {
-      if (!mounted) {
+    try {
+      if (_cameras.isEmpty || _cameraIndex < 0 || _cameraIndex >= _cameras.length) {
         return;
       }
-      _controller?.getMinZoomLevel().then((value) {
-        _currentZoomLevel = value;
-        _minAvailableZoom = value;
-      });
-      _controller?.getMaxZoomLevel().then((value) {
-        _maxAvailableZoom = value;
-      });
-      _controller?.getMinExposureOffset().then((value) {
-        _minAvailableExposureOffset = value;
-        if (kDebugMode) {
-          print('minAvailableExposureOffset: $_minAvailableExposureOffset');
+      final camera = _cameras[_cameraIndex];
+      _controller = widget.cameraController;
+
+      _controller?.initialize().then((_) {
+        if (!mounted) {
+          return;
         }
-      });
-      _controller?.getMaxExposureOffset().then((value) {
-        _maxAvailableExposureOffset = value;
-        if (kDebugMode) {
-          print('maxAvailableExposureOffset: $_maxAvailableExposureOffset');
+        _controller?.getMinZoomLevel().then((value) {
+          if (mounted) {
+            _currentZoomLevel = value;
+            _minAvailableZoom = value;
+          }
+        }).catchError((e) {
+          if (kDebugMode) print('Unable to get min zoom level: $e');
+        });
+        _controller?.getMaxZoomLevel().then((value) {
+          if (mounted) {
+            _maxAvailableZoom = value;
+          }
+        }).catchError((e) {
+          if (kDebugMode) print('Unable to get max zoom level: $e');
+        });
+        _controller?.getMinExposureOffset().then((value) {
+          if (mounted) {
+            _minAvailableExposureOffset = value;
+          }
+          if (kDebugMode) {
+            print('minAvailableExposureOffset: $_minAvailableExposureOffset');
+          }
+        }).catchError((e) {
+          if (kDebugMode) print('Unable to get min exposure: $e');
+        });
+        _controller?.getMaxExposureOffset().then((value) {
+          if (mounted) {
+            _maxAvailableExposureOffset = value;
+          }
+          if (kDebugMode) {
+            print('maxAvailableExposureOffset: $_maxAvailableExposureOffset');
+          }
+        }).catchError((e) {
+          if (kDebugMode) print('Unable to get max exposure: $e');
+        });
+        _controller?.startImageStream(_processCameraImage).then((value) {
+          if (widget.onCameraFeedReady != null) {
+            widget.onCameraFeedReady!();
+          }
+          if (widget.onCameraLensDirectionChanged != null) {
+            widget.onCameraLensDirectionChanged!(camera.lensDirection);
+          }
+        }).catchError((e) {
+          if (kDebugMode) print('Unable to start image stream: $e');
+        });
+        if (mounted) {
+          setState(() {});
         }
+      }).catchError((e) {
+        if (kDebugMode) print('Unable to scan: Camera initialization failed - $e');
       });
-      _controller?.startImageStream(_processCameraImage).then((value) {
-        if (widget.onCameraFeedReady != null) {
-          widget.onCameraFeedReady!();
-        }
-        if (widget.onCameraLensDirectionChanged != null) {
-          widget.onCameraLensDirectionChanged!(camera.lensDirection);
-        }
-      });
-      setState(() {});
-    });
+    } catch (e) {
+      if (kDebugMode) print('Unable to scan: $e');
+    }
   }
 
   Future _stopLiveFeed() async {
@@ -292,12 +331,17 @@ class _CameraViewState extends State<CameraView> {
   }
 
   Future _switchLiveCamera() async {
-    setState(() => _changingCameraLens = true);
+    if (_cameras.isEmpty) return;
+    if (mounted) {
+      setState(() => _changingCameraLens = true);
+    }
     _cameraIndex = (_cameraIndex + 1) % _cameras.length;
 
     await _stopLiveFeed();
     await _startLiveFeed();
-    setState(() => _changingCameraLens = false);
+    if (mounted) {
+      setState(() => _changingCameraLens = false);
+    }
   }
 
   void _processCameraImage(CameraImage image) {

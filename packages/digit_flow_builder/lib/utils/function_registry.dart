@@ -462,7 +462,8 @@ void initializeFunctionRegistry() {
           lastDose == selectedCycle.deliveries?.length &&
           lastCycle != null &&
           lastCycle == selectedCycle.id &&
-          lastTaskStatus == 'ADMINISTRATION_SUCCESS') {
+          (lastTaskStatus == 'ADMINISTRATION_SUCCESS' ||
+              lastTaskStatus == 'DELIVERED')) {
         return true;
       }
 
