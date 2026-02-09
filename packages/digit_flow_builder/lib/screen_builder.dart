@@ -293,6 +293,7 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
               // 3. registryFormData - data from REVERSE_TRANSFORM action (highest priority for prefill)
               // 4. System values like administrativeArea, availableIDs
               defaultValues: {
+                ...?widget.defaultValues,
                 ...mergedNavParams,
                 ...?widget.defaultValues,
                 if (isEdit) ...registryFormData,
