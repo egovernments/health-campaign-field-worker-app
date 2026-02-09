@@ -40,6 +40,11 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
   bool _hasTriggeredAtBottom = false;
   bool _hasTriggeredAtTop = false;
 
+  // Track the last wrapper reference to detect when new data arrives.
+  // When the wrapper changes (new list created after data load), we
+  // reset scroll trigger flags so the next scroll to edge can trigger.
+  List<dynamic>? _lastWrapper;
+
   // Scroll listener configuration (parsed from config)
   late final String _triggerMode;
   late final double _threshold;
@@ -101,7 +106,8 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
   }
 
   void _handleBidirectionalScroll(ScrollMetrics metrics) {
-    const buffer = 50.0; // pixels from edge
+    const buffer = 50.0; // pixels from edge to trigger load
+    const resetBuffer = 150.0; // pixels from edge to reset trigger flag
 
     // Check if near bottom
     final nearBottom = metrics.pixels >= (metrics.maxScrollExtent - buffer);
@@ -119,8 +125,8 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
       debugPrint('ScrollListener: Triggering scroll DOWN');
       _hasTriggeredAtBottom = true;
       _triggerScrollActions('down');
-    } else if (!nearBottom && metrics.pixels < metrics.maxScrollExtent * 0.8) {
-      // Reset bottom trigger when scrolled away from bottom
+    } else if (!nearBottom && metrics.pixels < (metrics.maxScrollExtent - resetBuffer)) {
+      // Reset bottom trigger when scrolled away from bottom (past resetBuffer)
       _hasTriggeredAtBottom = false;
     }
 
@@ -129,8 +135,8 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
       debugPrint('ScrollListener: Triggering scroll UP');
       _hasTriggeredAtTop = true;
       _triggerScrollActions('up');
-    } else if (!nearTop && metrics.pixels > metrics.maxScrollExtent * 0.2) {
-      // Reset top trigger when scrolled away from top
+    } else if (!nearTop && metrics.pixels > resetBuffer) {
+      // Reset top trigger when scrolled away from top (past resetBuffer)
       _hasTriggeredAtTop = false;
     }
   }
@@ -155,8 +161,8 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
     if (shouldTrigger && !_hasTriggeredAtBottom) {
       _hasTriggeredAtBottom = true;
       _triggerScrollActions('down');
-    } else if (!shouldTrigger && metrics.pixels < metrics.maxScrollExtent * 0.5) {
-      // Reset trigger flag when scrolled back up past 50%
+    } else if (!shouldTrigger && metrics.pixels < (metrics.maxScrollExtent - 150.0)) {
+      // Reset trigger flag when scrolled away from bottom (150px buffer)
       _hasTriggeredAtBottom = false;
     }
   }
@@ -217,7 +223,20 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
       builder: (context, flowState, __) {
         final stateData = extractCrudStateData(compositeKey);
         final isLoading = flowState?.isLoading ?? false;
-        final currentWrapperLength = flowState?.stateWrapper?.length ?? 0;
+        final currentWrapper = flowState?.stateWrapper;
+        final currentWrapperLength = currentWrapper?.length ?? 0;
+
+        // Reset scroll trigger flags when the data changes (new wrapper
+        // list created after load). This allows the next scroll to edge
+        // to trigger another page load without needing to scroll away first.
+        // Using object identity (not length) since bidirectional trim+add
+        // can keep the same length while replacing data.
+        if (_lastWrapper != null && !identical(currentWrapper, _lastWrapper)) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) resetScrollState();
+          });
+        }
+        _lastWrapper = currentWrapper;
 
         debugPrint('LayoutRenderer: REBUILD - screenKey=$screenKey, '
             'wrapperLength=$currentWrapperLength, isLoading=$isLoading');

@@ -31,8 +31,8 @@ class SearchBarWidget implements FlowWidget {
     // Parse validation rules
     for (final validation in validations) {
       if (validation is Map<String, dynamic>) {
-        final key = validation['key'];
-        if (key == 'minSearchChars') {
+        final type = validation['type'];
+        if (type == 'minSearchChars') {
           final value = validation['value'];
           if (value is int) {
             minSearchChars = value;
