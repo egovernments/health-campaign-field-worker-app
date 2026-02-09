@@ -845,7 +845,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           label: i18.home.dashboard,
           onPressed: () {
             if (isTriggerLocalisation) {
-              triggerLocalization();
+              const module = "hcm-dashboard";
+              triggerLocalization(module: module);
               isTriggerLocalisation = false;
             }
             context.router.push(const UserDashboardRoute());
@@ -1319,7 +1320,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           label: i18.home.manageAttendanceLabel,
           onPressed: () {
             // if (isTriggerLocalisation) {
-            triggerLocalization();
+            const module = "hcm-attendance";
+            triggerLocalization(module: module);
             isTriggerLocalisation = false;
             // };
             context.router.push(const ManageAttendanceRoute());
@@ -1346,8 +1348,9 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.send,
           label: i18.home.dataShare,
           onPressed: () async {
+            const module = "hcm-peer-to-peer";
             // if (isTriggerLocalisation) {
-            triggerLocalization();
+            triggerLocalization(module: module);
             isTriggerLocalisation = false;
             // }
             context.router.push(const DataShareHomeRoute());
@@ -1359,8 +1362,9 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.bar_chart_sharp,
           label: i18.home.dashboard,
           onPressed: () {
+            const module = "hcm-dashboard";
             // if (isTriggerLocalisation) {
-            triggerLocalization();
+            triggerLocalization(module: module);
             isTriggerLocalisation = false;
             // };
             context.router.push(const UserDashboardRoute());
@@ -1390,6 +1394,9 @@ class _HomePageState extends LocalizedState<HomePage> {
         icon: Icons.vaccines_outlined,
         label: i18.home.transitPostLabel,
         onPressed: () {
+          const module = "hcm-transit-post";
+          // if (isTriggerLocalisation) {
+          triggerLocalization(module: module);
           context.router.push(const TransitPostWrapperRoute());
         },
       )),
