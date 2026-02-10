@@ -562,11 +562,6 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                   scannerId: widget.scannerId,
                                 ),
                               );
-                              if (updatedBarcodes.length <
-                                  widget.effectiveQuantity) {
-                                DigitScannerUtils().buildDialog(context,
-                                    localizations, widget.effectiveQuantity);
-                              }
                               setState(() {
                                 manualCode = false;
                               });
@@ -811,11 +806,6 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                       .toString()
                                       .trim());
                             codes.add(form.control(_manualCodeFormKey).value);
-                            if (updatedQRCodes.length <
-                                widget.effectiveQuantity) {
-                              DigitScannerUtils().buildDialog(context,
-                                  localizations, widget.effectiveQuantity);
-                            }
                             bloc.add(
                               DigitScannerEvent.handleScanner(
                                 barCode: state.barCodes,
