@@ -62,8 +62,12 @@ class DigitScannerPage extends LocalizedStatefulWidget {
   });
 
   /// Gets the effective quantity - from validations if available, otherwise from legacy param
-  int get effectiveQuantity =>
-      validations != null ? validations.scanLimit : quantity;
+  int get effectiveQuantity {
+    if (validations != null && validations!.any((v) => v.type == 'scanLimit')) {
+      return validations.scanLimit;
+    }
+    return quantity;
+  }
 
   /// Gets the effective isGS1code - from validations if available, otherwise from legacy param
   bool get effectiveIsGS1code {
@@ -74,12 +78,20 @@ class DigitScannerPage extends LocalizedStatefulWidget {
   }
 
   /// Gets the effective singleValue - from validations if available, otherwise from legacy param
-  bool get effectiveSingleValue =>
-      validations != null ? validations.isSingleValue : singleValue;
+  bool get effectiveSingleValue {
+    if (validations != null && validations!.any((v) => v.type == 'scanLimit')) {
+      return validations.isSingleValue;
+    }
+    return singleValue;
+  }
 
   /// Gets the effective regex - from validations if available, otherwise from legacy param
-  String? get effectiveRegex =>
-      validations != null ? validations.pattern : regex;
+  String? get effectiveRegex {
+    if (validations != null && validations!.any((v) => v.type == 'pattern')) {
+      return validations.pattern;
+    }
+    return regex;
+  }
 
   /// Gets the scan limit exceeded message from validations
   String? get scanLimitMessage => validations?.scanLimitMessage;

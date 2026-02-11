@@ -7,7 +7,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart';
 import 'package:digit_crud_bloc/digit_crud_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
@@ -470,12 +469,11 @@ class _HomePageState extends LocalizedState<HomePage> {
       final isDistributor = context.loggedInUserRoles
           .where(
             (role) => role.code == RolesType.distributor.toValue(),
-      )
+          )
           .toList()
           .isNotEmpty;
       final isWareHouseMgr = context.loggedInUserRoles
-          .where(
-              (role) => role.code == RolesType.warehouseManager.toValue())
+          .where((role) => role.code == RolesType.warehouseManager.toValue())
           .toList()
           .isNotEmpty;
 
