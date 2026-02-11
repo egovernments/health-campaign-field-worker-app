@@ -66,8 +66,12 @@ class DigitScannerPage extends LocalizedStatefulWidget {
       validations != null ? validations.scanLimit : quantity;
 
   /// Gets the effective isGS1code - from validations if available, otherwise from legacy param
-  bool get effectiveIsGS1code =>
-      validations != null ? validations.isGS1 : isGS1code;
+  bool get effectiveIsGS1code {
+    if (validations != null && validations!.any((v) => v.type == 'isGS1')) {
+      return validations.isGS1;
+    }
+    return isGS1code;
+  }
 
   /// Gets the effective singleValue - from validations if available, otherwise from legacy param
   bool get effectiveSingleValue =>
@@ -100,6 +104,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
   static List<CameraDescription> _cameras = [];
   int _cameraIndex = -1;
   List<GS1Barcode> result = [];
+  List<GS1Barcode> _originalBarcodes = [];
   List<String> codes = [];
   bool manualCode = false;
   bool flashStatus = false;
@@ -176,57 +181,72 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
         widget.initialQrCodes!.isNotEmpty) {
       // Initialize with existing QR code data for edit mode
       codes = List.from(widget.initialQrCodes!);
-      context.read<DigitScannerBloc>().add(
-            DigitScannerEvent.handleScanner(
-              qrCode: widget.initialQrCodes!,
-              barCode: [],
-              scannerId: widget.scannerId,
-            ),
-          );
-    } else if (widget.initialBarcodeData != null &&
-        widget.initialBarcodeData!.isNotEmpty) {
-      // Initialize with existing barcode (GS1) data for edit mode
-      // Parse the comma-separated string (GTIN,SERIAL,BATCH,EXPIRY) back to GS1Barcode
-      try {
-        final parts = widget.initialBarcodeData!.split(',');
-        if (parts.length >= 4 &&
-            parts.every((part) => part.trim().isNotEmpty)) {
-          final gtin = parts[0].trim();
-          final serial = parts[1].trim();
-          final batch = parts[2].trim();
-          final expiryStr = parts[3].trim();
-
-          // Parse expiry date (format: dd MMM yyyy)
-          DateTime? expiryDate;
-          try {
-            expiryDate = DateFormat('dd MMM yyyy').parse(expiryStr);
-          } catch (_) {
-            expiryDate = DateTime.now().add(const Duration(days: 365));
-          }
-
-          // Generate GS1 barcode string and parse it
-          final barcodeString = DigitScannerUtils().generateGS1Barcode(
-            serialNumber: serial,
-            expiryDate: expiryDate,
-            batchNumber: batch,
-            gtin: gtin,
-          );
-
-          final parser = GS1BarcodeParser.defaultParser();
-          final parsed = parser.parse(barcodeString);
-
-          result = [parsed];
+      // Dispatch after BlocConsumer subscribes to ensure it sees the state change
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
           context.read<DigitScannerBloc>().add(
                 DigitScannerEvent.handleScanner(
-                  qrCode: [],
-                  barCode: [parsed],
+                  qrCode: widget.initialQrCodes!,
+                  barCode: [],
                   scannerId: widget.scannerId,
                 ),
               );
         }
+      });
+    } else if (widget.initialBarcodeData != null &&
+        widget.initialBarcodeData!.isNotEmpty) {
+      // Initialize with existing barcode (GS1) data for edit mode
+      // Supports multiple barcodes separated by semicolons
+      // Each barcode: GTIN,SERIAL,BATCH,EXPIRY
+      try {
+        final parser = GS1BarcodeParser.defaultParser();
+        final parsedBarcodes = <GS1Barcode>[];
+        final barcodeStrings = widget.initialBarcodeData!.split(';');
+
+        for (final barcodeStr in barcodeStrings) {
+          final parts = barcodeStr.split(',');
+          if (parts.length >= 4) {
+            final gtin = parts[0].trim();
+            final serial = parts[1].trim();
+            final batch = parts[2].trim();
+            final expiryStr = parts[3].trim();
+
+            DateTime expiryDate;
+            try {
+              expiryDate = DateFormat('dd MMM yyyy').parse(expiryStr);
+            } catch (_) {
+              expiryDate = DateTime.now().add(const Duration(days: 365));
+            }
+
+            final barcodeString = DigitScannerUtils().generateGS1Barcode(
+              serialNumber: serial,
+              expiryDate: expiryDate,
+              batchNumber: batch,
+              gtin: gtin,
+            );
+
+            parsedBarcodes.add(parser.parse(barcodeString));
+          }
+        }
+
+        if (parsedBarcodes.isNotEmpty) {
+          result = parsedBarcodes;
+          _originalBarcodes = List.from(parsedBarcodes);
+          // Dispatch after BlocConsumer subscribes to ensure it sees the state change
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              context.read<DigitScannerBloc>().add(
+                    DigitScannerEvent.handleScanner(
+                      qrCode: [],
+                      barCode: parsedBarcodes,
+                      scannerId: widget.scannerId,
+                    ),
+                  );
+            }
+          });
+        }
       } catch (e) {
         debugPrint('Error parsing initial barcode data: $e');
-        // Initialize with empty result on parse error
         result = [];
       }
     }
@@ -302,11 +322,21 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
               if (widget.isEditEnabled &&
                   widget.initialQrCodes != null &&
                   widget.initialQrCodes!.isNotEmpty) {
-                // Restore initial values when canceling edit
+                // Restore initial QR values when canceling edit
                 context.read<DigitScannerBloc>().add(
                       DigitScannerEvent.handleScanner(
                         qrCode: widget.initialQrCodes!,
                         barCode: [],
+                        scannerId: widget.scannerId,
+                      ),
+                    );
+              } else if (widget.isEditEnabled &&
+                  _originalBarcodes.isNotEmpty) {
+                // Restore initial barcode values when canceling edit
+                context.read<DigitScannerBloc>().add(
+                      DigitScannerEvent.handleScanner(
+                        qrCode: [],
+                        barCode: _originalBarcodes,
                         scannerId: widget.scannerId,
                       ),
                     );
@@ -890,11 +920,21 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
               if (widget.isEditEnabled &&
                   widget.initialQrCodes != null &&
                   widget.initialQrCodes!.isNotEmpty) {
-                // Restore initial values when canceling edit
+                // Restore initial QR values when canceling edit
                 context.read<DigitScannerBloc>().add(
                       DigitScannerEvent.handleScanner(
                         qrCode: widget.initialQrCodes!,
                         barCode: [],
+                        scannerId: widget.scannerId,
+                      ),
+                    );
+              } else if (widget.isEditEnabled &&
+                  _originalBarcodes.isNotEmpty) {
+                // Restore initial barcode values when canceling edit
+                context.read<DigitScannerBloc>().add(
+                      DigitScannerEvent.handleScanner(
+                        qrCode: [],
+                        barCode: _originalBarcodes,
                         scannerId: widget.scannerId,
                       ),
                     );
@@ -1016,6 +1056,10 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
 
   renderScannedResource(
       ThemeData theme, DigitTextTheme textTheme, DigitScannerState state) {
+    // Use state.barCodes when available, fall back to local result list
+    // This handles the case where bloc state hasn't updated yet but result is set in initState
+    final effectiveBarcodes = state.barCodes.isNotEmpty ? state.barCodes : result;
+    final effectiveQrCodes = state.qrCodes.isNotEmpty ? state.qrCodes : codes;
     return Stack(
       children: [
         Positioned(
@@ -1033,8 +1077,8 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                 type: DigitButtonType.primary,
                 onPressed: () async {
                   final scannedCount = widget.effectiveIsGS1code
-                      ? state.barCodes.length
-                      : state.qrCodes.length;
+                      ? effectiveBarcodes.length
+                      : effectiveQrCodes.length;
 
                   if (scannedCount < widget.effectiveQuantity) {
                     DigitScannerUtils().buildDialog(
@@ -1046,8 +1090,8 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                   } else {
                     final bloc = context.read<DigitScannerBloc>();
                     bloc.add(DigitScannerEvent.handleScanner(
-                      barCode: state.barCodes,
-                      qrCode: state.qrCodes,
+                      barCode: effectiveBarcodes,
+                      qrCode: effectiveQrCodes,
                       scannerId: widget.scannerId,
                     ));
                     Navigator.of(context).pop();
@@ -1060,11 +1104,11 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
         Positioned(
           bottom: (spacer1 * 10),
           height: widget.effectiveIsGS1code
-              ? state.barCodes.length < 3
-                  ? (state.barCodes.length * 60) + 80
-                  : MediaQuery.of(context).size.height / 3
-              : state.qrCodes.length < 2
-                  ? ((state.qrCodes.length + 1) * 60)
+              ? effectiveBarcodes.length < 2
+                  ? (effectiveBarcodes.length * 160) + 80
+                  : MediaQuery.of(context).size.height / 2.5
+              : effectiveQrCodes.length < 2
+                  ? ((effectiveQrCodes.length + 1) * 60)
                   : MediaQuery.of(context).size.height / 4,
           width: MediaQuery.of(context).size.width,
           child: Container(
@@ -1097,12 +1141,12 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                   width: MediaQuery.of(context).size.width,
                   child: widget.effectiveIsGS1code
                       ? Text(
-                          '${state.barCodes.length.toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
+                          '${effectiveBarcodes.length.toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
                           style: textTheme.headingM
                               .copyWith(color: theme.colorTheme.text.primary),
                         )
                       : Text(
-                          '${state.qrCodes.length.toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
+                          '${effectiveQrCodes.length.toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
                           style: textTheme.headingM
                               .copyWith(color: theme.colorTheme.text.primary),
                         ),
@@ -1110,9 +1154,117 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                 Expanded(
                   child: ListView.builder(
                     itemCount: widget.effectiveIsGS1code
-                        ? state.barCodes.length
-                        : state.qrCodes.length,
+                        ? effectiveBarcodes.length
+                        : effectiveQrCodes.length,
                     itemBuilder: (BuildContext context, int index) {
+                      if (widget.effectiveIsGS1code) {
+                        final gs1Data = DigitScannerUtils()
+                            .getGs1CodeFormattedStringAtIndex(
+                                effectiveBarcodes, index);
+                        return ListTile(
+                          shape: const Border(),
+                          title: Container(
+                            margin: const EdgeInsets.only(
+                              left: spacer1,
+                              right: spacer1,
+                            ),
+                            decoration: BoxDecoration(
+                              color: DigitTheme.instance.colorScheme.surface,
+                              border: Border.all(
+                                color: DigitTheme.instance.colorScheme.outline,
+                                width: 1,
+                              ),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(4.0),
+                              ),
+                            ),
+                            padding: const EdgeInsets.all(spacer2),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: gs1Data.entries.map((entry) {
+                                      final label =
+                                          localizations.translate(
+                                              'GS1_${entry.key}');
+                                      final value = entry.value is DateTime
+                                          ? DateFormat('dd MMM yyyy')
+                                              .format(entry.value)
+                                          : entry.value?.toString() ?? '';
+                                      return Padding(
+                                        padding: const EdgeInsets.only(
+                                            bottom: spacer1),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(
+                                              width: 80,
+                                              child: Text(
+                                                label,
+                                                style: textTheme.bodyS.copyWith(
+                                                  color: theme.colorTheme.text
+                                                      .secondary,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: spacer1),
+                                            Expanded(
+                                              child: Text(
+                                                value,
+                                                style:
+                                                    textTheme.bodyS.copyWith(
+                                                  color: theme.colorTheme.text
+                                                      .primary,
+                                                ),
+                                                maxLines: 2,
+                                                overflow:
+                                                    TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                                IconButton(
+                                  padding: EdgeInsets.zero,
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: theme.colorScheme.error,
+                                    size: 24,
+                                  ),
+                                  onPressed: () {
+                                    final bloc =
+                                        context.read<DigitScannerBloc>();
+                                    result = List.from(effectiveBarcodes);
+                                    result.removeAt(index);
+                                    setState(() {
+                                      result = result;
+                                    });
+                                    bloc.add(
+                                      DigitScannerEvent.handleScanner(
+                                        barCode: result,
+                                        qrCode: effectiveQrCodes,
+                                        regex: widget.effectiveRegex,
+                                        patternMessage: widget.patternMessage,
+                                        scannerId: widget.scannerId,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+
+                      // QR code display
                       return ListTile(
                         shape: const Border(),
                         title: Container(
@@ -1139,15 +1291,8 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                               Flexible(
                                 child: Text(
                                   overflow: TextOverflow.ellipsis,
-                                  widget.effectiveIsGS1code
-                                      ? DigitScannerUtils()
-                                          .getGs1CodeFormattedStringAtIndex(
-                                              state.barCodes, index)
-                                          .entries
-                                          .first
-                                          .value
-                                      : DigitScannerUtils().trimString(
-                                          state.qrCodes[index].toString()),
+                                  DigitScannerUtils().trimString(
+                                      effectiveQrCodes[index].toString()),
                                 ),
                               ),
                               IconButton(
@@ -1161,43 +1306,20 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                 ),
                                 onPressed: () {
                                   final bloc = context.read<DigitScannerBloc>();
-                                  if (widget.effectiveIsGS1code) {
-                                    result = List.from(
-                                      state.barCodes,
-                                    );
-                                    result.removeAt(index);
-                                    setState(() {
-                                      result = result;
-                                    });
-
-                                    bloc.add(
-                                      DigitScannerEvent.handleScanner(
-                                        barCode: result,
-                                        qrCode: state.qrCodes,
-                                        regex: widget.effectiveRegex,
-                                        patternMessage: widget.patternMessage,
-                                        scannerId: widget.scannerId,
-                                      ),
-                                    );
-                                  } else {
-                                    codes = List.from(
-                                      state.qrCodes,
-                                    );
-                                    codes.removeAt(index);
-                                    setState(() {
-                                      codes = codes;
-                                    });
-
-                                    bloc.add(
-                                      DigitScannerEvent.handleScanner(
-                                        barCode: state.barCodes,
-                                        qrCode: codes,
-                                        regex: widget.effectiveRegex,
-                                        patternMessage: widget.patternMessage,
-                                        scannerId: widget.scannerId,
-                                      ),
-                                    );
-                                  }
+                                  codes = List.from(effectiveQrCodes);
+                                  codes.removeAt(index);
+                                  setState(() {
+                                    codes = codes;
+                                  });
+                                  bloc.add(
+                                    DigitScannerEvent.handleScanner(
+                                      barCode: effectiveBarcodes,
+                                      qrCode: codes,
+                                      regex: widget.effectiveRegex,
+                                      patternMessage: widget.patternMessage,
+                                      scannerId: widget.scannerId,
+                                    ),
+                                  );
                                 },
                               ),
                             ],
