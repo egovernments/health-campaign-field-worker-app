@@ -342,8 +342,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                         scannerId: widget.scannerId,
                       ),
                     );
-              } else if (widget.isEditEnabled &&
-                  _originalBarcodes.isNotEmpty) {
+              } else if (widget.isEditEnabled && _originalBarcodes.isNotEmpty) {
                 // Restore initial barcode values when canceling edit
                 context.read<DigitScannerBloc>().add(
                       DigitScannerEvent.handleScanner(
@@ -561,7 +560,6 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                             if (!form.valid) return;
 
                             final bloc = context.read<DigitScannerBloc>();
-                            codes.add(form.control(_manualCodeFormKey).value);
 
                             try {
                               final barcodeString =
@@ -585,8 +583,12 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                               final parser = GS1BarcodeParser.defaultParser();
                               final parsed = parser.parse(barcodeString);
                               // ✅ Append to existing barcodes; DO NOT touch qrCodes in GS1 mode
+                              // Use local result as fallback when bloc state is empty
+                              final existingBarcodes = state.barCodes.isNotEmpty
+                                  ? state.barCodes
+                                  : result;
                               final updatedBarcodes =
-                                  List<GS1Barcode>.from(state.barCodes)
+                                  List<GS1Barcode>.from(existingBarcodes)
                                     ..add(parsed);
 
                               // Keep local mirror in sync (used by UI)
@@ -604,18 +606,16 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                   scannerId: widget.scannerId,
                                 ),
                               );
-                              setState(() {
-                                manualCode = false;
-                              });
 
                               initializeCameras();
                             } catch (e) {
-                              debugPrint('Error parsing manual GS1 barcode: $e');
+                              debugPrint(
+                                  'Error parsing manual GS1 barcode: $e');
                               Toast.showToast(
                                 context,
                                 type: ToastType.error,
-                                message: localizations.translate(
-                                    i18.scanner.resourcesScanFailed),
+                                message: localizations
+                                    .translate(i18.scanner.resourcesScanFailed),
                                 sentenceCaseEnabled: false,
                               );
                             }
@@ -836,18 +836,22 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                               type: ToastType.error,
                               message: localizations
                                   .translate(i18.scanner.enterManualCode),
-                                sentenceCaseEnabled: false,
+                              sentenceCaseEnabled: false,
                             );
                           } else {
                             final bloc = context.read<DigitScannerBloc>();
+                            // Use local codes as fallback when bloc state is empty
+                            final existingQrCodes = state.qrCodes.isNotEmpty
+                                ? state.qrCodes
+                                : codes;
                             final updatedQRCodes =
-                                List<String>.from(state.qrCodes)
+                                List<String>.from(existingQrCodes)
                                   ..add(form
                                       .control(_manualCodeFormKey)
                                       .value
                                       .toString()
                                       .trim());
-                            codes.add(form.control(_manualCodeFormKey).value);
+                            codes = updatedQRCodes;
                             bloc.add(
                               DigitScannerEvent.handleScanner(
                                 barCode: state.barCodes,
@@ -940,8 +944,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                         scannerId: widget.scannerId,
                       ),
                     );
-              } else if (widget.isEditEnabled &&
-                  _originalBarcodes.isNotEmpty) {
+              } else if (widget.isEditEnabled && _originalBarcodes.isNotEmpty) {
                 // Restore initial barcode values when canceling edit
                 context.read<DigitScannerBloc>().add(
                       DigitScannerEvent.handleScanner(
@@ -1047,13 +1050,6 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                   i18.scanner.enterManualCode,
                 ),
                 onPressed: () {
-                  context.read<DigitScannerBloc>().add(
-                        DigitScannerEvent.handleScanner(
-                          barCode: [],
-                          qrCode: [],
-                          scannerId: widget.scannerId,
-                        ),
-                      );
                   setState(() {
                     manualCode = true;
                   });
@@ -1070,7 +1066,8 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
       ThemeData theme, DigitTextTheme textTheme, DigitScannerState state) {
     // Use state.barCodes when available, fall back to local result list
     // This handles the case where bloc state hasn't updated yet but result is set in initState
-    final effectiveBarcodes = state.barCodes.isNotEmpty ? state.barCodes : result;
+    final effectiveBarcodes =
+        state.barCodes.isNotEmpty ? state.barCodes : result;
     final effectiveQrCodes = state.qrCodes.isNotEmpty ? state.qrCodes : codes;
     return Stack(
       children: [
@@ -1115,13 +1112,10 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
         ),
         Positioned(
           bottom: (spacer1 * 10),
-          height: widget.effectiveIsGS1code
-              ? effectiveBarcodes.length < 2
-                  ? (effectiveBarcodes.length * 160) + 80
-                  : MediaQuery.of(context).size.height / 2.5
-              : effectiveQrCodes.length < 2
-                  ? ((effectiveQrCodes.length + 1) * 60)
-                  : MediaQuery.of(context).size.height / 4,
+          height: (widget.effectiveIsGS1code
+                  ? (effectiveBarcodes.length * 160.0) + 80.0
+                  : ((effectiveQrCodes.length + 1) * 60.0))
+              .clamp(0.0, MediaQuery.of(context).size.height / 3),
           width: MediaQuery.of(context).size.width,
           child: Container(
             width: 100,
@@ -1200,9 +1194,8 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: gs1Data.entries.map((entry) {
-                                      final label =
-                                          localizations.translate(
-                                              'GS1_${entry.key}');
+                                      final label = localizations
+                                          .translate('GS1_${entry.key}');
                                       final value = entry.value is DateTime
                                           ? DateFormat('dd MMM yyyy')
                                               .format(entry.value)
@@ -1228,14 +1221,12 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                             Expanded(
                                               child: Text(
                                                 value,
-                                                style:
-                                                    textTheme.bodyS.copyWith(
-                                                  color: theme.colorTheme.text
-                                                      .primary,
+                                                style: textTheme.bodyS.copyWith(
+                                                  color: theme
+                                                      .colorTheme.text.primary,
                                                 ),
                                                 maxLines: 2,
-                                                overflow:
-                                                    TextOverflow.ellipsis,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
                                           ],
