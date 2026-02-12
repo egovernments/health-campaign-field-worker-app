@@ -15,6 +15,10 @@ class SearchStateManager {
   // Storage: compositeKey (screenKey::searchName) -> {filters: [...], orderBy: {...}}
   final Map<String, Map<String, dynamic>> _state = {};
 
+  /// Exposes internal state map for debug panel inspection.
+  /// Only use from FlowDebugger panels.
+  Map<String, Map<String, dynamic>> get debugState => _state;
+
   // Change notifiers per composite key
   final Map<String, ValueNotifier<int>> _notifiers = {};
 

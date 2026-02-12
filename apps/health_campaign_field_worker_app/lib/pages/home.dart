@@ -30,8 +30,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
-import 'package:transit_post/router/transit_post_router.gm.dart';
-import 'package:transit_post/utils/utils.dart';
+
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
@@ -1389,17 +1388,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       //     customIcon: Constants.beneficiaryIdDownload,
       //   ),
       // ),
-      i18.home.transitPostLabel: homeShowcaseData.transitPost.buildWith(
-          child: HomeItemCard(
-        icon: Icons.vaccines_outlined,
-        label: i18.home.transitPostLabel,
-        onPressed: () {
-          const module = "hcm-transit-post";
-          // if (isTriggerLocalisation) {
-          triggerLocalization(module: module);
-          context.router.push(const TransitPostWrapperRoute());
-        },
-      )),
+
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -1534,17 +1523,7 @@ void setPackagesSingleton(BuildContext context) {
         final filteredDashboardConfig = filterDashboardConfig(
             dashboardConfigSchema ?? [], context.projectTypeCode ?? "");
         loadLocalization(context, appConfiguration);
-        // INFO : Need to add singleton of package Here
-        TransitPostSingleton().setInitialData(
-          resources: context.selectedProjectType?.resources,
-          transitPostType: appConfiguration.transitPostType != null
-              ? appConfiguration.transitPostType!.map((e) => e.code).toList()
-              : [],
-          loggedInUserUuid: context.loggedInUserUuid,
-          projectId: context.selectedProject.id,
-          minAge: context.selectedProjectType?.validMinAge,
-          maxAge: context.selectedProjectType?.validMaxAge,
-        );
+
         FlowBuilderSingleton().setInitialData(
           loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,

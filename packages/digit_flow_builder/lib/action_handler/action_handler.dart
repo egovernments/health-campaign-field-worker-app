@@ -1,8 +1,10 @@
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_formula_parser/digit_formula_parser.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../utils/utils.dart';
 import '../blocs/flow_crud_bloc.dart';
+import '../debug/flow_debugger.dart';
 import '../utils/interpolation.dart';
 import 'action_config.dart';
 import 'action_executor_registry.dart';
@@ -114,20 +116,45 @@ class ActionHandler {
       debugPrint('CONDITION_EVAL_FLAT: parsedExpression=${parser.parsedExpression}');
       final result = parser.parse;
       debugPrint('CONDITION_EVAL_FLAT: result=$result');
-      return result["isSuccess"] && result["value"] == true;
-    } catch (e) {
+      final boolResult = result["isSuccess"] && result["value"] == true;
+      if (kDebugMode) {
+        FlowDebugger().logCondition(
+          expression: expression!,
+          evaluationData: flatData,
+          result: boolResult,
+        );
+      }
+      return boolResult;
+    } catch (e, stackTrace) {
       debugPrint('CONDITION_EVAL_FLAT: error=$e');
+      if (kDebugMode) {
+        FlowDebugger().logCondition(
+          expression: expression!,
+          evaluationData: flatData,
+          result: false,
+          errorMessage: e.toString(),
+          stackTrace: stackTrace.toString(),
+        );
+      }
       // If parsing fails, return false
       return false;
     }
   }
 
-  /// Execute actions with conditional support
+  /// Execute actions with conditional support.
+  ///
+  /// [actionSource] is used for debug config path tracking (e.g. "initActions", "onAction").
+  /// [screenKey] identifies which flow config these actions belong to.
   static Future<Map<String, dynamic>> executeActions(
     List<dynamic> actions,
     BuildContext context,
-    Map<String, dynamic> contextData,
-  ) async {
+    Map<String, dynamic> contextData, {
+    String actionSource = 'actions',
+    String? screenKey,
+  }) async {
+    // Resolve screenKey from context if not provided
+    screenKey ??= getEffectiveScreenKey(context, contextData);
+
     int i = 0;
     while (i < actions.length) {
       final actionJson = actions[i];
@@ -135,6 +162,7 @@ class ActionHandler {
       if (actionJson['condition'] != null) {
         // Conditional action block - collect all consecutive conditional actions
         final conditionalGroup = <Map<String, dynamic>>[];
+        final conditionalGroupStartIdx = i;
         while (i < actions.length && actions[i]['condition'] != null) {
           conditionalGroup.add(actions[i] as Map<String, dynamic>);
           i++;
@@ -215,9 +243,13 @@ class ActionHandler {
         final stateWrapper = currentState?.stateWrapper;
         final item = contextData['item'] as Map<String, dynamic>?;
 
-        for (final condActionJson in conditionalGroup) {
+        for (int condIdx = 0; condIdx < conditionalGroup.length; condIdx++) {
+          final condActionJson = conditionalGroup[condIdx];
           final condition = condActionJson['condition'] as Map<String, dynamic>;
           var expression = condition['expression'] as String?;
+
+          // Build config path for this conditional group entry
+          final condGroupPath = '$actionSource[${conditionalGroupStartIdx + condIdx}]';
 
           // Resolve any variable paths from stateWrapper/item context
           if (expression != null && expression != 'DEFAULT') {
@@ -233,8 +265,12 @@ class ActionHandler {
           if (evaluateCondition(resolvedCondition, evaluationData)) {
             debugPrint('CONDITION_EVAL: Condition matched!');
             final subActions = condActionJson['actions'] as List? ?? [];
-            for (final subActionJson in subActions) {
-              final action = ActionConfig.fromJson(subActionJson);
+            for (int subIdx = 0; subIdx < subActions.length; subIdx++) {
+              final action = ActionConfig.fromJson(subActions[subIdx])
+                  .withDebugPath(
+                    configPath: '$condGroupPath.actions[$subIdx]',
+                    screenKey: screenKey,
+                  );
               contextData = await execute(action, context, contextData);
             }
             break; // Execute only the first matching condition in this group
@@ -243,7 +279,10 @@ class ActionHandler {
         // Continue to next action after conditional group (don't break out of main loop)
       } else {
         // Direct action (non-conditional)
-        final action = ActionConfig.fromJson(actionJson);
+        final action = ActionConfig.fromJson(actionJson).withDebugPath(
+          configPath: '$actionSource[$i]',
+          screenKey: screenKey,
+        );
         contextData = await execute(action, context, contextData);
         i++;
       }

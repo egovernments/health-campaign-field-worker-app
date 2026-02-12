@@ -1,6 +1,7 @@
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_flow_builder/blocs/search_state_manager.dart';
 import 'package:digit_flow_builder/blocs/state_wrapper_builder.dart';
+import 'package:digit_flow_builder/debug/flow_debugger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -328,11 +329,47 @@ class FlowCrudStateRegistry {
     _disposeCompositeKey(compositeKey);
   }
 
+  /// Exposes internal state map for debug panel inspection.
+  /// Only use from FlowDebugger panels.
+  Map<String, ValueNotifier<FlowCrudState?>> get debugStateMap => _map;
+
   // ============ Composite Key Methods (Direct Access) ============
 
   /// Update state using composite key directly
   void updateByCompositeKey(String compositeKey, FlowCrudState state) {
-    _map.putIfAbsent(compositeKey, () => ValueNotifier<FlowCrudState?>(null)).value = state;
+    if (kDebugMode) {
+      final previous = _map[compositeKey]?.value;
+      _map.putIfAbsent(compositeKey, () => ValueNotifier<FlowCrudState?>(null)).value = state;
+      _logStateChangeIfNeeded(compositeKey, previous, state);
+    } else {
+      _map.putIfAbsent(compositeKey, () => ValueNotifier<FlowCrudState?>(null)).value = state;
+    }
+  }
+
+  /// Log a state change event for the debugger.
+  void _logStateChangeIfNeeded(
+      String compositeKey, FlowCrudState? previous, FlowCrudState next) {
+    final changed = <String>[];
+    if (previous?.stateWrapper?.length != next.stateWrapper?.length) {
+      changed.add('stateWrapper');
+    }
+    if (previous?.formData?.toString() != next.formData?.toString()) {
+      changed.add('formData');
+    }
+    if (previous?.widgetData?.toString() != next.widgetData?.toString()) {
+      changed.add('widgetData');
+    }
+    if (previous?.isLoading != next.isLoading) {
+      changed.add('isLoading');
+    }
+    FlowDebugger().logStateChange(
+      compositeKey: compositeKey,
+      changedFields: changed,
+      stateWrapperLength: next.stateWrapper?.length,
+      formDataKeys: next.formData?.keys.toList() ?? [],
+      widgetDataKeys: next.widgetData?.keys.toList() ?? [],
+      isLoading: next.isLoading,
+    );
   }
 
   /// Get state using composite key directly

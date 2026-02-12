@@ -16,8 +16,7 @@ import 'package:digit_ui_components/services/AppLocalization.dart'
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:survey_form/blocs/app_localization.dart'
     as survey_form_localization;
-import 'package:transit_post/blocs/app_localization.dart'
-    as transit_post_localization;
+
 
 import '../blocs/localization/app_localization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -56,10 +55,7 @@ getAppLocalizationDelegates({
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
-    transit_post_localization.TransitPostLocalization.getDelegate(
-      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
-      appConfig.languages!,
-    ),
+
     forms_engine_localization.FormLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,

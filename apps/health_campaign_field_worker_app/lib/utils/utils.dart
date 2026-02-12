@@ -30,8 +30,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:survey_form/models/entities/service.dart';
 import 'package:survey_form/survey_form.init.dart' as survey_form_mappers;
 import 'package:sync_service/blocs/sync/sync.dart';
-import 'package:transit_post/data/repositories/local/user_action.dart';
-import 'package:transit_post/data/repositories/remote/user_action.dart';
+
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/localization.dart';
@@ -549,7 +548,7 @@ void attemptSyncUp(BuildContext context) async {
               context.read<
                   LocalRepository<AttendanceLogModel,
                       AttendanceLogSearchModel>>(),
-              context.read<UserActionLocalRepository>(),
+
             ],
             remoteRepositories: [
               // INFO : Need to add repo repo of package Here
@@ -581,7 +580,7 @@ void attemptSyncUp(BuildContext context) async {
               context.read<
                   RemoteRepository<AttendanceLogModel,
                       AttendanceLogSearchModel>>(),
-              context.read<UserActionRemoteRepository>(),
+ 
             ],
           ),
         );

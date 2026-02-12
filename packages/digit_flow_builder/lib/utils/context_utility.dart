@@ -3,7 +3,7 @@ import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-extension ContextUtilityExtensions on BuildContext {
+extension FlowBuilderContextUtilityExtensions on BuildContext {
   DataRepository<D, R>
       repository<D extends EntityModel, R extends EntitySearchModel>(
     BuildContext context,

@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../router/flow_builder_routes.gm.dart';
@@ -181,6 +182,12 @@ class NavigationRegistry {
 
     // Special handling for HOME navigation
     if (name == 'HOME') {
+      if (kDebugMode) {
+        FlowDebugger().logNavigation(
+          toPage: 'HOME',
+          navigationMode: 'popUntilRoot',
+        );
+      }
       _service.navigateToHome();
       return;
     }
@@ -214,6 +221,15 @@ class NavigationRegistry {
     final navigationModeStr = properties['navigationMode'] as String?;
     final popUntilPageName = properties['popUntilPageName'] as String?;
     final navigationMode = _parseNavigationMode(navigationModeStr);
+
+    if (kDebugMode) {
+      FlowDebugger().logNavigation(
+        toPage: name,
+        navigationMode: navigationModeStr ?? 'push',
+        params: data.map((k, v) => MapEntry(k, v?.toString() ?? 'null')),
+        popUntilPageName: popUntilPageName,
+      );
+    }
 
     _service.navigateTo(
       type: type,

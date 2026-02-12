@@ -1,5 +1,8 @@
 import 'package:digit_flow_builder/action_handler/executors/close_popup_executor.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../debug/debug_event.dart';
+import '../debug/flow_debugger.dart';
 import 'action_config.dart';
 import 'executors/action_executor.dart';
 import 'executors/navigation_executor.dart';
@@ -67,6 +70,16 @@ class ActionExecutorRegistry {
 
     if (executor == null) {
       debugPrint('⚠️ No executor found for action type: ${action.actionType}');
+      if (kDebugMode) {
+        FlowDebugger().logAction(
+          actionType: action.actionType,
+          status: DebugEventStatus.skipped,
+          properties: Map<String, dynamic>.from(action.properties),
+          inputContextKeys: contextData.keys.toList(),
+          configPath: action.configPath,
+          screenKey: action.screenKey,
+        );
+      }
       return contextData;
     }
 
@@ -78,11 +91,57 @@ class ActionExecutorRegistry {
       enrichedContextData['parentScreenKey'] = parentScreenKey;
     }
 
+    final Stopwatch? stopwatch = kDebugMode ? (Stopwatch()..start()) : null;
+
+    // Log "started" event before execution so the viewer can show in-progress pointer
+    if (kDebugMode) {
+      FlowDebugger().logAction(
+        actionType: action.actionType,
+        status: DebugEventStatus.started,
+        properties: Map<String, dynamic>.from(action.properties),
+        inputContextKeys: enrichedContextData.keys.toList(),
+        configPath: action.configPath,
+        screenKey: action.screenKey,
+        contextDataSnapshot: enrichedContextData,
+      );
+    }
+
     try {
-      return await executor.execute(action, context, enrichedContextData);
+      final result = await executor.execute(action, context, enrichedContextData);
+      if (kDebugMode) {
+        stopwatch!.stop();
+        FlowDebugger().logAction(
+          actionType: action.actionType,
+          status: DebugEventStatus.success,
+          properties: Map<String, dynamic>.from(action.properties),
+          inputContextKeys: enrichedContextData.keys.toList(),
+          outputContextKeys: result.keys.toList(),
+          configPath: action.configPath,
+          screenKey: action.screenKey,
+          duration: stopwatch.elapsed,
+          contextDataSnapshot: result,
+        );
+      }
+      return result;
     } catch (e, stackTrace) {
       debugPrint('❌ Error executing action ${action.actionType}: $e');
       debugPrint('Stack trace: $stackTrace');
+
+      if (kDebugMode) {
+        stopwatch!.stop();
+        FlowDebugger().logAction(
+          actionType: action.actionType,
+          status: DebugEventStatus.failure,
+          properties: Map<String, dynamic>.from(action.properties),
+          inputContextKeys: enrichedContextData.keys.toList(),
+          errorMessage: e.toString(),
+          stackTrace: stackTrace.toString(),
+          configPath: action.configPath,
+          screenKey: action.screenKey,
+          duration: stopwatch.elapsed,
+          contextDataSnapshot: enrichedContextData,
+        );
+      }
 
       // Return original context data if execution fails
       return contextData;

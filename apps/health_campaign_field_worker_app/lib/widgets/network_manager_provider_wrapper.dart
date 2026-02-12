@@ -39,9 +39,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:survey_form/survey_form.dart';
-import 'package:transit_post/data/repositories/local/user_action.dart';
-import 'package:transit_post/data/repositories/oplog/oplog.dart';
-import 'package:transit_post/data/repositories/remote/user_action.dart';
+
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/downsync/downsync.dart';
@@ -300,12 +298,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         ),
       ),
       // INFO Need to add packages here
-      RepositoryProvider<UserActionLocalRepository>(
-        create: (_) => UserActionLocalRepository(
-          sql,
-          UserActionOpLogManager(isar),
-        ),
-      ),
+
       RepositoryProvider<
           LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(
         create: (_) => PgrServiceLocalRepository(
@@ -538,10 +531,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
                 LocationTrackerRemoteRepository(dio, actionMap: actions),
           ),
         // INFO Need to add packages here
-        if (value == DataModelType.userAction)
-          RepositoryProvider<UserActionRemoteRepository>(
-            create: (_) => UserActionRemoteRepository(dio, actionMap: actions),
-          ),
+
         if (value == DataModelType.complaints)
           RepositoryProvider<
               RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(

@@ -99,9 +99,13 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
         final resolvedActions =
             resolveTemplates(initActions, widget.navigationParams ?? {});
 
-        for (final action in resolvedActions) {
+        for (int idx = 0; idx < resolvedActions.length; idx++) {
+          final action = resolvedActions[idx];
           final parsed = ActionConfig.fromJson(
             Map<String, dynamic>.from(action as Map),
+          ).withDebugPath(
+            configPath: 'initActions[$idx]',
+            screenKey: _schemaKey,
           );
           ActionHandler.execute(parsed, context, {
             'wrappers': const [],
@@ -150,6 +154,8 @@ class _ScreenBuilderState extends State<ScreenBuilder> {
         onSubmit,
         context,
         contextData,
+        actionSource: 'onAction',
+        screenKey: _schemaKey,
       );
     }
   }

@@ -4,6 +4,7 @@ export 'blocs/flow_crud_bloc.dart';
 export 'blocs/form_submission_registry.dart';
 export 'blocs/search_state_manager.dart';
 export 'custom_component_registry.dart';
+export 'debug/debug_exports.dart';
 export 'flow_builder.dart';
 export 'flow_builder_home_page.dart';
 export 'layout_renderer.dart';

@@ -4,14 +4,15 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_flow_builder/flow_builder.dart'
+    hide FlowBuilderContextUtilityExtensions;
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
-import 'package:survey_form/survey_form.dart';
-
+import 'package:survey_form/survey_form.dart'; 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
 import 'blocs/error/error.dart';
@@ -330,20 +331,22 @@ class MainApplicationState extends State<MainApplication>
                                   return child ?? const SizedBox.shrink();
                                 }
 
-                                return Banner(
-                                  message: envConfig.variables.envType.name,
-                                  location: BannerLocation.topEnd,
-                                  color: () {
-                                    switch (envConfig.variables.envType) {
-                                      case EnvType.uat || EnvType.demo:
-                                        return Colors.green;
-                                      case EnvType.qa:
-                                        return Colors.pink;
-                                      default:
-                                        return Colors.red;
-                                    }
-                                  }(),
-                                  child: child,
+                                return FlowDebugOverlay(
+                                  child: Banner(
+                                    message: envConfig.variables.envType.name,
+                                    location: BannerLocation.topEnd,
+                                    color: () {
+                                      switch (envConfig.variables.envType) {
+                                        case EnvType.uat || EnvType.demo:
+                                          return Colors.green;
+                                        case EnvType.qa:
+                                          return Colors.pink;
+                                        default:
+                                          return Colors.red;
+                                      }
+                                    }(),
+                                    child: child,
+                                  ),
                                 );
                               },
                               supportedLocales: languages != null
