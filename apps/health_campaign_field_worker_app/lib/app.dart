@@ -8,6 +8,8 @@ import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_flow_builder/action_handler/action_handler.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_flow_builder/flow_builder.dart'
+    hide FlowBuilderContextUtilityExtensions;
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:dio/dio.dart';
@@ -468,20 +470,23 @@ class MainApplicationState extends State<MainApplication>
                                     return wrapped;
                                   }
 
-                                  return Banner(
-                                    message: envConfig.variables.envType.name,
-                                    location: BannerLocation.topEnd,
-                                    color: () {
-                                      switch (envConfig.variables.envType) {
-                                        case EnvType.uat || EnvType.demo:
-                                          return Colors.green;
-                                        case EnvType.qa:
-                                          return Colors.pink;
-                                        default:
-                                          return Colors.red;
-                                      }
-                                    }(),
-                                    child: wrapped,
+                                  return FlowDebugOverlay(
+                                    child: Banner(
+                                      message:
+                                          envConfig.variables.envType.name,
+                                      location: BannerLocation.topEnd,
+                                      color: () {
+                                        switch (envConfig.variables.envType) {
+                                          case EnvType.uat || EnvType.demo:
+                                            return Colors.green;
+                                          case EnvType.qa:
+                                            return Colors.pink;
+                                          default:
+                                            return Colors.red;
+                                        }
+                                      }(),
+                                      child: wrapped,
+                                    ),
                                   );
                                 },
                                 supportedLocales: languages != null

@@ -424,7 +424,7 @@ class Constants {
     );
     LocationTrackerSingleton()
         .setTenantId(tenantId: envConfig.variables.tenantId);
-    TransitPostSingleton().setTenantId(envConfig.variables.tenantId);
+    
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
     SyncServiceSingleton().setData(
       syncDownRetryCount: envConfig.variables.syncDownRetryCount,

@@ -7,8 +7,10 @@ import 'package:digit_data_model/models/entities/hf_referral.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_flow_builder/utils/interpolation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../debug/flow_debugger.dart';
 import 'function_registry.dart';
 
 class FlowBuilderSingleton {
@@ -307,21 +309,44 @@ String resolveTemplate(
   }
 
   // Now resolve all placeholders
-  for (final match in matches) {
-    final fullPlaceholder = match.group(0)!;
-    final placeholder = match.group(1)!.trim();
+  try {
+    for (final match in matches) {
+      final fullPlaceholder = match.group(0)!;
+      final placeholder = match.group(1)!.trim();
 
-    // Use existing resolveValueRaw to resolve the individual placeholder
-    final resolvedValue = resolveValueRaw('{{$placeholder}}', contextData,
-        screenKey: screenKey, stateData: stateData, widgetData: widgetData);
+      // Use existing resolveValueRaw to resolve the individual placeholder
+      final resolvedValue = resolveValueRaw('{{$placeholder}}', contextData,
+          screenKey: screenKey, stateData: stateData, widgetData: widgetData);
 
-    // Replace the placeholder in the result string
-    // For null values, use the string "null" so expressions like "x != null" work
-    final valueStr = resolvedValue == null ? 'null' : resolvedValue.toString();
-    result = result.replaceAll(fullPlaceholder, valueStr);
+      // Replace the placeholder in the result string
+      // For null values, use the string "null" so expressions like "x != null" work
+      final valueStr = resolvedValue == null ? 'null' : resolvedValue.toString();
+      result = result.replaceAll(fullPlaceholder, valueStr);
+    }
+
+    final finalResult = _translateWithLocalization(result, localization);
+
+    if (kDebugMode && template.contains('{{')) {
+      FlowDebugger().logResolver(
+        input: template,
+        resolvedValue: finalResult,
+        resolverName: 'resolveTemplate',
+      );
+    }
+
+    return finalResult;
+  } catch (e, stackTrace) {
+    if (kDebugMode) {
+      FlowDebugger().logResolver(
+        input: template,
+        resolvedValue: null,
+        resolverName: 'resolveTemplate',
+        errorMessage: e.toString(),
+        stackTrace: stackTrace.toString(),
+      );
+    }
+    rethrow;
   }
-
-  return _translateWithLocalization(result, localization);
 }
 
 /// Helper to translate using localization (supports FlowBuilderLocalization)
@@ -344,7 +369,70 @@ String _translateWithLocalization(String text, dynamic localization) {
 }
 
 /// New method: returns actual type (int, double, bool, list, map, entity, etc.)
+/// Logs each resolution to [FlowDebugger] when running in debug mode.
 dynamic resolveValueRaw(dynamic value, dynamic contextData,
+    {Map<String, dynamic>? widgetData,
+    String? screenKey,
+    CrudStateData? stateData}) {
+  // Only log templates in debug mode
+  final isTemplate = kDebugMode &&
+      value is String &&
+      value.startsWith('{{') &&
+      value.endsWith('}}');
+
+  try {
+    final result = _resolveValueRawImpl(value, contextData,
+        widgetData: widgetData, screenKey: screenKey, stateData: stateData);
+
+    if (isTemplate) {
+      String? prefix;
+      final path = value.replaceAll(RegExp(r'^\{\{|\}\}$'), '').trim();
+      for (final p in [
+        'itemData.',
+        'parentData.',
+        'formData.',
+        'currentItem.',
+        'contextData.',
+        'item.',
+        'widgetData.',
+        'singleton.',
+        'fn',
+        'navigation.',
+      ]) {
+        if (path.startsWith(p)) {
+          prefix = p;
+          break;
+        }
+      }
+
+      FlowDebugger().logResolver(
+        input: value,
+        resolvedValue: result,
+        resolverName: 'resolveValueRaw',
+        matchedPrefix: prefix,
+        contextData: contextData is Map
+            ? Map<String, dynamic>.from(contextData)
+            : <String, dynamic>{},
+      );
+    }
+
+    return result;
+  } catch (e, stackTrace) {
+    if (isTemplate) {
+      FlowDebugger().logResolver(
+        input: value,
+        resolvedValue: null,
+        resolverName: 'resolveValueRaw',
+        errorMessage: e.toString(),
+        stackTrace: stackTrace.toString(),
+      );
+    }
+    rethrow;
+  }
+}
+
+/// Core implementation of resolveValueRaw (no logging).
+dynamic _resolveValueRawImpl(dynamic value, dynamic contextData,
     {Map<String, dynamic>? widgetData,
     String? screenKey,
     CrudStateData? stateData}) {
@@ -468,8 +556,6 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
                   }
 
                   // Otherwise, treat as a variable/path to resolve
-                  // This includes: simple variables (selectedFacility),
-                  // dotted paths (item.field), and prefixed paths (navigation.x)
                   final placeholder = '{{ $trimmed }}';
                   final resolved = resolveValueRaw(placeholder, contextData,
                       widgetData: widgetData,
@@ -487,8 +573,6 @@ dynamic resolveValueRaw(dynamic value, dynamic contextData,
       }
 
       // Check widgetData for unprefixed simple variables first
-      // This handles cases like {{fn:isEmpty(selectedReconFacility)}} where
-      // selectedReconFacility is a widget data field (dropdown selection)
       if (widgetData != null && !path.contains('.')) {
         final widgetValue = widgetData[path];
         if (widgetValue != null) {

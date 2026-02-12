@@ -112,7 +112,7 @@ extension ContextUtilityExtensions on BuildContext {
     // INFO: Set Boundary for packages
     SurveyFormSingleton().setBoundary(boundary: selectedBoundary);
     AttendanceSingleton().setBoundary(boundary: selectedBoundary);
-    TransitPostSingleton().setBoundary(boundary: selectedBoundary);
+
     LocationTrackerSingleton()
         .setBoundaryName(boundaryName: selectedBoundary.code!);
     FlowBuilderSingleton().setBoundary(boundary: selectedBoundary);
