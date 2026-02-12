@@ -90,6 +90,8 @@ class Common {
 
   String get coreCommonlanguage => 'CORE_COMMON_LANGUAGE';
 
+  String get coreCommonTenant => 'CORE_COMMON_TENANT';
+
   String get coreCommonSyncProgress => 'CORE_COMMON_SYNC_PROGRESS';
 
   String get coreCommonDataSynced => 'CORE_COMMON_DATA_SYNCED';
@@ -376,6 +378,8 @@ class Login {
 
   String get unableToLoginText => 'UNABLE_TO_LOGIN';
   String get qrLogin => 'QR_LOGIN';
+  String? get microsoftSSOLabel => 'Microsoft Login';
+  String? get orLabel => '';
 }
 
 class SelectSurveyFormShowcase {

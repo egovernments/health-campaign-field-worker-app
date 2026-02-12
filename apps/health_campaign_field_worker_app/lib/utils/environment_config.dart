@@ -4,6 +4,8 @@ import 'package:collection/collection.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../data/local_store/app_shared_preferences.dart';
+
 EnvironmentConfiguration envConfig = EnvironmentConfiguration.instance;
 
 class EnvironmentConfiguration {
@@ -104,6 +106,21 @@ class Variables {
     'mdms-v2/v1/_search',
   );
 
+  static const _mdmsBaseUrl = EnvEntry(
+    'MDMS_BASE_URL',
+    '', // Empty means use BASE_URL
+  );
+
+  static const _mdmsV2ApiPath = EnvEntry(
+    'MDMS_V2_API_PATH',
+    'mdms-v2/v2/_search',
+  );
+
+  static const _mdmsSchemaCode = EnvEntry(
+    'MDMS_SCHEMA_CODE',
+    '',
+  );
+
   static const _tenantId = EnvEntry(
     'TENANT_ID',
     'default',
@@ -117,6 +134,32 @@ class Variables {
   static const _hierarchyType = EnvEntry(
     'HIERARCHY_TYPE',
     'ADMIN',
+  );
+
+  // Microsoft Entra ID (Azure AD) SSO Configuration
+  static const _entraClientId = EnvEntry(
+    'ENTRA_CLIENT_ID',
+    '',
+  );
+
+  static const _entraTenantId = EnvEntry(
+    'ENTRA_TENANT_ID',
+    'common', // 'common' allows both personal and work accounts
+  );
+
+  static const _entraRedirectUrl = EnvEntry(
+    'ENTRA_REDIRECT_URL',
+    'com.digit.hcm://oauth/callback',
+  );
+
+  static const _entraOAuthLoginPath = EnvEntry(
+    'ENTRA_OAUTH_LOGIN_PATH',
+    '/user/oauth/login',
+  );
+
+  static const _enableSso = EnvEntry(
+    'ENABLE_SSO',
+    'false',
   );
 
   const Variables({
@@ -136,6 +179,21 @@ class Variables {
       ? _mdmsApi.value
       : _dotEnv.get(_mdmsApi.key, fallback: _mdmsApi.value);
 
+  String get mdmsBaseUrl {
+    final url = useFallbackValues
+        ? _mdmsBaseUrl.value
+        : _dotEnv.get(_mdmsBaseUrl.key, fallback: _mdmsBaseUrl.value);
+    return url.isEmpty ? baseUrl : url;
+  }
+
+  String get mdmsV2ApiPath => useFallbackValues
+      ? _mdmsV2ApiPath.value
+      : _dotEnv.get(_mdmsV2ApiPath.key, fallback: _mdmsV2ApiPath.value);
+
+  String get mdmsSchemaCode => useFallbackValues
+      ? _mdmsSchemaCode.value
+      : _dotEnv.get(_mdmsSchemaCode.key, fallback: _mdmsSchemaCode.value);
+
   String get hierarchyType => useFallbackValues
       ? _hierarchyType.value
       : _dotEnv.get(_hierarchyType.key, fallback: _hierarchyType.value);
@@ -144,9 +202,17 @@ class Variables {
       ? _actionMapUrl.value
       : _dotEnv.get(_actionMapUrl.key, fallback: _actionMapUrl.value);
 
-  String get tenantId => useFallbackValues
-      ? _tenantId.value
-      : _dotEnv.get(_tenantId.key, fallback: _tenantId.value);
+  String get tenantId {
+    // First check if user has selected a tenantId from MDMS dropdown
+    final selectedTenantId = AppSharedPreferences().getSelectedTenantId;
+    if (selectedTenantId != null && selectedTenantId.isNotEmpty) {
+      return selectedTenantId;
+    }
+    // Fall back to environment variable
+    return useFallbackValues
+        ? _tenantId.value
+        : _dotEnv.get(_tenantId.key, fallback: _tenantId.value);
+  }
 
   String get dumpErrorApiPath => useFallbackValues
       ? _dumpErrorApi.value
@@ -200,6 +266,71 @@ class Variables {
     return EnvType.values.firstWhereOrNull((env) => env.name == envName) ??
         EnvType.dev;
   }
+
+  // Microsoft Entra ID Configuration
+  String get entraClientId => useFallbackValues
+      ? _entraClientId.value
+      : _dotEnv.get(_entraClientId.key, fallback: _entraClientId.value);
+
+  String get entraTenantId => useFallbackValues
+      ? _entraTenantId.value
+      : _dotEnv.get(_entraTenantId.key, fallback: _entraTenantId.value);
+
+  String get entraRedirectUrl => useFallbackValues
+      ? _entraRedirectUrl.value
+      : _dotEnv.get(
+          _entraRedirectUrl.key,
+          fallback: _entraRedirectUrl.value,
+        );
+
+  String get entraOAuthLoginPath => useFallbackValues
+      ? _entraOAuthLoginPath.value
+      : _dotEnv.get(
+          _entraOAuthLoginPath.key,
+          fallback: _entraOAuthLoginPath.value,
+        );
+
+  bool get enableSso {
+    final value = useFallbackValues
+        ? _enableSso.value
+        : _dotEnv.get(_enableSso.key, fallback: _enableSso.value);
+    return value.toLowerCase() == 'true';
+  }
+
+  /// Returns EntraConfig object with all Microsoft Entra ID configuration
+  EntraConfig get entraConfig {
+    final tenantId = entraTenantId;
+    final discoveryUrl =
+        'https://login.microsoftonline.com/$tenantId/v2.0/.well-known/openid-configuration';
+
+    return EntraConfig(
+      clientId: entraClientId,
+      tenantId: tenantId,
+      redirectUrl: entraRedirectUrl,
+      discoveryUrl: discoveryUrl,
+      scopes: ['openid', 'profile', 'email'],
+      oauthLoginPath: entraOAuthLoginPath,
+    );
+  }
+}
+
+/// Configuration model for Microsoft Entra ID SSO
+class EntraConfig {
+  final String clientId;
+  final String tenantId;
+  final String redirectUrl;
+  final String discoveryUrl;
+  final List<String> scopes;
+  final String oauthLoginPath;
+
+  const EntraConfig({
+    required this.clientId,
+    required this.tenantId,
+    required this.redirectUrl,
+    required this.discoveryUrl,
+    required this.scopes,
+    required this.oauthLoginPath,
+  });
 }
 
 class EnvEntry {

@@ -9,6 +9,7 @@ import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../../models/mdms/service_registry/pgr_service_defenitions.dart';
 import '../../../models/mdms/service_registry/service_registry_model.dart';
 import '../../../models/role_actions/role_actions_model.dart';
+import '../../../utils/environment_config.dart';
 import '../../local_store/no_sql/schema/app_configuration.dart';
 import '../../local_store/no_sql/schema/row_versions.dart';
 import '../../local_store/no_sql/schema/service_registry.dart';
@@ -450,6 +451,158 @@ class MdmsRepository {
       return RoleActionsWrapperModel.fromJson(json.decode(response.toString()));
     } catch (_) {
       rethrow;
+    }
+  }
+
+  /// Search MDMS v2 API using tenantId and schemaCode
+  /// Returns a list of master data items as Map<String, dynamic>
+  Future<List<Map<String, dynamic>>> searchMDMSBySchema({
+    required String tenantId,
+    required String schemaCode,
+    String? authToken,
+  }) async {
+    try {
+      final baseUrl = envConfig.variables.mdmsBaseUrl;
+      final apiPath = envConfig.variables.mdmsV2ApiPath;
+      final fullUrl = baseUrl.endsWith('/')
+          ? '$baseUrl$apiPath'
+          : '$baseUrl/$apiPath';
+
+      final requestBody = {
+        'MdmsCriteria': {
+          'tenantId': tenantId,
+          'schemaCode': schemaCode,
+        },
+      };
+
+      final response = await _client.post(
+        fullUrl,
+        data: requestBody,
+      );
+
+      final responseData = response.data;
+      if (responseData is! Map<String, dynamic>) {
+        throw Exception('Invalid response format');
+      }
+
+      // Check for 'mdms' array (new format)
+      final mdmsArray = responseData['mdms'];
+      if (mdmsArray != null && mdmsArray is List) {
+        // Extract 'data' field from each item in the mdms array
+        final List<Map<String, dynamic>> result = [];
+        for (final item in mdmsArray) {
+          if (item is Map<String, dynamic>) {
+            final itemData = item['data'];
+            if (itemData is Map<String, dynamic>) {
+              result.add(itemData);
+            }
+          }
+        }
+        return result;
+      }
+
+      // Fallback: Check for 'MdmsRes' (old format)
+      final mdmsRes = responseData['MdmsRes'];
+      if (mdmsRes != null && mdmsRes is Map<String, dynamic>) {
+        final data = mdmsRes['data'];
+        if (data != null && data is List) {
+          return data
+              .whereType<Map<String, dynamic>>()
+              .toList();
+        }
+      }
+
+      return [];
+    } on DioException catch (e) {
+      AppLogger.instance.error(
+        title: 'MDMS Repository',
+        message: 'Error searching MDMS v2: $e',
+        stackTrace: e.stackTrace,
+      );
+      rethrow;
+    } catch (e) {
+      AppLogger.instance.error(
+        title: 'MDMS Repository',
+        message: 'Unexpected error searching MDMS v2: $e',
+      );
+      rethrow;
+    }
+  }
+
+  /// Fetch SSO Configuration from MDMS v1 API
+  /// Returns the first active SSO configuration, or null if none found
+  Future<Map<String, dynamic>?> fetchSSOConfiguration({
+    required String tenantId,
+  }) async {
+    try {
+      final baseUrl = envConfig.variables.mdmsBaseUrl;
+      final apiPath = envConfig.variables.mdmsApiPath;
+      final fullUrl = baseUrl.endsWith('/')
+          ? '$baseUrl$apiPath'
+          : '$baseUrl/$apiPath';
+
+      final requestBody = {
+        'MdmsCriteria': {
+          'tenantId': tenantId,
+          'moduleDetails': [
+            {
+              'moduleName': 'common-masters',
+              'masterDetails': [
+                {
+                  'name': 'SSOConfiguration',
+                  'filter': '[?(@.active == true)]',
+                }
+              ]
+            }
+          ]
+        },
+      };
+
+      final response = await _client.post(
+        fullUrl,
+        data: requestBody,
+      );
+
+      final responseData = response.data;
+      if (responseData is! Map<String, dynamic>) {
+        return null;
+      }
+
+      final mdmsRes = responseData['MdmsRes'];
+      if (mdmsRes == null || mdmsRes is! Map<String, dynamic>) {
+        return null;
+      }
+
+      final commonMasters = mdmsRes['common-masters'];
+      if (commonMasters == null || commonMasters is! Map<String, dynamic>) {
+        return null;
+      }
+
+      final ssoConfigList = commonMasters['SSOConfiguration'];
+      if (ssoConfigList == null || ssoConfigList is! List || ssoConfigList.isEmpty) {
+        return null;
+      }
+
+      // Return the first active SSO configuration
+      final firstConfig = ssoConfigList.first;
+      if (firstConfig is Map<String, dynamic>) {
+        return firstConfig;
+      }
+
+      return null;
+    } on DioException catch (e) {
+      AppLogger.instance.error(
+        title: 'MDMS Repository',
+        message: 'Error fetching SSO configuration: $e',
+        stackTrace: e.stackTrace,
+      );
+      return null;
+    } catch (e) {
+      AppLogger.instance.error(
+        title: 'MDMS Repository',
+        message: 'Unexpected error fetching SSO configuration: $e',
+      );
+      return null;
     }
   }
 }

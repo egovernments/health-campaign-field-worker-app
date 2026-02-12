@@ -13,6 +13,8 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
+import '../data/remote_client.dart';
+import '../data/repositories/remote/mdms.dart';
 import '../router/app_router.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -35,10 +37,39 @@ class _LoginPageState extends LocalizedState<LoginPage> {
   static const _userId = 'userId';
   static const _password = 'password';
   static const _privacyCheck = 'privacyCheck';
+  
+  Map<String, dynamic>? _ssoConfig;
+  bool _isLoadingSSO = true;
 
   @override
   void initState() {
     super.initState();
+    _fetchSSOConfiguration();
+  }
+
+  Future<void> _fetchSSOConfiguration() async {
+    try {
+      final mdmsRepository = MdmsRepository(DioClient().dio);
+      final tenantId = envConfig.variables.tenantId;
+      
+      final ssoConfig = await mdmsRepository.fetchSSOConfiguration(
+        tenantId: tenantId,
+      );
+
+      if (mounted) {
+        setState(() {
+          _ssoConfig = ssoConfig;
+          _isLoadingSSO = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _ssoConfig = null;
+          _isLoadingSSO = false;
+        });
+      }
+    }
   }
 
   @override
@@ -86,107 +117,115 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                               .colorTheme.primary.primary2, // Use theme color
                         ),
                       ),
-                      ReactiveWrapperField(
-                        formControlName: _userId,
-                        validationMessages: {
-                          "required": (control) {
-                            return localizations.translate(
-                              '${i18.login.userIdPlaceholder}_IS_REQUIRED',
-                            );
-                          },
-                        },
-                        builder: (field) => LabeledField(
-                          label: localizations.translate(
-                            i18.login.userIdPlaceholder,
-                          ),
-                          capitalizedFirstLetter: false,
-                          isRequired: true,
-                          child: DigitTextFormInput(
-                            keyboardType: TextInputType.text,
-                            initialValue: form.control(_userId).value,
-                            errorMessage: field.errorText,
-                            onChange: (value) {
-                              form.control(_userId).value = value;
-                            },
-                          ),
-                        ),
-                      ),
-                      ReactiveWrapperField(
-                        formControlName: _password,
-                        validationMessages: {
-                          "required": (control) {
-                            return localizations.translate(
-                              '${i18.login.passwordPlaceholder}_IS_REQUIRED',
-                            );
-                          },
-                        },
-                        builder: (field) => LabeledField(
-                          label: localizations.translate(
-                            i18.login.passwordPlaceholder,
-                          ),
-                          isRequired: true,
-                          child: DigitPasswordFormInput(
-                            initialValue: form.control(_password).value,
-                            errorMessage: field.errorText,
-                            onChange: (value) {
-                              form.control(_password).value = value;
-                            },
-                            keyboardType: TextInputType.text,
-                          ),
-                        ),
-                      ),
-                      BlocBuilder<AppInitializationBloc,
-                              AppInitializationState>(
-                          builder: (context, initState) {
-                        final privacyPolicyJson = initState.maybeWhen(
-                            initialized:
-                                (AppConfiguration appConfiguration, _, __) =>
-                                    appConfiguration.privacyPolicyConfig,
-                            orElse: () => null);
-                        if (privacyPolicyJson?.active == false) {
-                          return const SizedBox.shrink();
-                        }
-
-                        form
-                            .control(_privacyCheck)
-                            .setValidators([Validators.requiredTrue]);
-                        form.control(_privacyCheck).updateValueAndValidity();
-                        return PrivacyComponent(
-                          privacyPolicy:
-                              convertToPrivacyPolicyModel(privacyPolicyJson),
-                          formControlName: _privacyCheck,
-                          text: localizations
-                              .translate(i18.privacyPolicy.privacyNoticeText),
-                          linkText: localizations.translate(
-                              i18.privacyPolicy.privacyPolicyLinkText),
-                          validationMessage: localizations.translate(
-                              i18.privacyPolicy.privacyPolicyValidationText),
-                        );
-                      }),
-                      DigitButton(
-                        label: localizations.translate(i18.login.actionLabel),
-                        type: DigitButtonType.primary,
-                        onPressed: () {
-                          form.markAllAsTouched();
-                          if (!form.valid) return;
-
-                          FocusManager.instance.primaryFocus?.unfocus();
-
-                          context.read<AuthBloc>().add(
-                                AuthLoginEvent(
-                                  userId:
-                                      (form.control(_userId).value as String)
-                                          .trim(),
-                                  password:
-                                      (form.control(_password).value as String)
-                                          .trim(),
-                                  tenantId: envConfig.variables.tenantId,
-                                ),
+                      // Show username/password login if SSO is not enabled
+                      
+                        ReactiveWrapperField(
+                          formControlName: _userId,
+                          validationMessages: {
+                            "required": (control) {
+                              return localizations.translate(
+                                '${i18.login.userIdPlaceholder}_IS_REQUIRED',
                               );
-                        },
-                        size: DigitButtonSize.large,
-                        mainAxisSize: MainAxisSize.max,
-                      ),
+                            },
+                          },
+                          builder: (field) => LabeledField(
+                            label: localizations.translate(
+                              i18.login.userIdPlaceholder,
+                            ),
+                            capitalizedFirstLetter: false,
+                            isRequired: true,
+                            child: DigitTextFormInput(
+                              keyboardType: TextInputType.text,
+                              initialValue: form.control(_userId).value,
+                              errorMessage: field.errorText,
+                              onChange: (value) {
+                                form.control(_userId).value = value;
+                              },
+                            ),
+                          ),
+                        ),
+                        ReactiveWrapperField(
+                          formControlName: _password,
+                          validationMessages: {
+                            "required": (control) {
+                              return localizations.translate(
+                                '${i18.login.passwordPlaceholder}_IS_REQUIRED',
+                              );
+                            },
+                          },
+                          builder: (field) => LabeledField(
+                            label: localizations.translate(
+                              i18.login.passwordPlaceholder,
+                            ),
+                            isRequired: true,
+                            child: DigitPasswordFormInput(
+                              initialValue: form.control(_password).value,
+                              errorMessage: field.errorText,
+                              onChange: (value) {
+                                form.control(_password).value = value;
+                              },
+                              keyboardType: TextInputType.text,
+                            ),
+                          ),
+                        ),
+                        BlocBuilder<AppInitializationBloc,
+                                AppInitializationState>(
+                            builder: (context, initState) {
+                          final privacyPolicyJson = initState.maybeWhen(
+                              initialized:
+                                  (AppConfiguration appConfiguration, _, __) =>
+                                      appConfiguration.privacyPolicyConfig,
+                              orElse: () => null);
+                          if (privacyPolicyJson?.active == false) {
+                            return const SizedBox.shrink();
+                          }
+
+                          form
+                              .control(_privacyCheck)
+                              .setValidators([Validators.requiredTrue]);
+                          form.control(_privacyCheck).updateValueAndValidity();
+                          return PrivacyComponent(
+                            privacyPolicy:
+                                convertToPrivacyPolicyModel(privacyPolicyJson),
+                            formControlName: _privacyCheck,
+                            text: localizations
+                                .translate(i18.privacyPolicy.privacyNoticeText),
+                            linkText: localizations.translate(
+                                i18.privacyPolicy.privacyPolicyLinkText),
+                            validationMessage: localizations.translate(
+                                i18.privacyPolicy.privacyPolicyValidationText),
+                          );
+                        }),
+                        DigitButton(
+                          label: localizations.translate(i18.login.actionLabel),
+                          type: DigitButtonType.primary,
+                          onPressed: () {
+                            form.markAllAsTouched();
+                            if (!form.valid) return;
+
+                            FocusManager.instance.primaryFocus?.unfocus();
+
+                            context.read<AuthBloc>().add(
+                                  AuthLoginEvent(
+                                    userId:
+                                        (form.control(_userId).value as String)
+                                            .trim(),
+                                    password:
+                                        (form.control(_password).value as String)
+                                            .trim(),
+                                    tenantId: envConfig.variables.tenantId,
+                                  ),
+                                );
+                          },
+                          size: DigitButtonSize.large,
+                          mainAxisSize: MainAxisSize.max,
+                        ),
+                      
+                      // Microsoft SSO Login Button - Show dynamically based on MDMS config
+                      if (!_isLoadingSSO && _ssoConfig != null && _ssoConfig!['active'] == true)
+                        _buildSSOButton(),
+                      
+                      // Forgot Password button - always visible in both SSO and username/password modes
                       DigitButton(
                         label: localizations.translate(
                           i18.forgotPassword.actionLabel,
@@ -224,6 +263,83 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                       ),
                     ]);
               },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSSOButton() {
+    final logoUrl = _ssoConfig?['logo'] as String?;
+    final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
+
+    return Container(
+      margin: const EdgeInsets.only(top: spacer2),
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+
+          context.read<AuthBloc>().add(
+                AuthMicrosoftSSOLoginEvent(
+                  tenantId: envConfig.variables.tenantId,
+                ),
+              );
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: theme.colorTheme.primary.primary1,
+          foregroundColor: theme.colorTheme.paper.primary,
+          padding: const EdgeInsets.symmetric(
+            horizontal: spacer4,
+            vertical: spacer3,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(spacer1),
+          ),
+          minimumSize: const Size(double.infinity, 48),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (logoUrl != null)
+              Image.network(
+                logoUrl,
+                width: 20,
+                height: 20,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(
+                    Icons.login,
+                    size: 20,
+                    color: theme.colorTheme.paper.primary,
+                  );
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                              loadingProgress.expectedTotalBytes!
+                          : null,
+                    ),
+                  );
+                },
+              ),
+            if (logoUrl != null) const SizedBox(width: spacer2),
+            Text(
+              localizations.translate(
+                i18.login.microsoftSSOLabel ?? 'LOGIN_MICROSOFT_SSO_LABEL',
+              ),
+              style: textTheme.bodyL.copyWith(
+                color: theme.colorTheme.paper.primary,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),

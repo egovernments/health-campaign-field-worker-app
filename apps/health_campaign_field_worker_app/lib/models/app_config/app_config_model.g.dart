@@ -65,6 +65,61 @@ Map<String, dynamic> _$$MdmsMasterDetailModelImplToJson(
       'filter': instance.filter,
     };
 
+_$MdmsV2RequestModelImpl _$$MdmsV2RequestModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$MdmsV2RequestModelImpl(
+      mdmsCriteria: MdmsV2CriteriaModel.fromJson(
+          json['MdmsCriteria'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$$MdmsV2RequestModelImplToJson(
+        _$MdmsV2RequestModelImpl instance) =>
+    <String, dynamic>{
+      'MdmsCriteria': instance.mdmsCriteria,
+    };
+
+_$MdmsV2CriteriaModelImpl _$$MdmsV2CriteriaModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$MdmsV2CriteriaModelImpl(
+      tenantId: json['tenantId'] as String,
+      schemaCode: json['schemaCode'] as String,
+    );
+
+Map<String, dynamic> _$$MdmsV2CriteriaModelImplToJson(
+        _$MdmsV2CriteriaModelImpl instance) =>
+    <String, dynamic>{
+      'tenantId': instance.tenantId,
+      'schemaCode': instance.schemaCode,
+    };
+
+_$MdmsV2ResponseModelImpl _$$MdmsV2ResponseModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$MdmsV2ResponseModelImpl(
+      mdmsRes: json['MdmsRes'] == null
+          ? null
+          : MdmsV2ResModel.fromJson(json['MdmsRes'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$$MdmsV2ResponseModelImplToJson(
+        _$MdmsV2ResponseModelImpl instance) =>
+    <String, dynamic>{
+      'MdmsRes': instance.mdmsRes,
+    };
+
+_$MdmsV2ResModelImpl _$$MdmsV2ResModelImplFromJson(Map<String, dynamic> json) =>
+    _$MdmsV2ResModelImpl(
+      data: (json['data'] as List<dynamic>?)
+              ?.map((e) => e as Map<String, dynamic>)
+              .toList() ??
+          const [],
+    );
+
+Map<String, dynamic> _$$MdmsV2ResModelImplToJson(
+        _$MdmsV2ResModelImpl instance) =>
+    <String, dynamic>{
+      'data': instance.data,
+    };
+
 _$AppConfigPrimaryWrapperModelImpl _$$AppConfigPrimaryWrapperModelImplFromJson(
         Map<String, dynamic> json) =>
     _$AppConfigPrimaryWrapperModelImpl(

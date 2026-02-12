@@ -20,6 +20,7 @@ mixin _$AuthEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(String userId, String password, String tenantId)
         login,
+    required TResult Function(String tenantId) microsoftSSOLogin,
     required TResult Function(String tenantId) autoLogin,
     required TResult Function() logout,
   }) =>
@@ -27,6 +28,7 @@ mixin _$AuthEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String userId, String password, String tenantId)? login,
+    TResult? Function(String tenantId)? microsoftSSOLogin,
     TResult? Function(String tenantId)? autoLogin,
     TResult? Function()? logout,
   }) =>
@@ -34,6 +36,7 @@ mixin _$AuthEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String userId, String password, String tenantId)? login,
+    TResult Function(String tenantId)? microsoftSSOLogin,
     TResult Function(String tenantId)? autoLogin,
     TResult Function()? logout,
     required TResult orElse(),
@@ -42,6 +45,8 @@ mixin _$AuthEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(AuthLoginEvent value) login,
+    required TResult Function(AuthMicrosoftSSOLoginEvent value)
+        microsoftSSOLogin,
     required TResult Function(AuthAutoLoginEvent value) autoLogin,
     required TResult Function(AuthLogoutEvent value) logout,
   }) =>
@@ -49,6 +54,7 @@ mixin _$AuthEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthLoginEvent value)? login,
+    TResult? Function(AuthMicrosoftSSOLoginEvent value)? microsoftSSOLogin,
     TResult? Function(AuthAutoLoginEvent value)? autoLogin,
     TResult? Function(AuthLogoutEvent value)? logout,
   }) =>
@@ -56,6 +62,7 @@ mixin _$AuthEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthLoginEvent value)? login,
+    TResult Function(AuthMicrosoftSSOLoginEvent value)? microsoftSSOLogin,
     TResult Function(AuthAutoLoginEvent value)? autoLogin,
     TResult Function(AuthLogoutEvent value)? logout,
     required TResult orElse(),
@@ -166,6 +173,7 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(String userId, String password, String tenantId)
         login,
+    required TResult Function(String tenantId) microsoftSSOLogin,
     required TResult Function(String tenantId) autoLogin,
     required TResult Function() logout,
   }) {
@@ -176,6 +184,7 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String userId, String password, String tenantId)? login,
+    TResult? Function(String tenantId)? microsoftSSOLogin,
     TResult? Function(String tenantId)? autoLogin,
     TResult? Function()? logout,
   }) {
@@ -186,6 +195,7 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String userId, String password, String tenantId)? login,
+    TResult Function(String tenantId)? microsoftSSOLogin,
     TResult Function(String tenantId)? autoLogin,
     TResult Function()? logout,
     required TResult orElse(),
@@ -200,6 +210,8 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(AuthLoginEvent value) login,
+    required TResult Function(AuthMicrosoftSSOLoginEvent value)
+        microsoftSSOLogin,
     required TResult Function(AuthAutoLoginEvent value) autoLogin,
     required TResult Function(AuthLogoutEvent value) logout,
   }) {
@@ -210,6 +222,7 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthLoginEvent value)? login,
+    TResult? Function(AuthMicrosoftSSOLoginEvent value)? microsoftSSOLogin,
     TResult? Function(AuthAutoLoginEvent value)? autoLogin,
     TResult? Function(AuthLogoutEvent value)? logout,
   }) {
@@ -220,6 +233,7 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthLoginEvent value)? login,
+    TResult Function(AuthMicrosoftSSOLoginEvent value)? microsoftSSOLogin,
     TResult Function(AuthAutoLoginEvent value)? autoLogin,
     TResult Function(AuthLogoutEvent value)? logout,
     required TResult orElse(),
@@ -243,6 +257,158 @@ abstract class AuthLoginEvent implements AuthEvent {
   @JsonKey(ignore: true)
   _$$AuthLoginEventImplCopyWith<_$AuthLoginEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$AuthMicrosoftSSOLoginEventImplCopyWith<$Res> {
+  factory _$$AuthMicrosoftSSOLoginEventImplCopyWith(
+          _$AuthMicrosoftSSOLoginEventImpl value,
+          $Res Function(_$AuthMicrosoftSSOLoginEventImpl) then) =
+      __$$AuthMicrosoftSSOLoginEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String tenantId});
+}
+
+/// @nodoc
+class __$$AuthMicrosoftSSOLoginEventImplCopyWithImpl<$Res>
+    extends _$AuthEventCopyWithImpl<$Res, _$AuthMicrosoftSSOLoginEventImpl>
+    implements _$$AuthMicrosoftSSOLoginEventImplCopyWith<$Res> {
+  __$$AuthMicrosoftSSOLoginEventImplCopyWithImpl(
+      _$AuthMicrosoftSSOLoginEventImpl _value,
+      $Res Function(_$AuthMicrosoftSSOLoginEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? tenantId = null,
+  }) {
+    return _then(_$AuthMicrosoftSSOLoginEventImpl(
+      tenantId: null == tenantId
+          ? _value.tenantId
+          : tenantId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$AuthMicrosoftSSOLoginEventImpl implements AuthMicrosoftSSOLoginEvent {
+  const _$AuthMicrosoftSSOLoginEventImpl({required this.tenantId});
+
+  @override
+  final String tenantId;
+
+  @override
+  String toString() {
+    return 'AuthEvent.microsoftSSOLogin(tenantId: $tenantId)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AuthMicrosoftSSOLoginEventImpl &&
+            (identical(other.tenantId, tenantId) ||
+                other.tenantId == tenantId));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, tenantId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AuthMicrosoftSSOLoginEventImplCopyWith<_$AuthMicrosoftSSOLoginEventImpl>
+      get copyWith => __$$AuthMicrosoftSSOLoginEventImplCopyWithImpl<
+          _$AuthMicrosoftSSOLoginEventImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String userId, String password, String tenantId)
+        login,
+    required TResult Function(String tenantId) microsoftSSOLogin,
+    required TResult Function(String tenantId) autoLogin,
+    required TResult Function() logout,
+  }) {
+    return microsoftSSOLogin(tenantId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String userId, String password, String tenantId)? login,
+    TResult? Function(String tenantId)? microsoftSSOLogin,
+    TResult? Function(String tenantId)? autoLogin,
+    TResult? Function()? logout,
+  }) {
+    return microsoftSSOLogin?.call(tenantId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String userId, String password, String tenantId)? login,
+    TResult Function(String tenantId)? microsoftSSOLogin,
+    TResult Function(String tenantId)? autoLogin,
+    TResult Function()? logout,
+    required TResult orElse(),
+  }) {
+    if (microsoftSSOLogin != null) {
+      return microsoftSSOLogin(tenantId);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AuthLoginEvent value) login,
+    required TResult Function(AuthMicrosoftSSOLoginEvent value)
+        microsoftSSOLogin,
+    required TResult Function(AuthAutoLoginEvent value) autoLogin,
+    required TResult Function(AuthLogoutEvent value) logout,
+  }) {
+    return microsoftSSOLogin(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AuthLoginEvent value)? login,
+    TResult? Function(AuthMicrosoftSSOLoginEvent value)? microsoftSSOLogin,
+    TResult? Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult? Function(AuthLogoutEvent value)? logout,
+  }) {
+    return microsoftSSOLogin?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AuthLoginEvent value)? login,
+    TResult Function(AuthMicrosoftSSOLoginEvent value)? microsoftSSOLogin,
+    TResult Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult Function(AuthLogoutEvent value)? logout,
+    required TResult orElse(),
+  }) {
+    if (microsoftSSOLogin != null) {
+      return microsoftSSOLogin(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AuthMicrosoftSSOLoginEvent implements AuthEvent {
+  const factory AuthMicrosoftSSOLoginEvent({required final String tenantId}) =
+      _$AuthMicrosoftSSOLoginEventImpl;
+
+  String get tenantId;
+  @JsonKey(ignore: true)
+  _$$AuthMicrosoftSSOLoginEventImplCopyWith<_$AuthMicrosoftSSOLoginEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -313,6 +479,7 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(String userId, String password, String tenantId)
         login,
+    required TResult Function(String tenantId) microsoftSSOLogin,
     required TResult Function(String tenantId) autoLogin,
     required TResult Function() logout,
   }) {
@@ -323,6 +490,7 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String userId, String password, String tenantId)? login,
+    TResult? Function(String tenantId)? microsoftSSOLogin,
     TResult? Function(String tenantId)? autoLogin,
     TResult? Function()? logout,
   }) {
@@ -333,6 +501,7 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String userId, String password, String tenantId)? login,
+    TResult Function(String tenantId)? microsoftSSOLogin,
     TResult Function(String tenantId)? autoLogin,
     TResult Function()? logout,
     required TResult orElse(),
@@ -347,6 +516,8 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(AuthLoginEvent value) login,
+    required TResult Function(AuthMicrosoftSSOLoginEvent value)
+        microsoftSSOLogin,
     required TResult Function(AuthAutoLoginEvent value) autoLogin,
     required TResult Function(AuthLogoutEvent value) logout,
   }) {
@@ -357,6 +528,7 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthLoginEvent value)? login,
+    TResult? Function(AuthMicrosoftSSOLoginEvent value)? microsoftSSOLogin,
     TResult? Function(AuthAutoLoginEvent value)? autoLogin,
     TResult? Function(AuthLogoutEvent value)? logout,
   }) {
@@ -367,6 +539,7 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthLoginEvent value)? login,
+    TResult Function(AuthMicrosoftSSOLoginEvent value)? microsoftSSOLogin,
     TResult Function(AuthAutoLoginEvent value)? autoLogin,
     TResult Function(AuthLogoutEvent value)? logout,
     required TResult orElse(),
@@ -428,6 +601,7 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(String userId, String password, String tenantId)
         login,
+    required TResult Function(String tenantId) microsoftSSOLogin,
     required TResult Function(String tenantId) autoLogin,
     required TResult Function() logout,
   }) {
@@ -438,6 +612,7 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String userId, String password, String tenantId)? login,
+    TResult? Function(String tenantId)? microsoftSSOLogin,
     TResult? Function(String tenantId)? autoLogin,
     TResult? Function()? logout,
   }) {
@@ -448,6 +623,7 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String userId, String password, String tenantId)? login,
+    TResult Function(String tenantId)? microsoftSSOLogin,
     TResult Function(String tenantId)? autoLogin,
     TResult Function()? logout,
     required TResult orElse(),
@@ -462,6 +638,8 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(AuthLoginEvent value) login,
+    required TResult Function(AuthMicrosoftSSOLoginEvent value)
+        microsoftSSOLogin,
     required TResult Function(AuthAutoLoginEvent value) autoLogin,
     required TResult Function(AuthLogoutEvent value) logout,
   }) {
@@ -472,6 +650,7 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthLoginEvent value)? login,
+    TResult? Function(AuthMicrosoftSSOLoginEvent value)? microsoftSSOLogin,
     TResult? Function(AuthAutoLoginEvent value)? autoLogin,
     TResult? Function(AuthLogoutEvent value)? logout,
   }) {
@@ -482,6 +661,7 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthLoginEvent value)? login,
+    TResult Function(AuthMicrosoftSSOLoginEvent value)? microsoftSSOLogin,
     TResult Function(AuthAutoLoginEvent value)? autoLogin,
     TResult Function(AuthLogoutEvent value)? logout,
     required TResult orElse(),

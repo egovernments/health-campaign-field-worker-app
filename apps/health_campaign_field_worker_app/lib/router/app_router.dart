@@ -24,6 +24,7 @@ import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
 import '../pages/boundary_selection.dart';
 import '../pages/home.dart';
+import '../pages/initial_screen.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
 import '../pages/non_mobile_user/non_mobile_user_list.dart';
@@ -69,9 +70,13 @@ class AppRouter extends _$AppRouter {
       path: '/',
       children: [
         AutoRoute(
+          page: InitialRouteRoute.page,
+          path: 'initial',
+          initial: true,
+        ),
+        AutoRoute(
           page: LanguageSelectionRoute.page,
           path: 'language_selection',
-          initial: true,
         ),
         AutoRoute(page: LoginRoute.page, path: 'login'),
         AutoRoute(page: DigitScannerRoute.page, path: 'scanner'),

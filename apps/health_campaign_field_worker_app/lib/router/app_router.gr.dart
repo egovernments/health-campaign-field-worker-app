@@ -104,6 +104,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    InitialRouteRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const InitialScreenPage(),
+      );
+    },
     LanguageSelectionRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -509,6 +515,20 @@ class HomeRouteArgs {
   String toString() {
     return 'HomeRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
+}
+
+/// generated route for
+/// [InitialScreenPage]
+class InitialRouteRoute extends PageRouteInfo<void> {
+  const InitialRouteRoute({List<PageRouteInfo>? children})
+      : super(
+          InitialRouteRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'InitialRouteRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

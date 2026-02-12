@@ -669,6 +669,627 @@ abstract class _MdmsMasterDetailModel implements MdmsMasterDetailModel {
       get copyWith => throw _privateConstructorUsedError;
 }
 
+MdmsV2RequestModel _$MdmsV2RequestModelFromJson(Map<String, dynamic> json) {
+  return _MdmsV2RequestModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$MdmsV2RequestModel {
+  @JsonKey(name: 'MdmsCriteria')
+  MdmsV2CriteriaModel get mdmsCriteria => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $MdmsV2RequestModelCopyWith<MdmsV2RequestModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $MdmsV2RequestModelCopyWith<$Res> {
+  factory $MdmsV2RequestModelCopyWith(
+          MdmsV2RequestModel value, $Res Function(MdmsV2RequestModel) then) =
+      _$MdmsV2RequestModelCopyWithImpl<$Res, MdmsV2RequestModel>;
+  @useResult
+  $Res call({@JsonKey(name: 'MdmsCriteria') MdmsV2CriteriaModel mdmsCriteria});
+
+  $MdmsV2CriteriaModelCopyWith<$Res> get mdmsCriteria;
+}
+
+/// @nodoc
+class _$MdmsV2RequestModelCopyWithImpl<$Res, $Val extends MdmsV2RequestModel>
+    implements $MdmsV2RequestModelCopyWith<$Res> {
+  _$MdmsV2RequestModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? mdmsCriteria = null,
+  }) {
+    return _then(_value.copyWith(
+      mdmsCriteria: null == mdmsCriteria
+          ? _value.mdmsCriteria
+          : mdmsCriteria // ignore: cast_nullable_to_non_nullable
+              as MdmsV2CriteriaModel,
+    ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $MdmsV2CriteriaModelCopyWith<$Res> get mdmsCriteria {
+    return $MdmsV2CriteriaModelCopyWith<$Res>(_value.mdmsCriteria, (value) {
+      return _then(_value.copyWith(mdmsCriteria: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$MdmsV2RequestModelImplCopyWith<$Res>
+    implements $MdmsV2RequestModelCopyWith<$Res> {
+  factory _$$MdmsV2RequestModelImplCopyWith(_$MdmsV2RequestModelImpl value,
+          $Res Function(_$MdmsV2RequestModelImpl) then) =
+      __$$MdmsV2RequestModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({@JsonKey(name: 'MdmsCriteria') MdmsV2CriteriaModel mdmsCriteria});
+
+  @override
+  $MdmsV2CriteriaModelCopyWith<$Res> get mdmsCriteria;
+}
+
+/// @nodoc
+class __$$MdmsV2RequestModelImplCopyWithImpl<$Res>
+    extends _$MdmsV2RequestModelCopyWithImpl<$Res, _$MdmsV2RequestModelImpl>
+    implements _$$MdmsV2RequestModelImplCopyWith<$Res> {
+  __$$MdmsV2RequestModelImplCopyWithImpl(_$MdmsV2RequestModelImpl _value,
+      $Res Function(_$MdmsV2RequestModelImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? mdmsCriteria = null,
+  }) {
+    return _then(_$MdmsV2RequestModelImpl(
+      mdmsCriteria: null == mdmsCriteria
+          ? _value.mdmsCriteria
+          : mdmsCriteria // ignore: cast_nullable_to_non_nullable
+              as MdmsV2CriteriaModel,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$MdmsV2RequestModelImpl implements _MdmsV2RequestModel {
+  const _$MdmsV2RequestModelImpl(
+      {@JsonKey(name: 'MdmsCriteria') required this.mdmsCriteria});
+
+  factory _$MdmsV2RequestModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MdmsV2RequestModelImplFromJson(json);
+
+  @override
+  @JsonKey(name: 'MdmsCriteria')
+  final MdmsV2CriteriaModel mdmsCriteria;
+
+  @override
+  String toString() {
+    return 'MdmsV2RequestModel(mdmsCriteria: $mdmsCriteria)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$MdmsV2RequestModelImpl &&
+            (identical(other.mdmsCriteria, mdmsCriteria) ||
+                other.mdmsCriteria == mdmsCriteria));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, mdmsCriteria);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$MdmsV2RequestModelImplCopyWith<_$MdmsV2RequestModelImpl> get copyWith =>
+      __$$MdmsV2RequestModelImplCopyWithImpl<_$MdmsV2RequestModelImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$MdmsV2RequestModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _MdmsV2RequestModel implements MdmsV2RequestModel {
+  const factory _MdmsV2RequestModel(
+          {@JsonKey(name: 'MdmsCriteria')
+          required final MdmsV2CriteriaModel mdmsCriteria}) =
+      _$MdmsV2RequestModelImpl;
+
+  factory _MdmsV2RequestModel.fromJson(Map<String, dynamic> json) =
+      _$MdmsV2RequestModelImpl.fromJson;
+
+  @override
+  @JsonKey(name: 'MdmsCriteria')
+  MdmsV2CriteriaModel get mdmsCriteria;
+  @override
+  @JsonKey(ignore: true)
+  _$$MdmsV2RequestModelImplCopyWith<_$MdmsV2RequestModelImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+MdmsV2CriteriaModel _$MdmsV2CriteriaModelFromJson(Map<String, dynamic> json) {
+  return _MdmsV2CriteriaModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$MdmsV2CriteriaModel {
+  String get tenantId => throw _privateConstructorUsedError;
+  String get schemaCode => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $MdmsV2CriteriaModelCopyWith<MdmsV2CriteriaModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $MdmsV2CriteriaModelCopyWith<$Res> {
+  factory $MdmsV2CriteriaModelCopyWith(
+          MdmsV2CriteriaModel value, $Res Function(MdmsV2CriteriaModel) then) =
+      _$MdmsV2CriteriaModelCopyWithImpl<$Res, MdmsV2CriteriaModel>;
+  @useResult
+  $Res call({String tenantId, String schemaCode});
+}
+
+/// @nodoc
+class _$MdmsV2CriteriaModelCopyWithImpl<$Res, $Val extends MdmsV2CriteriaModel>
+    implements $MdmsV2CriteriaModelCopyWith<$Res> {
+  _$MdmsV2CriteriaModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? tenantId = null,
+    Object? schemaCode = null,
+  }) {
+    return _then(_value.copyWith(
+      tenantId: null == tenantId
+          ? _value.tenantId
+          : tenantId // ignore: cast_nullable_to_non_nullable
+              as String,
+      schemaCode: null == schemaCode
+          ? _value.schemaCode
+          : schemaCode // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$MdmsV2CriteriaModelImplCopyWith<$Res>
+    implements $MdmsV2CriteriaModelCopyWith<$Res> {
+  factory _$$MdmsV2CriteriaModelImplCopyWith(_$MdmsV2CriteriaModelImpl value,
+          $Res Function(_$MdmsV2CriteriaModelImpl) then) =
+      __$$MdmsV2CriteriaModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String tenantId, String schemaCode});
+}
+
+/// @nodoc
+class __$$MdmsV2CriteriaModelImplCopyWithImpl<$Res>
+    extends _$MdmsV2CriteriaModelCopyWithImpl<$Res, _$MdmsV2CriteriaModelImpl>
+    implements _$$MdmsV2CriteriaModelImplCopyWith<$Res> {
+  __$$MdmsV2CriteriaModelImplCopyWithImpl(_$MdmsV2CriteriaModelImpl _value,
+      $Res Function(_$MdmsV2CriteriaModelImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? tenantId = null,
+    Object? schemaCode = null,
+  }) {
+    return _then(_$MdmsV2CriteriaModelImpl(
+      tenantId: null == tenantId
+          ? _value.tenantId
+          : tenantId // ignore: cast_nullable_to_non_nullable
+              as String,
+      schemaCode: null == schemaCode
+          ? _value.schemaCode
+          : schemaCode // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$MdmsV2CriteriaModelImpl implements _MdmsV2CriteriaModel {
+  const _$MdmsV2CriteriaModelImpl(
+      {required this.tenantId, required this.schemaCode});
+
+  factory _$MdmsV2CriteriaModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MdmsV2CriteriaModelImplFromJson(json);
+
+  @override
+  final String tenantId;
+  @override
+  final String schemaCode;
+
+  @override
+  String toString() {
+    return 'MdmsV2CriteriaModel(tenantId: $tenantId, schemaCode: $schemaCode)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$MdmsV2CriteriaModelImpl &&
+            (identical(other.tenantId, tenantId) ||
+                other.tenantId == tenantId) &&
+            (identical(other.schemaCode, schemaCode) ||
+                other.schemaCode == schemaCode));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, tenantId, schemaCode);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$MdmsV2CriteriaModelImplCopyWith<_$MdmsV2CriteriaModelImpl> get copyWith =>
+      __$$MdmsV2CriteriaModelImplCopyWithImpl<_$MdmsV2CriteriaModelImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$MdmsV2CriteriaModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _MdmsV2CriteriaModel implements MdmsV2CriteriaModel {
+  const factory _MdmsV2CriteriaModel(
+      {required final String tenantId,
+      required final String schemaCode}) = _$MdmsV2CriteriaModelImpl;
+
+  factory _MdmsV2CriteriaModel.fromJson(Map<String, dynamic> json) =
+      _$MdmsV2CriteriaModelImpl.fromJson;
+
+  @override
+  String get tenantId;
+  @override
+  String get schemaCode;
+  @override
+  @JsonKey(ignore: true)
+  _$$MdmsV2CriteriaModelImplCopyWith<_$MdmsV2CriteriaModelImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+MdmsV2ResponseModel _$MdmsV2ResponseModelFromJson(Map<String, dynamic> json) {
+  return _MdmsV2ResponseModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$MdmsV2ResponseModel {
+  @JsonKey(name: 'MdmsRes')
+  MdmsV2ResModel? get mdmsRes => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $MdmsV2ResponseModelCopyWith<MdmsV2ResponseModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $MdmsV2ResponseModelCopyWith<$Res> {
+  factory $MdmsV2ResponseModelCopyWith(
+          MdmsV2ResponseModel value, $Res Function(MdmsV2ResponseModel) then) =
+      _$MdmsV2ResponseModelCopyWithImpl<$Res, MdmsV2ResponseModel>;
+  @useResult
+  $Res call({@JsonKey(name: 'MdmsRes') MdmsV2ResModel? mdmsRes});
+
+  $MdmsV2ResModelCopyWith<$Res>? get mdmsRes;
+}
+
+/// @nodoc
+class _$MdmsV2ResponseModelCopyWithImpl<$Res, $Val extends MdmsV2ResponseModel>
+    implements $MdmsV2ResponseModelCopyWith<$Res> {
+  _$MdmsV2ResponseModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? mdmsRes = freezed,
+  }) {
+    return _then(_value.copyWith(
+      mdmsRes: freezed == mdmsRes
+          ? _value.mdmsRes
+          : mdmsRes // ignore: cast_nullable_to_non_nullable
+              as MdmsV2ResModel?,
+    ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $MdmsV2ResModelCopyWith<$Res>? get mdmsRes {
+    if (_value.mdmsRes == null) {
+      return null;
+    }
+
+    return $MdmsV2ResModelCopyWith<$Res>(_value.mdmsRes!, (value) {
+      return _then(_value.copyWith(mdmsRes: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$MdmsV2ResponseModelImplCopyWith<$Res>
+    implements $MdmsV2ResponseModelCopyWith<$Res> {
+  factory _$$MdmsV2ResponseModelImplCopyWith(_$MdmsV2ResponseModelImpl value,
+          $Res Function(_$MdmsV2ResponseModelImpl) then) =
+      __$$MdmsV2ResponseModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({@JsonKey(name: 'MdmsRes') MdmsV2ResModel? mdmsRes});
+
+  @override
+  $MdmsV2ResModelCopyWith<$Res>? get mdmsRes;
+}
+
+/// @nodoc
+class __$$MdmsV2ResponseModelImplCopyWithImpl<$Res>
+    extends _$MdmsV2ResponseModelCopyWithImpl<$Res, _$MdmsV2ResponseModelImpl>
+    implements _$$MdmsV2ResponseModelImplCopyWith<$Res> {
+  __$$MdmsV2ResponseModelImplCopyWithImpl(_$MdmsV2ResponseModelImpl _value,
+      $Res Function(_$MdmsV2ResponseModelImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? mdmsRes = freezed,
+  }) {
+    return _then(_$MdmsV2ResponseModelImpl(
+      mdmsRes: freezed == mdmsRes
+          ? _value.mdmsRes
+          : mdmsRes // ignore: cast_nullable_to_non_nullable
+              as MdmsV2ResModel?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$MdmsV2ResponseModelImpl implements _MdmsV2ResponseModel {
+  const _$MdmsV2ResponseModelImpl({@JsonKey(name: 'MdmsRes') this.mdmsRes});
+
+  factory _$MdmsV2ResponseModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MdmsV2ResponseModelImplFromJson(json);
+
+  @override
+  @JsonKey(name: 'MdmsRes')
+  final MdmsV2ResModel? mdmsRes;
+
+  @override
+  String toString() {
+    return 'MdmsV2ResponseModel(mdmsRes: $mdmsRes)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$MdmsV2ResponseModelImpl &&
+            (identical(other.mdmsRes, mdmsRes) || other.mdmsRes == mdmsRes));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, mdmsRes);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$MdmsV2ResponseModelImplCopyWith<_$MdmsV2ResponseModelImpl> get copyWith =>
+      __$$MdmsV2ResponseModelImplCopyWithImpl<_$MdmsV2ResponseModelImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$MdmsV2ResponseModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _MdmsV2ResponseModel implements MdmsV2ResponseModel {
+  const factory _MdmsV2ResponseModel(
+          {@JsonKey(name: 'MdmsRes') final MdmsV2ResModel? mdmsRes}) =
+      _$MdmsV2ResponseModelImpl;
+
+  factory _MdmsV2ResponseModel.fromJson(Map<String, dynamic> json) =
+      _$MdmsV2ResponseModelImpl.fromJson;
+
+  @override
+  @JsonKey(name: 'MdmsRes')
+  MdmsV2ResModel? get mdmsRes;
+  @override
+  @JsonKey(ignore: true)
+  _$$MdmsV2ResponseModelImplCopyWith<_$MdmsV2ResponseModelImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+MdmsV2ResModel _$MdmsV2ResModelFromJson(Map<String, dynamic> json) {
+  return _MdmsV2ResModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$MdmsV2ResModel {
+  List<Map<String, dynamic>> get data => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $MdmsV2ResModelCopyWith<MdmsV2ResModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $MdmsV2ResModelCopyWith<$Res> {
+  factory $MdmsV2ResModelCopyWith(
+          MdmsV2ResModel value, $Res Function(MdmsV2ResModel) then) =
+      _$MdmsV2ResModelCopyWithImpl<$Res, MdmsV2ResModel>;
+  @useResult
+  $Res call({List<Map<String, dynamic>> data});
+}
+
+/// @nodoc
+class _$MdmsV2ResModelCopyWithImpl<$Res, $Val extends MdmsV2ResModel>
+    implements $MdmsV2ResModelCopyWith<$Res> {
+  _$MdmsV2ResModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? data = null,
+  }) {
+    return _then(_value.copyWith(
+      data: null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<Map<String, dynamic>>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$MdmsV2ResModelImplCopyWith<$Res>
+    implements $MdmsV2ResModelCopyWith<$Res> {
+  factory _$$MdmsV2ResModelImplCopyWith(_$MdmsV2ResModelImpl value,
+          $Res Function(_$MdmsV2ResModelImpl) then) =
+      __$$MdmsV2ResModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({List<Map<String, dynamic>> data});
+}
+
+/// @nodoc
+class __$$MdmsV2ResModelImplCopyWithImpl<$Res>
+    extends _$MdmsV2ResModelCopyWithImpl<$Res, _$MdmsV2ResModelImpl>
+    implements _$$MdmsV2ResModelImplCopyWith<$Res> {
+  __$$MdmsV2ResModelImplCopyWithImpl(
+      _$MdmsV2ResModelImpl _value, $Res Function(_$MdmsV2ResModelImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? data = null,
+  }) {
+    return _then(_$MdmsV2ResModelImpl(
+      data: null == data
+          ? _value._data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<Map<String, dynamic>>,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$MdmsV2ResModelImpl implements _MdmsV2ResModel {
+  const _$MdmsV2ResModelImpl({final List<Map<String, dynamic>> data = const []})
+      : _data = data;
+
+  factory _$MdmsV2ResModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MdmsV2ResModelImplFromJson(json);
+
+  final List<Map<String, dynamic>> _data;
+  @override
+  @JsonKey()
+  List<Map<String, dynamic>> get data {
+    if (_data is EqualUnmodifiableListView) return _data;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_data);
+  }
+
+  @override
+  String toString() {
+    return 'MdmsV2ResModel(data: $data)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$MdmsV2ResModelImpl &&
+            const DeepCollectionEquality().equals(other._data, _data));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_data));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$MdmsV2ResModelImplCopyWith<_$MdmsV2ResModelImpl> get copyWith =>
+      __$$MdmsV2ResModelImplCopyWithImpl<_$MdmsV2ResModelImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$MdmsV2ResModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _MdmsV2ResModel implements MdmsV2ResModel {
+  const factory _MdmsV2ResModel({final List<Map<String, dynamic>> data}) =
+      _$MdmsV2ResModelImpl;
+
+  factory _MdmsV2ResModel.fromJson(Map<String, dynamic> json) =
+      _$MdmsV2ResModelImpl.fromJson;
+
+  @override
+  List<Map<String, dynamic>> get data;
+  @override
+  @JsonKey(ignore: true)
+  _$$MdmsV2ResModelImplCopyWith<_$MdmsV2ResModelImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 AppConfigPrimaryWrapperModel _$AppConfigPrimaryWrapperModelFromJson(
     Map<String, dynamic> json) {
   return _AppConfigPrimaryWrapperModel.fromJson(json);

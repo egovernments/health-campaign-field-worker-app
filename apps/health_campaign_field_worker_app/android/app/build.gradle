@@ -50,6 +50,11 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        
+        // Microsoft Entra ID SSO - Redirect scheme for flutter_appauth
+        manifestPlaceholders += [
+            'appAuthRedirectScheme': 'com.digit.hcm'
+        ]
     }
 
     buildTypes {

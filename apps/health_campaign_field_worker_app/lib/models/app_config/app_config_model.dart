@@ -53,6 +53,48 @@ class MdmsMasterDetailModel with _$MdmsMasterDetailModel {
       _$MdmsMasterDetailModelFromJson(json);
 }
 
+// MDMS v2 API Models
+@freezed
+class MdmsV2RequestModel with _$MdmsV2RequestModel {
+  const factory MdmsV2RequestModel({
+    @JsonKey(name: 'MdmsCriteria') required MdmsV2CriteriaModel mdmsCriteria,
+  }) = _MdmsV2RequestModel;
+
+  factory MdmsV2RequestModel.fromJson(Map<String, dynamic> json) =>
+      _$MdmsV2RequestModelFromJson(json);
+}
+
+@freezed
+class MdmsV2CriteriaModel with _$MdmsV2CriteriaModel {
+  const factory MdmsV2CriteriaModel({
+    required String tenantId,
+    required String schemaCode,
+  }) = _MdmsV2CriteriaModel;
+
+  factory MdmsV2CriteriaModel.fromJson(Map<String, dynamic> json) =>
+      _$MdmsV2CriteriaModelFromJson(json);
+}
+
+@freezed
+class MdmsV2ResponseModel with _$MdmsV2ResponseModel {
+  const factory MdmsV2ResponseModel({
+    @JsonKey(name: 'MdmsRes') MdmsV2ResModel? mdmsRes,
+  }) = _MdmsV2ResponseModel;
+
+  factory MdmsV2ResponseModel.fromJson(Map<String, dynamic> json) =>
+      _$MdmsV2ResponseModelFromJson(json);
+}
+
+@freezed
+class MdmsV2ResModel with _$MdmsV2ResModel {
+  const factory MdmsV2ResModel({
+    @Default([]) List<Map<String, dynamic>> data,
+  }) = _MdmsV2ResModel;
+
+  factory MdmsV2ResModel.fromJson(Map<String, dynamic> json) =>
+      _$MdmsV2ResModelFromJson(json);
+}
+
 @freezed
 class AppConfigPrimaryWrapperModel with _$AppConfigPrimaryWrapperModel {
   const factory AppConfigPrimaryWrapperModel({
