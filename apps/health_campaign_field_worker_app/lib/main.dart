@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
@@ -8,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
+import 'package:flutter/foundation.dart';
+import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'app.dart';
@@ -29,6 +32,12 @@ int i = 0;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Security checks - exit if device is compromised
+  if (!kDebugMode) {
+    final issues = await JailbreakRootDetection.instance.checkForIssues;
+    if (issues.isNotEmpty) exit(0);
+  }
 
   DartPluginRegistrant.ensureInitialized();
 
