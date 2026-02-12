@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DIGIT Flow Builder Config Generator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    h1 { font-size: 24px; font-weight: 600; margin-bottom: 8px; color: #f8fafc; }
+    .subtitle { color: #94a3b8; margin-bottom: 24px; font-size: 14px; }
+
+    .input-section { background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #334155; }
+    .input-section label { display: block; font-size: 13px; font-weight: 500; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    textarea { width: 100%; min-height: 120px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 12px; color: #e2e8f0; font-family: inherit; font-size: 14px; resize: vertical; outline: none; transition: border-color 0.2s; }
+    textarea:focus { border-color: #3b82f6; }
+    textarea::placeholder { color: #475569; }
+
+    .controls { display: flex; gap: 12px; align-items: center; margin-top: 16px; }
+    select { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 10px 12px; color: #e2e8f0; font-size: 14px; outline: none; cursor: pointer; }
+    select:focus { border-color: #3b82f6; }
+
+    .btn { padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: all 0.2s; }
+    .btn-primary { background: #3b82f6; color: white; }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-primary:disabled { background: #1e3a5f; color: #64748b; cursor: not-allowed; }
+    .btn-secondary { background: #334155; color: #e2e8f0; }
+    .btn-secondary:hover { background: #475569; }
+
+    .output-section { background: #1e293b; border-radius: 12px; border: 1px solid #334155; overflow: hidden; }
+    .output-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #334155; }
+    .output-header h2 { font-size: 16px; font-weight: 500; }
+    .status { font-size: 12px; padding: 4px 10px; border-radius: 20px; font-weight: 500; }
+    .status-idle { background: #334155; color: #94a3b8; }
+    .status-loading { background: #1e3a5f; color: #60a5fa; }
+    .status-valid { background: #14532d; color: #4ade80; }
+    .status-warning { background: #713f12; color: #fbbf24; }
+    .status-error { background: #7f1d1d; color: #f87171; }
+
+    .output-body { padding: 20px; max-height: 600px; overflow-y: auto; }
+    pre { background: #0f172a; border-radius: 8px; padding: 16px; font-size: 13px; line-height: 1.6; overflow-x: auto; white-space: pre-wrap; word-break: break-word; color: #e2e8f0; }
+
+    .errors { margin-top: 12px; }
+    .error-item { background: #2d1215; border: 1px solid #7f1d1d; border-radius: 6px; padding: 8px 12px; margin-bottom: 6px; font-size: 13px; color: #fca5a5; }
+    .warning-item { background: #2d2305; border: 1px solid #713f12; border-radius: 6px; padding: 8px 12px; margin-bottom: 6px; font-size: 13px; color: #fde68a; }
+
+    .questions { margin-top: 16px; }
+    .question-item { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 12px; margin-bottom: 8px; }
+    .question-item p { font-size: 14px; margin-bottom: 8px; color: #e2e8f0; }
+    .question-item input { width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 8px 12px; color: #e2e8f0; font-size: 14px; outline: none; }
+    .question-item input:focus { border-color: #3b82f6; }
+
+    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid #334155; border-top-color: #3b82f6; border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 8px; vertical-align: middle; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .examples { margin-top: 16px; }
+    .examples summary { cursor: pointer; color: #94a3b8; font-size: 13px; }
+    .example-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .chip { background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 6px 12px; font-size: 12px; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+    .chip:hover { border-color: #3b82f6; color: #e2e8f0; }
+
+    .copy-btn { background: none; border: 1px solid #334155; color: #94a3b8; padding: 4px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+    .copy-btn:hover { border-color: #3b82f6; color: #e2e8f0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>DIGIT Flow Builder Config Generator</h1>
+    <p class="subtitle">Describe the screen or flow you need, and the RAG pipeline will generate a valid JSON config.</p>
+
+    <div class="input-section">
+      <label>Prompt</label>
+      <textarea id="prompt" placeholder="e.g. Create a beneficiary search screen with proximity search, a search bar to filter by name, and a list view showing results with cards..."></textarea>
+
+      <details class="examples">
+        <summary>Example prompts</summary>
+        <div class="example-chips">
+          <span class="chip" onclick="useExample(this)">Search screen with proximity search and filters</span>
+          <span class="chip" onclick="useExample(this)">Stock management dashboard with 4 menu cards</span>
+          <span class="chip" onclick="useExample(this)">2-page household registration form with GPS, name, DOB, gender</span>
+          <span class="chip" onclick="useExample(this)">Delivery success screen with panelCard and two buttons</span>
+          <span class="chip" onclick="useExample(this)">Complaint form with dropdown, textArea, and date fields</span>
+        </div>
+      </details>
+
+      <div class="controls">
+        <select id="model">
+          <option value="llama3.1:8b">Llama 3.1 8B (default)</option>
+          <option value="llama3.2:3b">Llama 3.2 3B</option>
+          <option value="llama3.1:8b">Llama 3.1 8B</option>
+          <option value="mistral:7b">Mistral 7B</option>
+        </select>
+        <button class="btn btn-primary" id="generateBtn" onclick="generate()">Generate Config</button>
+        <button class="btn btn-secondary" id="clearBtn" onclick="clearAll()">Clear</button>
+      </div>
+    </div>
+
+    <!-- Follow-up questions (shown when pipeline needs more info) -->
+    <div id="questionsSection" style="display:none;">
+      <div class="input-section">
+        <label>Follow-up Questions</label>
+        <div id="questionsList" class="questions"></div>
+        <div class="controls" style="margin-top:12px;">
+          <button class="btn btn-primary" onclick="submitAnswers()">Submit Answers & Generate</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Output -->
+    <div class="output-section">
+      <div class="output-header">
+        <h2>Generated Config</h2>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="copy-btn" id="copyBtn" onclick="copyOutput()" style="display:none;">Copy JSON</button>
+          <span class="status status-idle" id="status">Idle</span>
+        </div>
+      </div>
+      <div class="output-body">
+        <pre id="output">Enter a prompt and click Generate to get started.</pre>
+        <div id="errorsList" class="errors"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let lastPrompt = '';
+    let lastAnswers = [];
+
+    function useExample(el) {
+      document.getElementById('prompt').value = el.textContent;
+    }
+
+    function setStatus(type, text) {
+      const el = document.getElementById('status');
+      el.className = 'status status-' + type;
+      el.innerHTML = text;
+    }
+
+    function clearAll() {
+      document.getElementById('prompt').value = '';
+      document.getElementById('output').textContent = 'Enter a prompt and click Generate to get started.';
+      document.getElementById('errorsList').innerHTML = '';
+      document.getElementById('questionsSection').style.display = 'none';
+      document.getElementById('copyBtn').style.display = 'none';
+      setStatus('idle', 'Idle');
+      lastPrompt = '';
+      lastAnswers = [];
+    }
+
+    async function generate() {
+      const prompt = document.getElementById('prompt').value.trim();
+      if (!prompt) return;
+
+      lastPrompt = prompt;
+      lastAnswers = [];
+
+      const model = document.getElementById('model').value;
+      const btn = document.getElementById('generateBtn');
+      btn.disabled = true;
+      setStatus('loading', '<span class="spinner"></span>Generating...');
+      document.getElementById('output').textContent = 'Generating config...';
+      document.getElementById('errorsList').innerHTML = '';
+      document.getElementById('questionsSection').style.display = 'none';
+      document.getElementById('copyBtn').style.display = 'none';
+
+      try {
+        const res = await fetch('/generate-config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt, model, answers: [] }),
+        });
+        const data = await res.json();
+        handleResponse(data);
+      } catch (e) {
+        setStatus('error', 'Error');
+        document.getElementById('output').textContent = 'Request failed: ' + e.message;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function submitAnswers() {
+      const inputs = document.querySelectorAll('#questionsList input');
+      lastAnswers = Array.from(inputs).map(i => i.value).filter(v => v.trim());
+
+      const model = document.getElementById('model').value;
+      const btn = document.getElementById('generateBtn');
+      btn.disabled = true;
+      setStatus('loading', '<span class="spinner"></span>Generating...');
+      document.getElementById('output').textContent = 'Generating config with your answers...';
+      document.getElementById('errorsList').innerHTML = '';
+
+      try {
+        const res = await fetch('/generate-config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: lastPrompt, model, answers: lastAnswers }),
+        });
+        const data = await res.json();
+        handleResponse(data);
+      } catch (e) {
+        setStatus('error', 'Error');
+        document.getElementById('output').textContent = 'Request failed: ' + e.message;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function handleResponse(data) {
+      if (data.detail) {
+        setStatus('error', 'Error');
+        document.getElementById('output').textContent = data.detail;
+        return;
+      }
+
+      // Follow-up questions needed
+      if (data.needs_input && data.questions && data.questions.length > 0) {
+        setStatus('warning', 'Needs more info');
+        document.getElementById('output').textContent = 'The pipeline needs more details to generate an accurate config. Please answer the questions below.';
+
+        const qList = document.getElementById('questionsList');
+        qList.innerHTML = '';
+        data.questions.forEach((q, i) => {
+          const div = document.createElement('div');
+          div.className = 'question-item';
+          div.innerHTML = '<p>' + q + '</p><input type="text" placeholder="Your answer...">';
+          qList.appendChild(div);
+        });
+        document.getElementById('questionsSection').style.display = 'block';
+        return;
+      }
+
+      document.getElementById('questionsSection').style.display = 'none';
+
+      // Config generated
+      if (data.config) {
+        document.getElementById('output').textContent = JSON.stringify(data.config, null, 2);
+        document.getElementById('copyBtn').style.display = 'inline-block';
+
+        if (data.is_valid) {
+          setStatus('valid', 'Valid');
+        } else if (data.warnings && data.warnings.length > 0) {
+          setStatus('warning', 'Warnings');
+        } else {
+          setStatus('warning', 'Generated');
+        }
+      } else {
+        document.getElementById('output').textContent = 'No config generated.';
+        setStatus('error', 'Failed');
+      }
+
+      // Show errors/warnings
+      const errDiv = document.getElementById('errorsList');
+      errDiv.innerHTML = '';
+      (data.errors || []).forEach(e => {
+        errDiv.innerHTML += '<div class="error-item">' + e + '</div>';
+      });
+      (data.warnings || []).forEach(w => {
+        errDiv.innerHTML += '<div class="warning-item">' + w + '</div>';
+      });
+    }
+
+    function copyOutput() {
+      const text = document.getElementById('output').textContent;
+      navigator.clipboard.writeText(text);
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy JSON', 1500);
+    }
+  </script>
+</body>
+</html>

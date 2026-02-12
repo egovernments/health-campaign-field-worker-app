@@ -1,0 +1,51 @@
+name: Rebuild RAG Index
+on:
+  push:
+    paths:
+      - 'packages/digit_flow_builder/lib/widgets/implementations/**'
+      - 'packages/digit_flow_builder/lib/widgets/widget_registration.dart'
+      - 'packages/digit_flow_builder/lib/action_handler/action_executor_registry.dart'
+      - 'packages/digit_forms_engine/lib/models/property_schema/property_schema.dart'
+      - 'packages/digit_data_model/lib/models/entities/**'
+      - 'packages/digit_flow_builder/lib/data/transformer_config.dart'
+      - 'packages/digit_flow_builder/lib/custom_component_registry.dart'
+      - 'apps/health_campaign_field_worker_app/lib/sampleJsonConfigs/**'
+      - 'DIGIT_FLOW_BUILDER_CONFIG_DOCUMENTATION.md'
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r rag/requirements.txt
+
+      - name: Run registry introspector
+        run: >
+          python rag/registry_introspector.py
+          --root .
+          --output rag/registry_manifest.json
+
+      - name: Generate strict schema
+        run: >
+          python rag/schema_generator.py
+          --manifest rag/registry_manifest.json
+          --base-schema packages/digit_flow_builder/flow-config-schema.json
+          --output rag/flow-config-schema-strict.json
+
+      - name: Run tests
+        run: python -m pytest rag/tests/ -v
+
+      - name: Build indexes
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: >
+          python rag/indexing/build_index.py
+          --root .
+          --manifest rag/registry_manifest.json
+          --store-dir rag/indexing/stores

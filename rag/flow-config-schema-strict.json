@@ -1,0 +1,627 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DIGIT Flow Builder Configuration Schema (Strict)",
+  "description": "Auto-generated strict schema with enum constraints. DO NOT EDIT MANUALLY. Regenerate with schema_generator.py.",
+  "type": "object",
+  "definitions": {
+    "widgetConfig": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "type": "string",
+          "enum": [
+            "actionPopup",
+            "backLink",
+            "button",
+            "card",
+            "column",
+            "dropdownTemplate",
+            "evaluationFacility",
+            "expandable",
+            "facilityFromWhich",
+            "facilityToWhich",
+            "filter",
+            "healthFacility",
+            "icon",
+            "infoCard",
+            "labelPairList",
+            "listView",
+            "menu_card",
+            "panelCard",
+            "productdetail",
+            "proximitySearch",
+            "qrScanner",
+            "qr_view",
+            "radioList",
+            "referralCycle",
+            "resourceCard",
+            "row",
+            "searchBar",
+            "selectionCard",
+            "stockReconciliationCard",
+            "switch",
+            "table",
+            "tag",
+            "textInput",
+            "textTemplate"
+          ]
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "fieldName": {
+          "type": "string"
+        },
+        "value": {},
+        "hidden": {},
+        "visible": {},
+        "disabled": {},
+        "dataSource": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "onAction": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/actionConfig"
+          }
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/widgetConfig"
+          }
+        },
+        "child": {
+          "$ref": "#/definitions/widgetConfig"
+        }
+      },
+      "required": [
+        "format"
+      ],
+      "additionalProperties": true
+    },
+    "actionConfig": {
+      "type": "object",
+      "properties": {
+        "actionType": {
+          "type": "string",
+          "enum": [
+            "BACK_NAVIGATION",
+            "CLEAR_STATE",
+            "CLOSE_POPUP",
+            "CREATE_EVENT",
+            "FETCH_TRANSFORMER_CONFIG",
+            "NAVIGATION",
+            "OPEN_SCANNER",
+            "REFRESH_SEARCH",
+            "REVERSE_TRANSFORM",
+            "SEARCH_EVENT",
+            "SHOW_TOAST",
+            "UPDATE_EVENT"
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "condition": {
+          "type": "object",
+          "properties": {
+            "expression": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/actionConfig"
+          }
+        }
+      },
+      "required": [
+        "actionType",
+        "properties"
+      ],
+      "additionalProperties": true
+    },
+    "formProperty": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "boolean",
+            "dynamic",
+            "integer",
+            "object",
+            "string"
+          ]
+        },
+        "label": {
+          "type": "string"
+        },
+        "order": {
+          "type": "number"
+        },
+        "value": {},
+        "format": {
+          "type": "string",
+          "enum": [
+            "checkbox",
+            "custom",
+            "date",
+            "dob",
+            "dropdown",
+            "idPopulator",
+            "latLng",
+            "locality",
+            "mobileNumber",
+            "numeric",
+            "radio",
+            "scanner",
+            "select",
+            "text",
+            "textArea"
+          ]
+        },
+        "hidden": {
+          "type": "boolean"
+        },
+        "tooltip": {
+          "type": "string"
+        },
+        "helpText": {
+          "type": "string"
+        },
+        "infoText": {
+          "type": "string"
+        },
+        "readOnly": {
+          "type": "boolean"
+        },
+        "fieldName": {
+          "type": "string"
+        },
+        "deleteFlag": {
+          "type": "boolean"
+        },
+        "innerLabel": {
+          "type": "string"
+        },
+        "systemDate": {
+          "type": "boolean"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "isMultiSelect": {
+          "type": "boolean"
+        },
+        "includeInForm": {
+          "type": "boolean"
+        },
+        "includeInSummary": {
+          "type": "boolean"
+        },
+        "schemaCode": {
+          "type": "string"
+        },
+        "validations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "value": {},
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "enums": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "name"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "visibilityCondition": {
+          "type": "object",
+          "properties": {
+            "expression": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "expression"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "type",
+        "label",
+        "order",
+        "format",
+        "fieldName"
+      ],
+      "additionalProperties": true
+    },
+    "pageConfig": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "order": {
+          "type": "number"
+        },
+        "description": {
+          "type": "string"
+        },
+        "actionLabel": {
+          "type": "string"
+        },
+        "navigateTo": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            },
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "key",
+                  "value"
+                ],
+                "additionalProperties": true
+              }
+            }
+          },
+          "required": [
+            "name",
+            "type"
+          ],
+          "additionalProperties": true
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/formProperty"
+          }
+        },
+        "showAlertPopUp": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "page",
+        "type",
+        "label",
+        "order",
+        "properties"
+      ],
+      "additionalProperties": true
+    },
+    "wrapperConfig": {
+      "type": "object",
+      "properties": {
+        "wrapperName": {
+          "type": "string"
+        },
+        "rootEntity": {
+          "type": "string",
+          "enum": [
+            "AddressModel",
+            "AttributesModel",
+            "BoundaryModel",
+            "DocumentModel",
+            "FacilityModel",
+            "HFReferralModel",
+            "HouseholdMemberModel",
+            "HouseholdMemberRelationShipModel",
+            "HouseholdModel",
+            "IdentifierModel",
+            "IndividualModel",
+            "LocalityModel",
+            "NameModel",
+            "PgrAddressModel",
+            "PgrComplainantModel",
+            "PgrComplainantResponseModel",
+            "PgrComplaintModel",
+            "PgrComplaintResponseModel",
+            "PgrRolesModel",
+            "PgrServiceCreateResponseModel",
+            "PgrServiceModel",
+            "PgrServiceResponseModel",
+            "PgrWorkflowModel",
+            "ProductModel",
+            "ProductVariantModel",
+            "ProjectBeneficiaryModel",
+            "ProjectFacilityModel",
+            "ProjectModel",
+            "ProjectProductVariantModel",
+            "ProjectResourceModel",
+            "ProjectStaffModel",
+            "ProjectTypeModel",
+            "ReferralModel",
+            "SideEffectModel",
+            "StockModel",
+            "StockReconciliationModel",
+            "TargetModel",
+            "TaskModel",
+            "TaskResourceModel",
+            "UniqueIdPoolModel",
+            "UserActionModel",
+            "UserModel"
+          ]
+        },
+        "filters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "relations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "entity": {
+                "type": "string",
+                "enum": [
+                  "AddressModel",
+                  "AttributesModel",
+                  "BoundaryModel",
+                  "DocumentModel",
+                  "FacilityModel",
+                  "HFReferralModel",
+                  "HouseholdMemberModel",
+                  "HouseholdMemberRelationShipModel",
+                  "HouseholdModel",
+                  "IdentifierModel",
+                  "IndividualModel",
+                  "LocalityModel",
+                  "NameModel",
+                  "PgrAddressModel",
+                  "PgrComplainantModel",
+                  "PgrComplainantResponseModel",
+                  "PgrComplaintModel",
+                  "PgrComplaintResponseModel",
+                  "PgrRolesModel",
+                  "PgrServiceCreateResponseModel",
+                  "PgrServiceModel",
+                  "PgrServiceResponseModel",
+                  "PgrWorkflowModel",
+                  "ProductModel",
+                  "ProductVariantModel",
+                  "ProjectBeneficiaryModel",
+                  "ProjectFacilityModel",
+                  "ProjectModel",
+                  "ProjectProductVariantModel",
+                  "ProjectResourceModel",
+                  "ProjectStaffModel",
+                  "ProjectTypeModel",
+                  "ReferralModel",
+                  "SideEffectModel",
+                  "StockModel",
+                  "StockReconciliationModel",
+                  "TargetModel",
+                  "TaskModel",
+                  "TaskResourceModel",
+                  "UniqueIdPoolModel",
+                  "UserActionModel",
+                  "UserModel"
+                ]
+              },
+              "match": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "searchConfig": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "wrapperName",
+        "rootEntity"
+      ],
+      "additionalProperties": true
+    }
+  },
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "initialPage": {
+      "type": "string"
+    },
+    "project": {
+      "type": "string"
+    },
+    "version": {
+      "type": "number"
+    },
+    "disabled": {
+      "type": "boolean"
+    },
+    "isSelected": {
+      "type": "boolean"
+    },
+    "flows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "screenType": {
+            "type": "string",
+            "enum": [
+              "TEMPLATE",
+              "FORM"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "heading": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "project": {
+            "type": "string"
+          },
+          "version": {
+            "type": "number"
+          },
+          "disabled": {
+            "type": "boolean"
+          },
+          "isSelected": {
+            "type": "boolean"
+          },
+          "header": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/widgetConfig"
+            }
+          },
+          "footer": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/widgetConfig"
+            }
+          },
+          "body": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/widgetConfig"
+            }
+          },
+          "pages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/pageConfig"
+            }
+          },
+          "initActions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/actionConfig"
+            }
+          },
+          "onAction": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/actionConfig"
+            }
+          },
+          "wrapperConfig": {
+            "$ref": "#/definitions/wrapperConfig"
+          }
+        },
+        "required": [
+          "screenType",
+          "name"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "screenType": {
+                  "const": "TEMPLATE"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "body"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "screenType": {
+                  "const": "FORM"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "pages"
+              ]
+            }
+          }
+        ],
+        "additionalProperties": true
+      }
+    }
+  },
+  "required": [
+    "name",
+    "flows"
+  ],
+  "additionalProperties": true
+}

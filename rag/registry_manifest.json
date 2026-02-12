@@ -1,0 +1,763 @@
+{
+  "_meta": {
+    "description": "Auto-generated registry manifest. DO NOT EDIT MANUALLY.",
+    "source": "registry_introspector.py",
+    "instruction": "Re-run the introspector after adding widgets/actions/entities."
+  },
+  "template_widget_formats": {
+    "count": 26,
+    "items": [
+      {
+        "format": "actionPopup",
+        "class": "ActionPopupWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/action_popup_widget.dart",
+        "json_properties_read": [
+          "label",
+          "onAction",
+          "properties"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": true
+      },
+      {
+        "format": "backLink",
+        "class": "BackLinkWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/back_link.dart",
+        "json_properties_read": [
+          "label",
+          "onAction"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": true
+      },
+      {
+        "format": "button",
+        "class": "ButtonWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/button_widget.dart",
+        "json_properties_read": [
+          "disabled",
+          "label",
+          "onAction",
+          "prefixIcon",
+          "properties",
+          "suffixIcon",
+          "visible"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": true
+      },
+      {
+        "format": "card",
+        "class": "CardWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/card_widget.dart",
+        "json_properties_read": [
+          "children",
+          "onAction",
+          "properties",
+          "visible"
+        ],
+        "supports_children": true,
+        "supports_child": false,
+        "supports_onAction": true
+      },
+      {
+        "format": "column",
+        "class": "ColumnWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/column_widget.dart",
+        "json_properties_read": [
+          "children"
+        ],
+        "supports_children": true,
+        "supports_child": false,
+        "supports_onAction": false
+      },
+      {
+        "format": "dropdownTemplate",
+        "class": "DropdownWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/dropdown_widget.dart",
+        "json_properties_read": [
+          "displayKey",
+          "enums",
+          "fieldName",
+          "key",
+          "label",
+          "onChange",
+          "required",
+          "source",
+          "valueKey",
+          "visible"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": false
+      },
+      {
+        "format": "expandable",
+        "class": "ExpandableWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/expandable_widget.dart",
+        "json_properties_read": [
+          "children",
+          "collapseLabel",
+          "expandLabel",
+          "initiallyExpanded",
+          "visible"
+        ],
+        "supports_children": true,
+        "supports_child": false,
+        "supports_onAction": false
+      },
+      {
+        "format": "filter",
+        "class": "FilterWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/filter_widget.dart",
+        "json_properties_read": [
+          "label",
+          "onAction"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": true
+      },
+      {
+        "format": "icon",
+        "class": "IconWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/icon_widget.dart",
+        "json_properties_read": [
+          "value"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": false
+      },
+      {
+        "format": "infoCard",
+        "class": "InfoCardWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/info_card_widget.dart",
+        "json_properties_read": [
+          "description",
+          "hidden",
+          "label",
+          "properties",
+          "visible"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": false
+      },
+      {
+        "format": "labelPairList",
+        "class": "LabelPairListWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/label_pair_list_widget.dart",
+        "json_properties_read": [
+          "data"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": false
+      },
+      {
+        "format": "listView",
+        "class": "ListViewWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/list_view_widget.dart",
+        "json_properties_read": [
+          "child",
+          "dataSource",
+          "properties"
+        ],
+        "supports_children": false,
+        "supports_child": true,
+        "supports_onAction": false
+      },
+      {
+        "format": "menu_card",
+        "class": "MenuCardWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/menu_card_widget.dart",
+        "json_properties_read": [
+          "description",
+          "heading",
+          "icon",
+          "onAction"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": true
+      },
+      {
+        "format": "panelCard",
+        "class": "PanelCardWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/panel_card_widget.dart",
+        "json_properties_read": [
+          "additionalWidgets",
+          "description",
+          "label",
+          "primaryAction",
+          "secondaryAction"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": false
+      },
+      {
+        "format": "proximitySearch",
+        "class": "ProximitySearchWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/proximitySearch_widget.dart",
+        "json_properties_read": [
+          "defaultValue",
+          "fieldName",
+          "label",
+          "onAction",
+          "validations"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": true
+      },
+      {
+        "format": "qrScanner",
+        "class": "QRScannerWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/qr_scanner_widget.dart",
+        "json_properties_read": [
+          "disabled",
+          "label",
+          "onAction",
+          "prefixIcon",
+          "properties",
+          "suffixIcon",
+          "validations",
+          "visible"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": true
+      },
+      {
+        "format": "qr_view",
+        "class": "QrViewWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/qr_view_widget.dart",
+        "json_properties_read": [
+          "backgroundColor",
+          "data",
+          "dataModuleColor",
+          "errorCorrectionLevel",
+          "padding",
+          "showInDialog",
+          "size",
+          "version"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": false
+      },
+      {
+        "format": "radioList",
+        "class": "RadioWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/radio.dart",
+        "json_properties_read": [
+          "data",
+          "fieldName",
+          "key",
+          "onChange",
+          "visible"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": false
+      },
+      {
+        "format": "row",
+        "class": "RowWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/row_widget.dart",
+        "json_properties_read": [
+          "children",
+          "properties"
+        ],
+        "supports_children": true,
+        "supports_child": false,
+        "supports_onAction": false
+      },
+      {
+        "format": "searchBar",
+        "class": "SearchBarWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/search_bar_widget.dart",
+        "json_properties_read": [
+          "fieldName",
+          "label",
+          "onAction",
+          "validation"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": true
+      },
+      {
+        "format": "selectionCard",
+        "class": "SelectionCardWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/selection_card.dart",
+        "json_properties_read": [
+          "enums",
+          "fieldName"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": false
+      },
+      {
+        "format": "switch",
+        "class": "SwitchWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/switch_widget.dart",
+        "json_properties_read": [
+          "fieldName",
+          "label",
+          "onAction"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": true
+      },
+      {
+        "format": "table",
+        "class": "TableWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/table_widget.dart",
+        "json_properties_read": [
+          "data",
+          "visible"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": false
+      },
+      {
+        "format": "tag",
+        "class": "TagWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/tag_widget.dart",
+        "json_properties_read": [
+          "label",
+          "properties",
+          "visible"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": false
+      },
+      {
+        "format": "textInput",
+        "class": "TextInputWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/text_input_widget.dart",
+        "json_properties_read": [
+          "fieldName",
+          "inputType",
+          "key",
+          "label",
+          "maxLength",
+          "minLength",
+          "onChange",
+          "placeholder",
+          "readOnly",
+          "required",
+          "visible"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": false
+      },
+      {
+        "format": "textTemplate",
+        "class": "TextWidget",
+        "source_file": "packages/digit_flow_builder/lib/widgets/implementations/text_widget.dart",
+        "json_properties_read": [
+          "properties",
+          "value"
+        ],
+        "supports_children": false,
+        "supports_child": false,
+        "supports_onAction": false
+      }
+    ],
+    "all_format_names": [
+      "actionPopup",
+      "backLink",
+      "button",
+      "card",
+      "column",
+      "dropdownTemplate",
+      "expandable",
+      "filter",
+      "icon",
+      "infoCard",
+      "labelPairList",
+      "listView",
+      "menu_card",
+      "panelCard",
+      "proximitySearch",
+      "qrScanner",
+      "qr_view",
+      "radioList",
+      "row",
+      "searchBar",
+      "selectionCard",
+      "switch",
+      "table",
+      "tag",
+      "textInput",
+      "textTemplate"
+    ]
+  },
+  "action_types": {
+    "count": 12,
+    "items": [
+      {
+        "action_type": "NAVIGATION",
+        "executor_class": "NavigationExecutor",
+        "source_file": "packages/digit_flow_builder/lib/action_handler/action_executor_registry.dart"
+      },
+      {
+        "action_type": "BACK_NAVIGATION",
+        "executor_class": "BackNavigationExecutor",
+        "source_file": "packages/digit_flow_builder/lib/action_handler/action_executor_registry.dart"
+      },
+      {
+        "action_type": "CREATE_EVENT",
+        "executor_class": "CrudExecutor",
+        "source_file": "packages/digit_flow_builder/lib/action_handler/action_executor_registry.dart"
+      },
+      {
+        "action_type": "UPDATE_EVENT",
+        "executor_class": "UpdateExecutor",
+        "source_file": "packages/digit_flow_builder/lib/action_handler/action_executor_registry.dart"
+      },
+      {
+        "action_type": "SEARCH_EVENT",
+        "executor_class": "SearchExecutor",
+        "source_file": "packages/digit_flow_builder/lib/action_handler/action_executor_registry.dart"
+      },
+      {
+        "action_type": "REFRESH_SEARCH",
+        "executor_class": "RefreshSearchExecutor",
+        "source_file": "packages/digit_flow_builder/lib/action_handler/action_executor_registry.dart"
+      },
+      {
+        "action_type": "FETCH_TRANSFORMER_CONFIG",
+        "executor_class": "TransformerExecutor",
+        "source_file": "packages/digit_flow_builder/lib/action_handler/action_executor_registry.dart"
+      },
+      {
+        "action_type": "SHOW_TOAST",
+        "executor_class": "ToastExecutor",
+        "source_file": "packages/digit_flow_builder/lib/action_handler/action_executor_registry.dart"
+      },
+      {
+        "action_type": "CLEAR_STATE",
+        "executor_class": "ClearStateExecutor",
+        "source_file": "packages/digit_flow_builder/lib/action_handler/action_executor_registry.dart"
+      },
+      {
+        "action_type": "OPEN_SCANNER",
+        "executor_class": "OpenScannerExecutor",
+        "source_file": "packages/digit_flow_builder/lib/action_handler/action_executor_registry.dart"
+      },
+      {
+        "action_type": "REVERSE_TRANSFORM",
+        "executor_class": "ReverseTransformerExecutor",
+        "source_file": "packages/digit_flow_builder/lib/action_handler/action_executor_registry.dart"
+      },
+      {
+        "action_type": "CLOSE_POPUP",
+        "executor_class": "ClosePopupExecutor",
+        "source_file": "packages/digit_flow_builder/lib/action_handler/action_executor_registry.dart"
+      }
+    ],
+    "all_action_names": [
+      "NAVIGATION",
+      "BACK_NAVIGATION",
+      "CREATE_EVENT",
+      "UPDATE_EVENT",
+      "SEARCH_EVENT",
+      "REFRESH_SEARCH",
+      "FETCH_TRANSFORMER_CONFIG",
+      "SHOW_TOAST",
+      "CLEAR_STATE",
+      "OPEN_SCANNER",
+      "REVERSE_TRANSFORM",
+      "CLOSE_POPUP"
+    ]
+  },
+  "form_field_formats": {
+    "count": 15,
+    "items": [
+      "date",
+      "latLng",
+      "custom",
+      "locality",
+      "select",
+      "numeric",
+      "dropdown",
+      "checkbox",
+      "radio",
+      "dob",
+      "scanner",
+      "idPopulator",
+      "mobileNumber",
+      "textArea",
+      "text"
+    ]
+  },
+  "form_field_types": {
+    "count": 5,
+    "items": [
+      "object",
+      "string",
+      "integer",
+      "boolean",
+      "dynamic"
+    ]
+  },
+  "entity_models": {
+    "count": 42,
+    "items": [
+      {
+        "model_name": "AddressModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/address.dart"
+      },
+      {
+        "model_name": "AttributesModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/attributes.dart"
+      },
+      {
+        "model_name": "BoundaryModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/boundary.dart"
+      },
+      {
+        "model_name": "DocumentModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/document.dart"
+      },
+      {
+        "model_name": "FacilityModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/facility.dart"
+      },
+      {
+        "model_name": "HFReferralModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/hf_referral.dart"
+      },
+      {
+        "model_name": "HouseholdModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/household.dart"
+      },
+      {
+        "model_name": "HouseholdMemberModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/household_member.dart"
+      },
+      {
+        "model_name": "HouseholdMemberRelationShipModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/household_member_relationship.dart"
+      },
+      {
+        "model_name": "IdentifierModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/identifier.dart"
+      },
+      {
+        "model_name": "IndividualModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/individual.dart"
+      },
+      {
+        "model_name": "LocalityModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/locality.dart"
+      },
+      {
+        "model_name": "NameModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/name.dart"
+      },
+      {
+        "model_name": "PgrAddressModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/pgr_address.dart"
+      },
+      {
+        "model_name": "PgrComplaintModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/pgr_complaints.dart"
+      },
+      {
+        "model_name": "PgrComplainantModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/pgr_complaints.dart"
+      },
+      {
+        "model_name": "PgrRolesModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/pgr_complaints.dart"
+      },
+      {
+        "model_name": "PgrServiceModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/pgr_complaints.dart"
+      },
+      {
+        "model_name": "PgrWorkflowModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/pgr_complaints.dart"
+      },
+      {
+        "model_name": "PgrServiceCreateResponseModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/pgr_complaints_response.dart"
+      },
+      {
+        "model_name": "PgrComplaintResponseModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/pgr_complaints_response.dart"
+      },
+      {
+        "model_name": "PgrComplainantResponseModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/pgr_complaints_response.dart"
+      },
+      {
+        "model_name": "PgrServiceResponseModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/pgr_complaints_response.dart"
+      },
+      {
+        "model_name": "ProductModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/product.dart"
+      },
+      {
+        "model_name": "ProductVariantModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/product_variant.dart"
+      },
+      {
+        "model_name": "ProjectModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/project.dart"
+      },
+      {
+        "model_name": "ProjectBeneficiaryModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/project_beneficiary.dart"
+      },
+      {
+        "model_name": "ProjectFacilityModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/project_facility.dart"
+      },
+      {
+        "model_name": "ProjectProductVariantModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/project_product_variant.dart"
+      },
+      {
+        "model_name": "ProjectResourceModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/project_resource.dart"
+      },
+      {
+        "model_name": "ProjectStaffModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/project_staff.dart"
+      },
+      {
+        "model_name": "ProjectTypeModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/project_type.dart"
+      },
+      {
+        "model_name": "ReferralModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/referral.dart"
+      },
+      {
+        "model_name": "SideEffectModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/side_effect.dart"
+      },
+      {
+        "model_name": "StockModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/stock.dart"
+      },
+      {
+        "model_name": "StockReconciliationModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/stock_reconciliation.dart"
+      },
+      {
+        "model_name": "TargetModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/target.dart"
+      },
+      {
+        "model_name": "TaskModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/task.dart"
+      },
+      {
+        "model_name": "TaskResourceModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/task_resource.dart"
+      },
+      {
+        "model_name": "UniqueIdPoolModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/unique_id_pool.dart"
+      },
+      {
+        "model_name": "UserModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/user.dart"
+      },
+      {
+        "model_name": "UserActionModel",
+        "source_file": "packages/digit_data_model/lib/models/entities/user_action.dart"
+      }
+    ],
+    "all_model_names": [
+      "AddressModel",
+      "AttributesModel",
+      "BoundaryModel",
+      "DocumentModel",
+      "FacilityModel",
+      "HFReferralModel",
+      "HouseholdModel",
+      "HouseholdMemberModel",
+      "HouseholdMemberRelationShipModel",
+      "IdentifierModel",
+      "IndividualModel",
+      "LocalityModel",
+      "NameModel",
+      "PgrAddressModel",
+      "PgrComplaintModel",
+      "PgrComplainantModel",
+      "PgrRolesModel",
+      "PgrServiceModel",
+      "PgrWorkflowModel",
+      "PgrServiceCreateResponseModel",
+      "PgrComplaintResponseModel",
+      "PgrComplainantResponseModel",
+      "PgrServiceResponseModel",
+      "ProductModel",
+      "ProductVariantModel",
+      "ProjectModel",
+      "ProjectBeneficiaryModel",
+      "ProjectFacilityModel",
+      "ProjectProductVariantModel",
+      "ProjectResourceModel",
+      "ProjectStaffModel",
+      "ProjectTypeModel",
+      "ReferralModel",
+      "SideEffectModel",
+      "StockModel",
+      "StockReconciliationModel",
+      "TargetModel",
+      "TaskModel",
+      "TaskResourceModel",
+      "UniqueIdPoolModel",
+      "UserModel",
+      "UserActionModel"
+    ]
+  },
+  "transformer_configs": {
+    "count": 11,
+    "items": [
+      "beneficiaryRegistration",
+      "individualRegistration",
+      "indirectBulkDelivery",
+      "delivery",
+      "ineligibleConfig",
+      "stock",
+      "stockReconciliation",
+      "complaintRegistration",
+      "closeHouseholdRegistration",
+      "referralCreation",
+      "referralBeneficaryCreate"
+    ]
+  },
+  "custom_components": {
+    "count": 8,
+    "items": [
+      "evaluationFacility",
+      "facilityFromWhich",
+      "facilityToWhich",
+      "healthFacility",
+      "productdetail",
+      "referralCycle",
+      "resourceCard",
+      "stockReconciliationCard"
+    ]
+  }
+}
