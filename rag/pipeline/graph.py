@@ -101,7 +101,8 @@ def build_graph(
 
         prompt = GATHER_INFO_PROMPT.format(
             route=route,
-            missing_items="\n".join(f"- {item}" for item in missing),
+            user_query=state.get("user_query", ""),
+            missing_categories=", ".join(missing),
         )
         t0 = time.time()
         result = llm.invoke(prompt)
@@ -177,6 +178,7 @@ def build_graph(
         schema_ctx = grouped.get("schema", "")
         exemplar_ctx = grouped.get("exemplars", "")
         widget_ctx = grouped.get("widgets", "")
+        wrapper_ctx = grouped.get("wrappers", "")
 
         # If exemplars are empty (metadata missing), fall back to full dump
         if not exemplar_ctx and not widget_ctx:
@@ -208,6 +210,7 @@ def build_graph(
                 exemplar_context=exemplar_ctx,
                 widget_context=widget_ctx,
                 user_query=full_query,
+                wrapper_context=wrapper_ctx,
                 previous_errors=previous_errors or None,
             )
         else:
@@ -217,6 +220,7 @@ def build_graph(
                 exemplar_context=exemplar_ctx,
                 widget_context=widget_ctx,
                 user_query=full_query,
+                wrapper_context=wrapper_ctx,
                 previous_errors=previous_errors or None,
             )
 
@@ -364,8 +368,15 @@ def run_pipeline(
 ) -> dict:
     """Run the full pipeline and return the result.
 
+    Phase 1 (routing): Run the router to check completeness.
+        If incomplete and no user_answers yet, generate follow-up questions
+        and return immediately — no expensive retrieval/generation.
+
+    Phase 2 (generation): Run the full graph when the query is complete
+        (either from the start or after user provided answers).
+
     Returns:
-        Dict with keys: config, is_valid, errors, warnings
+        Dict with keys: config, is_valid, errors, warnings, needs_input, questions
     """
     logger.info("=" * 60)
     logger.info("PIPELINE START | model=%s | query='%s'", model_name, user_query[:80])
@@ -374,6 +385,53 @@ def run_pipeline(
     llm = ChatOllama(model=model_name, temperature=0)
     manifest = RegistryManifest(manifest_path)
 
+    # ------------------------------------------------------------------
+    # Phase 1: Route and check completeness BEFORE running the full graph
+    # ------------------------------------------------------------------
+    router_fn = create_router(llm)
+    route_result = router_fn(user_query, user_answers)
+
+    logger.info(
+        "ROUTING | route=%s, complete=%s, missing=%s",
+        route_result.screen_type,
+        route_result.is_complete,
+        route_result.missing_info,
+    )
+
+    if not route_result.is_complete and not user_answers:
+        # Query is incomplete and user hasn't provided answers yet.
+        # Generate follow-up questions and return immediately —
+        # skip the expensive retrieval/generation pipeline.
+        logger.info("INCOMPLETE — generating follow-up questions (no graph run)")
+        prompt = GATHER_INFO_PROMPT.format(
+            route=route_result.screen_type,
+            user_query=user_query,
+            missing_categories=", ".join(route_result.missing_info),
+        )
+        result = llm.invoke(prompt)
+        questions = [
+            q.strip()
+            for q in result.content.strip().split("\n")
+            if q.strip()
+        ]
+        logger.info(
+            "PIPELINE EARLY RETURN | %.1fs | %d follow-up questions",
+            time.time() - pipeline_t0,
+            len(questions),
+        )
+        return {
+            "config": None,
+            "is_valid": False,
+            "errors": [],
+            "warnings": [],
+            "needs_input": True,
+            "questions": questions,
+        }
+
+    # ------------------------------------------------------------------
+    # Phase 2: Query is complete (or user provided answers) — run the
+    # full graph, skipping the gather_info loop.
+    # ------------------------------------------------------------------
     graph = build_graph(
         llm=llm,
         manifest=manifest,
@@ -383,12 +441,12 @@ def run_pipeline(
 
     initial_state: GraphState = {
         "user_query": user_query,
-        "route": None,
-        "is_complete": False,
+        "route": route_result.screen_type,
+        "is_complete": True,  # Skip gather loop — we're ready to generate
         "missing_info": [],
         "follow_up_questions": [],
         "user_answers": user_answers or [],
-        "intent_keywords": [],
+        "intent_keywords": route_result.intent_keywords,
         "documents": [],
         "doc_metadata": [],
         "generation": None,
@@ -409,16 +467,6 @@ def run_pipeline(
     errors = result.get("validation_errors", [])
     is_valid = not errors
     warnings = []
-
-    if result.get("follow_up_questions") and not result.get("is_complete"):
-        return {
-            "config": None,
-            "is_valid": False,
-            "errors": [],
-            "warnings": [],
-            "needs_input": True,
-            "questions": result["follow_up_questions"],
-        }
 
     if errors and config:
         warnings = [

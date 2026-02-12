@@ -157,6 +157,55 @@ def _extract_entity_models(config: dict | list) -> list[str]:
     return models
 
 
+def _build_section_summary(screen: dict) -> str:
+    """Build a human-readable section placement summary for a screen config.
+
+    This tells the LLM which widgets are in header/body/footer so it can
+    learn the patterns from exemplars instead of hardcoded rules.
+    """
+    lines = []
+    screen_name = screen.get("name", "unknown")
+    screen_type = screen.get("screenType", "UNKNOWN")
+    lines.append(f"=== SECTION PATTERN for '{screen_name}' ({screen_type}) ===")
+
+    for section in ("header", "body", "footer"):
+        items = screen.get(section, [])
+        if not items:
+            lines.append(f"  {section}: [] (empty)")
+        else:
+            formats = []
+            for item in items:
+                fmt = item.get("format", "?")
+                extra = []
+                if "primaryAction" in item:
+                    pa_fmt = item["primaryAction"].get("format", "")
+                    extra.append(f"primaryAction={pa_fmt}")
+                if "secondaryAction" in item:
+                    sa_fmt = item["secondaryAction"].get("format", "")
+                    extra.append(f"secondaryAction={sa_fmt}")
+                if "children" in item:
+                    child_fmts = [c.get("format", "?") for c in item.get("children", []) if isinstance(c, dict)]
+                    if child_fmts:
+                        extra.append(f"children=[{', '.join(child_fmts)}]")
+                desc = fmt
+                if extra:
+                    desc += f" ({', '.join(extra)})"
+                formats.append(desc)
+            lines.append(f"  {section}: [{', '.join(formats)}]")
+
+    init_actions = screen.get("initActions", [])
+    if init_actions:
+        action_types = [a.get("actionType", "?") for a in init_actions if isinstance(a, dict)]
+        lines.append(f"  initActions: [{', '.join(action_types)}]")
+    else:
+        lines.append(f"  initActions: [] (empty)")
+
+    has_wrapper = "wrapperConfig" in screen
+    lines.append(f"  wrapperConfig: {'yes' if has_wrapper else 'no'}")
+
+    return "\n".join(lines)
+
+
 def chunk_sample_configs(repo_root: Path | None = None) -> list[dict]:
     """Parse sample config Dart files and extract per-screen chunks."""
     root = repo_root or REPO_ROOT
@@ -194,10 +243,17 @@ def chunk_sample_configs(repo_root: Path | None = None) -> list[dict]:
             screen_name = screen.get("name", "unknown")
             screen_type = screen.get("screenType", "UNKNOWN")
 
-            widget_formats = sorted(set(
+            header_widgets = sorted(set(
                 _extract_widget_formats(screen.get("header", []))
-                + _extract_widget_formats(screen.get("body", []))
-                + _extract_widget_formats(screen.get("footer", []))
+            ))
+            body_widgets = sorted(set(
+                _extract_widget_formats(screen.get("body", []))
+            ))
+            footer_widgets = sorted(set(
+                _extract_widget_formats(screen.get("footer", []))
+            ))
+            widget_formats = sorted(set(
+                header_widgets + body_widgets + footer_widgets
             ))
             action_types = sorted(set(
                 _extract_action_types(screen.get("initActions", []))
@@ -208,8 +264,15 @@ def chunk_sample_configs(repo_root: Path | None = None) -> list[dict]:
             ))
             entity_models = sorted(set(_extract_entity_models(screen)))
 
+            # Build section summary and prepend to content
+            section_summary = _build_section_summary(screen)
+            enriched_content = (
+                section_summary + "\n\n"
+                + json.dumps(screen, indent=2)
+            )
+
             chunks.append({
-                "content": json.dumps(screen, indent=2),
+                "content": enriched_content,
                 "metadata": {
                     "source": dart_file.name,
                     "collection": "sample_configs",
@@ -218,6 +281,9 @@ def chunk_sample_configs(repo_root: Path | None = None) -> list[dict]:
                     "has_wrapper": "wrapperConfig" in screen,
                     "has_init_actions": bool(screen.get("initActions")),
                     "widget_formats_used": widget_formats,
+                    "header_widgets": header_widgets,
+                    "body_widgets": body_widgets,
+                    "footer_widgets": footer_widgets,
                     "action_types_used": action_types,
                     "entity_models": entity_models,
                 },
@@ -332,6 +398,36 @@ def chunk_transformer_configs(repo_root: Path | None = None) -> list[dict]:
     return chunks
 
 
+def chunk_wrapper_reference(repo_root: Path | None = None) -> list[dict]:
+    """Chunk the wrapper reference documentation by section."""
+    root = repo_root or REPO_ROOT
+    ref_path = root / "rag" / "indexing" / "wrapper_reference.md"
+    chunks = []
+
+    if not ref_path.exists():
+        return chunks
+
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1200,
+        chunk_overlap=200,
+        separators=["\n## ", "\n### ", "\n\n", "\n"],
+    )
+    text = ref_path.read_text()
+    splits = splitter.split_text(text)
+    for i, chunk_text in enumerate(splits):
+        chunks.append({
+            "content": chunk_text,
+            "metadata": {
+                "source": "wrapper_reference.md",
+                "collection": "wrapper_reference",
+                "doc_type": "wrapper_guide",
+                "chunk_index": i,
+            },
+        })
+
+    return chunks
+
+
 def chunk_wrapper_patterns(repo_root: Path | None = None) -> list[dict]:
     """Extract wrapperConfig objects from sample configs as separate chunks."""
     root = repo_root or REPO_ROOT
@@ -381,6 +477,7 @@ def chunk_all(
     all_chunks.extend(chunk_sample_configs(root))
     all_chunks.extend(chunk_widget_reference(root, manifest))
     all_chunks.extend(chunk_transformer_configs(root))
+    all_chunks.extend(chunk_wrapper_reference(root))
     all_chunks.extend(chunk_wrapper_patterns(root))
 
     return all_chunks

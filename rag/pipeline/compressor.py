@@ -74,6 +74,7 @@ def group_context_by_type(documents: list[Document]) -> dict[str, str]:
         "sample_configs": "exemplars",
         "widget_reference": "widgets",
         "transformer_patterns": "transformers",
+        "wrapper_reference": "wrappers",
         "wrapper_patterns": "wrappers",
     }
 

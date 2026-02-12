@@ -3,270 +3,750 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DIGIT Flow Builder Config Generator</title>
+  <title>FlowCraft</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
-    .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
-    h1 { font-size: 24px; font-weight: 600; margin-bottom: 8px; color: #f8fafc; }
-    .subtitle { color: #94a3b8; margin-bottom: 24px; font-size: 14px; }
 
-    .input-section { background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #334155; }
-    .input-section label { display: block; font-size: 13px; font-weight: 500; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-    textarea { width: 100%; min-height: 120px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 12px; color: #e2e8f0; font-family: inherit; font-size: 14px; resize: vertical; outline: none; transition: border-color 0.2s; }
-    textarea:focus { border-color: #3b82f6; }
-    textarea::placeholder { color: #475569; }
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-bot: #1a1a2e;
+      --bg-user: #1c1c28;
+      --bg-input: #16161f;
+      --border: #1e1e2e;
+      --border-focus: #3b82f6;
+      --text-primary: #f0f0f5;
+      --text-secondary: #8888a0;
+      --text-muted: #55556a;
+      --accent: #3b82f6;
+      --accent-hover: #2552d0;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --code-bg: #0d0d14;
+    }
 
-    .controls { display: flex; gap: 12px; align-items: center; margin-top: 16px; }
-    select { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 10px 12px; color: #e2e8f0; font-size: 14px; outline: none; cursor: pointer; }
-    select:focus { border-color: #3b82f6; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
 
-    .btn { padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: all 0.2s; }
-    .btn-primary { background: #3b82f6; color: white; }
-    .btn-primary:hover { background: #2563eb; }
-    .btn-primary:disabled { background: #1e3a5f; color: #64748b; cursor: not-allowed; }
-    .btn-secondary { background: #334155; color: #e2e8f0; }
-    .btn-secondary:hover { background: #475569; }
+    /* ---- Header ---- */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .bot-avatar-header {
+      width: 34px; height: 34px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .header-title { font-size: 15px; font-weight: 600; }
+    .header-sub { font-size: 12px; color: var(--text-secondary); margin-top: 1px; }
+    .header-actions { display: flex; gap: 8px; align-items: center; }
+    .model-select {
+      background: var(--bg-primary); border: 1px solid var(--border);
+      color: var(--text-secondary); padding: 6px 10px; border-radius: 8px;
+      font-size: 12px; font-family: inherit; outline: none; cursor: pointer;
+    }
+    .model-select:focus { border-color: var(--border-focus); }
+    .clear-btn {
+      background: none; border: 1px solid var(--border); color: var(--text-secondary);
+      padding: 6px 14px; border-radius: 8px; font-size: 12px; cursor: pointer;
+      font-family: inherit; transition: all 0.2s;
+    }
+    .clear-btn:hover { border-color: var(--error); color: var(--error); }
 
-    .output-section { background: #1e293b; border-radius: 12px; border: 1px solid #334155; overflow: hidden; }
-    .output-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #334155; }
-    .output-header h2 { font-size: 16px; font-weight: 500; }
-    .status { font-size: 12px; padding: 4px 10px; border-radius: 20px; font-weight: 500; }
-    .status-idle { background: #334155; color: #94a3b8; }
-    .status-loading { background: #1e3a5f; color: #60a5fa; }
-    .status-valid { background: #14532d; color: #4ade80; }
-    .status-warning { background: #713f12; color: #fbbf24; }
-    .status-error { background: #7f1d1d; color: #f87171; }
+    /* ======== WELCOME SCREEN ======== */
+    .welcome-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .welcome-icon {
+      width: 56px; height: 56px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
+    .welcome-title {
+      font-size: 22px; font-weight: 700; margin-bottom: 8px;
+      text-align: center;
+    }
+    .welcome-sub {
+      font-size: 14px; color: var(--text-secondary);
+      text-align: center; max-width: 460px; line-height: 1.5;
+      margin-bottom: 28px;
+    }
 
-    .output-body { padding: 20px; max-height: 600px; overflow-y: auto; }
-    pre { background: #0f172a; border-radius: 8px; padding: 16px; font-size: 13px; line-height: 1.6; overflow-x: auto; white-space: pre-wrap; word-break: break-word; color: #e2e8f0; }
+    /* Prompt chips */
+    .prompt-chips {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 8px; max-width: 600px; margin-bottom: 24px;
+    }
+    .prompt-chip {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 9px 18px;
+      border-radius: 22px;
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .prompt-chip:hover {
+      border-color: var(--accent);
+      background: rgba(59, 130, 246, 0.08);
+      color: #93bbfc;
+    }
 
-    .errors { margin-top: 12px; }
-    .error-item { background: #2d1215; border: 1px solid #7f1d1d; border-radius: 6px; padding: 8px 12px; margin-bottom: 6px; font-size: 13px; color: #fca5a5; }
-    .warning-item { background: #2d2305; border: 1px solid #713f12; border-radius: 6px; padding: 8px 12px; margin-bottom: 6px; font-size: 13px; color: #fde68a; }
+    /* Welcome input */
+    .welcome-input-wrap {
+      display: flex; align-items: flex-end; gap: 10px;
+      width: 100%; max-width: 600px;
+    }
+    .welcome-input {
+      flex: 1;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 18px;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      resize: none;
+      max-height: 120px;
+      min-height: 48px;
+      line-height: 1.4;
+      transition: border-color 0.2s;
+    }
+    .welcome-input:focus { border-color: var(--border-focus); }
+    .welcome-input::placeholder { color: var(--text-muted); }
 
-    .questions { margin-top: 16px; }
-    .question-item { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 12px; margin-bottom: 8px; }
-    .question-item p { font-size: 14px; margin-bottom: 8px; color: #e2e8f0; }
-    .question-item input { width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 8px 12px; color: #e2e8f0; font-size: 14px; outline: none; }
-    .question-item input:focus { border-color: #3b82f6; }
+    .send-btn {
+      width: 48px; height: 48px;
+      background: var(--accent); border: none; border-radius: 12px;
+      color: white; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; flex-shrink: 0;
+    }
+    .send-btn:hover { background: var(--accent-hover); }
+    .send-btn:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; }
+    .send-btn svg { width: 20px; height: 20px; }
 
-    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid #334155; border-top-color: #3b82f6; border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 8px; vertical-align: middle; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    /* ======== CHAT MODE ======== */
+    .chat-container {
+      flex: 1;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .chat-container.active { display: flex; }
+    .welcome-screen.hidden { display: none; }
 
-    .examples { margin-top: 16px; }
-    .examples summary { cursor: pointer; color: #94a3b8; font-size: 13px; }
-    .example-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-    .chip { background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 6px 12px; font-size: 12px; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
-    .chip:hover { border-color: #3b82f6; color: #e2e8f0; }
+    .chat-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: center;
+      scroll-behavior: smooth;
+    }
+    .chat-area::-webkit-scrollbar { width: 6px; }
+    .chat-area::-webkit-scrollbar-track { background: transparent; }
+    .chat-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-    .copy-btn { background: none; border: 1px solid #334155; color: #94a3b8; padding: 4px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; }
-    .copy-btn:hover { border-color: #3b82f6; color: #e2e8f0; }
+    /* ---- Messages (all centered, same layout) ---- */
+    .message {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      max-width: 760px;
+      padding: 16px 0;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .message.bot .msg-avatar {
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    }
+    .message.user .msg-avatar {
+      background: #2a2a3a;
+      border: 1px solid #3a3a4a;
+    }
+
+    .msg-sender {
+      font-size: 13px; font-weight: 600; margin-bottom: 4px;
+    }
+    .message.bot .msg-sender { color: #a78bfa; }
+    .message.user .msg-sender { color: var(--text-secondary); }
+
+    .msg-content { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 0; }
+    .msg-text {
+      font-size: 14px; line-height: 1.7; color: var(--text-primary);
+      word-break: break-word;
+    }
+
+    /* Quick actions */
+    .quick-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+    .quick-action {
+      background: var(--bg-primary); border: 1px solid var(--border);
+      color: var(--text-primary); padding: 8px 16px; border-radius: 20px;
+      font-size: 13px; font-family: inherit; cursor: pointer;
+      transition: all 0.2s; text-align: left;
+    }
+    .quick-action:hover { border-color: var(--accent); background: rgba(59,130,246,0.08); color: #93bbfc; }
+
+    /* Config block */
+    .config-block {
+      background: var(--code-bg); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+    }
+    .config-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 14px; background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+    .config-label { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; }
+    .config-badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+    .badge-valid { background: rgba(34,197,94,0.15); color: var(--success); }
+    .badge-warning { background: rgba(245,158,11,0.15); color: var(--warning); }
+    .badge-error { background: rgba(239,68,68,0.15); color: var(--error); }
+    .copy-btn {
+      background: none; border: 1px solid var(--border); color: var(--text-secondary);
+      padding: 4px 10px; border-radius: 6px; font-size: 11px; cursor: pointer;
+      font-family: inherit; transition: all 0.2s;
+    }
+    .copy-btn:hover { border-color: var(--accent); color: var(--text-primary); }
+    .config-body { padding: 14px; max-height: 400px; overflow-y: auto; }
+    .config-body::-webkit-scrollbar { width: 5px; }
+    .config-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    .config-body pre {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 12px; line-height: 1.5; color: #c5c5d8;
+      white-space: pre-wrap; word-break: break-word; margin: 0;
+    }
+
+    /* Issues */
+    .issue-list { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+    .issue-item { font-size: 12px; padding: 6px 10px; border-radius: 6px; display: flex; align-items: flex-start; gap: 6px; }
+    .issue-error { background: rgba(239,68,68,0.1); color: #fca5a5; border: 1px solid rgba(239,68,68,0.2); }
+    .issue-warning { background: rgba(245,158,11,0.1); color: #fde68a; border: 1px solid rgba(245,158,11,0.2); }
+    .issue-icon { flex-shrink: 0; margin-top: 1px; }
+
+    /* Follow-up questions */
+    .followup-form { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+    .followup-question { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; }
+    .followup-question label { display: block; font-size: 13px; color: var(--text-primary); margin-bottom: 6px; }
+    .followup-question input {
+      width: 100%; background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 6px; padding: 8px 10px; color: var(--text-primary);
+      font-size: 13px; font-family: inherit; outline: none;
+    }
+    .followup-question input:focus { border-color: var(--border-focus); }
+    .followup-question input::placeholder { color: var(--text-muted); }
+    .followup-submit {
+      align-self: flex-start; background: var(--accent); color: white;
+      border: none; padding: 8px 20px; border-radius: 8px;
+      font-size: 13px; font-family: inherit; font-weight: 500;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .followup-submit:hover { background: var(--accent-hover); }
+
+    /* Typing indicator */
+    .typing-wrapper {
+      display: flex; justify-content: center; width: 100%;
+      max-width: 760px; align-self: center;
+    }
+    .typing-indicator {
+      display: flex; gap: 5px; padding: 10px 20px;
+      background: var(--bg-bot); border-radius: 20px; width: fit-content;
+    }
+    .typing-dot {
+      width: 7px; height: 7px; background: var(--text-muted);
+      border-radius: 50%; animation: bounce 1.4s infinite;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-6px); }
+    }
+
+    /* Message divider */
+    .msg-divider {
+      width: 100%; max-width: 760px;
+      border: none; border-top: 1px solid rgba(255,255,255,0.04);
+      margin: 0;
+    }
+
+    /* Chat input bar */
+    .input-bar {
+      padding: 16px 24px; background: var(--bg-secondary);
+      border-top: 1px solid var(--border); flex-shrink: 0;
+    }
+    .input-wrapper {
+      display: flex; align-items: flex-end; gap: 10px;
+      max-width: 760px; margin: 0 auto;
+    }
+    .input-field {
+      flex: 1; background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 14px; padding: 12px 16px; color: var(--text-primary);
+      font-size: 14px; font-family: inherit; outline: none; resize: none;
+      max-height: 120px; min-height: 44px; line-height: 1.4;
+      transition: border-color 0.2s;
+    }
+    .input-field:focus { border-color: var(--border-focus); }
+    .input-field::placeholder { color: var(--text-muted); }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .header { padding: 12px 16px; }
+      .chat-area { padding: 16px; }
+      .input-bar { padding: 12px 16px; }
+      .message { max-width: 100%; }
+      .config-block { max-width: 100%; }
+      .welcome-screen { padding: 20px; }
+      .prompt-chips { max-width: 100%; }
+      .welcome-input-wrap { max-width: 100%; }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>DIGIT Flow Builder Config Generator</h1>
-    <p class="subtitle">Describe the screen or flow you need, and the RAG pipeline will generate a valid JSON config.</p>
 
-    <div class="input-section">
-      <label>Prompt</label>
-      <textarea id="prompt" placeholder="e.g. Create a beneficiary search screen with proximity search, a search bar to filter by name, and a list view showing results with cards..."></textarea>
-
-      <details class="examples">
-        <summary>Example prompts</summary>
-        <div class="example-chips">
-          <span class="chip" onclick="useExample(this)">Search screen with proximity search and filters</span>
-          <span class="chip" onclick="useExample(this)">Stock management dashboard with 4 menu cards</span>
-          <span class="chip" onclick="useExample(this)">2-page household registration form with GPS, name, DOB, gender</span>
-          <span class="chip" onclick="useExample(this)">Delivery success screen with panelCard and two buttons</span>
-          <span class="chip" onclick="useExample(this)">Complaint form with dropdown, textArea, and date fields</span>
-        </div>
-      </details>
-
-      <div class="controls">
-        <select id="model">
-          <option value="llama3.1:8b">Llama 3.1 8B (default)</option>
-          <option value="llama3.2:3b">Llama 3.2 3B</option>
-          <option value="llama3.1:8b">Llama 3.1 8B</option>
-          <option value="mistral:7b">Mistral 7B</option>
-        </select>
-        <button class="btn btn-primary" id="generateBtn" onclick="generate()">Generate Config</button>
-        <button class="btn btn-secondary" id="clearBtn" onclick="clearAll()">Clear</button>
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="bot-avatar-header">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div>
+        <div class="header-title">FlowCraft</div>
+        <div class="header-sub">Config Generator</div>
       </div>
     </div>
+    <div class="header-actions">
+      <select class="model-select" id="modelSelect">
+        <option value="llama3.1:8b">Llama 3.1 8B</option>
+        <option value="llama3.2:3b">Llama 3.2 3B</option>
+        <option value="mistral:7b">Mistral 7B</option>
+      </select>
+      <button class="clear-btn" onclick="resetChat()">New Chat</button>
+    </div>
+  </div>
 
-    <!-- Follow-up questions (shown when pipeline needs more info) -->
-    <div id="questionsSection" style="display:none;">
-      <div class="input-section">
-        <label>Follow-up Questions</label>
-        <div id="questionsList" class="questions"></div>
-        <div class="controls" style="margin-top:12px;">
-          <button class="btn btn-primary" onclick="submitAnswers()">Submit Answers & Generate</button>
-        </div>
-      </div>
+  <!-- Welcome Screen -->
+  <div class="welcome-screen" id="welcomeScreen">
+    <div class="welcome-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    </div>
+    <h1 class="welcome-title">What would you like to build?</h1>
+    <p class="welcome-sub">Describe a screen or flow in plain English and I'll generate a valid Flow Builder JSON config for you.</p>
+
+    <div class="prompt-chips" id="promptChips">
+      <button class="prompt-chip" data-prompt="Create a beneficiary search screen with proximity search, a search bar to filter by name, and a list view showing results with cards">Search screen with filters</button>
+      <button class="prompt-chip" data-prompt="Create a stock management dashboard screen with 4 menu cards for stock receipt, stock issued, stock returned, and stock damaged">Dashboard with menu cards</button>
+      <button class="prompt-chip" data-prompt="Create a 2-page household registration form with GPS location, head of household name, date of birth, and gender fields">Registration form</button>
+      <button class="prompt-chip" data-prompt="Create a delivery success screen with a panelCard showing delivery details and two buttons for going back to search and going home">Delivery success screen</button>
+      <button class="prompt-chip" data-prompt="Create a complaint registration form with complaint type dropdown, description textArea, and date of complaint fields">Complaint form</button>
     </div>
 
-    <!-- Output -->
-    <div class="output-section">
-      <div class="output-header">
-        <h2>Generated Config</h2>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <button class="copy-btn" id="copyBtn" onclick="copyOutput()" style="display:none;">Copy JSON</button>
-          <span class="status status-idle" id="status">Idle</span>
-        </div>
-      </div>
-      <div class="output-body">
-        <pre id="output">Enter a prompt and click Generate to get started.</pre>
-        <div id="errorsList" class="errors"></div>
+    <div class="welcome-input-wrap">
+      <textarea
+        class="welcome-input"
+        id="welcomeInput"
+        placeholder="Describe the config you want to build..."
+        rows="1"
+        onkeydown="handleWelcomeKeyDown(event)"
+        oninput="autoResize(this)"
+      ></textarea>
+      <button class="send-btn" id="welcomeSendBtn" onclick="sendFromWelcome()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Chat Mode -->
+  <div class="chat-container" id="chatContainer">
+    <div class="chat-area" id="chatArea"></div>
+    <div class="input-bar">
+      <div class="input-wrapper">
+        <textarea
+          class="input-field"
+          id="chatInput"
+          placeholder="Describe the config you want to build..."
+          rows="1"
+          onkeydown="handleChatKeyDown(event)"
+          oninput="autoResize(this)"
+        ></textarea>
+        <button class="send-btn" id="chatSendBtn" onclick="sendFromChat()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
       </div>
     </div>
   </div>
 
   <script>
+    // ---- State ----
+    let isGenerating = false;
     let lastPrompt = '';
-    let lastAnswers = [];
+    let chatMode = false;
 
-    function useExample(el) {
-      document.getElementById('prompt').value = el.textContent;
+    const BOT_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>';
+    const USER_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+
+    // ---- Prompt chip click handlers ----
+    document.querySelectorAll('.prompt-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.getElementById('welcomeInput').value = chip.dataset.prompt;
+        sendFromWelcome();
+      });
+    });
+
+    // ---- Switch to chat mode ----
+    function enterChatMode() {
+      if (chatMode) return;
+      chatMode = true;
+      document.getElementById('welcomeScreen').classList.add('hidden');
+      document.getElementById('chatContainer').classList.add('active');
+      document.getElementById('chatInput').focus();
     }
 
-    function setStatus(type, text) {
-      const el = document.getElementById('status');
-      el.className = 'status status-' + type;
-      el.innerHTML = text;
+    // ---- Send handlers ----
+    function sendFromWelcome() {
+      const input = document.getElementById('welcomeInput');
+      const text = input.value.trim();
+      if (!text || isGenerating) return;
+      lastPrompt = text;
+      input.value = '';
+      enterChatMode();
+      addUserMessage(text);
+      callGenerate(text, []);
     }
 
-    function clearAll() {
-      document.getElementById('prompt').value = '';
-      document.getElementById('output').textContent = 'Enter a prompt and click Generate to get started.';
-      document.getElementById('errorsList').innerHTML = '';
-      document.getElementById('questionsSection').style.display = 'none';
-      document.getElementById('copyBtn').style.display = 'none';
-      setStatus('idle', 'Idle');
-      lastPrompt = '';
-      lastAnswers = [];
+    function sendFromChat() {
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text || isGenerating) return;
+      lastPrompt = text;
+      input.value = '';
+      autoResize(input);
+      addUserMessage(text);
+      callGenerate(text, []);
     }
 
-    async function generate() {
-      const prompt = document.getElementById('prompt').value.trim();
+    // ---- Key handlers ----
+    function handleWelcomeKeyDown(e) {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendFromWelcome(); }
+    }
+    function handleChatKeyDown(e) {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendFromChat(); }
+    }
+    function handleAnswerKeyDown(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const inputs = document.querySelectorAll('.followup-question input');
+        const idx = Array.from(inputs).indexOf(e.target);
+        if (idx < inputs.length - 1) inputs[idx + 1].focus();
+        else submitFollowUp();
+      }
+    }
+
+    // ---- Message builders ----
+    function addDivider() {
+      const chatArea = document.getElementById('chatArea');
+      const hr = document.createElement('hr');
+      hr.className = 'msg-divider';
+      chatArea.appendChild(hr);
+    }
+
+    function addBotMessage(html, quickActions) {
+      addDivider();
+      const chatArea = document.getElementById('chatArea');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'message bot';
+
+      let actionsHtml = '';
+      if (quickActions && quickActions.length) {
+        actionsHtml = '<div class="quick-actions">' +
+          quickActions.map(a =>
+            `<button class="quick-action" onclick="handleQuickAction('${escapeAttr(a.prompt)}')">${escapeHtml(a.label)}</button>`
+          ).join('') + '</div>';
+      }
+
+      msgDiv.innerHTML = `
+        <div class="msg-avatar">${BOT_SVG}</div>
+        <div class="msg-content">
+          <div class="msg-sender">FlowCraft</div>
+          <div class="msg-text">${html}</div>
+          ${actionsHtml}
+        </div>`;
+      chatArea.appendChild(msgDiv);
+      scrollToBottom();
+    }
+
+    function addUserMessage(text) {
+      addDivider();
+      const chatArea = document.getElementById('chatArea');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'message user';
+      msgDiv.innerHTML = `
+        <div class="msg-avatar">${USER_SVG}</div>
+        <div class="msg-content">
+          <div class="msg-sender">You</div>
+          <div class="msg-text">${escapeHtml(text)}</div>
+        </div>`;
+      chatArea.appendChild(msgDiv);
+      scrollToBottom();
+    }
+
+    function addTypingIndicator() {
+      const chatArea = document.getElementById('chatArea');
+      const wrapper = document.createElement('div');
+      wrapper.className = 'typing-wrapper';
+      wrapper.id = 'typingMsg';
+      wrapper.innerHTML = `
+        <div class="typing-indicator">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>`;
+      chatArea.appendChild(wrapper);
+      scrollToBottom();
+    }
+
+    function removeTypingIndicator() {
+      const el = document.getElementById('typingMsg');
+      if (el) el.remove();
+    }
+
+    function addConfigBlock(config, isValid, errors, warnings) {
+      addDivider();
+      const chatArea = document.getElementById('chatArea');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'message bot';
+
+      let badgeClass = 'badge-valid', badgeText = 'Valid';
+      if (!isValid && errors && errors.length) { badgeClass = 'badge-error'; badgeText = 'Has Errors'; }
+      else if (warnings && warnings.length) { badgeClass = 'badge-warning'; badgeText = 'Warnings'; }
+
+      const configJson = JSON.stringify(config, null, 2);
+      const configId = 'config-' + Date.now();
+
+      let issuesHtml = '';
+      if ((errors && errors.length) || (warnings && warnings.length)) {
+        issuesHtml = '<div class="issue-list">';
+        (errors || []).forEach(e => {
+          issuesHtml += `<div class="issue-item issue-error"><span class="issue-icon">&#10007;</span><span>${escapeHtml(e)}</span></div>`;
+        });
+        (warnings || []).forEach(w => {
+          issuesHtml += `<div class="issue-item issue-warning"><span class="issue-icon">&#9888;</span><span>${escapeHtml(w)}</span></div>`;
+        });
+        issuesHtml += '</div>';
+      }
+
+      msgDiv.innerHTML = `
+        <div class="msg-avatar">${BOT_SVG}</div>
+        <div class="msg-content">
+          <div class="msg-sender">FlowCraft</div>
+          <div class="msg-text">Here's your generated config:</div>
+          <div class="config-block">
+            <div class="config-header">
+              <div class="config-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                <span>flow-config.json</span>
+                <span class="config-badge ${badgeClass}">${badgeText}</span>
+              </div>
+              <button class="copy-btn" onclick="copyConfig('${configId}')">Copy</button>
+            </div>
+            <div class="config-body">
+              <pre id="${configId}">${escapeHtml(configJson)}</pre>
+            </div>
+          </div>
+          ${issuesHtml}
+        </div>`;
+      chatArea.appendChild(msgDiv);
+      scrollToBottom();
+    }
+
+    function addFollowUpQuestions(questions) {
+      addDivider();
+      const chatArea = document.getElementById('chatArea');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'message bot';
+      msgDiv.id = 'followupMsg';
+
+      let formHtml = '<div class="followup-form">';
+      questions.forEach((q, i) => {
+        formHtml += `
+          <div class="followup-question">
+            <label>${escapeHtml(q)}</label>
+            <input type="text" id="answer-${i}" placeholder="Your answer..." onkeydown="handleAnswerKeyDown(event)">
+          </div>`;
+      });
+      formHtml += '<button class="followup-submit" onclick="submitFollowUp()">Send Answers</button></div>';
+
+      msgDiv.innerHTML = `
+        <div class="msg-avatar">${BOT_SVG}</div>
+        <div class="msg-content">
+          <div class="msg-sender">FlowCraft</div>
+          <div class="msg-text">I need a bit more info to build the best config for you:</div>
+          ${formHtml}
+        </div>`;
+      chatArea.appendChild(msgDiv);
+      scrollToBottom();
+      setTimeout(() => { const f = document.getElementById('answer-0'); if (f) f.focus(); }, 100);
+    }
+
+    // ---- Actions ----
+    function handleQuickAction(prompt) {
       if (!prompt) return;
+      document.getElementById('chatInput').value = prompt;
+      sendFromChat();
+    }
 
-      lastPrompt = prompt;
-      lastAnswers = [];
+    async function submitFollowUp() {
+      const followupMsg = document.getElementById('followupMsg');
+      const inputs = followupMsg ? followupMsg.querySelectorAll('input') : [];
+      const answers = Array.from(inputs).map(i => i.value.trim()).filter(Boolean);
+      if (!answers.length) return;
 
-      const model = document.getElementById('model').value;
-      const btn = document.getElementById('generateBtn');
-      btn.disabled = true;
-      setStatus('loading', '<span class="spinner"></span>Generating...');
-      document.getElementById('output').textContent = 'Generating config...';
-      document.getElementById('errorsList').innerHTML = '';
-      document.getElementById('questionsSection').style.display = 'none';
-      document.getElementById('copyBtn').style.display = 'none';
+      addUserMessage(answers.join(' | '));
+      if (followupMsg) followupMsg.remove();
+      await callGenerate(lastPrompt, answers);
+    }
+
+    async function callGenerate(prompt, answers) {
+      isGenerating = true;
+      updateSendBtns();
+      addTypingIndicator();
+
+      const model = document.getElementById('modelSelect').value;
 
       try {
         const res = await fetch('/generate-config', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt, model, answers: [] }),
+          body: JSON.stringify({ prompt, model, answers }),
         });
         const data = await res.json();
-        handleResponse(data);
-      } catch (e) {
-        setStatus('error', 'Error');
-        document.getElementById('output').textContent = 'Request failed: ' + e.message;
-      } finally {
-        btn.disabled = false;
-      }
-    }
+        removeTypingIndicator();
 
-    async function submitAnswers() {
-      const inputs = document.querySelectorAll('#questionsList input');
-      lastAnswers = Array.from(inputs).map(i => i.value).filter(v => v.trim());
-
-      const model = document.getElementById('model').value;
-      const btn = document.getElementById('generateBtn');
-      btn.disabled = true;
-      setStatus('loading', '<span class="spinner"></span>Generating...');
-      document.getElementById('output').textContent = 'Generating config with your answers...';
-      document.getElementById('errorsList').innerHTML = '';
-
-      try {
-        const res = await fetch('/generate-config', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt: lastPrompt, model, answers: lastAnswers }),
-        });
-        const data = await res.json();
-        handleResponse(data);
-      } catch (e) {
-        setStatus('error', 'Error');
-        document.getElementById('output').textContent = 'Request failed: ' + e.message;
-      } finally {
-        btn.disabled = false;
-      }
-    }
-
-    function handleResponse(data) {
-      if (data.detail) {
-        setStatus('error', 'Error');
-        document.getElementById('output').textContent = data.detail;
-        return;
-      }
-
-      // Follow-up questions needed
-      if (data.needs_input && data.questions && data.questions.length > 0) {
-        setStatus('warning', 'Needs more info');
-        document.getElementById('output').textContent = 'The pipeline needs more details to generate an accurate config. Please answer the questions below.';
-
-        const qList = document.getElementById('questionsList');
-        qList.innerHTML = '';
-        data.questions.forEach((q, i) => {
-          const div = document.createElement('div');
-          div.className = 'question-item';
-          div.innerHTML = '<p>' + q + '</p><input type="text" placeholder="Your answer...">';
-          qList.appendChild(div);
-        });
-        document.getElementById('questionsSection').style.display = 'block';
-        return;
-      }
-
-      document.getElementById('questionsSection').style.display = 'none';
-
-      // Config generated
-      if (data.config) {
-        document.getElementById('output').textContent = JSON.stringify(data.config, null, 2);
-        document.getElementById('copyBtn').style.display = 'inline-block';
-
-        if (data.is_valid) {
-          setStatus('valid', 'Valid');
-        } else if (data.warnings && data.warnings.length > 0) {
-          setStatus('warning', 'Warnings');
-        } else {
-          setStatus('warning', 'Generated');
+        if (data.detail) {
+          addBotMessage(`<span style="color:var(--error)">Error: ${escapeHtml(data.detail)}</span>`);
+          return;
         }
-      } else {
-        document.getElementById('output').textContent = 'No config generated.';
-        setStatus('error', 'Failed');
-      }
 
-      // Show errors/warnings
-      const errDiv = document.getElementById('errorsList');
-      errDiv.innerHTML = '';
-      (data.errors || []).forEach(e => {
-        errDiv.innerHTML += '<div class="error-item">' + e + '</div>';
-      });
-      (data.warnings || []).forEach(w => {
-        errDiv.innerHTML += '<div class="warning-item">' + w + '</div>';
+        if (data.needs_input && data.questions && data.questions.length) {
+          addFollowUpQuestions(data.questions);
+          return;
+        }
+
+        if (data.config) {
+          addConfigBlock(data.config, data.is_valid, data.errors, data.warnings);
+          if (data.is_valid) {
+            addBotMessage(
+              'Config generated and validated successfully! You can copy the JSON above.<br><br>Want to build another config?',
+              [
+                { label: 'Search screen', prompt: 'Create a beneficiary search screen with proximity search and a list view showing results' },
+                { label: 'Dashboard', prompt: 'Create a stock management dashboard with menu cards' },
+                { label: 'Registration form', prompt: 'Create a multi-page registration form' },
+              ]
+            );
+          } else if (data.warnings && data.warnings.length) {
+            addBotMessage('Config generated with some warnings. Review the issues listed above before using it.');
+          }
+        } else {
+          addBotMessage(
+            "I wasn't able to generate a config for that. Try describing it with more detail — " +
+            "include screen type, widgets, and actions."
+          );
+        }
+      } catch (e) {
+        removeTypingIndicator();
+        addBotMessage(`<span style="color:var(--error)">Connection error: ${escapeHtml(e.message)}. Is the server running?</span>`);
+      } finally {
+        isGenerating = false;
+        updateSendBtns();
+      }
+    }
+
+    function resetChat() {
+      isGenerating = false;
+      lastPrompt = '';
+      chatMode = false;
+      document.getElementById('chatArea').innerHTML = '';
+      document.getElementById('chatContainer').classList.remove('active');
+      document.getElementById('welcomeScreen').classList.remove('hidden');
+      document.getElementById('welcomeInput').value = '';
+      document.getElementById('welcomeInput').focus();
+      updateSendBtns();
+    }
+
+    function copyConfig(id) {
+      const pre = document.getElementById(id);
+      if (!pre) return;
+      navigator.clipboard.writeText(pre.textContent).then(() => {
+        const btn = pre.closest('.config-block').querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 1500);
       });
     }
 
-    function copyOutput() {
-      const text = document.getElementById('output').textContent;
-      navigator.clipboard.writeText(text);
-      const btn = document.getElementById('copyBtn');
-      btn.textContent = 'Copied!';
-      setTimeout(() => btn.textContent = 'Copy JSON', 1500);
+    // ---- Helpers ----
+    function autoResize(el) {
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+    }
+
+    function updateSendBtns() {
+      document.getElementById('welcomeSendBtn').disabled = isGenerating;
+      document.getElementById('chatSendBtn').disabled = isGenerating;
+    }
+
+    function scrollToBottom() {
+      const chatArea = document.getElementById('chatArea');
+      setTimeout(() => { chatArea.scrollTop = chatArea.scrollHeight; }, 50);
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function escapeAttr(str) {
+      return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
     }
   </script>
 </body>

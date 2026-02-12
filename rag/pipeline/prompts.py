@@ -22,7 +22,14 @@ SYSTEM_RULES = """## ABSOLUTE RULES
 7. Form names must be UPPER_CASE.
 8. Form field names (fieldName) must be camelCase.
 9. Template interpolation uses: {{key}}, {{fn:functionName}}, {{singleton.*}}, {{item.*}}, {{context.*}}
-10. Output ONLY valid JSON. No commentary, no markdown fences, no explanation."""
+10. Output ONLY valid JSON. No commentary, no markdown fences, no explanation.
+
+## USING EXEMPLAR CONFIGS
+Each exemplar config below starts with a "SECTION PATTERN" summary showing which widgets are in header, body, and footer in that particular example.
+- Use these as REFERENCE to understand how similar screens have been built before.
+- Widget placement (header/body/footer) is flexible — it depends on what the user wants.
+- Study the widget nesting structures in exemplars (e.g. panelCard has primaryAction/secondaryAction properties that contain button configs with onAction arrays).
+- If the user's request does not clearly specify placement or structure, the pipeline should ask follow-up questions rather than guess."""
 
 
 # ---------------------------------------------------------------------------
@@ -35,6 +42,7 @@ def build_template_prompt(
     exemplar_context: str,
     widget_context: str,
     user_query: str,
+    wrapper_context: str = "",
     previous_errors: list[str] | None = None,
 ) -> str:
     """Build the generation prompt for a TEMPLATE screen."""
@@ -43,6 +51,13 @@ def build_template_prompt(
         error_section = f"""
 ## PREVIOUS GENERATION ERRORS (fix these)
 {chr(10).join(f'- {e}' for e in previous_errors)}
+"""
+
+    wrapper_section = ""
+    if wrapper_context:
+        wrapper_section = f"""
+## WRAPPER CONFIG REFERENCE (for data-driven screens)
+{wrapper_context}
 """
 
     return f"""You are a DIGIT Flow Builder config generator.
@@ -86,7 +101,7 @@ IMPORTANT: Every screen object inside "flows" MUST have both "screenType" and "n
 
 ## WIDGET PROPERTY REFERENCE
 {widget_context}
-{error_section}
+{wrapper_section}{error_section}
 ## USER REQUEST
 {user_query}
 
@@ -189,6 +204,7 @@ def build_full_flow_prompt(
     exemplar_context: str,
     widget_context: str,
     user_query: str,
+    wrapper_context: str = "",
     previous_errors: list[str] | None = None,
 ) -> str:
     """Build the generation prompt for a complete multi-screen flow."""
@@ -248,6 +264,9 @@ FORM screens have: screenType, name, pages, onAction
 
 ## WIDGET REFERENCE
 {widget_context}
+
+## WRAPPER CONFIG REFERENCE
+{wrapper_context}
 {error_section}
 ## USER REQUEST
 {user_query}
@@ -326,11 +345,8 @@ Output one query per line, no numbering or bullets."""
 # Follow-up question generation prompt
 # ---------------------------------------------------------------------------
 
-GATHER_INFO_PROMPT = """The user wants to create a {route} config but their request is missing details.
+GATHER_INFO_PROMPT = """User wants a {route} screen: "{user_query}"
+Missing: {missing_categories}
 
-Missing information:
-{missing_items}
-
-Generate 2-4 short, specific follow-up questions to gather the missing info.
-Each question should offer concrete choices where possible.
-Output one question per line, no numbering."""
+Ask exactly one short question per missing item. Offer concrete choices where possible.
+No extra questions. One per line, no numbering."""
