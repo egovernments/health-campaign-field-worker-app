@@ -33,12 +33,6 @@ int i = 0;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Security checks - exit if device is compromised
-  if (!kDebugMode) {
-    final issues = await JailbreakRootDetection.instance.checkForIssues;
-    if (issues.isNotEmpty) exit(0);
-  }
-
   DartPluginRegistrant.ensureInitialized();
 
   await initializeAllMappers();
@@ -54,6 +48,21 @@ void main() async {
   }
 
   await envConfig.initialize();
+
+  // Security checks - enforce exit only in production environment
+  if (!kDebugMode) {
+    try {
+      final issues = await JailbreakRootDetection.instance.checkForIssues;
+      if (issues.isNotEmpty) {
+        debugPrint('Security warning: ${issues.join(', ')}');
+        if (envConfig.variables.envType == EnvType.prod) {
+          exit(0);
+        }
+      }
+    } catch (e) {
+      debugPrint('Security check failed: $e');
+    }
+  }
   WidgetsBinding.instance.addObserver(AppLifecycleObserver());
   _dio = DioClient().dio;
 
