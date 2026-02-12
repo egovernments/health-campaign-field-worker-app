@@ -50,25 +50,9 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
           // Join multiple QR codes with comma separator
           form.control(formControlName).value = state.qrCodes.join(', ');
         } else if (state.barCodes.isNotEmpty) {
-          // Store all barcodes, separated by semicolon
-          // Each barcode is stored as: GTIN,SERIAL,BATCH,EXPIRY
-          final barcodeStrings = <String>[];
-          for (int i = 0; i < state.barCodes.length; i++) {
-            final gs1Data = DigitScannerUtils()
-                .getGs1CodeFormattedStringAtIndex(state.barCodes, i);
-
-            // Convert GS1 map to comma-separated string in order: GTIN, SERIAL, BATCH, EXPIRY
-            final gtin = gs1Data['01']?.toString() ?? '';
-            final serial = gs1Data['21']?.toString() ?? '';
-            final batch = gs1Data['10']?.toString() ?? '';
-            final expiry = gs1Data['17'] is DateTime
-                ? DateFormat('dd MMM yyyy').format(gs1Data['17'])
-                : gs1Data['17']?.toString() ?? '';
-
-            barcodeStrings.add('$gtin,$serial,$batch,$expiry');
-          }
-          // Join multiple barcodes with semicolon separator
-          form.control(formControlName).value = barcodeStrings.join(';');
+          // Serialize barcodes dynamically using only non-empty fields
+          form.control(formControlName).value =
+              DigitScannerUtils().serializeGs1Barcodes(state.barCodes);
         } else {
           // Clear the form value when all scanned data has been deleted
           form.control(formControlName).value = null;
@@ -90,19 +74,8 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
           }
         } else if (isThisScanner && state.barCodes.isNotEmpty) {
           // Sync barcodes - build expected form value and compare
-          final barcodeStrings = <String>[];
-          for (int i = 0; i < state.barCodes.length; i++) {
-            final gs1Data = DigitScannerUtils()
-                .getGs1CodeFormattedStringAtIndex(state.barCodes, i);
-            final gtin = gs1Data['01']?.toString() ?? '';
-            final serial = gs1Data['21']?.toString() ?? '';
-            final batch = gs1Data['10']?.toString() ?? '';
-            final expiry = gs1Data['17'] is DateTime
-                ? DateFormat('dd MMM yyyy').format(gs1Data['17'])
-                : gs1Data['17']?.toString() ?? '';
-            barcodeStrings.add('$gtin,$serial,$batch,$expiry');
-          }
-          final stateValue = barcodeStrings.join(';');
+          final stateValue =
+              DigitScannerUtils().serializeGs1Barcodes(state.barCodes);
           if (formValue != stateValue) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               form.control(formControlName).value = stateValue;
@@ -119,20 +92,23 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
         }
 
         // Check if this is barcode data (GS1 format)
-        // Single barcode: GTIN,SERIAL,BATCH,EXPIRY (4 comma-separated parts)
-        // Multiple barcodes: barcode1;barcode2;barcode3 (semicolon-separated)
+        // New format: key:value|key:value (pipe-separated key-value pairs)
+        // Legacy format: GTIN,SERIAL,BATCH,EXPIRY (4 comma-separated parts)
         bool isGS1BarcodeFormat(String value) {
-          // Check for multiple barcodes (semicolon-separated)
+          // New format: contains '|' or starts with 2-digit AI code followed by ':'
+          if (value.contains('|') ||
+              RegExp(r'^\d{2}:').hasMatch(value.trim())) {
+            return true;
+          }
+          // Legacy format: check for semicolon-separated barcodes
           if (value.contains(';')) {
             final barcodes = value.split(';');
-            // Check if first barcode has 4 parts
             final firstParts =
                 barcodes.first.split(',').map((e) => e.trim()).toList();
             return firstParts.length == 4;
           }
-          // Single barcode check
+          // Single legacy barcode check
           final parts = value.split(',').map((e) => e.trim()).toList();
-          // GS1 barcodes have exactly 4 parts
           return parts.length == 4;
         }
 
@@ -203,54 +179,26 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                                   ),
                                 );
                               }).toList()
-                            // Fall back to parsing form value (multiple barcodes separated by ;)
+                            // Fall back to parsing form value using deserializer
                             : () {
-                                final barcodeStrings = formValue!.split(';');
+                                final parsedBarcodes = DigitScannerUtils
+                                    .deserializeGs1Barcodes(formValue!);
                                 final widgets = <Widget>[];
                                 for (int i = 0;
-                                    i < barcodeStrings.length;
+                                    i < parsedBarcodes.length;
                                     i++) {
-                                  final parts = barcodeStrings[i].split(',');
-                                  final items = <LabelValueItem>[];
-                                  if (parts.isNotEmpty &&
-                                      parts[0].trim().isNotEmpty) {
-                                    items.add(LabelValueItem(
-                                      labelFlex: 5,
-                                      label: "GS1_01",
-                                      value: parts[0].trim(),
-                                      maxLines: 5,
-                                    ));
-                                  }
-                                  if (parts.length > 1 &&
-                                      parts[1].trim().isNotEmpty) {
-                                    items.add(LabelValueItem(
-                                      labelFlex: 5,
-                                      label: "GS1_21",
-                                      value: parts[1].trim(),
-                                      maxLines: 5,
-                                    ));
-                                  }
-                                  if (parts.length > 2 &&
-                                      parts[2].trim().isNotEmpty) {
-                                    items.add(LabelValueItem(
-                                      labelFlex: 5,
-                                      label: "GS1_10",
-                                      value: parts[2].trim(),
-                                      maxLines: 5,
-                                    ));
-                                  }
-                                  if (parts.length > 3 &&
-                                      parts[3].trim().isNotEmpty) {
-                                    items.add(LabelValueItem(
-                                      labelFlex: 5,
-                                      label: "GS1_17",
-                                      value: parts[3].trim(),
-                                      maxLines: 5,
-                                    ));
-                                  }
+                                  final items = parsedBarcodes[i]
+                                      .entries
+                                      .map((entry) => LabelValueItem(
+                                            labelFlex: 5,
+                                            label: "GS1_${entry.key}",
+                                            value: entry.value,
+                                            maxLines: 5,
+                                          ))
+                                      .toList();
                                   widgets.add(Padding(
                                     padding: EdgeInsets.only(
-                                      bottom: i < barcodeStrings.length - 1
+                                      bottom: i < parsedBarcodes.length - 1
                                           ? 16.0
                                           : 0,
                                     ),

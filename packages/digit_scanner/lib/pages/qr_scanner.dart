@@ -208,37 +208,38 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
     } else if (widget.initialBarcodeData != null &&
         widget.initialBarcodeData!.isNotEmpty) {
       // Initialize with existing barcode (GS1) data for edit mode
-      // Supports multiple barcodes separated by semicolons
-      // Each barcode: GTIN,SERIAL,BATCH,EXPIRY
+      // Supports both new format (key:value|key:value) and legacy format (gtin,serial,batch,expiry)
       try {
         final parser = GS1BarcodeParser.defaultParser();
         final parsedBarcodes = <GS1Barcode>[];
-        final barcodeStrings = widget.initialBarcodeData!.split(';');
+        final deserializedMaps = DigitScannerUtils.deserializeGs1Barcodes(
+            widget.initialBarcodeData!);
 
-        for (final barcodeStr in barcodeStrings) {
-          final parts = barcodeStr.split(',');
-          if (parts.length >= 4) {
-            final gtin = parts[0].trim();
-            final serial = parts[1].trim();
-            final batch = parts[2].trim();
-            final expiryStr = parts[3].trim();
+        for (final map in deserializedMaps) {
+          final gtin = map['01'] ?? '';
+          final serial = map['21'] ?? '';
+          final batch = map['10'] ?? '';
+          final expiryStr = map['17'] ?? '';
 
-            DateTime expiryDate;
+          DateTime expiryDate;
+          if (expiryStr.isNotEmpty) {
             try {
               expiryDate = DateFormat('dd MMM yyyy').parse(expiryStr);
             } catch (_) {
               expiryDate = DateTime.now().add(const Duration(days: 365));
             }
-
-            final barcodeString = DigitScannerUtils().generateGS1Barcode(
-              serialNumber: serial,
-              expiryDate: expiryDate,
-              batchNumber: batch,
-              gtin: gtin,
-            );
-
-            parsedBarcodes.add(parser.parse(barcodeString));
+          } else {
+            expiryDate = DateTime.now().add(const Duration(days: 365));
           }
+
+          final barcodeString = DigitScannerUtils().generateGS1Barcode(
+            serialNumber: serial,
+            expiryDate: expiryDate,
+            batchNumber: batch,
+            gtin: gtin,
+          );
+
+          parsedBarcodes.add(parser.parse(barcodeString));
         }
 
         if (parsedBarcodes.isNotEmpty) {
@@ -587,6 +588,23 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                               final existingBarcodes = state.barCodes.isNotEmpty
                                   ? state.barCodes
                                   : result;
+
+                              // Check scan limit before adding
+                              if (existingBarcodes.length >=
+                                  widget.effectiveQuantity) {
+                                Toast.showToast(
+                                  context,
+                                  type: ToastType.error,
+                                  message: widget.scanLimitMessage != null
+                                      ? localizations
+                                          .translate(widget.scanLimitMessage!)
+                                      : localizations.translate(
+                                          i18.scanner.scannedQtyExceed),
+                                  sentenceCaseEnabled: false,
+                                );
+                                return;
+                              }
+
                               final updatedBarcodes =
                                   List<GS1Barcode>.from(existingBarcodes)
                                     ..add(parsed);
@@ -844,6 +862,23 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                             final existingQrCodes = state.qrCodes.isNotEmpty
                                 ? state.qrCodes
                                 : codes;
+
+                            // Check scan limit before adding
+                            if (existingQrCodes.length >=
+                                widget.effectiveQuantity) {
+                              Toast.showToast(
+                                context,
+                                type: ToastType.error,
+                                message: widget.scanLimitMessage != null
+                                    ? localizations
+                                        .translate(widget.scanLimitMessage!)
+                                    : localizations.translate(
+                                        i18.scanner.scannedQtyExceed),
+                                sentenceCaseEnabled: false,
+                              );
+                              return;
+                            }
+
                             final updatedQRCodes =
                                 List<String>.from(existingQrCodes)
                                   ..add(form

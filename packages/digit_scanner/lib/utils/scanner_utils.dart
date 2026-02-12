@@ -355,9 +355,83 @@ class DigitScannerUtils {
       List<GS1Barcode> barCodes, int index) {
     if (index >= 0 && index < barCodes.length) {
       final elements = barCodes[index];
-      return elements.getAIsData;
+      final data = elements.getAIsData;
+      // Filter out entries with null or empty values
+      data.removeWhere((key, value) {
+        if (value == null) return true;
+        if (value is String && value.trim().isEmpty) return true;
+        return false;
+      });
+      return data;
     }
     return {};
+  }
+
+  /// Serializes GS1 barcode data to a form value string.
+  /// Format: key1:value1|key2:value2 per barcode, semicolons between barcodes.
+  /// Only includes entries with non-empty values.
+  String serializeGs1Barcodes(List<GS1Barcode> barCodes) {
+    final barcodeStrings = <String>[];
+    for (int i = 0; i < barCodes.length; i++) {
+      final gs1Data = getGs1CodeFormattedStringAtIndex(barCodes, i);
+      final parts = <String>[];
+      for (final entry in gs1Data.entries) {
+        final value = entry.value is DateTime
+            ? DateFormat('dd MMM yyyy').format(entry.value)
+            : entry.value?.toString() ?? '';
+        if (value.trim().isNotEmpty) {
+          parts.add('${entry.key}:$value');
+        }
+      }
+      if (parts.isNotEmpty) {
+        barcodeStrings.add(parts.join('|'));
+      }
+    }
+    return barcodeStrings.join(';');
+  }
+
+  /// Deserializes a GS1 barcode form value string back to a list of key-value maps.
+  /// Supports both new format (key:value|key:value) and legacy format (gtin,serial,batch,expiry).
+  static List<Map<String, String>> deserializeGs1Barcodes(String data) {
+    final result = <Map<String, String>>[];
+    final barcodeStrings = data.split(';');
+    for (final barcodeStr in barcodeStrings) {
+      if (barcodeStr.trim().isEmpty) continue;
+      // New format: contains '|' or starts with a 2-digit AI code followed by ':'
+      if (barcodeStr.contains('|') ||
+          RegExp(r'^\d{2}:').hasMatch(barcodeStr.trim())) {
+        final map = <String, String>{};
+        for (final pair in barcodeStr.split('|')) {
+          final colonIndex = pair.indexOf(':');
+          if (colonIndex > 0) {
+            final key = pair.substring(0, colonIndex).trim();
+            final value = pair.substring(colonIndex + 1).trim();
+            if (value.isNotEmpty) {
+              map[key] = value;
+            }
+          }
+        }
+        if (map.isNotEmpty) result.add(map);
+      } else {
+        // Legacy format: gtin,serial,batch,expiry (4 comma-separated positional values)
+        final parts = barcodeStr.split(',');
+        final map = <String, String>{};
+        if (parts.isNotEmpty && parts[0].trim().isNotEmpty) {
+          map['01'] = parts[0].trim();
+        }
+        if (parts.length > 1 && parts[1].trim().isNotEmpty) {
+          map['21'] = parts[1].trim();
+        }
+        if (parts.length > 2 && parts[2].trim().isNotEmpty) {
+          map['10'] = parts[2].trim();
+        }
+        if (parts.length > 3 && parts[3].trim().isNotEmpty) {
+          map['17'] = parts[3].trim();
+        }
+        if (map.isNotEmpty) result.add(map);
+      }
+    }
+    return result;
   }
 
   String generateGS1Barcode({
