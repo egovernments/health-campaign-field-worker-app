@@ -40,11 +40,11 @@ class SecurityCheckResult {
 }
 
 class AppSecurity {
-  late AppSecurityLevel securityLevel;
+  AppSecurityLevel securityLevel = AppSecurityLevel.low;
   static final AppSecurity instance = AppSecurity._();
-  AppSecurity._() {
-    securityLevel = AppSecurityLevel.low;
-  }
+
+  AppSecurity._();
+
   factory AppSecurity() {
     return instance;
   }
