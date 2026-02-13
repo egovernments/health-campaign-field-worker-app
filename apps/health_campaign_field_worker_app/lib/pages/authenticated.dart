@@ -37,7 +37,6 @@ import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/error_screen.dart';
-import '../widgets/root_detection_wrapper.dart';
 import 'error_boundary.dart';
 
 @RoutePage()
@@ -51,216 +50,212 @@ class AuthenticatedPageWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return RootDetectionWrapper(
-      child: ShowcaseWidget(
-        enableAutoScroll: true,
-        builder: Builder(
-          builder: (context) {
-            return StreamBuilder<bool>(
-              stream: _drawerVisibilityController.stream,
-              builder: (context, snapshot) {
-                final showDrawer = snapshot.data ?? false;
+    return ShowcaseWidget(
+      enableAutoScroll: true,
+      builder: Builder(
+        builder: (context) {
+          return StreamBuilder<bool>(
+            stream: _drawerVisibilityController.stream,
+            builder: (context, snapshot) {
+              final showDrawer = snapshot.data ?? false;
 
-                return Portal(
-                  child: Scaffold(
-                    backgroundColor: theme.colorTheme.generic.background,
-                    appBar: AppBar(
-                      backgroundColor: theme.colorTheme.primary.primary2,
-                      foregroundColor: theme.colorTheme.paper.primary,
-                      actions: showDrawer
-                          ? [
-                              BlocBuilder<BoundaryBloc, BoundaryState>(
-                                builder: (ctx, state) {
-                                  final selectedBoundary = ctx.boundaryOrNull;
+              return Portal(
+                child: Scaffold(
+                  backgroundColor: theme.colorTheme.generic.background,
+                  appBar: AppBar(
+                    backgroundColor: theme.colorTheme.primary.primary2,
+                    foregroundColor: theme.colorTheme.paper.primary,
+                    actions: showDrawer
+                        ? [
+                            BlocBuilder<BoundaryBloc, BoundaryState>(
+                              builder: (ctx, state) {
+                                final selectedBoundary = ctx.boundaryOrNull;
 
-                                  if (selectedBoundary == null) {
-                                    return const SizedBox.shrink();
-                                  } else {
-                                    LocalizationParams()
-                                        .setCode([selectedBoundary.code!]);
-                                    final boundaryName =
-                                        AppLocalizations.of(context).translate(
-                                      selectedBoundary.code ??
-                                          i18.projectSelection.onProjectMapped,
-                                    );
+                                if (selectedBoundary == null) {
+                                  return const SizedBox.shrink();
+                                } else {
+                                  LocalizationParams()
+                                      .setCode([selectedBoundary.code!]);
+                                  final boundaryName =
+                                      AppLocalizations.of(context).translate(
+                                    selectedBoundary.code ??
+                                        i18.projectSelection.onProjectMapped,
+                                  );
 
-                                    final theme = Theme.of(context);
+                                  final theme = Theme.of(context);
 
-                                    return GestureDetector(
-                                      onTap: () {
-                                        ctx.router.replaceAll([
-                                          BoundarySelectionRoute(),
-                                        ]);
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.only(
-                                            right: spacer2),
-                                        width:
-                                            MediaQuery.of(context).size.width -
-                                                60,
-                                        child: Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Flexible(
-                                                child: Text(
-                                                  boundaryName,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    color: theme.colorTheme
-                                                        .paper.primary,
-                                                    fontSize: 16,
-                                                  ),
+                                  return GestureDetector(
+                                    onTap: () {
+                                      ctx.router.replaceAll([
+                                        BoundarySelectionRoute(),
+                                      ]);
+                                    },
+                                    child: Container(
+                                      padding:
+                                          const EdgeInsets.only(right: spacer2),
+                                      width: MediaQuery.of(context).size.width -
+                                          60,
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Flexible(
+                                              child: Text(
+                                                boundaryName,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  color: theme
+                                                      .colorTheme.paper.primary,
+                                                  fontSize: 16,
                                                 ),
                                               ),
-                                              Icon(
-                                                Icons.arrow_drop_down_outlined,
-                                                color: theme
-                                                    .colorTheme.paper.primary,
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                            Icon(
+                                              Icons.arrow_drop_down_outlined,
+                                              color: theme
+                                                  .colorTheme.paper.primary,
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    );
-                                  }
-                                },
-                              ),
-                            ]
-                          : null,
-                    ),
-                    drawer: showDrawer ? drawerWidget(context) : null,
-                    body: MultiBlocProvider(
-                      providers: [
-                        // INFO : Need to add bloc of package Here
-                        BlocProvider(
-                          create: (context) {
-                            final userId = context.loggedInUserUuid;
-
-                            final isar = context.read<Isar>();
-                            final bloc = SyncBloc(
-                              isar: isar,
-                              syncService: SyncService(),
-                            );
-
-                            if (!bloc.isClosed) {
-                              bloc.add(SyncRefreshEvent(userId));
-                            }
-                            /* Every time when the user changes the screen
-       this will refresh the data of sync count */
-                            isar.opLogs
-                                .filter()
-                                .createdByEqualTo(userId)
-                                .syncedUpEqualTo(false)
-                                .watch()
-                                .listen(
-                              (event) {
-                                if (!bloc.isClosed) {
-                                  triggerSyncRefreshEvent(bloc, userId, event);
+                                    ),
+                                  );
                                 }
                               },
-                            );
-
-                            isar.opLogs
-                                .filter()
-                                .createdByEqualTo(userId)
-                                .syncedUpEqualTo(true)
-                                .syncedDownEqualTo(false)
-                                .watch()
-                                .listen(
-                              (event) {
-                                if (!bloc.isClosed) {
-                                  triggerSyncRefreshEvent(bloc, userId, event);
-                                }
-                              },
-                            );
-
-                            return bloc;
-                          },
-                        ),
-                        BlocProvider(
-                          create: (_) => LocationBloc(location: Location())
-                            ..add(const LoadLocationEvent()),
-                        ),
-                        BlocProvider(
-                          create: (ctx) => BeneficiaryDownSyncBloc(
-                            bandwidthCheckRepository: BandwidthCheckRepository(
-                              DioClient().dio,
-                              bandwidthPath:
-                                  envConfig.variables.checkBandwidthApiPath,
                             ),
-                            individualLocalRepository: ctx.read<
-                                LocalRepository<IndividualModel,
-                                    IndividualSearchModel>>(),
-                            downSyncRemoteRepository: ctx.read<
-                                RemoteRepository<DownsyncModel,
-                                    DownsyncSearchModel>>(),
-                            downSyncLocalRepository: ctx.read<
-                                LocalRepository<DownsyncModel,
-                                    DownsyncSearchModel>>(),
-                            householdLocalRepository: ctx.read<
-                                LocalRepository<HouseholdModel,
-                                    HouseholdSearchModel>>(),
-                            householdMemberLocalRepository: ctx.read<
-                                LocalRepository<HouseholdMemberModel,
-                                    HouseholdMemberSearchModel>>(),
-                            projectBeneficiaryLocalRepository: ctx.read<
-                                LocalRepository<ProjectBeneficiaryModel,
-                                    ProjectBeneficiarySearchModel>>(),
-                            taskLocalRepository: ctx.read<
-                                LocalRepository<TaskModel, TaskSearchModel>>(),
-                            sideEffectLocalRepository: ctx.read<
-                                LocalRepository<SideEffectModel,
-                                    SideEffectSearchModel>>(),
-                            referralLocalRepository: ctx.read<
-                                LocalRepository<ReferralModel,
-                                    ReferralSearchModel>>(),
-                            serviceLocalRepository: ctx.read<
-                                LocalRepository<ServiceModel,
-                                    ServiceSearchModel>>(),
-                          ),
-                        ),
-                        BlocProvider(
-                          create: (_) => ServiceBloc(
-                            const ServiceEmptyState(),
-                            serviceDataRepository: context
-                                .repository<ServiceModel, ServiceSearchModel>(),
-                          ),
-                        ),
-                      ],
-                      child: ErrorBoundary(builder: (context, error) {
-                        return error != null
-                            ? const ErrorScreen()
-                            : AutoRouter(
-                                navigatorObservers: () => [
-                                  AuthenticatedRouteObserver(
-                                    onNavigated: () {
-                                      bool shouldShowDrawer;
-                                      switch (context.router.topRoute.name) {
-                                        case ProjectSelectionRoute.name:
-                                        case BoundarySelectionRoute.name:
-                                          shouldShowDrawer = false;
-                                          break;
-                                        default:
-                                          shouldShowDrawer = true;
-                                      }
-
-                                      _drawerVisibilityController
-                                          .add(shouldShowDrawer);
-                                    },
-                                  ),
-                                ],
-                              );
-                      }),
-                    ),
+                          ]
+                        : null,
                   ),
-                );
-              },
-            );
-          },
-        ),
+                  drawer: showDrawer ? drawerWidget(context) : null,
+                  body: MultiBlocProvider(
+                    providers: [
+                      // INFO : Need to add bloc of package Here
+                      BlocProvider(
+                        create: (context) {
+                          final userId = context.loggedInUserUuid;
+
+                          final isar = context.read<Isar>();
+                          final bloc = SyncBloc(
+                            isar: isar,
+                            syncService: SyncService(),
+                          );
+
+                          if (!bloc.isClosed) {
+                            bloc.add(SyncRefreshEvent(userId));
+                          }
+                          /* Every time when the user changes the screen
+       this will refresh the data of sync count */
+                          isar.opLogs
+                              .filter()
+                              .createdByEqualTo(userId)
+                              .syncedUpEqualTo(false)
+                              .watch()
+                              .listen(
+                            (event) {
+                              if (!bloc.isClosed) {
+                                triggerSyncRefreshEvent(bloc, userId, event);
+                              }
+                            },
+                          );
+
+                          isar.opLogs
+                              .filter()
+                              .createdByEqualTo(userId)
+                              .syncedUpEqualTo(true)
+                              .syncedDownEqualTo(false)
+                              .watch()
+                              .listen(
+                            (event) {
+                              if (!bloc.isClosed) {
+                                triggerSyncRefreshEvent(bloc, userId, event);
+                              }
+                            },
+                          );
+
+                          return bloc;
+                        },
+                      ),
+                      BlocProvider(
+                        create: (_) => LocationBloc(location: Location())
+                          ..add(const LoadLocationEvent()),
+                      ),
+                      BlocProvider(
+                        create: (ctx) => BeneficiaryDownSyncBloc(
+                          bandwidthCheckRepository: BandwidthCheckRepository(
+                            DioClient().dio,
+                            bandwidthPath:
+                                envConfig.variables.checkBandwidthApiPath,
+                          ),
+                          individualLocalRepository: ctx.read<
+                              LocalRepository<IndividualModel,
+                                  IndividualSearchModel>>(),
+                          downSyncRemoteRepository: ctx.read<
+                              RemoteRepository<DownsyncModel,
+                                  DownsyncSearchModel>>(),
+                          downSyncLocalRepository: ctx.read<
+                              LocalRepository<DownsyncModel,
+                                  DownsyncSearchModel>>(),
+                          householdLocalRepository: ctx.read<
+                              LocalRepository<HouseholdModel,
+                                  HouseholdSearchModel>>(),
+                          householdMemberLocalRepository: ctx.read<
+                              LocalRepository<HouseholdMemberModel,
+                                  HouseholdMemberSearchModel>>(),
+                          projectBeneficiaryLocalRepository: ctx.read<
+                              LocalRepository<ProjectBeneficiaryModel,
+                                  ProjectBeneficiarySearchModel>>(),
+                          taskLocalRepository: ctx.read<
+                              LocalRepository<TaskModel, TaskSearchModel>>(),
+                          sideEffectLocalRepository: ctx.read<
+                              LocalRepository<SideEffectModel,
+                                  SideEffectSearchModel>>(),
+                          referralLocalRepository: ctx.read<
+                              LocalRepository<ReferralModel,
+                                  ReferralSearchModel>>(),
+                          serviceLocalRepository: ctx.read<
+                              LocalRepository<ServiceModel,
+                                  ServiceSearchModel>>(),
+                        ),
+                      ),
+                      BlocProvider(
+                        create: (_) => ServiceBloc(
+                          const ServiceEmptyState(),
+                          serviceDataRepository: context
+                              .repository<ServiceModel, ServiceSearchModel>(),
+                        ),
+                      ),
+                    ],
+                    child: ErrorBoundary(builder: (context, error) {
+                      return error != null
+                          ? const ErrorScreen()
+                          : AutoRouter(
+                              navigatorObservers: () => [
+                                AuthenticatedRouteObserver(
+                                  onNavigated: () {
+                                    bool shouldShowDrawer;
+                                    switch (context.router.topRoute.name) {
+                                      case ProjectSelectionRoute.name:
+                                      case BoundarySelectionRoute.name:
+                                        shouldShowDrawer = false;
+                                        break;
+                                      default:
+                                        shouldShowDrawer = true;
+                                    }
+
+                                    _drawerVisibilityController
+                                        .add(shouldShowDrawer);
+                                  },
+                                ),
+                              ],
+                            );
+                    }),
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }

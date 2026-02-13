@@ -102,11 +102,14 @@ class MainApplicationState extends State<MainApplication>
                   DashboardRemoteRepository(widget.client),
             )..add(const AppInitializationSetupEvent()),
           ),
-          BlocProvider(
-            create: (_) {
-              return RootDetectionBloc()..add(const RootDetectionLoadedEvent());
-            },
-          ),
+          // BlocProvider(
+          //   create: (_) {
+          //     return RootDetectionBloc()
+          //       ..add(const RootDetectionEvent.startPeriodicChecks(
+          //         interval: Duration(minutes: 5),
+          //       ));
+          //   },
+          // ),
         ],
         child: NetworkManagerProviderWrapper(
           isar: widget.isar,
