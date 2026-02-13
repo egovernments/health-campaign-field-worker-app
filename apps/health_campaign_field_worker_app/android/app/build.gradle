@@ -53,10 +53,8 @@ android {
     }
 
     buildTypes {
-        debug {
-            debuggable true
-        }
         release {
+            // Enable code obfuscation with R8
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -64,6 +62,13 @@ android {
             // 1. Generate keystore: keytool -genkey -v -keystore my-release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias my-key-alias
             // 2. Create android/key.properties with storePassword, keyPassword, keyAlias, storeFile
             // 3. Add signingConfigs.release block and reference it here
+            signingConfig signingConfigs.debug
+        }
+        
+        debug {
+            // Disable obfuscation for debug builds to speed up development
+            minifyEnabled false
+            shrinkResources false
             signingConfig signingConfigs.debug
         }
     }
