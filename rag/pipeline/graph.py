@@ -29,7 +29,7 @@ from .prompts import (
     build_template_prompt,
     build_form_prompt,
     build_full_flow_prompt,
-    GATHER_INFO_PROMPT,
+    build_gather_info_prompt,
 )
 from .validator import validate_full
 from .corrector import corrective_rewrite
@@ -70,7 +70,7 @@ def build_graph(
 ) -> StateGraph:
     """Build and compile the LangGraph workflow."""
 
-    router_fn = create_router(llm)
+    router_fn = create_router(llm, manifest)
     retriever = load_retriever(
         store_dir,
         embedding_model=embedding_model,
@@ -99,10 +99,11 @@ def build_graph(
         missing = state.get("missing_info", [])
         route = state.get("route", "FULL_FLOW")
 
-        prompt = GATHER_INFO_PROMPT.format(
+        prompt = build_gather_info_prompt(
+            manifest=manifest,
             route=route,
             user_query=state.get("user_query", ""),
-            missing_categories=", ".join(missing),
+            missing_categories=missing,
         )
         t0 = time.time()
         result = llm.invoke(prompt)
@@ -388,7 +389,7 @@ def run_pipeline(
     # ------------------------------------------------------------------
     # Phase 1: Route and check completeness BEFORE running the full graph
     # ------------------------------------------------------------------
-    router_fn = create_router(llm)
+    router_fn = create_router(llm, manifest)
     route_result = router_fn(user_query, user_answers)
 
     logger.info(
@@ -403,10 +404,11 @@ def run_pipeline(
         # Generate follow-up questions and return immediately —
         # skip the expensive retrieval/generation pipeline.
         logger.info("INCOMPLETE — generating follow-up questions (no graph run)")
-        prompt = GATHER_INFO_PROMPT.format(
+        prompt = build_gather_info_prompt(
+            manifest=manifest,
             route=route_result.screen_type,
             user_query=user_query,
-            missing_categories=", ".join(route_result.missing_info),
+            missing_categories=route_result.missing_info,
         )
         result = llm.invoke(prompt)
         questions = [

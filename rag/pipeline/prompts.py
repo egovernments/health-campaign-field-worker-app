@@ -342,11 +342,93 @@ Output one query per line, no numbering or bullets."""
 
 
 # ---------------------------------------------------------------------------
-# Follow-up question generation prompt
+# Follow-up question generation prompt (domain-aware)
 # ---------------------------------------------------------------------------
 
-GATHER_INFO_PROMPT = """User wants a {route} screen: "{user_query}"
-Missing: {missing_categories}
+def build_gather_info_prompt(
+    manifest: RegistryManifest,
+    route: str,
+    user_query: str,
+    missing_categories: list[str],
+) -> str:
+    """Build a domain-specific follow-up question prompt.
 
-Ask exactly one short question per missing item. Offer concrete choices where possible.
-No extra questions. One per line, no numbering."""
+    Injects available values from the manifest so the LLM can offer
+    concrete, domain-specific choices instead of generic web dev questions.
+    """
+    category_guidance = []
+
+    for cat in missing_categories:
+        if cat == "widgets":
+            category_guidance.append(
+                f"widgets — Ask which widget types to display on screen. "
+                f"Available widget formats: {', '.join(sorted(manifest.all_widget_formats))}. "
+                f"Common choices for search screens: listView, searchBar, panelCard, textTemplate. "
+                f"Common choices for dashboards: statusCard, panelCard, listView, sideBar."
+            )
+        elif cat == "actions":
+            category_guidance.append(
+                f"actions — Ask what happens when the user interacts (taps a button, selects a list item, etc.). "
+                f"Available action types: {', '.join(sorted(manifest.action_types))}. "
+                f"Common: NAVIGATION (go to another screen), SEARCH (query data), "
+                f"CREATE/UPDATE/DELETE (modify entity data)."
+            )
+        elif cat == "entity":
+            category_guidance.append(
+                f"entity — Ask which data entity this screen reads/writes. "
+                f"Available entity models: {', '.join(sorted(manifest.entity_models))}."
+            )
+        elif cat == "fields":
+            category_guidance.append(
+                f"fields — Ask what form fields to capture. "
+                f"Available field formats: {', '.join(sorted(manifest.form_formats))}. "
+                f"Available field types: {', '.join(sorted(manifest.form_types))}. "
+                f"Examples: text (name), numeric (quantity), date, select/dropdown (options), "
+                f"mobileNumber, latLng (GPS location), scanner (barcode)."
+            )
+        elif cat == "pages":
+            category_guidance.append(
+                "pages — Ask how many form pages and how to group fields across pages. "
+                "Example: 'Should personal details be on page 1 and address on page 2?'"
+            )
+        elif cat == "submit_action":
+            category_guidance.append(
+                f"submit_action — Ask what happens after form submission. "
+                f"Available action types: {', '.join(sorted(manifest.action_types))}. "
+                f"Common: CREATE entity then navigate back, or CREATE then go to success screen."
+            )
+        elif cat == "screens":
+            category_guidance.append(
+                "screens — Ask what screens make up the flow (e.g., search → results → detail → edit form)."
+            )
+        elif cat == "navigation":
+            category_guidance.append(
+                "navigation — Ask how users move between screens. "
+                "TEMPLATE-to-TEMPLATE uses NAVIGATION action, TEMPLATE-to-FORM uses NAVIGATION with form name."
+            )
+
+    guidance_text = "\n".join(f"- {g}" for g in category_guidance)
+
+    return f"""You are a DIGIT Flow Builder config assistant gathering requirements.
+
+The DIGIT Flow Builder renders mobile app screens from JSON configs. Screens are either:
+- TEMPLATE: display screens (dashboards, search results, detail views, lists)
+- FORM: data entry screens (multi-page forms with fields and validation)
+
+The user wants a {route} screen: "{user_query}"
+
+The following details are still needed. For each, ask ONE short, specific question
+with concrete choices from the available values:
+
+{guidance_text}
+
+RULES:
+- Ask exactly ONE question per missing item listed above
+- Offer 2-4 specific choices from the available values in each question
+- Questions must reference DIGIT Flow Builder concepts (widget formats, action types, entity models)
+- Do NOT ask generic web development questions
+- Do NOT ask about header/body/footer placement (the system infers this from patterns)
+- Do NOT ask about URLs, server requests, or web concepts
+- Keep questions short and actionable
+
+Output one question per line. No numbering, no bullets."""

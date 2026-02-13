@@ -15,6 +15,8 @@ from typing import Literal
 from langchain_core.language_models import BaseChatModel
 from pydantic import BaseModel, Field
 
+from .manifest import RegistryManifest
+
 
 # ---------------------------------------------------------------------------
 # Models
@@ -71,7 +73,16 @@ class RouteQuery(BaseModel):
 # LLM prompt — only classification + extraction, no completeness judgement
 # ---------------------------------------------------------------------------
 
-ROUTER_SYSTEM_PROMPT = """You are a DIGIT Flow Builder config request analyzer.
+def build_router_prompt(manifest: RegistryManifest) -> str:
+    """Build the router system prompt with available values from the manifest.
+
+    All widget formats, action types, entity models, and form field formats
+    are injected dynamically — never hardcoded.
+    """
+    return f"""You are a DIGIT Flow Builder config request analyzer.
+
+The DIGIT Flow Builder renders mobile app screens from JSON configs. Each screen is either a
+TEMPLATE (display screen) or a FORM (data entry screen). Multiple screens form a FULL_FLOW.
 
 Your job is to:
 1. Classify the user's request as TEMPLATE, FORM, or FULL_FLOW.
@@ -82,29 +93,57 @@ TEMPLATE: any display screen — dashboards, lists, search screens, success/ackn
 FORM: data entry — any screen with form fields and pages
 FULL_FLOW: multi-screen workflows combining multiple TEMPLATE and/or FORM screens
 
+## Available Widget Formats (from registry)
+{', '.join(sorted(manifest.all_widget_formats))}
+
+When the user describes a screen element in natural language, map it to the closest
+matching widget format above. For example "list of results" maps to a listView widget,
+"card" maps to panelCard, "search bar" maps to searchBar, "back button" maps to backLink, etc.
+
+## Available Action Types (from registry)
+{', '.join(sorted(manifest.action_types))}
+
+When the user describes an interaction, map it to the closest matching action type above.
+For example "go to another screen" maps to NAVIGATION, "look up records" maps to SEARCH,
+"save new record" maps to CREATE, etc.
+
+## Available Entity Models (from registry)
+{', '.join(sorted(manifest.entity_models))}
+
+When the user mentions a domain concept, map it to the closest entity model above.
+For example "beneficiary" or "individual" maps to IndividualModel, "household" maps to
+HouseholdModel, "stock" or "inventory" maps to StockModel, etc.
+
+## Available Form Field Formats (from registry)
+{', '.join(sorted(manifest.form_formats))}
+
+## Available Form Field Types (from registry)
+{', '.join(sorted(manifest.form_types))}
+
 ## Extraction
 From the user's request, extract:
-- intent_keywords: words useful for finding similar patterns
-- widgets_mentioned: any widget names the user mentioned
-- sections_mentioned: if the user specified which section (header/body/footer) a widget goes in, capture it as {"header": [...], "body": [...], "footer": [...]}. Only include sections the user explicitly mentioned.
-- actions_mentioned: any actions or navigation the user described (e.g. "go home", "go back", "navigate to details")
+- intent_keywords: words useful for finding similar patterns in existing configs
+- widgets_mentioned: widget names the user mentioned (map natural language to available widget formats above)
+- sections_mentioned: if the user specified which section (header/body/footer) a widget goes in, capture it as {{"header": [...], "body": [...], "footer": [...]}}. Only include sections the user explicitly mentioned.
+- actions_mentioned: actions or navigation the user described (map to available action types above)
 - fields_mentioned: any form fields or field types mentioned
 - page_count: number of form pages if mentioned, 0 if not
 - screens_mentioned: screen names/types for multi-screen flows
 
 Only extract what is in the request. Do not invent or assume anything.
+Use the available values above to recognize implicit references in natural language.
 
 You MUST respond with valid JSON matching this schema:
-{
+{{
   "screen_type": "TEMPLATE" | "FORM" | "FULL_FLOW",
   "intent_keywords": [],
   "widgets_mentioned": [],
-  "sections_mentioned": {},
+  "sections_mentioned": {{}},
   "actions_mentioned": [],
   "fields_mentioned": [],
   "page_count": 0,
   "screens_mentioned": []
-}"""
+}}"""
 
 
 # ---------------------------------------------------------------------------
@@ -113,9 +152,32 @@ You MUST respond with valid JSON matching this schema:
 
 # What each screen type needs — categories only, no hardcoded questions.
 # The LLM generates the actual user-facing questions from these tags.
-TEMPLATE_REQUIREMENTS = ["widgets", "sections", "actions"]
+TEMPLATE_REQUIREMENTS = ["widgets", "actions"]
 FORM_REQUIREMENTS = ["fields", "pages", "submit_action"]
 FULL_FLOW_REQUIREMENTS = ["screens", "navigation"]
+
+# Words indicating the user has described a clear screen purpose.
+# When present, the system can infer widgets and actions from exemplar patterns.
+_PURPOSE_WORDS = [
+    "search", "find", "look up", "query",
+    "list", "results", "show all", "display",
+    "dashboard", "home", "landing", "summary",
+    "detail", "view", "overview",
+    "report", "inventory", "stock",
+    "register", "registration", "enroll",
+    "complaint", "referral", "checklist",
+    "success", "acknowledgement", "confirmation",
+    "beneficiary", "household", "individual",
+]
+
+# Extended action/interaction words (domain-specific verbs count too)
+_ACTION_WORDS = [
+    "navigate", "go to", "go back", "go home", "redirect",
+    "open", "click", "tap", "button action",
+    "search", "filter", "view", "select", "submit",
+    "create", "save", "delete", "update", "edit",
+    "scan", "record", "capture",
+]
 
 
 def _check_completeness(
@@ -127,23 +189,33 @@ def _check_completeness(
     """Check completeness based on extracted details.
 
     Returns (is_complete, missing_categories) where missing_categories
-    are tags like 'widgets', 'sections', etc. — NOT full question strings.
+    are tags like 'widgets', 'actions', etc. — NOT full question strings.
     The LLM later converts these tags into user-friendly questions.
+
+    The check is intentionally lenient: if the user describes a clear
+    screen purpose (e.g. "search screen with list view"), the system
+    infers widgets and actions from exemplar patterns rather than asking
+    generic follow-up questions.
     """
     missing = []
     full_text = user_query.lower()
     if user_answers:
         full_text += " " + " ".join(a.lower() for a in user_answers)
 
+    has_clear_purpose = any(w in full_text for w in _PURPOSE_WORDS)
+
     if screen_type == "TEMPLATE":
-        if not llm_output.widgets_mentioned:
+        # If the user describes a clear purpose (search, list, dashboard, etc.)
+        # the generator can infer widgets from exemplar patterns — don't ask.
+        if not llm_output.widgets_mentioned and not has_clear_purpose:
             missing.append("widgets")
-        if llm_output.widgets_mentioned and not llm_output.sections_mentioned:
-            missing.append("sections")
+
+        # NEVER ask about header/body/footer sections — always infer from
+        # exemplar patterns. Content defaults to body.
+
+        # Only ask about actions if there's no clear interaction intent
         if not llm_output.actions_mentioned:
-            nav_words = ["navigate", "go to", "go back", "go home", "redirect",
-                         "open", "click", "tap", "button action"]
-            if not any(w in full_text for w in nav_words):
+            if not any(w in full_text for w in _ACTION_WORDS) and not has_clear_purpose:
                 missing.append("actions")
 
     elif screen_type == "FORM":
@@ -169,12 +241,14 @@ def _check_completeness(
 # Router factory
 # ---------------------------------------------------------------------------
 
-def create_router(llm: BaseChatModel) -> callable:
+def create_router(llm: BaseChatModel, manifest: RegistryManifest) -> callable:
     """Create a router function.
 
-    LLM classifies + extracts details.
+    LLM classifies + extracts details (with manifest-injected vocabulary).
     Code checks completeness based on extracted details.
     """
+
+    router_system_prompt = build_router_prompt(manifest)
 
     def _parse_llm_output(llm_instance, messages) -> LLMRouteOutput:
         """Get LLM classification and extraction."""
@@ -211,7 +285,7 @@ def create_router(llm: BaseChatModel) -> callable:
             )
 
         messages = [
-            {"role": "system", "content": ROUTER_SYSTEM_PROMPT},
+            {"role": "system", "content": router_system_prompt},
             {"role": "user", "content": full_context},
         ]
 
