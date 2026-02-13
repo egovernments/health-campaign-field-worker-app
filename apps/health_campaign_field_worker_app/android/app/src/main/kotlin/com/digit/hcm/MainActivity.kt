@@ -13,6 +13,8 @@ import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "com.digit.location_tracker"
+    private lateinit var securityHelper: SecurityHelper
+    
     private val locationReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val latitude = intent?.getDoubleExtra("latitude", 0.0)
@@ -44,6 +46,10 @@ class MainActivity : FlutterActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Initialize Security Helper
+        securityHelper = SecurityHelper(this)
+        securityHelper.setupMethodChannel(flutterEngine!!)
 
         MethodChannel(
             flutterEngine!!.dartExecutor.binaryMessenger,

@@ -1,14 +1,42 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
-import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
+import 'package:flutter/services.dart';
 
-import 'utils/environment_config.dart';
+import 'utils/root_detection_utils.dart';
 
 enum AppSecurityLevel {
   low,
   medium,
   high,
+}
+
+enum SecurityThreatType {
+  root,
+  emulator,
+  hook,
+  debugger,
+  repackaging,
+  unknown,
+}
+
+class SecurityCheckResult {
+  final bool isPassed;
+  final List<SecurityThreatType> threats;
+  final String checksum;
+  final DateTime timestamp;
+
+  SecurityCheckResult({
+    required this.isPassed,
+    required this.threats,
+    required this.checksum,
+    required this.timestamp,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'isPassed': isPassed,
+        'threats': threats.map((t) => t.name).toList(),
+        'checksum': checksum,
+        'timestamp': timestamp.toIso8601String(),
+      };
 }
 
 class AppSecurity {
@@ -31,7 +59,9 @@ class AppSecurity {
         break;
       case AppSecurityLevel.high:
         removeDebugPrints();
-        rootDetection();
+        RootDetectionUtils.instance.startPeriodicSecurityChecks(
+          interval: const Duration(minutes: 5),
+        );
         break;
     }
   }
@@ -39,22 +69,6 @@ class AppSecurity {
   void removeDebugPrints() {
     if (!kDebugMode) {
       debugPrint = (String? message, {int? wrapWidth}) => null;
-    }
-  }
-
-  Future<void> rootDetection() async {
-    if (!kDebugMode) {
-      try {
-        final issues = await JailbreakRootDetection.instance.checkForIssues;
-        if (issues.isNotEmpty) {
-          debugPrint('Security warning: ${issues.join(', ')}');
-          if (envConfig.variables.envType == EnvType.prod) {
-            exit(0);
-          }
-        }
-      } catch (e) {
-        debugPrint('Security check failed: $e');
-      }
     }
   }
 }
