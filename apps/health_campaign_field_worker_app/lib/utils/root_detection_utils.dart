@@ -15,7 +15,7 @@ class RootDetectionUtils {
   SecurityCheckResult? _lastSecurityCheck;
   bool _isSecurityCompromised = false;
 
-  RootDetectionUtils._() {}
+  RootDetectionUtils._();
   factory RootDetectionUtils() {
     return instance;
   }
