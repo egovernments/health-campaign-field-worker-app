@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
@@ -8,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
+import 'package:flutter/foundation.dart';
+import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'app.dart';
@@ -45,6 +48,21 @@ void main() async {
   }
 
   await envConfig.initialize();
+
+  // Security checks - enforce exit only in production environment
+  if (!kDebugMode) {
+    try {
+      final issues = await JailbreakRootDetection.instance.checkForIssues;
+      if (issues.isNotEmpty) {
+        debugPrint('Security warning: ${issues.join(', ')}');
+        if (envConfig.variables.envType == EnvType.prod) {
+          exit(0);
+        }
+      }
+    } catch (e) {
+      debugPrint('Security check failed: $e');
+    }
+  }
   WidgetsBinding.instance.addObserver(AppLifecycleObserver());
   _dio = DioClient().dio;
 
