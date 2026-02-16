@@ -90,7 +90,11 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
         scannerId: event.scannerId,
       ));
     } catch (error) {
-      rethrow;
+      emit(state.copyWith(
+        error: 'Unable to scan: ${error.toString()}',
+        loading: false,
+      ));
+      return;
     } finally {
       emit(state.copyWith(loading: false));
     }

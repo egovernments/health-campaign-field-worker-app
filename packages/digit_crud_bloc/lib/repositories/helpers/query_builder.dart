@@ -85,6 +85,9 @@ class QueryBuilder {
           return '$column NOT IN (${List.filled(values.length, '?').join(', ')})';
         case 'within':
           return '1 = 1';
+        case 'notEqual':
+        case 'notEquals':
+          return '$column != ?';
         case 'equalsAny':
           // Supports OR condition: field contains comma-separated column names
           // Example: field='senderId,receiverId', value='F-123'
@@ -102,6 +105,10 @@ class QueryBuilder {
     for (final filter in filters) {
       switch (filter.operator) {
         case 'equals':
+          args.add(Variable.withString(filter.value.toString()));
+          break;
+        case 'notEqual':
+        case 'notEquals':
           args.add(Variable.withString(filter.value.toString()));
           break;
         case 'contains':
@@ -228,6 +235,10 @@ class QueryBuilder {
       switch (filter.operator) {
         case 'equals':
           whereClauses.add(col.equals(filter.value));
+          break;
+        case 'notEqual':
+        case 'notEquals':
+          whereClauses.add(col.equals(filter.value).not());
           break;
         case 'contains':
           whereClauses

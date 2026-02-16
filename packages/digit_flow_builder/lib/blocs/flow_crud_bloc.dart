@@ -42,6 +42,19 @@ class FlowCrudBloc extends CrudBloc {
       return;
     }
 
+    // Handle error state - reset loading
+    if (crudState is CrudStateError) {
+      final flowState = FlowCrudState(
+        base: crudState,
+        stateWrapper: existingState?.stateWrapper,
+        formData: existingState?.formData,
+        widgetData: existingState?.widgetData,
+        isLoading: false,
+      );
+      FlowCrudStateRegistry().updateByCompositeKey(compositeKey, flowState);
+      return;
+    }
+
     if (crudState is CrudStateLoaded) {
       // Consume scroll direction and pagination info when we have loaded data
       // This prevents intermediate states (Loading) from consuming the flags

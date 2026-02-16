@@ -1748,6 +1748,18 @@ final dynamic sampleReferralFlows = {
                       "value": true,
                       "message":
                           "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_REQUIRED_ERROR"
+                    },
+                    {
+                      "type": "min",
+                      "value": 3,
+                      "message":
+                          "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_VALIDATION"
+                    },
+                    {
+                      "type": "max",
+                      "value": 59,
+                      "message":
+                          "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_VALIDATION"
                     }
                   ],
                   "errorMessage": "",

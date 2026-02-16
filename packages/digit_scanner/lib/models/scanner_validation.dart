@@ -22,9 +22,9 @@ class ScannerValidation {
 
   factory ScannerValidation.fromJson(Map<String, dynamic> json) {
     return ScannerValidation(
-      type: json['type'] as String,
+      type: json['type']?.toString() ?? '',
       value: json['value'],
-      message: json['message'] as String?,
+      message: json['message']?.toString(),
     );
   }
 
@@ -63,7 +63,11 @@ extension ScannerValidationListExt on List<ScannerValidation>? {
 
   /// Gets the regex pattern for validation
   String? get pattern {
-    return this?.firstWhereOrNull((v) => v.type == 'pattern')?.value as String?;
+    final validation = this?.firstWhereOrNull((v) => v.type == 'pattern');
+    final value = validation?.value;
+    if (value == null) return null;
+    if (value is String) return value;
+    return value.toString();
   }
 
   /// Gets the scan limit validation message
