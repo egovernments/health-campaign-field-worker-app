@@ -52,6 +52,8 @@ class _BoundarySelectionPageState
   var leastLevelBoundaries;
   // Flag to track if HF Referral downsync is triggered silently from beneficiary downsync
   bool _isSilentHFReferralSync = false;
+  // Flag to wait for HF Referral data check before showing dataFound dialog
+  bool _waitingForHFReferralDataCheck = false;
 
   @override
   void initState() {
@@ -78,6 +80,7 @@ class _BoundarySelectionPageState
           const HFReferralDownSyncResetStateEvent(),
         );
     _isSilentHFReferralSync = false;
+    _waitingForHFReferralDataCheck = false;
     super.deactivate();
   }
 
@@ -200,6 +203,99 @@ class _BoundarySelectionPageState
                                                 ),
                                         dataFound: (initialServerCount,
                                             batchSize, offset, lastSyncedTime) {
+                                          // If waiting for HF referral check, show dialog based on result
+                                          if (_waitingForHFReferralDataCheck) {
+                                            _waitingForHFReferralDataCheck =
+                                                false;
+                                            final bool hasHFData =
+                                                initialServerCount > 0;
+                                            showDownloadDialog(
+                                              context,
+                                              model: DownloadBeneficiary(
+                                                title:
+                                                    localizations.translate(
+                                                  hasHFData
+                                                      ? i18.beneficiaryDetails
+                                                          .dataFound
+                                                      : i18.beneficiaryDetails
+                                                          .noDataFound,
+                                                ),
+                                                appConfiguartion:
+                                                    appConfiguration,
+                                                projectId: context.projectId,
+                                                boundary: selectedBoundary!
+                                                    .value!.code
+                                                    .toString(),
+                                                batchSize: batchSize,
+                                                totalCount:
+                                                    initialServerCount,
+                                                content:
+                                                    localizations.translate(
+                                                  hasHFData
+                                                      ? i18.beneficiaryDetails
+                                                          .dataFoundContent
+                                                      : i18.beneficiaryDetails
+                                                          .noDataFoundContent,
+                                                ),
+                                                primaryButtonLabel:
+                                                    localizations.translate(
+                                                  hasHFData
+                                                      ? i18.common
+                                                          .coreCommonDownload
+                                                      : i18.common
+                                                          .coreCommonGoback,
+                                                ),
+                                                secondaryButtonLabel:
+                                                    localizations.translate(
+                                                  hasHFData
+                                                      ? i18.beneficiaryDetails
+                                                          .proceedWithoutDownloading
+                                                      : i18
+                                                          .acknowledgementSuccess
+                                                          .goToHome,
+                                                ),
+                                                boundaryName:
+                                                    selectedBoundary
+                                                        .value!.name
+                                                        .toString(),
+                                              ),
+                                              dialogType:
+                                                  DigitProgressDialogType
+                                                      .dataFound,
+                                              isPop: false,
+                                              onDownloadAction: hasHFData
+                                                  ? () {
+                                                      _isSilentHFReferralSync =
+                                                          false;
+                                                      context
+                                                          .read<
+                                                              HFReferralDownSyncBloc>()
+                                                          .add(
+                                                            HFReferralDownSyncStartEvent(
+                                                              projectId: context
+                                                                  .projectId,
+                                                              boundaryCode:
+                                                                  selectedBoundary!
+                                                                      .value!
+                                                                      .code
+                                                                      .toString(),
+                                                              batchSize:
+                                                                  batchSize,
+                                                              initialServerCount:
+                                                                  initialServerCount,
+                                                              boundaryName:
+                                                                  selectedBoundary
+                                                                      .value!
+                                                                      .name
+                                                                      .toString(),
+                                                            ),
+                                                          );
+                                                    }
+                                                  : null,
+                                            );
+                                            return;
+                                          }
+
                                           // Start download directly for HFReferral (silently)
                                           context
                                               .read<HFReferralDownSyncBloc>()
@@ -226,14 +322,44 @@ class _BoundarySelectionPageState
                                         failed: () {
                                           // Silent sync failed, reset flag (don't block user)
                                           _isSilentHFReferralSync = false;
+                                          if (_waitingForHFReferralDataCheck) {
+                                            _waitingForHFReferralDataCheck =
+                                                false;
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .popUntil((route) =>
+                                                    route is! PopupRoute);
+                                            context.router
+                                                .replaceAll([HomeRoute()]);
+                                          }
                                         },
                                         totalCountCheckFailed: () {
                                           // Silent sync check failed, reset flag
                                           _isSilentHFReferralSync = false;
+                                          if (_waitingForHFReferralDataCheck) {
+                                            _waitingForHFReferralDataCheck =
+                                                false;
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .popUntil((route) =>
+                                                    route is! PopupRoute);
+                                            context.router
+                                                .replaceAll([HomeRoute()]);
+                                          }
                                         },
                                         pendingSync: () {
                                           // Silent sync has pending, reset flag
                                           _isSilentHFReferralSync = false;
+                                          if (_waitingForHFReferralDataCheck) {
+                                            _waitingForHFReferralDataCheck =
+                                                false;
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .popUntil((route) =>
+                                                    route is! PopupRoute);
+                                            context.router
+                                                .replaceAll([HomeRoute()]);
+                                          }
                                         },
                                       );
                                       return;
@@ -474,10 +600,12 @@ class _BoundarySelectionPageState
                                           clickedStatus.value = false;
 
                                           // If no beneficiary data but user has HEALTH_FACILITY_WORKER role,
-                                          // trigger HF Referral downsync silently
+                                          // trigger HF Referral data check first before showing dialog
                                           if (initialServerCount == 0 &&
                                               isHealthFacilityWorker) {
                                             _isSilentHFReferralSync = true;
+                                            _waitingForHFReferralDataCheck =
+                                                true;
                                             context
                                                 .read<HFReferralDownSyncBloc>()
                                                 .add(
@@ -498,6 +626,8 @@ class _BoundarySelectionPageState
                                                             .toString(),
                                                   ),
                                                 );
+                                            // Don't show dialog yet - wait for HF referral check result
+                                            return;
                                           }
 
                                           showDownloadDialog(
