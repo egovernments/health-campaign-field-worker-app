@@ -77,6 +77,12 @@ android {
     }
 }
 
+// Exclude sqlite3_flutter_libs since sqlcipher_flutter_libs is used as a drop-in replacement
+// Both share the same Android package (eu.simonbinder.sqlite3_flutter_libs) causing duplicate class errors
+configurations.all {
+    exclude module: 'sqlite3_flutter_libs'
+}
+
 flutter {
     source '../..'
 }
