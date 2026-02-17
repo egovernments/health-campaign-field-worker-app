@@ -27,8 +27,6 @@ int i = 0;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  AppSecurity.instance.setSecurityLevel = AppSecurityLevel.high;
-
   await initializeAllMappers();
   final info = await PackageInfo.fromPlatform();
   setupErrorWidget();
@@ -42,6 +40,7 @@ void main() async {
   }
 
   await envConfig.initialize();
+  AppSecurity.instance.setSecurityLevel = AppSecurityLevel.high;
   WidgetsBinding.instance.addObserver(AppLifecycleObserver());
   await DioClient()
       .enableSSLPinning(); // Enable SSL pinning (comment out to disable)

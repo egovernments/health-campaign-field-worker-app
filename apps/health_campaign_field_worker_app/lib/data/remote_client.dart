@@ -33,6 +33,18 @@ class DioClient {
   // Initialization method for the Dio client
   void _init() {
     _dio = Dio()
+      ..httpClientAdapter = IOHttpClientAdapter(
+        createHttpClient: () {
+          final client = HttpClient();
+          if (AppSecurity.instance.securityLevel == AppSecurityLevel.low) {
+            debugPrint(
+                'Warning: SSL pinning is disabled due to low security level');
+            client.badCertificateCallback =
+                (X509Certificate cert, String host, int port) => true;
+          }
+          return client;
+        },
+      )
       ..interceptors.addAll([
         AuthTokenInterceptor(),
         // Custom interceptor for handling authentication tokens
