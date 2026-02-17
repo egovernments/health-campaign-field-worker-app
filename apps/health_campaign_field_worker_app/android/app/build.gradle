@@ -70,10 +70,10 @@ android {
 
     buildTypes {
         release {
-            // Enable code obfuscation with R8
+            // Enable code obfuscation with R8 and updated ProGuard rules
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             
             // Signing configuration
             signingConfig signingConfigs.release
