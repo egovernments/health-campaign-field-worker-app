@@ -44,6 +44,8 @@ final dynamic sampleReferralFlows = {
           "type": "template",
           "label": "HF_REFERRAL_GO_BACK",
           "format": "button",
+          "visible":
+              "{{fn:computeReferralButtonLabel(HFReferralModel.0.symptom, HFReferralModel.0.additionalFields.fields)}}==HF_REFERRAL_GO_BACK",
           "onAction": [
             {
               "actionType": "REVERSE_TRANSFORM",
@@ -272,19 +274,17 @@ final dynamic sampleReferralFlows = {
           "mandatory": true,
           "properties": {
             "size": "large",
-            "type": "primary",
+            "type": "secondary",
             "mainAxisSize": "max",
             "mainAxisAlignment": "center"
-          },
-          "visible":
-              "{{fn:computeReferralButtonLabel(HFReferralModel.0.symptom, HFReferralModel.0.additionalFields.fields)}}==HF_REFERRAL_GO_BACK"
+          }
         },
         {
-          "visible":
-              "{{fn:computeReferralButtonLabel(HFReferralModel.0.symptom, HFReferralModel.0.additionalFields.fields)}}==HF_REFERRAL_CONTINUE",
           "type": "template",
           "label": "HF_REFERRAL_CONTINUE",
           "format": "button",
+          "visible":
+              "{{fn:computeReferralButtonLabel(HFReferralModel.0.symptom, HFReferralModel.0.additionalFields.fields)}}==HF_REFERRAL_CONTINUE",
           "onAction": [
             {
               "actionType": "REVERSE_TRANSFORM",
@@ -2308,6 +2308,18 @@ final dynamic sampleReferralFlows = {
                   "value": true,
                   "message":
                       "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_REQUIRED_ERROR"
+                },
+                {
+                  "type": "min",
+                  "value": 3,
+                  "message":
+                      "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_VALIDATION"
+                },
+                {
+                  "type": "max",
+                  "value": 59,
+                  "message":
+                      "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_VALIDATION"
                 }
               ],
               "errorMessage": "",
@@ -4042,8 +4054,8 @@ final dynamic sampleReferralFlows = {
   "isActive": true,
   "auditDetails": {
     "createdBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
-    "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+    "lastModifiedBy": "8ca0fd96-d0d8-4c1d-b209-4aa5518f78e7",
     "createdTime": 1766989202754,
-    "lastModifiedTime": 1770999846500
+    "lastModifiedTime": 1771306135238
   }
 };
