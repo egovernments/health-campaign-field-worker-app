@@ -54,10 +54,10 @@ android {
 
     buildTypes {
         release {
-            // Enable code obfuscation with R8
+            // Enable code obfuscation with R8 and updated ProGuard rules
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             // TODO: For production release, replace signingConfigs.debug with signingConfigs.release
             // 1. Generate keystore: keytool -genkey -v -keystore my-release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias my-key-alias
             // 2. Create android/key.properties with storePassword, keyPassword, keyAlias, storeFile

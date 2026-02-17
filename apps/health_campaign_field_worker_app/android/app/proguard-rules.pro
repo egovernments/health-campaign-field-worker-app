@@ -58,10 +58,15 @@
 # Security Helper (Native Android Code)
 # ============================================================================
 
-# Keep custom security classes
--keep class com.digit.hcm.SecurityHelper { *; }
--keep class com.digit.hcm.MainActivity { *; }
--keep class com.digit.hcm.LocationService { *; }
+# Keep custom security classes - MUST NOT BE OBFUSCATED
+-keep,includedescriptorclasses class com.digit.hcm.** { *; }
+-keepclassmembers class com.digit.hcm.** { *; }
+
+# Explicitly keep Activities
+-keep public class com.digit.hcm.LauncherActivity { *; }
+-keep public class com.digit.hcm.MainActivity { *; }
+-keep public class com.digit.hcm.SecurityHelper { *; }
+-keep public class com.digit.hcm.LocationService { *; }
 
 # Keep all public methods in security classes (needed for method channels)
 -keepclassmembers class com.digit.hcm.SecurityHelper {
@@ -266,3 +271,43 @@
 # Add any app-specific rules below this line
 # Example: Keep your custom data models
 # -keep class com.digit.hcm.models.** { *; }
+# ============================================================================
+# Critical Flutter Plugin Rules (Added to fix APK launch issues)
+# ============================================================================
+
+# Keep all Flutter plugin registrants
+-keep class io.flutter.plugins.GeneratedPluginRegistrant { *; }
+-keep class io.flutter.embedding.engine.plugins.FlutterPlugin { *; }
+
+# Keep LauncherActivity (critical for app launch)
+-keep class com.digit.hcm.LauncherActivity { *; }
+-keepclassmembers class com.digit.hcm.LauncherActivity {
+    *;
+}
+
+# Keep all Activity classes
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Application
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+
+# Keep method channel handlers
+-keepclassmembers class * {
+    @io.flutter.embedding.engine.dart.DartMessenger.DartCallback *;
+}
+
+# Prevent optimization issues with Kotlin coroutines (if used in plugins)
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+-dontwarn kotlinx.coroutines.flow.**
+
+# ============================================================================
+# Dart/Flutter VM Rules
+# ============================================================================
+
+# Keep Dart VM classes
+-keep class io.flutter.view.** { *; }
+-keep class io.flutter.app.** { *; }
+-keep class io.flutter.embedding.android.** { *; }
+-keep class io.flutter.embedding.engine.** { *; }

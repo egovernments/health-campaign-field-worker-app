@@ -20,11 +20,11 @@ class LauncherActivity : Activity() {
         val intent = Intent(this, MainActivity::class.java).apply {
             // Forward all extras from the launch intent
             this@LauncherActivity.intent.extras?.let { putExtras(it) }
-            // Forward action and data
-            action = this@LauncherActivity.intent.action
-            data = this@LauncherActivity.intent.data
-            // Preserve the original flags
-            addFlags(this@LauncherActivity.intent.flags)
+            // Forward action and data if not MAIN/LAUNCHER
+            if (this@LauncherActivity.intent.action != Intent.ACTION_MAIN) {
+                action = this@LauncherActivity.intent.action
+                data = this@LauncherActivity.intent.data
+            }
         }
         
         startActivity(intent)
