@@ -108,6 +108,36 @@ class HFReferralDownSyncBloc
             offSet: offset,
             limit: event.batchSize);
 
+        // If no data found with current offset and offset > 0,
+        // retry once with offset 0 and limit 200 (temporal fetch, not stored)
+        if (initialResults.isEmpty && offset > 0) {
+          final retryResults = await hfReferralRemoteRepository.search(
+              HFReferralSearchModel(
+                localityCode: [event.boundaryCode],
+              ),
+              offSet: 0,
+              limit: 200);
+
+          if (retryResults.isNotEmpty) {
+            // Reset the stored offset to 0 so the actual downsync starts from beginning
+            await downSyncLocalRepository.update(DownsyncModel(
+              offset: 0,
+              limit: event.batchSize,
+              lastSyncedTime: lastSyncedTime,
+              totalCount: existingDownSyncData.first.totalCount ?? 0,
+              locality: 'hfReferral_${event.boundaryCode}',
+              boundaryName: event.boundaryName,
+            ));
+            emit(HFReferralDownSyncState.dataFound(
+              retryResults.length,
+              event.batchSize,
+              0,
+              lastSyncedTime,
+            ));
+            return;
+          }
+        }
+
         // If we got results, there's data to sync
         int serverTotalCount = initialResults.length;
 
@@ -156,7 +186,35 @@ class HFReferralDownSyncBloc
         ));
       }
 
-      // Fetch ALL HFReferral data from server in a loop (like project beneficiary downsync)
+      // If stored offset > 0, first check offset 0 for new records
+      // (server stores newest data first, so new records appear at the beginning)
+      if (offset > 0) {
+        final newDataCheck = await hfReferralRemoteRepository.search(
+            HFReferralSearchModel(
+              localityCode: [event.boundaryCode],
+            ),
+            offSet: 0,
+            limit: 200);
+
+        if (newDataCheck.isNotEmpty) {
+          final checkClientRefIds =
+              newDataCheck.map((e) => e.clientReferenceId).toList();
+          final existingLocal = await hfReferralLocalRepository.search(
+            HFReferralSearchModel(clientReferenceId: checkClientRefIds),
+          );
+          final existingIds =
+              existingLocal.map((e) => e.clientReferenceId).toSet();
+          final hasNewRecords =
+              checkClientRefIds.any((id) => !existingIds.contains(id));
+
+          // If new records found at offset 0, reset to fetch from beginning
+          if (hasNewRecords) {
+            offset = 0;
+          }
+        }
+      }
+
+      // Fetch HFReferral data from server in a loop
       int totalFetched = 0;
       int currentOffset = offset;
       List<HFReferralModel> allFetchedReferrals = [];
@@ -165,7 +223,7 @@ class HFReferralDownSyncBloc
         // Emit progress state
         emit(HFReferralDownSyncState.inProgress(
           totalFetched,
-          totalFetched + event.batchSize, // Estimated total (will adjust as we fetch)
+          totalFetched + event.batchSize,
         ));
 
         // Fetch batch from server starting from current offset
@@ -204,9 +262,25 @@ class HFReferralDownSyncBloc
           );
         }).toList();
 
-        // Bulk create this batch
-        await hfReferralLocalRepository.bulkCreate(hfReferralsWithLocality);
-        allFetchedReferrals.addAll(hfReferralsWithLocality);
+        // Filter out records that already exist locally to avoid
+        // overwriting user-modified data and storing duplicates
+        final incomingClientRefIds = hfReferralsWithLocality
+            .map((e) => e.clientReferenceId)
+            .toList();
+        final existingRecords = await hfReferralLocalRepository.search(
+          HFReferralSearchModel(clientReferenceId: incomingClientRefIds),
+        );
+        final existingClientRefIds =
+            existingRecords.map((e) => e.clientReferenceId).toSet();
+        final newReferrals = hfReferralsWithLocality
+            .where((e) => !existingClientRefIds.contains(e.clientReferenceId))
+            .toList();
+
+        // Only bulk create records that don't already exist
+        if (newReferrals.isNotEmpty) {
+          await hfReferralLocalRepository.bulkCreate(newReferrals);
+        }
+        allFetchedReferrals.addAll(newReferrals);
 
         // Update offset and count
         currentOffset += hfReferrals.length;

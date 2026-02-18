@@ -239,6 +239,7 @@ void showDownloadDialog(
   required DigitProgressDialogType dialogType,
   bool isPop = true,
   StreamController<double>? downloadProgressController,
+  VoidCallback? onDownloadAction,
 }) {
   if (isPop) {
     Navigator.of(context, rootNavigator: true).pop();
@@ -303,6 +304,8 @@ void showDownloadDialog(
                   if (dialogType == DigitProgressDialogType.pendingSync) {
                     Navigator.of(context, rootNavigator: true).pop();
                     context.router.replaceAll([HomeRoute()]);
+                  } else if (onDownloadAction != null) {
+                    onDownloadAction();
                   } else {
                     if ((model.totalCount ?? 0) > 0) {
                       context.read<BeneficiaryDownSyncBloc>().add(

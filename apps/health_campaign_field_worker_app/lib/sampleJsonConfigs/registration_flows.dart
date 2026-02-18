@@ -2659,7 +2659,7 @@ final dynamic sampleFlows = {
               ],
               "errorMessage": "",
               "autoFillCondition": [
-                {"value": "{{loggedInUserUuid}}", "expression": "true==true"}
+                {"value": "{{loggedInUserName}}", "expression": "true==true"}
               ]
             },
             {

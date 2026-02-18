@@ -1084,7 +1084,7 @@ void initializeFunctionRegistry() {
   /// - DRUG_SE_PC → sideEffectPQ1
   /// hf-referral impel
   FunctionRegistry.register('computeReferralButtonLabel', (args, stateData) {
-    if (args.isEmpty) return 'CORE_COMMON_CONTINUE';
+    if (args.isEmpty) return 'HF_REFERRAL_CONTINUE';
 
     final symptom = args[0]?.toString().toUpperCase() ?? '';
     final fields = args.length > 1 ? args[1] : null;
@@ -1100,7 +1100,7 @@ void initializeFunctionRegistry() {
     final checklistKey = symptomToChecklistKey[symptom];
     if (checklistKey == null) {
       // Unknown symptom, default to continue
-      return 'CORE_COMMON_CONTINUE';
+      return 'HF_REFERRAL_CONTINUE';
     }
 
     // Check if the checklist key exists in additionalFields.fields
@@ -1119,7 +1119,7 @@ void initializeFunctionRegistry() {
     }
 
     // If checklist exists → Go Back, otherwise → Continue
-    return checklistExists ? 'CORE_COMMON_GO_BACK' : 'CORE_COMMON_CONTINUE';
+    return checklistExists ? 'HF_REFERRAL_GO_BACK' : 'HF_REFERRAL_CONTINUE';
   });
 
   /// Registers a function to compute the referral status  based on symptom and checklist data.

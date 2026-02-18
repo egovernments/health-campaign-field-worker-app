@@ -1,5 +1,5 @@
 final dynamic sampleReferralFlows = {
-  "id": "b4702adb-5d57-4a78-9091-82805385d738",
+  "id": "126f478d-81e3-4d63-afc9-71d5f56e1c36",
   "tenantId": "mz",
   "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
   "uniqueIdentifier": "HFREFERRAL.MR-DN",
@@ -42,9 +42,249 @@ final dynamic sampleReferralFlows = {
       "footer": [
         {
           "type": "template",
-          "label":
-              "{{fn:computeReferralButtonLabel(HFReferralModel.0.symptom, HFReferralModel.0.additionalFields.fields)}}",
+          "label": "HF_REFERRAL_GO_BACK",
           "format": "button",
+          "visible":
+              "{{fn:computeReferralButtonLabel(HFReferralModel.0.symptom, HFReferralModel.0.additionalFields.fields)}}==HF_REFERRAL_GO_BACK",
+          "onAction": [
+            {
+              "actionType": "REVERSE_TRANSFORM",
+              "properties": {
+                "configName": "referralCreation",
+                "entityTypes": ["HFReferralModel"]
+              }
+            },
+            {
+              "actionType": "CONDITIONAL_NAVIGATION",
+              "properties": {
+                "conditions": [
+                  {
+                    "condition":
+                        "0.HFReferralModel.additionalFields.fields.feverQ1==null&&0.HFReferralModel.symptom==FEVER",
+                    "navigateTo": {
+                      "data": [
+                        {
+                          "key": "clientReferenceId",
+                          "value": "{{0.HFReferralModel.clientReferenceId}}"
+                        },
+                        {
+                          "key": "referralSymptom",
+                          "value": "{{0.HFReferralModel.symptom}}"
+                        },
+                        {"key": "isUpdate", "value": "true"},
+                        {
+                          "key": "rowVersion",
+                          "value": "{{0.HFReferralModel.rowVersion}}"
+                        },
+                        {
+                          "key": "nameOfChild",
+                          "value": "{{0.HFReferralModel.name}}"
+                        },
+                        {
+                          "key": "beneficiaryId",
+                          "value": "{{0.HFReferralModel.beneficiaryId}}"
+                        },
+                        {
+                          "key": "referralCode",
+                          "value": "{{0.HFReferralModel.referralCode}}"
+                        },
+                        {
+                          "key": "ageInMonths",
+                          "value":
+                              "{{0.HFReferralModel.additionalFields.fields.ageInMonths}}"
+                        },
+                        {
+                          "key": "gender",
+                          "value":
+                              "{{0.HFReferralModel.additionalFields.fields.gender}}"
+                        },
+                        {
+                          "key": "referralReason",
+                          "value": "{{0.HFReferralModel.symptom}}"
+                        }
+                      ],
+                      "flow": "REFERRAL_CREATE",
+                      "name": "referralDetails",
+                      "type": "FORM"
+                    }
+                  },
+                  {
+                    "condition":
+                        "0.HFReferralModel.additionalFields.fields.sickQ1==null&&0.HFReferralModel.symptom==SICK",
+                    "navigateTo": {
+                      "data": [
+                        {
+                          "key": "clientReferenceId",
+                          "value": "{{0.HFReferralModel.clientReferenceId}}"
+                        },
+                        {
+                          "key": "referralSymptom",
+                          "value": "{{0.HFReferralModel.symptom}}"
+                        },
+                        {"key": "isUpdate", "value": "true"},
+                        {
+                          "key": "rowVersion",
+                          "value": "{{0.HFReferralModel.rowVersion}}"
+                        },
+                        {
+                          "key": "nameOfChild",
+                          "value": "{{0.HFReferralModel.name}}"
+                        },
+                        {
+                          "key": "beneficiaryId",
+                          "value": "{{0.HFReferralModel.beneficiaryId}}"
+                        },
+                        {
+                          "key": "referralCode",
+                          "value": "{{0.HFReferralModel.referralCode}}"
+                        },
+                        {
+                          "key": "ageInMonths",
+                          "value":
+                              "{{0.HFReferralModel.additionalFields.fields.ageInMonths}}"
+                        },
+                        {
+                          "key": "gender",
+                          "value":
+                              "{{0.HFReferralModel.additionalFields.fields.gender}}"
+                        },
+                        {
+                          "key": "referralReason",
+                          "value": "{{0.HFReferralModel.symptom}}"
+                        }
+                      ],
+                      "flow": "REFERRAL_CREATE",
+                      "name": "referralDetails",
+                      "type": "FORM"
+                    }
+                  },
+                  {
+                    "condition":
+                        "0.HFReferralModel.additionalFields.fields.sideEffectQ1==null&&0.HFReferralModel.symptom==DRUG_SE_CC",
+                    "navigateTo": {
+                      "data": [
+                        {
+                          "key": "clientReferenceId",
+                          "value": "{{0.HFReferralModel.clientReferenceId}}"
+                        },
+                        {
+                          "key": "referralSymptom",
+                          "value": "{{0.HFReferralModel.symptom}}"
+                        },
+                        {"key": "isUpdate", "value": "true"},
+                        {
+                          "key": "rowVersion",
+                          "value": "{{0.HFReferralModel.rowVersion}}"
+                        },
+                        {
+                          "key": "nameOfChild",
+                          "value": "{{0.HFReferralModel.name}}"
+                        },
+                        {
+                          "key": "beneficiaryId",
+                          "value": "{{0.HFReferralModel.beneficiaryId}}"
+                        },
+                        {
+                          "key": "referralCode",
+                          "value": "{{0.HFReferralModel.referralCode}}"
+                        },
+                        {
+                          "key": "ageInMonths",
+                          "value":
+                              "{{0.HFReferralModel.additionalFields.fields.ageInMonths}}"
+                        },
+                        {
+                          "key": "gender",
+                          "value":
+                              "{{0.HFReferralModel.additionalFields.fields.gender}}"
+                        },
+                        {
+                          "key": "referralReason",
+                          "value": "{{0.HFReferralModel.symptom}}"
+                        }
+                      ],
+                      "flow": "REFERRAL_CREATE",
+                      "name": "referralDetails",
+                      "type": "FORM"
+                    }
+                  },
+                  {
+                    "condition":
+                        "0.HFReferralModel.additionalFields.fields.sideEffectPQ1==null&&0.HFReferralModel.symptom==DRUG_SE_PC",
+                    "navigateTo": {
+                      "data": [
+                        {
+                          "key": "clientReferenceId",
+                          "value": "{{0.HFReferralModel.clientReferenceId}}"
+                        },
+                        {
+                          "key": "referralSymptom",
+                          "value": "{{0.HFReferralModel.symptom}}"
+                        },
+                        {"key": "isUpdate", "value": "true"},
+                        {
+                          "key": "rowVersion",
+                          "value": "{{0.HFReferralModel.rowVersion}}"
+                        },
+                        {
+                          "key": "nameOfChild",
+                          "value": "{{0.HFReferralModel.name}}"
+                        },
+                        {
+                          "key": "beneficiaryId",
+                          "value": "{{0.HFReferralModel.beneficiaryId}}"
+                        },
+                        {
+                          "key": "referralCode",
+                          "value": "{{0.HFReferralModel.referralCode}}"
+                        },
+                        {
+                          "key": "ageInMonths",
+                          "value":
+                              "{{0.HFReferralModel.additionalFields.fields.ageInMonths}}"
+                        },
+                        {
+                          "key": "gender",
+                          "value":
+                              "{{0.HFReferralModel.additionalFields.fields.gender}}"
+                        },
+                        {
+                          "key": "referralReason",
+                          "value": "{{0.HFReferralModel.symptom}}"
+                        }
+                      ],
+                      "flow": "REFERRAL_CREATE",
+                      "name": "referralDetails",
+                      "type": "FORM"
+                    }
+                  },
+                  {
+                    "default": true,
+                    "navigateTo": {
+                      "data": [],
+                      "name": "referralInbox",
+                      "type": "TEMPLATE"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "fieldName": "actionButton",
+          "mandatory": true,
+          "properties": {
+            "size": "large",
+            "type": "secondary",
+            "mainAxisSize": "max",
+            "mainAxisAlignment": "center"
+          }
+        },
+        {
+          "type": "template",
+          "label": "HF_REFERRAL_CONTINUE",
+          "format": "button",
+          "visible":
+              "{{fn:computeReferralButtonLabel(HFReferralModel.0.symptom, HFReferralModel.0.additionalFields.fields)}}==HF_REFERRAL_CONTINUE",
           "onAction": [
             {
               "actionType": "REVERSE_TRANSFORM",
@@ -454,11 +694,6 @@ final dynamic sampleReferralFlows = {
                   "mainAxisAlignment": "spaceBetween"
                 }
               },
-              // {
-              //     "value": "HF_REFERRAL_INBOX_DATE_OF_EVALUATION {{ fn:formatDate(itemData.additionalFields.fields.dateOfEvaluation, 'date', dd MMM yyyy) }}",
-              //     "format": "textTemplate",
-              //     "fieldName": "textTemplatetext"
-              // },
               {
                 "type": "template",
                 "format": "row",
@@ -1854,7 +2089,10 @@ final dynamic sampleReferralFlows = {
                       "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR",
                   "visibilityCondition": {
                     "expression": [
-                      {"condition": "navigation.isUpdate!=true"}
+                      {
+                        "type": "custom",
+                        "condition": "navigation.isUpdate!=true"
+                      }
                     ]
                   }
                 }
@@ -2070,6 +2308,18 @@ final dynamic sampleReferralFlows = {
                   "value": true,
                   "message":
                       "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_REQUIRED_ERROR"
+                },
+                {
+                  "type": "min",
+                  "value": 3,
+                  "message":
+                      "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_VALIDATION"
+                },
+                {
+                  "type": "max",
+                  "value": 59,
+                  "message":
+                      "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_VALIDATION"
                 }
               ],
               "errorMessage": "",
@@ -2163,7 +2413,7 @@ final dynamic sampleReferralFlows = {
                   "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR",
               "visibilityCondition": {
                 "expression": [
-                  {"condition": "navigation.isUpdate!=true"}
+                  {"type": "custom", "condition": "navigation.isUpdate!=true"}
                 ]
               }
             }
@@ -2175,6 +2425,7 @@ final dynamic sampleReferralFlows = {
           "preventScreenCapture": false,
           "conditionalNavigateTo": [
             {
+              "type": "custom",
               "condition":
                   "navigation.isUpdate==true&&navigation.referralSymptom==DRUG_SE_CC",
               "navigateTo": {
@@ -2195,6 +2446,7 @@ final dynamic sampleReferralFlows = {
               }
             },
             {
+              "type": "custom",
               "condition":
                   "navigation.isUpdate==true&&navigation.referralSymptom==DRUG_SE_PC",
               "navigateTo": {
@@ -2215,6 +2467,7 @@ final dynamic sampleReferralFlows = {
               }
             },
             {
+              "type": "custom",
               "condition":
                   "navigation.isUpdate==true&&navigation.referralSymptom==FEVER",
               "navigateTo": {
@@ -2235,6 +2488,7 @@ final dynamic sampleReferralFlows = {
               }
             },
             {
+              "type": "custom",
               "condition":
                   "navigation.isUpdate==true&&navigation.referralSymptom==SICK",
               "navigateTo": {
@@ -3800,8 +4054,8 @@ final dynamic sampleReferralFlows = {
   "isActive": true,
   "auditDetails": {
     "createdBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
-    "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
-    "createdTime": 1766043208665,
-    "lastModifiedTime": 1770362941024
+    "lastModifiedBy": "8ca0fd96-d0d8-4c1d-b209-4aa5518f78e7",
+    "createdTime": 1766989202754,
+    "lastModifiedTime": 1771306135238
   }
 };
