@@ -4,33 +4,32 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../layout_renderer.dart';
-import '../../utils/flow_widget_state.dart';
 import '../../utils/interpolation.dart';
 import '../../widget_registry.dart';
-import '../flow_widget_interface.dart';
+import '../resolved_flow_widget.dart';
 
-class ListViewWidget implements FlowWidget {
+class ListViewWidget extends ResolvedFlowWidget {
   @override
   String get format => 'listView';
 
   @override
-  Widget build(
+  Widget buildResolved(
     Map<String, dynamic> json,
     BuildContext context,
     void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
   ) {
-    final flowState = WidgetStateContext.of(context);
-    final stateData = flowState.stateData;
+    final stateData = resolved.stateData;
 
     final dataSourceKey = json['dataSource'] as String?;
-    final rawState = flowState.contextData ?? [];
+    final rawState = resolved.state.contextData ?? [];
     var items = rawState;
 
     if (dataSourceKey != null && rawState.isNotEmpty) {
       if (dataSourceKey.startsWith('item.')) {
         final fieldPath = dataSourceKey.substring(5);
-        items = flowState.itemData != null
-            ? _resolveNestedField(flowState.itemData!, fieldPath)
+        items = resolved.state.itemData != null
+            ? _resolveNestedField(resolved.state.itemData!, fieldPath)
             : [];
       } else {
         items = rawState[0]?[dataSourceKey];
@@ -41,7 +40,7 @@ class ListViewWidget implements FlowWidget {
       return const SizedBox.shrink();
     }
 
-    // 🔹 Read spacing property (e.g., "spacer4")
+    // Read spacing property (e.g., "spacer4")
     final properties = json['properties'] as Map<String, dynamic>?;
     final spacingKey = properties?['spacing']?.toString();
     final double spacing = _mapSpacingValue(context, spacingKey);
@@ -77,21 +76,21 @@ class ListViewWidget implements FlowWidget {
         onAction,
         item: safeItem,
         listIndex: index,
-        compositeKey: flowState.compositeKey,
+        compositeKey: resolved.compositeKey,
       );
 
       if (mappedChild is SizedBox &&
           mappedChild.width == 0.0 &&
           mappedChild.height == 0.0) continue;
 
-      // 🔹 Add spacing below each item except the last
+      // Add spacing below each item except the last
       widgets.add(
         CrudItemContext(
           stateData: stateData,
           listIndex: index,
           item: safeItem,
-          screenKey: flowState.screenKey,
-          compositeKey: flowState.compositeKey,
+          screenKey: resolved.screenKey,
+          compositeKey: resolved.compositeKey,
           child: Column(
             children: [
               mappedChild,
@@ -108,7 +107,7 @@ class ListViewWidget implements FlowWidget {
     return Column(children: widgets);
   }
 
-  // 🔹 Map your "spacer" keywords to actual pixel values
+  // Map your "spacer" keywords to actual pixel values
   double _mapSpacingValue(BuildContext context, String? key) {
     switch (key) {
       case 'spacer1':
