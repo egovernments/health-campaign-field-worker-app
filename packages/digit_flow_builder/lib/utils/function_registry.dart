@@ -6,6 +6,12 @@ import 'package:intl/intl.dart';
 
 import 'interpolation.dart';
 
+class TaskStatus {
+  static const String administrationSuccess = 'ADMINISTRATION_SUCCESS';
+  static const String delivered = 'DELIVERED';
+  static const String ineligible = 'INELIGIBLE';
+}
+
 /// The signature for a function that can be registered in the [FunctionRegistry].
 ///
 /// - `args`: A list of dynamic arguments passed to the function.
@@ -1029,12 +1035,12 @@ void initializeFunctionRegistry() {
             final status = taskMap['status']?.toString().toUpperCase().trim();
 
             // Disable if any task status is success
-            if (status == 'ADMINISTRATION_SUCCESS' || status == 'DELIVERED') {
+            if (status == TaskStatus.administrationSuccess || status == TaskStatus.delivered) {
               return true;
             }
 
             // Disable if any task is not eligible
-            if (status == 'INELIGIBLE') {
+            if (status == TaskStatus.ineligible) {
               return true;
             }
           }
