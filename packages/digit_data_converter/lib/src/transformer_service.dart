@@ -302,6 +302,10 @@ class FormEntityMapper {
             target[targetKey] = (formValue != null && formValue is DateTime)
                 ? formValue.millisecondsSinceEpoch
                 : formValue;
+
+            // Track the path as used so it's not treated as unmapped
+            usedPaths
+                .add(sourcePath.split('.').last.split('[').first);
           }
         }
       }
@@ -387,6 +391,9 @@ class FormEntityMapper {
       if (containsPathInFormData(path, formValues)) {
         final value = getStrictValueFromFormDataOnly(path, formValues);
         updatedFields[customKey] = value;
+
+        // Track the path as used so it's not treated as unmapped
+        usedPaths.add(path.split('.').last.split('[').first);
       }
     });
 

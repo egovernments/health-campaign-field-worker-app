@@ -3440,7 +3440,7 @@ final dynamic sampleFlows = {
               "order": 3,
               "value": "",
               "format": "idPopulator",
-              "hidden": false,
+              "hidden": true,
               "isMdms": true,
               "tooltip": "",
               "helpText": "",
@@ -3451,6 +3451,7 @@ final dynamic sampleFlows = {
               "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
+              "includeInForm":true,
               "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR",
               "systemDate": false,
               "validations": [
@@ -3525,7 +3526,10 @@ final dynamic sampleFlows = {
             },
             {
               "type": "string",
-              "enums": null,
+              "enums" : [
+                {"code": "MALE", "name": "MALE"},
+                {"code": "FEMALE", "name": "Female"}
+              ],
               "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender_addmember",
               "order": 5,
               "value": "",
@@ -4525,7 +4529,8 @@ final dynamic sampleFlows = {
               "order": 4,
               "value": "",
               "format": "idPopulator",
-              "hidden": false,
+              "hidden": true,
+              "includeInForm":true,
               "isMdms": true,
               "tooltip": "",
               "helpText": "",
@@ -4596,7 +4601,6 @@ final dynamic sampleFlows = {
             },
             {
               "type": "string",
-              "enums": null,
               "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender",
               "order": 6,
               "value": "",
@@ -4609,6 +4613,10 @@ final dynamic sampleFlows = {
               "readOnly": false,
               "required": true,
               "fieldName": "gender",
+              "enums" : [
+                {"code": "MALE", "name": "MALE"},
+                {"code": "FEMALE", "name": "Female"}
+              ],
               "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
