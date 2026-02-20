@@ -988,6 +988,75 @@ void initializeFunctionRegistry() {
     return '';
   });
 
+  /// Registers a function to check if the edit button should be disabled.
+  ///
+  /// - **Function Name**: `'disableEdit'`
+  /// - **Arguments**:
+  ///   - First argument: task - the task list for the beneficiary
+  ///   - Second argument (optional): referral - the referral data
+  /// - **Returns**: `true` if editing should be disabled, `false` otherwise.
+  ///
+  /// Editing is disabled when:
+  /// 1. Any task has a success status (ADMINISTRATION_SUCCESS or DELIVERED)
+  /// 2. Any task is not eligible (INELIGIBLE status)
+  /// 3. A referral exists (not null/empty)
+  FunctionRegistry.register("disableEdit", (args, stateData) {
+    // Check task statuses - if ANY task is delivered or ineligible, disable
+    if (args.isNotEmpty && args.first != null) {
+      final tasks = args.first;
+
+      if (tasks is List && tasks.isNotEmpty) {
+        for (final item in tasks) {
+          Map<String, dynamic>? taskMap;
+          if (item is Map<String, dynamic>) {
+            taskMap = item;
+          } else if (item is Map) {
+            taskMap = Map<String, dynamic>.from(item);
+          } else {
+            try {
+              taskMap = (item as dynamic).toMap() as Map<String, dynamic>;
+            } catch (_) {
+              try {
+                taskMap =
+                    (item as dynamic).toJson() as Map<String, dynamic>;
+              } catch (_) {
+                taskMap = null;
+              }
+            }
+          }
+
+          if (taskMap != null) {
+            final status = taskMap['status']?.toString().toUpperCase().trim();
+
+            // Disable if any task status is success
+            if (status == 'ADMINISTRATION_SUCCESS' || status == 'DELIVERED') {
+              return true;
+            }
+
+            // Disable if any task is not eligible
+            if (status == 'INELIGIBLE') {
+              return true;
+            }
+          }
+        }
+      }
+    }
+
+    // Disable if referral exists
+    if (args.length > 1 && args[1] != null) {
+      final referral = args[1];
+
+      if (referral is List && referral.isNotEmpty) {
+        return true;
+      }
+      if (referral is Map && referral.isNotEmpty) {
+        return true;
+      }
+    }
+
+    return false;
+  });
+
   FunctionRegistry.register("canRecordDelivery", (args, stateData) {
     final projectType = FlowBuilderSingleton().projectType;
     if (projectType == null || projectType.cycles == null) {

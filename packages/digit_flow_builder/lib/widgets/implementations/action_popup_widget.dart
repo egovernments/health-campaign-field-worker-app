@@ -50,6 +50,18 @@ class ActionPopupWidget implements FlowWidget {
 
           // Show popup if popupConfig is provided
           if (popupConfig != null) {
+            // Execute onOpenAction before showing popup
+            final onOpenActions =
+                popupConfig['onOpenAction'] as List<dynamic>?;
+            if (onOpenActions != null) {
+              for (var raw in onOpenActions) {
+                if (raw is Map<String, dynamic>) {
+                  final action = ActionConfig.fromJson(raw);
+                  onAction(action);
+                }
+              }
+            }
+
             await _showActionPopup(context, popupConfig, onAction, screenKey,
                 stateData, item, listIndex, compositeKey);
           }
