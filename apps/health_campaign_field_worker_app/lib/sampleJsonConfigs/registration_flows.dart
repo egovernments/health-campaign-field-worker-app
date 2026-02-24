@@ -3699,7 +3699,9 @@ final dynamic sampleFlows = {
               }
             }
           ],
-          "condition": {"expression": "doseIndex == 1"}
+          "condition": {
+            "expression": "doseIndex == 1 && deliveryStrategy == INDIRECT"
+          }
         },
         {
           "actionType": "NAVIGATION",
