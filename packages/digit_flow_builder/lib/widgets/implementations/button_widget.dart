@@ -18,6 +18,8 @@ class ButtonWidget extends ResolvedFlowWidget {
   ) {
     final props = Map<String, dynamic>.from(json['properties'] ?? {});
 
+    Map<String, Color> colorMap = {'green': Colors.green};
+
     return WidgetParsers.wrapWithBottomGap(
       DigitButton(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -32,6 +34,8 @@ class ButtonWidget extends ResolvedFlowWidget {
         },
         type: WidgetParsers.parseButtonType(props['type']),
         size: WidgetParsers.parseButtonSize(props['size']),
+        iconColor: colorMap[props["color"]],
+        textColor: colorMap[props["color"]],
         mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
         mainAxisAlignment:
             WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),
