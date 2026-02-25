@@ -34,10 +34,12 @@ class FormEntityMapper {
 
           if (listData is List && listData.isNotEmpty) {
             // Apply skipFirst - skip the first N items
-            final startIndex = skipFirst < listData.length ? skipFirst : listData.length;
+            final startIndex =
+                skipFirst < listData.length ? skipFirst : listData.length;
 
             if (kDebugMode && skipFirst > 0) {
-              print('listSource: Skipping first $skipFirst items, starting from index $startIndex');
+              print(
+                  'listSource: Skipping first $skipFirst items, starting from index $startIndex');
             }
 
             // Create one model instance for each item in the list (after skipping)
@@ -883,7 +885,8 @@ class FormEntityMapper {
         print('   fullPath: "$fullPath"');
 
         // Debug: check what the list item looks like
-        final listItem = _getValueFromPath(context, '$contextPath[$listItemIndex]');
+        final listItem =
+            _getValueFromPath(context, '$contextPath[$listItemIndex]');
         print('   listItem type: ${listItem?.runtimeType}');
         if (listItem is Map) {
           print('   listItem keys: ${listItem.keys}');
@@ -979,10 +982,6 @@ class FormEntityMapper {
         "createdBy": context['userUUID'],
         "createdTime": now,
       };
-    }
-
-    if (instruction == '__generate:timestamp') {
-      return DateTime.now().millisecondsSinceEpoch;
     }
 
     if (instruction.startsWith('__ref:') && updateMapping == false) {

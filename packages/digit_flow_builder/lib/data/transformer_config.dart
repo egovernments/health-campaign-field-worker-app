@@ -1030,66 +1030,10 @@ final jsonConfig = {
             "referralCycle": "__context:cycleIndex",
             "gender": "__context:selectedIndividualGender",
             "ageInMonths": "__context:selectedIndividualAgeInMonths",
-            "dateOfEvaluation": "__generate:timestamp"
+            "dateOfEvaluation": "__value:DATETIME.NOW"
           }
         }
       }
-
-      // "ReferralModel": {
-      //   "mappings": {
-      //     "nonRecoverableError": "referral.nonRecoverable",
-      //     "clientReferenceId": "__generate:uuid",
-      //     "rowVersion": "meta.rowVersion",
-      //     "clientAuditDetails": "__generate:clientAudit",
-      //     "auditDetails": "__generate:audit",
-      //     "projectId": "__context:projectId",
-      //     "projectBeneficiaryClientReferenceId":
-      //         "__context:ProjectBeneficiaryClientReferenceId",
-      //     "recipientType":
-      //         "__switch:referBeneficiary.healthevaluationFacilityFacility:{Community Health Worker:STAFF,default:__value:FACILITY}",
-      //     "recipientId":
-      //         //"__switch:referBeneficiary.evaluationFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.evaluationFacility}"
-      //         "__switch:referBeneficiary.healthFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.healthFacility}",
-      //     "referrerId": "__context:userUUID",
-      //     "reasons": "collect:referBeneficiary.referralReason",
-      //     "tenantId": "__context:tenantId",
-      //     "additionalFields": {
-      //       "boundaryCode": "facilityDetails.administrativeUnit",
-      //       "referralComments": "referBeneficiary.referralComments"
-      //     }
-      //   }
-      // }
-      // ,
-      // "HFReferralModel": {
-      //   "mappings": {
-      //     "tenantId": "__context:tenantId",
-      //     "projectId": "__context:projectId",
-      //     "projectFacilityId":
-      //         //"__switch:referBeneficiary.evaluationFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.evaluationFacility}"
-      //         "__switch:referBeneficiary.projectFacilityId:{Community Health Worker:__context:userUUID,default:referBeneficiary.projectFacilityId}",
-      //     "beneficiaryId": "__context:ProjectBeneficiaryClientReferenceId",
-      //     "referralCode": "__context:selectedIndividualClientReferenceId",
-      //     "name": "__context:selectedIndividualName",
-      //     "symptom": "referBeneficiary.referralReason",
-      //     "nonRecoverableError": "referral.nonRecoverable",
-      //     "clientReferenceId": "__generate:uuid",
-      //     "rowVersion": "meta.rowVersion",
-      //     "clientAuditDetails": "__generate:clientAudit",
-      //     "auditDetails": "__generate:audit",
-      //     "localityCode": "__context:selectedBoundaryCode",
-      //     "additionalFields": {
-      //       // Explicit field mappings matching ReferralReconEnums/ReferralReconAdditionalFields
-      //       "boundaryCode": "referBeneficiary.administrativeArea",
-      //       "referredBy": "__context:userUUID",
-      //       "referralComments": "referBeneficiary.referralComments",
-      //       "nameOfReferral": "__context:selectedIndividualName",
-      //       "referralCycle": "__context:cycleIndex",
-      //       "gender": "__context:selectedIndividualGender",
-      //       "ageInMonths": "__context:selectedIndividualAgeInMonths",
-      //       "dateOfEvaluation": "__generate:timestamp"
-      //     }
-      //   }
-      // }
     }
   }
 };
