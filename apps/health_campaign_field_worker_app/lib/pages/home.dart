@@ -906,11 +906,19 @@ class _HomePageState extends LocalizedState<HomePage> {
                       to: 'task',
                       localKey: 'clientReferenceId',
                       foreignKey: 'projectBeneficiaryClientReferenceId'),
+                  // const RelationshipMapping(
+                  //     from: 'projectBeneficiary',
+                  //     to: 'referral',
+                  //     localKey: 'clientReferenceId',
+                  //     foreignKey: 'projectBeneficiaryClientReferenceId'),
+                  // hfreferral
+                  // beneficiaryId
                   const RelationshipMapping(
                       from: 'projectBeneficiary',
-                      to: 'referral',
+                      to: 'hFReferral',
                       localKey: 'clientReferenceId',
-                      foreignKey: 'projectBeneficiaryClientReferenceId'),
+                      foreignKey: 'beneficiaryId'),
+
                   // Conditional mapping
                   if (FlowBuilderSingleton().beneficiaryType ==
                       BeneficiaryType.household)

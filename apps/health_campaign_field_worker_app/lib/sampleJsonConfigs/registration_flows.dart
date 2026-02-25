@@ -629,7 +629,7 @@ final dynamic sampleFlows = {
           "mandatory": true,
           "properties": {"type": "success"},
           "description":
-              "ID-{{navigation.ProjectBeneficiaryClientReferenceId}}",
+              "ID-{{contextData.0.navigation.ProjectBeneficiaryClientReferenceId}}",
           "primaryAction": {
             "type": "template",
             "label": "REFERRAL_VIEW_HOUSEHOLD_DETAILS",

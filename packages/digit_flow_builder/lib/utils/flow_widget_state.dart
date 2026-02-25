@@ -146,10 +146,24 @@ class WidgetStateContext {
     final registryState =
         compositeKey != null ? FlowCrudStateRegistry().get(compositeKey) : null;
 
+    // Fetch navigation params and include in contextData
+    final key = compositeKey ?? screenKey;
+    final navigationParams = key != null
+        ? FlowCrudStateRegistry().getNavigationParams(key) ??
+            FlowCrudStateRegistry()
+                .getNavigationParams(screenKey?.split('::').last ?? '')
+        : null;
+
+    final rawContextData = crudCtx?.stateData?.rawState;
+    final enrichedContextData =
+        (navigationParams != null && navigationParams.isNotEmpty)
+            ? [...?rawContextData, {'navigation': navigationParams}]
+            : rawContextData;
+
     return WidgetStateContext(
       itemData: crudCtx?.item,
       parentData: _resolveParentData(crudCtx),
-      contextData: crudCtx?.stateData?.rawState,
+      contextData: enrichedContextData,
       formData: registryState?.formData ?? {},
       widgetData: registryState?.widgetData ?? {},
       modelMap: crudCtx?.stateData?.modelMap ?? {},
