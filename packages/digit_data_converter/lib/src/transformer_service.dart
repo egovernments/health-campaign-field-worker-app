@@ -295,13 +295,17 @@ class FormEntityMapper {
             }
           }
         } else if (sourcePath is String) {
-          final formValue =
-              getStrictValueFromFormDataOnly(sourcePath, formData);
+          if (containsPathInFormData(sourcePath, formData)) {
+            final formValue =
+                getStrictValueFromFormDataOnly(sourcePath, formData);
 
-          if (formValue != null) {
-            target[targetKey] = formValue is DateTime
+            target[targetKey] = (formValue != null && formValue is DateTime)
                 ? formValue.millisecondsSinceEpoch
                 : formValue;
+
+            // Track the path as used so it's not treated as unmapped
+            usedPaths
+                .add(sourcePath.split('.').last.split('[').first);
           }
         }
       }
@@ -347,9 +351,9 @@ class FormEntityMapper {
           final mappingPath = entry.value;
 
           if (mappingPath is String) {
-            final formValue =
-                getStrictValueFromFormDataOnly(mappingPath, formValues);
-            if (formValue != null) {
+            if (containsPathInFormData(mappingPath, formValues)) {
+              final formValue =
+                  getStrictValueFromFormDataOnly(mappingPath, formValues);
               updated[modelField] = formValue;
             }
           }
@@ -384,10 +388,12 @@ class FormEntityMapper {
     final updatedFields = <String, dynamic>{};
 
     updateMapping.forEach((customKey, path) {
-      final value = getStrictValueFromFormDataOnly(path, formValues);
-
-      if (value != null) {
+      if (containsPathInFormData(path, formValues)) {
+        final value = getStrictValueFromFormDataOnly(path, formValues);
         updatedFields[customKey] = value;
+
+        // Track the path as used so it's not treated as unmapped
+        usedPaths.add(path.split('.').last.split('[').first);
       }
     });
 
@@ -453,6 +459,31 @@ class FormEntityMapper {
     }
 
     return current;
+  }
+
+  bool containsPathInFormData(String path, Map<String, dynamic> formValues) {
+    final regex = RegExp(r'([^\[\].]+)(?:\[(\d+)\])?');
+
+    dynamic current = formValues;
+    for (final match in regex.allMatches(path)) {
+      final key = match.group(1);
+
+      if (current is Map<String, dynamic> &&
+          key != null &&
+          current.containsKey(key)) {
+        current = current[key];
+      } else if (current is List &&
+          current.length == 1 &&
+          current.first is Map<String, dynamic> &&
+          key != null &&
+          (current.first as Map<String, dynamic>).containsKey(key)) {
+        current = (current.first as Map<String, dynamic>)[key];
+      } else {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   EntityModel _mapModel(
