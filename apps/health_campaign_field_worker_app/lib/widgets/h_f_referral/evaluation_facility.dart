@@ -1,6 +1,5 @@
 import 'package:digit_data_model/blocs/project_facility/project_facility.dart';
 import 'package:digit_data_model/models/entities/project_facility.dart';
-import 'package:digit_flow_builder/flow_builder.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:digit_forms_engine/helper/validation_message_helper.dart';
 import 'package:digit_forms_engine/models/property_schema/property_schema.dart';
@@ -29,7 +28,6 @@ class EvaluationKeyDropDown extends LocalizedStatefulWidget {
 
 class _EvaluationKeyDropDownState
     extends LocalizedState<EvaluationKeyDropDown> {
-
   @override
   void initState() {
     super.initState();
@@ -60,8 +58,12 @@ class _EvaluationKeyDropDownState
     bool isRequiredFromSchema = false;
     dynamic validationMessages;
 
-    final pages =
-        context.read<FormsBloc>().state.cachedSchemas[widget.schemaName]?.pages ?? context.read<FormsBloc>().state.cachedSchemas["REFERRAL_CREATE"]?.pages;
+    final pages = context
+            .read<FormsBloc>()
+            .state
+            .cachedSchemas[widget.schemaName]
+            ?.pages ??
+        context.read<FormsBloc>().state.cachedSchemas["REFERRAL_CREATE"]?.pages;
 
     void walk(Map<String, PropertySchema> node, List<String> pathSoFar) {
       for (final entry in node.entries) {
@@ -73,7 +75,8 @@ class _EvaluationKeyDropDownState
               (schema.readOnly == true) || (schema.displayOnly == true);
           labelFromSchema = schema.label ?? schema.innerLabel;
           if (schema.validations != null) {
-            validationMessages = buildValidationMessages(schema.validations, localizations);
+            validationMessages =
+                buildValidationMessages(schema.validations, localizations);
             for (final validation in schema.validations!) {
               if (validation.type == "required" && validation.value == true) {
                 isRequiredFromSchema = true;
@@ -114,6 +117,7 @@ class _EvaluationKeyDropDownState
             errorMessage: field.errorText,
             items: _mapItems(projectFacilities),
             onSelect: (val) {
+              debugPrint('EVAL_DROPDOWN: onSelect - name=${val.name}, code=${val.code}, schema=${widget.schemaName}, key=${widget.formControlName}');
               form.control(widget.formControlName).markAsTouched();
               form.control(widget.formControlName).value = val.code;
 
@@ -125,22 +129,6 @@ class _EvaluationKeyDropDownState
                       value: val.code,
                     ),
                   );
-
-              // Store the project facility id separately for HFReferralModel
-              // This is needed because the dropdown code stores facilityId for REFER_BENEFICIARY
-              // but HFReferralModel needs the project facility id
-              if (widget.schemaName == "REFER_BENEFICIARY") {
-                final selectedFacility = projectFacilities.firstWhere(
-                  (f) => f.facilityId == val.code,
-                  orElse: () => projectFacilities.first,
-                );
-
-                // Store in transient registry for transformer to access via __context:
-                TransientFormValueRegistry().set(
-                  'selectedProjectFacilityId',
-                  selectedFacility.id,
-                );
-              }
             },
           ),
         );
@@ -152,7 +140,7 @@ class _EvaluationKeyDropDownState
     return keys
         .map((key) => DropdownItem(
               name: key.facilityId,
-              code: widget.schemaName == "REFER_BENEFICIARY" ? key.facilityId : key.id,
+              code: key.id,
             ))
         .toList();
   }

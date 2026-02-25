@@ -978,38 +978,15 @@ final jsonConfig = {
     },
   },
   "referralBeneficaryCreate": {
-    "fallbackModel": "ReferralModel",
+    "fallbackModel": "HFReferralModel",
     "models": {
-      "ReferralModel": {
-        "mappings": {
-          "nonRecoverableError": "referral.nonRecoverable",
-          "clientReferenceId": "__generate:uuid",
-          "rowVersion": "meta.rowVersion",
-          "clientAuditDetails": "__generate:clientAudit",
-          "auditDetails": "__generate:audit",
-          "projectId": "__context:projectId",
-          "projectBeneficiaryClientReferenceId":
-              "__context:ProjectBeneficiaryClientReferenceId",
-          "recipientType":
-              "__switch:referBeneficiary.healthFacility:{Community Health Worker:STAFF,default:__value:FACILITY}",
-          "recipientId":
-              "__switch:referBeneficiary.healthFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.healthFacility}",
-          "referrerId": "__context:userUUID",
-          "reasons": "collect:referBeneficiary.referralReason",
-          "tenantId": "__context:tenantId",
-          "additionalFields": {
-            "boundaryCode": "facilityDetails.administrativeUnit",
-            "referralComments": "referBeneficiary.referralComments"
-          }
-        }
-      },
       "HFReferralModel": {
         "mappings": {
           "tenantId": "__context:tenantId",
           "projectId": "__context:projectId",
           "projectFacilityId":
               //"__switch:referBeneficiary.evaluationFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.evaluationFacility}"
-              "__switch:referBeneficiary.healthFacility:{Community Health Worker:__context:userUUID,default:__context:selectedProjectFacilityId}",
+              "__switch:referBeneficiary.healthFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.healthFacility}",
           "beneficiaryId": "__context:ProjectBeneficiaryClientReferenceId",
           "referralCode": "__context:selectedIndividualClientReferenceId",
           "name": "__context:selectedIndividualName",

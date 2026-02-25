@@ -243,15 +243,6 @@ class TransformerExecutor extends ActionExecutor {
       }
     }
 
-    // Add transient form values to context
-    // These are values stored by custom widgets that need to be accessible via __context:
-    final transientValues = TransientFormValueRegistry().all;
-    if (transientValues.isNotEmpty) {
-      contextMap.addAll(transientValues);
-      debugPrint(
-          'TRANSFORMER: Added transient form values to context: ${transientValues.keys.toList()}');
-    }
-
     List<EntityModel> entities = [];
 
     // Use updateEntitiesFromForm for edit mode with existing models

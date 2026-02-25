@@ -7,27 +7,28 @@ import 'package:flutter/material.dart';
 import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
 import '../../utils/conditional_evaluator.dart';
+import '../../utils/flow_widget_state.dart';
 import '../../utils/utils.dart';
 import '../../widget_registry.dart';
+import '../flow_widget_interface.dart';
 import '../localization_context.dart';
-import '../resolved_flow_widget.dart';
 
-class TableWidget extends ResolvedFlowWidget {
+class TableWidget implements FlowWidget {
   @override
   String get format => 'table';
 
   @override
-  Widget buildResolved(
+  Widget build(
     Map<String, dynamic> json,
     BuildContext context,
     void Function(ActionConfig) onAction,
-    ResolvedWidgetContext resolved,
   ) {
-    final stateData = resolved.stateData;
-    final localization = resolved.localization;
+    final flowState = WidgetStateContext.of(context);
+    final stateData = flowState.stateData;
+    final localization = LocalizationContext.maybeOf(context);
 
     // Use compositeKey for registry operations (includes instanceId for proper isolation)
-    final compositeKey = resolved.compositeKey ?? resolved.screenKey;
+    final compositeKey = flowState.compositeKey ?? flowState.screenKey;
 
     // Get navigation params for visibility evaluation
     final navigationParams = compositeKey != null
@@ -36,11 +37,22 @@ class TableWidget extends ResolvedFlowWidget {
 
     // Build evaluation context with navigation params
     final evalContext = {
-      ...resolved.evalContext,
+      ...flowState.evalContext,
       'navigation': navigationParams,
       // Legacy support for existing templates
-      'currentItem': resolved.state.itemData,
+      'currentItem': flowState.itemData,
     };
+
+    // Check visibility condition
+    final visible = ConditionalEvaluator.evaluate(
+      json['visible'] ?? true,
+      evalContext,
+      screenKey: flowState.screenKey,
+    );
+
+    if (visible == false) {
+      return const SizedBox.shrink();
+    }
 
     final data = Map<String, dynamic>.from(json['data'] ?? {});
 
@@ -122,6 +134,9 @@ class TableWidget extends ResolvedFlowWidget {
 
     if (sourceList.isEmpty) return const SizedBox.shrink();
 
+    // Use contextData from evalContext (already contains the rawState list)
+    final contextDataList = flowState.contextData ?? [];
+
     final rows = sourceList.asMap().entries.map((entry) {
       final rowItem = entry.value;
 
@@ -147,7 +162,7 @@ class TableWidget extends ResolvedFlowWidget {
 
           final cellValue = ConditionalEvaluator.evaluate(
               rawCellValue, cellEvalContext,
-              screenKey: resolved.screenKey, stateData: stateData);
+              screenKey: flowState.screenKey, stateData: stateData);
 
           // cellValue should already be resolved by ConditionalEvaluator
           // Just convert to string

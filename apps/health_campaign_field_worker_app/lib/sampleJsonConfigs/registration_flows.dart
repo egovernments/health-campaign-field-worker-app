@@ -1,4 +1,8 @@
 final dynamic sampleFlows = {
+  "id": "9d3a901b-d831-427b-8aeb-4bbda9ec2018",
+  "tenantId": "mz",
+  "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
+  "uniqueIdentifier": "REGISTRATION.MR-DN",
   "name": "REGISTRATION",
   "flows": [
     {
@@ -82,6 +86,7 @@ final dynamic sampleFlows = {
           "mandatory": true
         }
       ],
+      "category": "DELIVERY",
       "navigateTo": null,
       "screenType": "TEMPLATE",
       "submitCondition": null,
@@ -330,6 +335,7 @@ final dynamic sampleFlows = {
         }
       ],
       "heading": "BENEFICIARY_DETAILS_HEADING",
+      "category": "DELIVERY",
       "navigateTo": null,
       "screenType": "TEMPLATE",
       "description": "BENEFICIARY_DETAILS_DESC",
@@ -521,12 +527,12 @@ final dynamic sampleFlows = {
             "entity": "SideEffectModel"
           },
           {
-            "name": "referrals",
+            "name": "hFReferral",
             "match": {
-              "field": "clientReferenceId",
+              "field": "beneficiaryId",
               "equalsFrom": "projectBeneficiaries.clientReferenceId"
             },
-            "entity": "ReferralModel"
+            "entity": "HFReferralModel"
           }
         ],
         "rootEntity": "IndividualModel",
@@ -699,6 +705,7 @@ final dynamic sampleFlows = {
           "mandatory": true
         }
       ],
+      "category": "REFERRAL",
       "navigateTo": null,
       "screenType": "TEMPLATE",
       "submitCondition": null,
@@ -797,7 +804,6 @@ final dynamic sampleFlows = {
                         "type": "template",
                         "label": "REGISTRATION_EDIT_INDIVIDUAL_BUTTON_LABEL",
                         "format": "button",
-                        // "disabled": "{{fn:disableEdit(item.task, item.referral)}}==true",
                         "onAction": [
                           {
                             "actionType": "REVERSE_TRANSFORM",
@@ -873,7 +879,7 @@ final dynamic sampleFlows = {
                     "type": "template",
                     "label": "BENEFICIARY_REFERRED",
                     "format": "tag",
-                    "visible": "{{fn:length(item.referral)}} > 0",
+                    "visible": "{{fn:length(item.hFReferral)}} > 0",
                     "fieldName": "beneficiaryReferred",
                     "properties": {"tagType": "error"}
                   },
@@ -882,7 +888,7 @@ final dynamic sampleFlows = {
                     "label": "ADMINISTERED_SUCCESS",
                     "format": "tag",
                     "visible":
-                        "{{fn:isDelivered(item.task.last.status)}}==true && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:length(item.referral)}} <= 0",
+                        "{{fn:isDelivered(item.task.last.status)}}==true && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:length(item.hFReferral)}} <= 0",
                     "fieldName": "administrationSuccess",
                     "properties": {"tagType": "success", "bottomGap": 16}
                   },
@@ -891,7 +897,7 @@ final dynamic sampleFlows = {
                     "label": "NOT_VISITED",
                     "format": "tag",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:length(item.referral)}} <= 0",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:length(item.hFReferral)}} <= 0",
                     "fieldName": "notVisited",
                     "properties": {"tagType": "info", "bottomGap": 16}
                   },
@@ -900,7 +906,7 @@ final dynamic sampleFlows = {
                     "label": "DELIVERY",
                     "format": "button",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:length(item.referral)}} <= 0",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:length(item.hFReferral)}} <= 0",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -941,7 +947,7 @@ final dynamic sampleFlows = {
                     "label": "REGISTRATION_VIEW_DETAILS",
                     "format": "button",
                     "visible":
-                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true &&  {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:length(item.referral)}} <= 0",
+                        "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true &&  {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:length(item.hFReferral)}} <= 0",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -1039,6 +1045,7 @@ final dynamic sampleFlows = {
         }
       ],
       "heading": "REGISTRATION_HOUSEHOLD_OVERVIEW_HEADING",
+      "category": "REGISTRATION",
       "navigateTo": null,
       "screenType": "TEMPLATE",
       "description": "REGISTRATION_HOUSEHOLD_OVERVIEW_DESC",
@@ -1129,12 +1136,12 @@ final dynamic sampleFlows = {
                 "entity": "TaskModel"
               },
               {
-                "name": "referral",
+                "name": "hFReferral",
                 "match": {
-                  "field": "projectBeneficiaryClientReferenceId",
+                  "field": "beneficiaryId",
                   "equalsFrom": "projectBeneficiary.clientReferenceId"
                 },
-                "entity": "ReferralModel"
+                "entity": "HFReferralModel"
               }
             ]
           }
@@ -1148,7 +1155,8 @@ final dynamic sampleFlows = {
             "householdMember",
             "projectBeneficiary",
             "task",
-            "referral"
+            "referral",
+            "hFReferral"
           ],
           "primary": "household"
         }
@@ -1378,7 +1386,7 @@ final dynamic sampleFlows = {
                             "data": [
                               {
                                 "key": "projectId",
-                                "root": "referral",
+                                "root": "hFReferral",
                                 "value": "{{singleton.selectedProject.id}}",
                                 "operation": "equals"
                               }
@@ -1632,6 +1640,7 @@ final dynamic sampleFlows = {
         }
       ],
       "heading": "REGISTRATION_SEARCH_BENEFICIARY_HEADING",
+      "category": "REGISTRATION",
       "navigateTo": null,
       "screenType": "TEMPLATE",
       "description": "REGISTRATION_SEARCH_BENEFICIARY_DESC",
@@ -1698,12 +1707,12 @@ final dynamic sampleFlows = {
             "entity": "SideEffectModel"
           },
           {
-            "name": "referrals",
+            "name": "hFReferral",
             "match": {
-              "field": "clientReferenceId",
-              "equalsFrom": "clientReferenceId"
+              "field": "beneficiaryId",
+              "equalsFrom": "projectBeneficiaries.clientReferenceId"
             },
-            "entity": "ReferralModel"
+            "entity": "HFReferralModel"
           }
         ],
         "rootEntity": "HouseholdModel",
@@ -2262,6 +2271,7 @@ final dynamic sampleFlows = {
       ],
       "summary": false,
       "version": 3,
+      "category": "DELIVERY",
       "disabled": false,
       "onAction": [
         {
@@ -2820,6 +2830,7 @@ final dynamic sampleFlows = {
       ],
       "summary": false,
       "version": 3,
+      "category": "DELIVERY",
       "disabled": false,
       "onAction": [
         {
@@ -3241,13 +3252,15 @@ final dynamic sampleFlows = {
             },
             {
               "type": "string",
-              "enums": null,
+              "enums": [
+                {"code": "DEFAULT", "name": "DEFAULT"}
+              ],
               "label":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers_addmember",
               "order": 3,
               "value": "",
               "format": "idPopulator",
-              "hidden": true,
+              "hidden": false,
               "isMdms": true,
               "tooltip": "",
               "helpText": "",
@@ -3258,7 +3271,6 @@ final dynamic sampleFlows = {
               "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
-              "includeInForm": true,
               "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR",
               "systemDate": false,
               "validations": [
@@ -3333,11 +3345,11 @@ final dynamic sampleFlows = {
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_mandatory_message_addmember"
             },
             {
-              "type": "string",
               "enums": [
                 {"code": "MALE", "name": "MALE"},
-                {"code": "FEMALE", "name": "Female"}
+                {"code": "FEMALE", "name": "FEMALE"}
               ],
+              "type": "string",
               "label":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender_addmember",
               "order": 5,
@@ -3380,6 +3392,7 @@ final dynamic sampleFlows = {
               "format": "mobileNumber",
               "hidden": false,
               "isMdms": false,
+              "pattern": "^\\d+",
               "tooltip":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_tooltip_addmember",
               "helpText":
@@ -3398,6 +3411,11 @@ final dynamic sampleFlows = {
                 "errorMessage": "MOBILE_LENGTH_10_DIGIT_ERROR_ADDMEMBER"
               },
               "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^\\d+",
+                  "message": "MB_ONLY_NUMBERS"
+                },
                 {
                   "type": "minLength",
                   "value": 10,
@@ -3451,6 +3469,7 @@ final dynamic sampleFlows = {
       ],
       "summary": false,
       "version": 3,
+      "category": "REGISTRATION",
       "disabled": false,
       "onAction": [
         {
@@ -3578,12 +3597,12 @@ final dynamic sampleFlows = {
             "entity": "SideEffectModel"
           },
           {
-            "name": "referrals",
+            "name": "hFReferral",
             "match": {
-              "field": "clientReferenceId",
-              "equalsFrom": "household.clientReferenceId"
+              "field": "beneficiaryId",
+              "equalsFrom": "projectBeneficiaries.clientReferenceId"
             },
-            "entity": "ReferralModel"
+            "entity": "HFReferralModel"
           }
         ],
         "rootEntity": "HouseholdMemberModel",
@@ -3822,7 +3841,9 @@ final dynamic sampleFlows = {
             },
             {
               "type": "string",
-              "enums": null,
+              "enums": [
+                {"code": "FEVER", "name": "FEVER"}
+              ],
               "label": "HFREFERRAL_REFERRAL_DETAILS_referralReason_LABEL",
               "order": 4,
               "value": "",
@@ -3864,6 +3885,7 @@ final dynamic sampleFlows = {
       ],
       "summary": false,
       "version": 3,
+      "category": "REFERRAL",
       "disabled": false,
       "onAction": [
         {
@@ -4304,14 +4326,15 @@ final dynamic sampleFlows = {
             },
             {
               "type": "string",
-              "enums": null,
+              "enums": [
+                {"code": "DEFAULT", "name": "DEFAULT"}
+              ],
               "label":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers",
               "order": 4,
               "value": "",
               "format": "idPopulator",
-              "hidden": true,
-              "includeInForm": true,
+              "hidden": false,
               "isMdms": true,
               "tooltip": "",
               "helpText": "",
@@ -4380,6 +4403,10 @@ final dynamic sampleFlows = {
             },
             {
               "type": "string",
+              "enums": [
+                {"code": "MALE", "name": "MALE"},
+                {"code": "FEMALE", "name": "FEMALE"}
+              ],
               "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender",
               "order": 6,
               "value": "",
@@ -4392,10 +4419,6 @@ final dynamic sampleFlows = {
               "readOnly": false,
               "required": true,
               "fieldName": "gender",
-              "enums": [
-                {"code": "MALE", "name": "MALE"},
-                {"code": "FEMALE", "name": "Female"}
-              ],
               "mandatory": true,
               "deleteFlag": false,
               "innerLabel": "",
@@ -4420,6 +4443,7 @@ final dynamic sampleFlows = {
               "format": "mobileNumber",
               "hidden": false,
               "isMdms": false,
+              "pattern": "^\\d+",
               "tooltip":
                   "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_tooltip",
               "helpText":
@@ -4438,6 +4462,11 @@ final dynamic sampleFlows = {
                 "errorMessage": "MOBILE_LENGTH_10_DIGIT_ERROR"
               },
               "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^\\d+",
+                  "message": "MB_ONLY_NUMBER"
+                },
                 {
                   "type": "minLength",
                   "value": 10,
@@ -5203,6 +5232,7 @@ final dynamic sampleFlows = {
               "format": "text",
               "hidden": true,
               "isMdms": false,
+              "pattern": "^\\d+",
               "tooltip": "",
               "helpText":
                   "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_pincode_helpText",
@@ -5214,7 +5244,13 @@ final dynamic sampleFlows = {
               "innerLabel": "",
               "schemaCode": null,
               "systemDate": false,
-              "validations": [],
+              "validations": [
+                {
+                  "type": "pattern",
+                  "value": "^\\d+",
+                  "message": "PINCODE_ONLY_NUMBERS"
+                }
+              ],
               "errorMessage": "",
               "pattern.message": "PINCODE_ONLY_NUMBERS"
             },
@@ -5271,6 +5307,7 @@ final dynamic sampleFlows = {
       ],
       "summary": false,
       "version": 3,
+      "category": "REGISTRATION",
       "disabled": false,
       "onAction": [
         {
@@ -5500,12 +5537,12 @@ final dynamic sampleFlows = {
             "entity": "SideEffectModel"
           },
           {
-            "name": "referrals",
+            "name": "hFReferral",
             "match": {
-              "field": "clientReferenceId",
-              "equalsFrom": "household.clientReferenceId"
+              "field": "beneficiaryId",
+              "equalsFrom": "projectBeneficiaries.clientReferenceId"
             },
-            "entity": "ReferralModel"
+            "entity": "HFReferralModel"
           }
         ],
         "rootEntity": "HouseholdMemberModel",
@@ -5530,5 +5567,12 @@ final dynamic sampleFlows = {
   "version": 1,
   "disabled": false,
   "isSelected": true,
-  "initialPage": "searchBeneficiary"
+  "initialPage": "searchBeneficiary",
+  "isActive": true,
+  "auditDetails": {
+    "createdBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
+    "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+    "createdTime": 1766988969631,
+    "lastModifiedTime": 1771829004541
+  }
 };

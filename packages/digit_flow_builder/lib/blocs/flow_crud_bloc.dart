@@ -27,7 +27,8 @@ class FlowCrudBloc extends CrudBloc {
 
     final CrudState crudState = transition.nextState;
     List<dynamic>? wrapper;
-    final existingState = FlowCrudStateRegistry().getByCompositeKey(compositeKey);
+    final existingState =
+        FlowCrudStateRegistry().getByCompositeKey(compositeKey);
 
     // Handle loading state
     if (crudState is CrudStateLoading) {
@@ -58,10 +59,10 @@ class FlowCrudBloc extends CrudBloc {
     if (crudState is CrudStateLoaded) {
       // Consume scroll direction and pagination info when we have loaded data
       // This prevents intermediate states (Loading) from consuming the flags
-      final scrollDirection =
-          FlowCrudStateRegistry().consumeScrollDirectionByCompositeKey(compositeKey);
-      final paginationInfo =
-          FlowCrudStateRegistry().consumePaginationInfoByCompositeKey(compositeKey);
+      final scrollDirection = FlowCrudStateRegistry()
+          .consumeScrollDirectionByCompositeKey(compositeKey);
+      final paginationInfo = FlowCrudStateRegistry()
+          .consumePaginationInfoByCompositeKey(compositeKey);
 
       // Fallback to legacy append mode for backwards compatibility
       final legacyAppendMode =
@@ -69,7 +70,8 @@ class FlowCrudBloc extends CrudBloc {
 
       final newEntities =
           crudState.results.values.expand((list) => list).toList();
-      final wrapperConfig = flowConfig['wrapperConfig'] as Map<String, dynamic>?;
+      final wrapperConfig =
+          flowConfig['wrapperConfig'] as Map<String, dynamic>?;
       final newWrapper = wrapperConfig != null
           ? WrapperBuilder(
               newEntities,
@@ -114,7 +116,8 @@ class FlowCrudBloc extends CrudBloc {
         // groups N entities into 1 wrapper item, skewing the pagination count.
         // For other configs, use wrapper length (original behavior).
         final isGrouped = wrapperConfig?['groupByType'] == true;
-        final initialLoadCount = isGrouped ? newEntities.length : newWrapper.length;
+        final initialLoadCount =
+            isGrouped ? newEntities.length : newWrapper.length;
         _updatePaginationWindowInitial(initialLoadCount, paginationInfo);
       }
 
@@ -131,14 +134,16 @@ class FlowCrudBloc extends CrudBloc {
       FlowCrudStateRegistry().updateByCompositeKey(compositeKey, flowState);
     } else if (crudState is CrudStatePersisted) {
       final entities = crudState.entities;
-      final persistedWrapperConfig = flowConfig['wrapperConfig'] as Map<String, dynamic>?;
-      wrapper = persistedWrapperConfig != null
-          ? WrapperBuilder(
-              entities,
-              persistedWrapperConfig,
-              screenKey: screenKey,
-            ).build()
-          : entities;
+      // final persistedWrapperConfig = flowConfig['wrapperConfig'] as Map<String, dynamic>?;
+      wrapper =
+          //persistedWrapperConfig != null
+          //     ? WrapperBuilder(
+          //         entities,
+          //         persistedWrapperConfig,
+          //         screenKey: screenKey,
+          //       ).build()
+          //     :
+          entities;
       // Preserve existing formData and widgetData when creating new state
       final flowState = FlowCrudState(
         base: crudState,
@@ -182,7 +187,8 @@ class FlowCrudBloc extends CrudBloc {
       // Trim entities (not wrapper items) if exceeds max
       if (totalBeforeTrim > maxItems) {
         result = _trimGroupedWrappers(result, maxItems, direction);
-        debugPrint('FlowCrudBloc: Trimmed grouped wrapper from $totalBeforeTrim to $maxItems entities');
+        debugPrint(
+            'FlowCrudBloc: Trimmed grouped wrapper from $totalBeforeTrim to $maxItems entities');
       }
 
       debugPrint(
@@ -381,8 +387,11 @@ class FlowCrudBloc extends CrudBloc {
       '_pagination',
       direction: direction,
       loadedCount: 0,
-      totalInWindow:
-          FlowCrudStateRegistry().getByCompositeKey(compositeKey)?.stateWrapper?.length ?? 0,
+      totalInWindow: FlowCrudStateRegistry()
+              .getByCompositeKey(compositeKey)
+              ?.stateWrapper
+              ?.length ??
+          0,
     );
   }
 
@@ -403,7 +412,8 @@ class FlowCrudStateRegistry {
   final Map<String, bool> _appendMode = {};
   final Map<String, String> _scrollDirection = {}; // 'up' or 'down'
   final Map<String, Map<String, int>> _paginationInfo = {}; // limit, windowSize
-  final Map<String, String> _instanceIds = {}; // screenKey -> current instanceId
+  final Map<String, String> _instanceIds =
+      {}; // screenKey -> current instanceId
 
   static final FlowCrudStateRegistry _instance =
       FlowCrudStateRegistry._internal();
@@ -426,7 +436,8 @@ class FlowCrudStateRegistry {
   /// Register instanceId for a screen key
   void registerInstance(String key, String instanceId) {
     _instanceIds[key] = instanceId;
-    debugPrint('FlowCrudStateRegistry: Registered instanceId $instanceId for $key');
+    debugPrint(
+        'FlowCrudStateRegistry: Registered instanceId $instanceId for $key');
   }
 
   /// Get the current instanceId for a screen key
@@ -441,7 +452,8 @@ class FlowCrudStateRegistry {
   /// Returns true if disposed, false if skipped
   bool disposeIfOwner(String key, String instanceId) {
     if (_instanceIds[key] != instanceId) {
-      debugPrint('FlowCrudStateRegistry: Skipped dispose for $key - instanceId $instanceId is not current owner (current: ${_instanceIds[key]})');
+      debugPrint(
+          'FlowCrudStateRegistry: Skipped dispose for $key - instanceId $instanceId is not current owner (current: ${_instanceIds[key]})');
       return false;
     }
     // Use composite key for actual disposal
@@ -473,15 +485,19 @@ class FlowCrudStateRegistry {
 
   /// Update state using composite key directly
   void updateByCompositeKey(String compositeKey, FlowCrudState state) {
-    _map.putIfAbsent(compositeKey, () => ValueNotifier<FlowCrudState?>(null)).value = state;
+    _map
+        .putIfAbsent(compositeKey, () => ValueNotifier<FlowCrudState?>(null))
+        .value = state;
   }
 
   /// Get state using composite key directly
-  FlowCrudState? getByCompositeKey(String compositeKey) => _map[compositeKey]?.value;
+  FlowCrudState? getByCompositeKey(String compositeKey) =>
+      _map[compositeKey]?.value;
 
   /// Listen to state using composite key directly
   ValueNotifier<FlowCrudState?> listenByCompositeKey(String compositeKey) {
-    return _map.putIfAbsent(compositeKey, () => ValueNotifier<FlowCrudState?>(null));
+    return _map.putIfAbsent(
+        compositeKey, () => ValueNotifier<FlowCrudState?>(null));
   }
 
   /// Consume append mode using composite key directly
@@ -508,17 +524,21 @@ class FlowCrudStateRegistry {
   /// Set scroll direction using composite key directly
   void setScrollDirectionByCompositeKey(String compositeKey, String direction) {
     _scrollDirection[compositeKey] = direction;
-    debugPrint('FlowCrudStateRegistry: Set scrollDirection=$direction for $compositeKey');
+    debugPrint(
+        'FlowCrudStateRegistry: Set scrollDirection=$direction for $compositeKey');
   }
 
   /// Set pagination info using composite key directly
-  void setPaginationInfoByCompositeKey(String compositeKey, {required int limit, required int maxItems}) {
+  void setPaginationInfoByCompositeKey(String compositeKey,
+      {required int limit, required int maxItems}) {
     _paginationInfo[compositeKey] = {'limit': limit, 'maxItems': maxItems};
-    debugPrint('FlowCrudStateRegistry: Set paginationInfo limit=$limit, maxItems=$maxItems for $compositeKey');
+    debugPrint(
+        'FlowCrudStateRegistry: Set paginationInfo limit=$limit, maxItems=$maxItems for $compositeKey');
   }
 
   /// Update navigation params using composite key directly
-  void updateNavigationParamsByCompositeKey(String compositeKey, Map<String, dynamic>? params) {
+  void updateNavigationParamsByCompositeKey(
+      String compositeKey, Map<String, dynamic>? params) {
     _navParams[compositeKey] = params;
   }
 
@@ -533,7 +553,8 @@ class FlowCrudStateRegistry {
   void setAppendMode(String key, bool append) {
     final compositeKey = _currentCompositeKey(key) ?? key;
     _appendMode[compositeKey] = append;
-    debugPrint('FlowCrudStateRegistry: Set appendMode=$append for $compositeKey');
+    debugPrint(
+        'FlowCrudStateRegistry: Set appendMode=$append for $compositeKey');
   }
 
   /// Get and consume append mode (called during state update) - DEPRECATED
@@ -581,14 +602,16 @@ class FlowCrudStateRegistry {
   void update(String key, FlowCrudState state) {
     // Use composite key if instanceId is registered for this screenKey
     final compositeKey = _currentCompositeKey(key) ?? key;
-    _map.putIfAbsent(compositeKey, () => ValueNotifier<FlowCrudState?>(null)).value =
-        state;
+    _map
+        .putIfAbsent(compositeKey, () => ValueNotifier<FlowCrudState?>(null))
+        .value = state;
   }
 
   ValueNotifier<FlowCrudState?> listen(String key) {
     // Use composite key if instanceId is registered for this screenKey
     final compositeKey = _currentCompositeKey(key) ?? key;
-    return _map.putIfAbsent(compositeKey, () => ValueNotifier<FlowCrudState?>(null));
+    return _map.putIfAbsent(
+        compositeKey, () => ValueNotifier<FlowCrudState?>(null));
   }
 
   FlowCrudState? get(String key) {
@@ -641,12 +664,12 @@ class FlowCrudStateRegistry {
   }
 
   void updateNavigationParams(String key, Map<String, dynamic>? params) {
-    final compositeKey =  key;
+    final compositeKey = key;
     _navParams[compositeKey] = params;
   }
 
   Map<String, dynamic>? getNavigationParams(String key) {
-    final compositeKey = key ;
+    final compositeKey = key;
     return _navParams[compositeKey];
   }
 }
