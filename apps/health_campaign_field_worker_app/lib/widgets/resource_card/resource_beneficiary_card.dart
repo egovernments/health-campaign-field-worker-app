@@ -18,6 +18,7 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
   final bool readOnly;
   final int? maxQuantity;
   final List<DeliveryProductVariant>? variants;
+  final void Function(int index, DeliveryProductVariant product)? onProductChanged;
 
   const ResourceBeneficiaryCard({
     super.key,
@@ -29,6 +30,7 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
     this.maxQuantity,
     this.readOnly = false,
     this.variants,
+    this.onProductChanged,
   });
 
   @override
@@ -51,6 +53,11 @@ class ResourceBeneficiaryCardState
             var selectedOption = selectedOptions.first;
             widget.form.control('resourceDelivered.${widget.cardIndex}').value =
                 selectedOption;
+            // Update quantity to the new product's default quantity
+            widget.form.control('quantityDistributed.${widget.cardIndex}').value =
+                selectedOption.quantity ?? 0;
+            // Notify parent to update maxQuantity
+            widget.onProductChanged?.call(widget.cardIndex, selectedOption);
           } else {
             widget.form.control('resourceDelivered.${widget.cardIndex}').value =
                 null;

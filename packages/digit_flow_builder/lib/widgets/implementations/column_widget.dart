@@ -2,23 +2,22 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../layout_renderer.dart';
-import '../../utils/flow_widget_state.dart';
 import '../../utils/interpolation.dart';
 import '../../widget_registry.dart';
-import '../flow_widget_interface.dart';
+import '../resolved_flow_widget.dart';
 
-class ColumnWidget implements FlowWidget {
+class ColumnWidget extends ResolvedFlowWidget {
   @override
   String get format => 'column';
 
   @override
-  Widget build(
+  Widget buildResolved(
     Map<String, dynamic> json,
     BuildContext context,
     void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
   ) {
-    final flowState = WidgetStateContext.of(context);
-    final stateData = flowState.stateData;
+    final stateData = resolved.stateData;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,20 +26,20 @@ class ColumnWidget implements FlowWidget {
             ? preprocessConfigWithState(
                 Map<String, dynamic>.from(childJson),
                 stateData,
-                listIndex: flowState.listIndex,
-                item: flowState.itemData,
+                listIndex: resolved.state.listIndex,
+                item: resolved.state.itemData,
               )
             : Map<String, dynamic>.from(childJson);
 
         return CrudItemContext(
           stateData: stateData,
-          listIndex: flowState.listIndex,
-          item: flowState.itemData,
-          screenKey: flowState.screenKey,
-          compositeKey: flowState.compositeKey,
+          listIndex: resolved.state.listIndex,
+          item: resolved.state.itemData,
+          screenKey: resolved.screenKey,
+          compositeKey: resolved.compositeKey,
           child: LayoutMapper.map(processedChild, stateData, context, onAction,
-              listIndex: flowState.listIndex, item: flowState.itemData,
-              compositeKey: flowState.compositeKey),
+              listIndex: resolved.state.listIndex, item: resolved.state.itemData,
+              compositeKey: resolved.compositeKey),
         );
       }).toList(),
     );

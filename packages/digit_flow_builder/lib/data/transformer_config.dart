@@ -330,7 +330,6 @@ final jsonConfig = {
     }
   },
   "indirectBulkDelivery": {
-    "fallbackModel": "TaskModel",
     "models": {
       "TaskModel": {
         "listSource": "__context:futureDoses",

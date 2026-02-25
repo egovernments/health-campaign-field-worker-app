@@ -553,10 +553,11 @@ packages:
   digit_dss:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_dss"
-      relative: true
-    source: path
-    version: "1.0.4+2"
+      name: digit_dss
+      sha256: "8e49e0510b079982f5906b87bd9d68b1389a92a74f8e5fb5e0d923f501877077"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4+3"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -604,9 +605,10 @@ packages:
   digit_showcase:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_showcase"
-      relative: true
-    source: path
+      name: digit_showcase
+      sha256: "4667b29e652738a1621e907359da327594c288417f5dfa3da60e77f0342a4eae"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.2+1"
   digit_ui_components:
     dependency: "direct main"
@@ -2057,6 +2059,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.5"
+  sqlite3_flutter_libs:
+    dependency: transitive
+    description:
+      name: sqlite3_flutter_libs
+      sha256: "1e800ebe7f85a80a66adacaa6febe4d5f4d8b75f244e9838a27cb2ffc7aec08d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.41"
   sqlparser:
     dependency: transitive
     description:
@@ -2115,10 +2125,11 @@ packages:
   sync_service:
     dependency: "direct main"
     description:
-      path: "../../packages/sync_service"
-      relative: true
-    source: path
-    version: "1.0.3"
+      name: sync_service
+      sha256: "3d2ea69d48ca024077ffb7b3f086dbab9459ffcfabb204463f7bc347b874fdfe"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   synchronized:
     dependency: transitive
     description:

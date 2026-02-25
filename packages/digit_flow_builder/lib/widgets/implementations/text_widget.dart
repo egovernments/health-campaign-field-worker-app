@@ -2,42 +2,31 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
-import '../../utils/flow_widget_state.dart';
-import '../../utils/utils.dart';
 import '../../utils/widget_parsers.dart';
-import '../flow_widget_interface.dart';
-import '../localization_context.dart';
+import '../resolved_flow_widget.dart';
 
-class TextWidget implements FlowWidget {
+class TextWidget extends ResolvedFlowWidget {
   @override
   String get format =>
       'textTemplate'; // add support to take multiple format types
 
   @override
-  Widget build(
+  Widget buildResolved(
     Map<String, dynamic> json,
     BuildContext context,
     void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
   ) {
-    final state = WidgetStateContext.of(context);
-    final localization = LocalizationContext.maybeOf(context);
-
-    // Resolve template using state.evalContext which provides all contexts:
-    // itemData, parentData, contextData, formData, widgetData, modelMap
+    // Use the pre-resolved label, or resolve 'value' field as fallback
     final value = json['value'] ?? '';
-    final resolvedValue = resolveTemplate(
-          value,
-          state.evalContext,
-          localization: localization,
-        ) ??
-        value;
+    final resolvedValue = resolved.resolveText(value);
 
     // Get style from properties
     final properties = json['properties'] as Map<String, dynamic>? ?? {};
     final styleKey = properties['style']?.toString();
     final textStyle = _parseTextStyle(context, styleKey);
 
-    final displayValue = (resolvedValue ?? '')
+    final displayValue = (resolvedValue)
         .replaceAll(RegExp(r'\bnull\b', caseSensitive: false), '--');
 
     return WidgetParsers.wrapWithBottomGap(

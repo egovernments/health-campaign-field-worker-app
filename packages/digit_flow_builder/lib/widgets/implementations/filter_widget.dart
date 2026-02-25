@@ -4,22 +4,23 @@ import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
-import '../flow_widget_interface.dart';
+import '../resolved_flow_widget.dart';
 
-class FilterWidget implements FlowWidget {
+class FilterWidget extends ResolvedFlowWidget {
   @override
   String get format => 'filter';
 
   @override
-  Widget build(
+  Widget buildResolved(
     Map<String, dynamic> json,
     BuildContext context,
     void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
   ) {
     return DigitButton(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
-      label: json['label'] ?? '',
+      label: resolved.resolvedLabel ?? (json['label'] ?? ''),
       onPressed: () async {
         // trigger configured actions if any
         if (json['onAction'] != null) {
@@ -64,12 +65,7 @@ dynamic showFilterPopup(BuildContext context, String title) {
       onCrossTap: () {
         Navigator.of(ctx, rootNavigator: true).pop();
       },
-      additionalWidgets: const [
-        // Replace with your custom filter widget
-        // StatusFilter(
-        //   selectedFilters: [],
-        // ),
-      ],
+      additionalWidgets: const [],
     ),
   );
 }
