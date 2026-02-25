@@ -82,6 +82,7 @@ class FlowCrudBloc extends CrudBloc {
         wrapper = _handleBidirectionalPagination(
           existingWrapper: existingState!.stateWrapper!,
           newWrapper: newWrapper,
+          rawEntityCount: newEntities.length,
           direction: scrollDirection,
           paginationInfo: paginationInfo,
         );
@@ -109,7 +110,12 @@ class FlowCrudBloc extends CrudBloc {
         wrapper = newWrapper;
 
         // Update pagination window for initial load
-        _updatePaginationWindowInitial(newWrapper.length, paginationInfo);
+        // For groupByType configs, use raw entity count since WrapperBuilder
+        // groups N entities into 1 wrapper item, skewing the pagination count.
+        // For other configs, use wrapper length (original behavior).
+        final isGrouped = wrapperConfig?['groupByType'] == true;
+        final initialLoadCount = isGrouped ? newEntities.length : newWrapper.length;
+        _updatePaginationWindowInitial(initialLoadCount, paginationInfo);
       }
 
       // Preserve existing formData and widgetData when creating new state
@@ -151,6 +157,7 @@ class FlowCrudBloc extends CrudBloc {
   List<dynamic> _handleBidirectionalPagination({
     required List<dynamic> existingWrapper,
     required List<dynamic> newWrapper,
+    required int rawEntityCount,
     required String direction,
     Map<String, int>? paginationInfo,
   }) {
@@ -159,10 +166,28 @@ class FlowCrudBloc extends CrudBloc {
     final maxItems = paginationInfo?['maxItems'] ??
         ((paginationInfo?['windowSize'] ?? 3) * limit);
 
+    final wrapperConfig = flowConfig['wrapperConfig'] as Map<String, dynamic>?;
+    final isGroupedByType = wrapperConfig?['groupByType'] == true;
+
     List<dynamic> result;
     int totalBeforeTrim; // Track pre-trim total for accurate offset calculation
 
-    if (direction == 'down') {
+    if (isGroupedByType) {
+      // groupByType wrappers: each item is {"TypeName": [entities]}.
+      // Merge entity lists within the same type key instead of appending
+      // separate group objects.
+      result = _mergeGroupedWrappers(existingWrapper, newWrapper, direction);
+      totalBeforeTrim = _countGroupedEntities(result);
+
+      // Trim entities (not wrapper items) if exceeds max
+      if (totalBeforeTrim > maxItems) {
+        result = _trimGroupedWrappers(result, maxItems, direction);
+        debugPrint('FlowCrudBloc: Trimmed grouped wrapper from $totalBeforeTrim to $maxItems entities');
+      }
+
+      debugPrint(
+          'FlowCrudBloc: Merged grouped wrapper ($direction), totalEntities=$totalBeforeTrim, afterTrim=${_countGroupedEntities(result)}');
+    } else if (direction == 'down') {
       // Append new items to the end
       result = List<dynamic>.from(existingWrapper);
       result.addAll(newWrapper);
@@ -198,14 +223,111 @@ class FlowCrudBloc extends CrudBloc {
       totalBeforeTrim = result.length;
     }
 
-    // Update pagination window state with PRE-TRIM total so offsets are calculated correctly
+    // Update pagination window state with PRE-TRIM total so offsets are calculated correctly.
+    // For groupByType, use rawEntityCount since wrapper items != entity count.
+    // For non-grouped, use newWrapper.length (original behavior) to avoid side effects.
+    final loadedCount = isGroupedByType ? rawEntityCount : newWrapper.length;
     debugPrint(
         'FlowCrudBloc: Calling _updatePaginationWindow - direction=$direction, '
-        'loadedCount=${newWrapper.length}, totalBeforeTrim=$totalBeforeTrim');
+        'loadedCount=$loadedCount, isGrouped=$isGroupedByType, totalBeforeTrim=$totalBeforeTrim');
     _updatePaginationWindow(
-        direction, newWrapper.length, totalBeforeTrim, paginationInfo);
+        direction, loadedCount, totalBeforeTrim, paginationInfo);
 
     return result;
+  }
+
+  /// Merge grouped wrappers by combining entity lists under the same type key.
+  /// Input format: [{"TypeName": [entities]}]
+  List<dynamic> _mergeGroupedWrappers(
+    List<dynamic> existing,
+    List<dynamic> newItems,
+    String direction,
+  ) {
+    final typeMap = <String, List<dynamic>>{};
+
+    // Collect existing entities by type
+    for (final item in existing) {
+      if (item is Map) {
+        for (final entry in item.entries) {
+          typeMap.putIfAbsent(entry.key.toString(), () => []);
+          if (entry.value is List) {
+            typeMap[entry.key.toString()]!.addAll(entry.value as List);
+          }
+        }
+      }
+    }
+
+    // Merge new entities (append for down, prepend for up)
+    for (final item in newItems) {
+      if (item is Map) {
+        for (final entry in item.entries) {
+          final key = entry.key.toString();
+          typeMap.putIfAbsent(key, () => []);
+          if (entry.value is List) {
+            if (direction == 'up') {
+              typeMap[key] = [...(entry.value as List), ...typeMap[key]!];
+            } else {
+              typeMap[key]!.addAll(entry.value as List);
+            }
+          }
+        }
+      }
+    }
+
+    return typeMap.entries
+        .map((e) => <String, dynamic>{e.key: e.value})
+        .toList();
+  }
+
+  /// Count total entities across all type groups.
+  int _countGroupedEntities(List<dynamic> wrapper) {
+    int count = 0;
+    for (final item in wrapper) {
+      if (item is Map) {
+        for (final value in item.values) {
+          if (value is List) count += value.length;
+        }
+      }
+    }
+    return count;
+  }
+
+  /// Trim grouped wrappers to maxItems entities.
+  /// For 'down' direction, trim from start; for 'up', trim from end.
+  List<dynamic> _trimGroupedWrappers(
+    List<dynamic> wrapper,
+    int maxItems,
+    String direction,
+  ) {
+    final typeMap = <String, List<dynamic>>{};
+    for (final item in wrapper) {
+      if (item is Map) {
+        for (final entry in item.entries) {
+          typeMap.putIfAbsent(entry.key.toString(), () => []);
+          if (entry.value is List) {
+            typeMap[entry.key.toString()]!.addAll(entry.value as List);
+          }
+        }
+      }
+    }
+
+    // Trim each type's entity list
+    for (final key in typeMap.keys) {
+      final entities = typeMap[key]!;
+      if (entities.length > maxItems) {
+        if (direction == 'down') {
+          // Keep the last maxItems (trim from start)
+          typeMap[key] = entities.sublist(entities.length - maxItems);
+        } else {
+          // Keep the first maxItems (trim from end)
+          typeMap[key] = entities.sublist(0, maxItems);
+        }
+      }
+    }
+
+    return typeMap.entries
+        .map((e) => <String, dynamic>{e.key: e.value})
+        .toList();
   }
 
   /// Update pagination window after data loaded
