@@ -912,6 +912,7 @@ final dynamic sampleFlows = {
                         "actionType": "NAVIGATION",
                         "properties": {
                           "data": [
+                            // to add
                             {
                               "key": "selectedIndividualClientReferenceId",
                               "value": "{{item.individual.0.clientReferenceId}}"
@@ -925,6 +926,21 @@ final dynamic sampleFlows = {
                               "key": "ProjectBeneficiaryClientReferenceId",
                               "value":
                                   "{{item.projectBeneficiary.0.clientReferenceId}}"
+                            },
+
+                            {
+                              "key": "selectedIndividualName",
+                              "value": "{{item.individual.0.name.givenName}}"
+                            },
+                            {
+                              "key": "selectedIndividualGender",
+                              "value": "{{item.individual.0.gender}}"
+                            },
+
+                            {
+                              "key": "selectedIndividualAgeInMonths",
+                              "value":
+                                  "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
                             }
                           ],
                           "name": "CHECKLIST",
@@ -953,6 +969,7 @@ final dynamic sampleFlows = {
                         "actionType": "NAVIGATION",
                         "properties": {
                           "data": [
+                            // to do
                             {
                               "key": "selectedIndividualClientReferenceId",
                               "value": "{{item.individual.0.clientReferenceId}}"
@@ -966,6 +983,20 @@ final dynamic sampleFlows = {
                               "key": "ProjectBeneficiaryClientReferenceId",
                               "value":
                                   "{{item.projectBeneficiary.0.clientReferenceId}}"
+                            },
+                            {
+                              "key": "selectedIndividualName",
+                              "value": "{{item.individual.0.name.givenName}}"
+                            },
+                            {
+                              "key": "selectedIndividualGender",
+                              "value": "{{item.individual.0.gender}}"
+                            },
+
+                            {
+                              "key": "selectedIndividualAgeInMonths",
+                              "value":
+                                  "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
                             }
                           ],
                           "name": "beneficiaryDetails",
@@ -2482,6 +2513,18 @@ final dynamic sampleFlows = {
                         "key": "ProjectBeneficiaryClientReferenceId",
                         "value":
                             "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                      },
+                      {
+                        "key": "selectedIndividualName",
+                        "value": "{{navigation.selectedIndividualName}}"
+                      },
+                      {
+                        "key": "selectedIndividualGender",
+                        "value": "{{navigation.selectedIndividualGender}}"
+                      },
+                      {
+                        "key": "selectedIndividualAgeInMonths",
+                        "value": "{{navigation.selectedIndividualAgeInMonths}}"
                       }
                     ],
                     "name": "REFER_BENEFICIARY",
@@ -2604,6 +2647,18 @@ final dynamic sampleFlows = {
                         "key": "ProjectBeneficiaryClientReferenceId",
                         "value":
                             "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                      },
+                      {
+                        "key": "selectedIndividualName",
+                        "value": "{{navigation.selectedIndividualName}}"
+                      },
+                      {
+                        "key": "selectedIndividualGender",
+                        "value": "{{navigation.selectedIndividualGender}}"
+                      },
+                      {
+                        "key": "selectedIndividualAgeInMonths",
+                        "value": "{{navigation.selectedIndividualAgeInMonths}}"
                       }
                     ],
                     "name": "REFER_BENEFICIARY",
@@ -2891,6 +2946,18 @@ final dynamic sampleFlows = {
                     "key": "ProjectBeneficiaryClientReferenceId",
                     "value":
                         "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  },
+                  {
+                    "key": "selectedIndividualName",
+                    "value": "{{navigation.selectedIndividualName}}"
+                  },
+                  {
+                    "key": "selectedIndividualGender",
+                    "value": "{{navigation.selectedIndividualGender}}"
+                  },
+                  {
+                    "key": "selectedIndividualAgeInMonths",
+                    "value": "{{navigation.selectedIndividualAgeInMonths}}"
                   }
                 ],
                 "name": "REFER_BENEFICIARY",
@@ -3011,6 +3078,18 @@ final dynamic sampleFlows = {
                     "key": "ProjectBeneficiaryClientReferenceId",
                     "value":
                         "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  },
+                  {
+                    "key": "selectedIndividualName",
+                    "value": "{{navigation.selectedIndividualName}}"
+                  },
+                  {
+                    "key": "selectedIndividualGender",
+                    "value": "{{navigation.selectedIndividualGender}}"
+                  },
+                  {
+                    "key": "selectedIndividualAgeInMonths",
+                    "value": "{{navigation.selectedIndividualAgeInMonths}}"
                   }
                 ],
                 "name": "REFER_BENEFICIARY",
@@ -3671,6 +3750,21 @@ final dynamic sampleFlows = {
                     "key": "ProjectBeneficiaryClientReferenceId",
                     "value":
                         "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  },
+                  // need
+
+                  {
+                    "key": "selectedIndividualName",
+                    "value": "{{navigation.selectedIndividualName}}"
+                  },
+                  {
+                    "key": "selectedIndividualGender",
+                    "value": "{{navigation.selectedIndividualGender}}"
+                  },
+
+                  {
+                    "key": "selectedIndividualAgeInMonths",
+                    "value": "{{navigation.selectedIndividualAgeInMonths}}"
                   }
                 ],
                 "onError": [
@@ -3699,6 +3793,18 @@ final dynamic sampleFlows = {
                     "key": "ProjectBeneficiaryClientReferenceId",
                     "value":
                         "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  },
+                  {
+                    "key": "selectedIndividualName",
+                    "value": "{{navigation.selectedIndividualName}}"
+                  },
+                  {
+                    "key": "selectedIndividualGender",
+                    "value": "{{navigation.selectedIndividualGender}}"
+                  },
+                  {
+                    "key": "selectedIndividualAgeInMonths",
+                    "value": "{{navigation.selectedIndividualAgeInMonths}}"
                   }
                 ],
                 "entity": "REFERRAL",
@@ -3727,6 +3833,18 @@ final dynamic sampleFlows = {
                     "key": "ProjectBeneficiaryClientReferenceId",
                     "value":
                         "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  },
+                  {
+                    "key": "selectedIndividualName",
+                    "value": "{{navigation.selectedIndividualName}}"
+                  },
+                  {
+                    "key": "selectedIndividualGender",
+                    "value": "{{navigation.selectedIndividualGender}}"
+                  },
+                  {
+                    "key": "selectedIndividualAgeInMonths",
+                    "value": "{{navigation.selectedIndividualAgeInMonths}}"
                   }
                 ],
                 "name": "referralSuccess",
@@ -3903,6 +4021,22 @@ final dynamic sampleFlows = {
               {
                 "key": "ProjectBeneficiaryClientReferenceId",
                 "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+              },
+
+              // need
+
+              {
+                "key": "selectedIndividualName",
+                "value": "{{navigation.selectedIndividualName}}"
+              },
+              {
+                "key": "selectedIndividualGender",
+                "value": "{{navigation.selectedIndividualGender}}"
+              },
+
+              {
+                "key": "selectedIndividualAgeInMonths",
+                "value": "{{navigation.selectedIndividualAgeInMonths}}"
               }
             ],
             "onError": [
@@ -3929,6 +4063,19 @@ final dynamic sampleFlows = {
               {
                 "key": "ProjectBeneficiaryClientReferenceId",
                 "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+              },
+              // need
+              {
+                "key": "selectedIndividualName",
+                "value": "{{navigation.selectedIndividualName}}"
+              },
+              {
+                "key": "selectedIndividualGender",
+                "value": "{{navigation.selectedIndividualGender}}"
+              },
+              {
+                "key": "selectedIndividualAgeInMonths",
+                "value": "{{navigation.selectedIndividualAgeInMonths}}"
               }
             ],
             "entity": "REFERRAL",
@@ -3955,6 +4102,20 @@ final dynamic sampleFlows = {
               {
                 "key": "ProjectBeneficiaryClientReferenceId",
                 "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+              },
+              // need
+              {
+                "key": "selectedIndividualName",
+                "value": "{{navigation.selectedIndividualName}}"
+              },
+              {
+                "key": "selectedIndividualGender",
+                "value": "{{navigation.selectedIndividualGender}}"
+              },
+
+              {
+                "key": "selectedIndividualAgeInMonths",
+                "value": "{{navigation.selectedIndividualAgeInMonths}}"
               }
             ],
             "name": "referralSuccess",

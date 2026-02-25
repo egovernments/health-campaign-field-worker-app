@@ -154,7 +154,8 @@ class TransformerExecutor extends ActionExecutor {
 
     // If not in contextData, try registry navigation params
     if (existingModels == null || existingModels.isEmpty) {
-      debugPrint('TRANSFORMER: screenKey from args: $screenKey, compositeKey: $compositeKey');
+      debugPrint(
+          'TRANSFORMER: screenKey from args: $screenKey, compositeKey: $compositeKey');
 
       // Try multiple key formats - the navigation executor stores with FORM:: prefix
       final keysToTry = <String?>[
@@ -198,35 +199,35 @@ class TransformerExecutor extends ActionExecutor {
 
     // Auto-fetch individual data if selectedIndividualClientReferenceId is in navigation
     // This allows transformer config to use __context:selectedIndividualGender, etc.
-    final selectedIndividualId =
-        navigationParams?['selectedIndividualClientReferenceId'];
-    if (selectedIndividualId != null) {
-      // Add selectedIndividualClientReferenceId to context for use in mappings
-      contextMap['selectedIndividualClientReferenceId'] = selectedIndividualId;
+    // final selectedIndividualId =
+    //     navigationParams?['selectedIndividualClientReferenceId'];
+    // if (selectedIndividualId != null) {
+    //   // Add selectedIndividualClientReferenceId to context for use in mappings
+    //   contextMap['selectedIndividualClientReferenceId'] = selectedIndividualId;
 
-      final individualData =
-          _fetchIndividualDataFromRegistry(selectedIndividualId);
-      if (individualData != null) {
-        contextMap['selectedIndividualName'] = individualData['name'];
-        contextMap['selectedIndividualGender'] = individualData['gender'];
-        contextMap['selectedIndividualAgeInMonths'] =
-            individualData['ageInMonths'];
-        contextMap['selectedIndividualDateOfBirth'] =
-            individualData['dateOfBirth'];
-        debugPrint(
-            'TRANSFORMER: Added individual data to context - name=${individualData['name']}, gender=${individualData['gender']}, ageInMonths=${individualData['ageInMonths']}');
-      }
+    //   final individualData =
+    //       _fetchIndividualDataFromRegistry(selectedIndividualId);
+    //   if (individualData != null) {
+    //     contextMap['selectedIndividualName'] = individualData['name'];
+    //     contextMap['selectedIndividualGender'] = individualData['gender'];
+    //     contextMap['selectedIndividualAgeInMonths'] =
+    //         individualData['ageInMonths'];
+    //     contextMap['selectedIndividualDateOfBirth'] =
+    //         individualData['dateOfBirth'];
+    //     debugPrint(
+    //         'TRANSFORMER: Added individual data to context - name=${individualData['name']}, gender=${individualData['gender']}, ageInMonths=${individualData['ageInMonths']}');
+    //   }
 
-      // Fetch ProjectBeneficiaryClientReferenceId from household state
-      final projectBeneficiaryId =
-          _fetchProjectBeneficiaryClientReferenceId(selectedIndividualId);
-      if (projectBeneficiaryId != null) {
-        contextMap['ProjectBeneficiaryClientReferenceId'] =
-            projectBeneficiaryId;
-        debugPrint(
-            'TRANSFORMER: Added ProjectBeneficiaryClientReferenceId to context: $projectBeneficiaryId');
-      }
-    }
+    //   // Fetch ProjectBeneficiaryClientReferenceId from household state
+    //   final projectBeneficiaryId =
+    //       _fetchProjectBeneficiaryClientReferenceId(selectedIndividualId);
+    //   if (projectBeneficiaryId != null) {
+    //     contextMap['ProjectBeneficiaryClientReferenceId'] =
+    //         projectBeneficiaryId;
+    //     debugPrint(
+    //         'TRANSFORMER: Added ProjectBeneficiaryClientReferenceId to context: $projectBeneficiaryId');
+    //   }
+    // }
 
     // Auto-calculate current cycle index if not already in context
     // This allows transformer config to use __context:cycleIndex
