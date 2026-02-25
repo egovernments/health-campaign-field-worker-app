@@ -41,6 +41,7 @@ import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
+import '../sampleJsonConfigs/attendance.dart';
 import '../sampleJsonConfigs/closed_household.dart';
 import '../sampleJsonConfigs/complaints.dart';
 import '../sampleJsonConfigs/hf_referral.dart';
@@ -1316,13 +1317,58 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
-          onPressed: () {
+          onPressed: () async {
             // if (isTriggerLocalisation) {
             const module = "hcm-attendance";
             triggerLocalization(module: module);
             isTriggerLocalisation = false;
             // };
-            context.router.push(const ManageAttendanceRoute());
+            // context.router.push(const ManageAttendanceRoute());
+
+            final prefs = await SharedPreferences.getInstance();
+            final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+            FlowBuilderSingleton().setPersistenceConfiguration(
+                persistenceConfiguration:
+                    PersistenceConfiguration.offlineFirst);
+            WidgetRegistry.initialize();
+            try {
+              if (schemaJsonRaw != null) {
+                final allSchemas =
+                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                Map<String, dynamic> data = allSchemas['ATTENDANCE'];
+
+                // final attendanceData = data?['data'];
+                Map<String, dynamic> attendanceData = attendanceFlows;
+                List<Map<String, dynamic>> flowsData =
+                    (attendanceData['flows'] as List<dynamic>?)
+                            ?.map((e) => Map<String, dynamic>.from(e as Map))
+                            .toList() ??
+                        [];
+                FlowRegistry.setConfig(flowsData);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(pageName: attendanceData["initialPage"]),
+                );
+              } else {
+                FlowRegistry.setConfig(
+                    sampleFlows["flows"] as List<Map<String, dynamic>>);
+                NavigationRegistry.setupNavigation(context);
+                context.router.push(
+                  FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
+                );
+              }
+            } catch (e) {
+              debugPrint('error $e');
+            }
+            // await FlowNavigationUtils.navigateToFlowModule(
+            //   context: context,
+            //   config: FlowModuleConfig(
+            //     schemaKey: 'ATTENDANCE',
+            //     sampleFlows: attendanceFlows,
+            //   ),
+            // );
           },
         ),
       ),
@@ -1455,7 +1501,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db)
+            element == i18.home.db ||
+            element == i18.home.manageAttendanceLabel)
         .toList();
 
     final showcaseKeys = filteredLabels
