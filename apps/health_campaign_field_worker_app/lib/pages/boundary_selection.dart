@@ -50,10 +50,6 @@ class _BoundarySelectionPageState
   Map<String, TextEditingController> dropdownControllers = {};
   late StreamSubscription syncSubscription;
   var leastLevelBoundaries;
-  // Flag to track if HF Referral downsync is triggered silently from beneficiary downsync
-  bool _isSilentHFReferralSync = false;
-  // Flag to wait for HF Referral data check before showing dataFound dialog
-  bool _waitingForHFReferralDataCheck = false;
 
   @override
   void initState() {
@@ -79,8 +75,6 @@ class _BoundarySelectionPageState
     context.read<HFReferralDownSyncBloc>().add(
           const HFReferralDownSyncResetStateEvent(),
         );
-    _isSilentHFReferralSync = false;
-    _waitingForHFReferralDataCheck = false;
     super.deactivate();
   }
 
@@ -169,339 +163,6 @@ class _BoundarySelectionPageState
                         builder: (context, form, child) => ScrollableContent(
                             footer: MultiBlocListener(
                               listeners: [
-                                BlocListener<HFReferralDownSyncBloc,
-                                    HFReferralDownSyncState>(
-                                  listener: (context, hfDownSyncState) {
-                                    // If silent sync (triggered from beneficiary downsync), skip UI updates
-                                    if (_isSilentHFReferralSync) {
-                                      hfDownSyncState.maybeWhen(
-                                        orElse: () => false,
-                                        getBatchSize: (
-                                          batchSize,
-                                          projectId,
-                                          boundaryCode,
-                                          pendingSyncCount,
-                                          boundaryName,
-                                        ) =>
-                                            context
-                                                .read<HFReferralDownSyncBloc>()
-                                                .add(
-                                                  HFReferralDownSyncCheckTotalCountEvent(
-                                                    projectId:
-                                                        context.projectId,
-                                                    boundaryCode:
-                                                        selectedBoundary!
-                                                            .value!.code
-                                                            .toString(),
-                                                    pendingSyncCount: 0,
-                                                    boundaryName:
-                                                        selectedBoundary
-                                                            .value!.name
-                                                            .toString(),
-                                                    batchSize: batchSize,
-                                                  ),
-                                                ),
-                                        dataFound: (initialServerCount,
-                                            batchSize, offset, lastSyncedTime) {
-                                          // If waiting for HF referral check, show dialog based on result
-                                          if (_waitingForHFReferralDataCheck) {
-                                            _waitingForHFReferralDataCheck =
-                                                false;
-                                            final bool hasHFData =
-                                                initialServerCount > 0;
-                                            showDownloadDialog(
-                                              context,
-                                              model: DownloadBeneficiary(
-                                                title:
-                                                    localizations.translate(
-                                                  hasHFData
-                                                      ? i18.beneficiaryDetails
-                                                          .dataFound
-                                                      : i18.beneficiaryDetails
-                                                          .noDataFound,
-                                                ),
-                                                appConfiguartion:
-                                                    appConfiguration,
-                                                projectId: context.projectId,
-                                                boundary: selectedBoundary!
-                                                    .value!.code
-                                                    .toString(),
-                                                batchSize: batchSize,
-                                                totalCount:
-                                                    initialServerCount,
-                                                content:
-                                                    localizations.translate(
-                                                  hasHFData
-                                                      ? i18.beneficiaryDetails
-                                                          .dataFoundContent
-                                                      : i18.beneficiaryDetails
-                                                          .noDataFoundContent,
-                                                ),
-                                                primaryButtonLabel:
-                                                    localizations.translate(
-                                                  hasHFData
-                                                      ? i18.common
-                                                          .coreCommonDownload
-                                                      : i18.common
-                                                          .coreCommonGoback,
-                                                ),
-                                                secondaryButtonLabel:
-                                                    localizations.translate(
-                                                  hasHFData
-                                                      ? i18.beneficiaryDetails
-                                                          .proceedWithoutDownloading
-                                                      : i18
-                                                          .acknowledgementSuccess
-                                                          .goToHome,
-                                                ),
-                                                boundaryName:
-                                                    selectedBoundary
-                                                        .value!.name
-                                                        .toString(),
-                                              ),
-                                              dialogType:
-                                                  DigitProgressDialogType
-                                                      .dataFound,
-                                              isPop: false,
-                                              onDownloadAction: hasHFData
-                                                  ? () {
-                                                      _isSilentHFReferralSync =
-                                                          false;
-                                                      context
-                                                          .read<
-                                                              HFReferralDownSyncBloc>()
-                                                          .add(
-                                                            HFReferralDownSyncStartEvent(
-                                                              projectId: context
-                                                                  .projectId,
-                                                              boundaryCode:
-                                                                  selectedBoundary!
-                                                                      .value!
-                                                                      .code
-                                                                      .toString(),
-                                                              batchSize:
-                                                                  batchSize,
-                                                              initialServerCount:
-                                                                  initialServerCount,
-                                                              boundaryName:
-                                                                  selectedBoundary
-                                                                      .value!
-                                                                      .name
-                                                                      .toString(),
-                                                            ),
-                                                          );
-                                                    }
-                                                  : null,
-                                            );
-                                            return;
-                                          }
-
-                                          // Start download directly for HFReferral (silently)
-                                          context
-                                              .read<HFReferralDownSyncBloc>()
-                                              .add(
-                                                HFReferralDownSyncStartEvent(
-                                                  projectId: context.projectId,
-                                                  boundaryCode:
-                                                      selectedBoundary!
-                                                          .value!.code
-                                                          .toString(),
-                                                  batchSize: batchSize,
-                                                  initialServerCount:
-                                                      initialServerCount,
-                                                  boundaryName: selectedBoundary
-                                                      .value!.name
-                                                      .toString(),
-                                                ),
-                                              );
-                                        },
-                                        success: (result) {
-                                          // Silent sync completed, reset flag
-                                          _isSilentHFReferralSync = false;
-                                        },
-                                        failed: () {
-                                          // Silent sync failed, reset flag (don't block user)
-                                          _isSilentHFReferralSync = false;
-                                          if (_waitingForHFReferralDataCheck) {
-                                            _waitingForHFReferralDataCheck =
-                                                false;
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .popUntil((route) =>
-                                                    route is! PopupRoute);
-                                            context.router
-                                                .replaceAll([HomeRoute()]);
-                                          }
-                                        },
-                                        totalCountCheckFailed: () {
-                                          // Silent sync check failed, reset flag
-                                          _isSilentHFReferralSync = false;
-                                          if (_waitingForHFReferralDataCheck) {
-                                            _waitingForHFReferralDataCheck =
-                                                false;
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .popUntil((route) =>
-                                                    route is! PopupRoute);
-                                            context.router
-                                                .replaceAll([HomeRoute()]);
-                                          }
-                                        },
-                                        pendingSync: () {
-                                          // Silent sync has pending, reset flag
-                                          _isSilentHFReferralSync = false;
-                                          if (_waitingForHFReferralDataCheck) {
-                                            _waitingForHFReferralDataCheck =
-                                                false;
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .popUntil((route) =>
-                                                    route is! PopupRoute);
-                                            context.router
-                                                .replaceAll([HomeRoute()]);
-                                          }
-                                        },
-                                      );
-                                      return;
-                                    }
-
-                                    // Normal HF Referral downsync flow (when user has ONLY HEALTH_FACILITY_WORKER role)
-                                    LocalizationParams()
-                                        .setModule('boundary', true);
-                                    context.read<LocalizationBloc>().add(
-                                        LocalizationEvent
-                                            .onUpdateLocalizationIndex(
-                                                index: appConfiguration
-                                                    .languages!
-                                                    .indexWhere((element) =>
-                                                        element.value ==
-                                                        AppSharedPreferences()
-                                                            .getSelectedLocale),
-                                                code: AppSharedPreferences()
-                                                    .getSelectedLocale!));
-                                    Future.delayed(
-                                        const Duration(milliseconds: 10), () {
-                                      hfDownSyncState.maybeWhen(
-                                        orElse: () => false,
-                                        loading: (isPop) => {
-                                          if (isPop)
-                                            {
-                                              Navigator.of(
-                                                context,
-                                                rootNavigator: true,
-                                              ).popUntil(
-                                                (route) => route is! PopupRoute,
-                                              ),
-                                            },
-                                          DigitSyncDialog.show(
-                                            context,
-                                            type: DialogType.inProgress,
-                                            label: localizations.translate(
-                                              i18.beneficiaryDetails
-                                                  .dataDownloadInProgress,
-                                            ),
-                                            barrierDismissible: false,
-                                          ),
-                                        },
-                                        getBatchSize: (
-                                          batchSize,
-                                          projectId,
-                                          boundaryCode,
-                                          pendingSyncCount,
-                                          boundaryName,
-                                        ) =>
-                                            context
-                                                .read<HFReferralDownSyncBloc>()
-                                                .add(
-                                                  HFReferralDownSyncCheckTotalCountEvent(
-                                                    projectId:
-                                                        context.projectId,
-                                                    boundaryCode:
-                                                        selectedBoundary!
-                                                            .value!.code
-                                                            .toString(),
-                                                    pendingSyncCount:
-                                                        pendingSyncCount,
-                                                    boundaryName:
-                                                        selectedBoundary
-                                                            .value!.name
-                                                            .toString(),
-                                                    batchSize: batchSize,
-                                                  ),
-                                                ),
-                                        dataFound: (initialServerCount,
-                                            batchSize, offset, lastSyncedTime) {
-                                          clickedStatus.value = false;
-                                          // Start download directly for HFReferral
-                                          context
-                                              .read<HFReferralDownSyncBloc>()
-                                              .add(
-                                                HFReferralDownSyncStartEvent(
-                                                  projectId: context.projectId,
-                                                  boundaryCode:
-                                                      selectedBoundary!
-                                                          .value!.code
-                                                          .toString(),
-                                                  batchSize: batchSize,
-                                                  initialServerCount:
-                                                      initialServerCount,
-                                                  boundaryName: selectedBoundary
-                                                      .value!.name
-                                                      .toString(),
-                                                ),
-                                              );
-                                        },
-                                        inProgress: (syncCount, totalCount) {
-                                          // Show progress dialog
-                                        },
-                                        success: (result) {
-                                          Navigator.of(
-                                            context,
-                                            rootNavigator: true,
-                                          ).popUntil(
-                                            (route) => route is! PopupRoute,
-                                          );
-                                          clickedStatus.value = true;
-                                          context.router
-                                              .replaceAll([HomeRoute()]);
-                                        },
-                                        failed: () {
-                                          Navigator.of(
-                                            context,
-                                            rootNavigator: true,
-                                          ).popUntil(
-                                            (route) => route is! PopupRoute,
-                                          );
-                                          clickedStatus.value = true;
-                                          context.router
-                                              .replaceAll([HomeRoute()]);
-                                        },
-                                        totalCountCheckFailed: () {
-                                          Navigator.of(
-                                            context,
-                                            rootNavigator: true,
-                                          ).popUntil(
-                                            (route) => route is! PopupRoute,
-                                          );
-                                          clickedStatus.value = true;
-                                          context.router
-                                              .replaceAll([HomeRoute()]);
-                                        },
-                                        pendingSync: () {
-                                          Navigator.of(
-                                            context,
-                                            rootNavigator: true,
-                                          ).popUntil(
-                                            (route) => route is! PopupRoute,
-                                          );
-                                          clickedStatus.value = true;
-                                          context.router
-                                              .replaceAll([HomeRoute()]);
-                                        },
-                                      );
-                                    });
-                                  },
-                                ),
                                 BlocListener<BeneficiaryDownSyncBloc,
                                     BeneficiaryDownSyncState>(
                                   listener: (context, downSyncState) {
@@ -599,37 +260,6 @@ class _BoundarySelectionPageState
                                             (initialServerCount, batchSize) {
                                           clickedStatus.value = false;
 
-                                          // If no beneficiary data but user has HEALTH_FACILITY_WORKER role,
-                                          // trigger HF Referral data check first before showing dialog
-                                          if (initialServerCount == 0 &&
-                                              isHealthFacilityWorker) {
-                                            _isSilentHFReferralSync = true;
-                                            _waitingForHFReferralDataCheck =
-                                                true;
-                                            context
-                                                .read<HFReferralDownSyncBloc>()
-                                                .add(
-                                                  HFReferralDownSyncGetBatchSizeEvent(
-                                                    appConfiguration: [
-                                                      appConfiguration,
-                                                    ],
-                                                    projectId:
-                                                        context.projectId,
-                                                    boundaryCode:
-                                                        selectedBoundary!
-                                                            .value!.code
-                                                            .toString(),
-                                                    pendingSyncCount: 0,
-                                                    boundaryName:
-                                                        selectedBoundary
-                                                            .value!.name
-                                                            .toString(),
-                                                  ),
-                                                );
-                                            // Don't show dialog yet - wait for HF referral check result
-                                            return;
-                                          }
-
                                           showDownloadDialog(
                                             context,
                                             model: DownloadBeneficiary(
@@ -721,31 +351,6 @@ class _BoundarySelectionPageState
                                           }
                                         },
                                         success: (result) {
-                                          // If user also has HEALTH_FACILITY_WORKER role, trigger HF Referral downsync silently
-                                          if (isHealthFacilityWorker) {
-                                            _isSilentHFReferralSync = true;
-                                            context
-                                                .read<HFReferralDownSyncBloc>()
-                                                .add(
-                                                  HFReferralDownSyncGetBatchSizeEvent(
-                                                    appConfiguration: [
-                                                      appConfiguration,
-                                                    ],
-                                                    projectId:
-                                                        context.projectId,
-                                                    boundaryCode:
-                                                        selectedBoundary!
-                                                            .value!.code
-                                                            .toString(),
-                                                    pendingSyncCount: 0,
-                                                    boundaryName:
-                                                        selectedBoundary
-                                                            .value!.name
-                                                            .toString(),
-                                                  ),
-                                                );
-                                          }
-
                                           int? epochTime =
                                               result.lastSyncedTime;
 
@@ -973,31 +578,59 @@ class _BoundarySelectionPageState
                                                                     .toString(),
                                                           ),
                                                         );
+                                                    // Also trigger silent HF Referral downsync if user has health_facility_worker role
+                                                    if (isHealthFacilityWorker) {
+                                                      triggerSilentHFReferralDownSync(
+                                                        context: context,
+                                                        appConfiguration: [
+                                                          appConfiguration,
+                                                        ],
+                                                        projectId:
+                                                            context.projectId,
+                                                        boundaryCode:
+                                                            selectedBoundary!
+                                                                .value!.code
+                                                                .toString(),
+                                                        boundaryName:
+                                                            selectedBoundary
+                                                                .value!.name
+                                                                .toString(),
+                                                      );
+                                                    }
                                                   } else if (isOnline &&
                                                       isHealthFacilityWorkerOnly) {
-                                                    // Only HEALTH_FACILITY_WORKER role: trigger HFReferral down sync
-                                                    context
-                                                        .read<
-                                                            HFReferralDownSyncBloc>()
-                                                        .add(
-                                                          HFReferralDownSyncGetBatchSizeEvent(
-                                                            appConfiguration: [
-                                                              appConfiguration,
-                                                            ],
-                                                            projectId: context
-                                                                .projectId,
-                                                            boundaryCode:
-                                                                selectedBoundary!
-                                                                    .value!.code
-                                                                    .toString(),
-                                                            pendingSyncCount:
-                                                                pendingSyncCount,
-                                                            boundaryName:
-                                                                selectedBoundary
-                                                                    .value!.name
-                                                                    .toString(),
-                                                          ),
-                                                        );
+                                                    // Only HEALTH_FACILITY_WORKER role: trigger silent HFReferral down sync and go to home
+                                                    triggerSilentHFReferralDownSync(
+                                                      context: context,
+                                                      appConfiguration: [
+                                                        appConfiguration,
+                                                      ],
+                                                      projectId:
+                                                          context.projectId,
+                                                      boundaryCode:
+                                                          selectedBoundary!
+                                                              .value!.code
+                                                              .toString(),
+                                                      boundaryName:
+                                                          selectedBoundary
+                                                              .value!.name
+                                                              .toString(),
+                                                    );
+                                                    clickedStatus.value = true;
+                                                    LocalizationParams()
+                                                        .setModule(
+                                                            'boundary', true);
+                                                    context.read<LocalizationBloc>().add(LocalizationEvent.onUpdateLocalizationIndex(
+                                                        index: appConfiguration
+                                                            .languages!
+                                                            .indexWhere((element) =>
+                                                                element.value ==
+                                                                AppSharedPreferences()
+                                                                    .getSelectedLocale),
+                                                        code: AppSharedPreferences()
+                                                            .getSelectedLocale!));
+                                                    context.router.replaceAll(
+                                                        [HomeRoute()]);
                                                   } else {
                                                     clickedStatus.value = true;
                                                     LocalizationParams()
