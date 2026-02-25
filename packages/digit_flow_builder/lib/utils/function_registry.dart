@@ -10,6 +10,7 @@ class TaskStatus {
   static const String administrationSuccess = 'ADMINISTRATION_SUCCESS';
   static const String delivered = 'DELIVERED';
   static const String ineligible = 'INELIGIBLE';
+  static const String notDelivered = 'NOT_DELIVERED';
 }
 
 /// The signature for a function that can be registered in the [FunctionRegistry].
