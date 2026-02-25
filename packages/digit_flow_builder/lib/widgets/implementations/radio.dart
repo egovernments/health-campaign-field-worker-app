@@ -4,39 +4,25 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
-import '../../utils/flow_widget_state.dart';
 import '../../utils/utils.dart';
-import '../flow_widget_interface.dart';
-import '../localization_context.dart';
+import '../resolved_flow_widget.dart';
 
-class RadioWidget implements FlowWidget {
+class RadioWidget extends ResolvedFlowWidget {
   @override
   String get format => 'radioList';
 
   @override
-  Widget build(
+  Widget buildResolved(
     Map<String, dynamic> json,
     BuildContext context,
     void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
   ) {
-    final state = WidgetStateContext.of(context);
-
     final data = json['data'] as List<dynamic>? ?? [];
     final key = (json['key'] ?? json['fieldName']) as String?;
-    final localization = LocalizationContext.maybeOf(context);
 
-    // Check visibility condition
-    final visible = json['visible'] == null ||
-        (json['visible'] is bool && json['visible'] == true) ||
-        (json['visible'] is String &&
-            resolveValue(json['visible'], state.evalContext) == true);
-
-    if (!visible) {
-      return const SizedBox.shrink();
-    }
-
-    // Use compositeKey for registry operations (includes instanceId for proper isolation)
-    final compositeKey = state.compositeKey ?? state.screenKey;
+    // Use compositeKey for registry operations
+    final compositeKey = resolved.compositeKey;
 
     // If no compositeKey, fall back to non-reactive behavior
     if (compositeKey == null) {
@@ -45,11 +31,11 @@ class RadioWidget implements FlowWidget {
         context: context,
         onAction: onAction,
         compositeKey: compositeKey,
-        evalContext: state.evalContext,
+        evalContext: resolved.evalContext,
         data: data,
         key: key,
-        localization: localization,
-        widgetData: state.widgetData,
+        localization: resolved.localization,
+        widgetData: resolved.widgetData,
       );
     }
 
@@ -59,9 +45,8 @@ class RadioWidget implements FlowWidget {
       builder: (context, flowState, _) {
         final widgetData = flowState?.widgetData ?? {};
 
-        // Rebuild evalContext with updated widgetData from registry
         final updatedEvalContext = {
-          ...state.evalContext,
+          ...resolved.evalContext,
           'widgetData': widgetData,
         };
 
@@ -73,7 +58,7 @@ class RadioWidget implements FlowWidget {
           evalContext: updatedEvalContext,
           data: data,
           key: key,
-          localization: localization,
+          localization: resolved.localization,
           widgetData: widgetData,
         );
       },
@@ -92,16 +77,12 @@ class RadioWidget implements FlowWidget {
     required Map<String, dynamic> widgetData,
   }) {
     // Get current selected value from state
-    // Priority: widgetData (persisted selection) > evalContext (entity data)
     dynamic currentValue;
     if (key != null) {
-      // First check widgetData for persisted selection
       if (widgetData.containsKey(key)) {
         currentValue = widgetData[key];
       } else {
-        // Fall back to evalContext
         currentValue = resolveValue('{{$key}}', evalContext);
-        // If unresolved template, treat as null
         if (currentValue == '{{$key}}') {
           currentValue = null;
         }
@@ -110,7 +91,7 @@ class RadioWidget implements FlowWidget {
 
     final options = data
         .where((item) =>
-    item is Map<String, dynamic> && item['isActive'] != false)
+            item is Map<String, dynamic> && item['isActive'] != false)
         .map((item) {
       final map = item as Map<String, dynamic>;
       final name = map['name'] as String? ?? '';
@@ -120,10 +101,8 @@ class RadioWidget implements FlowWidget {
         code: map['code'] as String? ?? '',
         name: localizedName,
       );
-    })
-        .toList();
+    }).toList();
 
-    // Build RadioDigitButtons from options
     final radioButtons = options.map((option) {
       return RadioButtonModel(
         code: option.code,
@@ -137,24 +116,20 @@ class RadioWidget implements FlowWidget {
       groupValue: currentValue?.toString() ?? "",
       onChanged: (selectedValue) {
         if (key != null && selectedValue != null) {
-          // Find the selected option
           final selectedOption = options.firstWhere(
             (option) => option.code == selectedValue.code,
             orElse: () => SelectionCardOption(code: '', name: ''),
           );
 
-          // Store selected value in widgetData only (for filters)
           if (compositeKey != null) {
             final currentState = FlowCrudStateRegistry().get(compositeKey);
             final existingWidgetData = currentState?.widgetData ?? {};
 
-            // Update widget data with the selected value
             final updatedWidgetData = {
               ...existingWidgetData,
               key: selectedOption.code,
             };
 
-            // Update the registry with widgetData only
             final updatedState =
                 (currentState ?? const FlowCrudState()).copyWith(
               widgetData: updatedWidgetData,
@@ -162,7 +137,6 @@ class RadioWidget implements FlowWidget {
             FlowCrudStateRegistry().update(compositeKey, updatedState);
           }
 
-          // Trigger onChange actions if defined
           if (json['onChange'] != null) {
             final actionsList =
                 List<Map<String, dynamic>>.from(json['onChange']);
@@ -170,7 +144,6 @@ class RadioWidget implements FlowWidget {
             for (var actionJson in actionsList) {
               var action = ActionConfig.fromJson(actionJson);
 
-              // Add selected value to action context
               final enhancedProperties = {
                 ...action.properties,
                 key: selectedValue,

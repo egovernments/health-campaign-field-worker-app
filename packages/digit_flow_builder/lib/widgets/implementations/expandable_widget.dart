@@ -3,39 +3,28 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../layout_renderer.dart';
-import '../../utils/conditional_evaluator.dart';
 import '../../utils/flow_widget_state.dart';
 import '../../utils/interpolation.dart';
 import '../../widget_registry.dart';
-import '../flow_widget_interface.dart';
 import '../localization_context.dart';
+import '../resolved_flow_widget.dart';
 
-class ExpandableWidget implements FlowWidget {
+class ExpandableWidget extends ResolvedFlowWidget {
   @override
   String get format => 'expandable';
 
   @override
-  Widget build(
+  Widget buildResolved(
     Map<String, dynamic> json,
     BuildContext context,
     void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
   ) {
-    final flowState = WidgetStateContext.of(context);
-
-    // Check visibility condition
-    final visible = ConditionalEvaluator.evaluate(
-      json['visible'] ?? true,
-      flowState.evalContext,
-    );
-
-    if (visible == false) {
-      return const SizedBox.shrink();
-    }
-
+    // Visibility already checked by base class
     return _ExpandableStateful(
       json: json,
       onAction: onAction,
-      flowState: flowState,
+      flowState: resolved.state,
     );
   }
 }

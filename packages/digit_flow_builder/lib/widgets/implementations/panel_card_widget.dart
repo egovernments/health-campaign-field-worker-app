@@ -4,49 +4,37 @@ import 'package:flutter/material.dart';
 
 import '../../action_handler/action_config.dart';
 import '../../blocs/flow_crud_bloc.dart';
-import '../../utils/flow_widget_state.dart';
-import '../../utils/utils.dart';
 import '../../widget_registry.dart';
-import '../flow_widget_interface.dart';
 import '../localization_context.dart';
+import '../resolved_flow_widget.dart';
 
-class PanelCardWidget implements FlowWidget {
+class PanelCardWidget extends ResolvedFlowWidget {
   @override
   String get format => 'panelCard';
 
   @override
-  Widget build(
+  Widget buildResolved(
     Map<String, dynamic> json,
     BuildContext context,
     void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
   ) {
-    final flowState = WidgetStateContext.of(context);
-    final navigationData = flowState.compositeKey != null
-        ? FlowCrudStateRegistry().getNavigationParams(flowState.compositeKey!)
+    // Enrich evalContext with navigation params
+    final navigationData = resolved.compositeKey != null
+        ? FlowCrudStateRegistry()
+            .getNavigationParams(resolved.compositeKey!)
         : null;
 
-    // Build evaluation context with navigation params
     final evalContext = {
-      ...flowState.evalContext,
+      ...resolved.evalContext,
       if (navigationData != null) 'navigation': navigationData,
     };
 
     final localization = LocalizationContext.maybeOf(context);
 
-    // Use resolveTemplate with evalContext
-    final labelText = json['label'] ?? '';
-    final label = resolveTemplate(
-      labelText,
-      evalContext,
-      localization: localization,
-    );
-
-    final descriptionText = json['description'] ?? '';
-    final description = resolveTemplate(
-      descriptionText,
-      evalContext,
-      localization: localization,
-    );
+    // Label/description need navigation context, so resolve manually here
+    final label = resolved.resolveText(json['label'] ?? '');
+    final description = resolved.resolveText(json['description'] ?? '');
 
     Map<String, dynamic>? primaryAction = json['primaryAction'];
     Map<String, dynamic>? secondaryAction = json['secondaryAction'];
@@ -57,50 +45,25 @@ class PanelCardWidget implements FlowWidget {
       final actionsList = actionJson['onAction'];
 
       for (var actionMap in actionsList) {
-        var action = ActionConfig.fromJson(actionMap);
-        final navData = action.properties['data'] as List<dynamic>?;
-
-        if (navData != null) {
-          final resolvedData = navData.map((entry) {
-            final key = entry['key'] as String;
-            final rawValue = entry['value'];
-
-            // Resolve using evalContext which contains all data sources
-            final resolvedValue = resolveValue(rawValue, evalContext);
-
-            return {
-              "key": key,
-              "value": resolvedValue == rawValue ? rawValue : resolvedValue,
-            };
-          }).toList();
-
-          action = ActionConfig(
-            action: action.action,
-            actionType: action.actionType,
-            properties: {
-              ...action.properties,
-              'data': resolvedData,
-            },
-            condition: action.condition,
-            actions: action.actions,
-          );
-        }
-
+        final action = resolved.resolveAction(
+          actionMap,
+          evalContext,
+        );
         onAction(action);
       }
     }
 
     // Build additional widgets if provided
-    final additionalWidgetsConfig = json['additionalWidgets'] as List<dynamic>?;
+    final additionalWidgetsConfig =
+        json['additionalWidgets'] as List<dynamic>?;
     List<Widget>? additionalWidgets;
 
-    if (additionalWidgetsConfig != null && additionalWidgetsConfig.isNotEmpty) {
+    if (additionalWidgetsConfig != null &&
+        additionalWidgetsConfig.isNotEmpty) {
       final widgets = <Widget>[];
       try {
         for (var widgetJson in additionalWidgetsConfig) {
           if (widgetJson is Map<String, dynamic>) {
-            // Render the widget using WidgetRegistry
-            // Each widget handles its own visibility property
             final widget = WidgetRegistry.build(
               widgetJson,
               context,
@@ -109,14 +72,12 @@ class PanelCardWidget implements FlowWidget {
             widgets.add(widget);
           }
         }
-        // Only assign if we actually have widgets
         if (widgets.isNotEmpty) {
           additionalWidgets = widgets;
         }
       } catch (e, stackTrace) {
         debugPrint('Error building additionalWidgets: $e');
         debugPrint('StackTrace: $stackTrace');
-        // Return null to avoid breaking the panel card
         additionalWidgets = null;
       }
     }
@@ -139,8 +100,9 @@ class PanelCardWidget implements FlowWidget {
           DigitButton(
             type: DigitButtonType.secondary,
             size: DigitButtonSize.large,
-            label: localization?.translate(secondaryAction['label'] ?? '') ??
-                (secondaryAction['label'] ?? ''),
+            label:
+                localization?.translate(secondaryAction['label'] ?? '') ??
+                    (secondaryAction['label'] ?? ''),
             onPressed: () => handleAction(json['secondaryAction']),
           ),
       ],
