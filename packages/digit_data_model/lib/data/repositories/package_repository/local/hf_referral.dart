@@ -11,6 +11,85 @@ class HFReferralLocalRepository
     extends LocalRepository<HFReferralModel, HFReferralSearchModel> {
   HFReferralLocalRepository(super.sql, super.opLogManager);
 
+  void listenToChanges({
+    required HFReferralSearchModel query,
+    required void Function(List<HFReferralModel> data) listener,
+  }) async {
+    return retryLocalCallOperation(() async {
+      final select = sql.select(sql.hFReferral)
+        ..where(
+          (tbl) => buildAnd([
+            if (query.projectId != null) tbl.projectId.isIn(query.projectId!),
+          ]),
+        );
+
+      select.watch().listen((event) {
+        final data = event
+            .map((referral) {
+              final additionalData = referral.additionalFields != null
+                  ? jsonDecode(referral.additionalFields!)
+                  : null;
+              List<Map<String, dynamic>> fields = additionalData != null &&
+                      additionalData['fields'] != null
+                  ? List<Map<String, dynamic>>.from(additionalData['fields'])
+                  : <Map<String, dynamic>>[];
+
+              final HFReferralAdditionalFields additionalFields =
+                  HFReferralAdditionalFields(
+                version: additionalData?['version'] ?? 1,
+                fields: fields
+                    .where((field) =>
+                        field['key'] != null && field['value'] != null)
+                    .map((field) => AdditionalField(
+                          field['key'] as String,
+                          field['value'],
+                        ))
+                    .toList(),
+              );
+
+              return HFReferralModel(
+                id: referral.id,
+                clientReferenceId: referral.clientReferenceId,
+                rowVersion: referral.rowVersion,
+                tenantId: referral.tenantId,
+                name: referral.name,
+                projectId: referral.projectId,
+                projectFacilityId: referral.projectFacilityId,
+                symptom: referral.symptom,
+                symptomSurveyId: referral.symptomSurveyId,
+                beneficiaryId: referral.beneficiaryId,
+                referralCode: referral.referralCode,
+                nationalLevelId: referral.nationalLevelId,
+                localityCode: referral.localityCode,
+                isDeleted: referral.isDeleted,
+                additionalFields: additionalFields,
+                auditDetails: referral.auditCreatedBy != null
+                    ? AuditDetails(
+                        createdBy: referral.auditCreatedBy!,
+                        createdTime: referral.auditCreatedTime!,
+                        lastModifiedBy: referral.auditModifiedBy,
+                        lastModifiedTime: referral.auditModifiedTime,
+                      )
+                    : null,
+                clientAuditDetails: referral.clientCreatedTime == null ||
+                        referral.clientCreatedBy == null
+                    ? null
+                    : ClientAuditDetails(
+                        createdTime: referral.clientCreatedTime!,
+                        createdBy: referral.clientCreatedBy!,
+                        lastModifiedBy: referral.clientModifiedBy,
+                        lastModifiedTime: referral.clientModifiedTime,
+                      ),
+              );
+            })
+            .where((element) => element.isDeleted != true)
+            .toList();
+
+        listener(data);
+      });
+    });
+  }
+
   @override
   FutureOr<List<HFReferralModel>> search(
     HFReferralSearchModel query, [
@@ -66,8 +145,8 @@ class HFReferralLocalRepository
                 HFReferralAdditionalFields(
               version: additionalData?['version'] ?? 1,
               fields: data
-                  .where((field) =>
-                      field['key'] != null && field['value'] != null)
+                  .where(
+                      (field) => field['key'] != null && field['value'] != null)
                   .map((field) => AdditionalField(
                         field['key'] as String,
                         field['value'],

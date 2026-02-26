@@ -25,7 +25,7 @@ class RowWidget extends ResolvedFlowWidget {
       Row(
         mainAxisSize: WidgetParsers.parseMainAxisSize(props['mainAxisSize']),
         mainAxisAlignment: WidgetParsers.parseMainAxisAlignment(props['mainAxisAlignment']),
-        children: (json['children'] as List).map<Widget>((childJson) {
+        children: (json['children'] as List? ?? []).map<Widget>((childJson) {
           final processedChild = stateData != null
               ? preprocessConfigWithState(
                   Map<String, dynamic>.from(childJson),

@@ -46,7 +46,7 @@ class CardWidget extends ResolvedFlowWidget {
           }
         }
       },
-      children: (json['children'] as List).map<Widget>((childJson) {
+      children: (json['children'] as List? ?? []).map<Widget>((childJson) {
         final processed = stateData != null
             ? preprocessConfigWithState(
                 Map<String, dynamic>.from(childJson),

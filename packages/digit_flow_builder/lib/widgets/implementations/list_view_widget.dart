@@ -23,7 +23,7 @@ class ListViewWidget extends ResolvedFlowWidget {
 
     final dataSourceKey = json['dataSource'] as String?;
     final rawState = resolved.state.contextData ?? [];
-    var items = rawState;
+    dynamic items = rawState;
 
     if (dataSourceKey != null && rawState.isNotEmpty) {
       if (dataSourceKey.startsWith('item.')) {

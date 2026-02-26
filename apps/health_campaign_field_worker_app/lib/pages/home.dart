@@ -570,6 +570,10 @@ class _HomePageState extends LocalizedState<HomePage> {
       skipProgressBar = true;
     }
 
+    final hasHfReferralAction = state.actionsWrapper.actions
+        .map((e) => e.displayName)
+        .contains(i18.home.beneficiaryReferralLabel);
+
     final mappedItems = _getItems(context);
 
     final homeItems = mappedItems?.homeItems ?? [];
@@ -618,6 +622,15 @@ class _HomePageState extends LocalizedState<HomePage> {
                         ),
                       ),
                     ),
+              if (hasHfReferralAction && !skipProgressBar)
+                HFReferralProgressBar(
+                  label: localizations.translate(
+                    i18.home.progressIndicatorTitle,
+                  ),
+                  prefixLabel: localizations.translate(
+                    i18.home.progressIndicatorPrefixLabel,
+                  ),
+                ),
             ],
           ),
           footer: Padding(
@@ -867,7 +880,8 @@ class _HomePageState extends LocalizedState<HomePage> {
             // }
 
             final prefs = await SharedPreferences.getInstance();
-            final schemaJsonRaw = prefs.getString('app_config_schemas');
+            dynamic schemaJsonRaw = prefs.getString('app_config_schemas');
+            schemaJsonRaw = null;
 
             FlowBuilderSingleton().setPersistenceConfiguration(
                 persistenceConfiguration:

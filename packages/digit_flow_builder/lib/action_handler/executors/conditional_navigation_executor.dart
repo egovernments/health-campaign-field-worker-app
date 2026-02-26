@@ -3,6 +3,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../flow_builder.dart';
+import '../../router/flow_builder_routes.gm.dart';
 import 'action_executor.dart';
 
 /// Executor for CONDITIONAL_NAVIGATION action type
@@ -65,7 +66,8 @@ class ConditionalNavigationExecutor extends ActionExecutor {
       if (conditionItem['default'] == true) {
         debugPrint('CONDITIONAL_NAVIGATION: Using default navigation');
         return _executeNavigation(
-            conditionItem['navigateTo'], contextData, evaluationContext);
+            conditionItem['navigateTo'], contextData, evaluationContext,
+            context: context);
       }
 
       final condition = conditionItem['condition'] as String?;
@@ -92,7 +94,8 @@ class ConditionalNavigationExecutor extends ActionExecutor {
 
         debugPrint('CONDITIONAL_NAVIGATION: Condition matched, navigating');
         return _executeNavigation(
-            conditionItem['navigateTo'], contextData, evaluationContext);
+            conditionItem['navigateTo'], contextData, evaluationContext,
+            context: context);
       }
     }
 
@@ -554,8 +557,9 @@ class ConditionalNavigationExecutor extends ActionExecutor {
   Map<String, dynamic> _executeNavigation(
     dynamic navigateToConfig,
     Map<String, dynamic> contextData,
-    Map<String, dynamic> evaluationContext,
-  ) {
+    Map<String, dynamic> evaluationContext, {
+    BuildContext? context,
+  }) {
     if (navigateToConfig == null || navigateToConfig is! Map<String, dynamic>) {
       return contextData;
     }
@@ -664,7 +668,41 @@ class ConditionalNavigationExecutor extends ActionExecutor {
       };
     }
 
-    // Handle TEMPLATE navigation using NavigationRegistry
+    // Handle TEMPLATE navigation
+    // Check if the target page already exists in the route stack.
+    // If it does, pop back to it (preserves existing data) instead of
+    // pushing a new empty page.
+    if (context != null) {
+      final router = AutoRouter.of(context);
+      bool targetExists = false;
+      for (final route in router.stack) {
+        if (route.name?.contains('FlowBuilderHomeRoute') == true) {
+          final args = route.arguments;
+          if (args is FlowBuilderHomeRouteArgs &&
+              args.pageName == targetName) {
+            targetExists = true;
+            break;
+          }
+        }
+      }
+
+      if (targetExists) {
+        debugPrint(
+            'CONDITIONAL_NAVIGATION: Target "$targetName" exists in stack, using popUntil');
+        router.popUntil((route) {
+          if (route.settings.name?.contains('FlowBuilderHomeRoute') == true) {
+            final args = route.settings.arguments;
+            if (args is FlowBuilderHomeRouteArgs) {
+              return args.pageName == targetName;
+            }
+          }
+          return false;
+        });
+        return contextData;
+      }
+    }
+
+    // Target not in stack - push new page using NavigationRegistry
     final resolvedDataList = <Map<String, dynamic>>[];
     if (navData != null) {
       for (final item in navData) {

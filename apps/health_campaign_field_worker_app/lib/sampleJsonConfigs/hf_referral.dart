@@ -1,5 +1,5 @@
 final dynamic sampleReferralFlows = {
-  "id": "126f478d-81e3-4d63-afc9-71d5f56e1c36",
+  "id": "de0e58c5-1238-4478-aa73-f00be1f3e063",
   "tenantId": "mz",
   "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
   "uniqueIdentifier": "HFREFERRAL.MR-DN",
@@ -38,7 +38,7 @@ final dynamic sampleReferralFlows = {
         }
       ],
       "name": "referralOverview",
-      "order": 4,
+      "order": 3,
       "footer": [
         {
           "type": "template",
@@ -534,6 +534,7 @@ final dynamic sampleReferralFlows = {
         }
       ],
       "heading": "REFERRAL_OVERVIEW_HEADING",
+      "category": "HFREFERRAL",
       "navigateTo": null,
       "screenType": "TEMPLATE",
       "description": "REFERRAL_OVERVIEW_DESCRIPTION",
@@ -596,9 +597,10 @@ final dynamic sampleReferralFlows = {
         }
       ],
       "name": "referralAcknowledgement",
-      "order": 3,
+      "order": 4,
       "footer": [],
       "header": [],
+      "category": "HFREFERRAL",
       "navigateTo": null,
       "screenType": "TEMPLATE",
       "submitCondition": null,
@@ -699,6 +701,7 @@ final dynamic sampleReferralFlows = {
                 "format": "row",
                 "children": [
                   {
+                    "type": "template",
                     "value":
                         "HF_REFERRAL_INBOX_DATE_OF_EVALUATION {{ fn:formatDate(itemData.additionalFields.fields.dateOfEvaluation, 'date', dd MMM yyyy) }}",
                     "format": "textTemplate",
@@ -848,6 +851,7 @@ final dynamic sampleReferralFlows = {
         }
       ],
       "heading": "REFERRAL_INBOX_HEADING",
+      "category": "HFREFERRAL",
       "navigateTo": null,
       "screenType": "TEMPLATE",
       "description": "REFERRAL_INBOX_DESCRIPTION",
@@ -890,6 +894,7 @@ final dynamic sampleReferralFlows = {
     },
     {
       "name": "REFERRAL_CREATE",
+      "order": 2,
       "pages": [
         {
           "flow": "REFERRAL_CREATE",
@@ -2923,6 +2928,7 @@ final dynamic sampleReferralFlows = {
       "project": "MR-DN",
       "summary": false,
       "version": 2,
+      "category": "HFREFERRAL",
       "disabled": false,
       "onAction": [
         {
@@ -3008,9 +3014,9 @@ final dynamic sampleReferralFlows = {
   "initialPage": "referralInbox",
   "isActive": true,
   "auditDetails": {
-    "createdBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
-    "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
-    "createdTime": 1766989202754,
-    "lastModifiedTime": 1771328929754
+    "createdBy": "e2bd8b28-e7d5-4f88-9ef9-952988bcd391",
+    "lastModifiedBy": "3c039c21-38dd-4a41-95a0-e944201240f9",
+    "createdTime": 1770449154349,
+    "lastModifiedTime": 1771999821125
   }
 };

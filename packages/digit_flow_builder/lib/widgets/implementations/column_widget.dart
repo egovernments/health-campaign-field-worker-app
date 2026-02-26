@@ -21,7 +21,7 @@ class ColumnWidget extends ResolvedFlowWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: (json['children'] as List).map<Widget>((childJson) {
+      children: (json['children'] as List? ?? []).map<Widget>((childJson) {
         final processedChild = stateData != null
             ? preprocessConfigWithState(
                 Map<String, dynamic>.from(childJson),
