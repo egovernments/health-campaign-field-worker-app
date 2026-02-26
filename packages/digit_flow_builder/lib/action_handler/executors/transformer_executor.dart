@@ -197,53 +197,6 @@ class TransformerExecutor extends ActionExecutor {
       "beneficiaryType": FlowBuilderSingleton().beneficiaryType?.toValue(),
     };
 
-    // Auto-fetch individual data if selectedIndividualClientReferenceId is in navigation
-    // This allows transformer config to use __context:selectedIndividualGender, etc.
-    // final selectedIndividualId =
-    //     navigationParams?['selectedIndividualClientReferenceId'];
-    // if (selectedIndividualId != null) {
-    //   // Add selectedIndividualClientReferenceId to context for use in mappings
-    //   contextMap['selectedIndividualClientReferenceId'] = selectedIndividualId;
-
-    //   final individualData =
-    //       _fetchIndividualDataFromRegistry(selectedIndividualId);
-    //   if (individualData != null) {
-    //     contextMap['selectedIndividualName'] = individualData['name'];
-    //     contextMap['selectedIndividualGender'] = individualData['gender'];
-    //     contextMap['selectedIndividualAgeInMonths'] =
-    //         individualData['ageInMonths'];
-    //     contextMap['selectedIndividualDateOfBirth'] =
-    //         individualData['dateOfBirth'];
-    //     debugPrint(
-    //         'TRANSFORMER: Added individual data to context - name=${individualData['name']}, gender=${individualData['gender']}, ageInMonths=${individualData['ageInMonths']}');
-    //   }
-
-    //   // Fetch ProjectBeneficiaryClientReferenceId from household state
-    //   final projectBeneficiaryId =
-    //       _fetchProjectBeneficiaryClientReferenceId(selectedIndividualId);
-    //   if (projectBeneficiaryId != null) {
-    //     contextMap['ProjectBeneficiaryClientReferenceId'] =
-    //         projectBeneficiaryId;
-    //     debugPrint(
-    //         'TRANSFORMER: Added ProjectBeneficiaryClientReferenceId to context: $projectBeneficiaryId');
-    //   }
-    // }
-
-    // Auto-calculate current cycle index if not already in context
-    // This allows transformer config to use __context:cycleIndex
-    // if (!contextMap.containsKey('cycleIndex') ||
-    //     contextMap['cycleIndex'] == null) {
-    //   final currentCycleIndex = _getCurrentCycleIndex();
-    //   if (currentCycleIndex != null) {
-    //     // Format as zero-padded string (e.g., 1 -> "01", 10 -> "10")
-    //     final formattedCycleIndex =
-    //         currentCycleIndex.toString().padLeft(2, '0');
-    //     contextMap['cycleIndex'] = formattedCycleIndex;
-    //     debugPrint(
-    //         'TRANSFORMER: Added cycleIndex to context: $formattedCycleIndex');
-    //   }
-    // }
-
     List<EntityModel> entities = [];
 
     // Use updateEntitiesFromForm for edit mode with existing models
