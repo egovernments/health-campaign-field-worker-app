@@ -132,7 +132,7 @@ class ActionPopupWidget extends ResolvedFlowWidget {
                     child: Builder(
                       builder: (innerCtx) => FlowWidgetFactory.build(
                         widgetJson,
-                        innerCtx,
+                        context,
                         onAction,
                       ),
                     ),
