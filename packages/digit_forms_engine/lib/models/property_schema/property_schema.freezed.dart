@@ -86,7 +86,9 @@ mixin _$PropertySchema {
       throw _privateConstructorUsedError; // Submit condition for pages - when true, form submits directly instead of navigating to next page
   @JsonKey(fromJson: _visibilityConditionOrNull)
   VisibilityCondition? get submitCondition =>
-      throw _privateConstructorUsedError;
+      throw _privateConstructorUsedError; // Comparison config for scanner fields - enables duplicate detection against historical data
+  @JsonKey(fromJson: _comparisonConfigOrNull)
+  ComparisonConfig? get comparisonConfig => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -149,7 +151,9 @@ abstract class $PropertySchemaCopyWith<$Res> {
       MultiEntityConfig? multiEntityConfig,
       bool? preventScreenCapture,
       @JsonKey(fromJson: _visibilityConditionOrNull)
-      VisibilityCondition? submitCondition});
+      VisibilityCondition? submitCondition,
+      @JsonKey(fromJson: _comparisonConfigOrNull)
+      ComparisonConfig? comparisonConfig});
 
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
   $NavigateToConfigCopyWith<$Res>? get navigateTo;
@@ -157,6 +161,7 @@ abstract class $PropertySchemaCopyWith<$Res> {
   $ShowAlertPopUpCopyWith<$Res>? get showAlertPopUp;
   $MultiEntityConfigCopyWith<$Res>? get multiEntityConfig;
   $VisibilityConditionCopyWith<$Res>? get submitCondition;
+  $ComparisonConfigCopyWith<$Res>? get comparisonConfig;
 }
 
 /// @nodoc
@@ -214,6 +219,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? multiEntityConfig = freezed,
     Object? preventScreenCapture = freezed,
     Object? submitCondition = freezed,
+    Object? comparisonConfig = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -384,6 +390,10 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.submitCondition
           : submitCondition // ignore: cast_nullable_to_non_nullable
               as VisibilityCondition?,
+      comparisonConfig: freezed == comparisonConfig
+          ? _value.comparisonConfig
+          : comparisonConfig // ignore: cast_nullable_to_non_nullable
+              as ComparisonConfig?,
     ) as $Val);
   }
 
@@ -459,6 +469,18 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
       return _then(_value.copyWith(submitCondition: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ComparisonConfigCopyWith<$Res>? get comparisonConfig {
+    if (_value.comparisonConfig == null) {
+      return null;
+    }
+
+    return $ComparisonConfigCopyWith<$Res>(_value.comparisonConfig!, (value) {
+      return _then(_value.copyWith(comparisonConfig: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -518,7 +540,9 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       MultiEntityConfig? multiEntityConfig,
       bool? preventScreenCapture,
       @JsonKey(fromJson: _visibilityConditionOrNull)
-      VisibilityCondition? submitCondition});
+      VisibilityCondition? submitCondition,
+      @JsonKey(fromJson: _comparisonConfigOrNull)
+      ComparisonConfig? comparisonConfig});
 
   @override
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
@@ -532,6 +556,8 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
   $MultiEntityConfigCopyWith<$Res>? get multiEntityConfig;
   @override
   $VisibilityConditionCopyWith<$Res>? get submitCondition;
+  @override
+  $ComparisonConfigCopyWith<$Res>? get comparisonConfig;
 }
 
 /// @nodoc
@@ -587,6 +613,7 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? multiEntityConfig = freezed,
     Object? preventScreenCapture = freezed,
     Object? submitCondition = freezed,
+    Object? comparisonConfig = freezed,
   }) {
     return _then(_$PropertySchemaImpl(
       type: null == type
@@ -757,6 +784,10 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.submitCondition
           : submitCondition // ignore: cast_nullable_to_non_nullable
               as VisibilityCondition?,
+      comparisonConfig: freezed == comparisonConfig
+          ? _value.comparisonConfig
+          : comparisonConfig // ignore: cast_nullable_to_non_nullable
+              as ComparisonConfig?,
     ));
   }
 }
@@ -811,7 +842,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
       @JsonKey(fromJson: _showAlertOrNull) this.showAlertPopUp,
       @JsonKey(fromJson: _multiEntityConfigOrNull) this.multiEntityConfig,
       this.preventScreenCapture,
-      @JsonKey(fromJson: _visibilityConditionOrNull) this.submitCondition})
+      @JsonKey(fromJson: _visibilityConditionOrNull) this.submitCondition,
+      @JsonKey(fromJson: _comparisonConfigOrNull) this.comparisonConfig})
       : _properties = properties,
         _enums = enums,
         _conditions = conditions,
@@ -978,10 +1010,14 @@ class _$PropertySchemaImpl implements _PropertySchema {
   @override
   @JsonKey(fromJson: _visibilityConditionOrNull)
   final VisibilityCondition? submitCondition;
+// Comparison config for scanner fields - enables duplicate detection against historical data
+  @override
+  @JsonKey(fromJson: _comparisonConfigOrNull)
+  final ComparisonConfig? comparisonConfig;
 
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, min: $min, max: $max, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp, multiEntityConfig: $multiEntityConfig, preventScreenCapture: $preventScreenCapture, submitCondition: $submitCondition)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, min: $min, max: $max, helpText: $helpText, tooltip: $tooltip, prefixText: $prefixText, suffixText: $suffixText, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo, visibilityCondition: $visibilityCondition, conditionalNavigateTo: $conditionalNavigateTo, autoFillCondition: $autoFillCondition, showAlertPopUp: $showAlertPopUp, multiEntityConfig: $multiEntityConfig, preventScreenCapture: $preventScreenCapture, submitCondition: $submitCondition, comparisonConfig: $comparisonConfig)';
   }
 
   @override
@@ -1061,7 +1097,9 @@ class _$PropertySchemaImpl implements _PropertySchema {
             (identical(other.preventScreenCapture, preventScreenCapture) ||
                 other.preventScreenCapture == preventScreenCapture) &&
             (identical(other.submitCondition, submitCondition) ||
-                other.submitCondition == submitCondition));
+                other.submitCondition == submitCondition) &&
+            (identical(other.comparisonConfig, comparisonConfig) ||
+                other.comparisonConfig == comparisonConfig));
   }
 
   @JsonKey(ignore: true)
@@ -1109,7 +1147,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
         showAlertPopUp,
         multiEntityConfig,
         preventScreenCapture,
-        submitCondition
+        submitCondition,
+        comparisonConfig
       ]);
 
   @JsonKey(ignore: true)
@@ -1178,7 +1217,9 @@ abstract class _PropertySchema implements PropertySchema {
       final MultiEntityConfig? multiEntityConfig,
       final bool? preventScreenCapture,
       @JsonKey(fromJson: _visibilityConditionOrNull)
-      final VisibilityCondition? submitCondition}) = _$PropertySchemaImpl;
+      final VisibilityCondition? submitCondition,
+      @JsonKey(fromJson: _comparisonConfigOrNull)
+      final ComparisonConfig? comparisonConfig}) = _$PropertySchemaImpl;
 
   factory _PropertySchema.fromJson(Map<String, dynamic> json) =
       _$PropertySchemaImpl.fromJson;
@@ -1284,6 +1325,9 @@ abstract class _PropertySchema implements PropertySchema {
   @override // Submit condition for pages - when true, form submits directly instead of navigating to next page
   @JsonKey(fromJson: _visibilityConditionOrNull)
   VisibilityCondition? get submitCondition;
+  @override // Comparison config for scanner fields - enables duplicate detection against historical data
+  @JsonKey(fromJson: _comparisonConfigOrNull)
+  ComparisonConfig? get comparisonConfig;
   @override
   @JsonKey(ignore: true)
   _$$PropertySchemaImplCopyWith<_$PropertySchemaImpl> get copyWith =>
@@ -3146,5 +3190,488 @@ abstract class _MultiEntityConfig implements MultiEntityConfig {
   @override
   @JsonKey(ignore: true)
   _$$MultiEntityConfigImplCopyWith<_$MultiEntityConfigImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+ComparisonConfig _$ComparisonConfigFromJson(Map<String, dynamic> json) {
+  return _ComparisonConfig.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ComparisonConfig {
+  String get model =>
+      throw _privateConstructorUsedError; // table to search (e.g., "stock", "projectBeneficiary")
+  String get extractKey =>
+      throw _privateConstructorUsedError; // field to match scanned value against
+  String get extractFrom =>
+      throw _privateConstructorUsedError; // "additionalFields" or "column"
+  List<ComparisonFilter> get filters => throw _privateConstructorUsedError;
+  String? get errorMessage => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $ComparisonConfigCopyWith<ComparisonConfig> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ComparisonConfigCopyWith<$Res> {
+  factory $ComparisonConfigCopyWith(
+          ComparisonConfig value, $Res Function(ComparisonConfig) then) =
+      _$ComparisonConfigCopyWithImpl<$Res, ComparisonConfig>;
+  @useResult
+  $Res call(
+      {String model,
+      String extractKey,
+      String extractFrom,
+      List<ComparisonFilter> filters,
+      String? errorMessage});
+}
+
+/// @nodoc
+class _$ComparisonConfigCopyWithImpl<$Res, $Val extends ComparisonConfig>
+    implements $ComparisonConfigCopyWith<$Res> {
+  _$ComparisonConfigCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? model = null,
+    Object? extractKey = null,
+    Object? extractFrom = null,
+    Object? filters = null,
+    Object? errorMessage = freezed,
+  }) {
+    return _then(_value.copyWith(
+      model: null == model
+          ? _value.model
+          : model // ignore: cast_nullable_to_non_nullable
+              as String,
+      extractKey: null == extractKey
+          ? _value.extractKey
+          : extractKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      extractFrom: null == extractFrom
+          ? _value.extractFrom
+          : extractFrom // ignore: cast_nullable_to_non_nullable
+              as String,
+      filters: null == filters
+          ? _value.filters
+          : filters // ignore: cast_nullable_to_non_nullable
+              as List<ComparisonFilter>,
+      errorMessage: freezed == errorMessage
+          ? _value.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$ComparisonConfigImplCopyWith<$Res>
+    implements $ComparisonConfigCopyWith<$Res> {
+  factory _$$ComparisonConfigImplCopyWith(_$ComparisonConfigImpl value,
+          $Res Function(_$ComparisonConfigImpl) then) =
+      __$$ComparisonConfigImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String model,
+      String extractKey,
+      String extractFrom,
+      List<ComparisonFilter> filters,
+      String? errorMessage});
+}
+
+/// @nodoc
+class __$$ComparisonConfigImplCopyWithImpl<$Res>
+    extends _$ComparisonConfigCopyWithImpl<$Res, _$ComparisonConfigImpl>
+    implements _$$ComparisonConfigImplCopyWith<$Res> {
+  __$$ComparisonConfigImplCopyWithImpl(_$ComparisonConfigImpl _value,
+      $Res Function(_$ComparisonConfigImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? model = null,
+    Object? extractKey = null,
+    Object? extractFrom = null,
+    Object? filters = null,
+    Object? errorMessage = freezed,
+  }) {
+    return _then(_$ComparisonConfigImpl(
+      model: null == model
+          ? _value.model
+          : model // ignore: cast_nullable_to_non_nullable
+              as String,
+      extractKey: null == extractKey
+          ? _value.extractKey
+          : extractKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      extractFrom: null == extractFrom
+          ? _value.extractFrom
+          : extractFrom // ignore: cast_nullable_to_non_nullable
+              as String,
+      filters: null == filters
+          ? _value._filters
+          : filters // ignore: cast_nullable_to_non_nullable
+              as List<ComparisonFilter>,
+      errorMessage: freezed == errorMessage
+          ? _value.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
+class _$ComparisonConfigImpl implements _ComparisonConfig {
+  const _$ComparisonConfigImpl(
+      {required this.model,
+      required this.extractKey,
+      this.extractFrom = 'additionalFields',
+      final List<ComparisonFilter> filters = const [],
+      this.errorMessage})
+      : _filters = filters;
+
+  factory _$ComparisonConfigImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ComparisonConfigImplFromJson(json);
+
+  @override
+  final String model;
+// table to search (e.g., "stock", "projectBeneficiary")
+  @override
+  final String extractKey;
+// field to match scanned value against
+  @override
+  @JsonKey()
+  final String extractFrom;
+// "additionalFields" or "column"
+  final List<ComparisonFilter> _filters;
+// "additionalFields" or "column"
+  @override
+  @JsonKey()
+  List<ComparisonFilter> get filters {
+    if (_filters is EqualUnmodifiableListView) return _filters;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_filters);
+  }
+
+  @override
+  final String? errorMessage;
+
+  @override
+  String toString() {
+    return 'ComparisonConfig(model: $model, extractKey: $extractKey, extractFrom: $extractFrom, filters: $filters, errorMessage: $errorMessage)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ComparisonConfigImpl &&
+            (identical(other.model, model) || other.model == model) &&
+            (identical(other.extractKey, extractKey) ||
+                other.extractKey == extractKey) &&
+            (identical(other.extractFrom, extractFrom) ||
+                other.extractFrom == extractFrom) &&
+            const DeepCollectionEquality().equals(other._filters, _filters) &&
+            (identical(other.errorMessage, errorMessage) ||
+                other.errorMessage == errorMessage));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, model, extractKey, extractFrom,
+      const DeepCollectionEquality().hash(_filters), errorMessage);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ComparisonConfigImplCopyWith<_$ComparisonConfigImpl> get copyWith =>
+      __$$ComparisonConfigImplCopyWithImpl<_$ComparisonConfigImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ComparisonConfigImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _ComparisonConfig implements ComparisonConfig {
+  const factory _ComparisonConfig(
+      {required final String model,
+      required final String extractKey,
+      final String extractFrom,
+      final List<ComparisonFilter> filters,
+      final String? errorMessage}) = _$ComparisonConfigImpl;
+
+  factory _ComparisonConfig.fromJson(Map<String, dynamic> json) =
+      _$ComparisonConfigImpl.fromJson;
+
+  @override
+  String get model;
+  @override // table to search (e.g., "stock", "projectBeneficiary")
+  String get extractKey;
+  @override // field to match scanned value against
+  String get extractFrom;
+  @override // "additionalFields" or "column"
+  List<ComparisonFilter> get filters;
+  @override
+  String? get errorMessage;
+  @override
+  @JsonKey(ignore: true)
+  _$$ComparisonConfigImplCopyWith<_$ComparisonConfigImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+ComparisonFilter _$ComparisonFilterFromJson(Map<String, dynamic> json) {
+  return _ComparisonFilter.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ComparisonFilter {
+  String get key =>
+      throw _privateConstructorUsedError; // DB column name (e.g., "senderId")
+  String get value =>
+      throw _privateConstructorUsedError; // default template (e.g., "{{navigation.facilityFromWhich}}")
+  String get operation => throw _privateConstructorUsedError;
+  String? get switchOn =>
+      throw _privateConstructorUsedError; // template for conditional switch (e.g., "{{navigation.stockEntryType}}")
+  Map<String, String>? get cases => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $ComparisonFilterCopyWith<ComparisonFilter> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ComparisonFilterCopyWith<$Res> {
+  factory $ComparisonFilterCopyWith(
+          ComparisonFilter value, $Res Function(ComparisonFilter) then) =
+      _$ComparisonFilterCopyWithImpl<$Res, ComparisonFilter>;
+  @useResult
+  $Res call(
+      {String key,
+      String value,
+      String operation,
+      String? switchOn,
+      Map<String, String>? cases});
+}
+
+/// @nodoc
+class _$ComparisonFilterCopyWithImpl<$Res, $Val extends ComparisonFilter>
+    implements $ComparisonFilterCopyWith<$Res> {
+  _$ComparisonFilterCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? key = null,
+    Object? value = null,
+    Object? operation = null,
+    Object? switchOn = freezed,
+    Object? cases = freezed,
+  }) {
+    return _then(_value.copyWith(
+      key: null == key
+          ? _value.key
+          : key // ignore: cast_nullable_to_non_nullable
+              as String,
+      value: null == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as String,
+      operation: null == operation
+          ? _value.operation
+          : operation // ignore: cast_nullable_to_non_nullable
+              as String,
+      switchOn: freezed == switchOn
+          ? _value.switchOn
+          : switchOn // ignore: cast_nullable_to_non_nullable
+              as String?,
+      cases: freezed == cases
+          ? _value.cases
+          : cases // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$ComparisonFilterImplCopyWith<$Res>
+    implements $ComparisonFilterCopyWith<$Res> {
+  factory _$$ComparisonFilterImplCopyWith(_$ComparisonFilterImpl value,
+          $Res Function(_$ComparisonFilterImpl) then) =
+      __$$ComparisonFilterImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String key,
+      String value,
+      String operation,
+      String? switchOn,
+      Map<String, String>? cases});
+}
+
+/// @nodoc
+class __$$ComparisonFilterImplCopyWithImpl<$Res>
+    extends _$ComparisonFilterCopyWithImpl<$Res, _$ComparisonFilterImpl>
+    implements _$$ComparisonFilterImplCopyWith<$Res> {
+  __$$ComparisonFilterImplCopyWithImpl(_$ComparisonFilterImpl _value,
+      $Res Function(_$ComparisonFilterImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? key = null,
+    Object? value = null,
+    Object? operation = null,
+    Object? switchOn = freezed,
+    Object? cases = freezed,
+  }) {
+    return _then(_$ComparisonFilterImpl(
+      key: null == key
+          ? _value.key
+          : key // ignore: cast_nullable_to_non_nullable
+              as String,
+      value: null == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as String,
+      operation: null == operation
+          ? _value.operation
+          : operation // ignore: cast_nullable_to_non_nullable
+              as String,
+      switchOn: freezed == switchOn
+          ? _value.switchOn
+          : switchOn // ignore: cast_nullable_to_non_nullable
+              as String?,
+      cases: freezed == cases
+          ? _value._cases
+          : cases // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>?,
+    ));
+  }
+}
+
+/// @nodoc
+
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
+class _$ComparisonFilterImpl implements _ComparisonFilter {
+  const _$ComparisonFilterImpl(
+      {required this.key,
+      required this.value,
+      this.operation = 'equals',
+      this.switchOn,
+      final Map<String, String>? cases})
+      : _cases = cases;
+
+  factory _$ComparisonFilterImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ComparisonFilterImplFromJson(json);
+
+  @override
+  final String key;
+// DB column name (e.g., "senderId")
+  @override
+  final String value;
+// default template (e.g., "{{navigation.facilityFromWhich}}")
+  @override
+  @JsonKey()
+  final String operation;
+  @override
+  final String? switchOn;
+// template for conditional switch (e.g., "{{navigation.stockEntryType}}")
+  final Map<String, String>? _cases;
+// template for conditional switch (e.g., "{{navigation.stockEntryType}}")
+  @override
+  Map<String, String>? get cases {
+    final value = _cases;
+    if (value == null) return null;
+    if (_cases is EqualUnmodifiableMapView) return _cases;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
+
+  @override
+  String toString() {
+    return 'ComparisonFilter(key: $key, value: $value, operation: $operation, switchOn: $switchOn, cases: $cases)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ComparisonFilterImpl &&
+            (identical(other.key, key) || other.key == key) &&
+            (identical(other.value, value) || other.value == value) &&
+            (identical(other.operation, operation) ||
+                other.operation == operation) &&
+            (identical(other.switchOn, switchOn) ||
+                other.switchOn == switchOn) &&
+            const DeepCollectionEquality().equals(other._cases, _cases));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, key, value, operation, switchOn,
+      const DeepCollectionEquality().hash(_cases));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ComparisonFilterImplCopyWith<_$ComparisonFilterImpl> get copyWith =>
+      __$$ComparisonFilterImplCopyWithImpl<_$ComparisonFilterImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ComparisonFilterImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _ComparisonFilter implements ComparisonFilter {
+  const factory _ComparisonFilter(
+      {required final String key,
+      required final String value,
+      final String operation,
+      final String? switchOn,
+      final Map<String, String>? cases}) = _$ComparisonFilterImpl;
+
+  factory _ComparisonFilter.fromJson(Map<String, dynamic> json) =
+      _$ComparisonFilterImpl.fromJson;
+
+  @override
+  String get key;
+  @override // DB column name (e.g., "senderId")
+  String get value;
+  @override // default template (e.g., "{{navigation.facilityFromWhich}}")
+  String get operation;
+  @override
+  String? get switchOn;
+  @override // template for conditional switch (e.g., "{{navigation.stockEntryType}}")
+  Map<String, String>? get cases;
+  @override
+  @JsonKey(ignore: true)
+  _$$ComparisonFilterImplCopyWith<_$ComparisonFilterImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

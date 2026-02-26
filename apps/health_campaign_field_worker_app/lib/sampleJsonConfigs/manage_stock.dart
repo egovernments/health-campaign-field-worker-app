@@ -403,7 +403,7 @@ final dynamic sampleInventoryFlows = {
               }
             ]
           }
-        }
+        },
       ],
       "wrapperConfig": {
         "wrapperName": "InventoryWrapper",
@@ -866,7 +866,7 @@ final dynamic sampleInventoryFlows = {
             },
             {
               "type": "string",
-              "label": "APPONE_INVENTORY_QUANTITY_SENT_LABEL",
+              "label": "APPONE_INVENTORY_QUANTITY_SENT_LABEL_01",
               "order": 4,
               "value": "",
               "format": "text",
@@ -878,6 +878,14 @@ final dynamic sampleInventoryFlows = {
               "fieldName": "quantitySent",
               "deleteFlag": false,
               "innerLabel": "",
+              "visibilityCondition": {
+                "expression": [
+                  {
+                    "condition": "navigation.stockEntryType == 'ISSUED'",
+                    "type": "custom"
+                  }
+                ]
+              },
               "systemDate": false,
               "validations": [
                 {
@@ -893,15 +901,7 @@ final dynamic sampleInventoryFlows = {
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "enums": null,
-              "visibilityCondition": {
-                "expression": [
-                  {
-                    "condition": "navigation.stockEntryType == 'ISSUED'",
-                    "type": "custom"
-                  }
-                ]
-              }
+              "enums": null
             },
             {
               "type": "string",
@@ -1102,6 +1102,36 @@ final dynamic sampleInventoryFlows = {
               "validations": [
                 {"type": "isGS1", "value": true, "message": ""}
               ],
+              "comparisonConfig": {
+                "model": "stock",
+                "extractKey": "scanResource",
+                "extractFrom": "additionalFields",
+                "filters": [
+                  {
+                    "key": "senderId",
+                    "value": "{{navigation.facilityFromWhich}}",
+                    "operation": "equals",
+                    "switchOn": "{{navigation.stockEntryType}}",
+                    "cases": {
+                      "ISSUED": "{{navigation.facilityToWhich}}",
+                      "DAMAGED": "{{navigation.facilityToWhich}}",
+                      "LOSS": "{{navigation.facilityToWhich}}"
+                    }
+                  },
+                  {
+                    "key": "receiverId",
+                    "value": "{{navigation.facilityToWhich}}",
+                    "operation": "equals",
+                    "switchOn": "{{navigation.stockEntryType}}",
+                    "cases": {
+                      "ISSUED": "{{navigation.facilityFromWhich}}",
+                      "DAMAGED": "{{navigation.facilityFromWhich}}",
+                      "LOSS": "{{navigation.facilityFromWhich}}"
+                    }
+                  }
+                ],
+                "errorMessage": "RESOURCES_ALREADY_SCANNED"
+              },
               "hidden": false,
               "tooltip": "",
               "helpText": "Scan Resource",

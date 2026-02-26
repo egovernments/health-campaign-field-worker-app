@@ -47,6 +47,12 @@ class DigitScannerPage extends LocalizedStatefulWidget {
   /// Used to prevent multiple scanner fields from reacting to the same state change.
   final String scannerId;
 
+  /// Per-scan duplicate check callback. Returns true if the scanned value is a duplicate.
+  final Future<bool> Function(String scannedValue)? duplicateCheckFn;
+
+  /// Error message for duplicate detection (localization key)
+  final String? duplicateCheckMessage;
+
   const DigitScannerPage({
     super.key,
     super.appLocalizations,
@@ -59,6 +65,8 @@ class DigitScannerPage extends LocalizedStatefulWidget {
     this.initialQrCodes,
     this.initialBarcodeData,
     this.scannerId = 'default',
+    this.duplicateCheckFn,
+    this.duplicateCheckMessage,
   });
 
   /// Gets the effective quantity - from validations if available, otherwise from legacy param
@@ -123,6 +131,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   bool _isPermissionDialogShowing = false;
   bool _waitingForPermissionFromSettings = false;
+  static const _manualGtinFormKey = 'gtinCode';
   static const _manualCodeFormKey = 'manualCode';
   static const _manualSerialNoFormKey = 'serialNoCode';
   static const _manualExpiryDateFormKey = 'expiryDate';
@@ -427,6 +436,8 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
       scanLimitMessage: widget.scanLimitMessage,
       regex: widget.effectiveRegex,
       patternMessage: widget.patternMessage,
+      duplicateCheckFn: widget.duplicateCheckFn,
+      duplicateCheckMessage: widget.duplicateCheckMessage,
     );
   }
 
@@ -511,14 +522,16 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
   FormGroup buildForm() {
     if (widget.effectiveIsGS1code) {
       return fb.group(<String, Object>{
+        _manualGtinFormKey: FormControl<String>(
+          validators: [Validators.required],
+        ),
         _manualCodeFormKey: FormControl<String>(
           validators: [Validators.required],
         ),
-        _manualSerialNoFormKey: FormControl<String>(
+        _manualSerialNoFormKey: FormControl<String>(),
+        _manualExpiryDateFormKey: FormControl<DateTime>(
           validators: [Validators.required],
         ),
-        _manualExpiryDateFormKey: FormControl<DateTime>(
-            value: DateTime.now(), validators: [Validators.required]),
       });
     } else {
       return fb
@@ -563,13 +576,20 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                             final bloc = context.read<DigitScannerBloc>();
 
                             try {
+                              final gtinValue = form
+                                  .control(_manualGtinFormKey)
+                                  .value
+                                  ?.toString()
+                                  .trim();
+                              final serialValue = form
+                                  .control(_manualSerialNoFormKey)
+                                  .value
+                                  ?.toString()
+                                  .trim();
                               final barcodeString =
                                   DigitScannerUtils().generateGS1Barcode(
-                                serialNumber: form
-                                    .control(_manualSerialNoFormKey)
-                                    .value
-                                    .toString()
-                                    .trim(),
+                                gtin: gtinValue,
+                                serialNumber: serialValue,
                                 expiryDate: _parseExpiryDate(form
                                     .control(_manualExpiryDateFormKey)
                                     .value),
@@ -588,6 +608,49 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                               final existingBarcodes = state.barCodes.isNotEmpty
                                   ? state.barCodes
                                   : result;
+
+                              // Per-scan duplicate check
+                              if (widget.duplicateCheckFn != null) {
+                                final serialized = DigitScannerUtils()
+                                    .serializeGs1Barcodes([parsed]);
+                                final isDuplicate =
+                                    await widget.duplicateCheckFn!(serialized);
+                                if (isDuplicate) {
+                                  Toast.showToast(
+                                    context,
+                                    type: ToastType.error,
+                                    message: localizations.translate(
+                                        widget.duplicateCheckMessage ??
+                                            i18.scanner
+                                                .resourceAlreadyScanned),
+                                    sentenceCaseEnabled: false,
+                                  );
+                                  return;
+                                }
+                              }
+
+                              // Check if barcode already scanned
+                              final alreadyScanned =
+                                  existingBarcodes.any((element) {
+                                if (element.elements.entries.isEmpty ||
+                                    parsed.elements.entries.isEmpty) {
+                                  return false;
+                                }
+                                return element.elements.entries.last.value
+                                        .data ==
+                                    parsed.elements.entries.last.value.data;
+                              });
+
+                              if (alreadyScanned) {
+                                Toast.showToast(
+                                  context,
+                                  type: ToastType.error,
+                                  message: localizations.translate(
+                                      i18.scanner.resourceAlreadyScanned),
+                                  sentenceCaseEnabled: false,
+                                );
+                                return;
+                              }
 
                               // Check scan limit before adding
                               if (existingBarcodes.length >=
@@ -653,16 +716,51 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                     .translate(i18.scanner.enterManualCode),
                               );
                             } else {
+                              final manualValue = form
+                                  .control(_manualCodeFormKey)
+                                  .value
+                                  .toString()
+                                  .trim();
                               final bloc = context.read<DigitScannerBloc>();
+
+                              // Per-scan duplicate check
+                              if (widget.duplicateCheckFn != null) {
+                                final isDuplicate =
+                                    await widget.duplicateCheckFn!(manualValue);
+                                if (isDuplicate) {
+                                  Toast.showToast(
+                                    context,
+                                    type: ToastType.error,
+                                    message: localizations.translate(
+                                        widget.duplicateCheckMessage ??
+                                            i18.scanner
+                                                .resourceAlreadyScanned),
+                                    sentenceCaseEnabled: false,
+                                  );
+                                  return;
+                                }
+                              }
+
+                              // Check if QR code already scanned
+                              final existingQrCodes = state.qrCodes.isNotEmpty
+                                  ? state.qrCodes
+                                  : codes;
+                              if (existingQrCodes.contains(manualValue)) {
+                                Toast.showToast(
+                                  context,
+                                  type: ToastType.error,
+                                  message: localizations.translate(
+                                      i18.scanner.resourceAlreadyScanned),
+                                  sentenceCaseEnabled: false,
+                                );
+                                return;
+                              }
+
                               final updatedQRCodes =
                                   List<String>.from(state.qrCodes)
-                                    ..add(form
-                                        .control(_manualCodeFormKey)
-                                        .value
-                                        .toString()
-                                        .trim());
+                                    ..add(manualValue);
 
-                              codes.add(form.control(_manualCodeFormKey).value);
+                              codes.add(manualValue);
                               bloc.add(
                                 DigitScannerEvent.handleScanner(
                                     barCode: state.barCodes,
@@ -712,6 +810,31 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                               ),
                             ),
                           ),
+                          if (widget.effectiveIsGS1code)
+                            ReactiveWrapperField(
+                              formControlName: _manualGtinFormKey,
+                              validationMessages: {
+                                'required': (object) =>
+                                    localizations.translate(
+                                      i18.scanner.gtinRequired,
+                                    ),
+                              },
+                              builder: (field) {
+                                return LabeledField(
+                                  label: localizations.translate(
+                                    i18.scanner.barCodeGtin,
+                                  ),
+                                  capitalizedFirstLetter: false,
+                                  child: DigitTextFormInput(
+                                      errorMessage: field.errorText,
+                                      isRequired: true,
+                                      onChange: (value) {
+                                        form.control(_manualGtinFormKey).value =
+                                            value;
+                                      }),
+                                );
+                              },
+                            ),
                           ReactiveWrapperField(
                             formControlName: _manualCodeFormKey,
                             validationMessages: widget.effectiveIsGS1code
@@ -743,11 +866,6 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                           if (widget.effectiveIsGS1code) ...[
                             ReactiveWrapperField(
                               formControlName: _manualSerialNoFormKey,
-                              validationMessages: {
-                                'required': (object) => localizations.translate(
-                                      i18.scanner.serialNoRequired,
-                                    ),
-                              },
                               builder: (field) {
                                 return LabeledField(
                                   label: localizations.translate(
@@ -756,7 +874,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                                   capitalizedFirstLetter: false,
                                   child: DigitTextFormInput(
                                       errorMessage: field.errorText,
-                                      isRequired: true,
+                                      isRequired: false,
                                       onChange: (value) {
                                         form
                                             .control(_manualSerialNoFormKey)
@@ -857,11 +975,46 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
                               sentenceCaseEnabled: false,
                             );
                           } else {
+                            final manualValue = form
+                                .control(_manualCodeFormKey)
+                                .value
+                                .toString()
+                                .trim();
                             final bloc = context.read<DigitScannerBloc>();
+
+                            // Per-scan duplicate check
+                            if (widget.duplicateCheckFn != null) {
+                              final isDuplicate =
+                                  await widget.duplicateCheckFn!(manualValue);
+                              if (isDuplicate) {
+                                Toast.showToast(
+                                  context,
+                                  type: ToastType.error,
+                                  message: localizations.translate(
+                                      widget.duplicateCheckMessage ??
+                                          i18.scanner.resourceAlreadyScanned),
+                                  sentenceCaseEnabled: false,
+                                );
+                                return;
+                              }
+                            }
+
                             // Use local codes as fallback when bloc state is empty
                             final existingQrCodes = state.qrCodes.isNotEmpty
                                 ? state.qrCodes
                                 : codes;
+
+                            // Check if QR code already scanned
+                            if (existingQrCodes.contains(manualValue)) {
+                              Toast.showToast(
+                                context,
+                                type: ToastType.error,
+                                message: localizations.translate(
+                                    i18.scanner.resourceAlreadyScanned),
+                                sentenceCaseEnabled: false,
+                              );
+                              return;
+                            }
 
                             // Check scan limit before adding
                             if (existingQrCodes.length >=
@@ -881,11 +1034,7 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
 
                             final updatedQRCodes =
                                 List<String>.from(existingQrCodes)
-                                  ..add(form
-                                      .control(_manualCodeFormKey)
-                                      .value
-                                      .toString()
-                                      .trim());
+                                  ..add(manualValue);
                             codes = updatedQRCodes;
                             bloc.add(
                               DigitScannerEvent.handleScanner(

@@ -98,6 +98,8 @@ class DigitScannerUtils {
     String? scanLimitMessage,
     String? regex,
     String? patternMessage,
+    Future<bool> Function(String scannedValue)? duplicateCheckFn,
+    String? duplicateCheckMessage,
   }) async {
     // Check if processing is allowed
     if (!canProcess) return;
@@ -135,6 +137,19 @@ class DigitScannerUtils {
             final parsedResult =
                 parser.parse(barcodes.first.displayValue.toString());
 
+            // Per-scan duplicate check
+            if (duplicateCheckFn != null) {
+              final serialized =
+                  DigitScannerUtils().serializeGs1Barcodes([parsedResult]);
+              final isDuplicate = await duplicateCheckFn(serialized);
+              if (isDuplicate) {
+                await handleError(duplicateCheckMessage ??
+                    localizations
+                        .translate(i18.scanner.resourceAlreadyScanned));
+                return;
+              }
+            }
+
             // Check if the barcode has already been scanned
             final alreadyScanned = bloc.state.barCodes.any((element) {
               if (element.elements.entries.isEmpty ||
@@ -151,8 +166,8 @@ class DigitScannerUtils {
                   localizations.translate(i18.scanner.resourceAlreadyScanned));
             } else if (regex != null &&
                 regex.trim().isNotEmpty &&
-                !RegExp(regex).hasMatch(
-                    barcodes.first.displayValue.toString())) {
+                !RegExp(regex)
+                    .hasMatch(barcodes.first.displayValue.toString())) {
               // Handle error if barcode doesn't match regex pattern
               final errorMsg = patternMessage != null
                   ? localizations.translate(patternMessage)
@@ -180,6 +195,17 @@ class DigitScannerUtils {
           }
         } else {
           // For non-GS1 codes
+          // Per-scan duplicate check
+          if (duplicateCheckFn != null) {
+            final isDuplicate =
+                await duplicateCheckFn(barcodes.first.displayValue.toString());
+            if (isDuplicate) {
+              await handleError(duplicateCheckMessage ??
+                  localizations.translate(i18.scanner.resourceAlreadyScanned));
+              return;
+            }
+          }
+
           if (bloc.state.qrCodes.contains(barcodes.first.displayValue)) {
             // Handle error if the QR code is already scanned
             await handleError(
@@ -187,8 +213,7 @@ class DigitScannerUtils {
             return;
           } else if (regex != null &&
               regex.trim().isNotEmpty &&
-              !RegExp(regex).hasMatch(
-                  barcodes.first.displayValue.toString())) {
+              !RegExp(regex).hasMatch(barcodes.first.displayValue.toString())) {
             // Handle error if QR code doesn't match regex pattern
             final errorMsg = patternMessage != null
                 ? localizations.translate(patternMessage)
@@ -252,7 +277,7 @@ class DigitScannerUtils {
         context,
         type: ToastType.error,
         message: localizations.translate(message),
-          sentenceCaseEnabled: false,
+        sentenceCaseEnabled: false,
       );
     }
 
@@ -437,15 +462,18 @@ class DigitScannerUtils {
   String generateGS1Barcode({
     required String batchNumber,
     required DateTime expiryDate,
-    required String serialNumber,
+    String? serialNumber,
     String? gtin,
   }) {
     const groupSeparator = '\u001d'; // ASCII 29
     final formattedDate = DateFormat('yyMMdd').format(expiryDate);
 
-    // Include GTIN (01) if provided
-    final gtinPart =
-        gtin != null && gtin.isNotEmpty ? '01$gtin$groupSeparator' : '';
-    return '${gtinPart}10$batchNumber${groupSeparator}17${formattedDate}21$serialNumber$groupSeparator';
+    // Include GTIN (01) if provided (fixed-length 14 digits, no GS needed)
+    final gtinPart = gtin != null && gtin.isNotEmpty ? '01$gtin' : '';
+    // Include Serial (21) only if provided (variable-length, needs GS)
+    final serialPart = serialNumber != null && serialNumber.isNotEmpty
+        ? '21$serialNumber$groupSeparator'
+        : '';
+    return '${gtinPart}10$batchNumber${groupSeparator}17$formattedDate$serialPart';
   }
 }

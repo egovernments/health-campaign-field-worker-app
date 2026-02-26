@@ -8,6 +8,8 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'dart:async' as _i6;
+
 import 'package:auto_route/auto_route.dart' as _i2;
 import 'package:digit_scanner/blocs/app_localization.dart' as _i4;
 import 'package:digit_scanner/models/scanner_validation.dart' as _i5;
@@ -34,6 +36,8 @@ abstract class $DigitScannerPackageRoute extends _i2.AutoRouterModule {
           initialQrCodes: args.initialQrCodes,
           initialBarcodeData: args.initialBarcodeData,
           scannerId: args.scannerId,
+          duplicateCheckFn: args.duplicateCheckFn,
+          duplicateCheckMessage: args.duplicateCheckMessage,
         ),
       );
     }
@@ -55,6 +59,8 @@ class DigitScannerRoute extends _i2.PageRouteInfo<DigitScannerRouteArgs> {
     List<String>? initialQrCodes,
     String? initialBarcodeData,
     String scannerId = 'default',
+    _i6.Future<bool> Function(String)? duplicateCheckFn,
+    String? duplicateCheckMessage,
     List<_i2.PageRouteInfo>? children,
   }) : super(
           DigitScannerRoute.name,
@@ -70,6 +76,8 @@ class DigitScannerRoute extends _i2.PageRouteInfo<DigitScannerRouteArgs> {
             initialQrCodes: initialQrCodes,
             initialBarcodeData: initialBarcodeData,
             scannerId: scannerId,
+            duplicateCheckFn: duplicateCheckFn,
+            duplicateCheckMessage: duplicateCheckMessage,
           ),
           initialChildren: children,
         );
@@ -93,6 +101,8 @@ class DigitScannerRouteArgs {
     this.initialQrCodes,
     this.initialBarcodeData,
     this.scannerId = 'default',
+    this.duplicateCheckFn,
+    this.duplicateCheckMessage,
   });
 
   final _i3.Key? key;
@@ -117,8 +127,12 @@ class DigitScannerRouteArgs {
 
   final String scannerId;
 
+  final _i6.Future<bool> Function(String)? duplicateCheckFn;
+
+  final String? duplicateCheckMessage;
+
   @override
   String toString() {
-    return 'DigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled, regex: $regex, validations: $validations, initialQrCodes: $initialQrCodes, initialBarcodeData: $initialBarcodeData, scannerId: $scannerId}';
+    return 'DigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled, regex: $regex, validations: $validations, initialQrCodes: $initialQrCodes, initialBarcodeData: $initialBarcodeData, scannerId: $scannerId, duplicateCheckFn: $duplicateCheckFn, duplicateCheckMessage: $duplicateCheckMessage}';
   }
 }
