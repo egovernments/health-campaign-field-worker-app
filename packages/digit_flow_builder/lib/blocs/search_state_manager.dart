@@ -82,8 +82,6 @@ class SearchStateManager {
       _searchCallbacks.remove(key);
       _state.remove(key);
     }
-    debugPrint(
-        'SearchStateManager: Disposed ${keysToRemove.length} entries for $prefix');
   }
 
   // ============ Composite Key Methods (Direct Access) ============
@@ -99,8 +97,6 @@ class SearchStateManager {
       _searchCallbacks.remove(key);
       _state.remove(key);
     }
-    debugPrint(
-        'SearchStateManager: Disposed ${keysToRemove.length} entries for compositeKey $compositeKey');
   }
 
   /// Update window after data is loaded using composite key directly
@@ -114,10 +110,6 @@ class SearchStateManager {
     final fullKey = '$compositeKey::$searchName';
     final windowData =
         _state[fullKey]?['paginationWindow'] as Map<String, dynamic>?;
-
-    debugPrint(
-        'SearchStateManager.onDataLoadedByCompositeKey: compositeKey=$compositeKey, direction=$direction, '
-        'loadedCount=$loadedCount, totalInWindow=$totalInWindow, windowData=${windowData != null}');
 
     if (windowData == null) return;
 
@@ -202,7 +194,6 @@ class SearchStateManager {
 
     // Call search callback if registered
     if (_searchCallbacks.containsKey(compositeKey)) {
-      debugPrint('SearchStateManager: Triggering search for $compositeKey');
       _searchCallbacks[compositeKey]!();
     }
   }
@@ -232,34 +223,6 @@ class SearchStateManager {
     /// as it is handled separately by [getAllFilters].
 
     _state[compositeKey]!['filters'] = List<dynamic>.from(newFilters);
-    debugPrint(
-        'SearchStateManager: Set ${newFilters.length} filters for $compositeKey');
-
-    //     final existing =
-    //     List<dynamic>.from(_state[compositeKey]!['filters'] as List? ?? []);
-
-    // // Merge: for each new filter, replace if same 'key' exists, else add
-    // for (final newFilter in newFilters) {
-    //   if (newFilter is! Map) continue;
-
-    //   final filterKey = newFilter['key'];
-    //   if (filterKey == null) continue;
-
-    //   final existingIndex =
-    //       existing.indexWhere((f) => f is Map && f['key'] == filterKey);
-
-    //   if (existingIndex >= 0) {
-    //     existing[existingIndex] = newFilter;
-    //     debugPrint(
-    //         'SearchStateManager: Updated filter key=$filterKey for $compositeKey');
-    //   } else {
-    //     existing.add(newFilter);
-    //     debugPrint(
-    //         'SearchStateManager: Added filter key=$filterKey for $compositeKey');
-    //   }
-    // }
-
-    // _state[compositeKey]!['filters'] = existing;
 
     if (triggerSearch) {
       _notifyChange(compositeKey);
@@ -283,9 +246,6 @@ class SearchStateManager {
     existing.removeWhere((f) => f is Map && filterKeys.contains(f['key']));
 
     _state[compositeKey]!['filters'] = existing;
-
-    debugPrint(
-        'SearchStateManager: Removed ${beforeCount - existing.length} filters for keys=$filterKeys from $compositeKey');
 
     if (triggerSearch && beforeCount != existing.length) {
       _notifyChange(compositeKey);
@@ -552,10 +512,6 @@ class SearchStateManager {
     final maxItems = windowData['maxItems'] as int? ??
         ((windowData['windowSize'] as int? ?? 3) * limit);
 
-    debugPrint(
-        'SearchStateManager.onDataLoaded: limit=$limit, maxItems=$maxItems, '
-        'willTrim=${totalInWindow > maxItems} (totalInWindow=$totalInWindow > maxItems=$maxItems)');
-
     if (direction == 'initial') {
       // First load
       windowData['startOffset'] = 0;
@@ -609,8 +565,6 @@ class SearchStateManager {
     final compositeKey = _compositeKey(screenKey, searchName);
     if (_state.containsKey(compositeKey)) {
       _state[compositeKey]!.remove('paginationWindow');
-      debugPrint(
-          'SearchStateManager: Reset pagination window for $compositeKey');
     }
   }
 
