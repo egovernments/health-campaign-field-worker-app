@@ -36,10 +36,6 @@ class FormEntityMapper {
             // Apply skipFirst - skip the first N items
             final startIndex = skipFirst < listData.length ? skipFirst : listData.length;
 
-            if (kDebugMode && skipFirst > 0) {
-              print('listSource: Skipping first $skipFirst items, starting from index $startIndex');
-            }
-
             // Create one model instance for each item in the list (after skipping)
             for (int index = startIndex; index < listData.length; index++) {
               final model = _mapModel(
@@ -53,10 +49,6 @@ class FormEntityMapper {
             }
           } else {
             // If list is empty or null, skip model creation
-            if (kDebugMode) {
-              print(
-                  'Warning: listSource "$listSourcePath" returned empty or null for $modelName');
-            }
           }
         } else {
           // Normal single model creation
@@ -568,18 +560,10 @@ class FormEntityMapper {
     // Remove "collect:" prefix
     final pathWithoutPrefix = sourcePath.replaceFirst('collect:', '');
 
-    if (kDebugMode) {
-      print('🔍 _collectFieldFromList called with path: "$pathWithoutPrefix"');
-    }
 
     // Resolve the full path to get the value
     final resolvedValue =
         getValueFromMapping(pathWithoutPrefix, formValues, modelName, context);
-
-    if (kDebugMode) {
-      print('   Resolved value type: ${resolvedValue.runtimeType}');
-      print('   Resolved value: $resolvedValue');
-    }
 
     // If null, return empty list
     if (resolvedValue == null) {
@@ -619,10 +603,6 @@ class FormEntityMapper {
       result.add(resolvedValue.toString());
     }
 
-    if (kDebugMode) {
-      print('   Final collected list: $result');
-    }
-
     return result;
   }
 
@@ -646,23 +626,13 @@ class FormEntityMapper {
     // If listSource is defined, use it to fetch a list and map each item
     final nestedListSourcePath = listConfig['listSource'] as String?;
     if (nestedListSourcePath != null) {
-      if (kDebugMode) {
-        print('🔍 Resolving nestedListSourcePath: "$nestedListSourcePath"');
-        print('   listItemIndex: $listItemIndex');
-        print('   listSourcePath: $listSourcePath');
-        print('   formValues keys: ${formValues.keys}');
-        print('   context keys: ${context.keys}');
-      }
+
       final listData = getValueFromMapping(
           nestedListSourcePath, formValues, listModelName, context,
           listItemIndex: listItemIndex, listSourcePath: listSourcePath);
-      if (kDebugMode) {
-        print('   listData result: ${listData?.runtimeType} = $listData');
-      }
+
       if (listData is List) {
-        if (kDebugMode) {
-          print('✅ listData is List with ${listData.length} items');
-        }
+
         final mappings = listConfig['mappings'] as Map<String, dynamic>;
         final items = <Map<String, dynamic>>[];
         for (int i = 0; i < listData.length; i++) {
@@ -671,9 +641,7 @@ class FormEntityMapper {
           Map<String, dynamic> itemMap;
           if (item is Map<String, dynamic>) {
             itemMap = item;
-            if (kDebugMode) {
-              print('   Item $i is already a Map with keys: ${itemMap.keys}');
-            }
+
           } else {
             // Try to call toMap() on any object that has it
             try {
@@ -681,17 +649,11 @@ class FormEntityMapper {
               itemMap = toMapResult is Map<String, dynamic>
                   ? toMapResult
                   : Map<String, dynamic>.from(toMapResult as Map);
-              if (kDebugMode) {
-                print(
-                    '   Item $i converted from ${item.runtimeType} to Map with keys: ${itemMap.keys}');
-              }
+
             } catch (e) {
               // Object doesn't have toMap method, use empty map
               itemMap = <String, dynamic>{};
-              if (kDebugMode) {
-                print(
-                    '   Item $i (${item.runtimeType}) has no toMap method, using empty map');
-              }
+
             }
           }
 
@@ -714,12 +676,6 @@ class FormEntityMapper {
                     listItemIndex: listItemIndex,
                     listSourcePath: listSourcePath);
                 newItem[targetKey] = value;
-                if (kDebugMode &&
-                    (targetKey == 'productVariantId' ||
-                        targetKey == 'quantity')) {
-                  print(
-                      '   Mapping $targetKey from "$sourcePath": itemMap[$sourcePath]=${itemMap[sourcePath]}, resolved=$value');
-                }
               }
             }
             if (targetKey == 'additionalFields' &&
@@ -1213,7 +1169,7 @@ class FormEntityMapper {
           print(
               '⚠️ Warning: Key "$key" not found while resolving path "$path".');
           if (current is Map) {
-            print('   Available keys in current Map: ${(current as Map).keys}');
+            print('   Available keys in current Map: ${(current).keys}');
           }
         }
         return null;
