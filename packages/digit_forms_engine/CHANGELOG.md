@@ -1,3 +1,22 @@
+## 0.0.1
+
+- Dynamic form rendering engine based on JSON schema
+- Multi-page form support with automatic navigation
+- Support for multiple field types: text, dropdown, date, latLng, locality, scanner, and more
+- Validation support using reactive_forms
+- Form state management using BLoC pattern
+- Summary page generation
+- Localization support
+- Theming support via digit_ui_components
+- Added mobile number format support for string type fields
+- Fixed min and maxLength validation skipping for empty strings
+- Added dependency field logic
+- Integrated formula parser for conditional visibility and validation
+- Fixed issue with multiple submit buttons
+- Added support for multiple scanning
+- Added validation for scanning
+- Added dynamic validator resolver context
+
 ## 0.0.12-dev
 
 - Added dynamic validator resolver context
