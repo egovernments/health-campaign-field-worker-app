@@ -399,24 +399,6 @@ final dynamic sampleReferralFlows = {
                       "type": "SEARCH_EVENT",
                       "awaitResults": true
                     }
-                  },
-                  {
-                    "actionType": "NAVIGATION",
-                    "properties": {
-                      "data": [
-                        {
-                          "key": "clientReferenceId",
-                          "value":
-                              "{{HFReferralModel.0.clientReferenceId}}"
-                        },
-                        {
-                          "key": "referralSymptom",
-                          "value": "{{HFReferralModel.0.symptom}}"
-                        }
-                      ],
-                      "name": "referralOverview",
-                      "type": "TEMPLATE"
-                    }
                   }
                 ],
                 "scanLimit": 1,
