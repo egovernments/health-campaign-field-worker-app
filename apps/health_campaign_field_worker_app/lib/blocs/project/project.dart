@@ -27,7 +27,6 @@ import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/entities/roles_type.dart';
-import '../../models/entities/transaction_type.dart';
 import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/least_level_boundary_singleton.dart';
@@ -46,40 +45,40 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
   /// Project Staff Repositories
   final RemoteRepository<ProjectStaffModel, ProjectStaffSearchModel>
-  projectStaffRemoteRepository;
+      projectStaffRemoteRepository;
   final LocalRepository<ProjectStaffModel, ProjectStaffSearchModel>
-  projectStaffLocalRepository;
+      projectStaffLocalRepository;
 
   /// Project Repositories
   final RemoteRepository<ProjectModel, ProjectSearchModel>
-  projectRemoteRepository;
+      projectRemoteRepository;
   final LocalRepository<ProjectModel, ProjectSearchModel>
-  projectLocalRepository;
+      projectLocalRepository;
 
   final RemoteRepository<AttendanceRegisterModel, AttendanceRegisterSearchModel>
-  attendanceRemoteRepository;
+      attendanceRemoteRepository;
   final LocalRepository<AttendanceRegisterModel, AttendanceRegisterSearchModel>
-  attendanceLocalRepository;
+      attendanceLocalRepository;
   final RemoteRepository<IndividualModel, IndividualSearchModel>
-  individualRemoteRepository;
+      individualRemoteRepository;
   final LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>
-  attendanceLogLocalRepository;
+      attendanceLogLocalRepository;
   final RemoteRepository<AttendanceLogModel, AttendanceLogSearchModel>
-  attendanceLogRemoteRepository;
+      attendanceLogRemoteRepository;
   final LocalRepository<IndividualModel, IndividualSearchModel>
-  individualLocalRepository;
+      individualLocalRepository;
 
   /// Project Facility Repositories
   final RemoteRepository<ProjectFacilityModel, ProjectFacilitySearchModel>
-  projectFacilityRemoteRepository;
+      projectFacilityRemoteRepository;
   final LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>
-  projectFacilityLocalRepository;
+      projectFacilityLocalRepository;
 
   /// Facility Repositories
   final RemoteRepository<FacilityModel, FacilitySearchModel>
-  facilityRemoteRepository;
+      facilityRemoteRepository;
   final LocalRepository<FacilityModel, FacilitySearchModel>
-  facilityLocalRepository;
+      facilityLocalRepository;
 
   /// Stock Repositories
   final RemoteRepository<StockModel, StockSearchModel> stockRemoteRepository;
@@ -87,27 +86,27 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
   /// Service Definition Repositories
   final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
-  serviceDefinitionRemoteRepository;
+      serviceDefinitionRemoteRepository;
   final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
-  serviceDefinitionLocalRepository;
+      serviceDefinitionLocalRepository;
 
   ///Boundary Resource Repositories
   final RemoteRepository<BoundaryModel, BoundarySearchModel>
-  boundaryRemoteRepository;
+      boundaryRemoteRepository;
   final LocalRepository<BoundaryModel, BoundarySearchModel>
-  boundaryLocalRepository;
+      boundaryLocalRepository;
 
   /// Project Resource Repositories
   final RemoteRepository<ProjectResourceModel, ProjectResourceSearchModel>
-  projectResourceRemoteRepository;
+      projectResourceRemoteRepository;
   final LocalRepository<ProjectResourceModel, ProjectResourceSearchModel>
-  projectResourceLocalRepository;
+      projectResourceLocalRepository;
 
   /// Product Variant Repositories
   final RemoteRepository<ProductVariantModel, ProductVariantSearchModel>
-  productVariantRemoteRepository;
+      productVariantRemoteRepository;
   final LocalRepository<ProductVariantModel, ProductVariantSearchModel>
-  productVariantLocalRepository;
+      productVariantLocalRepository;
   final DashboardRemoteRepository dashboardRemoteRepository;
   BuildContext context;
 
@@ -149,9 +148,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   }
 
   FutureOr<void> _handleProjectInit(
-      ProjectInitializeEvent event,
-      ProjectEmitter emit,
-      ) async {
+    ProjectInitializeEvent event,
+    ProjectEmitter emit,
+  ) async {
     emit(const ProjectState(
       loading: true,
       projects: [],
@@ -165,9 +164,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       title: 'ProjectBloc',
     );
 
-    final isOnline =
-        connectivityResult.contains(ConnectivityResult.wifi) ||
-            connectivityResult.contains(ConnectivityResult.mobile);
+    final isOnline = connectivityResult.contains(ConnectivityResult.wifi) ||
+        connectivityResult.contains(ConnectivityResult.mobile);
     final selectedProject = await localSecureStore.selectedProject;
     final isProjectSetUpComplete = await localSecureStore
         .isProjectSetUpComplete(selectedProject?.id ?? "noProjectId");
@@ -327,8 +325,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         emit(state.copyWith(
           projectType: projectTypes.projectTypeWrapper?.projectTypes
               .where((element) =>
-          element.id ==
-              (additionalProjectTypeId ?? projects.first.projectTypeId))
+                  element.id ==
+                  (additionalProjectTypeId ?? projects.first.projectTypeId))
               .toList()
               .firstOrNull,
         ));
@@ -423,90 +421,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
   }
 
-  // info: downloads stock data from remote , based on the user role
-  FutureOr<void> downloadStockDataBasedOnRole(
-      List<ProjectFacilityModel> projectFacilities,
-      List<FacilityModel> allFacilities,
-      String? boundaryType,
-      ProjectCycle? currentRunningCycle) async {
-    final userObject = await localSecureStore.userRequestModel;
-    final userRoles = userObject!.roles.map((e) => e.code);
-    final lastChangedSince = currentRunningCycle?.startDate;
-
-    Map<String, String> facilityIdUsageMap = {};
-
-    for (var element in allFacilities) {
-      facilityIdUsageMap[element.id] = element?.usage ?? "";
-    }
-
-    // info : assumption both roles will not be assigned to user
-
-    if (userRoles.contains(RolesType.healthFacilitySupervisor.toValue())) {
-      List<String> receiverIds =
-      projectFacilities.map((e) => e.facilityId).toList();
-      receiverIds = receiverIds
-          .where((e) => facilityIdUsageMap[e] == Constants.healthFacility)
-          .toList();
-      final stockSearchModel = StockSearchModel(
-        receiverId: receiverIds,
-        transactionType: [TransactionType.dispatched.toValue()],
-      );
-      final stockEntriesDownloaded =
-      await downloadStockEntries(stockSearchModel, lastChangedSince);
-      // info : create entries in the local repository
-
-      await createStockDownloadedEntries(stockEntriesDownloaded);
-    } else if (userRoles.contains(RolesType.warehouseManager.toValue()) &&
-        boundaryType == Constants.lgaBoundaryLevel) {
-      List<String> receiverIds =
-      projectFacilities.map((e) => e.facilityId).toList();
-      receiverIds = receiverIds
-          .where((e) => facilityIdUsageMap[e] == Constants.lgaFacility)
-          .toList();
-      final stockSearchModel = StockSearchModel(
-        receiverId: receiverIds,
-        transactionType: [TransactionType.dispatched.toValue()],
-      );
-      final stockEntriesDownloaded =
-      await downloadStockEntries(stockSearchModel, lastChangedSince);
-
-      // info : create entries in the local repository
-      await createStockDownloadedEntries(stockEntriesDownloaded);
-    } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
-      final receiverIds = [context.loggedInUserUuid];
-      final stockSearchModel = StockSearchModel(
-        receiverId: receiverIds,
-        transactionType: [TransactionType.dispatched.toValue()],
-      );
-      final stockEntriesDownloaded =
-      await downloadStockEntries(stockSearchModel, lastChangedSince);
-
-      // info : create entries in the local repository
-      await createStockDownloadedEntries(stockEntriesDownloaded);
-    }
-  }
-
-  // info : insert data in db
-  FutureOr<void> createStockDownloadedEntries(
-      List<StockModel> stockEntries) async {
-    await stockLocalRepository.bulkCreate(stockEntries);
-  }
-
-  // info:  downloads the stock data from remote repository
-
-  FutureOr<List<StockModel>> downloadStockEntries(
-      StockSearchModel stockSearchModel, int? lastChangedSince) async {
-    var offset = 0;
-    var initialLimit = 10;
-
-    final stockEntries = await stockRemoteRepository.search(stockSearchModel,
-        limit: initialLimit,
-        offSet: offset,
-        lastChangedSince: lastChangedSince);
-
-    return stockEntries;
-  }
-
   FutureOr<void> _loadProductVariants(List<ProjectModel> projects) async {
     for (final project in projects) {
       final projectResources = await projectResourceRemoteRepository.search(
@@ -536,9 +450,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   }
 
   Future<void> _handleProjectSelection(
-      ProjectSelectProjectEvent event,
-      ProjectEmitter emit,
-      ) async {
+    ProjectSelectProjectEvent event,
+    ProjectEmitter emit,
+  ) async {
     emit(state.copyWith(loading: true, syncError: null));
 
     List<BoundaryModel> boundaries;
@@ -547,12 +461,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         if (context.loggedInUserRoles
             .where(
               (role) =>
-          role.code == RolesType.districtSupervisor.toValue() ||
-              role.code ==
-                  RolesType.distributor
-                      .toValue() || // NOTE: Distributor also fetches registers for getting his team members (Non-Mobile users)
-              role.code == RolesType.teamSupervisor.toValue(),
-        )
+                  role.code == RolesType.districtSupervisor.toValue() ||
+                  role.code ==
+                      RolesType.distributor
+                          .toValue() || // NOTE: Distributor also fetches registers for getting his team members (Non-Mobile users)
+                  role.code == RolesType.teamSupervisor.toValue(),
+            )
             .toList()
             .isNotEmpty) {
           final loggedInIndividualId = await localSecureStore.userIndividualId;
@@ -561,9 +475,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           if (context.loggedInUserRoles
               .where(
                 (role) =>
-            role.code == RolesType.districtSupervisor.toValue() ||
-                role.code == RolesType.teamSupervisor.toValue(),
-          )
+                    role.code == RolesType.districtSupervisor.toValue() ||
+                    role.code == RolesType.teamSupervisor.toValue(),
+              )
               .toList()
               .isNotEmpty) {
             attendanceRegisters = await attendanceRemoteRepository.search(
@@ -597,9 +511,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 if (context.loggedInUserRoles
                     .where(
                       (role) =>
-                  role.code == RolesType.districtSupervisor.toValue() ||
-                      role.code == RolesType.teamSupervisor.toValue(),
-                )
+                          role.code == RolesType.districtSupervisor.toValue() ||
+                          role.code == RolesType.teamSupervisor.toValue(),
+                    )
                     .toList()
                     .isNotEmpty) {
                   final logs = await attendanceLogRemoteRepository.search(
@@ -629,11 +543,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       }
       try {
         final startDate = DateTime(
-            DateTime.now().year, DateTime.now().month, DateTime.now().day)
+                DateTime.now().year, DateTime.now().month, DateTime.now().day)
             .toLocal()
             .millisecondsSinceEpoch;
         final endDate = DateTime(DateTime.now().year, DateTime.now().month,
-            DateTime.now().day, 23, 59)
+                DateTime.now().day, 23, 59)
             .toLocal()
             .millisecondsSinceEpoch;
         final serviceRegistry = await isar.serviceRegistrys.where().findAll();
@@ -672,7 +586,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             });
           }
           final individuals =
-          await individualLocalRepository.search(IndividualSearchModel(
+              await individualLocalRepository.search(IndividualSearchModel(
             id: attendeesIndividualIds,
           ));
           final userUUIDList = individuals
@@ -681,11 +595,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               .toList();
           await processDashboardConfig(
             dashboardConfig.first.dashboardConfigs
-                ?.where((config) =>
-            config.projectTypeId == event.model.projectTypeId ||
-                config.projectTypeCode == event.model.projectType)
-                .first
-                .charts ??
+                    ?.where((config) =>
+                        config.projectTypeId == event.model.projectTypeId ||
+                        config.projectTypeCode == event.model.projectType)
+                    .first
+                    .charts ??
                 [],
             startDate,
             endDate,
@@ -717,7 +631,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                     MdmsMasterDetailModel(
                       'FormConfig',
                       filter:
-                      "[?(@.project=='${event.model.referenceID}' && @.isSelected==true)]",
+                          "[?(@.project=='${event.model.referenceID}' && @.isSelected==true)]",
                     ),
                   ],
                 ),
@@ -788,18 +702,18 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       final selectedProjectType = projectType.projectTypeWrapper?.projectTypes
           .where(
             (element) =>
-        element.id ==
-            (additionalProjectTypeId ?? event.model.projectTypeId),
-      )
+                element.id ==
+                (additionalProjectTypeId ?? event.model.projectTypeId),
+          )
           .toList()
           .firstOrNull;
       final currentRunningCycle = selectedProjectType?.cycles
           ?.where(
             (e) =>
-        (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-            (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
-        // Return null when no matching cycle is found
-      )
+                (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+                (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+            // Return null when no matching cycle is found
+          )
           .firstOrNull;
 
       final cycles = List<Cycle>.from(
@@ -817,7 +731,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       final serverVersion = configResult.rowVersions?.rowVersionslist
           ?.where(
             (element) => element.module == 'egov-location',
-      )
+          )
           .toList()
           .firstOrNull
           ?.version;
@@ -892,41 +806,32 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       return;
     }
 
-    final getSelectedProjectType = await localSecureStore.selectedProjectType;
     final getSelectedProject = await localSecureStore.selectedProject;
 
-    final currentRunningCycle =
-        getSelectedProject?.additionalDetails?.projectType?.cycles
-            ?.where(
-              (e) =>
-          (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-              (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
-          // Return null when no matching cycle is found
-        )
-            .firstOrNull;
-
-    try {
-      final projectFacilities = await projectFacilityLocalRepository
-          .search(ProjectFacilitySearchModel());
-      final facilities =
-      await facilityLocalRepository.search(FacilitySearchModel());
-      await downloadStockDataBasedOnRole(projectFacilities, facilities,
-          event.model.address?.boundaryType, currentRunningCycle);
-
-      emit(state.copyWith(
-        selectedProject: event.model,
-        loading: false,
-        syncError: null,
-        projectType: getSelectedProjectType,
-        selectedCycle: currentRunningCycle,
-      ));
-    } catch (_) {
-      emit(state.copyWith(
-        loading: false,
-        projects: [],
-        syncError: ProjectSyncErrorType.projectFacilities,
-      ));
-    }
+    // try {
+    //   final stockDownsyncService = StockDownsyncService(
+    //     localSecureStore: localSecureStore,
+    //     projectFacilityLocalRepository: projectFacilityLocalRepository,
+    //     facilityLocalRepository: facilityLocalRepository,
+    //     stockRemoteRepository: stockRemoteRepository,
+    //     stockLocalRepository: stockLocalRepository,
+    //   );
+    //   await stockDownsyncService.execute(event.model, context);
+    //
+    //   emit(state.copyWith(
+    //     selectedProject: event.model,
+    //     loading: false,
+    //     syncError: null,
+    //     projectType: getSelectedProjectType,
+    //     selectedCycle: currentRunningCycle,
+    //   ));
+    // } catch (_) {
+    //   emit(state.copyWith(
+    //     loading: false,
+    //     projects: [],
+    //     syncError: ProjectSyncErrorType.projectFacilities,
+    //   ));
+    // }
   }
 
   Future<void> storeSchema(dynamic schemaJson) async {
@@ -939,7 +844,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     // Load existing schemas
     final existingSchemasRaw = prefs.getString(schemaKey);
     final Map<String, dynamic> existingSchemas =
-    existingSchemasRaw != null ? json.decode(existingSchemasRaw) : {};
+        existingSchemasRaw != null ? json.decode(existingSchemasRaw) : {};
 
     final updatedEntry = {
       'data': schemaJson,
@@ -953,8 +858,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   }
 
   Future<void> enrichFormSchemasWithEnumsForForms(
-      dynamic formConfigs,
-      ) async {
+    dynamic formConfigs,
+  ) async {
     // Filter only FORM type screens
     final formTypeConfigs = formConfigs['flows']
         .where((config) => config['screenType'] == 'FORM')
@@ -998,7 +903,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       return MdmsModuleDetailModel(
         moduleName: entry.key,
         masterDetails:
-        entry.value.map((m) => MdmsMasterDetailModel(m)).toList(),
+            entry.value.map((m) => MdmsMasterDetailModel(m)).toList(),
       );
     }).toList();
 
@@ -1030,9 +935,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               if (enumValues != null) {
                 property['enums'] = enumValues
                     .map((e) => {
-                  'code': e['code'],
-                  'name': e['name'] ?? e['code'],
-                })
+                          'code': e['code'],
+                          'name': e['name'] ?? e['code'],
+                        })
                     .toList();
               }
             }
@@ -1070,7 +975,7 @@ class ProjectEvent with _$ProjectEvent {
   const factory ProjectEvent.initialize() = ProjectInitializeEvent;
 
   const factory ProjectEvent.selectProject(ProjectModel model) =
-  ProjectSelectProjectEvent;
+      ProjectSelectProjectEvent;
 }
 
 @freezed

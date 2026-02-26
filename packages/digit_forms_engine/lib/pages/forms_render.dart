@@ -971,22 +971,57 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
   Widget _buildSingleEntityForm(PropertySchema schema, dynamic entity) {
     // Create a schema with renamed fields for the single entity (index 0)
     final entitySchema = _createSchemaForEntity(schema, 0);
+    final entityName = _getEntityName(entity);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(spacer2),
-      child: JsonForms(
-        propertySchema: entitySchema,
-        pageName: widget.pageName,
-        currentSchemaKey: widget.currentSchemaKey,
-        childrens: widget.customComponents,
-        navigationParams: {
-          ...?widget.navigationParams,
-          'currentEntityIndex': 0,
-          'currentEntity': entity,
-        },
-        defaultValues: widget.defaultValues ?? {},
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (entityName.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: spacer2),
+              child: Text(
+                entityName,
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
+            ),
+          JsonForms(
+            propertySchema: entitySchema,
+            pageName: widget.pageName,
+            currentSchemaKey: widget.currentSchemaKey,
+            childrens: widget.customComponents,
+            navigationParams: {
+              ...?widget.navigationParams,
+              'currentEntityIndex': 0,
+              'currentEntity': entity,
+              'currentEntityName': entityName,
+            },
+            defaultValues: widget.defaultValues ?? {},
+          ),
+        ],
       ),
     );
+  }
+
+  /// Gets a display name from an entity value.
+  String _getEntityName(dynamic entity) {
+    if (entity == null) return '';
+
+    if (entity is Map) {
+      final name = entity['name']?.toString() ??
+          entity['sku']?.toString() ??
+          entity['label']?.toString() ??
+          entity['code']?.toString() ??
+          entity['value']?.toString();
+      if (name != null && name.isNotEmpty) return name;
+    }
+
+    if (entity is String && entity.isNotEmpty) return entity;
+
+    return entity.toString().isNotEmpty ? entity.toString() : '';
   }
 
   /// Creates a modified schema where field names include the entity index suffix.

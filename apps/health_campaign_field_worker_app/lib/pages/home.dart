@@ -53,6 +53,7 @@ import '../utils/environment_config.dart';
 import '../utils/flow_navigation_utils.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/least_level_boundary_singleton.dart';
+import '../utils/stock_downsync.dart';
 import '../utils/utils.dart';
 import '../widgets/h_f_referral/evaluation_facility.dart';
 import '../widgets/h_f_referral/project_cycles.dart';
@@ -1224,6 +1225,27 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.stockSyncDataLabel: homeShowcaseData.stockSyncData.buildWith(
+          child: HomeItemCard(
+        icon: Icons.sync_alt,
+        label: i18.home.stockSyncDataLabel,
+        onPressed: () async {
+          final stockService = StockDownsyncService(
+            localSecureStore: LocalSecureStore.instance,
+            projectFacilityLocalRepository: context.read<
+                LocalRepository<ProjectFacilityModel,
+                    ProjectFacilitySearchModel>>(),
+            facilityLocalRepository: context
+                .read<LocalRepository<FacilityModel, FacilitySearchModel>>(),
+            stockRemoteRepository:
+                context.read<RemoteRepository<StockModel, StockSearchModel>>(),
+            stockLocalRepository:
+                context.read<LocalRepository<StockModel, StockSearchModel>>(),
+          );
+
+          await stockService.execute(context);
+        },
+      )),
       i18.home.beneficiaryReferralLabel:
           homeShowcaseData.hfBeneficiaryReferral.buildWith(
         child: HomeItemCard(
@@ -1466,6 +1488,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
       filteredLabels.remove(i18.home.db);
     }
+    filteredLabels.add(i18.home.stockSyncDataLabel);
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
 
