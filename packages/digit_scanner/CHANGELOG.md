@@ -1,3 +1,7 @@
+## 1.0.7+1
+
+* Updated digit_ui_components package version
+
 ## 1.0.7
 
 * Refactored scanner bloc — simplified `DigitScannerBloc` with cleaner state management
