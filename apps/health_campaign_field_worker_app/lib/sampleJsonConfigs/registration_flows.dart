@@ -912,7 +912,6 @@ final dynamic sampleFlows = {
                         "actionType": "NAVIGATION",
                         "properties": {
                           "data": [
-                            // to add
                             {
                               "key": "selectedIndividualClientReferenceId",
                               "value": "{{item.individual.0.clientReferenceId}}"
@@ -927,7 +926,6 @@ final dynamic sampleFlows = {
                               "value":
                                   "{{item.projectBeneficiary.0.clientReferenceId}}"
                             },
-
                             {
                               "key": "selectedIndividualName",
                               "value": "{{item.individual.0.name.givenName}}"
@@ -936,7 +934,6 @@ final dynamic sampleFlows = {
                               "key": "selectedIndividualGender",
                               "value": "{{item.individual.0.gender}}"
                             },
-
                             {
                               "key": "selectedIndividualAgeInMonths",
                               "value":
@@ -969,7 +966,6 @@ final dynamic sampleFlows = {
                         "actionType": "NAVIGATION",
                         "properties": {
                           "data": [
-                            // to do
                             {
                               "key": "selectedIndividualClientReferenceId",
                               "value": "{{item.individual.0.clientReferenceId}}"
@@ -992,7 +988,6 @@ final dynamic sampleFlows = {
                               "key": "selectedIndividualGender",
                               "value": "{{item.individual.0.gender}}"
                             },
-
                             {
                               "key": "selectedIndividualAgeInMonths",
                               "value":
@@ -3751,8 +3746,6 @@ final dynamic sampleFlows = {
                     "value":
                         "{{navigation.ProjectBeneficiaryClientReferenceId}}"
                   },
-                  // need
-
                   {
                     "key": "selectedIndividualName",
                     "value": "{{navigation.selectedIndividualName}}"
@@ -3761,7 +3754,6 @@ final dynamic sampleFlows = {
                     "key": "selectedIndividualGender",
                     "value": "{{navigation.selectedIndividualGender}}"
                   },
-
                   {
                     "key": "selectedIndividualAgeInMonths",
                     "value": "{{navigation.selectedIndividualAgeInMonths}}"
@@ -4022,9 +4014,6 @@ final dynamic sampleFlows = {
                 "key": "ProjectBeneficiaryClientReferenceId",
                 "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
               },
-
-              // need
-
               {
                 "key": "selectedIndividualName",
                 "value": "{{navigation.selectedIndividualName}}"
@@ -4033,7 +4022,6 @@ final dynamic sampleFlows = {
                 "key": "selectedIndividualGender",
                 "value": "{{navigation.selectedIndividualGender}}"
               },
-
               {
                 "key": "selectedIndividualAgeInMonths",
                 "value": "{{navigation.selectedIndividualAgeInMonths}}"
@@ -4064,7 +4052,6 @@ final dynamic sampleFlows = {
                 "key": "ProjectBeneficiaryClientReferenceId",
                 "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
               },
-              // need
               {
                 "key": "selectedIndividualName",
                 "value": "{{navigation.selectedIndividualName}}"
@@ -4103,7 +4090,6 @@ final dynamic sampleFlows = {
                 "key": "ProjectBeneficiaryClientReferenceId",
                 "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
               },
-              // need
               {
                 "key": "selectedIndividualName",
                 "value": "{{navigation.selectedIndividualName}}"
@@ -4112,7 +4098,6 @@ final dynamic sampleFlows = {
                 "key": "selectedIndividualGender",
                 "value": "{{navigation.selectedIndividualGender}}"
               },
-
               {
                 "key": "selectedIndividualAgeInMonths",
                 "value": "{{navigation.selectedIndividualAgeInMonths}}"
