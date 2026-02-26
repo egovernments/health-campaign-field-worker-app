@@ -1282,6 +1282,9 @@ class FormEntityMapper {
     void extractUnmapped(Map<String, dynamic> data) {
       data.forEach((key, value) {
         if (usedPaths.contains(key)) return;
+        // Skip navigation params — they are control data (e.g., isEdit),
+        // not entity fields, and should never be stored in additionalFields.
+        if (key == 'navigation') return;
         if (value is Map<String, dynamic>) {
           extractUnmapped(value);
         } else {
