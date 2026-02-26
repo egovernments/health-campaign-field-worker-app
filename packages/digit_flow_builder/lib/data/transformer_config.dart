@@ -950,12 +950,12 @@ final jsonConfig = {
           "referralCode": "referralDetails.referralCode",
           "nationalLevelId": "referralDetails.nationalLevelId",
           "symptom":
-              "__switch:navigation.isUpdate:{true:navigation.referralSymptom,default:referralDetails.referralReason}",
+              "__switch:navigation.isEdit:{true:navigation.referralSymptom,default:referralDetails.referralReason}",
           "nonRecoverableError": "referralDetails.nonRecoverable",
           "clientReferenceId":
-              "__switch:navigation.isUpdate:{true:navigation.clientReferenceId,default:__generate:uuid}",
+              "__switch:navigation.isEdit:{true:navigation.clientReferenceId,default:__generate:uuid}",
           "rowVersion":
-              "__switch:navigation.isUpdate:{true:navigation.rowVersion,default:meta.rowVersion}",
+              "__switch:navigation.isEdit:{true:navigation.rowVersion,default:meta.rowVersion}",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
@@ -968,10 +968,9 @@ final jsonConfig = {
             "dateOfEvaluation": "facilityDetails.dateOfEvaluation",
             "referredBy": "facilityDetails.referredByKey",
             "hfCoordinator": "facilityDetails.hfCoordinator",
-            // Note: Checklist fields from side effect pages (sideEffectSick, sideEffectFever,
-            // sideEffectFromCurrentCycle, sideEffectFromPreviousCycle) are handled by
-            // MERGE_UPDATE_ADDITIONAL_FIELDS action in hf_referral.dart onAction handlers.
-            // Do not use __collectFromPages here as it's not processed by digit_data_converter.
+            // Checklist fields from side effect pages (sideEffectSick, sideEffectFever,
+            // sideEffectFromCurrentCycle, sideEffectFromPreviousCycle) are automatically
+            // captured as unmapped fields and merged into additionalFields via fallbackModel.
           }
         }
       }

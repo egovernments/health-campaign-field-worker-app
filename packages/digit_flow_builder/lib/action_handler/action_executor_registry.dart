@@ -1,6 +1,5 @@
 import 'package:digit_flow_builder/action_handler/executors/close_popup_executor.dart';
 import 'package:digit_flow_builder/action_handler/executors/conditional_navigation_executor.dart';
-import 'package:digit_flow_builder/action_handler/executors/merge_update_executor.dart';
 import 'package:flutter/material.dart';
 import 'action_config.dart';
 import 'executors/action_executor.dart';
@@ -43,7 +42,6 @@ class ActionExecutorRegistry {
     register('OPEN_SCANNER', OpenScannerExecutor());
     register('REVERSE_TRANSFORM', ReverseTransformerExecutor());
     register('CLOSE_POPUP', ClosePopupExecutor());
-    register('MERGE_UPDATE_ADDITIONAL_FIELDS', MergeUpdateExecutor());
     register('CONDITIONAL_NAVIGATION', ConditionalNavigationExecutor());
   }
 

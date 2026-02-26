@@ -1066,14 +1066,13 @@ class FormEntityMapper {
       final keyValue = getValueFromMapping(
           keyInstruction, data, currentModel, context,
           listItemIndex: listItemIndex, listSourcePath: listSourcePath);
-      if (keyValue == null) {
-        throw Exception(
-            'Key value "$keyInstruction" resolved to null in __switch');
-      }
 
       final mapping = _parseSwitchMapping(mappingString);
-      final resolvedInstruction =
-          mapping[keyValue.toString()] ?? mapping['default'];
+
+      // When key resolves to null, fall through to default case
+      final resolvedInstruction = keyValue != null
+          ? (mapping[keyValue.toString()] ?? mapping['default'])
+          : mapping['default'];
 
       if (resolvedInstruction == null) {
         throw Exception(
