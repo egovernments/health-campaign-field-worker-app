@@ -42,7 +42,6 @@ class ActionExecutorRegistry {
     register('OPEN_SCANNER', OpenScannerExecutor());
     register('REVERSE_TRANSFORM', ReverseTransformerExecutor());
     register('CLOSE_POPUP', ClosePopupExecutor());
-    register('CONDITIONAL_NAVIGATION', ConditionalNavigationExecutor());
   }
 
   /// Register a custom executor
