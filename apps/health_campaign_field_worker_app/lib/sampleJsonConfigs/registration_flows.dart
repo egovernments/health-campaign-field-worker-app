@@ -803,6 +803,8 @@ final dynamic sampleFlows = {
                       {
                         "type": "template",
                         "label": "REGISTRATION_EDIT_INDIVIDUAL_BUTTON_LABEL",
+                        "disabled":
+                            "{{fn:disableEdit(item.task, item.hFReferral)}}==true",
                         "format": "button",
                         "onAction": [
                           {
