@@ -115,8 +115,8 @@ class HFReferralDownSyncBloc
               HFReferralSearchModel(
                 localityCode: [event.boundaryCode],
               ),
-              offSet: 0,
-              limit: 200);
+              offSet: offset ?? 0,
+              limit: event.batchSize ?? 200);
 
           if (retryResults.isNotEmpty) {
             // Reset the stored offset to 0 so the actual downsync starts from beginning
@@ -264,9 +264,8 @@ class HFReferralDownSyncBloc
 
         // Filter out records that already exist locally to avoid
         // overwriting user-modified data and storing duplicates
-        final incomingClientRefIds = hfReferralsWithLocality
-            .map((e) => e.clientReferenceId)
-            .toList();
+        final incomingClientRefIds =
+            hfReferralsWithLocality.map((e) => e.clientReferenceId).toList();
         final existingRecords = await hfReferralLocalRepository.search(
           HFReferralSearchModel(clientReferenceId: incomingClientRefIds),
         );
