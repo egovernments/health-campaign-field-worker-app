@@ -1323,52 +1323,45 @@ class _HomePageState extends LocalizedState<HomePage> {
             triggerLocalization(module: module);
             isTriggerLocalisation = false;
             // };
-            // context.router.push(const ManageAttendanceRoute());
+            context.router.push(const ManageAttendanceRoute());
 
-            final prefs = await SharedPreferences.getInstance();
-            final schemaJsonRaw = prefs.getString('app_config_schemas');
+            // final prefs = await SharedPreferences.getInstance();
+            // final schemaJsonRaw = prefs.getString('app_config_schemas');
 
-            FlowBuilderSingleton().setPersistenceConfiguration(
-                persistenceConfiguration:
-                    PersistenceConfiguration.offlineFirst);
-            WidgetRegistry.initialize();
-            try {
-              if (schemaJsonRaw != null) {
-                final allSchemas =
-                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                Map<String, dynamic> data = allSchemas['ATTENDANCE'];
+            // FlowBuilderSingleton().setPersistenceConfiguration(
+            //     persistenceConfiguration:
+            //         PersistenceConfiguration.offlineFirst);
+            // WidgetRegistry.initialize();
+            // try {
+            //   if (schemaJsonRaw != null) {
+            //     final allSchemas =
+            //         json.decode(schemaJsonRaw) as Map<String, dynamic>;
+            //     Map<String, dynamic> data = allSchemas['ATTENDANCE'];
 
-                // final attendanceData = data?['data'];
-                Map<String, dynamic> attendanceData = attendanceFlows;
-                List<Map<String, dynamic>> flowsData =
-                    (attendanceData['flows'] as List<dynamic>?)
-                            ?.map((e) => Map<String, dynamic>.from(e as Map))
-                            .toList() ??
-                        [];
-                FlowRegistry.setConfig(flowsData);
-                NavigationRegistry.setupNavigation(context);
+            //     // final attendanceData = data?['data'];
+            //     Map<String, dynamic> attendanceData = attendanceFlows;
+            //     List<Map<String, dynamic>> flowsData =
+            //         (attendanceData['flows'] as List<dynamic>?)
+            //                 ?.map((e) => Map<String, dynamic>.from(e as Map))
+            //                 .toList() ??
+            //             [];
+            //     FlowRegistry.setConfig(flowsData);
+            //     NavigationRegistry.setupNavigation(context);
 
-                context.router.push(
-                  FlowBuilderHomeRoute(pageName: attendanceData["initialPage"]),
-                );
-              } else {
-                FlowRegistry.setConfig(
-                    sampleFlows["flows"] as List<Map<String, dynamic>>);
-                NavigationRegistry.setupNavigation(context);
-                context.router.push(
-                  FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
-                );
-              }
-            } catch (e) {
-              debugPrint('error $e');
-            }
-            // await FlowNavigationUtils.navigateToFlowModule(
-            //   context: context,
-            //   config: FlowModuleConfig(
-            //     schemaKey: 'ATTENDANCE',
-            //     sampleFlows: attendanceFlows,
-            //   ),
-            // );
+            //     context.router.push(
+            //       FlowBuilderHomeRoute(pageName: attendanceData["initialPage"]),
+            //     );
+            //   } else {
+            //     FlowRegistry.setConfig(
+            //         sampleFlows["flows"] as List<Map<String, dynamic>>);
+            //     NavigationRegistry.setupNavigation(context);
+            //     context.router.push(
+            //       FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
+            //     );
+            //   }
+            // } catch (e) {
+            //   debugPrint('error $e');
+            // }
           },
         ),
       ),
