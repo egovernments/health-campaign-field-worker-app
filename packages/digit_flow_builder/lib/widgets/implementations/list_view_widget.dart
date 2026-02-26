@@ -21,7 +21,8 @@ class ListViewWidget extends ResolvedFlowWidget {
   ) {
     final stateData = resolved.stateData;
 
-    final dataSourceKey = json['dataSource'] as String?;
+    final dataSourceKey =
+        json['dataSource'] as String? ?? json['data'] as String?;
     final rawState = resolved.state.contextData ?? [];
     var items = rawState;
 

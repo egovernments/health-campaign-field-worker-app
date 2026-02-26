@@ -141,8 +141,8 @@ class WidgetStateContext {
   static WidgetStateContext of(BuildContext context) {
     final crudCtx = CrudItemContext.of(context);
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
-    final compositeKey = crudCtx?.compositeKey ??
-        getCompositeKey(context, screenKey: screenKey);
+    final compositeKey =
+        crudCtx?.compositeKey ?? getCompositeKey(context, screenKey: screenKey);
     final registryState =
         compositeKey != null ? FlowCrudStateRegistry().get(compositeKey) : null;
 
@@ -155,10 +155,7 @@ class WidgetStateContext {
         : null;
 
     final rawContextData = crudCtx?.stateData?.rawState;
-    final enrichedContextData =
-        (navigationParams != null && navigationParams.isNotEmpty)
-            ? [...?rawContextData, {'navigation': navigationParams}]
-            : rawContextData;
+    final enrichedContextData = rawContextData;
 
     return WidgetStateContext(
       itemData: crudCtx?.item,
@@ -196,8 +193,8 @@ class WidgetStateContext {
   static ValueListenable<FlowCrudState?> listen(BuildContext context) {
     final crudCtx = CrudItemContext.of(context);
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
-    final compositeKey = crudCtx?.compositeKey ??
-        getCompositeKey(context, screenKey: screenKey);
+    final compositeKey =
+        crudCtx?.compositeKey ?? getCompositeKey(context, screenKey: screenKey);
     return FlowCrudStateRegistry().listen(compositeKey ?? '');
   }
 
@@ -270,8 +267,8 @@ class WidgetStateContext {
   ) {
     final crudCtx = CrudItemContext.of(context);
     final screenKey = crudCtx?.screenKey ?? getScreenKeyFromArgs(context);
-    final compositeKey = crudCtx?.compositeKey ??
-        getCompositeKey(context, screenKey: screenKey);
+    final compositeKey =
+        crudCtx?.compositeKey ?? getCompositeKey(context, screenKey: screenKey);
 
     if (compositeKey == null) {
       return builder(context, of(context));
