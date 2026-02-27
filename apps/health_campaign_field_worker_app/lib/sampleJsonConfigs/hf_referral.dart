@@ -38,7 +38,7 @@ final dynamic sampleReferralFlows = {
         }
       ],
       "name": "referralOverview",
-      "order": 4,
+      "order": 3,
       "footer": [
         {
           "type": "template",
@@ -98,10 +98,7 @@ final dynamic sampleReferralFlows = {
                     "key": "rowVersion",
                     "value": "{{HFReferralModel.0.rowVersion}}"
                   },
-                  {
-                    "key": "nameOfChild",
-                    "value": "{{HFReferralModel.0.name}}"
-                  },
+                  {"key": "nameOfChild", "value": "{{HFReferralModel.0.name}}"},
                   {
                     "key": "beneficiaryId",
                     "value": "{{HFReferralModel.0.beneficiaryId}}"
@@ -124,10 +121,7 @@ final dynamic sampleReferralFlows = {
                     "key": "referralReason",
                     "value": "{{HFReferralModel.0.symptom}}"
                   },
-                  {
-                    "key": "startPage",
-                    "value": "referralDetails"
-                  }
+                  {"key": "startPage", "value": "referralDetails"}
                 ],
                 "name": "REFERRAL_CREATE",
                 "type": "FORM"
@@ -159,6 +153,7 @@ final dynamic sampleReferralFlows = {
         }
       ],
       "heading": "REFERRAL_OVERVIEW_HEADING",
+      "category": "HFREFERRAL",
       "navigateTo": null,
       "screenType": "TEMPLATE",
       "description": "REFERRAL_OVERVIEW_DESCRIPTION",
@@ -221,9 +216,10 @@ final dynamic sampleReferralFlows = {
         }
       ],
       "name": "referralAcknowledgement",
-      "order": 3,
+      "order": 4,
       "footer": [],
       "header": [],
+      "category": "HFREFERRAL",
       "navigateTo": null,
       "screenType": "TEMPLATE",
       "submitCondition": null,
@@ -440,6 +436,7 @@ final dynamic sampleReferralFlows = {
         }
       ],
       "heading": "REFERRAL_INBOX_HEADING",
+      "category": "HFREFERRAL",
       "navigateTo": null,
       "screenType": "TEMPLATE",
       "description": "REFERRAL_INBOX_DESCRIPTION",
@@ -482,6 +479,7 @@ final dynamic sampleReferralFlows = {
     },
     {
       "name": "REFERRAL_CREATE",
+      "order": 2,
       "pages": [
         {
           "flow": "REFERRAL_CREATE",
@@ -537,9 +535,7 @@ final dynamic sampleReferralFlows = {
                 },
                 {
                   "actionType": "UPDATE_EVENT",
-                  "properties": {
-                    "applyIf": "navigation.isEdit==true"
-                  }
+                  "properties": {"applyIf": "navigation.isEdit==true"}
                 },
                 {
                   "actionType": "NAVIGATION",
@@ -613,9 +609,7 @@ final dynamic sampleReferralFlows = {
             },
             {
               "actionType": "UPDATE_EVENT",
-              "properties": {
-                "applyIf": "navigation.isEdit==true"
-              }
+              "properties": {"applyIf": "navigation.isEdit==true"}
             },
             {
               "actionType": "NAVIGATION",
@@ -893,9 +887,7 @@ final dynamic sampleReferralFlows = {
                 },
                 {
                   "actionType": "UPDATE_EVENT",
-                  "properties": {
-                    "applyIf": "navigation.isEdit==true"
-                  }
+                  "properties": {"applyIf": "navigation.isEdit==true"}
                 },
                 {
                   "actionType": "NAVIGATION",
@@ -969,9 +961,7 @@ final dynamic sampleReferralFlows = {
             },
             {
               "actionType": "UPDATE_EVENT",
-              "properties": {
-                "applyIf": "navigation.isEdit==true"
-              }
+              "properties": {"applyIf": "navigation.isEdit==true"}
             },
             {
               "actionType": "NAVIGATION",
@@ -1417,10 +1407,7 @@ final dynamic sampleReferralFlows = {
               "required.message":
                   "HFREFERRAL_REFERRAL_DETAILS_gender_REQUIRED_ERROR",
               "autoFillCondition": [
-                {
-                  "value": "{{gender}}",
-                  "expression": "navigation.isEdit==true"
-                }
+                {"value": "{{gender}}", "expression": "navigation.isEdit==true"}
               ]
             },
             {
@@ -1641,9 +1628,7 @@ final dynamic sampleReferralFlows = {
                 },
                 {
                   "actionType": "UPDATE_EVENT",
-                  "properties": {
-                    "applyIf": "navigation.isEdit==true"
-                  }
+                  "properties": {"applyIf": "navigation.isEdit==true"}
                 },
                 {
                   "actionType": "NAVIGATION",
@@ -1717,9 +1702,7 @@ final dynamic sampleReferralFlows = {
             },
             {
               "actionType": "UPDATE_EVENT",
-              "properties": {
-                "applyIf": "navigation.isEdit==true"
-              }
+              "properties": {"applyIf": "navigation.isEdit==true"}
             },
             {
               "actionType": "NAVIGATION",
@@ -2059,9 +2042,7 @@ final dynamic sampleReferralFlows = {
                 },
                 {
                   "actionType": "UPDATE_EVENT",
-                  "properties": {
-                    "applyIf": "navigation.isEdit==true"
-                  }
+                  "properties": {"applyIf": "navigation.isEdit==true"}
                 },
                 {
                   "actionType": "NAVIGATION",
@@ -2135,9 +2116,7 @@ final dynamic sampleReferralFlows = {
             },
             {
               "actionType": "UPDATE_EVENT",
-              "properties": {
-                "applyIf": "navigation.isEdit==true"
-              }
+              "properties": {"applyIf": "navigation.isEdit==true"}
             },
             {
               "actionType": "NAVIGATION",
@@ -2491,72 +2470,8 @@ final dynamic sampleReferralFlows = {
       "project": "MR-DN",
       "summary": false,
       "version": 2,
+      "category": "HFREFERRAL",
       "disabled": false,
-      "onAction": [
-        {
-          "actionType": "SEARCH_EVENT",
-          "properties": {
-            "data": [
-              {
-                "key": "clientReferenceId",
-                "root": "HFReferral",
-                "value": "{{navigation.clientReferenceId}}",
-                "operation": "equals"
-              }
-            ],
-            "name": "HFReferral",
-            "applyIf": "navigation.isEdit==true",
-            "awaitResults": true
-          }
-        },
-        {
-          "actionType": "FETCH_TRANSFORMER_CONFIG",
-          "properties": {
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to fetch config."}
-              }
-            ],
-            "configName": "referralCreation"
-          }
-        },
-        {
-          "actionType": "CREATE_EVENT",
-          "properties": {
-            "entity": "",
-            "applyIf": "navigation.isEdit!=true",
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Failed to create household."}
-              }
-            ]
-          }
-        },
-        {
-          "actionType": "UPDATE_EVENT",
-          "properties": {
-            "applyIf": "navigation.isEdit==true"
-          }
-        },
-        {
-          "actionType": "NAVIGATION",
-          "properties": {
-            "data": [],
-            "name": "referralAcknowledgement",
-            "type": "TEMPLATE",
-            "onError": [
-              {
-                "actionType": "SHOW_TOAST",
-                "properties": {"message": "Navigation failed."}
-              }
-            ]
-          }
-        }
-      ],
-      "isSelected": true,
-      "screenType": "FORM",
       "onAction": [
         {
           "condition": {"type": "custom", "expression": "isEdit==true"},
@@ -2578,15 +2493,11 @@ final dynamic sampleReferralFlows = {
             },
             {
               "actionType": "FETCH_TRANSFORMER_CONFIG",
-              "properties": {
-                "configName": "referralCreation"
-              }
+              "properties": {"configName": "referralCreation"}
             },
             {
               "actionType": "UPDATE_EVENT",
-              "properties": {
-                "entity": "HFReferralModel"
-              }
+              "properties": {"entity": "HFReferralModel"}
             },
             {
               "actionType": "NAVIGATION",
@@ -2603,15 +2514,11 @@ final dynamic sampleReferralFlows = {
           "actions": [
             {
               "actionType": "FETCH_TRANSFORMER_CONFIG",
-              "properties": {
-                "configName": "referralCreation"
-              }
+              "properties": {"configName": "referralCreation"}
             },
             {
               "actionType": "CREATE_EVENT",
-              "properties": {
-                "entity": ""
-              }
+              "properties": {"entity": ""}
             },
             {
               "actionType": "NAVIGATION",
@@ -2623,7 +2530,9 @@ final dynamic sampleReferralFlows = {
             }
           ]
         }
-      ]
+      ],
+      "isSelected": true,
+      "screenType": "FORM"
     }
   ],
   "order": 3,
