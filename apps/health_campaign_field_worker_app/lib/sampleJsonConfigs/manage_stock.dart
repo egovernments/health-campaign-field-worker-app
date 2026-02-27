@@ -18,7 +18,7 @@ final dynamic sampleInventoryFlows = {
           "onAction": [
             {"actionType": "BACK_NAVIGATION", "properties": {}}
           ]
-        },
+        }
       ],
       "footer": [
         {
@@ -89,7 +89,7 @@ final dynamic sampleInventoryFlows = {
           "format": "menu_card",
           "heading": "INVENTORY_RECORD_STOCK_RECEIPT_HEADING",
           "description": "INVENTORY_RECORD_STOCK_RECEIPT_DESCRIPTION",
-          "icon": 'FileUpload',
+          "icon": "FileUpload",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -114,7 +114,7 @@ final dynamic sampleInventoryFlows = {
           "format": "menu_card",
           "heading": "INVENTORY_RECORD_STOCK_ISSUED_HEADING",
           "description": "INVENTORY_RECORD_STOCK_ISSUED_DESCRIPTION",
-          "icon": 'FileDownload',
+          "icon": "FileDownload",
           "onAction": [
             {
               "actionType": "SEARCH_EVENT",
@@ -162,7 +162,7 @@ final dynamic sampleInventoryFlows = {
           "format": "menu_card",
           "heading": "INVENTORY_STOCK_RETURNED_HEADING",
           "description": "INVENTORY_STOCK_RETURNED_DESCRIPTION",
-          "icon": 'Restore',
+          "icon": "Restore",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -188,7 +188,7 @@ final dynamic sampleInventoryFlows = {
           "heading": "INVENTORY_STOCK_DAMAGED_HEADING",
           "visible": "{{fn:hasRole('WAREHOUSE_MANAGER')}} == false",
           "description": "INVENTORY_STOCK_DAMAGED_DESCRIPTION",
-          "icon": 'Store',
+          "icon": "Store",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -213,7 +213,7 @@ final dynamic sampleInventoryFlows = {
           "format": "menu_card",
           "heading": "INVENTORY_STOCK_LOSS_HEADING",
           "description": "INVENTORY_STOCK_LOSS_DESCRIPTION",
-          "icon": 'Store',
+          "icon": "Store",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -238,7 +238,7 @@ final dynamic sampleInventoryFlows = {
           "format": "menu_card",
           "heading": "INVENTORY_INCOMING_TRANSACTIONS_HEADING",
           "description": "INVENTORY_INCOMING_TRANSACTIONS_DESCRIPTION",
-          "icon": 'Inbox',
+          "icon": "Inbox",
           "onAction": [
             {
               "actionType": "NAVIGATION",
@@ -316,7 +316,7 @@ final dynamic sampleInventoryFlows = {
               }
             ]
           }
-        },
+        }
       ],
       "wrapperConfig": {
         "wrapperName": "ScanStockWrapper",
@@ -403,7 +403,7 @@ final dynamic sampleInventoryFlows = {
               }
             ]
           }
-        },
+        }
       ],
       "wrapperConfig": {
         "wrapperName": "InventoryWrapper",
@@ -538,7 +538,7 @@ final dynamic sampleInventoryFlows = {
               "errorMessage": "",
               "isMultiSelect": false,
               "includeInForm": true,
-              "enums": [],
+              "enums": []
             },
             {
               "type": "string",
@@ -570,7 +570,7 @@ final dynamic sampleInventoryFlows = {
               "errorMessage": "",
               "isMultiSelect": false,
               "dropDownOptions": []
-            },
+            }
           ],
           "navigateTo": {"name": "stockDetails", "type": "form"}
         },
@@ -695,7 +695,7 @@ final dynamic sampleInventoryFlows = {
               ],
               "errorMessage": "",
               "isMultiSelect": false,
-              "enums": [],
+              "enums": []
             },
             {
               "type": "string",
@@ -712,13 +712,6 @@ final dynamic sampleInventoryFlows = {
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
-              // "validations": [
-              //   {
-              //     "type": "required",
-              //     "value": true,
-              //     "message": "Transport type is required"
-              //   }
-              // ],
               "errorMessage": "",
               "isMultiSelect": false,
               "enums": [
@@ -741,17 +734,10 @@ final dynamic sampleInventoryFlows = {
               "deleteFlag": false,
               "innerLabel": "",
               "systemDate": false,
-              // "validations": [
-              //   {
-              //     "type": "required",
-              //     "value": true,
-              //     "message": "Vehicle number is required"
-              //   }
-              // ],
               "errorMessage": "",
               "isMultiSelect": false,
               "enums": null
-            },
+            }
           ],
           "value": null,
           "required": null,
@@ -1143,8 +1129,8 @@ final dynamic sampleInventoryFlows = {
               "systemDate": false,
               "errorMessage": "",
               "isMultiSelect": false,
-              "enums": [],
-            },
+              "enums": []
+            }
           ],
           "value": null,
           "required": null,
@@ -1163,7 +1149,7 @@ final dynamic sampleInventoryFlows = {
           "includeInSummary": null,
           "autoEnable": null,
           "navigateTo": {"name": "stock-acknowledgement", "type": "template"}
-        },
+        }
       ],
       "onAction": [
         {
@@ -1248,7 +1234,7 @@ final dynamic sampleInventoryFlows = {
               "dataModuleColor": "black",
               "backgroundColor": "white",
               "padding": 16,
-              "visible": "{{fn:hasRole('DISTRIBUTOR')}}",
+              "visible": "{{fn:hasRole('DISTRIBUTOR')}}"
             }
           ],
           "properties": {"type": "success"},
@@ -1279,7 +1265,7 @@ final dynamic sampleInventoryFlows = {
                   "type": "TEMPLATE",
                   "name": "manageStock",
                   "navigationMode": "popUntilAndReplace",
-                  "popUntilPageName": "manageStock",
+                  "popUntilPageName": "manageStock"
                 }
               }
             ]
@@ -1299,7 +1285,7 @@ final dynamic sampleInventoryFlows = {
           "onAction": [
             {"actionType": "BACK_NAVIGATION", "properties": {}}
           ]
-        },
+        }
       ],
       "footer": [],
       "initActions": [
@@ -1332,7 +1318,7 @@ final dynamic sampleInventoryFlows = {
               "field": "clientAuditDetails.createdBy",
               "equalsFrom": "{{singleton.loggedInUserUuid}}"
             }
-          },
+          }
         ],
         "searchConfig": {
           "primary": "stock",
@@ -1466,7 +1452,7 @@ final dynamic sampleInventoryFlows = {
                     }
                   }
                 ]
-              },
+              }
             ]
           }
         }
@@ -1512,14 +1498,11 @@ final dynamic sampleInventoryFlows = {
         "rootEntity": "StockModel",
         "filters": [],
         "relations": [
-          {
-            "name": "stock",
-            "entity": "StockModel",
-          }
+          {"name": "stock", "entity": "StockModel"}
         ],
         "searchConfig": {
           "primary": "stock",
-          "select": ["stock"],
+          "select": ["stock"]
         }
       },
       "body": [

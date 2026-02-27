@@ -611,34 +611,40 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
 
                               // Per-scan duplicate check
                               if (widget.duplicateCheckFn != null) {
-                                final serialized = DigitScannerUtils()
-                                    .serializeGs1Barcodes([parsed]);
-                                final isDuplicate =
-                                    await widget.duplicateCheckFn!(serialized);
-                                if (isDuplicate) {
-                                  Toast.showToast(
-                                    context,
-                                    type: ToastType.error,
-                                    message: localizations.translate(
-                                        widget.duplicateCheckMessage ??
-                                            i18.scanner
-                                                .resourceAlreadyScanned),
-                                    sentenceCaseEnabled: false,
-                                  );
-                                  return;
+                                try {
+                                  final serialized = DigitScannerUtils()
+                                      .serializeGs1Barcodes([parsed]);
+                                  final isDuplicate =
+                                      await widget.duplicateCheckFn!(
+                                          serialized);
+                                  if (isDuplicate) {
+                                    Toast.showToast(
+                                      context,
+                                      type: ToastType.error,
+                                      message: localizations.translate(
+                                          widget.duplicateCheckMessage ??
+                                              i18.scanner
+                                                  .resourceAlreadyScanned),
+                                      sentenceCaseEnabled: false,
+                                    );
+                                    return;
+                                  }
+                                } catch (_) {
+                                  // Allow scan to proceed if check fails
                                 }
                               }
 
                               // Check if barcode already scanned
+                              // Compare full serialized form (all AI elements)
+                              // to avoid false positives when serial number is
+                              // optional and the last AI varies.
+                              final newSerialized = DigitScannerUtils()
+                                  .serializeGs1Barcodes([parsed]);
                               final alreadyScanned =
                                   existingBarcodes.any((element) {
-                                if (element.elements.entries.isEmpty ||
-                                    parsed.elements.entries.isEmpty) {
-                                  return false;
-                                }
-                                return element.elements.entries.last.value
-                                        .data ==
-                                    parsed.elements.entries.last.value.data;
+                                final existingSerialized = DigitScannerUtils()
+                                    .serializeGs1Barcodes([element]);
+                                return existingSerialized == newSerialized;
                               });
 
                               if (alreadyScanned) {
@@ -725,19 +731,24 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
 
                               // Per-scan duplicate check
                               if (widget.duplicateCheckFn != null) {
-                                final isDuplicate =
-                                    await widget.duplicateCheckFn!(manualValue);
-                                if (isDuplicate) {
-                                  Toast.showToast(
-                                    context,
-                                    type: ToastType.error,
-                                    message: localizations.translate(
-                                        widget.duplicateCheckMessage ??
-                                            i18.scanner
-                                                .resourceAlreadyScanned),
-                                    sentenceCaseEnabled: false,
-                                  );
-                                  return;
+                                try {
+                                  final isDuplicate =
+                                      await widget.duplicateCheckFn!(
+                                          manualValue);
+                                  if (isDuplicate) {
+                                    Toast.showToast(
+                                      context,
+                                      type: ToastType.error,
+                                      message: localizations.translate(
+                                          widget.duplicateCheckMessage ??
+                                              i18.scanner
+                                                  .resourceAlreadyScanned),
+                                      sentenceCaseEnabled: false,
+                                    );
+                                    return;
+                                  }
+                                } catch (_) {
+                                  // Allow scan to proceed if check fails
                                 }
                               }
 
@@ -984,18 +995,23 @@ class DigitScannerPageState extends LocalizedState<DigitScannerPage>
 
                             // Per-scan duplicate check
                             if (widget.duplicateCheckFn != null) {
-                              final isDuplicate =
-                                  await widget.duplicateCheckFn!(manualValue);
-                              if (isDuplicate) {
-                                Toast.showToast(
-                                  context,
-                                  type: ToastType.error,
-                                  message: localizations.translate(
-                                      widget.duplicateCheckMessage ??
-                                          i18.scanner.resourceAlreadyScanned),
-                                  sentenceCaseEnabled: false,
-                                );
-                                return;
+                              try {
+                                final isDuplicate =
+                                    await widget.duplicateCheckFn!(manualValue);
+                                if (isDuplicate) {
+                                  Toast.showToast(
+                                    context,
+                                    type: ToastType.error,
+                                    message: localizations.translate(
+                                        widget.duplicateCheckMessage ??
+                                            i18.scanner
+                                                .resourceAlreadyScanned),
+                                    sentenceCaseEnabled: false,
+                                  );
+                                  return;
+                                }
+                              } catch (_) {
+                                // Allow scan to proceed if check fails
                               }
                             }
 

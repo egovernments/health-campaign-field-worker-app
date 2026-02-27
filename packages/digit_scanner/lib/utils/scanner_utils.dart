@@ -139,25 +139,30 @@ class DigitScannerUtils {
 
             // Per-scan duplicate check
             if (duplicateCheckFn != null) {
-              final serialized =
-                  DigitScannerUtils().serializeGs1Barcodes([parsedResult]);
-              final isDuplicate = await duplicateCheckFn(serialized);
-              if (isDuplicate) {
-                await handleError(duplicateCheckMessage ??
-                    localizations
-                        .translate(i18.scanner.resourceAlreadyScanned));
-                return;
+              try {
+                final serialized =
+                    DigitScannerUtils().serializeGs1Barcodes([parsedResult]);
+                final isDuplicate = await duplicateCheckFn(serialized);
+                if (isDuplicate) {
+                  await handleError(duplicateCheckMessage ??
+                      localizations
+                          .translate(i18.scanner.resourceAlreadyScanned));
+                  return;
+                }
+              } catch (_) {
+                // Allow scan to proceed if check fails
               }
             }
 
             // Check if the barcode has already been scanned
+            // Compare full serialized form (all AI elements) to avoid false
+            // positives when serial number is optional and the last AI varies.
+            final newSerialized =
+                DigitScannerUtils().serializeGs1Barcodes([parsedResult]);
             final alreadyScanned = bloc.state.barCodes.any((element) {
-              if (element.elements.entries.isEmpty ||
-                  parsedResult.elements.entries.isEmpty) {
-                return false;
-              }
-              return element.elements.entries.last.value.data ==
-                  parsedResult.elements.entries.last.value.data;
+              final existingSerialized =
+                  DigitScannerUtils().serializeGs1Barcodes([element]);
+              return existingSerialized == newSerialized;
             });
 
             if (alreadyScanned) {
@@ -197,12 +202,17 @@ class DigitScannerUtils {
           // For non-GS1 codes
           // Per-scan duplicate check
           if (duplicateCheckFn != null) {
-            final isDuplicate =
-                await duplicateCheckFn(barcodes.first.displayValue.toString());
-            if (isDuplicate) {
-              await handleError(duplicateCheckMessage ??
-                  localizations.translate(i18.scanner.resourceAlreadyScanned));
-              return;
+            try {
+              final isDuplicate = await duplicateCheckFn(
+                  barcodes.first.displayValue.toString());
+              if (isDuplicate) {
+                await handleError(duplicateCheckMessage ??
+                    localizations
+                        .translate(i18.scanner.resourceAlreadyScanned));
+                return;
+              }
+            } catch (_) {
+              // Allow scan to proceed if check fails
             }
           }
 
@@ -349,14 +359,9 @@ class DigitScannerUtils {
     // Make a copy of the current barcodes from the bloc state
     List<GS1Barcode> result = List.from(initialResult);
 
-    // Remove duplicate entries based on the last value in the elements map
+    // Remove duplicate entries based on the full serialized barcode
     result.removeDuplicates(
-      (element) {
-        if (element.elements.entries.isEmpty) {
-          return ''; // Return empty string for empty elements
-        }
-        return element.elements.entries.last.value.data;
-      },
+      (element) => DigitScannerUtils().serializeGs1Barcodes([element]),
     );
 
     // Add the new parsed result to the list
@@ -469,6 +474,9 @@ class DigitScannerUtils {
     final formattedDate = DateFormat('yyMMdd').format(expiryDate);
 
     // Include GTIN (01) if provided (fixed-length 14 digits, no GS needed)
+    if (gtin != null && gtin.isNotEmpty && !RegExp(r'^\d{14}$').hasMatch(gtin)) {
+      throw FormatException('GTIN must be exactly 14 digits, got: $gtin');
+    }
     final gtinPart = gtin != null && gtin.isNotEmpty ? '01$gtin' : '';
     // Include Serial (21) only if provided (variable-length, needs GS)
     final serialPart = serialNumber != null && serialNumber.isNotEmpty

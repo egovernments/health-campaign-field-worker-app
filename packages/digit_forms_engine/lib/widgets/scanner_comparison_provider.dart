@@ -22,42 +22,99 @@ class ScannerComparisonRegistry {
   }
 }
 
-/// InheritedWidget that provides per-scan duplicate checking for scanner fields.
-/// Also registers callbacks in [ScannerComparisonRegistry] so they are
-/// accessible from child routes pushed via auto_route.
-class ScannerComparisonProvider extends InheritedWidget {
-  /// Per-scan duplicate check callback.
-  /// Takes (fieldName, scannedValue, formValues).
-  /// Returns true if the scanned value is a duplicate.
+/// Provides per-scan duplicate checking for scanner fields.
+///
+/// Registers callbacks in [ScannerComparisonRegistry] on mount so they are
+/// accessible from child routes pushed via auto_route (where the InheritedWidget
+/// is not in the ancestor tree). Clears the registry on dispose to prevent
+/// stale callbacks from leaking into later scanner sessions.
+class ScannerComparisonProvider extends StatefulWidget {
   final Future<bool> Function(
     String fieldName,
     String scannedValue,
     Map<String, dynamic> formValues,
   )? duplicateCheckFn;
 
-  /// Error message for duplicate detection (localization key)
   final String? Function(String fieldName)? duplicateErrorMessage;
 
-  ScannerComparisonProvider({
+  final Widget child;
+
+  const ScannerComparisonProvider({
+    super.key,
+    required this.child,
+    this.duplicateCheckFn,
+    this.duplicateErrorMessage,
+  });
+
+  /// Looks up the inherited data from the widget tree.
+  static ScannerComparisonData? of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<ScannerComparisonData>();
+  }
+
+  @override
+  State<ScannerComparisonProvider> createState() =>
+      _ScannerComparisonProviderState();
+}
+
+class _ScannerComparisonProviderState extends State<ScannerComparisonProvider> {
+  @override
+  void initState() {
+    super.initState();
+    _registerCallbacks();
+  }
+
+  @override
+  void didUpdateWidget(ScannerComparisonProvider oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.duplicateCheckFn != oldWidget.duplicateCheckFn ||
+        widget.duplicateErrorMessage != oldWidget.duplicateErrorMessage) {
+      _registerCallbacks();
+    }
+  }
+
+  void _registerCallbacks() {
+    ScannerComparisonRegistry().duplicateCheckFn = widget.duplicateCheckFn;
+    ScannerComparisonRegistry().duplicateErrorMessage =
+        widget.duplicateErrorMessage;
+  }
+
+  @override
+  void dispose() {
+    ScannerComparisonRegistry().clear();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScannerComparisonData(
+      duplicateCheckFn: widget.duplicateCheckFn,
+      duplicateErrorMessage: widget.duplicateErrorMessage,
+      child: widget.child,
+    );
+  }
+}
+
+/// InheritedWidget that holds the callback data for widget tree lookups.
+/// Used internally by [ScannerComparisonProvider] and returned by its [of] method.
+class ScannerComparisonData extends InheritedWidget {
+  final Future<bool> Function(
+    String fieldName,
+    String scannedValue,
+    Map<String, dynamic> formValues,
+  )? duplicateCheckFn;
+
+  final String? Function(String fieldName)? duplicateErrorMessage;
+
+  const ScannerComparisonData({
     super.key,
     required super.child,
     this.duplicateCheckFn,
     this.duplicateErrorMessage,
-  }) {
-    // Register in singleton so child routes can access it
-    ScannerComparisonRegistry().duplicateCheckFn = duplicateCheckFn;
-    ScannerComparisonRegistry().duplicateErrorMessage = duplicateErrorMessage;
-  }
-
-  /// Looks up the provider from InheritedWidget tree first,
-  /// falls back to the singleton registry.
-  static ScannerComparisonProvider? of(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<ScannerComparisonProvider>();
-  }
+  });
 
   @override
-  bool updateShouldNotify(ScannerComparisonProvider oldWidget) {
+  bool updateShouldNotify(ScannerComparisonData oldWidget) {
     return duplicateCheckFn != oldWidget.duplicateCheckFn ||
         duplicateErrorMessage != oldWidget.duplicateErrorMessage;
   }

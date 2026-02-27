@@ -306,14 +306,13 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
                 ),
                 // defaultValues priority (lowest to highest):
                 // defaultValues priority (lowest to highest):
-                // 1. mergedNavParams - navigation data merged from widget and registry
-                // 2. widget.defaultValues - config-defined defaults
+                // 1. widget.defaultValues - config-defined defaults
+                // 2. mergedNavParams - navigation data merged from widget and registry
                 // 3. registryFormData - data from REVERSE_TRANSFORM action (highest priority for prefill)
                 // 4. System values like administrativeArea, availableIDs
                 defaultValues: {
                   ...?widget.defaultValues,
                   ...mergedNavParams,
-                  ...?widget.defaultValues,
                   if (isEdit) ...registryFormData,
                   // System values always present
                   'administrativeArea': localizations
