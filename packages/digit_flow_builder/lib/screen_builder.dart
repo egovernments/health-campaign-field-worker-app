@@ -305,7 +305,6 @@ class _FormScreenWrapperState extends LocalizedState<_FormScreenWrapper> {
                   flowState,
                 ),
                 // defaultValues priority (lowest to highest):
-                // defaultValues priority (lowest to highest):
                 // 1. widget.defaultValues - config-defined defaults
                 // 2. mergedNavParams - navigation data merged from widget and registry
                 // 3. registryFormData - data from REVERSE_TRANSFORM action (highest priority for prefill)
