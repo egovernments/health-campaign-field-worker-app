@@ -4,6 +4,7 @@ import 'package:digit_flow_builder/widgets/implementations/date_row_picker_widge
 import 'package:digit_flow_builder/widgets/implementations/expandable_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/expanded_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/icon_button_widget.dart';
+import 'package:digit_flow_builder/widgets/implementations/label_value_summary_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/proximitySearch_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/sized_box_widget.dart';
 
@@ -71,6 +72,7 @@ class WidgetRegistration {
     FlowWidgetFactory.register(SizedBoxWidget());
     FlowWidgetFactory.register(IconsButtonWidget());
     FlowWidgetFactory.register(DateRowPickerWidget());
+    FlowWidgetFactory.register(LabelValueSummaryWidget());
     _initialized = true;
   }
 

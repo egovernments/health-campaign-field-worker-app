@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:attendance_management/attendance_management.dart';
-import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart';
 import 'package:digit_crud_bloc/digit_crud_bloc.dart';
@@ -33,6 +32,7 @@ import 'package:transit_post/router/transit_post_router.gm.dart';
 import 'package:transit_post/utils/utils.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/attendance_curd_service.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/localization/localization.dart';
 import '../data/local_store/app_shared_preferences.dart';
@@ -41,7 +41,7 @@ import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
-import '../sampleJsonConfigs/attendance.dart';
+import '../sampleJsonConfigs/attendance/attendance_flows.dart';
 import '../sampleJsonConfigs/closed_household.dart';
 import '../sampleJsonConfigs/complaints.dart';
 import '../sampleJsonConfigs/hf_referral.dart';
@@ -1323,45 +1323,58 @@ class _HomePageState extends LocalizedState<HomePage> {
             triggerLocalization(module: module);
             isTriggerLocalisation = false;
             // };
-            context.router.push(const ManageAttendanceRoute());
+            // context.router.push(const ManageAttendanceRoute());
 
-            // final prefs = await SharedPreferences.getInstance();
-            // final schemaJsonRaw = prefs.getString('app_config_schemas');
+            // Set up CRUD service
+            CrudBlocSingleton().setData(
+              crudService: AttendanceCurdService(
+                context: context,
+                relationshipMap: null,
+                nestedModelMappings: null,
+                searchEntityRepository: context.read<SearchEntityRepository>(),
+              ),
+              dynamicEntityModelListener: AttendanceEntityModelMapMapper(),
+            );
 
-            // FlowBuilderSingleton().setPersistenceConfiguration(
-            //     persistenceConfiguration:
-            //         PersistenceConfiguration.offlineFirst);
-            // WidgetRegistry.initialize();
-            // try {
-            //   if (schemaJsonRaw != null) {
-            //     final allSchemas =
-            //         json.decode(schemaJsonRaw) as Map<String, dynamic>;
-            //     Map<String, dynamic> data = allSchemas['ATTENDANCE'];
+            final prefs = await SharedPreferences.getInstance();
+            final schemaJsonRaw = prefs.getString('app_config_schemas');
 
-            //     // final attendanceData = data?['data'];
-            //     Map<String, dynamic> attendanceData = attendanceFlows;
-            //     List<Map<String, dynamic>> flowsData =
-            //         (attendanceData['flows'] as List<dynamic>?)
-            //                 ?.map((e) => Map<String, dynamic>.from(e as Map))
-            //                 .toList() ??
-            //             [];
-            //     FlowRegistry.setConfig(flowsData);
-            //     NavigationRegistry.setupNavigation(context);
+            FlowBuilderSingleton().setPersistenceConfiguration(
+                persistenceConfiguration:
+                    PersistenceConfiguration.offlineFirst);
+            WidgetRegistry.initialize();
+            try {
+              if (schemaJsonRaw != null) {
+                final allSchemas =
+                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                Map<String, dynamic> data = allSchemas['ATTENDANCE'];
 
-            //     context.router.push(
-            //       FlowBuilderHomeRoute(pageName: attendanceData["initialPage"]),
-            //     );
-            //   } else {
-            //     FlowRegistry.setConfig(
-            //         sampleFlows["flows"] as List<Map<String, dynamic>>);
-            //     NavigationRegistry.setupNavigation(context);
-            //     context.router.push(
-            //       FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
-            //     );
-            //   }
-            // } catch (e) {
-            //   debugPrint('error $e');
-            // }
+                // final attendanceData = data?['data'];
+                Map<String, dynamic> attendanceData =
+                    attendanceFlows; // Adding custom attendance flows as the flows are not coming from the server for attendance module
+                List<Map<String, dynamic>> flowsData =
+                    (attendanceData['flows'] as List<dynamic>?)
+                            ?.map((e) => Map<String, dynamic>.from(e as Map))
+                            .toList() ??
+                        [];
+                FlowRegistry.setConfig(flowsData);
+                NavigationRegistry.setupNavigation(context);
+
+                context.router.push(
+                  FlowBuilderHomeRoute(pageName: attendanceData["initialPage"]),
+                );
+              } else {
+                FlowRegistry.setConfig(
+                    sampleFlows["flows"] as List<Map<String, dynamic>>);
+                NavigationRegistry.setupNavigation(context);
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: attendanceFlows["initialPage"]),
+                );
+              }
+            } catch (e) {
+              debugPrint('error $e');
+            }
           },
         ),
       ),
