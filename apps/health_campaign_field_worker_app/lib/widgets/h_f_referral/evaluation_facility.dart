@@ -117,7 +117,6 @@ class _EvaluationKeyDropDownState
             errorMessage: field.errorText,
             items: _mapItems(projectFacilities),
             onSelect: (val) {
-              debugPrint('EVAL_DROPDOWN: onSelect - name=${val.name}, code=${val.code}, schema=${widget.schemaName}, key=${widget.formControlName}');
               form.control(widget.formControlName).markAsTouched();
               form.control(widget.formControlName).value = val.code;
 
