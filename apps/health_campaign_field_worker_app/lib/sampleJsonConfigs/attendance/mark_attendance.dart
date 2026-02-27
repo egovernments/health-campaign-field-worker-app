@@ -71,16 +71,6 @@ final dynamic markAttendanceFlow = {
       "onAction": []
     },
     {
-      "format": "proximitySearch",
-      "label": "Only show unmarked attendance",
-      "fieldName": "proximitySearch",
-      "defaultValue": false,
-      "validations": [
-        {"key": "proximityRadius", "value": 500}
-      ],
-      "onAction": []
-    },
-    {
       "type": "template",
       "format": "row",
       "properties": {
@@ -142,9 +132,83 @@ final dynamic markAttendanceFlow = {
       ]
     },
     {
+      "format": "proximitySearch",
+      "label": "Only show unmarked attendance",
+      "fieldName": "proximitySearch",
+      "defaultValue": false,
+      "validations": [
+        {"key": "proximityRadius", "value": 500}
+      ],
+      "onAction": []
+    },
+    {
       "type": "template",
       "format": "card",
       "children": [
+        {
+          "type": "template",
+          "format": "expanded",
+          "child": {
+            "type": "template",
+            "format": "row",
+            "properties": {
+              "mainAxisAlignment": 'spaceBetween',
+            },
+            "children": [
+              {
+                "type": "template",
+                "format": "textTemplate",
+                "value": "Team 1",
+                "properties": {"style": "headingS"}
+              },
+              {
+                "type": "template",
+                "format": "sizedBox",
+                "width": 12.0,
+              },
+              {
+                "type": "template",
+                "format": "textTemplate",
+                "value": "Last sync 4PM today",
+                "properties": {"style": "bodyS"}
+              },
+            ]
+          },
+        },
+        {
+          "type": "template",
+          "format": "row",
+          "properties": {
+            "mainAxisAlignment": 'stretch',
+          },
+          "children": [
+            {
+              "type": "template",
+              "format": "textTemplate",
+              "value": "Target Achieved: ",
+            },
+            {
+              "type": "template",
+              "format": "textTemplate",
+              "value": "90% / 100",
+            },
+            {
+              "type": "template",
+              "format": "sizedBox",
+              "width": 12.0,
+            },
+            {
+              "type": "template",
+              "format": "textTemplate",
+              "value": "(View Delivery Map)",
+            },
+          ]
+        },
+        {
+          "type": "template",
+          "format": "progressBar",
+          "value": 0.4,
+        },
         {
           "type": "template",
           "format": "card",
@@ -163,7 +227,7 @@ final dynamic markAttendanceFlow = {
                 {
                   "type": "template",
                   "format": "textTemplate",
-                  "value": "MARK_ATTENDANCE_FACIAL_RECOGNITION: ",
+                  "value": "FACIAL_RECOGNITION: ",
                 },
                 {
                   "type": "template",

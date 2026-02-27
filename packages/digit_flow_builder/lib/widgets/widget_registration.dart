@@ -5,6 +5,7 @@ import 'package:digit_flow_builder/widgets/implementations/expandable_widget.dar
 import 'package:digit_flow_builder/widgets/implementations/expanded_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/icon_button_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/label_value_summary_widget.dart';
+import 'package:digit_flow_builder/widgets/implementations/progress_bar_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/proximitySearch_widget.dart';
 import 'package:digit_flow_builder/widgets/implementations/sized_box_widget.dart';
 
@@ -73,6 +74,7 @@ class WidgetRegistration {
     FlowWidgetFactory.register(IconsButtonWidget());
     FlowWidgetFactory.register(DateRowPickerWidget());
     FlowWidgetFactory.register(LabelValueSummaryWidget());
+    FlowWidgetFactory.register(ProgressBarWidget());
     _initialized = true;
   }
 
