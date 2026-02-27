@@ -1587,6 +1587,9 @@ void setPackagesSingleton(BuildContext context) {
                     .map((e) => e.code.snakeCase.toUpperCase())
                     .toList();
               }),
+          checklistTypes: (appConfiguration.checklistTypes ??[])
+              .map((e) => e.code)
+              .toList(),
         );
 
         DashboardSingleton().setInitialData(
