@@ -23,13 +23,6 @@ class TransformerExecutor extends ActionExecutor {
     final formDataConfig = action.properties['formDataConfig'];
 
     debugPrint('TRANSFORMER: Starting with configName=$configName');
-    debugPrint('TRANSFORMER: contextData keys = ${contextData.keys.toList()}');
-    debugPrint(
-        'TRANSFORMER: contextData[formData] = ${contextData['formData']}');
-    debugPrint(
-        'TRANSFORMER: contextData[formData] keys = ${(contextData['formData'] as Map?)?.keys.toList()}');
-    debugPrint(
-        'TRANSFORMER: contextData[navigation] = ${contextData['navigation']}');
 
     final configData = jsonConfig[configName];
     if (configData == null) {
