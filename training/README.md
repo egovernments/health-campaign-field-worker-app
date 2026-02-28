@@ -1,21 +1,34 @@
 # Fine-tuning MobileFaceNet on African Faces
 
-Fine-tune the MobileFaceNet model (pre-trained on MS1M-ArcFace) specifically on African faces from the RFW dataset to improve verification accuracy for Nigerian field workers.
+Fine-tune the MobileFaceNet model (pre-trained on WebFace600K) specifically on African faces from the FAGE_v2 dataset to improve verification accuracy for Nigerian field workers.
+
+## Prerequisites
+
+Before running the notebook, upload these files to Google Drive at `My Drive/mobilefacenet_african/`:
+
+1. **`w600k_mbf.onnx`** — Pre-trained MobileFaceNet ONNX model
+   - Download from: https://huggingface.co/WePrompt/buffalo_sc/resolve/main/w600k_mbf.onnx
+   - Also available locally at: `training/models/w600k_mbf.onnx`
+
+2. **`fage_v2.zip`** (or `archive.zip`) — FAGE_v2 African face dataset
+   - Download from: https://www.kaggle.com/datasets/ajewoleolaitan/fage-dataset
+   - 500 African identities x 10 images, CC BY 4.0
 
 ## Quick Start (Google Colab)
 
-1. Open `finetune_mobilefacenet_african.ipynb` in Google Colab
-2. Select **Runtime > Change runtime type > T4 GPU**
-3. Run all cells sequentially
-4. Download the exported `mobilefacenet_african_v2.tflite` from the final cell
+1. Upload prerequisites to Google Drive (see above)
+2. Open `finetune_mobilefacenet_african.ipynb` in Google Colab
+3. Select **Runtime > Change runtime type > T4 GPU**
+4. Run all cells sequentially
+5. Download the exported `mobilefacenet_african_v2.tflite` from the final cell
 
 ## What This Does
 
 | Step | Description |
 |------|-------------|
 | Setup | Installs dependencies, mounts Google Drive |
-| Pre-trained Model | Downloads InsightFace MobileFaceNet ONNX, converts to PyTorch |
-| Dataset | Downloads RFW African subset (~10K pairs), prepares DataLoaders |
+| Pre-trained Model | Loads InsightFace MobileFaceNet ONNX from Drive, converts to PyTorch |
+| Dataset | Loads FAGE_v2 African faces (~5K images, 500 identities), generates verification pairs |
 | Fine-tuning | ArcFace loss, 20 epochs, cosine LR schedule on T4 GPU |
 | Evaluation | ROC analysis on African verification pairs, reports accuracy/FAR/FRR |
 | Export | PyTorch -> ONNX -> TFLite (112x112 NHWC input, 192-dim output) |
@@ -52,7 +65,7 @@ After training completes:
 
 ## Target Metrics
 
-- Verification accuracy >= 90% on RFW African pairs
+- Verification accuracy >= 90% on FAGE African pairs
 - FAR (False Accept Rate) < 1%
 - Model size <= 5MB
 
