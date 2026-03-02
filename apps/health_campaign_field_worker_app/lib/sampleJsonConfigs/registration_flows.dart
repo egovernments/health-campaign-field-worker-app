@@ -1184,7 +1184,7 @@ final dynamic sampleFlows = {
                                 }
                               }
                             ],
-                            "fieldName": "deliveryButton",
+                            "fieldName": "beneficiaryMigrated",
                             "mandatory": true,
                             "properties": {
                               "size": "medium",
@@ -1282,7 +1282,7 @@ final dynamic sampleFlows = {
                                 }
                               }
                             ],
-                            "fieldName": "deliveryButton",
+                            "fieldName": "beneficiaryAbsent",
                             "mandatory": true,
                             "properties": {
                               "size": "medium",
@@ -1380,7 +1380,7 @@ final dynamic sampleFlows = {
                                 }
                               }
                             ],
-                            "fieldName": "deliveryButton",
+                            "fieldName": "beneficiaryRefused",
                             "mandatory": true,
                             "properties": {
                               "size": "medium",
@@ -3533,6 +3533,10 @@ final dynamic sampleFlows = {
                   {
                     "key": "ProjectBeneficiaryClientReferenceId",
                     "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                  },
+                  {
+                    "key": "status",
+                    "value": "INELIGIBLE"
                   }
                 ],
                 "onError": [
