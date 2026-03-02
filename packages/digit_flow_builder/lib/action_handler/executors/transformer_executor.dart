@@ -81,13 +81,24 @@ class TransformerExecutor extends ActionExecutor {
       }
     }
 
-    final flowState = const FlowCrudState().copyWith(formData: formValuesToUse);
 
-    final screenKey = getScreenKeyFromArgs(context);
+    final crudCtx = CrudItemContext.of(context);
+    final flowState = const FlowCrudState().copyWith(formData: formValuesToUse);
+    final screenKey =
+        crudCtx?.screenKey ?? getEffectiveScreenKey(context, contextData);
+
     final config = FlowRegistry.getByName(screenKey ?? '');
 
-    // Get composite key for current screen
-    final compositeKey = getCompositeKey(context, screenKey: screenKey);
+
+
+
+    // Get composite key for FlowCrudStateRegistry operations
+    // IMPORTANT: Try CrudItemContext.compositeKey first - it's correctly passed
+    // from popups via ActionPopupWidget. Only fall back to getEffectiveCompositeKey
+    // when not in a popup context.
+    final compositeKey =
+        crudCtx?.compositeKey ?? getEffectiveCompositeKey(context, contextData);
+
 
     // Update state with composite key if available, fallback to config name
     FlowCrudStateRegistry().update(compositeKey ?? config?["name"], flowState);
@@ -257,12 +268,16 @@ class TransformerExecutor extends ActionExecutor {
       }
     } else {
       // No multiEntityField configured, create entities normally
-      entities = formEntityMapper.mapFormToEntities(
-        formValues: formValuesToUse ?? {},
-        modelsConfig: transformerConfig,
-        context: contextMap,
-        fallbackFormDataString: fallBackModel,
-      );
+      try{
+        entities = formEntityMapper.mapFormToEntities(
+          formValues: formValuesToUse ?? {},
+          modelsConfig: transformerConfig,
+          context: contextMap,
+          fallbackFormDataString: fallBackModel,
+        );
+      }catch(e){
+        debugPrint(e.toString());
+      }
     }
 
     contextData['entities'] = entities;

@@ -10,6 +10,11 @@ class TaskStatus {
   static const String administrationSuccess = 'ADMINISTRATION_SUCCESS';
   static const String delivered = 'DELIVERED';
   static const String ineligible = 'INELIGIBLE';
+  static const String notDelivered = 'NOT_DELIVERED';
+  static const String beneficiaryDied = 'BENEFICIARY_DIED';
+  static const String beneficiaryMigrated = 'BENEFICIARY_MIGRATED';
+  static const String beneficiaryAbsent = 'BENEFICIARY_ABSENT';
+  static const String beneficiaryRefused = 'BENEFICIARY_REFUSED';
 }
 
 /// The signature for a function that can be registered in the [FunctionRegistry].
@@ -307,7 +312,11 @@ void initializeFunctionRegistry() {
         }
       }
 
-      if (lastTask['status'] == "INELIGIBLE") return false;
+      if (lastTask['status'] == TaskStatus.ineligible ||
+          lastTask['status'] == TaskStatus.beneficiaryDied ||
+          lastTask['status'] == TaskStatus.beneficiaryMigrated ||
+          lastTask['status'] == TaskStatus.beneficiaryAbsent ||
+          lastTask['status'] == TaskStatus.beneficiaryRefused) return false;
     }
 
     if (tasks.isNotEmpty && sideEffects.isNotEmpty) {
@@ -343,6 +352,55 @@ void initializeFunctionRegistry() {
     }
   });
 
+  FunctionRegistry.register("getInEligibleStatus", (args, stateData) {
+    // No arguments passed
+    if (args.isEmpty) return '';
+
+    final tasks = args.first;
+
+    // Must be a non-empty list of tasks
+    if (tasks is! List || tasks.isEmpty) return '';
+
+    // Get the last task and convert to Map if needed
+    final item = tasks.last;
+    Map<String, dynamic>? lastTask;
+    if (item is Map<String, dynamic>) {
+      lastTask = item;
+    } else if (item is Map) {
+      lastTask = Map<String, dynamic>.from(item);
+    } else {
+      try {
+        lastTask = (item as dynamic).toMap() as Map<String, dynamic>;
+      } catch (_) {
+        try {
+          lastTask = (item as dynamic).toJson() as Map<String, dynamic>;
+        } catch (_) {
+          return '';
+        }
+      }
+    }
+
+    if (lastTask == null) return '';
+
+    // Get and normalize the status
+    final status = lastTask['status']?.toString().trim().toUpperCase() ?? '';
+
+    if (status.isEmpty) return '';
+
+    // Return the status string for ineligible/non-delivered statuses
+    if (status == TaskStatus.ineligible ||
+        status == TaskStatus.beneficiaryDied ||
+        status == TaskStatus.beneficiaryMigrated ||
+        status == TaskStatus.beneficiaryAbsent ||
+        status == TaskStatus.beneficiaryRefused ||
+        status == TaskStatus.notDelivered) {
+      return status;
+    }
+
+    // Default to ineligible
+    return TaskStatus.ineligible;
+  });
+
   FunctionRegistry.register("isDelivered", (args, stateData) {
     // No arguments passed
     if (args.isEmpty) return false;
@@ -356,7 +414,7 @@ void initializeFunctionRegistry() {
     final status = value.trim().toUpperCase();
 
     // Match valid delivered statuses
-    if (status == "ADMINISTRATION_SUCCESS" || status == "DELIVERED") {
+    if (status == TaskStatus.administrationSuccess || status == TaskStatus.delivered) {
       return true;
     }
 
@@ -1023,8 +1081,7 @@ void initializeFunctionRegistry() {
               taskMap = (item as dynamic).toMap() as Map<String, dynamic>;
             } catch (_) {
               try {
-                taskMap =
-                    (item as dynamic).toJson() as Map<String, dynamic>;
+                taskMap = (item as dynamic).toJson() as Map<String, dynamic>;
               } catch (_) {
                 taskMap = null;
               }
@@ -1035,12 +1092,17 @@ void initializeFunctionRegistry() {
             final status = taskMap['status']?.toString().toUpperCase().trim();
 
             // Disable if any task status is success
-            if (status == TaskStatus.administrationSuccess || status == TaskStatus.delivered) {
+            if (status == TaskStatus.administrationSuccess ||
+                status == TaskStatus.delivered ) {
               return true;
             }
 
             // Disable if any task is not eligible
-            if (status == TaskStatus.ineligible) {
+            if (status == TaskStatus.ineligible ||
+                status == TaskStatus.beneficiaryDied ||
+                status == TaskStatus.beneficiaryMigrated ||
+                status == TaskStatus.beneficiaryAbsent ||
+                status == TaskStatus.beneficiaryRefused) {
               return true;
             }
           }

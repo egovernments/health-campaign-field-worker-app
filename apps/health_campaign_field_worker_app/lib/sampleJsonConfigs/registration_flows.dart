@@ -840,7 +840,7 @@ final dynamic sampleFlows = {
                         "type": "template",
                         "label": "REGISTRATION_EDIT_INDIVIDUAL_BUTTON_LABEL",
                         "format": "button",
-                        // "disabled": "{{fn:disableEdit(item.task, item.referral)}}==true",
+                        "disabled": "{{fn:disableEdit(item.task, item.referral)}}==true",
                         "onAction": [
                           {
                             "actionType": "REVERSE_TRANSFORM",
@@ -908,7 +908,7 @@ final dynamic sampleFlows = {
                   },
                   {
                     "type": "template",
-                    "label": "NOT_ELIGIBLE",
+                    "label": "{{fn:getInEligibleStatus(item.task)}}",
                     "format": "tag",
                     "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==false",
                     "fieldName": "notEligible",
@@ -982,8 +982,425 @@ final dynamic sampleFlows = {
                       "size": "medium",
                       "type": "primary",
                       "mainAxisSize": "max",
-                      "mainAxisAlignment": "center"
+                      "mainAxisAlignment": "center",
+                      "bottomGap": 16
                     }
+                  },
+                  {
+                    "type": "template",
+                    "label": "HOUSEHOLD_OVERVIEW_UNABLE_TO_DELIVER_LABEL",
+                    "format": "actionPopup",
+                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:length(item.referral)}} <= 0",
+                    "fieldName": "unableToDeliver",
+                    "properties": {
+                      "size": "medium",
+                      "type": "secondary",
+                      "popupConfig": {
+                        "body": [
+                          {
+                            "type": "template",
+                            "label": "UNABLE_TO_DELIVER_BENEFICIARY_DIED",
+                            "format": "button",
+                            "onAction": [
+                              {
+                                "actionType": "CLOSE_POPUP",
+                                "properties": {
+                                  "parentScreenKey": "householdOverview"
+                                }
+                              },
+                              {
+                                "actionType": "FETCH_TRANSFORMER_CONFIG",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key": "selectedIndividualClientReferenceId",
+                                      "value": "{{item.individual.0.clientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "HouseholdClientReferenceId",
+                                      "value": "{{ household.0.clientReferenceId }}"
+                                    },
+                                    {
+                                      "key": "ProjectBeneficiaryClientReferenceId",
+                                      "value": "{{item.projectBeneficiary.0.clientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "status",
+                                      "value": "BENEFICIARY_DIED"
+                                    }
+                                  ],
+                                  "onError": [
+                                    {
+                                      "actionType": "SHOW_TOAST",
+                                      "properties": {
+                                        "message": "Failed to fetch ineligible config."
+                                      }
+                                    }
+                                  ],
+                                  "configName": "unableToDeliver"
+                                }
+                              },
+                              {
+                                "actionType": "CREATE_EVENT",
+                                "properties": {
+                                  "entity": "TASK",
+                                  "onError": [
+                                    {
+                                      "actionType": "SHOW_TOAST",
+                                      "properties": {
+                                        "message": "Failed to create task records."
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "actionType": "NAVIGATION",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key": "selectedIndividualClientReferenceId",
+                                      "value": "{{navigation.selectedIndividualClientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "HouseholdClientReferenceId",
+                                      "value": "{{ navigation.HouseholdClientReferenceId }}"
+                                    },
+                                    {
+                                      "key": "ProjectBeneficiaryClientReferenceId",
+                                      "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                                    }
+                                  ],
+                                  "name": "householdOverview",
+                                  "type": "TEMPLATE",
+                                  "onError": [
+                                    {
+                                      "actionType": "SHOW_TOAST",
+                                      "properties": {
+                                        "message": "Navigation to flow failed."
+                                      }
+                                    }
+                                  ],
+                                  "navigationMode": "popUntilAndPush",
+                                  "popUntilPageName": "searchBeneficiary"
+                                }
+                              }
+                            ],
+                            "fieldName": "beneficiaryDied",
+                            "mandatory": true,
+                            "properties": {
+                              "size": "medium",
+                              "type": "secondary",
+                              "mainAxisSize": "max",
+                              "mainAxisAlignment": "center",
+                            }
+                          },
+                          {
+                            "type": "template",
+                            "label": "UNABLE_TO_DELIVER_BENEFICIARY_MIGRATED",
+                            "format": "button",
+                            "onAction": [
+                              {
+                                "actionType": "CLOSE_POPUP",
+                                "properties": {
+                                  "parentScreenKey": "householdOverview"
+                                }
+                              },
+                              {
+                                "actionType": "FETCH_TRANSFORMER_CONFIG",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key": "selectedIndividualClientReferenceId",
+                                      "value": "{{item.individual.0.clientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "HouseholdClientReferenceId",
+                                      "value": "{{ household.0.clientReferenceId }}"
+                                    },
+                                    {
+                                      "key": "ProjectBeneficiaryClientReferenceId",
+                                      "value": "{{item.projectBeneficiary.0.clientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "status",
+                                      "value": "BENEFICIARY_MIGRATED"
+                                    }
+                                  ],
+                                  "onError": [
+                                    {
+                                      "actionType": "SHOW_TOAST",
+                                      "properties": {
+                                        "message": "Failed to fetch ineligible config."
+                                      }
+                                    }
+                                  ],
+                                  "configName": "unableToDeliver"
+                                }
+                              },
+                              {
+                                "actionType": "CREATE_EVENT",
+                                "properties": {
+                                  "entity": "TASK",
+                                  "onError": [
+                                    {
+                                      "actionType": "SHOW_TOAST",
+                                      "properties": {
+                                        "message": "Failed to create task records."
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "actionType": "NAVIGATION",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key": "selectedIndividualClientReferenceId",
+                                      "value": "{{navigation.selectedIndividualClientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "HouseholdClientReferenceId",
+                                      "value": "{{ navigation.HouseholdClientReferenceId }}"
+                                    },
+                                    {
+                                      "key": "ProjectBeneficiaryClientReferenceId",
+                                      "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                                    }
+                                  ],
+                                  "name": "householdOverview",
+                                  "type": "TEMPLATE",
+                                  "onError": [
+                                    {
+                                      "actionType": "SHOW_TOAST",
+                                      "properties": {
+                                        "message": "Navigation to flow failed."
+                                      }
+                                    }
+                                  ],
+                                  "navigationMode": "popUntilAndPush",
+                                  "popUntilPageName": "searchBeneficiary"
+                                }
+                              }
+                            ],
+                            "fieldName": "deliveryButton",
+                            "mandatory": true,
+                            "properties": {
+                              "size": "medium",
+                              "type": "secondary",
+                              "mainAxisSize": "max",
+                              "mainAxisAlignment": "center",
+                            }
+                          },
+                          {
+                            "type": "template",
+                            "label": "UNABLE_TO_DELIVER_BENEFICIARY_ABSENT",
+                            "format": "button",
+                            "onAction": [
+                              {
+                                "actionType": "CLOSE_POPUP",
+                                "properties": {
+                                  "parentScreenKey": "householdOverview"
+                                }
+                              },
+                              {
+                                "actionType": "FETCH_TRANSFORMER_CONFIG",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key": "selectedIndividualClientReferenceId",
+                                      "value": "{{item.individual.0.clientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "HouseholdClientReferenceId",
+                                      "value": "{{ household.0.clientReferenceId }}"
+                                    },
+                                    {
+                                      "key": "ProjectBeneficiaryClientReferenceId",
+                                      "value": "{{item.projectBeneficiary.0.clientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "status",
+                                      "value": "BENEFICIARY_ABSENT"
+                                    }
+                                  ],
+                                  "onError": [
+                                    {
+                                      "actionType": "SHOW_TOAST",
+                                      "properties": {
+                                        "message": "Failed to fetch ineligible config."
+                                      }
+                                    }
+                                  ],
+                                  "configName": "unableToDeliver"
+                                }
+                              },
+                              {
+                                "actionType": "CREATE_EVENT",
+                                "properties": {
+                                  "entity": "TASK",
+                                  "onError": [
+                                    {
+                                      "actionType": "SHOW_TOAST",
+                                      "properties": {
+                                        "message": "Failed to create task records."
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "actionType": "NAVIGATION",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key": "selectedIndividualClientReferenceId",
+                                      "value": "{{navigation.selectedIndividualClientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "HouseholdClientReferenceId",
+                                      "value": "{{ navigation.HouseholdClientReferenceId }}"
+                                    },
+                                    {
+                                      "key": "ProjectBeneficiaryClientReferenceId",
+                                      "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                                    }
+                                  ],
+                                  "name": "householdOverview",
+                                  "type": "TEMPLATE",
+                                  "onError": [
+                                    {
+                                      "actionType": "SHOW_TOAST",
+                                      "properties": {
+                                        "message": "Navigation to flow failed."
+                                      }
+                                    }
+                                  ],
+                                  "navigationMode": "popUntilAndPush",
+                                  "popUntilPageName": "searchBeneficiary"
+                                }
+                              }
+                            ],
+                            "fieldName": "deliveryButton",
+                            "mandatory": true,
+                            "properties": {
+                              "size": "medium",
+                              "type": "secondary",
+                              "mainAxisSize": "max",
+                              "mainAxisAlignment": "center"
+                            }
+                          },
+                          {
+                            "type": "template",
+                            "label": "UNABLE_TO_DELIVER_BENEFICIARY_REFUSED",
+                            "format": "button",
+                            "onAction": [
+                              {
+                                "actionType": "CLOSE_POPUP",
+                                "properties": {
+                                  "parentScreenKey": "householdOverview"
+                                }
+                              },
+                              {
+                                "actionType": "FETCH_TRANSFORMER_CONFIG",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key": "selectedIndividualClientReferenceId",
+                                      "value": "{{item.individual.0.clientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "HouseholdClientReferenceId",
+                                      "value": "{{ household.0.clientReferenceId }}"
+                                    },
+                                    {
+                                      "key": "ProjectBeneficiaryClientReferenceId",
+                                      "value": "{{item.projectBeneficiary.0.clientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "status",
+                                      "value": "BENEFICIARY_REFUSED"
+                                    }
+                                  ],
+                                  "onError": [
+                                    {
+                                      "actionType": "SHOW_TOAST",
+                                      "properties": {
+                                        "message": "Failed to fetch ineligible config."
+                                      }
+                                    }
+                                  ],
+                                  "configName": "unableToDeliver"
+                                }
+                              },
+                              {
+                                "actionType": "CREATE_EVENT",
+                                "properties": {
+                                  "entity": "TASK",
+                                  "onError": [
+                                    {
+                                      "actionType": "SHOW_TOAST",
+                                      "properties": {
+                                        "message": "Failed to create task records."
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "actionType": "NAVIGATION",
+                                "properties": {
+                                  "data": [
+                                    {
+                                      "key": "selectedIndividualClientReferenceId",
+                                      "value": "{{navigation.selectedIndividualClientReferenceId}}"
+                                    },
+                                    {
+                                      "key": "HouseholdClientReferenceId",
+                                      "value": "{{ navigation.HouseholdClientReferenceId }}"
+                                    },
+                                    {
+                                      "key": "ProjectBeneficiaryClientReferenceId",
+                                      "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+                                    }
+                                  ],
+                                  "name": "householdOverview",
+                                  "type": "TEMPLATE",
+                                  "onError": [
+                                    {
+                                      "actionType": "SHOW_TOAST",
+                                      "properties": {
+                                        "message": "Navigation to flow failed."
+                                      }
+                                    }
+                                  ],
+                                  "navigationMode": "popUntilAndPush",
+                                  "popUntilPageName": "searchBeneficiary"
+                                }
+                              }
+                            ],
+                            "fieldName": "deliveryButton",
+                            "mandatory": true,
+                            "properties": {
+                              "size": "medium",
+                              "type": "secondary",
+                              "mainAxisSize": "max",
+                              "mainAxisAlignment": "center"
+                            }
+                          }
+                        ],
+                        "type": "default",
+                        "title": "HOUSEHOLD_OVERVIEW_UNABLE_TO_DELIVER_LABEL",
+                        "footerActions": [],
+                        "showCloseButton": true,
+                        "barrierDismissible": true
+                      },
+                      "mainAxisSize": "min",
+                      "mainAxisAlignment": "start"
+                    },
+                    "schemaCode": null,
+                    "suffixIcon": "FilterAlt"
                   },
                   {
                     "icon": "add",
