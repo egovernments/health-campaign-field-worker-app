@@ -2540,6 +2540,18 @@ final dynamic sampleFlows = {
               }
             },
             {
+              "actionType": "UPDATE_STOCK_BALANCE",
+              "properties": {
+                "entity": "TASK",
+                "onError": [
+                  {
+                    "actionType": "SHOW_TOAST",
+                    "properties": {"message": "Failed to update stock balance."}
+                  }
+                ]
+              }
+            },
+            {
               "actionType": "NAVIGATION",
               "properties": {
                 "data": [
@@ -3653,6 +3665,18 @@ final dynamic sampleFlows = {
               {
                 "actionType": "SHOW_TOAST",
                 "properties": {"message": "Failed to create household."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "UPDATE_STOCK_BALANCE",
+          "properties": {
+            "entity": "TASK",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to update stock balance."}
               }
             ]
           }

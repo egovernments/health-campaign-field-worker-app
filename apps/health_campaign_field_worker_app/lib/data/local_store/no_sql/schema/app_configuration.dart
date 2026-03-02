@@ -92,6 +92,9 @@ class AppConfiguration {
   late List<HouseStructureTypes>? houseStructureTypes;
   late List<RefusalReasons>? refusalReasons;
   late PrivacyPolicy? privacyPolicyConfig;
+
+  @Name('STOCK_THRESHOLD_CONFIG')
+  late StockThresholdConfig? stockThresholdConfig;
 }
 
 @embedded
@@ -301,4 +304,13 @@ class SubDescription {
   late String? type;
   late bool? isBold;
   late bool? isSpaceRequired;
+}
+
+@embedded
+class StockThresholdConfig {
+  @Name('MIN_THRESHOLD')
+  late double minThreshold; // Below this = red
+  @Name('MAX_THRESHOLD')
+  late double maxThreshold; // Above this = green
+  // Between min and max = blue
 }
