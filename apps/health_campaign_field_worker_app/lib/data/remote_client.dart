@@ -28,6 +28,17 @@ class DioClient {
   // Initialization method for the Dio client
   void init() {
     _dio = Dio()
+      ..httpClientAdapter = IOHttpClientAdapter(
+        createHttpClient: () {
+          // SECURITY: Never disable certificate validation regardless of security level.
+          // badCertificateCallback must always return false (reject bad certs).
+          // SSL pinning is applied via enableSSLPinning() called during app startup.
+          final client = HttpClient()
+            ..badCertificateCallback =
+                (X509Certificate cert, String host, int port) => false;
+          return client;
+        },
+      )
       ..interceptors.addAll([
         AuthTokenInterceptor(),
         // Custom interceptor for handling authentication tokens
