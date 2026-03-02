@@ -5,25 +5,20 @@
 # Flutter Framework Rules
 # ============================================================================
 
-# Keep Flutter engine classes
+# Keep Flutter engine/embedding classes (required for JNI and plugin registration)
 -keep class io.flutter.** { *; }
 -dontwarn io.flutter.**
-
-# Keep Flutter embedding classes
 -keep class io.flutter.embedding.** { *; }
 -keep class io.flutter.plugin.** { *; }
 -keep class io.flutter.util.** { *; }
 -keep class io.flutter.view.** { *; }
-
-# Keep Flutter plugins
 -keep class io.flutter.plugins.** { *; }
 
 # ============================================================================
-# Kotlin Rules
+# Kotlin Rules (R8 has built-in support; only suppress warnings & keep metadata)
 # ============================================================================
 
--keep class kotlin.** { *; }
--keep class kotlin.Metadata { *; }
+# Do NOT use: -keep class kotlin.** { *; }  ← this defeats obfuscation of Kotlin code
 -dontwarn kotlin.**
 -keepclassmembers class **$WhenMappings {
     <fields>;
@@ -36,43 +31,45 @@
 }
 
 # ============================================================================
-# AndroidX Rules
+# AndroidX Rules (R8 includes built-in AndroidX rules; only suppress warnings)
 # ============================================================================
 
--keep class androidx.** { *; }
--keep interface androidx.** { *; }
+# Do NOT use: -keep class androidx.** { *; }  ← this defeats obfuscation of AndroidX
 -dontwarn androidx.**
 
 # ============================================================================
-# Google Play Services
+# Google Play Services / Firebase
 # ============================================================================
 
--keep class com.google.android.gms.** { *; }
+# Suppress warnings only; do NOT blanket-keep entire GMS/Firebase namespaces
 -dontwarn com.google.android.gms.**
-
-# Firebase
--keep class com.google.firebase.** { *; }
 -dontwarn com.google.firebase.**
 
+# Firebase (keep class names; internal members obfuscated)
+-keep class com.google.firebase.** { *; }
+
 # ============================================================================
-# Security Helper (Native Android Code)
+# App Entry Points
+# Only classes referenced BY NAME from AndroidManifest.xml need their name kept.
+# Internal implementation (methods, fields) is obfuscated by R8.
 # ============================================================================
 
-# Keep custom security classes - MUST NOT BE OBFUSCATED
--keep,includedescriptorclasses class com.digit.hcm.** { *; }
--keepclassmembers class com.digit.hcm.** { *; }
-
-# Explicitly keep Activities
--keep public class com.digit.hcm.LauncherActivity { *; }
--keep public class com.digit.hcm.MainActivity { *; }
--keep public class com.digit.hcm.SecurityHelper { *; }
--keep public class com.digit.hcm.LocationService { *; }
-
-# Keep all public methods in security classes (needed for method channels)
--keepclassmembers class com.digit.hcm.SecurityHelper {
+# Activities - name kept (manifest resolves by FQCN); internals obfuscated by R8
+-keep public class com.digit.hcm.LauncherActivity
+-keepclassmembers public class com.digit.hcm.LauncherActivity { *; }
+-keep public class com.digit.hcm.MainActivity
+-keepclassmembers class com.digit.hcm.MainActivity {
     public *;
 }
--keepclassmembers class com.digit.hcm.MainActivity {
+
+# LocationService - name kept; internals obfuscated
+-keep public class com.digit.hcm.LocationService
+
+# SecurityHelper - OBFUSCATE class and method names for maximum protection.
+# Flutter MethodChannel uses string-based dispatch (call.method), so Java method
+# names do not need to be preserved.
+-keep,allowobfuscation class com.digit.hcm.SecurityHelper
+-keepclassmembers,allowobfuscation class com.digit.hcm.SecurityHelper {
     public *;
 }
 
@@ -238,9 +235,9 @@
 # Security Enhancements
 # ============================================================================
 
-# Additional obfuscation for security-sensitive classes
--keep,allowobfuscation class com.digit.hcm.SecurityHelper
--keep,allowobfuscation class com.digit.hcm.MainActivity
+# SecurityHelper and MainActivity are handled in the "App Entry Points" section
+# above with the correct allowobfuscation settings. Do NOT add blanket -keep
+# rules here — that would override allowobfuscation and expose class names.
 
 # Obfuscate method names but keep their functionality
 -keepclassmembers,allowobfuscation class * {
@@ -279,18 +276,14 @@
 -keep class io.flutter.plugins.GeneratedPluginRegistrant { *; }
 -keep class io.flutter.embedding.engine.plugins.FlutterPlugin { *; }
 
-# Keep LauncherActivity (critical for app launch)
--keep class com.digit.hcm.LauncherActivity { *; }
--keepclassmembers class com.digit.hcm.LauncherActivity {
-    *;
-}
+# LauncherActivity entry point is already handled in the "App Entry Points"
+# section above with a targeted keep. Do NOT use blanket { *; } here as it
+# would expose all internal methods/fields in the APK.
 
-# Keep all Activity classes
--keep public class * extends android.app.Activity
--keep public class * extends android.app.Application
--keep public class * extends android.app.Service
--keep public class * extends android.content.BroadcastReceiver
--keep public class * extends android.content.ContentProvider
+# Android component lifecycle methods are preserved automatically by R8
+# via the built-in rules in proguard-android-optimize.txt. Blanket keeps
+# like "-keep public class * extends android.app.Activity" are NOT needed
+# and would prevent R8 from obfuscating third-party Activity subclasses.
 
 # Keep method channel handlers
 -keepclassmembers class * {
