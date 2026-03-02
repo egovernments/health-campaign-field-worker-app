@@ -1,5 +1,6 @@
 import 'package:attendance_management/attendance_management.dart';
 import 'package:collection/collection.dart';
+
 import 'package:digit_data_model/data/repositories/package_repository/local/hf_referral.dart';
 import 'package:digit_data_model/data/repositories/package_repository/local/household.dart';
 import 'package:digit_data_model/data/repositories/package_repository/local/household_member.dart';
@@ -234,11 +235,15 @@ class Constants {
     final appConfigs = await isar.appConfigurations.where().findAll();
     final config = appConfigs.firstOrNull;
 
+    // Always initialize Firebase Core (required for FCM, analytics, etc.)
+    await firebase_services.initializeFirebaseCore(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
     final enableCrashlytics =
-        config?.firebaseConfig?.enableCrashlytics ?? false; // TODO: Remove hardcoding and uncomment above
+        config?.firebaseConfig?.enableCrashlytics ?? false;
     if (enableCrashlytics) {
-      firebase_services.initialize(
-        options: DefaultFirebaseOptions.currentPlatform,
+      await firebase_services.initializeCrashlytics(
         onErrorMessage: (value) {
           AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
         },
