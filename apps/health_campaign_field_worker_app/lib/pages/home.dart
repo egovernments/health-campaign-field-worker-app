@@ -62,7 +62,6 @@ import '../widgets/inventory/custom_facility_widgets.dart';
 import '../widgets/inventory/custom_product_selection_card.dart';
 import '../widgets/localized.dart';
 import '../widgets/progress_bar/beneficiary_progress.dart';
-import '../widgets/progress_bar/hf_referral_progress.dart';
 import '../widgets/resource_card/custom_resource_card.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
