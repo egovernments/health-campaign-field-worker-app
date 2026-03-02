@@ -25,6 +25,7 @@ import 'package:sync_service/sync_service_lib.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
+import '../blocs/push_notification/push_notification.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
@@ -303,10 +304,29 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                         create: (_) => FormsBloc(),
                       ),
                     ],
-                    child: ErrorBoundary(builder: (context, error) {
-                      return error != null
-                          ? const ErrorScreen()
-                          : AutoRouter(
+                    child: BlocListener<PushNotificationBloc,
+                        PushNotificationState>(
+                      listener: (context, state) {
+                        if (state is PushNotificationTappedState) {
+                          final screen = state.data['screen'];
+                          switch (screen) {
+                            case 'home':
+                              context.router.replaceAll([HomeRoute()]);
+                              break;
+                            case 'profile':
+                              context.router.push(ProfileRoute());
+                              break;
+                            default:
+                              // If no recognized screen, navigate to home
+                              context.router.replaceAll([HomeRoute()]);
+                              break;
+                          }
+                        }
+                      },
+                      child: ErrorBoundary(builder: (context, error) {
+                        return error != null
+                            ? const ErrorScreen()
+                            : AutoRouter(
                               navigatorObservers: () => [
                                 AuthenticatedRouteObserver(
                                   onNavigated: () {
@@ -327,7 +347,8 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                 ),
                               ],
                             );
-                    }),
+                      }),
+                    ),
                   ),
                 ),
               );

@@ -661,6 +661,10 @@ class Home {
   String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
 
   String get clfLabel => "HOME_COMMUNAL_LIVING_FACILITIES_LABEL";
+
+  String get stockBalanceLabel => 'HOME_STOCK_BALANCE_LABEL';
+
+  String get faceRegistrationLabel => 'HOME_FACE_REGISTRATION_LABEL';
 }
 
 class DataShare {
