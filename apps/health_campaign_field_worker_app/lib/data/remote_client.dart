@@ -35,13 +35,12 @@ class DioClient {
     _dio = Dio()
       ..httpClientAdapter = IOHttpClientAdapter(
         createHttpClient: () {
-          final client = HttpClient();
-          if (AppSecurity.instance.securityLevel == AppSecurityLevel.low) {
-            debugPrint(
-                'Warning: SSL pinning is disabled due to low security level');
-            client.badCertificateCallback =
-                (X509Certificate cert, String host, int port) => true;
-          }
+          // SECURITY: Never disable certificate validation regardless of security level.
+          // badCertificateCallback must always return false (reject bad certs).
+          // SSL pinning is applied via enableSSLPinning() called during app startup.
+          final client = HttpClient()
+            ..badCertificateCallback =
+                (X509Certificate cert, String host, int port) => false;
           return client;
         },
       )
