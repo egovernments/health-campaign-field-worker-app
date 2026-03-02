@@ -1093,12 +1093,16 @@ void initializeFunctionRegistry() {
 
             // Disable if any task status is success
             if (status == TaskStatus.administrationSuccess ||
-                status == TaskStatus.delivered) {
+                status == TaskStatus.delivered ) {
               return true;
             }
 
             // Disable if any task is not eligible
-            if (status == TaskStatus.ineligible) {
+            if (status == TaskStatus.ineligible ||
+                status == TaskStatus.beneficiaryDied ||
+                status == TaskStatus.beneficiaryMigrated ||
+                status == TaskStatus.beneficiaryAbsent ||
+                status == TaskStatus.beneficiaryRefused) {
               return true;
             }
           }
