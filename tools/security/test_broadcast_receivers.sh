@@ -5,6 +5,14 @@ PACKAGE_NAME="com.digit.hcm"
 WATCHDOG_RECEIVER="id.flutter.flutter_background_service.WatchdogReceiver"
 BOOT_RECEIVER="id.flutter.flutter_background_service.BootReceiver"
 
+# Optional: path to the built APK for binary manifest verification.
+# If set, aapt2 is used as a secondary check to confirm exported=false
+# and eliminate ADB shell false positives.
+# Usage: APK_PATH=/path/to/app.apk ./test_broadcast_receivers.sh
+APK_PATH="${APK_PATH:-}"
+# Path to aapt2 binary (auto-detected from ANDROID_HOME if not set)
+AAPT2_PATH="${AAPT2_PATH:-}"
+
 echo "==========================================================="
 echo " Testing Insecure Broadcast Receiver Mitigations"
 echo " Package: $PACKAGE_NAME"
@@ -31,6 +39,60 @@ if ! adb shell pm list packages | grep -q "^package:${PACKAGE_NAME}$"; then
     echo "    Please install the app on the device and try again."
     exit 1
 fi
+
+# Auto-detect aapt2 from ANDROID_HOME or common SDK paths
+if [ -z "$AAPT2_PATH" ]; then
+    SDK_ROOTS=("$ANDROID_HOME" "$HOME/Library/Android/sdk" "$HOME/Android/Sdk" \
+               "$LOCALAPPDATA/Android/Sdk" "/usr/local/lib/android/sdk")
+    for sdk in "${SDK_ROOTS[@]}"; do
+        if [ -d "$sdk/build-tools" ]; then
+            AAPT2_PATH=$(find "$sdk/build-tools" -name "aapt2" -o -name "aapt2.exe" 2>/dev/null \
+                         | sort -rV | head -1)
+            [ -n "$AAPT2_PATH" ] && break
+        fi
+    done
+fi
+
+# Verify aapt2 manifest: returns 0 (exported=false/not found) or 1 (exported=true)
+# Usage: manifest_exported_check <receiver_class>
+function manifest_exported_check() {
+    local receiver_class=$1
+    [ -z "$APK_PATH" ] && return 2   # no APK path → skip
+    [ -z "$AAPT2_PATH" ] && return 2 # no aapt2    → skip
+
+    local xml
+    xml=$("$AAPT2_PATH" dump xmltree "$APK_PATH" --file AndroidManifest.xml 2>/dev/null)
+    if [ -z "$xml" ]; then return 2; fi
+
+    # Extract the block for this receiver and check its exported attribute.
+    # Strategy: find the line with the receiver name, then scan forward until
+    # the next 'E: receiver' opening tag for the exported= attribute.
+    local in_receiver=0
+    local result=2  # 2 = not found
+
+    while IFS= read -r line; do
+        if echo "$line" | grep -q "\"${receiver_class}\""; then
+            in_receiver=1
+            continue
+        fi
+        if [ "$in_receiver" -eq 1 ]; then
+            # Stop at next receiver/service/activity element
+            if echo "$line" | grep -qP "^\s+E: (receiver|service|activity|application)\b"; then
+                break
+            fi
+            if echo "$line" | grep -q "android:exported"; then
+                if echo "$line" | grep -q "=true"; then
+                    result=1  # exported=true → vulnerable
+                else
+                    result=0  # exported=false → secure
+                fi
+                break
+            fi
+        fi
+    done <<< "$xml"
+
+    return $result
+}
 
 TOTAL_TESTS=0
 SUCCESS_COUNT=0
@@ -65,8 +127,28 @@ function test_receiver() {
         echo "    Result : [SECURE] Access Denied. The receiver is not exported or requires permissions."
         SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
     elif echo "$output" | grep -qi "Broadcast completed"; then
-        echo "    Result : [VULNERABLE] Broadcast completed successfully. The receiver is exported!"
-        FAILURE_COUNT=$((FAILURE_COUNT + 1))
+        # am broadcast -n from ADB shell (uid=2000) can bypass android:exported=false
+        # because the shell user has elevated privileges.  Perform a secondary
+        # check against the binary APK manifest via aapt2 to eliminate this
+        # false positive before declaring a real vulnerability.
+        manifest_exported_check "$receiver"
+        local manifest_status=$?
+
+        if [ "$manifest_status" -eq 0 ]; then
+            echo "    Note   : Broadcast succeeded due to ADB shell privilege bypass (uid=2000)."
+            echo "             Binary manifest verification confirms android:exported=false."
+            echo "             Real apps (uid>=10000) cannot send this broadcast."
+            echo "    Result : [SECURE] Manifest confirms exported=false. ADB false positive."
+            SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+        elif [ "$manifest_status" -eq 1 ]; then
+            echo "    Result : [VULNERABLE] Broadcast completed AND manifest confirms exported=true!"
+            FAILURE_COUNT=$((FAILURE_COUNT + 1))
+        else
+            echo "    Note   : Could not perform secondary manifest verification"
+            echo "             (set APK_PATH and ensure aapt2 is available for confirmation)."
+            echo "    Result : [LIKELY VULNERABLE] Broadcast completed. Verify exported attribute manually."
+            FAILURE_COUNT=$((FAILURE_COUNT + 1))
+        fi
     else
         echo "    Result : [UNKNOWN] Could not determine status. Please review the output above."
         FAILURE_COUNT=$((FAILURE_COUNT + 1))
@@ -75,6 +157,7 @@ function test_receiver() {
 }
 
 # Test both broadcast receivers
+APK_PATH="${APK_PATH:-../../apps/health_campaign_field_worker_app/build/app/outputs/flutter-apk/app-release.apk}"
 test_receiver "$WATCHDOG_RECEIVER" ""
 test_receiver "$BOOT_RECEIVER" "android.intent.action.BOOT_COMPLETED"
 
