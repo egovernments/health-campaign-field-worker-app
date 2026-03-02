@@ -73,7 +73,8 @@ android {
             // Enable code obfuscation with R8 and updated ProGuard rules
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // proguard-android-optimize.txt enables R8 full mode: better obfuscation + dead-code removal
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             
             // Signing configuration
             signingConfig signingConfigs.release
