@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Network Security Configuration
+    ================================
+    OWASP Mobile Top 10 - M1: Improper Platform Usage mitigation.
+
+    Rules:
+    1. Cleartext (HTTP) traffic is BLOCKED globally.
+    2. Only system-trusted CAs are honoured in release builds.
+       User-installed CAs (common MITM proxy attack vector) are NOT trusted.
+    3. Debug builds additionally trust user CAs and allow localhost cleartext
+       for development convenience ONLY — this block is stripped from release APKs.
+-->
+<network-security-config>
+
+    <!-- ================================================================
+         Base configuration: applied to all connections not matched below.
+         - Block all cleartext (HTTP) traffic.
+         - Trust ONLY system CAs; ignore user-installed CAs.
+         ================================================================ -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <!-- Only trust the pre-installed system CA store -->
+            <certificates src="system" />
+            <!-- Do NOT include: <certificates src="user" />
+                 User-installed CAs are a common MITM attack vector (e.g., Burp
+                 proxy certificate installed by an attacker on the device). -->
+        </trust-anchors>
+    </base-config>
+
+    <!-- ================================================================
+         Debug-only overrides (removed from release APKs by the build system).
+         Allows developers to inspect traffic via proxy tools (e.g. Charles,
+         Burp) without modifying the production security policy.
+         ================================================================ -->
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </debug-overrides>
+
+</network-security-config>

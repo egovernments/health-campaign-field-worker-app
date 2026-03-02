@@ -41,16 +41,20 @@
         android:fullBackupContent="false"
         android:fullBackupOnly="false"
         android:icon="@mipmap/ic_launcher"
-        android:label="HCM">
+        android:label="HCM"
+        android:networkSecurityConfig="@xml/network_security_config">
         <service
             android:name=".LocationService"
             android:exported="false"
             android:foregroundServiceType="location" />
 
-        <!-- LauncherActivity: Exported entry point for app launch (Android 12+ requirement) -->
+        <!-- LauncherActivity: Exported entry point for app launch (Android 12+ requirement).
+             android:taskAffinity="" prevents StrandHogg task-hijacking: a malicious app
+             cannot inject itself into this app's back-stack by matching task affinity. -->
         <activity
             android:name=".LauncherActivity"
             android:exported="true"
+            android:taskAffinity=""
             android:theme="@style/LaunchTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -82,7 +86,9 @@
         </activity>
         <service
             android:name="id.flutter.flutter_background_service.BackgroundService"
-            android:foregroundServiceType="dataSync" />
+            android:exported="false"
+            android:foregroundServiceType="dataSync"
+            tools:replace="android:exported" />
         
         <!-- Secure Broadcast Receivers - Override insecure plugin defaults -->
         <receiver
