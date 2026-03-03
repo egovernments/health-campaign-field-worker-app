@@ -467,9 +467,11 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      path: "../../packages/dart_mappable_builder"
-      relative: true
-    source: path
+      path: "packages/dart_mappable_builder"
+      ref: master
+      resolved-ref: fa446e8582bba65a88894844ead567f4955e1487
+      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
+    source: git
     version: "4.2.3"
   dart_style:
     dependency: transitive
@@ -559,9 +561,10 @@ packages:
   digit_firebase_services:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_firebase_services"
-      relative: true
-    source: path
+      name: digit_firebase_services
+      sha256: ce76521d797e123b6fc95c9dfad7d4a918a93b97f57aecd0e1d517b46190909d
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.1"
   digit_flow_builder:
     dependency: "direct main"
@@ -587,9 +590,10 @@ packages:
   digit_location_tracker:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_location_tracker"
-      relative: true
-    source: path
+      name: digit_location_tracker
+      sha256: a93bda5b07db112210e08c7a76f0627957d931d5106c8a7db8876503cc2fd06f
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.0"
   digit_scanner:
     dependency: "direct main"
@@ -2478,5 +2482,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.0 <4.0.0"
+  dart: ">=3.4.3 <4.0.0"
   flutter: ">=3.22.0"
