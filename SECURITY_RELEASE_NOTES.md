@@ -1,33 +1,281 @@
 # Security Enhancements Release Notes
 
-**Version:** 1.8.3+3  
-**Release Date:** February 13, 2026  
-**Branch:** vapt-fixes  
-**Commits Range:** 20228ab..2f4c6a4  
+**Version:** 1.8.7+7  
+**Release Date:** March 3, 2026  
 
+---
+
+## Overview
+
+This release builds addresses the previously addressed vulnerabilities. Improvements focus on data-at-rest encryption, network security configuration, advanced obfuscation with R8 full mode, StrandHogg task-hijacking prevention, and comprehensive automated security test scripts.
+
+---
+
+## Security Measures Implemented
+
+### 1. LocationService Broadcast Receiver Hardening
+
+**Vulnerability Addressed:**  
+Continues the Insecure Broadcast Receiver mitigation from v1.8.6: the custom `LocationService` was sending unprotected broadcasts containing raw GPS coordinates and writing plaintext location data to external storage (Downloads folder), both accessible to other apps and anyone with physical device access.
+
+**Implementation Details:**
+
+#### Restricted Broadcast Delivery:
+- Broadcasts now scoped to this app's package via `intent.setPackage(packageName)`
+- Added signature-level permission enforcement: `sendBroadcast(intent, "${packageName}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION")`
+- Only this app can receive `LocationUpdate` intents
+
+#### Encrypted Location Data Storage:
+- **Previous:** Plaintext GPS written to external Downloads folder (`getExternalFilesDir`)
+- **Now:** AES-256-GCM encrypted, written to internal app-private storage (`filesDir`)
+- Encryption key managed by Android Keystore (`location_data_key` alias)
+- IV prepended to each encrypted record for proper GCM decryption
+- Error handling sanitized — no file paths leaked in logs
+
+**Code Example:**
+```kotlin
+// Restricted broadcast
+intent.setPackage(packageName)
+sendBroadcast(intent, "${packageName}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION")
+
+// AES-256-GCM encryption with Android Keystore
+val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+cipher.init(Cipher.ENCRYPT_MODE, getOrCreateSecretKey())
+val encryptedData = cipher.doFinal((data + "\n").toByteArray(Charsets.UTF_8))
+```
+
+#### Lock-Screen Information Disclosure Prevention:
+- Notification visibility set to `NotificationCompat.VISIBILITY_SECRET`
+- Notification content changed from raw coordinates to generic "Location updated"
+- Notification channel `lockscreenVisibility` set to `VISIBILITY_SECRET`
+
+#### API Deprecation Fixes:
+- Replaced deprecated `LocationRequest.create()` with `LocationRequest.Builder`
+- Replaced deprecated `stopForeground(true)` with `STOP_FOREGROUND_REMOVE` (API 24+)
+
+**Security Impact:**
+- ✅ GPS data encrypted at rest with hardware-backed key
+- ✅ Broadcast intents restricted to same-app-signature only
+- ✅ No sensitive data visible on lock screen or notification shade
+- ✅ Internal storage inaccessible to other apps without root
+- ✅ Eliminates plaintext location data leakage via external storage
+
+---
+
+### 2. Improper Platform Usage — Additional Hardening
+
+**Vulnerability Addressed:**  
+Continues the Improper Platform Usage mitigation from v1.8.6, addressing residual issues: cleartext HTTP traffic was not globally blocked, user-installed CA certificates could enable MITM attacks, the `BackgroundService` was exported, `LauncherActivity` was vulnerable to StrandHogg task-hijacking, secure storage was not using the strongest encryption backend, and SSL validation was conditionally disabled in low-security mode.
+
+**Implementation Details:**
+
+#### Network Security Configuration (`network_security_config.xml`):
+```xml
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+            <!-- User-installed CAs NOT trusted in release builds -->
+        </trust-anchors>
+    </base-config>
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>
+```
+- **Cleartext blocked globally:** All HTTP traffic rejected; only HTTPS permitted
+- **System CAs only:** User-installed certificates (MITM proxy attack vector) not trusted in release builds
+- **Debug override:** Developers can still use proxy tools (Charles, Burp) in debug builds only
+
+#### StrandHogg Task-Hijacking Prevention:
+- Added `android:taskAffinity=""` to `LauncherActivity`
+- Prevents malicious apps from injecting themselves into this app's back-stack by matching task affinity
+
+#### BackgroundService Export Protection:
+- `flutter_background_service.BackgroundService` secured with `android:exported="false"` and `tools:replace="android:exported"`
+
+#### EncryptedSharedPreferences for Secure Storage:
+```dart
+final storage = const FlutterSecureStorage(
+  aOptions: AndroidOptions(encryptedSharedPreferences: true),
+);
+```
+- Explicitly enables Android Keystore-backed AES-256 encryption
+- Prevents fallback to less-secure KeyStore-only mechanism on older plugin versions
+
+#### SSL Certificate Validation — Always Enforced:
+```dart
+final client = HttpClient()
+  ..badCertificateCallback =
+      (X509Certificate cert, String host, int port) => false;
+```
+- **Previous:** `badCertificateCallback` returned `true` (accepted all certs) when `AppSecurityLevel.low`
+- **Now:** Always returns `false` — bad certificates rejected regardless of security level
+- SSL pinning applied separately via `enableSSLPinning()` at app startup
+
+**Security Impact:**
+- ✅ Cleartext HTTP traffic blocked application-wide
+- ✅ MITM attacks via user-installed CAs prevented in production
+- ✅ StrandHogg task-hijacking vulnerability mitigated
+- ✅ Background service protected from external IPC
+- ✅ Secure storage uses strongest available encryption backend
+- ✅ SSL validation never bypassed, eliminating conditional trust
+
+---
+
+### 3. Code Obfuscation — R8 Full Mode Upgrade
+
+**Vulnerability Addressed:**  
+Continues the Code Obfuscation hardening from v1.8.6: the previous ProGuard configuration used balanced mode (`proguard-android.txt`) and overly broad `-keep` rules that prevented effective obfuscation of Kotlin, AndroidX, and security-critical classes.
+
+**Implementation Details:**
+
+#### R8 Full Optimization Mode:
+```gradle
+// Previous (v1.8.6):
+proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+// Current (v1.8.7):
+proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+```
+- `proguard-android-optimize.txt` enables R8 full mode: aggressive dead-code removal + enhanced obfuscation
+
+#### Removed Overly Broad Keep Rules:
+| Previous (v1.8.6) | Updated (v1.8.7) | Reason |
+|---|---|---|
+| `-keep class kotlin.** { *; }` | Removed | Defeated Kotlin code obfuscation |
+| `-keep class androidx.** { *; }` | Removed | Defeated AndroidX obfuscation |
+| `-keep class com.digit.hcm.** { *; }` | Targeted per-class rules | Exposed all app internals |
+| `-keep public class * extends android.app.Activity` | Removed | R8 handles component lifecycle automatically |
+
+#### SecurityHelper Now Obfuscated:
+```proguard
+# v1.8.6: Class and method names visible in decompiled APK
+-keep public class com.digit.hcm.SecurityHelper { *; }
+
+# v1.8.7: Class/method names obfuscated; Flutter MethodChannel uses string dispatch
+-keep,allowobfuscation class com.digit.hcm.SecurityHelper
+-keepclassmembers,allowobfuscation class com.digit.hcm.SecurityHelper {
+    public *;
+}
+```
+
+#### Targeted Entry Point Preservation:
+- Activity class names kept (required by AndroidManifest) but **internal methods/fields obfuscated**
+- `LocationService` name kept; internals obfuscated
+- `GeneratedPluginRegistrant` and Flutter plugin interfaces preserved
+
+**Security Impact:**
+- ✅ Significantly improved obfuscation coverage vs v1.8.6
+- ✅ SecurityHelper internals no longer readable in decompiled APK
+- ✅ Kotlin and AndroidX code now properly obfuscated
+- ✅ R8 full mode provides better dead-code elimination
+- ✅ Smaller APK through more aggressive shrinking
+
+---
+
+### 4. Security Test Automation
+
+**Implementation Details:**
+- Automated validation of all 4 vulnerability categories from v1.8.6 and v1.8.7
+- APK analysis using `aapt2` for manifest attribute verification
+- Broadcast receiver export status checking
+- Obfuscation coverage validation through class name analysis
+- Network security configuration verification
+- Reusable test framework for CI/CD integration
+
+**Security Impact:**
+- ✅ Repeatable security validation on every build
+- ✅ Regression detection for security configurations
+- ✅ Structured reporting for VAPT audit compliance
+
+---
+
+## Testing & Validation
+
+### Security Testing Performed:
+- ✅ All v1.8.6 security tests re-validated
+- ✅ LocationService broadcast restriction verified (adb shell am broadcast)
+- ✅ Encrypted location file validated (AES-256-GCM, no plaintext)
+- ✅ Network security config: cleartext HTTP blocked, user CAs rejected
+- ✅ StrandHogg task-hijacking scenario tested
+- ✅ BackgroundService export status verified in merged manifest
+- ✅ EncryptedSharedPreferences backend confirmed via debug inspection
+- ✅ SSL validation: bad certificate always rejected (no conditional bypass)
+- ✅ R8 full mode: decompiled APK shows increased obfuscation coverage
+- ✅ SecurityHelper class/method names obfuscated in release build
+- ✅ Automated security test scripts executed successfully
+- ✅ Lock-screen notification content sanitized
+
+### Build Verification:
+```
+✓ Built build/app/outputs/flutter-apk/app-release.apk
+✓ R8 full optimization: SUCCESS
+✓ Resource shrinking: Applied
+✓ Code obfuscation: R8 full mode with targeted keep rules
+✓ Signature verification: PASSED
+✓ Launch verification: PASSED
+✓ Security test suite: ALL PASSED
+```
+
+### Device Compatibility:
+- Android 8.0 (API 26) to Android 14 (API 34)
+- Verified backward-compatible `stopForeground()` handling
+- `LocationRequest.Builder` compatible with all target API levels
+
+---
+
+## Known Limitations
+
+1. **Network Security Config Debug Override:**
+   - Debug builds still trust user-installed CAs for development convenience
+   - Stripped from release APKs automatically by the build system
+
+2. **Encrypted File Format:**
+   - Location data file uses append-mode encryption (each record independently encrypted)
+   - Requires custom reader; standard decryption tools cannot parse the format
+
+3. **R8 Full Mode Trade-offs:**
+   - More aggressive optimization may require additional testing with new third-party libraries
+   - Some libraries may need explicit keep rules when upgraded
+
+---
+
+## Migration & Deployment
+
+### Breaking Changes:
+- None. All hardening is transparent to legitimate users.
+
+### Deployment Steps:
+1. Build release APK: `fvm flutter build apk`
+2. Verify with security test suite: `./tools/security/run_all_security_tests.sh`
+3. Test on representative device set
+4. Validate network security config (cleartext blocked, user CAs rejected)
+5. Monitor crash reports for R8 full mode issues
+
+
+---
+---
+
+
+**Version:** 1.8.6+6  
+**Release Date:** February 13, 2026  
+
+---
 ---
 
 ## Overview
 
 This release addresses critical security vulnerabilities identified during the Vulnerability Assessment and Penetration Testing (VAPT) process. The implementation focuses on hardening the application against common mobile security threats while maintaining application functionality and user experience.
 
-**Total Changes:**
-- 21 files modified
-- 2,259 insertions (+)
-- 648 deletions (-)
-- 8 security-focused commits
-
 ---
 
 ## Security Measures Implemented
 
 ### 1. Insecure Broadcast Receiver Mitigation
-
-**Commit:** `515416eb8` - "fixed Insecure broadcast Receiver"  
-**Files Modified:**
-- `AndroidManifest.xml` (21 lines added)
-- `MainActivity.kt` (2 lines modified)
-- `location_service.kt` (1 line added)
 
 **Vulnerability Description:**  
 An Insecure Broadcast Receiver occurs when an Android application exposes a broadcast receiver that lacks appropriate access controls, such as permissions or intent validation. This allows any external application to send crafted broadcast intents to the receiver, potentially triggering unauthorized actions, accessing sensitive data, or manipulating application behavior. Such vulnerabilities arise from improperly configured `android:exported` attributes, missing permission enforcement, or failure to validate incoming intent data.
@@ -70,18 +318,6 @@ An Insecure Broadcast Receiver occurs when an Android application exposes a broa
 ---
 
 ### 2. Root Detection Bypass Prevention
-
-**Commits:**
-- `d3b6b8c7d` - "added more comprehensive check for root detection"
-- `a1d6e9d64` - "security changes"
-
-**Files Modified:**
-- `SecurityHelper.kt` (292 lines added) - New native security module
-- `root_detection.dart` (172 lines modified)
-- `root_detection_utils.dart` (277 lines added) - New utility module
-- `app_security.dart` (56 lines modified)
-- `authenticated.dart` (381 lines modified)
-- `root_detection_wrapper.dart` (140 lines modified)
 
 **Vulnerability Description:**  
 A Root Detection Bypass vulnerability occurs when an Android application relies solely on client-side root detection mechanisms to enforce security controls, such as restricting application usage on rooted devices. These checks can be bypassed through dynamic instrumentation, runtime hooking, or environment manipulation, allowing the application to execute in a rooted or tampered environment. Since root detection is inherently unreliable on the client side, attackers can neutralize such controls and operate the application under elevated privileges.
@@ -131,16 +367,6 @@ A Root Detection Bypass vulnerability occurs when an Android application relies 
 ---
 
 ### 3. Improper Platform Usage Mitigation
-
-**Commits:**
-- `2f4c6a4da` - "remove the android external access and added new launch activity"
-- `83333da1b` - "added badCertificateCallback"
-
-**Files Modified:**
-- `AndroidManifest.xml` (19 lines modified)
-- `LauncherActivity.kt` (33 lines added) - New secure entry point
-- `MainActivity.kt` (8 lines modified)
-- `remote_client.dart` (12 lines added)
 
 **Vulnerability Description:**  
 Improper Platform Usage occurs when a mobile application fails to correctly or securely use platform-provided security controls, APIs, or system services. This includes misuse or omission of security-critical features such as permissions, key management systems, secure storage mechanisms, inter-process communication protections, and cryptographic APIs. As a result, sensitive data, application logic, or privileged functionality may become exposed to unauthorized access, tampering, or abuse by malicious applications or users.
@@ -195,15 +421,6 @@ Improper Platform Usage occurs when a mobile application fails to correctly or s
 ---
 
 ### 4. Code Obfuscation
-
-**Commits:**
-- `0e3ffaf61` - "added code obfuscation"
-- `bbc589bfa` - "added proguard-rules"
-
-**Files Modified:**
-- `build.gradle` (16 lines modified)
-- `proguard-rules.pro` (268 lines added) - New ProGuard configuration
-- `build_obfuscated.sh` (126 lines added) - Obfuscated build script
 
 **Vulnerability Description:**  
 Lack of Code Obfuscation occurs when a mobile application is distributed without adequate measures to protect its source code, business logic, and sensitive implementation details from reverse engineering. Without obfuscation, attackers can easily decompile the application to analyze internal logic, identify security mechanisms, extract hard-coded secrets, and bypass client-side protections. This significantly increases the risk of application tampering, fraud, and exploitation of chained vulnerabilities.
@@ -332,14 +549,6 @@ Server-side root detection was evaluated but **not implemented** in this release
    - **Rollback Complexity:** Difficult to disable server-side checks once deployed without app update
    - **Testing Difficulty:** Comprehensive testing requires large device matrix including various root configurations
 
-#### Cost-Benefit Analysis:
-
-**Costs:**
-- Development time: ~4-6 weeks
-- Infrastructure costs: $200-500/month (depending on user volume)
-- Ongoing maintenance: ~8-16 hours/month
-- Support overhead: ~10-20% increase in support tickets
-
 **Benefits:**
 - Marginal improvement over multi-layered client-side detection
 - Does not eliminate determined attackers with device control
@@ -445,67 +654,8 @@ Server-side root detection should be reconsidered only if:
 
 ---
 
-## Future Enhancements
-
-1. **Server-Side Validation:**
-   - Implement if user base analysis shows significant fraud patterns
-   - Consider when regulatory requirements change
-   - Evaluate Google Play Integrity API integration
-
-2. **Runtime Application Self-Protection (RASP):**
-   - Memory integrity checks
-   - Runtime code modification detection
-   - Anti-debugging enhancements
-
-3. **Biometric Authentication:**
-   - Fingerprint/Face ID integration for sensitive operations
-   - Hardware-backed keystores for cryptographic operations
-
-4. **Enhanced Analytics:**
-   - Security event logging and monitoring
-   - Behavioral analysis for fraud detection
-   - Device fingerprinting for anomaly detection
-
----
-
-## References
-
-### Commit History:
-```
-2f4c6a4da - remove the android external access and added new launch activity
-f9179eb70 - Merge branch 'vapt-root-detection-fixes' into vapt-fixes
-515416eb8 - fixed Insecure broadcast Receiver
-bbc589bfa - added proguard-rules
-0e3ffaf61 - added code obfuscation
-83333da1b - added badCertificateCallback
-d3b6b8c7d - added more comprehensive check for root detection
-a1d6e9d64 - security changes
-```
-
 ### Security Standards:
 - OWASP Mobile Security Testing Guide (MSTG)
-- OWASP Mobile Top 10 (2016)
 - Android Security Best Practices
 - Google Play Security Policies
 
-### Tools Used:
-- ProGuard (Code Obfuscation)
-- Android Security Libraries
-- Flutter Security Plugins
-- ADB Security Testing Tools
-
----
-
-## Support & Contact
-
-For security concerns or questions regarding this release:
-- **Technical Lead:** psbskb <susanta.behera@equidhi.org>
-- **Security Team:** [Security Team Contact]
-- **Issue Tracking:** [Project Issue Tracker]
-
----
-
-**Release Signed By:** psbskb  
-**Release Date:** February 13, 2026  
-**Build Verification:** ✅ PASSED  
-**Security Review:** ✅ COMPLETED
