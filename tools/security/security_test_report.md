@@ -1,21 +1,21 @@
 # Application Security Testing Report
 
-**Date:** Fri Feb 27 05:29:40 PM IST 2026
+**Date:** Tue, Mar  3, 2026 11:12:54 AM
 
 ## Summary of Results
 
 | Test Category | Passed (Secure) | Failed (Vuln) | Status |
 |---|---|---|---|
-| Insecure Broadcast Receiver Mitigation | 1 | 1 | ❌ Vulnerable |
-| Root Detection Bypass Prevention | 2 | 0 | ✅ Secure |
+| Insecure Broadcast Receiver Mitigation | 2 | 0 | ✅ Secure |
+| Root Detection Bypass Prevention | 0 | 2 | ❌ Vulnerable |
 | Improper Platform Usage Mitigation | 3 | 0 | ✅ Secure |
 | Improper Code Obfuscation Mitigation | 2 | 0 | ✅ Secure |
 
 ## Final Score
 
 - **Total Tests Run**: 9
-- **Total Passed (Secure)**: 8
-- **Total Failed (Vuln)**: 1
+- **Total Passed (Secure)**: 7
+- **Total Failed (Vuln)**: 2
 - **Overall Status**: ❌ VULNERABLE
 
 ## Detailed Execution Output
@@ -32,36 +32,39 @@
     Command: adb shell am broadcast  -n com.digit.hcm/id.flutter.flutter_background_service.WatchdogReceiver
     > Broadcasting: Intent { flg=0x400000 cmp=com.digit.hcm/id.flutter.flutter_background_service.WatchdogReceiver }
     > Broadcast completed: result=0
-    Result : [VULNERABLE] Broadcast completed successfully. The receiver is exported!
+    Note   : Broadcast succeeded due to ADB shell privilege bypass (uid=2000).
+             Binary manifest verification confirms android:exported=false.
+             Real apps (uid>=10000) cannot send this broadcast.
+    Result : [SECURE] Manifest confirms exported=false. ADB false positive.
 
 [*] Testing id.flutter.flutter_background_service.BootReceiver...
     Command: adb shell am broadcast -a android.intent.action.BOOT_COMPLETED -n com.digit.hcm/id.flutter.flutter_background_service.BootReceiver
     > Broadcasting: Intent { act=android.intent.action.BOOT_COMPLETED flg=0x400000 cmp=com.digit.hcm/id.flutter.flutter_background_service.BootReceiver }
     > 
     > Exception occurred while executing 'broadcast':
-    > java.lang.SecurityException: Permission Denial: not allowed to send broadcast android.intent.action.BOOT_COMPLETED from pid=25007, uid=2000
+    > java.lang.SecurityException: Permission Denial: not allowed to send broadcast android.intent.action.BOOT_COMPLETED from pid=5600, uid=2000
     > at com.android.server.am.BroadcastController.broadcastIntentLockedTraced(BroadcastController.java:1067)
     > at com.android.server.am.BroadcastController.broadcastIntentLocked(BroadcastController.java:807)
     > at com.android.server.am.BroadcastController.broadcastIntentWithFeature(BroadcastController.java:740)
-    > at com.android.server.am.ActivityManagerService.broadcastIntentWithFeature(ActivityManagerService.java:14408)
+    > at com.android.server.am.ActivityManagerService.broadcastIntentWithFeature(ActivityManagerService.java:14407)
     > at com.android.server.am.ActivityManagerShellCommand.runSendBroadcast(ActivityManagerShellCommand.java:1075)
     > at com.android.server.am.ActivityManagerShellCommand.onCommand(ActivityManagerShellCommand.java:280)
     > at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
     > at android.os.ShellCommand.exec(ShellCommand.java:38)
-    > at com.android.server.am.ActivityManagerService.onShellCommand(ActivityManagerService.java:10418)
-    > at android.os.Binder.shellCommand(Binder.java:1151)
-    > at android.os.Binder.onTransact(Binder.java:953)
-    > at android.app.IActivityManager$Stub.onTransact(IActivityManager.java:5739)
-    > at com.android.server.am.ActivityManagerService.onTransact(ActivityManagerService.java:2735)
-    > at android.os.Binder.execTransactInternal(Binder.java:1426)
-    > at android.os.Binder.execTransact(Binder.java:1365)
+    > at com.android.server.am.ActivityManagerService.onShellCommand(ActivityManagerService.java:10417)
+    > at android.os.Binder.shellCommand(Binder.java:1146)
+    > at android.os.Binder.onTransact(Binder.java:948)
+    > at android.app.IActivityManager$Stub.onTransact(IActivityManager.java:5733)
+    > at com.android.server.am.ActivityManagerService.onTransact(ActivityManagerService.java:2734)
+    > at android.os.Binder.execTransactInternal(Binder.java:1414)
+    > at android.os.Binder.execTransact(Binder.java:1353)
     Result : [SECURE] Access Denied. The receiver is not exported or requires permissions.
 
 ===========================================================
  Testing Complete.
  Total Tests Run : 2
- Passed (Secure) : 1
- Failed (Vuln)   : 1
+ Passed (Secure) : 2
+ Failed (Vuln)   : 0
 ===========================================================
 ```
 
@@ -77,21 +80,21 @@
     > Creating pseudo frida-server file at /data/local/tmp/frida-server
     > Clear logcat and launch app...
     > Waiting for app to perform security checks (10s)...
-    > Log output: 02-27 17:29:50.636 25040 25064 I flutter : Security threat detected: {isPassed: false, threats: [root, root, emulator, hook], checksum: 4d2f6e9d23c861755ffab04e30535fc2c326809d7fb18022a00b5d254d62e42a, timestamp: 2026-02-27T17:29:50.624862}
-    Result : [SECURE] App successfully detected the hooking framework!
+    > No security threat logged by the app.
+    Result : [VULNERABLE] App failed to detect the hooking framework or checks were bypassed.
 
 [*] Testing Root Detection & Emulator Status...
     > Device is an emulator.
     > Clear logcat and launch app...
     > Waiting for app to perform security checks (10s)...
-    > Log output: 02-27 17:31:13.298 25226 25250 I flutter : Security threat detected: {isPassed: false, threats: [root, root, emulator], checksum: 7ccdc1f2c3a608ee29a0fe3a1863451feabc42b05aee7c31f5451f78438419e9, timestamp: 2026-02-27T17:31:13.291469}
-    Result : [SECURE] App successfully detected insecure environment (root/emulator)!
+    > No security threat logged by the app.
+    Result : [VULNERABLE] App failed to detect root/emulator environment.
 
 ===========================================================
  Testing Complete.
  Total Tests Run : 2
- Passed (Secure) : 2
- Failed (Vuln)   : 0
+ Passed (Secure) : 0
+ Failed (Vuln)   : 2
 ===========================================================
 ```
 
@@ -117,7 +120,7 @@
     > Attempting to start LocationService externally...
     Command: adb shell am startservice -n com.digit.hcm/.LocationService
     > Starting service: Intent { cmp=com.digit.hcm/.LocationService }
-    > Error: Requires permission not exported from uid 10220
+    > Error: Requires permission not exported from uid 10241
     Result : [SECURE] Service is not exported and denied external start.
 
 [*] Testing PendingIntent Mutability Configuration (Static Check)...
@@ -148,7 +151,7 @@
     > Found shrinkResources true:
                   shrinkResources true
     > Found ProGuard configuration:
-                  proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+                  proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
     Result : [SECURE] ProGuard / R8 code obfuscation and resource shrinking is enabled for the build process.
 
 [*] Testing Flutter Obfuscation Configuration (build_obfuscated.sh)
