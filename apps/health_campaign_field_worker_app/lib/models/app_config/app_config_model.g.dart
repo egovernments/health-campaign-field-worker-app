@@ -299,6 +299,8 @@ _$AppConfigImpl _$$AppConfigImplFromJson(Map<String, dynamic> json) =>
       syncTrigger: json['SYNC_TRIGGER'] as String,
       tenantId: json['TENANT_ID'] as String?,
       maxRadius: (json['PROXIMITY_SEARCH_RANGE'] as num?)?.toDouble(),
+      boundaryLastLevelMaxSelection:
+          (json['BOUNDARY_LAST_LEVEL_MAX_SELECTION'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$AppConfigImplToJson(_$AppConfigImpl instance) =>
@@ -309,6 +311,8 @@ Map<String, dynamic> _$$AppConfigImplToJson(_$AppConfigImpl instance) =>
       'SYNC_TRIGGER': instance.syncTrigger,
       'TENANT_ID': instance.tenantId,
       'PROXIMITY_SEARCH_RANGE': instance.maxRadius,
+      'BOUNDARY_LAST_LEVEL_MAX_SELECTION':
+          instance.boundaryLastLevelMaxSelection,
     };
 
 _$IdTypeOptionsImpl _$$IdTypeOptionsImplFromJson(Map<String, dynamic> json) =>

@@ -38,7 +38,7 @@ class BoundarySelectionPage extends LocalizedStatefulWidget {
 class _BoundarySelectionPageState
     extends LocalizedState<BoundarySelectionPage> {
   bool shouldPop = false;
-  Map<String, FormControl<BoundaryModel>> formControls = {};
+  Map<String, AbstractControl<dynamic>> formControls = {};
   int i = 0;
   int pendingSyncCount = 0;
   final clickedStatus = ValueNotifier<bool>(false);
@@ -183,24 +183,18 @@ class _BoundarySelectionPageState
                                     getBatchSize: (
                                       batchSize,
                                       projectId,
-                                      boundaryCode,
+                                      boundaries,
                                       pendingSyncCount,
-                                      boundaryName,
                                     ) =>
                                         context
                                             .read<BeneficiaryDownSyncBloc>()
                                             .add(
-                                              DownSyncCheckTotalCountEvent(
+                                              DownSyncAllBoundariesEvent(
                                                 projectId: context.projectId,
-                                                boundaryCode: selectedBoundary!
-                                                    .value!.code
-                                                    .toString(),
+                                                boundaries: boundaries,
+                                                batchSize: batchSize,
                                                 pendingSyncCount:
                                                     pendingSyncCount,
-                                                boundaryName: selectedBoundary
-                                                    .value!.name
-                                                    .toString(),
-                                                batchSize: batchSize,
                                               ),
                                             ),
                                     pendingSync: () => showDownloadDialog(
@@ -211,8 +205,8 @@ class _BoundarySelectionPageState
                                         ),
                                         projectId: context.projectId,
                                         appConfiguartion: appConfiguration,
-                                        boundary: selectedBoundary!.value!.code
-                                            .toString(),
+                                        boundaries:
+                                            state.selectedLastLevelBoundaries,
                                         content: localizations.translate(
                                           i18.syncDialog.pendingSyncContent,
                                         ),
@@ -220,9 +214,6 @@ class _BoundarySelectionPageState
                                             localizations.translate(
                                           i18.acknowledgementSuccess.goToHome,
                                         ),
-                                        boundaryName: selectedBoundary
-                                            .value!.name
-                                            .toString(),
                                       ),
                                       dialogType:
                                           DigitProgressDialogType.pendingSync,
@@ -242,9 +233,8 @@ class _BoundarySelectionPageState
                                           ),
                                           appConfiguartion: appConfiguration,
                                           projectId: context.projectId,
-                                          boundary: selectedBoundary!
-                                              .value!.code
-                                              .toString(),
+                                          boundaries: state
+                                              .selectedLastLevelBoundaries,
                                           batchSize: batchSize,
                                           totalCount: initialServerCount,
                                           content: localizations.translate(
@@ -268,9 +258,6 @@ class _BoundarySelectionPageState
                                                 : i18.acknowledgementSuccess
                                                     .goToHome,
                                           ),
-                                          boundaryName: selectedBoundary
-                                              .value!.name
-                                              .toString(),
                                         ),
                                         dialogType:
                                             DigitProgressDialogType.dataFound,
@@ -293,17 +280,13 @@ class _BoundarySelectionPageState
                                                   .dataDownloadInProgress,
                                             ),
                                             projectId: context.projectId,
-                                            boundary: selectedBoundary!
-                                                .value!.code
-                                                .toString(),
+                                            boundaries: state
+                                                .selectedLastLevelBoundaries,
                                             appConfiguartion: appConfiguration,
                                             syncCount: syncCount,
                                             totalCount: totalCount,
                                             prefixLabel: syncCount.toString(),
                                             suffixLabel: totalCount.toString(),
-                                            boundaryName: selectedBoundary
-                                                .value!.name
-                                                .toString(),
                                           ),
                                           dialogType: DigitProgressDialogType
                                               .inProgress,
@@ -376,8 +359,8 @@ class _BoundarySelectionPageState
                                         appConfiguartion: appConfiguration,
                                         projectId: context.projectId,
                                         pendingSyncCount: pendingSyncCount,
-                                        boundary: selectedBoundary!.value!.code
-                                            .toString(),
+                                        boundaries: state
+                                            .selectedLastLevelBoundaries,
                                         content: localizations.translate(
                                           i18.beneficiaryDetails
                                               .dataFoundContent,
@@ -391,9 +374,6 @@ class _BoundarySelectionPageState
                                           i18.beneficiaryDetails
                                               .proceedWithoutDownloading,
                                         ),
-                                        boundaryName: selectedBoundary
-                                            .value!.name
-                                            .toString(),
                                       ),
                                       dialogType:
                                           DigitProgressDialogType.failed,
@@ -410,8 +390,8 @@ class _BoundarySelectionPageState
                                         appConfiguartion: appConfiguration,
                                         projectId: context.projectId,
                                         pendingSyncCount: pendingSyncCount,
-                                        boundary: selectedBoundary!.value!.code
-                                            .toString(),
+                                        boundaries: state
+                                            .selectedLastLevelBoundaries,
                                         primaryButtonLabel:
                                             localizations.translate(
                                           i18.syncDialog.retryButtonLabel,
@@ -421,9 +401,6 @@ class _BoundarySelectionPageState
                                           i18.beneficiaryDetails
                                               .proceedWithoutDownloading,
                                         ),
-                                        boundaryName: selectedBoundary
-                                            .value!.name
-                                            .toString(),
                                       ),
                                       dialogType:
                                           DigitProgressDialogType.checkFailed,
@@ -443,21 +420,105 @@ class _BoundarySelectionPageState
                                               .insufficientStorageContent),
                                           projectId: context.projectId,
                                           appConfiguartion: appConfiguration,
-                                          boundary: selectedBoundary!
-                                              .value!.code
-                                              .toString(),
+                                          boundaries: state
+                                              .selectedLastLevelBoundaries,
                                           primaryButtonLabel:
                                               localizations.translate(
                                             i18.common.coreCommonOk,
                                           ),
-                                          boundaryName: selectedBoundary
-                                              .value!.name
-                                              .toString(),
                                         ),
                                         dialogType: DigitProgressDialogType
                                             .insufficientStorage,
                                         isPop: true,
                                       );
+                                    },
+                                    multiBoundaryInProgress: (
+                                      currentIndex,
+                                      totalBoundaries,
+                                      boundaryName,
+                                      syncCount,
+                                      totalCount,
+                                    ) {
+                                      downloadProgress.add(
+                                        min(
+                                          (syncCount) /
+                                              (totalCount == 0
+                                                  ? 1
+                                                  : totalCount),
+                                          1,
+                                        ),
+                                      );
+                                      if (syncCount < 1 && currentIndex == 0) {
+                                        showDownloadDialog(
+                                          context,
+                                          model: DownloadBeneficiary(
+                                            title: localizations.translate(
+                                              i18.beneficiaryDetails
+                                                  .dataDownloadInProgress,
+                                            ),
+                                            projectId: context.projectId,
+                                            boundaries: state
+                                                .selectedLastLevelBoundaries,
+                                            appConfiguartion: appConfiguration,
+                                            syncCount: syncCount,
+                                            totalCount: totalCount,
+                                            prefixLabel:
+                                                '${currentIndex + 1}/$totalBoundaries',
+                                            suffixLabel: totalCount.toString(),
+                                          ),
+                                          dialogType: DigitProgressDialogType
+                                              .inProgress,
+                                          isPop: true,
+                                          downloadProgressController:
+                                              downloadProgress,
+                                        );
+                                      }
+                                    },
+                                    multiBoundarySuccess: (results) {
+                                      final now =
+                                          DateTime.now().millisecondsSinceEpoch;
+                                      String date =
+                                          '${DigitDateUtils.getTimeFromTimestamp(now)} on ${DigitDateUtils.getDateFromTimestamp(now)}';
+                                      int totalRecords = results.fold(
+                                          0,
+                                          (sum, r) =>
+                                              sum + (r.totalCount ?? 0));
+                                      String boundaryNames = results
+                                          .map((r) => localizations
+                                              .translate(r.locality ?? ''))
+                                          .join(', ');
+                                      Navigator.of(
+                                        context,
+                                        rootNavigator: true,
+                                      ).popUntil(
+                                        (route) => route is! PopupRoute,
+                                      );
+                                      context.router.popAndPush(
+                                          (AcknowledgementRoute(
+                                        isDataRecordSuccess: true,
+                                        description: '',
+                                        label: localizations.translate(i18
+                                            .acknowledgementSuccess
+                                            .dataDownloadedSuccessLabel),
+                                        descriptionTableData: {
+                                          localizations.translate(
+                                            i18.beneficiaryDetails.boundary,
+                                          ): boundaryNames,
+                                          localizations.translate(
+                                            i18.beneficiaryDetails.status,
+                                          ): localizations.translate(
+                                            i18.beneficiaryDetails
+                                                .downloadcompleted,
+                                          ),
+                                          localizations.translate(
+                                            i18.beneficiaryDetails.downloadtime,
+                                          ): date,
+                                          localizations.translate(
+                                            i18.beneficiaryDetails
+                                                .totalrecorddownload,
+                                          ): '$totalRecords/$totalRecords',
+                                        },
+                                      )));
                                     },
                                   );
                                 });
@@ -472,7 +533,9 @@ class _BoundarySelectionPageState
                                           return DigitButton(
                                             mainAxisSize: MainAxisSize.max,
                                             isDisabled:
-                                                selectedBoundary == null ||
+                                                (selectedBoundary == null &&
+                                                    state.selectedLastLevelBoundaries
+                                                        .isEmpty) ||
                                                     isClicked,
                                             label: localizations.translate(
                                               i18.common.coreCommonSubmit,
@@ -518,16 +581,12 @@ class _BoundarySelectionPageState
                                                             ],
                                                             projectId: context
                                                                 .projectId,
-                                                            boundaryCode:
-                                                                selectedBoundary!
-                                                                    .value!.code
-                                                                    .toString(),
+                                                            boundaries: context
+                                                                .read<BoundaryBloc>()
+                                                                .state
+                                                                .selectedLastLevelBoundaries,
                                                             pendingSyncCount:
                                                                 pendingSyncCount,
-                                                            boundaryName:
-                                                                selectedBoundary
-                                                                    .value!.name
-                                                                    .toString(),
                                                           ),
                                                         );
                                                   } else {
@@ -603,6 +662,10 @@ class _BoundarySelectionPageState
                                           return false;
                                         }).toList();
 
+                                        final isLastLevel =
+                                            labelIndex ==
+                                                labelList.length - 1;
+
                                         return Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 0, vertical: spacer2),
@@ -620,8 +683,103 @@ class _BoundarySelectionPageState
                                               label: localizations.translate(
                                                   '${envConfig.variables.hierarchyType}_$label'),
                                               isRequired: true,
-                                              child:
-                                                  DigitDropdown<BoundaryModel>(
+                                              child: isLastLevel
+                                                  ? MultiSelectDropDown(
+                                                      sentenceCaseEnabled:
+                                                          false,
+                                                      maxItems: appConfiguration
+                                                          .boundaryLastLevelMaxSelection ?? 3,
+                                                      maxItemWarningCallback: () {
+                                                        Toast.showToast(
+                                                          context,
+                                                          message: localizations
+                                                              .translate(i18
+                                                                  .common
+                                                                  .maxBoundarySelectionReached),
+                                                          type: ToastType.error,
+                                                        );
+                                                      },
+                                                      isDisabled:
+                                                          labelIndex != 0 &&
+                                                              formControls[labelList[
+                                                                          labelIndex -
+                                                                              1]]
+                                                                      ?.value ==
+                                                                  null,
+                                                      emptyItemText:
+                                                          localizations
+                                                              .translate(
+                                                        i18.common
+                                                            .noMatchFound,
+                                                      ),
+                                                      errorMessage: form
+                                                              .control(label)
+                                                              .hasErrors
+                                                          ? localizations
+                                                              .translate(
+                                                              i18.common
+                                                                  .corecommonRequired,
+                                                            )
+                                                          : null,
+                                                      options: filteredItems
+                                                          .map((e) =>
+                                                              DropdownItem(
+                                                                name: localizations
+                                                                    .translate(
+                                                                        e.code ??
+                                                                            'No Value'),
+                                                                code:
+                                                                    e.code ??
+                                                                        '',
+                                                              ))
+                                                          .toList(),
+                                                      initialOptions: state
+                                                          .selectedLastLevelBoundaries
+                                                          .map((e) =>
+                                                              DropdownItem(
+                                                                name: localizations
+                                                                    .translate(
+                                                                        e.code ??
+                                                                            'No Value'),
+                                                                code:
+                                                                    e.code ??
+                                                                        '',
+                                                              ))
+                                                          .toList(),
+                                                      onOptionSelected:
+                                                          (selectedValues) {
+                                                        final boundaries =
+                                                            selectedValues
+                                                                .map((v) =>
+                                                                    filteredItems
+                                                                        .firstWhere(
+                                                                      (b) =>
+                                                                          b.code ==
+                                                                          v.code,
+                                                                    ))
+                                                                .toList();
+                                                        (formControls[label]
+                                                                as FormControl<
+                                                                    List<BoundaryModel>>)
+                                                            .updateValue(
+                                                                boundaries
+                                                                        .isNotEmpty
+                                                                    ? boundaries
+                                                                    : null);
+                                                        context
+                                                            .read<
+                                                                BoundaryBloc>()
+                                                            .add(
+                                                              BoundaryMultiSelectEvent(
+                                                                label: label,
+                                                                selectedBoundaries:
+                                                                    boundaries,
+                                                              ),
+                                                            );
+                                                      },
+                                                    )
+                                                  : DigitDropdown<
+                                                      BoundaryModel>(
                                                 onTap: () {
                                                   setState(() {
                                                     resetChildDropdowns(
@@ -673,7 +831,6 @@ class _BoundarySelectionPageState
                                                   formControls[label]
                                                       ?.updateValue(
                                                           selectedBoundary);
-                                                  // Call the resetChildDropdowns function when a parent dropdown is selected
                                                   resetChildDropdowns(
                                                       label, state);
                                                 },
@@ -756,6 +913,13 @@ class _BoundarySelectionPageState
       final label = labelList[i];
       formControls[label]?.updateValue(null);
     }
+    // Clear multi-select state when any parent changes
+    context.read<BoundaryBloc>().add(
+          BoundaryMultiSelectEvent(
+            label: labelList.last,
+            selectedBoundaries: [],
+          ),
+        );
   }
 
   FormGroup buildForm(BoundaryState state, AppConfiguration appConfiguration) {
@@ -777,31 +941,36 @@ class _BoundarySelectionPageState
                   element.value == AppSharedPreferences().getSelectedLocale),
               code: AppSharedPreferences().getSelectedLocale!));
     }
-    for (final label in labelList) {
-      formControls[label] = FormControl<BoundaryModel>(
-        value: state.selectedBoundaryMap[label],
-      );
+    for (int i = 0; i < labelList.length; i++) {
+      final label = labelList[i];
+      final isLastLevel = i == labelList.length - 1;
+
+      if (isLastLevel) {
+        formControls[label] = FormControl<List<BoundaryModel>>(
+          value: state.selectedLastLevelBoundaries.isNotEmpty
+              ? state.selectedLastLevelBoundaries
+              : null,
+        );
+      } else {
+        formControls[label] = FormControl<BoundaryModel>(
+          value: state.selectedBoundaryMap[label],
+        );
+      }
     }
 
     return fb.group(formControls);
   }
 
   bool validateAllBoundarySelection() {
-    // Iterate through the map entries
     for (final entry in formControls.entries) {
-      // Access the form control
       final formControl = entry.value;
 
-      // Check if the form control value is null
       if (formControl.value == null) {
         formControl.setErrors({'': true});
-
-        // Return true if any form control has a null value
         return true;
       }
     }
 
-    // Return false if none of the form controls have a null value
     return false;
   }
 

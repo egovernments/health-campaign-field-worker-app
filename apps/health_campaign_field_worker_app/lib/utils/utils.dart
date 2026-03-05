@@ -261,9 +261,8 @@ void showDownloadDialog(
                     DownSyncGetBatchSizeEvent(
                       appConfiguration: [model.appConfiguartion!],
                       projectId: context.projectId,
-                      boundaryCode: model.boundary,
+                      boundaries: model.boundaries,
                       pendingSyncCount: model.pendingSyncCount ?? 0,
-                      boundaryName: model.boundaryName,
                     ),
                   );
             } else {
@@ -306,13 +305,10 @@ void showDownloadDialog(
                   } else {
                     if ((model.totalCount ?? 0) > 0) {
                       context.read<BeneficiaryDownSyncBloc>().add(
-                            DownSyncBeneficiaryEvent(
+                            DownSyncDownloadAllEvent(
                               projectId: context.projectId,
-                              boundaryCode: model.boundary,
-                              // Batch Size need to be defined based on Internet speed.
+                              boundaries: model.boundaries,
                               batchSize: model.batchSize ?? 1,
-                              initialServerCount: model.totalCount ?? 0,
-                              boundaryName: model.boundaryName,
                             ),
                           );
                     } else {

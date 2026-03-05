@@ -41,164 +41,169 @@ const AppConfigurationSchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'BeneficiaryIdConfig',
     ),
-    r'CALL_SUPPORT': PropertySchema(
+    r'BOUNDARY_LAST_LEVEL_MAX_SELECTION': PropertySchema(
       id: 4,
+      name: r'BOUNDARY_LAST_LEVEL_MAX_SELECTION',
+      type: IsarType.long,
+    ),
+    r'CALL_SUPPORT': PropertySchema(
+      id: 5,
       name: r'CALL_SUPPORT',
       type: IsarType.objectList,
       target: r'CallSupportList',
     ),
     r'CHECKLIST_TYPES': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'CHECKLIST_TYPES',
       type: IsarType.objectList,
       target: r'ChecklistTypes',
     ),
     r'COMPLAINT_TYPES': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'COMPLAINT_TYPES',
       type: IsarType.objectList,
       target: r'ComplaintTypes',
     ),
     r'DELIVERY_COMMENT_OPTIONS_POPULATOR': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'DELIVERY_COMMENT_OPTIONS_POPULATOR',
       type: IsarType.objectList,
       target: r'DeliveryCommentOptions',
     ),
     r'DOWNSYNC-BANDWIDTH_BATCH_SIZE': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'DOWNSYNC-BANDWIDTH_BATCH_SIZE',
       type: IsarType.objectList,
       target: r'BandwidthBatchSize',
     ),
     r'FIREBASE_CONFIG': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'FIREBASE_CONFIG',
       type: IsarType.object,
       target: r'FirebaseConfig',
     ),
     r'GENDER_OPTIONS_POPULATOR': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'GENDER_OPTIONS_POPULATOR',
       type: IsarType.objectList,
       target: r'GenderOptions',
     ),
     r'HOUSEHOLD_DELETION_REASON_OPTIONS': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'HOUSEHOLD_DELETION_REASON_OPTIONS',
       type: IsarType.objectList,
       target: r'HouseholdDeletionReasonOptions',
     ),
     r'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS',
       type: IsarType.objectList,
       target: r'HouseholdMemberDeletionReasonOptions',
     ),
     r'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES',
       type: IsarType.objectList,
       target: r'RelationShipTypeOptions',
     ),
     r'ID_TYPE_OPTIONS_POPULATOR': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'ID_TYPE_OPTIONS_POPULATOR',
       type: IsarType.objectList,
       target: r'IdTypeOptions',
     ),
     r'LANGUAGES': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'LANGUAGES',
       type: IsarType.objectList,
       target: r'Languages',
     ),
     r'NETWORK_DETECTION': PropertySchema(
-      id: 16,
+      id: 17,
       name: r'NETWORK_DETECTION',
       type: IsarType.string,
     ),
     r'PERSISTENCE_MODE': PropertySchema(
-      id: 17,
+      id: 18,
       name: r'PERSISTENCE_MODE',
       type: IsarType.string,
     ),
     r'PROXIMITY_SEARCH_RANGE': PropertySchema(
-      id: 18,
+      id: 19,
       name: r'PROXIMITY_SEARCH_RANGE',
       type: IsarType.double,
     ),
     r'SEARCH_CLF_FILTERS': PropertySchema(
-      id: 19,
+      id: 20,
       name: r'SEARCH_CLF_FILTERS',
       type: IsarType.objectList,
       target: r'SearchCLFFilters',
     ),
     r'SEARCH_HOUSEHOLD_FILTERS': PropertySchema(
-      id: 20,
+      id: 21,
       name: r'SEARCH_HOUSEHOLD_FILTERS',
       type: IsarType.objectList,
       target: r'SearchHouseHoldFilters',
     ),
     r'SYNC_METHOD': PropertySchema(
-      id: 21,
+      id: 22,
       name: r'SYNC_METHOD',
       type: IsarType.string,
     ),
     r'SYNC_TRIGGER': PropertySchema(
-      id: 22,
+      id: 23,
       name: r'SYNC_TRIGGER',
       type: IsarType.string,
     ),
     r'TENANT_ID': PropertySchema(
-      id: 23,
+      id: 24,
       name: r'TENANT_ID',
       type: IsarType.string,
     ),
     r'TRANSIT_POST_TYPE': PropertySchema(
-      id: 24,
+      id: 25,
       name: r'TRANSIT_POST_TYPE',
       type: IsarType.objectList,
       target: r'TransitPostType',
     ),
     r'TRANSPORT_TYPES': PropertySchema(
-      id: 25,
+      id: 26,
       name: r'TRANSPORT_TYPES',
       type: IsarType.objectList,
       target: r'TransportTypes',
     ),
     r'houseStructureTypes': PropertySchema(
-      id: 26,
+      id: 27,
       name: r'houseStructureTypes',
       type: IsarType.objectList,
       target: r'HouseStructureTypes',
     ),
     r'manualAttendanceReasons': PropertySchema(
-      id: 27,
+      id: 28,
       name: r'manualAttendanceReasons',
       type: IsarType.objectList,
       target: r'ManualAttendanceReasons',
     ),
     r'privacyPolicyConfig': PropertySchema(
-      id: 28,
+      id: 29,
       name: r'privacyPolicyConfig',
       type: IsarType.object,
       target: r'PrivacyPolicy',
     ),
     r'referralReasons': PropertySchema(
-      id: 29,
+      id: 30,
       name: r'referralReasons',
       type: IsarType.objectList,
       target: r'ReferralReasons',
     ),
     r'refusalReasons': PropertySchema(
-      id: 30,
+      id: 31,
       name: r'refusalReasons',
       type: IsarType.objectList,
       target: r'RefusalReasons',
     ),
     r'symptomsTypes': PropertySchema(
-      id: 31,
+      id: 32,
       name: r'symptomsTypes',
       type: IsarType.objectList,
       target: r'SymptomsTypes',
@@ -659,140 +664,141 @@ void _appConfigurationSerialize(
     BeneficiaryIdConfigSchema.serialize,
     object.beneficiaryIdConfig,
   );
+  writer.writeLong(offsets[4], object.boundaryLastLevelMaxSelection);
   writer.writeObjectList<CallSupportList>(
-    offsets[4],
+    offsets[5],
     allOffsets,
     CallSupportListSchema.serialize,
     object.callSupportOptions,
   );
   writer.writeObjectList<ChecklistTypes>(
-    offsets[5],
+    offsets[6],
     allOffsets,
     ChecklistTypesSchema.serialize,
     object.checklistTypes,
   );
   writer.writeObjectList<ComplaintTypes>(
-    offsets[6],
+    offsets[7],
     allOffsets,
     ComplaintTypesSchema.serialize,
     object.complaintTypes,
   );
   writer.writeObjectList<DeliveryCommentOptions>(
-    offsets[7],
+    offsets[8],
     allOffsets,
     DeliveryCommentOptionsSchema.serialize,
     object.deliveryCommentOptions,
   );
   writer.writeObjectList<BandwidthBatchSize>(
-    offsets[8],
+    offsets[9],
     allOffsets,
     BandwidthBatchSizeSchema.serialize,
     object.downSyncBandwidthBatchSize,
   );
   writer.writeObject<FirebaseConfig>(
-    offsets[9],
+    offsets[10],
     allOffsets,
     FirebaseConfigSchema.serialize,
     object.firebaseConfig,
   );
   writer.writeObjectList<GenderOptions>(
-    offsets[10],
+    offsets[11],
     allOffsets,
     GenderOptionsSchema.serialize,
     object.genderOptions,
   );
   writer.writeObjectList<HouseholdDeletionReasonOptions>(
-    offsets[11],
+    offsets[12],
     allOffsets,
     HouseholdDeletionReasonOptionsSchema.serialize,
     object.householdDeletionReasonOptions,
   );
   writer.writeObjectList<HouseholdMemberDeletionReasonOptions>(
-    offsets[12],
+    offsets[13],
     allOffsets,
     HouseholdMemberDeletionReasonOptionsSchema.serialize,
     object.householdMemberDeletionReasonOptions,
   );
   writer.writeObjectList<RelationShipTypeOptions>(
-    offsets[13],
+    offsets[14],
     allOffsets,
     RelationShipTypeOptionsSchema.serialize,
     object.relationShipTypeOptions,
   );
   writer.writeObjectList<IdTypeOptions>(
-    offsets[14],
+    offsets[15],
     allOffsets,
     IdTypeOptionsSchema.serialize,
     object.idTypeOptions,
   );
   writer.writeObjectList<Languages>(
-    offsets[15],
+    offsets[16],
     allOffsets,
     LanguagesSchema.serialize,
     object.languages,
   );
-  writer.writeString(offsets[16], object.networkDetection);
-  writer.writeString(offsets[17], object.persistenceMode);
-  writer.writeDouble(offsets[18], object.maxRadius);
+  writer.writeString(offsets[17], object.networkDetection);
+  writer.writeString(offsets[18], object.persistenceMode);
+  writer.writeDouble(offsets[19], object.maxRadius);
   writer.writeObjectList<SearchCLFFilters>(
-    offsets[19],
+    offsets[20],
     allOffsets,
     SearchCLFFiltersSchema.serialize,
     object.searchCLFFilters,
   );
   writer.writeObjectList<SearchHouseHoldFilters>(
-    offsets[20],
+    offsets[21],
     allOffsets,
     SearchHouseHoldFiltersSchema.serialize,
     object.searchHouseHoldFilters,
   );
-  writer.writeString(offsets[21], object.syncMethod);
-  writer.writeString(offsets[22], object.syncTrigger);
-  writer.writeString(offsets[23], object.tenantId);
+  writer.writeString(offsets[22], object.syncMethod);
+  writer.writeString(offsets[23], object.syncTrigger);
+  writer.writeString(offsets[24], object.tenantId);
   writer.writeObjectList<TransitPostType>(
-    offsets[24],
+    offsets[25],
     allOffsets,
     TransitPostTypeSchema.serialize,
     object.transitPostType,
   );
   writer.writeObjectList<TransportTypes>(
-    offsets[25],
+    offsets[26],
     allOffsets,
     TransportTypesSchema.serialize,
     object.transportTypes,
   );
   writer.writeObjectList<HouseStructureTypes>(
-    offsets[26],
+    offsets[27],
     allOffsets,
     HouseStructureTypesSchema.serialize,
     object.houseStructureTypes,
   );
   writer.writeObjectList<ManualAttendanceReasons>(
-    offsets[27],
+    offsets[28],
     allOffsets,
     ManualAttendanceReasonsSchema.serialize,
     object.manualAttendanceReasons,
   );
   writer.writeObject<PrivacyPolicy>(
-    offsets[28],
+    offsets[29],
     allOffsets,
     PrivacyPolicySchema.serialize,
     object.privacyPolicyConfig,
   );
   writer.writeObjectList<ReferralReasons>(
-    offsets[29],
+    offsets[30],
     allOffsets,
     ReferralReasonsSchema.serialize,
     object.referralReasons,
   );
   writer.writeObjectList<RefusalReasons>(
-    offsets[30],
+    offsets[31],
     allOffsets,
     RefusalReasonsSchema.serialize,
     object.refusalReasons,
   );
   writer.writeObjectList<SymptomsTypes>(
-    offsets[31],
+    offsets[32],
     allOffsets,
     SymptomsTypesSchema.serialize,
     object.symptomsTypes,
@@ -829,112 +835,113 @@ AppConfiguration _appConfigurationDeserialize(
     allOffsets,
     BeneficiaryIdConfig(),
   );
+  object.boundaryLastLevelMaxSelection = reader.readLongOrNull(offsets[4]);
   object.callSupportOptions = reader.readObjectList<CallSupportList>(
-    offsets[4],
+    offsets[5],
     CallSupportListSchema.deserialize,
     allOffsets,
     CallSupportList(),
   );
   object.checklistTypes = reader.readObjectList<ChecklistTypes>(
-    offsets[5],
+    offsets[6],
     ChecklistTypesSchema.deserialize,
     allOffsets,
     ChecklistTypes(),
   );
   object.complaintTypes = reader.readObjectList<ComplaintTypes>(
-    offsets[6],
+    offsets[7],
     ComplaintTypesSchema.deserialize,
     allOffsets,
     ComplaintTypes(),
   );
   object.deliveryCommentOptions = reader.readObjectList<DeliveryCommentOptions>(
-    offsets[7],
+    offsets[8],
     DeliveryCommentOptionsSchema.deserialize,
     allOffsets,
     DeliveryCommentOptions(),
   );
   object.downSyncBandwidthBatchSize = reader.readObjectList<BandwidthBatchSize>(
-    offsets[8],
+    offsets[9],
     BandwidthBatchSizeSchema.deserialize,
     allOffsets,
     BandwidthBatchSize(),
   );
   object.firebaseConfig = reader.readObjectOrNull<FirebaseConfig>(
-    offsets[9],
+    offsets[10],
     FirebaseConfigSchema.deserialize,
     allOffsets,
   );
   object.genderOptions = reader.readObjectList<GenderOptions>(
-    offsets[10],
+    offsets[11],
     GenderOptionsSchema.deserialize,
     allOffsets,
     GenderOptions(),
   );
   object.householdDeletionReasonOptions =
       reader.readObjectList<HouseholdDeletionReasonOptions>(
-    offsets[11],
+    offsets[12],
     HouseholdDeletionReasonOptionsSchema.deserialize,
     allOffsets,
     HouseholdDeletionReasonOptions(),
   );
   object.householdMemberDeletionReasonOptions =
       reader.readObjectList<HouseholdMemberDeletionReasonOptions>(
-    offsets[12],
+    offsets[13],
     HouseholdMemberDeletionReasonOptionsSchema.deserialize,
     allOffsets,
     HouseholdMemberDeletionReasonOptions(),
   );
   object.relationShipTypeOptions =
       reader.readObjectList<RelationShipTypeOptions>(
-    offsets[13],
+    offsets[14],
     RelationShipTypeOptionsSchema.deserialize,
     allOffsets,
     RelationShipTypeOptions(),
   );
   object.idTypeOptions = reader.readObjectList<IdTypeOptions>(
-    offsets[14],
+    offsets[15],
     IdTypeOptionsSchema.deserialize,
     allOffsets,
     IdTypeOptions(),
   );
   object.languages = reader.readObjectList<Languages>(
-    offsets[15],
+    offsets[16],
     LanguagesSchema.deserialize,
     allOffsets,
     Languages(),
   );
-  object.networkDetection = reader.readStringOrNull(offsets[16]);
-  object.persistenceMode = reader.readStringOrNull(offsets[17]);
-  object.maxRadius = reader.readDoubleOrNull(offsets[18]);
+  object.networkDetection = reader.readStringOrNull(offsets[17]);
+  object.persistenceMode = reader.readStringOrNull(offsets[18]);
+  object.maxRadius = reader.readDoubleOrNull(offsets[19]);
   object.searchCLFFilters = reader.readObjectList<SearchCLFFilters>(
-    offsets[19],
+    offsets[20],
     SearchCLFFiltersSchema.deserialize,
     allOffsets,
     SearchCLFFilters(),
   );
   object.searchHouseHoldFilters = reader.readObjectList<SearchHouseHoldFilters>(
-    offsets[20],
+    offsets[21],
     SearchHouseHoldFiltersSchema.deserialize,
     allOffsets,
     SearchHouseHoldFilters(),
   );
-  object.syncMethod = reader.readStringOrNull(offsets[21]);
-  object.syncTrigger = reader.readStringOrNull(offsets[22]);
-  object.tenantId = reader.readStringOrNull(offsets[23]);
+  object.syncMethod = reader.readStringOrNull(offsets[22]);
+  object.syncTrigger = reader.readStringOrNull(offsets[23]);
+  object.tenantId = reader.readStringOrNull(offsets[24]);
   object.transitPostType = reader.readObjectList<TransitPostType>(
-    offsets[24],
+    offsets[25],
     TransitPostTypeSchema.deserialize,
     allOffsets,
     TransitPostType(),
   );
   object.transportTypes = reader.readObjectList<TransportTypes>(
-    offsets[25],
+    offsets[26],
     TransportTypesSchema.deserialize,
     allOffsets,
     TransportTypes(),
   );
   object.houseStructureTypes = reader.readObjectList<HouseStructureTypes>(
-    offsets[26],
+    offsets[27],
     HouseStructureTypesSchema.deserialize,
     allOffsets,
     HouseStructureTypes(),
@@ -942,30 +949,30 @@ AppConfiguration _appConfigurationDeserialize(
   object.id = id;
   object.manualAttendanceReasons =
       reader.readObjectList<ManualAttendanceReasons>(
-    offsets[27],
+    offsets[28],
     ManualAttendanceReasonsSchema.deserialize,
     allOffsets,
     ManualAttendanceReasons(),
   );
   object.privacyPolicyConfig = reader.readObjectOrNull<PrivacyPolicy>(
-    offsets[28],
+    offsets[29],
     PrivacyPolicySchema.deserialize,
     allOffsets,
   );
   object.referralReasons = reader.readObjectList<ReferralReasons>(
-    offsets[29],
+    offsets[30],
     ReferralReasonsSchema.deserialize,
     allOffsets,
     ReferralReasons(),
   );
   object.refusalReasons = reader.readObjectList<RefusalReasons>(
-    offsets[30],
+    offsets[31],
     RefusalReasonsSchema.deserialize,
     allOffsets,
     RefusalReasons(),
   );
   object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
-    offsets[31],
+    offsets[32],
     SymptomsTypesSchema.deserialize,
     allOffsets,
     SymptomsTypes(),
@@ -1007,163 +1014,165 @@ P _appConfigurationDeserializeProp<P>(
         BeneficiaryIdConfig(),
       )) as P;
     case 4:
+      return (reader.readLongOrNull(offset)) as P;
+    case 5:
       return (reader.readObjectList<CallSupportList>(
         offset,
         CallSupportListSchema.deserialize,
         allOffsets,
         CallSupportList(),
       )) as P;
-    case 5:
+    case 6:
       return (reader.readObjectList<ChecklistTypes>(
         offset,
         ChecklistTypesSchema.deserialize,
         allOffsets,
         ChecklistTypes(),
       )) as P;
-    case 6:
+    case 7:
       return (reader.readObjectList<ComplaintTypes>(
         offset,
         ComplaintTypesSchema.deserialize,
         allOffsets,
         ComplaintTypes(),
       )) as P;
-    case 7:
+    case 8:
       return (reader.readObjectList<DeliveryCommentOptions>(
         offset,
         DeliveryCommentOptionsSchema.deserialize,
         allOffsets,
         DeliveryCommentOptions(),
       )) as P;
-    case 8:
+    case 9:
       return (reader.readObjectList<BandwidthBatchSize>(
         offset,
         BandwidthBatchSizeSchema.deserialize,
         allOffsets,
         BandwidthBatchSize(),
       )) as P;
-    case 9:
+    case 10:
       return (reader.readObjectOrNull<FirebaseConfig>(
         offset,
         FirebaseConfigSchema.deserialize,
         allOffsets,
       )) as P;
-    case 10:
+    case 11:
       return (reader.readObjectList<GenderOptions>(
         offset,
         GenderOptionsSchema.deserialize,
         allOffsets,
         GenderOptions(),
       )) as P;
-    case 11:
+    case 12:
       return (reader.readObjectList<HouseholdDeletionReasonOptions>(
         offset,
         HouseholdDeletionReasonOptionsSchema.deserialize,
         allOffsets,
         HouseholdDeletionReasonOptions(),
       )) as P;
-    case 12:
+    case 13:
       return (reader.readObjectList<HouseholdMemberDeletionReasonOptions>(
         offset,
         HouseholdMemberDeletionReasonOptionsSchema.deserialize,
         allOffsets,
         HouseholdMemberDeletionReasonOptions(),
       )) as P;
-    case 13:
+    case 14:
       return (reader.readObjectList<RelationShipTypeOptions>(
         offset,
         RelationShipTypeOptionsSchema.deserialize,
         allOffsets,
         RelationShipTypeOptions(),
       )) as P;
-    case 14:
+    case 15:
       return (reader.readObjectList<IdTypeOptions>(
         offset,
         IdTypeOptionsSchema.deserialize,
         allOffsets,
         IdTypeOptions(),
       )) as P;
-    case 15:
+    case 16:
       return (reader.readObjectList<Languages>(
         offset,
         LanguagesSchema.deserialize,
         allOffsets,
         Languages(),
       )) as P;
-    case 16:
-      return (reader.readStringOrNull(offset)) as P;
     case 17:
       return (reader.readStringOrNull(offset)) as P;
     case 18:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 19:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 20:
       return (reader.readObjectList<SearchCLFFilters>(
         offset,
         SearchCLFFiltersSchema.deserialize,
         allOffsets,
         SearchCLFFilters(),
       )) as P;
-    case 20:
+    case 21:
       return (reader.readObjectList<SearchHouseHoldFilters>(
         offset,
         SearchHouseHoldFiltersSchema.deserialize,
         allOffsets,
         SearchHouseHoldFilters(),
       )) as P;
-    case 21:
-      return (reader.readStringOrNull(offset)) as P;
     case 22:
       return (reader.readStringOrNull(offset)) as P;
     case 23:
       return (reader.readStringOrNull(offset)) as P;
     case 24:
+      return (reader.readStringOrNull(offset)) as P;
+    case 25:
       return (reader.readObjectList<TransitPostType>(
         offset,
         TransitPostTypeSchema.deserialize,
         allOffsets,
         TransitPostType(),
       )) as P;
-    case 25:
+    case 26:
       return (reader.readObjectList<TransportTypes>(
         offset,
         TransportTypesSchema.deserialize,
         allOffsets,
         TransportTypes(),
       )) as P;
-    case 26:
+    case 27:
       return (reader.readObjectList<HouseStructureTypes>(
         offset,
         HouseStructureTypesSchema.deserialize,
         allOffsets,
         HouseStructureTypes(),
       )) as P;
-    case 27:
+    case 28:
       return (reader.readObjectList<ManualAttendanceReasons>(
         offset,
         ManualAttendanceReasonsSchema.deserialize,
         allOffsets,
         ManualAttendanceReasons(),
       )) as P;
-    case 28:
+    case 29:
       return (reader.readObjectOrNull<PrivacyPolicy>(
         offset,
         PrivacyPolicySchema.deserialize,
         allOffsets,
       )) as P;
-    case 29:
+    case 30:
       return (reader.readObjectList<ReferralReasons>(
         offset,
         ReferralReasonsSchema.deserialize,
         allOffsets,
         ReferralReasons(),
       )) as P;
-    case 30:
+    case 31:
       return (reader.readObjectList<RefusalReasons>(
         offset,
         RefusalReasonsSchema.deserialize,
         allOffsets,
         RefusalReasons(),
       )) as P;
-    case 31:
+    case 32:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
         SymptomsTypesSchema.deserialize,
@@ -1516,6 +1525,80 @@ extension AppConfigurationQueryFilter
         upper,
         includeUpper,
       );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      boundaryLastLevelMaxSelectionIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'BOUNDARY_LAST_LEVEL_MAX_SELECTION',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      boundaryLastLevelMaxSelectionIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'BOUNDARY_LAST_LEVEL_MAX_SELECTION',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      boundaryLastLevelMaxSelectionEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'BOUNDARY_LAST_LEVEL_MAX_SELECTION',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      boundaryLastLevelMaxSelectionGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'BOUNDARY_LAST_LEVEL_MAX_SELECTION',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      boundaryLastLevelMaxSelectionLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'BOUNDARY_LAST_LEVEL_MAX_SELECTION',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      boundaryLastLevelMaxSelectionBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'BOUNDARY_LAST_LEVEL_MAX_SELECTION',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
     });
   }
 
@@ -4799,6 +4882,20 @@ extension AppConfigurationQueryLinks
 extension AppConfigurationQuerySortBy
     on QueryBuilder<AppConfiguration, AppConfiguration, QSortBy> {
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
+      sortByBoundaryLastLevelMaxSelection() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'BOUNDARY_LAST_LEVEL_MAX_SELECTION', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
+      sortByBoundaryLastLevelMaxSelectionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'BOUNDARY_LAST_LEVEL_MAX_SELECTION', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
       sortByNetworkDetection() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'NETWORK_DETECTION', Sort.asc);
@@ -4885,6 +4982,20 @@ extension AppConfigurationQuerySortBy
 
 extension AppConfigurationQuerySortThenBy
     on QueryBuilder<AppConfiguration, AppConfiguration, QSortThenBy> {
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
+      thenByBoundaryLastLevelMaxSelection() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'BOUNDARY_LAST_LEVEL_MAX_SELECTION', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
+      thenByBoundaryLastLevelMaxSelectionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'BOUNDARY_LAST_LEVEL_MAX_SELECTION', Sort.desc);
+    });
+  }
+
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
       thenByNetworkDetection() {
     return QueryBuilder.apply(this, (query) {
@@ -4986,6 +5097,13 @@ extension AppConfigurationQuerySortThenBy
 extension AppConfigurationQueryWhereDistinct
     on QueryBuilder<AppConfiguration, AppConfiguration, QDistinct> {
   QueryBuilder<AppConfiguration, AppConfiguration, QDistinct>
+      distinctByBoundaryLastLevelMaxSelection() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'BOUNDARY_LAST_LEVEL_MAX_SELECTION');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QDistinct>
       distinctByNetworkDetection({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'NETWORK_DETECTION',
@@ -5063,6 +5181,13 @@ extension AppConfigurationQueryProperty
       beneficiaryIdConfigProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'BENEFICIARY_ID_CONFIG');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, int?, QQueryOperations>
+      boundaryLastLevelMaxSelectionProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'BOUNDARY_LAST_LEVEL_MAX_SELECTION');
     });
   }
 

@@ -2912,6 +2912,8 @@ mixin _$AppConfig {
   String? get tenantId => throw _privateConstructorUsedError;
   @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
   double? get maxRadius => throw _privateConstructorUsedError;
+  @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+  int? get boundaryLastLevelMaxSelection => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -2930,7 +2932,9 @@ abstract class $AppConfigCopyWith<$Res> {
       @JsonKey(name: 'SYNC_METHOD') String syncMethod,
       @JsonKey(name: 'SYNC_TRIGGER') String syncTrigger,
       @JsonKey(name: 'TENANT_ID') String? tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius});
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius,
+      @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+      int? boundaryLastLevelMaxSelection});
 }
 
 /// @nodoc
@@ -2952,6 +2956,7 @@ class _$AppConfigCopyWithImpl<$Res, $Val extends AppConfig>
     Object? syncTrigger = null,
     Object? tenantId = freezed,
     Object? maxRadius = freezed,
+    Object? boundaryLastLevelMaxSelection = freezed,
   }) {
     return _then(_value.copyWith(
       networkDetection: null == networkDetection
@@ -2978,6 +2983,10 @@ class _$AppConfigCopyWithImpl<$Res, $Val extends AppConfig>
           ? _value.maxRadius
           : maxRadius // ignore: cast_nullable_to_non_nullable
               as double?,
+      boundaryLastLevelMaxSelection: freezed == boundaryLastLevelMaxSelection
+          ? _value.boundaryLastLevelMaxSelection
+          : boundaryLastLevelMaxSelection // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 }
@@ -2996,7 +3005,9 @@ abstract class _$$AppConfigImplCopyWith<$Res>
       @JsonKey(name: 'SYNC_METHOD') String syncMethod,
       @JsonKey(name: 'SYNC_TRIGGER') String syncTrigger,
       @JsonKey(name: 'TENANT_ID') String? tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius});
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius,
+      @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+      int? boundaryLastLevelMaxSelection});
 }
 
 /// @nodoc
@@ -3016,6 +3027,7 @@ class __$$AppConfigImplCopyWithImpl<$Res>
     Object? syncTrigger = null,
     Object? tenantId = freezed,
     Object? maxRadius = freezed,
+    Object? boundaryLastLevelMaxSelection = freezed,
   }) {
     return _then(_$AppConfigImpl(
       networkDetection: null == networkDetection
@@ -3042,6 +3054,10 @@ class __$$AppConfigImplCopyWithImpl<$Res>
           ? _value.maxRadius
           : maxRadius // ignore: cast_nullable_to_non_nullable
               as double?,
+      boundaryLastLevelMaxSelection: freezed == boundaryLastLevelMaxSelection
+          ? _value.boundaryLastLevelMaxSelection
+          : boundaryLastLevelMaxSelection // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -3055,7 +3071,9 @@ class _$AppConfigImpl implements _AppConfig {
       @JsonKey(name: 'SYNC_METHOD') required this.syncMethod,
       @JsonKey(name: 'SYNC_TRIGGER') required this.syncTrigger,
       @JsonKey(name: 'TENANT_ID') this.tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') this.maxRadius});
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') this.maxRadius,
+      @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+      this.boundaryLastLevelMaxSelection});
 
   factory _$AppConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$AppConfigImplFromJson(json);
@@ -3078,10 +3096,13 @@ class _$AppConfigImpl implements _AppConfig {
   @override
   @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
   final double? maxRadius;
+  @override
+  @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+  final int? boundaryLastLevelMaxSelection;
 
   @override
   String toString() {
-    return 'AppConfig(networkDetection: $networkDetection, persistenceMode: $persistenceMode, syncMethod: $syncMethod, syncTrigger: $syncTrigger, tenantId: $tenantId, maxRadius: $maxRadius)';
+    return 'AppConfig(networkDetection: $networkDetection, persistenceMode: $persistenceMode, syncMethod: $syncMethod, syncTrigger: $syncTrigger, tenantId: $tenantId, maxRadius: $maxRadius, boundaryLastLevelMaxSelection: $boundaryLastLevelMaxSelection)';
   }
 
   @override
@@ -3100,13 +3121,24 @@ class _$AppConfigImpl implements _AppConfig {
             (identical(other.tenantId, tenantId) ||
                 other.tenantId == tenantId) &&
             (identical(other.maxRadius, maxRadius) ||
-                other.maxRadius == maxRadius));
+                other.maxRadius == maxRadius) &&
+            (identical(other.boundaryLastLevelMaxSelection,
+                    boundaryLastLevelMaxSelection) ||
+                other.boundaryLastLevelMaxSelection ==
+                    boundaryLastLevelMaxSelection));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, networkDetection,
-      persistenceMode, syncMethod, syncTrigger, tenantId, maxRadius);
+  int get hashCode => Object.hash(
+      runtimeType,
+      networkDetection,
+      persistenceMode,
+      syncMethod,
+      syncTrigger,
+      tenantId,
+      maxRadius,
+      boundaryLastLevelMaxSelection);
 
   @JsonKey(ignore: true)
   @override
@@ -3130,8 +3162,9 @@ abstract class _AppConfig implements AppConfig {
       @JsonKey(name: 'SYNC_METHOD') required final String syncMethod,
       @JsonKey(name: 'SYNC_TRIGGER') required final String syncTrigger,
       @JsonKey(name: 'TENANT_ID') final String? tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
-      final double? maxRadius}) = _$AppConfigImpl;
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') final double? maxRadius,
+      @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+      final int? boundaryLastLevelMaxSelection}) = _$AppConfigImpl;
 
   factory _AppConfig.fromJson(Map<String, dynamic> json) =
       _$AppConfigImpl.fromJson;
@@ -3154,6 +3187,9 @@ abstract class _AppConfig implements AppConfig {
   @override
   @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
   double? get maxRadius;
+  @override
+  @JsonKey(name: 'BOUNDARY_LAST_LEVEL_MAX_SELECTION')
+  int? get boundaryLastLevelMaxSelection;
   @override
   @JsonKey(ignore: true)
   _$$AppConfigImplCopyWith<_$AppConfigImpl> get copyWith =>

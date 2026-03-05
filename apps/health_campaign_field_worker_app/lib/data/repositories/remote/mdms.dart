@@ -183,6 +183,8 @@ class MdmsRepository {
       ..syncTrigger = appConfig?.syncTrigger
       ..tenantId = appConfig?.tenantId
       ..maxRadius = appConfig?.maxRadius
+      ..boundaryLastLevelMaxSelection =
+          appConfig?.boundaryLastLevelMaxSelection
       ..backgroundServiceConfig = backgroundServiceConfig
       ..firebaseConfig = firebaseConfig;
 

@@ -92,6 +92,9 @@ class AppConfiguration {
   late List<HouseStructureTypes>? houseStructureTypes;
   late List<RefusalReasons>? refusalReasons;
   late PrivacyPolicy? privacyPolicyConfig;
+
+  @Name("BOUNDARY_LAST_LEVEL_MAX_SELECTION")
+  late int? boundaryLastLevelMaxSelection;
 }
 
 @embedded

@@ -422,8 +422,7 @@ enum DigitProgressDialogType {
 class DownloadBeneficiary {
   String title;
   String projectId;
-  String boundary;
-  String boundaryName;
+  List<BoundaryModel> boundaries;
   int? pendingSyncCount;
   int? syncCount;
   int? totalCount;
@@ -438,8 +437,7 @@ class DownloadBeneficiary {
   DownloadBeneficiary({
     required this.title,
     required this.projectId,
-    required this.boundary,
-    required this.boundaryName,
+    required this.boundaries,
     this.appConfiguartion,
     this.pendingSyncCount,
     this.batchSize,

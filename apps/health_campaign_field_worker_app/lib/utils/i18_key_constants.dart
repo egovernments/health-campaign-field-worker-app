@@ -169,6 +169,9 @@ class Common {
 
   String get noMatchFound => 'CORE_COMMON_NO_MATCH_FOUND';
 
+  String get maxBoundarySelectionReached =>
+      'CORE_COMMON_MAX_BOUNDARY_SELECTION_REACHED';
+
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
 
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
