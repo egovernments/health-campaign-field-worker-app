@@ -6,8 +6,10 @@ import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_flow_builder/widgets/localization_context.dart';
 import 'package:digit_flow_builder/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/ComponentTheme/digit_tag_theme.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
 import 'package:digit_ui_components/widgets/atoms/text_block.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
@@ -296,6 +298,12 @@ class LayoutRendererPageState extends LocalizedState<LayoutRendererPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Tag(
+                            label: localizations.translate(FlowBuilderSingleton().boundary?.name ?? ""),
+                            isIcon: true,
+                            type: TagType.monochrome,
+                            customIcon: Icon(Icons.location_on_outlined, color: Theme.of(context).colorTheme.alert.info, size: 16,),
+                          ),
                           DigitTextBlock(
                             padding: EdgeInsets.zero,
                             heading: (widget.config['heading'] != null &&
