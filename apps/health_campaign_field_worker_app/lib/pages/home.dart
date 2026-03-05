@@ -790,6 +790,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.announcement,
           label: i18.home.fileComplaint,
           onPressed: () async {
+            final selected = await context.router
+                .push<BoundaryModel>(CurrentBoundaryRoute());
+            if (selected == null || !context.mounted) return;
+
             final moduleName =
                 'hcm-complaints-${context.selectedProject.referenceID}';
             triggerLocalization(module: moduleName);
@@ -858,12 +862,14 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
-            // if (isTriggerLocalisation) {
+            final selected = await context.router
+                .push<BoundaryModel>(CurrentBoundaryRoute());
+            if (selected == null || !context.mounted) return;
+
             final moduleName =
                 'hcm-registration-${context.selectedProject.referenceID}';
             triggerLocalization(module: moduleName);
             isTriggerLocalisation = false;
-            // }
 
             final prefs = await SharedPreferences.getInstance();
             final schemaJsonRaw = prefs.getString('app_config_schemas');
@@ -1039,6 +1045,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           customIcon: Constants.closedHouseholdSvg,
           label: i18.home.closedHouseHoldLabel,
           onPressed: () async {
+            final selected = await context.router
+                .push<BoundaryModel>(CurrentBoundaryRoute());
+            if (selected == null || !context.mounted) return;
+
             final moduleName =
                 'hcm-closehousehold-${context.selectedProject.referenceID}';
             triggerLocalization(module: moduleName);
@@ -1060,6 +1070,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.store_mall_directory,
           label: i18.home.manageStockLabel,
           onPressed: () async {
+            final selected = await context.router
+                .push<BoundaryModel>(CurrentBoundaryRoute());
+            if (selected == null || !context.mounted) return;
+
             final moduleName =
                 'hcm-inventory-${context.selectedProject.referenceID}';
             triggerLocalization(module: moduleName);
@@ -1117,6 +1131,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.menu_book,
           label: i18.home.stockReconciliationLabel,
           onPressed: () async {
+            final selected = await context.router
+                .push<BoundaryModel>(CurrentBoundaryRoute());
+            if (selected == null || !context.mounted) return;
+
             final moduleName =
                 'hcm-stockreconciliation-${context.selectedProject.referenceID}';
             triggerLocalization(module: moduleName);
@@ -1230,6 +1248,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.supervised_user_circle_rounded,
           label: i18.home.beneficiaryReferralLabel,
           onPressed: () async {
+            final selected = await context.router
+                .push<BoundaryModel>(CurrentBoundaryRoute());
+            if (selected == null || !context.mounted) return;
+
             final moduleName =
                 'hcm-hfreferral-${context.selectedProject.referenceID}';
             triggerLocalization(module: moduleName);
@@ -1250,6 +1272,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.announcement,
           label: i18.home.viewReportsLabel,
           onPressed: () async {
+            final selected = await context.router
+                .push<BoundaryModel>(CurrentBoundaryRoute());
+            if (selected == null || !context.mounted) return;
+
             final moduleName =
                 'hcm-stockreports-${context.selectedProject.referenceID}';
             triggerLocalization(module: moduleName);

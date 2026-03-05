@@ -172,6 +172,13 @@ class Common {
   String get maxBoundarySelectionReached =>
       'CORE_COMMON_MAX_BOUNDARY_SELECTION_REACHED';
 
+  String get selectCurrentBoundary => 'CORE_COMMON_SELECT_CURRENT_BOUNDARY';
+
+  String get wantToChooseAnotherBoundary =>
+      'CORE_COMMON_WANT_TO_CHOOSE_ANOTHER_BOUNDARY';
+
+  String get chooseAnotherBoundary => 'CORE_COMMON_CHOOSE_ANOTHER_BOUNDARY';
+
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
 
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
