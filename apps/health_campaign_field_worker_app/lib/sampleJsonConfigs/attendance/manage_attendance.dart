@@ -13,7 +13,21 @@ final dynamic manageAttendanceFlow = {
             "operation": "equals"
           }
         ],
-        "name": "pgrService",
+        "name": "attendanceRegister",
+        "type": "SEARCH_EVENT"
+      }
+    },
+    {
+      "actionType": "SEARCH_EVENT",
+      "properties": {
+        "data": [
+          {
+            "key": "tenantId",
+            "value": "{{singleton.selectedProject.tenantId}}",
+            "operation": "equals"
+          }
+        ],
+        "name": "attendee",
         "type": "SEARCH_EVENT"
       }
     }
@@ -21,11 +35,11 @@ final dynamic manageAttendanceFlow = {
   "wrapperConfig": {
     "filters": [],
     "relations": [],
-    "rootEntity": "PgrServiceModel",
-    "wrapperName": "ComplaintWrapper",
+    "rootEntity": "AttendanceRegisterModel",
+    "wrapperName": "AttendanceWrapper",
     "searchConfig": {
-      "select": ["pgrService"],
-      "primary": "pgrService"
+      "select": ["attendanceRegister", "attendee"],
+      "primary": "attendanceRegister"
     }
   },
   "header": [
@@ -41,13 +55,13 @@ final dynamic manageAttendanceFlow = {
   "footer": [],
   "body": [
     {
-      "data": "ComplaintWrapper",
+      "data": "AttendanceWrapper",
       "type": "template",
       "format": "listView",
       "hidden": false,
       "fieldName": "listView",
       "properties": {"spacing": "spacer4"},
-      "visibilityCondition": "{{ context.ComplaintWrapper.empty }}",
+      "visibilityCondition": "{{ context.AttendanceWrapper.empty }}",
       "child": {
         "type": "template",
         "format": "card",
@@ -56,30 +70,35 @@ final dynamic manageAttendanceFlow = {
             "data": [
               {
                 "key": "CAMPAIGN_NAME",
-                "value": "Test Campaign",
-                "defaultValue": "Sync data to generate complaint number"
+                "value":
+                    "{{fn:getAdditionalDetails(item.AttendanceRegisterModel.additionalDetails, 'campaignName')}}",
               },
-              {"key": "EVENT_TYPE", "value": "Test type"},
+              {
+                "key": "EVENT_TYPE",
+                "value":
+                    "{{fn:getAdditionalDetails(item.AttendanceRegisterModel.additionalDetails, 'eventType')}}",
+              },
               {
                 "key": "STAFF_COUNT",
+                "value": "{{item.AttendeeModel.attendees.length}}"
               },
               {
                 "key": "START_DATE",
                 "value":
-                    "{{fn:formatDate(item.PgrServiceModel.auditDetails.createdTime, 'date', dd MMM yyyy)}}"
+                    "{{fn:formatDate(item.AttendanceRegisterModel.startDate, 'date', dd MMM yyyy)}}"
               },
               {
                 "key": "END_DATE",
                 "value":
-                    "{{fn:formatDate(item.PgrServiceModel.auditDetails.createdTime, 'date', dd MMM yyyy)}}"
+                    "{{fn:formatDate(item.AttendanceRegisterModel.endDate, 'date', dd MMM yyyy)}}"
               },
               {
                 "key": "STATUS",
-                "value": "{{item.PgrServiceModel.applicationStatus}}"
+                "value": "{{item.AttendanceRegisterModel.status}}"
               },
               {
                 "key": "ATTENDANCE_COMPLETION",
-                "value": "{{item.PgrServiceModel.applicationStatus}}"
+                "value": "{{item.AttendanceRegisterModel.status}}"
               }
             ],
             "type": "template",
