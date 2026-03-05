@@ -139,67 +139,7 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                   appBar: AppBar(
                     backgroundColor: theme.colorTheme.primary.primary2,
                     foregroundColor: theme.colorTheme.paper.primary,
-                    actions: showDrawer
-                        ? [
-                            BlocBuilder<BoundaryBloc, BoundaryState>(
-                              builder: (ctx, state) {
-                                final selectedBoundary = ctx.boundaryOrNull;
-
-                                if (selectedBoundary == null) {
-                                  return const SizedBox.shrink();
-                                } else {
-                                  LocalizationParams()
-                                      .setCode([selectedBoundary.code!, i18.common.coreCommonSubmit]);
-                                  final boundaryName =
-                                      AppLocalizations.of(context).translate(
-                                    selectedBoundary.code ??
-                                        i18.projectSelection.onProjectMapped,
-                                  );
-
-                                  final theme = Theme.of(context);
-
-                                  return GestureDetector(
-                                    onTap: () {
-                                      ctx.router.replaceAll([
-                                        BoundarySelectionRoute(),
-                                      ]);
-                                    },
-                                    child: Container(
-                                      padding:
-                                          const EdgeInsets.only(right: spacer2),
-                                      width: MediaQuery.of(context).size.width -
-                                          60,
-                                      child: Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Flexible(
-                                              child: Text(
-                                                boundaryName,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  color: theme
-                                                      .colorTheme.paper.primary,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                            ),
-                                            Icon(
-                                              Icons.arrow_drop_down_outlined,
-                                              color: theme
-                                                  .colorTheme.paper.primary,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                          ]
-                        : null,
+                    actions: null,
                   ),
                   drawer: showDrawer ? drawerWidget(context) : null,
                   body: MultiBlocProvider(

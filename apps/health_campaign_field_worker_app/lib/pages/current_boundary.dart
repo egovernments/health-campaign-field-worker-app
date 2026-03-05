@@ -135,7 +135,9 @@ class _CurrentBoundaryPageState extends LocalizedState<CurrentBoundaryPage> {
                           i18.common.chooseAnotherBoundary,
                         ),
                         onPressed: () {
-                          context.router.popAndPush(BoundarySelectionRoute());
+                          context.router.replaceAll([
+                            BoundarySelectionRoute(),
+                          ]);
                         },
                       ),
                     ],
