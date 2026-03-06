@@ -696,7 +696,7 @@ class _BoundarySelectionPageState
                                                               .translate(i18
                                                                   .common
                                                                   .maxBoundarySelectionReached),
-                                                          type: ToastType.error,
+                                                          type: ToastType.info,
                                                         );
                                                       },
                                                       isDisabled:
@@ -735,6 +735,11 @@ class _BoundarySelectionPageState
                                                           .toList(),
                                                       initialOptions: state
                                                           .selectedLastLevelBoundaries
+                                                          .where((e) =>
+                                                              filteredItems.any(
+                                                                  (f) =>
+                                                                      f.code ==
+                                                                      e.code))
                                                           .map((e) =>
                                                               DropdownItem(
                                                                 name: localizations
