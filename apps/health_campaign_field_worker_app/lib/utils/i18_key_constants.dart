@@ -901,6 +901,14 @@ class SyncDialog {
   String get pendingSyncLabel => 'PENDING_SYNC_LABEL';
 
   String get pendingSyncContent => 'PENDING_SYNC_CONTENT';
+
+  String get noInternetConnection => 'SYNC_DIALOG_NO_INTERNET_CONNECTION';
+
+  String get connectionTimedOut => 'SYNC_DIALOG_CONNECTION_TIMED_OUT';
+
+  String get serverError => 'SYNC_DIALOG_SERVER_ERROR';
+
+  String get networkError => 'SYNC_DIALOG_NETWORK_ERROR';
 }
 
 class StockReconciliationShowcase {

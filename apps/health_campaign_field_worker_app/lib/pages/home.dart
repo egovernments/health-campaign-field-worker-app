@@ -642,7 +642,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                     final debouncer = Debouncer(seconds: 5);
                     debouncer.run(() async {
                       if (count != 0) {
-                        await localSecureStore.setManualSyncTrigger(false);
                         if (context.mounted) {
                           await performBackgroundService(
                             isBackground: false,
@@ -650,13 +649,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                             context: context,
                           );
                         }
-                      } else {
-                        await localSecureStore.setManualSyncTrigger(true);
                       }
                     });
                   },
                   syncInProgress: () async {
-                    await localSecureStore.setManualSyncTrigger(false);
                     if (context.mounted) {
                       DigitSyncDialog.show(
                         context,
@@ -670,7 +666,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                   },
                   completedSync: () async {
                     Navigator.of(context, rootNavigator: true).pop();
-                    await localSecureStore.setManualSyncTrigger(true);
                     if (context.mounted) {
                       DigitSyncDialog.show(context,
                           type: DialogType.complete,
@@ -688,36 +683,42 @@ class _HomePageState extends LocalizedState<HomePage> {
                           barrierDismissible: true);
                     }
                   },
-                  failedSync: () async {
-                    await localSecureStore.setManualSyncTrigger(true);
+                  failedSync: (message) async {
                     if (context.mounted) {
                       _showSyncFailedDialog(
                         context,
                         message: localizations.translate(
                           i18.syncDialog.syncFailedTitle,
                         ),
+                        errorMessage: message.isNotEmpty
+                            ? localizations.translate(message)
+                            : null,
                       );
                     }
                   },
-                  failedDownSync: () async {
-                    await localSecureStore.setManualSyncTrigger(true);
+                  failedDownSync: (message) async {
                     if (context.mounted) {
                       _showSyncFailedDialog(
                         context,
                         message: localizations.translate(
                           i18.syncDialog.downSyncFailedTitle,
                         ),
+                        errorMessage: message.isNotEmpty
+                            ? localizations.translate(message)
+                            : null,
                       );
                     }
                   },
-                  failedUpSync: () async {
-                    await localSecureStore.setManualSyncTrigger(true);
+                  failedUpSync: (message) async {
                     if (context.mounted) {
                       _showSyncFailedDialog(
                         context,
                         message: localizations.translate(
                           i18.syncDialog.upSyncFailedTitle,
                         ),
+                        errorMessage: message.isNotEmpty
+                            ? localizations.translate(message)
+                            : null,
                       );
                     }
                   },
@@ -756,13 +757,14 @@ class _HomePageState extends LocalizedState<HomePage> {
   void _showSyncFailedDialog(
     BuildContext context, {
     required String message,
+    String? errorMessage,
   }) {
     Navigator.of(context, rootNavigator: true).pop();
 
     DigitSyncDialog.show(
       context,
       type: DialogType.failed,
-      label: message,
+      label: errorMessage != null ? '$message\n$errorMessage' : message,
       primaryAction: DigitDialogActions(
         label: localizations.translate(
           i18.syncDialog.retryButtonLabel,
