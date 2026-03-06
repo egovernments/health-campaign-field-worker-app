@@ -910,7 +910,7 @@ final dynamic sampleFlows = {
                     "type": "template",
                     "label": "{{fn:getInEligibleStatus(item.task)}}",
                     "format": "tag",
-                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==false",
+                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, currentRunningCycle)}}==false",
                     "fieldName": "notEligible",
                     "properties": {
                       "tagType": "error"
@@ -930,7 +930,7 @@ final dynamic sampleFlows = {
                     "type": "template",
                     "label": "ADMINISTERED_SUCCESS",
                     "format": "tag",
-                    "visible": "{{fn:isDelivered(item.task.last.status)}}==true && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:length(item.referral)}} <= 0",
+                    "visible": "{{fn:isDelivered(item.task.last.status)}}==true && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, currentRunningCycle)}}==true && {{fn:length(item.referral)}} <= 0",
                     "fieldName": "administrationSuccess",
                     "properties": {
                       "tagType": "success",
@@ -941,7 +941,7 @@ final dynamic sampleFlows = {
                     "type": "template",
                     "label": "NOT_VISITED",
                     "format": "tag",
-                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:length(item.referral)}} <= 0",
+                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, currentRunningCycle)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:length(item.referral)}} <= 0",
                     "fieldName": "notVisited",
                     "properties": {
                       "tagType": "info",
@@ -952,7 +952,7 @@ final dynamic sampleFlows = {
                     "type": "template",
                     "label": "DELIVERY",
                     "format": "button",
-                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:length(item.referral)}} <= 0",
+                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, currentRunningCycle)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:length(item.referral)}} <= 0",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -990,7 +990,7 @@ final dynamic sampleFlows = {
                     "type": "template",
                     "label": "HOUSEHOLD_OVERVIEW_UNABLE_TO_DELIVER_LABEL",
                     "format": "button",
-                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:length(item.referral)}} <= 0",
+                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, currentRunningCycle)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:length(item.referral)}} <= 0",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -1007,6 +1007,10 @@ final dynamic sampleFlows = {
                             {
                               "key": "ProjectBeneficiaryClientReferenceId",
                               "value": "{{item.projectBeneficiary.0.clientReferenceId}}"
+                            },
+                            {
+                              "key": "cycleIndex",
+                              "value": "{{contextData.0.currentRunningCycle}}"
                             }
                           ],
                           "name": "UNABLETODELIVER",
@@ -1029,7 +1033,7 @@ final dynamic sampleFlows = {
                     "type": "template",
                     "label": "REGISTRATION_VIEW_DETAILS",
                     "format": "button",
-                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task)}} == true &&  {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:length(item.referral)}} <= 0",
+                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, currentRunningCycle)}} == true &&  {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:length(item.referral)}} <= 0",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -1235,6 +1239,27 @@ final dynamic sampleFlows = {
             ]
           }
         ],
+        "computed": {
+          "currentRunningCycle": {
+            "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+            "order": 1,
+            "where": [
+              {
+                "left": "{{startDate}}",
+                "right": "{{now}}",
+                "operator": "lt"
+              },
+              {
+                "left": "{{endDate}}",
+                "right": "{{now}}",
+                "operator": "gt"
+              }
+            ],
+            "select": "{{id}}",
+            "default": -1,
+            "takeFirst": true
+          }
+        },
         "rootEntity": "HouseholdModel",
         "wrapperName": "HouseholdWrapper",
         "searchConfig": {
@@ -1403,6 +1428,10 @@ final dynamic sampleFlows = {
               {
                 "key": "ProjectBeneficiaryClientReferenceId",
                 "value": "{{navigation.ProjectBeneficiaryClientReferenceId}}"
+              },
+              {
+                "key": "cycleIndex",
+                "value": "{{navigation.cycleIndex}}"
               }
             ],
             "onError": [
