@@ -193,50 +193,51 @@ void onStart(ServiceInstance service) async {
                       break;
                     }
                   }
-                  if (speedArray.isEmpty) continue;
-                  double sum = speedArray.fold(0, (p, c) => p + c);
+                  if (speedArray.isNotEmpty) {
+                    double sum = speedArray.fold(0, (p, c) => p + c);
 
-                  int configuredBatchSize = getBatchSizeToBandwidth(
-                    sum / speedArray.length,
-                    appConfiguration,
-                  );
-                  final BandwidthModel bandwidthModel = BandwidthModel.fromJson({
-                    'userId': userRequestModel?.uuid,
-                    'batchSize': configuredBatchSize,
-                  });
-                  flutterLocalNotificationsPlugin.show(
-                    888,
-                    'Auto Sync',
-                    'Speed : ${speedArray.isNotEmpty && speedArray.firstOrNull != null ? double.tryParse(speedArray.first.toString())?.toStringAsFixed(2) ?? '0' : '0'}Mb/ps - BatchSize : $configuredBatchSize',
-                    const NotificationDetails(
-                      android: AndroidNotificationDetails(
-                        "my_foreground",
-                        'AUTO SYNC',
-                        icon: 'ic_bg_service_small',
-                        ongoing: true,
+                    int configuredBatchSize = getBatchSizeToBandwidth(
+                      sum / speedArray.length,
+                      appConfiguration,
+                    );
+                    final BandwidthModel bandwidthModel = BandwidthModel.fromJson({
+                      'userId': userRequestModel?.uuid,
+                      'batchSize': configuredBatchSize,
+                    });
+                    flutterLocalNotificationsPlugin.show(
+                      888,
+                      'Auto Sync',
+                      'Speed : ${speedArray.isNotEmpty && speedArray.firstOrNull != null ? double.tryParse(speedArray.first.toString())?.toStringAsFixed(2) ?? '0' : '0'}Mb/ps - BatchSize : $configuredBatchSize',
+                      const NotificationDetails(
+                        android: AndroidNotificationDetails(
+                          "my_foreground",
+                          'AUTO SYNC',
+                          icon: 'ic_bg_service_small',
+                          ongoing: true,
+                        ),
                       ),
-                    ),
-                  );
-                  // Insert sync logic here
-                  final isSyncCompleted = await SyncService().performSync(
-                    localRepositories: Constants.getLocalRepositories(
-                      _sql,
-                      _isar,
-                    ).toList(),
-                    remoteRepositories: Constants.getRemoteRepositories(
-                      _dio,
-                      getActionMap(serviceRegistryList),
-                    ),
-                    bandwidthModel: bandwidthModel,
-                    service: service,
-                  );
+                    );
+                    // Insert sync logic here
+                    final isSyncCompleted = await SyncService().performSync(
+                      localRepositories: Constants.getLocalRepositories(
+                        _sql,
+                        _isar,
+                      ).toList(),
+                      remoteRepositories: Constants.getRemoteRepositories(
+                        _dio,
+                        getActionMap(serviceRegistryList),
+                      ),
+                      bandwidthModel: bandwidthModel,
+                      service: service,
+                    );
 
-                  i++;
-                  final isAppInActive =
-                      await LocalSecureStore.instance.isAppInActive;
+                    i++;
+                    final isAppInActive =
+                        await LocalSecureStore.instance.isAppInActive;
 
-                  if (isSyncCompleted && i >= 2 && isAppInActive) {
-                    service.invoke("stopService");
+                    if (isSyncCompleted && i >= 2 && isAppInActive) {
+                      service.invoke("stopService");
+                    }
                   }
                 }
               }
