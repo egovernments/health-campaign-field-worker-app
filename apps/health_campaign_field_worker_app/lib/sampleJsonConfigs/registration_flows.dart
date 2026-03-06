@@ -910,7 +910,7 @@ final dynamic sampleFlows = {
                     "type": "template",
                     "label": "{{fn:getInEligibleStatus(item.task)}}",
                     "format": "tag",
-                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, currentRunningCycle)}}==false",
+                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==false",
                     "fieldName": "notEligible",
                     "properties": {
                       "tagType": "error"
@@ -930,7 +930,7 @@ final dynamic sampleFlows = {
                     "type": "template",
                     "label": "ADMINISTERED_SUCCESS",
                     "format": "tag",
-                    "visible": "{{fn:isDelivered(item.task.last.status)}}==true && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, currentRunningCycle)}}==true && {{fn:length(item.referral)}} <= 0",
+                    "visible": "{{fn:isDelivered(item.task.last.status)}}==true && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:length(item.referral)}} <= 0",
                     "fieldName": "administrationSuccess",
                     "properties": {
                       "tagType": "success",
@@ -941,7 +941,7 @@ final dynamic sampleFlows = {
                     "type": "template",
                     "label": "NOT_VISITED",
                     "format": "tag",
-                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, currentRunningCycle)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:length(item.referral)}} <= 0",
+                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:length(item.referral)}} <= 0",
                     "fieldName": "notVisited",
                     "properties": {
                       "tagType": "info",
@@ -952,7 +952,7 @@ final dynamic sampleFlows = {
                     "type": "template",
                     "label": "DELIVERY",
                     "format": "button",
-                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, currentRunningCycle)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:length(item.referral)}} <= 0",
+                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:length(item.referral)}} <= 0",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -990,7 +990,7 @@ final dynamic sampleFlows = {
                     "type": "template",
                     "label": "HOUSEHOLD_OVERVIEW_UNABLE_TO_DELIVER_LABEL",
                     "format": "button",
-                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, currentRunningCycle)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:length(item.referral)}} <= 0",
+                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}} == true  && {{fn:checkAllDoseDelivered(item.task)}} == false && {{fn:length(item.referral)}} <= 0",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
@@ -1033,7 +1033,7 @@ final dynamic sampleFlows = {
                     "type": "template",
                     "label": "REGISTRATION_VIEW_DETAILS",
                     "format": "button",
-                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, currentRunningCycle)}} == true &&  {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:length(item.referral)}} <= 0",
+                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}} == true &&  {{fn:checkAllDoseDelivered(item.task)}} == true && {{fn:length(item.referral)}} <= 0",
                     "onAction": [
                       {
                         "actionType": "NAVIGATION",
