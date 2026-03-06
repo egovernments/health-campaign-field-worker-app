@@ -36,6 +36,7 @@ import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/remote_client.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
 import '../models/downsync/downsync.dart';
+import '../models/entities/notification_data.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';
@@ -331,22 +332,20 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                         PushNotificationState>(
                       listener: (context, state) {
                         if (state is PushNotificationTappedState) {
-                          // Trigger stock downsync only for stock_sync notifications
-                          if (state.data['notificationType'] == 'stock_sync') {
+                          final notificationData =
+                              NotificationData.fromMap(state.data);
+
+                          if (notificationData.notificationType ==
+                              NotificationType.stockSync) {
                             _triggerStockDownsync(context);
                           }
 
-                          final screen = state.data['screen'];
-                          switch (screen) {
-                            case 'home':
+                          switch (notificationData.screenName) {
+                            case NotificationScreenName.home:
                               context.router.replaceAll([HomeRoute()]);
                               break;
-                            case 'profile':
+                            case NotificationScreenName.profile:
                               context.router.push(ProfileRoute());
-                              break;
-                            default:
-                              // If no recognized screen, navigate to home
-                              context.router.replaceAll([HomeRoute()]);
                               break;
                           }
                         }
