@@ -687,11 +687,11 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           evaluateSingleCondition(condition.expression, contextValues);
 
       if (isConditionTrue) {
-        return template?.replaceAll("{value}", condition.value);
+        return template?.replaceAll("{value}", localizations.translate(condition.value));
       }
 
       if (condition.expression == "DEFAULT") {
-        return template?.replaceAll("{value}", condition.value);
+        return template?.replaceAll("{value}", localizations.translate(condition.value));
       }
     }
 
