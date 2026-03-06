@@ -27,6 +27,8 @@ import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/push_notification/push_notification.dart';
 import '../blocs/localization/app_localization.dart';
+import '../data/local_store/secure_store/secure_store.dart';
+import '../utils/stock_downsync.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
@@ -118,6 +120,27 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
     if (_isOfflineDialogShowing) {
       Navigator.of(context, rootNavigator: true).pop();
       _isOfflineDialogShowing = false;
+    }
+  }
+
+  void _triggerStockDownsync(BuildContext context) {
+    try {
+      final stockService = StockDownsyncService(
+        localSecureStore: LocalSecureStore.instance,
+        projectFacilityLocalRepository: context.read<
+            LocalRepository<ProjectFacilityModel,
+                ProjectFacilitySearchModel>>(),
+        facilityLocalRepository:
+            context.read<LocalRepository<FacilityModel, FacilitySearchModel>>(),
+        stockRemoteRepository:
+            context.read<RemoteRepository<StockModel, StockSearchModel>>(),
+        stockLocalRepository:
+            context.read<LocalRepository<StockModel, StockSearchModel>>(),
+      );
+
+      stockService.execute(context);
+    } catch (e) {
+      debugPrint('Stock downsync on notification tap failed: $e');
     }
   }
 
@@ -308,6 +331,11 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                         PushNotificationState>(
                       listener: (context, state) {
                         if (state is PushNotificationTappedState) {
+                          // Trigger stock downsync only for stock_sync notifications
+                          if (state.data['notificationType'] == 'stock_sync') {
+                            _triggerStockDownsync(context);
+                          }
+
                           final screen = state.data['screen'];
                           switch (screen) {
                             case 'home':
