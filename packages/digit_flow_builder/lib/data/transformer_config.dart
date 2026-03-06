@@ -608,6 +608,40 @@ final jsonConfig = {
       },
     }
   },
+  "stockLessExcess": {
+    "fallbackModel": "StockModel",
+    "models": {
+      "StockModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "facilityId": "warehouseDetails.facilityToWhich",
+          "productVariantId": "lessExcessDetails.productVariant.id",
+          "referenceId": "__context:projectId",
+          "referenceIdType": "__value:PROJECT",
+          "quantity": "lessExcessDetails.quantity",
+          "transactionType":
+              "__switch:__context:stockEntryType:{LESS:__value:DISPATCHED,EXCESS:__value:RECEIVED}",
+          "transactionReason": "lessExcessDetails.reasonForLessExcess",
+          "senderId": "__value:null",
+          "senderType": "__value:null",
+          "receiverId": "warehouseDetails.facilityToWhich",
+          "receiverType": "__value:WAREHOUSE",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "additionalFields": {
+            "sku": "lessExcessDetails.productVariant.sku",
+            "mrnNumber": "__context:mrnNumber",
+            "stockEntryType": "__context:stockEntryType",
+            "reasonForLessExcess": "lessExcessDetails.reasonForLessExcess"
+          },
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
+          "dateOfEntry": "warehouseDetails.dateOfEntry"
+        }
+      }
+    }
+  },
   "stockReconciliation": {
     "fallbackModel": "StockReconciliationModel",
     "models": {

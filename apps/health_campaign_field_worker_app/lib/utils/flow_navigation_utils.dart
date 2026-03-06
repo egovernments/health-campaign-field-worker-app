@@ -63,26 +63,26 @@ class FlowNavigationUtils {
       final prefs = await SharedPreferences.getInstance();
       final schemaJsonRaw = prefs.getString('app_config_schemas');
 
-      if (schemaJsonRaw != null) {
-        final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
-        final moduleSchema = allSchemas[config.schemaKey];
-
-        if (moduleSchema != null) {
-          final moduleData = moduleSchema['data'];
-          final flowsData = (moduleData['flows'] as List<dynamic>?)
-                  ?.map((e) => Map<String, dynamic>.from(e as Map))
-                  .toList() ??
-              [];
-
-          FlowRegistry.setConfig(flowsData);
-          NavigationRegistry.setupNavigation(context);
-
-          context.router.push(
-            FlowBuilderHomeRoute(pageName: moduleData["initialPage"]),
-          );
-          return;
-        }
-      }
+      // if (schemaJsonRaw != null) {
+      //   final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
+      //   final moduleSchema = allSchemas[config.schemaKey];
+      //
+      //   if (moduleSchema != null) {
+      //     final moduleData = moduleSchema['data'];
+      //     final flowsData = (moduleData['flows'] as List<dynamic>?)
+      //             ?.map((e) => Map<String, dynamic>.from(e as Map))
+      //             .toList() ??
+      //         [];
+      //
+      //     FlowRegistry.setConfig(flowsData);
+      //     NavigationRegistry.setupNavigation(context);
+      //
+      //     context.router.push(
+      //       FlowBuilderHomeRoute(pageName: moduleData["initialPage"]),
+      //     );
+      //     return;
+      //   }
+      // }
 
       // Fallback to sample flows
       FlowRegistry.setConfig(

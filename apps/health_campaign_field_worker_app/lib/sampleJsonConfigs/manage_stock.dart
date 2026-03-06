@@ -236,6 +236,28 @@ final dynamic sampleInventoryFlows = {
         },
         {
           "format": "menu_card",
+          "heading": "INVENTORY_RECORD_LESS_EXCESS_HEADING",
+          "description": "INVENTORY_RECORD_LESS_EXCESS_DESCRIPTION",
+          "icon": "Store",
+          "onAction": [
+            {
+              "actionType": "NAVIGATION",
+              "properties": {
+                "type": "FORM",
+                "name": "RECORDLESSEXCESS",
+                "data": [
+                  {"key": "stockEntryType", "value": "LESS_EXCESS"},
+                  {
+                    "key": "mrnNumber",
+                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "format": "menu_card",
           "heading": "INVENTORY_INCOMING_TRANSACTIONS_HEADING",
           "description": "INVENTORY_INCOMING_TRANSACTIONS_DESCRIPTION",
           "icon": "Inbox",
@@ -1173,6 +1195,398 @@ final dynamic sampleInventoryFlows = {
                     "{{fn:getSecondaryType(stockDetails.facilityFromWhich)}}"
               },
               {"key": "mrnNumber", "value": "{{navigation.mrnNumber}}"}
+            ],
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to fetch config."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "CREATE_EVENT",
+          "properties": {
+            "entity": "STOCK",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Failed to create stock."}
+              }
+            ]
+          }
+        },
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "type": "TEMPLATE",
+            "name": "stockSuccess",
+            "navigationMode": "popUntilAndPush",
+            "popUntilPageName": "manageStock",
+            "onError": [
+              {
+                "actionType": "SHOW_TOAST",
+                "properties": {"message": "Navigation failed."}
+              }
+            ],
+            "data": [
+              {"key": "mrnNumber", "value": "{{navigation.mrnNumber}}"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "screenType": "FORM",
+      "name": "RECORDLESSEXCESS",
+      "project": "CMP-2025-08-04-004846",
+      "version": 1,
+      "disabled": false,
+      "isSelected": true,
+      "initActions": [
+        {
+          "actionType": "SEARCH_EVENT",
+          "properties": {
+            "type": "SEARCH_EVENT",
+            "name": "projectFacility",
+            "awaitResults": true,
+            "skipAccumulatedFilters": true,
+            "data": [
+              {
+                "key": "projectId",
+                "value": "{{singleton.selectedProject.id}}",
+                "operation": "equals"
+              }
+            ]
+          }
+        }
+      ],
+      "wrapperConfig": {
+        "wrapperName": "InventoryWrapper",
+        "groupByType": true,
+        "rootEntity": "ProjectFacilityModel",
+        "filters": [],
+        "relations": [
+          {
+            "name": "facility",
+            "entity": "FacilityModel",
+            "match": {"field": "id", "equalsFrom": "facilityId"}
+          },
+          {
+            "name": "productVariant",
+            "entity": "ProductVariantModel",
+            "match": {"field": "id", "equalsFrom": "resource"}
+          }
+        ],
+        "searchConfig": {
+          "primary": "projectFacility",
+          "select": ["projectFacility", "productVariant", "stock"]
+        }
+      },
+      "pages": [
+        {
+          "page": "warehouseDetails",
+          "label": "APPONE_MANAGESTOCK_WAREHOUSE_SCREEN_HEADING",
+          "order": 1,
+          "type": "object",
+          "description": "APPONE_MANAGESTOCK_WAREHOUSE_SCREEN_DESCRIPTION",
+          "actionLabel": "APPONE_MANAGESTOCK_WAREHOUSE_ACTION_BUTTON_LABEL_1",
+          "properties": [
+            {
+              "type": "integer",
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_dateOfReceipt",
+              "order": 1,
+              "value": "",
+              "format": "date",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Enter the date on which the stock was received",
+              "infoText": "",
+              "readOnly": true,
+              "fieldName": "dateOfEntry",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": true,
+              "includeInForm": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_MANAGESTOCK_WAREHOUSE_label_dateOfReceipt_mandatory_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "string",
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_administrativeArea",
+              "order": 2,
+              "value": "",
+              "format": "locality",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Select the administrative area of the warehouse",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "administrativeArea",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "includeInForm": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_MANAGESTOCK_WAREHOUSE_label_administrativeArea_mandatory_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false
+            },
+            {
+              "type": "dynamic",
+              "label": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich",
+              "order": 3,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "tooltip": "",
+              "helpText":
+                  "Select the facility to which the stock is being sent",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "facilityToWhich",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
+                },
+                {
+                  "type": "facilityHierarchy",
+                  "value": {
+                    "hierarchyMapping": {
+                      "State": {
+                        "forReceipt": ["LGA Facility"],
+                        "forIssue": ["LGA Facility"]
+                      },
+                      "LGA": {
+                        "forReceipt": ["State Facility"],
+                        "forIssue": ["Health Facility"]
+                      },
+                      "Health Facility": {
+                        "forReceipt": ["LGA Facility"],
+                        "forIssue": ["DELIVERY_TEAM"]
+                      }
+                    },
+                    "useTransactionType": true
+                  },
+                  "message": ""
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "includeInForm": true,
+              "enums": []
+            },
+            {
+              "type": "string",
+              "enums": [],
+              "label": "APP_CONFIG_INVENTORY_warehouseDetails_teamCode_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "scanner",
+              "hidden": true,
+              "isMdms": false,
+              "tooltip": "",
+              "helpText": "",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "teamCode",
+              "mandatory": false,
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "includeInSummary": true,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "dropDownOptions": []
+            }
+          ],
+          "navigateTo": {"name": "lessExcessDetails", "type": "form"}
+        },
+        {
+          "page": "lessExcessDetails",
+          "label": "INVENTORY_LESS_EXCESS_DETAILS_HEADING",
+          "order": 2,
+          "type": "object",
+          "format": null,
+          "description": "INVENTORY_LESS_EXCESS_DETAILS_DESCRIPTION",
+          "actionLabel": "CORE_COMMON_SUBMIT",
+          "properties": [
+            {
+              "type": "string",
+              "label": "INVENTORY_WHAT_ARE_YOU_RECORDING_LABEL",
+              "order": 1,
+              "value": "",
+              "format": "dropdown",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Select whether you are recording less or excess",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "recordType",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message":
+                      "INVENTORY_RECORD_TYPE_REQUIRED_MESSAGE"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": [
+                {"code": "LESS", "name": "Less"},
+                {"code": "EXCESS", "name": "Excess"}
+              ]
+            },
+            {
+              "type": "dynamic",
+              "label": "APPONE_INVENTORY_PRODUCTDETAILS_LABEL",
+              "order": 2,
+              "value": "",
+              "format": "custom",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Select the product variant",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "productVariant",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "INVENTORY_PRODUCT_VARIANT_REQUIRED_MESSAGE"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": []
+            },
+            {
+              "type": "string",
+              "label": "INVENTORY_QUANTITY_LABEL",
+              "order": 3,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Enter the quantity",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "quantity",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "INVENTORY_QUANTITY_REQUIRED_MESSAGE"
+                },
+                {
+                  "type": "regex",
+                  "value": r"^[0-9]+$",
+                  "message": "Please enter a valid number"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            },
+            {
+              "type": "string",
+              "label": "INVENTORY_REASON_FOR_LESS_EXCESS_LABEL",
+              "order": 4,
+              "value": "",
+              "format": "text",
+              "hidden": false,
+              "tooltip": "",
+              "helpText": "Enter the reason for less/excess",
+              "infoText": "",
+              "readOnly": false,
+              "fieldName": "reasonForLessExcess",
+              "deleteFlag": false,
+              "innerLabel": "",
+              "systemDate": false,
+              "validations": [
+                {
+                  "type": "required",
+                  "value": true,
+                  "message": "INVENTORY_REASON_REQUIRED_MESSAGE"
+                }
+              ],
+              "errorMessage": "",
+              "isMultiSelect": false,
+              "enums": null
+            }
+          ],
+          "value": null,
+          "required": null,
+          "hidden": null,
+          "helpText": null,
+          "innerLabel": null,
+          "validations": null,
+          "tooltip": null,
+          "startDate": null,
+          "endDate": null,
+          "readOnly": null,
+          "charCount": null,
+          "systemDate": null,
+          "isMultiSelect": null,
+          "includeInForm": null,
+          "includeInSummary": null,
+          "autoEnable": null,
+          "navigateTo": {"name": "stock-acknowledgement", "type": "template"}
+        }
+      ],
+      "onAction": [
+        {
+          "actionType": "FETCH_TRANSFORMER_CONFIG",
+          "properties": {
+            "configName": "stockLessExcess",
+            "data": [
+              {
+                "key": "stockEntryType",
+                "value": "{{lessExcessDetails.recordType}}"
+              },
+              {
+                "key": "mrnNumber",
+                "value": "{{navigation.mrnNumber}}"
+              }
             ],
             "onError": [
               {
