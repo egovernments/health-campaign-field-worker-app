@@ -470,9 +470,9 @@ mixin _$SyncState {
     required TResult Function() syncInProgress,
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
-    required TResult Function() failedSync,
-    required TResult Function() failedDownSync,
-    required TResult Function() failedUpSync,
+    required TResult Function(String message) failedSync,
+    required TResult Function(String message) failedDownSync,
+    required TResult Function(String message) failedUpSync,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -481,9 +481,9 @@ mixin _$SyncState {
     TResult? Function()? syncInProgress,
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
-    TResult? Function()? failedSync,
-    TResult? Function()? failedDownSync,
-    TResult? Function()? failedUpSync,
+    TResult? Function(String message)? failedSync,
+    TResult? Function(String message)? failedDownSync,
+    TResult? Function(String message)? failedUpSync,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -492,9 +492,9 @@ mixin _$SyncState {
     TResult Function()? syncInProgress,
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
-    TResult Function()? failedSync,
-    TResult Function()? failedDownSync,
-    TResult Function()? failedUpSync,
+    TResult Function(String message)? failedSync,
+    TResult Function(String message)? failedDownSync,
+    TResult Function(String message)? failedUpSync,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -593,9 +593,9 @@ class _$SyncLoadingStateImpl implements SyncLoadingState {
     required TResult Function() syncInProgress,
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
-    required TResult Function() failedSync,
-    required TResult Function() failedDownSync,
-    required TResult Function() failedUpSync,
+    required TResult Function(String message) failedSync,
+    required TResult Function(String message) failedDownSync,
+    required TResult Function(String message) failedUpSync,
   }) {
     return loading();
   }
@@ -607,9 +607,9 @@ class _$SyncLoadingStateImpl implements SyncLoadingState {
     TResult? Function()? syncInProgress,
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
-    TResult? Function()? failedSync,
-    TResult? Function()? failedDownSync,
-    TResult? Function()? failedUpSync,
+    TResult? Function(String message)? failedSync,
+    TResult? Function(String message)? failedDownSync,
+    TResult? Function(String message)? failedUpSync,
   }) {
     return loading?.call();
   }
@@ -621,9 +621,9 @@ class _$SyncLoadingStateImpl implements SyncLoadingState {
     TResult Function()? syncInProgress,
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
-    TResult Function()? failedSync,
-    TResult Function()? failedDownSync,
-    TResult Function()? failedUpSync,
+    TResult Function(String message)? failedSync,
+    TResult Function(String message)? failedDownSync,
+    TResult Function(String message)? failedUpSync,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -726,9 +726,9 @@ class _$SyncInProgressStateImpl implements SyncInProgressState {
     required TResult Function() syncInProgress,
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
-    required TResult Function() failedSync,
-    required TResult Function() failedDownSync,
-    required TResult Function() failedUpSync,
+    required TResult Function(String message) failedSync,
+    required TResult Function(String message) failedDownSync,
+    required TResult Function(String message) failedUpSync,
   }) {
     return syncInProgress();
   }
@@ -740,9 +740,9 @@ class _$SyncInProgressStateImpl implements SyncInProgressState {
     TResult? Function()? syncInProgress,
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
-    TResult? Function()? failedSync,
-    TResult? Function()? failedDownSync,
-    TResult? Function()? failedUpSync,
+    TResult? Function(String message)? failedSync,
+    TResult? Function(String message)? failedDownSync,
+    TResult? Function(String message)? failedUpSync,
   }) {
     return syncInProgress?.call();
   }
@@ -754,9 +754,9 @@ class _$SyncInProgressStateImpl implements SyncInProgressState {
     TResult Function()? syncInProgress,
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
-    TResult Function()? failedSync,
-    TResult Function()? failedDownSync,
-    TResult Function()? failedUpSync,
+    TResult Function(String message)? failedSync,
+    TResult Function(String message)? failedDownSync,
+    TResult Function(String message)? failedUpSync,
     required TResult orElse(),
   }) {
     if (syncInProgress != null) {
@@ -886,9 +886,9 @@ class _$SyncPendingStateImpl implements SyncPendingState {
     required TResult Function() syncInProgress,
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
-    required TResult Function() failedSync,
-    required TResult Function() failedDownSync,
-    required TResult Function() failedUpSync,
+    required TResult Function(String message) failedSync,
+    required TResult Function(String message) failedDownSync,
+    required TResult Function(String message) failedUpSync,
   }) {
     return pendingSync(count);
   }
@@ -900,9 +900,9 @@ class _$SyncPendingStateImpl implements SyncPendingState {
     TResult? Function()? syncInProgress,
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
-    TResult? Function()? failedSync,
-    TResult? Function()? failedDownSync,
-    TResult? Function()? failedUpSync,
+    TResult? Function(String message)? failedSync,
+    TResult? Function(String message)? failedDownSync,
+    TResult? Function(String message)? failedUpSync,
   }) {
     return pendingSync?.call(count);
   }
@@ -914,9 +914,9 @@ class _$SyncPendingStateImpl implements SyncPendingState {
     TResult Function()? syncInProgress,
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
-    TResult Function()? failedSync,
-    TResult Function()? failedDownSync,
-    TResult Function()? failedUpSync,
+    TResult Function(String message)? failedSync,
+    TResult Function(String message)? failedDownSync,
+    TResult Function(String message)? failedUpSync,
     required TResult orElse(),
   }) {
     if (pendingSync != null) {
@@ -1023,9 +1023,9 @@ class _$SyncCompletedStateImpl implements SyncCompletedState {
     required TResult Function() syncInProgress,
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
-    required TResult Function() failedSync,
-    required TResult Function() failedDownSync,
-    required TResult Function() failedUpSync,
+    required TResult Function(String message) failedSync,
+    required TResult Function(String message) failedDownSync,
+    required TResult Function(String message) failedUpSync,
   }) {
     return completedSync();
   }
@@ -1037,9 +1037,9 @@ class _$SyncCompletedStateImpl implements SyncCompletedState {
     TResult? Function()? syncInProgress,
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
-    TResult? Function()? failedSync,
-    TResult? Function()? failedDownSync,
-    TResult? Function()? failedUpSync,
+    TResult? Function(String message)? failedSync,
+    TResult? Function(String message)? failedDownSync,
+    TResult? Function(String message)? failedUpSync,
   }) {
     return completedSync?.call();
   }
@@ -1051,9 +1051,9 @@ class _$SyncCompletedStateImpl implements SyncCompletedState {
     TResult Function()? syncInProgress,
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
-    TResult Function()? failedSync,
-    TResult Function()? failedDownSync,
-    TResult Function()? failedUpSync,
+    TResult Function(String message)? failedSync,
+    TResult Function(String message)? failedDownSync,
+    TResult Function(String message)? failedUpSync,
     required TResult orElse(),
   }) {
     if (completedSync != null) {
@@ -1118,6 +1118,8 @@ abstract class _$$SyncFailedStateImplCopyWith<$Res> {
   factory _$$SyncFailedStateImplCopyWith(_$SyncFailedStateImpl value,
           $Res Function(_$SyncFailedStateImpl) then) =
       __$$SyncFailedStateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String message});
 }
 
 /// @nodoc
@@ -1127,26 +1129,52 @@ class __$$SyncFailedStateImplCopyWithImpl<$Res>
   __$$SyncFailedStateImplCopyWithImpl(
       _$SyncFailedStateImpl _value, $Res Function(_$SyncFailedStateImpl) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_$SyncFailedStateImpl(
+      message: null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$SyncFailedStateImpl implements SyncFailedState {
-  const _$SyncFailedStateImpl();
+  const _$SyncFailedStateImpl({this.message = ''});
+
+  @override
+  @JsonKey()
+  final String message;
 
   @override
   String toString() {
-    return 'SyncState.failedSync()';
+    return 'SyncState.failedSync(message: $message)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$SyncFailedStateImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$SyncFailedStateImpl &&
+            (identical(other.message, message) || other.message == message));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, message);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SyncFailedStateImplCopyWith<_$SyncFailedStateImpl> get copyWith =>
+      __$$SyncFailedStateImplCopyWithImpl<_$SyncFailedStateImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1155,11 +1183,11 @@ class _$SyncFailedStateImpl implements SyncFailedState {
     required TResult Function() syncInProgress,
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
-    required TResult Function() failedSync,
-    required TResult Function() failedDownSync,
-    required TResult Function() failedUpSync,
+    required TResult Function(String message) failedSync,
+    required TResult Function(String message) failedDownSync,
+    required TResult Function(String message) failedUpSync,
   }) {
-    return failedSync();
+    return failedSync(message);
   }
 
   @override
@@ -1169,11 +1197,11 @@ class _$SyncFailedStateImpl implements SyncFailedState {
     TResult? Function()? syncInProgress,
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
-    TResult? Function()? failedSync,
-    TResult? Function()? failedDownSync,
-    TResult? Function()? failedUpSync,
+    TResult? Function(String message)? failedSync,
+    TResult? Function(String message)? failedDownSync,
+    TResult? Function(String message)? failedUpSync,
   }) {
-    return failedSync?.call();
+    return failedSync?.call(message);
   }
 
   @override
@@ -1183,13 +1211,13 @@ class _$SyncFailedStateImpl implements SyncFailedState {
     TResult Function()? syncInProgress,
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
-    TResult Function()? failedSync,
-    TResult Function()? failedDownSync,
-    TResult Function()? failedUpSync,
+    TResult Function(String message)? failedSync,
+    TResult Function(String message)? failedDownSync,
+    TResult Function(String message)? failedUpSync,
     required TResult orElse(),
   }) {
     if (failedSync != null) {
-      return failedSync();
+      return failedSync(message);
     }
     return orElse();
   }
@@ -1242,7 +1270,12 @@ class _$SyncFailedStateImpl implements SyncFailedState {
 }
 
 abstract class SyncFailedState implements SyncState {
-  const factory SyncFailedState() = _$SyncFailedStateImpl;
+  const factory SyncFailedState({final String message}) = _$SyncFailedStateImpl;
+
+  String get message;
+  @JsonKey(ignore: true)
+  _$$SyncFailedStateImplCopyWith<_$SyncFailedStateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1250,6 +1283,8 @@ abstract class _$$DownSyncFailedStateImplCopyWith<$Res> {
   factory _$$DownSyncFailedStateImplCopyWith(_$DownSyncFailedStateImpl value,
           $Res Function(_$DownSyncFailedStateImpl) then) =
       __$$DownSyncFailedStateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String message});
 }
 
 /// @nodoc
@@ -1259,27 +1294,52 @@ class __$$DownSyncFailedStateImplCopyWithImpl<$Res>
   __$$DownSyncFailedStateImplCopyWithImpl(_$DownSyncFailedStateImpl _value,
       $Res Function(_$DownSyncFailedStateImpl) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_$DownSyncFailedStateImpl(
+      message: null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$DownSyncFailedStateImpl implements DownSyncFailedState {
-  const _$DownSyncFailedStateImpl();
+  const _$DownSyncFailedStateImpl({this.message = ''});
+
+  @override
+  @JsonKey()
+  final String message;
 
   @override
   String toString() {
-    return 'SyncState.failedDownSync()';
+    return 'SyncState.failedDownSync(message: $message)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$DownSyncFailedStateImpl);
+            other is _$DownSyncFailedStateImpl &&
+            (identical(other.message, message) || other.message == message));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, message);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DownSyncFailedStateImplCopyWith<_$DownSyncFailedStateImpl> get copyWith =>
+      __$$DownSyncFailedStateImplCopyWithImpl<_$DownSyncFailedStateImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1288,11 +1348,11 @@ class _$DownSyncFailedStateImpl implements DownSyncFailedState {
     required TResult Function() syncInProgress,
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
-    required TResult Function() failedSync,
-    required TResult Function() failedDownSync,
-    required TResult Function() failedUpSync,
+    required TResult Function(String message) failedSync,
+    required TResult Function(String message) failedDownSync,
+    required TResult Function(String message) failedUpSync,
   }) {
-    return failedDownSync();
+    return failedDownSync(message);
   }
 
   @override
@@ -1302,11 +1362,11 @@ class _$DownSyncFailedStateImpl implements DownSyncFailedState {
     TResult? Function()? syncInProgress,
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
-    TResult? Function()? failedSync,
-    TResult? Function()? failedDownSync,
-    TResult? Function()? failedUpSync,
+    TResult? Function(String message)? failedSync,
+    TResult? Function(String message)? failedDownSync,
+    TResult? Function(String message)? failedUpSync,
   }) {
-    return failedDownSync?.call();
+    return failedDownSync?.call(message);
   }
 
   @override
@@ -1316,13 +1376,13 @@ class _$DownSyncFailedStateImpl implements DownSyncFailedState {
     TResult Function()? syncInProgress,
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
-    TResult Function()? failedSync,
-    TResult Function()? failedDownSync,
-    TResult Function()? failedUpSync,
+    TResult Function(String message)? failedSync,
+    TResult Function(String message)? failedDownSync,
+    TResult Function(String message)? failedUpSync,
     required TResult orElse(),
   }) {
     if (failedDownSync != null) {
-      return failedDownSync();
+      return failedDownSync(message);
     }
     return orElse();
   }
@@ -1375,7 +1435,13 @@ class _$DownSyncFailedStateImpl implements DownSyncFailedState {
 }
 
 abstract class DownSyncFailedState implements SyncState {
-  const factory DownSyncFailedState() = _$DownSyncFailedStateImpl;
+  const factory DownSyncFailedState({final String message}) =
+      _$DownSyncFailedStateImpl;
+
+  String get message;
+  @JsonKey(ignore: true)
+  _$$DownSyncFailedStateImplCopyWith<_$DownSyncFailedStateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1383,6 +1449,8 @@ abstract class _$$UpSyncFailedStateImplCopyWith<$Res> {
   factory _$$UpSyncFailedStateImplCopyWith(_$UpSyncFailedStateImpl value,
           $Res Function(_$UpSyncFailedStateImpl) then) =
       __$$UpSyncFailedStateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String message});
 }
 
 /// @nodoc
@@ -1392,26 +1460,52 @@ class __$$UpSyncFailedStateImplCopyWithImpl<$Res>
   __$$UpSyncFailedStateImplCopyWithImpl(_$UpSyncFailedStateImpl _value,
       $Res Function(_$UpSyncFailedStateImpl) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_$UpSyncFailedStateImpl(
+      message: null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$UpSyncFailedStateImpl implements UpSyncFailedState {
-  const _$UpSyncFailedStateImpl();
+  const _$UpSyncFailedStateImpl({this.message = ''});
+
+  @override
+  @JsonKey()
+  final String message;
 
   @override
   String toString() {
-    return 'SyncState.failedUpSync()';
+    return 'SyncState.failedUpSync(message: $message)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$UpSyncFailedStateImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$UpSyncFailedStateImpl &&
+            (identical(other.message, message) || other.message == message));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, message);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UpSyncFailedStateImplCopyWith<_$UpSyncFailedStateImpl> get copyWith =>
+      __$$UpSyncFailedStateImplCopyWithImpl<_$UpSyncFailedStateImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1420,11 +1514,11 @@ class _$UpSyncFailedStateImpl implements UpSyncFailedState {
     required TResult Function() syncInProgress,
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
-    required TResult Function() failedSync,
-    required TResult Function() failedDownSync,
-    required TResult Function() failedUpSync,
+    required TResult Function(String message) failedSync,
+    required TResult Function(String message) failedDownSync,
+    required TResult Function(String message) failedUpSync,
   }) {
-    return failedUpSync();
+    return failedUpSync(message);
   }
 
   @override
@@ -1434,11 +1528,11 @@ class _$UpSyncFailedStateImpl implements UpSyncFailedState {
     TResult? Function()? syncInProgress,
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
-    TResult? Function()? failedSync,
-    TResult? Function()? failedDownSync,
-    TResult? Function()? failedUpSync,
+    TResult? Function(String message)? failedSync,
+    TResult? Function(String message)? failedDownSync,
+    TResult? Function(String message)? failedUpSync,
   }) {
-    return failedUpSync?.call();
+    return failedUpSync?.call(message);
   }
 
   @override
@@ -1448,13 +1542,13 @@ class _$UpSyncFailedStateImpl implements UpSyncFailedState {
     TResult Function()? syncInProgress,
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
-    TResult Function()? failedSync,
-    TResult Function()? failedDownSync,
-    TResult Function()? failedUpSync,
+    TResult Function(String message)? failedSync,
+    TResult Function(String message)? failedDownSync,
+    TResult Function(String message)? failedUpSync,
     required TResult orElse(),
   }) {
     if (failedUpSync != null) {
-      return failedUpSync();
+      return failedUpSync(message);
     }
     return orElse();
   }
@@ -1507,5 +1601,11 @@ class _$UpSyncFailedStateImpl implements UpSyncFailedState {
 }
 
 abstract class UpSyncFailedState implements SyncState {
-  const factory UpSyncFailedState() = _$UpSyncFailedStateImpl;
+  const factory UpSyncFailedState({final String message}) =
+      _$UpSyncFailedStateImpl;
+
+  String get message;
+  @JsonKey(ignore: true)
+  _$$UpSyncFailedStateImplCopyWith<_$UpSyncFailedStateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

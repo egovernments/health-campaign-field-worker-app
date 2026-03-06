@@ -68,15 +68,15 @@ class PerformSyncDown {
           return e.entity;
         }).toList();
 
-        List<EntityModel>? responseEntities = [];
-
-        responseEntities = await SyncServiceSingleton()
+        final responseEntities = await SyncServiceSingleton()
             .entityMapper
             ?.syncDownEntityResponse(typeGroupedEntity, operationGroupedEntity,
                 entities, remote, local);
 
-        for (var element in responseEntities!) {
-          await local.update(element, createOpLog: false);
+        if (responseEntities != null) {
+          for (var element in responseEntities) {
+            await local.update(element, createOpLog: false);
+          }
         }
       }
     }

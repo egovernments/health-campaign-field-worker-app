@@ -1,5 +1,6 @@
 // GENERATED using mason_cli
 import 'dart:async';
+import 'dart:io';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,19 +49,24 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     int? length = event.count;
     emit(const SyncState.loading());
     try {
-      length ??= (SyncServiceSingleton().entityMapper!.getSyncCount(isar.opLogs
+      final entityMapper = SyncServiceSingleton().entityMapper;
+      if (entityMapper != null && length == null) {
+        final results = await Future.wait([
+          isar.opLogs
               .filter()
               .createdByEqualTo(event.createdBy)
               .syncedUpEqualTo(false)
-              .findAllSync()) +
-          SyncServiceSingleton().entityMapper!.getSyncCount(isar.opLogs
+              .findAll(),
+          isar.opLogs
               .filter()
               .createdByEqualTo(event.createdBy)
               .syncedUpEqualTo(true)
               .syncedDownEqualTo(false)
-              .findAllSync()));
-    } catch (_) {
-      rethrow;
+              .findAll(),
+        ]);
+        length = entityMapper.getSyncCount(results[0]) +
+            entityMapper.getSyncCount(results[1]);
+      }
     } finally {
       emit(SyncPendingState(count: length ?? previousCount));
     }
@@ -78,26 +84,64 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
         'batchSize': 5,
       });
       emit(const SyncInProgressState());
-      await syncService.performSync(
+      final isSyncCompleted = await syncService.performSync(
         localRepositories: event.localRepositories,
         remoteRepositories: event.remoteRepositories,
         bandwidthModel: bandwidthModel,
       );
-      emit(const SyncCompletedState());
-    } on SyncError catch (error) {
-      if (error is SyncDownError) {
-        emit(const DownSyncFailedState());
+      if (isSyncCompleted) {
+        emit(const SyncCompletedState());
       } else {
-        emit(const UpSyncFailedState());
+        // Lock was held by another sync — nothing happened.
+        emit(const SyncPendingState());
       }
-
+    } on SyncError catch (error) {
+      final message = _extractErrorMessage(error.error);
+      if (error is SyncDownError) {
+        emit(DownSyncFailedState(message: message));
+      } else {
+        emit(UpSyncFailedState(message: message));
+      }
       rethrow;
     } catch (error) {
-      emit(const SyncFailedState());
+      emit(SyncFailedState(message: _extractErrorMessage(error)));
       rethrow;
     } finally {
       add(SyncRefreshEvent(event.userId));
     }
+  }
+
+  /// Extracts a user-facing error key/message from the underlying exception.
+  /// Returns localization keys (SYNC_DIALOG_*) when possible so the UI
+  /// can translate them; falls back to the raw error string otherwise.
+  String _extractErrorMessage(dynamic error) {
+    if (error is SocketException) {
+      return 'SYNC_DIALOG_NO_INTERNET_CONNECTION';
+    }
+    if (error is TimeoutException) {
+      return 'SYNC_DIALOG_CONNECTION_TIMED_OUT';
+    }
+    if (error is HttpException) {
+      return 'SYNC_DIALOG_SERVER_ERROR';
+    }
+    final errorString = error.toString();
+    // DioException check without importing dio
+    if (errorString.contains('DioException')) {
+      if (errorString.contains('connection timeout') ||
+          errorString.contains('send timeout') ||
+          errorString.contains('receive timeout')) {
+        return 'SYNC_DIALOG_CONNECTION_TIMED_OUT';
+      }
+      if (errorString.contains('SocketException') ||
+          errorString.contains('Connection refused')) {
+        return 'SYNC_DIALOG_NO_INTERNET_CONNECTION';
+      }
+      if (errorString.contains('status')) {
+        return 'SYNC_DIALOG_SERVER_ERROR';
+      }
+      return 'SYNC_DIALOG_NETWORK_ERROR';
+    }
+    return errorString;
   }
 }
 
@@ -133,11 +177,14 @@ class SyncState with _$SyncState {
   const factory SyncState.completedSync() = SyncCompletedState;
 
   // The `SyncFailedState` represents a failed sync state.
-  const factory SyncState.failedSync() = SyncFailedState;
+  const factory SyncState.failedSync({@Default('') String message}) =
+      SyncFailedState;
 
   // The `DownSyncFailedState` represents a failed down sync state.
-  const factory SyncState.failedDownSync() = DownSyncFailedState;
+  const factory SyncState.failedDownSync({@Default('') String message}) =
+      DownSyncFailedState;
 
   // The `UpSyncFailedState` represents a failed up sync state.
-  const factory SyncState.failedUpSync() = UpSyncFailedState;
+  const factory SyncState.failedUpSync({@Default('') String message}) =
+      UpSyncFailedState;
 }

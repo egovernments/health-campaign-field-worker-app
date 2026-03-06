@@ -165,10 +165,6 @@ class PerformSyncUp {
 
         // Handle successful operations
         if (listOfBatchedOpLogList.isNotEmpty) {
-          final registry = SyncServiceSingleton()
-              .registries
-              ?.getSyncRegistries(typeGroupedEntity.key, remote);
-
           for (final sublist in listOfBatchedOpLogList) {
             final entities = getEntityModel(sublist, local);
             if (operationGroupedEntity.key == DataOperation.create) {

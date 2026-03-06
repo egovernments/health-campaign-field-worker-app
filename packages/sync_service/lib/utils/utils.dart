@@ -1,6 +1,4 @@
 import 'package:digit_data_model/data_model.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 import 'package:sync_service/sync_service_lib.dart';
 
 /// The `SyncServiceSingleton` class is a singleton that provides access to sync service related configurations and listeners.
@@ -62,23 +60,3 @@ class SyncServiceSingleton {
       _persistenceConfiguration;
 }
 
-class SyncUtils {
-  // sync refresh
-  void syncRefresh(BuildContext context, String loggedInUserUuid) {
-    final syncBloc = context.read<SyncBloc>();
-    syncBloc.add(SyncRefreshEvent(loggedInUserUuid));
-  }
-
-// insert sync count
-  SyncState? syncCount(
-    BuildContext context,
-  ) {
-    SyncState? state;
-    final syncBloc = context.read<SyncBloc>();
-    syncBloc.stream.listen((state) {
-      state = state;
-    });
-
-    return state;
-  }
-}
