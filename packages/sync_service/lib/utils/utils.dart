@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:digit_data_model/data_model.dart';
 import 'package:sync_service/sync_service_lib.dart';
 
@@ -58,5 +60,34 @@ class SyncServiceSingleton {
   // Getter for the persistence configuration
   PersistenceConfiguration? get persistenceConfiguration =>
       _persistenceConfiguration;
+
+  // Stream controller for sync progress updates
+  final _progressController = StreamController<SyncProgress>.broadcast();
+
+  /// Stream of sync progress updates (which entity/operation is being synced).
+  Stream<SyncProgress> get progressStream => _progressController.stream;
+
+  /// Emits a sync progress update.
+  void reportProgress(SyncProgress progress) {
+    _progressController.add(progress);
+  }
 }
 
+/// Represents the current sync operation in progress.
+class SyncProgress {
+  final String entityType;
+  final String operation; // 'syncUp' or 'syncDown'
+  final DataOperation? dataOperation; // create, update, delete etc.
+
+  const SyncProgress({
+    required this.entityType,
+    required this.operation,
+    this.dataOperation,
+  });
+
+  @override
+  String toString() {
+    final op = dataOperation?.name ?? operation;
+    return '$op: $entityType';
+  }
+}

@@ -72,6 +72,11 @@ class PerformSyncUp {
 
     // For each type and operation, get the remote and local repositories and apply the server generated ID to each entity
     for (final typeGroupedEntity in entries) {
+      SyncServiceSingleton().reportProgress(SyncProgress(
+        entityType: typeGroupedEntity.key.name,
+        operation: 'syncUp',
+      ));
+
       final groupedOperations = typeGroupedEntity.value.groupListsBy(
         (element) => element.operation,
       );

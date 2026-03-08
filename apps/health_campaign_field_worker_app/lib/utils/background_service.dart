@@ -17,6 +17,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:recase/recase.dart';
 import 'package:sync_service/data/sync_service.dart';
 import 'package:sync_service/models/bandwidth/bandwidth_model.dart';
+import 'package:sync_service/utils/utils.dart' as sync_utils;
 
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
@@ -107,9 +108,14 @@ void onStart(ServiceInstance service) async {
     service.stopSelf();
   });
   await envConfig.initialize();
+  final info = await PackageInfo.fromPlatform();
   if (Isar.getInstance('HCM') == null) {
-    final info = await PackageInfo.fromPlatform();
     await Constants().initialize(info.version);
+  } else {
+    // Isar already open (from isarFuture), but singletons are
+    // per-isolate so package data must still be initialised.
+    await initializeAllMappers();
+    Constants().setInitialDataOfPackages();
   }
 
   _dio = DioClient().dio;
@@ -144,7 +150,6 @@ void onStart(ServiceInstance service) async {
       appConfiguration.first.backgroundServiceConfig?.apiConcurrency;
 
   if (interval != null) {
-    int i = 0;
     bool isSyncing = false;
     makePeriodicTimer(
       Duration(seconds: interval),
@@ -217,26 +222,76 @@ void onStart(ServiceInstance service) async {
                         ),
                       ),
                     );
-                    // Insert sync logic here
+                    // Listen to sync progress and update notification
+                    final progressSub = sync_utils.SyncServiceSingleton()
+                        .progressStream
+                        .listen((progress) {
+                      final direction = progress.operation == 'syncUp'
+                          ? '↑ Uploading'
+                          : '↓ Downloading';
+                      flutterLocalNotificationsPlugin.show(
+                        888,
+                        'Auto Sync',
+                        '$direction: ${progress.entityType}',
+                        const NotificationDetails(
+                          android: AndroidNotificationDetails(
+                            "my_foreground",
+                            'AUTO SYNC',
+                            icon: 'ic_bg_service_small',
+                            ongoing: true,
+                          ),
+                        ),
+                      );
+                    });
+
+                    final localRepos = Constants.getLocalRepositories(
+                      _sql,
+                      _isar,
+                    ).toList();
+                    final remoteRepos = Constants.getRemoteRepositories(
+                      _dio,
+                      getActionMap(serviceRegistryList),
+                    );
+
                     final isSyncCompleted = await SyncService().performSync(
-                      localRepositories: Constants.getLocalRepositories(
-                        _sql,
-                        _isar,
-                      ).toList(),
-                      remoteRepositories: Constants.getRemoteRepositories(
-                        _dio,
-                        getActionMap(serviceRegistryList),
-                      ),
+                      localRepositories: localRepos,
+                      remoteRepositories: remoteRepos,
                       bandwidthModel: bandwidthModel,
                       service: service,
                     );
 
-                    i++;
-                    final isAppInActive =
-                        await LocalSecureStore.instance.isAppInActive;
+                    await progressSub.cancel();
 
-                    if (isSyncCompleted && i >= 2 && isAppInActive) {
-                      service.invoke("stopService");
+                    if (isSyncCompleted) {
+                      // Show last synced time in notification
+                      final now = DateTime.now();
+                      final timeStr =
+                          '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
+                      flutterLocalNotificationsPlugin.show(
+                        888,
+                        'Auto Sync',
+                        'Last synced at $timeStr',
+                        const NotificationDetails(
+                          android: AndroidNotificationDetails(
+                            "my_foreground",
+                            'AUTO SYNC',
+                            icon: 'ic_bg_service_small',
+                            ongoing: true,
+                          ),
+                        ),
+                      );
+                      // Verify no new records were created during sync
+                      final remaining = await SyncService()
+                          .getPendingSyncRecordsCount(
+                        localRepos,
+                        bandwidthModel.userId,
+                      );
+                      final isAppInActive =
+                          await LocalSecureStore.instance.isAppInActive;
+
+                      if (remaining == 0 && isAppInActive) {
+                        service.invoke("stopService");
+                      }
                     }
                   }
                 }
