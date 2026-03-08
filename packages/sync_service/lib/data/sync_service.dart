@@ -126,26 +126,38 @@ class SyncService {
       SyncError? syncError;
 
       // Perform the sync Down Operation
-      try {
-        await PerformSyncDown.syncDown(
-          bandwidthModel: bandwidthModel,
-          localRepositories: localRepositories.toSet().toList(),
-          remoteRepositories: remoteRepositories.toSet().toList(),
-          configuration: configuration!,
-        );
-      } catch (e) {
-        syncError = SyncDownError(e);
+      if (pendingSyncDownEntries.isNotEmpty) {
+        SyncServiceSingleton().reportProgress(const SyncProgress(
+          entityType: 'Downloading from server...',
+          operation: 'syncDown',
+        ));
+        try {
+          await PerformSyncDown.syncDown(
+            bandwidthModel: bandwidthModel,
+            localRepositories: localRepositories.toSet().toList(),
+            remoteRepositories: remoteRepositories.toSet().toList(),
+            configuration: configuration!,
+          );
+        } catch (e) {
+          syncError = SyncDownError(e);
+        }
       }
 
       // Perform the sync up Operation
-      try {
-        await PerformSyncUp.syncUp(
-          bandwidthModel: bandwidthModel,
-          localRepositories: localRepositories.toSet().toList(),
-          remoteRepositories: remoteRepositories.toSet().toList(),
-        );
-      } catch (e) {
-        syncError ??= SyncUpError(e);
+      if (pendingSyncUpEntries.isNotEmpty) {
+        SyncServiceSingleton().reportProgress(const SyncProgress(
+          entityType: 'Uploading to server...',
+          operation: 'syncUp',
+        ));
+        try {
+          await PerformSyncUp.syncUp(
+            bandwidthModel: bandwidthModel,
+            localRepositories: localRepositories.toSet().toList(),
+            remoteRepositories: remoteRepositories.toSet().toList(),
+          );
+        } catch (e) {
+          syncError ??= SyncUpError(e);
+        }
       }
 
       if (syncError != null) {
@@ -179,12 +191,13 @@ class SyncService {
   FutureOr<int> getPendingSyncRecordsCount(
     List<LocalRepository> localRepositories,
     String userId,
-  ) async =>
-      (await Future.wait(localRepositories.map((e) {
-        return e.getItemsToBeSyncedUp(userId);
-      })))
-          .expand((element) => element)
-          .length;
+  ) async {
+    final results = await Future.wait([
+      ...localRepositories.map((e) => e.getItemsToBeSyncedUp(userId)),
+      ...localRepositories.map((e) => e.getItemsToBeSyncedDown(userId)),
+    ]);
+    return results.expand((element) => element).length;
+  }
 }
 
 /// This function filters the entities by the given bandwidth.

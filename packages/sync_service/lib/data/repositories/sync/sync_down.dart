@@ -39,6 +39,11 @@ class PerformSyncDown {
         );
 
     for (final typeGroupedEntity in groupedEntries.entries) {
+      SyncServiceSingleton().reportProgress(SyncProgress(
+        entityType: typeGroupedEntity.key.name,
+        operation: 'syncDown',
+      ));
+
       final groupedOperations = typeGroupedEntity.value.groupListsBy(
         (element) => element.operation,
       );

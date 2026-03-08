@@ -95,17 +95,18 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
         // Lock was held by another sync — nothing happened.
         emit(const SyncPendingState());
       }
-    } on SyncError catch (error) {
+    } on SyncError catch (error, stackTrace) {
       final message = _extractErrorMessage(error.error);
       if (error is SyncDownError) {
         emit(DownSyncFailedState(message: message));
       } else {
         emit(UpSyncFailedState(message: message));
       }
-      rethrow;
-    } catch (error) {
+      // Report via BlocObserver (for Firebase/logging) without crashing the app
+      addError(error, stackTrace);
+    } catch (error, stackTrace) {
       emit(SyncFailedState(message: _extractErrorMessage(error)));
-      rethrow;
+      addError(error, stackTrace);
     } finally {
       add(SyncRefreshEvent(event.userId));
     }
@@ -114,6 +115,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   /// Extracts a user-facing error key/message from the underlying exception.
   /// Returns localization keys (SYNC_DIALOG_*) when possible so the UI
   /// can translate them; falls back to the raw error string otherwise.
+  /// Appends the failed API path when available.
   String _extractErrorMessage(dynamic error) {
     if (error is SocketException) {
       return 'SYNC_DIALOG_NO_INTERNET_CONNECTION';
@@ -125,23 +127,66 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
       return 'SYNC_DIALOG_SERVER_ERROR';
     }
     final errorString = error.toString();
-    // DioException check without importing dio
+
+    // Extract API path early (works for DioException and enriched errors)
+    final apiPath = _extractApiPath(errorString);
+
+    // Check for HTTP status codes first — these are the most specific signals
+    // and should take priority over transport-level errors like SocketException.
+    // Matches both Dio's "status code of 500" and enriched "Status: 500" formats.
+    final statusMatch = RegExp(r'status(?:\s+code\s+of\s+|\s*:\s*)(\d{3})')
+        .firstMatch(errorString.toLowerCase());
+    if (statusMatch != null) {
+      final statusCode = int.tryParse(statusMatch.group(1)!);
+      if (statusCode != null) {
+        String key;
+        if (statusCode == 401) {
+          key = 'SYNC_DIALOG_SESSION_EXPIRED';
+        } else if (statusCode >= 500) {
+          key = 'SYNC_DIALOG_SERVER_ERROR';
+        } else if (statusCode >= 400) {
+          key = 'SYNC_DIALOG_SERVER_ERROR';
+        } else {
+          key = 'SYNC_DIALOG_NETWORK_ERROR';
+        }
+        return apiPath != null ? '$key\n[$apiPath]' : key;
+      }
+    }
+
+    // Transport-level errors (no HTTP status code available)
+    if (errorString.contains('connection timeout') ||
+        errorString.contains('send timeout') ||
+        errorString.contains('receive timeout')) {
+      final key = 'SYNC_DIALOG_CONNECTION_TIMED_OUT';
+      return apiPath != null ? '$key\n[$apiPath]' : key;
+    }
+    if (errorString.contains('SocketException') ||
+        errorString.contains('Connection refused') ||
+        errorString.contains('Connection reset')) {
+      final key = 'SYNC_DIALOG_NO_INTERNET_CONNECTION';
+      return apiPath != null ? '$key\n[$apiPath]' : key;
+    }
     if (errorString.contains('DioException')) {
-      if (errorString.contains('connection timeout') ||
-          errorString.contains('send timeout') ||
-          errorString.contains('receive timeout')) {
-        return 'SYNC_DIALOG_CONNECTION_TIMED_OUT';
-      }
-      if (errorString.contains('SocketException') ||
-          errorString.contains('Connection refused')) {
-        return 'SYNC_DIALOG_NO_INTERNET_CONNECTION';
-      }
-      if (errorString.contains('status')) {
-        return 'SYNC_DIALOG_SERVER_ERROR';
-      }
-      return 'SYNC_DIALOG_NETWORK_ERROR';
+      final key = 'SYNC_DIALOG_NETWORK_ERROR';
+      return apiPath != null ? '$key\n[$apiPath]' : key;
     }
     return errorString;
+  }
+
+  /// Extracts the API path from a DioException string.
+  /// Looks for patterns like "uri=https://host/path" or "/path/to/api".
+  String? _extractApiPath(String errorString) {
+    // Match uri= pattern from DioException
+    final uriMatch = RegExp(r'uri[=:]\s*(https?://[^\s,\]]+)').firstMatch(errorString);
+    if (uriMatch != null) {
+      try {
+        final uri = Uri.parse(uriMatch.group(1)!);
+        return uri.path;
+      } catch (_) {
+        return uriMatch.group(1);
+      }
+    }
+    return null;
   }
 }
 
