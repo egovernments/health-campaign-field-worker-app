@@ -238,7 +238,8 @@ void showDownloadDialog(
   required DownloadBeneficiary model,
   required DigitProgressDialogType dialogType,
   bool isPop = true,
-  StreamController<double>? downloadProgressController,
+  StreamController<DownloadProgressData>? downloadProgressController,
+  DownloadProgressData? initialProgressData,
 }) {
   if (isPop) {
     Navigator.of(context, rootNavigator: true).pop();
@@ -283,6 +284,7 @@ void showDownloadDialog(
     case DigitProgressDialogType.pendingSync:
     case DigitProgressDialogType.insufficientStorage:
       showCustomPopup(
+        barrierDismissible: false,
         context: context,
         builder: (ctx) => Popup(
           title: model.title,
@@ -309,6 +311,7 @@ void showDownloadDialog(
                               projectId: context.projectId,
                               boundaries: model.boundaries,
                               batchSize: model.batchSize ?? 1,
+                              boundaryCounts: model.boundaryCounts,
                             ),
                           );
                     } else {
@@ -338,17 +341,28 @@ void showDownloadDialog(
       );
     case DigitProgressDialogType.inProgress:
       showCustomPopup(
+        barrierDismissible: false,
         context: context,
         builder: (ctx) => Popup(title: "", additionalWidgets: [
-          StreamBuilder<double>(
+          StreamBuilder<DownloadProgressData>(
             stream: downloadProgressController?.stream,
+            initialData: initialProgressData,
             builder: (context, snapshot) {
+              final data = snapshot.data;
+              final progress = data?.progress ?? 0;
+              final totalCount = data?.totalCount ?? model.totalCount ?? 0;
+              final syncedCount = data?.syncedCount ?? 0;
+              final boundaryName = data?.boundaryName ?? '';
+              final currentIndex = data?.currentIndex ?? 0;
+              final totalBoundaries = data?.totalBoundaries ?? 1;
+
               return ProgressIndicatorContainer(
-                label: '',
-                prefixLabel: '',
-                suffixLabel:
-                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}',
-                value: snapshot.data ?? 0,
+                label: boundaryName.isNotEmpty
+                    ? '$boundaryName (${currentIndex + 1}/$totalBoundaries)'
+                    : '',
+                prefixLabel: '$syncedCount',
+                suffixLabel: '$totalCount',
+                value: progress,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   Theme.of(context).colorTheme.primary.primary1,
                 ),

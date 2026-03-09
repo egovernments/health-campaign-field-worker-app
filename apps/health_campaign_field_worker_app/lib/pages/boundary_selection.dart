@@ -42,8 +42,8 @@ class _BoundarySelectionPageState
   int i = 0;
   int pendingSyncCount = 0;
   final clickedStatus = ValueNotifier<bool>(false);
-  StreamController<double> downloadProgress =
-      StreamController<double>.broadcast();
+  StreamController<DownloadProgressData> downloadProgress =
+      StreamController<DownloadProgressData>.broadcast();
 
   Map<String, TextEditingController> dropdownControllers = {};
   late StreamSubscription syncSubscription;
@@ -219,7 +219,8 @@ class _BoundarySelectionPageState
                                           DigitProgressDialogType.pendingSync,
                                       isPop: true,
                                     ),
-                                    dataFound: (initialServerCount, batchSize) {
+                                    dataFound: (initialServerCount, batchSize,
+                                        boundaryCounts) {
                                       clickedStatus.value = false;
                                       showDownloadDialog(
                                         context,
@@ -237,6 +238,7 @@ class _BoundarySelectionPageState
                                               .selectedLastLevelBoundaries,
                                           batchSize: batchSize,
                                           totalCount: initialServerCount,
+                                          boundaryCounts: boundaryCounts,
                                           content: localizations.translate(
                                             initialServerCount > 0
                                                 ? i18.beneficiaryDetails
@@ -265,11 +267,23 @@ class _BoundarySelectionPageState
                                       );
                                     },
                                     inProgress: (syncCount, totalCount) {
-                                      downloadProgress.add(
-                                        min(
+                                      final progressData =
+                                          DownloadProgressData(
+                                        progress: min(
                                           (syncCount) / (totalCount),
                                           1,
                                         ),
+                                        boundaryName:
+                                            localizations.translate(
+                                          state.selectedLastLevelBoundaries
+                                                  .firstOrNull
+                                                  ?.code ??
+                                              '',
+                                        ),
+                                        syncedCount: syncCount,
+                                        totalCount: totalCount,
+                                        currentIndex: 0,
+                                        totalBoundaries: 1,
                                       );
                                       if (syncCount < 1) {
                                         showDownloadDialog(
@@ -285,16 +299,16 @@ class _BoundarySelectionPageState
                                             appConfiguartion: appConfiguration,
                                             syncCount: syncCount,
                                             totalCount: totalCount,
-                                            prefixLabel: syncCount.toString(),
-                                            suffixLabel: totalCount.toString(),
                                           ),
                                           dialogType: DigitProgressDialogType
                                               .inProgress,
                                           isPop: true,
                                           downloadProgressController:
                                               downloadProgress,
+                                          initialProgressData: progressData,
                                         );
                                       }
+                                      downloadProgress.add(progressData);
                                     },
                                     success: (result) {
                                       int? epochTime = result.lastSyncedTime;
@@ -439,16 +453,26 @@ class _BoundarySelectionPageState
                                       syncCount,
                                       totalCount,
                                     ) {
-                                      downloadProgress.add(
-                                        min(
+                                      final progressData =
+                                          DownloadProgressData(
+                                        progress: min(
                                           (syncCount) /
                                               (totalCount == 0
                                                   ? 1
                                                   : totalCount),
                                           1,
                                         ),
+                                        boundaryName:
+                                            localizations.translate(
+                                          boundaryName,
+                                        ),
+                                        syncedCount: syncCount,
+                                        totalCount: totalCount,
+                                        currentIndex: currentIndex,
+                                        totalBoundaries: totalBoundaries,
                                       );
-                                      if (syncCount < 1 && currentIndex == 0) {
+                                      if (syncCount < 1 &&
+                                          currentIndex == 0) {
                                         showDownloadDialog(
                                           context,
                                           model: DownloadBeneficiary(
@@ -462,17 +486,16 @@ class _BoundarySelectionPageState
                                             appConfiguartion: appConfiguration,
                                             syncCount: syncCount,
                                             totalCount: totalCount,
-                                            prefixLabel:
-                                                '${currentIndex + 1}/$totalBoundaries',
-                                            suffixLabel: totalCount.toString(),
                                           ),
                                           dialogType: DigitProgressDialogType
                                               .inProgress,
                                           isPop: true,
                                           downloadProgressController:
                                               downloadProgress,
+                                          initialProgressData: progressData,
                                         );
                                       }
+                                      downloadProgress.add(progressData);
                                     },
                                     multiBoundarySuccess: (results) {
                                       final now =
@@ -733,12 +756,11 @@ class _BoundarySelectionPageState
                                                                         '',
                                                               ))
                                                           .toList(),
-                                                      initialOptions: state
-                                                          .selectedLastLevelBoundaries
+                                                      initialOptions: filteredItems
                                                           .where((e) =>
-                                                              filteredItems.any(
-                                                                  (f) =>
-                                                                      f.code ==
+                                                              state.selectedLastLevelBoundaries.any(
+                                                                  (s) =>
+                                                                      s.code ==
                                                                       e.code))
                                                           .map((e) =>
                                                               DropdownItem(

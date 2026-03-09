@@ -145,6 +145,7 @@ class BeneficiaryDownSyncBloc
         emit(BeneficiaryDownSyncState.dataFound(
           serverTotalCount,
           event.batchSize,
+          {event.boundaryCode: serverTotalCount},
         ));
       } else {
         await LocalSecureStore.instance.setManualSyncTrigger(false);
@@ -290,6 +291,7 @@ class BeneficiaryDownSyncBloc
 
     try {
       int totalServerCount = 0;
+      final Map<String, int> boundaryCounts = {};
 
       for (final boundary in event.boundaries) {
         final boundaryCode = boundary.code.toString();
@@ -316,14 +318,19 @@ class BeneficiaryDownSyncBloc
         );
 
         if (initialResults.isNotEmpty) {
-          totalServerCount +=
-              (initialResults["DownsyncCriteria"]["totalCount"] as int);
+          final count =
+              initialResults["DownsyncCriteria"]["totalCount"] as int;
+          if (count > 0) {
+            boundaryCounts[boundaryCode] = count;
+            totalServerCount += count;
+          }
         }
       }
 
       emit(BeneficiaryDownSyncState.dataFound(
         totalServerCount,
         event.batchSize,
+        boundaryCounts,
       ));
     } catch (e) {
       await LocalSecureStore.instance.setManualSyncTrigger(false);
@@ -338,36 +345,19 @@ class BeneficiaryDownSyncBloc
   ) async {
     emit(const BeneficiaryDownSyncState.loading(true));
 
-    final boundaries = event.boundaries;
+    // Only process boundaries that have data (count > 0) from the initial check
+    final boundaries = event.boundaries
+        .where((b) => (event.boundaryCounts[b.code.toString()] ?? 0) > 0)
+        .toList();
     final List<DownsyncModel> completedResults = [];
 
     try {
       for (int i = 0; i < boundaries.length; i++) {
         final boundaryCode = boundaries[i].code.toString();
-        final boundaryName = boundaries[i].name.toString();
+        final boundaryName = boundaries[i].code.toString();
 
-        // Get this boundary's total count from server
-        final existingData =
-            await downSyncLocalRepository.search(DownsyncSearchModel(
-          locality: boundaryCode,
-        ));
-        int? initLastSyncedTime = existingData.isEmpty
-            ? null
-            : existingData.first.lastSyncedTime;
-        final countResult = await downSyncRemoteRepository.downSync(
-          DownsyncSearchModel(
-            locality: boundaryCode,
-            offset: existingData.firstOrNull?.offset ?? 0,
-            limit: 0,
-            isDeleted: true,
-            lastSyncedTime: initLastSyncedTime,
-            tenantId: envConfig.variables.tenantId,
-            projectId: event.projectId,
-          ),
-        );
-        if (countResult.isEmpty) continue;
-        int boundaryTotalCount =
-            countResult["DownsyncCriteria"]["totalCount"] as int;
+        // Use cached count from the initial check instead of re-fetching
+        int boundaryTotalCount = event.boundaryCounts[boundaryCode] ?? 0;
         if (boundaryTotalCount == 0) continue;
 
         // Check disk space
@@ -613,6 +603,7 @@ class BeneficiaryDownSyncEvent with _$BeneficiaryDownSyncEvent {
     required String projectId,
     required List<BoundaryModel> boundaries,
     required int batchSize,
+    required Map<String, int> boundaryCounts,
   }) = DownSyncDownloadAllEvent;
 
   const factory BeneficiaryDownSyncEvent.downSyncReport() = DownSyncReportEvent;
@@ -649,6 +640,7 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
   const factory BeneficiaryDownSyncState.dataFound(
     int initialServerCount,
     int batchSize,
+    Map<String, int> boundaryCounts,
   ) = _DownSyncDataFoundState;
 
   const factory BeneficiaryDownSyncState.resetState() = _DownSyncResetState;

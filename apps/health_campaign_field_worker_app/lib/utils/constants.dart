@@ -419,6 +419,24 @@ enum DigitProgressDialogType {
   pendingSync,
 }
 
+class DownloadProgressData {
+  final double progress;
+  final String boundaryName;
+  final int syncedCount;
+  final int totalCount;
+  final int currentIndex;
+  final int totalBoundaries;
+
+  const DownloadProgressData({
+    required this.progress,
+    required this.boundaryName,
+    required this.syncedCount,
+    required this.totalCount,
+    required this.currentIndex,
+    required this.totalBoundaries,
+  });
+}
+
 class DownloadBeneficiary {
   String title;
   String projectId;
@@ -433,6 +451,7 @@ class DownloadBeneficiary {
   String? prefixLabel;
   String? suffixLabel;
   AppConfiguration? appConfiguartion;
+  Map<String, int> boundaryCounts;
 
   DownloadBeneficiary({
     required this.title,
@@ -448,5 +467,6 @@ class DownloadBeneficiary {
     this.secondaryButtonLabel,
     this.prefixLabel,
     this.suffixLabel,
+    this.boundaryCounts = const {},
   });
 }
