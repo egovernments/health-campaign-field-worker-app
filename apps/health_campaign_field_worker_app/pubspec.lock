@@ -1882,10 +1882,10 @@ packages:
     dependency: transitive
     description:
       name: registration_delivery
-      sha256: e0594d5ec0b3feaacbfc10d7c6447cf4d6ca0ffd7bb7a12502f5fc8ba81721de
+      sha256: "43f381276df6dce931107963dc34c92e87eb22fe86bf4e41a058b9304c4235e0"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.1-dev.8-console"
+    version: "1.1.1-dev.6-console"
   rxdart:
     dependency: transitive
     description:
