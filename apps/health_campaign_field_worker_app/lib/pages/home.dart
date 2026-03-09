@@ -66,6 +66,7 @@ import '../widgets/progress_bar/beneficiary_progress.dart';
 import '../widgets/resource_card/custom_resource_card.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
+import '../widgets/stock_balance/stock_balance_card.dart';
 import '../widgets/stock_reconciliation/stock_reconciliation_card.dart';
 import '../widgets/task_functions.dart';
 
@@ -111,10 +112,10 @@ class _HomePageState extends LocalizedState<HomePage> {
     // Example 1: Register a dynamic resource card with multi-page state access
     CustomComponentRegistry().registerBuilder(
       'resourceCard',
-          (context, stateAccessor) {
+      (context, stateAccessor) {
         // Access data from any page in the flow
         final beneficiaryDetails =
-        stateAccessor.getPageData('beneficiaryDetails');
+            stateAccessor.getPageData('beneficiaryDetails');
 
         // Build your component with access to all this data
         return ResourceCard(
@@ -126,7 +127,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     CustomComponentRegistry().registerBuilder(
       'evaluationFacility',
-          (context, stateAccessor) {
+      (context, stateAccessor) {
         // Build your component with access to all this data
         return const EvaluationKeyDropDown(
             schemaName: "REFERRAL_CREATE",
@@ -136,7 +137,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     CustomComponentRegistry().registerBuilder(
       'healthFacility',
-          (context, stateAccessor) {
+      (context, stateAccessor) {
         // Build your component with access to all this data
         return const EvaluationKeyDropDown(
             schemaName: "REFER_BENEFICIARY", formControlName: "healthFacility");
@@ -145,14 +146,14 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     CustomComponentRegistry().registerBuilder(
       'referralCycle',
-          (context, stateAccessor) {
+      (context, stateAccessor) {
         // Build your component with access to all this data
         return const CycleDropDown();
       },
     );
     CustomComponentRegistry().registerBuilder(
       'facilityToWhich',
-          (context, stateAccessor) {
+      (context, stateAccessor) {
         // Access data from RECORDSTOCK form (where formData is stored by NAVIGATION executor)
         final stockData = stateAccessor.getPageData('manageStock');
 
@@ -167,7 +168,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     );
     CustomComponentRegistry().registerBuilder(
       'facilityFromWhich',
-          (context, stateAccessor) {
+      (context, stateAccessor) {
         // Access data from RECORDSTOCK form (where formData is stored by NAVIGATION executor)
         final stockData = stateAccessor.getPageData('manageStock');
 
@@ -182,7 +183,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     );
     CustomComponentRegistry().registerBuilder(
       'productdetail',
-          (context, stateAccessor) {
+      (context, stateAccessor) {
         // Access data from any page in the flow
         final stockData = stateAccessor.getPageData('manageStock');
 
@@ -195,7 +196,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     );
     CustomComponentRegistry().registerBuilder(
       'stockReconciliationCard',
-          (context, stateAccessor) {
+      (context, stateAccessor) {
         // Access data from stock reconciliation page
         final reconciliationData = stateAccessor.getPageData('stockRecon');
 
@@ -207,38 +208,38 @@ class _HomePageState extends LocalizedState<HomePage> {
       },
     );
     FunctionRegistry.register('generateUniqueMaterialNoteNumber',
-            (args, stateData) {
-          // Generate a synchronous unique ID without async operations
-          int timestamp = DateTime.now().millisecondsSinceEpoch;
-          String userUuid = context.loggedInUserUuid;
+        (args, stateData) {
+      // Generate a synchronous unique ID without async operations
+      int timestamp = DateTime.now().millisecondsSinceEpoch;
+      String userUuid = context.loggedInUserUuid;
 
-          // Create a combined string with timestamp and user UUID
-          String combinedId = '$userUuid$timestamp';
+      // Create a combined string with timestamp and user UUID
+      String combinedId = '$userUuid$timestamp';
 
-          // Generate SHA-256 hash
-          List<int> bytes = utf8.encode(combinedId);
-          Digest sha256Hash = sha256.convert(bytes);
+      // Generate SHA-256 hash
+      List<int> bytes = utf8.encode(combinedId);
+      Digest sha256Hash = sha256.convert(bytes);
 
-          // Convert the hash to a 12-character string and make it uppercase
-          String hashString = sha256Hash.toString();
-          String uniqueId = hashString.substring(0, 12).toUpperCase();
+      // Convert the hash to a 12-character string and make it uppercase
+      String hashString = sha256Hash.toString();
+      String uniqueId = hashString.substring(0, 12).toUpperCase();
 
-          // Add a hyphen every 4 characters
-          String formattedUniqueId = uniqueId.replaceAllMapped(
-            RegExp(r'.{1,4}'),
-                (match) => '${match.group(0)}-',
-          );
+      // Add a hyphen every 4 characters
+      String formattedUniqueId = uniqueId.replaceAllMapped(
+        RegExp(r'.{1,4}'),
+        (match) => '${match.group(0)}-',
+      );
 
-          // Remove the last hyphen
-          formattedUniqueId =
-              formattedUniqueId.substring(0, formattedUniqueId.length - 1);
+      // Remove the last hyphen
+      formattedUniqueId =
+          formattedUniqueId.substring(0, formattedUniqueId.length - 1);
 
-          if (kDebugMode) {
-            print('uniqueId : $formattedUniqueId');
-          }
+      if (kDebugMode) {
+        print('uniqueId : $formattedUniqueId');
+      }
 
-          return formattedUniqueId;
-        });
+      return formattedUniqueId;
+    });
     registerTaskFunctions();
     FunctionRegistry.register('getQuantityLabel', (args, stateData) {
       if (args.isEmpty) return 'APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL';
@@ -470,7 +471,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       final isDistributor = context.loggedInUserRoles
           .where(
             (role) => role.code == RolesType.distributor.toValue(),
-      )
+          )
           .toList()
           .isNotEmpty;
       final isWareHouseMgr = context.loggedInUserRoles
@@ -586,7 +587,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           slivers: [
             SliverGrid(
               delegate: SliverChildBuilderDelegate(
-                    (context, index) {
+                (context, index) {
                   return homeItems.elementAt(index);
                 },
                 childCount: homeItems.length,
@@ -606,18 +607,23 @@ class _HomePageState extends LocalizedState<HomePage> {
                   showcaseFor: showcaseKeys.toSet().toList(),
                 ),
               ),
+              // Show stock balance card for users with stock management access
+              if (state.actionsWrapper.actions
+                  .map((e) => e.displayName)
+                  .contains(i18.home.manageStockLabel))
+                const StockBalanceCard(),
               skipProgressBar
                   ? const SizedBox.shrink()
                   : homeShowcaseData.distributorProgressBar.buildWith(
-                child: BeneficiaryProgressBar(
-                  label: localizations.translate(
-                    i18.home.progressIndicatorTitle,
-                  ),
-                  prefixLabel: localizations.translate(
-                    i18.home.progressIndicatorPrefixLabel,
-                  ),
-                ),
-              ),
+                      child: BeneficiaryProgressBar(
+                        label: localizations.translate(
+                          i18.home.progressIndicatorTitle,
+                        ),
+                        prefixLabel: localizations.translate(
+                          i18.home.progressIndicatorPrefixLabel,
+                        ),
+                      ),
+                    ),
             ],
           ),
           footer: Padding(
@@ -725,19 +731,19 @@ class _HomePageState extends LocalizedState<HomePage> {
                     return count == 0
                         ? const Offstage()
                         : Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: spacer2,
-                      ),
-                      child: InfoCard(
-                        type: InfoType.info,
-                        description: localizations
-                            .translate(i18.home.dataSyncInfoContent)
-                            .replaceAll('{}', count.toString()),
-                        title: localizations.translate(
-                          i18.home.dataSyncInfoLabel,
-                        ),
-                      ),
-                    );
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: spacer2,
+                            ),
+                            child: InfoCard(
+                              type: InfoType.info,
+                              description: localizations
+                                  .translate(i18.home.dataSyncInfoContent)
+                                  .replaceAll('{}', count.toString()),
+                              title: localizations.translate(
+                                i18.home.dataSyncInfoLabel,
+                              ),
+                            ),
+                          );
                   },
                 );
               },
@@ -749,9 +755,9 @@ class _HomePageState extends LocalizedState<HomePage> {
   }
 
   void _showSyncFailedDialog(
-      BuildContext context, {
-        required String message,
-      }) {
+    BuildContext context, {
+    required String message,
+  }) {
     Navigator.of(context, rootNavigator: true).pop();
 
     DigitSyncDialog.show(
@@ -786,7 +792,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
       i18.home.fileComplaint:
-      homeShowcaseData.distributorFileComplaint.buildWith(
+          homeShowcaseData.distributorFileComplaint.buildWith(
         child: HomeItemCard(
           icon: Icons.announcement,
           label: i18.home.fileComplaint,
@@ -854,7 +860,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       ),
 
       i18.home.beneficiaryLabel:
-      homeShowcaseData.distributorBeneficiaries.buildWith(
+          homeShowcaseData.distributorBeneficiaries.buildWith(
         child: HomeItemCard(
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
@@ -871,7 +877,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
             FlowBuilderSingleton().setPersistenceConfiguration(
                 persistenceConfiguration:
-                PersistenceConfiguration.offlineFirst);
+                    PersistenceConfiguration.offlineFirst);
             WidgetRegistry.initialize();
             CrudBlocSingleton().setData(
               crudService: DigitCrudService(
@@ -983,14 +989,14 @@ class _HomePageState extends LocalizedState<HomePage> {
             try {
               if (schemaJsonRaw != null) {
                 final allSchemas =
-                json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
                 final data = allSchemas['REGISTRATION'];
 
                 final registrationDeliveryData = data?['data'];
                 final flowsData =
                     (registrationDeliveryData['flows'] as List<dynamic>?)
-                        ?.map((e) => Map<String, dynamic>.from(e as Map))
-                        .toList() ??
+                            ?.map((e) => Map<String, dynamic>.from(e as Map))
+                            .toList() ??
                         [];
                 FlowRegistry.setConfig(flowsData);
                 NavigationRegistry.setupNavigation(context);
@@ -1056,7 +1062,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
       i18.home.manageStockLabel:
-      homeShowcaseData.warehouseManagerManageStock.buildWith(
+          homeShowcaseData.warehouseManagerManageStock.buildWith(
         child: HomeItemCard(
           icon: Icons.store_mall_directory,
           label: i18.home.manageStockLabel,
@@ -1113,7 +1119,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
       i18.home.stockReconciliationLabel:
-      homeShowcaseData.wareHouseManagerStockReconciliation.buildWith(
+          homeShowcaseData.wareHouseManagerStockReconciliation.buildWith(
         child: HomeItemCard(
           icon: Icons.menu_book,
           label: i18.home.stockReconciliationLabel,
@@ -1227,27 +1233,27 @@ class _HomePageState extends LocalizedState<HomePage> {
       ),
       i18.home.stockSyncDataLabel: homeShowcaseData.stockSyncData.buildWith(
           child: HomeItemCard(
-            icon: Icons.sync_alt,
-            label: i18.home.stockSyncDataLabel,
-            onPressed: () async {
-              final stockService = StockDownsyncService(
-                localSecureStore: LocalSecureStore.instance,
-                projectFacilityLocalRepository: context.read<
-                    LocalRepository<ProjectFacilityModel,
-                        ProjectFacilitySearchModel>>(),
-                facilityLocalRepository: context
-                    .read<LocalRepository<FacilityModel, FacilitySearchModel>>(),
-                stockRemoteRepository:
+        icon: Icons.sync_alt,
+        label: i18.home.stockSyncDataLabel,
+        onPressed: () async {
+          final stockService = StockDownsyncService(
+            localSecureStore: LocalSecureStore.instance,
+            projectFacilityLocalRepository: context.read<
+                LocalRepository<ProjectFacilityModel,
+                    ProjectFacilitySearchModel>>(),
+            facilityLocalRepository: context
+                .read<LocalRepository<FacilityModel, FacilitySearchModel>>(),
+            stockRemoteRepository:
                 context.read<RemoteRepository<StockModel, StockSearchModel>>(),
-                stockLocalRepository:
+            stockLocalRepository:
                 context.read<LocalRepository<StockModel, StockSearchModel>>(),
-              );
+          );
 
-              await stockService.execute(context);
-            },
-          )),
+          await stockService.execute(context);
+        },
+      )),
       i18.home.beneficiaryReferralLabel:
-      homeShowcaseData.hfBeneficiaryReferral.buildWith(
+          homeShowcaseData.hfBeneficiaryReferral.buildWith(
         child: HomeItemCard(
           icon: Icons.supervised_user_circle_rounded,
           label: i18.home.beneficiaryReferralLabel,
@@ -1334,7 +1340,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
       i18.home.manageAttendanceLabel:
-      homeShowcaseData.manageAttendance.buildWith(
+          homeShowcaseData.manageAttendance.buildWith(
         child: HomeItemCard(
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
@@ -1409,40 +1415,41 @@ class _HomePageState extends LocalizedState<HomePage> {
       //     customIcon: Constants.beneficiaryIdDownload,
       //   ),
       // ),
+
       i18.home.transitPostLabel: homeShowcaseData.transitPost.buildWith(
           child: HomeItemCard(
-            icon: Icons.vaccines_outlined,
-            label: i18.home.transitPostLabel,
-            onPressed: () {
-              const module = "hcm-transit-post";
-              // if (isTriggerLocalisation) {
-              triggerLocalization(module: module);
-              context.router.push(const TransitPostWrapperRoute());
-            },
-          )),
+        icon: Icons.vaccines_outlined,
+        label: i18.home.transitPostLabel,
+        onPressed: () {
+          const module = "hcm-transit-post";
+          // if (isTriggerLocalisation) {
+          triggerLocalization(module: module);
+          context.router.push(const TransitPostWrapperRoute());
+        },
+      )),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
       // INFO : Need to add showcase keys of package Here
       i18.home.beneficiaryLabel:
-      homeShowcaseData.distributorBeneficiaries.showcaseKey,
+          homeShowcaseData.distributorBeneficiaries.showcaseKey,
       i18.home.manageStockLabel:
-      homeShowcaseData.warehouseManagerManageStock.showcaseKey,
+          homeShowcaseData.warehouseManagerManageStock.showcaseKey,
       i18.home.stockReconciliationLabel:
-      homeShowcaseData.wareHouseManagerStockReconciliation.showcaseKey,
+          homeShowcaseData.wareHouseManagerStockReconciliation.showcaseKey,
       i18.home.mySurveyForm:
-      homeShowcaseData.supervisorMySurveyForm.showcaseKey,
+          homeShowcaseData.supervisorMySurveyForm.showcaseKey,
       i18.home.fileComplaint:
-      homeShowcaseData.distributorFileComplaint.showcaseKey,
+          homeShowcaseData.distributorFileComplaint.showcaseKey,
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
       i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.showcaseKey,
       i18.home.beneficiaryReferralLabel:
-      homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
+          homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
       i18.home.manageAttendanceLabel:
-      homeShowcaseData.manageAttendance.showcaseKey,
+          homeShowcaseData.manageAttendance.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
       i18.home.closedHouseHoldLabel:
-      homeShowcaseData.closedHouseHold.showcaseKey,
+          homeShowcaseData.closedHouseHold.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
       // i18.home.clfLabel: homeShowcaseData.clf.showcaseKey, // TODO: Uncomment when CLF is implemented
@@ -1467,17 +1474,18 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.manageAttendanceLabel,
       i18.home.dashboard,
       // i18.home.beneficiaryIdLabel, // TODO: Uncomment when beneficiary downsync is implemented
+      i18.home.faceRegistrationLabel,
       i18.home.dataShare,
       i18.home.db,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
         .where((element) =>
-    state.actionsWrapper.actions
-        .map((e) => e.displayName)
-        .toList()
-        .contains(element) ||
-        element == i18.home.db)
+            state.actionsWrapper.actions
+                .map((e) => e.displayName)
+                .toList()
+                .contains(element) ||
+            element == i18.home.db)
         .toList();
 
     final showcaseKeys = filteredLabels
@@ -1490,7 +1498,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     }
     filteredLabels.add(i18.home.stockSyncDataLabel);
     final List<Widget> widgetList =
-    filteredLabels.map((label) => homeItemsMap[label]!).toList();
+        filteredLabels.map((label) => homeItemsMap[label]!).toList();
 
     return _HomeItemDataModel(
       widgetList,
@@ -1500,46 +1508,46 @@ class _HomePageState extends LocalizedState<HomePage> {
 
   void triggerLocalization({String? module, bool? loadOnline}) {
     context.read<AppInitializationBloc>().state.maybeWhen(
-      orElse: () {},
-      initialized: (
-          AppConfiguration appConfiguration,
-          _,
-          __,
+          orElse: () {},
+          initialized: (
+            AppConfiguration appConfiguration,
+            _,
+            __,
           ) {
-        final appConfig = appConfiguration;
-        final localizationModulesList = appConfiguration.backendInterface;
-        final selectedLocale = AppSharedPreferences().getSelectedLocale;
-        LocalizationParams()
-            .setCode(LeastLevelBoundarySingleton().boundary);
-        if (loadOnline == true) {
-          context
-              .read<LocalizationBloc>()
-              .add(LocalizationEvent.onRemoteLoadLocalization(
-            module: module ??
-                "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
-            tenantId: envConfig.variables.tenantId,
-            locale: selectedLocale!,
-            path: Constants.localizationApiPath,
-          ));
-        } else {
-          context
-              .read<LocalizationBloc>()
-              .add(LocalizationEvent.onLoadLocalization(
-            module: module != null && module.isNotEmpty
-                ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist"
-                : localizationModulesList?.interfaces
-                .where(
-                    (e) => e.type == Modules.localizationModule)
-                .map((e) => e.name.toString())
-                .join(',') ??
-                "",
-            tenantId: envConfig.variables.tenantId,
-            locale: selectedLocale!,
-            path: Constants.localizationApiPath,
-          ));
-        }
-      },
-    );
+            final appConfig = appConfiguration;
+            final localizationModulesList = appConfiguration.backendInterface;
+            final selectedLocale = AppSharedPreferences().getSelectedLocale;
+            LocalizationParams()
+                .setCode(LeastLevelBoundarySingleton().boundary);
+            if (loadOnline == true) {
+              context
+                  .read<LocalizationBloc>()
+                  .add(LocalizationEvent.onRemoteLoadLocalization(
+                    module: module ??
+                        "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                    tenantId: envConfig.variables.tenantId,
+                    locale: selectedLocale!,
+                    path: Constants.localizationApiPath,
+                  ));
+            } else {
+              context
+                  .read<LocalizationBloc>()
+                  .add(LocalizationEvent.onLoadLocalization(
+                    module: module != null && module.isNotEmpty
+                        ? "$module,hcm-common,hcm-login,hcm-scanner,hcm-checklist"
+                        : localizationModulesList?.interfaces
+                                .where(
+                                    (e) => e.type == Modules.localizationModule)
+                                .map((e) => e.name.toString())
+                                .join(',') ??
+                            "",
+                    tenantId: envConfig.variables.tenantId,
+                    locale: selectedLocale!,
+                    path: Constants.localizationApiPath,
+                  ));
+            }
+          },
+        );
   }
 }
 
@@ -1548,10 +1556,10 @@ void setPackagesSingleton(BuildContext context) {
   context.read<AppInitializationBloc>().state.maybeWhen(
       orElse: () {},
       initialized: (
-          AppConfiguration appConfiguration,
-          List<ServiceRegistry> serviceRegistry,
-          List<DashboardConfigSchema?>? dashboardConfigSchema,
-          ) {
+        AppConfiguration appConfiguration,
+        List<ServiceRegistry> serviceRegistry,
+        List<DashboardConfigSchema?>? dashboardConfigSchema,
+      ) {
         final filteredDashboardConfig = filterDashboardConfig(
             dashboardConfigSchema ?? [], context.projectTypeCode ?? "");
         loadLocalization(context, appConfiguration);
@@ -1576,9 +1584,9 @@ void setPackagesSingleton(BuildContext context) {
           selectedProject: context.selectedProject,
           userRoles: context.loggedInUserRoles
               .map((role) => {
-            'code': role.code,
-            'name': role.name,
-          })
+                    'code': role.code,
+                    'name': role.name,
+                  })
               .toList(),
         );
 
@@ -1588,9 +1596,9 @@ void setPackagesSingleton(BuildContext context) {
           loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,
           manualAttendanceReasons: appConfiguration.manualAttendanceReasons
-              ?.where((e) => e.active)
-              .map((e) => DropdownItem(name: e.name, code: e.code))
-              .toList() ??
+                  ?.where((e) => e.active)
+                  .map((e) => DropdownItem(name: e.name, code: e.code))
+                  .toList() ??
               [],
         );
 
@@ -1633,7 +1641,7 @@ void loadLocalization(
   context.read<LocalizationBloc>().add(
       LocalizationEvent.onUpdateLocalizationIndex(
           index: appConfiguration.languages!.indexWhere((element) =>
-          element.value == AppSharedPreferences().getSelectedLocale),
+              element.value == AppSharedPreferences().getSelectedLocale),
           code: AppSharedPreferences().getSelectedLocale!));
 }
 
