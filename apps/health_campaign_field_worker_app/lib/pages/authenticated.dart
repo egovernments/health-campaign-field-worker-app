@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -19,7 +18,6 @@ import 'package:flutter_portal/flutter_portal.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/sync_service_lib.dart';
 
@@ -31,14 +29,17 @@ import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.da
 import '../blocs/push_notification/push_notification.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
+import '../data/local_store/secure_store/secure_store.dart';
 import '../data/remote_client.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
 import '../models/downsync/downsync.dart';
+import '../models/entities/notification_data.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/stock_downsync.dart';
 import '../utils/utils.dart';
 import '../widgets/error_screen.dart';
 import 'error_boundary.dart';
@@ -118,6 +119,27 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
     if (_isOfflineDialogShowing) {
       Navigator.of(context, rootNavigator: true).pop();
       _isOfflineDialogShowing = false;
+    }
+  }
+
+  void _triggerStockDownsync(BuildContext context) {
+    try {
+      final stockService = StockDownsyncService(
+        localSecureStore: LocalSecureStore.instance,
+        projectFacilityLocalRepository: context.read<
+            LocalRepository<ProjectFacilityModel,
+                ProjectFacilitySearchModel>>(),
+        facilityLocalRepository:
+            context.read<LocalRepository<FacilityModel, FacilitySearchModel>>(),
+        stockRemoteRepository:
+            context.read<RemoteRepository<StockModel, StockSearchModel>>(),
+        stockLocalRepository:
+            context.read<LocalRepository<StockModel, StockSearchModel>>(),
+      );
+
+      stockService.execute(context);
+    } catch (e) {
+      debugPrint('Stock downsync on notification tap failed: $e');
     }
   }
 
@@ -310,17 +332,20 @@ class _AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                         PushNotificationState>(
                       listener: (context, state) {
                         if (state is PushNotificationTappedState) {
-                          final screen = state.data['screen'];
-                          switch (screen) {
-                            case 'home':
+                          final notificationData =
+                              NotificationData.fromMap(state.data);
+
+                          if (notificationData.notificationType ==
+                              NotificationType.stockSync) {
+                            _triggerStockDownsync(context);
+                          }
+
+                          switch (notificationData.screenName) {
+                            case NotificationScreenName.home:
                               context.router.replaceAll([HomeRoute()]);
                               break;
-                            case 'profile':
+                            case NotificationScreenName.profile:
                               context.router.push(ProfileRoute());
-                              break;
-                            default:
-                              // If no recognized screen, navigate to home
-                              context.router.replaceAll([HomeRoute()]);
                               break;
                           }
                         }
