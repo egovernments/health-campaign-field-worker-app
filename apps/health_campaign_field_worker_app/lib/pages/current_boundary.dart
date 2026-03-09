@@ -15,9 +15,12 @@ import '../widgets/localized.dart';
 
 @RoutePage<BoundaryModel>()
 class CurrentBoundaryPage extends LocalizedStatefulWidget {
+  final Function(BuildContext context)? onBoundarySelected;
+
   const CurrentBoundaryPage({
     super.key,
     super.appLocalizations,
+    this.onBoundarySelected,
   });
 
   @override
@@ -75,7 +78,11 @@ class _CurrentBoundaryPageState extends LocalizedState<CurrentBoundaryPage> {
                       return InkWell(
                         onTap: () {
                           context.setBoundary(boundary);
-                          context.router.pop(boundary);
+                          if (widget.onBoundarySelected != null) {
+                            widget.onBoundarySelected!(context);
+                          } else {
+                            context.router.pop(boundary);
+                          }
                         },
                         child: DigitCard(
                           children: [

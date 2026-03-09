@@ -61,6 +61,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: CurrentBoundaryPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+          onBoundarySelected: args.onBoundarySelected,
         ),
       );
     },
@@ -337,12 +338,14 @@ class CurrentBoundaryRoute extends PageRouteInfo<CurrentBoundaryRouteArgs> {
   CurrentBoundaryRoute({
     Key? key,
     AppLocalizations? appLocalizations,
+    dynamic Function(BuildContext)? onBoundarySelected,
     List<PageRouteInfo>? children,
   }) : super(
           CurrentBoundaryRoute.name,
           args: CurrentBoundaryRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
+            onBoundarySelected: onBoundarySelected,
           ),
           initialChildren: children,
         );
@@ -357,15 +360,18 @@ class CurrentBoundaryRouteArgs {
   const CurrentBoundaryRouteArgs({
     this.key,
     this.appLocalizations,
+    this.onBoundarySelected,
   });
 
   final Key? key;
 
   final AppLocalizations? appLocalizations;
 
+  final dynamic Function(BuildContext)? onBoundarySelected;
+
   @override
   String toString() {
-    return 'CurrentBoundaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'CurrentBoundaryRouteArgs{key: $key, appLocalizations: $appLocalizations, onBoundarySelected: $onBoundarySelected}';
   }
 }
 

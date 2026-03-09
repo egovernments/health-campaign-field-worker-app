@@ -790,53 +790,53 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.announcement,
           label: i18.home.fileComplaint,
           onPressed: () async {
-            final selected = await context.router
-                .push<BoundaryModel>(CurrentBoundaryRoute());
-            if (selected == null || !context.mounted) return;
+            context.router.push(CurrentBoundaryRoute(
+              onBoundarySelected: (ctx) async {
+                final moduleName =
+                    'hcm-complaints-${context.selectedProject.referenceID}';
+                triggerLocalization(module: moduleName);
+                isTriggerLocalisation = false;
 
-            final moduleName =
-                'hcm-complaints-${context.selectedProject.referenceID}';
-            triggerLocalization(module: moduleName);
-            isTriggerLocalisation = false;
-
-            await FlowNavigationUtils.navigateToFlowModule(
-              context: context,
-              config: FlowModuleConfig(
-                schemaKey: 'COMPLAINTS',
-                sampleFlows: sampleComplaintFlows,
-                relationshipMappings: const [
-                  RelationshipMapping(
-                      from: 'pgrComplainant',
-                      to: 'pgrService',
-                      localKey: 'complaintClientReferenceId',
-                      foreignKey: 'clientReferenceId'),
-                  RelationshipMapping(
-                      from: 'address',
-                      to: 'pgrService',
-                      localKey: 'relatedClientReferenceId',
-                      foreignKey: 'clientReferenceId'),
-                ],
-                nestedModelMappings: const [
-                  NestedModelMapping(
-                    rootModel: 'pgrService',
-                    fields: {
-                      'user': NestedFieldMapping(
-                        table: 'pgrComplainant',
-                        localKey: 'clientReferenceId',
-                        foreignKey: 'complaintClientReferenceId',
-                        type: NestedMappingType.one,
+                await FlowNavigationUtils.navigateToFlowModule(
+                  context: ctx,
+                  config: FlowModuleConfig(
+                    schemaKey: 'COMPLAINTS',
+                    sampleFlows: sampleComplaintFlows,
+                    relationshipMappings: const [
+                      RelationshipMapping(
+                          from: 'pgrComplainant',
+                          to: 'pgrService',
+                          localKey: 'complaintClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                      RelationshipMapping(
+                          from: 'address',
+                          to: 'pgrService',
+                          localKey: 'relatedClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                    ],
+                    nestedModelMappings: const [
+                      NestedModelMapping(
+                        rootModel: 'pgrService',
+                        fields: {
+                          'user': NestedFieldMapping(
+                            table: 'pgrComplainant',
+                            localKey: 'clientReferenceId',
+                            foreignKey: 'complaintClientReferenceId',
+                            type: NestedMappingType.one,
+                          ),
+                          'address': NestedFieldMapping(
+                            table: 'address',
+                            localKey: 'clientReferenceId',
+                            foreignKey: 'relatedClientReferenceId',
+                            type: NestedMappingType.one,
+                          )
+                        },
                       ),
-                      'address': NestedFieldMapping(
-                        table: 'address',
-                        localKey: 'clientReferenceId',
-                        foreignKey: 'relatedClientReferenceId',
-                        type: NestedMappingType.one,
-                      )
-                    },
+                    ],
                   ),
-                ],
-              ),
-            );
+                );
+              },
+            ));
           },
         ),
       ),
@@ -862,159 +862,159 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
-            final selected = await context.router
-                .push<BoundaryModel>(CurrentBoundaryRoute());
-            if (selected == null || !context.mounted) return;
+            context.router.push(CurrentBoundaryRoute(
+              onBoundarySelected: (ctx) async {
+                final moduleName =
+                    'hcm-registration-${context.selectedProject.referenceID}';
+                triggerLocalization(module: moduleName);
+                isTriggerLocalisation = false;
 
-            final moduleName =
-                'hcm-registration-${context.selectedProject.referenceID}';
-            triggerLocalization(module: moduleName);
-            isTriggerLocalisation = false;
+                final prefs = await SharedPreferences.getInstance();
+                final schemaJsonRaw = prefs.getString('app_config_schemas');
 
-            final prefs = await SharedPreferences.getInstance();
-            final schemaJsonRaw = prefs.getString('app_config_schemas');
-
-            FlowBuilderSingleton().setPersistenceConfiguration(
-                persistenceConfiguration:
-                    PersistenceConfiguration.offlineFirst);
-            WidgetRegistry.initialize();
-            CrudBlocSingleton().setData(
-              crudService: DigitCrudService(
-                context: context,
-                relationshipMap: [
-                  const RelationshipMapping(
-                      from: 'name',
-                      to: 'individual',
-                      localKey: 'individualClientReferenceId',
-                      foreignKey: 'clientReferenceId'),
-                  const RelationshipMapping(
-                      from: 'identifier',
-                      to: 'individual',
-                      localKey: 'individualClientReferenceId',
-                      foreignKey: 'clientReferenceId'),
-                  const RelationshipMapping(
-                      from: 'householdMember',
-                      to: 'individual',
-                      localKey: 'individualClientReferenceId',
-                      foreignKey: 'clientReferenceId'),
-                  const RelationshipMapping(
-                      from: 'address',
-                      to: 'household',
-                      localKey: 'relatedClientReferenceId',
-                      foreignKey: 'clientReferenceId'),
-                  const RelationshipMapping(
-                      from: 'householdMember',
-                      to: 'household',
-                      localKey: 'householdClientReferenceId',
-                      foreignKey: 'clientReferenceId'),
-                  const RelationshipMapping(
-                      from: 'projectBeneficiary',
-                      to: 'task',
-                      localKey: 'clientReferenceId',
-                      foreignKey: 'projectBeneficiaryClientReferenceId'),
-                  const RelationshipMapping(
-                      from: 'projectBeneficiary',
-                      to: 'referral',
-                      localKey: 'clientReferenceId',
-                      foreignKey: 'projectBeneficiaryClientReferenceId'),
-                  // Conditional mapping
-                  if (FlowBuilderSingleton().beneficiaryType ==
-                      BeneficiaryType.household)
-                    const RelationshipMapping(
-                      from: 'projectBeneficiary',
-                      to: 'household',
-                      localKey: 'beneficiaryClientReferenceId',
-                      foreignKey: 'clientReferenceId',
-                    )
-                  else
-                    const RelationshipMapping(
-                      from: 'projectBeneficiary',
-                      to: 'individual',
-                      localKey: 'beneficiaryClientReferenceId',
-                      foreignKey: 'clientReferenceId',
-                    ),
-                ],
-                nestedModelMappings: [
-                  const NestedModelMapping(
-                    rootModel: 'individual',
-                    fields: {
-                      'name': NestedFieldMapping(
-                        table: 'name',
-                        localKey: 'clientReferenceId',
-                        foreignKey: 'individualClientReferenceId',
-                        type: NestedMappingType.one,
+                FlowBuilderSingleton().setPersistenceConfiguration(
+                    persistenceConfiguration:
+                        PersistenceConfiguration.offlineFirst);
+                WidgetRegistry.initialize();
+                CrudBlocSingleton().setData(
+                  crudService: DigitCrudService(
+                    context: ctx,
+                    relationshipMap: [
+                      const RelationshipMapping(
+                          from: 'name',
+                          to: 'individual',
+                          localKey: 'individualClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                      const RelationshipMapping(
+                          from: 'identifier',
+                          to: 'individual',
+                          localKey: 'individualClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                      const RelationshipMapping(
+                          from: 'householdMember',
+                          to: 'individual',
+                          localKey: 'individualClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                      const RelationshipMapping(
+                          from: 'address',
+                          to: 'household',
+                          localKey: 'relatedClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                      const RelationshipMapping(
+                          from: 'householdMember',
+                          to: 'household',
+                          localKey: 'householdClientReferenceId',
+                          foreignKey: 'clientReferenceId'),
+                      const RelationshipMapping(
+                          from: 'projectBeneficiary',
+                          to: 'task',
+                          localKey: 'clientReferenceId',
+                          foreignKey: 'projectBeneficiaryClientReferenceId'),
+                      const RelationshipMapping(
+                          from: 'projectBeneficiary',
+                          to: 'referral',
+                          localKey: 'clientReferenceId',
+                          foreignKey: 'projectBeneficiaryClientReferenceId'),
+                      // Conditional mapping
+                      if (FlowBuilderSingleton().beneficiaryType ==
+                          BeneficiaryType.household)
+                        const RelationshipMapping(
+                          from: 'projectBeneficiary',
+                          to: 'household',
+                          localKey: 'beneficiaryClientReferenceId',
+                          foreignKey: 'clientReferenceId',
+                        )
+                      else
+                        const RelationshipMapping(
+                          from: 'projectBeneficiary',
+                          to: 'individual',
+                          localKey: 'beneficiaryClientReferenceId',
+                          foreignKey: 'clientReferenceId',
+                        ),
+                    ],
+                    nestedModelMappings: [
+                      const NestedModelMapping(
+                        rootModel: 'individual',
+                        fields: {
+                          'name': NestedFieldMapping(
+                            table: 'name',
+                            localKey: 'clientReferenceId',
+                            foreignKey: 'individualClientReferenceId',
+                            type: NestedMappingType.one,
+                          ),
+                          'address': NestedFieldMapping(
+                            table: 'address',
+                            localKey: 'clientReferenceId',
+                            foreignKey: 'relatedClientReferenceId',
+                            type: NestedMappingType.many,
+                          ),
+                          'identifiers': NestedFieldMapping(
+                            table: 'identifier',
+                            localKey: 'clientReferenceId',
+                            foreignKey: 'individualClientReferenceId',
+                            type: NestedMappingType.many,
+                          ),
+                        },
                       ),
-                      'address': NestedFieldMapping(
-                        table: 'address',
-                        localKey: 'clientReferenceId',
-                        foreignKey: 'relatedClientReferenceId',
-                        type: NestedMappingType.many,
+                      const NestedModelMapping(
+                        rootModel: 'household',
+                        fields: {
+                          'address': NestedFieldMapping(
+                            table: 'address',
+                            localKey: 'clientReferenceId',
+                            foreignKey: 'relatedClientReferenceId',
+                            type: NestedMappingType.one,
+                          ),
+                        },
                       ),
-                      'identifiers': NestedFieldMapping(
-                        table: 'identifier',
-                        localKey: 'clientReferenceId',
-                        foreignKey: 'individualClientReferenceId',
-                        type: NestedMappingType.many,
+                      const NestedModelMapping(
+                        rootModel: 'task',
+                        fields: {
+                          'resource': NestedFieldMapping(
+                            table: 'resource',
+                            localKey: 'taskclientReferenceId',
+                            foreignKey: 'clientReferenceId',
+                            type: NestedMappingType.many,
+                          ),
+                        },
                       ),
-                    },
+                    ],
+                    searchEntityRepository: ctx.read<SearchEntityRepository>(),
                   ),
-                  const NestedModelMapping(
-                    rootModel: 'household',
-                    fields: {
-                      'address': NestedFieldMapping(
-                        table: 'address',
-                        localKey: 'clientReferenceId',
-                        foreignKey: 'relatedClientReferenceId',
-                        type: NestedMappingType.one,
-                      ),
-                    },
-                  ),
-                  const NestedModelMapping(
-                    rootModel: 'task',
-                    fields: {
-                      'resource': NestedFieldMapping(
-                        table: 'resource',
-                        localKey: 'taskclientReferenceId',
-                        foreignKey: 'clientReferenceId',
-                        type: NestedMappingType.many,
-                      ),
-                    },
-                  ),
-                ],
-                searchEntityRepository: context.read<SearchEntityRepository>(),
-              ),
-              dynamicEntityModelListener: EntityModelMapMapper(),
-            );
-            try {
-              if (schemaJsonRaw != null) {
-                final allSchemas =
-                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
-                final data = allSchemas['REGISTRATION'];
-
-                final registrationDeliveryData = data?['data'];
-                final flowsData =
-                    (registrationDeliveryData['flows'] as List<dynamic>?)
-                            ?.map((e) => Map<String, dynamic>.from(e as Map))
-                            .toList() ??
-                        [];
-                FlowRegistry.setConfig(flowsData);
-                NavigationRegistry.setupNavigation(context);
-
-                context.router.push(
-                  FlowBuilderHomeRoute(
-                      pageName: registrationDeliveryData["initialPage"]),
+                  dynamicEntityModelListener: EntityModelMapMapper(),
                 );
-              } else {
-                FlowRegistry.setConfig(
-                    sampleFlows["flows"] as List<Map<String, dynamic>>);
-                NavigationRegistry.setupNavigation(context);
-                context.router.push(
-                  FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
-                );
-              }
-            } catch (e) {
-              debugPrint('error $e');
-            }
+                try {
+                  if (schemaJsonRaw != null) {
+                    final allSchemas =
+                        json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                    final data = allSchemas['REGISTRATION'];
+
+                    final registrationDeliveryData = data?['data'];
+                    final flowsData =
+                        (registrationDeliveryData['flows'] as List<dynamic>?)
+                                ?.map((e) => Map<String, dynamic>.from(e as Map))
+                                .toList() ??
+                            [];
+                    FlowRegistry.setConfig(flowsData);
+                    NavigationRegistry.setupNavigation(ctx);
+
+                    ctx.router.push(
+                      FlowBuilderHomeRoute(
+                          pageName: registrationDeliveryData["initialPage"]),
+                    );
+                  } else {
+                    FlowRegistry.setConfig(
+                        sampleFlows["flows"] as List<Map<String, dynamic>>);
+                    NavigationRegistry.setupNavigation(ctx);
+                    ctx.router.push(
+                      FlowBuilderHomeRoute(pageName: sampleFlows["initialPage"]),
+                    );
+                  }
+                } catch (e) {
+                  debugPrint('error $e');
+                }
+              },
+            ));
           },
         ),
       ),
@@ -1045,22 +1045,22 @@ class _HomePageState extends LocalizedState<HomePage> {
           customIcon: Constants.closedHouseholdSvg,
           label: i18.home.closedHouseHoldLabel,
           onPressed: () async {
-            final selected = await context.router
-                .push<BoundaryModel>(CurrentBoundaryRoute());
-            if (selected == null || !context.mounted) return;
+            context.router.push(CurrentBoundaryRoute(
+              onBoundarySelected: (ctx) async {
+                final moduleName =
+                    'hcm-closehousehold-${context.selectedProject.referenceID}';
+                triggerLocalization(module: moduleName);
+                isTriggerLocalisation = false;
 
-            final moduleName =
-                'hcm-closehousehold-${context.selectedProject.referenceID}';
-            triggerLocalization(module: moduleName);
-            isTriggerLocalisation = false;
-
-            await FlowNavigationUtils.navigateToFlowModule(
-              context: context,
-              config: FlowModuleConfig(
-                schemaKey: 'CLOSEHOUSEHOLD',
-                sampleFlows: sampleCloseHouseholdFlows,
-              ),
-            );
+                await FlowNavigationUtils.navigateToFlowModule(
+                  context: ctx,
+                  config: FlowModuleConfig(
+                    schemaKey: 'CLOSEHOUSEHOLD',
+                    sampleFlows: sampleCloseHouseholdFlows,
+                  ),
+                );
+              },
+            ));
           },
         ),
       ),
@@ -1070,58 +1070,58 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.store_mall_directory,
           label: i18.home.manageStockLabel,
           onPressed: () async {
-            final selected = await context.router
-                .push<BoundaryModel>(CurrentBoundaryRoute());
-            if (selected == null || !context.mounted) return;
+            context.router.push(CurrentBoundaryRoute(
+              onBoundarySelected: (ctx) async {
+                final moduleName =
+                    'hcm-inventory-${context.selectedProject.referenceID}';
+                triggerLocalization(module: moduleName);
+                isTriggerLocalisation = false;
 
-            final moduleName =
-                'hcm-inventory-${context.selectedProject.referenceID}';
-            triggerLocalization(module: moduleName);
-            isTriggerLocalisation = false;
-
-            await FlowNavigationUtils.navigateToFlowModule(
-              context: context,
-              config: FlowModuleConfig(
-                schemaKey: 'INVENTORY',
-                sampleFlows: sampleInventoryFlows,
-                relationshipMappings: const [
-                  RelationshipMapping(
-                      from: 'facility',
-                      to: 'projectFacility',
-                      localKey: 'id',
-                      foreignKey: 'facilityId'),
-                  RelationshipMapping(
-                      from: 'projectResource',
-                      to: 'projectFacility',
-                      localKey: 'projectId',
-                      foreignKey: 'projectId'),
-                  RelationshipMapping(
-                      from: 'productVariant',
-                      to: 'projectResource',
-                      localKey: 'id',
-                      foreignKey: 'resource'),
-                ],
-                nestedModelMappings: const [
-                  NestedModelMapping(
-                    rootModel: 'projectFacility',
-                    fields: {
-                      'facility': NestedFieldMapping(
-                        table: 'facility',
-                        localKey: 'facilityId',
-                        foreignKey: 'id',
-                        type: NestedMappingType.one,
+                await FlowNavigationUtils.navigateToFlowModule(
+                  context: ctx,
+                  config: FlowModuleConfig(
+                    schemaKey: 'INVENTORY',
+                    sampleFlows: sampleInventoryFlows,
+                    relationshipMappings: const [
+                      RelationshipMapping(
+                          from: 'facility',
+                          to: 'projectFacility',
+                          localKey: 'id',
+                          foreignKey: 'facilityId'),
+                      RelationshipMapping(
+                          from: 'projectResource',
+                          to: 'projectFacility',
+                          localKey: 'projectId',
+                          foreignKey: 'projectId'),
+                      RelationshipMapping(
+                          from: 'productVariant',
+                          to: 'projectResource',
+                          localKey: 'id',
+                          foreignKey: 'resource'),
+                    ],
+                    nestedModelMappings: const [
+                      NestedModelMapping(
+                        rootModel: 'projectFacility',
+                        fields: {
+                          'facility': NestedFieldMapping(
+                            table: 'facility',
+                            localKey: 'facilityId',
+                            foreignKey: 'id',
+                            type: NestedMappingType.one,
+                          ),
+                          'projectResources': NestedFieldMapping(
+                            table: 'projectResource',
+                            localKey: 'projectId',
+                            foreignKey: 'projectId',
+                            type: NestedMappingType.many,
+                          ),
+                        },
                       ),
-                      'projectResources': NestedFieldMapping(
-                        table: 'projectResource',
-                        localKey: 'projectId',
-                        foreignKey: 'projectId',
-                        type: NestedMappingType.many,
-                      ),
-                    },
+                    ],
                   ),
-                ],
-              ),
-            );
+                );
+              },
+            ));
           },
         ),
       ),
@@ -1131,63 +1131,63 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.menu_book,
           label: i18.home.stockReconciliationLabel,
           onPressed: () async {
-            final selected = await context.router
-                .push<BoundaryModel>(CurrentBoundaryRoute());
-            if (selected == null || !context.mounted) return;
+            context.router.push(CurrentBoundaryRoute(
+              onBoundarySelected: (ctx) async {
+                final moduleName =
+                    'hcm-stockreconciliation-${context.selectedProject.referenceID}';
+                triggerLocalization(module: moduleName);
+                isTriggerLocalisation = false;
 
-            final moduleName =
-                'hcm-stockreconciliation-${context.selectedProject.referenceID}';
-            triggerLocalization(module: moduleName);
-            isTriggerLocalisation = false;
-
-            await FlowNavigationUtils.navigateToFlowModule(
-              context: context,
-              config: FlowModuleConfig(
-                schemaKey: 'STOCKRECONCILIATION',
-                sampleFlows: stockReconciliationFlows,
-                relationshipMappings: const [
-                  RelationshipMapping(
-                      from: 'facility',
-                      to: 'projectFacility',
-                      localKey: 'id',
-                      foreignKey: 'facilityId'),
-                  RelationshipMapping(
-                      from: 'projectResource',
-                      to: 'projectFacility',
-                      localKey: 'projectId',
-                      foreignKey: 'projectId'),
-                  RelationshipMapping(
-                      from: 'productVariant',
-                      to: 'projectResource',
-                      localKey: 'id',
-                      foreignKey: 'resource'),
-                  RelationshipMapping(
-                      from: 'stock',
-                      to: 'facility',
-                      localKey: 'facilityId',
-                      foreignKey: 'id'),
-                ],
-                nestedModelMappings: const [
-                  NestedModelMapping(
-                    rootModel: 'projectFacility',
-                    fields: {
-                      'facility': NestedFieldMapping(
-                        table: 'facility',
-                        localKey: 'facilityId',
-                        foreignKey: 'id',
-                        type: NestedMappingType.one,
+                await FlowNavigationUtils.navigateToFlowModule(
+                  context: ctx,
+                  config: FlowModuleConfig(
+                    schemaKey: 'STOCKRECONCILIATION',
+                    sampleFlows: stockReconciliationFlows,
+                    relationshipMappings: const [
+                      RelationshipMapping(
+                          from: 'facility',
+                          to: 'projectFacility',
+                          localKey: 'id',
+                          foreignKey: 'facilityId'),
+                      RelationshipMapping(
+                          from: 'projectResource',
+                          to: 'projectFacility',
+                          localKey: 'projectId',
+                          foreignKey: 'projectId'),
+                      RelationshipMapping(
+                          from: 'productVariant',
+                          to: 'projectResource',
+                          localKey: 'id',
+                          foreignKey: 'resource'),
+                      RelationshipMapping(
+                          from: 'stock',
+                          to: 'facility',
+                          localKey: 'facilityId',
+                          foreignKey: 'id'),
+                    ],
+                    nestedModelMappings: const [
+                      NestedModelMapping(
+                        rootModel: 'projectFacility',
+                        fields: {
+                          'facility': NestedFieldMapping(
+                            table: 'facility',
+                            localKey: 'facilityId',
+                            foreignKey: 'id',
+                            type: NestedMappingType.one,
+                          ),
+                          'projectResources': NestedFieldMapping(
+                            table: 'projectResource',
+                            localKey: 'projectId',
+                            foreignKey: 'projectId',
+                            type: NestedMappingType.many,
+                          ),
+                        },
                       ),
-                      'projectResources': NestedFieldMapping(
-                        table: 'projectResource',
-                        localKey: 'projectId',
-                        foreignKey: 'projectId',
-                        type: NestedMappingType.many,
-                      ),
-                    },
+                    ],
                   ),
-                ],
-              ),
-            );
+                );
+              },
+            ));
           },
         ),
       ),
@@ -1248,22 +1248,22 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.supervised_user_circle_rounded,
           label: i18.home.beneficiaryReferralLabel,
           onPressed: () async {
-            final selected = await context.router
-                .push<BoundaryModel>(CurrentBoundaryRoute());
-            if (selected == null || !context.mounted) return;
+            context.router.push(CurrentBoundaryRoute(
+              onBoundarySelected: (ctx) async {
+                final moduleName =
+                    'hcm-hfreferral-${context.selectedProject.referenceID}';
+                triggerLocalization(module: moduleName);
+                isTriggerLocalisation = false;
 
-            final moduleName =
-                'hcm-hfreferral-${context.selectedProject.referenceID}';
-            triggerLocalization(module: moduleName);
-            isTriggerLocalisation = false;
-
-            await FlowNavigationUtils.navigateToFlowModule(
-              context: context,
-              config: FlowModuleConfig(
-                schemaKey: 'HFREFERRAL',
-                sampleFlows: sampleReferralFlows,
-              ),
-            );
+                await FlowNavigationUtils.navigateToFlowModule(
+                  context: ctx,
+                  config: FlowModuleConfig(
+                    schemaKey: 'HFREFERRAL',
+                    sampleFlows: sampleReferralFlows,
+                  ),
+                );
+              },
+            ));
           },
         ),
       ),
@@ -1272,68 +1272,68 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.announcement,
           label: i18.home.viewReportsLabel,
           onPressed: () async {
-            final selected = await context.router
-                .push<BoundaryModel>(CurrentBoundaryRoute());
-            if (selected == null || !context.mounted) return;
+            context.router.push(CurrentBoundaryRoute(
+              onBoundarySelected: (ctx) async {
+                final moduleName =
+                    'hcm-stockreports-${context.selectedProject.referenceID}';
+                triggerLocalization(module: moduleName);
+                isTriggerLocalisation = false;
 
-            final moduleName =
-                'hcm-stockreports-${context.selectedProject.referenceID}';
-            triggerLocalization(module: moduleName);
-            isTriggerLocalisation = false;
-
-            await FlowNavigationUtils.navigateToFlowModule(
-              context: context,
-              config: FlowModuleConfig(
-                schemaKey: 'STOCKREPORTS',
-                sampleFlows: inventoryReportFlows,
-                relationshipMappings: const [
-                  RelationshipMapping(
-                      from: 'facility',
-                      to: 'projectFacility',
-                      localKey: 'id',
-                      foreignKey: 'facilityId'),
-                  RelationshipMapping(
-                      from: 'projectResource',
-                      to: 'projectFacility',
-                      localKey: 'projectId',
-                      foreignKey: 'projectId'),
-                  RelationshipMapping(
-                      from: 'productVariant',
-                      to: 'projectResource',
-                      localKey: 'id',
-                      foreignKey: 'resource'),
-                  RelationshipMapping(
-                      from: 'stockReconciliation',
-                      to: 'facility',
-                      localKey: 'facilityId',
-                      foreignKey: 'id'),
-                  RelationshipMapping(
-                      from: 'stockReconciliation',
-                      to: 'productVariant',
-                      localKey: 'productVariantId',
-                      foreignKey: 'id'),
-                ],
-                nestedModelMappings: const [
-                  NestedModelMapping(
-                    rootModel: 'projectFacility',
-                    fields: {
-                      'facility': NestedFieldMapping(
-                        table: 'facility',
-                        localKey: 'facilityId',
-                        foreignKey: 'id',
-                        type: NestedMappingType.one,
+                await FlowNavigationUtils.navigateToFlowModule(
+                  context: ctx,
+                  config: FlowModuleConfig(
+                    schemaKey: 'STOCKREPORTS',
+                    sampleFlows: inventoryReportFlows,
+                    relationshipMappings: const [
+                      RelationshipMapping(
+                          from: 'facility',
+                          to: 'projectFacility',
+                          localKey: 'id',
+                          foreignKey: 'facilityId'),
+                      RelationshipMapping(
+                          from: 'projectResource',
+                          to: 'projectFacility',
+                          localKey: 'projectId',
+                          foreignKey: 'projectId'),
+                      RelationshipMapping(
+                          from: 'productVariant',
+                          to: 'projectResource',
+                          localKey: 'id',
+                          foreignKey: 'resource'),
+                      RelationshipMapping(
+                          from: 'stockReconciliation',
+                          to: 'facility',
+                          localKey: 'facilityId',
+                          foreignKey: 'id'),
+                      RelationshipMapping(
+                          from: 'stockReconciliation',
+                          to: 'productVariant',
+                          localKey: 'productVariantId',
+                          foreignKey: 'id'),
+                    ],
+                    nestedModelMappings: const [
+                      NestedModelMapping(
+                        rootModel: 'projectFacility',
+                        fields: {
+                          'facility': NestedFieldMapping(
+                            table: 'facility',
+                            localKey: 'facilityId',
+                            foreignKey: 'id',
+                            type: NestedMappingType.one,
+                          ),
+                          'projectResources': NestedFieldMapping(
+                            table: 'projectResource',
+                            localKey: 'projectId',
+                            foreignKey: 'projectId',
+                            type: NestedMappingType.many,
+                          ),
+                        },
                       ),
-                      'projectResources': NestedFieldMapping(
-                        table: 'projectResource',
-                        localKey: 'projectId',
-                        foreignKey: 'projectId',
-                        type: NestedMappingType.many,
-                      ),
-                    },
+                    ],
                   ),
-                ],
-              ),
-            );
+                );
+              },
+            ));
           },
         ),
       ),
