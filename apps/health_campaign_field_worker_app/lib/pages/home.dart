@@ -152,13 +152,17 @@ class _HomePageState extends LocalizedState<HomePage> {
     CustomComponentRegistry().registerBuilder(
       'facilityToWhich',
       (context, stateAccessor) {
-        // Access data from RECORDSTOCK form (where formData is stored by NAVIGATION executor)
         final stockData = stateAccessor.getPageData('manageStock');
 
-        // Build your component with access to all this data
+        // Determine active inventory form for facility widget
+        final schemaName =
+            FlowCrudStateRegistry().get('FORM::RECORDLESSEXCESS') != null
+                ? 'RECORDLESSEXCESS'
+                : 'RECORDSTOCK';
+
         return FacilityCard(
           stateData: stockData,
-          schemaName: 'RECORDSTOCK',
+          schemaName: schemaName,
           formKey: 'facilityToWhich',
           dependantFormKey: 'teamCode',
         );
@@ -189,6 +193,17 @@ class _HomePageState extends LocalizedState<HomePage> {
         return ProductSelectionCard(
           stateData: stockData,
           pageSchema: 'RECORDSTOCK',
+        );
+      },
+    );
+    CustomComponentRegistry().registerBuilder(
+      'productVariant',
+      (context, stateAccessor) {
+        final stockData = stateAccessor.getPageData('manageStock');
+
+        return ProductSelectionCard(
+          stateData: stockData,
+          pageSchema: 'RECORDLESSEXCESS',
         );
       },
     );
