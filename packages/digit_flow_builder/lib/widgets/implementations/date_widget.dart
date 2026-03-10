@@ -1,0 +1,172 @@
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_date_form_input.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+import '../../action_handler/action_config.dart';
+import '../../utils/flow_widget_state.dart';
+import '../flow_widget_interface.dart';
+import '../resolved_flow_widget.dart';
+
+/// A date picker widget for TEMPLATE screens.
+///
+/// JSON Config:
+/// ```json
+/// {
+///   "type": "template",
+///   "format": "date",
+///   "fieldKey": "selectedDate",
+///   "label": "SELECT_DATE",
+///   "innerLabel": "Select date",
+///   "startDate": "2026-02-14",  // or epoch milliseconds
+///   "endDate": "2026-02-28",    // or epoch milliseconds
+///   "readOnly": false,
+///   "onAction": []  // Optional actions to execute on date change
+/// }
+/// ```
+///
+/// The widget stores date state as a structured object:
+/// ```json
+/// {
+///   "date": "2026-02-14T00:00:00.000",  // ISO 8601 string
+///   "entryTime": 1739491200000,          // Start of day (epoch ms)
+///   "exitTime": 1739577599999            // End of day (epoch ms)
+/// }
+/// ```
+/// Access via: `{{widgetData.selectedDate.entryTime}}`, `{{widgetData.selectedDate.exitTime}}`
+class DateWidget extends ResolvedFlowWidget {
+  @override
+  String get format => 'date';
+
+  @override
+  Widget buildResolved(
+    Map<String, dynamic> json,
+    BuildContext context,
+    void Function(ActionConfig) onAction,
+    ResolvedWidgetContext resolved,
+  ) {
+    return WidgetStateContext.reactive(context, (ctx, state) {
+      final fieldKey = json['fieldKey'] as String? ?? 'selectedDate';
+      final label = json['label'] as String?;
+      final innerLabel = json['innerLabel'] as String?;
+      final helpText = json['helpText'] as String?;
+      final readOnly = json['readOnly'] as bool? ?? false;
+
+      // Parse start date
+      DateTime? startDate;
+      final startDateRaw = resolved.resolveText(json['startDate']);
+      if (startDateRaw != null) {
+        if (startDateRaw is int) {
+          startDate =
+              DateTime.fromMillisecondsSinceEpoch(int.parse(startDateRaw));
+        } else if (startDateRaw is String) {
+          startDate = DateTime.tryParse(startDateRaw);
+        }
+      }
+
+      // Parse end date
+      DateTime? endDate;
+      final endDateRaw = resolved.resolveText(json['endDate']);
+      if (endDateRaw != null) {
+        if (endDateRaw is int) {
+          endDate = DateTime.fromMillisecondsSinceEpoch(int.parse(endDateRaw));
+        } else if (endDateRaw is String) {
+          endDate = DateTime.tryParse(endDateRaw);
+        }
+      }
+
+      // Current Date
+      DateTime currentDate = DateTime.now();
+      final currentDateRaw = resolved.resolveText(json['currentDate']);
+      if (currentDateRaw is int) {
+        currentDate =
+            DateTime.fromMillisecondsSinceEpoch(int.parse(currentDateRaw));
+      } else {
+        currentDate = DateTime.tryParse(currentDateRaw) ?? currentDate;
+      }
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (label != null) ...[
+            Text(
+              label,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+            ),
+            const SizedBox(height: 8),
+          ],
+          DigitDateFormInput(
+            firstDate: startDate,
+            lastDate: endDate,
+            helpText: helpText,
+            readOnly: readOnly,
+            innerLabel: innerLabel,
+            initialDate: currentDate,
+            onChange: (value) async {
+              DateTime? parsedDate;
+              try {
+                final currentLocale =
+                    Localizations.localeOf(context).toString();
+                parsedDate =
+                    DateFormat("dd MMM yyyy", currentLocale).parseStrict(value);
+              } catch (e) {
+                parsedDate = null;
+              }
+
+              if (parsedDate == null) return;
+
+              // Calculate start of day (entry time) and end of day (exit time)
+              final startOfDay = DateTime(
+                parsedDate.year,
+                parsedDate.month,
+                parsedDate.day,
+                0,
+                0,
+                0,
+              );
+              final endOfDay = DateTime(
+                parsedDate.year,
+                parsedDate.month,
+                parsedDate.day,
+                23,
+                59,
+                59,
+                999,
+              );
+
+              // Store as structured object with date, entryTime, and exitTime
+              final dateState = {
+                'date': parsedDate.toIso8601String(),
+                'entryTime': startOfDay.millisecondsSinceEpoch,
+                'exitTime': endOfDay.millisecondsSinceEpoch,
+              };
+              state.updateWidgetData(fieldKey, dateState);
+
+              // Dispatch selectDate action for internal handling
+              onAction(ActionConfig(
+                action: 'selectDate',
+                actionType: 'widgetData',
+                properties: {
+                  'key': fieldKey,
+                  'value': dateState,
+                },
+              ));
+
+              // Process onAction array from config (if present)
+              if (json['onAction'] != null && json['onAction'] is List) {
+                final actionsList =
+                    List<Map<String, dynamic>>.from(json['onAction']);
+                if (actionsList.isNotEmpty) {
+                  await resolved.executeActions(actionsList, context);
+                }
+              }
+            },
+          ),
+        ],
+      );
+    });
+  }
+}

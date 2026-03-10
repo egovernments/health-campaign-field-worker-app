@@ -22,14 +22,18 @@ class ProgressBarWidget extends ResolvedFlowWidget {
     final valueColor = json["valueColor"];
     final value = json['value'];
 
+    Map<String, Color> colorMap = {'green': Colors.green};
+
     return LinearProgressIndicator(
-      backgroundColor: backgroundColor,
-      valueColor: valueColor,
+      backgroundColor: colorMap[backgroundColor],
+      valueColor: AlwaysStoppedAnimation<Color>(
+        colorMap[valueColor] ?? Theme.of(context).colorTheme.primary.primary1,
+      ),
       value: value,
-      minHeight: height ?? 7.0,
+      minHeight: height ?? 15.0,
       borderRadius: BorderRadius.horizontal(
-          right: Radius.circular(radius ?? spacer1),
-          left: Radius.circular(radius ?? spacer1)),
+          right: Radius.circular(radius ?? spacer2),
+          left: Radius.circular(radius ?? spacer2)),
     );
   }
 }
