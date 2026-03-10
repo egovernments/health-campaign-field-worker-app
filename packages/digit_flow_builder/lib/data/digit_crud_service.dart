@@ -122,6 +122,7 @@ class EntityModelMapMapper extends DynamicEntityModelListener {
         return AttendanceRegisterModelMapper.fromMap(normalizedMapAttendance);
       case 'attendee':
         return AttendeeModelMapper.fromMap(normalizedMapAttendance);
+      case 'attendance':
       case 'attendanceLog':
         return AttendanceLogModelMapper.fromMap(normalizedMapAttendance);
       default:

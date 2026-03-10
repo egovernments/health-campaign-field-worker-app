@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/models/entities/attendance_log.dart';
 import 'package:digit_data_model/models/entities/attendance_register.dart';
 import 'package:digit_data_model/models/entities/project_type.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
@@ -166,6 +167,20 @@ bool _recordedSideEffectInternal(
   return false;
 }
 
+// Helper function matching hasLogWithType logic
+bool _hasLogWithType(attendanceLog, DateTime date, String type) {
+  final logTime = type == 'ENTRY'
+      ? DateTime(date.year, date.month, date.day, 9).millisecondsSinceEpoch
+      : DateTime(date.year, date.month, date.day, 18).millisecondsSinceEpoch;
+
+  return attendanceLog.any((element) {
+    if (element is! AttendanceLogModel) return false;
+    final elementTime = element.time;
+    final elementType = element.type?.toString();
+    return elementTime == logTime && elementType == type;
+  });
+}
+
 /// Initializes the [FunctionRegistry] with application-specific functions.
 ///
 /// This function should be called at application startup to populate the
@@ -174,38 +189,87 @@ void initializeFunctionRegistry() {
   /// Registers a function to calculate completed attendance days.
   ///
   /// - **Function Name**: `'calculateCompletedDays'`
-  /// - **Arguments**: A list where the first element is the AttendanceRegisterModel or its Map representation.
+  /// - **Arguments**: A list where:
+  ///   - First element is the AttendanceRegisterModel or its Map representation.
+  ///   - Second element (optional) is the attendance logs list from wrapper relations (List<AttendanceLogModel> or List<Map>).
   /// - **Returns**: A formatted string like `"3/5"` representing completed/total days.
   ///
-  /// This function handles both direct model objects AND map representations
-  /// (since template rendering converts EntityModel to Map before fn: invocation).
+  /// This function handles both:
+  /// 1. Model's attendanceLog field (List<Map<DateTime, bool>>?) - legacy format
+  /// 2. Wrapper's attendanceLog relation (List<AttendanceLogModel>) - raw attendance records
   FunctionRegistry.register('calculateCompletedDays', (args, stateData) {
     if (args.isEmpty || args.first == null) return '0/0';
 
     final attendanceRegister = args.first;
 
-    // Extract attendanceLog from either model or map
+    // Check for attendance logs passed as second argument (from wrapper relations)
     dynamic attendanceLog;
+    if (args.length > 1 && args[1] != null) {
+      attendanceLog = args[1];
+    } else {
+      // Fallback: try to get from model's attendanceLog field
+      try {
+        attendanceLog = attendanceRegister.attendanceLog;
+      } catch (_) {
+        attendanceLog = null;
+      }
+    }
 
+    // Get startDate and endDate from register
+    int? startDate;
+    int? endDate;
     try {
-      // Try model access first
-      attendanceLog = attendanceRegister.attendanceLog;
+      startDate = attendanceRegister is Map
+          ? attendanceRegister['startDate'] as int?
+          : attendanceRegister.startDate as int?;
+      endDate = attendanceRegister is Map
+          ? attendanceRegister['endDate'] as int?
+          : attendanceRegister.endDate as int?;
     } catch (_) {
-      attendanceLog = null;
+      startDate = null;
+      endDate = null;
     }
 
     // Process attendanceLog if it exists and is a List
-    if (attendanceLog != null && attendanceLog is List) {
-      var completedDays = 0;
-      final totalDays = attendanceLog.length;
+    if (attendanceLog != null) {
+      // Check if this is raw AttendanceLogModel data (has 'time' and 'type' fields)
+      // final isRawLogData = attendanceLog.isNotEmpty;
 
-      for (final element in attendanceLog) {
-        if (element is Map && element.containsValue(true)) {
-          completedDays++;
+      if (startDate != null && endDate != null) {
+        // Calculate completed days using hasLogWithType logic
+        final startDateTime = DateTime.fromMillisecondsSinceEpoch(startDate);
+        final endDateTime = DateTime.fromMillisecondsSinceEpoch(endDate);
+        final daysDifference = endDateTime.difference(startDateTime).inDays;
+        final totalDays = daysDifference + 1;
+
+        var completedDays = 0;
+
+        // Check each day for completed attendance (both ENTRY and EXIT)
+        for (int i = 0; i <= daysDifference; i++) {
+          final currentDate = startDateTime.add(Duration(days: i));
+          final hasMorningLog =
+              _hasLogWithType(attendanceLog, currentDate, 'ENTRY');
+          final hasEveningLog =
+              _hasLogWithType(attendanceLog, currentDate, 'EXIT');
+          if (hasMorningLog && hasEveningLog) {
+            completedDays++;
+          }
         }
-      }
 
-      return '$completedDays/$totalDays';
+        return '$completedDays/$totalDays';
+      } else {
+        // Legacy format: List<Map<DateTime, bool>>
+        var completedDays = 0;
+        final totalDays = attendanceLog.length;
+
+        for (final element in attendanceLog) {
+          if (element is Map && element.containsValue(true)) {
+            completedDays++;
+          }
+        }
+
+        return '$completedDays/$totalDays';
+      }
     }
 
     return '0/0';
@@ -224,6 +288,42 @@ void initializeFunctionRegistry() {
     }
 
     return attendees;
+  });
+
+  FunctionRegistry.register('attendanceStatus', (args, stateData) {
+    if (args.isEmpty || args.first == null) return 'Attendance Unmarked';
+
+    List<dynamic>? attendanceLogs = args.isNotEmpty ? args[0] : null;
+    String? individualId = args.length > 1 ? args[1]?.toString() : null;
+    int? selectedDateRaw =
+        args.length > 2 ? int.tryParse(args[2]?.toString() ?? '') : null;
+
+    AttendanceLogModel? currentAttendanceLogs =
+        attendanceLogs?.firstWhereOrNull((log) =>
+            log is AttendanceLogModel &&
+            log.individualId?.toString() == individualId &&
+            log.time == selectedDateRaw) as AttendanceLogModel?;
+
+    if (currentAttendanceLogs != null) {
+      return currentAttendanceLogs.type?.toString() == 'ENTRY'
+          ? 'Marked as Present'
+          : 'Attendance Unmarked';
+    }
+
+    return 'Attendance Unmarked';
+  });
+
+  FunctionRegistry.register('isToday', (args, stateData) {
+    if (args.isEmpty || args.first == null) return false;
+
+    final date = args.first;
+    if (date is! int) return false;
+
+    final now = DateTime.now();
+    final dateTime = DateTime.fromMillisecondsSinceEpoch(date);
+    return dateTime.year == now.year &&
+        dateTime.month == now.month &&
+        dateTime.day == now.day;
   });
 
   /// Registers a function to calculate age from a date of birth.
