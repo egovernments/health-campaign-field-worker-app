@@ -1091,15 +1091,113 @@ void initializeFunctionRegistry() {
       }
     }
 
-    // Disable if referral exists
+    // Disable if referral exists for the current cycle
     if (args.length > 1 && args[1] != null) {
       final referral = args[1];
 
       if (referral is List && referral.isNotEmpty) {
-        return true;
+        // Check if any referral matches the current running cycle
+        final projectType = FlowBuilderSingleton().projectType;
+        final selectedCycle = projectType?.cycles?.firstWhereOrNull(
+          (e) =>
+              e.startDate < DateTime.now().millisecondsSinceEpoch &&
+              e.endDate > DateTime.now().millisecondsSinceEpoch,
+        );
+
+        if (selectedCycle != null) {
+          for (final item in referral) {
+            Map<String, dynamic>? refMap;
+            if (item is Map<String, dynamic>) {
+              refMap = item;
+            } else if (item is Map) {
+              refMap = Map<String, dynamic>.from(item);
+            } else {
+              try {
+                refMap = (item as dynamic).toMap() as Map<String, dynamic>;
+              } catch (_) {
+                continue;
+              }
+            }
+
+            final additionalFields = refMap['additionalFields'];
+            final fields = additionalFields?['fields'] as List?;
+            if (fields != null) {
+              for (final field in fields) {
+                if (field is Map && field['key'] == 'referralCycle') {
+                  final referralCycle =
+                      int.tryParse(field['value']?.toString() ?? '');
+                  if (referralCycle == selectedCycle.id) return true;
+                }
+              }
+            }
+          }
+        }
       }
       if (referral is Map && referral.isNotEmpty) {
         return true;
+      }
+    }
+
+    return false;
+  });
+
+  /// Returns the current running cycle's id from the project configuration.
+  /// Reuses the same cycle lookup logic as hasReferralForCurrentCycle.
+  FunctionRegistry.register("getCurrentCycleIndex", (args, stateData) {
+    final projectType = FlowBuilderSingleton().projectType;
+    final now = DateTime.now().millisecondsSinceEpoch;
+    return projectType?.cycles
+        ?.firstWhereOrNull(
+          (e) => e.startDate < now && e.endDate > now,
+        )
+        ?.id;
+  });
+
+  /// Checks if a referral exists for the current running cycle.
+  ///
+  /// - **Function Name**: `'hasReferralForCurrentCycle'`
+  /// - **Arguments**: First argument is the hFReferral list.
+  /// - **Returns**: `true` if a referral exists for the current cycle, `false` otherwise.
+  FunctionRegistry.register("hasReferralForCurrentCycle", (args, stateData) {
+    if (args.isEmpty || args.first == null) return false;
+
+    final referrals = args.first;
+    if (referrals is! List || referrals.isEmpty) return false;
+
+    // Get current active cycle from FlowBuilderSingleton
+    final projectType = FlowBuilderSingleton().projectType;
+    final selectedCycle = projectType?.cycles?.firstWhereOrNull(
+      (e) =>
+          e.startDate < DateTime.now().millisecondsSinceEpoch &&
+          e.endDate > DateTime.now().millisecondsSinceEpoch,
+    );
+
+    if (selectedCycle == null) return false;
+
+    for (final item in referrals) {
+      Map<String, dynamic>? refMap;
+      if (item is Map<String, dynamic>) {
+        refMap = item;
+      } else if (item is Map) {
+        refMap = Map<String, dynamic>.from(item);
+      } else {
+        try {
+          refMap = (item as dynamic).toMap() as Map<String, dynamic>;
+        } catch (_) {
+          continue;
+        }
+      }
+
+      final additionalFields = refMap['additionalFields'];
+      final fields = additionalFields?['fields'] as List?;
+      if (fields != null) {
+        for (final field in fields) {
+          if (field is Map && field['key'] == 'referralCycle') {
+            final referralCycle =
+                int.tryParse(field['value']?.toString() ?? '');
+            if (referralCycle == selectedCycle.id) return true;
+          }
+        }
       }
     }
 
