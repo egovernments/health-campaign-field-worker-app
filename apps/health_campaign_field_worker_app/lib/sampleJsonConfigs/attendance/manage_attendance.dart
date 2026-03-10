@@ -30,15 +30,40 @@ final dynamic manageAttendanceFlow = {
         "name": "attendee",
         "type": "SEARCH_EVENT"
       }
+    },
+    {
+      "actionType": "SEARCH_EVENT",
+      "properties": {
+        "data": [
+          {
+            "key": "tenantId",
+            "value": "{{singleton.selectedProject.tenantId}}",
+            "operation": "equals"
+          }
+        ],
+        "name": "attendance",
+        "type": "SEARCH_EVENT"
+      }
     }
   ],
   "wrapperConfig": {
     "filters": [],
-    "relations": [],
+    "relations": [
+      {
+        "name": "attendees",
+        "entity": "AttendeeModel",
+        "match": {"field": "registerId", "equalsFrom": "id"}
+      },
+      {
+        "name": "attendanceLog",
+        "entity": "AttendanceLogModel",
+        "match": {"field": "registerId", "equalsFrom": "id"}
+      }
+    ],
     "rootEntity": "AttendanceRegisterModel",
     "wrapperName": "AttendanceWrapper",
     "searchConfig": {
-      "select": ["attendanceRegister", "attendee"],
+      "select": ["attendanceRegister", "attendee", "attendance"],
       "primary": "attendanceRegister"
     }
   },
@@ -61,7 +86,7 @@ final dynamic manageAttendanceFlow = {
       "hidden": false,
       "fieldName": "listView",
       "properties": {"spacing": "spacer4"},
-      "visibilityCondition": "{{ context.AttendanceWrapper.empty }}",
+      // "visibilityCondition": "{{ context.AttendanceWrapper.empty }}",
       "child": {
         "type": "template",
         "format": "card",
@@ -71,17 +96,14 @@ final dynamic manageAttendanceFlow = {
               {
                 "key": "CAMPAIGN_NAME",
                 "value":
-                    "{{fn:getAdditionalDetails(item.AttendanceRegisterModel.additionalDetails, 'campaignName')}}",
+                    "{{item.AttendanceRegisterModel.additionalDetails.campaignName}}",
               },
               {
                 "key": "EVENT_TYPE",
                 "value":
-                    "{{fn:getAdditionalDetails(item.AttendanceRegisterModel.additionalDetails, 'eventType')}}",
+                    "{{item.AttendanceRegisterModel.additionalDetails.eventType}}",
               },
-              {
-                "key": "STAFF_COUNT",
-                "value": "{{item.AttendeeModel.attendees.length}}"
-              },
+              {"key": "STAFF_COUNT", "value": "{{fn:length(item.attendees)}}"},
               {
                 "key": "START_DATE",
                 "value":
@@ -98,7 +120,8 @@ final dynamic manageAttendanceFlow = {
               },
               {
                 "key": "ATTENDANCE_COMPLETION",
-                "value": "{{item.AttendanceRegisterModel.status}}"
+                "value":
+                    "{{fn:calculateCompletedDays(item.AttendanceRegisterModel, item.attendanceLog)}}"
               }
             ],
             "type": "template",
@@ -115,7 +138,12 @@ final dynamic manageAttendanceFlow = {
                 "properties": {
                   "type": "TEMPLATE",
                   "name": "markAttendance",
-                  "data": []
+                  "data": [
+                    {
+                      "key": "registerId",
+                      "value": "{{item.AttendanceRegisterModel.id}}"
+                    }
+                  ]
                 }
               }
             ],

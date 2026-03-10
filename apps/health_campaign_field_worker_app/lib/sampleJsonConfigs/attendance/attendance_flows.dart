@@ -1,3 +1,4 @@
+import 'attendace_acknowlagement.dart';
 import 'manage_attendance.dart';
 import 'mark_attendance.dart';
 
@@ -12,5 +13,6 @@ final dynamic attendanceFlows = {
   "flows": [
     manageAttendanceFlow,
     markAttendanceFlow,
+    attendanceAcknowledgementFlow,
   ]
 };
