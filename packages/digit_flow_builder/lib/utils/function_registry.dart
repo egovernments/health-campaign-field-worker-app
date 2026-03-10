@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/models/entities/attendance_register.dart';
 import 'package:digit_data_model/models/entities/project_type.dart';
 import 'package:digit_flow_builder/utils/utils.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
@@ -170,6 +171,61 @@ bool _recordedSideEffectInternal(
 /// This function should be called at application startup to populate the
 /// registry with all necessary business logic functions.
 void initializeFunctionRegistry() {
+  /// Registers a function to calculate completed attendance days.
+  ///
+  /// - **Function Name**: `'calculateCompletedDays'`
+  /// - **Arguments**: A list where the first element is the AttendanceRegisterModel or its Map representation.
+  /// - **Returns**: A formatted string like `"3/5"` representing completed/total days.
+  ///
+  /// This function handles both direct model objects AND map representations
+  /// (since template rendering converts EntityModel to Map before fn: invocation).
+  FunctionRegistry.register('calculateCompletedDays', (args, stateData) {
+    if (args.isEmpty || args.first == null) return '0/0';
+
+    final attendanceRegister = args.first;
+
+    // Extract attendanceLog from either model or map
+    dynamic attendanceLog;
+
+    try {
+      // Try model access first
+      attendanceLog = attendanceRegister.attendanceLog;
+    } catch (_) {
+      attendanceLog = null;
+    }
+
+    // Process attendanceLog if it exists and is a List
+    if (attendanceLog != null && attendanceLog is List) {
+      var completedDays = 0;
+      final totalDays = attendanceLog.length;
+
+      for (final element in attendanceLog) {
+        if (element is Map && element.containsValue(true)) {
+          completedDays++;
+        }
+      }
+
+      return '$completedDays/$totalDays';
+    }
+
+    return '0/0';
+  });
+
+  FunctionRegistry.register('filterAttendeesByTeam', (args, stateData) {
+    if (args.isEmpty || args.first == null) return null;
+
+    final item = args.first;
+    List<dynamic>? attendees;
+
+    try {
+      attendees = item.attendees;
+    } catch (_) {
+      attendees = null;
+    }
+
+    return attendees;
+  });
+
   /// Registers a function to calculate age from a date of birth.
   ///
   /// - **Function Name**: `'calculateAge'`
@@ -1023,8 +1079,7 @@ void initializeFunctionRegistry() {
               taskMap = (item as dynamic).toMap() as Map<String, dynamic>;
             } catch (_) {
               try {
-                taskMap =
-                    (item as dynamic).toJson() as Map<String, dynamic>;
+                taskMap = (item as dynamic).toJson() as Map<String, dynamic>;
               } catch (_) {
                 taskMap = null;
               }
@@ -1035,7 +1090,8 @@ void initializeFunctionRegistry() {
             final status = taskMap['status']?.toString().toUpperCase().trim();
 
             // Disable if any task status is success
-            if (status == TaskStatus.administrationSuccess || status == TaskStatus.delivered) {
+            if (status == TaskStatus.administrationSuccess ||
+                status == TaskStatus.delivered) {
               return true;
             }
 
@@ -1111,5 +1167,38 @@ void initializeFunctionRegistry() {
     }
 
     return true;
+  });
+
+  /// Registers a function to check if attendance is single session mode.
+  ///
+  /// - **Function Name**: `'isSingleSession'`
+  /// - **Arguments**: A list where the first element is the sessions value from
+  ///   AttendanceRegisterModel.additionalDetails.sessions
+  /// - **Returns**: `true` if single session (sessions != 2), `false` if double session (sessions == 2).
+  ///
+  /// This function is used in attendance marking to determine if the register
+  /// operates in single session mode (one entry/exit per day) or double session mode
+  /// (morning and evening sessions).
+  FunctionRegistry.register("isSingleSession", (args, stateData) {
+    // If no argument provided, default to single session
+    if (args.isEmpty || args.first == null) {
+      return true;
+    }
+
+    final sessionsValue = args.first;
+
+    // Try to parse as int
+    int? sessions;
+    if (sessionsValue is int) {
+      sessions = sessionsValue;
+    } else if (sessionsValue is num) {
+      sessions = sessionsValue.toInt();
+    } else if (sessionsValue is String) {
+      sessions = int.tryParse(sessionsValue);
+    }
+
+    // If sessions is 2, it's double session mode (return false)
+    // Otherwise, it's single session mode (return true)
+    return sessions != 2;
   });
 }

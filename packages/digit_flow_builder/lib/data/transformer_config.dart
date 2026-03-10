@@ -995,5 +995,47 @@ final jsonConfig = {
         }
       }
     }
+  },
+  "markAttendancePresent": {
+    "fallbackModel": "AttendanceLogModel",
+    "models": {
+      "AttendanceLogModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "tenantId": "__context:tenantId",
+          "registerId": "__context:registerId",
+          "individualId": "__context:individualId",
+          "time": "__context:entryTime",
+          "status": "__value:ACTIVE",
+          "type": "__value:ENTRY",
+          "uploadToServer": "__value:false",
+          "rowVersion": "__value:1",
+          "additionalDetails": "__context:additionalFields",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit"
+        }
+      }
+    }
+  },
+  "markAttendanceAbsent": {
+    "fallbackModel": "AttendanceLogModel",
+    "models": {
+      "AttendanceLogModel": {
+        "mappings": {
+          "clientReferenceId": "__generate:uuid",
+          "tenantId": "__context:tenantId",
+          "registerId": "__context:registerId",
+          "individualId": "__context:individualId",
+          "time": "__context:entryTime",
+          "status": "__value:INACTIVE",
+          "type": "__value:ENTRY",
+          "uploadToServer": "__value:false",
+          "rowVersion": "__value:1",
+          "additionalDetails": "__context:additionalFields",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit"
+        }
+      }
+    }
   }
 };
