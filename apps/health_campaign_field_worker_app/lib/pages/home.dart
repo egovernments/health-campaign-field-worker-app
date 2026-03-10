@@ -1324,87 +1324,85 @@ class _HomePageState extends LocalizedState<HomePage> {
             triggerLocalization(module: module);
             isTriggerLocalisation = false;
             // };
-            context.router.push(const ManageAttendanceRoute());
+            // context.router.push(const ManageAttendanceRoute());
 
             // Set up CRUD service
-            // CrudBlocSingleton().setData(
-            //   crudService: DigitCrudService(
-            //     context: context,
-            //     relationshipMap: const [
-            //       RelationshipMapping(
-            //           from: 'pgrComplainant',
-            //           to: 'pgrService',
-            //           localKey: 'complaintClientReferenceId',
-            //           foreignKey: 'clientReferenceId'),
-            //       RelationshipMapping(
-            //           from: 'address',
-            //           to: 'pgrService',
-            //           localKey: 'relatedClientReferenceId',
-            //           foreignKey: 'clientReferenceId'),
-            //     ],
-            //     nestedModelMappings: const [
-            //       NestedModelMapping(
-            //         rootModel: 'pgrService',
-            //         fields: {
-            //           'user': NestedFieldMapping(
-            //             table: 'pgrComplainant',
-            //             localKey: 'clientReferenceId',
-            //             foreignKey: 'complaintClientReferenceId',
-            //             type: NestedMappingType.one,
-            //           ),
-            //           'address': NestedFieldMapping(
-            //             table: 'address',
-            //             localKey: 'clientReferenceId',
-            //             foreignKey: 'relatedClientReferenceId',
-            //             type: NestedMappingType.one,
-            //           )
-            //         },
-            //       ),
-            //     ],
-            //     searchEntityRepository: context.read<SearchEntityRepository>(),
-            //   ),
-            //   dynamicEntityModelListener: EntityModelMapMapper(),
-            // );
+            CrudBlocSingleton().setData(
+              crudService: DigitCrudService(
+                context: context,
+                relationshipMap: const [
+                  RelationshipMapping(
+                    from: 'attendanceRegister',
+                    to: 'attendee',
+                    localKey: 'id',
+                    foreignKey: 'registerId',
+                  ),
+                  RelationshipMapping(
+                    from: 'attendanceRegister',
+                    to: 'attendance',
+                    localKey: 'id',
+                    foreignKey: 'registerId',
+                  ),
+                ],
+                nestedModelMappings: const [
+                  NestedModelMapping(
+                    rootModel: 'attendanceRegister',
+                    fields: {
+                      'attendees': NestedFieldMapping(
+                        table: 'attendee',
+                        localKey: 'id',
+                        foreignKey: 'registerId',
+                        type: NestedMappingType.many,
+                      ),
+                    },
+                  ),
+                  // Note: 'attendanceLog' on AttendanceRegisterModel is List<Map<DateTime, bool>>?,
+                  // not List<AttendanceLogModel>?. Use wrapper relations for attendance data instead.
+                ],
+                searchEntityRepository: context.read<SearchEntityRepository>(),
+              ),
+              dynamicEntityModelListener: EntityModelMapMapper(),
+            );
 
-            // final prefs = await SharedPreferences.getInstance();
-            // final schemaJsonRaw = prefs.getString('app_config_schemas');
+            final prefs = await SharedPreferences.getInstance();
+            final schemaJsonRaw = prefs.getString('app_config_schemas');
 
-            // FlowBuilderSingleton().setPersistenceConfiguration(
-            //     persistenceConfiguration:
-            //         PersistenceConfiguration.offlineFirst);
-            // WidgetRegistry.initialize();
-            // try {
-            //   if (schemaJsonRaw != null) {
-            //     final allSchemas =
-            //         json.decode(schemaJsonRaw) as Map<String, dynamic>;
-            //     Map<String, dynamic> data = allSchemas['ATTENDANCE'];
+            FlowBuilderSingleton().setPersistenceConfiguration(
+                persistenceConfiguration:
+                    PersistenceConfiguration.offlineFirst);
+            WidgetRegistry.initialize();
+            try {
+              if (schemaJsonRaw != null) {
+                final allSchemas =
+                    json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                Map<String, dynamic> data = allSchemas['ATTENDANCE'];
 
-            //     // final attendanceData = data?['data'];
-            //     Map<String, dynamic> attendanceData =
-            //         attendanceFlows; // Adding custom attendance flows as the flows are not coming from the server for attendance module
-            //     List<Map<String, dynamic>> flowsData =
-            //         (attendanceData['flows'] as List<dynamic>?)
-            //                 ?.map((e) => Map<String, dynamic>.from(e as Map))
-            //                 .toList() ??
-            //             [];
-            //     FlowRegistry.setConfig(flowsData);
-            //     NavigationRegistry.setupNavigation(context);
+                // final attendanceData = data?['data'];
+                Map<String, dynamic> attendanceData =
+                    attendanceFlows; // Adding custom attendance flows as the flows are not coming from the server for attendance module
+                List<Map<String, dynamic>> flowsData =
+                    (attendanceData['flows'] as List<dynamic>?)
+                            ?.map((e) => Map<String, dynamic>.from(e as Map))
+                            .toList() ??
+                        [];
+                FlowRegistry.setConfig(flowsData);
+                NavigationRegistry.setupNavigation(context);
 
-            //     context.router.push(
-            //       FlowBuilderHomeRoute(pageName: attendanceData["initialPage"]),
-            //     );
-            //   } else {
-            //     FlowRegistry.setConfig(
-            //         sampleFlows["flows"] as List<Map<String, dynamic>>);
-            //     NavigationRegistry.setupNavigation(context);
-            //     context.router.push(
-            //       FlowBuilderHomeRoute(
-            //           pageName: attendanceFlows["initialPage"]),
-            //     );
-            //   }
-            // } catch (e) {
-            //   debugPrint('error $e');
-            // }
+                context.router.push(
+                  FlowBuilderHomeRoute(pageName: attendanceData["initialPage"]),
+                );
+              } else {
+                FlowRegistry.setConfig(
+                    sampleFlows["flows"] as List<Map<String, dynamic>>);
+                NavigationRegistry.setupNavigation(context);
+                context.router.push(
+                  FlowBuilderHomeRoute(
+                      pageName: attendanceFlows["initialPage"]),
+                );
+              }
+            } catch (e) {
+              debugPrint('error $e');
+            }
           },
         ),
       ),
