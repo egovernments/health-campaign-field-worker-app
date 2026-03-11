@@ -53,7 +53,7 @@ class _BoundarySelectionPageState
   void initState() {
     context.syncRefresh();
     LocalizationParams().setModule('common', false);
-    LocalizationParams().setCode([i18.common.coreCommonContinue, i18.common.coreCommonSubmit]);
+    LocalizationParams().setCode([i18.common.coreCommonContinue, i18.common.coreCommonSubmit, i18.common.maxBoundarySelectionReached]);
     context.read<SyncBloc>().add(SyncRefreshEvent(context.loggedInUserUuid));
     context.read<BeneficiaryDownSyncBloc>().add(
           const DownSyncResetStateEvent(),
@@ -124,7 +124,8 @@ class _BoundarySelectionPageState
                           final combinedCodes = [
                             ...finalCodes,
                             ...labelCodeList,
-                            i18.common.coreCommonSubmit
+                            i18.common.coreCommonSubmit,
+                            i18.common.maxBoundarySelectionReached
                           ];
 
                           LocalizationParams().setCode(combinedCodes);
@@ -959,7 +960,7 @@ class _BoundarySelectionPageState
           .map((key) => '${envConfig.variables.hierarchyType}_$key')
           .toList();
 
-      final combinedCodes = [...finalCodes, ...labelCodeList, i18.common.coreCommonSubmit];
+      final combinedCodes = [...finalCodes, ...labelCodeList, i18.common.coreCommonSubmit, i18.common.maxBoundarySelectionReached];
 
       LocalizationParams().setCode(combinedCodes);
       context.read<LocalizationBloc>().add(

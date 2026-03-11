@@ -37,7 +37,6 @@ class _CurrentBoundaryPageState extends LocalizedState<CurrentBoundaryPage> {
         final boundaries = state.selectedLastLevelBoundaries;
 
         return Scaffold(
-          backgroundColor: Colors.white,
           body: ScrollableContent(
             backgroundColor: Colors.white,
             header: const BackNavigationHelpHeaderWidget(
@@ -61,6 +60,7 @@ class _CurrentBoundaryPageState extends LocalizedState<CurrentBoundaryPage> {
                   ),
                 ),
               ),
+              const SizedBox(height: spacer2),
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
@@ -92,7 +92,7 @@ class _CurrentBoundaryPageState extends LocalizedState<CurrentBoundaryPage> {
                               children: [
                                 Text(
                                   localizations.translate(
-                                    boundary.name ?? 'No Value',
+                                    boundary.code ?? 'No Value',
                                   ),
                                   style: theme.digitTextTheme(context).headingM.copyWith(
                                     color: theme.colorTheme.text.primary
