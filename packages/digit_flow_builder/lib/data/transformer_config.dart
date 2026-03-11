@@ -1001,6 +1001,7 @@ final jsonConfig = {
     "models": {
       "HFReferralModel": {
         "mappings": {
+          "localityCode": "__context:selectedBoundaryCode",
           "id": "referralDetails.id",
           "tenantId": "__context:tenantId",
           "name": "referralDetails.nameOfChild",
@@ -1010,13 +1011,17 @@ final jsonConfig = {
           "beneficiaryId": "referralDetails.beneficiaryId",
           "referralCode": "referralDetails.referralCode",
           "nationalLevelId": "referralDetails.nationalLevelId",
-          "symptom": "referralDetails.referralReason",
+          "symptom":
+              "__switch:navigation.isEdit:{true:navigation.referralSymptom,default:referralDetails.referralReason}",
           "nonRecoverableError": "referralDetails.nonRecoverable",
-          "clientReferenceId": "__generate:uuid",
-          "rowVersion": "meta.rowVersion",
+          "clientReferenceId":
+              "__switch:navigation.isEdit:{true:navigation.clientReferenceId,default:__generate:uuid}",
+          "rowVersion":
+              "__switch:navigation.isEdit:{true:navigation.rowVersion,default:meta.rowVersion}",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
           "additionalFields": {
+            // Static field mappings
             "boundaryCode": "facilityDetails.administrativeUnit",
             "referralCycle": "referralDetails.referralCycle",
             "gender": "referralDetails.gender",
@@ -1025,34 +1030,44 @@ final jsonConfig = {
             "dateOfEvaluation": "facilityDetails.dateOfEvaluation",
             "referredBy": "facilityDetails.referredByKey",
             "hfCoordinator": "facilityDetails.hfCoordinator",
+            // Checklist fields from side effect pages (sideEffectSick, sideEffectFever,
+            // sideEffectFromCurrentCycle, sideEffectFromPreviousCycle) are automatically
+            // captured as unmapped fields and merged into additionalFields via fallbackModel.
           }
         }
       }
     },
   },
   "referralBeneficaryCreate": {
-    "fallbackModel": "ReferralModel",
+    "fallbackModel": "HFReferralModel",
     "models": {
-      "ReferralModel": {
+      "HFReferralModel": {
         "mappings": {
+          "tenantId": "__context:tenantId",
+          "projectId": "__context:projectId",
+          "projectFacilityId":
+              //"__switch:referBeneficiary.evaluationFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.evaluationFacility}"
+              "__switch:referBeneficiary.healthFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.healthFacility}",
+          "beneficiaryId": "__context:selectedIndividualIdentifierId",
+          "referralCode": "__context:selectedIndividualClientReferenceId",
+          "name": "__context:selectedIndividualName",
+          "symptom": "referBeneficiary.referralReason",
           "nonRecoverableError": "referral.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "rowVersion": "meta.rowVersion",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit",
-          "projectId": "__context:projectId",
-          "projectBeneficiaryClientReferenceId":
-              "__context:ProjectBeneficiaryClientReferenceId",
-          "recipientType":
-              "__switch:referBeneficiary.healthFacility:{Community Health Worker:STAFF,default:__value:FACILITY}",
-          "recipientId":
-              "__switch:referBeneficiary.healthFacility:{Community Health Worker:__context:userUUID,default:referBeneficiary.healthFacility}",
-          "referrerId": "__context:userUUID",
-          "reasons": "collect:referBeneficiary.referralReason",
-          "tenantId": "__context:tenantId",
+          "localityCode": "__context:selectedBoundaryCode",
           "additionalFields": {
-            "boundaryCode": "facilityDetails.administrativeUnit",
-            "referralComments": "referBeneficiary.referralComments"
+            // Explicit field mappings matching ReferralReconEnums/ReferralReconAdditionalFields
+            "boundaryCode": "facilityDetails.administrativeArea",
+            "referredBy": "__context:userUUID",
+            "referralComments": "referBeneficiary.referralComments",
+            "nameOfReferral": "__context:selectedIndividualName",
+            "referralCycle": "__context:cycleIndex",
+            "gender": "__context:selectedIndividualGender",
+            "ageInMonths": "__context:selectedIndividualAgeInMonths",
+            "dateOfEvaluation": "__value:DATETIME.NOW"
           }
         }
       }

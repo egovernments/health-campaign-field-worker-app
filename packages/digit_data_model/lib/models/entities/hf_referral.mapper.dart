@@ -60,6 +60,10 @@ class HFReferralSearchModelMapper
       v.clientReferenceId;
   static const Field<HFReferralSearchModel, List<String>> _f$clientReferenceId =
       Field('clientReferenceId', _$clientReferenceId, opt: true);
+  static List<String>? _$localityCode(HFReferralSearchModel v) =>
+      v.localityCode;
+  static const Field<HFReferralSearchModel, List<String>> _f$localityCode =
+      Field('localityCode', _$localityCode, opt: true);
   static String? _$boundaryCode(HFReferralSearchModel v) => v.boundaryCode;
   static const Field<HFReferralSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
@@ -86,6 +90,7 @@ class HFReferralSearchModelMapper
     #nationalLevelId: _f$nationalLevelId,
     #symptom: _f$symptom,
     #clientReferenceId: _f$clientReferenceId,
+    #localityCode: _f$localityCode,
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
@@ -114,6 +119,7 @@ class HFReferralSearchModelMapper
         nationalLevelId: data.dec(_f$nationalLevelId),
         symptom: data.dec(_f$symptom),
         clientReferenceId: data.dec(_f$clientReferenceId),
+        localityCode: data.dec(_f$localityCode),
         boundaryCode: data.dec(_f$boundaryCode));
   }
 
@@ -189,6 +195,8 @@ abstract class HFReferralSearchModelCopyWith<
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get symptom;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get localityCode;
   @override
   $R call(
       {List<String>? id,
@@ -202,6 +210,7 @@ abstract class HFReferralSearchModelCopyWith<
       List<String>? nationalLevelId,
       List<String>? symptom,
       List<String>? clientReferenceId,
+      List<String>? localityCode,
       String? boundaryCode});
   HFReferralSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -286,6 +295,14 @@ class _HFReferralSearchModelCopyWithImpl<$R, $Out>
               (v) => call(clientReferenceId: v))
           : null;
   @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get localityCode => $value.localityCode != null
+          ? ListCopyWith(
+              $value.localityCode!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(localityCode: v))
+          : null;
+  @override
   $R call(
           {Object? id = $none,
           Object? tenantId = $none,
@@ -298,6 +315,7 @@ class _HFReferralSearchModelCopyWithImpl<$R, $Out>
           Object? nationalLevelId = $none,
           Object? symptom = $none,
           Object? clientReferenceId = $none,
+          Object? localityCode = $none,
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
@@ -311,6 +329,7 @@ class _HFReferralSearchModelCopyWithImpl<$R, $Out>
         if (nationalLevelId != $none) #nationalLevelId: nationalLevelId,
         if (symptom != $none) #symptom: symptom,
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
+        if (localityCode != $none) #localityCode: localityCode,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
@@ -332,6 +351,7 @@ class _HFReferralSearchModelCopyWithImpl<$R, $Out>
           symptom: data.get(#symptom, or: $value.symptom),
           clientReferenceId:
               data.get(#clientReferenceId, or: $value.clientReferenceId),
+          localityCode: data.get(#localityCode, or: $value.localityCode),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
@@ -400,6 +420,9 @@ class HFReferralModelMapper extends SubClassMapperBase<HFReferralModel> {
   static int? _$rowVersion(HFReferralModel v) => v.rowVersion;
   static const Field<HFReferralModel, int> _f$rowVersion =
       Field('rowVersion', _$rowVersion, opt: true);
+  static String? _$localityCode(HFReferralModel v) => v.localityCode;
+  static const Field<HFReferralModel, String> _f$localityCode =
+      Field('localityCode', _$localityCode, opt: true);
   static AuditDetails? _$auditDetails(HFReferralModel v) => v.auditDetails;
   static const Field<HFReferralModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, opt: true);
@@ -428,6 +451,7 @@ class HFReferralModelMapper extends SubClassMapperBase<HFReferralModel> {
     #nonRecoverableError: _f$nonRecoverableError,
     #clientReferenceId: _f$clientReferenceId,
     #rowVersion: _f$rowVersion,
+    #localityCode: _f$localityCode,
     #auditDetails: _f$auditDetails,
     #clientAuditDetails: _f$clientAuditDetails,
     #isDeleted: _f$isDeleted,
@@ -459,6 +483,7 @@ class HFReferralModelMapper extends SubClassMapperBase<HFReferralModel> {
         nonRecoverableError: data.dec(_f$nonRecoverableError),
         clientReferenceId: data.dec(_f$clientReferenceId),
         rowVersion: data.dec(_f$rowVersion),
+        localityCode: data.dec(_f$localityCode),
         auditDetails: data.dec(_f$auditDetails),
         clientAuditDetails: data.dec(_f$clientAuditDetails),
         isDeleted: data.dec(_f$isDeleted));
@@ -540,6 +565,7 @@ abstract class HFReferralModelCopyWith<$R, $In extends HFReferralModel, $Out>
       bool? nonRecoverableError,
       String? clientReferenceId,
       int? rowVersion,
+      String? localityCode,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -583,6 +609,7 @@ class _HFReferralModelCopyWithImpl<$R, $Out>
           Object? nonRecoverableError = $none,
           String? clientReferenceId,
           Object? rowVersion = $none,
+          Object? localityCode = $none,
           Object? auditDetails = $none,
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
@@ -602,6 +629,7 @@ class _HFReferralModelCopyWithImpl<$R, $Out>
           #nonRecoverableError: nonRecoverableError,
         if (clientReferenceId != null) #clientReferenceId: clientReferenceId,
         if (rowVersion != $none) #rowVersion: rowVersion,
+        if (localityCode != $none) #localityCode: localityCode,
         if (auditDetails != $none) #auditDetails: auditDetails,
         if (clientAuditDetails != $none)
           #clientAuditDetails: clientAuditDetails,
@@ -627,6 +655,7 @@ class _HFReferralModelCopyWithImpl<$R, $Out>
       clientReferenceId:
           data.get(#clientReferenceId, or: $value.clientReferenceId),
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
+      localityCode: data.get(#localityCode, or: $value.localityCode),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
       clientAuditDetails:
           data.get(#clientAuditDetails, or: $value.clientAuditDetails),
